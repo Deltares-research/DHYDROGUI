@@ -32,7 +32,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CrossSectionView
             cs.HydroNetwork.SharedCrossSectionDefinitions.Add(crossSectionDefinitionYZ);
             cs.HydroNetwork.SharedCrossSectionDefinitions.Add(bigYz);
 
-            var crossSectionView = new Gui.Forms.CrossSectionView.CrossSectionView { Data = cs };
+            var crossSectionView = new NetworkEditor.Gui.Forms.CrossSectionView.CrossSectionView { Data = cs };
 
             WindowsFormsTestHelper.ShowModal(crossSectionView,(f)=>cs.HydroNetwork.SharedCrossSectionDefinitions.Add(new CrossSectionDefinitionZW()));
         }
@@ -43,7 +43,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CrossSectionView
             ICrossSection cs = GetXYZCrossSectionOnHydroNetwork();
             cs.Name = "Rijn";
 
-            var crossSectionView = new Gui.Forms.CrossSectionView.CrossSectionView { Data = cs };
+            var crossSectionView = new NetworkEditor.Gui.Forms.CrossSectionView.CrossSectionView { Data = cs };
 
             WindowsFormsTestHelper.ShowModal(crossSectionView, (f) => cs.HydroNetwork.SharedCrossSectionDefinitions.Add(new CrossSectionDefinitionZW()));
         }
@@ -61,7 +61,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CrossSectionView
 
             var cs = HydroNetworkHelper.AddCrossSectionDefinitionToBranch(channel, proxyDefinition, 10);
 
-            var crossSectionView = new Gui.Forms.CrossSectionView.CrossSectionView { Data = cs };
+            var crossSectionView = new NetworkEditor.Gui.Forms.CrossSectionView.CrossSectionView { Data = cs };
             WindowsFormsTestHelper.ShowModal(crossSectionView);
         }
 
@@ -83,7 +83,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CrossSectionView
 
             var cs = HydroNetworkHelper.AddCrossSectionDefinitionToBranch(channel, proxyDefinition, 10);
 
-            var crossSectionView = new Gui.Forms.CrossSectionView.CrossSectionView { Data = cs };
+            var crossSectionView = new NetworkEditor.Gui.Forms.CrossSectionView.CrossSectionView { Data = cs };
             WindowsFormsTestHelper.ShowModal(crossSectionView);
         }
 

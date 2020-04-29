@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
@@ -32,6 +31,7 @@ using DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView;
 using DeltaShell.Plugins.NetworkEditor.Gui.Helpers;
+using DeltaShell.Plugins.NetworkEditor.Gui.Layers;
 using DeltaShell.Plugins.NetworkEditor.Gui.MapTools;
 using DeltaShell.Plugins.NetworkEditor.Gui.ProjectExplorer;
 using DeltaShell.Plugins.NetworkEditor.MapLayers;
@@ -70,14 +70,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
         private ContextMenuStrip calculationGridMenu;
         private ContextMenuStrip hydroRegionContextMenu;
         private ContextMenuStrip convertCoordinateSystemContextMenu;
-        private readonly IMapLayerProvider networkEditorMapLayerProvider;
         private IGui gui;
 
         public NetworkEditorGuiPlugin()
         {
             InitializeComponent();
             Instance = this;
-            networkEditorMapLayerProvider = new NetworkEditorMapLayerProvider();
+            MapLayerProvider = NetworkEditorMapLayerProviderCreator.CreateMapLayerProvider();
         }
 
         public static NetworkEditorGuiPlugin Instance { get; private set; }
@@ -298,8 +297,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 GetCompositeViewData = route => Gui.Application.DataItemService.GetDataItemByValue(Gui.Application.Project, route.Network),
             };
 
-            yield return CreateAreaStructureCollectionViewInfo<Pump2D>(HydroArea.PumpsPluralName);
-            yield return CreateAreaStructureCollectionViewInfo<Weir2D>(HydroArea.WeirsPluralName);
+            yield return CreateAreaStructureCollectionViewInfo<Pump2D>(HydroAreaLayerNames.PumpsPluralName);
+            yield return CreateAreaStructureCollectionViewInfo<Weir2D>(HydroAreaLayerNames.WeirsPluralName);
             yield return GetViewInfoForHydroAreaFeatureCollection(ha => ha.LandBoundaries);
             yield return GetViewInfoForHydroAreaFeatureCollection(ha => ha.DryPoints);
             yield return GetViewInfoForHydroAreaFeatureCollection(ha => ha.DryAreas);
@@ -464,10 +463,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             }
         }
 
-        public override IMapLayerProvider MapLayerProvider
-        {
-            get { return networkEditorMapLayerProvider; }
-        }
+        public override IMapLayerProvider MapLayerProvider { get; }
 
         public IView HydroRegionContents
         {
@@ -535,9 +531,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 excludedTypes.Add(typeof (NetworkCoverageLocationLayer));
                 excludedTypes.Add(typeof (NetworkCoverageSegmentLayer));
             }
-
-            ImportBranchesFromSelectionMapTool.BeforeExecute += () => Gui.IsViewRemoveOnItemDeleteSuspended = true;
-            ImportBranchesFromSelectionMapTool.AfterExecute += () => Gui.IsViewRemoveOnItemDeleteSuspended = false; 
 
             base.Activate();
         }
@@ -624,8 +617,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
         public override IEnumerable<ITreeNodePresenter> GetProjectTreeViewNodePresenters()
         {
             yield return new HydroRegionProjectTreeViewNodePresenter { GuiPlugin = this };
-            yield return new HydroNetworkProjectTreeViewNodePresenter { GuiPlugin = this };
-            yield return new DrainageBasinProjectTreeViewNodePresenter { GuiPlugin = this };
             yield return new HydroAreaProjectTreeViewNodePresenter { GuiPlugin = this };
         }
 
@@ -669,61 +660,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
         void ApplicationProjectOpened(Project project)
         {
             project.RootFolder.CollectionChanged += RootFolderCollectionChanged;
-            project.RootFolder.PropertyChanged += RootFolderPropertyChanged;
-        }
-
-        [EditAction]
-        private void RootFolderPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            if (Gui == null || Gui.DocumentViews == null)
-            {
-                return;
-            }
-
-            // TODO: this looks very dirty, can we find a better way to manage these dependencies?
-
-            // Update the network in the network layers of all relevant maps after changing a network coverage network
-            var networkCoverage = sender as INetworkCoverage;
-            if (networkCoverage != null && e.PropertyName == "Network")
-            {
-                // Try to find maps for open views
-                var openMaps = Gui.DocumentViews.AllViews
-                    .OfType<MapView>()
-                    .Select(mv => mv.Map)
-                    .Where(m => m.Layers.OfType<NetworkCoverageGroupLayer>()
-                                    .Any(l => l.NetworkCoverage == networkCoverage));
-
-                if (openMaps.Any())
-                {
-                    foreach (var openMap in openMaps)
-                    {
-                        RefreshNetworkMapLayers(networkCoverage, openMap);
-                    }
-                }
-                else
-                {
-                    // Try to find maps in a view contexts
-                    foreach (var viewContext in Gui.ViewContextManager.ProjectViewContexts.OfType<CoverageViewViewContext>().Where(cvvc => cvvc.Coverage == networkCoverage))
-                    {
-                        RefreshNetworkMapLayers(networkCoverage, viewContext.Map);
-                    }
-                }
-            }
-        }
-
-        private void RefreshNetworkMapLayers(INetworkCoverage networkCoverage, IMap map)
-        {
-            var hydroNetworkMapLayer = map.Layers.OfType<HydroRegionMapLayer>().FirstOrDefault(l => l.Region is IHydroNetwork);
-            if (hydroNetworkMapLayer != null)
-            {
-                map.Layers.Remove(hydroNetworkMapLayer);
-            }
-
-            if (networkCoverage.Network != null)
-            {
-                map.Layers.Add(MapLayerProviderHelper.CreateLayersRecursive(networkCoverage.Network,null, Gui.Plugins.Select(p => p.MapLayerProvider).ToList()));
-                map.ZoomToExtents();
-            }
         }
 
         /// <summary>
@@ -823,7 +759,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             if (project != null)
             {
                 project.RootFolder.CollectionChanged -= RootFolderCollectionChanged;
-                project.RootFolder.PropertyChanged -= RootFolderPropertyChanged;
                 foreach (var network in project.RootFolder.GetAllItemsRecursive().OfType<INetwork>())
                 {
                     RemoveNetworkViews(network);

@@ -1,0 +1,54 @@
+﻿using DelftTools.Utils.Collections.Generic;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.Calculators;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
+
+namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries
+{
+    /// <summary>
+    /// <see cref="BoundaryContainer"/> is responsible for managing a set of
+    /// boundaries linked to the current outer grid.
+    /// </summary>
+    public class BoundaryContainer : IBoundaryContainer
+    {
+        private bool definitionPerFileUsed; 
+
+        /// <summary>
+        /// Get the boundaries defined on the current outer grid.
+        /// </summary>
+        /// <value>
+        /// The boundaries defined on the current outer grid.
+        /// </value>
+        /// <remarks>
+        /// This class is the logical owner of the <see cref="IWaveBoundary"/>
+        /// within the model it is part of.
+        /// </remarks>
+        public IEventedList<IWaveBoundary> Boundaries { get; } = new EventedList<IWaveBoundary>();
+
+        public bool DefinitionPerFileUsed
+        {
+            get => definitionPerFileUsed;
+            set
+            {
+                if (value)
+                {
+                    Boundaries.Clear();
+                }
+                definitionPerFileUsed = value;
+            }
+        }
+
+        public string FileNameForBoundariesPerFile { get; set; } = string.Empty;
+
+        public void UpdateGridBoundary(IGridBoundary gridBoundary)
+        {
+            this.gridBoundary = gridBoundary;
+            snappingCalculator = this.gridBoundary != null ? new BoundarySnappingCalculator(this.gridBoundary) : null;
+        }
+
+        public IBoundarySnappingCalculator GetBoundarySnappingCalculator() => snappingCalculator;
+        private IBoundarySnappingCalculator snappingCalculator = null;
+
+        public IGridBoundary GetGridBoundary() => gridBoundary;
+        private IGridBoundary gridBoundary = null;
+    }
+}

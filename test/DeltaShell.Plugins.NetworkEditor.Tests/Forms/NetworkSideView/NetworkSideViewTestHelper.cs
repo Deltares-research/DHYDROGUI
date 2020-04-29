@@ -38,20 +38,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.NetworkSideView
             CrossSectionHelper.AddXYZCrossSectionFromYZCoordinates(branch1, offset, yzCoordinates, "crs1");
         }
 
-        public static NetworkSideViewDataController CreateEmptyViewData()
-        {
-            var network = new HydroNetwork();
-
-            var waterLevel = new NetworkCoverage {Network = network};
-            waterLevel.Arguments[0].Name = "x";
-            waterLevel.Components[0].Name = "y";
-            waterLevel.Name = "Water level";
-
-            var route = new Route { Network = network, SegmentGenerationMethod = SegmentGenerationMethod.RouteBetweenLocations };
-
-            return new NetworkSideViewDataController(route, new NetworkSideViewCoverageManager(route, null, new []{waterLevel}));
-        }
-
         public static NetworkSideViewDataController CreateDefaultViewData()
         {
             // create network
@@ -271,7 +257,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.NetworkSideView
 
         private static void ShowSideViewFor(NetworkSideViewDataController viewData, IBranchFeature branchFeature)
         {
-            var sideView = new Gui.Forms.NetworkSideView.NetworkSideView
+            var sideView = new NetworkEditor.Gui.Forms.NetworkSideView.NetworkSideView
                                {
                                    Data = viewData.NetworkRoute,
                                    DataController = viewData,
@@ -303,7 +289,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.NetworkSideView
 
             NetworkHelper.AddBranchFeatureToBranch(feature, network.Branches[0], 50);
 
-            var sideView = new Gui.Forms.NetworkSideView.NetworkSideView
+            var sideView = new NetworkEditor.Gui.Forms.NetworkSideView.NetworkSideView
                                {
                                    Data = viewData.NetworkRoute,
                                    DataController = viewData

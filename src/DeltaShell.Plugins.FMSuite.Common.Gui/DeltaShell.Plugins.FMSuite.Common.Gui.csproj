@@ -109,6 +109,8 @@
       <HintPath>..\..\packages\PostSharp.Redist.5.0.55\lib\net45\PostSharp.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
     <Reference Include="SharpMap">
       <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.50157\lib\net461\DeltaShell\SharpMap.dll</HintPath>
       <Private>False</Private>
@@ -129,13 +131,17 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xaml" />
     <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
+    <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\AssemblyInfo.Version.FM.cs">
       <Link>Properties\AssemblyInfo.Version.FM.cs</Link>
     </Compile>
     <Compile Include="Editors\ListBoxItemRemovingEventArgs.cs" />
+    <Compile Include="Editors\ModelFeatureCoordinateDataEditor\BoundaryGeometryPreviewWindowsFormsHostMap.cs" />
     <Compile Include="FeatureCollectionViewInfoHelper.cs" />
     <Compile Include="FileBasedWindDefinitionView.cs">
       <SubType>UserControl</SubType>
@@ -224,6 +230,11 @@
     <Compile Include="Forms\VerticalProfileDialog.Designer.cs">
       <DependentUpon>VerticalProfileDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="MapView\ActualSizeObserver.cs" />
+    <Compile Include="MapView\MapView.xaml.cs">
+      <DependentUpon>MapView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MapView\MapViewModel.cs" />
     <Compile Include="ModelTreeShortcut.cs" />
     <Compile Include="NodePresenters\ContextMenuFactory.cs" />
     <Compile Include="NodePresenters\FMSuiteNodePresenterBase.cs" />
@@ -409,12 +420,19 @@
     <None Include="Resources\dry_point.png" />
     <None Include="Resources\dry_area.png" />
     <None Include="Resources\gate.png" />
+    <Resource Include="Resources\generate_data.png" />
     <Content Include="Resources\hurricane2.png" />
     <None Include="Resources\thindam.png" />
     <Resource Include="Resources\Observation.png" />
     <Resource Include="Resources\ObservationCS.png" />
     <None Include="Resources\settings.png" />
     <None Include="Resources\hurricane_del.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="MapView\MapView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

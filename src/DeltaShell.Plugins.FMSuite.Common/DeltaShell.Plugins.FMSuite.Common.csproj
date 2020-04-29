@@ -150,6 +150,7 @@
     <Compile Include="IO\BackwardCompatibility\DelftIniBackwardsCompatibilityHelper.cs" />
     <Compile Include="IO\BackwardCompatibility\IDelftIniBackwardsCompatibilityConfigurationValues.cs" />
     <Compile Include="IO\FileConstants.cs" />
+    <Compile Include="IO\Files\LineStringCreator.cs" />
     <Compile Include="IO\Files\HtcFile.cs" />
     <Compile Include="IO\Files\Structures\StructureRegion.cs" />
     <Compile Include="IO\Readers\DiaFileLogSeverity.cs" />
@@ -217,6 +218,11 @@
     <ProjectReference Include="..\DelftTools.Hydro\DelftTools.Hydro.csproj">
       <Project>{9f94f7fe-c79c-4e32-b3dc-a11c01b79349}</Project>
       <Name>DelftTools.Hydro</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\DeltaShell.NGHS.Common\DeltaShell.NGHS.Common.csproj">
+      <Project>{AE78982B-8798-4B5A-9DB4-FCA8F5C8428B}</Project>
+      <Name>DeltaShell.NGHS.Common</Name>
       <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\DeltaShell.NGHS.IO\DeltaShell.NGHS.IO.csproj">

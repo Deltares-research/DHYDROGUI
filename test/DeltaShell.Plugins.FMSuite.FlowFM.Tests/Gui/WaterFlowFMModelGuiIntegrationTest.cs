@@ -58,7 +58,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
     {
 
         [Test]
-        [Category(TestCategory.WindowsForms)]
+        [Category(TestCategory.Wpf)]
         public void GivenWaterFlowFmModel_WhenRunningModel_ThenShouldNotCrashWithOldOutputOpen()
         {
             var mduPath = TestHelper.GetTestFilePath(@"data\f04_bottomfriction\c016_2DConveyance_bend\input\bendprof.mdu");
@@ -110,7 +110,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         }
 
         [Test]
-        [Category(TestCategory.WindowsForms)]
+        [Category(TestCategory.Wpf)]
         public void GivenWaterFlowFmModel_WhenImportedInRootFolder_ThenShouldBeReplaced()
         {
             var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
@@ -153,7 +153,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         }
 
         [Test]
-        [Category(TestCategory.WindowsForms)]
+        [Category(TestCategory.Wpf)]
         public void GivenWaterFlowFmModel_WhenImportedInFolder_ThenShouldBeReplaced()
         {
             var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
@@ -208,7 +208,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         /// the type of heat flux model in the combobox.
         /// </summary>
         [Test]
-        [Category(TestCategory.WindowsForms)]
+        [Category(TestCategory.Wpf)]
         public void GivenWaterFlowFmModel_WhenOnChange_CloseHeatFluxModelViewIsTested()
         {
             var model = new WaterFlowFMModel();
@@ -249,7 +249,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         }
 
         [Test]
-        [Category(TestCategory.WindowsForms)]
+        [Category(TestCategory.Wpf)]
         public void GivenWaterFlowFmModel_WhenDoubleClickingOnMap_ThenOutputCoverageShouldEnableLayerInCentralMap()
         {
             var mduPath = TestHelper.GetTestFilePath(@"data\f04_bottomfriction\c016_2DConveyance_bend\input\bendprof.mdu");
@@ -295,7 +295,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         }
 
         [Test]
-        [Category(TestCategory.WindowsForms)]
+        [Category(TestCategory.Wpf)]
         public void GivenWaterFlowFmModel_WhenDoubleClickingOnHis_ThenOutputCoverageShouldEnableLayerInCentralMap()
         {
             var mduPath =
@@ -343,9 +343,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         }
 
         [Test]
-        [Category(TestCategory.Integration)]
+        [Category(TestCategory.Wpf)]
         [Category(TestCategory.Slow)]
-        [Category(TestCategory.WindowsForms)]
         public void GivenWaterFlowFmModel_WhenShowSnapped_ThenFeatureLayersInMap()
         {
             var mduPath =
@@ -386,7 +385,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         }
 
         [Test]
-        [Category(TestCategory.Integration)]
+        [Category(TestCategory.Wpf)]
         [Category(TestCategory.VerySlow)]
         public void GivenWaterFlowFmModel_WhenRunning_ThenShouldGiveVectorVelocityLayer()
         {
@@ -431,7 +430,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         }
 
         [Test]
-        [Category(TestCategory.WindowsForms)]
+        [Category(TestCategory.Wpf)]
         [Category(TestCategory.VerySlow)]
         public void ImportModelWithBigNetfileGridIntoProject()
         {
@@ -481,7 +480,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         }
 
         [Test]
-        [Category(TestCategory.WindowsForms)]
+        [Category(TestCategory.Wpf)]
         [Category(TestCategory.VerySlow)]
         public void ImportModelWithBigUgridIntoProject()
         {
@@ -534,8 +533,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         /// Test for issue TOOLS_22977, Not working test only reproducing scenario
         /// </summary>
         [Test]
-        [Category(TestCategory.Integration)]
-        [Category(TestCategory.WindowsForms)]
+        [Category(TestCategory.Wpf)]
         [Category(TestCategory.WorkInProgress)]
         [Ignore]
         public void TOOLS_22977Test()
@@ -679,7 +677,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
 
         [Test]
-        [Category(TestCategory.WindowsForms)]
+        [Category(TestCategory.Wpf)]
         public void Given_WaterFlowFmModel_With_MultipleFunctionView_When_CloseProject_Then_MultipleFunctionView_Is_Closed()
         {
             // 1. Prepare test data
@@ -693,7 +691,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         }
 
         [Test]
-        [Category(TestCategory.WindowsForms)]
+        [Category(TestCategory.Wpf)]
         public void Given_WaterFlowFmModel_With_MultipleFunctionView_When_DeleteModel_Then_MultipleFunctionView_Is_Closed()
         {
             // 1. Prepare test data
@@ -802,7 +800,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         }
 
         [Test]
-        [Category(TestCategory.WindowsForms)]
+        [Category(TestCategory.Wpf)]
         public void Given_FlowFmModel_When_Importing_Pli_Files_Then_UpdatesTreeView()
         {
             // 1. Define test data
@@ -874,7 +872,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         }
 
         [Test]
-        [Category(TestCategory.WindowsForms)]
+        [Category(TestCategory.Wpf)]
         public void GivenWaterFlowFMModelWithEmptyBoundarySet_WhenOpeningBoundaryConditionsEditor_ThenEditorCorrectlyConfigured()
         {
             // Given
@@ -919,7 +917,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         }
 
         [Test]
-        [Category(TestCategory.WindowsForms)]
+        [Category(TestCategory.Wpf)]
         public void GivenWaterFlowFMModelWithBoundarySet_WhenOpeningBoundaryConditionsEditor_ThenEditorCorrectlyConfigured()
         {
             // Given
@@ -970,12 +968,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                 };
 
                 WpfTestHelper.ShowModal(gui.MainWindow as Control, mainWindowShown);
-                gui.Dispose();
             }
         }
 
         [Test]
-        [Category(TestCategory.WindowsForms)]
+        [Category(TestCategory.Wpf)]
         [TestCaseSource(nameof(GetConfiguredBoundaryConditionSets))]
         public void GivenWaterFlowFMModelWithBoundarySetAndEditorOpened_WhenOpeningBoundaryConditionsEditorForOtherSet_ThenEditorCorrectlyConfigured(
             IEnumerable<BoundaryConditionSet> boundaryConditionSets)
@@ -1008,7 +1005,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                 };
 
                 WpfTestHelper.ShowModal(gui.MainWindow as Control, mainWindowShown);
-                gui.Dispose();
             }
         }
 

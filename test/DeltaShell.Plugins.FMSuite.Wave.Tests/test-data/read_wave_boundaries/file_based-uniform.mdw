@@ -1,0 +1,92 @@
+[WaveFileInformation]
+    FileVersion           = 02.00               
+[General]
+    ReferenceDate         = 2020-04-01          
+    DirConvention         = nautical            
+    SimMode               = stationary          
+    TimeStep              = 10                  
+    TimeInterval          = 60                  
+    OnlyInputVerify       = false               
+    FlowBedLevel          = 0                   
+    FlowWaterLevel        = 0                   
+    FlowVelocity          = 0                   
+    FlowVelocityType      = depth-averaged      
+    FlowWind              = 0                   
+    DirSpace              = circle              
+    NDir                  = 36                  
+    StartDir              = 0                   
+    EndDir                = 360                 
+    NFreq                 = 24                  
+    FreqMin               = 0.03                
+    FreqMax               = 1                   
+    WaterLevel            = 0                   
+    XVeloc                = 0                   
+    YVeloc                = 0                   
+    WindSpeed             = 1                   
+    WindDir               = 0                   
+[TimePoint]
+    Time                  = 0.0000000e+000      
+[TimePoint]
+    Time                  = 4.3200000e+004      
+[Output]
+    WriteCOM              = false               
+    COMWriteInterval      = 60                  
+    AppendCOM             = false               
+    MassFluxToCOM         = true                
+    MapWriteInterval      = 60                  
+    WriteTable            = false               
+    WriteSpec1D           = false               
+    WriteSpec2D           = false               
+    UseHotFile            = false               
+    TestOutputLevel       = 0                   
+    TraceCalls            = false               
+    MapWriteNetCDF        = true                
+    NetCDFSinglePrecision = false               
+[Constants]
+    WaterLevelCorrection  = 0                   
+    Gravity               = 9.81                
+    WaterDensity          = 1025                
+    NorthDir              = 90                  
+    MinimumDepth          = 0.05                
+[Processes]
+    GenModePhys           = 3                   
+    WaveSetup             = false               
+    Breaking              = true                
+    BreakAlpha            = 1                   
+    BreakGamma            = 0.73                
+    Triads                = false               
+    TriadsAlpha           = 0.05                
+    TriadsBeta            = 2.5                 
+    BedFriction           = jonswap             
+    BedFricCoef           = 0.038               
+    Diffraction           = false               
+    DiffracSteps          = 0                   
+    DiffracProp           = true                
+    DiffracCoef           = 0.2                 
+    WindGrowth            = true                
+    Quadruplets           = true                
+    WhiteCapping          = Komen               
+    Refraction            = true                
+    FreqShift             = true                
+    WaveForces            = dissipation 3d      
+[Numerics]
+    DirSpaceCDD           = 0.5                 
+    FreqSpaceCSS          = 0.5                 
+    RChHsTm01             = 0.02                
+    RChMeanHs             = 0.02                
+    RChMeanTm01           = 0.02                
+    PercWet               = 98                  
+    MaxIter               = 50                  
+[Boundary]
+    Name                  = boundary_name       
+    Definition            = xy-coordinates      
+    StartCoordX           = 1.0000000e+000      
+    EndCoordX             = 1.0100000e+002      
+    StartCoordY           = 1.0000000e+000      
+    EndCoordY             = 1.0000000e+000      
+    SpectrumSpec          = from file           
+    Spectrum              = SpectrumFile.sp1                
+[Domain]
+    Grid                  = Outer.grd           
+    BedLevel              = Outer.dep           
+    Output                = true                

@@ -225,44 +225,18 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
 
             AddMapTool(newLinkTool);
 
-            // TODO: merge the tools below into the hydro network editor map tool?! (context menus only)
-            var importBranchesMapTool = new ImportBranchesFromSelectionMapTool(FeatureTypeLayerFilter<Channel>)
-                                            {
-                                                Name = "import branches"
-                                            };
-            AddMapTool(importBranchesMapTool);
-
-            var importStructuresMapTool = new ImportBranchFeaturesFromSelectedFeaturesMapTool(HydroNetworkFilter)
-                                              {
-                                                  Name = "import structures",
-                      
-                                              };
-            AddMapTool(importStructuresMapTool);
-            
-            var importCrossSectionFromCsvMapTool = new ImportCrossSectionsFromCsvMapTool(HydroNetworkFilter)
-                                                       {
-                                                           Name = "Import cross sections from csv"
-                                                       };
-            AddMapTool(importCrossSectionFromCsvMapTool);
-
-            var exportCrossSectionToCsvMapTool = new ExportCrossSectionToCsvMapTool(HydroNetworkFilter)
-                                                     {
-                                                         Name = "Export cross sections to csv"
-                                                     };
-            AddMapTool(exportCrossSectionToCsvMapTool);
-
-            AddMapTool(new Feature2DLineTool(HydroArea.ThinDamsPluralName, ThinDamToolName, Resources.thindam));
-            AddMapTool(new Feature2DLineTool(HydroArea.FixedWeirsPluralName, FixedWeirToolName, Resources.fixedweir));
-            AddMapTool(new Feature2DPointTool(HydroArea.ObservationPointsPluralName, ObservationPointToolName, Resources.Observation));
-            AddMapTool(new Feature2DLineTool(HydroArea.ObservationCrossSectionsPluralName, ObservationCrossSectionToolName, Resources.observationcs2d));
-            AddMapTool(new Feature2DLineTool(HydroArea.PumpsPluralName, PumpToolName, Resources.pump));
-            AddMapTool(new Feature2DLineTool(HydroArea.WeirsPluralName, WeirToolName, Resources.Weir) { MaxPoints = 2 });
-            AddMapTool(new Feature2DLineTool(HydroArea.LandBoundariesPluralName, LandBoundaryToolName, Resources.landboundary));
-            AddMapTool(new Feature2DPointTool(HydroArea.DryPointsPluralName, DryPointToolName, Resources.dry_point));
-            AddMapTool(new Feature2DLineTool(HydroArea.DryAreasPluralName, DryAreaToolName, Resources.dry_area) { CloseLine = true });
-            AddMapTool(new Feature2DLineTool(HydroArea.EmbankmentsPluralName, EmbankmentToolName, Resources.Embankment));
-            AddMapTool(new SingleFeature2DLineTool(HydroArea.EnclosureName, EnclosureToolName, Resources.enclosure) { CloseLine = true });
-            AddMapTool(new Feature2DLineTool(HydroArea.BridgePillarsPluralName, BridgePillarToolName, Resources.BridgeSmall));
+            AddMapTool(new Feature2DLineTool(HydroAreaLayerNames.ThinDamsPluralName, ThinDamToolName, Resources.thindam));
+            AddMapTool(new Feature2DLineTool(HydroAreaLayerNames.FixedWeirsPluralName, FixedWeirToolName, Resources.fixedweir));
+            AddMapTool(new Feature2DPointTool(HydroAreaLayerNames.ObservationPointsPluralName, ObservationPointToolName, Resources.Observation));
+            AddMapTool(new Feature2DLineTool(HydroAreaLayerNames.ObservationCrossSectionsPluralName, ObservationCrossSectionToolName, Resources.observationcs2d));
+            AddMapTool(new Feature2DLineTool(HydroAreaLayerNames.PumpsPluralName, PumpToolName, Resources.pump));
+            AddMapTool(new Feature2DLineTool(HydroAreaLayerNames.WeirsPluralName, WeirToolName, Resources.Weir) { MaxPoints = 2 });
+            AddMapTool(new Feature2DLineTool(HydroAreaLayerNames.LandBoundariesPluralName, LandBoundaryToolName, Resources.landboundary));
+            AddMapTool(new Feature2DPointTool(HydroAreaLayerNames.DryPointsPluralName, DryPointToolName, Resources.dry_point));
+            AddMapTool(new Feature2DLineTool(HydroAreaLayerNames.DryAreasPluralName, DryAreaToolName, Resources.dry_area) { CloseLine = true });
+            AddMapTool(new Feature2DLineTool(HydroAreaLayerNames.EmbankmentsPluralName, EmbankmentToolName, Resources.Embankment));
+            AddMapTool(new SingleFeature2DLineTool(HydroAreaLayerNames.EnclosureName, EnclosureToolName, Resources.enclosure) { CloseLine = true });
+            AddMapTool(new Feature2DLineTool(HydroAreaLayerNames.BridgePillarsPluralName, BridgePillarToolName, Resources.BridgeSmall));
 
             var addInterpolatedCrossSectionTool = new NewPointFeatureTool(FeatureTypeLayerFilter<CrossSection>, AddInterpolatedCrossSectionToolName) { Cursor = AddInterpolatedCrossSectionToolCursor };
             AddMapTool(addInterpolatedCrossSectionTool);
@@ -282,16 +256,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
             var transformation = coordinateSystemFactory.CreateTransformation(sourceCoordinateSystem, targetCoordinateSystem);
 
             return GeometryTransform.TransformGeometry(geometry, transformation.MathTransform);
-        }
-
-        private static bool HydroNetworkFilter(ILayer layer)
-        {
-            var hydroRegionLayer = layer as HydroRegionMapLayer;
-            if (hydroRegionLayer != null)
-            {
-                return hydroRegionLayer.Region is IHydroNetwork;
-            }
-            return false;
         }
 
         private IMapTool NetworkLocationTool { get; set; }
@@ -491,20 +455,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
                         break;
                 }
             }
-            if (removedOrAddedItem is ILayer && HydroNetworkFilter((ILayer)removedOrAddedItem))
-            {
-                switch (e.Action)
-                {
-                    case NotifyCollectionChangedAction.Replace:
-                        throw new NotImplementedException();
-
-                    case NotifyCollectionChangedAction.Add:
-                        break;
-
-                    case NotifyCollectionChangedAction.Remove:
-                        break;
-                }
-            }
         }
 
         private void SetCoverageLayerTheme(INetworkCoverageGroupLayer networkCoverageGroupLayer)
@@ -611,10 +561,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
 
         public override IEnumerable<MapToolContextMenuItem> GetContextMenuItems(Coordinate worldPosition)
         {
-            // HydroNetworkEditorMapTool is alwas added to a map, even if there is no network.
-            if (!Map.GetAllVisibleLayers(true).Any(HydroNetworkFilter))
-                yield break;
-
             contextMenuWorldPosition = worldPosition;
 
             var firstDiscretizationLayer = MapControl.Map.GetAllLayers(true)

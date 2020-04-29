@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using DelftTools.Utils.Guards;
-using DeltaShell.NGHS.IO.Handlers;
+using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.Plugins.FMSuite.Common.Properties;
 
 namespace DeltaShell.Plugins.FMSuite.Common.IO.BackwardCompatibility

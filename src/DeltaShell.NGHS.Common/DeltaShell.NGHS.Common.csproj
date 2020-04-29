@@ -50,17 +50,24 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApplicationPluginHelper.cs" />
     <Compile Include="DefaultModelSettings.cs" />
+    <Compile Include="Eventing\PropertyChangedExtendedEventArgs.cs" />
     <Compile Include="EnvironmentConstants.cs" />
+    <Compile Include="IO\FilesManager.cs" />
+    <Compile Include="IO\IFilesManager.cs" />
+    <Compile Include="Logging\ILogHandler.cs" />
+    <Compile Include="Logging\LogHandler.cs" />
     <Compile Include="SystemEnvironment.cs" />
     <Compile Include="IEnvironment.cs" />
     <Compile Include="ILinkedDataItemsModel.cs" />
     <Compile Include="IO\FileBasedFolder.cs" />
     <Compile Include="IO\IFileBasedFolder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utils\EnumUtils.cs" />
     <Compile Include="Utils\Repeat.cs" />
     <Compile Include="Utils\NameableCollectionExtensions.cs" />
   </ItemGroup>

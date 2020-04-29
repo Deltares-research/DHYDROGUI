@@ -21,7 +21,6 @@ using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using DeltaShell.Plugins.NetworkEditor;
 using DeltaShell.Plugins.NetworkEditor.Gui;
-using DeltaShell.Plugins.NetworkEditor.MapLayers.CustomRenderers;
 using DeltaShell.Plugins.ProjectExplorer;
 using DeltaShell.Plugins.SharpMapGis;
 using DeltaShell.Plugins.SharpMapGis.Gui;
@@ -37,10 +36,10 @@ using Control = System.Windows.Controls.Control;
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 {
     [TestFixture]
-    [Category(TestCategory.WindowsForms)]
     public class FlowFmMapLayerProviderTest
     {
         [Test]
+        [Category(TestCategory.WindowsForms)]
         public void ShowLayersForFmModel()
         {
             var mduPath =
@@ -50,6 +49,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         }
         
         [Test]
+        [Category(TestCategory.WindowsForms)]
         public void ShowLayersForIvoorkust()
         {
             var mduPath =
@@ -59,6 +59,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         }
 
         [Test]
+        [Category(TestCategory.WindowsForms)]
         public void ShowLayersAdjustedModel()
         {
             var mduPath =
@@ -80,6 +81,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         }
 
         [Test]
+        [Category(TestCategory.Wpf)]
         public void CheckLayerIsSetCorrectlyWhenOpeningFmItems()
         {
             var mduPath = TestHelper.GetTestFilePath(@"roughness\bendprof.mdu");
@@ -126,41 +128,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         }
 
         [Test]
-        public void CheckFmEnclosureLayerIsCreated()
-        {
-            var model = new WaterFlowFMModel();
-
-            using (var gui = new DeltaShellGui())
-            {
-                var fmGuiPlugin = new FlowFMGuiPlugin();
-
-                var app = gui.Application;
-                app.Plugins.Add(new SharpMapGisApplicationPlugin());
-                app.Plugins.Add(new NetworkEditorApplicationPlugin());
-                gui.Plugins.Add(new ProjectExplorerGuiPlugin());
-                gui.Plugins.Add(new NetworkEditorGuiPlugin());
-                gui.Plugins.Add(new SharpMapGisGuiPlugin());
-                gui.Plugins.Add(fmGuiPlugin);
-
-                gui.Run();
-
-                var project = app.Project;
-                project.RootFolder.Add(model);
-
-                var enclosureFeature =
-                    FlowFMTestHelper.CreateFeature2DPolygonFromGeometry("Enclosure01",
-                        FlowFMTestHelper.GetValidGeometryForEnclosureExample());
-
-                model.Area.Enclosures.Add(enclosureFeature);
-                var layer = new NetworkEditorMapLayerProvider().CreateLayer(model.Area.Enclosures, model.Area);
-
-                Assert.IsNotNull(layer); //asssert it got injected               
-                Assert.AreEqual(1, layer.CustomRenderers.Count);
-                Assert.AreEqual(typeof(EnclosureRenderer), layer.CustomRenderers[0].GetType());
-            }
-        }
-
-        [Test]
+        [Category(TestCategory.WindowsForms)]
         public void CheckFmBridgePillarLayerIsCreated()
         {
             var model = new WaterFlowFMModel();
@@ -194,6 +162,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         }
 
         [Test]
+        [Category(TestCategory.WindowsForms)]
         public void GivenAFlowFMMapLayerProviderAndAClassMapFileFunctionStore_WhenCreateLayerIsCalled_ThenCorrectLayerIsCreated()
         {
             // Given
@@ -210,6 +179,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         }
 
         [Test]
+        [Category(TestCategory.WindowsForms)]
         public void GivenAFlowFMMapLayerProviderAndAClassMapFileFunctionStore_WhenCanCreateLayerForIsCalle_ThenTrueIsReturned()
         {
             // Given
@@ -223,7 +193,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             Assert.IsTrue(result);
         }
 
-        [Test, Category(TestCategory.DataAccess)]
+        [Test]
+        [Category(TestCategory.DataAccess)]
         public void GivenAFlowFmMapLayerProviderAndAModelWithAClassMapFileFunctionStore_WhenChildLayerObjectsIsCalled_ThenTheFunctionStoreIsReturned()
         {
             // Given
@@ -249,7 +220,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             Assert.AreSame(classMapFileFunctionStoreLayer, outputClassMapFileStore);
         }
 
-        [Test, Category(TestCategory.DataAccess)]
+        [Test]
+        [Category(TestCategory.DataAccess)]
         public void GivenAFlowFmMapLayerProviderAndAClassMapFileFunctionStore_WhenChildLayerObjectsIsCalled_ThenTheFunctionsAndGridAreReturned()
         {
             // Given
@@ -273,6 +245,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         }
 
         [Test]
+        [Category(TestCategory.WindowsForms)]
         public void CheckFmLayerProviderGivesAWarningWithInvalidGeometryForEnclosure()
         {
             var model = new WaterFlowFMModel();
@@ -316,6 +289,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         }
 
         [Test]
+        [Category(TestCategory.WindowsForms)]
         public void GivenAFlowFmMapLayProvider_WhenCreatingAMapLayerBoundaryConditions_ThenBoundaryConditionLayerIsNotEnabledInLegend()
         {
             //Given
@@ -335,6 +309,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         }
 
         [Test]
+        [Category(TestCategory.WindowsForms)]
         public void GivenAFlowFmMapLayProvider_WhenCreatingAMapLayerSourceAndSinks_ThenSourceAndSinksLayerIsNotEnabledInLegend()
         {
             //Given
@@ -343,7 +318,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             var waterFlowFmModel = new WaterFlowFMModel();
             TypeUtils.SetPrivatePropertyValue(waterFlowFmModel, "Pipes", sourceAndSinks);
 
-           //When
+            //When
             var layer = mapLayerProvider.CreateLayer(sourceAndSinks, waterFlowFmModel);
 
             //Then

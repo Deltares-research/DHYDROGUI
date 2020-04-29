@@ -12,6 +12,7 @@ using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.Layers;
 using GeoAPI.Extensions.Feature;
 using NetTopologySuite.Extensions.Features;
 using SharpMap.Api.Layers;
@@ -122,7 +123,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors
             {
                 ILayer boundaryLayer =
                     modelGroupLayer.Layers.FirstOrDefault(
-                        l => l.Name == WaveModelMapLayerProvider.BoundaryLayerName);
+                        l => l.Name == WaveLayerNames.BoundaryLayerName);
                 if (boundaryLayer != null)
                 {
                     boundaryLayer.Selectable = !model.BoundaryIsDefinedBySpecFile;

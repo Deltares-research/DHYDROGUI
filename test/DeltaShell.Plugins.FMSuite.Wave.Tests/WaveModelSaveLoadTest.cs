@@ -260,35 +260,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         }
 
         [Test]
-        public void CreateFromScratchAddBoundarySaveAndReload()
-        {
-            using (var app = new DeltaShellApplication())
-            {
-                LoadRequiredPlugins(app);
-                app.Run();
-
-                string path = "modelSaveTest.dsproj";
-                app.SaveProjectAs(path); // save to initialize file repository..
-
-                var model = new WaveModel {Name = "modelSaveTest"};
-                app.Project.RootFolder.Add(model);
-
-                var line = new LineString(new [] {new Coordinate(15, 15), new Coordinate(20, 20)});
-                model.Boundaries.Add(new Feature2D {Name = "bound1", Geometry = line});
-                
-                // save & reload
-                app.SaveProject();
-                app.CloseProject();
-                app.OpenProject(path);
-
-                var retrievedModel = (WaveModel) app.Project.RootFolder.Items[0];
-                Assert.AreEqual(1, retrievedModel.Boundaries.Count, "#boundaries");
-                Assert.AreEqual(1, retrievedModel.BoundaryConditions.Count, "#bcs");
-            }
-
-        }
-
-        [Test]
         public void ImportModelSaveAsConfirmFilesAreCopiedAlong()
         {
             using (var app = new DeltaShellApplication())

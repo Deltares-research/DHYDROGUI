@@ -67,5 +67,18 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.ModelDefinition
             var retrievedMaxIter = string.Format(CultureInfo.InvariantCulture, "{0}", propertyMaxIter.Value);
             Assert.AreEqual(expectedDefaultValue, retrievedMaxIter);
         }
+
+        [Test]
+        public void GivenWaveModelDefinition_WhenConstructorFinished_ThenBoundaryContainerSet()
+        {
+            // Given
+            WaveModelDefinition Call() => new WaveModelDefinition();
+
+            // When
+            var waveModelDefinition = Call();
+
+            // Then
+            Assert.IsNotNull(waveModelDefinition.BoundaryContainer);
+        }
     }
 }

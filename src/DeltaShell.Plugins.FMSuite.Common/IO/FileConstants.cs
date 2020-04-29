@@ -56,6 +56,9 @@
         public const string MeteoFileExtension = "_meteo" + TimFileExtension;
         public const string BoundaryExternalForcingFileExtension = "_bnd" + ExternalForcingFileExtension;
 
+        public const string SpectrumFileExtension = ".sp2";
+
+
         #endregion
     }
 }

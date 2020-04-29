@@ -51,6 +51,10 @@
       <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.50157\lib\net461\DeltaShell\DeltaShell.Core.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="DelftTools.Utils">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.50157\lib\net461\DeltaShell\DelftTools.Utils.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
@@ -76,10 +80,17 @@
   <ItemGroup>
     <Compile Include="ApplicationPluginTestHelper.cs" />
     <Compile Include="AssertConstraints\Collection.cs" />
+    <Compile Include="AssertConstraints\ConstraintExpressionExtensions.cs" />
     <Compile Include="AssertConstraints\ContainsOnlyConstraint.cs" />
+    <Compile Include="AssertConstraints\Does.cs" />
+    <Compile Include="AssertConstraints\ExistConstraint.cs" />
+    <Compile Include="EnumDescriptionTestFixture.cs" />
+    <Compile Include="EnumValuesTestFixture.cs" />
     <Compile Include="NghsTestCategory.cs" />
+    <Compile Include="NotifyPropertyChangedTestObserver.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ApplicationTestHelper.cs" />
+    <Compile Include="RandomExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -4,12 +4,13 @@ using System.Windows.Forms;
 using DelftTools.Hydro;
 using DelftTools.Shell.Gui;
 using DelftTools.TestUtils;
-using DeltaShell.Plugins.NetworkEditor.Gui;
+using DeltaShell.Plugins.NetworkEditor.Gui.Layers;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Features;
 using NUnit.Framework;
 using SharpMap;
+using SharpMap.Api.Layers;
 using SharpMap.Data.Providers;
 using SharpMap.Extensions.CoordinateSystems;
 using SharpMap.UI.Tools;
@@ -25,15 +26,18 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Tools
         {
             var area = new HydroArea();
             var map = new Map();
-            var layer = MapLayerProviderHelper.CreateLayersRecursive(area, null,
-                                                                     new[] {new NetworkEditorMapLayerProvider()});
+            ILayer layer = MapLayerProviderHelper.CreateLayersRecursive(area, null, new[]
+            {
+                NetworkEditorMapLayerProviderCreator.CreateMapLayerProvider()
+            });
+
             layer.DataSource = new Feature2DCollection().Init(area.ObservationPoints, "ObservationPoint", "MyModelName",
                                                               area.CoordinateSystem);
             map.Layers.Add(layer);
 
             var mapView = new MapView {Map = map};
             var pointTool = new Feature2DPointTool("", "", null);
-            pointTool.LayerFilter = l => l.Name == HydroArea.ObservationPointsPluralName;
+            pointTool.LayerFilter = l => l.Name == HydroAreaLayerNames.ObservationPointsPluralName;
             mapView.MapControl.Tools.Add(pointTool);
 
             Action<Form> formAction = f =>
@@ -67,8 +71,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Tools
                 
                 var area = new HydroArea();
                 var map = new Map();
-                var layer = MapLayerProviderHelper.CreateLayersRecursive(area, null,
-                                                                     new[] {new NetworkEditorMapLayerProvider()});
+                ILayer layer = MapLayerProviderHelper.CreateLayersRecursive(area, null, new[]
+                {
+                    NetworkEditorMapLayerProviderCreator.CreateMapLayerProvider()
+                });
                 layer.DataSource = new Feature2DCollection().Init(area.ObservationPoints, "ObservationPoint", "MyModelName",
                                                               area.CoordinateSystem);
                 map.Layers.Add(layer);
@@ -77,7 +83,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Tools
 
                 var mapView = new MapView {Map = map};
                 var pointTool = new Feature2DPointTool("", "", null);
-                pointTool.LayerFilter = l => l.Name == HydroArea.ObservationPointsPluralName;
+                pointTool.LayerFilter = l => l.Name == HydroAreaLayerNames.ObservationPointsPluralName;
                 mapView.MapControl.Tools.Add(pointTool);
 
                 Action<Form> formAction = f =>
@@ -127,8 +133,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Tools
 
                 var area = new HydroArea();
                 var map = new Map();
-                var layer = MapLayerProviderHelper.CreateLayersRecursive(area, null,
-                                                                     new[] { new NetworkEditorMapLayerProvider() });
+                ILayer layer = MapLayerProviderHelper.CreateLayersRecursive(area, null, new[]
+                {
+                    NetworkEditorMapLayerProviderCreator.CreateMapLayerProvider()
+                });
                 layer.DataSource = new Feature2DCollection().Init(area.ObservationPoints, "ObservationPoint", "MyModelName",
                                                               area.CoordinateSystem);
                 map.Layers.Add(layer);
@@ -136,7 +144,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Tools
 
                 var mapView = new MapView { Map = map };
                 var pointTool = new Feature2DPointTool("", "", null);
-                pointTool.LayerFilter = l => l.Name == HydroArea.ObservationPointsPluralName;
+                pointTool.LayerFilter = l => l.Name == HydroAreaLayerNames.ObservationPointsPluralName;
                 mapView.MapControl.Tools.Add(pointTool);
 
                 Action<Form> formAction = f =>
@@ -184,8 +192,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Tools
             {
                 var area = new HydroArea();
                 var map = new Map();
-                var layer = MapLayerProviderHelper.CreateLayersRecursive(area, null,
-                                                                     new[] { new NetworkEditorMapLayerProvider() });
+                ILayer layer = MapLayerProviderHelper.CreateLayersRecursive(area, null, new[]
+                {
+                    NetworkEditorMapLayerProviderCreator.CreateMapLayerProvider()
+                });
                 layer.DataSource = new Feature2DCollection().Init(area.ObservationPoints, "ObservationPoint", "MyModelName",
                                                               area.CoordinateSystem);
                 map.Layers.Add(layer);
@@ -193,7 +203,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Tools
 
                 var mapView = new MapView { Map = map };
                 var pointTool = new Feature2DPointTool("", "", null);
-                pointTool.LayerFilter = l => l.Name == HydroArea.ObservationPointsPluralName;
+                pointTool.LayerFilter = l => l.Name == HydroAreaLayerNames.ObservationPointsPluralName;
                 mapView.MapControl.Tools.Add(pointTool);
 
                 Action<Form> formAction = f =>

@@ -152,12 +152,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CompositeStructureView
                         var viewList = new ViewList(dockingManager, ViewLocation.Document);
                         var viewResolver = new ViewResolver(viewList, plugin.GetViewInfoObjects());
                         return viewResolver.CreateViewForData(o, info =>
-                                info.CompositeViewType == typeof (Gui.Forms.CompositeStructureView.CompositeStructureView));
+                                info.CompositeViewType == typeof (NetworkEditor.Gui.Forms.CompositeStructureView.CompositeStructureView));
                     }
                 },
                 SelectionContainer = new SimpleSelectionContainer { Logging = true }
             };
-            var view = new Gui.Forms.CompositeStructureView.CompositeStructureView
+            var view = new NetworkEditor.Gui.Forms.CompositeStructureView.CompositeStructureView
             {
                 Presenter = presenter,
                 Data = compositeBranchStructure

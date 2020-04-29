@@ -47,6 +47,9 @@
       <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.50157\lib\net461\DeltaShell\DelftTools.Shell.Gui.Swf.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="DelftTools.Shell.Gui">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.50157\lib\net461\DeltaShell\DelftTools.Shell.Gui.dll</HintPath>
+    </Reference>
     <Reference Include="DelftTools.TestUtils, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\DeltaShell.TestProject.1.4.0.50157\lib\net40\DelftTools.TestUtils.dll</HintPath>
       <SpecificVersion>False</SpecificVersion>
@@ -79,9 +82,14 @@
       <HintPath>..\..\packages\RhinoMocks.3.6.1\lib\net\Rhino.Mocks.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="SharpMap.Api">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.50157\lib\net461\DeltaShell\SharpMap.Api.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Threading.Tasks.Extensions, Version=4.1.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\..\packages\System.Threading.Tasks.Extensions.4.3.0\lib\portable-net45+win8+wp8+wpa81\System.Threading.Tasks.Extensions.dll</HintPath>
     </Reference>
@@ -95,9 +103,15 @@
   <ItemGroup>
     <Compile Include="ApplicationPluginHelperTest.cs" />
     <Compile Include="DefaultModelSettingsTest.cs" />
+    <Compile Include="IO\FilesManagerTest.cs" />
+    <Compile Include="Logging\LogHandlerTest.cs" />
+    <Compile Include="Logging\LogMessagesListTest.cs" />
     <Compile Include="SystemEnvironmentTest.cs" />
+    <Compile Include="Gui\DeltaresColorTest.cs" />
     <Compile Include="IO\FileBasedFolderTest.cs" />
+    <Compile Include="Layers\MapLayerProviderTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utils\EnumUtilsTest.cs" />
     <Compile Include="Utils\NameableCollectionExtensionsTest.cs" />
     <Compile Include="Utils\RepeatTest.cs" />
   </ItemGroup>
@@ -106,6 +120,11 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\src\DeltaShell.NGHS.Common.Gui\DeltaShell.NGHS.Common.Gui.csproj">
+      <Project>{90DED9A6-DD9A-4694-ADEC-5918C12435C8}</Project>
+      <Name>DeltaShell.NGHS.Common.Gui</Name>
+      <Private>False</Private>
+    </ProjectReference>
     <ProjectReference Include="..\..\src\DeltaShell.NGHS.Common\DeltaShell.NGHS.Common.csproj">
       <Project>{ae78982b-8798-4b5a-9db4-fca8f5c8428b}</Project>
       <Name>DeltaShell.NGHS.Common</Name>
@@ -114,6 +133,10 @@
     <ProjectReference Include="..\DeltaShell.NGHS.IO.TestUtils\DeltaShell.NGHS.IO.TestUtils.csproj">
       <Project>{002EB0B8-8D52-4794-A00E-A5D1FC465BFD}</Project>
       <Name>DeltaShell.NGHS.IO.TestUtils</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DeltaShell.NGHS.TestUtils\DeltaShell.NGHS.TestUtils.csproj">
+      <Project>{4A0F7700-AA64-463F-A602-8C15E3886EC5}</Project>
+      <Name>DeltaShell.NGHS.TestUtils</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

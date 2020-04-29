@@ -47,6 +47,10 @@
       <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.50157\lib\net461\DeltaShell\DelftTools.Controls.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="DelftTools.Controls.Wpf">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.50157\lib\net461\DeltaShell\DelftTools.Controls.Wpf.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="DelftTools.Controls.Swf">
       <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.50157\lib\net461\DeltaShell\DelftTools.Controls.Swf.dll</HintPath>
       <Private>False</Private>
@@ -200,6 +204,50 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Boundaries\BoundaryContainerSyncServiceTest.cs" />
+    <Compile Include="Boundaries\BoundaryContainerTest.cs" />
+    <Compile Include="Boundaries\Calculators\BoundarySnappingCalculatorHelperTest.cs" />
+    <Compile Include="Boundaries\Calculators\BoundarySnappingCalculatorTest.cs" />
+    <Compile Include="Boundaries\Calculators\CartesianDistanceCalculatorTest.cs" />
+    <Compile Include="Boundaries\Calculators\CartesianOrientationCalculatorHelperTest.cs" />
+    <Compile Include="Boundaries\Calculators\Coordinate2DEqualityComparerTest.cs" />
+    <Compile Include="Boundaries\ConditionDefinitions\SpatiallyDefinedDataComponents\SpatiallyDefinedDataComponentFactoryConstructTest.cs" />
+    <Compile Include="Boundaries\ConditionDefinitions\SpatiallyDefinedDataComponents\SpatiallyDefinedDataComponentFactoryTest.cs" />
+    <Compile Include="Boundaries\ConditionDefinitions\SpatiallyDefinedDataComponents\DataComponentTestUtils.cs" />
+    <Compile Include="Boundaries\ConditionDefinitions\SpatiallyDefinedDataComponents\SpatiallyVaryingDataComponentTest.cs" />
+    <Compile Include="Boundaries\ConditionDefinitions\SpatiallyDefinedDataComponents\UniformDataComponentTest.cs" />
+    <Compile Include="Boundaries\ConditionDefinitions\ForcingTypeDefinedParameters\ForcingTypeDefinedParametersFactoryTest.cs" />
+    <Compile Include="Boundaries\ConditionDefinitions\ForcingTypeDefinedParameters\ConstantParametersTest.cs" />
+    <Compile Include="Boundaries\ConditionDefinitions\BoundaryConditionPeriodTypeTest.cs" />
+    <Compile Include="Boundaries\ConditionDefinitions\ForcingTypeDefinedParameters\FileBasedParametersTest.cs" />
+    <Compile Include="Boundaries\ConditionDefinitions\ForcingTypeDefinedParameters\TimeDependentParametersTest.cs" />
+    <Compile Include="Boundaries\ConditionDefinitions\ForcingTypeDefinedParameters\WaveTimeDependentParametersConstantsTest.cs" />
+    <Compile Include="Boundaries\ConditionDefinitions\Shapes\BoundaryConditionShapeFactoryTest.cs" />
+    <Compile Include="Boundaries\ConditionDefinitions\Shapes\GaussShapeTest.cs" />
+    <Compile Include="Boundaries\ConditionDefinitions\Shapes\JonswapShapeTest.cs" />
+    <Compile Include="Boundaries\ConditionDefinitions\Shapes\PiersonMoskowitzShapeTest.cs" />
+    <Compile Include="Boundaries\ConditionDefinitions\Spreading\DegreesDefinedSpreadingTest.cs" />
+    <Compile Include="Boundaries\ConditionDefinitions\Spreading\PowerDefinedSpreadingTest.cs" />
+    <Compile Include="Boundaries\ConditionDefinitions\Spreading\SpreadingConversionTest.cs" />
+    <Compile Include="Boundaries\ConditionDefinitions\Spreading\WaveSpreadingConstantsTest.cs" />
+    <Compile Include="Boundaries\ConditionDefinitions\WaveBoundaryConditionDefinitionTest.cs" />
+    <Compile Include="Boundaries\ConditionDefinitions\WaveEnergyFunctions\WaveEnergyFunctionConversionTest.cs" />
+    <Compile Include="Boundaries\ConditionDefinitions\WaveEnergyFunctions\WaveEnergyFunctionTest.cs" />
+    <Compile Include="Boundaries\GeometricDefinitions\GridBoundaryTestHelper.cs" />
+    <Compile Include="Boundaries\GeometricDefinitions\SupportPointTest.cs" />
+    <Compile Include="Boundaries\GeometricDefinitions\WaveBoundaryGeometricDefinitionFactoryHelperTest.cs" />
+    <Compile Include="Boundaries\GeometricDefinitions\WaveBoundaryGeometricDefinitionTest.cs" />
+    <Compile Include="Boundaries\GeometricDefinitions\GridBoundaryCoordinateTest.cs" />
+    <Compile Include="Boundaries\GeometricDefinitions\GridBoundaryTest.cs" />
+    <Compile Include="Boundaries\GeometricDefinitions\GridCoordinateTest.cs" />
+    <Compile Include="Boundaries\GeometricDefinitions\GridCoordinateValueComparerTest.cs" />
+    <Compile Include="Boundaries\GeometricDefinitions\GridSideTest.cs" />
+    <Compile Include="Boundaries\SimpleBoundaryProviderTest.cs" />
+    <Compile Include="Boundaries\SpectralData\WaveBoundaryParametersTest.cs" />
+    <Compile Include="Boundaries\SpectralData\WaveDirectionalSpreadingTypeTest.cs" />
+    <Compile Include="Boundaries\SpectralData\WavePeriodTypeTest.cs" />
+    <Compile Include="Boundaries\SpectralData\WaveSpectrumShapeTypeTest.cs" />
+    <Compile Include="Boundaries\WaveBoundaryTest.cs" />
     <Compile Include="Api\WaveEnvironmentHelperTest.cs" />
     <Compile Include="Common\IO\Delft3DDepthFileExporterTest.cs" />
     <Compile Include="Common\IO\Delft3DDepthFileReaderTest.cs" />
@@ -207,9 +255,67 @@
     <Compile Include="Common\IO\Delft3DGridFileWriterTest.cs" />
     <Compile Include="Common\IO\DelftIniReaderTest.cs" />
     <Compile Include="Common\IO\GridFileReaderTest.cs" />
+    <Compile Include="Gui\Editors\Boundaries\Converters\NotNullToBooleanConverterTest.cs" />
+    <Compile Include="Gui\Editors\Boundaries\Converters\TypeToDescriptionConverterTest.cs" />
+    <Compile Include="Gui\Editors\Boundaries\Converters\TypeToVisibilityConverterTest.cs" />
+    <Compile Include="Gui\Editors\Boundaries\Converters\UnitStringToUnitDisplayStringConverterTest.cs" />
+    <Compile Include="Gui\Editors\Boundaries\Enums\DirectionalSpreadingViewTypeTest.cs" />
+    <Compile Include="Gui\Editors\Boundaries\Enums\ForcingViewTypeTest.cs" />
+    <Compile Include="Gui\Editors\Boundaries\Enums\PeriodViewTypeTest.cs" />
+    <Compile Include="Gui\Editors\Boundaries\Enums\SpatialDefinitionViewTypeTest.cs" />
+    <Compile Include="Gui\Editors\Boundaries\Enums\WaveBoundaryConditionEditorEnumExtensionsTest.cs" />
+    <Compile Include="Gui\Editors\Boundaries\Factories\ViewEnumFromDataComponentQuerierTest.cs" />
+    <Compile Include="Gui\Editors\Boundaries\Factories\GeometryPreviewMapConfiguratorTest.cs" />
+    <Compile Include="Gui\Editors\Boundaries\Factories\ViewDataComponentFactoryTest.cs" />
+    <Compile Include="Gui\Editors\Boundaries\Factories\ViewShapeFactoryTest.cs" />
+    <Compile Include="Gui\Editors\Boundaries\Mediators\DataComponentChangeMediatorTest.cs" />
+    <Compile Include="Gui\Editors\Boundaries\Mediators\WaveBoundaryConditionEditorMediatorTest.cs" />
+    <Compile Include="Gui\Editors\Boundaries\Validation\PositiveDoubleValidationRuleTest.cs" />
+    <Compile Include="Gui\Editors\Boundaries\ViewModels\WaveBoundaryConditionEditorViewModelTest.cs" />
+    <Compile Include="Gui\Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\BoundaryDescriptionViewModelTest.cs" />
+    <Compile Include="Gui\Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\BoundaryGeometryViewModelTest.cs" />
+    <Compile Include="Gui\Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\BoundaryParametersSpecific\ConstantParametersViewModelGenericTest.cs" />
+    <Compile Include="Gui\Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\BoundaryParametersSpecific\FileBasedParametersViewModelTest.cs" />
+    <Compile Include="Gui\Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\BoundaryParametersSpecific\SpatiallyVariantConstantParametersSettingsViewModelTest.cs" />
+    <Compile Include="Gui\Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\BoundaryParametersSpecific\SpatiallyVariantFileBasedParametersSettingsViewModelTest.cs" />
+    <Compile Include="Gui\Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\BoundaryParametersSpecific\SpatiallyVariantTimeDependentParametersSettingsViewModelTest.cs" />
+    <Compile Include="Gui\Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\BoundaryParametersSpecific\TimeDependentSpatiallyVaryingParametersViewModelTest.cs" />
+    <Compile Include="Gui\Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\BoundaryParametersSpecific\TimeDependentUniformParametersViewModelTest.cs" />
+    <Compile Include="Gui\Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\BoundaryParametersSpecific\TimeSeriesGeneration\GenerateSeriesTest.cs" />
+    <Compile Include="Gui\Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\BoundaryParametersSpecific\UniformConstantParametersSettingsViewModelTest.cs" />
+    <Compile Include="Gui\Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\BoundaryParametersSpecific\UniformFileBasedParametersSettingsViewModelTest.cs" />
+    <Compile Include="Gui\Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\BoundaryParametersSpecific\UniformTimeDependentParametersSettingsViewModelTest.cs" />
+    <Compile Include="Gui\Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\BoundarySpecificParametersSettingsViewModelTest.cs" />
+    <Compile Include="Gui\Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\BoundaryWideParametersViewModelTest.cs" />
+    <Compile Include="Gui\Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\GeometryPreviewViewModelTest.cs" />
+    <Compile Include="Gui\Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\Shapes\GaussViewShapeTest.cs" />
+    <Compile Include="Gui\Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\Shapes\JonswapViewShapeTest.cs" />
+    <Compile Include="Gui\Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\Shapes\PiersonMoskowitzViewShapeTest.cs" />
+    <Compile Include="Gui\Editors\Boundaries\Enums\ViewShapeTypeTest.cs" />
+    <Compile Include="Gui\Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\SupportPoints\SupportPointDataComponentViewModelTest.cs" />
+    <Compile Include="Gui\Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\SupportPoints\SupportPointEditorViewModelTest.cs" />
+    <Compile Include="Gui\Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\SupportPoints\SupportPointViewModelTest.cs" />
+    <Compile Include="Gui\FeatureProviders\Boundaries\Factories\BoundaryMapFeaturesContainerFactoryTest.cs" />
+    <Compile Include="Gui\FeatureProviders\Boundaries\Providers\Behaviours\AddBehaviours\BoundaryFromLineAddBehaviourTest.cs" />
+    <Compile Include="Gui\FeatureProviders\Boundaries\Providers\Behaviours\FeaturesFromBoundaryBehaviours\SelectedSupportPointFromBoundaryBehaviourTest.cs" />
+    <Compile Include="Gui\FeatureProviders\Boundaries\Providers\Behaviours\FeaturesFromBoundaryBehaviours\EndPointFromBoundaryBehaviourTest.cs" />
+    <Compile Include="Gui\FeatureProviders\Boundaries\Providers\Behaviours\AddBehaviours\ReadOnlyAddBehaviourTest.cs" />
+    <Compile Include="Gui\FeatureProviders\Boundaries\Providers\Behaviours\FeaturesFromBoundaryBehaviours\StartingPointFromBoundaryBehaviourTest.cs" />
+    <Compile Include="Gui\FeatureProviders\Boundaries\Providers\Behaviours\FeaturesFromBoundaryBehaviours\ToggledSupportPointsFromBoundaryBehaviourTest.cs" />
+    <Compile Include="Gui\FeatureProviders\Boundaries\Providers\BoundaryReadOnlyMapFeatureProviderTest.cs" />
+    <Compile Include="Gui\FeatureProviders\Boundaries\Features\BoundaryLineFeatureTest.cs" />
+    <Compile Include="Gui\FeatureProviders\Boundaries\Providers\BoundaryLineMapFeatureProviderTest.cs" />
+    <Compile Include="Gui\FeatureProviders\Boundaries\Containers\BoundaryMapFeaturesContainerTest.cs" />
+    <Compile Include="Gui\FeatureProviders\Boundaries\Providers\BoundarySupportPointMapFeatureProviderTest.cs" />
+    <Compile Include="Gui\FeatureProviders\Boundaries\Factories\WaveBoundaryGeometryFactoryTest.cs" />
+    <Compile Include="Gui\FeatureProviders\Boundaries\Helpers\UniqueBoundaryNameProviderTest.cs" />
+    <Compile Include="Gui\FeatureProviders\Boundaries\Helpers\WaveBoundaryFactoryHelperTest.cs" />
+    <Compile Include="Gui\FeatureProviders\Boundaries\Factories\WaveBoundaryFactoryTest.cs" />
+    <Compile Include="Gui\FeatureProviders\Boundaries\Features\SupportPointFeatureTest.cs" />
+    <Compile Include="Gui\FeatureProviders\MultiIEventedListAdapterTest.cs" />
     <Compile Include="FunctionArgumentSyncerTest.cs" />
     <Compile Include="Gui\Editors\DomainSpecificDataEditor\Converters\DirectionSpaceTypeToBooleanConverterTest.cs" />
-    <Compile Include="Gui\Editors\DomainSpecificDataEditor\Converters\EnumToDescriptionConverterTest.cs" />
+    <Compile Include="Gui\Converters\EnumToDescriptionConverterTest.cs" />
     <Compile Include="Gui\Editors\DomainSpecificDataEditor\Converters\FilePathToFileNameConverterTest.cs" />
     <Compile Include="Gui\Editors\DomainSpecificDataEditor\Converters\WindInputTypeAndBooleanToBooleanConverterTest.cs" />
     <Compile Include="Gui\Editors\DomainSpecificDataEditor\Converters\WindInputTypeToBooleanConverterTest.cs" />
@@ -224,6 +330,22 @@
     <Compile Include="Gui\Editors\DomainSpecificDataEditor\ViewModels\HydroDynamicsSettingsViewModelTest.cs" />
     <Compile Include="Gui\Editors\DomainSpecificDataEditor\ViewModels\HydroDynamicsUseParameterTypeTest.cs" />
     <Compile Include="Gui\Editors\DomainSpecificDataEditor\ViewModels\VelocityTypeTest.cs" />
+    <Compile Include="Gui\Layers\Providers\BoundaryMapFeaturesContainerLayerSubProviderTest.cs" />
+    <Compile Include="Gui\Layers\Providers\DiscreteGridPointCoverageLayerSubProviderTest.cs" />
+    <Compile Include="Gui\Layers\Providers\Feature2DLayerSubProviderTestFixture.cs" />
+    <Compile Include="Gui\Layers\Providers\ObservationCrossSectionLayerSubProviderTest.cs" />
+    <Compile Include="Gui\Layers\Providers\ObservationPointLayerSubProviderTest.cs" />
+    <Compile Include="Gui\Layers\Providers\ObstacleLayerSubProviderTest.cs" />
+    <Compile Include="Gui\Layers\Providers\WaveDomainDataLayerSubProviderTest.cs" />
+    <Compile Include="Gui\Layers\Providers\WaveLayerSubProviderTestFixture.cs" />
+    <Compile Include="Gui\Layers\Providers\WaveModelLayerSubProviderTest.cs" />
+    <Compile Include="Gui\Layers\Providers\WaveSnappedFeaturesGroupLayerDataLayerSubProviderTest.cs" />
+    <Compile Include="Gui\Layers\Providers\WavmFileFunctionStoreLayerSubProviderTest.cs" />
+    <Compile Include="Gui\Layers\WaveLayerFactoryTest.cs" />
+    <Compile Include="Gui\Layers\WaveLayerNamesTest.cs" />
+    <Compile Include="Gui\Layers\WaveMapLayerProviderFactoryTest.cs" />
+    <Compile Include="Gui\MapTools\GroupedLayerFeature2DLineToolTest.cs" />
+    <Compile Include="Gui\NodePresenters\SpatiallyVariantBoundaryNodePresenterTest.cs" />
     <Compile Include="Gui\WaveBoundaryTimeSelectionDialogTest.cs" />
     <Compile Include="Gui\WaveDomainNodePresenterTest.cs" />
     <Compile Include="Gui\WaveGuiPluginTest.cs" />
@@ -232,7 +354,6 @@
     <Compile Include="Gui\WaveBoundaryConditionEditorTest.cs" />
     <Compile Include="Gui\WaveBoundaryConditionListViewTest.cs" />
     <Compile Include="Gui\WaveDomainEditorTest.cs" />
-    <Compile Include="Gui\WaveModelMapLayerProviderTest.cs" />
     <Compile Include="Gui\WaveModelNodePresenterTest.cs" />
     <Compile Include="Gui\WaveObstacleListViewTest.cs" />
     <Compile Include="Gui\WaveSettingsHelperTest.cs" />
@@ -240,20 +361,45 @@
     <Compile Include="Gui\Editors\DomainSpecificDataEditor\ViewModels\WindInputTypeTest.cs" />
     <Compile Include="Gui\Editors\DomainSpecificDataEditor\ViewModels\WindSettingsViewModelTest.cs" />
     <Compile Include="IO\BcwFileTest.cs" />
+    <Compile Include="IO\BcwTimeSeriesOfBoundaryCollectorTest.cs" />
     <Compile Include="IO\Exporters\WaveModelFileExporterTest.cs" />
+    <Compile Include="IO\Helpers\Boundaries\OverallBoundaryCategoryConverterTest.cs" />
+    <Compile Include="IO\Helpers\Boundaries\BoundaryCategoryConverterTest.cs" />
+    <Compile Include="IO\Helpers\Boundaries\OverallBoundaryMdwBlockTest.cs" />
+    <Compile Include="IO\Helpers\Boundaries\BoundaryMdwBlockTest.cs" />
+    <Compile Include="IO\Helpers\Boundaries\DefinitionImportTypeDescriptionTest.cs" />
+    <Compile Include="IO\Helpers\Boundaries\DefinitionImportTypeTest.cs" />
+    <Compile Include="IO\Helpers\Boundaries\ImportBoundaryConditionDataComponentFactoryTest.cs" />
+    <Compile Include="IO\Helpers\Boundaries\KnownWaveBoundariesFileConstantsTest.cs" />
+    <Compile Include="IO\Helpers\Boundaries\ParametersBlockTest.cs" />
+    <Compile Include="IO\Helpers\Boundaries\PeriodImportExportTypeDescriptionTest.cs" />
+    <Compile Include="IO\Helpers\Boundaries\PeriodImportExportTypeTest.cs" />
+    <Compile Include="IO\Helpers\Boundaries\ShapeImportTypeDescriptionTest.cs" />
+    <Compile Include="IO\Helpers\Boundaries\ShapeImportTypeTest.cs" />
+    <Compile Include="IO\Helpers\Boundaries\SpectrumImportExportTypeDescriptionTest.cs" />
+    <Compile Include="IO\Helpers\Boundaries\SpectrumImportExportTypeTest.cs" />
+    <Compile Include="IO\Helpers\Boundaries\SpreadingImportTypeDescriptionTest.cs" />
+    <Compile Include="IO\Helpers\Boundaries\SpreadingImportTypeTest.cs" />
+    <Compile Include="IO\Helpers\Boundaries\WaveBoundaryConverterTest.cs" />
     <Compile Include="IO\Helpers\MdwFileBackwardsCompatibilityConfigurationValuesTest.cs" />
+    <Compile Include="IO\Helpers\Boundaries\WaveBoundaryGeometricDefinitionFactoryTest.cs" />
     <Compile Include="IO\Importers\WaveBoundaryFileImporterTest.cs" />
     <Compile Include="IO\Importers\WaveDepthFileImporterTest.cs" />
     <Compile Include="IO\Importers\WaveGridFileImporterTests.cs" />
-    <Compile Include="IO\WaveDelftIniCategoryCreatorTest.cs" />
+    <Compile Include="IO\MdwBoundaryCategoriesCreatorTest.cs" />
+    <Compile Include="IO\MdwBoundaryCategoryConditionsExtenderTest.cs" />
+    <Compile Include="IO\MdwBoundaryCategoryGeometryExtenderTest.cs" />
     <Compile Include="IO\MdwFileTest.cs" />
     <Compile Include="IO\Sp2FileTest.cs" />
+    <Compile Include="IO\SpectrumDataComponentVisitorTest.cs" />
+    <Compile Include="IO\SpectrumParametersVisitorTest.cs" />
     <Compile Include="IO\WaveModelSchemaCsvFileTest.cs" />
     <Compile Include="IO\WavmFileFunctionStoreTest.cs" />
+    <Compile Include="ModelDefinition\ModelDefinitionReferenceDateTimeProviderTest.cs" />
     <Compile Include="ModelDefinition\WaveModelDefinitionTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestClassSetup.cs" />
-    <Compile Include="Validation\WaveBoundaryConditionValidatorTest.cs" />
+    <Compile Include="Validation\WaveBoundariesValidatorTest.cs" />
     <Compile Include="Validation\WaveCouplingValidatorTest.cs" />
     <Compile Include="Validation\WaveModelValidatorTest.cs" />
     <Compile Include="Validation\WaveOutputParametersValidatorTest.cs" />
@@ -261,8 +407,7 @@
     <Compile Include="Gui\WaveTimePointValidatorTest.cs" />
     <Compile Include="WaveApplicationPluginTest.cs" />
     <Compile Include="WaveBoundaryConditionTest.cs" />
-    <Compile Include="WaveBoundaryParametersTest.cs" />
-    <Compile Include="WaveBoundarySpectralDataTest.cs" />
+    <Compile Include="Boundaries\SpectralData\WaveBoundarySpectralDataTest.cs" />
     <Compile Include="WaveGridOperationApiTest.cs" />
     <Compile Include="WaveModelApiTest.cs" />
     <Compile Include="WaveModelRunTest.cs" />
@@ -281,6 +426,11 @@
     <ProjectReference Include="..\..\src\DeltaShell.Dimr\DeltaShell.Dimr.csproj">
       <Project>{ad22cec6-2a71-478c-96c3-b7acdfe9b84b}</Project>
       <Name>DeltaShell.Dimr</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\..\src\DeltaShell.NGHS.Common.Gui\DeltaShell.NGHS.Common.Gui.csproj">
+      <Project>{90DED9A6-DD9A-4694-ADEC-5918C12435C8}</Project>
+      <Name>DeltaShell.NGHS.Common.Gui</Name>
       <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\..\src\DeltaShell.NGHS.Common\DeltaShell.NGHS.Common.csproj">

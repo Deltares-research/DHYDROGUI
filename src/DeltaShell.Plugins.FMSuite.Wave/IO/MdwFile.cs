@@ -6,23 +6,27 @@ using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
 using DelftTools.Utils.Collections;
-using DelftTools.Utils.Collections.Extensions;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Reflection;
+using DeltaShell.NGHS.Common.IO;
+using DeltaShell.NGHS.Common.Logging;
+using DeltaShell.NGHS.Common.Utils;
 using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.IO.DelftIniObjects;
-using DeltaShell.NGHS.IO.Handlers;
-using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.IO.BackwardCompatibility;
 using DeltaShell.Plugins.FMSuite.Common.IO.Files;
 using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
 using DeltaShell.Plugins.FMSuite.Common.Wind;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.ForcingTypeDefinedParameters;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
 using DeltaShell.Plugins.FMSuite.Wave.IO.Helpers;
+using DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries;
 using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.Wave.Properties;
-using GeoAPI.Geometries;
 using log4net;
 using NetTopologySuite.Extensions.Features;
+using NetTopologySuite.Extensions.Grids;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.IO
 {
@@ -62,6 +66,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
 
         public void SaveTo(string mdwTargetFilePath, WaveModelDefinition modelDefinition, bool switchTo)
         {
+            var logHandler = new LogHandler(Resources.MdwFile_SaveTo_exporting_the_D_Waves_model, Log);
+            var filesManager = new FilesManager();
+
             string modelName = Path.GetFileNameWithoutExtension(mdwTargetFilePath);
             string targetDir = Path.GetDirectoryName(mdwTargetFilePath);
             if (targetDir != string.Empty && !Directory.Exists(targetDir))
@@ -73,17 +80,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
 
             SetConstantWindProperties(modelDefinition);
             SetConstantHydrodynamicsProperties(modelDefinition);
-
-            // save boundary data
-            string tSeriesFile = modelName + ".bcw";
-            modelDefinition.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.TimeSeriesFile)
-                           .SetValueAsString(modelDefinition.BoundaryConditions.Any(bc =>
-                                                                                        bc.DataType ==
-                                                                                        BoundaryConditionDataType
-                                                                                            .ParameterizedSpectrumTimeseries)
-                                                 ? tSeriesFile
-                                                 : string.Empty);
-
+            
             string locationFileName = modelDefinition
                                       .GetModelProperty(KnownWaveCategories.OutputCategory,
                                                         KnownWaveProperties.LocationFile)
@@ -108,15 +105,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                                .SetValueAsString(string.Empty);
             }
 
+            IEnumerable<DelftIniCategory> boundaryCategories = MdwBoundaryCategoriesCreator.CreateCategories(modelDefinition.BoundaryContainer,
+                                                                                                             filesManager);
+
+            WriteTimeSeriesFileForBoundaries(modelName, modelDefinition, targetDir);
+
             List<DelftIniCategory> mdwCategories = GroupPropertiesByMdwCategory(modelDefinition);
-
             CreateTimePointCategories(modelDefinition, ref mdwCategories);
-
-            IEnumerable<DelftIniCategory> boundaryConditionCategories = modelDefinition.BoundaryConditions
-                                                                        .Select(WaveDelftIniCategoryCreator.CreateBoundaryConditionCategory);
-            mdwCategories.AddRange(boundaryConditionCategories);
-            SaveBoundaryConditions(modelDefinition, Path.Combine(targetDir, tSeriesFile),
-                                   modelDefinition.ModelReferenceDateTime);
+            mdwCategories.AddRange(boundaryCategories);
 
             if (MdwFilePath != null)
             {
@@ -149,12 +145,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                 // grid is not edited within DS, so always in sync
                 // and a plain file copy suffices
                 CopyGridFiles(allDomains.Select(d => d.GridFileName), sourceDir, targetDir);
-
-                IEnumerable<string> boundarySpectralFiles = mdwCategories
-                                                            .Where(c => c.Name == KnownWaveCategories.BoundaryCategory)
-                                                            .SelectMany(
-                                                                c => c.GetPropertyValues(KnownWaveProperties.Spectrum));
-                boundarySpectralFiles.ForEach(f => CopyModelFile(f, sourceDir, targetDir));
 
                 if (modelDefinition.BoundaryIsDefinedBySpecFile)
                 {
@@ -200,6 +190,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             {
                 MdwFilePath = mdwTargetFilePath;
             }
+
+            if (!string.IsNullOrEmpty(targetDir))
+            {
+                filesManager.CopyTo(targetDir, logHandler, switchTo);
+            }
+
+            logHandler.LogReport();
         }
 
         private void SetConstantWindProperties(WaveModelDefinition modelDefinition)
@@ -361,31 +358,40 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             }
         }
 
-        private void SaveBoundaryConditions(WaveModelDefinition modelDefinition, string targetFile, DateTime refDate)
+        private static void WriteTimeSeriesFileForBoundaries(string modelName, WaveModelDefinition modelDefinition, string targetFile)
         {
-            IEventedList<WaveBoundaryCondition> boundaryConditions = modelDefinition.BoundaryConditions;
+            IEventedList<IWaveBoundary> boundaries = modelDefinition.BoundaryContainer.Boundaries;
 
-            // update refdate before writing
-            foreach (WaveBoundaryCondition bc in boundaryConditions)
+            Dictionary<string, List<IFunction>> allTimeSeriesPerBoundary = new Dictionary<string, List<IFunction>>();
+
+            foreach (IWaveBoundary boundary in boundaries)
             {
-                bc.PointData.ForEach(f => f.Attributes[BcwFile.RefDateAttributeName] =
-                                              refDate.ToString(BcwFile.DateFormatString));
+                List<IFunction> timeSeries = BcwTimeSeriesOfBoundaryCollector.Collect(boundary.ConditionDefinition.DataComponent);
+                
+                if (timeSeries.Any())
+                {
+                    // update refdate before writing
+                    timeSeries.ForEach(f => f.Attributes[BcwFile.RefDateAttributeName] =
+                                                modelDefinition.ModelReferenceDateTime.ToString(BcwFile.DateFormatString));
+                    allTimeSeriesPerBoundary.Add(boundary.Name, timeSeries);
+                }
             }
-
-            // get the bcwconditions with parameterizedspectrumtimeseries.
-            // Make it a dictionary, but make sure to order the datapointindices while writing, because rekenhart demands it.
-            Dictionary<string, List<IFunction>> bcwConditions = boundaryConditions
-                                                                .Where(bc => bc.DataType == BoundaryConditionDataType
-                                                                                 .ParameterizedSpectrumTimeseries)
-                                                                .ToDictionary(
-                                                                    b => b.Name,
-                                                                    b => b.DataPointIndices.OrderBy(di => di)
-                                                                          .Select(b.GetDataAtPoint).ToList());
-
+            
             // write bcw file                                    
-            if (bcwConditions.Any())
+            if (allTimeSeriesPerBoundary.Any())
             {
-                new BcwFile().Write(bcwConditions, targetFile);
+                string tSeriesFile = modelName + ".bcw";
+                modelDefinition
+                    .GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.TimeSeriesFile)
+                    .SetValueAsString(tSeriesFile);
+                                                     
+                new BcwFile().Write(allTimeSeriesPerBoundary, Path.Combine(targetFile, tSeriesFile));
+            }
+            else
+            {
+                modelDefinition
+                    .GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.TimeSeriesFile)
+                    .SetValueAsString(string.Empty);
             }
         }
 
@@ -576,6 +582,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
 
         public WaveModelDefinition Load(string filePath)
         {
+            var logHandler = new LogHandler(Resources.MdwFile_Load_loading_the_D_Waves_model, Log);
             MdwFilePath = filePath;
 
             var modelDefinition = new WaveModelDefinition();
@@ -587,7 +594,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             }
             string mdwDir = Path.GetDirectoryName(filePath);
 
-            ConvertMdwCategoriesToModelDefinitionProperties(modelDefinition, mdwCategories);
+            ConvertMdwCategoriesToModelDefinitionProperties(modelDefinition, mdwCategories, logHandler);
 
             // domain(s) and nesting
             List<WaveDomainData> allDomains = CreateWaveDomainData(mdwCategories).ToList();
@@ -603,6 +610,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                     superDomain.SubDomains.Add(domain);
                     domain.SuperDomain = superDomain;
                 }
+
+                WaveModel.LoadGrid(mdwDir, domain);
             }
 
             // time frame
@@ -610,13 +619,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             modelDefinition.TimePointData =
                 CreateTimePointData(mdwCategories, modelDefinition.ModelReferenceDateTime, out times);
 
-            List<WaveBoundaryCondition> allConditions = CreateWaveBoundaries(mdwCategories, modelDefinition).ToList();
-            List<WaveBoundaryCondition> orientedConditions = allConditions.Where(bc => bc.Feature.Attributes != null &&
-                                                                                       bc.Feature.Attributes
-                                                                                         .ContainsKey("orientation"))
-                                                                          .ToList();
-            modelDefinition.BoundaryConditions.AddRange(allConditions.Except(orientedConditions));
-            modelDefinition.OrientedBoundaryConditions.AddRange(orientedConditions);
+            ReadWaveBoundaries(modelDefinition, mdwCategories, mdwDir);
 
             modelDefinition.Obstacles.AddRange(
                 CreateObstacleData(
@@ -639,7 +642,47 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                     new EventedList<Feature2D>(new PliFile<Feature2D>().Read(Path.Combine(mdwDir, curveFile)));
             }
 
+            logHandler.LogReport();
+
             return modelDefinition;
+        }
+
+        private static void ReadWaveBoundaries(WaveModelDefinition modelDefinition,
+                                               IList<DelftIniCategory> mdwCategories,
+                                               string mdwDirPath)
+        {
+            IBoundaryContainer boundaryContainer = modelDefinition.BoundaryContainer;
+            CurvilinearGrid grid = modelDefinition.OuterDomain.Grid;
+            if (grid.IsEmpty)
+            {
+                Log.Warn(Resources.MdwFile_ReadWaveBoundaries_Boundaries_cannot_be_imported__because_there_is_no_grid_detected);
+                return;
+            }
+
+            boundaryContainer.UpdateGridBoundary(new GridBoundary(grid));
+
+            var boundariesConverter = new WaveBoundaryConverter(new ImportBoundaryConditionDataComponentFactory(new ForcingTypeDefinedParametersFactory()),
+                                                                new WaveBoundaryGeometricDefinitionFactory(boundaryContainer));
+
+            IEnumerable<DelftIniCategory> boundaryCategories = mdwCategories.GetAllByName(KnownWaveCategories.BoundaryCategory).ToArray();
+
+            IDictionary<string, List<IFunction>> timeSeriesData = ReadBoundaryTimeSeriesData(mdwCategories, mdwDirPath);
+            IEnumerable<IWaveBoundary> waveBoundaries = boundariesConverter.Convert(boundaryCategories, timeSeriesData, mdwDirPath);
+
+            OverallBoundaryCategoryConverter.Convert(boundaryContainer, boundaryCategories);
+
+            boundaryContainer.Boundaries.AddRange(waveBoundaries);
+        }
+
+        private static IDictionary<string, List<IFunction>> ReadBoundaryTimeSeriesData(IEnumerable<DelftIniCategory> mdwCategories, 
+                                                                                       string mdwDirPath)
+        {
+            string relativeBcwFilePath = mdwCategories.GetByName(KnownWaveCategories.GeneralCategory)
+                                                      .GetPropertyValue(KnownWaveProperties.TimeSeriesFile);
+
+            return !string.IsNullOrEmpty(relativeBcwFilePath)
+                       ? new BcwFile().Read(Path.Combine(mdwDirPath, relativeBcwFilePath))
+                       : new Dictionary<string, List<IFunction>>();
         }
 
         /// <summary>
@@ -649,12 +692,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
         /// Based on the other property the correct one will be set. Otherwise the default value is based on the default value of
         /// the other property.
         /// </summary>
-        /// <param name="modelDefinition"> </param>
-        /// <param name="mdwCategories"> </param>
+        /// <param name="modelDefinition">The model definition.</param>
+        /// <param name="mdwCategories">The delft ini categories from the mdw file.</param>
+        /// <param name="logHandler">The log handler.</param>
         private void ConvertMdwCategoriesToModelDefinitionProperties(WaveModelDefinition modelDefinition,
-                                                                     IEnumerable<DelftIniCategory> mdwCategories)
+                                                                     IEnumerable<DelftIniCategory> mdwCategories,
+                                                                     ILogHandler logHandler)
         {
-            var logHandler = new LogHandler(Resources.MdwFile_ConvertMdwCategoriesToModelDefinitionProperties_reading_the_mdw_file, Log);
             var backwardsCompatibilityHelper = 
                 new DelftIniBackwardsCompatibilityHelper(new MdwFileBackwardsCompatibilityConfigurationValues());
 
@@ -741,8 +785,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                     }
                 }
             }
-            
-            logHandler.LogReport();
         }
 
         private IEnumerable<WaveDomainData> CreateWaveDomainData(IEnumerable<DelftIniCategory> categories)
@@ -826,261 +868,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
 
                 yield return domain;
             }
-        }
-
-        private IEnumerable<WaveBoundaryCondition> CreateWaveBoundaries(IList<DelftIniCategory> categories,
-                                                                        WaveModelDefinition modelDefinition)
-        {
-            DelftIniCategory generalCategory = categories.First(c => c.Name == KnownWaveCategories.GeneralCategory);
-
-            string bcwFilePath = generalCategory.GetPropertyValue(KnownWaveProperties.TimeSeriesFile);
-
-            IDictionary<string, List<IFunction>> functionLookup = null;
-            if (!string.IsNullOrEmpty(bcwFilePath))
-            {
-                functionLookup = new BcwFile().Read(Path.Combine(Path.GetDirectoryName(MdwFilePath), bcwFilePath));
-            }
-
-            List<DelftIniCategory> boundaries =
-                categories.Where(c => c.Name == KnownWaveCategories.BoundaryCategory).ToList();
-            if (boundaries.Count == 1 &&
-                boundaries[0].GetPropertyValue(KnownWaveProperties.Definition) == "fromsp2file")
-            {
-                // sp2 file
-                string sp2File = boundaries[0].GetPropertyValue(KnownWaveProperties.OverallSpecFile);
-                if (sp2File == null)
-                {
-                    Log.ErrorFormat("Error loading boundary: \'OverallSpecfile\' should be defined");
-                    yield break;
-                }
-
-                modelDefinition.BoundaryIsDefinedBySpecFile = true;
-                modelDefinition.OverallSpecFile = sp2File;
-                yield break;
-            }
-
-            foreach (DelftIniCategory boundaryData in boundaries)
-            {
-                string name = boundaryData.GetPropertyValue(KnownWaveProperties.Name);
-                BoundaryConditionDataType dataType =
-                    boundaryData.GetPropertyValue(KnownWaveProperties.SpectrumSpec) == "parametric"
-                        ? functionLookup != null && functionLookup.ContainsKey(name) // check if timeseries
-                              ? BoundaryConditionDataType.ParameterizedSpectrumTimeseries
-                              : BoundaryConditionDataType.ParameterizedSpectrumConstant
-                        : BoundaryConditionDataType.SpectrumFromFile; // "from file"
-
-                WaveBoundaryImportDefinitionType definition =
-                    GetImportDefinition(boundaryData.GetPropertyValue(KnownWaveProperties.Definition));
-
-                if (definition == WaveBoundaryImportDefinitionType.FromSp2File ||
-                    definition == WaveBoundaryImportDefinitionType.FromWaveWatchFile ||
-                    definition == WaveBoundaryImportDefinitionType.GridIndexBased)
-                {
-                    Log.ErrorFormat("Unsupported definition: " + definition + "skipping boundary {0} in {1}", name,
-                                    MdwFilePath);
-                    continue;
-                }
-
-                List<double> condSpecAtDists =
-                    boundaryData.GetPropertyValues(KnownWaveProperties.CondSpecAtDist)
-                                .Select(s => double.Parse(s, NumberStyles.Any, CultureInfo.InvariantCulture))
-                                .ToList();
-
-                List<double> sortedList = condSpecAtDists.OrderBy(c => c).ToList();
-                if (!condSpecAtDists.SequenceEqual(sortedList))
-                {
-                    throw new NotImplementedException("CondSpecAtDist in mdw should be ordered");
-                }
-
-                var feature = new Feature2D {Name = name};
-                if (definition == WaveBoundaryImportDefinitionType.Orientation)
-                {
-                    // create dummy feature, will be fixed later
-                    WaveBoundaryImportHelper.CreateDummyFeature(feature, condSpecAtDists);
-                    feature.Attributes["orientation"] = boundaryData.GetPropertyValue("Orientation");
-                }
-                else
-                {
-                    var startCoordinate =
-                        new Coordinate(
-                            double.Parse(boundaryData.GetPropertyValue(KnownWaveProperties.StartCoordinateX),
-                                         NumberStyles.Any,
-                                         CultureInfo.InvariantCulture),
-                            double.Parse(boundaryData.GetPropertyValue(KnownWaveProperties.StartCoordinateY),
-                                         NumberStyles.Any,
-                                         CultureInfo.InvariantCulture));
-                    var endCoordinate =
-                        new Coordinate(
-                            double.Parse(boundaryData.GetPropertyValue(KnownWaveProperties.EndCoordinateX),
-                                         NumberStyles.Any,
-                                         CultureInfo.InvariantCulture),
-                            double.Parse(boundaryData.GetPropertyValue(KnownWaveProperties.EndCoordinateY),
-                                         NumberStyles.Any,
-                                         CultureInfo.InvariantCulture));
-
-                    feature.Geometry = WaveBoundaryImportHelper.CreateBoundaryGeometry(startCoordinate, endCoordinate,
-                                                                                       condSpecAtDists);
-                }
-
-                var boundaryCondition = (WaveBoundaryCondition) new WaveBoundaryConditionFactory()
-                    .CreateBoundaryCondition(feature,
-                                             WaveBoundaryCondition.WaveQuantityName,
-                                             dataType);
-                boundaryCondition.Name = name;
-                boundaryCondition.SpatialDefinitionType = condSpecAtDists.Any()
-                                                              ? WaveBoundaryConditionSpatialDefinitionType
-                                                                  .SpatiallyVarying
-                                                              : WaveBoundaryConditionSpatialDefinitionType.Uniform;
-
-                // spectral data
-                if (dataType == BoundaryConditionDataType.SpectrumFromFile)
-                {
-                    List<string> spectrumFiles = boundaryData.GetPropertyValues(KnownWaveProperties.Spectrum).ToList();
-                    for (var i = 0; i < spectrumFiles.Count; ++i)
-                    {
-                        boundaryCondition.AddPoint(i);
-                        boundaryCondition.SpectrumFiles[i] = spectrumFiles[i];
-                    }
-                }
-                else
-                {
-                    WaveBoundarySpectralData spectralData = GetSpectralData(boundaryData);
-                    CopySpectralDataToWaveBoundaryCondition(boundaryCondition, spectralData);
-
-                    if (dataType == BoundaryConditionDataType.ParameterizedSpectrumConstant)
-                    {
-                        // get parameters for distances or uniform from mdw file
-                        List<double> waveHeight =
-                            boundaryData.GetPropertyValues(KnownWaveProperties.WaveHeight)
-                                        .Select(s => double.Parse(s, NumberStyles.Any, CultureInfo.InvariantCulture))
-                                        .ToList();
-                        List<double> period =
-                            boundaryData.GetPropertyValues(KnownWaveProperties.Period)
-                                        .Select(s => double.Parse(s, NumberStyles.Any, CultureInfo.InvariantCulture))
-                                        .ToList();
-                        List<double> direction =
-                            boundaryData.GetPropertyValues(KnownWaveProperties.Direction)
-                                        .Select(s => double.Parse(s, NumberStyles.Any, CultureInfo.InvariantCulture))
-                                        .ToList();
-                        List<double> directionalSpreading =
-                            boundaryData.GetPropertyValues(KnownWaveProperties.DirectionalSpreadingValue)
-                                        .Select(s => double.Parse(s, NumberStyles.Any, CultureInfo.InvariantCulture))
-                                        .ToList();
-
-                        int expectedMultiplicity = Math.Max(condSpecAtDists.Count, 1);
-                        if (waveHeight.Count != expectedMultiplicity ||
-                            period.Count != expectedMultiplicity ||
-                            direction.Count != expectedMultiplicity ||
-                            directionalSpreading.Count != expectedMultiplicity)
-                        {
-                            Log.ErrorFormat(
-                                "Inconsistent parameter specification for boundary \'{0}\', boundary excluded", name);
-                            continue;
-                        }
-
-                        // uniform or multiple support points, constant in time, if we have 
-                        // waveheigth, we should have the other parameters as well
-                        if (boundaryCondition.IsHorizontallyUniform)
-                        {
-                            boundaryCondition.AddPoint(0);
-                            boundaryCondition.SpectrumParameters[0] = new WaveBoundaryParameters
-                            {
-                                Height = waveHeight[0],
-                                Period = period[0],
-                                Direction = direction[0],
-                                Spreading = directionalSpreading[0]
-                            };
-                        }
-                        else
-                        {
-                            // when first data point doesn't equal first coordinate in feature, we skip that one:
-                            int offset = condSpecAtDists[0] > 0.0 ? 1 : 0;
-                            int count = Math.Min(condSpecAtDists.Count,
-                                                 boundaryCondition.Feature.Geometry.Coordinates.Count());
-                            for (var i = 0; i < count; ++i)
-                            {
-                                boundaryCondition.AddPoint(i + offset);
-                                boundaryCondition.SpectrumParameters[i + offset] = new WaveBoundaryParameters
-                                {
-                                    Height = waveHeight[i],
-                                    Period = period[i],
-                                    Direction = direction[i],
-                                    Spreading = directionalSpreading[i]
-                                };
-                            }
-                        }
-                    }
-
-                    if (dataType == BoundaryConditionDataType.ParameterizedSpectrumTimeseries)
-                    {
-                        // from time series file (.bcw for now..)
-                        if (functionLookup == null || !functionLookup.ContainsKey(name))
-                        {
-                            Log.ErrorFormat("Unexpected missing data in bcw file for boundary {0}, excluding boundary",
-                                            name);
-                            continue;
-                        }
-
-                        List<IFunction> functions = functionLookup[name].ToList();
-
-                        if (condSpecAtDists.Count > 0)
-                        {
-                            // add distances, functions will follow from bcw fil3
-                            int offset = condSpecAtDists[0] > 0.0 ? 1 : 0;
-                            for (var i = 0; i < condSpecAtDists.Count; ++i)
-                            {
-                                boundaryCondition.SetTimeSeriesAtSupportPoint(i + offset, functions[i]);
-                            }
-                        }
-                        else
-                        {
-                            // ASSUMPTION: There will be no condSpecAtDist in a uniform time series, because points without data aren't saved in the file format.
-                            // if there are no condSpecAtDists, we need to add the information of the boundary to the first point.
-                            // first try to get the function.
-                            IFunction func = functions.FirstOrDefault();
-
-                            if (func != null)
-                            {
-                                // add it to the time series' first support point.
-                                boundaryCondition.SetTimeSeriesAtSupportPoint(0, func);
-                            }
-                        }
-                    }
-                }
-
-                yield return boundaryCondition;
-            }
-        }
-
-        private WaveBoundarySpectralData GetSpectralData(DelftIniCategory boundaryData)
-        {
-            return new WaveBoundarySpectralData
-            {
-                ShapeType = GetSpectrumShapeType(boundaryData.GetPropertyValue(KnownWaveProperties.ShapeType)),
-                PeriodType = boundaryData.GetPropertyValue(KnownWaveProperties.PeriodType) == "peak"
-                                 ? WavePeriodType.Peak
-                                 : WavePeriodType.Mean,
-                DirectionalSpreadingType =
-                    boundaryData.GetPropertyValue(KnownWaveProperties.DirectionalSpreadingType) == "power"
-                        ? WaveDirectionalSpreadingType.Power
-                        : WaveDirectionalSpreadingType.Degrees,
-                PeakEnhancementFactor =
-                    double.Parse(boundaryData.GetPropertyValue(KnownWaveProperties.PeakEnhancementFactor),
-                                 NumberStyles.Any, CultureInfo.InvariantCulture),
-                GaussianSpreadingValue =
-                    double.Parse(boundaryData.GetPropertyValue(KnownWaveProperties.GaussianSpreading), NumberStyles.Any,
-                                 CultureInfo.InvariantCulture)
-            };
-        }
-
-        private static void CopySpectralDataToWaveBoundaryCondition(WaveBoundaryCondition boundaryCondition,
-                                                                    WaveBoundarySpectralData spectralData)
-        {
-            boundaryCondition.ShapeType = spectralData.ShapeType;
-            boundaryCondition.PeriodType = spectralData.PeriodType;
-            boundaryCondition.DirectionalSpreadingType = spectralData.DirectionalSpreadingType;
-            boundaryCondition.PeakEnhancementFactor = spectralData.PeakEnhancementFactor;
-            boundaryCondition.GaussianSpreadingValue = spectralData.GaussianSpreadingValue;
         }
 
         private WaveInputFieldData CreateTimePointData(IEnumerable<DelftIniCategory> mdwCategories,
@@ -1366,49 +1153,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                 "Parsing error in file '{0}'. Can't convert '{1}' to a double. The property '{2}' has been given the default value '{3}'.",
                 fileName, input, property, defaultValue);
             return defaultValue;
-        }
-
-        private WaveBoundaryImportDefinitionType GetImportDefinition(string value)
-        {
-            switch (value)
-            {
-                case "orientation":
-                    return WaveBoundaryImportDefinitionType.Orientation;
-                case "grid-coordinates":
-                    return WaveBoundaryImportDefinitionType.GridIndexBased;
-                case "fromsp2file":
-                    return WaveBoundaryImportDefinitionType.FromSp2File;
-                case "xy-coordinates":
-                    return WaveBoundaryImportDefinitionType.CoordinateBased;
-                case "fromWWfile":
-                    return WaveBoundaryImportDefinitionType.FromWaveWatchFile;
-                default:
-                    throw new ArgumentException($"Invalid boundary definition: {value}");
-            }
-        }
-
-        private WaveSpectrumShapeType GetSpectrumShapeType(string value)
-        {
-            switch (value)
-            {
-                case "jonswap":
-                    return WaveSpectrumShapeType.Jonswap;
-                case "pierson-moskowitz":
-                    return WaveSpectrumShapeType.PiersonMoskowitz;
-                case "gauss":
-                    return WaveSpectrumShapeType.Gauss;
-                default:
-                    throw new ArgumentException($"Invalid spectral shape definition: {value}");
-            }
-        }
-
-        private enum WaveBoundaryImportDefinitionType
-        {
-            Orientation,
-            GridIndexBased,
-            CoordinateBased,
-            FromSp2File,
-            FromWaveWatchFile
         }
     }
 }

@@ -23,6 +23,7 @@ using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.IO.Readers;
 using DeltaShell.Plugins.FMSuite.Common.IO.Writers;
 using DeltaShell.Plugins.FMSuite.Wave.Api;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
 using DeltaShell.Plugins.FMSuite.Wave.IO;
 using DeltaShell.Plugins.FMSuite.Wave.IO.Exporters;
 using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
@@ -171,6 +172,44 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             }
         }
 
+        public IBoundaryContainer BoundaryContainer
+        {
+            get => ModelDefinition.BoundaryContainer;
+        }
+
+        public IEventedList<Feature2DPoint> ObservationPoints
+        {
+            get => ModelDefinition.ObservationPoints;
+        }
+
+        public IEventedList<Feature2D> ObservationCrossSections
+        {
+            get => ModelDefinition.ObservationCrossSections;
+        }
+
+        public IEventedList<WaveObstacle> Obstacles
+        {
+            get => ModelDefinition.Obstacles;
+        }
+
+        public IEventedList<WaveBoundaryCondition> BoundaryConditions
+        {
+            get => ModelDefinition.BoundaryConditions;
+        }
+
+        public WaveInputFieldData TimePointData
+        {
+            get => ModelDefinition.TimePointData;
+        }
+
+        /// <summary>
+        /// Only used for bubbling events for updating project tree. Don't remove the setter.
+        /// It should be public.
+        /// </summary>
+        [Obsolete("Use BoundaryContainer.Boundaries")]
+        public IEventedList<IWaveBoundary> BoundariesFromBoundaryContainer { get; set; }
+
+
         public WaveModelDefinition ModelDefinition
         {
             get => modelDefinition;
@@ -193,6 +232,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
         private readonly MdwFile mdwFile = new MdwFile();
         private IWaveModelApi waveApi;
+
+        private readonly BoundaryContainerSyncService boundaryContainerSyncService;
 
         public IEventedList<Feature2D> Boundaries { get; }
         public IEventedList<Feature2D> Sp2Boundaries { get; }
@@ -370,13 +411,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             }
         }
 
-        public IEventedList<Feature2DPoint> ObservationPoints { get; set; }
-        public IEventedList<Feature2D> ObservationCrossSections { get; set; }
-        public IEventedList<WaveObstacle> Obstacles { get; set; }
-        public IEventedList<WaveBoundaryCondition> BoundaryConditions { get; set; }
-
-        public WaveInputFieldData TimePointData { get; set; }
-
         public IEnumerable<WavmFileFunctionStore> WavmFunctionStores
         {
             get
@@ -428,6 +462,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             tempWorkingDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
 
             InitializeCouplingTime();
+
+            boundaryContainerSyncService = new BoundaryContainerSyncService(this);
+            BoundariesFromBoundaryContainer = BoundaryContainer.Boundaries;
         }
 
         private void InitializeCouplingTime()
@@ -472,13 +509,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             {
                 UpdateCoordinateSystem(outerDomain.Grid.CoordinateSystem);
             }
-
-            BoundaryConditions = ModelDefinition.BoundaryConditions;
-            Obstacles = ModelDefinition.Obstacles;
-            TimePointData = ModelDefinition.TimePointData;
-            ObservationPoints = ModelDefinition.ObservationPoints;
-            ObservationCrossSections = ModelDefinition.ObservationCrossSections;
-
+            
             disposableItems.Add(new FeatureDataSyncer<Feature2D, WaveBoundaryCondition>(
                                     Boundaries,
                                     BoundaryConditions,
@@ -749,7 +780,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         {
             foreach (IWaveDomainData domain in allDomains)
             {
-                LoadGrid(workingDirectory, domain);
                 LoadBathymetry(model, workingDirectory, domain);
             }
         }

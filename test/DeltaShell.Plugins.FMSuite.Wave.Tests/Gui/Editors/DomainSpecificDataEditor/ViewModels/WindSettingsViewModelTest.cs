@@ -56,8 +56,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.DomainSpecificDataEd
             void Call() => viewModel.InputType = setValue;
 
             // Assert
-            int propertyChangedCount = viewModel.CountPropertyChangedFired(Call, nameof(viewModel.InputType));
-            Assert.That(propertyChangedCount, Is.EqualTo(expectedPropertyChangedCount));
+            viewModel.AssertPropertyChangedFired(Call, expectedPropertyChangedCount, nameof(viewModel.InputType));
             Assert.That(meteoData.FileType, Is.EqualTo(expectedFileType));
         }
 
@@ -87,8 +86,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.DomainSpecificDataEd
             void Call() => viewModel.XComponentFilePath = setValue;
 
             // Assert
-            int propertyChangedCount = viewModel.CountPropertyChangedFired(Call, nameof(viewModel.XComponentFilePath));
-            Assert.That(propertyChangedCount, Is.EqualTo(expectedPropertyChangedCount));
+            viewModel.AssertPropertyChangedFired(Call, expectedPropertyChangedCount, nameof(viewModel.XComponentFilePath));
             Assert.That(meteoData.XComponentFileName, Is.EqualTo(setValue));
         }
 
@@ -118,8 +116,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.DomainSpecificDataEd
             void Call() => viewModel.YComponentFilePath = setValue;
 
             // Assert
-            int propertyChangedCount = viewModel.CountPropertyChangedFired(Call, nameof(viewModel.YComponentFilePath));
-            Assert.That(propertyChangedCount, Is.EqualTo(expectedPropertyChangedCount));
+            viewModel.AssertPropertyChangedFired(Call, expectedPropertyChangedCount, nameof(viewModel.YComponentFilePath));
             Assert.That(meteoData.YComponentFileName, Is.EqualTo(setValue));
         }
 
@@ -149,8 +146,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.DomainSpecificDataEd
             void Call() => viewModel.SpiderWebFilePath = setValue;
 
             // Assert
-            int propertyChangedCount = viewModel.CountPropertyChangedFired(Call, nameof(viewModel.SpiderWebFilePath));
-            Assert.That(propertyChangedCount, Is.EqualTo(expectedPropertyChangedCount));
+            viewModel.AssertPropertyChangedFired(Call, expectedPropertyChangedCount, nameof(viewModel.SpiderWebFilePath));
             Assert.That(meteoData.SpiderWebFileName, Is.EqualTo(setValue));
         }
 
@@ -180,8 +176,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.DomainSpecificDataEd
             void Call() => viewModel.WindVelocityFilePath = setValue;
 
             // Assert
-            int propertyChangedCount = viewModel.CountPropertyChangedFired(Call, nameof(viewModel.WindVelocityFilePath));
-            Assert.That(propertyChangedCount, Is.EqualTo(expectedPropertyChangedCount));
+            viewModel.AssertPropertyChangedFired(Call, expectedPropertyChangedCount, nameof(viewModel.WindVelocityFilePath));
             Assert.That(meteoData.XYVectorFileName, Is.EqualTo(setValue));
         }
 
@@ -213,8 +208,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.DomainSpecificDataEd
             void Call() => viewModel.UseSpiderWebGrid = setValue;
 
             // Assert
-            int propertyChangedCount = viewModel.CountPropertyChangedFired(Call, nameof(viewModel.UseSpiderWebGrid));
-            Assert.That(propertyChangedCount, Is.EqualTo(expectedPropertyChangedCount));
+            viewModel.AssertPropertyChangedFired(Call, expectedPropertyChangedCount, nameof(viewModel.UseSpiderWebGrid));
             Assert.That(meteoData.HasSpiderWeb, Is.EqualTo(setValue));
         }
     }

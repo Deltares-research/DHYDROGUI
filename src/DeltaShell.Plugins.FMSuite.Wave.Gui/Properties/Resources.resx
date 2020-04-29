@@ -157,6 +157,9 @@
   <data name="SelectComFileButton_ButtonAction_Communication_files___0_" xml:space="preserve">
     <value>Communication files|*{0}</value>
   </data>
+  <data name="SelectSp2FileButton_ButtonAction_Spectrum_Files___0_" xml:space="preserve">
+    <value>Spectrum files|*{0}</value>
+  </data>
   <data name="WaveSettingsHelper_GetWaveSettings_Online_Coupling_Time_Frame" xml:space="preserve">
     <value>Online-coupling time frame</value>
   </data>
@@ -189,5 +192,44 @@
   </data>
   <data name="WaveSettingsHelper_GetWaveSettings_Time_step_within_the_coupled_model_run" xml:space="preserve">
     <value>Time step within the coupled model run [Dd HH:MM:SS.ZZZ]</value>
+  </data>
+  <data name="Spectrum_Files_Filter" xml:space="preserve">
+    <value>Spectrum Files (*.sp1,*.sp2)|*.sp1;*.sp2</value>
+  </data>
+  <data name="Select_spectrum_file" xml:space="preserve">
+    <value>Select spectrum file ...</value>
+  </data>
+  <data name="FileBasedParametersView_Spectrum_File" xml:space="preserve">
+    <value>Spectrum File:</value>
+  </data>
+  <data name="Browse" xml:space="preserve">
+    <value>Browse...</value>
+  </data>
+  <data name="SpatiallyVariantFileBasedParametersSettingsViewModel_GroupBoxTitle" xml:space="preserve">
+    <value>Spatially Varying File Based Parameters</value>
+  </data>
+  <data name="UniformFileBasedParametersSettingsViewModel_GroupBoxTitle" xml:space="preserve">
+    <value>Uniform File Based Parameters</value>
+  </data>
+  <data name="UniformConstantParametersSettingsViewModel_GroupBoxTitle" xml:space="preserve">
+    <value>Uniform Constant Parameters</value>
+  </data>
+  <data name="SpatiallyVariantConstantParametersSettingsViewModel_GroupBoxTitle" xml:space="preserve">
+    <value>Spatially Varying Constant Parameters</value>
+  </data>
+  <data name="SpatiallyVariantTimeDependentParametersSettingsViewModel_GroupBoxTitle" xml:space="preserve">
+    <value>Spatially Varying Time Dependent Parameters</value>
+  </data>
+  <data name="UniformTimeDependentParametersSettingsViewModel_GroupBoxTitle" xml:space="preserve">
+    <value>Uniform Time Dependent Parameters</value>
+  </data>
+  <data name="WaveSettingsHelper_AddCustomWaveSettings_Spectrum_File" xml:space="preserve">
+    <value>Spectrum File:</value>
+  </data>
+  <data name="WaveSettingsHelper_AddCustomWaveSettings_Use_boundary_definition_per_file" xml:space="preserve">
+    <value>Use boundary definition per file</value>
+  </data>
+  <data name="WaveSettingsHelper_AddCustomWaveSettings_Boundaries_Category_Name" xml:space="preserve">
+    <value>Boundaries</value>
   </data>
 </root>

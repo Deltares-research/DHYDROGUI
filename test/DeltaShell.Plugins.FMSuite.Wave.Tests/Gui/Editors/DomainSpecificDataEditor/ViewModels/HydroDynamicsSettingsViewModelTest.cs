@@ -45,8 +45,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.DomainSpecificDataEd
             void Call() => viewModel.BedLevelUsage = setValue;
 
             // Assert
-            int propertyChangedCount = viewModel.CountPropertyChangedFired(Call, nameof(viewModel.BedLevelUsage));
-            Assert.That(propertyChangedCount, Is.EqualTo(expectedPropertyChangedCount));
+            viewModel.AssertPropertyChangedFired(Call, expectedPropertyChangedCount, nameof(viewModel.BedLevelUsage));
             Assert.That(settings.BedLevelUsage, Is.EqualTo(expectedUsageFromFlowType));
         }
 
@@ -76,8 +75,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.DomainSpecificDataEd
             void Call() => viewModel.WaterLevelUsage = setValue;
 
             // Assert
-            int propertyChangedCount = viewModel.CountPropertyChangedFired(Call, nameof(viewModel.WaterLevelUsage));
-            Assert.That(propertyChangedCount, Is.EqualTo(expectedPropertyChangedCount));
+            viewModel.AssertPropertyChangedFired(Call, expectedPropertyChangedCount, nameof(viewModel.WaterLevelUsage));
             Assert.That(settings.WaterLevelUsage, Is.EqualTo(expectedUsageFromFlowType));
         }
 
@@ -107,8 +105,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.DomainSpecificDataEd
             void Call() => viewModel.VelocityUsage = setValue;
 
             // Assert
-            int propertyChangedCount = viewModel.CountPropertyChangedFired(Call, nameof(viewModel.VelocityUsage));
-            Assert.That(propertyChangedCount, Is.EqualTo(expectedPropertyChangedCount));
+            viewModel.AssertPropertyChangedFired(Call, expectedPropertyChangedCount, nameof(viewModel.VelocityUsage));
             Assert.That(settings.VelocityUsage, Is.EqualTo(expectedUsageFromFlowType));
         }
 
@@ -148,8 +145,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.DomainSpecificDataEd
             void Call() => viewModel.VelocityType = setValue;
 
             // Assert
-            int propertyChangedCount = viewModel.CountPropertyChangedFired(Call, nameof(viewModel.VelocityType));
-            Assert.That(propertyChangedCount, Is.EqualTo(expectedPropertyChangedCount));
+            viewModel.AssertPropertyChangedFired(Call, expectedPropertyChangedCount, nameof(viewModel.VelocityType));
             Assert.That(settings.VelocityUsageType, Is.EqualTo(expectedFileType));
         }
 
@@ -179,8 +175,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.DomainSpecificDataEd
             void Call() => viewModel.WindUsage = setValue;
 
             // Assert
-            int propertyChangedCount = viewModel.CountPropertyChangedFired(Call, nameof(viewModel.WindUsage));
-            Assert.That(propertyChangedCount, Is.EqualTo(expectedPropertyChangedCount));
+            viewModel.AssertPropertyChangedFired(Call, expectedPropertyChangedCount, nameof(viewModel.WindUsage));
             Assert.That(settings.WindUsage, Is.EqualTo(expectedUsageFromFlowType));
         }
 

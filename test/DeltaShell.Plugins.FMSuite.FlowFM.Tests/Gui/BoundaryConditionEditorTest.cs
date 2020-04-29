@@ -26,7 +26,6 @@ using NUnit.Framework;
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 {
     [TestFixture]
-    [Category(TestCategory.WindowsForms)]
     public class BoundaryConditionEditorTest
     {
         private static FlowBoundaryCondition CreateBoundaryCondition(FlowBoundaryQuantityType quantity,
@@ -458,7 +457,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         }
 
         [Test]
-        [Category(TestCategory.WindowsForms)]
+        [Category(TestCategory.Wpf)]
         [Category(TestCategory.Slow)]
         public void ShowBoundaryConditionsFromGuiForBoundaryCondition()
         {
@@ -494,7 +493,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         }
 
         [Test]
-        [Category(TestCategory.WindowsForms)]
+        [Category(TestCategory.Wpf)]
         [Category(TestCategory.Slow)]
         public void ShowBoundaryConditionsFromGuiForBoundary()
         {

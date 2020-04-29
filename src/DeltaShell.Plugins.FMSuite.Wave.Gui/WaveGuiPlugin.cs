@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Windows.Forms;
 using DelftTools.Controls;
 using DelftTools.Functions;
 using DelftTools.Shell.Core;
@@ -15,6 +11,7 @@ using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.Gui;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.BoundaryConditionEditor;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Forms;
@@ -28,13 +25,23 @@ using Mono.Addins;
 using NetTopologySuite.Extensions.Features;
 using SharpMap.Api.Layers;
 using SharpMap.Layers;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Windows.Forms;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Views;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factories;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Features;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.Layers;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui
 {
     [Extension(typeof(IPlugin))]
     public class WaveGuiPlugin : GuiPlugin
     {
-        private WaveModelMapLayerProvider mapLayerProvider;
+        private IMapLayerProvider mapLayerProvider;
 
         public override string Name => "Delft3D Wave (Gui)";
 
@@ -182,8 +189,41 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
                 CloseForData = (v, o) => v.Data.Equals(o)
             };
             yield return boundaryConditionViewInfo;
-            yield return ViewInfoWrapper<Feature2D>.Create(boundaryConditionViewInfo, FindBoundaryConditionForFeature,
+            yield return ViewInfoWrapper<Feature2D>.Create(boundaryConditionViewInfo, 
+                                                           FindBoundaryConditionForFeature,
                                                            IsModelBoundary);
+
+            // Spatially varying boundary editor
+            // This should be changed to the appropriate data context already.
+            var boundaryViewInfo = new ViewInfo<IWaveBoundary, WaveBoundaryConditionEditorViewModel, WaveBoundaryConditionEditorView>()
+            {
+                Description = "Spatially Varying Boundary Editor",
+                GetViewName =(v, o) => $"Boundary Editor ( {o.Name} )",
+                AdditionalDataCheck = o => WaveModels.Any(m => m.BoundaryContainer.Boundaries.Contains(o)),
+                GetViewData = data =>
+                {
+                    WaveModel model =
+                        WaveModels.First(m => m.BoundaryContainer.Boundaries.Contains(data));
+
+                    var geometryFactory = new WaveBoundaryGeometryFactory(model.BoundaryContainer,
+                                                                          model.BoundaryContainer);
+                    var referenceDateTimeProvider = new ModelDefinitionReferenceDateTimeProvider(model.ModelDefinition);
+
+                    var geometryPreviewConfigurator = new GeometryPreviewMapConfigurator(geometryFactory, 
+                                                                                         new WaveLayerFactory(), 
+                                                                                         model.CoordinateSystem);
+
+                    return new WaveBoundaryConditionEditorViewModel(data, 
+                                                                    geometryPreviewConfigurator, 
+                                                                    referenceDateTimeProvider);
+                },
+                CloseForData = (v, o) => v.Data.Equals(o)
+            };
+
+            yield return boundaryViewInfo;
+            yield return ViewInfoWrapper<BoundaryLineFeature>.Create(boundaryViewInfo, 
+                                                                     f => f.ObservedWaveBoundary);
+            // TODO: (MWT) add connection with  the map here as above.
 
             // obstacles
             var obstacleViewInfo = new ViewInfo<IEventedList<WaveObstacle>, WaveObstacleListView>()
@@ -346,18 +386,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
                                                          ? Gui.Application.GetAllModelsInProject().OfType<WaveModel>()
                                                          : Enumerable.Empty<WaveModel>();
 
-        public override IMapLayerProvider MapLayerProvider
-        {
-            get
-            {
-                return mapLayerProvider ?? (mapLayerProvider = new WaveModelMapLayerProvider
-                                               {
-                                                   GetWaveModels = () =>
-                                                       Gui?.Application?.GetAllModelsInProject().OfType<WaveModel>() ??
-                                                       Enumerable.Empty<WaveModel>()
-                                               });
-            }
-        }
+        private IEnumerable<WaveModel> GetWaveModels() =>
+            Gui?.Application?.GetAllModelsInProject().OfType<WaveModel>() ??
+            Enumerable.Empty<WaveModel>();
+
+        public override IMapLayerProvider MapLayerProvider => 
+            mapLayerProvider 
+            ?? (mapLayerProvider = WaveMapLayerProviderFactory.ConstructMapLayerProvider(GetWaveModels));
 
         public override IEnumerable<PropertyInfo> GetPropertyInfos()
         {
@@ -373,9 +408,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
             yield return new WaveModelNodePresenter(this);
             yield return new WaveDomainNodePresenter(
                 d => WaveModels.FirstOrDefault(m => WaveDomainHelper.GetAllDomains(m.OuterDomain).Contains(d)));
-            yield return new WaveBoundaryNodePresenter(getModelFromBoundaryConditionFunc) {GuiPlugin = this};
+            yield return new WaveBoundaryNodePresenter(getModelFromBoundaryConditionFunc) {GuiPlugin = this}; // TODO: remove this
             yield return new WavmFileFunctionStoreNodePresenter {GuiPlugin = this};
             yield return new WaveModelTreeShortcutNodePresenter {GuiPlugin = this};
+
+            IBoundaryContainer GetBoundaryContainerFromBoundaryFunc(IWaveBoundary boundary) =>
+                WaveModels.Select(wm => wm.BoundaryContainer)
+                          .FirstOrDefault(bc => bc.Boundaries.Contains(boundary));
+
+            yield return new SpatiallyVariantBoundaryNodePresenter(GetBoundaryContainerFromBoundaryFunc);
         }
 
         public override IRibbonCommandHandler RibbonCommandHandler => new Ribbon.Ribbon();

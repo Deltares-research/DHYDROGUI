@@ -4,8 +4,8 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using DeltaShell.Dimr.xsd;
+using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.NGHS.IO.FileConverters;
-using DeltaShell.NGHS.IO.Handlers;
 
 namespace DeltaShell.NGHS.IO.FileReaders
 {

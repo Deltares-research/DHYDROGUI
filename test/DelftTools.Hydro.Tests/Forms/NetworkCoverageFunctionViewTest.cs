@@ -11,9 +11,11 @@ using NUnit.Framework;
 
 namespace DelftTools.Hydro.Tests.Forms
 {
-    public class NetworkCoverageFunctionViewTest {
+    [TestFixture]
+    public class NetworkCoverageFunctionViewTest
+    {
         [Test]
-        [NUnit.Framework.Category(TestCategory.WindowsForms)]
+        [Category(TestCategory.WindowsForms)]
         public void NetworkCoverageWithNoDataValues()
         {
             var network = HydroNetworkHelper.GetSnakeHydroNetwork(3);
@@ -41,7 +43,7 @@ namespace DelftTools.Hydro.Tests.Forms
         }
 
         [Test]
-        [NUnit.Framework.Category(TestCategory.WindowsForms)]
+        [Category(TestCategory.WindowsForms)]
         public void ShowNetworkCoverageUsingGridView()
         {
             // create network

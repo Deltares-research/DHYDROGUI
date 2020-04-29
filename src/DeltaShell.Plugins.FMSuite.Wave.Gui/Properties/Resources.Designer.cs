@@ -22,7 +22,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Properties {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class Resources {
+    public class Resources {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
@@ -36,7 +36,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Properties {
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Resources.ResourceManager ResourceManager {
+        public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
                     global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("DeltaShell.Plugins.FMSuite.Wave.Gui.Properties.Resources", typeof(Resources).Assembly);
@@ -51,7 +51,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Properties {
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Globalization.CultureInfo Culture {
+        public static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
@@ -61,9 +61,18 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Browse....
+        /// </summary>
+        public static string Browse {
+            get {
+                return ResourceManager.GetString("Browse", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap compass {
+        public static System.Drawing.Bitmap compass {
             get {
                 object obj = ResourceManager.GetObject("compass", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -73,7 +82,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap domain {
+        public static System.Drawing.Bitmap domain {
             get {
                 object obj = ResourceManager.GetObject("domain", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -81,9 +90,18 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Spectrum File:.
+        /// </summary>
+        public static string FileBasedParametersView_Spectrum_File {
+            get {
+                return ResourceManager.GetString("FileBasedParametersView_Spectrum_File", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap folder_domain {
+        public static System.Drawing.Bitmap folder_domain {
             get {
                 object obj = ResourceManager.GetObject("folder_domain", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -93,7 +111,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Grid2D {
+        public static System.Drawing.Bitmap Grid2D {
             get {
                 object obj = ResourceManager.GetObject("Grid2D", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -103,7 +121,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap hurricane2 {
+        public static System.Drawing.Bitmap hurricane2 {
             get {
                 object obj = ResourceManager.GetObject("hurricane2", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -111,18 +129,99 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Select spectrum file ....
+        /// </summary>
+        public static string Select_spectrum_file {
+            get {
+                return ResourceManager.GetString("Select_spectrum_file", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Communication files|*{0}.
         /// </summary>
-        internal static string SelectComFileButton_ButtonAction_Communication_files___0_ {
+        public static string SelectComFileButton_ButtonAction_Communication_files___0_ {
             get {
                 return ResourceManager.GetString("SelectComFileButton_ButtonAction_Communication_files___0_", resourceCulture);
             }
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Spectrum files|*{0}.
+        /// </summary>
+        public static string SelectSp2FileButton_ButtonAction_Spectrum_Files___0_ {
+            get {
+                return ResourceManager.GetString("SelectSp2FileButton_ButtonAction_Spectrum_Files___0_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Spatially Varying Constant Parameters.
+        /// </summary>
+        public static string SpatiallyVariantConstantParametersSettingsViewModel_GroupBoxTitle {
+            get {
+                return ResourceManager.GetString("SpatiallyVariantConstantParametersSettingsViewModel_GroupBoxTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Spatially Varying File Based Parameters.
+        /// </summary>
+        public static string SpatiallyVariantFileBasedParametersSettingsViewModel_GroupBoxTitle {
+            get {
+                return ResourceManager.GetString("SpatiallyVariantFileBasedParametersSettingsViewModel_GroupBoxTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Spatially Varying Time Dependent Parameters.
+        /// </summary>
+        public static string SpatiallyVariantTimeDependentParametersSettingsViewModel_GroupBoxTitle {
+            get {
+                return ResourceManager.GetString("SpatiallyVariantTimeDependentParametersSettingsViewModel_GroupBoxTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Spectrum Files (*.sp1,*.sp2)|*.sp1;*.sp2.
+        /// </summary>
+        public static string Spectrum_Files_Filter {
+            get {
+                return ResourceManager.GetString("Spectrum_Files_Filter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Uniform Constant Parameters.
+        /// </summary>
+        public static string UniformConstantParametersSettingsViewModel_GroupBoxTitle {
+            get {
+                return ResourceManager.GetString("UniformConstantParametersSettingsViewModel_GroupBoxTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Uniform File Based Parameters.
+        /// </summary>
+        public static string UniformFileBasedParametersSettingsViewModel_GroupBoxTitle {
+            get {
+                return ResourceManager.GetString("UniformFileBasedParametersSettingsViewModel_GroupBoxTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Uniform Time Dependent Parameters.
+        /// </summary>
+        public static string UniformTimeDependentParametersSettingsViewModel_GroupBoxTitle {
+            get {
+                return ResourceManager.GetString("UniformTimeDependentParametersSettingsViewModel_GroupBoxTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap wall_brick {
+        public static System.Drawing.Bitmap wall_brick {
             get {
                 object obj = ResourceManager.GetObject("wall_brick", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -132,7 +231,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap wave {
+        public static System.Drawing.Bitmap wave {
             get {
                 object obj = ResourceManager.GetObject("wave", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -142,7 +241,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Delete.
         /// </summary>
-        internal static string WaveBoundaryNodePresenter_GetContextMenu_Delete {
+        public static string WaveBoundaryNodePresenter_GetContextMenu_Delete {
             get {
                 return ResourceManager.GetString("WaveBoundaryNodePresenter_GetContextMenu_Delete", resourceCulture);
             }
@@ -151,7 +250,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Add Interior Domain....
         /// </summary>
-        internal static string WaveDomainNodePresenter_CreateAddDomainMenuItem_Add_Interior_Domain___ {
+        public static string WaveDomainNodePresenter_CreateAddDomainMenuItem_Add_Interior_Domain___ {
             get {
                 return ResourceManager.GetString("WaveDomainNodePresenter_CreateAddDomainMenuItem_Add_Interior_Domain___", resourceCulture);
             }
@@ -160,7 +259,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Add Exterior Domain....
         /// </summary>
-        internal static string WaveDomainNodePresenter_CreateAddSuperDomainMenuItem_Add_Exterior_Domain___ {
+        public static string WaveDomainNodePresenter_CreateAddSuperDomainMenuItem_Add_Exterior_Domain___ {
             get {
                 return ResourceManager.GetString("WaveDomainNodePresenter_CreateAddSuperDomainMenuItem_Add_Exterior_Domain___", resourceCulture);
             }
@@ -169,7 +268,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Delete Domain.
         /// </summary>
-        internal static string WaveDomainNodePresenter_CreateDeleteDomainMenuItem_Delete_Domain {
+        public static string WaveDomainNodePresenter_CreateDeleteDomainMenuItem_Delete_Domain {
             get {
                 return ResourceManager.GetString("WaveDomainNodePresenter_CreateDeleteDomainMenuItem_Delete_Domain", resourceCulture);
             }
@@ -178,16 +277,43 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Validate....
         /// </summary>
-        internal static string WaveModelNodePresenter_CreateValidationMenuItem_Validate___ {
+        public static string WaveModelNodePresenter_CreateValidationMenuItem_Validate___ {
             get {
                 return ResourceManager.GetString("WaveModelNodePresenter_CreateValidationMenuItem_Validate___", resourceCulture);
             }
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Boundaries.
+        /// </summary>
+        public static string WaveSettingsHelper_AddCustomWaveSettings_Boundaries_Category_Name {
+            get {
+                return ResourceManager.GetString("WaveSettingsHelper_AddCustomWaveSettings_Boundaries_Category_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Spectrum File:.
+        /// </summary>
+        public static string WaveSettingsHelper_AddCustomWaveSettings_Spectrum_File {
+            get {
+                return ResourceManager.GetString("WaveSettingsHelper_AddCustomWaveSettings_Spectrum_File", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use boundary definition per file.
+        /// </summary>
+        public static string WaveSettingsHelper_AddCustomWaveSettings_Use_boundary_definition_per_file {
+            get {
+                return ResourceManager.GetString("WaveSettingsHelper_AddCustomWaveSettings_Use_boundary_definition_per_file", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Coupled to D-Flow FM.
         /// </summary>
-        internal static string WaveSettingsHelper_GetWaveSettings_Coupled_to_D_Flow_FM {
+        public static string WaveSettingsHelper_GetWaveSettings_Coupled_to_D_Flow_FM {
             get {
                 return ResourceManager.GetString("WaveSettingsHelper_GetWaveSettings_Coupled_to_D_Flow_FM", resourceCulture);
             }
@@ -196,7 +322,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Coupling start time.
         /// </summary>
-        internal static string WaveSettingsHelper_GetWaveSettings_Coupling_start_time {
+        public static string WaveSettingsHelper_GetWaveSettings_Coupling_start_time {
             get {
                 return ResourceManager.GetString("WaveSettingsHelper_GetWaveSettings_Coupling_start_time", resourceCulture);
             }
@@ -205,7 +331,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Coupling stop time.
         /// </summary>
-        internal static string WaveSettingsHelper_GetWaveSettings_Coupling_stop_time {
+        public static string WaveSettingsHelper_GetWaveSettings_Coupling_stop_time {
             get {
                 return ResourceManager.GetString("WaveSettingsHelper_GetWaveSettings_Coupling_stop_time", resourceCulture);
             }
@@ -214,7 +340,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Coupling time step.
         /// </summary>
-        internal static string WaveSettingsHelper_GetWaveSettings_Coupling_time_step {
+        public static string WaveSettingsHelper_GetWaveSettings_Coupling_time_step {
             get {
                 return ResourceManager.GetString("WaveSettingsHelper_GetWaveSettings_Coupling_time_step", resourceCulture);
             }
@@ -223,7 +349,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Domain specific settings.
         /// </summary>
-        internal static string WaveSettingsHelper_GetWaveSettings_Domain_specific_settings {
+        public static string WaveSettingsHelper_GetWaveSettings_Domain_specific_settings {
             get {
                 return ResourceManager.GetString("WaveSettingsHelper_GetWaveSettings_Domain_specific_settings", resourceCulture);
             }
@@ -232,7 +358,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Online-coupling time frame.
         /// </summary>
-        internal static string WaveSettingsHelper_GetWaveSettings_Online_Coupling_Time_Frame {
+        public static string WaveSettingsHelper_GetWaveSettings_Online_Coupling_Time_Frame {
             get {
                 return ResourceManager.GetString("WaveSettingsHelper_GetWaveSettings_Online_Coupling_Time_Frame", resourceCulture);
             }
@@ -241,7 +367,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Start time within the coupled model run [YYYY-MM-DD HH:MM:SS].
         /// </summary>
-        internal static string WaveSettingsHelper_GetWaveSettings_Start_time_within_the_coupled_model_run {
+        public static string WaveSettingsHelper_GetWaveSettings_Start_time_within_the_coupled_model_run {
             get {
                 return ResourceManager.GetString("WaveSettingsHelper_GetWaveSettings_Start_time_within_the_coupled_model_run", resourceCulture);
             }
@@ -250,7 +376,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Stop time within the coupled model run [YYYY-MM-DD HH:MM:SS].
         /// </summary>
-        internal static string WaveSettingsHelper_GetWaveSettings_Stop_time_within_the_coupled_model_run {
+        public static string WaveSettingsHelper_GetWaveSettings_Stop_time_within_the_coupled_model_run {
             get {
                 return ResourceManager.GetString("WaveSettingsHelper_GetWaveSettings_Stop_time_within_the_coupled_model_run", resourceCulture);
             }
@@ -259,7 +385,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Time step within the coupled model run [Dd HH:MM:SS.ZZZ].
         /// </summary>
-        internal static string WaveSettingsHelper_GetWaveSettings_Time_step_within_the_coupled_model_run {
+        public static string WaveSettingsHelper_GetWaveSettings_Time_step_within_the_coupled_model_run {
             get {
                 return ResourceManager.GetString("WaveSettingsHelper_GetWaveSettings_Time_step_within_the_coupled_model_run", resourceCulture);
             }
@@ -268,7 +394,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to When enabled, domain specific data can be filled in.
         /// </summary>
-        internal static string WaveSettingsHelper_GetWaveSettings_When_enabled__domain_specific_data_can_be_filled_in {
+        public static string WaveSettingsHelper_GetWaveSettings_When_enabled__domain_specific_data_can_be_filled_in {
             get {
                 return ResourceManager.GetString("WaveSettingsHelper_GetWaveSettings_When_enabled__domain_specific_data_can_be_fill" +
                         "ed_in", resourceCulture);
@@ -278,7 +404,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to When enabled, run coupled to D-Flow FM core.
         /// </summary>
-        internal static string WaveSettingsHelper_GetWaveSettings_When_enabled__run_coupled_to_D_Flow_FM_core {
+        public static string WaveSettingsHelper_GetWaveSettings_When_enabled__run_coupled_to_D_Flow_FM_core {
             get {
                 return ResourceManager.GetString("WaveSettingsHelper_GetWaveSettings_When_enabled__run_coupled_to_D_Flow_FM_core", resourceCulture);
             }

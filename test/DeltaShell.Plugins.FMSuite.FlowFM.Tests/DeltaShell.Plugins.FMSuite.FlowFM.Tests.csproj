@@ -236,7 +236,6 @@
     <Compile Include="Api\RemoteFlexibleMeshModelApiTest.cs" />
     <Compile Include="Api\UnstrucGridOperationApiIntegrationTest.cs" />
     <Compile Include="Api\UnstrucGridOperationApiTest.cs" />
-    <Compile Include="Editors\ModelFeatureCoordinateDataEditor\BoundaryGeometryPreviewWindowsFormsHostMapTest.cs" />
     <Compile Include="Editors\ModelFeatureCoordinateDataEditor\CoordinateDataRowTest.cs" />
     <Compile Include="Editors\ModelFeatureCoordinateDataEditor\ModelFeatureCoordinateDataViewTest.cs" />
     <Compile Include="Editors\ModelFeatureCoordinateDataEditor\ModelFeatureCoordinateDataViewViewModelTest.cs" />
@@ -425,6 +424,11 @@
     <ProjectReference Include="..\..\src\DeltaShell.Dimr\DeltaShell.Dimr.csproj">
       <Project>{ad22cec6-2a71-478c-96c3-b7acdfe9b84b}</Project>
       <Name>DeltaShell.Dimr</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\..\src\DeltaShell.NGHS.Common\DeltaShell.NGHS.Common.csproj">
+      <Project>{AE78982B-8798-4B5A-9DB4-FCA8F5C8428B}</Project>
+      <Name>DeltaShell.NGHS.Common</Name>
       <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\..\src\DeltaShell.NGHS.IO\DeltaShell.NGHS.IO.csproj">

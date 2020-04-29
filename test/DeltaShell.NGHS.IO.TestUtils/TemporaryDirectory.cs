@@ -44,6 +44,19 @@ namespace DeltaShell.NGHS.IO.TestUtils
         }
 
         /// <summary>
+        /// Creates a new directory at the relative path.
+        /// </summary>
+        /// <param name="relativeDirPath">The relative directory path.</param>
+        /// <returns>The full directory path of the created directory.</returns>
+        public string CreateDirectory(string relativeDirPath)
+        {
+            string targetDirPath = System.IO.Path.Combine(Path, relativeDirPath);
+            FileUtils.CreateDirectoryIfNotExists(targetDirPath);
+
+            return targetDirPath;
+        }
+
+        /// <summary>
         /// Copies all test data to temporary directory.
         /// </summary>
         /// <param name="relativeTestDataFilePaths">The relative test data file paths.</param>

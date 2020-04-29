@@ -54,11 +54,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CompositeStructureView
                             var viewList = new ViewList(dockingManager, ViewLocation.Document);
                             var viewResolver = new ViewResolver(viewList, plugin.GetViewInfoObjects());
 
-                            return viewResolver.CreateViewForData(o, info => info.CompositeViewType == typeof(Gui.Forms.CompositeStructureView.CompositeStructureView));
+                            return viewResolver.CreateViewForData(o, info => info.CompositeViewType == typeof(NetworkEditor.Gui.Forms.CompositeStructureView.CompositeStructureView));
                         },
                     SelectionContainer = new SimpleSelectionContainer {Logging = true}
                 };
-            var view =  new Gui.Forms.CompositeStructureView.CompositeStructureView
+            var view =  new NetworkEditor.Gui.Forms.CompositeStructureView.CompositeStructureView
                             {
                                 Presenter = presenter,
                                 Data = compositeBranchStructure
@@ -200,11 +200,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CompositeStructureView
                                         var plugin = new NetworkEditorGuiPlugin();
                                         var viewList = new ViewList(dockingManager, ViewLocation.Document);
                                         var viewResolver = new ViewResolver(viewList, plugin.GetViewInfoObjects());
-                                        return viewResolver.CreateViewForData(o, info => info.CompositeViewType == typeof(Gui.Forms.CompositeStructureView.CompositeStructureView));
+                                        return viewResolver.CreateViewForData(o, info => info.CompositeViewType == typeof(NetworkEditor.Gui.Forms.CompositeStructureView.CompositeStructureView));
                                     },
                                     SelectionContainer = new SimpleSelectionContainer {Logging = true}
                                 };
-            var view =  new Gui.Forms.CompositeStructureView.CompositeStructureView
+            var view =  new NetworkEditor.Gui.Forms.CompositeStructureView.CompositeStructureView
                             {
                                 Presenter = presenter,
                                 Data = compositeBranchStructure
@@ -238,11 +238,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CompositeStructureView
                             var plugin = new NetworkEditorGuiPlugin();
                             var viewList = new ViewList(dockingManager, ViewLocation.Document);
                             var viewResolver = new ViewResolver(viewList, plugin.GetViewInfoObjects());
-                            return viewResolver.CreateViewForData(o, info => info.CompositeViewType == typeof(Gui.Forms.CompositeStructureView.CompositeStructureView));
+                            return viewResolver.CreateViewForData(o, info => info.CompositeViewType == typeof(NetworkEditor.Gui.Forms.CompositeStructureView.CompositeStructureView));
                         },
                     SelectionContainer = new SimpleSelectionContainer {Logging = true}
                 };
-            var view = new Gui.Forms.CompositeStructureView.CompositeStructureView
+            var view = new NetworkEditor.Gui.Forms.CompositeStructureView.CompositeStructureView
                 {
                     Presenter = presenter,
                     Data = compositeBranchStructure
@@ -292,7 +292,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CompositeStructureView
                         var plugin = new NetworkEditorGuiPlugin();
                         var viewList = new ViewList(dockingManager, ViewLocation.Document);
                         var viewResolver = new ViewResolver(viewList, plugin.GetViewInfoObjects());
-                        return viewResolver.CreateViewForData(o, info => info.CompositeViewType == typeof(Gui.Forms.CompositeStructureView.CompositeStructureView));
+                        return viewResolver.CreateViewForData(o, info => info.CompositeViewType == typeof(NetworkEditor.Gui.Forms.CompositeStructureView.CompositeStructureView));
                     }
                 };
             gui.SelectionChanged += delegate
@@ -302,7 +302,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CompositeStructureView
             
             mocks.ReplayAll();
 
-            var compositeStructureView = new Gui.Forms.CompositeStructureView.CompositeStructureView
+            var compositeStructureView = new NetworkEditor.Gui.Forms.CompositeStructureView.CompositeStructureView
                                              {
                                                  Presenter = compositeStructureViewPresenter,
                                                  Data = compositeBranchStructure

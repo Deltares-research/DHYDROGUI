@@ -45,53 +45,53 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Layers
         {
             yield return new SnappedFeatureCollection(model, model.CoordinateSystem,
                                                       (IList) model.Area.ObservationPoints,
-                                                      AreaLayerStyles.ObservationPointStyle,
+                                                      HydroAreaLayerStyles.ObservationPointStyle,
                                                       "Observation points (snapped)", UnstrucGridOperationApi.ObsPoint);
             yield return new SnappedFeatureCollection(model, model.CoordinateSystem, (IList) model.Area.ThinDams,
-                                                      AreaLayerStyles.ThinDamStyle, "Thin dams (snapped)",
+                                                      HydroAreaLayerStyles.ThinDamStyle, "Thin dams (snapped)",
                                                       UnstrucGridOperationApi.ThinDams);
             yield return new SnappedFeatureCollection(model, model.CoordinateSystem, (IList) model.Area.FixedWeirs,
-                                                      AreaLayerStyles.FixedWeirStyle, "Fixed weirs (snapped)",
+                                                      HydroAreaLayerStyles.FixedWeirStyle, "Fixed weirs (snapped)",
                                                       UnstrucGridOperationApi.FixedWeir);
             yield return
                 new SnappedFeatureCollection(model, model.CoordinateSystem, (IList) model.Area.DryPoints,
-                                             AreaLayerStyles.DryPointStyle, "Dry points (snapped)",
+                                             HydroAreaLayerStyles.DryPointStyle, "Dry points (snapped)",
                                              UnstrucGridOperationApi.ObsPoint);
             yield return
                 new SnappedFeatureCollection(model, model.CoordinateSystem, (IList) model.Area.DryAreas,
-                                             AreaLayerStyles.DryAreaStyle, "Dry areas (snapped)",
+                                             HydroAreaLayerStyles.DryAreaStyle, "Dry areas (snapped)",
                                              UnstrucGridOperationApi.ObsCrossSection);
             yield return
                 new SnappedFeatureCollection(model, model.CoordinateSystem, (IList) model.Area.Enclosures,
-                                             AreaLayerStyles.EnclosureStyle, "Enclosure (snapped)",
+                                             HydroAreaLayerStyles.EnclosureStyle, "Enclosure (snapped)",
                                              UnstrucGridOperationApi.ObsCrossSection);
             yield return new SnappedFeatureCollection(model, model.CoordinateSystem, (IList) model.Area.Pumps,
-                                                      AreaLayerStyles.PumpStyle, "Pumps (snapped)",
+                                                      HydroAreaLayerStyles.PumpStyle, "Pumps (snapped)",
                                                       UnstrucGridOperationApi.Pump);
             yield return new SnappedFeatureCollection(model, model.CoordinateSystem, (IList) model.Area.Weirs,
-                                                      AreaLayerStyles.WeirStyle, "Structures (snapped)",
+                                                      HydroAreaLayerStyles.WeirStyle, "Structures (snapped)",
                                                       UnstrucGridOperationApi.Weir);
             yield return new SnappedFeatureCollection(model, model.CoordinateSystem,
                                                       (IList) model.Area.ObservationCrossSections,
-                                                      AreaLayerStyles.ObsCrossSectionStyle,
+                                                      HydroAreaLayerStyles.ObsCrossSectionStyle,
                                                       "Observation cross sections (snapped)",
                                                       UnstrucGridOperationApi.ObsCrossSection);
             yield return new SnappedFeatureCollection(model, model.CoordinateSystem, (IList) model.Area.Embankments,
-                                                      AreaLayerStyles.EmbankmentStyle, "Embankments (snapped)",
+                                                      HydroAreaLayerStyles.EmbankmentStyle, "Embankments (snapped)",
                                                       UnstrucGridOperationApi.Embankment);
             yield return new SnappedFeatureCollection(model, model.CoordinateSystem, (IList) model.SourcesAndSinks,
-                                                      AreaLayerStyles.SnappedSourcesAndSinksStyle,
+                                                      HydroAreaLayerStyles.SnappedSourcesAndSinksStyle,
                                                       "Sources and sinks (snapped)",
                                                       UnstrucGridOperationApi.SourceSink);
             yield return new SnappedFeatureCollection(model, model.CoordinateSystem, (IList) model.Boundaries,
-                                                      AreaLayerStyles.BoundariesStyle, "Boundaries (snapped)",
+                                                      HydroAreaLayerStyles.BoundariesStyle, "Boundaries (snapped)",
                                                       UnstrucGridOperationApi.Boundary);
             yield return new SnappedFeatureCollection(model, model.CoordinateSystem, (IList) model.Boundaries,
-                                                      AreaLayerStyles.BoundariesWaterLevelPointsStyle,
+                                                      HydroAreaLayerStyles.BoundariesWaterLevelPointsStyle,
                                                       "Water level boundary points",
                                                       UnstrucGridOperationApi.WaterLevelBnd);
             yield return new SnappedFeatureCollection(model, model.CoordinateSystem, (IList) model.Boundaries,
-                                                      AreaLayerStyles.BoundariesVelocityPointsStyle,
+                                                      HydroAreaLayerStyles.BoundariesVelocityPointsStyle,
                                                       "Discharge / velocity boundary points",
                                                       UnstrucGridOperationApi.VelocityBnd);
         }

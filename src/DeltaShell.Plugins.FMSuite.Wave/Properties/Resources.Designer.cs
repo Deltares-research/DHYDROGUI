@@ -61,11 +61,30 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to reading the mdw file.
+        ///   Looks up a localized string similar to loading the D-Waves model.
         /// </summary>
-        public static string MdwFile_ConvertMdwCategoriesToModelDefinitionProperties_reading_the_mdw_file {
+        public static string MdwFile_Load_loading_the_D_Waves_model {
             get {
-                return ResourceManager.GetString("MdwFile_ConvertMdwCategoriesToModelDefinitionProperties_reading_the_mdw_file", resourceCulture);
+                return ResourceManager.GetString("MdwFile_Load_loading_the_D_Waves_model", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Boundaries cannot be imported, because there is no grid detected..
+        /// </summary>
+        public static string MdwFile_ReadWaveBoundaries_Boundaries_cannot_be_imported__because_there_is_no_grid_detected {
+            get {
+                return ResourceManager.GetString("MdwFile_ReadWaveBoundaries_Boundaries_cannot_be_imported__because_there_is_no_gri" +
+                        "d_detected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to exporting the D-Waves model.
+        /// </summary>
+        public static string MdwFile_SaveTo_exporting_the_D_Waves_model {
+            get {
+                return ResourceManager.GetString("MdwFile_SaveTo_exporting_the_D_Waves_model", resourceCulture);
             }
         }
         
@@ -80,152 +99,180 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Parameter &quot;Height&quot; must be greater than 0 and smaller or equal to 25..
-        /// </summary>
-        public static string WaveBoundaryConditionValidator_ValidateBoundaryCondition__Parameter__Height__must_be_greater_than_0_and_smaller_or_equal_to_25_ {
-            get {
-                return ResourceManager.GetString("WaveBoundaryConditionValidator_ValidateBoundaryCondition__Parameter__Height__must" +
-                        "_be_greater_than_0_and_smaller_or_equal_to_25_", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Parameter &quot;Period&quot; must be a value within the range 0,1 - 20..
-        /// </summary>
-        public static string WaveBoundaryConditionValidator_ValidateBoundaryCondition__Parameter__Period__must_be_a_value_within_the_range_ {
-            get {
-                return ResourceManager.GetString("WaveBoundaryConditionValidator_ValidateBoundaryCondition__Parameter__Period__must" +
-                        "_be_a_value_within_the_range_", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Parameter &quot;Spreading&quot; must be a value within the range 1 - 800 when Directional Spreading type is equal to Power..
-        /// </summary>
-        public static string WaveBoundaryConditionValidator_ValidateBoundaryCondition__Parameter__Spreading__must_be_a_value_within_the_range_1_800 {
-            get {
-                return ResourceManager.GetString("WaveBoundaryConditionValidator_ValidateBoundaryCondition__Parameter__Spreading__m" +
-                        "ust_be_a_value_within_the_range_1_800", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Parameter &quot;Spreading&quot; must be a value within the range 2 - 180 when Directional Spreading type is equal to Degrees..
-        /// </summary>
-        public static string WaveBoundaryConditionValidator_ValidateBoundaryCondition__Parameter__Spreading__must_be_a_value_within_the_range_2_180 {
-            get {
-                return ResourceManager.GetString("WaveBoundaryConditionValidator_ValidateBoundaryCondition__Parameter__Spreading__m" +
-                        "ust_be_a_value_within_the_range_2_180", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Values in column &quot;Dir&quot; in the time series table must be within the range -360 - 360..
-        /// </summary>
-        public static string WaveBoundaryConditionValidator_ValidateBoundaryCondition__Values_in_column__Direction__in_the_time_series_table_must_be_within_expected_range {
-            get {
-                return ResourceManager.GetString("WaveBoundaryConditionValidator_ValidateBoundaryCondition__Values_in_column__Direc" +
-                        "tion__in_the_time_series_table_must_be_within_expected_range", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Values in column &quot;Hs&quot; in the time series table must be greater than 0 and smaller than or equal to 25..
-        /// </summary>
-        public static string WaveBoundaryConditionValidator_ValidateBoundaryCondition__Values_in_column__Hs__in_the_time_series_table_must_be_within_expected_range {
-            get {
-                return ResourceManager.GetString("WaveBoundaryConditionValidator_ValidateBoundaryCondition__Values_in_column__Hs__i" +
-                        "n_the_time_series_table_must_be_within_expected_range", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Values in column &quot;Spreading&quot; in the time series table must be within the range 1 - 800 when Directional Spreading type is equal to Power..
-        /// </summary>
-        public static string WaveBoundaryConditionValidator_ValidateBoundaryCondition__Values_in_column__Spreading__in_the_time_series_table_must_be_a_value_within_the_range_1_800 {
-            get {
-                return ResourceManager.GetString("WaveBoundaryConditionValidator_ValidateBoundaryCondition__Values_in_column__Sprea" +
-                        "ding__in_the_time_series_table_must_be_a_value_within_the_range_1_800", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Values in column &quot;Spreading&quot; in the time series table must be within the range 2 - 180 when Directional Spreading type is equal to Degrees..
-        /// </summary>
-        public static string WaveBoundaryConditionValidator_ValidateBoundaryCondition__Values_in_column__Spreading__in_the_time_series_table_must_be_a_value_within_the_range_2_180 {
-            get {
-                return ResourceManager.GetString("WaveBoundaryConditionValidator_ValidateBoundaryCondition__Values_in_column__Sprea" +
-                        "ding__in_the_time_series_table_must_be_a_value_within_the_range_2_180", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Values in column &quot;Tp&quot; in the time series table must be within the range 0,1 - 20..
-        /// </summary>
-        public static string WaveBoundaryConditionValidator_ValidateBoundaryCondition__Values_in_column__Tp__in_the_time_series_table_must_be_within_expected_range {
-            get {
-                return ResourceManager.GetString("WaveBoundaryConditionValidator_ValidateBoundaryCondition__Values_in_column__Tp__i" +
-                        "n_the_time_series_table_must_be_within_expected_range", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Boundary condition contains internal geometry points. These points will be discarded upon saving, exporting or running.
         /// </summary>
-        public static string WaveBoundaryConditionValidator_ValidateBoundaryCondition_Boundary_condition_contains_internal_geometry_points {
+        public static string WaveBoundariesValidator_Validate_Boundary_condition_contains_internal_geometry_points {
             get {
-                return ResourceManager.GetString("WaveBoundaryConditionValidator_ValidateBoundaryCondition_Boundary_condition_conta" +
-                        "ins_internal_geometry_points", resourceCulture);
+                return ResourceManager.GetString("WaveBoundariesValidator_Validate_Boundary_condition_contains_internal_geometry_po" +
+                        "ints", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Boundary condition contains unactivated support points. These points will be discarded upon saving, exporting or running.
         /// </summary>
-        public static string WaveBoundaryConditionValidator_ValidateBoundaryCondition_Boundary_condition_contains_unactivated_support_points {
+        public static string WaveBoundariesValidator_Validate_Boundary_condition_contains_unactivated_support_points {
             get {
-                return ResourceManager.GetString("WaveBoundaryConditionValidator_ValidateBoundaryCondition_Boundary_condition_conta" +
-                        "ins_unactivated_support_points", resourceCulture);
+                return ResourceManager.GetString("WaveBoundariesValidator_Validate_Boundary_condition_contains_unactivated_support_" +
+                        "points", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Boundary does not contain a boundary condition.
         /// </summary>
-        public static string WaveBoundaryConditionValidator_ValidateBoundaryCondition_Boundary_does_not_contain_a_boundary_condition {
+        public static string WaveBoundariesValidator_Validate_Boundary_does_not_contain_a_boundary_condition {
             get {
-                return ResourceManager.GetString("WaveBoundaryConditionValidator_ValidateBoundaryCondition_Boundary_does_not_contai" +
-                        "n_a_boundary_condition", resourceCulture);
+                return ResourceManager.GetString("WaveBoundariesValidator_Validate_Boundary_does_not_contain_a_boundary_condition", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Time points are not synchronized on boundary: {0}.
+        ///   Looks up a localized string similar to Boundary does not contain any valid boundary data..
         /// </summary>
-        public static string WaveBoundaryConditionValidator_ValidateBoundaryCondition_Time_points_are_not_synchronized_on_boundary___0_ {
+        public static string WaveBoundariesValidator_Validate_Boundary_does_not_contain_any_valid_boundary_data {
             get {
-                return ResourceManager.GetString("WaveBoundaryConditionValidator_ValidateBoundaryCondition_Time_points_are_not_sync" +
-                        "hronized_on_boundary___0_", resourceCulture);
+                return ResourceManager.GetString("WaveBoundariesValidator_Validate_Boundary_does_not_contain_any_valid_boundary_dat" +
+                        "a", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Peak Enhancement Factor must be a value within the range 1 - 10..
+        ///   Looks up a localized string similar to Model start time does not precede any of the time points of &apos;{0}&apos;.
         /// </summary>
-        public static string WaveBoundaryConditionValidator_ValidateSpectralData_Peak_Enhancement_Factor_must_be_a_value_within_the_range_1___10_ {
+        public static string WaveBoundariesValidator_Validate_ModelStartTime_Model_start_time_does_not_precede_any_of_Boundary_Condition_time_points_of__0__ {
             get {
-                return ResourceManager.GetString("WaveBoundaryConditionValidator_ValidateSpectralData_Peak_Enhancement_Factor_must_" +
-                        "be_a_value_within_the_range_1___10_", resourceCulture);
+                return ResourceManager.GetString("WaveBoundariesValidator_Validate_ModelStartTime_Model_start_time_does_not_precede" +
+                        "_any_of_Boundary_Condition_time_points_of__0__", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Parameter &quot;Direction&quot; must be a value within the range -360 - 360..
         /// </summary>
-        public static string WaveBoundaryConditionValidator_ValidateSpectrumParameters_Parameter__Direction__must_be_a_value_within_the_range__360___360_ {
+        public static string WaveBoundariesValidator_Validate_Parameter_Direction_must_be_a_value_within_the_range_360_360_ {
             get {
-                return ResourceManager.GetString("WaveBoundaryConditionValidator_ValidateSpectrumParameters_Parameter__Direction__m" +
-                        "ust_be_a_value_within_the_range__360___360_", resourceCulture);
+                return ResourceManager.GetString("WaveBoundariesValidator_Validate_Parameter_Direction_must_be_a_value_within_the_r" +
+                        "ange_360_360_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Parameter &quot;Height&quot; must be greater than 0 and smaller or equal to 25..
+        /// </summary>
+        public static string WaveBoundariesValidator_Validate_Parameter_Height_must_be_greater_than_0_and_smaller_or_equal_to_25_ {
+            get {
+                return ResourceManager.GetString("WaveBoundariesValidator_Validate_Parameter_Height_must_be_greater_than_0_and_smal" +
+                        "ler_or_equal_to_25_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Parameter &quot;Period&quot; must be a value within the range 0,1 - 20..
+        /// </summary>
+        public static string WaveBoundariesValidator_Validate_Parameter_Period_must_be_a_value_within_the_range_ {
+            get {
+                return ResourceManager.GetString("WaveBoundariesValidator_Validate_Parameter_Period_must_be_a_value_within_the_rang" +
+                        "e_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Parameter &quot;Spreading&quot; must be a value within the range 1 - 800 when Directional Spreading type is equal to Power..
+        /// </summary>
+        public static string WaveBoundariesValidator_Validate_Parameter_Spreading__must_be_a_value_within_the_range_1_800 {
+            get {
+                return ResourceManager.GetString("WaveBoundariesValidator_Validate_Parameter_Spreading__must_be_a_value_within_the_" +
+                        "range_1_800", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Parameter &quot;Spreading&quot; must be a value within the range 2 - 180 when Directional Spreading type is equal to Degrees..
+        /// </summary>
+        public static string WaveBoundariesValidator_Validate_Parameter_Spreading_must_be_a_value_within_the_range_2_180 {
+            get {
+                return ResourceManager.GetString("WaveBoundariesValidator_Validate_Parameter_Spreading_must_be_a_value_within_the_r" +
+                        "ange_2_180", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Peak Enhancement Factor must be a value within the range 1 - 10..
+        /// </summary>
+        public static string WaveBoundariesValidator_Validate_Peak_Enhancement_Factor_must_be_a_value_within_the_range_1_10_ {
+            get {
+                return ResourceManager.GetString("WaveBoundariesValidator_Validate_Peak_Enhancement_Factor_must_be_a_value_within_t" +
+                        "he_range_1_10_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Time points are not synchronized on boundary: {0}.
+        /// </summary>
+        public static string WaveBoundariesValidator_Validate_Time_points_are_not_synchronized_on_boundary__0__ {
+            get {
+                return ResourceManager.GetString("WaveBoundariesValidator_Validate_Time_points_are_not_synchronized_on_boundary__0_" +
+                        "_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Values in column &quot;Dir&quot; in the time series table must be within the range -360 - 360..
+        /// </summary>
+        public static string WaveBoundariesValidator_Validate_Values_in_column_Direction_in_the_time_series_table_must_be_within_expected_range {
+            get {
+                return ResourceManager.GetString("WaveBoundariesValidator_Validate_Values_in_column_Direction_in_the_time_series_ta" +
+                        "ble_must_be_within_expected_range", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Values in column &quot;Hs&quot; in the time series table must be greater than 0 and smaller than or equal to 25..
+        /// </summary>
+        public static string WaveBoundariesValidator_Validate_Values_in_column_Hs_in_the_time_series_table_must_be_within_expected_range {
+            get {
+                return ResourceManager.GetString("WaveBoundariesValidator_Validate_Values_in_column_Hs_in_the_time_series_table_mus" +
+                        "t_be_within_expected_range", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Values in column &quot;Spreading&quot; in the time series table must be within the range 1 - 800 when Directional Spreading type is equal to Power..
+        /// </summary>
+        public static string WaveBoundariesValidator_Validate_Values_in_column_Spreading_in_the_time_series_table_must_be_a_value_within_the_range_1_800 {
+            get {
+                return ResourceManager.GetString("WaveBoundariesValidator_Validate_Values_in_column_Spreading_in_the_time_series_ta" +
+                        "ble_must_be_a_value_within_the_range_1_800", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Values in column &quot;Spreading&quot; in the time series table must be within the range 2 - 180 when Directional Spreading type is equal to Degrees..
+        /// </summary>
+        public static string WaveBoundariesValidator_Validate_Values_in_column_Spreading_in_the_time_series_table_must_be_a_value_within_the_range_2_180 {
+            get {
+                return ResourceManager.GetString("WaveBoundariesValidator_Validate_Values_in_column_Spreading_in_the_time_series_ta" +
+                        "ble_must_be_a_value_within_the_range_2_180", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Values in column &quot;Tp&quot; in the time series table must be within the range 0,1 - 20..
+        /// </summary>
+        public static string WaveBoundariesValidator_Validate_Values_in_column_Tp_in_the_time_series_table_must_be_within_expected_range {
+            get {
+                return ResourceManager.GetString("WaveBoundariesValidator_Validate_Values_in_column_Tp_in_the_time_series_table_mus" +
+                        "t_be_within_expected_range", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Waves Model Boundaries.
+        /// </summary>
+        public static string WaveBoundariesValidator_Validate_Waves_Model_Boundaries {
+            get {
+                return ResourceManager.GetString("WaveBoundariesValidator_Validate_Waves_Model_Boundaries", resourceCulture);
             }
         }
         
@@ -444,16 +491,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Properties {
             get {
                 return ResourceManager.GetString("WavePropertiesValidator_ValidateWindSpeedAndQuadruple_WindSpeed_is_zero_whereas_q" +
                         "uadruplets_is_activated_", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Model start time does not precede any of the time points of.
-        /// </summary>
-        public static string WaveTimePointValidator_BoundaryConditionTimePointsPrecedesModelStartTime_Model_start_time_does_not_precede_any_of_Boundary_Condition_time_points_ {
-            get {
-                return ResourceManager.GetString("WaveTimePointValidator_BoundaryConditionTimePointsPrecedesModelStartTime_Model_st" +
-                        "art_time_does_not_precede_any_of_Boundary_Condition_time_points_", resourceCulture);
             }
         }
         

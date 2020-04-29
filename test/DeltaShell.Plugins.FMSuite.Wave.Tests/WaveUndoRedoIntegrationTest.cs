@@ -77,7 +77,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         }
 
         [Test]
-        [Category(TestCategory.WindowsForms)]
+        [Category(TestCategory.Wpf)]
         [Category(TestCategory.UndoRedo)]
         [Category(TestCategory.WorkInProgress)]
         public void AddOrDeleteOuterDomainShouldNotDisconnectObjectTest()

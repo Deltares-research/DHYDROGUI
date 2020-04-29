@@ -4,6 +4,9 @@ using System.Drawing;
 using System.Linq;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Extensions;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Providers;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.Layers;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.MapTools;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Properties;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using SharpMap.Api.Layers;
@@ -21,6 +24,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
 
         internal const string ObstacleToolName = "Obstacle Tool (Waves)";
         internal const string BoundaryToolName = "Boundary Tool (Waves)";
+
+        // TODO: This needs to be renamed once everything is implemented
+        internal const string CustomBoundaryToolName = "Spatially Varying Boundary Tool (Waves)";
+
         internal const string ObservationPointToolName = "Observation Point Tool (Waves)";
         internal const string ObservationCrossSectionToolName = "Observation Cross-Section Tool (Waves)";
 
@@ -37,15 +44,30 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
 
             // tools:
             tools.Add(
-                new Feature2DLineTool(WaveModelMapLayerProvider.ObstacleLayerName, ObstacleToolName, ObstacleIcon));
+                new Feature2DLineTool(WaveLayerNames.ObstacleLayerName, ObstacleToolName, ObstacleIcon));
             tools.Add(
-                new Feature2DLineTool(WaveModelMapLayerProvider.BoundaryLayerName, BoundaryToolName, BoundaryIcon));
-            tools.Add(new Feature2DPointTool(WaveModelMapLayerProvider.ObservationPointLayerName,
+                new Feature2DLineTool(WaveLayerNames.BoundaryLayerName, BoundaryToolName, BoundaryIcon));
+            tools.Add(new Feature2DPointTool(WaveLayerNames.ObservationPointLayerName,
                                              ObservationPointToolName, ObservationPointIcon));
-            tools.Add(new Feature2DLineTool(WaveModelMapLayerProvider.ObservationCrossSectionLayerName,
+            tools.Add(new Feature2DLineTool(WaveLayerNames.ObservationCrossSectionLayerName,
                                             ObservationCrossSectionToolName, ObservationCrossSectionIcon));
 
             tools.Cast<ITargetLayerTool>().ForEach(t => t.LayerFilter = GetLayerFilter(t));
+
+            // TODO: This needs to be refactored
+            var boundaryTool = new GroupedLayerFeature2DLineTool(WaveLayerNames.SpatiallyVaryingBoundaryLayerName,
+                                                                 WaveLayerNames.BoundaryLineLayerName,
+                                                                 CustomBoundaryToolName,
+                                                                 BoundaryIcon);
+
+            bool layerFilterBoundary(ILayer layer) =>
+                layer.Name == boundaryTool.LayerName &&
+                layer is IGroupLayer groupLayer &&
+                groupLayer.Layers.Any(x => x.DataSource is BoundaryLineMapFeatureProvider);
+
+            boundaryTool.LayerFilter = layerFilterBoundary;
+            tools.Add(boundaryTool);
+
             mapView.MapControl.Tools.AddRange(tools);
         }
 

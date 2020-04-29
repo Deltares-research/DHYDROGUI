@@ -11,7 +11,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
         public void GivenAreaLayer_WhenHydroAreaIsSet_ThenLayerIsNotEnabledInLegend()
         {
             //Given/When
-            var areaLayer = new AreaLayer {HydroArea = new HydroArea()};
+            var areaLayer = new HydroAreaLayer {HydroArea = new HydroArea()};
 
             //Then
             Assert.That(areaLayer.ShowInLegend, Is.EqualTo(false));

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 using DelftTools.Utils.Binding;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.SpectralData;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.BoundaryConditionEditor
 {

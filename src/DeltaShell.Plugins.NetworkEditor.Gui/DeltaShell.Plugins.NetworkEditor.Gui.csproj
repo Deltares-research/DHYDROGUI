@@ -188,7 +188,6 @@
     <Compile Include="Commands\AddNewPumpCommand.cs" />
     <Compile Include="Commands\AddNewRetentionCommand.cs" />
     <Compile Include="Commands\AddNewWeirCommand.cs" />
-    <Compile Include="Commands\ImportBranchesCommand.cs" />
     <Compile Include="Commands\InsertNewNodeCommand.cs" />
     <Compile Include="Commands\NetworkEditorCommand.cs" />
     <Compile Include="Commands\NetworkEditorHelper.cs" />
@@ -217,7 +216,6 @@
       <DependentUpon>SingleTextBoxWithLabelAndUnitControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Forms\StructureFeatureView\WeirViewModelDesignerDataContext.cs" />
-    <Compile Include="Helpers\FeatureCollectionViewInfoHelper.cs" />
     <Compile Include="Forms\AreaStructureView.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -601,21 +599,29 @@
     <Compile Include="Forms\StructureFeatureView\WeirViewValidationResult.cs" />
     <Compile Include="Helpers\HydroRegionEditorHelper.cs" />
     <Compile Include="Helpers\NetworkCoordinateConvertor.cs" />
-    <Compile Include="MapTools\ExportCrossSectionToCsvMapTool.cs" />
+    <Compile Include="Layers\NetworkEditorMapLayerProviderCreator.cs" />
+    <Compile Include="Layers\Providers\BridgePillarsLayerProvider.cs" />
+    <Compile Include="Layers\Providers\DryAreasLayerProvider.cs" />
+    <Compile Include="Layers\Providers\DryPointsLayerProvider.cs" />
+    <Compile Include="Layers\Providers\EmbankmentsLayerProvider.cs" />
+    <Compile Include="Layers\Providers\EnclosuresLayerProvider.cs" />
+    <Compile Include="Layers\Providers\FeaturesLayerProvider.cs" />
+    <Compile Include="Layers\Providers\FixedWeirsLayerProvider.cs" />
+    <Compile Include="Layers\Providers\GroupableFeature2DPolygonsLayerProvider.cs" />
+    <Compile Include="Layers\Providers\HydroAreaLayerProvider.cs" />
+    <Compile Include="Layers\Providers\HydroRegionLayerProvider.cs" />
+    <Compile Include="Layers\Providers\LandBoundariesLayerProvider.cs" />
+    <Compile Include="Layers\Providers\ObservationCrossSectionsLayerProvider.cs" />
+    <Compile Include="Layers\Providers\ObservationPointsLayerProvider.cs" />
+    <Compile Include="Layers\Providers\PumpsLayerProvider.cs" />
+    <Compile Include="Layers\Providers\ThinDamsLayerProvider.cs" />
+    <Compile Include="Layers\Providers\WeirsLayerProvider.cs" />
     <Compile Include="MapTools\HydroNetworkEditorMapToolHelper.cs" />
     <Compile Include="MapTools\HydroRegionEditorMapTool.cs" />
     <Compile Include="MapTools\IHydroNetworkEditorMapTool.cs" />
-    <Compile Include="MapTools\ImportBranchesFromSelectionMapTool.cs" />
-    <Compile Include="MapTools\ImportBranchFeaturesFromSelectedFeaturesMapTool.cs" />
-    <Compile Include="MapTools\ImportCrossSectionsFromCsvMapTool.cs" />
-    <Compile Include="MapTools\SelectBranchesAlongShortestPathTool.cs" />
     <Compile Include="MapTools\SingleFeature2DLineTool.cs" />
     <Compile Include="NetworkEditorGuiPlugin.cs" />
-    <Compile Include="NetworkEditorMapLayerProvider.cs" />
-    <Compile Include="NetworkLayerStyleFactory.cs" />
-    <Compile Include="ProjectExplorer\DrainageBasinProjectTreeViewNodePresenter.cs" />
     <Compile Include="ProjectExplorer\HydroAreaProjectTreeViewNodePresenter.cs" />
-    <Compile Include="ProjectExplorer\HydroNetworkProjectTreeViewNodePresenter.cs" />
     <Compile Include="ProjectExplorer\HydroRegionProjectTreeViewNodePresenter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\PluginInfo.cs" />
@@ -776,6 +782,11 @@
     <ProjectReference Include="..\DelftTools.Hydro\DelftTools.Hydro.csproj">
       <Project>{9f94f7fe-c79c-4e32-b3dc-a11c01b79349}</Project>
       <Name>DelftTools.Hydro</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\DeltaShell.NGHS.Common.Gui\DeltaShell.NGHS.Common.Gui.csproj">
+      <Project>{90DED9A6-DD9A-4694-ADEC-5918C12435C8}</Project>
+      <Name>DeltaShell.NGHS.Common.Gui</Name>
       <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\DeltaShell.Plugins.NetworkEditor\DeltaShell.Plugins.NetworkEditor.csproj">

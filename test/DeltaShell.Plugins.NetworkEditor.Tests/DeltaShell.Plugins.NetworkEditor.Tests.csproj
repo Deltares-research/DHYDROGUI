@@ -251,7 +251,6 @@
     <Compile Include="Forms\GridProperties\RunoffBoundaryPropertiesTest.cs" />
     <Compile Include="Forms\GridProperties\WasteWaterTreatmentPlantPropertiesTest.cs" />
     <Compile Include="Forms\GridProperties\WeirPropertiesTest.cs" />
-    <Compile Include="Export\HydroRegionToShapeFileExporterTest.cs" />
     <Compile Include="Forms\StructureFeatureView\CrestValidationRuleTest.cs" />
     <Compile Include="Forms\StructureFeatureView\CrestWidthValidationRuleTest.cs" />
     <Compile Include="Forms\StructureFeatureView\CulvertViewWpfModelTest.cs" />
@@ -259,11 +258,26 @@
     <Compile Include="Forms\StructureFeatureView\FMWeirViewTest.cs" />
     <Compile Include="Forms\StructureFeatureView\GateViewTest.cs" />
     <Compile Include="Forms\StructureFeatureView\WeirViewModelTest.cs" />
+    <Compile Include="Gui\Layers\NetworkEditorMapLayerProviderCreatorTest.cs" />
+    <Compile Include="Gui\Layers\Providers\BridgePillarsLayerProviderTest.cs" />
+    <Compile Include="Gui\Layers\Providers\DryAreasLayerProviderTest.cs" />
+    <Compile Include="Gui\Layers\Providers\EnclosuresLayerProviderTest.cs" />
+    <Compile Include="Gui\Layers\Providers\GroupableFeature2DPolygonsLayerProviderTest.cs" />
+    <Compile Include="Gui\Layers\Providers\DryPointsLayerProviderTest.cs" />
+    <Compile Include="Gui\Layers\Providers\EmbankmentsLayerProviderTest.cs" />
+    <Compile Include="Gui\Layers\Providers\FeaturesLayerProviderTest.cs" />
+    <Compile Include="Gui\Layers\Providers\FixedWeirsLayerProviderTest.cs" />
+    <Compile Include="Gui\Layers\Providers\HydroAreaLayerProviderTest.cs" />
+    <Compile Include="Gui\Layers\Providers\HydroRegionLayerProviderTest.cs" />
+    <Compile Include="Gui\Layers\Providers\LandBoundariesLayerProviderTest.cs" />
+    <Compile Include="Gui\Layers\Providers\ObservationCrossSectionsLayerProviderTest.cs" />
+    <Compile Include="Gui\Layers\Providers\ObservationPointsLayerProviderTest.cs" />
+    <Compile Include="Gui\Layers\Providers\PumpsLayerProviderTest.cs" />
+    <Compile Include="Gui\Layers\Providers\ThinDamsLayerProviderTest.cs" />
+    <Compile Include="Gui\Layers\Providers\WeirsLayerProviderTest.cs" />
     <Compile Include="HydroAreaProjectTreeViewNodePresenterTest.cs" />
-    <Compile Include="HydroRegionEditorGuiIntegrationTest.cs" />
     <Compile Include="Import\HydroAreaEmbankmentHeightImporterTests.cs" />
     <Compile Include="Import\HydroAreaEmbankmentImporterTest.cs" />
-    <Compile Include="MapLayers\CustomRenderers\DiffuseLateralSourceRendererTest.cs" />
     <Compile Include="Forms\CaseAnalysis\CoverageAnalysisViewTest.cs" />
     <Compile Include="Forms\CaseAnalysis\NetworkCoverageOperationsTest.cs" />
     <Compile Include="Forms\GridProperties\ChannelPropertiesTest.cs" />
@@ -282,7 +296,6 @@
     <Compile Include="Forms\CrossSectionView\ProfileMutators\XYZProfileMutatorTest.cs" />
     <Compile Include="Forms\CrossSectionView\ProfileMutators\ZWProfileMutatorTest.cs" />
     <Compile Include="Forms\CrossSectionView\YZTableViewTest.cs" />
-    <Compile Include="Forms\FeatureDataView\FeatureDataViewTest.cs" />
     <Compile Include="Forms\GridProperties\FeaturePropertiesTest.cs" />
     <Compile Include="Forms\ImportBranchFeatureDialogTest.cs" />
     <Compile Include="Forms\NetworkSideView\NetworkSideViewCoverageManagerTest.cs" />
@@ -298,7 +311,6 @@
     <Compile Include="MapLayers\Editors\CompositeStructureEditorTest.cs" />
     <Compile Include="MapLayers\Editors\HydroLinkInteractorTest.cs" />
     <Compile Include="MapLayers\Editors\HydroNodeInteractorTest.cs" />
-    <Compile Include="MapLayers\Editors\Snapping\HydroLinkSnapRuleTest.cs" />
     <Compile Include="MapLayers\Editors\StructureEditorTest.cs" />
     <Compile Include="Forms\ChartEditors\FixedRectangleShapeEditorTest.cs" />
     <Compile Include="Forms\ChartEditors\RectangleShapeEditorTest.cs" />
@@ -318,7 +330,6 @@
     <Compile Include="NetworkEditorPluginTest.cs" />
     <Compile Include="NetworkEditorTestHelper.cs" />
     <Compile Include="TestClassSetup.cs" />
-    <Compile Include="TestNetwork\FeatureDataTreeView\FeatureDataTreeViewTest.cs" />
     <Compile Include="Forms\GridProperties\CrossSectionPropertiesTest.cs" />
     <Compile Include="Forms\NetworkSideView\BedLevelNetworkCoverageBuilderTest.cs" />
     <Compile Include="Forms\NetworkSideView\NetworkSideViewDataTest.cs" />
@@ -332,24 +343,16 @@
     <Compile Include="Forms\StructureFeatureView\WeirFormulaViews\SimpleWeirFormulaViewTest.cs" />
     <Compile Include="Forms\StructureFeatureView\WeirViewTest.cs" />
     <Compile Include="Forms\StructureViewTest.cs" />
-    <Compile Include="Helpers\HydroRegionEditorHelperTest.cs" />
     <Compile Include="NetworkEditorGuiPluginTest.cs" />
     <Compile Include="NetworkCoveragePropertiesTest.cs" />
     <Compile Include="NetworkEditorViewProviderTest.cs" />
     <Compile Include="Forms\NetworkLocationEditorMapControlTest.cs" />
     <Compile Include="MapLayers\Providers\HydroNetworkFeatureCollectionTest.cs" />
     <Compile Include="ShowSideViewCommandTest.cs" />
-    <Compile Include="MapLayers\Snapping\ChannelSnapRuleTest.cs" />
-    <Compile Include="MapLayers\Snapping\CrossSectionSnapRuleTest.cs" />
     <Compile Include="TestModelWithHydroNetwork.cs" />
-    <Compile Include="MapLayers\Tools\ImportBranchFeaturesFromSelectedFeaturesMapToolTest.cs" />
     <Compile Include="MapLayers\Editors\BranchNodeTopologyTest.cs" />
-    <Compile Include="MapLayers\Editors\StructureToCompositeStructureTopologyTest.cs" />
-    <Compile Include="MapLayers\Tools\HydroRegionEditorMapToolTest.cs" />
     <Compile Include="HydroRegionTreeViewTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="MapLayers\Tools\MapToolTest.cs" />
-    <Compile Include="WeirViewWpfTest.cs" />
     <Compile Include="WpfConverters\EnumToDescriptionConverterTest.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -366,6 +369,11 @@
     <ProjectReference Include="..\..\src\DelftTools.Hydro\DelftTools.Hydro.csproj">
       <Project>{9F94F7FE-C79C-4E32-B3DC-A11C01B79349}</Project>
       <Name>DelftTools.Hydro</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\..\src\DeltaShell.NGHS.Common.Gui\DeltaShell.NGHS.Common.Gui.csproj">
+      <Project>{90DED9A6-DD9A-4694-ADEC-5918C12435C8}</Project>
+      <Name>DeltaShell.NGHS.Common.Gui</Name>
       <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\..\src\DeltaShell.Plugins.NetworkEditor.Gui\DeltaShell.Plugins.NetworkEditor.Gui.csproj">

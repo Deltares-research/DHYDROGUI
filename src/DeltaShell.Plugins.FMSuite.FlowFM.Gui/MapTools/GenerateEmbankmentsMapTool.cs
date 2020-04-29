@@ -112,7 +112,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
             return Layers.FirstOrDefault(l =>
                 l.DataSource != null &&
                 l.DataSource.FeatureType == typeof (Embankment) &&
-                l.Name == HydroArea.EmbankmentsPluralName);
+                l.Name == HydroAreaLayerNames.EmbankmentsPluralName);
         }
     }
 

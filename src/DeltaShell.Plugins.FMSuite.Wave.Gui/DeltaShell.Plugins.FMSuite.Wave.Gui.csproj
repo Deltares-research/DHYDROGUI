@@ -44,6 +44,10 @@
       <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.50157\lib\net461\DeltaShell\DelftTools.Controls.Swf.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="DelftTools.Controls.Wpf">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.50157\lib\net461\DeltaShell\DelftTools.Controls.Wpf.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="DelftTools.Functions">
       <HintPath>..\..\packages\DeltaShell.Framework.1.4.0.50157\lib\net461\DeltaShell\DelftTools.Functions.dll</HintPath>
       <Private>False</Private>
@@ -142,15 +146,124 @@
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml" />
     <Reference Include="WindowsBase" />
+    <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\AssemblyInfo.Version.FM.cs">
       <Link>Properties\AssemblyInfo.Version.FM.cs</Link>
     </Compile>
+    <Compile Include="Buttons\SelectSp2FileButton.cs" />
+    <Compile Include="Editors\Boundaries\Converters\NotNullToBooleanConverter.cs" />
+    <Compile Include="Editors\Boundaries\Converters\TypeToDescriptionConverter.cs" />
+    <Compile Include="Editors\Boundaries\Converters\TypeToVisibilityConverter.cs" />
+    <Compile Include="Editors\Boundaries\Converters\UnitStringToUnitDisplayStringConverter.cs" />
+    <Compile Include="Editors\Boundaries\Enums\DirectionalSpreadingViewType.cs" />
+    <Compile Include="Editors\Boundaries\Enums\ForcingViewType.cs" />
+    <Compile Include="Editors\Boundaries\Enums\PeriodViewType.cs" />
+    <Compile Include="Editors\Boundaries\Enums\SpatialDefinitionViewType.cs" />
+    <Compile Include="Editors\Boundaries\Enums\WaveBoundaryConditionEditorEnumExtensions.cs" />
+    <Compile Include="Editors\Boundaries\Factories\ViewEnumFromDataComponentQuerier.cs" />
+    <Compile Include="Editors\Boundaries\Factories\GeometryPreviewMapConfigurator.cs" />
+    <Compile Include="Editors\Boundaries\Factories\IViewEnumFromDataComponentQuerier.cs" />
+    <Compile Include="Editors\Boundaries\Factories\IGeometryPreviewMapConfigurator.cs" />
+    <Compile Include="Editors\Boundaries\Factories\IViewDataComponentFactory.cs" />
+    <Compile Include="Editors\Boundaries\Factories\IViewShapeFactory.cs" />
+    <Compile Include="Editors\Boundaries\Factories\ViewDataComponentFactory.cs" />
+    <Compile Include="Editors\Boundaries\Factories\ViewShapeFactory.cs" />
+    <Compile Include="Editors\Boundaries\Mediators\DataComponentChangeMediator.cs" />
+    <Compile Include="Editors\Boundaries\Mediators\IAnnounceDataComponentChanged.cs" />
+    <Compile Include="Editors\Boundaries\Mediators\IAnnounceSupportPointDataChanged.cs" />
+    <Compile Include="Editors\Boundaries\Mediators\IRefreshGeometryView.cs" />
+    <Compile Include="Editors\Boundaries\Mediators\IRefreshViewModel.cs" />
+    <Compile Include="Editors\Boundaries\Mediators\IRefreshDataComponentViewModel.cs" />
+    <Compile Include="Editors\Boundaries\Mediators\IRefreshIsEnabledOnDataComponentChanged.cs" />
+    <Compile Include="Editors\Boundaries\Mediators\WaveBoundaryConditionEditorMediator.cs" />
+    <Compile Include="Editors\Boundaries\Validation\PositiveDoubleValidationRule.cs" />
+    <Compile Include="Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\BoundaryDescriptionViewModel.cs" />
+    <Compile Include="Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\BoundaryGeometryViewModel.cs" />
+    <Compile Include="Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\BoundaryParameterSpecific\ConstantParametersViewModel.cs" />
+    <Compile Include="Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\BoundaryParameterSpecific\ConstantParametersSettingsViewModel.cs" />
+    <Compile Include="Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\BoundaryParameterSpecific\ConstantParametersViewModelGeneric.cs" />
+    <Compile Include="Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\BoundaryParameterSpecific\FileBasedParametersSettingsViewModel.cs" />
+    <Compile Include="Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\BoundaryParameterSpecific\FileBasedParametersViewModel.cs" />
+    <Compile Include="Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\BoundaryParameterSpecific\IParametersSettingsViewModel.cs" />
+    <Compile Include="Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\BoundaryParameterSpecific\ISpatiallyVariantParametersSettingsViewModel.cs" />
+    <Compile Include="Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\BoundaryParameterSpecific\SpatiallyVariantConstantParametersSettingsViewModel.cs" />
+    <Compile Include="Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\BoundaryParameterSpecific\SpatiallyVariantFileBasedParametersSettingsViewModel.cs" />
+    <Compile Include="Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\BoundaryParameterSpecific\SpatiallyVariantTimeDependentParametersSettingsViewModel.cs" />
+    <Compile Include="Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\BoundaryParameterSpecific\TimeDependentSpatiallyVaryingParametersViewModel.cs" />
+    <Compile Include="Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\BoundaryParameterSpecific\TimeDependentUniformParametersViewModel.cs" />
+    <Compile Include="Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\BoundaryParameterSpecific\TimeDependentParametersSettingsViewModel.cs" />
+    <Compile Include="Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\BoundaryParameterSpecific\TimeDependentParametersViewModel.cs" />
+    <Compile Include="Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\BoundaryParameterSpecific\TimeSeriesGeneration\GenerateSeries.cs" />
+    <Compile Include="Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\BoundaryParameterSpecific\TimeSeriesGeneration\GenerateSeriesDialogHelper.cs" />
+    <Compile Include="Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\BoundaryParameterSpecific\TimeSeriesGeneration\IGenerateSeries.cs" />
+    <Compile Include="Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\BoundaryParameterSpecific\TimeSeriesGeneration\IGenerateSeriesDialogHelper.cs" />
+    <Compile Include="Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\BoundaryParameterSpecific\UniformConstantParametersSettingsViewModel.cs" />
+    <Compile Include="Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\BoundaryParameterSpecific\UniformFileBasedParametersSettingsViewModel.cs" />
+    <Compile Include="Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\BoundaryParameterSpecific\UniformTimeDependentParametersSettingsViewModel.cs" />
+    <Compile Include="Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\BoundarySpecificParametersSettingsViewModel.cs" />
+    <Compile Include="Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\BoundaryWideParametersViewModel.cs" />
+    <Compile Include="Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\GeometryPreviewViewModel.cs" />
+    <Compile Include="Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\Shapes\GaussViewShape.cs" />
+    <Compile Include="Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\Shapes\IViewShape.cs" />
+    <Compile Include="Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\Shapes\JonswapViewShape.cs" />
+    <Compile Include="Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\Shapes\PiersonMoskowitzViewShape.cs" />
+    <Compile Include="Editors\Boundaries\Enums\ViewShapeType.cs" />
+    <Compile Include="Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\SupportPoints\SupportPointDataComponentViewModel.cs" />
+    <Compile Include="Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\SupportPoints\SupportPointEditorViewModel.cs" />
+    <Compile Include="Editors\Boundaries\ViewModels\WaveBoundaryConditionEditor\SupportPoints\SupportPointViewModel.cs" />
+    <Compile Include="Editors\Boundaries\Views\CommonElements\LabeledCheckBox.xaml.cs">
+      <DependentUpon>LabeledCheckBox.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\Boundaries\Views\CommonElements\LabeledComboBox.xaml.cs">
+      <DependentUpon>LabeledComboBox.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\Boundaries\Views\CommonElements\LabeledValueBox.xaml.cs">
+      <DependentUpon>LabeledValueBox.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\Boundaries\Views\WaveBoundaryConditionEditor\BoundaryParametersSpecific\FileBasedParametersView.xaml.cs">
+      <DependentUpon>FileBasedParametersView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\Boundaries\Views\WaveBoundaryConditionEditor\BoundaryParametersSpecific\ConstantParametersView.xaml.cs">
+      <DependentUpon>ConstantParametersView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\Boundaries\Views\WaveBoundaryConditionEditor\BoundaryParametersSpecific\ParametersSettingsView.xaml.cs">
+      <DependentUpon>ParametersSettingsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\Boundaries\Views\WaveBoundaryConditionEditor\BoundaryParametersSpecific\TimeDependentParametersView.xaml.cs">
+      <DependentUpon>TimeDependentParametersView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\Boundaries\Views\WaveBoundaryConditionEditor\BoundaryParametersSpecific\MultipleFunctionViewWindowsFormsHostMap.cs" />
+    <Compile Include="Editors\Boundaries\Views\WaveBoundaryConditionEditor\BoundarySpecificParametersSettingsView.xaml.cs">
+      <DependentUpon>BoundarySpecificParametersSettingsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\Boundaries\Views\WaveBoundaryConditionEditor\BoundaryWideParametersView.xaml.cs">
+      <DependentUpon>BoundaryWideParametersView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\Boundaries\Views\WaveBoundaryConditionEditor\GeometryPreviewView.xaml.cs">
+      <DependentUpon>GeometryPreviewView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\Boundaries\Views\WaveBoundaryConditionEditor\SupportPoints\SupportPointEditorView.xaml.cs">
+      <DependentUpon>SupportPointEditorView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\Boundaries\Views\WaveBoundaryConditionEditor\SupportPoints\SupportPointView.xaml.cs">
+      <DependentUpon>SupportPointView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Editors\DomainSpecificDataEditor\Converters\DirectionSpaceTypeToBooleanConverter.cs" />
     <Compile Include="Editors\DomainSpecificDataEditor\Converters\WindInputTypeAndBooleanToBooleanConverter.cs" />
     <Compile Include="Buttons\SelectComFileButton.cs" />
-    <Compile Include="Editors\DomainSpecificDataEditor\Converters\EnumToDescriptionConverter.cs" />
+    <Compile Include="Editors\Boundaries\ViewModels\WaveBoundaryConditionEditorViewModel.cs" />
+    <Compile Include="Editors\Boundaries\Views\WaveBoundaryConditionEditorView.xaml.cs">
+      <DependentUpon>WaveBoundaryConditionEditorView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\Boundaries\Views\WaveBoundaryConditionEditor\BoundaryDescriptionView.xaml.cs">
+      <DependentUpon>BoundaryDescriptionView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\Boundaries\Views\WaveBoundaryConditionEditor\BoundaryGeometryView.xaml.cs">
+      <DependentUpon>BoundaryGeometryView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Converters\EnumToDescriptionConverter.cs" />
     <Compile Include="Editors\DomainSpecificDataEditor\Converters\FilePathToFileNameConverter.cs" />
     <Compile Include="Editors\DomainSpecificDataEditor\Converters\WindInputTypeToBooleanConverter.cs" />
     <Compile Include="Editors\DomainSpecificDataEditor\Converters\WindInputTypeToVisibilityConverter.cs" />
@@ -243,7 +356,39 @@
     <Compile Include="Editors\WaveTimePointEditor.Designer.cs">
       <DependentUpon>WaveTimePointEditor.cs</DependentUpon>
     </Compile>
+    <Compile Include="FeatureProviders\Boundaries\Factories\BoundaryMapFeaturesContainerFactory.cs" />
+    <Compile Include="FeatureProviders\Boundaries\Providers\Behaviours\AddBehaviours\BoundaryFromLineAddBehaviour.cs" />
+    <Compile Include="FeatureProviders\Boundaries\Providers\Behaviours\FeaturesFromBoundaryBehaviours\SelectedSupportPointFromBoundaryBehaviour.cs" />
+    <Compile Include="FeatureProviders\Boundaries\Providers\Behaviours\FeaturesFromBoundaryBehaviours\EndPointFromBoundaryBehaviour.cs" />
+    <Compile Include="FeatureProviders\Boundaries\Providers\Behaviours\AddBehaviours\IAddBehaviour.cs" />
+    <Compile Include="FeatureProviders\Boundaries\Providers\Behaviours\FeaturesFromBoundaryBehaviours\IFeaturesFromBoundaryBehaviour.cs" />
+    <Compile Include="FeatureProviders\Boundaries\Providers\Behaviours\AddBehaviours\ReadOnlyAddBehaviour.cs" />
+    <Compile Include="FeatureProviders\Boundaries\Providers\Behaviours\FeaturesFromBoundaryBehaviours\StartingPointFromBoundaryBehaviour.cs" />
+    <Compile Include="FeatureProviders\Boundaries\Providers\Behaviours\FeaturesFromBoundaryBehaviours\ToggledSupportPointsFromBoundaryBehaviour.cs" />
+    <Compile Include="FeatureProviders\Boundaries\Providers\BoundaryReadOnlyMapFeatureProvider.cs" />
+    <Compile Include="FeatureProviders\Boundaries\Features\BoundaryLineFeature.cs" />
+    <Compile Include="FeatureProviders\Boundaries\Providers\BoundaryLineMapFeatureProvider.cs" />
+    <Compile Include="FeatureProviders\Boundaries\Containers\BoundaryMapFeaturesContainer.cs" />
+    <Compile Include="FeatureProviders\Boundaries\Providers\BoundarySupportPointMapFeatureProvider.cs" />
+    <Compile Include="FeatureProviders\Boundaries\Containers\IBoundaryMapFeaturesContainer.cs" />
+    <Compile Include="FeatureProviders\Boundaries\Factories\WaveBoundaryGeometryFactory.cs" />
+    <Compile Include="FeatureProviders\Boundaries\Helpers\IUniqueBoundaryNameProvider.cs" />
+    <Compile Include="FeatureProviders\Boundaries\Helpers\IWaveBoundaryFactoryHelper.cs" />
+    <Compile Include="FeatureProviders\Boundaries\Helpers\UniqueBoundaryNameProvider.cs" />
+    <Compile Include="FeatureProviders\Boundaries\Helpers\WaveBoundaryFactoryHelper.cs" />
+    <Compile Include="FeatureProviders\Boundaries\Factories\IWaveBoundaryGeometryFactory.cs" />
+    <Compile Include="FeatureProviders\Boundaries\Factories\IWaveBoundaryFactory.cs" />
+    <Compile Include="FeatureProviders\Boundaries\Factories\WaveBoundaryFactory.cs" />
+    <Compile Include="FeatureProviders\Boundaries\Features\SupportPointFeature.cs" />
+    <Compile Include="FeatureProviders\MultiIEventedListAdapter.cs" />
     <Compile Include="Forms\BoundaryConditionImportDialog.cs" />
+    <Compile Include="Forms\WaveSupportPointMode.cs" />
+    <Compile Include="Forms\WaveSupportPointSelectionForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\WaveSupportPointSelectionForm.Designer.cs">
+      <DependentUpon>WaveSupportPointSelectionForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\WaveBoundaryTimeSelectionDialog.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -255,6 +400,26 @@
     </Compile>
     <Compile Include="Editors\DomainSpecificDataEditor\ViewModels\FrequencySpaceSettingsViewModel.cs" />
     <Compile Include="Editors\DomainSpecificDataEditor\ViewModels\HydroDynamicsSettingsViewModel.cs" />
+    <Compile Include="Layers\IWaveLayerFactory.cs" />
+    <Compile Include="Layers\Providers\BoundaryMapFeaturesContainerLayerSubProvider.cs" />
+    <Compile Include="Layers\Providers\DiscreteGridPointCoverageLayerSubProvider.cs" />
+    <Compile Include="Layers\Providers\Feature2DLayerSubProvider.cs" />
+    <Compile Include="Layers\Providers\ObservationCrossSectionLayerSubProvider.cs" />
+    <Compile Include="Layers\Providers\ObservationPointLayerSubProvider.cs" />
+    <Compile Include="Layers\Providers\ObstacleLayerSubProvider.cs" />
+    <Compile Include="Layers\Providers\Sp2BoundaryLayerSubProvider.cs" />
+    <Compile Include="Layers\Providers\WaveBoundaryConditionLayerSubProvider.cs" />
+    <Compile Include="Layers\Providers\WaveBoundaryLayerSubProvider.cs" />
+    <Compile Include="Layers\Providers\WaveDomainDataLayerSubProvider.cs" />
+    <Compile Include="Layers\Providers\WaveModelLayerSubProvider.cs" />
+    <Compile Include="Layers\Providers\WaveSnappedFeaturesGroupLayerDataLayerSubProvider.cs" />
+    <Compile Include="Layers\Providers\WavmFileFunctionStoreLayerSubProvider.cs" />
+    <Compile Include="Layers\WaveLayerIcons.cs" />
+    <Compile Include="Layers\WaveLayerNames.cs" />
+    <Compile Include="Layers\WaveLayerFactory.cs" />
+    <Compile Include="Layers\WaveMapLayerProviderFactory.cs" />
+    <Compile Include="MapTools\GroupedLayerFeature2DLineTool.cs" />
+    <Compile Include="NodePresenters\SpatiallyVariantBoundaryNodePresenter.cs" />
     <Compile Include="NodePresenters\WaveBoundaryNodePresenter.cs" />
     <Compile Include="NodePresenters\WaveDomainNodePresenter.cs" />
     <Compile Include="NodePresenters\WaveModelTreeShortcutNodePresenter.cs" />
@@ -285,7 +450,6 @@
     <Compile Include="WaveGridBasedDataSource.cs" />
     <Compile Include="WaveGuiPlugin.cs" />
     <Compile Include="WaveMapViewDecorator.cs" />
-    <Compile Include="WaveModelMapLayerProvider.cs" />
     <Compile Include="WaveModelUIDescription.cs" />
     <Compile Include="WaveSettingsHelper.cs" />
     <Compile Include="WaveModelTreeShortcut.cs" />
@@ -300,6 +464,11 @@
     <ProjectReference Include="..\DeltaShell.Dimr\DeltaShell.Dimr.csproj">
       <Project>{ad22cec6-2a71-478c-96c3-b7acdfe9b84b}</Project>
       <Name>DeltaShell.Dimr</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\DeltaShell.NGHS.Common.Gui\DeltaShell.NGHS.Common.Gui.csproj">
+      <Project>{90DED9A6-DD9A-4694-ADEC-5918C12435C8}</Project>
+      <Name>DeltaShell.NGHS.Common.Gui</Name>
       <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\DeltaShell.NGHS.Common\DeltaShell.NGHS.Common.csproj">
@@ -370,16 +539,79 @@
     <EmbeddedResource Include="Editors\WaveTimePointEditor.resx">
       <DependentUpon>WaveTimePointEditor.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\WaveSupportPointSelectionForm.resx">
+      <DependentUpon>WaveSupportPointSelectionForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\WaveBoundaryTimeSelectionDialog.resx">
       <DependentUpon>WaveBoundaryTimeSelectionDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
+      <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Editors\Boundaries\Views\CommonElements\LabeledCheckBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Editors\Boundaries\Views\CommonElements\LabeledComboBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Editors\Boundaries\Views\CommonElements\LabeledValueBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Editors\Boundaries\Views\WaveBoundaryConditionEditorView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Editors\Boundaries\Views\WaveBoundaryConditionEditor\BoundaryDescriptionView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Editors\Boundaries\Views\WaveBoundaryConditionEditor\BoundaryGeometryView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Editors\Boundaries\Views\WaveBoundaryConditionEditor\BoundaryParametersSpecific\FileBasedParametersView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Editors\Boundaries\Views\WaveBoundaryConditionEditor\BoundaryParametersSpecific\ConstantParametersView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Editors\Boundaries\Views\WaveBoundaryConditionEditor\BoundaryParametersSpecific\ParametersSettingsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Editors\Boundaries\Views\WaveBoundaryConditionEditor\BoundaryParametersSpecific\TimeDependentParametersView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Editors\Boundaries\Views\WaveBoundaryConditionEditor\BoundarySpecificParametersSettingsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Editors\Boundaries\Views\WaveBoundaryConditionEditor\BoundaryWideParametersView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Editors\Boundaries\Views\WaveBoundaryConditionEditor\GeometryPreviewView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Editors\Boundaries\Views\WaveBoundaryConditionEditor\SupportPoints\SupportPointEditorView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Editors\Boundaries\Views\WaveBoundaryConditionEditor\SupportPoints\SupportPointView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Editors\DomainSpecificDataEditor\Views\MainDomainSpecificDataView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -418,6 +650,8 @@
     <None Include="packages.config" />
     <None Include="Resources\hurricane2.png" />
     <None Include="Resources\folder.png" />
+    <Resource Include="Resources\add.png" />
+    <Resource Include="Resources\delete.png" />
     <Content Include="Resources\folder_domain.png" />
     <Content Include="Resources\domain.png" />
   </ItemGroup>
