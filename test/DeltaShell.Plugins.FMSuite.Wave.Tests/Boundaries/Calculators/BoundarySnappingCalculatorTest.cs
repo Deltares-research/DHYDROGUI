@@ -141,8 +141,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.Calculators
             // Assert
             var expectedResult = new List<GridBoundaryCoordinate>()
             {
-                new GridBoundaryCoordinate(GridSide.East, 0),
-                new GridBoundaryCoordinate(GridSide.North, 4),
+                new GridBoundaryCoordinate(GridSide.East, 4),
+                new GridBoundaryCoordinate(GridSide.North, 0),
             };
 
             Assert.That(result, Is.EquivalentTo(expectedResult));
@@ -187,8 +187,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.Calculators
             const int y = 5;
             IDiscreteGridPointCoverage grid = GridBoundaryTestHelper.GetValidGridMock(x, y);
 
-            SetGridValues(grid, x, y);
-
             var gridBoundary = new GridBoundary(grid);
             var calculator = new BoundarySnappingCalculator(gridBoundary);
             var coordinateRef = new Coordinate(8.0, 8.0);
@@ -199,8 +197,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.Calculators
             // Assert
             var expectedResult = new List<GridBoundaryCoordinate>()
             {
-                new GridBoundaryCoordinate(GridSide.East, 0),
-                new GridBoundaryCoordinate(GridSide.North, 4),
+                new GridBoundaryCoordinate(GridSide.East, 4),
+                new GridBoundaryCoordinate(GridSide.North, 0),
             };
 
             Assert.That(result, Is.EquivalentTo(expectedResult));
@@ -215,7 +213,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.Calculators
             const int y = 10;
 
             GridBoundary gridBoundary = GridBoundaryTestHelper.GetGridBoundaryWithMockedGrid(x, y, out IDiscreteGridPointCoverage grid);
-            SetGridValues(grid, x, y);
 
             var calculator = new BoundarySnappingCalculator(gridBoundary);
 
@@ -249,7 +246,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.Calculators
             const int y = 10;
 
             GridBoundary gridBoundary = GridBoundaryTestHelper.GetGridBoundaryWithMockedGrid(x, y, out IDiscreteGridPointCoverage grid);
-            SetGridValues(grid, x, y);
 
             var calculator = new BoundarySnappingCalculator(gridBoundary);
 
@@ -303,18 +299,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.Calculators
             Assert.That(exception.Message, Is.EqualTo("gridSide"));
         }
 
-        private static void SetGridValues(IDiscreteGridPointCoverage grid, int x, int y)
-        {
-            for (var i = 0; i < x; i++)
-            {
-                for (var j = 0; j < y; j++)
-                {
-                    grid.X.Values[i, j] = i;
-                    grid.Y.Values[i, j] = j;
-                }
-            }
-        }
-
         /// <remarks>
         /// Assumes grid of 10x10;
         /// </remarks>>
@@ -327,13 +311,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.Calculators
             double distance = random.NextDouble() * (endIndex - startIndex);
 
             yield return new TestCaseData(CreateSupportPoint(distance, GridSide.North, startIndex, endIndex),
-                                          new Coordinate(distance + startIndex, 9));
+                                          new Coordinate(maxIndex - (distance + startIndex), 9));
             yield return new TestCaseData(CreateSupportPoint(distance, GridSide.East, startIndex, endIndex),
-                                          new Coordinate(maxIndex, maxIndex - distance - startIndex));
+                                          new Coordinate(maxIndex, distance + startIndex));
             yield return new TestCaseData(CreateSupportPoint(distance, GridSide.South, startIndex, endIndex),
-                                          new Coordinate(maxIndex - distance - startIndex, 0));
+                                          new Coordinate(distance + startIndex, 0));
             yield return new TestCaseData(CreateSupportPoint(distance, GridSide.West, startIndex, endIndex),
-                                          new Coordinate(0, distance + startIndex));
+                                          new Coordinate(0, maxIndex - (distance + startIndex)));
         }
 
         private static SupportPoint CreateSupportPoint(double distance, GridSide side, int start, int end)

@@ -21,6 +21,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.GeometricDefinitions
             result.Size1.Returns(sizeX);
             result.Size2.Returns(sizeY);
 
+            for (var j = 0; j < sizeY; j++)
+            {
+                for (var i = 0; i < sizeX; i++)
+                {
+                    result.X.Values[i, j] = i;
+                    result.Y.Values[i, j] = j;
+                }
+            }
+
             return result;
         }
 
@@ -31,7 +40,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.GeometricDefinitions
         /// <param name="y">The y dimension.</param>
         /// <param name="grid">The mocked grid.</param>
         /// <returns>
-        /// A <see cref="Gridboundary"/> with <paramref name="grid"/> backing it.
+        /// A <see cref="GridBoundary"/> with <paramref name="grid"/> backing it.
         /// </returns>
         public static GridBoundary GetGridBoundaryWithMockedGrid(int x, int y, out IDiscreteGridPointCoverage grid)
         {
@@ -45,7 +54,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.GeometricDefinitions
         /// <param name="x">The x dimension.</param>
         /// <param name="y">The y dimension.</param>
         /// <returns>
-        /// A <see cref="Gridboundary"/> with a mocked grid.
+        /// A <see cref="GridBoundary"/> with a mocked grid.
         /// </returns>
         public static GridBoundary GetGridBoundaryWithMockedGrid(int x, int y)
         {

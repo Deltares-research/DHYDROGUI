@@ -12,32 +12,117 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.GeometricDefinitions
     [TestFixture]
     public class GridBoundaryTest
     {
-        private readonly Random random = new Random();
+        private const int gridSizeX = 10;
+        private const int gridSizeY = 12;
+
+        private static IDiscreteGridPointCoverage GetRegularGrid()
+        {
+            var grid = Substitute.For<IDiscreteGridPointCoverage>();
+            grid.Size1.Returns(gridSizeX);
+            grid.Size2.Returns(gridSizeY);
+
+            for (var j = 0; j < gridSizeY; j++)
+            {
+                for (var i = 0; i < gridSizeX; i++)
+                {
+                    grid.X.Values[i, j] = i;
+                    grid.Y.Values[i, j] = j;
+                }
+            }
+
+            return grid;
+        }
+
+        private static IDiscreteGridPointCoverage GetRegularGridInvertedX()
+        {
+            var grid = Substitute.For<IDiscreteGridPointCoverage>();
+            grid.Size1.Returns(gridSizeX);
+            grid.Size2.Returns(gridSizeY);
+
+            for (var j = 0; j < gridSizeY; j++)
+            {
+                for (var i = 0; i < gridSizeX; i++)
+                {
+                    grid.X.Values[i, j] = gridSizeX - 1 - i;
+                    grid.Y.Values[i, j] = j;
+                }
+            }
+
+            return grid;
+        }
+
+        private static IDiscreteGridPointCoverage GetRegularGridInvertedY()
+        {
+            var grid = Substitute.For<IDiscreteGridPointCoverage>();
+            grid.Size1.Returns(gridSizeX);
+            grid.Size2.Returns(gridSizeY);
+
+            for (var j = 0; j < gridSizeY; j++)
+            {
+                for (var i = 0; i < gridSizeX; i++)
+                {
+                    grid.X.Values[i, j] = i;
+                    grid.Y.Values[i, j] = gridSizeY - 1 - j;
+                }
+            }
+
+            return grid;
+        }
+
+        private static IDiscreteGridPointCoverage GetRegularGridInvertedXY()
+        {
+            var grid = Substitute.For<IDiscreteGridPointCoverage>();
+            grid.Size1.Returns(gridSizeX);
+            grid.Size2.Returns(gridSizeY);
+
+            for (var j = 0; j < gridSizeY; j++)
+            {
+                for (var i = 0; i < gridSizeX; i++)
+                {
+                    grid.X.Values[i, j] = gridSizeX - 1 - i;
+                    grid.Y.Values[i, j] = gridSizeY - 1 - j;
+                }
+            }
+
+            return grid;
+        }
+
+        private static IEnumerable<TestCaseData> GetConstructorTestCaseData()
+        {
+            yield return new TestCaseData(GetRegularGrid());
+            yield return new TestCaseData(GetRegularGridInvertedX());
+            yield return new TestCaseData(GetRegularGridInvertedY());
+            yield return new TestCaseData(GetRegularGridInvertedXY());
+        }
 
         [Test]
-        public void Constructor_ExpectedValues()
+        [TestCaseSource(nameof(GetConstructorTestCaseData))]
+        public void Constructor_ExpectedValues(IDiscreteGridPointCoverage grid)
         {
-            // Setup
-            const int expectedX = 5;
-            const int expectedY = 6;
-
-            var grid = Substitute.For<IDiscreteGridPointCoverage>();
-            grid.Size1.Returns(expectedX);
-            grid.Size2.Returns(expectedY);
-
             // Call
+            const int expectedX = gridSizeX;
+            const int expectedY = gridSizeY;
+
             var gridBoundary = new GridBoundary(grid);
 
             // Assert
-            AssertGridBoundarySideHasExpectedValues(gridBoundary, GridSide.West, expectedY);
-            AssertGridBoundarySideHasExpectedValues(gridBoundary, GridSide.North, expectedX);
-            AssertGridBoundarySideHasExpectedValues(gridBoundary, GridSide.East, expectedY);
-            AssertGridBoundarySideHasExpectedValues(gridBoundary, GridSide.South, expectedX);
+            Coordinate[] eastCoordinates = Enumerable.Range(0, expectedY).Select(j => new Coordinate(expectedX - 1, j)).ToArray();
+            AssertGridBoundarySideHasExpectedValues(gridBoundary, GridSide.East, expectedY, eastCoordinates);
+
+            Coordinate[] northCoordinates = Enumerable.Range(0, expectedX).Select(i => new Coordinate(expectedX - 1 - i, expectedY - 1)).ToArray();
+            AssertGridBoundarySideHasExpectedValues(gridBoundary, GridSide.North, expectedX, northCoordinates);
+
+            Coordinate[] westCoordinates = Enumerable.Range(0, expectedY).Select(j => new Coordinate(0, expectedY - 1 - j)).ToArray();
+            AssertGridBoundarySideHasExpectedValues(gridBoundary, GridSide.West, expectedY, westCoordinates);
+
+            Coordinate[] southCoordinates = Enumerable.Range(0, expectedX).Select(i => new Coordinate(i, 0)).ToArray();
+            AssertGridBoundarySideHasExpectedValues(gridBoundary, GridSide.South, expectedX, southCoordinates);
         }
 
         private static void AssertGridBoundarySideHasExpectedValues(GridBoundary gridBoundary,
                                                                     GridSide side,
-                                                                    int expectedNumberOfValues)
+                                                                    int expectedNumberOfValues, 
+                                                                    Coordinate[] expectedWorldCoordinates)
         {
             List<GridBoundaryCoordinate> gridBoundaryValues = gridBoundary[side].ToList();
             Assert.That(gridBoundaryValues, Has.Count.EqualTo(expectedNumberOfValues),
@@ -47,6 +132,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.GeometricDefinitions
             {
                 Assert.That(gridBoundaryValues[i].GridSide, Is.EqualTo(side));
                 Assert.That(gridBoundaryValues[i].Index, Is.EqualTo(i));
+                Assert.That(gridBoundary.GetWorldCoordinateFromBoundaryCoordinate(gridBoundaryValues[i]),
+                            Is.EqualTo(expectedWorldCoordinates[i]));
             }
         }
 
@@ -99,9 +186,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.GeometricDefinitions
 
             GridSide[] expectedSides =
             {
-                GridSide.West,
-                GridSide.North,
                 GridSide.East,
+                GridSide.North,
+                GridSide.West,
                 GridSide.South,
             };
 
@@ -147,9 +234,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.GeometricDefinitions
         {
             // Setup
             var gridCoordinate = new GridCoordinate(5, 4);
-            var expectedXWorldCoordinate = random.NextDouble();
-            var expectedYWorldCoordinate = random.NextDouble();
-
             const int expectedX = 6;
             const int expectedY = 5;
 
@@ -157,11 +241,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.GeometricDefinitions
                 GridBoundaryTestHelper.GetGridBoundaryWithMockedGrid(expectedX, 
                                                                      expectedY, 
                                                                      out IDiscreteGridPointCoverage grid);
-
-            grid.X.Values[gridCoordinate.X, gridCoordinate.Y].Returns(expectedXWorldCoordinate);
-            grid.Y.Values[gridCoordinate.X, gridCoordinate.Y].Returns(expectedYWorldCoordinate);
-
-            var gridBoundaryCoordinate = new GridBoundaryCoordinate(GridSide.North, 5);
+            var gridBoundaryCoordinate = new GridBoundaryCoordinate(GridSide.North, 0);
 
             // Call
             Coordinate result = gridBoundary.GetWorldCoordinateFromBoundaryCoordinate(gridBoundaryCoordinate);
@@ -169,8 +249,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.GeometricDefinitions
 
             // Assert
             Assert.That(result, Is.Not.Null, "Expected the result not to be null.");
-            Assert.That(result.X, Is.EqualTo(expectedXWorldCoordinate), "Expected a different Coordinate.X value:");
-            Assert.That(result.Y, Is.EqualTo(expectedYWorldCoordinate), "Expected a different Coordinate.Y value:");
+            Assert.That(result.X, Is.EqualTo(grid.X.Values[5, 4]), "Expected a different Coordinate.X value:");
+            Assert.That(result.Y, Is.EqualTo(grid.Y.Values[5, 4]), "Expected a different Coordinate.Y value:");
         }
     }
 }

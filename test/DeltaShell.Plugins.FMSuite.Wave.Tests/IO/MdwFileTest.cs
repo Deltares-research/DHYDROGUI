@@ -650,7 +650,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
                 x[i] = i;
                 y[i] = i;
             }
-            var grid = new CurvilinearGrid(length, width, x, y, WaveModel.CoordinateSystemType.Spherical);
+            var grid = new CurvilinearGrid(length, width, x, y, WaveModel.CoordinateSystemType.Cartesian);
             return grid;
         }
 
@@ -674,7 +674,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             geometricDefinition.EndingIndex.Returns(10);
             geometricDefinition.StartingIndex.Returns(0);
             geometricDefinition.Length.Returns(10);
-            geometricDefinition.GridSide.Returns(GridSide.West);
+            geometricDefinition.GridSide.Returns(GridSide.East);
             geometricDefinition.SupportPoints.Returns(new EventedList<SupportPoint>()
             {
                 new SupportPoint(0, geometricDefinition),
@@ -1290,7 +1290,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             Assert.That(geometricDefinition.StartingIndex, Is.EqualTo(0));
             Assert.That(geometricDefinition.EndingIndex, Is.EqualTo(10));
             Assert.That(geometricDefinition.Length, Is.EqualTo(100));
-            Assert.That(geometricDefinition.GridSide, Is.EqualTo(GridSide.West));
+            Assert.That(geometricDefinition.GridSide, Is.EqualTo(GridSide.South));
         }
 
         private static SupportPoint AssertCorrectSupportPoint(IWaveBoundaryGeometricDefinition geometricDefinition, double distance)
