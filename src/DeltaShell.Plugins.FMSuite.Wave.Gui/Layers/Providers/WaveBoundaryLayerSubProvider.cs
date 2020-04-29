@@ -27,7 +27,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers.Providers
                 FeatureEditor = new Feature2DEditor(model),
                 Style = WaveModelLayerStyles.BoundaryStyle,
                 NameIsReadOnly = true,
-                Selectable = !model.BoundaryIsDefinedBySpecFile
             };
         }
 

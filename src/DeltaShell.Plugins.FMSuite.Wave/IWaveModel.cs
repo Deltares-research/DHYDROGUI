@@ -38,13 +38,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
         // TODO: This will most likely be removed.
         IEventedList<Feature2D> Boundaries { get; }
-
-        // TODO: This will most likely be removed.
-        IEventedList<Feature2D> Sp2Boundaries { get; }
-
-        // TODO: This will most likely be removed.
-        bool BoundaryIsDefinedBySpecFile { get; set; }
-
+        
         // TODO: This will most likely be removed.
         IGeometry GetGridSnappedBoundary(IGeometry geometry);
     }

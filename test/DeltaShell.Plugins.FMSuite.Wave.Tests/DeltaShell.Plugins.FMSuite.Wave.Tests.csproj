@@ -352,7 +352,6 @@
     <Compile Include="Gui\WaveMeteoDataEditorTest.cs" />
     <Compile Include="Gui\WaveModelGroupLayerTest.cs" />
     <Compile Include="Gui\WaveBoundaryConditionEditorTest.cs" />
-    <Compile Include="Gui\WaveBoundaryConditionListViewTest.cs" />
     <Compile Include="Gui\WaveDomainEditorTest.cs" />
     <Compile Include="Gui\WaveModelNodePresenterTest.cs" />
     <Compile Include="Gui\WaveObstacleListViewTest.cs" />

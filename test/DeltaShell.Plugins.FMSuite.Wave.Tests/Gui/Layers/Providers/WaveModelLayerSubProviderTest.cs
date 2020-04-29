@@ -58,11 +58,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers.Providers
             IList<object> result = subProvider.GenerateChildLayerObjects(waveModel).ToList();
 
             // Assert
-            Assert.That(result.Count, Is.EqualTo(9));
+            Assert.That(result.Count, Is.EqualTo(8));
 
             Assert.That(result, Has.Member(waveModel.BoundaryConditions));
             Assert.That(result, Has.Member(waveModel.Boundaries));
-            Assert.That(result, Has.Member(waveModel.Sp2Boundaries));
             Assert.That(result, Has.Member(waveModel.Obstacles));
             Assert.That(result, Has.Member(waveModel.ObservationPoints));
             Assert.That(result, Has.Member(waveModel.ObservationCrossSections));

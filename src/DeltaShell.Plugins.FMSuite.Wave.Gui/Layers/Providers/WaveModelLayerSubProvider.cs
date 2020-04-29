@@ -59,7 +59,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers.Providers
 
             yield return model.BoundaryConditions;
             yield return model.Boundaries;
-            yield return model.Sp2Boundaries;
             yield return model.Obstacles;
             yield return model.ObservationPoints;
             yield return model.ObservationCrossSections;

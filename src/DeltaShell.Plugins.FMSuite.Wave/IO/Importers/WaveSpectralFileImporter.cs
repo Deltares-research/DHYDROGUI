@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using DelftTools.Shell.Core;
 using DelftTools.Utils.Editing;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.IO.Importers
 {
@@ -45,18 +46,18 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Importers
         {
             path = path ?? SelectedFilePath;
 
-            var conditions = target as IList<WaveBoundaryCondition>;
+            var conditions = target as IList<IWaveBoundary>;
             if (conditions == null)
             {
                 return null;
             }
 
-            WaveModel model = getModels().First(m => m.BoundaryConditions.Equals(conditions));
+            WaveModel model = getModels().First(m => m.BoundaryContainer.Boundaries.Equals(conditions));
             string filePath = Path.GetFullPath(path);
 
             model.BeginEdit(new DefaultEditAction("Import sp2 file"));
-            model.BoundaryIsDefinedBySpecFile = true;
-            model.OverallSpecFile = model.ImportIntoModelDirectory(filePath);
+            model.BoundaryContainer.DefinitionPerFileUsed = true;
+            model.BoundaryContainer.FileNameForBoundariesPerFile = model.ImportIntoModelDirectory(filePath);
             model.EndEdit();
 
             return target;

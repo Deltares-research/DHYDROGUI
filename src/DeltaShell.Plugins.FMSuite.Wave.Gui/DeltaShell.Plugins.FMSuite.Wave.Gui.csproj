@@ -308,12 +308,6 @@
     <Compile Include="Editors\BoundaryConditionEditor\WaveBoundaryConditionEditor.Designer.cs">
       <DependentUpon>WaveBoundaryConditionEditor.cs</DependentUpon>
     </Compile>
-    <Compile Include="Editors\WaveBoundaryConditionListView.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Editors\WaveBoundaryConditionListView.Designer.cs">
-      <DependentUpon>WaveBoundaryConditionListView.cs</DependentUpon>
-    </Compile>
     <Compile Include="Editors\BoundaryConditionEditor\WaveBoundaryConditionPropertiesControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -331,12 +325,6 @@
     </Compile>
     <Compile Include="Editors\WaveObstacleListView.Designer.cs">
       <DependentUpon>WaveObstacleListView.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Editors\WaveOverallSpectrumFileSelection.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Editors\WaveOverallSpectrumFileSelection.Designer.cs">
-      <DependentUpon>WaveOverallSpectrumFileSelection.cs</DependentUpon>
     </Compile>
     <Compile Include="Editors\BoundaryConditionEditor\WaveSpectrumFileSelection.cs">
       <SubType>UserControl</SubType>
@@ -407,7 +395,6 @@
     <Compile Include="Layers\Providers\ObservationCrossSectionLayerSubProvider.cs" />
     <Compile Include="Layers\Providers\ObservationPointLayerSubProvider.cs" />
     <Compile Include="Layers\Providers\ObstacleLayerSubProvider.cs" />
-    <Compile Include="Layers\Providers\Sp2BoundaryLayerSubProvider.cs" />
     <Compile Include="Layers\Providers\WaveBoundaryConditionLayerSubProvider.cs" />
     <Compile Include="Layers\Providers\WaveBoundaryLayerSubProvider.cs" />
     <Compile Include="Layers\Providers\WaveDomainDataLayerSubProvider.cs" />
@@ -514,9 +501,6 @@
     <EmbeddedResource Include="Editors\MeteoFileSelectionControl.resx">
       <DependentUpon>MeteoFileSelectionControl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Editors\WaveBoundaryConditionListView.resx">
-      <DependentUpon>WaveBoundaryConditionListView.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Editors\BoundaryConditionEditor\WaveBoundaryConditionPropertiesControl.resx">
       <DependentUpon>WaveBoundaryConditionPropertiesControl.cs</DependentUpon>
     </EmbeddedResource>
@@ -525,10 +509,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Editors\WaveMeteoDataEditor.resx">
       <DependentUpon>WaveMeteoDataEditor.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Editors\WaveOverallSpectrumFileSelection.resx">
-      <DependentUpon>WaveOverallSpectrumFileSelection.cs</DependentUpon>
-      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Editors\BoundaryConditionEditor\WaveSpectrumFileSelection.resx">
       <DependentUpon>WaveSpectrumFileSelection.cs</DependentUpon>

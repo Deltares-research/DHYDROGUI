@@ -236,8 +236,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         private readonly BoundaryContainerSyncService boundaryContainerSyncService;
 
         public IEventedList<Feature2D> Boundaries { get; }
-        public IEventedList<Feature2D> Sp2Boundaries { get; }
-
+        
         private IWaveDomainData outerDomain;
 
         public IWaveDomainData OuterDomain
@@ -439,7 +438,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         {
             runner = new DimrRunner(this);
             Boundaries = new EventedList<Feature2D>();
-            Sp2Boundaries = new EventedList<Feature2D>();
             BuildModel(creationCode, false);
             
 
@@ -548,7 +546,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
                 return b.Feature;
             });
             model.Boundaries.AddRange(snappedBoundaries);
-            model.LoadSp2Boundary();
         }
 
         public MdwFile MdwFile => mdwFile;
@@ -723,47 +720,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         {
             return WaveModelFileHelper.ImportIntoModelDirectory(Path.GetDirectoryName(MdwFilePath), filePath);
         }
-
-        public bool BoundaryIsDefinedBySpecFile
-        {
-            get => ModelDefinition.BoundaryIsDefinedBySpecFile;
-            set
-            {
-                if (value == ModelDefinition.BoundaryIsDefinedBySpecFile)
-                {
-                    return;
-                }
-
-                ModelDefinition.BoundaryIsDefinedBySpecFile = value;
-
-                // load sp2 file:
-                if (ModelDefinition.BoundaryIsDefinedBySpecFile)
-                {
-                    Boundaries.Clear();
-                    LoadSp2Boundary();
-                }
-                else
-                {
-                    Sp2Boundaries.Clear();
-                }
-            }
-        }
-
-        public string OverallSpecFile
-        {
-            get => ModelDefinition.OverallSpecFile;
-            set
-            {
-                if (value == ModelDefinition.OverallSpecFile)
-                {
-                    return;
-                }
-
-                ModelDefinition.OverallSpecFile = value;
-                LoadSp2Boundary();
-            }
-        }
-
+        
         private static WaveBoundaryCondition CreateWaveBoundaryCondition(Feature2D f, WaveModel model)
         {
             // default condition: parameterized and uniform
@@ -885,44 +842,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
                     ((SpatialOperationSetValueConverter) di.ValueConverter).OriginalValue = domain.Bathymetry.Clone();
                 }
             }
-        }
-
-        private void LoadSp2Boundary()
-        {
-            Sp2Boundaries.Clear();
-
-            string mdwDirectory = Path.GetDirectoryName(MdwFilePath);
-
-            if (!ModelDefinition.BoundaryIsDefinedBySpecFile)
-            {
-                return;
-            }
-
-            if (mdwDirectory == null || ModelDefinition.OverallSpecFile == null)
-            {
-                return;
-            }
-
-            string sp2FilePath = Path.Combine(mdwDirectory, ModelDefinition.OverallSpecFile);
-            if (!File.Exists(sp2FilePath))
-            {
-                return;
-            }
-
-            List<Coordinate> coordinates = new Sp2File().Read(sp2FilePath).Keys.ToList();
-
-            if (coordinates.Count < 2)
-            {
-                return;
-            }
-
-            coordinates.Add(coordinates[0]);
-
-            Sp2Boundaries.Add(new Feature2D
-            {
-                Name = Path.GetFileNameWithoutExtension(ModelDefinition.OverallSpecFile),
-                Geometry = new LineString(coordinates.ToArray())
-            });
         }
 
         public ICoordinateSystem CoordinateSystem
@@ -1342,14 +1261,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
         public IGeometry GetGridSnappedBoundary(IGeometry geometry)
         {
-            // couldn't think of a better way to do this, for now..
-            if (BoundaryIsDefinedBySpecFile)
-            {
-                Log.WarnFormat(
-                    "Cannot add boundaries when the model boundary is defined by Swan spectrum file (*.sp2)");
-                return null;
-            }
-
             return GetGridSnappedGeometry("boundaries", geometry);
         }
 

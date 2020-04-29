@@ -141,29 +141,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
             fromTreeShortcut.CloseForData = (v, o) => o.Equals(v.Data);
 
             yield return fromTreeShortcut;
-
-            // boundary table view
-            var boundaryListView = new ViewInfo<WaveModel, WaveBoundaryConditionListView>()
-            {
-                Description = "Boundary Conditions",
-                GetViewName = (v, o) => "Boundary Conditions (" + o.Name + ")",
-                CompositeViewType = typeof(ProjectItemMapView),
-                GetCompositeViewData = o => o
-            };
-            yield return ViewInfoWrapper<IEventedList<WaveBoundaryCondition>>.Create(boundaryListView,
-                                                                                     o => WaveModels.First(
-                                                                                         m => m.BoundaryConditions
-                                                                                               .Equals(o)),
-                                                                                     o => WaveModels.Any(
-                                                                                         m => m.BoundaryConditions
-                                                                                               .Equals(o)));
-
-            yield return ViewInfoWrapper<WaveModelTreeShortcut>.Create(boundaryListView, o => o.Model,
-                                                                       o =>
-                                                                           o.WaveModel.BoundaryConditions
-                                                                            .Equals(o.Data) &&
-                                                                           o.ShortCutType == ShortCutType.FeatureSet);
-
+            
             // boundary condition editor
             var boundaryConditionViewInfo = new ViewInfo<WaveBoundaryCondition, WaveBoundaryConditionEditor>()
             {
