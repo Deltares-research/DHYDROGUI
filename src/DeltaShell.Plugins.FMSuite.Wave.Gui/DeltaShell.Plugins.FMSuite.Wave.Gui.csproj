@@ -578,7 +578,6 @@
     <Content Include="Resources\domain.png" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Editors\BoundaryConditionEditor\" />
     <Folder Include="Editors\Buttons\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
