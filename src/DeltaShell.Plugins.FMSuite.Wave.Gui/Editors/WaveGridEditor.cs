@@ -54,7 +54,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors
                 }
 
                 model.ReloadAllGrids();
-                model.ResnapBoundaries();
             }
             catch (Exception e)
             {

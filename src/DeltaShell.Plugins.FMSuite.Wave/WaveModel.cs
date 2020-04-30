@@ -1129,36 +1129,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             }
         }
 
-        public void ResnapBoundaries()
-        {
-            try
-            {
-                BeginEdit(new DefaultEditAction("Snap boundaries"));
-                var unsnappable = new List<Feature2D>();
-                foreach (Feature2D b in Boundaries)
-                {
-                    if (gridOperationApi != null)
-                    {
-                        IGeometry snappedGeometry = GetGridSnappedBoundary(b.Geometry);
-                        if (snappedGeometry == null)
-                        {
-                            unsnappable.Add(b);
-                            continue;
-                        }
-
-                        b.Geometry = snappedGeometry;
-                    }
-                }
-
-                // delete
-                unsnappable.ForEach(b => Boundaries.Remove(b));
-            }
-            finally
-            {
-                EndEdit();
-            }
-        }
-
         public IGeometry GetGridSnappedGeometry(string featureType, IGeometry geometry)
         {
             return gridOperationApi != null ? gridOperationApi.GetGridSnappedGeometry(featureType, geometry) : geometry;
