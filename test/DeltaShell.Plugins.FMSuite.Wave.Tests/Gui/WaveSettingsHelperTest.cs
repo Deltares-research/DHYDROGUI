@@ -82,7 +82,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
             Assert.AreEqual(2, boundaryProperties.Count);
             Assert.AreEqual(Resources.WaveSettingsHelper_AddCustomWaveSettings_Use_boundary_definition_per_file,boundaryProperties[0].Label);
             Assert.AreEqual(typeof(bool), boundaryProperties[0].ValueType);
-            Assert.AreEqual(string.Empty, boundaryProperties[0].ToolTip);
+            Assert.AreEqual(Resources.WaveSettingsHelper_AddCustomWaveSettings_When_this_option_is_selected_adding_2D_D_Waves_boundaries_is_not_possible, boundaryProperties[0].ToolTip);
 
             Assert.AreEqual(Resources.WaveSettingsHelper_AddCustomWaveSettings_Spectrum_File, boundaryProperties[1].Label);
             Assert.AreEqual(typeof(string), boundaryProperties[1].ValueType);

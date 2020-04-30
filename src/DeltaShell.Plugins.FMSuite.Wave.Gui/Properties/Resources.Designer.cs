@@ -311,6 +311,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to When this option is selected, adding 2D D-Waves boundaries is not possible..
+        /// </summary>
+        public static string WaveSettingsHelper_AddCustomWaveSettings_When_this_option_is_selected_adding_2D_D_Waves_boundaries_is_not_possible {
+            get {
+                return ResourceManager.GetString("WaveSettingsHelper_AddCustomWaveSettings_When_this_option_is_selected_adding_2D_D" +
+                        "-Waves_boundaries_is_not_possible", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Coupled to D-Flow FM.
         /// </summary>
         public static string WaveSettingsHelper_GetWaveSettings_Coupled_to_D_Flow_FM {

@@ -72,8 +72,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
                     SubCategory = Resources.WaveSettingsHelper_AddCustomWaveSettings_Boundaries_Category_Name,
                     Label = Resources.WaveSettingsHelper_AddCustomWaveSettings_Use_boundary_definition_per_file,
                     ValueType = typeof(bool),
-                    ToolTip = string.Empty
-                });
+                    ToolTip = Resources.WaveSettingsHelper_AddCustomWaveSettings_When_this_option_is_selected_adding_2D_D_Waves_boundaries_is_not_possible
+                    });
                 generalCategory.AddWpfGuiProperty(waveBoundariesPerFileUsed);
 
                 var waveBoundariesPerFileName = new WpfGuiProperty(new FieldUIDescription(o => model.ModelDefinition.BoundaryContainer.FilePathForBoundariesPerFile,

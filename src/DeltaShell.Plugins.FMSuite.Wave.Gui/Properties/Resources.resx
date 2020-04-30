@@ -232,4 +232,7 @@
   <data name="WaveSettingsHelper_AddCustomWaveSettings_Boundaries_Category_Name" xml:space="preserve">
     <value>Boundaries</value>
   </data>
+  <data name="WaveSettingsHelper_AddCustomWaveSettings_When_this_option_is_selected_adding_2D_D-Waves_boundaries_is_not_possible" xml:space="preserve">
+    <value>When this option is selected, adding 2D D-Waves boundaries is not possible.</value>
+  </data>
 </root>
