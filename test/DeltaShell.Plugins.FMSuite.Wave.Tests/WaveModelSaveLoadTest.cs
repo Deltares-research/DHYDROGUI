@@ -146,8 +146,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
 
                 var retrievedModel = (WaveModel) app.Project.RootFolder.Items[0];
 
-                Assert.AreEqual(retrievedModel.BoundaryConditions.Count, model.BoundaryConditions.Count);
-                Assert.AreEqual(retrievedModel.Boundaries.Count, model.Boundaries.Count);
+                Assert.AreEqual(retrievedModel.BoundaryContainer.Boundaries.Count, model.BoundaryContainer.Boundaries.Count);
                 Assert.AreEqual(retrievedModel.Obstacles.Count, model.Obstacles.Count);
                 Assert.AreEqual(retrievedModel.Obstacles.Count, model.Obstacles.Count);
                 Assert.AreEqual(WaveDomainHelper.GetAllDomains(retrievedModel.OuterDomain).Count,

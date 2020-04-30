@@ -189,11 +189,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             get => ModelDefinition.Obstacles;
         }
 
-        public IEventedList<WaveBoundaryCondition> BoundaryConditions
-        {
-            get => ModelDefinition.BoundaryConditions;
-        }
-
         public WaveInputFieldData TimePointData
         {
             get => ModelDefinition.TimePointData;
@@ -1321,13 +1316,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             {
                 yield return domain.Grid;
                 yield return domain.Bathymetry;
-            }
-
-            yield return BoundaryConditions;
-
-            foreach (WaveBoundaryCondition bc in BoundaryConditions)
-            {
-                yield return bc;
             }
 
             foreach (WavmFileFunctionStore wavmFileFunctionStore in WavmFunctionStores)
