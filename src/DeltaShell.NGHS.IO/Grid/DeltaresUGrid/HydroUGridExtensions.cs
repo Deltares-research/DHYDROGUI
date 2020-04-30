@@ -25,7 +25,7 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
     public static class HydroUGridExtensions
     {
         private const int Digits = (int)1E6;
-        private const double EpsilonLocation = 1e-5;
+        private const double EpsilonLocation = 1e-8;
 
         #region Mesh2d
 
@@ -312,13 +312,13 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
         private static INetworkLocation GetNeighboringNetworkLocation(INode node, IDiscretization discretization, IBranch originalBranch)
         {
             var networkLocationsIn = node.IncomingBranches
-                .Where(b => b != originalBranch)
+                .Where(b => b != originalBranch && (b is IChannel || b is IPipe))
                 .Select(b => new { branch = b, location = discretization.GetLocationsForBranch(b).LastOrDefault() })
                 .Where(l => l.location != null && Math.Abs(l.location.Chainage - l.branch.Length) < EpsilonLocation)
                 .Select(l => l.location);
 
             var networkLocationsOut = node.OutgoingBranches
-                .Where(b => b != originalBranch)
+                .Where(b => b != originalBranch && (b is IChannel || b is IPipe))
                 .Select(b => discretization.GetLocationsForBranch(b).FirstOrDefault())
                 .Where(l => l != null && Math.Abs(l.Chainage) < EpsilonLocation);
 
