@@ -50,9 +50,6 @@
             this.waveMeteoDataEditor1 = new DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.WaveMeteoDataEditor();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.tablePanel = new System.Windows.Forms.Panel();
-            this.buttonPanel = new System.Windows.Forms.Panel();
-            this.importFromBoundaryBtn = new System.Windows.Forms.Button();
-            this.exportToBoundaryButton = new System.Windows.Forms.Button();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.configPanel.SuspendLayout();
             this.windGroupBox.SuspendLayout();
@@ -63,7 +60,6 @@
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
-            this.buttonPanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // configPanel
@@ -74,43 +70,48 @@
             this.configPanel.Controls.Add(this.label1);
             this.configPanel.Dock = System.Windows.Forms.DockStyle.Top;
             this.configPanel.Location = new System.Drawing.Point(0, 0);
+            this.configPanel.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.configPanel.Name = "configPanel";
-            this.configPanel.Size = new System.Drawing.Size(836, 43);
+            this.configPanel.Size = new System.Drawing.Size(1254, 66);
             this.configPanel.TabIndex = 1;
             // 
             // windComboBox
             // 
             this.windComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.windComboBox.FormattingEnabled = true;
-            this.windComboBox.Location = new System.Drawing.Point(323, 10);
+            this.windComboBox.Location = new System.Drawing.Point(484, 15);
+            this.windComboBox.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.windComboBox.Name = "windComboBox";
-            this.windComboBox.Size = new System.Drawing.Size(121, 21);
+            this.windComboBox.Size = new System.Drawing.Size(180, 28);
             this.windComboBox.TabIndex = 3;
             // 
             // hydroComboBox
             // 
             this.hydroComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.hydroComboBox.FormattingEnabled = true;
-            this.hydroComboBox.Location = new System.Drawing.Point(109, 10);
+            this.hydroComboBox.Location = new System.Drawing.Point(164, 15);
+            this.hydroComboBox.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.hydroComboBox.Name = "hydroComboBox";
-            this.hydroComboBox.Size = new System.Drawing.Size(121, 21);
+            this.hydroComboBox.Size = new System.Drawing.Size(180, 28);
             this.hydroComboBox.TabIndex = 2;
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(270, 13);
+            this.label2.Location = new System.Drawing.Point(405, 20);
+            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(35, 13);
+            this.label2.Size = new System.Drawing.Size(49, 20);
             this.label2.TabIndex = 1;
             this.label2.Text = "Wind:";
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(8, 13);
+            this.label1.Location = new System.Drawing.Point(12, 20);
+            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(82, 13);
+            this.label1.Size = new System.Drawing.Size(121, 20);
             this.label1.TabIndex = 0;
             this.label1.Text = "Hydrodynamics:";
             // 
@@ -120,9 +121,11 @@
             this.windGroupBox.Controls.Add(this.windDirectionBox);
             this.windGroupBox.Controls.Add(this.label8);
             this.windGroupBox.Controls.Add(this.windSpeedBox);
-            this.windGroupBox.Location = new System.Drawing.Point(3, 136);
+            this.windGroupBox.Location = new System.Drawing.Point(4, 210);
+            this.windGroupBox.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.windGroupBox.Name = "windGroupBox";
-            this.windGroupBox.Size = new System.Drawing.Size(270, 103);
+            this.windGroupBox.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.windGroupBox.Size = new System.Drawing.Size(405, 158);
             this.windGroupBox.TabIndex = 1;
             this.windGroupBox.TabStop = false;
             this.windGroupBox.Text = "Wind (constant values)";
@@ -130,33 +133,37 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(18, 62);
+            this.label7.Location = new System.Drawing.Point(27, 95);
+            this.label7.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(52, 13);
+            this.label7.Size = new System.Drawing.Size(76, 20);
             this.label7.TabIndex = 11;
             this.label7.Text = "Direction:";
             // 
             // windDirectionBox
             // 
-            this.windDirectionBox.Location = new System.Drawing.Point(126, 59);
+            this.windDirectionBox.Location = new System.Drawing.Point(189, 91);
+            this.windDirectionBox.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.windDirectionBox.Name = "windDirectionBox";
-            this.windDirectionBox.Size = new System.Drawing.Size(100, 20);
+            this.windDirectionBox.Size = new System.Drawing.Size(148, 26);
             this.windDirectionBox.TabIndex = 14;
             // 
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(18, 29);
+            this.label8.Location = new System.Drawing.Point(27, 45);
+            this.label8.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(41, 13);
+            this.label8.Size = new System.Drawing.Size(60, 20);
             this.label8.TabIndex = 10;
             this.label8.Text = "Speed:";
             // 
             // windSpeedBox
             // 
-            this.windSpeedBox.Location = new System.Drawing.Point(126, 26);
+            this.windSpeedBox.Location = new System.Drawing.Point(189, 40);
+            this.windSpeedBox.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.windSpeedBox.Name = "windSpeedBox";
-            this.windSpeedBox.Size = new System.Drawing.Size(100, 20);
+            this.windSpeedBox.Size = new System.Drawing.Size(148, 26);
             this.windSpeedBox.TabIndex = 13;
             // 
             // hydroGroupBox
@@ -167,58 +174,66 @@
             this.hydroGroupBox.Controls.Add(this.label5);
             this.hydroGroupBox.Controls.Add(this.label4);
             this.hydroGroupBox.Controls.Add(this.label3);
-            this.hydroGroupBox.Location = new System.Drawing.Point(3, 3);
+            this.hydroGroupBox.Location = new System.Drawing.Point(4, 5);
+            this.hydroGroupBox.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.hydroGroupBox.Name = "hydroGroupBox";
-            this.hydroGroupBox.Size = new System.Drawing.Size(270, 127);
+            this.hydroGroupBox.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.hydroGroupBox.Size = new System.Drawing.Size(405, 195);
             this.hydroGroupBox.TabIndex = 0;
             this.hydroGroupBox.TabStop = false;
             this.hydroGroupBox.Text = "Hydrodynamics (constant values)";
             // 
             // velocityYBox
             // 
-            this.velocityYBox.Location = new System.Drawing.Point(126, 94);
+            this.velocityYBox.Location = new System.Drawing.Point(189, 145);
+            this.velocityYBox.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.velocityYBox.Name = "velocityYBox";
-            this.velocityYBox.Size = new System.Drawing.Size(100, 20);
+            this.velocityYBox.Size = new System.Drawing.Size(148, 26);
             this.velocityYBox.TabIndex = 9;
             // 
             // velocityXBox
             // 
-            this.velocityXBox.Location = new System.Drawing.Point(126, 59);
+            this.velocityXBox.Location = new System.Drawing.Point(189, 91);
+            this.velocityXBox.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.velocityXBox.Name = "velocityXBox";
-            this.velocityXBox.Size = new System.Drawing.Size(100, 20);
+            this.velocityXBox.Size = new System.Drawing.Size(148, 26);
             this.velocityXBox.TabIndex = 8;
             // 
             // waterlevelBox
             // 
-            this.waterlevelBox.Location = new System.Drawing.Point(126, 26);
+            this.waterlevelBox.Location = new System.Drawing.Point(189, 40);
+            this.waterlevelBox.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.waterlevelBox.Name = "waterlevelBox";
-            this.waterlevelBox.Size = new System.Drawing.Size(100, 20);
+            this.waterlevelBox.Size = new System.Drawing.Size(148, 26);
             this.waterlevelBox.TabIndex = 7;
             // 
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(18, 97);
+            this.label5.Location = new System.Drawing.Point(27, 149);
+            this.label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(57, 13);
+            this.label5.Size = new System.Drawing.Size(83, 20);
             this.label5.TabIndex = 6;
             this.label5.Text = "Velocity Y:";
             // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(18, 62);
+            this.label4.Location = new System.Drawing.Point(27, 95);
+            this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(57, 13);
+            this.label4.Size = new System.Drawing.Size(83, 20);
             this.label4.TabIndex = 5;
             this.label4.Text = "Velocity X:";
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(18, 29);
+            this.label3.Location = new System.Drawing.Point(27, 45);
+            this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(68, 13);
+            this.label3.Size = new System.Drawing.Size(97, 20);
             this.label3.TabIndex = 4;
             this.label3.Text = "Water Level:";
             // 
@@ -230,17 +245,20 @@
             this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Left;
             this.flowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.flowLayoutPanel1.Location = new System.Drawing.Point(0, 0);
+            this.flowLayoutPanel1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(280, 444);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(420, 683);
             this.flowLayoutPanel1.TabIndex = 0;
             this.flowLayoutPanel1.WrapContents = false;
             // 
             // meteoBox
             // 
             this.meteoBox.Controls.Add(this.waveMeteoDataEditor1);
-            this.meteoBox.Location = new System.Drawing.Point(3, 245);
+            this.meteoBox.Location = new System.Drawing.Point(4, 378);
+            this.meteoBox.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.meteoBox.Name = "meteoBox";
-            this.meteoBox.Size = new System.Drawing.Size(270, 193);
+            this.meteoBox.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.meteoBox.Size = new System.Drawing.Size(405, 297);
             this.meteoBox.TabIndex = 2;
             this.meteoBox.TabStop = false;
             this.meteoBox.Text = "Wind Files";
@@ -248,80 +266,52 @@
             // waveMeteoDataEditor1
             // 
             this.waveMeteoDataEditor1.Data = null;
-            this.waveMeteoDataEditor1.Location = new System.Drawing.Point(21, 22);
+            this.waveMeteoDataEditor1.Location = new System.Drawing.Point(32, 34);
+            this.waveMeteoDataEditor1.Margin = new System.Windows.Forms.Padding(6, 8, 6, 8);
             this.waveMeteoDataEditor1.Name = "waveMeteoDataEditor1";
-            this.waveMeteoDataEditor1.Size = new System.Drawing.Size(246, 165);
+            this.waveMeteoDataEditor1.Size = new System.Drawing.Size(369, 254);
             this.waveMeteoDataEditor1.TabIndex = 0;
             // 
             // splitContainer1
             // 
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer1.Location = new System.Drawing.Point(0, 43);
+            this.splitContainer1.Location = new System.Drawing.Point(0, 66);
+            this.splitContainer1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.splitContainer1.Name = "splitContainer1";
             // 
             // splitContainer1.Panel1
             // 
             this.splitContainer1.Panel1.Controls.Add(this.tablePanel);
-            this.splitContainer1.Panel1.Controls.Add(this.buttonPanel);
             // 
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.AutoScroll = true;
             this.splitContainer1.Panel2.Controls.Add(this.flowLayoutPanel1);
             this.splitContainer1.Panel2MinSize = 0;
-            this.splitContainer1.Size = new System.Drawing.Size(836, 444);
-            this.splitContainer1.SplitterDistance = 548;
+            this.splitContainer1.Size = new System.Drawing.Size(1254, 683);
+            this.splitContainer1.SplitterDistance = 822;
+            this.splitContainer1.SplitterWidth = 6;
             this.splitContainer1.TabIndex = 2;
             // 
             // tablePanel
             // 
             this.tablePanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tablePanel.Location = new System.Drawing.Point(0, 0);
+            this.tablePanel.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.tablePanel.Name = "tablePanel";
-            this.tablePanel.Size = new System.Drawing.Size(548, 407);
+            this.tablePanel.Size = new System.Drawing.Size(822, 683);
             this.tablePanel.TabIndex = 1;
-            // 
-            // buttonPanel
-            // 
-            this.buttonPanel.Controls.Add(this.importFromBoundaryBtn);
-            this.buttonPanel.Controls.Add(this.exportToBoundaryButton);
-            this.buttonPanel.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.buttonPanel.Location = new System.Drawing.Point(0, 407);
-            this.buttonPanel.Name = "buttonPanel";
-            this.buttonPanel.Size = new System.Drawing.Size(548, 37);
-            this.buttonPanel.TabIndex = 0;
-            // 
-            // importFromBoundaryBtn
-            // 
-            this.importFromBoundaryBtn.Dock = System.Windows.Forms.DockStyle.Left;
-            this.importFromBoundaryBtn.Location = new System.Drawing.Point(201, 0);
-            this.importFromBoundaryBtn.Name = "importFromBoundaryBtn";
-            this.importFromBoundaryBtn.Size = new System.Drawing.Size(201, 37);
-            this.importFromBoundaryBtn.TabIndex = 1;
-            this.importFromBoundaryBtn.Text = "Import from boundary ...";
-            this.importFromBoundaryBtn.UseVisualStyleBackColor = true;
-            this.importFromBoundaryBtn.Click += new System.EventHandler(this.importFromBoundaryBtn_Click);
-            // 
-            // exportToBoundaryButton
-            // 
-            this.exportToBoundaryButton.Dock = System.Windows.Forms.DockStyle.Left;
-            this.exportToBoundaryButton.Location = new System.Drawing.Point(0, 0);
-            this.exportToBoundaryButton.Name = "exportToBoundaryButton";
-            this.exportToBoundaryButton.Size = new System.Drawing.Size(201, 37);
-            this.exportToBoundaryButton.TabIndex = 0;
-            this.exportToBoundaryButton.Text = "Export to boundaries";
-            this.exportToBoundaryButton.UseVisualStyleBackColor = true;
-            this.exportToBoundaryButton.Click += new System.EventHandler(this.exportToBoundaryButton_Click);
             // 
             // WaveTimePointEditor
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.configPanel);
+            this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.Name = "WaveTimePointEditor";
-            this.Size = new System.Drawing.Size(836, 487);
+            this.Size = new System.Drawing.Size(1254, 749);
             this.configPanel.ResumeLayout(false);
             this.configPanel.PerformLayout();
             this.windGroupBox.ResumeLayout(false);
@@ -334,7 +324,6 @@
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
-            this.buttonPanel.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -361,12 +350,9 @@
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
-        private System.Windows.Forms.Panel buttonPanel;
-        private System.Windows.Forms.Button exportToBoundaryButton;
         private System.Windows.Forms.Panel tablePanel;
         private System.Windows.Forms.GroupBox meteoBox;
         private WaveMeteoDataEditor waveMeteoDataEditor1;
-        private System.Windows.Forms.Button importFromBoundaryBtn;
 
     }
 }
