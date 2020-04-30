@@ -49,29 +49,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             SpectrumParameters = new Dictionary<int, WaveBoundaryParameters>();
         }
 
-        public WaveDirectionalSpreadingType DirectionalSpreadingType
-        {
-            get => spectralData.DirectionalSpreadingType;
-            set
-            {
-                spectralData.DirectionalSpreadingType = value;
-
-                switch (DataType)
-                {
-                    case BoundaryConditionDataType.ParameterizedSpectrumConstant:
-                        double defaultSpreadingValue = GetDefaultSpreadingValue();
-                        SpectrumParameters.Values.ForEach(parameters => parameters.Spreading = defaultSpreadingValue);
-                        break;
-                    case BoundaryConditionDataType.ParameterizedSpectrumTimeseries:
-                        PointData.ForEach(function =>
-                        {
-                            UpdateSpreadingComponentDefaultValue(function);
-                            UpdateDirectionComponentVariableUnit(function);
-                        });
-                        break;
-                }
-            }
-        }
+        public WaveDirectionalSpreadingType DirectionalSpreadingType => spectralData.DirectionalSpreadingType;
 
         private double GetDefaultSpreadingValue()
         {
@@ -143,25 +121,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
         public override int VariableDimension => 1;
 
-        private void UpdateSpreadingComponentDefaultValue(IFunction function)
-        {
-            function.Components.Where(c => c.Name == SpreadingVariableName)
-                    .ForEach(c => c.DefaultValue = GetDefaultSpreadingValue());
-        }
-
-        private void UpdateDirectionComponentVariableUnit(IFunction function)
-        {
-            function.Components.Where(c => c.Name == DirectionVariableName)
-                    .ForEach(c =>
-                                 c.Unit = new Unit(
-                                     DirectionalSpreadingType == WaveDirectionalSpreadingType.Degrees
-                                         ? DegreesUnitName
-                                         : PowerUnitName,
-                                     DirectionalSpreadingType == WaveDirectionalSpreadingType.Degrees
-                                         ? DegreesUnitSymbol
-                                         : PowerUnitSymbol));
-        }
-
         public const string TimeVariableName = "Time";
         public const string HeightVariableName = "Hs";
         public const string PeriodVariableName = "Tp";
@@ -170,8 +129,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
         private const string DegreesUnitName = "degrees";
         public const string DegreesUnitSymbol = "deg";
-        private const string PowerUnitName = "power";
-        public const string PowerUnitSymbol = "-";
 
         public static IFunction CreateEmptyWaveEnergyFunction()
         {
