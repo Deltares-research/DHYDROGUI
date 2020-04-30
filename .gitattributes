@@ -1749,6 +1749,8 @@ src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/NodePresenters/WaterFlowFMFileBasedIte
 src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/NodePresenters/WaterFlowFMModelNodePresenter.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/NodePresenters/WindItemListNodePresenter.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/NodePresenters/WindItemNodePresenter.cs -text
+src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/PresentationObjects/ChannelFrictionDefinitionsWrapper.cs -text
+src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/PresentationObjects/PipeFrictionDefinitionsWrapper.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/Properties/AssemblyInfo.cs.svn -text
 src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/Properties/PluginInfo.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/Properties/Resources.Designer.cs -text

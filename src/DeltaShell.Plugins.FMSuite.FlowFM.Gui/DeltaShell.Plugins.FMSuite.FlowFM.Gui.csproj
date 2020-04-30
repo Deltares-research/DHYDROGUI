@@ -368,6 +368,8 @@
     <Compile Include="NodePresenters\ChannelFrictionDefinitionsNodePresenter.cs" />
     <Compile Include="NodePresenters\FmMeteoItemListNodePresenter.cs" />
     <Compile Include="NodePresenters\FmMeteoItemNodePresenter.cs" />
+    <Compile Include="PresentationObjects\PipeFrictionDefinitionsWrapper.cs" />
+    <Compile Include="PresentationObjects\ChannelFrictionDefinitionsWrapper.cs" />
     <Compile Include="Properties\PluginInfo.cs" />
     <Compile Include="Ribbon\ImportBedlevelFromFileCommand.cs" />
     <Compile Include="Ribbon\RelayMapToolCommand.cs" />
