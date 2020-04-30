@@ -43,7 +43,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
         [Test]
         [Category(TestCategory.Performance)]
-        [Category("Quarantine")]
         public void ImportLargeListOfFixedWeirsInDeltaShell()
         {
             using (var gui = new DeltaShellGui())

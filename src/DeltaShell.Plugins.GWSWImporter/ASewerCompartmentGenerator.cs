@@ -84,7 +84,7 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
             if (nodeShapeAttribute.IsValidAttribute())
             {
                 var nodeShapeString = nodeShapeAttribute.GetValidStringValue();
-                if (Enum.IsDefined(typeof(CompartmentShape), nodeShapeString))
+                if (Enum.IsDefined(typeof(CompartmentShape), CompartmentShapeConverter.ConvertStringToCompartmentShape(nodeShapeString)))
                 {
                     compartment.Shape = CompartmentShapeConverter.ConvertStringToCompartmentShape(nodeShapeAttribute.GetValidStringValue());
                 }
