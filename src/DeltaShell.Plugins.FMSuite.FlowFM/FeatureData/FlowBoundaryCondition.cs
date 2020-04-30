@@ -558,7 +558,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
             #endregion
         };
 
-        public static readonly IList<FlowBoundaryQuantityType> AlwaysAllowedQuantities =
+        public static IList<FlowBoundaryQuantityType> AlwaysAllowedQuantities { get; } =
             Enum.GetValues(typeof(FlowBoundaryQuantityType))
                 .Cast<FlowBoundaryQuantityType>()
                 .Except(ValidBoundaryConditionCombinations.SelectMany(l => l).Distinct())

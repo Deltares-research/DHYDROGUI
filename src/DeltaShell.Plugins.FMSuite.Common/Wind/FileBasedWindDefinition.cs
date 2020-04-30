@@ -45,7 +45,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Wind
             public int Method { get; set; }
         }
 
-        public static readonly IDictionary<WindDefinitionType, IList<FileBasedWindQuantity>> ExpectedQuantities =
+        private static IDictionary<WindDefinitionType, IList<FileBasedWindQuantity>> ExpectedQuantities { get; } =
             new Dictionary<WindDefinitionType, IList<FileBasedWindQuantity>>
             {
                 {
