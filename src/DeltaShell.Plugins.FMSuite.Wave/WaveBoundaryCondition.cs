@@ -1,8 +1,6 @@
 ﻿using DelftTools.Units;
 using DelftTools.Utils.Aop;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
-using GeoAPI.Extensions.Feature;
-using GeoAPI.Geometries;
 
 namespace DeltaShell.Plugins.FMSuite.Wave
 {
@@ -10,9 +8,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave
     /// A class that represents boundary conditions that are used in wave models.
     /// </summary>
     /// <seealso cref="DeltaShell.Plugins.FMSuite.Common.FeatureData.BoundaryCondition"/>
-    /// <seealso cref="GeoAPI.Extensions.Feature.IFeature"/>
     [Entity]
-    public class WaveBoundaryCondition : BoundaryCondition, IFeature
+    public class WaveBoundaryCondition : BoundaryCondition
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="WaveBoundaryCondition"/> class.
@@ -32,9 +29,5 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         public override bool IsVerticallyUniform { get; }
 
         public override int VariableDimension => 1;
-
-        public IGeometry Geometry { get; set; }
-
-        public IFeatureAttributeCollection Attributes { get; set; }
     }
 }
