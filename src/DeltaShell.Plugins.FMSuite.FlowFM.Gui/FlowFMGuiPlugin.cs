@@ -456,8 +456,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             };
 
             yield return CreateChannelFrictionDefinitionsWrapperViewInfo(() => Gui);
-
-            yield return SharpMapGisGuiPlugin.CreateAttributeTableViewInfo<PipeFrictionDefinition, WaterFlowFMModel>(m => m.PipeFrictionDefinitions, () => Gui);
+            yield return CreatePipeFrictionDefinitionsWrapperViewInfo(() => Gui);
         }
 
         private static ViewInfo<ChannelFrictionDefinitionsWrapper, ILayer, ChannelFrictionDefinitionsView> CreateChannelFrictionDefinitionsWrapperViewInfo(Func<IGui> getGui)
@@ -502,6 +501,36 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                     if (centralMap == null) return;
 
                     view.SetZoomToFeatureMethod(feature => centralMap.MapView.EnsureVisible(feature));
+                }
+            };
+        }
+
+        private static ViewInfo<PipeFrictionDefinitionsWrapper, ILayer, VectorLayerAttributeTableView> CreatePipeFrictionDefinitionsWrapperViewInfo(Func<IGui> getGui)
+        {
+            return new ViewInfo<PipeFrictionDefinitionsWrapper, ILayer, VectorLayerAttributeTableView>
+            {
+                Description = "1D Roughness - Sewer",
+                GetViewName = (view, layer) => layer.Name,
+                GetViewData = pipeFrictionDefinitionsWrapper =>
+                {
+                    return getGui().DocumentViews
+                        .OfType<ProjectItemMapView>()
+                        .Select(projectItemMapView => projectItemMapView.MapView.GetLayerForData(pipeFrictionDefinitionsWrapper))
+                        .FirstOrDefault(layerData => layerData != null);
+                },
+                CompositeViewType = typeof(ProjectItemMapView),
+                GetCompositeViewData = pipeFrictionDefinitionsWrapper => getGui().Application.Project.RootFolder
+                    .GetAllItemsRecursive()
+                    .OfType<WaterFlowFMModel>()
+                    .First(waterFlowFmModel => Equals(pipeFrictionDefinitionsWrapper.WrappedData, waterFlowFmModel.PipeFrictionDefinitions)),
+                AfterCreate = (view, pipeFrictionDefinitionsWrapper) =>
+                {
+                    var centralMap = getGui().DocumentViews
+                        .OfType<ProjectItemMapView>()
+                        .First(vi => vi.MapView.GetLayerForData(pipeFrictionDefinitionsWrapper) != null);
+                    if (centralMap == null) return;
+
+                    view.ZoomToFeature = feature => centralMap.MapView.EnsureVisible(feature);
                 }
             };
         }
