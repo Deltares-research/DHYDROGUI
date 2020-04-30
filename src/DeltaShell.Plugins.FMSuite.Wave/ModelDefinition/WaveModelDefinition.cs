@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -20,15 +19,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.ModelDefinition
         public IEventedList<WaveModelProperty> Properties { get; set; }
         public ModelPropertySchema<WaveModelPropertyDefinition> ModelSchema { get; private set; }
         public IWaveDomainData OuterDomain { get; set; }
-        public IEventedList<WaveBoundaryCondition> BoundaryConditions { get; set; }
         public IEventedList<WaveObstacle> Obstacles { get; set; }
         public IEventedList<Feature2DPoint> ObservationPoints { get; set; }
         public IEventedList<Feature2D> ObservationCrossSections { get; set; }
 
         public string ObstaclePolylineFile { get; set; }
-
-        // only for import, will be converted
-        public IList<WaveBoundaryCondition> OrientedBoundaryConditions { get; set; }
 
         public WaveInputFieldData TimePointData { get; set; }
 
@@ -78,8 +73,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.ModelDefinition
             Dependencies.CompileEnabledDependencies(Properties);
             Dependencies.CompileVisibleDependencies(Properties);
 
-            BoundaryConditions = new EventedList<WaveBoundaryCondition>();
-            OrientedBoundaryConditions = new List<WaveBoundaryCondition>();
             Obstacles = new EventedList<WaveObstacle>();
             TimePointData = new WaveInputFieldData();
             ObservationPoints = new EventedList<Feature2DPoint>();
