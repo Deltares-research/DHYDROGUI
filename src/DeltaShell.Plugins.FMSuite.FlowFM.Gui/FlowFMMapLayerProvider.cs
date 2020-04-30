@@ -618,6 +618,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                     model.LateralSourcesDataItemSet.AsEventedList<Model1DLateralSourceData>(),
                     model.BoundaryConditions1DDataItemSet.AsEventedList<Model1DBoundaryNodeData>(),
                     model.InitialWaterLevel,
+                    ChannelFrictionDefinitionsWrapper.GetInstance(model.ChannelFrictionDefinitions),
+                    PipeFrictionDefinitionsWrapper.GetInstance(model.PipeFrictionDefinitions),
                     model.RoughnessSections,
                     model.NetworkDiscretization,
                     model.Links,
