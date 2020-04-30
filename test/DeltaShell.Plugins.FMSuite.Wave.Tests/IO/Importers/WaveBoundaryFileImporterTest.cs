@@ -1,18 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using DelftTools.TestUtils;
-using DelftTools.Utils.IO;
-using DeltaShell.Core;
-using DeltaShell.Plugins.CommonTools;
-using DeltaShell.Plugins.Data.NHibernate;
-using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Wave.IO.Importers;
-using DeltaShell.Plugins.SharpMapGis;
-using GeoAPI.Geometries;
-using NetTopologySuite.Extensions.Features;
-using NetTopologySuite.Geometries;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Importers
@@ -31,11 +20,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Importers
         }
 
         [Test]
-        public void SupportedItemTypesTypesPropertyTest()
+        public void SupportedItemTypes_ReturnsEmptyCollection()
         {
-            var expected = new List<Type> {typeof(IList<WaveBoundaryCondition>)};
+            // Setup
             importer = new WaveBoundaryFileImporter();
-            Assert.AreEqual(expected, importer.SupportedItemTypes);
+
+            // Call | Assert
+            Assert.That(importer.SupportedItemTypes, Is.Empty);
         }
 
         [Test]
@@ -63,12 +54,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Importers
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        public void ImportItemTest_WhenTargetIsNotWaveBoundaryConditionCollection_ThenReturnNull()
+        public void ImportItem_ThrowsNotSupportedException()
         {
+            // Setup
             importer = new WaveBoundaryFileImporter();
-            var target = new List<string>();
-            var boundaryConditions = importer.ImportItem(string.Empty, target);
-            Assert.IsNull(boundaryConditions);
+
+            // Call
+            void Call() => importer.ImportItem("path", new List<object>());
+
+            // Assert
+            Assert.That(Call, Throws.TypeOf<NotSupportedException>());
         }
 
         [Test]
@@ -96,34 +91,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Importers
             importer.ProgressChanged = (name, current, total) => { succes = true; };
             importer.ProgressChanged("Importing boundary file...", 1, 2);
             Assert.IsTrue(succes);
-        }
-
-        private static DeltaShellApplication GetRunningApplication(string savePath)
-        {
-            var app = new DeltaShellApplication {IsProjectCreatedInTemporaryDirectory = true};
-            app.Plugins.Add(new NHibernateDaoApplicationPlugin());
-            app.Plugins.Add(new CommonToolsApplicationPlugin());
-            app.Plugins.Add(new SharpMapGisApplicationPlugin());
-            app.Run();
-            app.SaveProjectAs(savePath);
-            return app;
-        }
-
-        private static void SetData(WaveBoundaryCondition boundaryCondition, DateTime refTime)
-        {
-            boundaryCondition.PointData[0].Arguments[0].SetValues(new[] {refTime, refTime.AddDays(1)});
-            boundaryCondition.PointData[0].Components[0].SetValues(new double[] {1, 2});
-            boundaryCondition.PointData[0].Components[1].SetValues(new double[] {3, 4});
-        }
-
-        private static Feature2D CreateBoundary(string boundaryName)
-        {
-            var boundary = new Feature2D
-            {
-                Geometry = new LineString(new[] {new Coordinate(0, 0), new Coordinate(0, 1)}),
-                Name = boundaryName
-            };
-            return boundary;
         }
     }
 }
