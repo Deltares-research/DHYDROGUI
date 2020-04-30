@@ -145,17 +145,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                 // grid is not edited within DS, so always in sync
                 // and a plain file copy suffices
                 CopyGridFiles(allDomains.Select(d => d.GridFileName), sourceDir, targetDir);
-
-                if (modelDefinition.BoundaryIsDefinedBySpecFile)
-                {
-                    var sp2Boundary = new DelftIniCategory(KnownWaveCategories.BoundaryCategory);
-                    sp2Boundary.AddProperty(KnownWaveProperties.Definition, "fromsp2file");
-                    sp2Boundary.AddProperty(KnownWaveProperties.OverallSpecFile, modelDefinition.OverallSpecFile);
-                    mdwCategories.Add(sp2Boundary);
-
-                    // here spec file should always be relative
-                    CopyModelFile(modelDefinition.OverallSpecFile, sourceDir, targetDir);
-                }
             }
 
             DelftIniCategory outputCategory = mdwCategories.First(c => c.Name == KnownWaveCategories.OutputCategory);
