@@ -151,6 +151,8 @@
     <Compile Include="FmModelSettings.cs" />
     <Compile Include="IO\BathymetryFileWriter.cs" />
     <Compile Include="IO\BcMeteoFileDataBuilder.cs" />
+    <Compile Include="IO\ChannelFrictionDefinitionFileReader.cs" />
+    <Compile Include="IO\ChannelFrictionDefinitionFileWriter.cs" />
     <Compile Include="IO\FeatureFile1D2DReader.cs" />
     <Compile Include="IO\FeatureFile1D2DWriter.cs" />
     <Compile Include="IO\FM1DFileFunctionStore.cs" />

@@ -1,13 +1,15 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Roughness;
 using DelftTools.Utils.Collections.Generic;
+using DeltaShell.NGHS.IO.DataObjects.Friction;
 using DeltaShell.NGHS.IO.FileReaders;
 using DeltaShell.NGHS.IO.FileReaders.Location;
 using DeltaShell.NGHS.IO.FileReaders.Roughness;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using log4net;
+using System.IO;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 {
@@ -15,12 +17,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(FeatureFile1D2DReader));
         
-        public static void Read1D2DFeatures(string targetMduFilePath, WaterFlowFMModelDefinition modelDefinition, IHydroNetwork network, IEventedList<RoughnessSection> roughnessSections)
+        public static void Read1D2DFeatures(string targetMduFilePath, WaterFlowFMModelDefinition modelDefinition, IHydroNetwork network, IEventedList<RoughnessSection> roughnessSections, IEventedList<ChannelFrictionDefinition> channelFrictionDefinitions)
         {
             ReadStructuresFiles(targetMduFilePath, modelDefinition, network);
             ReadCrossSectionFiles(targetMduFilePath, modelDefinition, network);
             ReadObservationPointsFiles(targetMduFilePath, modelDefinition, network);
-            ReadRoughnessFiles(targetMduFilePath, modelDefinition, network, roughnessSections);
+            ReadRoughnessFiles(targetMduFilePath, modelDefinition, network, roughnessSections, channelFrictionDefinitions);
             ReadRetentionsFile(targetMduFilePath, modelDefinition, network);
         }
 
@@ -71,21 +73,27 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             StructureFileReader.ReadFile(structureFile, crDefFile, network);
         }
 
-        private static void ReadRoughnessFiles(string targetMduFilePath, WaterFlowFMModelDefinition modelDefinition, IHydroNetwork network, IEventedList<RoughnessSection> roughnessSections)
+        private static void ReadRoughnessFiles(string targetMduFilePath, WaterFlowFMModelDefinition modelDefinition, IHydroNetwork network, IEventedList<RoughnessSection> roughnessSections, IEventedList<ChannelFrictionDefinition> channelFrictionDefinitions)
         {
             var directoryName = Path.GetDirectoryName(targetMduFilePath);
             if (directoryName == null) return;
 
-            var frictionFileNames = modelDefinition.GetModelProperty(KnownProperties.FrictFile).GetValueAsString()?.Split(';');
-            if(frictionFileNames == null || frictionFileNames.Length == 0) return;
-            
+            var roughnessFileNames = modelDefinition.GetModelProperty(KnownProperties.FrictFile).GetValueAsString()?.Split(';');
+            if(roughnessFileNames == null || roughnessFileNames.Length == 0) return;
 
-            foreach (var frictionFileName in frictionFileNames)
+            // read lanes
+            foreach (var roughnessFileName in roughnessFileNames)
             {
-                var fileName = IoHelper.GetFilePathToLocationInSameDirectory(targetMduFilePath, frictionFileName);
+                var fileName = IoHelper.GetFilePathToLocationInSameDirectory(targetMduFilePath, roughnessFileName);
                 if (!File.Exists(fileName)) return;
-                RoughnessDataFileReader.ReadFile(fileName, network, roughnessSections);
+                RoughnessDataFileReader.ReadFile(fileName, network, roughnessSections, channelFrictionDefinitions);
             }
+
+            // read channels roughness
+            var frictionFileName = Properties.Resources.Roughness_Main_Channels_Filename;
+            var frictionFilePath = IoHelper.GetFilePathToLocationInSameDirectory(targetMduFilePath, frictionFileName);
+            if (!File.Exists(frictionFilePath)) return;
+            ChannelFrictionDefinitionFileReader.ReadFile(frictionFilePath, modelDefinition, network, channelFrictionDefinitions);
         }
     }
 }

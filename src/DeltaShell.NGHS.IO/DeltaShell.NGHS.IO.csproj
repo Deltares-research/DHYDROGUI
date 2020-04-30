@@ -122,9 +122,18 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
+    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\System.ValueTuple.4.5.0\lib\net461\System.ValueTuple.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataObjects\Friction\ChannelFrictionDefinition.cs" />
+    <Compile Include="DataObjects\Friction\ChannelFrictionSpecificationType.cs" />
+    <Compile Include="DataObjects\Friction\ConstantChannelFrictionDefinition.cs" />
+    <Compile Include="DataObjects\Friction\SpatialChannelFrictionDefinition.cs" />
+    <Compile Include="DataObjects\Friction\ConstantSpatialChannelFrictionDefinition.cs" />
     <Compile Include="DataObjects\Model1DBoundaryNodeDataExtensions.cs" />
     <Compile Include="DataObjects\Model1D\AggregationOptions.cs" />
     <Compile Include="DataObjects\Model1D\ElementSet.cs" />
@@ -134,6 +143,7 @@
     <Compile Include="DataObjects\FlowWaterLevelTable.cs" />
     <Compile Include="DataObjects\Helper1D.cs" />
     <Compile Include="DataObjects\Model1D\QuantityType.cs" />
+    <Compile Include="DataObjects\Friction\PipeFrictionDefinition.cs" />
     <Compile Include="DataObjects\SaltBoundaryConditionType.cs" />
     <Compile Include="DataObjects\TemperatureBoundaryConditionType.cs" />
     <Compile Include="DataObjects\Model1DBoundaryNodeData.cs" />
@@ -146,6 +156,7 @@
     <Compile Include="DataObjects\WaterLevelParameter.cs" />
     <Compile Include="DelftBcReader.cs" />
     <Compile Include="DelftBcWriter.cs" />
+    <Compile Include="DelftIniMultiLineReader.cs" />
     <Compile Include="DelftIniReader.cs" />
     <Compile Include="DelftIniWriter.cs" />
     <Compile Include="FileReaders\BoundaryFileReader.cs" />

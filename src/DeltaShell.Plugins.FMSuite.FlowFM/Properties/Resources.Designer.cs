@@ -81,6 +81,86 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Branch ({0}) where the roughness should be put on is not available in the model.
+        /// </summary>
+        public static string ChannelFrictionDefinitionFileReader_ReadFile_Branch___0___where_the_roughness_should_be_put_on_is_not_available_in_the_model1 {
+            get {
+                return ResourceManager.GetString("ChannelFrictionDefinitionFileReader_ReadFile_Branch___0___where_the_roughness_sho" +
+                        "uld_be_put_on_is_not_available_in_the_model1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not read content section {0} properly; {1} is not a valid friction type.
+        /// </summary>
+        public static string ChannelFrictionDefinitionFileReader_ReadFile_Could_not_read_content_section__0__properly__1__is_not_a_valid_friction_type1 {
+            get {
+                return ResourceManager.GetString("ChannelFrictionDefinitionFileReader_ReadFile_Could_not_read_content_section__0__p" +
+                        "roperly__1__is_not_a_valid_friction_type1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not read content section {0} properly; {1} is not a valid function type.
+        /// </summary>
+        public static string ChannelFrictionDefinitionFileReader_ReadFile_Could_not_read_content_section__0__properly__1__is_not_a_valid_function_type {
+            get {
+                return ResourceManager.GetString("ChannelFrictionDefinitionFileReader_ReadFile_Could_not_read_content_section__0__p" +
+                        "roperly__1__is_not_a_valid_function_type", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not read content section {0} properly.
+        /// </summary>
+        public static string ChannelFrictionDefinitionFileReader_ReadFile_Could_not_read_content_section__0__properly_1 {
+            get {
+                return ResourceManager.GetString("ChannelFrictionDefinitionFileReader_ReadFile_Could_not_read_content_section__0__p" +
+                        "roperly_1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not read file {0} properly, it doesn&apos;t exist..
+        /// </summary>
+        public static string ChannelFrictionDefinitionFileReader_ReadFile_Could_not_read_file__0__properly__it_doesn_t_exist_1 {
+            get {
+                return ResourceManager.GetString("ChannelFrictionDefinitionFileReader_ReadFile_Could_not_read_file__0__properly__it" +
+                        "_doesn_t_exist_1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not read file {0} properly, it seems empty.
+        /// </summary>
+        public static string ChannelFrictionDefinitionFileReader_ReadFile_Could_not_read_file__0__properly__it_seems_empty_1 {
+            get {
+                return ResourceManager.GetString("ChannelFrictionDefinitionFileReader_ReadFile_Could_not_read_file__0__properly__it" +
+                        "_seems_empty_1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not read file {0} properly, invalid global value was given.
+        /// </summary>
+        public static string ChannelFrictionDefinitionFileReader_ReadFile_Could_not_read_file__0__properly_invalid_global_value_was_given {
+            get {
+                return ResourceManager.GetString("ChannelFrictionDefinitionFileReader_ReadFile_Could_not_read_file__0__properly_inv" +
+                        "alid_global_value_was_given", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not read file {0} properly, no global property was found.
+        /// </summary>
+        public static string ChannelFrictionDefinitionFileReader_ReadFile_Could_not_read_file__0__properly_no_global_property_was_found {
+            get {
+                return ResourceManager.GetString("ChannelFrictionDefinitionFileReader_ReadFile_Could_not_read_file__0__properly_no_" +
+                        "global_property_was_found", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Unknown key {0} from file {1}. It will not be imported..
         /// </summary>
         public static string CmpFile_Read_Unknown_key__0__from_file__1___It_will_not_be_imported_ {
@@ -482,6 +562,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         public static string Read_SourceAndSink_values_failed__no_function_detected_for_SourceAndSink__0_ {
             get {
                 return ResourceManager.GetString("Read_SourceAndSink_values_failed__no_function_detected_for_SourceAndSink__0_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to roughness-Channels.ini.
+        /// </summary>
+        public static string Roughness_Main_Channels_Filename {
+            get {
+                return ResourceManager.GetString("Roughness_Main_Channels_Filename", resourceCulture);
             }
         }
         

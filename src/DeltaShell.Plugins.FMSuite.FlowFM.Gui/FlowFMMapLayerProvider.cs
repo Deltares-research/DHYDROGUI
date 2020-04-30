@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Drawing;
@@ -17,7 +18,7 @@ using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.Common.Gui;
 using DeltaShell.NGHS.IO.DataObjects;
-using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms;
+using DeltaShell.NGHS.IO.DataObjects.Friction;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.Common.Layers;
@@ -31,6 +32,7 @@ using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using DeltaShell.Plugins.NetworkEditor.MapLayers;
 using DeltaShell.Plugins.NetworkEditor.MapLayers.CustomRenderers;
+using GeoAPI.Extensions.CoordinateSystems;
 using GeoAPI.Geometries;
 using log4net;
 using NetTopologySuite.Extensions.Features;
@@ -56,6 +58,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
         private static readonly ConditionalWeakTable<WaterFlowFMModel, FMOutputSnappedFeaturesGroupLayerData> outputSnappedGroupLayerDataMapping =
             new ConditionalWeakTable<WaterFlowFMModel, FMOutputSnappedFeaturesGroupLayerData>();
 
+        private static readonly ConditionalWeakTable<WaterFlowFMModel, FrictionGroupLayerData> frictionGroupLayerDataMapping =
+            new ConditionalWeakTable<WaterFlowFMModel, FrictionGroupLayerData>();
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(FlowFMMapLayerProvider));
 
@@ -305,8 +309,53 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 return featureCoverageLayer;
             }
 
+            if (data is FrictionGroupLayerData)
+            {
+                return new GroupLayer("Roughness Data 1D")
+                {
+                    LayersReadOnly = true,
+                    Selectable = false,
+                    NameIsReadOnly = true
+                };
+            }
+
+            if (data is IEventedList<ChannelFrictionDefinition> channelFrictionDefinitions)
+            {
+                return new VectorLayer(Properties.Resources.ChannelFrictionDefinitions_Name)
+                {
+                    Visible = false,
+                    Selectable = true,
+                    NameIsReadOnly = true,
+                    CanBeRemovedByUser = false,
+                    DataSource = new FeatureCollection
+                    {
+                        FeatureType = typeof(ChannelFrictionDefinition),
+                        Features = (IList) channelFrictionDefinitions,
+                        CoordinateSystem = ((FrictionGroupLayerData) parent).CoordinateSystem
+                    }
+                };
+            }
+
+            if (data is IEventedList<PipeFrictionDefinition> pipeFrictionDefinitions)
+            {
+                return new VectorLayer(Properties.Resources.PipeFrictionDefinitions_Name)
+                {
+                    Visible = false,
+                    Selectable = true,
+                    NameIsReadOnly = true,
+                    CanBeRemovedByUser = false,
+                    DataSource = new FeatureCollection
+                    {
+                        FeatureType = typeof(PipeFrictionDefinition),
+                        Features = (IList) pipeFrictionDefinitions,
+                        CoordinateSystem = ((FrictionGroupLayerData) parent).CoordinateSystem
+                    }
+                };
+            }
+
             return null;
         }
+
         private static string GetCommonFunctionName(IList<IFunction> functions)
         {
             if (!functions.Any()) return string.Empty;
@@ -375,7 +424,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                    || data is FMSnappedFeaturesGroupLayerData
                    || data is FMOutputSnappedFeaturesGroupLayerData
                    || data is CoverageDepthLayersList
-                   || data is IEventedList<Feature2D>;  // Boundaries and sources&sinks
+                   || data is IEventedList<Feature2D>  // Boundaries and sources&sinks
+                   || data is FrictionGroupLayerData
+                   || data is IEventedList<ChannelFrictionDefinition>
+                   || data is IEventedList<PipeFrictionDefinition>;
         }
 
         private bool IsCoverageLeveeBreachWidth(INameable data)
@@ -396,7 +448,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 }
 
                 yield return model.NetworkDiscretization;
-                yield return model.RoughnessSections;
+
+                if (!frictionGroupLayerDataMapping.TryGetValue(model, out var frictionGroupLayerDataElement))
+                {
+                    frictionGroupLayerDataElement = new FrictionGroupLayerData(model);
+                    frictionGroupLayerDataMapping.Add(model, frictionGroupLayerDataElement);
+                }
+                yield return frictionGroupLayerDataElement;
 
                 yield return model.BoundaryConditions1DDataItemSet.AsEventedList<Model1DBoundaryNodeData>();
                 yield return model.LateralSourcesDataItemSet.AsEventedList<Model1DLateralSourceData>();
@@ -532,6 +590,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 foreach (var function in grouping)
                 {
                     yield return function;
+                }
+            }
+
+            if (data is FrictionGroupLayerData frictionGroupLayerData)
+            {
+                foreach (var childLayerObject in frictionGroupLayerData.ChildLayerObjects())
+                {
+                    yield return childLayerObject;
                 }
             }
         }
@@ -710,6 +776,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             return ownerModel != null
                 ? GetRootModelRecursive(ownerModel)
                 : model;
+        }
+
+        private class FrictionGroupLayerData
+        {
+            private readonly WaterFlowFMModel model;
+
+            public FrictionGroupLayerData(WaterFlowFMModel model)
+            {
+                this.model = model;
+            }
+
+            public ICoordinateSystem CoordinateSystem => model.CoordinateSystem;
+
+            public IEnumerable<object> ChildLayerObjects()
+            {
+                yield return model.ChannelFrictionDefinitions;
+                yield return model.PipeFrictionDefinitions;
+                yield return model.RoughnessSections;
+            }
         }
     }
 }

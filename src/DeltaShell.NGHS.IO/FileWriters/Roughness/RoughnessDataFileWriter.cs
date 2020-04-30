@@ -50,33 +50,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Roughness
                         break;
                 }
             }
-            /*
-            // Add definitions
-            foreach (var branch in branches)
-            {
-                var locations = GetLocations(roughnessSection, branch);
-                if (locations != null)
-                {
-                    // Write functions of Discharge or Water level
-                    categories.AddRange(
-                        locations.Select(location => GenerateRoughnessDefinition(roughnessSection, branch, location)));
-                }
-                else
-                {
-                    // Write constant
-                    foreach (var networkLocation in networkCoverage.GetLocationsForBranch(branch))
-                    {
-                        var roughnessValues =
-                            roughnessSection.RoughnessNetworkCoverage.GetValues(
-                                new VariableValueFilter<INetworkLocation>(
-                                    roughnessSection.RoughnessNetworkCoverage.Locations, networkLocation));
-                        foreach (double roughnessValue in roughnessValues)
-                        {
-                            categories.Add(SpatialDataFileWriter.GenerateSpatialDataDefinition(networkLocation, roughnessValue));
-                        }
-                    }
-                }
-            }*/
+
             if (File.Exists(filename)) File.Delete(filename);
             new IniFileWriter().WriteIniFile(categories, filename);
         }
@@ -104,9 +78,6 @@ namespace DeltaShell.NGHS.IO.FileWriters.Roughness
             var roughnessSectionId = reversedRoughnessSection?.NormalSection.Name ?? roughnessSection.Name;
 
             content.AddProperty(RoughnessDataRegion.SectionId.Key, roughnessSectionId);
-            //content.AddProperty(RoughnessDataRegion.FlowDirection.Key, roughnessSection.Reversed.ToString(), RoughnessDataRegion.FlowDirection.Description);
-            //var interpolationIsLinear = networkCoverage != null && (networkCoverage.Arguments.FirstOrDefault() != null && networkCoverage.Arguments.First().InterpolationType == InterpolationType.Linear) ? 1 : 0;
-            //content.AddProperty(RoughnessDataRegion.Interpolate.Key, interpolationIsLinear, RoughnessDataRegion.Interpolate.Description);
 
             var frictionType = ConvertFrictionTypeToTextForFM(roughnessSection);
             var frictionValue = roughnessSection.GetDefaultRoughnessValue();

@@ -24,6 +24,7 @@ using DelftTools.Utils.Collections;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.IO.DataObjects;
+using DeltaShell.NGHS.IO.DataObjects.Friction;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.Coverages;
@@ -2166,6 +2167,72 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             outlet.SurfaceWaterLevel = 1234.567;
 
             Assert.AreEqual(outlet.SurfaceWaterLevel,boundary.WaterLevel);
+        }
+
+        [Test] // Test related to marking model dirty
+        public void ChannelFrictionDefinitions_ChangeProperty_BubblesPropertyChanged()
+        {
+            // Setup
+            var channelFrictionDefinition = new ChannelFrictionDefinition(new Channel());
+            var waterFlowFmModel = new WaterFlowFMModel
+            {
+                ChannelFrictionDefinitions =
+                {
+                    channelFrictionDefinition
+                }
+            };
+
+            var counter = 0;
+            ((INotifyPropertyChanged) waterFlowFmModel).PropertyChanged += (sender, args) =>
+            {
+                if (ReferenceEquals(sender, channelFrictionDefinition) && args.PropertyName == nameof(ChannelFrictionDefinition.SpecificationType))
+                {
+                    counter++;
+                }
+            };
+
+            // Call
+            channelFrictionDefinition.SpecificationType = ChannelFrictionSpecificationType.ConstantChannelFrictionDefinition;
+
+            // Assert
+            Assert.AreEqual(1, counter);
+        }
+
+        [Test] // Test related to marking model dirty
+        public void ChannelFrictionDefinitions_ChangeCollection_BubblesCollectionChanged()
+        {
+            // Setup
+            var channelFrictionDefinition = new ChannelFrictionDefinition(new Channel())
+            {
+                SpecificationType = ChannelFrictionSpecificationType.SpatialChannelFrictionDefinition,
+                SpatialChannelFrictionDefinition =
+                {
+                    FunctionType = RoughnessFunction.Constant
+                }
+            };
+
+            var waterFlowFmModel = new WaterFlowFMModel
+            {
+                ChannelFrictionDefinitions =
+                {
+                    channelFrictionDefinition
+                }
+            };
+
+            var counter = 0;
+            ((INotifyCollectionChanged) waterFlowFmModel).CollectionChanged += (sender, args) =>
+            {
+                if (ReferenceEquals(sender, channelFrictionDefinition.SpatialChannelFrictionDefinition.ConstantSpatialChannelFrictionDefinitions))
+                {
+                    counter++;
+                }
+            };
+
+            // Call
+            channelFrictionDefinition.SpatialChannelFrictionDefinition.ConstantSpatialChannelFrictionDefinitions.Add(new ConstantSpatialChannelFrictionDefinition());
+
+            // Assert
+            Assert.AreEqual(1, counter);
         }
     }
 }

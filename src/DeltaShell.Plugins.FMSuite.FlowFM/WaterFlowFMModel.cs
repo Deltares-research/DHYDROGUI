@@ -29,6 +29,7 @@ using DelftTools.Utils.Reflection;
 using DelftTools.Utils.Validation;
 using DeltaShell.Dimr;
 using DeltaShell.NGHS.IO.DataObjects;
+using DeltaShell.NGHS.IO.DataObjects.Friction;
 using DeltaShell.NGHS.IO.DataObjects.Model1D;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.FMSuite.Common;
@@ -120,7 +121,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             {
                 LoadStateFromMdu(mduFilePath);
                 
-                FeatureFile1D2DReader.Read1D2DFeatures(mduFilePath, ModelDefinition, Network, RoughnessSections);
+                FeatureFile1D2DReader.Read1D2DFeatures(mduFilePath, ModelDefinition, Network, RoughnessSections, ChannelFrictionDefinitions);
 
                 LoadLinks();
 
@@ -217,6 +218,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             Links = new EventedList<ILink1D2D>();
             BoundaryConditions1D = new EventedList<Model1DBoundaryNodeData>();
             LateralSourcesData = new EventedList<Model1DLateralSourceData>();
+            ChannelFrictionDefinitions = new EventedList<ChannelFrictionDefinition>();
+            PipeFrictionDefinitions = new EventedList<PipeFrictionDefinition>();
             RoughnessSections = new EventedList<RoughnessSection>();
         }
 
@@ -2425,7 +2428,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             if (switchTo)
             {
                 ReloadGrid();
-                mduFile.Write(mduPath, ModelDefinition, Area, Network, RoughnessSections, BoundaryConditions1D, LateralSourcesData, allFixedWeirsAndCorrespondingProperties, switchTo: switchTo, writeExtForcings: writeExtForcings, writeFeatures: writeFeatures, disableFlowNodeRenumbering: DisableFlowNodeRenumbering, sedimentModelData: UseMorSed ? this : null);
+                mduFile.Write(mduPath, ModelDefinition, Area, Network, RoughnessSections, ChannelFrictionDefinitions, BoundaryConditions1D, LateralSourcesData, allFixedWeirsAndCorrespondingProperties, switchTo: switchTo, writeExtForcings: writeExtForcings, writeFeatures: writeFeatures, disableFlowNodeRenumbering: DisableFlowNodeRenumbering, sedimentModelData: UseMorSed ? this : null);
             }
             else
             {
@@ -2437,7 +2440,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 {
                     bathymetryNoDataValue = UGridFileHelper.GetZCoordinateNoDataValue(workNetFile, BedLevelLocation);
                 }
-                mduFile.Write(mduPath, ModelDefinition, Area, Network, RoughnessSections, BoundaryConditions1D, LateralSourcesData, allFixedWeirsAndCorrespondingProperties, switchTo: switchTo, writeExtForcings: writeExtForcings, writeFeatures: writeFeatures, disableFlowNodeRenumbering: DisableFlowNodeRenumbering, sedimentModelData: UseMorSed ? this : null, workNetFilePath: workNetFile);
+                mduFile.Write(mduPath, ModelDefinition, Area, Network, RoughnessSections, ChannelFrictionDefinitions, BoundaryConditions1D, LateralSourcesData, allFixedWeirsAndCorrespondingProperties, switchTo: switchTo, writeExtForcings: writeExtForcings, writeFeatures: writeFeatures, disableFlowNodeRenumbering: DisableFlowNodeRenumbering, sedimentModelData: UseMorSed ? this : null, workNetFilePath: workNetFile);
             }
 
 
@@ -2499,7 +2502,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             CreateDataItemsNotAvailableInPreviousVersion();
             LoadStateFromMdu(mduPath);
             
-            FeatureFile1D2DReader.Read1D2DFeatures(mduPath, ModelDefinition, Network, RoughnessSections);
+            FeatureFile1D2DReader.Read1D2DFeatures(mduPath, ModelDefinition, Network, RoughnessSections, ChannelFrictionDefinitions);
 
             LoadLinks();
 

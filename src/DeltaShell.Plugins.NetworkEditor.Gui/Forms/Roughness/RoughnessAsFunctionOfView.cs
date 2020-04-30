@@ -1,4 +1,5 @@
 ﻿using System.Windows.Forms;
+using DelftTools.Controls.Swf.Table;
 using DelftTools.Functions;
 using DelftTools.Hydro;
 using DeltaShell.Plugins.CommonTools.Gui.Forms.Functions;
@@ -7,37 +8,56 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.Roughness
 {
     public partial class RoughnessAsFunctionOfView : Form
     {
-        private FunctionView FunctionView { get; set; }
-        private string FunctionOfColumnTitle { get; set; }
-        private RoughnessType RoughnessType { get; set; }
-        private string RoughnessUnit { get; set; }
-
-        public RoughnessAsFunctionOfView(string functionOfColumnTitle, string branchName, RoughnessType roughnessType, string roughnessUnit)
-        {
-            InitializeComponent();
-            FunctionView = new FunctionView { Dock = DockStyle.Fill };
-            FunctionOfColumnTitle = functionOfColumnTitle;
-            functionGroupBox.Controls.Add(FunctionView);
-            Text = "Roughness as function of " + functionOfColumnTitle + " for channel '" + branchName + "'";
-            RoughnessType = roughnessType;
-            RoughnessUnit = roughnessUnit;
-        }
+        private readonly bool isEditable;
+        private readonly FunctionView functionView;
+        private readonly string leftAxisTitle;
+        private readonly string functionOfColumnTitle;
 
         private IFunction data;
+
+        public RoughnessAsFunctionOfView(string functionOfColumnTitle, string branchName, RoughnessType roughnessType, string roughnessUnit, bool isEditable = true)
+        {
+            InitializeComponent();
+
+            this.isEditable = isEditable;
+
+            functionView = new FunctionView { Dock = DockStyle.Fill };
+            functionGroupBox.Controls.Add(functionView);
+
+            var functionTableView = (TableView) functionView.TableView;
+            functionTableView.ReadOnly = !isEditable;
+            functionTableView.ShowImportExportToolbar = isEditable;
+
+            btnCancel.Visible = isEditable;
+
+            leftAxisTitle = $"{roughnessType} [{roughnessUnit}]";
+
+            this.functionOfColumnTitle = functionOfColumnTitle;
+
+            Text = RoughnessHelper.GetDialogTitle(roughnessType, branchName);
+        }
+
         public IFunction Data
         {
             set
             {
                 data = value;
-                FunctionView.Data = RoughnessFunctionConvertor.ConvertFunctionOfToTableWithChainageColumns(data, FunctionOfColumnTitle);
-                FunctionView.ChartView.Chart.LeftAxis.Title = string.Format("{0} [{1}]", RoughnessType, RoughnessUnit);
+                functionView.Data = RoughnessFunctionConvertor.ConvertFunctionOfToTableWithChainageColumns(data, functionOfColumnTitle);
+                functionView.ChartView.Chart.LeftAxis.Title = leftAxisTitle;
             }
         }
 
         private void BtnOkClick(object sender, System.EventArgs e)
         {
-            // since we are using the clone, cancel does nothing
-            RoughnessFunctionConvertor.ConvertTableWithChainageColumnsToFunctionOf((IFunction) FunctionView.Data, data);
+            if (isEditable)
+            {
+                RoughnessFunctionConvertor.ConvertTableWithChainageColumnsToFunctionOf((IFunction) functionView.Data, data);
+            }
+        }
+
+        private void BtnCancelClick(object sender, System.EventArgs e)
+        {
+            // Since we are using a clone, cancel does nothing
         }
     }
 }

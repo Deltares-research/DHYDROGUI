@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resources {
@@ -151,6 +151,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Channels.
+        /// </summary>
+        public static string ChannelFrictionDefinitions_Name {
+            get {
+                return ResourceManager.GetString("ChannelFrictionDefinitions_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         public static System.Drawing.Bitmap DamBreak {
@@ -276,6 +285,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Properties {
         public static System.Drawing.Bitmap folder {
             get {
                 object obj = ResourceManager.GetObject("folder", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap FrictionDefinition {
+            get {
+                object obj = ResourceManager.GetObject("FrictionDefinition", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -427,6 +446,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Properties {
             get {
                 object obj = ResourceManager.GetObject("none", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sewer.
+        /// </summary>
+        public static string PipeFrictionDefinitions_Name {
+            get {
+                return ResourceManager.GetString("PipeFrictionDefinitions_Name", resourceCulture);
             }
         }
         

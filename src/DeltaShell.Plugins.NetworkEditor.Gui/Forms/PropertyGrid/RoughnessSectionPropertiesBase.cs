@@ -44,7 +44,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
                 if (data.RoughnessNetworkCoverage.DefaultRoughnessType != value)
                 {
                     data.RoughnessNetworkCoverage.DefaultRoughnessType = value;
-                    data.RoughnessNetworkCoverage.DefaultValue = RoughnessTypeDefaults.GetDefault(value);
+                    data.RoughnessNetworkCoverage.DefaultValue = RoughnessHelper.GetDefault(value);
                 }
             }
         }

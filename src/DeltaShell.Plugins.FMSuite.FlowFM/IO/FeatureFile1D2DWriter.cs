@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Roughness;
+using DelftTools.Shell.Core.Properties;
 using DelftTools.Utils.IO;
+using DeltaShell.NGHS.IO.DataObjects.Friction;
 using DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition;
 using DeltaShell.NGHS.IO.FileWriters.Location;
 using DeltaShell.NGHS.IO.FileWriters.Network;
@@ -25,14 +27,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         public const string CROSS_SECTION_LOCATION_FILE_NAME = "crsloc.ini";
         public const string STRUCTURES_FILE_NAME = "structures.ini";
 
-        public static void Write1D2DFeatures(string targetMduFilePath, WaterFlowFMModelDefinition modelDefinition, IHydroNetwork network, HydroArea area, IEnumerable<RoughnessSection> roughnessSections)
+        public static void Write1D2DFeatures(string targetMduFilePath, WaterFlowFMModelDefinition modelDefinition, IHydroNetwork network, HydroArea area, IEnumerable<RoughnessSection> roughnessSections, IEnumerable<ChannelFrictionDefinition> channelFrictionDefinitions)
         {
             WriteNodeFile(targetMduFilePath, modelDefinition, network);
             WriteBranchFile(targetMduFilePath, modelDefinition, network.Branches);
             WriteCrossSectionFiles(targetMduFilePath, modelDefinition, network);
             WriteObservationPointsFiles(targetMduFilePath, modelDefinition, network);
             WriteStructuresFiles(targetMduFilePath, modelDefinition, network, area);
-            WriteRoughnessFiles(targetMduFilePath, modelDefinition, roughnessSections);
+            WriteRoughnessFiles(targetMduFilePath, modelDefinition, roughnessSections, channelFrictionDefinitions);
         }
 
         private static void WriteObservationPointsFiles(string targetMduFilePath,
@@ -157,7 +159,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             }
         }
 
-        private static void WriteRoughnessFiles(string targetMduFilePath, WaterFlowFMModelDefinition modelDefinition, IEnumerable<RoughnessSection> roughnessSections)
+        private static void WriteRoughnessFiles(string targetMduFilePath, WaterFlowFMModelDefinition modelDefinition, IEnumerable<RoughnessSection> roughnessSections, IEnumerable<ChannelFrictionDefinition> channelFrictionDefinitions)
         {
             var directoryName = System.IO.Path.GetDirectoryName(targetMduFilePath);
             if (directoryName == null) return;
@@ -166,6 +168,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             var roughnessFileNames = sections.Select(GetRoughnessFilename);
             modelDefinition.SetModelProperty(KnownProperties.FrictFile, string.Join(";", roughnessFileNames));
 
+            // write lanes files
             foreach (var roughnessSection in sections)
             {
                 var roughnessFileName = GetRoughnessFilename(roughnessSection);
@@ -173,6 +176,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
                 FileWritingUtils.ThrowIfFileNotExists(roughnessFilePath, directoryName, p => RoughnessDataFileWriter.WriteFile(p, roughnessSection));
             }
+
+            // write channels roughness
+            var frictionFileName = Properties.Resources.Roughness_Main_Channels_Filename;
+            var frictionFilePath = System.IO.Path.Combine(directoryName, frictionFileName);
+            var globalFrictionType = (RoughnessType)(int)modelDefinition.GetModelProperty(GuiProperties.UnifFrictTypeChannels).Value;
+            double globalFrictionValue = (double) modelDefinition.GetModelProperty(GuiProperties.UnifFrictCoefChannels).Value;
+            FileWritingUtils.ThrowIfFileNotExists(frictionFilePath, directoryName, p => ChannelFrictionDefinitionFileWriter.WriteFile(p, channelFrictionDefinitions, globalFrictionType, globalFrictionValue));
+            
         }
 
         private static string GetRoughnessFilename(RoughnessSection roughnessSection)

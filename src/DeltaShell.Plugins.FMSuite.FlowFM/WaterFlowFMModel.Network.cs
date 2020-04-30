@@ -19,6 +19,7 @@ using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Editing;
 using DeltaShell.NGHS.IO.DataObjects;
+using DeltaShell.NGHS.IO.DataObjects.Friction;
 using DeltaShell.NGHS.IO.DataObjects.Model1D;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Feature;
@@ -171,23 +172,23 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     NetworkDiscretization.Name = WaterFlowFMModel.DiscretizationObjectName;
             }
 
-            // update boundary conditions
             if (Network != null)
             {
+                // Update boundary conditions
                 foreach (var node in Network.Nodes)
                 {
                     AddBoundaryCondition(Helper1D.CreateDefaultBoundaryCondition(node, false, false));
                 }
-            }
-            // update laterals
-            if (Network != null)
-            {
+
+                // Update laterals
                 foreach (var lateralSource in Network.LateralSources)
                 {
                     AddLateralSourceData(new Model1DLateralSourceData { Feature = (LateralSource)lateralSource });
                 }
-            }
 
+                // Update channel friction definitions
+                ChannelFrictionDefinitions.AddRange(Network.Channels.Select(channel => new ChannelFrictionDefinition(channel)));
+            }
         }
         
         public IDiscretization NetworkDiscretization {
@@ -217,10 +218,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         private DataItemSet boundaryNodeDataItemSet;
         private DataItemSet lateralSourceDataItemSet;
 
+        public IEventedList<ChannelFrictionDefinition> ChannelFrictionDefinitions { get; private set; }
+        public IEventedList<PipeFrictionDefinition> PipeFrictionDefinitions { get; private set; }
+
         public bool UseReverseRoughness { get; set; }
         public bool UseReverseRoughnessInCalculation { get; set; }
         public IEventedList<RoughnessSection> RoughnessSections { get; private set; }
-
 
         /// <summary>
         /// - Synchronize the boundary condition in the model with the IsBoundary property of the Nodes. Since this property
@@ -265,6 +268,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                                 RemoveLateralSourceData(lateralSource);
                             }
 
+                            ChannelFrictionDefinitions.Remove(ChannelFrictionDefinitions.First(cfd => ReferenceEquals(cfd.Channel, channel)));
+
                             // remove all child data items
                             var dataItemsToRemove = new List<IDataItem>();
                             var networkDataItem = GetDataItemByValue(Network);
@@ -307,6 +312,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                             {
                                 AddLateralSourceData(new Model1DLateralSourceData {Feature = lateralSource});
                             }
+
+                            ChannelFrictionDefinitions.Add(new ChannelFrictionDefinition(channel));
 
                             break;
                         }
@@ -459,6 +466,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             ClearOutput();
             ClearBoundaryConditions();
             ClearLateralSourceData();
+            ClearChannelFrictionDefinitions();
             RefreshNetworkDataRelatedData();
             
             // update network in output coverages
@@ -535,9 +543,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         {
             lateralSourceDataItemSet.DataItems.Clear();
         }
+
         private void ClearBoundaryConditions()
         {
             boundaryNodeDataItemSet.DataItems.Clear();
+        }
+
+        private void ClearChannelFrictionDefinitions()
+        {
+            ChannelFrictionDefinitions.Clear();
         }
 
         /// <summary>

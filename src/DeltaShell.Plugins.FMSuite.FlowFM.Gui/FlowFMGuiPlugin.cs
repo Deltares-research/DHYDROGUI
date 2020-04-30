@@ -22,17 +22,18 @@ using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Extensions;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.NGHS.IO.DataObjects;
+using DeltaShell.NGHS.IO.DataObjects.Friction;
 using DeltaShell.Plugins.CommonTools.Gui.Forms.Functions;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.Gui;
 using DeltaShell.Plugins.FMSuite.Common.Gui.Editors;
 using DeltaShell.Plugins.FMSuite.Common.IO;
-using DeltaShell.Plugins.FMSuite.FlowFM.Coverages;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors.ModelFeatureCoordinateDataEditor;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms;
+using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms.Friction;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.GraphicsProviders;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
@@ -50,6 +51,7 @@ using GeoAPI.Geometries;
 using Mono.Addins;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Features;
+using SharpMap.Api.Layers;
 using SharpMap.Data.Providers;
 using SharpMap.Layers;
 
@@ -104,6 +106,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             yield return new WindItemNodePresenter {GuiPlugin = this};
             yield return new FmMeteoItemNodePresenter {GuiPlugin = this};
             yield return new FmMeteoItemListNodePresenter { GuiPlugin = this };
+            yield return new ChannelFrictionDefinitionsNodePresenter { GuiPlugin = this };
+            yield return new PipeFrictionDefinitionsNodePresenter { GuiPlugin = this };
         }
         public override IEnumerable<ViewInfo> GetViewInfoObjects()
         {
@@ -449,7 +453,58 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                     v.CoordinateSystem = model.CoordinateSystem;
                 }
             };
+
+            yield return CreateChannelFrictionDefinitionsViewInfo(() => Gui);
+
+            yield return SharpMapGisGuiPlugin.CreateAttributeTableViewInfo<PipeFrictionDefinition, WaterFlowFMModel>(m => m.PipeFrictionDefinitions, () => Gui);
         }
+
+        private static ViewInfo<IEventedList<ChannelFrictionDefinition>, ILayer, ChannelFrictionDefinitionsView> CreateChannelFrictionDefinitionsViewInfo(Func<IGui> getGui)
+        {
+            return new ViewInfo<IEventedList<ChannelFrictionDefinition>, ILayer, ChannelFrictionDefinitionsView>
+            {
+                Description = "1D Roughness - Channels",
+                GetViewName = (view, layer) => layer.Name,
+                GetViewData = channelFrictionDefinitions =>
+                {
+                    return getGui().DocumentViews
+                        .OfType<ProjectItemMapView>()
+                        .Select(projectItemMapView => projectItemMapView.MapView.GetLayerForData(channelFrictionDefinitions))
+                        .FirstOrDefault(layerData => layerData != null);
+                },
+                CompositeViewType = typeof(ProjectItemMapView),
+                GetCompositeViewData = channelFrictionDefinitions => getGui().Application.Project.RootFolder
+                    .GetAllItemsRecursive()
+                    .OfType<WaterFlowFMModel>()
+                    .First(waterFlowFmModel => Equals(channelFrictionDefinitions, waterFlowFmModel.ChannelFrictionDefinitions)),
+                AfterCreate = (view, channelFrictionDefinitions) =>
+                {
+                    var gui = getGui();
+                    var flowFmModel = gui.Application.Project.RootFolder.GetAllItemsRecursive()
+                        .OfType<WaterFlowFMModel>()
+                        .First(waterFlowFmModel => Equals(channelFrictionDefinitions, waterFlowFmModel.ChannelFrictionDefinitions));
+
+                    view.SetWaterFlowFmModel(flowFmModel);
+
+                    view.SetOpenGlobalFrictionSettingsMethod(() =>
+                    {
+                        gui.DocumentViewsResolver.OpenViewForData(new FmValidationShortcut
+                        {
+                            FlowFmModel = flowFmModel,
+                            TabName = "Physical Parameters"
+                        });
+                    });
+
+                    var centralMap = gui.DocumentViews
+                        .OfType<ProjectItemMapView>()
+                        .First(vi => vi.MapView.GetLayerForData(channelFrictionDefinitions) != null);
+                    if (centralMap == null) return;
+
+                    view.SetZoomToFeatureMethod(feature => centralMap.MapView.EnsureVisible(feature));
+                }
+            };
+        }
+
         private static void SetLateralSourceCompartmentComboBoxTypeEditor(VectorLayerAttributeTableView view)
         {
             var model1DBoundaryNode = view.TableView.CurrentFocusedRowObject as Model1DLateralSourceData;

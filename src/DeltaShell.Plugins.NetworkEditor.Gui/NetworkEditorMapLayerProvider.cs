@@ -295,7 +295,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
 
             if (data is IEventedList<RoughnessSection>)
             {
-                return new GroupLayer("Roughness data")
+                return new GroupLayer("Lanes")
                 {
                     LayersReadOnly = true,
                     Selectable = false,

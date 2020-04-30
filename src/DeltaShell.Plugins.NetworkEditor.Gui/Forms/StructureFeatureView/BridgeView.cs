@@ -221,7 +221,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
 
             if (oldValue != newValue)
             {
-                var roughness = RoughnessTypeDefaults.GetDefault(newValue).ToString();
+                var roughness = RoughnessHelper.GetDefault(newValue).ToString();
                 textBoxGroundLayerRoughnessValue.Text = roughness;
                 textBoxRoughnessValue.Text = roughness;
                 bindingSourceBridge.EndEdit();

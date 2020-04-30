@@ -49,8 +49,7 @@ namespace DeltaShell.NGHS.IO
                     }
                     if (currentCategory == null) continue;
 
-                    var fields = GetKeyValueComment(line);
-                    currentCategory.Properties.Add(new DelftIniProperty {Name = fields[0], Value = fields[1], Comment = fields[2], LineNumber = LineNumber});
+                    ReadFields(line, currentCategory);
                 }
             }
             finally
@@ -59,6 +58,18 @@ namespace DeltaShell.NGHS.IO
             }
 
             return content;
+        }
+
+        /// <summary>
+        /// Parses a line into a DelftIniProperty.
+        /// </summary>
+        /// <param name="line">Line to be parsed.</param>
+        /// <param name="currentCategory">The current category.</param>
+        protected virtual void ReadFields(string line, DelftIniCategory currentCategory)
+        {
+            var fields = GetKeyValueComment(line);
+            currentCategory.Properties.Add(new DelftIniProperty
+                {Name = fields[0], Value = fields[1], Comment = fields[2], LineNumber = LineNumber});
         }
 
         /// <summary>

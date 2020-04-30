@@ -145,6 +145,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataObjects\Friction\ChannelFrictionDefinitionTest.cs" />
+    <Compile Include="DataObjects\Friction\ConstantChannelFrictionDefinitionTest.cs" />
+    <Compile Include="DataObjects\Friction\ConstantSpatialChannelFrictionDefinitionTest.cs" />
+    <Compile Include="DataObjects\Friction\PipeFrictionDefinitionTest.cs" />
+    <Compile Include="DataObjects\Friction\SpatialChannelFrictionDefinitionTest.cs" />
+    <Compile Include="DelftIniMultiLineReaderTest.cs" />
     <Compile Include="FileReaders\CrossSectionDefinitionFileReaderTest.cs" />
     <Compile Include="FileReaders\LocationFileReaderTest.cs" />
     <Compile Include="FileReaders\NetworkAndGridReaderTest.cs" />
@@ -211,7 +217,9 @@
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="FileWriters\Roughness\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>

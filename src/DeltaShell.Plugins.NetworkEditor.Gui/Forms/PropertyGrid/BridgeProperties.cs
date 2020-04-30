@@ -99,7 +99,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
                 if (data.FrictionType != value)
                 {
                     data.FrictionType = value;
-                    data.Friction = RoughnessTypeDefaults.GetDefault(value);
+                    data.Friction = RoughnessHelper.GetDefault(value);
                 }
             }
         }

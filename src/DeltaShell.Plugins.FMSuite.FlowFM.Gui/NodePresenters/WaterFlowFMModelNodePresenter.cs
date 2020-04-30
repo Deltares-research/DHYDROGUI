@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using DelftTools.Controls;
 using DelftTools.Controls.Swf;
 using DelftTools.Functions;
+using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Shell.Gui;
@@ -112,10 +113,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
             {
                 model.GetDataItemByValue(model.Network),
                 new FmModelTreeShortcut(model.NetworkDiscretization.Name, NetworkDiscretizationIcon, model, model.NetworkDiscretization, ShortCutType.Default),
-                new FmModelTreeShortcut("1D Roughness", Resources.Roughness, model, null, ShortCutType.FeatureSet, model.RoughnessSections),
+                new TreeFolder(model, new List<object>
+                {
+                    model.ChannelFrictionDefinitions,
+                    model.PipeFrictionDefinitions,
+                    new FmModelTreeShortcut("Lanes", FolderIcon, model, null, ShortCutType.FeatureSet, model.RoughnessSections)
+                }, "1D Roughness", FolderImageType.None),
                 model.BoundaryConditions1DDataItemSet,
-                model.LateralSourcesDataItemSet,
-
+                model.LateralSourcesDataItemSet
             }, "1D", FolderImageType.None);
 
             yield return new TreeFolder(model, new object[]
@@ -127,7 +132,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
                 new FmModelTreeShortcut("Boundary Conditions", BoundaryConditionIcon, model, model.BoundaryConditionSets, ShortCutType.FeatureSet, model.BoundaryConditionSets),
                 new FmModelTreeShortcut("Physical Parameters", PhysParamIcon, model, "Physical Parameters", ShortCutType.SettingsTab, GetPhysicalSubItems(model)),
                 new FmModelTreeShortcut("Sources and Sinks", SourceSinkIcon, model, model.SourcesAndSinks, ShortCutType.FeatureSet, model.SourcesAndSinks)
-
             }, "2D", FolderImageType.None);
 
             yield return new FmModelTreeShortcut("1D2D Links", Link1D2DIcon, model, model.Links, ShortCutType.FeatureSet);

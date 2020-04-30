@@ -144,6 +144,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         public const string WriteSnappedFeatures = "WriteSnappedFeatures";
 
         public const string TargetMduPath = "TargetMduPath";
+
+        public const string UnifFrictCoefChannels = "UnifFrictCoefChannels";
+        public const string UnifFrictTypeChannels = "UnifFrictTypeChannels";
     }
 
 

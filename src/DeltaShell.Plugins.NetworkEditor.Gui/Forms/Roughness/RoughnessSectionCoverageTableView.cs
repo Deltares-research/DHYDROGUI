@@ -38,15 +38,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.Roughness
         private RoughnessSection data;
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(RoughnessSectionCoverageTableView));
-        private readonly IDictionary<RoughnessType, string> roughnessTypeUnitLookUp = new Dictionary<RoughnessType, string>
-                {
-                    {RoughnessType.Chezy, "m^1/2*s^-1"},
-                    {RoughnessType.Manning, "s*m^-1/3"},
-                    {RoughnessType.StricklerKn, "m"},
-                    {RoughnessType.StricklerKs, "m^1/3*s^-1"},
-                    {RoughnessType.DeBosAndBijkerk, "-"},
-                    {RoughnessType.WhiteColebrook, "m"},
-                };
 
         public RoughnessSectionCoverageTableView()
         {
@@ -187,7 +178,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.Roughness
             }
             else if (column == ColumnRoughnessUnitIndex)
             {
-                return roughnessTypeUnitLookUp[GetRoughnessType(branch)];
+                return RoughnessHelper.GetUnit(GetRoughnessType(branch));
             }
 
             return null;
@@ -208,7 +199,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.Roughness
                 return;
             }
 
-            var defaultValue = RoughnessTypeDefaults.GetDefault(newRoughnessType);
+            var defaultValue = RoughnessHelper.GetDefault(newRoughnessType);
             data.BeginEdit(String.Format("Changing roughness type {0} -> {1}", oldRoughnessType, newRoughnessType));
             tableView.SetCellValue(rowIndex, e.Value.Column.AbsoluteIndex + 1, defaultValue.ToString("N3"));
 
@@ -283,7 +274,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.Roughness
 
             var form = new RoughnessAsFunctionOfView(variableName, location.Branch.Name,
                                                      data.EvaluateRoughnessType(location),
-                                                     roughnessTypeUnitLookUp[GetRoughnessType(location.Branch)])
+                                                     RoughnessHelper.GetUnit(GetRoughnessType(location.Branch)))
                 {
                     Data = function
                 };

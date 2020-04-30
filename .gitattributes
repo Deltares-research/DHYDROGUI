@@ -379,8 +379,8 @@ src/DelftTools.Hydro/Roughness/RoughnessSection.cs -text
 src/DelftTools.Hydro/Roughness/RoughnessSection.hbm.xml -text
 src/DelftTools.Hydro/Roughness/RoughnessSectionChangeBranchFunction.cs -text
 src/DelftTools.Hydro/Roughness/RoughnessSectionExtensions.cs -text
+src/DelftTools.Hydro/RoughnessHelper.cs -text
 src/DelftTools.Hydro/RoughnessType.cs -text
-src/DelftTools.Hydro/RoughnessTypeDefaults.cs -text
 src/DelftTools.Hydro/RunoffBoundary.cs -text
 src/DelftTools.Hydro/RunoffBoundary.hbm.xml -text
 src/DelftTools.Hydro/SewerConnectionExtensionMethods.cs -text
@@ -549,6 +549,12 @@ src/DeltaShell.NGHS.IO/DataObjects/FlowParameter.cs -text
 src/DeltaShell.NGHS.IO/DataObjects/FlowParameter.hbm.xml -text
 src/DeltaShell.NGHS.IO/DataObjects/FlowWaterLevelTable.cs -text
 src/DeltaShell.NGHS.IO/DataObjects/FlowWaterLevelTable.hbm.xml -text
+src/DeltaShell.NGHS.IO/DataObjects/Friction/ChannelFrictionDefinition.cs -text
+src/DeltaShell.NGHS.IO/DataObjects/Friction/ChannelFrictionSpecificationType.cs -text
+src/DeltaShell.NGHS.IO/DataObjects/Friction/ConstantChannelFrictionDefinition.cs -text
+src/DeltaShell.NGHS.IO/DataObjects/Friction/ConstantSpatialChannelFrictionDefinition.cs -text
+src/DeltaShell.NGHS.IO/DataObjects/Friction/PipeFrictionDefinition.cs -text
+src/DeltaShell.NGHS.IO/DataObjects/Friction/SpatialChannelFrictionDefinition.cs -text
 src/DeltaShell.NGHS.IO/DataObjects/Helper1D.cs -text
 src/DeltaShell.NGHS.IO/DataObjects/Model1D/AggregationOptions.cs -text
 src/DeltaShell.NGHS.IO/DataObjects/Model1D/ElementSet.cs -text
@@ -574,6 +580,7 @@ src/DeltaShell.NGHS.IO/DataObjects/WaterLevelParameter.hbm.xml -text
 src/DeltaShell.NGHS.IO/DataTypeValueParser.cs -text
 src/DeltaShell.NGHS.IO/DelftBcReader.cs -text
 src/DeltaShell.NGHS.IO/DelftBcWriter.cs -text
+src/DeltaShell.NGHS.IO/DelftIniMultiLineReader.cs -text
 src/DeltaShell.NGHS.IO/DelftIniReader.cs -text
 src/DeltaShell.NGHS.IO/DelftIniWriter.cs -text
 src/DeltaShell.NGHS.IO/DeltaShell.NGHS.IO.csproj -text
@@ -1698,6 +1705,11 @@ src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/Forms/Feature2DImportExportDialog.cs -
 src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/Forms/Feature2DImportExportDialog.resx -text
 src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/Forms/FmMeteoSelectionDialog.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/Forms/FmMeteoSelectionDialog.resx -text
+src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/Forms/Friction/ChannelFrictionDefinitionsView.Designer.cs -text
+src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/Forms/Friction/ChannelFrictionDefinitionsView.cs -text
+src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/Forms/Friction/ConstantSpatialChannelFrictionDefinitionsForm.Designer.cs -text
+src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/Forms/Friction/ConstantSpatialChannelFrictionDefinitionsForm.cs -text
+src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/Forms/Friction/ConstantSpatialChannelFrictionDefinitionsForm.resx -text
 src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/Forms/GenerateEmbankmentsDialog.Designer.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/Forms/GenerateEmbankmentsDialog.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/Forms/GenerateEmbankmentsDialog.resx -text
@@ -1723,6 +1735,7 @@ src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/MapTools/GridWizardMapToolHelper.cs -t
 src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/MapTools/MapTool1D2DLinksHelper.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/MapTools/MergeEmbankmentsMapTool.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/NodePresenters/BoundaryConditionSetNodePresenter.cs -text
+src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/NodePresenters/ChannelFrictionDefinitionsNodePresenter.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/NodePresenters/FMHisFileFunctionStoreNodePresenter.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/NodePresenters/FMMapFileFunctionStoreNodePresenter.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/NodePresenters/FmMeteoItemListNodePresenter.cs -text
@@ -1730,6 +1743,7 @@ src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/NodePresenters/FmMeteoItemNodePresente
 src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/NodePresenters/FmModelTreeShortcutNodePresenter.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/NodePresenters/HeatFluxModelNodePresenter.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/NodePresenters/ImportedFMNetFileNodePresenter.cs -text
+src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/NodePresenters/PipeFrictionDefinitionsNodePresenter.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/NodePresenters/SourceSinkNodePresenter.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/NodePresenters/WaterFlowFMFileBasedItemNodePresenter.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/NodePresenters/WaterFlowFMModelNodePresenter.cs -text
@@ -1753,6 +1767,7 @@ src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/Resources/BoundaryType_TimeSeries.png 
 src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/Resources/BoundaryType_Undefined.png -text
 src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/Resources/DamBreak.png -text
 src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/Resources/Delete.png -text
+src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/Resources/FrictionDefinition.png -text
 src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/Resources/Gully.png -text
 src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/Resources/HBoundary.png -text
 src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/Resources/HConst.png -text
@@ -1857,6 +1872,8 @@ src/DeltaShell.Plugins.FMSuite.FlowFM/IO/BcmFile.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/IO/BcmFileFlowBoundaryDataBuilder.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/IO/BndExtForceFile.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/IO/BoundaryConditionWpsImporter.cs -text
+src/DeltaShell.Plugins.FMSuite.FlowFM/IO/ChannelFrictionDefinitionFileReader.cs -text
+src/DeltaShell.Plugins.FMSuite.FlowFM/IO/ChannelFrictionDefinitionFileWriter.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/IO/CmpFile.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/IO/Exporters/Area2DStructuresExporter.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/IO/Exporters/BcFileExporter.cs -text
@@ -3235,6 +3252,12 @@ test/DeltaShell.NGHS.IO.TestUtils/NetworkAndGridReaderTestHelper.cs -text
 test/DeltaShell.NGHS.IO.TestUtils/Properties/AssemblyInfo.cs -text
 test/DeltaShell.NGHS.IO.TestUtils/StructureFileWriterTestHelper.cs -text
 test/DeltaShell.NGHS.IO.TestUtils/packages.config -text
+test/DeltaShell.NGHS.IO.Tests/DataObjects/Friction/ChannelFrictionDefinitionTest.cs -text
+test/DeltaShell.NGHS.IO.Tests/DataObjects/Friction/ConstantChannelFrictionDefinitionTest.cs -text
+test/DeltaShell.NGHS.IO.Tests/DataObjects/Friction/ConstantSpatialChannelFrictionDefinitionTest.cs -text
+test/DeltaShell.NGHS.IO.Tests/DataObjects/Friction/PipeFrictionDefinitionTest.cs -text
+test/DeltaShell.NGHS.IO.Tests/DataObjects/Friction/SpatialChannelFrictionDefinitionTest.cs -text
+test/DeltaShell.NGHS.IO.Tests/DelftIniMultiLineReaderTest.cs -text
 test/DeltaShell.NGHS.IO.Tests/DeltaShell.NGHS.IO.Tests.csproj -text
 test/DeltaShell.NGHS.IO.Tests/FileReaders/CrossSectionDefinitionFileReaderTest.cs -text
 test/DeltaShell.NGHS.IO.Tests/FileReaders/LocationFileReaderTest.cs -text
@@ -3259,6 +3282,7 @@ test/DeltaShell.NGHS.IO.Tests/NGHSIOResourcesTest.cs -text
 test/DeltaShell.NGHS.IO.Tests/Properties/AssemblyInfo.cs -text
 test/DeltaShell.NGHS.IO.Tests/app.config -text
 test/DeltaShell.NGHS.IO.Tests/packages.config -text
+test/DeltaShell.NGHS.IO.Tests/test-data/DelftIniMultiLineReaderTestData.ini -text
 test/DeltaShell.NGHS.IO.Tests/test-data/DirectoryDoesNotExist/deltashell.map -text
 test/DeltaShell.NGHS.IO.Tests/test-data/FileReaders/StructureFileReaderTest/FlowFM.mdu -text
 test/DeltaShell.NGHS.IO.Tests/test-data/FileReaders/StructureFileReaderTest/FlowFM_meteo.bc -text
@@ -6034,6 +6058,8 @@ test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/IO/BcmFileExportImportTest.cs -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/IO/BcmFileFlowBoundaryDataBuilderTest.cs -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/IO/BcmFileTest.cs -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/IO/BndExtForceFileTest.cs -text
+test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/IO/ChannelFrictionDefinitionFileReaderTest.cs -text
+test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/IO/ChannelFrictionDefinitionFileWriterTest.cs -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/IO/CmpFileTest.cs -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/IO/DelftIniCategoryExtensionTests.cs -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/IO/Exporters/BcFileExporterTest.cs -text
@@ -7466,6 +7492,8 @@ test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/HydroAreaCollection/TwoFi
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/HydroAreaCollection/repeatedProperty.mdu -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/HydroAreaCollection/slashSeparated.mdu -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/HydroAreaCollection/spaceSeparated.mdu -text
+test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/IO/ChannelFrictionDefinitions_expected.ini -text
+test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/IO/roughness-Channels.ini -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/ImportMDUFile/IncorrectPlizFile/bridge-1.mdu -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/ImportMDUFile/IncorrectPlizFile/bridge-1.pliz -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/ImportMDUFile/IncorrectPlizFile/bridge-2.mdu -text
