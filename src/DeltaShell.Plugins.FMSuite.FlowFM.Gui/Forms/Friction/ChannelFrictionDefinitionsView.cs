@@ -434,8 +434,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms.Friction
             tableView.Columns[columnIndex].Editor = new ComboBoxTypeEditor
             {
                 Items = Enum.GetValues(typeof(RoughnessType)),
-                CustomFormatter = new EnumFormatter(typeof(RoughnessType)),
-                ItemsMandatory = false
+                CustomFormatter = new EnumFormatter(typeof(RoughnessType))
             };
         }
 
@@ -577,7 +576,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms.Friction
         {
             if (sender is IChannel && e.PropertyName == nameof(IChannel.Name))
             {
-                vectorLayerAttributeTableView.TableView.RefreshData();
                 vectorLayerAttributeTableView.TableView.BestFitColumns();
             }
         }
