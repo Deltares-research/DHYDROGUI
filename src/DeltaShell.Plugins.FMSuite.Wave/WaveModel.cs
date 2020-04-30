@@ -225,8 +225,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
         private readonly BoundaryContainerSyncService boundaryContainerSyncService;
 
-        public IEventedList<Feature2D> Boundaries { get; }
-        
         private IWaveDomainData outerDomain;
 
         public IWaveDomainData OuterDomain
@@ -427,7 +425,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         private WaveModel(Action<WaveModel> creationCode) : base("Waves")
         {
             runner = new DimrRunner(this);
-            Boundaries = new EventedList<Feature2D>();
             BuildModel(creationCode, false);
             
 

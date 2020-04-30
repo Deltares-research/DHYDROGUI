@@ -35,8 +35,5 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         /// Gets the boundary container of this <see cref="IWaveModel"/>.
         /// </summary>
         IBoundaryContainer BoundaryContainer { get; }
-
-        // TODO: This will most likely be removed.
-        IEventedList<Feature2D> Boundaries { get; }
     }
 }
