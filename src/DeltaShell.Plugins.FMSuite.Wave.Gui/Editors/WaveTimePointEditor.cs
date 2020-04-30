@@ -46,8 +46,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors
         }
 
         public Func<string, string> ImportFileIntoModelDirectory { private get; set; }
-        public Action ExportToBoundaryConditions { private get; set; }
-        public Action ImportFromBoundaryCondition { private get; set; }
 
         private void WindComboBoxOnSelectedValueChanged(object sender, EventArgs eventArgs)
         {
@@ -164,15 +162,5 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors
         public void OnActivated() {}
 
         public void OnDeactivated() {}
-
-        private void exportToBoundaryButton_Click(object sender, EventArgs e)
-        {
-            ExportToBoundaryConditions();
-        }
-
-        private void importFromBoundaryBtn_Click(object sender, EventArgs e)
-        {
-            ImportFromBoundaryCondition();
-        }
     }
 }

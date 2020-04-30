@@ -123,10 +123,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
                 {
                     WaveModel model = WaveModels.First(m => Equals(o, m.TimePointData));
                     v.ImportFileIntoModelDirectory = model.ImportIntoModelDirectory;
-                    v.ExportToBoundaryConditions =
-                        () => ExportTimesToBoundaryConditions(WaveModels.First(m => Equals(o, m.TimePointData)));
-                    v.ImportFromBoundaryCondition =
-                        () => ImportTimesFromBoundaryCondition(WaveModels.First(m => Equals(o, m.TimePointData)));
                 }
             };
             yield return timePointViewInfo;
@@ -255,16 +251,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
                     v.OnValidate = d => new WaveModelValidator().Validate(d as WaveModel, d as WaveModel);
                 }
             };
-        }
-
-        private static void ImportTimesFromBoundaryCondition(WaveModel model)
-        {
-            // TODO? Should this functionality be available?
-        }
-
-        private static void ExportTimesToBoundaryConditions(WaveModel model)
-        {
-            // TODO? Should this functionality be available?
         }
 
         private bool IsModelObstacle(Feature2D f)
