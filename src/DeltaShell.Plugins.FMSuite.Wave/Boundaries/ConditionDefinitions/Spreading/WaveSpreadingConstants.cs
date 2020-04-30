@@ -2,7 +2,7 @@
 {
     /// <summary>
     /// <see cref="WaveSpreadingConstants"/> defines the constants used within the spreading
-    /// of <see cref="WaveBoundaryConditionSpatialDefinitionType"/>.
+    /// of <see cref="IBoundaryConditionSpreading"/>.
     /// </summary>
     public static class WaveSpreadingConstants
     {
