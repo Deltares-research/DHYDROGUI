@@ -1139,11 +1139,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             throw new NotImplementedException();
         }
 
-        public IGeometry GetGridSnappedBoundary(IGeometry geometry)
-        {
-            return GetGridSnappedGeometry("boundaries", geometry);
-        }
-
         public IEnumerable<IGeometry> GetGridSnappedGeometry(string featureType, ICollection<IGeometry> geometries)
         {
             throw new NotImplementedException();
