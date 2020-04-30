@@ -26,6 +26,7 @@ using DeltaShell.Plugins.FMSuite.FlowFM.CoverageDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms;
+using DeltaShell.Plugins.FMSuite.FlowFM.Gui.PresentationObjects;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.Layers;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
@@ -319,7 +320,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 };
             }
 
-            if (data is IEventedList<ChannelFrictionDefinition> channelFrictionDefinitions)
+            if (data is ChannelFrictionDefinitionsWrapper channelFrictionDefinitionsWrapper)
             {
                 return new VectorLayer(Properties.Resources.ChannelFrictionDefinitions_Name)
                 {
@@ -330,13 +331,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                     DataSource = new FeatureCollection
                     {
                         FeatureType = typeof(ChannelFrictionDefinition),
-                        Features = (IList) channelFrictionDefinitions,
+                        Features = (IList) channelFrictionDefinitionsWrapper.WrappedData,
                         CoordinateSystem = ((FrictionGroupLayerData) parent).CoordinateSystem
                     }
                 };
             }
 
-            if (data is IEventedList<PipeFrictionDefinition> pipeFrictionDefinitions)
+            if (data is PipeFrictionDefinitionsWrapper pipeFrictionDefinitionsWrapper)
             {
                 return new VectorLayer(Properties.Resources.PipeFrictionDefinitions_Name)
                 {
@@ -347,7 +348,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                     DataSource = new FeatureCollection
                     {
                         FeatureType = typeof(PipeFrictionDefinition),
-                        Features = (IList) pipeFrictionDefinitions,
+                        Features = (IList) pipeFrictionDefinitionsWrapper.WrappedData,
                         CoordinateSystem = ((FrictionGroupLayerData) parent).CoordinateSystem
                     }
                 };
@@ -426,8 +427,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                    || data is CoverageDepthLayersList
                    || data is IEventedList<Feature2D>  // Boundaries and sources&sinks
                    || data is FrictionGroupLayerData
-                   || data is IEventedList<ChannelFrictionDefinition>
-                   || data is IEventedList<PipeFrictionDefinition>;
+                   || data is ChannelFrictionDefinitionsWrapper
+                   || data is PipeFrictionDefinitionsWrapper;
         }
 
         private bool IsCoverageLeveeBreachWidth(INameable data)
