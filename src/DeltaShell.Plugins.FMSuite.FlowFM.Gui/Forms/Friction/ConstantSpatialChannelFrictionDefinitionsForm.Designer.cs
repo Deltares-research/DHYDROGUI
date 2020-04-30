@@ -71,7 +71,7 @@
             this.tableView.RowValidator = null;
             this.tableView.ShowImportExportToolbar = false;
             this.tableView.ShowRowNumbers = false;
-            this.tableView.Size = new System.Drawing.Size(631, 440);
+            this.tableView.Size = new System.Drawing.Size(623, 440);
             this.tableView.TabIndex = 0;
             this.tableView.UseCenteredHeaderText = false;
             this.tableView.ViewInfo = null;
@@ -99,13 +99,13 @@
             this.tableLayoutPanel2.Controls.Add(this.flowLayoutPanel1, 0, 0);
             this.tableLayoutPanel2.Controls.Add(this.orderByChainageButton, 0, 1);
             this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel2.Location = new System.Drawing.Point(639, 2);
+            this.tableLayoutPanel2.Location = new System.Drawing.Point(631, 2);
             this.tableLayoutPanel2.Margin = new System.Windows.Forms.Padding(0, 2, 3, 3);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
             this.tableLayoutPanel2.RowCount = 2;
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 35F));
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(158, 445);
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 38F));
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(166, 445);
             this.tableLayoutPanel2.TabIndex = 2;
             // 
             // flowLayoutPanel1
@@ -117,7 +117,7 @@
             this.flowLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.flowLayoutPanel1.Margin = new System.Windows.Forms.Padding(0);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(158, 410);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(166, 407);
             this.flowLayoutPanel1.TabIndex = 2;
             // 
             // okButton
@@ -126,7 +126,7 @@
             this.okButton.Dock = System.Windows.Forms.DockStyle.Top;
             this.okButton.Location = new System.Drawing.Point(3, 3);
             this.okButton.Name = "okButton";
-            this.okButton.Size = new System.Drawing.Size(152, 29);
+            this.okButton.Size = new System.Drawing.Size(160, 32);
             this.okButton.TabIndex = 0;
             this.okButton.Text = "OK";
             this.okButton.UseVisualStyleBackColor = true;
@@ -136,9 +136,9 @@
             // 
             this.cancelButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.cancelButton.Dock = System.Windows.Forms.DockStyle.Top;
-            this.cancelButton.Location = new System.Drawing.Point(3, 38);
+            this.cancelButton.Location = new System.Drawing.Point(3, 41);
             this.cancelButton.Name = "cancelButton";
-            this.cancelButton.Size = new System.Drawing.Size(152, 29);
+            this.cancelButton.Size = new System.Drawing.Size(160, 32);
             this.cancelButton.TabIndex = 1;
             this.cancelButton.Text = "Cancel";
             this.cancelButton.UseVisualStyleBackColor = true;
@@ -146,9 +146,9 @@
             // 
             // orderByChainageButton
             // 
-            this.orderByChainageButton.Location = new System.Drawing.Point(3, 413);
+            this.orderByChainageButton.Location = new System.Drawing.Point(3, 410);
             this.orderByChainageButton.Name = "orderByChainageButton";
-            this.orderByChainageButton.Size = new System.Drawing.Size(152, 29);
+            this.orderByChainageButton.Size = new System.Drawing.Size(160, 32);
             this.orderByChainageButton.TabIndex = 1;
             this.orderByChainageButton.Text = "Order by chainage";
             this.orderByChainageButton.UseVisualStyleBackColor = true;

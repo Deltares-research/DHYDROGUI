@@ -508,8 +508,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms.Friction
 
                     break;
                 }
-                default:
-                    throw new NotSupportedException();
             }
         }
 
