@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Utils.Guards;
+using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.Common.Utils;
 using DeltaShell.NGHS.IO.DelftIniObjects;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
@@ -14,6 +15,8 @@ using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spreading;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.WaveEnergyFunctions;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
 using GeoAPI.Geometries;
+using log4net;
+using log4net.Core;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
 {
@@ -23,6 +26,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
     /// </summary>
     public class WaveBoundaryConverter
     {
+        private static readonly ILog log = LogManager.GetLogger(typeof(WaveBoundaryConverter));
+
         private const double doublePrecision = 1E-5;
         private readonly IImportBoundaryConditionDataComponentFactory importDataComponentFactory;
         private readonly IWaveBoundaryGeometricDefinitionFactory geometricDefinitionFactory;
@@ -134,6 +139,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
                 return null;
             }
 
+            log.WarnFormat("Converting boundary '{0}', from {1} to {2}, this may lead to unexpected results, please inspect your boundaries.",
+                           boundaryBlock.Name, 
+                           DefinitionImportType.Oriented.GetDescription(), 
+                           DefinitionImportType.Coordinates.GetDescription());
+
             IWaveBoundaryGeometricDefinition geometricDefinition = geometricDefinitionFactory
                 .ConstructWaveBoundaryGeometricDefinition(boundaryBlock.OrientationType.Value);
 
@@ -147,10 +157,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
             return geometricDefinition;
         }
 
-        private static void InvertSupportPointDistances(BoundaryMdwBlock boundaryBlock, 
-                                                        double geometricDefinitionLength) =>
+        private static void InvertSupportPointDistances(BoundaryMdwBlock boundaryBlock,
+                                                        double geometricDefinitionLength)
+        {
+            log.WarnFormat("Boundary '{0}' is defined in a clockwise fashion. This boundary will be converted to a " +
+                           "counter-clockwise, any support points distances will be adjusted accordingly. This may " +
+                           "lead to unexpected results, please inspect your support points.",
+                           boundaryBlock.Name);
             boundaryBlock.Distances = boundaryBlock.Distances.Select(d => geometricDefinitionLength - d).ToArray();
-
+        }
 
         private IWaveBoundaryConditionDefinition GetConditionDefinition(BoundaryMdwBlock boundaryBlock,
                                                                         IList<IFunction> timeSeriesData,
