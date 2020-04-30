@@ -185,7 +185,6 @@
     <Compile Include="Boundaries\IBoundaryProvider.cs" />
     <Compile Include="Boundaries\IWaveBoundary.cs" />
     <Compile Include="Boundaries\SimpleBoundaryProvider.cs" />
-    <Compile Include="Boundaries\SpectralData\WaveDirectionalSpreadingType.cs" />
     <Compile Include="Boundaries\SpectralData\WavePeriodType.cs" />
     <Compile Include="Boundaries\SpectralData\WaveSpectrumShapeType.cs" />
     <Compile Include="Boundaries\WaveBoundary.cs" />
