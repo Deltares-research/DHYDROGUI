@@ -21,7 +21,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers.Providers
         private readonly Func<IEnumerable<WaveModel>> getWaveModelsFunc;
 
         /// <summary>
-        /// Creates a new <see cref="WaveSnappedFeaturesGroupLayerDataLayerSubProvider"/>.
+        /// Creates a new <see cref="WavmFileFunctionStoreLayerSubProvider"/>.
         /// </summary>
         /// <param name="factory">The factory to build the layers with.</param>
         /// <param name="getWaveModelsFunc"> Function to retrieve the WaveModels. </param>
