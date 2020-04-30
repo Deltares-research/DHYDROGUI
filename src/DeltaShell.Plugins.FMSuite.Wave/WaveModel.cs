@@ -510,13 +510,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             IList<IWaveDomainData> allDomains = WaveDomainHelper.GetAllDomains(model.ModelDefinition.OuterDomain);
 
             model.BuildWaveDomains(allDomains, mdwDir, model);
-
-            List<WaveBoundaryCondition> convertedBoundaries =
-                WaveBoundaryImportHelper.ConvertToCoordinateBased(model.ModelDefinition.OrientedBoundaryConditions,
-                                                                  model.ModelDefinition.OuterDomain.Grid).ToList();
-
-            model.ModelDefinition.BoundaryConditions.AddRange(convertedBoundaries);
-            model.ModelDefinition.OrientedBoundaryConditions.Clear();
         }
 
         public MdwFile MdwFile => mdwFile;

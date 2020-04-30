@@ -11,6 +11,7 @@ using NetTopologySuite.Geometries;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.IO
 {
+    // TODO Remove when D3DFMIQ-1487 is done.
     public static class WaveBoundaryImportHelper
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(WaveBoundaryImportHelper));
