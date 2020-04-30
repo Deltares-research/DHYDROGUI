@@ -80,8 +80,8 @@
 [Boundary]
     Name                  = boundary_name       
     Definition            = xy-coordinates      
-    StartCoordX           = 1.0000000e+000      
-    EndCoordX             = 1.0100000e+002      
+    StartCoordX             = 1.0100000e+002      
+    EndCoordX             = 1.0000000e+000      
     StartCoordY           = 1.0000000e+000      
     EndCoordY             = 1.0000000e+000      
     SpectrumSpec          = parametric          
