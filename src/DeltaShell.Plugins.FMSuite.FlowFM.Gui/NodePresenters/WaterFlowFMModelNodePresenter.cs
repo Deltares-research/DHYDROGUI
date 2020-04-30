@@ -19,6 +19,7 @@ using DeltaShell.Dimr;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf;
 using DeltaShell.Plugins.FMSuite.Common.Gui;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors;
+using DeltaShell.Plugins.FMSuite.FlowFM.Gui.PresentationObjects;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Properties;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 
@@ -115,8 +116,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
                 new FmModelTreeShortcut(model.NetworkDiscretization.Name, NetworkDiscretizationIcon, model, model.NetworkDiscretization, ShortCutType.Default),
                 new TreeFolder(model, new List<object>
                 {
-                    model.ChannelFrictionDefinitions,
-                    model.PipeFrictionDefinitions,
+                    new ChannelFrictionDefinitionsWrapper(model.ChannelFrictionDefinitions),
+                    new PipeFrictionDefinitionsWrapper(model.PipeFrictionDefinitions),
                     new FmModelTreeShortcut("Lanes", FolderIcon, model, null, ShortCutType.FeatureSet, model.RoughnessSections)
                 }, "1D Roughness", FolderImageType.None),
                 model.BoundaryConditions1DDataItemSet,

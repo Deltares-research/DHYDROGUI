@@ -106,8 +106,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             yield return new WindItemNodePresenter {GuiPlugin = this};
             yield return new FmMeteoItemNodePresenter {GuiPlugin = this};
             yield return new FmMeteoItemListNodePresenter { GuiPlugin = this };
-            yield return new ChannelFrictionDefinitionsNodePresenter { GuiPlugin = this };
-            yield return new PipeFrictionDefinitionsNodePresenter { GuiPlugin = this };
+            yield return new ChannelFrictionDefinitionsWrapperNodePresenter { GuiPlugin = this };
+            yield return new PipeFrictionDefinitionsWrapperNodePresenter { GuiPlugin = this };
         }
         public override IEnumerable<ViewInfo> GetViewInfoObjects()
         {
