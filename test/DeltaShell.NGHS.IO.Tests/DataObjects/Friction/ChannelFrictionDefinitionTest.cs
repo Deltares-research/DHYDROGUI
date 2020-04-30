@@ -23,6 +23,7 @@ namespace DeltaShell.NGHS.IO.Tests.DataObjects.Friction
             Assert.AreEqual(ChannelFrictionSpecificationType.ModelSettings, channelFrictionDefinition.SpecificationType);
             Assert.AreSame(channel.Geometry, channelFrictionDefinition.Geometry);
             Assert.AreSame(channel.Attributes, channelFrictionDefinition.Attributes);
+            Assert.AreEqual("1D Roughness", channelFrictionDefinition.ToString());
         }
 
         [Test]

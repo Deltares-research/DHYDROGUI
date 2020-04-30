@@ -80,5 +80,10 @@ namespace DeltaShell.NGHS.IO.DataObjects.Friction
         }
 
         # endregion
+
+        public override string ToString()
+        {
+            return "1D Roughness";
+        }
     }
 }

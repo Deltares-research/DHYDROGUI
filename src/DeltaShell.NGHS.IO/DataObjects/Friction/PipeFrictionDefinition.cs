@@ -40,6 +40,11 @@ namespace DeltaShell.NGHS.IO.DataObjects.Friction
             set => Pipe.Attributes = value;
         }
 
-        # endregion
+        #endregion
+
+        public override string ToString()
+        {
+            return "1D Roughness";
+        }
     }
 }

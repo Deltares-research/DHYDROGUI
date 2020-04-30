@@ -20,6 +20,7 @@ namespace DeltaShell.NGHS.IO.Tests.DataObjects.Friction
             Assert.AreSame(pipe, pipeFrictionDefinition.Pipe);
             Assert.AreSame(pipe.Geometry, pipeFrictionDefinition.Geometry);
             Assert.AreSame(pipe.Attributes, pipeFrictionDefinition.Attributes);
+            Assert.AreEqual("1D Roughness", pipeFrictionDefinition.ToString());
         }
     }
 }
