@@ -228,7 +228,6 @@
     <Compile Include="IO\WavmFileFunctionStore.cs" />
     <Compile Include="IWaveDomainData.cs" />
     <Compile Include="IWaveModel.cs" />
-    <Compile Include="Layers\WaveSnappedFeaturesGroupLayerData.cs" />
     <Compile Include="ModelDefinition\IReferenceDateTimeProvider.cs" />
     <Compile Include="ModelDefinition\ModelDefinitionReferenceDateTimeProvider.cs" />
     <Compile Include="Properties\PluginInfo.cs" />
@@ -315,6 +314,9 @@
     <EmbeddedResource Include="IO\WavmFileFunctionStore.hbm.xml">
       <SubType>Designer</SubType>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Layers\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

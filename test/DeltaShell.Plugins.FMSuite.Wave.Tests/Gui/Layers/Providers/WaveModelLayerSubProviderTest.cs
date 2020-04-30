@@ -5,7 +5,6 @@ using DeltaShell.NGHS.Common.Gui.Layers;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Containers;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Layers;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Layers.Providers;
-using DeltaShell.Plugins.FMSuite.Wave.Layers;
 using NSubstitute;
 using NUnit.Framework;
 using SharpMap.Api.Layers;
@@ -58,14 +57,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers.Providers
             IList<object> result = subProvider.GenerateChildLayerObjects(waveModel).ToList();
 
             // Assert
-            Assert.That(result.Count, Is.EqualTo(6));
+            Assert.That(result.Count, Is.EqualTo(5));
 
             Assert.That(result, Has.Member(waveModel.Obstacles));
             Assert.That(result, Has.Member(waveModel.ObservationPoints));
             Assert.That(result, Has.Member(waveModel.ObservationCrossSections));
             Assert.That(result, Has.Member(waveModel.OuterDomain));
 
-            Assert.That(result.Count(x => x is WaveSnappedFeaturesGroupLayerData), Is.EqualTo(1));
             Assert.That(result.Count(x => x is BoundaryMapFeaturesContainer), Is.EqualTo(1));
         }
     }
