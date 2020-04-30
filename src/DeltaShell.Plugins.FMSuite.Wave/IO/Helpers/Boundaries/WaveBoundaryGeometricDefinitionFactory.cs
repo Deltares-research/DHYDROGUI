@@ -50,5 +50,18 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
 
             return WaveBoundaryGeometricDefinitionFactoryHelper.GetGeometricDefinition(snappedEndPoints, calculator);
         }
+
+        public IWaveBoundaryGeometricDefinition ConstructWaveBoundaryGeometricDefinition(BoundaryOrientationType orientation)
+        {
+            Ensure.IsDefined(orientation, nameof(orientation));
+
+            IBoundarySnappingCalculator calculator = snappingCalculatorProvider.GetBoundarySnappingCalculator();
+            if (calculator == null)
+            {
+                return null;
+            }
+
+            return WaveBoundaryGeometricDefinitionFactoryHelper.GetGeometricDefinition(orientation, calculator);
+        }
     }
 }

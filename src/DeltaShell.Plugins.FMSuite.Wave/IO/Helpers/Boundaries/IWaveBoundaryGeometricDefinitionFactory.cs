@@ -20,5 +20,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
         /// </exception>
         IWaveBoundaryGeometricDefinition ConstructWaveBoundaryGeometricDefinition(Coordinate startCoordinate,
                                                                                   Coordinate endCoordinate);
+
+        /// <summary>
+        /// Constructs the wave boundary geometric definition from the specified
+        /// <paramref name="orientation"/>
+        /// </summary>
+        /// <param name="orientation"> The orientation . </param>
+        /// <returns> The constructed wave boundary geometric definition. </returns>
+        /// <exception cref="System.ComponentModel.InvalidEnumArgumentException">
+        /// Thrown when <paramref name="orientation"/> is undefined.
+        /// </exception>
+        IWaveBoundaryGeometricDefinition ConstructWaveBoundaryGeometricDefinition(BoundaryOrientationType orientation);
     }
 }

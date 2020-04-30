@@ -1,9 +1,11 @@
 ﻿using System;
+using System.ComponentModel;
 using DeltaShell.NGHS.TestUtils;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.Calculators;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
 using DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries;
 using GeoAPI.Geometries;
+using NetTopologySuite.Mathematics;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -106,6 +108,71 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             Assert.That(result.StartingIndex, Is.EqualTo(startIndex));
             Assert.That(result.EndingIndex, Is.EqualTo(endIndex));
             Assert.That(result.GridSide, Is.EqualTo(gridSide));
+            Assert.That(result.Length, Is.EqualTo(length));
+        }
+
+        [Test]
+        public void ConstructWaveBoundaryGeometricDefinition_OrientationNotDefined_ThrowsInvalidEnumArgumentException()
+        {
+            // Setup
+            var calculatorProvider = Substitute.For<IBoundarySnappingCalculatorProvider>();
+            var factory = new WaveBoundaryGeometricDefinitionFactory(calculatorProvider);
+
+            // Call | Assert
+            void Call() => factory.ConstructWaveBoundaryGeometricDefinition((BoundaryOrientationType) int.MaxValue);
+
+            Assert.Throws<InvalidEnumArgumentException>(Call);
+        }
+
+        [Test]
+        public void ConstructWaveBoundaryGeometricDefinition_CalculatorNull_ReturnsNull()
+        {
+            // Setup
+            var calculatorProvider = Substitute.For<IBoundarySnappingCalculatorProvider>();
+            calculatorProvider.GetBoundarySnappingCalculator().Returns((IBoundarySnappingCalculator) null);
+
+            var factory = new WaveBoundaryGeometricDefinitionFactory(calculatorProvider);
+
+            // Call
+            IWaveBoundaryGeometricDefinition result = 
+                factory.ConstructWaveBoundaryGeometricDefinition(BoundaryOrientationType.East);
+
+            // Assert
+            Assert.That(result, Is.Null);
+        }
+
+        [Test]
+        public void ConstructWaveBoundaryGeometricDefinition_ExpectedResults()
+        {
+            // Setup
+            const BoundaryOrientationType orientation = BoundaryOrientationType.North;
+
+            var calculator = Substitute.For<IBoundarySnappingCalculator>();
+            calculator.GridBoundary.GetSideAlignedWithNormal(Arg.Is<Vector2D>(n => Math.Abs(n.X) < 0.005 && 
+                                                                                   Math.Abs(n.Y - 1) < 0.005))
+                      .Returns(GridSide.North);
+            calculator.GridBoundary[GridSide.North].Returns(new[]
+            {
+                new GridBoundaryCoordinate(GridSide.North, 0),
+                new GridBoundaryCoordinate(GridSide.North, 1),
+            });
+
+            const double length = 5.0;
+            calculator.CalculateDistanceBetweenBoundaryIndices(0, 1, GridSide.North)
+                      .Returns(length);
+
+            var calculatorProvider = Substitute.For<IBoundarySnappingCalculatorProvider>();
+            calculatorProvider.GetBoundarySnappingCalculator().Returns(calculator);
+
+            var factory = new WaveBoundaryGeometricDefinitionFactory(calculatorProvider);
+
+            // Call
+            IWaveBoundaryGeometricDefinition result = factory.ConstructWaveBoundaryGeometricDefinition(orientation);
+
+            // Assert
+            Assert.That(result.GridSide, Is.EqualTo(GridSide.North));
+            Assert.That(result.StartingIndex, Is.EqualTo(0));
+            Assert.That(result.EndingIndex, Is.EqualTo(1));
             Assert.That(result.Length, Is.EqualTo(length));
         }
     }
