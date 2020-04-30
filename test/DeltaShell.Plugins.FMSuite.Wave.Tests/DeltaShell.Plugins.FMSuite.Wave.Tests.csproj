@@ -404,7 +404,6 @@
     <Compile Include="Validation\WavePropertiesValidatorTest.cs" />
     <Compile Include="Gui\WaveTimePointValidatorTest.cs" />
     <Compile Include="WaveApplicationPluginTest.cs" />
-    <Compile Include="WaveBoundaryConditionTest.cs" />
     <Compile Include="Boundaries\SpectralData\WaveBoundarySpectralDataTest.cs" />
     <Compile Include="WaveGridOperationApiTest.cs" />
     <Compile Include="WaveModelApiTest.cs" />
