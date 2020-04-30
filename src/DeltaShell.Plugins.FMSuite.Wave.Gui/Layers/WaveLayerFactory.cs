@@ -105,13 +105,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
             };
         }
 
-        public ILayer CreateSnappedFeaturesLayer(WaveSnappedFeaturesGroupLayerData snappedFeatures)
-        {
-            Ensure.NotNull(snappedFeatures, nameof(snappedFeatures));
-
-            return new GroupLayer(WaveLayerNames.GridSnappedFeaturesLayerName); // TODO can this be removed?
-        }
-
         public ILayer CreateOutputLayer(string domainName, bool overrideLayerName = false)
         {
             Ensure.NotNull(domainName, nameof(domainName));

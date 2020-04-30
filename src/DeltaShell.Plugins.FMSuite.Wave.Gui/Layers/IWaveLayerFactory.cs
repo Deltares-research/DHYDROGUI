@@ -37,18 +37,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
         ILayer CreateWaveDomainDataLayer(WaveDomainData domain);
 
         /// <summary>
-        /// Creates a new snapped features layer from the <paramref name="snappedFeatures"/>.
-        /// </summary>
-        /// <param name="snappedFeatures">The snapped features.</param>
-        /// <returns>
-        /// A new <see cref="ILayer"/> visualising the snapped features.
-        /// </returns>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown when <paramref name="snappedFeatures"/> is <c>null</c>.
-        /// </exception>
-        ILayer CreateSnappedFeaturesLayer(WaveSnappedFeaturesGroupLayerData snappedFeatures);
-
-        /// <summary>
         /// Creates a new output layer with the given <paramref name="domainName"/>.
         /// </summary>
         /// <param name="domainName">Name of the domain.</param>

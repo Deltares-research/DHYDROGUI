@@ -193,68 +193,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers
         }
 
         [Test]
-        public void CreateSnappedFeaturesLayer_ValidSnappedFeatures_ReturnsCorrectResults()
-        {
-            // Setup
-            var model = new WaveModel();
-            var waveSnappedFeatures = new WaveSnappedFeaturesGroupLayerData(model);
-            var factory = new WaveLayerFactory();
-
-            // Call
-            ILayer layer = factory.CreateSnappedFeaturesLayer(waveSnappedFeatures);
-
-            // Assert
-            Assert.That(layer, Is.InstanceOf<GroupLayer>(),
-                        $"Expected the result to be an instance of {nameof(GroupLayer)}");
-            Assert.That(layer.Name, Is.EqualTo("Estimated Grid-snapped features"),
-                        "Expected the layer to have a different name.");
-
-            var groupLayer = (GroupLayer) layer;
-            Assert.That(groupLayer.Layers.Count, Is.EqualTo(0),
-                        "Expected a different number of layers:");
-        }
-
-        [Test]
-        public void CreateSnappedFeaturesLayer_SnappedFeaturesNull_ThrowsArgumentNullException()
-        {
-            // Setup
-            var factory = new WaveLayerFactory();
-
-            // Call
-            void Call() => factory.CreateSnappedFeaturesLayer(null);
-
-            // Assert
-            var exception = Assert.Throws<ArgumentNullException>(Call);
-            Assert.That(exception, Has.Property("ParamName").EqualTo("snappedFeatures"));
-        }
-
-        [Test]
-        [TestCase(true, "domainName", "domainName")]
-        [TestCase(false, "domainName", "Output (domainName)")]
-        public void CreateOutputLayer_ValidDomainName_ReturnsCorrectResults(bool overrideLayerName, 
-                                                                            string domainName, 
-                                                                            string expectedName)
-        {
-            // Setup
-            var model = new WaveModel();
-            var waveSnappedFeatures = new WaveSnappedFeaturesGroupLayerData(model);
-            var factory = new WaveLayerFactory();
-
-            // Call
-            ILayer layer = factory.CreateSnappedFeaturesLayer(waveSnappedFeatures);
-
-            // Assert
-            Assert.That(layer, Is.InstanceOf<GroupLayer>(),
-                        $"Expected the result to be an instance of {nameof(GroupLayer)}");
-            Assert.That(layer.Name, Is.EqualTo("Estimated Grid-snapped features"),
-                        "Expected the layer to have a different name.");
-
-            var groupLayer = (GroupLayer) layer;
-            Assert.That(groupLayer.Layers.Count, Is.EqualTo(0),
-                        "Expected a different number of layers:");
-        }
-
-        [Test]
         public void CreateOutputLayer_DomainNameNull_ThrowsArgumentNullException()
         {
             // Setup
