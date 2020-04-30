@@ -72,7 +72,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
         
         //test if restart file is copied
         [Test]
-        [Category("Quarantine")]
         public void FMRstFileImporterCopiedRestartFile()
         {
             using (var gui = new DeltaShellGui())

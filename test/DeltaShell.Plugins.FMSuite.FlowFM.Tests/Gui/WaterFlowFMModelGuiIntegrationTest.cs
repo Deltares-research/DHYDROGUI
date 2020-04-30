@@ -52,6 +52,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         [Test]
         [Category(TestCategory.WindowsForms)]
         [Category("Quarantine")]
+        [Ignore("Crashes other tests, ignoring for now.")]
         public void RunModelShouldNotCrashWithOldOutputOpen()
         {
             var mduPath =
@@ -106,7 +107,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
         [Test]
         [Category(TestCategory.WindowsForms)]
-        [Category("Quarantine")]
         public void FmModelShouldBeReplacedWhenImportedInRootFolder()
         {
             var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
@@ -150,7 +150,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
         [Test]
         [Category(TestCategory.WindowsForms)]
-        [Category("Quarantine")]
         public void FmModelShouldBeReplacedWhenImportedInFolder()
         {
             var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
@@ -296,6 +295,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         [Test]
         [Category(TestCategory.WindowsForms)]
         [Category("Quarantine")]
+        [Ignore("Crashes other tests, ignoring for now.")]
         public void DoubleClickingOnHisOutputCoverageShouldEnableLayerInCentralMap()
         {
             var mduPath =
@@ -346,7 +346,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         [Category(TestCategory.Integration)]
         [Category(TestCategory.Slow)]
         [Category(TestCategory.WindowsForms)]
-        [Category("Quarantine")]
         public void ShowSnappedFeatureLayersInMap()
         {
             var mduPath =
@@ -1017,7 +1016,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         [Test]
         [Category(TestCategory.Performance)]
         [Category(TestCategory.Slow)]
-        [Category("Quarantine")]
         public void ImportingOfDryPointsWithProjectItemMapViewOpenShouldBeFast()
         {
             using (var gui = new DeltaShellGui())
