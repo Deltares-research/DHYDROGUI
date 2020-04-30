@@ -256,35 +256,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             return function;
         }
 
-        /// <summary>
-        /// Will set the function values of
-        /// <param name="timeSeries" />
-        /// to the function of the data point at
-        /// index
-        /// <param name="dataPointIndex" />
-        /// .
-        /// </summary>
-        /// <param name="dataPointIndex"> The index of the data point in <see cref="BoundaryCondition.DataPointIndices" />. </param>
-        /// <param name="timeSeries"> The <see cref="IFunction" /> object that represents a time series. </param>
-        // TODO: Somehow you cannot call this methods for a second time if you haven't cleared the index. Function and Variable will throw an exception. This should be resolved in the framework.
-        public void SetTimeSeriesAtSupportPoint(int dataPointIndex, IFunction timeSeries)
-        {
-            AddPoint(dataPointIndex);
-
-            IFunction func = GetDataAtPoint(dataPointIndex);
-            func.Arguments[0].SetValues(timeSeries.Arguments[0].GetValues());
-            for (var j = 0; j < func.Components.Count; ++j)
-            {
-                func.Components[j].SetValues(timeSeries.Components[j].GetValues());
-                func.Components[j].Unit = (IUnit) timeSeries.Components[j].Unit.Clone();
-            }
-
-            foreach (KeyValuePair<string, string> att in timeSeries.Attributes)
-            {
-                func.Attributes[att.Key] = att.Value;
-            }
-        }
-
         public IGeometry Geometry
         {
             get => Feature.Geometry.Centroid;
