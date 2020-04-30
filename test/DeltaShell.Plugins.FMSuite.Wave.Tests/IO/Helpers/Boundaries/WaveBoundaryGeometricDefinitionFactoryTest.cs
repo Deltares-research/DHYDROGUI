@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using DeltaShell.NGHS.TestUtils;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.Calculators;
@@ -174,6 +175,86 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             Assert.That(result.StartingIndex, Is.EqualTo(0));
             Assert.That(result.EndingIndex, Is.EqualTo(1));
             Assert.That(result.Length, Is.EqualTo(length));
+        }
+
+        [Test]
+        public void HasInvertedOrderingCoordinates_CalculatorNull_ReturnsFalse()
+        {
+            var geometricDefinition = Substitute.For<IWaveBoundaryGeometricDefinition>();
+            var inputCoordinate = new Coordinate(10.0, 10.0);
+
+            var calculatorProvider = Substitute.For<IBoundarySnappingCalculatorProvider>();
+            
+            calculatorProvider.GetBoundarySnappingCalculator().ReturnsForAnyArgs((IBoundarySnappingCalculator) null);
+            var factory = new WaveBoundaryGeometricDefinitionFactory(calculatorProvider);
+
+            // Call
+            bool result = factory.HasInvertedOrderingCoordinates(geometricDefinition, inputCoordinate);
+
+            // Assert
+            Assert.That(result, Is.False);
+        }
+
+        private static IEnumerable<TestCaseData> GetHasInvertedOrderingCoordinatesTestData()
+        {
+            var coord1 = new Coordinate( 5.0, 20.0);
+            var coord2 = new Coordinate(25.0, 20.0);
+
+            yield return new TestCaseData(coord1, coord1, true);
+            yield return new TestCaseData(coord1, coord2, false);
+        }
+
+        [Test]
+        [TestCaseSource(nameof(GetHasInvertedOrderingCoordinatesTestData))]
+        public void HasInvertedOrderingCoordinates_ExpectedResults(Coordinate inputCoordinate, Coordinate currentCoordinate, bool expectedResult)
+        {
+            // Setup
+            var geometricDefinition = Substitute.For<IWaveBoundaryGeometricDefinition>();
+            geometricDefinition.GridSide.ReturnsForAnyArgs(GridSide.North);
+            geometricDefinition.StartingIndex.ReturnsForAnyArgs(5);
+
+            var calculator = Substitute.For<IBoundarySnappingCalculator>();
+            calculator.GridBoundary.GetWorldCoordinateFromBoundaryCoordinate(
+                          Arg.Is<GridBoundaryCoordinate>(c => c.GridSide == GridSide.North && c.Index == 5))
+                      .Returns(currentCoordinate);
+
+            var calculatorProvider = Substitute.For<IBoundarySnappingCalculatorProvider>();
+            
+            calculatorProvider.GetBoundarySnappingCalculator().ReturnsForAnyArgs(calculator);
+            var factory = new WaveBoundaryGeometricDefinitionFactory(calculatorProvider);
+
+            // Call
+            bool result = factory.HasInvertedOrderingCoordinates(geometricDefinition, inputCoordinate);
+
+            // Assert
+            Assert.That(result, Is.EqualTo(expectedResult));
+        }
+
+        private static IEnumerable<TestCaseData> GetHasInvertedOrderingCoordinatesParamNullTestData()
+        {
+            var coord = new Coordinate( 5.0, 20.0);
+            var geometricDefinition = Substitute.For<IWaveBoundaryGeometricDefinition>();
+
+            yield return new TestCaseData(geometricDefinition, null, "startCoordinate");
+            yield return new TestCaseData(null, coord, "geometricDefinition");
+        }
+
+
+        [Test]
+        [TestCaseSource(nameof(GetHasInvertedOrderingCoordinatesParamNullTestData))]
+        public void HasInvertedOrderingCoordinates_ParameterNull_ThrowsArgumentNullException(IWaveBoundaryGeometricDefinition geometricDefinition,
+                                                                                             Coordinate startCoordinate,
+                                                                                             string expectedParamName)
+        {
+            // Setup
+            var calculatorProvider = Substitute.For<IBoundarySnappingCalculatorProvider>();
+            var factory = new WaveBoundaryGeometricDefinitionFactory(calculatorProvider);
+
+            // Call | Assert
+            void Call() => factory.HasInvertedOrderingCoordinates(geometricDefinition, startCoordinate);
+
+            var exception = Assert.Throws<ArgumentNullException>(Call);
+            Assert.That(exception.ParamName, Is.EqualTo(expectedParamName));
         }
     }
 }

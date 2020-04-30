@@ -31,5 +31,22 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
         /// Thrown when <paramref name="orientation"/> is undefined.
         /// </exception>
         IWaveBoundaryGeometricDefinition ConstructWaveBoundaryGeometricDefinition(BoundaryOrientationType orientation);
+
+        /// <summary>
+        /// Determines whether the coordinates of the <paramref name="geometricDefinition"/> have been inverted,
+        /// given the original <paramref name="startCoordinate"/>
+        /// </summary>
+        /// <param name="geometricDefinition">The geometric definition.</param>
+        /// <param name="startCoordinate">The original start coordinate.</param>
+        /// <returns>
+        /// <c>true</c> if the ordering has been inverted; <c>false</c> otherwise.
+        /// </returns>
+        /// <exception cref="System.ArgumentNullException">
+        /// Thrown when any parameter is <c>null</c>.
+        /// </exception>
+        /// <remarks>
+        /// If no calculator exists, then <c>false</c> will be returned.
+        /// </remarks>
+        bool HasInvertedOrderingCoordinates(IWaveBoundaryGeometricDefinition geometricDefinition, Coordinate startCoordinate);
     }
 }

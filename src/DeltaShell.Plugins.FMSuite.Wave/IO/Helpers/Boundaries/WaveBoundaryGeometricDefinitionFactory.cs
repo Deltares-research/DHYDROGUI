@@ -63,5 +63,27 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
 
             return WaveBoundaryGeometricDefinitionFactoryHelper.GetGeometricDefinition(orientation, calculator);
         }
+
+        public bool HasInvertedOrderingCoordinates(IWaveBoundaryGeometricDefinition geometricDefinition, 
+                                                  Coordinate startCoordinate)
+        {
+            Ensure.NotNull(geometricDefinition, nameof(geometricDefinition));
+            Ensure.NotNull(startCoordinate, nameof(startCoordinate));
+
+            IBoundarySnappingCalculator calculator = snappingCalculatorProvider.GetBoundarySnappingCalculator();
+            if (calculator == null)
+            {
+                return false;
+            }
+
+            var startGridBoundaryCoordinate =
+                new GridBoundaryCoordinate(geometricDefinition.GridSide,
+                                           geometricDefinition.StartingIndex);
+
+            Coordinate currentStartCoordinate =
+                calculator.GridBoundary.GetWorldCoordinateFromBoundaryCoordinate(startGridBoundaryCoordinate);
+
+            return currentStartCoordinate.Equals2D(startCoordinate, 0.00001);
+        }
     }
 }
