@@ -517,19 +517,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
             model.ModelDefinition.BoundaryConditions.AddRange(convertedBoundaries);
             model.ModelDefinition.OrientedBoundaryConditions.Clear();
-
-            // snap boundaries to grid
-            var tempSnapApi = new WaveGridOperationApi(model.ModelDefinition.OuterDomain.Grid);
-            IEnumerable<Feature2D> snappedBoundaries = model.ModelDefinition.BoundaryConditions.Select(b =>
-            {
-                if (model.gridOperationApi != null)
-                {
-                    b.Feature.Geometry = tempSnapApi.GetGridSnappedGeometry("boundaries", b.Feature.Geometry);
-                }
-
-                return b.Feature;
-            });
-            model.Boundaries.AddRange(snappedBoundaries);
         }
 
         public MdwFile MdwFile => mdwFile;
