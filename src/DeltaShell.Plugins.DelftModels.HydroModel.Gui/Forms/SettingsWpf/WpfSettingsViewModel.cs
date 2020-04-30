@@ -18,7 +18,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
     public sealed class WpfSettingsViewModel : IDisposable
     {
         private bool disposed;
-        private ObservableCollection<WpfGuiCategory> settingsCategories;
+        private readonly ObservableCollection<WpfGuiCategory> settingsCategories;
 
         /// <summary>
         /// Gets or sets the data model.

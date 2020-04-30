@@ -916,7 +916,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             IEnumerable<string> sedConcSpatiallyVarying =
                 modelDefinition.InitialSpatiallyVaryingSedimentPropertyNames.Where(sp => sp.EndsWith(SedConcPostfix));
 
-            LogHandler log = new LogHandler("Ext force warning handler");
+            var logHandler = new LogHandler("Ext force warning handler");
 
             foreach (string spatiallyVaryingSedimentPropertyName in sedConcSpatiallyVarying)
             {
@@ -933,7 +933,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                                                 spatiallyVaryingSedimentPropertyName);
                     }
 
-                    log.ReportWarning(warnMsg);
+                    logHandler.ReportWarning(warnMsg);
  
                     continue;
                 }
@@ -955,7 +955,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                 extForceFileItems.AddRange(forceFileItems);
             }
 
-            log.LogReport();
+            logHandler.LogReport();
 
             return extForceFileItems;
         }
