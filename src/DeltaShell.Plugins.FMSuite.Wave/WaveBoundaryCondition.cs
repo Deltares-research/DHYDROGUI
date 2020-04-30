@@ -1,16 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using DelftTools.Functions;
-using DelftTools.Functions.Generic;
 using DelftTools.Units;
 using DelftTools.Utils.Aop;
-using DelftTools.Utils.Collections;
 using DelftTools.Utils.Editing;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.SpectralData;
-using DeltaShell.Plugins.FMSuite.Wave.IO;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
 
@@ -120,33 +115,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         }
 
         public override int VariableDimension => 1;
-
-        public const string TimeVariableName = "Time";
-        public const string HeightVariableName = "Hs";
-        public const string PeriodVariableName = "Tp";
-        public const string DirectionVariableName = "Dir";
-        public const string SpreadingVariableName = "Spreading";
-
-        private const string DegreesUnitName = "degrees";
-        public const string DegreesUnitSymbol = "deg";
-
-        public static IFunction CreateEmptyWaveEnergyFunction()
-        {
-            // todo: add as variable name definition
-            var function = new Function(WaveQuantityName);
-            function.Arguments.Add(new Variable<DateTime>(TimeVariableName));
-            function.Components.Add(new Variable<double>(HeightVariableName, new Unit("meter", "m")));
-            function.Components.Add(new Variable<double>(PeriodVariableName, new Unit("second", "s")));
-            function.Components.Add(
-                new Variable<double>(DirectionVariableName, new Unit(DegreesUnitName, DegreesUnitSymbol)));
-            function.Components.Add(new Variable<double>(SpreadingVariableName, new Unit("", "-")));
-
-            function.Attributes[BcwFile.TimeFunctionAttributeName] = "non-equidistant";
-            function.Attributes[BcwFile.RefDateAttributeName] = new DateTime().ToString(BcwFile.DateFormatString);
-            function.Attributes[BcwFile.TimeUnitAttributeName] = "minutes";
-
-            return function;
-        }
 
         public IGeometry Geometry
         {
