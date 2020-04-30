@@ -19,10 +19,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.ModelDefinition
         private static readonly ILog Log = LogManager.GetLogger(typeof(WaveModelDefinition));
         public IEventedList<WaveModelProperty> Properties { get; set; }
         public ModelPropertySchema<WaveModelPropertyDefinition> ModelSchema { get; private set; }
-
-        public bool BoundaryIsDefinedBySpecFile { get; set; }
-        public string OverallSpecFile { get; set; }
-
         public IWaveDomainData OuterDomain { get; set; }
         public IEventedList<WaveBoundaryCondition> BoundaryConditions { get; set; }
         public IEventedList<WaveObstacle> Obstacles { get; set; }
@@ -89,8 +85,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.ModelDefinition
             ObservationPoints = new EventedList<Feature2DPoint>();
             ObservationCrossSections = new EventedList<Feature2D>();
             BoundaryContainer = new BoundaryContainer();
-
-            BoundaryIsDefinedBySpecFile = false;
         }
 
         public void SetModelProperty(string fileCategoryName, string filePropertyName, WaveModelProperty property)
