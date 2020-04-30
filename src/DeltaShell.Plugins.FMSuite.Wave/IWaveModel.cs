@@ -3,7 +3,6 @@ using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Editing;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
-using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Features;
 
 namespace DeltaShell.Plugins.FMSuite.Wave
