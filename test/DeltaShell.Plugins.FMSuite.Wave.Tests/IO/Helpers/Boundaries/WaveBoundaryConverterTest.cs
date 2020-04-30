@@ -535,6 +535,156 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             Assert.That(result[1].Name, Is.EqualTo(secondBoundaryName));
         }
 
+        [Test]
+        [TestCaseSource(nameof(ShapePeriodTestCases))]
+        public void Convert_OrientedBoundary_ExpectedResults(
+            ShapeImportType shapeType, PeriodImportExportType periodType,
+            IBoundaryConditionShape expectedShape,
+            BoundaryConditionPeriodType expectedPeriod,
+            double gaussianSpreading, double peakEnhancementFactor)
+        {
+            // Setup
+            var mdwValues = new MdwTestValues(gaussianSpreading, peakEnhancementFactor);
+
+            var geometricDefinition = Substitute.For<IWaveBoundaryGeometricDefinition>();
+            IWaveBoundaryGeometricDefinitionFactory geometricDefinitionFactory = GetMockedGeometricDefinitionFactoryOriented(geometricDefinition, mdwValues);
+
+            var uniformDataComponent = new UniformDataComponent<ConstantParameters<T>>(parametersFactory.ConstructDefaultConstantParameters<T>());
+            var importDataComponentFactory = Substitute.For<IImportBoundaryConditionDataComponentFactory>();
+            importDataComponentFactory.CreateUniformConstantComponent<T>(Arg.Is<ParametersBlock>(p => MatchesParameters(p, mdwValues, 0)))
+                                      .Returns(uniformDataComponent);
+
+            DelftIniCategory category = GetBoundaryCategory(shapeType, 
+                                                            periodType, 
+                                                            mdwValues, 
+                                                            definition:KnownWaveBoundariesFileConstants.OrientationDefinitionType);
+            category.AddProperty(KnownWaveProperties.Orientation, mdwValues.OrientationType.GetDescription());
+            AddParametersToCategory(mdwValues, category, 0);
+
+            DelftIniCategory[] categories =
+            {
+                category
+            };
+
+            var converter = new WaveBoundaryConverter(importDataComponentFactory, geometricDefinitionFactory);
+
+            // Call
+            List<IWaveBoundary> result = converter.Convert(categories, new Dictionary<string, List<IFunction>>(), "path")
+                                                  .ToList();
+
+            // Assert
+            Assert.That(result, Has.Count.EqualTo(1));
+
+            IWaveBoundary waveBoundary = result[0];
+            Assert.That(waveBoundary.Name, Is.EqualTo("boundary_name"));
+            Assert.That(waveBoundary.GeometricDefinition, Is.SameAs(geometricDefinition));
+            Assert.That(geometricDefinition.SupportPoints, Is.Empty);
+
+            geometricDefinitionFactory.Received(1).ConstructWaveBoundaryGeometricDefinition(mdwValues.OrientationType);
+
+            IWaveBoundaryConditionDefinition conditionDefinition = waveBoundary.ConditionDefinition;
+            Assert.That(conditionDefinition.Shape, Is.EqualTo(expectedShape).Using(shapeComparer));
+            Assert.That(conditionDefinition.PeriodType, Is.EqualTo(expectedPeriod));
+            Assert.That(conditionDefinition.DataComponent, Is.SameAs(uniformDataComponent));
+        }
+
+
+        [Test]
+        public void GivenAClockwiseOrientedBoundary_WhenConvertIsCalled_ThenTheSupportPointDistancesAreInverted()
+        {
+            // Setup
+            var mdwValues = new MdwTestValues(RandomDouble, RandomDouble);
+
+            var geometricDefinition = Substitute.For<IWaveBoundaryGeometricDefinition>();
+            geometricDefinition.Length.Returns(10.0);
+            IWaveBoundaryGeometricDefinitionFactory geometricDefinitionFactory = GetMockedGeometricDefinitionFactoryOriented(geometricDefinition, mdwValues);
+
+            geometricDefinition.SupportPoints.Add(new SupportPoint(0, geometricDefinition));
+            geometricDefinition.SupportPoints.Add(new SupportPoint(10, geometricDefinition));
+
+            var importDataComponentFactory = Substitute.For<IImportBoundaryConditionDataComponentFactory>();
+            var spatiallyVaryingDataComponent = new SpatiallyVaryingDataComponent<ConstantParameters<T>>();
+            importDataComponentFactory.CreateSpatiallyVaryingConstantComponent<T>(Arg.Is<IEnumerable<Tuple<SupportPoint, ParametersBlock>>>(
+                                                                                      p => MatchesSpatiallyVaryingParametersInverted(p, mdwValues)))
+                                      .Returns(spatiallyVaryingDataComponent);
+
+            DelftIniCategory category = GetBoundaryCategory(ShapeImportType.Gauss, 
+                                                            PeriodImportExportType.Mean, 
+                                                            mdwValues, 
+                                                            definition:KnownWaveBoundariesFileConstants.OrientationDefinitionType);
+
+            category.AddProperty(KnownWaveProperties.Orientation, mdwValues.OrientationType.GetDescription());
+            category.AddProperty(KnownWaveProperties.DistanceDir, DistanceDirType.Clockwise.GetDescription());
+            category.AddProperty(KnownWaveProperties.CondSpecAtDist, ToString(mdwValues.Distances[0]));
+            AddParametersToCategory(mdwValues, category, 0);
+            category.AddProperty(KnownWaveProperties.CondSpecAtDist, ToString(mdwValues.Distances[1]));
+            AddParametersToCategory(mdwValues, category, 1);
+            category.AddProperty(KnownWaveProperties.CondSpecAtDist, ToString(mdwValues.Distances[2]));
+            AddParametersToCategory(mdwValues, category, 2);
+
+            DelftIniCategory[] categories =
+            {
+                category
+            };
+
+            var converter = new WaveBoundaryConverter(importDataComponentFactory, geometricDefinitionFactory);
+
+            // Call
+            List<IWaveBoundary> result = converter.Convert(categories, new Dictionary<string, List<IFunction>>(), "path")
+                                                  .ToList();
+
+            // Assert
+            IEventedList<SupportPoint> supportPoints = geometricDefinition.SupportPoints;
+            Assert.That(supportPoints, Has.Count.EqualTo(5));
+            Assert.That(supportPoints[0].Distance, Is.EqualTo(0));
+            Assert.That(supportPoints[1].Distance, Is.EqualTo(10));
+            Assert.That(supportPoints[2].Distance, Is.EqualTo(10 - mdwValues.Distances[0]));
+            Assert.That(supportPoints[3].Distance, Is.EqualTo(10 - mdwValues.Distances[1]));
+            Assert.That(supportPoints[4].Distance, Is.EqualTo(10 - mdwValues.Distances[2]));
+        }
+
+        [Test]
+        public void GivenAClockwiseCoordinatesBoundary_WhenConvertIsCalled_ThenTheSupportPointDistancesAreInverted()
+        {
+            // Setup
+            var mdwValues = new MdwTestValues(RandomDouble, RandomDouble);
+
+            var geometricDefinition = Substitute.For<IWaveBoundaryGeometricDefinition>();
+            geometricDefinition.Length.Returns(10.0);
+            IWaveBoundaryGeometricDefinitionFactory geometricDefinitionFactory = GetMockedGeometricDefinitionFactory(geometricDefinition, mdwValues);
+            geometricDefinitionFactory.HasInvertedOrderingCoordinates(null, null).ReturnsForAnyArgs(true);
+
+            geometricDefinition.SupportPoints.Add(new SupportPoint(0, geometricDefinition));
+            geometricDefinition.SupportPoints.Add(new SupportPoint(10, geometricDefinition));
+
+            var importDataComponentFactory = Substitute.For<IImportBoundaryConditionDataComponentFactory>();
+            var spatiallyVaryingDataComponent = new SpatiallyVaryingDataComponent<ConstantParameters<T>>();
+            importDataComponentFactory.CreateSpatiallyVaryingConstantComponent<T>(Arg.Is<IEnumerable<Tuple<SupportPoint, ParametersBlock>>>(
+                                                                                      p => MatchesSpatiallyVaryingParametersInverted(p, mdwValues)))
+                                      .Returns(spatiallyVaryingDataComponent);
+
+            DelftIniCategory[] categories =
+            {
+                GetSpatiallyVaryingConstantCategory(ShapeImportType.Gauss, PeriodImportExportType.Mean, mdwValues),
+            };
+
+            var converter = new WaveBoundaryConverter(importDataComponentFactory, geometricDefinitionFactory);
+
+            // Call
+            List<IWaveBoundary> result = converter.Convert(categories, new Dictionary<string, List<IFunction>>(), "path")
+                                                  .ToList();
+
+            // Assert
+            IEventedList<SupportPoint> supportPoints = geometricDefinition.SupportPoints;
+            Assert.That(supportPoints, Has.Count.EqualTo(5));
+            Assert.That(supportPoints[0].Distance, Is.EqualTo(0));
+            Assert.That(supportPoints[1].Distance, Is.EqualTo(10));
+            Assert.That(supportPoints[2].Distance, Is.EqualTo(10 - mdwValues.Distances[0]));
+            Assert.That(supportPoints[3].Distance, Is.EqualTo(10 - mdwValues.Distances[1]));
+            Assert.That(supportPoints[4].Distance, Is.EqualTo(10 - mdwValues.Distances[2]));
+        }
+
+
         private static SpreadingImportType GetSpreadingImportType()
         {
             switch (typeof(T))
@@ -590,6 +740,19 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             return geometricDefinitionFactory;
         }
 
+        private static IWaveBoundaryGeometricDefinitionFactory GetMockedGeometricDefinitionFactoryOriented(
+            IWaveBoundaryGeometricDefinition geometricDefinition, MdwTestValues mdw)
+        {
+            geometricDefinition.SupportPoints.Returns(new EventedList<SupportPoint>());
+
+            var geometricDefinitionFactory = Substitute.For<IWaveBoundaryGeometricDefinitionFactory>();
+            geometricDefinitionFactory.ConstructWaveBoundaryGeometricDefinition(mdw.OrientationType)
+                                      .Returns(geometricDefinition);
+
+            return geometricDefinitionFactory;
+        }
+
+
         private static bool MatchesCoordinate(Coordinate c, double x, double y) => DoubleEquals(c.X, x) && DoubleEquals(c.Y, y);
 
         private static bool MatchesParameters(ParametersBlock p, MdwTestValues mdw, int i) =>
@@ -609,6 +772,20 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
                    DoubleEquals(secondPair.Item1.Distance, mdw.Distances[1]) &&
                    MatchesParameters(secondPair.Item2, mdw, 1) &&
                    DoubleEquals(thirdPair.Item1.Distance, mdw.Distances[2]) &&
+                   MatchesParameters(thirdPair.Item2, mdw, 2);
+        }
+
+        private static bool MatchesSpatiallyVaryingParametersInverted(IEnumerable<Tuple<SupportPoint, ParametersBlock>> p, MdwTestValues mdw)
+        {
+            Tuple<SupportPoint, ParametersBlock> firstPair = p.ElementAt(0);
+            Tuple<SupportPoint, ParametersBlock> secondPair = p.ElementAt(1);
+            Tuple<SupportPoint, ParametersBlock> thirdPair = p.ElementAt(2);
+
+            return DoubleEquals(firstPair.Item1.Distance, 10.0 - mdw.Distances[0]) &&
+                   MatchesParameters(firstPair.Item2, mdw, 0) &&
+                   DoubleEquals(secondPair.Item1.Distance, 10.0 - mdw.Distances[1]) &&
+                   MatchesParameters(secondPair.Item2, mdw, 1) &&
+                   DoubleEquals(thirdPair.Item1.Distance, 10.0 - mdw.Distances[2]) &&
                    MatchesParameters(thirdPair.Item2, mdw, 2);
         }
 
@@ -849,6 +1026,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             public readonly double EndY = RandomDouble;
             public readonly double PeakEnhancementFactor;
             public readonly double GaussianSpreading;
+
+            public readonly BoundaryOrientationType OrientationType =
+                random.NextEnumValue<BoundaryOrientationType>();
 
             public readonly double[] Distances = GetDataForThreeLocations();
 

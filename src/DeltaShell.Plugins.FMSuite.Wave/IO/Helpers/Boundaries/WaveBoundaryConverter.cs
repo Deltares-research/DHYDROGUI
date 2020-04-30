@@ -78,14 +78,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
             foreach (DelftIniCategory category in boundaryCategories)
             {
                 BoundaryMdwBlock boundaryBlock = BoundaryCategoryConverter.Convert(category, mdwDirPath);
-                if (boundaryBlock.DefinitionType != DefinitionImportType.Coordinates)
+                
+                IWaveBoundaryGeometricDefinition geometricDefinition = GetGeometricDefinition(boundaryBlock);
+
+                if (geometricDefinition == null)
                 {
                     continue;
                 }
 
                 timeSeriesData.TryGetValue(boundaryBlock.Name, out List<IFunction> timeSeries);
-
-                IWaveBoundaryGeometricDefinition geometricDefinition = GetGeometricDefinition(boundaryBlock);
                 IWaveBoundaryConditionDefinition conditionDefinition = GetConditionDefinition(boundaryBlock,
                                                                                               timeSeries,
                                                                                               geometricDefinition);
@@ -96,16 +97,60 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
 
         private IWaveBoundaryGeometricDefinition GetGeometricDefinition(BoundaryMdwBlock boundaryBlock)
         {
+            switch (boundaryBlock.DefinitionType)
+            {
+                case DefinitionImportType.Coordinates:
+                    return GetGeometricDefinitionFromCoordinates(boundaryBlock);
+                case DefinitionImportType.Oriented:
+                    return GetGeometricDefinitionFromOrientation(boundaryBlock);
+                case DefinitionImportType.SpectrumFile:
+                default:
+                    return null;
+            }
+        }
+
+        private IWaveBoundaryGeometricDefinition GetGeometricDefinitionFromCoordinates(BoundaryMdwBlock boundaryBlock)
+        {
             var startCoordinate = new Coordinate(boundaryBlock.XStartCoordinate, boundaryBlock.YStartCoordinate);
             var endCoordinate = new Coordinate(boundaryBlock.XEndCoordinate, boundaryBlock.YEndCoordinate);
 
             IWaveBoundaryGeometricDefinition geometricDefinition = geometricDefinitionFactory
                 .ConstructWaveBoundaryGeometricDefinition(startCoordinate, endCoordinate);
 
+            if (geometricDefinitionFactory.HasInvertedOrderingCoordinates(geometricDefinition, startCoordinate))
+            {
+                InvertSupportPointDistances(boundaryBlock, geometricDefinition.Length);
+            }
+
             CreateSupportPoints(boundaryBlock, geometricDefinition);
 
             return geometricDefinition;
         }
+
+        private IWaveBoundaryGeometricDefinition GetGeometricDefinitionFromOrientation(BoundaryMdwBlock boundaryBlock)
+        {
+            if (boundaryBlock.OrientationType == null)
+            {
+                return null;
+            }
+
+            IWaveBoundaryGeometricDefinition geometricDefinition = geometricDefinitionFactory
+                .ConstructWaveBoundaryGeometricDefinition(boundaryBlock.OrientationType.Value);
+
+            if (boundaryBlock.DistanceDirType == DistanceDirType.Clockwise)
+            {
+                InvertSupportPointDistances(boundaryBlock, geometricDefinition.Length);
+            }
+
+            CreateSupportPoints(boundaryBlock, geometricDefinition);
+
+            return geometricDefinition;
+        }
+
+        private static void InvertSupportPointDistances(BoundaryMdwBlock boundaryBlock, 
+                                                        double geometricDefinitionLength) =>
+            boundaryBlock.Distances = boundaryBlock.Distances.Select(d => geometricDefinitionLength - d).ToArray();
+
 
         private IWaveBoundaryConditionDefinition GetConditionDefinition(BoundaryMdwBlock boundaryBlock,
                                                                         IList<IFunction> timeSeriesData,
