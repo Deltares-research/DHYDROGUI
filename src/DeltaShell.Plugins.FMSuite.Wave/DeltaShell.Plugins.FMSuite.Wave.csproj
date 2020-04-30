@@ -247,7 +247,6 @@
     <Compile Include="WaveObstacle.cs" />
     <Compile Include="WaveTimePointData.cs" />
     <Compile Include="WaveApplicationPlugin.cs" />
-    <Compile Include="WaveBoundaryCondition.cs" />
     <Compile Include="WaveDomainData.cs" />
     <Compile Include="ModelDefinition\WaveModelDefinition.cs" />
     <Compile Include="ModelDefinition\WaveModelProperty.cs" />
