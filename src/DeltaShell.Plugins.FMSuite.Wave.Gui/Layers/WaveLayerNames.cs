@@ -63,11 +63,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
         public const string ObservationCrossSectionLayerName = "Observation Cross-Sections";
 
         /// <summary>
-        /// The grid snapped features layer name
-        /// </summary>
-        public const string GridSnappedFeaturesLayerName = "Estimated Grid-snapped features";
-
-        /// <summary>
         /// Gets the name of the domain layer given a <paramref name="domainName"/>.
         /// </summary>
         /// <param name="domainName">Name of the domain.</param>
