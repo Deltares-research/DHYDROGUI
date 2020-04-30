@@ -69,7 +69,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms.Friction
                 new DelayedEventHandler<EventArgs>(ChannelFrictionDefinitionsCollectionChanged)
                 {
                     FireLastEventOnly = true,
-                    Delay = 100,
+                    Delay = 500,
                     SynchronizingObject = this
                 };
         }
@@ -154,7 +154,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms.Friction
             SubscribeViewEvents();
             SubscribeDataEvents();
 
-            // Reset original data
+            // Reset original layer
             vectorLayerAttributeTableView.Data = data;
 
             UpdateTableView();
@@ -167,6 +167,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms.Friction
                 components?.Dispose();
 
                 UnsubscribeDataEvents();
+
+                delayedEventHandlerDefinitionsCollectionChanged.Dispose();
             }
 
             base.Dispose(disposing);
@@ -265,17 +267,23 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms.Friction
 
                 if (isSetData)
                 {
+                    var roughnessTypeToSet = channelFrictionDefinition.SpecificationType == ChannelFrictionSpecificationType.ConstantChannelFrictionDefinition
+                            ? channelFrictionDefinition.ConstantChannelFrictionDefinition.Type
+                            : channelFrictionDefinition.SpecificationType == ChannelFrictionSpecificationType.SpatialChannelFrictionDefinition
+                                ? channelFrictionDefinition.SpatialChannelFrictionDefinition.Type
+                                : GetModelSettingsType();
+
                     channelFrictionDefinition.SpecificationType = (ChannelFrictionSpecificationType) Enum.Parse(typeof(ChannelFrictionSpecificationType), value.ToString());
 
-                    if (channelFrictionDefinition.ConstantChannelFrictionDefinition != null)
+                    if (channelFrictionDefinition.SpecificationType == ChannelFrictionSpecificationType.ConstantChannelFrictionDefinition)
                     {
-                        channelFrictionDefinition.ConstantChannelFrictionDefinition.Type = GetModelSettingsType();
+                        channelFrictionDefinition.ConstantChannelFrictionDefinition.Type = roughnessTypeToSet;
                         channelFrictionDefinition.ConstantChannelFrictionDefinition.Value = GetModelSettingsValue();
                     }
 
-                    if (channelFrictionDefinition.SpatialChannelFrictionDefinition != null)
+                    if (channelFrictionDefinition.SpecificationType == ChannelFrictionSpecificationType.SpatialChannelFrictionDefinition)
                     {
-                        channelFrictionDefinition.SpatialChannelFrictionDefinition.Type = GetModelSettingsType();
+                        channelFrictionDefinition.SpatialChannelFrictionDefinition.Type = roughnessTypeToSet;
                     }
                 }
             }
@@ -284,12 +292,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms.Friction
             {
                 if (isGetData)
                 {
-                    if (channelFrictionDefinition.ConstantChannelFrictionDefinition != null)
+                    if (channelFrictionDefinition.SpecificationType == ChannelFrictionSpecificationType.ConstantChannelFrictionDefinition)
                     {
                         return channelFrictionDefinition.ConstantChannelFrictionDefinition.Type;
                     }
 
-                    if (channelFrictionDefinition.SpatialChannelFrictionDefinition != null)
+                    if (channelFrictionDefinition.SpecificationType == ChannelFrictionSpecificationType.SpatialChannelFrictionDefinition)
                     {
                         return channelFrictionDefinition.SpatialChannelFrictionDefinition.Type;
                     }
@@ -302,7 +310,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms.Friction
 
                 if (isSetData)
                 {
-                    if (channelFrictionDefinition.ConstantChannelFrictionDefinition != null)
+                    if (channelFrictionDefinition.SpecificationType == ChannelFrictionSpecificationType.ConstantChannelFrictionDefinition)
                     {
                         var roughnessType = (RoughnessType) Enum.Parse(typeof(RoughnessType), value.ToString());
 
@@ -310,7 +318,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms.Friction
                         channelFrictionDefinition.ConstantChannelFrictionDefinition.Value = RoughnessHelper.GetDefault(roughnessType);
                     }
 
-                    if (channelFrictionDefinition.SpatialChannelFrictionDefinition != null)
+                    if (channelFrictionDefinition.SpecificationType == ChannelFrictionSpecificationType.SpatialChannelFrictionDefinition)
                     {
                         var roughnessType = (RoughnessType) Enum.Parse(typeof(RoughnessType), value.ToString());
 
@@ -323,7 +331,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms.Friction
             {
                 if (isGetData)
                 {
-                    if (channelFrictionDefinition.ConstantChannelFrictionDefinition != null)
+                    if (channelFrictionDefinition.SpecificationType == ChannelFrictionSpecificationType.ConstantChannelFrictionDefinition)
                     {
                         return channelFrictionDefinition.ConstantChannelFrictionDefinition.Value;
                     }
@@ -336,7 +344,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms.Friction
 
                 if (isSetData)
                 {
-                    if (channelFrictionDefinition.ConstantChannelFrictionDefinition != null)
+                    if (channelFrictionDefinition.SpecificationType == ChannelFrictionSpecificationType.ConstantChannelFrictionDefinition)
                     {
                         channelFrictionDefinition.ConstantChannelFrictionDefinition.Value = double.Parse(value.ToString());
                     }
@@ -345,12 +353,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms.Friction
 
             if (columnIndex == UnitColumnIndex)
             {
-                if (channelFrictionDefinition.ConstantChannelFrictionDefinition != null)
+                if (channelFrictionDefinition.SpecificationType == ChannelFrictionSpecificationType.ConstantChannelFrictionDefinition)
                 {
                     return RoughnessHelper.GetUnit(channelFrictionDefinition.ConstantChannelFrictionDefinition.Type);
                 }
 
-                if (channelFrictionDefinition.SpatialChannelFrictionDefinition != null)
+                if (channelFrictionDefinition.SpecificationType == ChannelFrictionSpecificationType.SpatialChannelFrictionDefinition)
                 {
                     return RoughnessHelper.GetUnit(channelFrictionDefinition.SpatialChannelFrictionDefinition.Type);
                 }
@@ -365,7 +373,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms.Friction
             {
                 if (isGetData)
                 {
-                    if (channelFrictionDefinition.SpatialChannelFrictionDefinition != null)
+                    if (channelFrictionDefinition.SpecificationType == ChannelFrictionSpecificationType.SpatialChannelFrictionDefinition)
                     {
                         return channelFrictionDefinition.SpatialChannelFrictionDefinition.FunctionType;
                     }
@@ -373,7 +381,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms.Friction
 
                 if (isSetData)
                 {
-                    if (channelFrictionDefinition.SpatialChannelFrictionDefinition != null)
+                    if (channelFrictionDefinition.SpecificationType == ChannelFrictionSpecificationType.SpatialChannelFrictionDefinition)
                     {
                         channelFrictionDefinition.SpatialChannelFrictionDefinition.FunctionType = (RoughnessFunction) Enum.Parse(typeof(RoughnessFunction), value.ToString());
                     }
