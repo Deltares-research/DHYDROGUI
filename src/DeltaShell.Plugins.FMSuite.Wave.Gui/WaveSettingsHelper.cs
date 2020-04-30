@@ -70,9 +70,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
                 {
                     Category = KnownWaveCategories.GeneralCategory,
                     SubCategory = Resources.WaveSettingsHelper_AddCustomWaveSettings_Boundaries_Category_Name,
-                    Label = Resources.WaveSettingsHelper_AddCustomWaveSettings_Use_boundary_definition_per_file,
+                    Label = Resources.WaveSettingsHelper_AddCustomWaveSettings_Use_SWAN_domain_boundary_from_file,
                     ValueType = typeof(bool),
-                    ToolTip = Resources.WaveSettingsHelper_AddCustomWaveSettings_When_this_option_is_selected_adding_2D_D_Waves_boundaries_is_not_possible
+                    ToolTip = Resources.WaveSettingsHelper_AddCustomWaveSettings_When_this_option_is_selected_adding_2D_D_Waves_boundaries_is_not_possible_Existing_2D_D_Waves_boundaries_will_be_removed
                     });
                 generalCategory.AddWpfGuiProperty(waveBoundariesPerFileUsed);
 

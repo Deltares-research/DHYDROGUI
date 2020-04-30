@@ -302,21 +302,22 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Use boundary definition per file.
+        ///   Looks up a localized string similar to Use SWAN domain boundary from file.
         /// </summary>
-        public static string WaveSettingsHelper_AddCustomWaveSettings_Use_boundary_definition_per_file {
+        public static string WaveSettingsHelper_AddCustomWaveSettings_Use_SWAN_domain_boundary_from_file {
             get {
-                return ResourceManager.GetString("WaveSettingsHelper_AddCustomWaveSettings_Use_boundary_definition_per_file", resourceCulture);
+                return ResourceManager.GetString("WaveSettingsHelper_AddCustomWaveSettings_Use_SWAN_domain_boundary_from_file", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to When this option is selected, adding 2D D-Waves boundaries is not possible..
+        ///   Looks up a localized string similar to When this option is selected, adding 2D D-Waves boundaries is not possible. Existing 2D D-Waves boundaries will be removed..
         /// </summary>
-        public static string WaveSettingsHelper_AddCustomWaveSettings_When_this_option_is_selected_adding_2D_D_Waves_boundaries_is_not_possible {
+        public static string WaveSettingsHelper_AddCustomWaveSettings_When_this_option_is_selected_adding_2D_D_Waves_boundaries_is_not_possible_Existing_2D_D_Waves_boundaries_will_be_removed {
             get {
                 return ResourceManager.GetString("WaveSettingsHelper_AddCustomWaveSettings_When_this_option_is_selected_adding_2D_D" +
-                        "-Waves_boundaries_is_not_possible", resourceCulture);
+                        "-Waves_boundaries_is_not_possible_Existing_2D_D-Waves_boundaries_will_be_removed" +
+                        "", resourceCulture);
             }
         }
         
