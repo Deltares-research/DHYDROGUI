@@ -101,5 +101,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
         /// Gets or sets the the orientation.
         /// </summary>
         public BoundaryOrientationType? OrientationType { get; set; } = null;
+
+        /// <summary>
+        /// Gets or sets the type of the distance dir.
+        /// </summary>
+        public DistanceDirType? DistanceDirType { get; set; } = null;
     }
 }
