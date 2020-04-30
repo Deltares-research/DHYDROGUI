@@ -46,8 +46,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
                              IHydroModel, IDimrModel
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(WaveModel));
-        private IGeometry previousFeatureGeometry;
-        private bool snappingGeometry;
         private ICoordinateSystem coordinateSystem;
         private string progressText;
 
@@ -442,10 +440,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             ((INotifyPropertyChanged) this).PropertyChanged += (s, e) => MarkDirty();
             ((INotifyCollectionChanged) this).CollectionChanged += (s, e) => MarkDirty();
 
-            // todo: implement snapping through SnapRules
-            ((INotifyPropertyChange) Boundaries).PropertyChanging += BoundariesPropertyChanging;
-            ((INotifyPropertyChanged) Boundaries).PropertyChanged += BoundariesPropertyChanged;
-
             dataItems.Add(new DataItem(new TextDocument(true) {Name = "Swan run log"}, DataItemRole.Output,
                                        SwanLogDataItemTag));
 
@@ -531,14 +525,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         {
             domain.SubDomains.Remove(subDomain);
             RemoveDataItemsForDomain(subDomain);
-        }
-
-        private void BoundariesPropertyChanging(object sender, PropertyChangingEventArgs e)
-        {
-            var feature2D = sender as Feature2D;
-            previousFeatureGeometry = feature2D != null && Boundaries.Contains(feature2D)
-                                          ? feature2D.Geometry
-                                          : null;
         }
 
         /// <summary>
@@ -655,28 +641,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
                     EndEdit();
                 }
-            }
-        }
-
-        private void BoundariesPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            var feature2D = sender as Feature2D;
-
-            if (snappingGeometry || feature2D == null ||
-                e.PropertyName != nameof(feature2D.Geometry))
-            {
-                return;
-            }
-
-            snappingGeometry = true;
-
-            try
-            {
-                feature2D.Geometry = GetGridSnappedBoundary(feature2D.Geometry) ?? previousFeatureGeometry;
-            }
-            finally
-            {
-                snappingGeometry = false;
             }
         }
 
