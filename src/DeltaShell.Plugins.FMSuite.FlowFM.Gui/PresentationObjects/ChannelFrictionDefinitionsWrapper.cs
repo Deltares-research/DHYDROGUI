@@ -10,8 +10,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.PresentationObjects
     /// in project explorer and map tree.
     /// </summary>
     /// <remarks>
-    /// Directly using the <see cref="IEventedList{ChannelFrictionDefinition}"/> for presentation results
-    /// in unwanted selection synchronization after clicking the related node in the project explorer.
+    /// Directly using the <see cref="IEventedList{ChannelFrictionDefinition}"/> for presentation purposes results
+    /// in unwanted selection synchronization after clicking the related node in the project explorer. Implemented
+    /// the singleton pattern in order to guarantee equality.
     /// </remarks>
     public sealed class ChannelFrictionDefinitionsWrapper 
     {
