@@ -54,28 +54,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             // to avoid the name setting in FeatureData... 
         }
 
-        public WaveSpectrumShapeType ShapeType
-        {
-            get => spectralData.ShapeType;
-            set => spectralData.ShapeType = value;
-        }
-
-        public WavePeriodType PeriodType
-        {
-            get => spectralData.PeriodType;
-            set => spectralData.PeriodType = value;
-        }
-
         public double PeakEnhancementFactor
         {
             get => spectralData.PeakEnhancementFactor;
             set => spectralData.PeakEnhancementFactor = value;
-        }
-
-        public double GaussianSpreadingValue
-        {
-            get => spectralData.GaussianSpreadingValue;
-            set => spectralData.GaussianSpreadingValue = value;
         }
 
         public WaveDirectionalSpreadingType DirectionalSpreadingType
@@ -127,29 +109,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
                 spatialDefinitionType = value;
                 ClearData();
             }
-        }
-
-        public Coordinate StartCoordinate => Feature.Geometry.Coordinates[0];
-
-        public Coordinate EndCoordinate
-        {
-            get
-            {
-                int nrOfCoordinates = Feature.Geometry.Coordinates.Length;
-                return Feature.Geometry.Coordinates[nrOfCoordinates - 1];
-            }
-        }
-
-        /// <summary>
-        /// Gets the distance from first data point measured over the wave boundary.
-        /// </summary>
-        /// <param name="dataPointIndex"> Index of the data point. </param>
-        /// <returns> The requested distance as a double value. </returns>
-        public double GetDistanceFromFirstDataPointOverWaveBoundary(int dataPointIndex)
-        {
-            Coordinate[] coordinates = Feature.Geometry.Coordinates;
-            return Enumerable.Range(1, dataPointIndex)
-                             .Aggregate(0.0, (sum, i) => sum + coordinates[i].Distance(coordinates[i - 1]));
         }
 
         protected override void AfterDataTypeChanged(BoundaryConditionDataType previousDataType)
