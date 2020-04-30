@@ -9,6 +9,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Views
     /// </summary>
     public partial class WaveBoundaryConditionEditorView : UserControl, IView
     {
+        /// <summary>
+        /// Creates a new <see cref="WaveBoundaryConditionEditorView"/>.
+        /// </summary>
         public WaveBoundaryConditionEditorView()
         {
             InitializeComponent();
@@ -21,14 +24,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Views
 
         public void EnsureVisible(object item)
         {
+            // No specific object requires focus.
         }
 
-        public object Data
-        {
-            get => DataContext;
-            set => DataContext = value;
-        }
-
+        public object Data { get; set; }
         public string Text { get; set; }
         public Image Image { get; set; }
         public ViewInfo ViewInfo { get; set; }

@@ -134,13 +134,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
             yield return fromTreeShortcut;
 
             // Spatially varying boundary editor
-            // This should be changed to the appropriate data context already.
-            var boundaryViewInfo = new ViewInfo<IWaveBoundary, WaveBoundaryConditionEditorViewModel, WaveBoundaryConditionEditorView>()
+            var boundaryViewInfo = new ViewInfo<IWaveBoundary, WaveBoundaryConditionEditorView>()
             {
                 Description = "Spatially Varying Boundary Editor",
                 GetViewName =(v, o) => $"Boundary Editor ( {o.Name} )",
                 AdditionalDataCheck = o => WaveModels.Any(m => m.BoundaryContainer.Boundaries.Contains(o)),
-                GetViewData = data =>
+                AfterCreate = (view, data) =>
                 {
                     WaveModel model =
                         WaveModels.First(m => m.BoundaryContainer.Boundaries.Contains(data));
@@ -153,9 +152,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
                                                                                          new WaveLayerFactory(), 
                                                                                          model.CoordinateSystem);
 
-                    return new WaveBoundaryConditionEditorViewModel(data, 
-                                                                    geometryPreviewConfigurator, 
-                                                                    referenceDateTimeProvider);
+                    view.DataContext = new WaveBoundaryConditionEditorViewModel(data, 
+                                                                                geometryPreviewConfigurator, 
+                                                                                referenceDateTimeProvider);
                 },
                 CloseForData = (v, o) => v.Data.Equals(o)
             };
