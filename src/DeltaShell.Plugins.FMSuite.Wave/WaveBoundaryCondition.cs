@@ -49,17 +49,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             SpectrumParameters = new Dictionary<int, WaveBoundaryParameters>();
         }
 
-        protected override void UpdateName()
-        {
-            // to avoid the name setting in FeatureData... 
-        }
-
-        public double PeakEnhancementFactor
-        {
-            get => spectralData.PeakEnhancementFactor;
-            set => spectralData.PeakEnhancementFactor = value;
-        }
-
         public WaveDirectionalSpreadingType DirectionalSpreadingType
         {
             get => spectralData.DirectionalSpreadingType;
@@ -95,21 +84,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         public IDictionary<int, WaveBoundaryParameters> SpectrumParameters { get; }
 
         private WaveBoundaryConditionSpatialDefinitionType spatialDefinitionType;
-
-        public WaveBoundaryConditionSpatialDefinitionType SpatialDefinitionType
-        {
-            get => spatialDefinitionType;
-            set
-            {
-                if (spatialDefinitionType == value)
-                {
-                    return;
-                }
-
-                spatialDefinitionType = value;
-                ClearData();
-            }
-        }
 
         protected override void AfterDataTypeChanged(BoundaryConditionDataType previousDataType)
         {
@@ -167,46 +141,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             base.AddPoint(i);
         }
 
-        /// <summary>
-        /// Removes the point at index
-        /// <param name="i" />
-        /// and removes all related data to it.
-        /// </summary>
-        /// <param name="i"> The index of the data point in <see cref="BoundaryCondition.DataPointIndices" />. </param>
-        public override void RemovePoint(int i)
-        {
-            if (DataType == BoundaryConditionDataType.SpectrumFromFile)
-            {
-                SpectrumFiles.Remove(i);
-            }
-
-            if (DataType == BoundaryConditionDataType.ParameterizedSpectrumConstant)
-            {
-                SpectrumParameters.Remove(i);
-            }
-
-            base.RemovePoint(i);
-        }
-
         public override int VariableDimension => 1;
-
-        protected override IFunction CreateFunction()
-        {
-            switch (DataType)
-            {
-                case BoundaryConditionDataType.ParameterizedSpectrumTimeseries:
-                    IFunction function = CreateEmptyWaveEnergyFunction();
-                    function.Components.Where(c => c.Name == PeriodVariableName).ForEach(c => c.DefaultValue = 1.0);
-                    UpdateSpreadingComponentDefaultValue(function);
-                    UpdateDirectionComponentVariableUnit(function);
-                    return function;
-                case BoundaryConditionDataType.ParameterizedSpectrumConstant:
-                case BoundaryConditionDataType.SpectrumFromFile:
-                    return new Function("dummy");
-                default:
-                    return base.CreateFunction();
-            }
-        }
 
         private void UpdateSpreadingComponentDefaultValue(IFunction function)
         {
