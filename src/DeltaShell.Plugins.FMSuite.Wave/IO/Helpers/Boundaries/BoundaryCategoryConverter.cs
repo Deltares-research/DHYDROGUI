@@ -50,6 +50,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
                 return block;
             }
 
+            if (block.DefinitionType == DefinitionImportType.Oriented)
+            {
+                block.OrientationType = boundaryCategory.GetEnumValue<BoundaryOrientationType>(KnownWaveProperties.Orientation);
+
+                string distanceDirType = boundaryCategory.GetPropertyValue(KnownWaveProperties.DistanceDir);
+                block.DistanceDirType = distanceDirType != null
+                                            ? EnumUtils.GetEnumValueByDescription<DistanceDirType>(distanceDirType)
+                                            : DistanceDirType.CounterClockwise;
+            }
+
             block.Name = boundaryCategory.GetPropertyValue(KnownWaveProperties.Name);
             block.XStartCoordinate = boundaryCategory.GetDoubleValue(KnownWaveProperties.StartCoordinateX);
             block.YStartCoordinate = boundaryCategory.GetDoubleValue(KnownWaveProperties.StartCoordinateY);
