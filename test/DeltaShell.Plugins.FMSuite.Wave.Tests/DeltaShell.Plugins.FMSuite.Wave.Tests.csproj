@@ -243,7 +243,6 @@
     <Compile Include="Boundaries\GeometricDefinitions\GridCoordinateValueComparerTest.cs" />
     <Compile Include="Boundaries\GeometricDefinitions\GridSideTest.cs" />
     <Compile Include="Boundaries\SimpleBoundaryProviderTest.cs" />
-    <Compile Include="Boundaries\SpectralData\WaveSpectrumShapeTypeTest.cs" />
     <Compile Include="Boundaries\WaveBoundaryTest.cs" />
     <Compile Include="Api\WaveEnvironmentHelperTest.cs" />
     <Compile Include="Common\IO\Delft3DDepthFileExporterTest.cs" />
@@ -496,6 +495,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Boundaries\SpectralData\" />
     <Folder Include="test-data\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

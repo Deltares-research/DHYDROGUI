@@ -185,7 +185,6 @@
     <Compile Include="Boundaries\IBoundaryProvider.cs" />
     <Compile Include="Boundaries\IWaveBoundary.cs" />
     <Compile Include="Boundaries\SimpleBoundaryProvider.cs" />
-    <Compile Include="Boundaries\SpectralData\WaveSpectrumShapeType.cs" />
     <Compile Include="Boundaries\WaveBoundary.cs" />
     <Compile Include="IO\BcwFile.cs" />
     <Compile Include="IO\BcwTimeSeriesOfBoundaryCollector.cs" />
@@ -317,7 +316,9 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Boundaries\SpectralData\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>
