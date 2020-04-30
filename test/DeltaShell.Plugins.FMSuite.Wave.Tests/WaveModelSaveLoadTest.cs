@@ -114,8 +114,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
 
                 Assert.IsNotNull(retrievedModel);
                 Assert.AreEqual(model.ModelDefinition.Properties.Count, retrievedModel.ModelDefinition.Properties.Count);
-                Assert.AreEqual(model.ModelDefinition.BoundaryConditions.Count,
-                                retrievedModel.ModelDefinition.BoundaryConditions.Count);
+                Assert.AreEqual(model.ModelDefinition.BoundaryContainer.Boundaries.Count,
+                                retrievedModel.ModelDefinition.BoundaryContainer.Boundaries.Count);
             }
         }
 
