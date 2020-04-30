@@ -8,7 +8,6 @@ using System.Windows.Forms;
 using DelftTools.Controls;
 using DelftTools.Controls.Swf;
 using DelftTools.Functions;
-using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Shell.Gui;
@@ -116,8 +115,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
                 new FmModelTreeShortcut(model.NetworkDiscretization.Name, NetworkDiscretizationIcon, model, model.NetworkDiscretization, ShortCutType.Default),
                 new TreeFolder(model, new List<object>
                 {
-                    new ChannelFrictionDefinitionsWrapper(model.ChannelFrictionDefinitions),
-                    new PipeFrictionDefinitionsWrapper(model.PipeFrictionDefinitions),
+                    ChannelFrictionDefinitionsWrapper.GetInstance(model.ChannelFrictionDefinitions),
+                    PipeFrictionDefinitionsWrapper.GetInstance(model.PipeFrictionDefinitions),
                     new FmModelTreeShortcut("Lanes", FolderIcon, model, null, ShortCutType.FeatureSet, model.RoughnessSections)
                 }, "1D Roughness", FolderImageType.None),
                 model.BoundaryConditions1DDataItemSet,

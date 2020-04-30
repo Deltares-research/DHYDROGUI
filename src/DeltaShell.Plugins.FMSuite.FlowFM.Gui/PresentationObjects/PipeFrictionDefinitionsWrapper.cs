@@ -1,4 +1,6 @@
-﻿using DelftTools.Utils.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Linq;
+using DelftTools.Utils.Collections.Generic;
 using DeltaShell.NGHS.IO.DataObjects.Friction;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.PresentationObjects
@@ -11,13 +13,30 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.PresentationObjects
     /// Directly using the <see cref="IEventedList{PipeFrictionDefinition}"/> for presentation results
     /// in unwanted selection synchronization after clicking the related node in the project explorer.
     /// </remarks>
-    public class PipeFrictionDefinitionsWrapper
+    public sealed class PipeFrictionDefinitionsWrapper
     {
-        public PipeFrictionDefinitionsWrapper(IEventedList<PipeFrictionDefinition> wrappedData)
+        private static readonly IList<PipeFrictionDefinitionsWrapper> Instances = new List<PipeFrictionDefinitionsWrapper>();
+
+        public static PipeFrictionDefinitionsWrapper GetInstance(IEventedList<PipeFrictionDefinition> wrappedData)
+        {
+            var instance = Instances.FirstOrDefault(i => ReferenceEquals(i.WrappedData, wrappedData));
+            if (instance != null)
+            {
+                return instance;
+            }
+
+            instance = new PipeFrictionDefinitionsWrapper(wrappedData);
+
+            Instances.Add(instance);
+
+            return instance;
+        }
+
+        private PipeFrictionDefinitionsWrapper(IEventedList<PipeFrictionDefinition> wrappedData)
         {
             WrappedData = wrappedData;
         }
 
-        public IEventedList<PipeFrictionDefinition> WrappedData { get; private set; }
+        public IEventedList<PipeFrictionDefinition> WrappedData { get; }
     }
 }

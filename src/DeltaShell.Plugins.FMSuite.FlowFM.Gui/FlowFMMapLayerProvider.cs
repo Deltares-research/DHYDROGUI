@@ -792,8 +792,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
 
             public IEnumerable<object> ChildLayerObjects()
             {
-                yield return model.ChannelFrictionDefinitions;
-                yield return model.PipeFrictionDefinitions;
+                yield return ChannelFrictionDefinitionsWrapper.GetInstance(model.ChannelFrictionDefinitions);
+                yield return PipeFrictionDefinitionsWrapper.GetInstance(model.PipeFrictionDefinitions);
                 yield return model.RoughnessSections;
             }
         }

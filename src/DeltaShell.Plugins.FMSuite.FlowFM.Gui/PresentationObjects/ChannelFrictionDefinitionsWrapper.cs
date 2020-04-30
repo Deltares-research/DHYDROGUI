@@ -1,4 +1,6 @@
-﻿using DelftTools.Utils.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Linq;
+using DelftTools.Utils.Collections.Generic;
 using DeltaShell.NGHS.IO.DataObjects.Friction;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.PresentationObjects
@@ -11,13 +13,30 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.PresentationObjects
     /// Directly using the <see cref="IEventedList{ChannelFrictionDefinition}"/> for presentation results
     /// in unwanted selection synchronization after clicking the related node in the project explorer.
     /// </remarks>
-    public class ChannelFrictionDefinitionsWrapper
+    public sealed class ChannelFrictionDefinitionsWrapper 
     {
-        public ChannelFrictionDefinitionsWrapper(IEventedList<ChannelFrictionDefinition> wrappedData)
+        private static readonly IList<ChannelFrictionDefinitionsWrapper> Instances = new List<ChannelFrictionDefinitionsWrapper>();
+
+        public static ChannelFrictionDefinitionsWrapper GetInstance(IEventedList<ChannelFrictionDefinition> wrappedData)
+        {
+            var instance = Instances.FirstOrDefault(i => ReferenceEquals(i.WrappedData, wrappedData));
+            if (instance != null)
+            {
+                return instance;
+            }
+
+            instance = new ChannelFrictionDefinitionsWrapper(wrappedData);
+
+            Instances.Add(instance);
+
+            return instance;
+        }
+
+        private ChannelFrictionDefinitionsWrapper(IEventedList<ChannelFrictionDefinition> wrappedData)
         {
             WrappedData = wrappedData;
         }
 
-        public IEventedList<ChannelFrictionDefinition> WrappedData { get; private set; }
+        public IEventedList<ChannelFrictionDefinition> WrappedData { get; }
     }
 }
