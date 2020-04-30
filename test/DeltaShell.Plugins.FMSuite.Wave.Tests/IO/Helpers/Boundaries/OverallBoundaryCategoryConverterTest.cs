@@ -55,7 +55,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             OverallBoundaryCategoryConverter.Convert(boundariesPerFile, Enumerable.Empty<DelftIniCategory>(), "path");
 
             // Assert
-            Assert.That(boundariesPerFile.FileNameForBoundariesPerFile, Is.Null);
+            Assert.That(boundariesPerFile.FilePathForBoundariesPerFile, Is.Null);
             Assert.That(boundariesPerFile.DefinitionPerFileUsed, Is.False);
         }
 
@@ -73,7 +73,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             }, "path");
 
             // Assert
-            Assert.That(boundariesPerFile.FileNameForBoundariesPerFile, Is.Null);
+            Assert.That(boundariesPerFile.FilePathForBoundariesPerFile, Is.Null);
             Assert.That(boundariesPerFile.DefinitionPerFileUsed, Is.False);
         }
 
@@ -92,7 +92,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             }, "path");
 
             // Assert
-            Assert.That(boundariesPerFile.FileNameForBoundariesPerFile, Is.Null);
+            Assert.That(boundariesPerFile.FilePathForBoundariesPerFile, Is.Null);
             Assert.That(boundariesPerFile.DefinitionPerFileUsed, Is.False);
         }
 
@@ -112,7 +112,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             }, @"C:\folder");
 
             // Assert
-            Assert.That(boundariesPerFile.FileNameForBoundariesPerFile, Is.Empty);
+            Assert.That(boundariesPerFile.FilePathForBoundariesPerFile, Is.Empty);
             Assert.That(boundariesPerFile.DefinitionPerFileUsed, Is.True);
         }
 
@@ -132,14 +132,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             }, @"C:\folder");
 
             // Assert
-            Assert.That(boundariesPerFile.FileNameForBoundariesPerFile, Is.EqualTo(@"C:\folder\spectrumFile.sp2"));
+            Assert.That(boundariesPerFile.FilePathForBoundariesPerFile, Is.EqualTo(@"C:\folder\spectrumFile.sp2"));
             Assert.That(boundariesPerFile.DefinitionPerFileUsed, Is.True);
         }
 
         private class TestBoundariesPerFile : IBoundariesPerFile
         {
             public bool DefinitionPerFileUsed { get; set; }
-            public string FileNameForBoundariesPerFile { get; set; }
+            public string FilePathForBoundariesPerFile { get; set; }
         }
     }
 }

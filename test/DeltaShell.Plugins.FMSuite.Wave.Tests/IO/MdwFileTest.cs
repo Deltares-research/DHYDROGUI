@@ -526,7 +526,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
                 string sourceFilePath = Path.Combine(sourceDir, fileName);
                 File.WriteAllText(sourceFilePath, sourceFilePath);
 
-                boundaryContainer.FileNameForBoundariesPerFile = sourceFilePath;
+                boundaryContainer.FilePathForBoundariesPerFile = sourceFilePath;
                 string saveFilePath = Path.Combine(targetDir, "output.mdw");
 
                 // Call
@@ -543,7 +543,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
                 AssertPropertyLine(lines[0], KnownWaveProperties.Definition, "fromsp2file");
                 AssertPropertyLine(lines[1], KnownWaveProperties.OverallSpecFile, fileName);
 
-                Assert.That(boundaryContainer.FileNameForBoundariesPerFile,
+                Assert.That(boundaryContainer.FilePathForBoundariesPerFile,
                             Is.EqualTo(switchTo ? targetFilePath : sourceFilePath));
             }
         }
@@ -560,7 +560,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
 
             using (var tempDirectory = new TemporaryDirectory())
             {
-                boundaryContainer.FileNameForBoundariesPerFile = string.Empty;
+                boundaryContainer.FilePathForBoundariesPerFile = string.Empty;
                 string saveFilePath = Path.Combine(tempDirectory.Path, "output.mdw");
 
                 // Call
@@ -574,7 +574,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
                 AssertPropertyLine(lines[0], KnownWaveProperties.Definition, "fromsp2file");
                 AssertPropertyLine(lines[1], KnownWaveProperties.OverallSpecFile, string.Empty);
 
-                Assert.That(boundaryContainer.FileNameForBoundariesPerFile, Is.EqualTo(string.Empty));
+                Assert.That(boundaryContainer.FilePathForBoundariesPerFile, Is.EqualTo(string.Empty));
             }
         }
 
@@ -1196,7 +1196,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             IBoundaryContainer boundaryContainer = modelDefinition.BoundaryContainer;
             Assert.That(boundaryContainer.Boundaries, Is.Empty);
             Assert.That(boundaryContainer.DefinitionPerFileUsed, Is.True);
-            Assert.That(boundaryContainer.FileNameForBoundariesPerFile, Is.EqualTo(Path.Combine(Path.GetDirectoryName(mdwPath), "OverallSpectrumFile.sp2")));
+            Assert.That(boundaryContainer.FilePathForBoundariesPerFile, Is.EqualTo(Path.Combine(Path.GetDirectoryName(mdwPath), "OverallSpectrumFile.sp2")));
         }
 
         private static void AssertCorrectConstantParameters(ConstantParameters<PowerDefinedSpreading> supportPointData,

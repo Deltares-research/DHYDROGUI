@@ -232,7 +232,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
 
             var boundaryContainer = Substitute.For<IBoundaryContainer>();
             boundaryContainer.DefinitionPerFileUsed = true;
-            boundaryContainer.FileNameForBoundariesPerFile = filePath;
+            boundaryContainer.FilePathForBoundariesPerFile = filePath;
 
             var filesManager = Substitute.For<IFilesManager>();
 
@@ -255,7 +255,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             // Setup
             var boundaryContainer = Substitute.For<IBoundaryContainer>();
             boundaryContainer.DefinitionPerFileUsed = true;
-            boundaryContainer.FileNameForBoundariesPerFile = string.Empty;
+            boundaryContainer.FilePathForBoundariesPerFile = string.Empty;
 
             var filesManager = Substitute.For<IFilesManager>();
 
@@ -360,7 +360,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
 
             s.Invoke(setValue);
 
-            return boundaryContainer.FileNameForBoundariesPerFile == setValue;
+            return boundaryContainer.FilePathForBoundariesPerFile == setValue;
         }
 
         private class WaveBoundaryBuilder

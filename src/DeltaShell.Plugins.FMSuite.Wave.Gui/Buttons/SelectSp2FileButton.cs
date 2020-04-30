@@ -39,7 +39,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Buttons
                 {
                     string fileLocation = openFileDialog.FileName.Replace('\\', '/');
                     waveModel.ModelDefinition
-                             .BoundaryContainer.FileNameForBoundariesPerFile = fileLocation;
+                             .BoundaryContainer.FilePathForBoundariesPerFile = fileLocation;
                 }
             }
         }

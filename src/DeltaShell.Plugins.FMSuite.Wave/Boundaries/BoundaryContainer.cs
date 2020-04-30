@@ -37,7 +37,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries
             }
         }
 
-        public string FileNameForBoundariesPerFile { get; set; } = string.Empty;
+        public string FilePathForBoundariesPerFile { get; set; } = string.Empty;
 
         public void UpdateGridBoundary(IGridBoundary gridBoundary)
         {

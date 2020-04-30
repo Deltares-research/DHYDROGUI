@@ -41,7 +41,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
 
             boundariesPerFile.DefinitionPerFileUsed = true;
 
-            boundariesPerFile.FileNameForBoundariesPerFile = !string.IsNullOrEmpty(boundaryBlock.OverallSpectrumFile) 
+            boundariesPerFile.FilePathForBoundariesPerFile = !string.IsNullOrEmpty(boundaryBlock.OverallSpectrumFile) 
                                                                  ? Path.Combine(mdwDirPath, boundaryBlock.OverallSpectrumFile) 
                                                                  : string.Empty;
         }

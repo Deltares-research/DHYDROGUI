@@ -76,8 +76,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
                 });
                 generalCategory.AddWpfGuiProperty(waveBoundariesPerFileUsed);
 
-                var waveBoundariesPerFileName = new WpfGuiProperty(new FieldUIDescription(o => model.ModelDefinition.BoundaryContainer.FileNameForBoundariesPerFile,
-                                                                                      (d, v) => model.ModelDefinition.BoundaryContainer.FileNameForBoundariesPerFile = (string)v,
+                var waveBoundariesPerFileName = new WpfGuiProperty(new FieldUIDescription(o => model.ModelDefinition.BoundaryContainer.FilePathForBoundariesPerFile,
+                                                                                      (d, v) => model.ModelDefinition.BoundaryContainer.FilePathForBoundariesPerFile = (string)v,
                                                                        d=> model.BoundaryContainer.DefinitionPerFileUsed)
                 {
                     Category = KnownWaveCategories.GeneralCategory,

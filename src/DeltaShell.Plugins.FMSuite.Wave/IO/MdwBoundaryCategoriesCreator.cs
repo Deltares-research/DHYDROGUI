@@ -63,7 +63,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             var boundaryCategory = new DelftIniCategory(KnownWaveCategories.BoundaryCategory);
             boundaryCategory.AddProperty(KnownWaveProperties.Definition, KnownWaveBoundariesFileConstants.SpectrumFileDefinitionType);
 
-            string filePath = boundaryContainer.FileNameForBoundariesPerFile;
+            string filePath = boundaryContainer.FilePathForBoundariesPerFile;
             if (filePath == string.Empty)
             {
                 // this string should not be empty, because the DelftIniWriter
@@ -72,7 +72,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             }
             else
             {
-                filesManager.Add(filePath, s => boundaryContainer.FileNameForBoundariesPerFile = s);
+                filesManager.Add(filePath, s => boundaryContainer.FilePathForBoundariesPerFile = s);
                 boundaryCategory.AddProperty(KnownWaveProperties.OverallSpecFile, Path.GetFileName(filePath));
             }
 

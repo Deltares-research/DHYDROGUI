@@ -10,8 +10,8 @@
         bool DefinitionPerFileUsed { get; set; }
 
         /// <summary>
-        /// If a .sp2 file will be used for defining boundaries, this is the file name.
+        /// If a .sp2 file will be used for defining boundaries, this is the file path.
         /// </summary>
-        string FileNameForBoundariesPerFile { get; set; }
+        string FilePathForBoundariesPerFile { get; set; }
     }
 }

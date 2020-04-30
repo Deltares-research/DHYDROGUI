@@ -22,7 +22,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries
             Assert.That(container.Boundaries, Is.Not.Null);
             Assert.That(container.Boundaries, Is.Empty);
             Assert.That(container.GetBoundarySnappingCalculator(), Is.Null);
-            Assert.That(container.FileNameForBoundariesPerFile, Is.Empty);
+            Assert.That(container.FilePathForBoundariesPerFile, Is.Empty);
             Assert.That(container.DefinitionPerFileUsed, Is.False);
         }
 
