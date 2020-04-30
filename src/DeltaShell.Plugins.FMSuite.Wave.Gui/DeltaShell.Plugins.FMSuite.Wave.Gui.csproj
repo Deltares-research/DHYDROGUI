@@ -339,12 +339,6 @@
     <Compile Include="Forms\WaveSupportPointSelectionForm.Designer.cs">
       <DependentUpon>WaveSupportPointSelectionForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\WaveBoundaryTimeSelectionDialog.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\WaveBoundaryTimeSelectionDialog.Designer.cs">
-      <DependentUpon>WaveBoundaryTimeSelectionDialog.cs</DependentUpon>
-    </Compile>
     <Compile Include="Editors\DomainSpecificDataEditor\Views\FrequencySpaceSettingsView.xaml.cs">
       <DependentUpon>FrequencySpaceSettingsView.xaml</DependentUpon>
     </Compile>
@@ -462,9 +456,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\WaveSupportPointSelectionForm.resx">
       <DependentUpon>WaveSupportPointSelectionForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\WaveBoundaryTimeSelectionDialog.resx">
-      <DependentUpon>WaveBoundaryTimeSelectionDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
