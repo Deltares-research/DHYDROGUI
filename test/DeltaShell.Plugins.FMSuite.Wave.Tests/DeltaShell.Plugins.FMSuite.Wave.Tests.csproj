@@ -243,7 +243,6 @@
     <Compile Include="Boundaries\GeometricDefinitions\GridCoordinateValueComparerTest.cs" />
     <Compile Include="Boundaries\GeometricDefinitions\GridSideTest.cs" />
     <Compile Include="Boundaries\SimpleBoundaryProviderTest.cs" />
-    <Compile Include="Boundaries\SpectralData\WavePeriodTypeTest.cs" />
     <Compile Include="Boundaries\SpectralData\WaveSpectrumShapeTypeTest.cs" />
     <Compile Include="Boundaries\WaveBoundaryTest.cs" />
     <Compile Include="Api\WaveEnvironmentHelperTest.cs" />
