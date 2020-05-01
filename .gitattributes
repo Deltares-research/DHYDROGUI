@@ -3318,10 +3318,12 @@ test/DeltaShell.NGHS.IO.Tests/test-data/ugrid/c090_wetbed_map.nc -text
 test/DeltaShell.NGHS.IO.Tests/test-data/ugrid/c12_trench_VanRijn1993_sandbnd_map.nc -text
 test/DeltaShell.NGHS.IO.Tests/test-data/ugrid/write1d.nc -text
 test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/Acceptance/AcceptanceModelTestHelper.cs -text
-test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/Acceptance/FlowFmDataPersistenceAcceptanceTests.cs -text
-test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/Acceptance/FlowFmFileComparer.cs -text
-test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/Acceptance/GwswDataPersistenceAcceptanceTests.cs -text
-test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/Acceptance/SobekTwoDataPersistenceAcceptanceTests.cs -text
+test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/Acceptance/GwswAcceptanceModelTestHelper.cs -text
+test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/Acceptance/Persistence/FlowFmDataPersistenceAcceptanceTests.cs -text
+test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/Acceptance/Persistence/FlowFmFileComparer.cs -text
+test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/Acceptance/Persistence/GwswDataPersistenceAcceptanceTests.cs -text
+test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/Acceptance/Persistence/SobekTwoDataPersistenceAcceptanceTests.cs -text
+test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/Acceptance/Run/RunGwswModelAcceptanceTests.cs -text
 test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/AcceptanceModelsTest.cs -text
 test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/App.config -text
 test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/DHydroConfigModelCouplerTest.cs -text

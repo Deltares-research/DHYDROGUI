@@ -7,7 +7,7 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using NUnit.Framework;
 
-namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance
+namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
 {
     /// <summary>
     /// Helper class for comparing the contents of two FlowFM file directories.

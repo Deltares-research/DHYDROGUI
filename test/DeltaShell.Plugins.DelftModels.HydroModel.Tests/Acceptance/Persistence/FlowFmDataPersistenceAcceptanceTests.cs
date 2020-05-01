@@ -4,17 +4,17 @@ using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
-using DeltaShell.Plugins.ImportExport.Sobek;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 using log4net.Core;
 using NUnit.Framework;
 
-namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance
+namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
 {
     [TestFixture]
     [Category("Build.Acceptance")]
     [Category(TestCategory.Slow)]
     [Category(TestCategory.WindowsForms)]
-    public class SobekTwoDataPersistenceAcceptanceTests
+    public class FlowFmDataPersistenceAcceptanceTests
     {
         private string tempDirectory;
         private string firstSaveProjectPath;
@@ -23,30 +23,28 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance
 
         private static readonly object[] AcceptanceTests =
         {
-            new object[] {"DarEsSalaam", "14", 177, 0},
-            new object[] {"Waardenburg", "27", 288, 0},
-            new object[] {"HogeRaam", "9", 0, 0}, // TODO: Add preconditions when the model can be correctly imported
-            new object[] {"Jakarta", "3", 0, 0} // TODO: Add preconditions when the model can be correctly imported
+            new object[] {"Groesbeek", 0, 0} // TODO: Add preconditions when the model can be correctly imported
         };
 
         [TestFixtureSetUp]
         public void TestFixtureSetUp()
         {
-            acceptanceModelsDirectory = TestHelper.GetTestFilePath(@"AcceptanceModels\SOBEK2");
+            acceptanceModelsDirectory = Path.Combine(TestHelper.GetTestDataDirectory(), "AcceptanceModels", "FlowFM");
         }
 
         [SetUp]
         public void SetUp()
         {
-            var subFolder = "AcceptanceTests";
-            tempDirectory = TestHelper.GetTestWorkingDirectory(subFolder);
+            tempDirectory = FileUtils.CreateTempDirectory();
 
-            firstSaveProjectPath = TestHelper.GetTestWorkingDirectoryTestProjectPath("TestProject", $@"{subFolder}\First save");
-            secondSaveProjectPath = TestHelper.GetTestWorkingDirectoryTestProjectPath("TestProject", $@"{subFolder}\Second save");
+            var firstSaveDirectory = Path.Combine(tempDirectory, "First save");
+            firstSaveProjectPath = Path.Combine(firstSaveDirectory, "TestProject.dsproj");
 
-            FileUtils.CreateDirectoryIfNotExists(Path.GetDirectoryName(firstSaveProjectPath), true);
-            FileUtils.CreateDirectoryIfNotExists(Path.GetDirectoryName(secondSaveProjectPath), true);
+            var secondSaveDirectory = Path.Combine(tempDirectory, "Second save");
+            secondSaveProjectPath = Path.Combine(secondSaveDirectory, "TestProject.dsproj");
 
+            Directory.CreateDirectory(firstSaveDirectory);
+            Directory.CreateDirectory(secondSaveDirectory);
         }
 
         [TearDown]
@@ -57,9 +55,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance
 
         [Test]
         [TestCaseSource(nameof(AcceptanceTests))]
-        public void GivenRunningDeltaShellGuiWithImportedSobekTwoModel_WhenSavingLoadingAndResavingRhuHydroModel_ThenResavedModelIsSameAsInitiallySavedModel(
+        public void GivenRunningDeltaShellGuiWithImportedFlowFmModel_WhenSavingLoadingAndResavingRhuHydroModel_ThenResavedModelIsSameAsInitiallySavedModel(
             string acceptanceModelName,
-            string caseName,
             int preconditionExpectedBranchFeaturesCount,
             int preconditionExpectedCatchmentsCount)
         {
@@ -68,9 +65,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance
             {
                 var hydroModel = AcceptanceModelTestHelper.AddRhuHydroModel(gui.Application.Project.RootFolder);
 
-                ImportSobekTwoModelAndAssertPreconditions(
+                ImportFlowFmModelAndAssertPreconditions(
                     acceptanceModelName,
-                    caseName,
                     hydroModel,
                     preconditionExpectedBranchFeaturesCount,
                     preconditionExpectedCatchmentsCount);
@@ -83,32 +79,19 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance
             }
         }
 
-        private void ImportSobekTwoModelAndAssertPreconditions(
-            string acceptanceModelName,
-            string caseFolder,
-            IHydroModel hydroModel,
+        private void ImportFlowFmModelAndAssertPreconditions(
+            string acceptanceModelName, 
+            HydroModel hydroModel,
             int expectedBranchFeaturesCount,
             int expectedCatchmentsCount)
         {
-            var zipFilePath = Path.Combine(acceptanceModelsDirectory, acceptanceModelName + ".zip");
-            var extractedModelDirectory = Path.Combine(tempDirectory, "Extracted model");
-
-            ZipFileUtils.Extract(zipFilePath, extractedModelDirectory);
-
-            var caseDirectory = Path.Combine(extractedModelDirectory, caseFolder);
-            var pathToNetworkFile = Path.Combine(caseDirectory, "NETWORK.TP");
-            
-            var sobekHydroModelImporter = new SobekHydroModelImporter(true)
-            {
-                TargetObject = hydroModel,
-                PartialSobekImporter = PartialSobekImporterBuilder.BuildPartialSobekImporter(pathToNetworkFile, hydroModel),
-                PathSobek = pathToNetworkFile
-            };
-
-            var errorMessages = TestHelper.GetAllRenderedMessages(() => sobekHydroModelImporter.Import(), Level.Error);
+            var importer = new WaterFlowFMFileImporter();
+            var pathToMduFile = Path.Combine(acceptanceModelsDirectory, acceptanceModelName, "FlowFM.mdu");
+           
+            var errorMessages = TestHelper.GetAllRenderedMessages(() => importer.ImportItem(pathToMduFile, hydroModel), Level.Error);
 
             // [Precondition]
-            Assert.IsEmpty(errorMessages, $"[Precondition failure] Received unexpected error messages during the import of the SOBEK2 model:{Environment.NewLine}{errorMessages}");
+            Assert.IsEmpty(errorMessages, $"[Precondition failure] Received unexpected error messages during the import of the FlowFM model:{Environment.NewLine}{errorMessages}");
 
             // [Precondition]
             var hydroNetwork = hydroModel.Region.SubRegions.OfType<IHydroNetwork>().Single();

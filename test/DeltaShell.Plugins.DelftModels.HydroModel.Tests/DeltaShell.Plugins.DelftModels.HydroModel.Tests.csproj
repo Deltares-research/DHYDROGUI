@@ -223,7 +223,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AcceptanceModelsTest.cs" />
-    <Compile Include="Acceptance\FlowFmDataPersistenceAcceptanceTests.cs" />
+    <Compile Include="Acceptance\GwswAcceptanceModelTestHelper.cs" />
+    <Compile Include="Acceptance\Persistence\FlowFmDataPersistenceAcceptanceTests.cs" />
+    <Compile Include="Acceptance\Run\RunGwswModelAcceptanceTests.cs" />
     <Compile Include="DimrApiWrapperIntegrationTest.cs" />
     <Compile Include="Export\DHydroConfigXmlExporterTest.cs" />
     <Compile Include="DHydroConfigModelCouplerTest.cs" />
@@ -246,10 +248,10 @@
     <Compile Include="HydroModelApplicationPluginTest.cs" />
     <Compile Include="HydroModelGuiIntegrationTest.cs" />
     <Compile Include="HydroModelTest.cs" />
-    <Compile Include="Acceptance\FlowFmFileComparer.cs" />
+    <Compile Include="Acceptance\Persistence\FlowFmFileComparer.cs" />
     <Compile Include="Acceptance\AcceptanceModelTestHelper.cs" />
-    <Compile Include="Acceptance\SobekTwoDataPersistenceAcceptanceTests.cs" />
-    <Compile Include="Acceptance\GwswDataPersistenceAcceptanceTests.cs" />
+    <Compile Include="Acceptance\Persistence\SobekTwoDataPersistenceAcceptanceTests.cs" />
+    <Compile Include="Acceptance\Persistence\GwswDataPersistenceAcceptanceTests.cs" />
     <Compile Include="ModelExchangeInfoTest.cs" />
     <Compile Include="NHibernateHydroModelIntegrationTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -435,6 +437,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>
