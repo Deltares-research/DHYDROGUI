@@ -199,7 +199,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers
                                                                             string expectedName)
         {
             // Setup
-            var model = new WaveModel();
             var factory = new WaveLayerFactory();
 
             // Call
