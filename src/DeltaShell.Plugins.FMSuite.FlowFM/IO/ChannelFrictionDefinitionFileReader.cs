@@ -132,7 +132,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         {
             channelFrictionDefinition.SpecificationType = ChannelFrictionSpecificationType.SpatialChannelFrictionDefinition;
             channelFrictionDefinition.SpatialChannelFrictionDefinition.FunctionType = RoughnessFunction.Constant;
+            channelFrictionDefinition.SpatialChannelFrictionDefinition.Type = roughnessType;
+
             var numLocations = channelFrictionDefinitionCategory.ReadProperty<int>(RoughnessDataRegion.NumberOfLocations.Key);
+            if (numLocations == 0) return;
+
             var chainages = channelFrictionDefinitionCategory.ReadPropertiesToListOfType<double>(SpatialDataRegion.Chainage.Key);
             var frictionValues = channelFrictionDefinitionCategory.ReadPropertiesToListOfType<double>(RoughnessDataRegion.Values.Key);
             
@@ -150,24 +154,32 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         private static bool IsConstantFunction(DelftIniCategory channelFrictionDefinitionCategory)
         {
-            return channelFrictionDefinitionCategory.Properties.Any(p => p.Name.Equals(RoughnessDataRegion.NumberOfLocations.Key)) &&
-                   channelFrictionDefinitionCategory.Properties.Any(p => p.Name.Equals(SpatialDataRegion.Chainage.Key));
+            return channelFrictionDefinitionCategory.Properties.Any(p =>
+                p.Name.Equals(RoughnessDataRegion.NumberOfLocations.Key));
         }
 
         private static void AddFunctionPropertiesToDefinition(DelftIniCategory channelFrictionDefinitionCategory,
             ChannelFrictionDefinition channelFrictionDefinition, RoughnessType roughnessType, RoughnessFunction roughnessFunctionType)
         {
-            var numLevels = channelFrictionDefinitionCategory.ReadProperty<int>(RoughnessDataRegion.NumberOfLevels.Key);
-            var levels = channelFrictionDefinitionCategory.ReadPropertiesToListOfType<double>(RoughnessDataRegion.Levels.Key).ToArray();
-            var numLocations = channelFrictionDefinitionCategory.ReadProperty<int>(RoughnessDataRegion.NumberOfLocations.Key);
-            var chainages = channelFrictionDefinitionCategory.ReadPropertiesToListOfType<double>(SpatialDataRegion.Chainage.Key).ToArray();
-            var frictionValuesList = channelFrictionDefinitionCategory.ReadPropertiesToListOfType<double>(RoughnessDataRegion.Values.Key);
-            var frictionValues = Create2dArrayOfFrictionValuesFromList(frictionValuesList, numLevels, chainages.Length);
-
             channelFrictionDefinition.SpecificationType = ChannelFrictionSpecificationType.SpatialChannelFrictionDefinition;
             channelFrictionDefinition.SpatialChannelFrictionDefinition.FunctionType = roughnessFunctionType;
             channelFrictionDefinition.SpatialChannelFrictionDefinition.Type = roughnessType;
             var function = channelFrictionDefinition.SpatialChannelFrictionDefinition.Function;
+
+            var numLocations = channelFrictionDefinitionCategory.ReadProperty<int>(RoughnessDataRegion.NumberOfLocations.Key);
+            var chainages = channelFrictionDefinitionCategory.ReadPropertiesToListOfType<double>(SpatialDataRegion.Chainage.Key).ToArray();
+
+            var numLevels = channelFrictionDefinitionCategory.ReadProperty<int>(RoughnessDataRegion.NumberOfLevels.Key);
+            if (numLevels == 0)
+            {
+                function.Arguments[0].SetValues(chainages);
+                return;
+            }
+
+            var levels = channelFrictionDefinitionCategory.ReadPropertiesToListOfType<double>(RoughnessDataRegion.Levels.Key).ToArray();
+            var frictionValuesList = channelFrictionDefinitionCategory.ReadPropertiesToListOfType<double>(RoughnessDataRegion.Values.Key);
+            var frictionValues = Create2dArrayOfFrictionValuesFromList(frictionValuesList, numLevels, chainages.Length);
+
             for (int i = 0; i < numLevels; i++)
             {
                 var level = levels[i];
