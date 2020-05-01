@@ -33,14 +33,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Buttons
                 Title = Resources.Select_spectrum_file
             };
 
+            bool? result = openFileDialog.ShowDialog();
+            if (result == true)
             {
-                bool? result = openFileDialog.ShowDialog();
-                if (result == true)
-                {
-                    string fileLocation = openFileDialog.FileName.Replace('\\', '/');
-                    waveModel.ModelDefinition
-                             .BoundaryContainer.FilePathForBoundariesPerFile = fileLocation;
-                }
+                string fileLocation = openFileDialog.FileName.Replace('\\', '/');
+                waveModel.ModelDefinition
+                         .BoundaryContainer.FilePathForBoundariesPerFile = fileLocation;
             }
         }
     }
