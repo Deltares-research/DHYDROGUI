@@ -192,6 +192,28 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers
         }
 
         [Test]
+        [TestCase(true, "domainName", "domainName")]
+        [TestCase(false, "domainName", "Output (domainName)")]
+        public void CreateOutputLayer_ValidDomainName_ReturnsCorrectResults(bool overrideLayerName, 
+                                                                            string domainName, 
+                                                                            string expectedName)
+        {
+            // Setup
+            var model = new WaveModel();
+            var factory = new WaveLayerFactory();
+
+            // Call
+            ILayer layer = factory.CreateOutputLayer(domainName, overrideLayerName);
+
+            // Assert
+            Assert.That(layer, Is.InstanceOf<GroupLayer>());
+            Assert.That(layer.Name, Is.EqualTo(expectedName));
+
+            var groupLayer = (GroupLayer) layer;
+            Assert.That(groupLayer.LayersReadOnly, Is.True);
+        }
+
+        [Test]
         public void CreateOutputLayer_DomainNameNull_ThrowsArgumentNullException()
         {
             // Setup
