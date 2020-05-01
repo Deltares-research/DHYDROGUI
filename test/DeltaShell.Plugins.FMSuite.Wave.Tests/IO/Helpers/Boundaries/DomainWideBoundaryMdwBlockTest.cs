@@ -4,16 +4,16 @@ using NUnit.Framework;
 namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
 {
     [TestFixture]
-    public class OverallBoundaryMdwBlockTest
+    public class DomainWideBoundaryMdwBlockTest
     {
         [Test]
         public void Constructor_InitializesInstanceCorrectly()
         {
             // Call
-            var result = new OverallBoundaryMdwBlock();
+            var result = new DomainWideBoundaryMdwBlock();
 
             // Assert
-            Assert.That(result.OverallSpectrumFile, Is.Null);
+            Assert.That(result.DomainWideSpectrumFile, Is.Null);
         }
     }
 }

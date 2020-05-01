@@ -190,7 +190,7 @@
     <Compile Include="IO\BcwTimeSeriesOfBoundaryCollector.cs" />
     <Compile Include="IO\Helpers\Boundaries\BoundaryOrientationType.cs" />
     <Compile Include="IO\Helpers\Boundaries\DistanceDirType.cs" />
-    <Compile Include="IO\Helpers\Boundaries\OverallBoundaryCategoryConverter.cs" />
+    <Compile Include="IO\Helpers\Boundaries\DomainWideBoundaryCategoryConverter.cs" />
     <Compile Include="IO\Exporters\WaveModelFileExporter.cs" />
     <Compile Include="IO\Helpers\Boundaries\BoundaryCategoryConverter.cs" />
     <Compile Include="IO\Helpers\Boundaries\BoundaryMdwBlock.cs" />
@@ -199,7 +199,7 @@
     <Compile Include="IO\Helpers\Boundaries\ImportBoundaryConditionDataComponentFactory.cs" />
     <Compile Include="IO\Helpers\Boundaries\IWaveBoundaryGeometricDefinitionFactory.cs" />
     <Compile Include="IO\Helpers\Boundaries\KnownWaveBoundariesFileConstants.cs" />
-    <Compile Include="IO\Helpers\Boundaries\OverallBoundaryMdwBlock.cs" />
+    <Compile Include="IO\Helpers\Boundaries\DomainWideBoundaryMdwBlock.cs" />
     <Compile Include="IO\Helpers\Boundaries\ParametersBlock.cs" />
     <Compile Include="IO\Helpers\Boundaries\PeriodImportExportType.cs" />
     <Compile Include="IO\Helpers\Boundaries\ShapeImportType.cs" />

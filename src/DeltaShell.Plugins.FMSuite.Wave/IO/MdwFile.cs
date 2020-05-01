@@ -649,18 +649,22 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             }
 
             boundaryContainer.UpdateGridBoundary(new GridBoundary(grid));
-
-            var boundariesConverter = new WaveBoundaryConverter(new ImportBoundaryConditionDataComponentFactory(new ForcingTypeDefinedParametersFactory()),
-                                                                new WaveBoundaryGeometricDefinitionFactory(boundaryContainer));
-
+            
             IEnumerable<DelftIniCategory> boundaryCategories = mdwCategories.GetAllByName(KnownWaveCategories.BoundaryCategory).ToArray();
-
             IDictionary<string, List<IFunction>> timeSeriesData = ReadBoundaryTimeSeriesData(mdwCategories, mdwDirPath);
-            IEnumerable<IWaveBoundary> waveBoundaries = boundariesConverter.Convert(boundaryCategories, timeSeriesData, mdwDirPath);
 
-            OverallBoundaryCategoryConverter.Convert(boundaryContainer, boundaryCategories, mdwDirPath);
+            if (DomainWideBoundaryCategoryConverter.IsDomainWideBoundaryCategory(boundaryCategories))
+            {
+                DomainWideBoundaryCategoryConverter.Convert(boundaryContainer, boundaryCategories, mdwDirPath);
+            }
+            else
+            {
+                var boundariesConverter = new WaveBoundaryConverter(new ImportBoundaryConditionDataComponentFactory(new ForcingTypeDefinedParametersFactory()),
+                                                                    new WaveBoundaryGeometricDefinitionFactory(boundaryContainer));
+                IEnumerable<IWaveBoundary> waveBoundaries = boundariesConverter.Convert(boundaryCategories, timeSeriesData, mdwDirPath);
+                boundaryContainer.Boundaries.AddRange(waveBoundaries);
+            }
 
-            boundaryContainer.Boundaries.AddRange(waveBoundaries);
         }
 
         private static IDictionary<string, List<IFunction>> ReadBoundaryTimeSeriesData(IEnumerable<DelftIniCategory> mdwCategories, 

@@ -357,9 +357,9 @@
     <Compile Include="IO\Helpers\Boundaries\BoundaryOrientationTypeTest.cs" />
     <Compile Include="IO\Helpers\Boundaries\DistanceDirTypeDescriptionTest.cs" />
     <Compile Include="IO\Helpers\Boundaries\DistanceDirTypeTest.cs" />
-    <Compile Include="IO\Helpers\Boundaries\OverallBoundaryCategoryConverterTest.cs" />
+    <Compile Include="IO\Helpers\Boundaries\DomainWideBoundaryCategoryConverterTest.cs" />
     <Compile Include="IO\Helpers\Boundaries\BoundaryCategoryConverterTest.cs" />
-    <Compile Include="IO\Helpers\Boundaries\OverallBoundaryMdwBlockTest.cs" />
+    <Compile Include="IO\Helpers\Boundaries\DomainWideBoundaryMdwBlockTest.cs" />
     <Compile Include="IO\Helpers\Boundaries\BoundaryMdwBlockTest.cs" />
     <Compile Include="IO\Helpers\Boundaries\DefinitionImportTypeDescriptionTest.cs" />
     <Compile Include="IO\Helpers\Boundaries\DefinitionImportTypeTest.cs" />

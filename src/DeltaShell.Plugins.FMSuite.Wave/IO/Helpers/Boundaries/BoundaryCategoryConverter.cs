@@ -45,11 +45,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
 
             var block = new BoundaryMdwBlock {DefinitionType = boundaryCategory.GetEnumValue<DefinitionImportType>(KnownWaveProperties.Definition)};
 
-            if (block.DefinitionType == DefinitionImportType.SpectrumFile)
-            {
-                return block;
-            }
-
             if (block.DefinitionType == DefinitionImportType.Oriented)
             {
                 block.OrientationType = boundaryCategory.GetEnumValue<BoundaryOrientationType>(KnownWaveProperties.Orientation);
@@ -80,34 +75,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
             return block;
         }
 
-        /// <summary>
-        /// Converts the specified <paramref name="boundaryCategory"/>
-        /// to a <see cref="OverallBoundaryMdwBlock"/>.
-        /// </summary>
-        /// <param name="boundaryCategory">The boundary delft ini category.</param>
-        /// <returns>
-        /// If the boundary is an overall boundary category, a new instance of <see cref="OverallBoundaryMdwBlock"/>;
-        /// otherwise <c>null</c>.
-        /// </returns>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown when <paramref name="boundaryCategory"/> is <c>null</c>.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        /// Thrown when the <paramref name="boundaryCategory"/> is not an mdw boundary category.
-        /// </exception>
-        public static OverallBoundaryMdwBlock ConvertOverallBoundary(DelftIniCategory boundaryCategory)
-        {
-            Ensure.NotNull(boundaryCategory, nameof(boundaryCategory));
-
-            if (boundaryCategory.Name != KnownWaveCategories.BoundaryCategory)
-            {
-                throw new ArgumentException("Category is not an mdw boundary category.", nameof(boundaryCategory));
-            }
-
-            return boundaryCategory.GetEnumValue<DefinitionImportType>(KnownWaveProperties.Definition) == DefinitionImportType.SpectrumFile
-                       ? new OverallBoundaryMdwBlock {OverallSpectrumFile = boundaryCategory.GetPropertyValue(KnownWaveProperties.OverallSpecFile)}
-                       : null;
-        }
+        
 
         private static void ConvertFileBasedProperties(DelftIniCategory boundaryCategory, BoundaryMdwBlock block, string mdwDirPath)
         {

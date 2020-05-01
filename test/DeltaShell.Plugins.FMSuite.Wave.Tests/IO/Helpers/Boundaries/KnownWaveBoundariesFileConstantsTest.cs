@@ -26,6 +26,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
         [TestCase(KnownWaveBoundariesFileConstants.EastBoundaryOrientationType, "east")]
         [TestCase(KnownWaveBoundariesFileConstants.ClockwiseDistanceDirType, "clockwise")]
         [TestCase(KnownWaveBoundariesFileConstants.CounterClockwiseDistanceDirType, "counter-clockwise")]
+        [TestCase(KnownWaveBoundariesFileConstants.SpectrumFileDefinitionType, "fromsp2file")]
         public void ConstantField_ReturnsCorrectValue(string actualValue, string expectedValue)
         {
             Assert.That(actualValue, Is.EqualTo(expectedValue));
