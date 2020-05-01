@@ -162,7 +162,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
             yield return boundaryViewInfo;
             yield return ViewInfoWrapper<BoundaryLineFeature>.Create(boundaryViewInfo, 
                                                                      f => f.ObservedWaveBoundary);
-            // TODO: (MWT) add connection with  the map here as above.
 
             // obstacles
             var obstacleViewInfo = new ViewInfo<IEventedList<WaveObstacle>, WaveObstacleListView>()
