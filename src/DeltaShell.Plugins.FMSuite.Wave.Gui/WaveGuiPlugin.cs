@@ -136,13 +136,19 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
             // Spatially varying boundary editor
             var boundaryViewInfo = new ViewInfo<IWaveBoundary, WaveBoundaryConditionEditorView>()
             {
-                Description = "Spatially Varying Boundary Editor",
-                GetViewName =(v, o) => $"Boundary Editor ( {o.Name} )",
+                Description = Properties.Resources.WaveGuiPlugin_Spatially_Varying_Boundary_Editor,
+                GetViewName = (v, o) => 
+                    string.Format(Properties.Resources.WaveGuiPlugin_Boundary_Editor____0___, o.Name) ,
                 AdditionalDataCheck = o => WaveModels.Any(m => m.BoundaryContainer.Boundaries.Contains(o)),
                 AfterCreate = (view, data) =>
                 {
                     WaveModel model =
-                        WaveModels.First(m => m.BoundaryContainer.Boundaries.Contains(data));
+                        WaveModels.FirstOrDefault(m => m.BoundaryContainer.Boundaries.Contains(data));
+
+                    if (model == null)
+                    {
+                        return;
+                    }
 
                     var geometryFactory = new WaveBoundaryGeometryFactory(model.BoundaryContainer,
                                                                           model.BoundaryContainer);

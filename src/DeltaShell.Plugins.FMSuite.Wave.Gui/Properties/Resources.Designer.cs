@@ -275,6 +275,24 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Boundary Editor ( {0} ).
+        /// </summary>
+        public static string WaveGuiPlugin_Boundary_Editor____0___ {
+            get {
+                return ResourceManager.GetString("WaveGuiPlugin_Boundary_Editor____0___", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Spatially Varying Boundary Editor.
+        /// </summary>
+        public static string WaveGuiPlugin_Spatially_Varying_Boundary_Editor {
+            get {
+                return ResourceManager.GetString("WaveGuiPlugin_Spatially_Varying_Boundary_Editor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Validate....
         /// </summary>
         public static string WaveModelNodePresenter_CreateValidationMenuItem_Validate___ {
