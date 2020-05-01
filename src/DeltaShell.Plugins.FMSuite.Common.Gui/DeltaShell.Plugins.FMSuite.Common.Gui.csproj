@@ -230,11 +230,9 @@
     <Compile Include="Forms\VerticalProfileDialog.Designer.cs">
       <DependentUpon>VerticalProfileDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="MapView\ActualSizeObserver.cs" />
     <Compile Include="MapView\MapView.xaml.cs">
       <DependentUpon>MapView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="MapView\MapViewModel.cs" />
     <Compile Include="ModelTreeShortcut.cs" />
     <Compile Include="NodePresenters\ContextMenuFactory.cs" />
     <Compile Include="NodePresenters\FMSuiteNodePresenterBase.cs" />

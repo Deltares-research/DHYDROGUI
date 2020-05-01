@@ -154,7 +154,6 @@
     <Compile Include="Dependency\BooleanIsTrueDependencyExpressionTest.cs" />
     <Compile Include="Dependency\ValueEqualsDependencyExpressionTest.cs" />
     <Compile Include="Dependency\ValueGreaterOrLesserThanDependencyExpressionTest.cs" />
-    <Compile Include="Gui\MapView\ActualSizeObserverTest.cs" />
     <Compile Include="Gui\Editors\ModelFeatureCoordinateDataEditor\BoundaryGeometryPreviewWindowsFormsHostMapTest.cs" />
     <Compile Include="FeatureData\BoundaryConditionSetTest.cs" />
     <Compile Include="FeatureData\BoundaryConditionsPointsSyncedListTest.cs" />
@@ -165,7 +164,6 @@
     <Compile Include="FileBasedWindDefinitionTest.cs" />
     <Compile Include="FMSuiteCommonTestHelper.cs" />
     <Compile Include="Gui\FileBasedWindDefinitionViewTest.cs" />
-    <Compile Include="Gui\MapView\MapViewModelTest.cs" />
     <Compile Include="Gui\ModelTreeShortcutNodePresenterBaseTest.cs" />
     <Compile Include="Gui\NodePresenters\ContextMenuFactoryTest.cs" />
     <Compile Include="Gui\SupportPointListBoxTest.cs" />

@@ -38,9 +38,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             {
                 // Assert
                 Assert.That(viewModel, Is.InstanceOf<IRefreshGeometryView>());
-                Assert.That(viewModel.MapViewModel, Is.Not.Null);
+                Assert.That(viewModel.Map, Is.Not.Null);
 
-                configurator.Received(1).ConfigureMap(Arg.Is<IMap>(x => x == viewModel.MapViewModel.Map),
+                configurator.Received(1).ConfigureMap(Arg.Is<IMap>(x => x == viewModel.Map),
                                                       Arg.Is<IBoundaryProvider>(x => (x.Boundaries.Contains(waveBoundary) && x.Boundaries.Count == 1)),
                                                       Arg.Is<SupportPointDataComponentViewModel>(x => x == supportPointDataComponentViewModel),
                                                       Arg.Is<IRefreshGeometryView>(x => x == viewModel));
