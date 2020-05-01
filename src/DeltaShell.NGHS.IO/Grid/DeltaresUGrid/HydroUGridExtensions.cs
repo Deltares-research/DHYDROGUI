@@ -184,7 +184,6 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
         public static void SetMesh1DGeometry(this IDiscretization discretization, Disposable1DMeshGeometry meshGeometry, IHydroNetwork network)
         {
             discretization.Network = network;
-            discretization.Name = meshGeometry.Name;
 
             var numberOfNodes = meshGeometry.NodeIds.Length;
 
@@ -221,7 +220,7 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
 
             var mesh = new Disposable1DMeshGeometry
             {
-                Name = discretization.Name,
+                Name = "mesh1d",
                 NodesX = new double[locationCount],
                 NodesY = new double[locationCount],
                 NodeIds = new string[locationCount],
