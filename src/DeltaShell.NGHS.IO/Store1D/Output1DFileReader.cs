@@ -235,36 +235,44 @@ namespace DeltaShell.NGHS.IO.Store1D
 
         private class LocationVariableNames
         {
+            private readonly string meshName;
+            private readonly string location;
+
             public LocationVariableNames(string dimensionName)
             {
-                OnNodes = dimensionName == "mesh1d_nNodes";
+                OnNodes = dimensionName.EndsWith("_nNodes");
+
+                location = OnNodes ? "node" : "edge";
+
+                var suffix = OnNodes ? "_nNodes" : "_nEdges";
+                meshName = dimensionName.Replace(suffix, "");
             }
 
             public bool OnNodes { get; }
             
             public string id
             {
-                get { return OnNodes ? "mesh1d_node_id" : "mesh1d_edge_nodes"; }
+                get { return OnNodes ? $"{meshName}_{location}_id" : $"{meshName}_{location}_nodes"; }
             }
 
             public string BranchId
             {
-                get { return OnNodes ? "mesh1d_node_branch" : "mesh1d_edge_branch"; }
+                get { return $"{meshName}_{location}_branch"; }
             }
 
             public string Chainage
             {
-                get { return OnNodes ? "mesh1d_node_offset" : "mesh1d_edge_offset"; }
+                get { return $"{meshName}_{location}_offset"; }
             }
             
             public string XNodeCoordinate
             {
-                get { return OnNodes ? "mesh1d_node_x" : "mesh1d_edge_x"; }
+                get { return $"{meshName}_{location}_x"; }
             }
             
             public string YNodeCoordinate
             {
-                get { return OnNodes ? "mesh1d_node_y" : "mesh1d_edge_y"; }
+                get { return $"{meshName}_{location}_y"; }
             }
         }
     }
