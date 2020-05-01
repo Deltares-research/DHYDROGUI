@@ -16,7 +16,6 @@ using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.WaveEnergy
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
 using GeoAPI.Geometries;
 using log4net;
-using log4net.Core;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
 {
