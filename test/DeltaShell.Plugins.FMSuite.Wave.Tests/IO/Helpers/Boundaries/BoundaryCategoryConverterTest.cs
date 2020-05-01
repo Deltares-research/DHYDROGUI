@@ -31,6 +31,17 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
         }
 
         [Test]
+        public void Convert_MdwDirPathNull_ThrowsArgumentNullException()
+        {
+            // Call
+            void Call() => BoundaryCategoryConverter.Convert(new DelftIniCategory("category"), null);
+
+            // Assert
+            var exception = Assert.Throws<ArgumentNullException>(Call);
+            Assert.That(exception.ParamName, Is.EqualTo("mdwDirPath"));
+        }
+
+        [Test]
         public void Convert_NoBoundaryCategory_ThrowsArgumentException()
         {
             // Call
@@ -326,7 +337,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             BoundaryMdwBlock result = BoundaryCategoryConverter.Convert(category, "path");
 
             // Assert
-            Assert.That(result.SpectrumFiles[0], Is.EqualTo(" "));
+            Assert.That(result.SpectrumFiles[0], Is.Empty);
         }
 
         [Test]

@@ -61,8 +61,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
         /// The converted collection of <see cref="IWaveBoundary"/>
         /// </returns>
         /// <exception cref="ArgumentNullException">
-        /// Thrown when <paramref name="boundaryCategories"/> or
-        /// <paramref name="timeSeriesData"/> is <c>null</c>.
+        /// Thrown when any parameter is <c>null</c>.
         /// </exception>
         public IEnumerable<IWaveBoundary> Convert(IEnumerable<DelftIniCategory> boundaryCategories,
                                                   IDictionary<string, List<IFunction>> timeSeriesData,

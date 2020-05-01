@@ -116,7 +116,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
 
         private static string GetAbsolutePath(string mdwDirPath, string s)
         {
-            return string.IsNullOrWhiteSpace(s) ? " " : Path.Combine(mdwDirPath, s);
+            return string.IsNullOrWhiteSpace(s) ? string.Empty : Path.Combine(mdwDirPath, s);
         }
 
         private static void ConvertParameterizedProperties(DelftIniCategory boundaryCategory, BoundaryMdwBlock block)
