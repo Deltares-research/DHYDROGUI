@@ -445,7 +445,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             InitializeCouplingTime();
 
             boundaryContainerSyncService = new BoundaryContainerSyncService(this);
+#pragma warning disable 618
             BoundariesFromBoundaryContainer = BoundaryContainer.Boundaries;
+#pragma warning restore 618
         }
 
         private void InitializeCouplingTime()
