@@ -14,6 +14,7 @@ using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.SpatiallyD
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spreading;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.WaveEnergyFunctions;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.Shared;
 using GeoAPI.Geometries;
 using log4net;
 
@@ -27,7 +28,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(WaveBoundaryConverter));
 
-        private const double doublePrecision = 1E-5;
         private readonly IImportBoundaryConditionDataComponentFactory importDataComponentFactory;
         private readonly IWaveBoundaryGeometricDefinitionFactory geometricDefinitionFactory;
 
@@ -338,14 +338,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
 
         private static SupportPoint GetSupportPointWithDistance(IWaveBoundaryGeometricDefinition geometricDefinition, double d)
         {
-            return geometricDefinition.SupportPoints.FirstOrDefault(s => DoubleEquals(s.Distance, d));
+            return geometricDefinition.SupportPoints.FirstOrDefault(s => SpatialDouble.AreEqual(SpatialDouble.Round(s.Distance), d));
         }
-
-        private static bool DoubleEquals(double valueA, double valueB) => Math.Abs(valueA - valueB) < doublePrecision;
 
         private static bool Exists(IEnumerable<double> values, double value)
         {
-            return values.Any(d => DoubleEquals(d, value));
+            return values.Select(SpatialDouble.Round).Any(d => SpatialDouble.AreEqual(d, value));
         }
     }
 }

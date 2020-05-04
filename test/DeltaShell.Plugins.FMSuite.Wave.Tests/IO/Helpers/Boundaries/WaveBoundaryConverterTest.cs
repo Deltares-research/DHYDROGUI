@@ -28,13 +28,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
     [TestFixture(typeof(PowerDefinedSpreading))]
     public class WaveBoundaryConverterTest<T> where T : class, IBoundaryConditionSpreading, new()
     {
-        private const double doublePrecision = 1E-5;
+        private const double doublePrecision = 1E-7;
         private static readonly Random random = new Random(39);
         private readonly SpreadingImportType spreadingType = GetSpreadingImportType();
 
         private readonly ShapeEqualityComparer shapeComparer = new ShapeEqualityComparer();
         private readonly IForcingTypeDefinedParametersFactory parametersFactory = new ForcingTypeDefinedParametersFactory();
-        private static double RandomDouble => Math.Round(random.NextDouble(), 5);
+        private static double RandomDouble => Math.Round(random.NextDouble(), 7);
 
         [Test]
         public void Constructor_ImportDataComponentFactoryNull_ThrowsArgumentNullException()
