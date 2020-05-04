@@ -625,7 +625,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                         Visible = true,
                         Style = NetworkLayerStyleFactory.CreateStyle(links, drainageBasin != null),
                         NameIsReadOnly = true,
-                        DataSource = new FeatureCollection { Features = (IList)hydroRegion.Links, FeatureType = typeof(HydroLink), CoordinateSystem = hydroRegion.CoordinateSystem },
+                        DataSource = new ComplexFeatureCollection(hydroRegion, (IList)hydroRegion.Links, typeof(HydroLink)),
                         FeatureEditor = new HydroLinkFeatureEditor
                         {
                             SnapRules = { new HydroLinkSnapRule { Obligatory = true, PixelGravity = 40 } },
