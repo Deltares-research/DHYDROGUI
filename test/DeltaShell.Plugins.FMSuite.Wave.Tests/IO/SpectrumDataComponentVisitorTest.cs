@@ -259,7 +259,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
 
         private static void AssertProperty(DelftIniProperty property, string name, double value)
         {
-            AssertProperty(property, name, value.ToString("e7", CultureInfo.InvariantCulture));
+            AssertProperty(property, name, value.ToString("F7", CultureInfo.InvariantCulture));
         }
 
         private static void AssertProperty(DelftIniProperty property, string name, string value)

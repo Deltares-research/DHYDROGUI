@@ -6,6 +6,7 @@ using DeltaShell.NGHS.IO.DelftIniObjects;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.ForcingTypeDefinedParameters;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.SpatiallyDefinedDataComponents;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
+using DeltaShell.Plugins.FMSuite.Wave.IO.Helpers;
 using DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries;
 using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
 
@@ -73,7 +74,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                     return;
                 }
 
-                category.AddProperty(KnownWaveProperties.CondSpecAtDist, kvp.Key.Distance);
+                category.AddSpatialProperty(KnownWaveProperties.CondSpecAtDist, kvp.Key.Distance);
                 category.AddProperty(KnownWaveProperties.Spectrum, parametersVisitor.SpectrumFile);
             }
         }
