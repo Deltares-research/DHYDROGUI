@@ -500,7 +500,7 @@ namespace DelftTools.Hydro.SewerFeatures
                 Geometry = new LineString(new []{new Coordinate(0,0),new Coordinate(0,1)}); //stupid placeholder.
         }
 
-        private void SetLengthOfConnectionBasedOnConnectedCompartmentsOrSetAFake()
+        public void SetLengthOfConnectionBasedOnConnectedCompartmentsOrSetAFake()
         {
             if (Math.Abs(Length) < 10e-6 && SourceCompartment?.Geometry?.Coordinate != null &&
                 TargetCompartment?.Geometry?.Coordinate != null)

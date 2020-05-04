@@ -685,6 +685,7 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
             ParallelHelper.RunActionInParallel(this, importedFeatureElements.ToArray(), feature => feature.AddToHydroNetwork(network, helper), "Network");
             ParallelHelper.RunActionInParallel(this, helper.SewerConnectionsByName.Values.Where(sc => sc.BranchFeatures.Count >0).ToArray(),sewerConnection => sewerConnection.UpdateBranchFeatureGeometries(),"");
             ParallelHelper.RunActionInParallel(this, network.SewerConnections.Where(sc => sc.Geometry == null).ToArray(), sc => network.FindAndConnectManholesInNetwork(sc), "Update empty geometries");
+            ParallelHelper.RunActionInParallel(this, helper.SewerConnectionsByName.Values.Where(sc => Math.Abs(sc.Length) < 1.0e-6).ToArray(), sewerConnection => sewerConnection.SetLengthOfConnectionBasedOnConnectedCompartmentsOrSetAFake(), "Update length of sewer connections");
             ParallelHelper.RunActionInParallel(this, network.Pipes.ToArray(), pipe =>
             {
                 if (helper.CrossSectionDefinitionsByPipe.TryGetValue(pipe.CrossSectionDefinitionName, out var crossSectionDefinition))

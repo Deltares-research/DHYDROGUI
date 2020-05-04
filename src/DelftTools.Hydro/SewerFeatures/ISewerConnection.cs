@@ -23,5 +23,7 @@ namespace DelftTools.Hydro.SewerFeatures
 
         void UpdateBranchFeatureGeometries();
         void AddOrUpdateGeometry(IHydroNetwork hydroNetwork, SewerImporterHelper helper);
+
+        void SetLengthOfConnectionBasedOnConnectedCompartmentsOrSetAFake();
     }
 }
