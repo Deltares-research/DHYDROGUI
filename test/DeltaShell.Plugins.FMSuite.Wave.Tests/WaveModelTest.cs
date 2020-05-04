@@ -635,5 +635,24 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
                 Assert.AreEqual(!isCoupledToFlow, waveModel.IsMasterTimeStep);
             }
         }
+
+        [Test]
+        public void GetDirectChildren_ContainsBoundaries()
+        {
+            // Setup
+            var model = new WaveModel();
+
+            IWaveBoundary[] boundaries = Enumerable.Range(0, 10).Select(_ => Substitute.For<IWaveBoundary>()).ToArray();
+            model.BoundaryContainer.Boundaries.AddRange(boundaries);
+
+            // Call
+            IEnumerable<object> result = model.GetDirectChildren();
+
+            // Assert
+            foreach (IWaveBoundary waveBoundary in boundaries)
+            {
+                Assert.That(result, Has.Member(waveBoundary));
+            }
+        }
     }
 }

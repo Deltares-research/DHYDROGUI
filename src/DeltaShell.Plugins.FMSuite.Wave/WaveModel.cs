@@ -1233,6 +1233,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave
                     yield return wavmFileFunctionStore;
                 }
             }
+
+            foreach (IWaveBoundary boundary in BoundaryContainer.Boundaries)
+            {
+                yield return boundary;
+            }
         }
 
         #region IFileBased and NHibernate
