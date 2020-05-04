@@ -23,7 +23,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IO
                     yield return category;
             }
 
-            foreach (var compositeStructure in compositeStructures.Where(cs => cs.Structures.Count > 1 || cs.Branch is SewerConnection))
+            foreach (var compositeStructure in compositeStructures.Where(cs => cs.Structures.Count >= 0 || cs.Branch is SewerConnection))
             {
                 yield return new DefinitionGeneratorCompound().CreateStructureRegion(compositeStructure);
             }
