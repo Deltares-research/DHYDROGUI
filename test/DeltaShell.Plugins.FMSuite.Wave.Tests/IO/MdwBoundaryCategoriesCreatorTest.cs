@@ -153,10 +153,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             Assert.That(properties, Has.Length.EqualTo(8));
             AssertProperty(properties[0], KnownWaveProperties.Name, name);
             AssertProperty(properties[1], KnownWaveProperties.Definition, "xy-coordinates");
-            AssertProperty(properties[2], KnownWaveProperties.StartCoordinateX, startX);
-            AssertProperty(properties[3], KnownWaveProperties.EndCoordinateX, endX);
-            AssertProperty(properties[4], KnownWaveProperties.StartCoordinateY, startY);
-            AssertProperty(properties[5], KnownWaveProperties.EndCoordinateY, endY);
+            AssertSpatialProperty(properties[2], KnownWaveProperties.StartCoordinateX, startX);
+            AssertSpatialProperty(properties[3], KnownWaveProperties.EndCoordinateX, endX);
+            AssertSpatialProperty(properties[4], KnownWaveProperties.StartCoordinateY, startY);
+            AssertSpatialProperty(properties[5], KnownWaveProperties.EndCoordinateY, endY);
             AssertProperty(properties[6], KnownWaveProperties.SpectrumSpec, "from file");
             AssertProperty(properties[7], KnownWaveProperties.Spectrum, fileName);
 
@@ -205,16 +205,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             Assert.That(properties, Has.Length.EqualTo(13));
             AssertProperty(properties[0], KnownWaveProperties.Name, name);
             AssertProperty(properties[1], KnownWaveProperties.Definition, "xy-coordinates");
-            AssertProperty(properties[2], KnownWaveProperties.StartCoordinateX, startX);
-            AssertProperty(properties[3], KnownWaveProperties.EndCoordinateX, endX);
-            AssertProperty(properties[4], KnownWaveProperties.StartCoordinateY, startY);
-            AssertProperty(properties[5], KnownWaveProperties.EndCoordinateY, endY);
+            AssertSpatialProperty(properties[2], KnownWaveProperties.StartCoordinateX, startX);
+            AssertSpatialProperty(properties[3], KnownWaveProperties.EndCoordinateX, endX);
+            AssertSpatialProperty(properties[4], KnownWaveProperties.StartCoordinateY, startY);
+            AssertSpatialProperty(properties[5], KnownWaveProperties.EndCoordinateY, endY);
             AssertProperty(properties[6], KnownWaveProperties.SpectrumSpec, "from file");
-            AssertProperty(properties[7], KnownWaveProperties.CondSpecAtDist, distance1);
+            AssertSpatialProperty(properties[7], KnownWaveProperties.CondSpecAtDist, distance1);
             AssertProperty(properties[8], KnownWaveProperties.Spectrum, fileName1);
-            AssertProperty(properties[9], KnownWaveProperties.CondSpecAtDist, distance2);
+            AssertSpatialProperty(properties[9], KnownWaveProperties.CondSpecAtDist, distance2);
             AssertProperty(properties[10], KnownWaveProperties.Spectrum, fileName2);
-            AssertProperty(properties[11], KnownWaveProperties.CondSpecAtDist, distance3);
+            AssertSpatialProperty(properties[11], KnownWaveProperties.CondSpecAtDist, distance3);
             AssertProperty(properties[12], KnownWaveProperties.Spectrum, fileName3);
 
             List<FileBasedParameters> parameters = GetFileBasedParameters(boundary);
@@ -323,10 +323,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             Assert.AreEqual(11, properties.Count);
             AssertProperty(properties[0], KnownWaveProperties.Name, boundary1Name);
             AssertProperty(properties[1], KnownWaveProperties.Definition, "xy-coordinates");
-            AssertProperty(properties[2], KnownWaveProperties.StartCoordinateX, coordinate1.X);
-            AssertProperty(properties[3], KnownWaveProperties.EndCoordinateX, coordinate2.X);
-            AssertProperty(properties[4], KnownWaveProperties.StartCoordinateY, coordinate1.Y);
-            AssertProperty(properties[5], KnownWaveProperties.EndCoordinateY, coordinate2.Y);
+            AssertSpatialProperty(properties[2], KnownWaveProperties.StartCoordinateX, coordinate1.X);
+            AssertSpatialProperty(properties[3], KnownWaveProperties.EndCoordinateX, coordinate2.X);
+            AssertSpatialProperty(properties[4], KnownWaveProperties.StartCoordinateY, coordinate1.Y);
+            AssertSpatialProperty(properties[5], KnownWaveProperties.EndCoordinateY, coordinate2.Y);
             AssertProperty(properties[6], KnownWaveProperties.SpectrumSpec, "parametric");
             AssertProperty(properties[7], KnownWaveProperties.ShapeType, "Jonswap");
             AssertProperty(properties[8], KnownWaveProperties.PeriodType, KnownWaveBoundariesFileConstants.PeakPeriodType);
@@ -337,6 +337,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
         private static void AssertProperty(DelftIniProperty property, string name, double value)
         {
             AssertProperty(property, name, value.ToString("e7", CultureInfo.InvariantCulture));
+        }
+
+        private static void AssertSpatialProperty(DelftIniProperty property, string name, double value)
+        {
+            AssertProperty(property, name, value.ToString("F7", CultureInfo.InvariantCulture));
         }
 
         private static void AssertProperty(DelftIniProperty property, string name, string value)

@@ -350,10 +350,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
                 Assert.That(lines, Has.Length.EqualTo(8));
                 AssertPropertyLine(lines[0], KnownWaveProperties.Name, "boundary_name");
                 AssertPropertyLine(lines[1], KnownWaveProperties.Definition, "xy-coordinates");
-                AssertPropertyLine(lines[2], KnownWaveProperties.StartCoordinateX, "0.0000000e+000");
-                AssertPropertyLine(lines[3], KnownWaveProperties.EndCoordinateX, "9.0000000e+000");
-                AssertPropertyLine(lines[4], KnownWaveProperties.StartCoordinateY, "0.0000000e+000");
-                AssertPropertyLine(lines[5], KnownWaveProperties.EndCoordinateY, "9.0000000e+000");
+                AssertPropertyLine(lines[2], KnownWaveProperties.StartCoordinateX, "0.0000000");
+                AssertPropertyLine(lines[3], KnownWaveProperties.EndCoordinateX, "9.0000000");
+                AssertPropertyLine(lines[4], KnownWaveProperties.StartCoordinateY, "0.0000000");
+                AssertPropertyLine(lines[5], KnownWaveProperties.EndCoordinateY, "9.0000000");
                 AssertPropertyLine(lines[6], KnownWaveProperties.SpectrumSpec, "from file");
                 AssertPropertyLine(lines[7], KnownWaveProperties.Spectrum, fileName);
 
@@ -388,10 +388,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
                 Assert.That(lines, Has.Length.EqualTo(8));
                 AssertPropertyLine(lines[0], KnownWaveProperties.Name, "boundary_name");
                 AssertPropertyLine(lines[1], KnownWaveProperties.Definition, "xy-coordinates");
-                AssertPropertyLine(lines[2], KnownWaveProperties.StartCoordinateX, "0.0000000e+000");
-                AssertPropertyLine(lines[3], KnownWaveProperties.EndCoordinateX, "9.0000000e+000");
-                AssertPropertyLine(lines[4], KnownWaveProperties.StartCoordinateY, "0.0000000e+000");
-                AssertPropertyLine(lines[5], KnownWaveProperties.EndCoordinateY, "9.0000000e+000");
+                AssertPropertyLine(lines[2], KnownWaveProperties.StartCoordinateX, "0.0000000");
+                AssertPropertyLine(lines[3], KnownWaveProperties.EndCoordinateX, "9.0000000");
+                AssertPropertyLine(lines[4], KnownWaveProperties.StartCoordinateY, "0.0000000");
+                AssertPropertyLine(lines[5], KnownWaveProperties.EndCoordinateY, "9.0000000");
                 AssertPropertyLine(lines[6], KnownWaveProperties.SpectrumSpec, "from file");
                 AssertPropertyLine(lines[7], KnownWaveProperties.Spectrum, string.Empty);
 
@@ -447,14 +447,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
                 Assert.That(lines, Has.Length.EqualTo(11));
                 AssertPropertyLine(lines[0], KnownWaveProperties.Name, "boundary_name");
                 AssertPropertyLine(lines[1], KnownWaveProperties.Definition, "xy-coordinates");
-                AssertPropertyLine(lines[2], KnownWaveProperties.StartCoordinateX, "0.0000000e+000");
-                AssertPropertyLine(lines[3], KnownWaveProperties.EndCoordinateX, "9.0000000e+000");
-                AssertPropertyLine(lines[4], KnownWaveProperties.StartCoordinateY, "0.0000000e+000");
-                AssertPropertyLine(lines[5], KnownWaveProperties.EndCoordinateY, "9.0000000e+000");
+                AssertPropertyLine(lines[2], KnownWaveProperties.StartCoordinateX, "0.0000000");
+                AssertPropertyLine(lines[3], KnownWaveProperties.EndCoordinateX, "9.0000000");
+                AssertPropertyLine(lines[4], KnownWaveProperties.StartCoordinateY, "0.0000000");
+                AssertPropertyLine(lines[5], KnownWaveProperties.EndCoordinateY, "9.0000000");
                 AssertPropertyLine(lines[6], KnownWaveProperties.SpectrumSpec, "from file");
-                AssertPropertyLine(lines[7], KnownWaveProperties.CondSpecAtDist, "0.0000000e+000");
+                AssertPropertyLine(lines[7], KnownWaveProperties.CondSpecAtDist, "0.0000000");
                 AssertPropertyLine(lines[8], KnownWaveProperties.Spectrum, fileName1);
-                AssertPropertyLine(lines[9], KnownWaveProperties.CondSpecAtDist, "1.0000000e+001");
+                AssertPropertyLine(lines[9], KnownWaveProperties.CondSpecAtDist, "10.0000000");
                 AssertPropertyLine(lines[10], KnownWaveProperties.Spectrum, fileName2);
 
                 Assert.That(parameters1.FilePath, Is.EqualTo(switchTo ? targetFilePath1 : sourceFilePath1));
@@ -490,14 +490,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
                 Assert.That(lines, Has.Length.EqualTo(11));
                 AssertPropertyLine(lines[0], KnownWaveProperties.Name, "boundary_name");
                 AssertPropertyLine(lines[1], KnownWaveProperties.Definition, "xy-coordinates");
-                AssertPropertyLine(lines[2], KnownWaveProperties.StartCoordinateX, "0.0000000e+000");
-                AssertPropertyLine(lines[3], KnownWaveProperties.EndCoordinateX, "9.0000000e+000");
-                AssertPropertyLine(lines[4], KnownWaveProperties.StartCoordinateY, "0.0000000e+000");
-                AssertPropertyLine(lines[5], KnownWaveProperties.EndCoordinateY, "9.0000000e+000");
+                AssertPropertyLine(lines[2], KnownWaveProperties.StartCoordinateX, "0.0000000");
+                AssertPropertyLine(lines[3], KnownWaveProperties.EndCoordinateX, "9.0000000");
+                AssertPropertyLine(lines[4], KnownWaveProperties.StartCoordinateY, "0.0000000");
+                AssertPropertyLine(lines[5], KnownWaveProperties.EndCoordinateY, "9.0000000");
                 AssertPropertyLine(lines[6], KnownWaveProperties.SpectrumSpec, "from file");
-                AssertPropertyLine(lines[7], KnownWaveProperties.CondSpecAtDist, "0.0000000e+000");
+                AssertPropertyLine(lines[7], KnownWaveProperties.CondSpecAtDist, "0.0000000");
                 AssertPropertyLine(lines[8], KnownWaveProperties.Spectrum, string.Empty);
-                AssertPropertyLine(lines[9], KnownWaveProperties.CondSpecAtDist, "1.0000000e+001");
+                AssertPropertyLine(lines[9], KnownWaveProperties.CondSpecAtDist, "10.0000000");
                 AssertPropertyLine(lines[10], KnownWaveProperties.Spectrum, string.Empty);
             }
         }
