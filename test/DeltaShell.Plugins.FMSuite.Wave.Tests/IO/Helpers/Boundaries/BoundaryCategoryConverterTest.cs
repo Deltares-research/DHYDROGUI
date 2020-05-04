@@ -16,7 +16,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
     {
         private readonly Random random = new Random();
 
-        private double RandomDouble => Math.Round(random.NextDouble(), 3);
+        private const double doublePrecision = 1E-7;
+        private double RandomDouble => Math.Round(random.NextDouble(), 8);
         private int RandomInt => random.Next(100);
 
         [Test]
@@ -109,15 +110,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             // Assert
             Assert.That(result.Name, Is.EqualTo(name));
             Assert.That(result.DefinitionType, Is.EqualTo(DefinitionImportType.Coordinates));
-            Assert.That(result.XStartCoordinate, Is.EqualTo(startX));
-            Assert.That(result.YStartCoordinate, Is.EqualTo(startY));
-            Assert.That(result.XEndCoordinate, Is.EqualTo(endX));
-            Assert.That(result.YEndCoordinate, Is.EqualTo(endY));
+            AssertRoundedValue(result.XStartCoordinate, startX);
+            AssertRoundedValue(result.YStartCoordinate, startY);
+            AssertRoundedValue(result.XEndCoordinate, endX);
+            AssertRoundedValue(result.YEndCoordinate, endY);
             Assert.That(result.SpectrumType, Is.EqualTo(SpectrumImportExportType.Parametrized));
             Assert.That(result.ShapeType, Is.EqualTo(shapeImportData.ExpectedValue));
             Assert.That(result.PeriodType, Is.EqualTo(periodImportExportData.ExpectedValue));
             Assert.That(result.SpreadingType, Is.EqualTo(spreadingImportData.ExpectedValue));
-            Assert.That(result.Distances, Is.EqualTo(Doubles(distance1, distance2)));
+            AssertRoundedValues(result.Distances, Doubles(distance1, distance2));
             Assert.That(result.WaveHeights, Is.EqualTo(Doubles(waveHeight1, waveHeight2)));
             Assert.That(result.Periods, Is.EqualTo(Doubles(period1, period2)));
             Assert.That(result.Directions, Is.EqualTo(Doubles(direction1, direction2)));
@@ -182,11 +183,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             Assert.That(result.ShapeType, Is.EqualTo(shapeImportData.ExpectedValue));
             Assert.That(result.PeriodType, Is.EqualTo(periodImportExportData.ExpectedValue));
             Assert.That(result.SpreadingType, Is.EqualTo(spreadingImportData.ExpectedValue));
-            Assert.That(result.Distances, Is.EqualTo(Doubles(distance1, distance2)));
-            Assert.That(result.WaveHeights, Is.EqualTo(Doubles(waveHeight1, waveHeight2)));
-            Assert.That(result.Periods, Is.EqualTo(Doubles(period1, period2)));
-            Assert.That(result.Directions, Is.EqualTo(Doubles(direction1, direction2)));
-            Assert.That(result.DirectionalSpreadings, Is.EqualTo(Doubles(spreading1, spreading2)));
+            AssertRoundedValues(result.Distances, Doubles(distance1, distance2));
+            Assert.That(result.WaveHeights, Is.EqualTo(Doubles(waveHeight1, waveHeight2)).Within(doublePrecision));
+            Assert.That(result.Periods, Is.EqualTo(Doubles(period1, period2)).Within(doublePrecision));
+            Assert.That(result.Directions, Is.EqualTo(Doubles(direction1, direction2)).Within(doublePrecision));
+            Assert.That(result.DirectionalSpreadings, Is.EqualTo(Doubles(spreading1, spreading2)).Within(doublePrecision));
         }
 
 
@@ -234,15 +235,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             // Assert
             Assert.That(result.Name, Is.EqualTo(name));
             Assert.That(result.DefinitionType, Is.EqualTo(DefinitionImportType.Coordinates));
-            Assert.That(result.XStartCoordinate, Is.EqualTo(startX));
-            Assert.That(result.YStartCoordinate, Is.EqualTo(startY));
-            Assert.That(result.XEndCoordinate, Is.EqualTo(endX));
-            Assert.That(result.YEndCoordinate, Is.EqualTo(endY));
+            AssertRoundedValue(result.XStartCoordinate, startX);
+            AssertRoundedValue(result.YStartCoordinate, startY);
+            AssertRoundedValue(result.XEndCoordinate, endX);
+            AssertRoundedValue(result.YEndCoordinate, endY);
             Assert.That(result.SpectrumType, Is.EqualTo(SpectrumImportExportType.FromFile));
             Assert.That(result.ShapeType, Is.EqualTo(ShapeImportType.Gauss));
             Assert.That(result.PeriodType, Is.EqualTo(PeriodImportExportType.Mean));
             Assert.That(result.SpreadingType, Is.EqualTo(SpreadingImportType.Degrees));
-            Assert.That(result.Distances, Is.EqualTo(Doubles(distance1, distance2)));
+            AssertRoundedValues(result.Distances, Doubles(distance1, distance2));
             Assert.That(result.SpectrumFiles, Is.EqualTo(new[]
             {
                 @"C:\path\to\mdw\" + spectrum1,
@@ -296,7 +297,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             Assert.That(result.ShapeType, Is.EqualTo(ShapeImportType.Gauss));
             Assert.That(result.PeriodType, Is.EqualTo(PeriodImportExportType.Mean));
             Assert.That(result.SpreadingType, Is.EqualTo(SpreadingImportType.Degrees));
-            Assert.That(result.Distances, Is.EqualTo(Doubles(distance1, distance2)));
+            AssertRoundedValues(result.Distances, Doubles(distance1, distance2));
             Assert.That(result.SpectrumFiles, Is.EqualTo(new[]
             {
                 @"C:\path\to\mdw\" + spectrum1,
@@ -482,6 +483,20 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
                 DistanceDirType.Clockwise);
         }
 
+        private static void AssertRoundedValue(double actual, double expected)
+        {
+            Assert.That(actual, Is.EqualTo(Math.Round(expected, 7, MidpointRounding.AwayFromZero)));
+        }
+
+        private static void AssertRoundedValues(double[] actual, double[] expected)
+        {
+            Assert.That(actual.Length, Is.EqualTo(expected.Length));
+            for (var i = 0; i < actual.Length; i++)
+            {
+                AssertRoundedValue(actual[i], expected[i]);
+            }
+        }
+
         public class CategoryTestKeyValue<T>
         {
             public CategoryTestKeyValue(string key, string stringValue, T expectedValue)
@@ -499,7 +514,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
         private static void AddToCategory<T>(DelftIniCategory category, CategoryTestKeyValue<T> keyValuePair) =>
             category.AddProperty(keyValuePair.Key, keyValuePair.StringValue);
 
-        private static IEnumerable<double> Doubles(double a, double b)
+        private static double[] Doubles(double a, double b)
         {
             return new[]
             {

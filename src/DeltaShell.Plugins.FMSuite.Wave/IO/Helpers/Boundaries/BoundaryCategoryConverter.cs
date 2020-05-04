@@ -2,9 +2,11 @@
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Runtime.Remoting.Messaging;
 using DelftTools.Utils.Guards;
 using DeltaShell.NGHS.Common.Utils;
 using DeltaShell.NGHS.IO.DelftIniObjects;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.Shared;
 using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
@@ -56,12 +58,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
             }
 
             block.Name = boundaryCategory.GetPropertyValue(KnownWaveProperties.Name);
-            block.XStartCoordinate = boundaryCategory.GetDoubleValue(KnownWaveProperties.StartCoordinateX);
-            block.YStartCoordinate = boundaryCategory.GetDoubleValue(KnownWaveProperties.StartCoordinateY);
-            block.XEndCoordinate = boundaryCategory.GetDoubleValue(KnownWaveProperties.EndCoordinateX);
-            block.YEndCoordinate = boundaryCategory.GetDoubleValue(KnownWaveProperties.EndCoordinateY);
+            block.XStartCoordinate = boundaryCategory.GetDoubleValue(KnownWaveProperties.StartCoordinateX).Round();
+            block.YStartCoordinate = boundaryCategory.GetDoubleValue(KnownWaveProperties.StartCoordinateY).Round();
+            block.XEndCoordinate = boundaryCategory.GetDoubleValue(KnownWaveProperties.EndCoordinateX).Round();
+            block.YEndCoordinate = boundaryCategory.GetDoubleValue(KnownWaveProperties.EndCoordinateY).Round();
             block.SpectrumType = boundaryCategory.GetEnumValue<SpectrumImportExportType>(KnownWaveProperties.SpectrumSpec);
-            block.Distances = boundaryCategory.GetDoubleValues(KnownWaveProperties.CondSpecAtDist);
+            block.Distances = boundaryCategory.GetDoubleValues(KnownWaveProperties.CondSpecAtDist).Select(Round).ToArray();
 
             if (block.SpectrumType == SpectrumImportExportType.Parametrized)
             {
@@ -101,6 +103,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
         }
 
         private static double ToDouble(this string value) => double.Parse(value, NumberStyles.Any, CultureInfo.InvariantCulture);
+
+        private static double Round(this double value) => SpatialDouble.Round(value);
 
         private static T GetEnumValue<T>(this DelftIniCategory category, string propertyName) => EnumUtils.GetEnumValueByDescription<T>(category.GetPropertyValue(propertyName));
 
