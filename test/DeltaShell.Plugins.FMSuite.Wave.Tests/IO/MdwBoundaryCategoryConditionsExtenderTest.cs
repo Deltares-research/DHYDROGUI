@@ -172,7 +172,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             Assert.AreEqual(KnownWaveProperties.PeakEnhancementFactor, properties[3].Name);
             Assert.AreEqual(GetStringValue(factor), properties[3].Value);
             Assert.AreEqual(KnownWaveProperties.CondSpecAtDist, properties[4].Name);
-            Assert.AreEqual(GetStringValue(distance1), properties[4].Value);
+            Assert.AreEqual(GetDistanceStringValue(distance1), properties[4].Value);
             Assert.AreEqual(KnownWaveProperties.WaveHeight, properties[5].Name);
             Assert.AreEqual(GetStringValue(height1), properties[5].Value);
             Assert.AreEqual(KnownWaveProperties.Period, properties[6].Name);
@@ -182,7 +182,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             Assert.AreEqual(KnownWaveProperties.DirectionalSpreadingValue, properties[8].Name);
             Assert.AreEqual(GetStringValue(SpreadingValue), properties[8].Value);
             Assert.AreEqual(KnownWaveProperties.CondSpecAtDist, properties[9].Name);
-            Assert.AreEqual(GetStringValue(distance2), properties[9].Value);
+            Assert.AreEqual(GetDistanceStringValue(distance2), properties[9].Value);
             Assert.AreEqual(KnownWaveProperties.WaveHeight, properties[10].Name);
             Assert.AreEqual(GetStringValue(height2), properties[10].Value);
             Assert.AreEqual(KnownWaveProperties.Period, properties[11].Name);
@@ -230,9 +230,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             Assert.AreEqual(KnownWaveProperties.PeakEnhancementFactor, properties[3].Name);
             Assert.AreEqual(GetStringValue(factor), properties[3].Value);
             Assert.AreEqual(KnownWaveProperties.CondSpecAtDist, properties[4].Name);
-            Assert.AreEqual(GetStringValue(distance1), properties[4].Value);
+            Assert.AreEqual(GetDistanceStringValue(distance1), properties[4].Value);
             Assert.AreEqual(KnownWaveProperties.CondSpecAtDist, properties[5].Name);
-            Assert.AreEqual(GetStringValue(distance2), properties[5].Value);
+            Assert.AreEqual(GetDistanceStringValue(distance2), properties[5].Value);
         }
 
         [Test]
@@ -364,6 +364,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
         }
 
         private static string GetStringValue(double value) => value.ToString("e7", CultureInfo.InvariantCulture);
+
+        private static string GetDistanceStringValue(double value) => value.ToString("F7", CultureInfo.InvariantCulture);
 
         private static IEnumerable<TestCaseData> DifferentShapes
         {

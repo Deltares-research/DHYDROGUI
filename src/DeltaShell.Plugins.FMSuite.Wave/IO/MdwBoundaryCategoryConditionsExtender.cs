@@ -10,6 +10,7 @@ using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Shapes;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.SpatiallyDefinedDataComponents;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spreading;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
+using DeltaShell.Plugins.FMSuite.Wave.IO.Helpers;
 using DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries;
 using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
 
@@ -149,8 +150,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                 hasConstantValues = true;
                 if (!isUniform)
                 {
-                    BoundaryCategory.AddProperty(KnownWaveProperties.CondSpecAtDist,
-                                                 SupportPoints[supportPointCounter].Distance);
+                    BoundaryCategory.AddSpatialProperty(KnownWaveProperties.CondSpecAtDist,
+                                                        SupportPoints[supportPointCounter].Distance);
                     supportPointCounter++;
                 }
 
@@ -177,8 +178,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                 hasConstantValues = false;
                 if (!isUniform)
                 {
-                    BoundaryCategory.AddProperty(KnownWaveProperties.CondSpecAtDist,
-                                                 SupportPoints[supportPointCounter].Distance);
+                    BoundaryCategory.AddSpatialProperty(KnownWaveProperties.CondSpecAtDist,
+                                                        SupportPoints[supportPointCounter].Distance);
                     supportPointCounter++;
                 }
 
