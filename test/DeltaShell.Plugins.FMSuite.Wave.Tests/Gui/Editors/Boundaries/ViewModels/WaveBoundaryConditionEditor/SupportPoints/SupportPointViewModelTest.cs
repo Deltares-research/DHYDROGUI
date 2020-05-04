@@ -21,6 +21,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
     public class SupportPointViewModelTest<TSpreading> where TSpreading : class, IBoundaryConditionSpreading, new()
     {
         private readonly Random random = new Random();
+        private const double doublePrecision = 1E-7;
         private SupportPointViewModel viewModel;
         private SupportPoint supportPoint;
         private SupportPointDataComponentViewModel supportPointDataComponentViewModel;
@@ -255,11 +256,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
         }
 
         [TestCase(0, 0)]
-        [TestCase(1E-15, 0)]
-        [TestCase(1E-14, 1)]
+        [TestCase(1E-8, 0)]
+        [TestCase(1E-7, 1)]
         [TestCase(1, 1)]
-        public void SetDistance_CorrectDistanceIsSetOnModelAndPropertyChangedFiredOnce(double setValueDifference,
-                                                                                       int expectedPropChangedCount)
+        public void SetDistance_CorrectDistanceIsSetOnModelAndPropertyChangedFiredExpectedAmount(double setValueDifference,
+                                                                                                 int expectedPropChangedCount)
         {
             // Setup
             double originalValue = random.NextDouble();
@@ -274,9 +275,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             {
                 var extendedEventArgs = e as PropertyChangedExtendedEventArgs;
                 Assert.That(extendedEventArgs, Is.Not.Null);
-                Assert.That(extendedEventArgs.OriginalValue, Is.EqualTo(originalValue));
+                Assert.That(extendedEventArgs.OriginalValue, Is.EqualTo(originalValue).Within(doublePrecision));
             });
-            Assert.That(supportPoint.Distance, Is.EqualTo(setValue).Within(1E-15));
+            Assert.That(supportPoint.Distance, Is.EqualTo(setValue).Within(doublePrecision));
         }
     }
 }

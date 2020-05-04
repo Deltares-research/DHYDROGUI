@@ -4,6 +4,7 @@ using System.Runtime.CompilerServices;
 using DelftTools.Utils.Guards;
 using DeltaShell.NGHS.Common.Eventing;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.Shared;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor.SupportPoints
 {
@@ -120,16 +121,17 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         /// </value>
         public double Distance
         {
-            get => SupportPoint.Distance;
+            get => SpatialDouble.Round(SupportPoint.Distance);
             set
             {
-                if (Math.Abs(SupportPoint.Distance - value) <= comparisonTolerance)
+                double roundedValue = SpatialDouble.Round(value);
+                if (SpatialDouble.AreEqual(roundedValue, Distance))
                 {
                     return;
                 }
 
                 double originalValue = SupportPoint.Distance;
-                SupportPoint.Distance = value;
+                SupportPoint.Distance = roundedValue;
                 OnPropertyChanged(originalValue);
             }
         }
