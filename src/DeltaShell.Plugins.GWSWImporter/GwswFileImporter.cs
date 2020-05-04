@@ -690,7 +690,7 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
             {
                 if (helper.CrossSectionDefinitionsByPipe.TryGetValue(pipe.CrossSectionDefinitionName, out var crossSectionDefinition))
                 {
-                    var crossSection = new CrossSection(crossSectionDefinition) { Name = $"SewerProfile_0" };
+                    var crossSection = new CrossSection(crossSectionDefinition) { Name = $"SewerProfile_" };
                     pipe.CrossSection = crossSection;
                     helper.PipeCrossSections.Enqueue(crossSection);
                 }
@@ -718,7 +718,8 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
                     pipe.Material = material;
             });
             */
-
+            var firstPipeCrossSection = helper.PipeCrossSections.FirstOrDefault(cs => cs.Name == "SewerProfile_");
+            if (firstPipeCrossSection != null) firstPipeCrossSection.Name = "SewerProfile_1";
             while (helper.PipeCrossSections.Select(ls => ls.Name).Distinct().Count() !=
                    helper.PipeCrossSections.Select(ls => Name).Count())
             {
