@@ -5,6 +5,7 @@ using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
+using DelftTools.Utils.Collections;
 using DeltaShell.Sobek.Readers;
 using DeltaShell.Sobek.Readers.Readers;
 using DeltaShell.Sobek.Readers.SobekDataObjects;
@@ -139,6 +140,8 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                         {
 
                             createdNodes[nodeName] = CreateManholeWithOutlet(createdNode);
+                            createdBranches.Where(vp => vp.Value is ISewerConnection && vp.Value.Source?.Name == nodeName).ForEach(vp => vp.Value.Source = createdNodes[nodeName]);
+                            createdBranches.Where(vp => vp.Value is ISewerConnection && vp.Value.Target?.Name == nodeName).ForEach(vp => vp.Value.Target = createdNodes[nodeName]);
                         }
 
                     }
