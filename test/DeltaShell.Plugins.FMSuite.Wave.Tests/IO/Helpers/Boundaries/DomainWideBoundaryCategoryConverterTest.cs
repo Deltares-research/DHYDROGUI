@@ -81,6 +81,27 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
         }
 
         [Test]
+        [TestCase(KnownWaveBoundariesFileConstants.OrientationDefinitionType)]
+        [TestCase(KnownWaveBoundariesFileConstants.CoordinatesDefinitionType)]
+        public void IsDomainWideBoundaryCategory_WithNonDomainWideBoundaryCategory_DoesNotUpdateBoundariesPerFile(string definitionType)
+        {
+            // Setup
+            var boundariesPerFile = Substitute.For<IBoundariesPerFile>();
+            var boundaryCategory = new DelftIniCategory(KnownWaveCategories.BoundaryCategory);
+            boundaryCategory.SetProperty(KnownWaveProperties.Definition, definitionType);
+
+            // Call
+            DomainWideBoundaryCategoryConverter.IsDomainWideBoundaryCategory(new[]
+            {
+                boundaryCategory
+            });
+
+            // Assert
+            Assert.That(boundariesPerFile.FilePathForBoundariesPerFile, Is.Empty);
+            Assert.That(boundariesPerFile.DefinitionPerFileUsed, Is.False);
+        }
+
+        [Test]
         public void Convert_BoundariesPerFileNull_ThrowsArgumentNullException()
         {
             // Call
