@@ -5,6 +5,7 @@ using DeltaShell.NGHS.IO.DelftIniObjects;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.Calculators;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
+using DeltaShell.Plugins.FMSuite.Wave.IO.Helpers;
 using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
 using GeoAPI.Geometries;
 
@@ -43,10 +44,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             Coordinate startCoordinate = calculator.CalculateCoordinateFromSupportPoint(sortedSupportPoints.First());
             Coordinate endCoordinate = calculator.CalculateCoordinateFromSupportPoint(sortedSupportPoints.Last());
 
-            boundaryCategory.AddProperty(KnownWaveProperties.StartCoordinateX, startCoordinate.X);
-            boundaryCategory.AddProperty(KnownWaveProperties.EndCoordinateX, endCoordinate.X);
-            boundaryCategory.AddProperty(KnownWaveProperties.StartCoordinateY, startCoordinate.Y);
-            boundaryCategory.AddProperty(KnownWaveProperties.EndCoordinateY, endCoordinate.Y);
+            boundaryCategory.AddSpatialProperty(KnownWaveProperties.StartCoordinateX, startCoordinate.X);
+            boundaryCategory.AddSpatialProperty(KnownWaveProperties.EndCoordinateX, endCoordinate.X);
+            boundaryCategory.AddSpatialProperty(KnownWaveProperties.StartCoordinateY, startCoordinate.Y);
+            boundaryCategory.AddSpatialProperty(KnownWaveProperties.EndCoordinateY, endCoordinate.Y);
         }
     }
 }

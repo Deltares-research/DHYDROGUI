@@ -108,7 +108,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
 
         private static string GetStringValue(double value)
         {
-            return value.ToString("e7", CultureInfo.InvariantCulture);
+            return value.ToString("F7", CultureInfo.InvariantCulture);
         }
     }
 }
