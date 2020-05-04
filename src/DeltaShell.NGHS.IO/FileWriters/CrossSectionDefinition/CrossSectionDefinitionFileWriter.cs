@@ -43,7 +43,21 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
                 categories.Add(definitionRegion);
                 processedCsDefinitions.Add(csDefinitionId);
             }
-            
+
+            foreach (var sharedCrossSectionDefinition in sharedCrossSectionDefinitions)
+            {
+                var definitionGeneratorCrossSectionDefinition = DefinitionGeneratorFactory.GetDefinitionGeneratorCrossSection(sharedCrossSectionDefinition);
+
+                if (definitionGeneratorCrossSectionDefinition == null) continue;
+
+                var csDefinitionId = sharedCrossSectionDefinition.Name;
+                if (processedCsDefinitions.Contains(csDefinitionId)) continue;
+
+                var definitionRegion = definitionGeneratorCrossSectionDefinition.CreateDefinitionRegion(sharedCrossSectionDefinition);
+                definitionRegion.AddProperty(DefinitionPropertySettings.IsShared.Key,true);
+                categories.Add(definitionRegion);
+            }
+
             new IniFileWriter().WriteIniFile(categories, targetFile);
         }
 

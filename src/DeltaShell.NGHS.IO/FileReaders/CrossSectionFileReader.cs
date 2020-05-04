@@ -18,11 +18,19 @@ namespace DeltaShell.NGHS.IO.FileReaders
     {
         public static void ReadFile(string cslFilename, string csdFilename, IHydroNetwork network)
         {
-            if (!File.Exists(cslFilename)) throw new FileReadingException(string.Format("Could not read file {0} properly, it doesn't exist.", cslFilename));
-            var cslCategories = new DelftIniReader().ReadDelftIniFile(cslFilename);
-            if (cslCategories.Count == 0) throw new FileReadingException(string.Format("Could not read file {0} properly, it seems empty", cslFilename));
-            var csIniLocations = cslCategories.Where(category => category.Name == CrossSectionRegion.IniHeader).ToList();
-            if (!csIniLocations.Any()) throw new FileReadingException("Could not read any cross section locations it seems not available");
+            IList<DelftIniCategory> cslCategories = new List<DelftIniCategory>();
+            if (File.Exists(cslFilename))
+            {
+                //throw new FileReadingException(string.Format("Could not read file {0} properly, it doesn't exist.",cslFilename));
+
+                cslCategories = new DelftIniReader().ReadDelftIniFile(cslFilename);
+            }
+            IList<DelftIniCategory> csIniLocations = new List<DelftIniCategory>();
+            if (cslCategories.Count != 0) //throw new FileReadingException(string.Format("Could not read file {0} properly, it seems empty", cslFilename));
+            {
+                csIniLocations = cslCategories.Where(category => category.Name == CrossSectionRegion.IniHeader).ToList();
+                if (!csIniLocations.Any()) throw new FileReadingException("Could not read any cross section locations it seems not available");
+            }
 
             if (!File.Exists(csdFilename)) throw new FileReadingException(string.Format("Could not read file {0} properly, it doesn't exist.", csdFilename));
             var csdCategories = new DelftIniReader().ReadDelftIniFile(csdFilename);
@@ -33,6 +41,7 @@ namespace DeltaShell.NGHS.IO.FileReaders
             var nonStructureCrossSectionDefinitions = csIniLocations.Select(csIniLocation => csIniLocation.ReadProperty<string>(LocationRegion.Definition.Key)).ToArray();
 
             IList<ICrossSectionDefinition> crossSectionDefinitions = new List<ICrossSectionDefinition>();
+            IList<ICrossSectionDefinition> sharedNotConnectedCrossSectionDefinitions = new List<ICrossSectionDefinition>();
             foreach (var csdDefinitionCategory in csdCategories.Where(category => category.Name == DefinitionPropertySettings.Header))
             {
                 try
@@ -40,8 +49,13 @@ namespace DeltaShell.NGHS.IO.FileReaders
                     var crossSectionDefinition = TransformDefinitionCategoryIntoCrossSectionDefinition(csdDefinitionCategory, network, nonStructureCrossSectionDefinitions);
                     if (crossSectionDefinitions.Contains(crossSectionDefinition) || crossSectionDefinitions.FirstOrDefault(csd => csd.Name == crossSectionDefinition.Name) != null)
                         throw new FileReadingException(string.Format("cross section definition with id {0} is already read, id's CAN NOT be duplicates!", crossSectionDefinition.Name));
-
+                    if(csdDefinitionCategory.ReadProperty<bool>(DefinitionPropertySettings.IsShared.Key, true))
+                    {
+                        sharedNotConnectedCrossSectionDefinitions.Add(crossSectionDefinition);
+                    }
+                    
                     crossSectionDefinitions.Add(crossSectionDefinition);
+                    
                 }
                 catch (FileReadingException fileReadingException)
                 {
@@ -53,6 +67,7 @@ namespace DeltaShell.NGHS.IO.FileReaders
             {
                 try
                 {
+
                     
                     var crossSectionLocationInfos = csIniLocations.Where(csIniLocation =>
                     {
@@ -62,7 +77,16 @@ namespace DeltaShell.NGHS.IO.FileReaders
 
                     if (!crossSectionLocationInfos.Any())
                     {
-                        PlaceDefinitionOnBridgeOrCulvert(crossSectionDefinition, network.Bridges.Concat(network.Culverts.Cast<IStructureWithCrossSectionDefinition>()));
+                        if (sharedNotConnectedCrossSectionDefinitions.Contains(crossSectionDefinition))
+                        {
+                            network.SharedCrossSectionDefinitions.Add(crossSectionDefinition);
+                        }
+                        else
+                        {
+                            PlaceDefinitionOnBridgeOrCulvert(crossSectionDefinition,
+                                network.Bridges.Concat(network.Culverts.Cast<IStructureWithCrossSectionDefinition>()));
+                        }
+
                         continue;
                     }
                         

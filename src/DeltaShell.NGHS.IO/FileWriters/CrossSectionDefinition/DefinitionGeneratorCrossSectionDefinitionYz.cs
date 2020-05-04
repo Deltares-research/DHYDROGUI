@@ -33,7 +33,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
         protected void AddFrictionData(ICrossSectionDefinition crossSectionDefinition)
         {
             var crossSectionSections = crossSectionDefinition.Sections;
-            if (crossSectionSections != null)
+            if (crossSectionSections != null && crossSectionSections.Any())
             {
                 IniCategory.AddProperty(DefinitionPropertySettings.SectionCount, crossSectionSections.Count);
                 /*IniCategory.AddProperty(DefinitionPropertySettings.FrictionPositions,
