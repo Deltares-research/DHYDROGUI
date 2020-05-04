@@ -27,6 +27,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
     {
         private readonly Random random = new Random();
         private const double maxDistance = 10;
+        private const double doublePrecision = 1E-7;
 
         private SupportPointEditorViewModel viewModel;
         private IWaveBoundary waveBoundary;
@@ -139,7 +140,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             distances.Add(maxDistance);
 
             double[] orderedDistances = distances.OrderBy(d => d).ToArray();
-            orderedDistances.ForEach((d, i) => Assert.That(SubViewModels[i].Distance, Is.EqualTo(d)));
+            orderedDistances.ForEach((d, i) => Assert.That(SubViewModels[i].Distance, Is.EqualTo(d).Within(doublePrecision)));
 
             Assert.That(viewModel.SelectedSupportPointViewModel, Is.SameAs(SubViewModels[0]));
 
@@ -206,7 +207,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             Assert.That(SubViewModels, Has.Count.EqualTo(3));
             Assert.That(SupportPoints, Has.Count.EqualTo(3));
             SupportPointViewModel subViewModel = SubViewModels[1];
-            Assert.That(subViewModel.Distance, Is.EqualTo(value).Within(1E-15));
+            Assert.That(subViewModel.Distance, Is.EqualTo(value).Within(doublePrecision));
             Assert.That(SupportPoints[2], Is.SameAs(subViewModel.SupportPoint));
             Assert.That(viewModel.SelectedSupportPointViewModel, Is.SameAs(SubViewModels[0]));
         }
@@ -257,24 +258,23 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             Assert.That(viewModel.SelectedSupportPointViewModel, Is.SameAs(SubViewModels[0]));
         }
 
-        [Test]
-        public void ExecuteAddSupportPointCommand_DistanceAlreadyExists_NoViewModelIsAdded()
+        [TestCaseSource((nameof(GetEqualDistances)))]
+        public void ExecuteAddSupportPointCommand_DistanceAlreadyExists_NoViewModelIsAdded(double existingValue, double newValue)
         {
             // Setup
-            double value = random.NextDouble();
-            SupportPointViewModel existingSubViewModel = GetExistingSupportPointViewModel(value);
+            SupportPointViewModel existingSubViewModel = GetExistingSupportPointViewModel(existingValue);
 
-            viewModel.NewDistance = value;
+            viewModel.NewDistance = newValue;
 
             // Call
-            viewModel.AddSupportPointCommand.Execute(value.ToString(CultureInfo.CurrentCulture));
+            viewModel.AddSupportPointCommand.Execute(newValue.ToString(CultureInfo.CurrentCulture));
 
             // Assert
             Assert.That(SubViewModels, Has.Count.EqualTo(3));
             Assert.That(SupportPoints, Has.Count.EqualTo(3));
 
             SupportPointViewModel subViewModel = SubViewModels[1];
-            Assert.That(subViewModel.Distance, Is.EqualTo(value).Within(1E-15));
+            Assert.That(subViewModel.Distance, Is.EqualTo(existingValue).Within(doublePrecision));
             Assert.That(subViewModel, Is.SameAs(existingSubViewModel));
             Assert.That(SupportPoints[2], Is.SameAs(existingSubViewModel.SupportPoint));
         }
@@ -371,7 +371,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
 
             SubViewModels.ForEach((vm, i) =>
             {
-                Assert.That(vm.Distance, Is.EqualTo(orderedDistances[i]));
+                Assert.That(vm.Distance, Is.EqualTo(orderedDistances[i]).Within(doublePrecision));
                 Assert.That(SupportPoints, Contains.Item(vm.SupportPoint));
             });
         }
@@ -434,6 +434,19 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             Assert.That(SupportPoints, Has.Count.EqualTo(2));
         }
 
+        [Test]
+        public void SetNewDistance_NewDistanceIsSetCorrectly()
+        {
+            // Setup
+            double newDistance = random.NextDouble();
+
+            // Call
+            viewModel.NewDistance = newDistance;
+
+            // Assert
+            Assert.That(viewModel.NewDistance, Is.EqualTo(Math.Round(newDistance, 7, MidpointRounding.AwayFromZero)));
+        }
+
         [TestCase(0)]
         [TestCase(1)]
         [TestCase(2)]
@@ -459,7 +472,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
 
             SupportPointViewModel subViewModel = SubViewModels[1];
             Assert.That(subViewModel, Is.Not.SameAs(originalSubViewModel));
-            Assert.That(subViewModel.Distance, Is.EqualTo(nextValue));
+            Assert.That(subViewModel.Distance, Is.EqualTo(nextValue).Within(doublePrecision));
         }
 
         [Test]
@@ -493,12 +506,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             Assert.That(dataComponent.Data[newSubViewModel.SupportPoint], Is.SameAs(originalParameters));
         }
 
-        [Test]
+        [TestCaseSource(nameof(GetEqualDistances))]
         [NUnit.Framework.Category(TestCategory.Integration)]
-        public void GivenASupportPointViewModel_WhenDistanceIsChanged_NewValueAlreadyExists_ThenViewModelIsNotReplacedAndHasOriginalValue()
+        public void GivenASupportPointViewModel_WhenDistanceIsChanged_NewValueAlreadyExists_ThenViewModelIsNotReplacedAndHasOriginalValue(
+            double existingDistance, double newDistance)
         {
             // Setup
-            double existingDistance = random.NextDouble();
             GetExistingSupportPointViewModel(existingDistance);
 
             SupportPointViewModel[] existingSubViewModels = SubViewModels.ToArray();
@@ -510,14 +523,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             SupportPointViewModel originalSubViewModel = SubViewModels.Single(m => !existingSubViewModels.Contains(m));
 
             // Call
-            originalSubViewModel.Distance = existingDistance;
+            originalSubViewModel.Distance = newDistance;
 
             // Assert
             Assert.That(SubViewModels, Has.Count.EqualTo(4));
 
             SupportPointViewModel subViewModel = SubViewModels.Single(m => !existingSubViewModels.Contains(m));
             Assert.That(subViewModel, Is.SameAs(originalSubViewModel));
-            Assert.That(subViewModel.Distance, Is.EqualTo(originalValue));
+            Assert.That(subViewModel.Distance, Is.EqualTo(originalValue).Within(doublePrecision));
         }
 
         [Test]
@@ -699,6 +712,31 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
         private SupportPoint GetSupportPoint(double distance)
         {
             return new SupportPoint(distance, geometricDefinition);
+        }
+
+        private IEnumerable<double[]> GetEqualDistances()
+        {
+            double value = random.NextDouble();
+            yield return new[]
+            {
+                value,
+                value
+            };
+            yield return new[]
+            {
+                value,
+                Math.Round(value, 7, MidpointRounding.AwayFromZero)
+            };
+            yield return new[]
+            {
+                0.1234567,
+                0.12345665001
+            };
+            yield return new[]
+            {
+                0.1234567,
+                0.12345674999
+            };
         }
     }
 }

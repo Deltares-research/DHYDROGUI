@@ -12,6 +12,7 @@ using DelftTools.Utils.Collections;
 using DelftTools.Utils.Guards;
 using DeltaShell.NGHS.Common.Eventing;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.Shared;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Mediators;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Validation;
 
@@ -30,8 +31,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         private readonly SupportPointDataComponentViewModel supportPointDataComponentViewModel;
 
         private SupportPointViewModel selectedSupportPointViewModel;
-
-        private const double comparisonTolerance = 1E-15;
+        private double newDistance;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SupportPointEditorViewModel" /> class.
@@ -161,7 +161,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         /// <value>
         /// The new distance.
         /// </value>
-        public double NewDistance { get; set; }
+        public double NewDistance
+        {
+            get => newDistance;
+            set => newDistance = SpatialDouble.Round(value);
+        }
 
         private void AddSupportPointAction(object value)
         {
@@ -322,7 +326,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
 
         private static bool DistanceExists(IEnumerable<SupportPointViewModel> viewModels, double distance)
         {
-            return viewModels.Any(vm => Math.Abs(vm.Distance - distance) < comparisonTolerance);
+            return viewModels.Any(vm => SpatialDouble.AreEqual(vm.Distance, distance));
         }
 
         private void Subscribe()
