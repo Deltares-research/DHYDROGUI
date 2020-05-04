@@ -6,6 +6,7 @@ using DelftTools.Functions.Generic;
 using DelftTools.Utils.Editing;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using GeoAPI.Extensions.Coverages;
+using log4net;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Grids;
 using SharpMap.Api;
@@ -15,6 +16,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Coverages
 {
     public static class UnstructuredGridCoverageExtensions
     {
+        private static readonly ILog Log = LogManager.GetLogger(typeof(UnstructuredGridCoverageExtensions));
+
         public static IPointCloud ToPointCloud(this UnstructuredGridCoverage coverage, int componentIndex = 0,
             bool skipMissingValues = false)
         {
@@ -133,29 +136,41 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Coverages
                 var interpolating = keyValuePair.Value;
                 if (interpolating && points.PointValues.Count >0)
                 {
-                    var api = new LocalECModuleApi();
-                    //using(var api = new RemoteECModuleApi()) // NEED TO HAVE A PROTOBUF UPDATE!
-                    using (var mesh = new DisposableMeshGeometry(grid))
+                    using(var api = new RemoteECModuleApi())
                     {
-                        var projectionType = grid.CoordinateSystem == null ||
-                                             !grid.CoordinateSystem.IsGeographic
-                            ? ProjectionType.Cartesian
-                            : ProjectionType.Spherical;
-
-                        var targetZ = api.Triangulation(points.PointValues, mesh, coverage.GetLocationTypeForCoverage(),
-                            projectionType);
-
-                        var unstructuredGridFlowLinkCoverage = coverage as UnstructuredGridFlowLinkCoverage;
-                        if (unstructuredGridFlowLinkCoverage != null)
+                        using (var mesh = new DisposableMeshGeometry(grid))
                         {
-                            targetZ = grid.FlowLinks.Count != 0
-                                ? grid.ReOrderResultsForFlowLinks(targetZ)
-                                : new double[0];
+                            var projectionType = grid.CoordinateSystem == null ||
+                                                 !grid.CoordinateSystem.IsGeographic
+                                ? ProjectionType.Cartesian
+                                : ProjectionType.Spherical;
+                            double[] targetZ;
+                            try
+                            {
+                                targetZ = api.Triangulation(points.PointValues, mesh, coverage.GetLocationTypeForCoverage(), projectionType);
+
+
+                                var unstructuredGridFlowLinkCoverage = coverage as UnstructuredGridFlowLinkCoverage;
+                                if (unstructuredGridFlowLinkCoverage != null)
+                                {
+                                    targetZ = grid.FlowLinks.Count != 0
+                                        ? grid.ReOrderResultsForFlowLinks(targetZ)
+                                        : new double[0];
+                                }
+
+                                coverage.BeginEdit(new DefaultEditAction("Interpolating values on coverage"));
+                                coverage.Components[i].Values.Clear();
+                                FunctionHelper.SetValuesRaw<double>(coverage.Components[i], targetZ);
+                                coverage.EndEdit();
+                            }
+                            catch
+                            {
+                                //gulp
+                                //should never happen
+                                Log.Fatal($"ECModuleApi could to triangulate the old point values to the new grid on coverage : {coverage.Name}" );
+                            }
                         }
-                        coverage.BeginEdit(new DefaultEditAction("Interpolating values on coverage"));
-                        coverage.Components[i].Values.Clear();
-                        FunctionHelper.SetValuesRaw<double>(coverage.Components[i], targetZ);
-                        coverage.EndEdit();
+
                     }
                 }
                 else
