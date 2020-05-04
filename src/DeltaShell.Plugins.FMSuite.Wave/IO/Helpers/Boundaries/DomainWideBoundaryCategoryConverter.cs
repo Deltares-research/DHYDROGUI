@@ -31,9 +31,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
                 return false;
             }
 
-            DomainWideBoundaryMdwBlock domainWideBoundaryBlock = ConvertDomainWideBoundary(boundaryCategories.Single());
-
-            return domainWideBoundaryBlock != null;
+            return boundaryCategories.First().GetEnumValue<DefinitionImportType>(KnownWaveProperties.Definition) == DefinitionImportType.SpectrumFile;
         }
 
         /// <summary>
@@ -74,9 +72,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
                 throw new ArgumentException("Category is not an mdw boundary category.", nameof(boundaryCategory));
             }
 
-            return boundaryCategory.GetEnumValue<DefinitionImportType>(KnownWaveProperties.Definition) == DefinitionImportType.SpectrumFile
-                       ? new DomainWideBoundaryMdwBlock {DomainWideSpectrumFile = boundaryCategory.GetPropertyValue(KnownWaveProperties.OverallSpecFile)}
-                       : null;
+            return new DomainWideBoundaryMdwBlock {DomainWideSpectrumFile = boundaryCategory.GetPropertyValue(KnownWaveProperties.OverallSpecFile)};
         }
 
         private static T GetEnumValue<T>(this DelftIniCategory category, string propertyName) => EnumUtils.GetEnumValueByDescription<T>(category.GetPropertyValue(propertyName));
