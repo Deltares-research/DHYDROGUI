@@ -376,6 +376,7 @@
     <Compile Include="IO\Helpers\Boundaries\SpreadingImportTypeDescriptionTest.cs" />
     <Compile Include="IO\Helpers\Boundaries\SpreadingImportTypeTest.cs" />
     <Compile Include="IO\Helpers\Boundaries\WaveBoundaryConverterTest.cs" />
+    <Compile Include="IO\Helpers\DelftIniCategoryExtensionsTest.cs" />
     <Compile Include="IO\Helpers\MdwFileBackwardsCompatibilityConfigurationValuesTest.cs" />
     <Compile Include="IO\Helpers\Boundaries\WaveBoundaryGeometricDefinitionFactoryTest.cs" />
     <Compile Include="IO\Importers\WaveBoundaryFileImporterTest.cs" />
