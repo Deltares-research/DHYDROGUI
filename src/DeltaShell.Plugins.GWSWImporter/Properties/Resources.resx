@@ -215,10 +215,13 @@ Manhole with unique id '{4}' is not imported.</value>
     <value>Weir(s) cannot be created without a network defined.</value>
   </data>
   <data name="Shape__0__is_not_a_valid_shape_Setting_shape_to_unknown" xml:space="preserve">
-    <value>Shape {0} is not a valid shape. Setting the shape to  'unknown'.</value>
+    <value>Shape {0} is not a valid shape. Setting the shape to 'unknown'.</value>
   </data>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="StructureFeatureSmall" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\StructureFeatureSmall.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Water_type__0__is_not_a_valid_water_type_Setting_water_type_to_none" xml:space="preserve">
+    <value>Water type {0} is not a valid water type. Setting the water type to 'none'.</value>
   </data>
 </root>

@@ -372,7 +372,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Shape {0} is not a valid shape. Setting the shape to  &apos;unknown&apos;..
+        ///   Looks up a localized string similar to Shape {0} is not a valid shape. Setting the shape to &apos;unknown&apos;..
         /// </summary>
         public static string Shape__0__is_not_a_valid_shape_Setting_shape_to_unknown {
             get {
@@ -387,6 +387,15 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Properties {
             get {
                 object obj = ResourceManager.GetObject("StructureFeatureSmall", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Water type {0} is not a valid water type. Setting the water type to &apos;none&apos;..
+        /// </summary>
+        public static string Water_type__0__is_not_a_valid_water_type_Setting_water_type_to_none {
+            get {
+                return ResourceManager.GetString("Water_type__0__is_not_a_valid_water_type_Setting_water_type_to_none", resourceCulture);
             }
         }
     }

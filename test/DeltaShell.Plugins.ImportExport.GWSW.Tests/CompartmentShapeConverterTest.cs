@@ -1,4 +1,7 @@
-﻿using DelftTools.Hydro;
+﻿using System;
+using System.Resources;
+using DelftTools.Hydro;
+using DelftTools.TestUtils;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
@@ -16,17 +19,23 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
         public void GivenCompartmentShapeString_WhenCallingWaterTypeConverter_ThenReturnsCorrectCompartmentShapeType(
             string compartmentShapeString, CompartmentShape expectedCompartmentShape)
         {
-            var actualCompartmentShapeType = CompartmentShapeConverter.ConvertStringToCompartmentShape(compartmentShapeString);
-            Assert.That(actualCompartmentShapeType, Is.EqualTo(expectedCompartmentShape));
+            var actualCompartmentShape = CompartmentShapeConverter.ConvertStringToCompartmentShape(compartmentShapeString);
+            Assert.That(actualCompartmentShape, Is.EqualTo(expectedCompartmentShape));
         }
 
         [Test]
-        public void GivenInvalidCompartmentShapeString_WhenCallingWaterTypeConverter_ThenReturnsUnknownCompartmentShapeType()
+        public void GivenInvalidCompartmentShapeString_WhenCallingCompartmentShapeConverter_ThenAddsMessageToLogAndSetsCompartmentToUnknown()
         {
-            var invalidCompartmentTypeString = "InvalidCompartmentShape";
+            var invalidCompartmentShapeString = "InvalidCompartmentShape";
             var expectedCompartmentShape = CompartmentShape.Unknown;
-            var actualCompartmentShapeType = CompartmentShapeConverter.ConvertStringToCompartmentShape(invalidCompartmentTypeString);
-            Assert.That(actualCompartmentShapeType, Is.EqualTo(expectedCompartmentShape));
+            var expectedMessage = $"Shape {invalidCompartmentShapeString} is not a valid shape. Setting the shape to 'unknown'";
+
+            CompartmentShape actualCompartmentShape = CompartmentShapeConverter.ConvertStringToCompartmentShape(invalidCompartmentShapeString);
+
+            Assert.That(actualCompartmentShape, Is.EqualTo(expectedCompartmentShape));
+            TestHelper.AssertAtLeastOneLogMessagesContains(
+                () => actualCompartmentShape = CompartmentShapeConverter.ConvertStringToCompartmentShape(invalidCompartmentShapeString), expectedMessage);
+            
         }
     }
 }

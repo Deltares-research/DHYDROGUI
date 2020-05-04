@@ -1,5 +1,6 @@
 ﻿using System;
 using DelftTools.Hydro;
+using DelftTools.TestUtils;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
@@ -19,6 +20,21 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
         {
             var actualSewerConnectionWaterType = WaterTypeConverter.ConvertStringToSewerConnectionWaterType(waterTypeString);
             Assert.That(actualSewerConnectionWaterType, Is.EqualTo(expectedSewerConnectionWaterType));
+        }
+
+        [Test]
+        public void GivenInvalidWaterTypeString_WhenCallingWaterTypeConverter_ThenAddsMessageToLogAndSetsWaterTypeToNone()
+        {
+            var invalidWaterTypeString = "InvalidWaterType";
+            var expectedWaterType = SewerConnectionWaterType.None;
+            var expectedMessage = $"Water type {invalidWaterTypeString} is not a valid water type. Setting the water type to 'none'.";
+
+            SewerConnectionWaterType actualWaterType = WaterTypeConverter.ConvertStringToSewerConnectionWaterType(invalidWaterTypeString);
+
+            Assert.That(actualWaterType, Is.EqualTo(expectedWaterType));
+            TestHelper.AssertAtLeastOneLogMessagesContains(
+                () => actualWaterType = WaterTypeConverter.ConvertStringToSewerConnectionWaterType(invalidWaterTypeString), expectedMessage);
+
         }
     }
 }

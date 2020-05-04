@@ -1,5 +1,6 @@
 ﻿using System;
 using DelftTools.Hydro;
+using log4net;
 
 namespace DeltaShell.Plugins.ImportExport.GWSW
 {
@@ -9,6 +10,8 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
     /// </summary>
     public static class WaterTypeConverter
     {
+        private static ILog Log = LogManager.GetLogger(typeof(WaterTypeConverter));
+
         /// <summary>
         /// Converts a string to a <see cref="SewerConnectionWaterType"/>. />
         /// </summary>
@@ -29,7 +32,9 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
                     return SewerConnectionWaterType.StormWater;
                 case "nvt":
                 case "none":
+                    return SewerConnectionWaterType.None;
                 default:
+                    Log.WarnFormat(GWSW.Properties.Resources.Water_type__0__is_not_a_valid_water_type_Setting_water_type_to_none, waterTypeString);
                     return SewerConnectionWaterType.None;
             }
         }

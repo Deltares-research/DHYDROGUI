@@ -1,5 +1,6 @@
 ﻿using System;
 using DelftTools.Hydro;
+using log4net;
 
 namespace DeltaShell.Plugins.ImportExport.GWSW
 {
@@ -9,6 +10,8 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
     /// </summary>
     public static class CompartmentShapeConverter
     {
+        private static ILog Log = LogManager.GetLogger(typeof(CompartmentShapeConverter));
+
         /// <summary>
         /// Converts a string to a <see cref="CompartmentShape"/>.
         /// </summary>
@@ -25,7 +28,9 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
                 case "rectangular":
                     return CompartmentShape.Rectangular;
                 case "unknown":
+                    return CompartmentShape.Unknown;
                 default:
+                    Log.WarnFormat(GWSW.Properties.Resources.Shape__0__is_not_a_valid_shape_Setting_shape_to_unknown, compartmentShapeString);
                     return CompartmentShape.Unknown;
             }
         }

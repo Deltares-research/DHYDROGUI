@@ -83,16 +83,7 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
             var nodeShapeAttribute = gwswElement.GetAttributeFromList(ManholeMapping.PropertyKeys.NodeShape);
             if (nodeShapeAttribute.IsValidAttribute())
             {
-                var nodeShapeString = nodeShapeAttribute.GetValidStringValue();
-                if (Enum.IsDefined(typeof(CompartmentShape), CompartmentShapeConverter.ConvertStringToCompartmentShape(nodeShapeString)))
-                {
-                    compartment.Shape = CompartmentShapeConverter.ConvertStringToCompartmentShape(nodeShapeAttribute.GetValidStringValue());
-                }
-                else
-                {
-                    Log.WarnFormat(GWSW.Properties.Resources.Shape__0__is_not_a_valid_shape_Setting_shape_to_unknown, nodeShapeString);
-                    compartment.Shape = CompartmentShape.Unknown;
-                }
+                compartment.Shape = CompartmentShapeConverter.ConvertStringToCompartmentShape(nodeShapeAttribute.GetValidStringValue());
             }
             
             var outletCompartment = compartment as OutletCompartment;
