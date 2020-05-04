@@ -249,39 +249,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         [Test]
-        [Category("Quarantine")]
-        public void GivenFmModelWith2DPump_WhenWritingMduFile_ThenStructureFilesAreWrittenAndMduReferenceIsCorrect()
-        {
-            var pumpName = "my2DPump";
-            var polylineFileName = $"{pumpName}.pli";
-            var tempFolder = FileUtils.CreateTempDirectory();
-            var mduFilePath = Path.Combine(tempFolder, "myModel.mdu");
-            var structuresFilePath = IoHelper.GetFilePathToLocationInSameDirectory(mduFilePath, StructuresFileName);
-            var pliFilePath = IoHelper.GetFilePathToLocationInSameDirectory(mduFilePath, polylineFileName);
-
-            var pump2D = new Pump2D(pumpName)
-            {
-                Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(10, 10) })
-            };
-            var area = new HydroArea();
-            area.Pumps.Add(pump2D);
-
-            var fmModel = new WaterFlowFMModel
-            {
-                MduFilePath = mduFilePath,
-                Area = area
-            };
-
-            FeatureFile1D2DWriter.Write1D2DFeatures(fmModel.MduFilePath, fmModel.ModelDefinition, fmModel.Network, fmModel.Area, fmModel.RoughnessSections, fmModel.ChannelFrictionDefinitions);
-
-            Assert.IsTrue(File.Exists(structuresFilePath), "Structures file was not written");
-            Assert.IsTrue(File.Exists(pliFilePath), "Polyline file was not written");
-
-            var crossSectionDefinitionFileProperty = fmModel.ModelDefinition.GetModelProperty(KnownProperties.StructuresFile);
-            Assert.That(crossSectionDefinitionFileProperty.GetValueAsString(), Is.EqualTo(StructuresFileName));
-        }
-
-        [Test]
         public void GivenFmModelWithEmptyNetworkAndEmptyHydroArea_WhenWritingMduFile_ThenMduReferenceToStructuresFileIsRemoved()
         {
             var tempFolder = FileUtils.CreateTempDirectory();

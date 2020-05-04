@@ -26,7 +26,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         [Test]
-        [Category("Quarantine")]
         public void StructuresFileWriteGeneralStructureGivesExpectedResultTest()
         {
             List<IStructure1D> structs = new List<IStructure1D>();
@@ -92,38 +91,42 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 // compare
                 Assert.AreEqual(
                 "[structure]" + Environment.NewLine +
-                "    type                  = generalstructure    # Type of structure" + Environment.NewLine +
-                "    id                    = weir01              # Name of the structure" + Environment.NewLine +
-                "    widthleftW1           = 1.000               # Width left side of structure (m)" + Environment.NewLine +
-                "    widthleftWsdl         = 2.000               # Width structure left side (m)" + Environment.NewLine +
-                "    widthcenter           = 3.000               # Width structure centre (m)" + Environment.NewLine +
-                "    widthrightWsdr        = 4.000               # Width structure right side (m)" + Environment.NewLine +
-                "    widthrightW2          = 5.000               # Width right side of structure (m)" + Environment.NewLine +
-                "    levelleftZb1          = 6.000               # Bed level left side of structure (m AD)" + Environment.NewLine +
-                "    levelleftZbsl         = 7.000               # Bed level left side structure (m AD)" + Environment.NewLine +
-                "    levelcenter           = 8.000               # Bed level at centre of structure (m AD)" + Environment.NewLine +
-                "    levelrightZbsr        = 9.000               # Bed level right side structure (m AD)" + Environment.NewLine +
-                "    levelrightZb2         = 10.000              # Bed level right side of structure (m AD)" + Environment.NewLine +
-                "    gateheight            = 19.000              # Gate lower edge level (m AD)" + Environment.NewLine +
-                "    pos_freegateflowcoeff = 12.000              # Positive free gate flow (-)" + Environment.NewLine +
-                "    pos_drowngateflowcoeff= 13.000              # Positive drowned gate flow (-)" + Environment.NewLine +
-                "    pos_freeweirflowcoeff = 14.000              # Positive free weir flow (-)" + Environment.NewLine +
-                "    pos_drownweirflowcoeff= 15.000              # Positive drowned weir flow (-)" + Environment.NewLine +
-                "    pos_contrcoeffreegate = 16.000              # Positive flow contraction coefficient (-)" + Environment.NewLine +
-                "    neg_freegateflowcoeff = 17.000              # Negative free gate flow (-)" + Environment.NewLine +
-                "    neg_drowngateflowcoeff= 18.000              # Negative drowned gate flow (-)" + Environment.NewLine +
-                "    neg_freeweirflowcoeff = 19.000              # Negative free weir flow (-)" + Environment.NewLine +
-                "    neg_drownweirflowcoeff= 20.000              # Negative drowned weir flow (-)" + Environment.NewLine +
-                "    neg_contrcoeffreegate = 21.000              # Negative flow contraction coefficient (-)" + Environment.NewLine +
-                "    extraresistance       = 22.000              # Extra resistance (-)" + Environment.NewLine +
-                "    gatedoorheight        = 11.000              # Gate opening height (m)" + Environment.NewLine +
+                "    type                  = generalstructure    # \"Structure type must read generalStructure.\"" + Environment.NewLine +
+                "    id                    = weir01              # Unique structure id." + Environment.NewLine +
+                "    upstream1Width        = 1.000               " + Environment.NewLine +
+                "    upstream2Width        = 2.000               " + Environment.NewLine +
+                "    crestWidth            = 3.000               # Width of weir (m)" + Environment.NewLine +
+                "    downstream1Width      = 4.000               " + Environment.NewLine +
+                "    downstream2Width      = 5.000               " + Environment.NewLine +
+                "    upstream1Level        = 6.000               " + Environment.NewLine +
+                "    upstream2Level        = 7.000               " + Environment.NewLine +
+                "    crestLevel            = 8.000               # Crest level of weir (m AD)" + Environment.NewLine +
+                "    downstream1Level      = 9.000               " + Environment.NewLine +
+                "    downstream2Level      = 10.000              " + Environment.NewLine +
+                "    gateLowerEdgeLevel    = 19.000              # Gate lower edge level (m AD)" + Environment.NewLine +
+                "    posFreeGateFlowCoeff  = 12.000              # Positive free gate flow (-)" + Environment.NewLine +
+                "    posDrownGateFlowCoeff = 13.000              # Positive drowned gate flow (-)" + Environment.NewLine +
+                "    posFreeWeirFlowCoeff  = 14.000              # Positive free weir flow (-)" + Environment.NewLine +
+                "    posDrownWeirFlowCoeff = 15.000              # Positive drowned weir flow (-)" + Environment.NewLine +
+                "    posContrCoefFreeGate  = 16.000              # Positive flow contraction coefficient (-)" + Environment.NewLine +
+                "    negFreeGateFlowCoeff  = 17.000              # Negative free gate flow (-)" + Environment.NewLine +
+                "    negDrownGateFlowCoeff = 18.000              # Negative drowned gate flow (-)" + Environment.NewLine +
+                "    negFreeWeirFlowCoeff  = 19.000              # Negative free weir flow (-)" + Environment.NewLine +
+                "    negDrownWeirFlowCoeff = 20.000              # Negative drowned weir flow (-)" + Environment.NewLine +
+                "    negContrCoefFreeGate  = 21.000              # Negative flow contraction coefficient (-)" + Environment.NewLine +
+                "    crestLength           = 0.000               " + Environment.NewLine +
+                "    useVelocityHeight     = true                " + Environment.NewLine +
+                "    extraResistance       = 22.000              # Extra resistance (-)" + Environment.NewLine +
+                "    gateHeight            = 11.000              # Gate opening height (m)" + Environment.NewLine +
+                "    gateOpeningWidth      = 0.000               " + Environment.NewLine +
+                "    gateOpeningHorizontalDirection= symmetric           " + Environment.NewLine +
                 Environment.NewLine +
                 "[structure]" + Environment.NewLine +
-                "    type                  = weir                # Type of structure" + Environment.NewLine +
-                "    id                    = weir02              # Name of the structure" + Environment.NewLine +
-                "    crest_level           = 1                   # Weir crest height (in [m])" + Environment.NewLine +
-                "    crest_width           = 5                   # Weir crest width (in [m])" + Environment.NewLine +
-                "    lat_contr_coeff       = 1                   # Lateral contraction coefficient" + Environment.NewLine, fileContents);
+                "    type                  = weir                # \"Structure type must read weir.\"" + Environment.NewLine +
+                "    id                    = weir02              # Unique structure id." + Environment.NewLine +
+                "    crestLevel            = 1                   # Crest level of weir (m AD)." + Environment.NewLine +
+                "    crestWidth            = 5                   # (optional) Width of weir (m)." + Environment.NewLine +
+                "    corrCoeff             = 1                   # Correction coefficient (-)." + Environment.NewLine, fileContents);
             }
             finally
             {

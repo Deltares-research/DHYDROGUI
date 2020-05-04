@@ -114,7 +114,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [TestCase(false)]
         [TestCase(true)]
         [Category(TestCategory.DataAccess)]
-        [Category("Quarantine")]
         public void GivenTimFile_WhenImportingMeteorologicalDataFromFile_ThenImportResultIsAsExpected(bool useSolarRadiation)
         {
             var originalTimFilePath = TestHelper.GetTestFilePath(Path.Combine("timFiles", "FlowFM_MeteoData.tim"));
@@ -124,6 +123,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             {
                 var newFmModel = new WaterFlowFMModel();
                 newFmModel.ModelDefinition.HeatFluxModel.Type = HeatFluxModelType.Composite;
+                // set model date to previously used default (01-01-2001)
+                var modelDefinition = newFmModel.ModelDefinition;
+                modelDefinition.SetModelProperty(KnownProperties.RefDate, "2001-01-01");
+
                 if (useSolarRadiation) newFmModel.ModelDefinition.HeatFluxModel.ContainsSolarRadiation = true;
 
                 // Import exported meteo data
