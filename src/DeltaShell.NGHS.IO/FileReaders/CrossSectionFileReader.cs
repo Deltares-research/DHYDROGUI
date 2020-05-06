@@ -240,6 +240,7 @@ namespace DeltaShell.NGHS.IO.FileReaders
             if (readCrossSectionDefinition.CrossSectionType == CrossSectionType.YZ || readCrossSectionDefinition.CrossSectionType == CrossSectionType.GeometryBased)
             {
                 var frictionIds = csdDefinitionCategory.ReadPropertiesToListOfType<string>(DefinitionPropertySettings.FrictionIds.Key,true,';');
+                if (frictionIds == null) return;
                 if (frictionIds.Count < 0 )
                     throw new FileReadingException("reading error");
 
