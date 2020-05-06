@@ -290,15 +290,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
 
         private void OnViewModelDistanceChanged(SupportPointViewModel supportPointViewModel, double originalDistance)
         {
-            double newDistance = supportPointViewModel.Distance;
+            double currentDistance = supportPointViewModel.Distance;
 
             IEnumerable<SupportPointViewModel> viewModelsToCheck = SupportPointViewModels.Except(new[]
             {
                 supportPointViewModel
             });
 
-            if (IsOutsideRange(newDistance) ||
-                DistanceExists(viewModelsToCheck, newDistance))
+            if (IsOutsideRange(currentDistance) ||
+                DistanceExists(viewModelsToCheck, currentDistance))
             {
                 UnsubscribeViewModel(supportPointViewModel);
 

@@ -14,7 +14,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
     /// <seealso cref="INotifyPropertyChanged" />
     public class SupportPointViewModel : INotifyPropertyChanged
     {
-        private const double comparisonTolerance = 1E-15;
         private readonly SupportPointDataComponentViewModel dataComponentViewModel;
 
         /// <summary>

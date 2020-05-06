@@ -1,12 +1,11 @@
 ﻿using System;
-using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.Shared
 {
     /// <summary>
     /// <see cref="SpatialDouble"/> contains methods for handling double
     /// values regarding spatial data of the <see cref="IWaveBoundary"/>
-    /// such as the geometry or the distance of a <see cref="SupportPoint"/>.
+    /// such as the geometry or the distance of a <see cref="GeometricDefinitions.SupportPoint"/>.
     /// </summary>
     public static class SpatialDouble
     {
