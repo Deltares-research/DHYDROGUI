@@ -7,6 +7,8 @@
     <GridLength x:Key ="ControlLength">*</GridLength>
     <GridLength x:Key ="UnitLength">47</GridLength>
 
+    <SolidColorBrush x:Key="ReadOnlyForegroundColor" Color="#FF6D6D6D"/>
+
     <Style x:Key="LabelTextBlockStyle" TargetType="TextBlock">
         <Setter Property="VerticalAlignment" Value="Center"/>
         <Setter Property="TextWrapping" Value="WrapWithOverflow"/>

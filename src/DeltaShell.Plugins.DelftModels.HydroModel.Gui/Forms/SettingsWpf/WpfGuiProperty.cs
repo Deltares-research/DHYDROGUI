@@ -159,7 +159,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
             }
         }
 
-        public bool IsEditable => IsEnabled && CustomCommand.TextBoxEnabled;
+        /// <summary>
+        /// Gets whether the property is read only.
+        /// </summary>
+        public bool IsReadOnly => !IsEnabled || !CustomCommand.TextBoxEnabled;
 
         /// <summary>
         /// Gets or sets a value indicating whether this instance is enabled.

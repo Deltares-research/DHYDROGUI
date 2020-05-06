@@ -144,5 +144,28 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.SettingsWpf
 
             Assert.AreEqual("[m/s]", property.UnitSymbol);
         }
+
+        [Test]
+        [TestCase(true, true, false)]
+        [TestCase(true, false, true)]
+        [TestCase(false, true, true)]
+        [TestCase(false, false, true)]
+        public void Test_WpfGuiProperty_IsReadOnlyHasCorrectValue(bool isEnabled, bool textBoxEnabled, bool expectedIsReadOnly)
+        {
+            var dummyField = new FieldUIDescription(null, null, o => isEnabled)
+            {
+                Label = "dummyName"
+            };
+
+            var property = new WpfGuiProperty(dummyField)
+            {
+                CustomCommand = new CommandHelper(() => {})
+                {
+                    TextBoxEnabled = textBoxEnabled
+                }
+            };
+
+            Assert.That(property.IsReadOnly, Is.EqualTo(expectedIsReadOnly));
+        }
     }
 }
