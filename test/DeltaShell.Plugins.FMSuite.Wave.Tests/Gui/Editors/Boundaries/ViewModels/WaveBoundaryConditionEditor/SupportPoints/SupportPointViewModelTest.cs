@@ -259,13 +259,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
         [TestCase(1E-8, 0)]
         [TestCase(1E-7, 1)]
         [TestCase(1, 1)]
-        public void SetDistance_CorrectDistanceIsSetOnModelAndPropertyChangedFiredExpectedAmount(double setValueDifference,
+        public void SetDistance_CorrectDistanceIsSetOnModelAndPropertyChangedFiredExpectedAmount(double setValue,
                                                                                                  int expectedPropChangedCount)
         {
             // Setup
-            double originalValue = random.NextDouble();
-            double setValue = originalValue + setValueDifference;
-            viewModel.Distance = originalValue;
+            viewModel.Distance = 0;
 
             // Call
             void Call() => viewModel.Distance = setValue;
@@ -275,7 +273,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             {
                 var extendedEventArgs = e as PropertyChangedExtendedEventArgs;
                 Assert.That(extendedEventArgs, Is.Not.Null);
-                Assert.That(extendedEventArgs.OriginalValue, Is.EqualTo(originalValue).Within(doublePrecision));
+                Assert.That(extendedEventArgs.OriginalValue, Is.EqualTo(0).Within(doublePrecision));
             });
             Assert.That(supportPoint.Distance, Is.EqualTo(setValue).Within(doublePrecision));
         }
