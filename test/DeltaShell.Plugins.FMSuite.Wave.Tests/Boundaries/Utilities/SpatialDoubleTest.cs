@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using DeltaShell.Plugins.FMSuite.Wave.Boundaries.Shared;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.Utilities;
 using NUnit.Framework;
 
-namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.Shared
+namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.Utilities
 {
     [TestFixture]
     public class SpatialDoubleTest

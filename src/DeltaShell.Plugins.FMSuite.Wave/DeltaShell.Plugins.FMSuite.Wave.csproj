@@ -185,7 +185,7 @@
     <Compile Include="Boundaries\IBoundaryContainer.cs" />
     <Compile Include="Boundaries\IBoundaryProvider.cs" />
     <Compile Include="Boundaries\IWaveBoundary.cs" />
-    <Compile Include="Boundaries\Shared\SpatialDouble.cs" />
+    <Compile Include="Boundaries\Utilities\SpatialDouble.cs" />
     <Compile Include="Boundaries\SimpleBoundaryProvider.cs" />
     <Compile Include="Boundaries\SnapBoundariesToNewGrid.cs" />
     <Compile Include="Boundaries\WaveBoundary.cs" />

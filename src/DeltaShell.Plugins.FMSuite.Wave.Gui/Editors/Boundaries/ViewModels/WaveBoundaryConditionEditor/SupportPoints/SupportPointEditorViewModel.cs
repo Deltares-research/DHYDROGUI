@@ -12,7 +12,7 @@ using DelftTools.Utils.Collections;
 using DelftTools.Utils.Guards;
 using DeltaShell.NGHS.Common.Eventing;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
-using DeltaShell.Plugins.FMSuite.Wave.Boundaries.Shared;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.Utilities;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Mediators;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Validation;
 

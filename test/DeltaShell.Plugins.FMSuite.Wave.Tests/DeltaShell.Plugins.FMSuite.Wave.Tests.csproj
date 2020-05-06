@@ -243,7 +243,7 @@
     <Compile Include="Boundaries\GeometricDefinitions\GridCoordinateTest.cs" />
     <Compile Include="Boundaries\GeometricDefinitions\GridCoordinateValueComparerTest.cs" />
     <Compile Include="Boundaries\GeometricDefinitions\GridSideTest.cs" />
-    <Compile Include="Boundaries\Shared\SpatialDoubleTest.cs" />
+    <Compile Include="Boundaries\Utilities\SpatialDoubleTest.cs" />
     <Compile Include="Boundaries\SimpleBoundaryProviderTest.cs" />
     <Compile Include="Boundaries\SnapBoundariesToNewGridTests.cs" />
     <Compile Include="Boundaries\WaveBoundaryTest.cs" />

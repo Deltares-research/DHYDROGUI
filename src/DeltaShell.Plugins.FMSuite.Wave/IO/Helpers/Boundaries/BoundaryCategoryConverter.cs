@@ -5,7 +5,7 @@ using System.Linq;
 using DelftTools.Utils.Guards;
 using DeltaShell.NGHS.Common.Utils;
 using DeltaShell.NGHS.IO.DelftIniObjects;
-using DeltaShell.Plugins.FMSuite.Wave.Boundaries.Shared;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.Utilities;
 using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries

@@ -4,7 +4,7 @@ using System.Runtime.CompilerServices;
 using DelftTools.Utils.Guards;
 using DeltaShell.NGHS.Common.Eventing;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
-using DeltaShell.Plugins.FMSuite.Wave.Boundaries.Shared;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.Utilities;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor.SupportPoints
 {

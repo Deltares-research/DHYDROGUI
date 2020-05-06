@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.Shared
+namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.Utilities
 {
     /// <summary>
     /// <see cref="SpatialDouble"/> contains methods for handling double

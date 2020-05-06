@@ -1,6 +1,6 @@
 ﻿using DelftTools.Utils.Guards;
 using DeltaShell.NGHS.IO.DelftIniObjects;
-using DeltaShell.Plugins.FMSuite.Wave.Boundaries.Shared;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.Utilities;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers
 {
