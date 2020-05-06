@@ -9,7 +9,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.Shared
     /// </summary>
     public static class SpatialDouble
     {
-        private const double precision = 1E-7;
         private const int nDecimalPlaces = 7;
 
         /// <summary>
@@ -34,7 +33,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.Shared
         /// </return>
         public static bool AreEqual(double valueA, double valueB)
         {
-            return Math.Abs(valueA - valueB) < precision;
+            // there is precision loss when taking the absolute difference,
+            // so we compare the rounded values.
+            return Round(valueA) == Round(valueB);
         }
     }
 }

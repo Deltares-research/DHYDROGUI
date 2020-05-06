@@ -43,18 +43,35 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.Shared
 
         private IEnumerable<TestCaseData> GetAreEqualTestCases()
         {
-            const double maxDif = 1E-7;
-            double valueA = 0;
-            double valueB = maxDif;
-            yield return new TestCaseData(valueA, valueB, false);
+            const double value1 = 7E-7;
+            const double value2 = 8E-7;
 
-            valueA = random.NextDouble();
-            valueB = valueA + maxDif + 1E-10;
-            yield return new TestCaseData(valueA, valueB, false);
+            foreach (double a in GetDoublesRoundingTo(value1))
+            {
+                foreach (double b in GetDoublesRoundingTo(value1))
+                {
+                    yield return new TestCaseData(a, b, true);
+                }
 
-            valueA = random.NextDouble();
-            valueB = valueA + (maxDif - 1E-10);
-            yield return new TestCaseData(valueA, valueB, true);
+                foreach (double b in GetDoublesRoundingTo(value2))
+                {
+                    yield return new TestCaseData(a, b, false);
+                }
+            }
+        }
+
+        private static IEnumerable<double> GetDoublesRoundingTo(double value)
+        {
+            yield return Math.Round(value - 5E-8, 8);
+            yield return value - 4E-8;
+            yield return value - 3E-8;
+            yield return value - 2E-8;
+            yield return value - 1E-8;
+            yield return value;
+            yield return value + 1E-8;
+            yield return value + 2E-8;
+            yield return value + 3E-8;
+            yield return value + 4E-8;
         }
     }
 }

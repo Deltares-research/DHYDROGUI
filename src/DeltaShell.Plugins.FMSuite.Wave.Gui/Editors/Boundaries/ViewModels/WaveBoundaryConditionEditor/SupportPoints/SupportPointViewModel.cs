@@ -123,14 +123,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
             get => SpatialDouble.Round(SupportPoint.Distance);
             set
             {
-                double roundedValue = SpatialDouble.Round(value);
-                if (SpatialDouble.AreEqual(roundedValue, Distance))
+                if (SpatialDouble.AreEqual(value, Distance))
                 {
                     return;
                 }
 
                 double originalValue = SupportPoint.Distance;
-                SupportPoint.Distance = roundedValue;
+                SupportPoint.Distance = SpatialDouble.Round(value);
                 OnPropertyChanged(originalValue);
             }
         }

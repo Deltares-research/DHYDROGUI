@@ -338,12 +338,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
 
         private static SupportPoint GetSupportPointWithDistance(IWaveBoundaryGeometricDefinition geometricDefinition, double d)
         {
-            return geometricDefinition.SupportPoints.FirstOrDefault(s => SpatialDouble.AreEqual(SpatialDouble.Round(s.Distance), d));
+            return geometricDefinition.SupportPoints.FirstOrDefault(s => SpatialDouble.AreEqual(s.Distance, d));
         }
 
         private static bool Exists(IEnumerable<double> values, double value)
         {
-            return values.Select(SpatialDouble.Round).Any(d => SpatialDouble.AreEqual(d, value));
+            return values.Any(d => SpatialDouble.AreEqual(d, value));
         }
     }
 }
