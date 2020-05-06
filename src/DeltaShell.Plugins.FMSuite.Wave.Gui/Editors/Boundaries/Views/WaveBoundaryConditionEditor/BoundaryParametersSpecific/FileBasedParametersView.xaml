@@ -27,6 +27,7 @@
             <TextBox Grid.Column="1"
                      Text="{Binding FilePath}"
                      IsReadOnly="True"
+                     IsReadOnlyCaretVisible="True"
                      Foreground="{StaticResource ReadOnlyForegroundColor}"
                      BorderBrush="{StaticResource ReadOnlyForegroundColor}"
                      TextAlignment="Right"

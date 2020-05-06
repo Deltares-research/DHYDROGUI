@@ -158,6 +158,7 @@
                              VerticalAlignment="Center"
                              Style="{StaticResource TextBlockWithErrorStyle}"
                              IsReadOnly="{Binding Path=IsReadOnly}"
+                             IsReadOnlyCaretVisible="True"
                              attachedProperties:InputBindingsManager.UpdatePropertySourceWhenEnterPressed="TextBox.Text" />
                     <TextBlock Grid.Column="2"
                                Text="{Binding UnitSymbol}"
