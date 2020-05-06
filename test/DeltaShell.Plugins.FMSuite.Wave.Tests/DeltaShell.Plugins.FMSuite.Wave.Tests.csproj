@@ -246,6 +246,7 @@
     <Compile Include="Boundaries\Utilities\SpatialDoubleTest.cs" />
     <Compile Include="Boundaries\SimpleBoundaryProviderTest.cs" />
     <Compile Include="Boundaries\SnapBoundariesToNewGridTests.cs" />
+    <Compile Include="Boundaries\UpdateSupportPointVisitorTests.cs" />
     <Compile Include="Boundaries\WaveBoundaryTest.cs" />
     <Compile Include="Api\WaveEnvironmentHelperTest.cs" />
     <Compile Include="Common\IO\Delft3DDepthFileExporterTest.cs" />

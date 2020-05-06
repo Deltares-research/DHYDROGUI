@@ -86,6 +86,7 @@
     <Compile Include="AssertConstraints\ExistConstraint.cs" />
     <Compile Include="EnumDescriptionTestFixture.cs" />
     <Compile Include="EnumValuesTestFixture.cs" />
+    <Compile Include="LogAppenderEntriesTester.cs" />
     <Compile Include="NghsTestCategory.cs" />
     <Compile Include="NotifyPropertyChangedTestObserver.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

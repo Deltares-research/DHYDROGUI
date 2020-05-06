@@ -2,13 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Utils.Collections.Generic;
+using DeltaShell.NGHS.TestUtils;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.Calculators;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
 using GeoAPI.Geometries;
-using log4net.Config;
-using log4net.Core;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -18,7 +17,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries
     public class SnapBoundariesToNewGridTests
     {
         [Test]
-        public void Constructor_ThrowsArgumentNullException_WhenBoundariesIsNull()
+        public void CreateCachedBoundaries_ThrowsArgumentNullException_WhenBoundariesIsNull()
         {
             var gridBoundaryMock = Substitute.For<IGridBoundary>();
             void Call() => SnapBoundariesToNewGrid.CreateCachedBoundaries(null, gridBoundaryMock);
@@ -26,15 +25,19 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries
         }
 
         [Test]
-        public void Constructor_ThrowsArgumentNullException_WhenGridBoundaryIsNull()
+        public void CreateCachedBoundaries_ReturnsEmptyList_WhenGridBoundaryIsNull()
         {
             var boundaries = new List<IWaveBoundary>();
-            void Call() => SnapBoundariesToNewGrid.CreateCachedBoundaries(boundaries, null);
-            Assert.DoesNotThrow(Call);
+            boundaries.Add(Substitute.For<IWaveBoundary>());
+            
+            var result = SnapBoundariesToNewGrid.CreateCachedBoundaries(boundaries, null);
+            
+            Assert.NotNull(result);
+            Assert.AreEqual(0, result.Count());
         }
 
         [Test]
-        public void CreateCachedBoundariesReturnsEmptyList_WhenProvidingEmptyList1()
+        public void CreateCachedBoundaries_ReturnsEmptyList_WhenProvidingEmptyList1()
         {
             // Arrange
             var gridBoundaryMock = Substitute.For<IGridBoundary>();
@@ -45,17 +48,19 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries
 
             // Assert
             Assert.NotNull(result);
-            Assert.AreEqual(result.Count(), 0);
+            Assert.IsFalse(result.Any());
         }
 
         [Test]
-        public void CreateCachedBoundaries_ReturnsCachedBoundary_WhenWaveBoundaryProvided()
+        public void CreateCachedBoundaries_ReturnsCachedBoundary_WhenWaveBoundariesProvided()
         {
+            // GridBoundaries coordinate are defined using the (GridSide, StartingIndex)
             // Arrange
+            var coordinate = new Coordinate(12, 12);
             var gridBoundaryMock = Substitute.For<IGridBoundary>();
-            gridBoundaryMock.GetWorldCoordinateFromBoundaryCoordinate(Arg.Any<GridBoundaryCoordinate>()).ReturnsForAnyArgs(new Coordinate(0, 0));
-            var boundaries = new List<IWaveBoundary>();
-            boundaries.Add(WaveBoundaryMockCreator());
+            gridBoundaryMock.GetWorldCoordinateFromBoundaryCoordinate(Arg.Any<GridBoundaryCoordinate>()).ReturnsForAnyArgs(coordinate);
+
+            var boundaries = new List<IWaveBoundary> { WaveBoundaryMockCreator() };
 
             // Act
             var result = SnapBoundariesToNewGrid.CreateCachedBoundaries(boundaries, gridBoundaryMock);
@@ -63,6 +68,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries
             // Assert
             Assert.NotNull(result);
             Assert.AreEqual(result.Count(), 1);
+
+            CachedBoundary first = result.First();
+            Assert.AreEqual(12, first.StartingPointWorldCoordinate.X);
+            Assert.AreEqual(12, first.StartingPointWorldCoordinate.Y);
+            Assert.AreEqual(12, first.EndingPointWorldCoordinate.X);
+            Assert.AreEqual(12, first.EndingPointWorldCoordinate.Y);
+
             gridBoundaryMock.Received(2).GetWorldCoordinateFromBoundaryCoordinate(Arg.Any<GridBoundaryCoordinate>());
         }
 
@@ -75,22 +87,28 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries
         }
 
         [Test]
-        public void RestoreBoundariesIfPossible_ThrowsArgumentNullException_WhenNullSnappingCalculatorProvided()
-        {
-            var cachedBoundaries = new List<CachedBoundary>();
-            void Call() => SnapBoundariesToNewGrid.RestoreBoundariesIfPossible(cachedBoundaries, null);
-            Assert.DoesNotThrow(Call);
-        }
-
-        [Test]
-        public void RestoreBoundariesIfPossible_ReturnsEmptyCollection_WhenProvidedEmptyCollection()
+        public void RestoreBoundariesIfPossible_ReturnsEmptyCollection_WhenCachedBoundariesEmpty()
         {
             // Arrange
             var cachedBoundaries = new List<CachedBoundary>();
-            var boundarySnappingCalculator = Substitute.For<IBoundarySnappingCalculator>();
 
             // Act
-            var result = SnapBoundariesToNewGrid.RestoreBoundariesIfPossible(cachedBoundaries, boundarySnappingCalculator);
+            var result = SnapBoundariesToNewGrid.RestoreBoundariesIfPossible(cachedBoundaries, null);
+
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.IsFalse(result.Any());
+        }
+
+        [Test]
+        public void RestoreBoundariesIfPossible_ReturnsEmptyCollection_WhenCachedBoundariesNotEmptyAndSnappingCalculatorNull()
+        {
+            // Arrange
+            var cachedBoundaries = new List<CachedBoundary>();
+            cachedBoundaries.Add(CachedBoundaryCreator(0, 0, 10, "test1"));
+
+            // Act
+            var result = SnapBoundariesToNewGrid.RestoreBoundariesIfPossible(cachedBoundaries, null);
 
             // Assert
             Assert.IsNotNull(result);
@@ -100,32 +118,30 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries
         [Test]
         public void RestoreBoundariesIfPossible_LogsMessageReturnsNothing_OnlyOnePointSnapped()
         {
-            var appender = new log4net.Appender.MemoryAppender();
-            var appenders = BasicConfigurator.Configure(appender);
+            using (var messageLogger = new LogAppenderEntriesTester(typeof(SnapBoundariesToNewGrid)))
+            {
+                // Arrange
+                var cachedBoundaries = new List<CachedBoundary>();
+                cachedBoundaries.Add(CachedBoundaryCreator(0, 0, 10, "one"));
+                
+                var boundarySnappingCalculator = Substitute.For<IBoundarySnappingCalculator>();
+                var beginPointGridCoordinates = new List<GridBoundaryCoordinate>() {new GridBoundaryCoordinate(GridSide.North, 0)};
+                var endPointGridCoordinates = new List<GridBoundaryCoordinate>();
+                // First call returns a coordinate for the begin point, second call returns an empty list (no coordinates.
+                boundarySnappingCalculator.SnapCoordinateToGridBoundaryCoordinate(Arg.Any<Coordinate>()).Returns(x => beginPointGridCoordinates, x => endPointGridCoordinates);
 
-            // Arrange
-            var cachedBoundaries = new List<CachedBoundary>();
-            cachedBoundaries.Add(CachedBoundaryCreator(0, 0, 10,"one"));
-            //cachedBoundaries.Add(CachedBoundaryCreator(20, 20, 20, "two"));
+                // Act
+                var result = SnapBoundariesToNewGrid.RestoreBoundariesIfPossible(cachedBoundaries, boundarySnappingCalculator);
 
-            var boundarySnappingCalculator = Substitute.For<IBoundarySnappingCalculator>();
-            var beginPointGridCoordinates = new List<GridBoundaryCoordinate>() {new GridBoundaryCoordinate(GridSide.North,0)};
-            var endPointGridCoordinates = new List<GridBoundaryCoordinate>() ;
-            boundarySnappingCalculator.SnapCoordinateToGridBoundaryCoordinate(Arg.Any<Coordinate>()).Returns( x=> beginPointGridCoordinates, x=> endPointGridCoordinates);
+                // Assert
+                Assert.IsNotNull(result);
+                Assert.IsFalse(result.Any());
 
-            // Act
-            var result = SnapBoundariesToNewGrid.RestoreBoundariesIfPossible(cachedBoundaries, boundarySnappingCalculator);
-
-            // Assert
-            Assert.IsNotNull(result);
-            Assert.IsFalse(result.Any());
-
-            // Assert logging messages
-            LoggingEvent[] logEntries = appender.GetEvents();
-            Assert.AreEqual(1, logEntries.Length);
-            Assert.That(logEntries.First().RenderedMessage, Is.EqualTo("Boundary one could not snap to the new grid (begin and or end point problematic). Please inspect your boundaries."));
+                // Assert logging messages
+                Assert.AreEqual(1, messageLogger.Messages.Count());
+                Assert.That(messageLogger.Messages.First(), Is.EqualTo("Boundary one could not snap to the new grid (begin and or end point problematic). Please inspect your boundaries."));
+            }
         }
-
 
         [Test]
         public void RestoreBoundariesIfPossible_ReturnsSingleNewWaveBoundary_NoAdditionalSupportPoints()
@@ -148,11 +164,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries
             Assert.AreEqual(1, result.Count());
             Assert.AreNotSame(result.First(), cachedBoundaries.First().WaveBoundary);
             Assert.AreEqual(cachedBoundaries.First().WaveBoundary.Name, result.First().Name);
-
         }
 
         [Test]
-        public void RestoreBoundariesIfPossible_SupportPoints()
+        public void RestoreBoundariesIfPossible_ReturnsIWaveBoundaryWithSupportPoints_WhenProvidingValidSupportPoints()
         {
             // Arrange
             var cachedBoundaries = new List<CachedBoundary>();
@@ -192,7 +207,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries
             var cachedBoundaries = new List<CachedBoundary>();
             var cachedBoundary = CachedBoundaryCreator(1, 1, 10, "one");
 
-            // Add a single support point falling within the lenth of the waveBoundary
+            // Add a single support point falling within the length of the waveBoundary
             var supportPoint = new SupportPoint(5, cachedBoundary.WaveBoundary.GeometricDefinition);
             var supportPointTooBig = new SupportPoint(30, cachedBoundary.WaveBoundary.GeometricDefinition);
             cachedBoundary.WaveBoundary.GeometricDefinition.SupportPoints.Add(supportPoint);
@@ -220,8 +235,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries
             Assert.AreEqual(5, points[2].Distance);
         }
 
-
-
         private static CachedBoundary CachedBoundaryCreator(double begin, double end, int length, string name)
         {
             var startCoordinate = new Coordinate(begin,end);
@@ -232,7 +245,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries
             supportPoints.Add(new SupportPoint(length, waveBoundaryMock.GeometricDefinition));
             waveBoundaryMock.GeometricDefinition.SupportPoints.Returns(supportPoints);
             waveBoundaryMock.Name.Returns(name);
-
 
             return new CachedBoundary(startCoordinate, endCoordinate, waveBoundaryMock);
         }

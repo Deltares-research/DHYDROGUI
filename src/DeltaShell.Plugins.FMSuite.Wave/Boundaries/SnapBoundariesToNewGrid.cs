@@ -53,7 +53,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries
             }
             if (gridBoundary == null)
             {
-                return Enumerable.Empty<CachedBoundary>(); ;
+                return Enumerable.Empty<CachedBoundary>();
             }
 
             var caching = new List<CachedBoundary>();
@@ -75,7 +75,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries
 
             List<GridBoundaryCoordinate> reSappedBoundaryCoordinates = WaveBoundaryGeometricDefinitionFactoryHelper.GetSnappedEndPoints(snappingCalculator, endpoints).ToList();
 
-            if (reSappedBoundaryCoordinates.Count() < 2)
+            if (reSappedBoundaryCoordinates.Count < 2)
             {
                 log.Warn($"Boundary {boundary.WaveBoundary.Name} could not snap to the new grid (begin and or end point problematic). Please inspect your boundaries.");
                 return null;
@@ -175,12 +175,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries
             return new CachedBoundary(startingPointWorldCoordinate, endingPointWordCoordinate, boundary);
         }
 
-        private class UpdateSupportPointVisitor : ISpatiallyDefinedDataComponentVisitor
+        internal class UpdateSupportPointVisitor : ISpatiallyDefinedDataComponentVisitor
         {
             private readonly IDictionary<SupportPoint, SupportPoint> toUpdate;
 
             public UpdateSupportPointVisitor(IDictionary<SupportPoint, SupportPoint> toUpdate)
             {
+                Ensure.NotNull(toUpdate, nameof(toUpdate));
                 this.toUpdate = toUpdate;
             }
 

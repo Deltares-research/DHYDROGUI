@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using DelftTools.Utils;
@@ -22,7 +21,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries
         /// Creates a new <see cref="BoundaryContainerSyncService"/>.
         /// </summary>
         /// <param name="model">The model to observe.</param>
-        /// <exception cref="ArgumentNullException">
+        /// <exception cref="System.ArgumentNullException">
         /// Thrown when <paramref name="model"/> is <c>null</c>.
         /// </exception>
         public BoundaryContainerSyncService(WaveModel model)

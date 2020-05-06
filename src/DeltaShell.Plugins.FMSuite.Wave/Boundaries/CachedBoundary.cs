@@ -1,11 +1,10 @@
 ﻿using DelftTools.Utils.Guards;
-using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
 using GeoAPI.Geometries;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries
 {
     /// <summary>
-    /// Simple struct that holds an <see cref="IWaveBoundary"/> and the Begin and ending <see cref="SupportPoint"/> coordinates
+    /// Simple struct that holds an <see cref="IWaveBoundary"/> and the Begin and ending <see cref="GeometricDefinitions.SupportPoint"/> coordinates
     /// in WorldSpace.
     /// </summary>
     internal class CachedBoundary
