@@ -25,6 +25,7 @@ using DeltaShell.Plugins.DelftModels.HydroModel.Export;
 using DeltaShell.Plugins.DelftModels.HydroModel.Properties;
 using DeltaShell.Plugins.DelftModels.HydroModel.Validation;
 using DeltaShell.Plugins.DelftModels.HydroModel.ValueConverters;
+using GeoAPI.Extensions.CoordinateSystems;
 using GeoAPI.Extensions.Feature;
 using log4net;
 
@@ -58,6 +59,23 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
         private CompositeHydroModelWorkFlowData currentWorkFlowData;
 
         public virtual bool ReadOnly { get; set; }
+
+        public virtual bool CopyFromWorkingDirectory { get; } = false;
+
+        public virtual ICoordinateSystem CoordinateSystem
+        {
+            get { return Region.CoordinateSystem; }
+            set
+            {
+                Region.AllRegions.ForEach(r => r.CoordinateSystem = value);
+                Activities.ForEach(a =>
+                {
+                    a.GetType().GetProperties()
+                        .Where(p => p.PropertyType == typeof(ICoordinateSystem) && p.CanWrite)
+                        .ForEach(p => p.SetValue(a, value));
+                });
+            }
+        }
 
         public virtual bool Migrating
         {
@@ -1183,7 +1201,5 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
 
         #endregion
-
-        public virtual bool CopyFromWorkingDirectory { get; } = false;
     }
 }

@@ -51,16 +51,5 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
         public void Dispose() { }
 
         public void EnsureVisible(object item) { }
-
-        private void CreateFmModelSettingViewOnLoaded(object sender, RoutedEventArgs e)
-        {
-            CoordinateSystemListView.ScrollIntoView(CoordinateSystemListView.SelectedItem);
-        }
-
-        private void CoordinateSystemListView_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (ViewModel.FmModelSettings.CoordinateSystem == null) return;
-            CoordinateSystemButton.IsChecked = false;
-        }
     }
 }

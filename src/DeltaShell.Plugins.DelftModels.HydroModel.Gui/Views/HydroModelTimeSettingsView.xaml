@@ -5,8 +5,10 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:vm="clr-namespace:DeltaShell.Plugins.DelftModels.HydroModel.Gui.ViewModels"
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             xmlns:gui="clr-namespace:DeltaShell.NGHS.Common.Gui;assembly=DeltaShell.NGHS.Common.Gui"
              mc:Ignorable="d"
-             d:DesignHeight="250" Width="580" Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}">
+             d:DesignHeight="300"
+             d:DesignWidth="580" Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}">
     <UserControl.DataContext>
         <vm:HydroModelTimeSettingsViewModel x:Name="ViewModel"/>
     </UserControl.DataContext>
@@ -33,30 +35,38 @@
     </UserControl.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="3*"/>
         </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
         
-        <GroupBox Header="Run parameters" FontWeight="Bold" Margin="0,-1,0,1" Grid.Column="0">
-            <Grid Margin="0,10,0,48">
+        <GroupBox Grid.Column="0">
+            <GroupBox.Header>
+                <TextBlock FontWeight="Bold" Text="Run parameters"/>
+            </GroupBox.Header>
+            <Grid Margin="5">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="60"/>
-                    <ColumnDefinition Width="25"/>
-                    <ColumnDefinition Width="75"/>
-                    <ColumnDefinition Width="100"/>
+                    <ColumnDefinition Width="80"/>
+                    <ColumnDefinition Width="20"/>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="26"/>
-                    <RowDefinition Height="26"/>
-                    <RowDefinition Height="26"/>
-                    <RowDefinition Height="40"/>
-                    <RowDefinition Height="40"/>
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
                 </Grid.RowDefinitions>
-                <Label Grid.Column="0" Grid.Row="0" HorizontalAlignment="Right" FontWeight="Normal" FontSize="11">Start time:</Label>
-                <Label Grid.Column="0" Grid.Row="1" HorizontalAlignment="Right" FontWeight="Normal" FontSize="11">Stop time:</Label>
-                <Label Grid.Column="0" Grid.Row="2" HorizontalAlignment="Right" FontWeight="Normal" FontSize="11">Time step:</Label>
-                <Label Grid.Column="0" Grid.Row="3" HorizontalAlignment="Right" VerticalAlignment="Bottom" FontWeight="Normal" FontSize="11">Duration:</Label>
-                <Label Content="{Binding DurationText}" Grid.Column="1" Grid.ColumnSpan="3" Grid.Row="3" HorizontalAlignment="Left" VerticalAlignment="Bottom" FontWeight="Normal" FontSize="11">
+                <Label Grid.Column="0" Grid.Row="0" Content="Start time:"/>
+                <Label Grid.Column="0" Grid.Row="1" Content="Stop time:"/>
+                <Label Grid.Column="0" Grid.Row="2" Content="Time step:"/>
+                <Label Grid.Column="0" Grid.Row="3" Content="Duration:"/>
+
+                <Label Content="{Binding DurationText}" Grid.Column="1" Grid.ColumnSpan="3" Grid.Row="3" >
                     <Label.Style>
                         <Style TargetType="Label">
                             <Setter Property="Foreground" Value="Black"/>
@@ -71,7 +81,8 @@
                 <ListView ItemsSource="{Binding ErrorTexts}" Focusable="False" FontWeight="Normal" BorderBrush="Transparent" Background="Transparent" Foreground="Red" Grid.Column="0" Grid.ColumnSpan="4" Grid.Row="4"/>
 
                 <CheckBox IsChecked="{Binding StartTimeSynchronisationEnabled}"
-                          Grid.Column="1" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                          Grid.Column="1" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center"
+                          Margin="2"/>
                 <CheckBox IsChecked="{Binding StopTimeSynchronisationEnabled}"
                           Grid.Column="1" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                 <CheckBox IsChecked="{Binding TimeStepSynchronisationEnabled}"
@@ -81,21 +92,44 @@
                                      Value="{Binding StartTime}"
                                      IsEnabled="{Binding StartTimeSynchronisationEnabled}"
                                      Style="{StaticResource DateTimePickerStyle}"
-                                     Grid.Column="2" Grid.ColumnSpan="2" Grid.Row="0" Margin="0,1,28,1"/>
+                                     Grid.Column="2" Grid.ColumnSpan="2" Grid.Row="0"
+                                     Margin="0,2,0,2"/>
                 <xctk:DateTimePicker Text="{Binding StopTime}"
                                      Value="{Binding StopTime}"
                                      IsEnabled="{Binding StopTimeSynchronisationEnabled}"
                                      Style="{StaticResource DateTimePickerStyle}"
-                                     Grid.Column="2" Grid.ColumnSpan="2" Grid.Row="1" Margin="0,1,28,1"/>
+                                     Grid.Column="2" Grid.ColumnSpan="2" Grid.Row="1"
+                                     Margin="0,2,0,2"/>
                 <xctk:MaskedTextBox Mask="00:00:00"
+                                    Margin="0,2,0,2"
+                                    VerticalContentAlignment="Center"
+                                    HorizontalContentAlignment="Right"
                                     Text="{Binding TimeStep, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                     IsEnabled="{Binding TimeStepSynchronisationEnabled}"
                                     Grid.Column="2" Grid.Row="2"/>
-
             </Grid>
         </GroupBox>
 
-        <GroupBox Header="Models" FontWeight="Bold" Margin="0,-1,0,1" Grid.Column="1">
+        <GroupBox Grid.Column="0" Grid.Row="1">
+            <GroupBox.Header>
+                <TextBlock FontWeight="Bold" Text="Spatial parameters"/> 
+            </GroupBox.Header>
+            <Grid Margin="5">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="0" Text="Coordinatesystem:" TextWrapping="Wrap" Width="100" VerticalAlignment="Center"/>
+                <gui:CoordinateSystemPicker Grid.Column="1" 
+                                            CoordinateSystem="{Binding HydroModel.CoordinateSystem}"/>
+            </Grid>
+        </GroupBox>
+
+        <GroupBox Header="Models" FontWeight="Bold" Grid.Column="1" Grid.RowSpan="3">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"/>

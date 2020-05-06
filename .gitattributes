@@ -541,6 +541,9 @@ src/DeltaShell.Dimr/xsd/dimr-1.0.custom.cs -text
 src/DeltaShell.Dimr/xsd/dimr-1.0.serializers.cs -text
 src/DeltaShell.Dimr/xsd/dimr-1.0.xsd -text
 src/DeltaShell.Dimr/xsd/dimr-1_0.cs -text
+src/DeltaShell.NGHS.Common.Gui/CoordinateSystemPicker.xaml -text
+src/DeltaShell.NGHS.Common.Gui/CoordinateSystemPicker.xaml.cs -text
+src/DeltaShell.NGHS.Common.Gui/CoordinateSystemPickerViewModel.cs -text
 src/DeltaShell.NGHS.Common.Gui/DeltaShell.NGHS.Common.Gui.csproj -text
 src/DeltaShell.NGHS.Common.Gui/LayerExtensions.cs -text
 src/DeltaShell.NGHS.Common.Gui/Properties/AssemblyInfo.cs -text

@@ -90,6 +90,10 @@
       <HintPath>..\..\packages\DeltaShell.Framework.1.5.0.50045-beta\lib\net461\DeltaShell\GeoAPI.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="GeoAPI.CoordinateSystems">
+      <HintPath>..\..\packages\DeltaShell.Framework.1.5.0.50045-beta\lib\net461\DeltaShell\GeoAPI.CoordinateSystems.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="GeoAPI.Extensions">
       <HintPath>..\..\packages\DeltaShell.Framework.1.5.0.50045-beta\lib\net461\DeltaShell\GeoAPI.Extensions.dll</HintPath>
       <Private>False</Private>
@@ -254,6 +258,11 @@
     <ProjectReference Include="..\DeltaShell.Dimr\DeltaShell.Dimr.csproj">
       <Project>{AD22CEC6-2A71-478C-96C3-B7ACDFE9B84B}</Project>
       <Name>DeltaShell.Dimr</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\DeltaShell.NGHS.Common.Gui\DeltaShell.NGHS.Common.Gui.csproj">
+      <Project>{6FAD9209-03EA-439C-8B41-80D1FD6AB4E2}</Project>
+      <Name>DeltaShell.NGHS.Common.Gui</Name>
       <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\DeltaShell.Plugins.DelftModels.HydroModel\DeltaShell.Plugins.DelftModels.HydroModel.csproj">
