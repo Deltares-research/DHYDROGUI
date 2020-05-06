@@ -18,7 +18,11 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
         /// <inheritdoc/>
         public void Dispose()
         {
-            api?.Dispose();
+            if (RemoteInstanceContainer.IsProcessAlive(api))
+            {
+                api?.Dispose();
+            }
+            
             RemoteInstanceContainer.RemoveInstance(api);
             api = null;
         }

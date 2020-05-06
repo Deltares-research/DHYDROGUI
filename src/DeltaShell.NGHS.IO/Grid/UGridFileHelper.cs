@@ -54,7 +54,7 @@ namespace DeltaShell.NGHS.IO.Grid
         /// returned from a native function</exception>
         public static double[] ReadZValues(string path, BedLevelLocation location)
         {
-            if (!File.Exists(path))
+            if (!IsValidPath(path))
             {
                 return new double[0];
             }
@@ -92,7 +92,7 @@ namespace DeltaShell.NGHS.IO.Grid
         /// returned from a native function</exception>
         public static double GetZCoordinateNoDataValue(string path, BedLevelLocation location)
         {
-            if (!File.Exists(path))
+            if (!IsValidPath(path))
             {
                 return DefaultNoDataValue;
             }
@@ -150,7 +150,7 @@ namespace DeltaShell.NGHS.IO.Grid
         /// returned from a native function</exception>
         public static ICoordinateSystem ReadCoordinateSystem(string path)
         {
-            if (!File.Exists(path))
+            if (!IsValidPath(path))
             {
                 return null;
             }
@@ -223,7 +223,7 @@ namespace DeltaShell.NGHS.IO.Grid
         /// returned from a native function</exception>
         public static UnstructuredGrid ReadUnstructuredGrid(string path, bool loadFlowLinksAndCells = false)
         {
-            if (!File.Exists(path) || Path.GetFileName(path) == null)
+            if (!IsValidPath(path))
             {
                 Log.WarnFormat("Could not find grid file at \"{0}\", this is because you maybe just created this model. If this is not the case please check if the file with" +
                                "the grid in it exists.", path);
@@ -270,7 +270,7 @@ namespace DeltaShell.NGHS.IO.Grid
             IList<BranchFile.BranchProperties> branchPropertiesList)
         {
             var errorMessage = $"Could not load network and computational grid from {path}";
-            if (network == null || !File.Exists(path))
+            if (network == null || !IsValidPath(path))
             {
                 Log.Error(errorMessage);
                 return;
@@ -314,7 +314,7 @@ namespace DeltaShell.NGHS.IO.Grid
         /// returned from a native function</exception>
         public static IList<ILink1D2D> Read1D2DLinks(string path)
         {
-            if (!File.Exists(path))
+            if (!IsValidPath(path))
             {
                 return new List<ILink1D2D>();
             }
@@ -412,7 +412,7 @@ namespace DeltaShell.NGHS.IO.Grid
         /// returned from a native function</exception>
         public static void RewriteGridCoordinates(string path, UnstructuredGrid unstructuredGrid)
         {
-            if (!File.Exists(path))
+            if (!IsValidPath(path))
             {
                 return;
             }
@@ -452,7 +452,7 @@ namespace DeltaShell.NGHS.IO.Grid
         /// <returns>The number of 1d networks in the UGrid file</returns>
         public static int GetNumberOfNetworks(string path)
         {
-            if (!File.Exists(path))
+            if (!IsValidPath(path))
             {
                 return 0;
             }
@@ -471,7 +471,7 @@ namespace DeltaShell.NGHS.IO.Grid
         /// <returns>The number of discretizations in the UGrid file</returns>
         public static int GetNumberOfNetworkDiscretizations(string path)
         {
-            if (!File.Exists(path))
+            if (!IsValidPath(path))
             {
                 return 0;
             }
@@ -490,7 +490,7 @@ namespace DeltaShell.NGHS.IO.Grid
         /// <returns>if the file is a UGrid file</returns>
         public static bool IsUGridFile(string path)
         {
-            if (string.IsNullOrEmpty(path) || !File.Exists(path))
+            if (!IsValidPath(path))
             {
                 return false;
             }
@@ -642,6 +642,14 @@ namespace DeltaShell.NGHS.IO.Grid
         {
             return new RemoteUGridApi();
             //use new UGridApi() to disable remoting
+        }
+
+        private static bool IsValidPath(string path)
+        {
+            var fileInfo = new FileInfo(path);
+            return fileInfo.Exists && 
+                   fileInfo.Length != 0 && 
+                   (!string.IsNullOrEmpty(fileInfo.Name));
         }
     }
 }
