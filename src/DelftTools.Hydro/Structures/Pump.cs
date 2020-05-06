@@ -194,6 +194,7 @@ namespace DelftTools.Hydro.Structures
                             s.Name.Equals(Name, StringComparison.InvariantCultureIgnoreCase)));
 
                     var composite = sewerConnection.AddStructureToBranch(this, false);
+                    composite.Name = "CompositeBranchStructure_1D_";
                     helper?.CompositeBranchStructures?.Enqueue(composite);
                 }
             }
@@ -209,6 +210,7 @@ namespace DelftTools.Hydro.Structures
             }
 
             var composite = sewerConnection.AddStructureToBranch(this, false);
+            composite.Name = "CompositeBranchStructure_1D_";
             helper?.CompositeBranchStructures?.Enqueue(composite);
             return sewerConnection;
         }

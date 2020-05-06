@@ -13,6 +13,7 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.SewerFeatures;
+using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow;
@@ -718,20 +719,22 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
                     pipe.Material = material;
             });
             */
-            var firstPipeCrossSection = helper.PipeCrossSections.FirstOrDefault(cs => cs.Name == "SewerProfile_");
-            if (firstPipeCrossSection != null) firstPipeCrossSection.Name = "SewerProfile_1";
             while (helper.PipeCrossSections.Select(ls => ls.Name).Distinct().Count() !=
                    helper.PipeCrossSections.Select(ls => Name).Count())
             {
                 NamingHelper.MakeNamesUnique(helper.PipeCrossSections);
             }
-
+            var pipeCrossSection = helper.PipeCrossSections.FirstOrDefault(cs => cs.Name == "SewerProfile_");
+            if (pipeCrossSection != null) pipeCrossSection.Name = NamingHelper.GetUniqueName("SewerProfile_{0}", helper.PipeCrossSections, typeof(ICrossSection), true);
             //NamingHelper.MakeNamesUnique(pipes.Select(p =>p.CrossSection));
             while (helper.CompositeBranchStructures.Select(ls => ls.Name).Distinct().Count() !=
                    helper.CompositeBranchStructures.Select(ls => Name).Count())
             {
                 NamingHelper.MakeNamesUnique(helper.CompositeBranchStructures);
             }
+            var compositeBranchStructure = helper.CompositeBranchStructures.FirstOrDefault(cs => cs.Name == "CompositeBranchStructure_1D_");
+            if (compositeBranchStructure != null) compositeBranchStructure.Name = NamingHelper.GetUniqueName("CompositeBranchStructure_1D_{0}", helper.CompositeBranchStructures, typeof(ICompositeBranchStructure), true);
+
         }
 
         /// <summary>
