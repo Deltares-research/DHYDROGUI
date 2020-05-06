@@ -15,19 +15,10 @@ namespace DeltaShell.NGHS.IO.FileWriters.Network
 {
     public static class BranchFile
     {
-        private static class KnownPropertyNames
-        {
-            public const string Name = "Name";
-            public const string BranchType = "BranchType";
-            public const string WaterType = "WaterType";
-            public const string Material = "Material";
-        }
-
         public enum BranchType
         {
             Channel = 0, SewerConnection = 1, Pipe = 2
         }
-
         private static string GetBranchType(IBranch branch)
         {
             var value = BranchType.Channel;
@@ -48,21 +39,28 @@ namespace DeltaShell.NGHS.IO.FileWriters.Network
             var categories = new List<DelftIniCategory>();
             foreach (var branch in branches)
             {
-                var iniCategory = new DelftIniCategory("Branch");
-                iniCategory.AddProperty(new DelftIniProperty(KnownPropertyNames.Name, branch.Name, string.Empty));
+                var iniCategory = new DelftIniCategory(NetworkRegion.BranchIniHeader);
+                iniCategory.AddProperty(NetworkRegion.BranchId, branch.Name);
                 
-                iniCategory.AddProperty(new DelftIniProperty(KnownPropertyNames.BranchType, GetBranchType(branch),
-                    "Channel = 0, SewerConnection = 1, Pipe = 2"));
+                iniCategory.AddProperty(NetworkRegion.BranchType, GetBranchType(branch));
+                iniCategory.AddProperty(NetworkRegion.IsLengthCustom, branch.IsLengthCustom);
+                
                 /*
                  var sewerConnection = branch as ISewerConnection;
                 var waterType = (int) (sewerConnection?.WaterType ?? SewerConnectionWaterType.None);
-                iniCategory.AddProperty(new DelftIniProperty(KnownPropertyNames.WaterType, waterType.ToString(),
-                    "0 = None, 1 = StormWater, 2 = DryWater, 3 = Combined"));
+                iniCategory.AddProperty(NetworkRegion.BranchWaterType, waterType);
                 */
                 var sewerConnection = branch as ISewerConnection;
-                if (sewerConnection == null) continue;
-                iniCategory.AddProperty(new DelftIniProperty("sourceCompartmentName", sewerConnection.SourceCompartment?.Name, ""));
-                iniCategory.AddProperty(new DelftIniProperty("targetCompartmentName", sewerConnection.TargetCompartment?.Name, ""));
+                if (sewerConnection == null)
+                {
+                    if (branch.IsLengthCustom)
+                    {
+                        categories.Add(iniCategory);
+                    }
+                    continue;
+                }
+                iniCategory.AddProperty(NetworkRegion.SourceCompartmentName, sewerConnection.SourceCompartment?.Name);
+                iniCategory.AddProperty(NetworkRegion.TargetCompartmentName, sewerConnection.TargetCompartment?.Name);
 
                 var pipe = branch as Pipe;
                 if (pipe == null)
@@ -71,8 +69,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Network
                     continue;
                 }
 
-                iniCategory.AddProperty(new DelftIniProperty(KnownPropertyNames.Material, ((int) pipe.Material).ToString(),
-                    "0 = Unknown, 1 = Concrete, 2 = CastIron, 3 = StoneWare, 4 = Hdpe, 5 = Masonry, 6 = SheetMetal, 7 = Polyester, 8 = Polyvinylchlorid, 9 = Steel"));
+                iniCategory.AddProperty(NetworkRegion.BranchMaterial, (int) pipe.Material);
 
                 categories.Add(iniCategory);
             }
@@ -89,12 +86,13 @@ namespace DeltaShell.NGHS.IO.FileWriters.Network
             {
                 var branchProperties = new BranchProperties
                 {
-                    Name = category.GetPropertyValue(KnownPropertyNames.Name),
-                    BranchType = category.GetEnumValueByKey<BranchType>(KnownPropertyNames.BranchType),
+                    Name = category.ReadProperty<string>(NetworkRegion.BranchId.Key),
+                    BranchType = category.GetEnumValueByKey<BranchType>(NetworkRegion.BranchType.Key),
+                    IsCustomLength = category.ReadProperty<bool>(NetworkRegion.IsLengthCustom.Key, true),
                     /* WaterType = category.GetEnumValueByKey<SewerConnectionWaterType>(KnownPropertyNames.WaterType),*/
-                    Material = category.GetEnumValueByKey<SewerProfileMapping.SewerProfileMaterial>(KnownPropertyNames.Material),
-                    SourceCompartmentName = category.ReadProperty<string>("sourceCompartmentName", true),
-                    TargetCompartmentName = category.ReadProperty<string>("targetCompartmentName", true)
+                    Material = category.GetEnumValueByKey<SewerProfileMapping.SewerProfileMaterial>(NetworkRegion.BranchMaterial.Key),
+                    SourceCompartmentName = category.ReadProperty<string>(NetworkRegion.SourceCompartmentName.Key, true),
+                    TargetCompartmentName = category.ReadProperty<string>(NetworkRegion.TargetCompartmentName.Key, true)
                 };
                 propertiesPerBranch.Add(branchProperties);
             }
@@ -159,9 +157,9 @@ namespace DeltaShell.NGHS.IO.FileWriters.Network
         {
             public string Name { get; set; }
             public BranchType BranchType { get; set; }
+            public bool IsCustomLength { get; set; }
             public SewerConnectionWaterType WaterType { get; set; }
             public SewerProfileMapping.SewerProfileMaterial Material { get; set; }
-
             public string SourceCompartmentName { get; set; }
             public string TargetCompartmentName { get; set; }
         }

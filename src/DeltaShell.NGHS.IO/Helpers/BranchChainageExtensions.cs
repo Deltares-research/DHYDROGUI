@@ -1,6 +1,4 @@
-﻿using System;
-using DeltaShell.NGHS.IO.Grid;
-using GeoAPI.Extensions.Networks;
+﻿using GeoAPI.Extensions.Networks;
 
 namespace DeltaShell.NGHS.IO.Helpers
 {
@@ -8,7 +6,7 @@ namespace DeltaShell.NGHS.IO.Helpers
     {
         public static double CorrectlyRoundOffChainageIfChainageIsOnEndOfBranch(this IBranch branch, double readChainageProperty)
         {
-            var branchLength = branch.IsLengthCustom ? branch.Length : Math.Floor(branch.Length * UGridFileHelper.DIGITS) / UGridFileHelper.DIGITS;
+            var branchLength = branch.IsLengthCustom ? branch.Length : branch.Length.TruncateByDigits();
             var chainage = readChainageProperty <= branchLength ? readChainageProperty : branchLength;
             return chainage;
         }

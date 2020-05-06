@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.IO;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Link1d2d;
 using DelftTools.Utils.Collections;
@@ -30,7 +28,6 @@ namespace DeltaShell.NGHS.IO.Grid
         private const double DefaultNoDataValue = -999.0;
         private static readonly ILog Log = LogManager.GetLogger(typeof(UGridFileHelper));
         public const int IdsSize = 40;
-        public const int DIGITS = 6;
         private static string lastCheckedUGridPath;
         private static bool lastCheckedUGridPathResult;
 

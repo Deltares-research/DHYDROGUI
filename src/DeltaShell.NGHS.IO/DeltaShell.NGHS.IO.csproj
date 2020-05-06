@@ -223,6 +223,7 @@
     <Compile Include="FileWriters\Location\LocationFileWriter.cs" />
     <Compile Include="FileWriters\Location\LocationRegion.cs" />
     <Compile Include="FileWriters\Network\BranchFile.cs" />
+    <Compile Include="FileWriters\Network\NetworkRegion.cs" />
     <Compile Include="FileWriters\Network\NetworkAndGridWriter.cs" />
     <Compile Include="FileWriters\Network\NetworkDefinitionRegion.cs" />
     <Compile Include="FileWriters\Network\NodeFile.cs" />
@@ -283,6 +284,7 @@
     <Compile Include="Helpers\BranchChainageExtensions.cs" />
     <Compile Include="Helpers\ConfigurationSetting.cs" />
     <Compile Include="Helpers\DelftIniCategory.cs" />
+    <Compile Include="Helpers\DoubleExtensions.cs" />
     <Compile Include="Helpers\FileWritingUtils.cs" />
     <Compile Include="Helpers\IoHelper.cs" />
     <Compile Include="Helpers\ListExtensions.cs" />

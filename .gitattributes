@@ -655,6 +655,7 @@ src/DeltaShell.NGHS.IO/FileWriters/Location/LocationRegion.cs -text
 src/DeltaShell.NGHS.IO/FileWriters/Network/BranchFile.cs -text
 src/DeltaShell.NGHS.IO/FileWriters/Network/NetworkAndGridWriter.cs -text
 src/DeltaShell.NGHS.IO/FileWriters/Network/NetworkDefinitionRegion.cs -text
+src/DeltaShell.NGHS.IO/FileWriters/Network/NetworkRegion.cs -text
 src/DeltaShell.NGHS.IO/FileWriters/Network/NodeFile.cs -text
 src/DeltaShell.NGHS.IO/FileWriters/Retention/RetentionFileWriter.cs -text
 src/DeltaShell.NGHS.IO/FileWriters/Retention/RetentionRegion.cs -text
@@ -711,6 +712,7 @@ src/DeltaShell.NGHS.IO/Grid/UGridFileHelper.cs -text
 src/DeltaShell.NGHS.IO/Helpers/BranchChainageExtensions.cs -text
 src/DeltaShell.NGHS.IO/Helpers/ConfigurationSetting.cs -text
 src/DeltaShell.NGHS.IO/Helpers/DelftIniCategory.cs -text
+src/DeltaShell.NGHS.IO/Helpers/DoubleExtensions.cs -text
 src/DeltaShell.NGHS.IO/Helpers/FileWritingUtils.cs -text
 src/DeltaShell.NGHS.IO/Helpers/IoHelper.cs -text
 src/DeltaShell.NGHS.IO/Helpers/ListExtensions.cs -text
