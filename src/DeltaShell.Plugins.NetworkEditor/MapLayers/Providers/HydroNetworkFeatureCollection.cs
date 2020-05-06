@@ -9,6 +9,7 @@ using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils;
+using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using GeoAPI.Extensions.Networks;
@@ -61,7 +62,7 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Providers
                 }
             }
         }
-
+        [InvokeRequired]
         private void OnNetworkPropertyChanged(object sender, PropertyChangedEventArgs propertyChangedEventArgs)
         {
             envelope = null;
