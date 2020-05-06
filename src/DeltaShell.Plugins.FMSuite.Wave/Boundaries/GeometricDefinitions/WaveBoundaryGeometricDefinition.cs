@@ -42,7 +42,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions
 
             if (length <= 0)
             {
-                throw new ArgumentException($"Length: '{length}' should be larger than or equal to zero.");
+                throw new ArgumentException($"Length: '{length}' should be larger than zero.");
             }
 
             GridSide = gridSide;

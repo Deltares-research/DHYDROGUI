@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using DelftTools.Utils;
+using DelftTools.Utils.Guards;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
 using GeoAPI.Extensions.Coverages;
 
@@ -26,11 +29,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries
         {
             // The dependency on WaveModel is an unfortunate result of the lack of well designed
             // interface, such that the properties can be separated correctly from their implementation.
-            if (model == null)
-            {
-                throw new ArgumentNullException(nameof(model));
-            }
-
+            Ensure.NotNull(model, nameof(model));
+            
             this.model = model;
 
             ((INotifyPropertyChange) model.OuterDomain).PropertyChanged += OnOuterGridChanged;
@@ -75,8 +75,19 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries
 
         private void HandleGridChanged(IDiscreteGridPointCoverage outerDomainGrid)
         {
+            IEnumerable<CachedBoundary> cache = SnapBoundariesToNewGrid.CreateCachedBoundaries(
+                model.BoundaryContainer.Boundaries.ToList(),
+                model.BoundaryContainer.GetGridBoundary());
+            
             model.BoundaryContainer.Boundaries.Clear();
             model.BoundaryContainer.UpdateGridBoundary(CreateGridBoundary(outerDomainGrid));
+
+            IEnumerable<IWaveBoundary> reSnappedBoundaries = SnapBoundariesToNewGrid.RestoreBoundariesIfPossible(cache, model.BoundaryContainer.GetBoundarySnappingCalculator());
+
+            foreach (var bound in reSnappedBoundaries)
+            {
+                model.BoundaryContainer.Boundaries.Add(bound);
+            }
         }
 
         private static IGridBoundary CreateGridBoundary(IDiscreteGridPointCoverage outerDomainGrid)

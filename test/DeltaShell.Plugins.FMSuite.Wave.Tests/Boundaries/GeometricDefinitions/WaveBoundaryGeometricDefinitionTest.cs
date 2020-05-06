@@ -151,7 +151,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.GeometricDefinitions
 
             // Assert
             var exception = Assert.Throws<ArgumentException>(Call);
-            Assert.That(exception.Message, Is.EqualTo($"Length: '{length}' should be larger than or equal to zero."));
+            Assert.That(exception.Message, Is.EqualTo($"Length: '{length}' should be larger than zero."));
         }
 
         [Test]
