@@ -83,7 +83,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
             Coordinate currentStartCoordinate =
                 calculator.GridBoundary.GetWorldCoordinateFromBoundaryCoordinate(startGridBoundaryCoordinate);
 
-            return currentStartCoordinate.Equals2D(startCoordinate, 0.00001);
+            return !currentStartCoordinate.Equals2D(startCoordinate, 0.00001);
         }
     }
 }

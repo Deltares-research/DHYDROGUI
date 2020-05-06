@@ -200,8 +200,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             var coord1 = new Coordinate( 5.0, 20.0);
             var coord2 = new Coordinate(25.0, 20.0);
 
-            yield return new TestCaseData(coord1, coord1, true);
-            yield return new TestCaseData(coord1, coord2, false);
+            yield return new TestCaseData(coord1, coord1, false);
+            yield return new TestCaseData(coord1, coord2, true);
         }
 
         [Test]
