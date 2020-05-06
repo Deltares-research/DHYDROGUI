@@ -74,7 +74,7 @@
                                 </Setter.Value>
                             </Setter>
                             <Style.Triggers>
-                                <DataTrigger Binding="{Binding Pipe.CrossSectionDefinition.ShapeType}" Value="{x:Static crossSections:CrossSectionStandardShapeType.Rectangle}">
+                                <DataTrigger Binding="{Binding Pipe.Profile.ShapeType}" Value="{x:Static crossSections:CrossSectionStandardShapeType.Rectangle}">
                                     <Setter Property="ContentTemplate">
                                         <Setter.Value>
                                             <DataTemplate>
@@ -85,7 +85,7 @@
                                         </Setter.Value>
                                     </Setter>
                                 </DataTrigger>
-                                <DataTrigger Binding="{Binding Pipe.CrossSectionDefinition.ShapeType}" Value="{x:Static crossSections:CrossSectionStandardShapeType.Circle}">
+                                <DataTrigger Binding="{Binding Pipe.Profile.ShapeType}" Value="{x:Static crossSections:CrossSectionStandardShapeType.Circle}">
                                     <Setter Property="ContentTemplate">
                                         <Setter.Value>
                                             <DataTemplate>

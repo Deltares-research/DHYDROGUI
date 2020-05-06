@@ -28,7 +28,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView.StandardCr
         private void SetStandardCrossSectionDataView()
         {
             panelDataView.Controls.Clear();
-            if (Data != null)
+            if (data?.Definition != null)
             {
                 panelDataView.Controls.Add(CrossSectionStandardShapeViewFactory.GetStandardShapeView(data.Definition.Shape));
             }
