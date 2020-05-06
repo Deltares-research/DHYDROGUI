@@ -13,12 +13,14 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
     /// <summary>
     /// Class which is used to get the Gui Properties to use in the WPF view.
     /// </summary>
-    /// <seealso cref="System.ComponentModel.INotifyPropertyChanged" />
-    /// <seealso cref="System.ComponentModel.IDataErrorInfo" />
+    /// <seealso cref="System.ComponentModel.INotifyPropertyChanged"/>
+    /// <seealso cref="System.ComponentModel.IDataErrorInfo"/>
     public class WpfGuiProperty : INotifyPropertyChanged, IDataErrorInfo
     {
         private readonly FieldUIDescription description;
         private Func<object> getModel;
+
+        public event PropertyChangedEventHandler PropertyChanged;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="WpfGuiProperty"/> class.
@@ -28,7 +30,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
         {
             CustomCommand = new CommandHelper(() => OnPropertyChanged("Value"));
             this.description = description;
-            
+
             UpdateValueCollection();
         }
 
@@ -44,8 +46,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
         {
             get
             {
-                if (columnName != "Value" 
-                    ||  string.IsNullOrEmpty(Value.ToString())) return null;
+                if (columnName != "Value"
+                    || string.IsNullOrEmpty(Value.ToString()))
+                {
+                    return null;
+                }
 
                 if (description.HasMinValue || description.HasMaxValue)
                 {
@@ -55,30 +60,30 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
                      */
                     if (Value is int)
                     {
-                        return CheckValueWithinBoundaries(Convert.ToDouble((int)Value));
+                        return CheckValueWithinBoundaries(Convert.ToDouble((int) Value));
                     }
 
                     if (Value is double)
                     {
-                        return CheckValueWithinBoundaries(Convert.ToDouble((double)Value));
+                        return CheckValueWithinBoundaries(Convert.ToDouble((double) Value));
                     }
                 }
 
                 return Error;
             }
         }
-        
+
         public CommandHelper CustomCommand { get; set; }
 
-        public Type ValueType { get { return description?.ValueType; } }
+        public Type ValueType => description?.ValueType;
 
-        public string Name { get { return description?.Name; } }
+        public string Name => description?.Name;
 
-        public string SubCategory { get { return description?.SubCategory; } }
-        
-        public string Label { get { return description?.Label; } }
+        public string SubCategory => description?.SubCategory;
 
-        public string ToolTip { get { return description?.ToolTip ?? "-"; } }
+        public string Label => description?.Label;
+
+        public string ToolTip => description?.ToolTip ?? "-";
 
         /// <summary>
         /// Unit for this property
@@ -87,50 +92,45 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
         {
             get
             {
-                var unitSymbol = description?.UnitSymbol;
+                string unitSymbol = description?.UnitSymbol;
 
-                return !string.IsNullOrEmpty(unitSymbol) 
-                    ? $"[{unitSymbol}]"
-                    : "";
+                return !string.IsNullOrEmpty(unitSymbol)
+                           ? $"[{unitSymbol}]"
+                           : "";
             }
         }
 
         /// <summary>
         /// Minimum allowed value
         /// </summary>
-        public double? MinValue { get { return description?.MinValue; } }
+        public double? MinValue => description?.MinValue;
 
         /// <summary>
         /// Maximum allowed value
         /// </summary>
-        public double? MaxValue { get { return description?.MaxValue; } }
+        public double? MaxValue => description?.MaxValue;
 
         /// <summary>
         /// Has a minimum value is set
         /// </summary>
-        public bool? HasMinValue { get { return description?.HasMinValue; } }
+        public bool? HasMinValue => description?.HasMinValue;
 
         /// <summary>
         /// Has a maximum value is set
         /// </summary>
-        public bool? HasMaxValue { get { return description?.HasMaxValue; } }
+        public bool? HasMaxValue => description?.HasMaxValue;
 
         /// <summary>
         /// Has a minimum or a maximum value set
         /// </summary>
-        public bool? HasMinMaxValue
-        {
-            get
-            {
-                return (HasMaxValue.HasValue &&
-                         HasMaxValue.Value) ||
-                         (HasMinValue.HasValue &&
-                         HasMinValue.Value);
-            }
-        }
+        public bool? HasMinMaxValue =>
+            HasMaxValue.HasValue &&
+            HasMaxValue.Value ||
+            HasMinValue.HasValue &&
+            HasMinValue.Value;
 
         /// <summary>
-        /// Gets or sets the get model function that will be used later on for 
+        /// Gets or sets the get model function that will be used later on for
         /// retrieving the IsEnabled <seealso cref="IsEnabled"/>and IsVisible <seealso cref="IsVisible"/> properties.
         /// </summary>
         /// <value>
@@ -138,24 +138,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
         /// </value>
         public Func<object> GetModel
         {
-            get { return getModel; }
+            get => getModel;
             set
             {
                 getModel = value;
                 CustomCommand.GetModel = getModel;
-            }
-        }
-
-        /// <summary>
-        /// Gets an error message indicating what is wrong with this object.
-        /// </summary>
-        public string Error {
-            get
-            {
-                var mssg = string.Empty;
-                if (!description.Validate(GetModel.Invoke(), Value, out mssg))
-                    return mssg;
-                return null;
             }
         }
 
@@ -168,14 +155,18 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
         /// Gets or sets a value indicating whether this instance is enabled.
         /// </summary>
         /// <value>
-        ///   <c>true</c> if this instance is enabled; otherwise, <c>false</c>.
+        /// <c>true</c> if this instance is enabled; otherwise, <c>false</c>.
         /// </value>
         public bool IsEnabled
         {
             get
             {
-                if (description == null) return false;
-                var model = GetModel?.Invoke();
+                if (description == null)
+                {
+                    return false;
+                }
+
+                object model = GetModel?.Invoke();
                 return description.IsEnabled(model);
             }
         }
@@ -184,14 +175,18 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
         /// Gets or sets a value indicating whether this instance is visible.
         /// </summary>
         /// <value>
-        ///   <c>true</c> if this instance is visible; otherwise, <c>false</c>.
+        /// <c>true</c> if this instance is visible; otherwise, <c>false</c>.
         /// </value>
         public bool IsVisible
         {
             get
             {
-                if (description == null) return false;
-                var model = GetModel?.Invoke();
+                if (description == null)
+                {
+                    return false;
+                }
+
+                object model = GetModel?.Invoke();
                 return description.IsVisible(model);
             }
         }
@@ -212,10 +207,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
         /// </value>
         public object Value
         {
-            get { return description?.GetValue(GetModel?.Invoke()); }
+            get => description?.GetValue(GetModel?.Invoke());
             set
             {
-                var convertedValue = value;
+                object convertedValue = value;
 
                 if (ValueType.Implements(typeof(IConvertible)))
                 {
@@ -228,19 +223,34 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
         }
 
         /// <summary>
+        /// Gets an error message indicating what is wrong with this object.
+        /// </summary>
+        public string Error
+        {
+            get
+            {
+                var errorMessage = string.Empty;
+                return !description.Validate(GetModel.Invoke(), Value, out errorMessage) ? errorMessage : null;
+            }
+        }
+
+        /// <summary>
         /// Raises the property changed events.
         /// </summary>
         public void RaisePropertyChangedEvents()
         {
-            OnPropertyChanged("IsEnabled");
-            OnPropertyChanged("IsVisible");
-            OnPropertyChanged("IsEditable");
-            OnPropertyChanged("Value");
+            OnPropertyChanged(nameof(IsEnabled));
+            OnPropertyChanged(nameof(IsVisible));
+            OnPropertyChanged(nameof(IsReadOnly));
+            OnPropertyChanged(nameof(Value));
             UpdateValueCollection();
-            OnPropertyChanged("ValueCollection");
+            OnPropertyChanged(nameof(ValueCollection));
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
 
         private void UpdateValueCollection()
         {
@@ -254,18 +264,19 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
                         WrapperValue = v,
                         SetBackValue = wrapperValue =>
                         {
-                            v = wrapperValue; //Overwrite value with new one.
+                            v = wrapperValue;                                               //Overwrite value with new one.
                             Value = ValueCollection.Select(vc => vc.WrapperValue).ToList(); //Trigger update.
                         },
                     }).ToList();
             }
+
             ValueCollection = new ObservableCollection<DoubleWrapper>(valueList); //Just to avoid a null exception
         }
 
         private string CheckValueWithinBoundaries(double valueAsDouble)
         {
-            if ((description.HasMinValue && valueAsDouble < description.MinValue)
-                || (description.HasMaxValue && valueAsDouble > description.MaxValue))
+            if (description.HasMinValue && valueAsDouble < description.MinValue
+                || description.HasMaxValue && valueAsDouble > description.MaxValue)
             {
                 return string.Format(Resources.WpfGuiProperty_this_This_value_must_be_between__0__and__1_,
                                      description.HasMinValue ? description.MinValue : double.NegativeInfinity,
@@ -273,11 +284,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
             }
 
             return null;
-        }
-
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }
