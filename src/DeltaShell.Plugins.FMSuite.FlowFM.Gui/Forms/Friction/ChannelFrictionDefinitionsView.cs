@@ -423,7 +423,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms.Friction
             tableView.Columns[columnIndex].Editor = new ComboBoxTypeEditor
             {
                 Items = Enum.GetValues(typeof(ChannelFrictionSpecificationType)).Except(new[] {ChannelFrictionSpecificationType.CrossSectionFrictionDefinitions}),
-                CustomFormatter = new EnumFormatter(typeof(ChannelFrictionSpecificationType))
+                CustomFormatter = new EnumFormatter(typeof(ChannelFrictionSpecificationType)),
+                ItemsMandatory = false // Note: Don't remove, necessary for copy/paste
             };
         }
 
@@ -434,7 +435,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms.Friction
             tableView.Columns[columnIndex].Editor = new ComboBoxTypeEditor
             {
                 Items = Enum.GetValues(typeof(RoughnessType)),
-                CustomFormatter = new EnumFormatter(typeof(RoughnessType))
+                CustomFormatter = new EnumFormatter(typeof(RoughnessType)),
+                ItemsMandatory = false // Note: Don't remove, necessary for copy/paste
             };
         }
 
