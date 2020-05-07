@@ -1518,7 +1518,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
                 Assert.That(rrModel.NwrwDryWeatherFlowDefinitions.Count(), Is.EqualTo(5));
                 Assert.That(rrModel.NwrwDryWeatherFlowDefinitions.Distinct().Count(), Is.EqualTo(5));
                 Assert.False(rrModel.NwrwDryWeatherFlowDefinitions.Any(dwfd =>
-                    dwfd.DistributionType.Equals(DwfDistributionType.Variable))); // not supported
+                    dwfd.DistributionType.Equals(DryweatherFlowDistributionType.Variable))); // not supported
             }
             finally
             {
@@ -1557,7 +1557,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
                     3.0, 2.5, 2.0, 2.0
                 };
                 Assert.That(nwrwDryWeatherFlowDefinition.Name, Is.EqualTo("Inwoner"));
-                Assert.That(nwrwDryWeatherFlowDefinition.DistributionType, Is.EqualTo(DwfDistributionType.Daily));
+                Assert.That(nwrwDryWeatherFlowDefinition.DistributionType, Is.EqualTo(DryweatherFlowDistributionType.Daily));
                 Assert.That(nwrwDryWeatherFlowDefinition.DayNumber, Is.EqualTo(0.0));
                 Assert.That(nwrwDryWeatherFlowDefinition.DailyVolumeVariable, Is.EqualTo(120));
                 Assert.That(nwrwDryWeatherFlowDefinition.HourlyPercentageDailyVolume,

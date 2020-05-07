@@ -46,19 +46,19 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
             return line.ToString();
         }
 
-        private void AppendDwfComputationOption(StringBuilder line, DwfDistributionType dwfDistributionType)
+        private void AppendDwfComputationOption(StringBuilder line, DryweatherFlowDistributionType dryweatherFlowDistributionType)
         {
             line.Append($"{NwrwKeywords.Pluv_dwa_do} ");
-            switch (dwfDistributionType)
+            switch (dryweatherFlowDistributionType)
             {
-                case DwfDistributionType.Constant:
+                case DryweatherFlowDistributionType.Constant:
                     line.Append($"{NUMBER_OF_PEOPLE_TIMES_CONSTANT_DWA_PER_CAPITA_PER_HOUR} ");
                     break;
-                case DwfDistributionType.Daily:
+                case DryweatherFlowDistributionType.Daily:
                     line.Append($"{NUMBER_OF_PEOPLE_TIMES_VARIABLE_DWA_PER_CAPITA_PER_HOUR} ");
                     break;
-                case DwfDistributionType.Variable:
-                    throw new ArgumentException($"'{nameof(DwfDistributionType.Variable)}' is not yet supported.");
+                case DryweatherFlowDistributionType.Variable:
+                    throw new ArgumentException($"'{nameof(DryweatherFlowDistributionType.Variable)}' is not yet supported.");
                 default:
                     throw new ArgumentException($"Invalid distribution type was provided.");
             }

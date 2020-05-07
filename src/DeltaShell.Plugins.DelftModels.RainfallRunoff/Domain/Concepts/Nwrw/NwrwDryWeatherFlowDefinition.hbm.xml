@@ -10,7 +10,7 @@
     </id>
 
     <property name="Name"/>
-    <property name="DistributionType" type="DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw.DwfDistributionType, DeltaShell.Plugins.DelftModels.RainfallRunoff"/>
+    <property name="DistributionType" type="DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw.DryweatherFlowDistributionType, DeltaShell.Plugins.DelftModels.RainfallRunoff"/>
     <property name="DayNumber"/>
     <property name="DailyVolumeConstant"/>
     <property name="DailyVolumeVariable"/>

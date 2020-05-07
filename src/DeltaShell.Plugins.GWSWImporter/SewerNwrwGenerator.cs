@@ -203,8 +203,8 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
                var distributionType = gwswElement
                    .GetAttributeFromList(SewerConnectionMapping.PropertyKeys.DistributionType).ValueAsString;
                nwrwDryWeatherFlowDefinition.DistributionType =
-                   (DwfDistributionType) typeof(DwfDistributionType).GetEnumValueFromDescription(distributionType);
-
+                   DryweatherFlowDistributionTypeConverter.ConvertStringToDryweatherFlowDistributionType(distributionType);
+               
                var dayNumber = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.DayNumber);
                if (dayNumber.TryGetValueAsInt(out auxInt))
                    nwrwDryWeatherFlowDefinition.DayNumber = auxInt;

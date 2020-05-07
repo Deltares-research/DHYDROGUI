@@ -21,7 +21,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
         private static readonly ILog Log = LogManager.GetLogger(typeof(NwrwDryWeatherFlowDefinition));
 
         public string Name { get; set; } //VER_IDE
-        public DwfDistributionType DistributionType { get; set; } // VER_TYPE
+        public DryweatherFlowDistributionType DistributionType { get; set; } // VER_TYPE
         public int DayNumber { get; set; } // VER_DAG
         public double DailyVolumeVariable { get; set; } // VER_VOL
         public double DailyVolumeConstant { get; set; } // VER_VOL
@@ -62,12 +62,12 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
         {
             // The kernel only supports DWF definitions of type 'DAG' or
             // of type 'CST' where VER_DAG is empty.
-            if (DistributionType == DwfDistributionType.Variable)
+            if (DistributionType == DryweatherFlowDistributionType.Variable)
             {
                 throw new NotSupportedException($"Could not add '{Name}' DWF definition to {nameof(RainfallRunoffModel)}. The given distribution type '{DistributionType}' is not yet supported.");
             }
 
-            if (DistributionType == DwfDistributionType.Constant && DayNumber != default(int))
+            if (DistributionType == DryweatherFlowDistributionType.Constant && DayNumber != default(int))
             {
                 throw new NotSupportedException($"Could not add '{Name}' DWF definition to {nameof(RainfallRunoffModel)}. The given distribution type '{DistributionType}' is not yet supported in combination with a value of '{DayNumber}' for VER_DAG.");
             }
@@ -80,7 +80,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
             return new NwrwDryWeatherFlowDefinition
             {
                 Name = "Default_DWA",
-                DistributionType = DwfDistributionType.Constant,
+                DistributionType = DryweatherFlowDistributionType.Constant,
                 DailyVolumeConstant = 12,
                 DailyVolumeVariable = 120,
                 HourlyPercentageDailyVolume = new []{1.5, 1.5, 1.5, 1.5, 1.5, 3.0, 4.0, 5.0, 6.0, 6.5, 7.5, 8.5, 7.5, 6.5, 6.0, 5.0, 5.0, 5.0, 4.0, 3.5, 3.0, 2.5, 2.0, 2.0 }

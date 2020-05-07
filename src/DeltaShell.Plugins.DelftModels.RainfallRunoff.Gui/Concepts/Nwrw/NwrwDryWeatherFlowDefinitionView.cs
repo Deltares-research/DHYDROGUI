@@ -122,8 +122,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts.Nwrw
 
             column.Editor = new ComboBoxTypeEditor
             {
-                Items = Enum.GetValues(typeof(DwfDistributionType)).Except(new List<DwfDistributionType>{DwfDistributionType.Variable}),
-                CustomFormatter = new EnumFormatter(typeof(DwfDistributionType))
+                Items = Enum.GetValues(typeof(DryweatherFlowDistributionType)).Except(new List<DryweatherFlowDistributionType>{DryweatherFlowDistributionType.Variable}),
+                CustomFormatter = new EnumFormatter(typeof(DryweatherFlowDistributionType))
             };
         }
 
@@ -173,7 +173,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts.Nwrw
 
                 if (arg.Column.AbsoluteIndex == ButtonColumnIndex)
                 {
-                    return nwrwDryWeatherFlowDefinition.DistributionType != DwfDistributionType.Daily;
+                    return nwrwDryWeatherFlowDefinition.DistributionType != DryweatherFlowDistributionType.Daily;
                 }
 
                 return false;

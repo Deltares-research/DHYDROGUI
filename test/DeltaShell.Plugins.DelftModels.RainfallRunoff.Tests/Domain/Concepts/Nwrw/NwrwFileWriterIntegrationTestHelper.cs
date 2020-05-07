@@ -275,7 +275,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Domain.Concepts.Nw
                 DailyVolumeConstant = 10,
                 DailyVolumeVariable = 50,
                 DayNumber = 3,
-                DistributionType = DwfDistributionType.Constant,
+                DistributionType = DryweatherFlowDistributionType.Constant,
                 HourlyPercentageDailyVolume = new double[]
                     {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23},
             };
@@ -287,7 +287,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Domain.Concepts.Nw
                 DailyVolumeConstant = 123,
                 DailyVolumeVariable = 456,
                 DayNumber = 7,
-                DistributionType = DwfDistributionType.Daily,
+                DistributionType = DryweatherFlowDistributionType.Daily,
                 HourlyPercentageDailyVolume = new double[]
                     {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24},
             };

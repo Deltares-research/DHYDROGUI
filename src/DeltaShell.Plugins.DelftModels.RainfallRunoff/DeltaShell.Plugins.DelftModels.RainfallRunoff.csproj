@@ -52,6 +52,7 @@
     <Compile Include="Domain\Concepts\GreenhouseDataProperties.cs" />
     <Compile Include="Domain\Concepts\HbvDataProperties.cs" />
     <Compile Include="Domain\Concepts\Nwrw\DryWeatherFlow.cs" />
+    <Compile Include="Domain\Concepts\Nwrw\DryweatherFlowDistributionTypeConverter.cs" />
     <Compile Include="Domain\Concepts\Nwrw\INwrwComponentFileWriterBase.cs" />
     <Compile Include="Domain\Concepts\Nwrw\INwrwFeature.cs" />
     <Compile Include="Domain\Concepts\Nwrw\NwrwSurfaceTypeHelper.cs" />
@@ -334,8 +335,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.nl-NL.resx" />
     <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
+      <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="RainfallRunoffModel.hbm.xml">
       <SubType>Designer</SubType>
