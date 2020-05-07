@@ -182,7 +182,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             }
 
             // write channels roughness
-            
             var frictionFilePath = System.IO.Path.Combine(directoryName, frictionFileName);
             var globalFrictionType = (RoughnessType)(int)modelDefinition.GetModelProperty(GuiProperties.UnifFrictTypeChannels).Value;
             double globalFrictionValue = (double) modelDefinition.GetModelProperty(GuiProperties.UnifFrictCoefChannels).Value;

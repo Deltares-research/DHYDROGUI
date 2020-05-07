@@ -71,6 +71,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         private static DelftIniCategory CreateGlobalFrictionCategory(RoughnessType frictionType, double frictionValue)
         {
             var category = new DelftIniCategory(RoughnessDataRegion.GlobalIniHeader);
+            category.AddProperty(RoughnessDataRegion.SectionId.Key, "Channels", RoughnessDataRegion.SectionId.Description);
             category.AddProperty(RoughnessDataRegion.FrictionType.Key, frictionType.ToString(), RoughnessDataRegion.FrictionType.Description);
             category.AddProperty(RoughnessDataRegion.FrictionValue.Key, frictionValue, RoughnessDataRegion.FrictionValue.Description, RoughnessDataRegion.GlobalValue.Format);
             return category;
