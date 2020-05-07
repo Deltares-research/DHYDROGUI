@@ -80,17 +80,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
             var roughnessFileNames = modelDefinition.GetModelProperty(KnownProperties.FrictFile).GetValueAsString()?.Split(';');
             if(roughnessFileNames == null || roughnessFileNames.Length == 0) return;
+            var frictionFileName = Properties.Resources.Roughness_Main_Channels_Filename;
 
             // read lanes
             foreach (var roughnessFileName in roughnessFileNames)
             {
+                if (roughnessFileName == frictionFileName) continue;
                 var fileName = IoHelper.GetFilePathToLocationInSameDirectory(targetMduFilePath, roughnessFileName);
                 if (!File.Exists(fileName)) return;
                 RoughnessDataFileReader.ReadFile(fileName, network, roughnessSections, channelFrictionDefinitions);
             }
 
             // read channels roughness
-            var frictionFileName = Properties.Resources.Roughness_Main_Channels_Filename;
             var frictionFilePath = IoHelper.GetFilePathToLocationInSameDirectory(targetMduFilePath, frictionFileName);
             if (!File.Exists(frictionFilePath)) return;
             ChannelFrictionDefinitionFileReader.ReadFile(frictionFilePath, modelDefinition, network, channelFrictionDefinitions);

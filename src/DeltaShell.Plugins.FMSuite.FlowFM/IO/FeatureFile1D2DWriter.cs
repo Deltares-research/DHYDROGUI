@@ -165,8 +165,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             if (directoryName == null) return;
 
             var sections = roughnessSections.ToArray();
+            var frictionFileName = Properties.Resources.Roughness_Main_Channels_Filename;
             var roughnessFileNames = sections.Select(GetRoughnessFilename);
-            modelDefinition.SetModelProperty(KnownProperties.FrictFile, string.Join(";", roughnessFileNames));
+            var roughnessFileNamesString = string.Join(";", roughnessFileNames);
+
+            modelDefinition.SetModelProperty(KnownProperties.FrictFile, 
+                string.Join(";", frictionFileName, roughnessFileNamesString));
 
             // write lanes files
             foreach (var roughnessSection in sections)
@@ -178,7 +182,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             }
 
             // write channels roughness
-            var frictionFileName = Properties.Resources.Roughness_Main_Channels_Filename;
+            
             var frictionFilePath = System.IO.Path.Combine(directoryName, frictionFileName);
             var globalFrictionType = (RoughnessType)(int)modelDefinition.GetModelProperty(GuiProperties.UnifFrictTypeChannels).Value;
             double globalFrictionValue = (double) modelDefinition.GetModelProperty(GuiProperties.UnifFrictCoefChannels).Value;

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using DelftTools.Hydro;
+﻿using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Roughness;
@@ -12,13 +8,12 @@ using DelftTools.Hydro.Tests.Helpers;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
-using DeltaShell.NGHS.IO.DataObjects.Friction;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
-using GeoAPI.Geometries;
-using NetTopologySuite.Geometries;
 using NUnit.Framework;
+using System.IO;
+using System.Linq;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 {
@@ -305,6 +300,32 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
             var frictionProperty = fmModel.ModelDefinition.GetModelProperty(KnownProperties.FrictFile);
             Assert.Contains(sewerRoughnessFileName, frictionProperty.GetValueAsString().Split(';'));
+        }
+
+        [Test]
+        public void GivenFmModelWithChannel_WhenWriting1D2DFeatures_ThenFrictionFileIsReferencedInTheMduFile()
+        {
+            var expectedFileName = Properties.Resources.Roughness_Main_Channels_Filename;
+            var tempFolder = FileUtils.CreateTempDirectory();
+            try
+            {
+                var mduFilePath = Path.Combine(tempFolder, "myModel.mdu");
+                using (var fmModel = new WaterFlowFMModel() { MduFilePath = mduFilePath })
+                {
+                    var channel = new Channel();
+                    fmModel.Network.Branches.Add(channel);
+                    Assert.That(fmModel.Network.Channels.Count(), Is.EqualTo(1));
+
+                    FeatureFile1D2DWriter.Write1D2DFeatures(fmModel.MduFilePath, fmModel.ModelDefinition, fmModel.Network, fmModel.Area, fmModel.RoughnessSections, fmModel.ChannelFrictionDefinitions);
+                    var frictionFileProperty = fmModel.ModelDefinition.GetModelProperty(KnownProperties.FrictFile);
+                    var actualFileNames = frictionFileProperty.GetValueAsString().Split(';');
+                    Assert.Contains(expectedFileName, actualFileNames);
+                }
+            }
+            finally
+            {
+                FileUtils.DeleteIfExists(tempFolder);
+            }
         }
     }
 }
