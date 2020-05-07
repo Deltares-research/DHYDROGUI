@@ -38,7 +38,7 @@ namespace DeltaShell.NGHS.IO.FileReaders
 
             IList<FileReadingException> fileReadingExceptions = new List<FileReadingException>();
 
-            var nonStructureCrossSectionDefinitions = csIniLocations.Select(csIniLocation => csIniLocation.ReadProperty<string>(LocationRegion.Definition.Key)).ToArray();
+            var nonStructureCrossSectionDefinitions = csIniLocations.Select(csIniLocation => csIniLocation.ReadProperty<string>(LocationRegion.Definition.Key)).Distinct().ToArray();
 
             IList<ICrossSectionDefinition> crossSectionDefinitions = new List<ICrossSectionDefinition>();
             IList<ICrossSectionDefinition> sharedNotConnectedCrossSectionDefinitions = new List<ICrossSectionDefinition>();
@@ -227,7 +227,7 @@ namespace DeltaShell.NGHS.IO.FileReaders
             var readCrossSectionDefinition = definitionReader.ReadDefinition(crossSectionDefinitionCategory);
 
             // Don't set friction for structure related cross sections
-            if (nonStructureCrossSectionDefinitions.Contains(readCrossSectionDefinition.Name))
+            if (nonStructureCrossSectionDefinitions.Contains(readCrossSectionDefinition.Name) || crossSectionDefinitionCategory.ReadProperty<bool>(DefinitionPropertySettings.IsShared.Key, true))
             {
                 SetFrictionOnCrossSectionDefinition(crossSectionDefinitionCategory, readCrossSectionDefinition, network);
             }
