@@ -25,7 +25,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.Calculators
         /// <returns>
         /// A new <see cref="Coordinate"/> containing the world coordinate x and y values.
         /// </returns>
-        /// <exception cref="System.ArgumentNullException">
+        /// <exception cref="ArgumentNullException">
         /// Thrown when <paramref name="grid"/> is <c>null</c>.
         /// </exception>
         internal static Coordinate GetCoordinateAt(this IDiscreteGridPointCoverage grid, int x, int y)
@@ -43,7 +43,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.Calculators
         /// <returns>
         /// A new <see cref="Coordinate"/> containing the world coordinate x and y values.
         /// </returns>
-        /// <exception cref="System.ArgumentNullException">
+        /// <exception cref="ArgumentNullException">
         /// Thrown when <paramref name="grid"/> or <paramref name="coordinate"/> is <c>null</c>.
         /// </exception>
         internal static Coordinate GetCoordinateAt(this IDiscreteGridPointCoverage grid, GridCoordinate coordinate)
@@ -59,10 +59,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.Calculators
         /// <returns>
         /// <c>true</c> if the polygon vertices are ordered counter-clockwise; otherwise, <c>false</c>.
         /// </returns>
-        /// <exception cref="System.ArgumentNullException">
+        /// <exception cref="ArgumentNullException">
         /// Thrown
         /// </exception>
-        /// <exception cref="System.InvalidOperationException">
+        /// <exception cref="InvalidOperationException">
         /// Thrown when the number of <paramref name="polygonVertices"/> is smaller than three.
         /// </exception>
         internal static bool IsCounterClockwisePolygon(params Coordinate[] polygonVertices)
@@ -71,9 +71,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.Calculators
 
             if (polygonVertices.Length < 3)
             {
-                throw new System.InvalidOperationException("Cannot calculate the ordering of line segment or point");
+                throw new InvalidOperationException("Cannot calculate the ordering of line segment or point");
             }
 
+            // Assuming standard cartesian coordinates, we calculate the area
+            // of the polygon defined by the polygonVertices. The sign of the
+            // calculated value is determined by the traversal order. If the
+            // vertices are ordered counter-clockwise then the summation will be
+            // negative and if the ordering is clockwise, then the sign will be
+            // negative. We leverage this fact to determine the ordering of the
+            // polygonVertices.
             var sum = 0.0;
 
             for (var i = 1; i <= polygonVertices.Length; i++)
@@ -88,14 +95,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.Calculators
         }
 
         /// <summary>
-        /// Gets the normalised normal associated with the line segment defined
-        /// by <paramref name="coordinate0"/> and <paramref name="coordinate1"/>.
+        /// Gets the normalised normal associated with the vector defined
+        /// by <paramref name="coordinate1"/> minus <paramref name="coordinate0"/>.
         /// </summary>
-        /// <param name="coordinate0">The coordinate0.</param>
-        /// <param name="coordinate1">The coordinate1.</param>
+        /// <param name="coordinate0">The first coordinate.</param>
+        /// <param name="coordinate1">The second coordinate.</param>
         /// <returns>
-        /// The normal associated with the line segment defined by
-        /// <paramref name="coordinate0"/> and <paramref name="coordinate1"/>.
+        /// The normal associated with the vector defined by
+        /// <paramref name="coordinate1"/> minus <paramref name="coordinate0"/>.
         /// </returns>
         internal static Vector2D GetNormal(Coordinate coordinate0,
                                            Coordinate coordinate1) =>
@@ -103,11 +110,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.Calculators
                             coordinate0.X - coordinate1.X).Normalize();
 
         /// <summary>
-        /// Gets the closest aligned value with the specified normal in the
-        /// provided <paramref name="valueNormalPairs"/> relative to the
+        /// Gets the value associated with the normal in the
+        /// provided <paramref name="valueNormalPairs"/> closest aligned to the
         /// <paramref name="referenceNormal"/>.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="T">The value type.</typeparam>
         /// <param name="valueNormalPairs">The value normal pairs.</param>
         /// <param name="referenceNormal">The reference normal.</param>
         /// <param name="defaultValue">The default value.</param>
@@ -117,17 +124,22 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.Calculators
         /// If <paramref name="valueNormalPairs"/> is empty, then <paramref name="defaultValue"/>
         /// is returned.
         /// </returns>
-        /// <exception cref=".ArgumentNullException">
+        /// <exception cref="ArgumentNullException">
         /// Thrown when <paramref name="valueNormalPairs"/> or <paramref name="referenceNormal"/>
         /// is <c>null</c>.
         /// </exception>
-        internal static T GetClosestAlignedValueWithNormal<T>(IEnumerable<Tuple<T, Vector2D>> valueNormalPairs, 
+        internal static T GetValueClosestAlignedWithNormal<T>(IEnumerable<Tuple<T, Vector2D>> valueNormalPairs, 
                                                               Vector2D referenceNormal, 
                                                               T defaultValue)
         {
             Ensure.NotNull(valueNormalPairs, nameof(valueNormalPairs));
             Ensure.NotNull(referenceNormal, nameof(referenceNormal));
 
+            // The dot product between two normalized vectors is equal to cos theta
+            // where theta is the angle between the vectors. Any dot product will
+            // thus lie between -1 and 1, where the highest value will correspond with
+            // the smallest angle between the referenceNormal and the normal associated with
+            // the value. We leverage this to find the result value.
             Vector2D referenceNormalized = referenceNormal.Normalize();
 
             double largestDotProduct = -1.0;

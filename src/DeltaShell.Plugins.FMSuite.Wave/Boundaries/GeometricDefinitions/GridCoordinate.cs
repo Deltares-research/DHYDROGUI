@@ -1,4 +1,6 @@
-﻿namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions
+﻿using System;
+
+namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions
 {
     /// <summary>
     /// <see cref="GridCoordinate"/> defines a discrete point on a grid.
@@ -10,19 +12,19 @@
         /// </summary>
         /// <param name="x">The x-coordinate.</param>
         /// <param name="y">The y-coordinate.</param>
-        /// <exception cref="System.ArgumentOutOfRangeException">
+        /// <exception cref="ArgumentOutOfRangeException">
         /// Thrown when either argument is smaller than 0.
         /// </exception>
         public GridCoordinate(int x, int y)
         {
             if (x < 0)
             {
-                throw new System.ArgumentOutOfRangeException(nameof(x));
+                throw new ArgumentOutOfRangeException(nameof(x));
             }
 
             if (y < 0)
             {
-                throw new System.ArgumentOutOfRangeException(nameof(y));
+                throw new ArgumentOutOfRangeException(nameof(y));
             }
 
             X = x;
@@ -44,17 +46,5 @@
         /// The y-coordinate.
         /// </value>
         public int Y { get; }
-
-        /// <summary>
-        /// Deconstructs this <see cref="GridCoordinate"/> into the
-        /// <see cref="X"/> and <see cref="Y"/>.
-        /// </summary>
-        /// <param name="x">The x.</param>
-        /// <param name="y">The y.</param>
-        public void Deconstruct(out int x, out int y)
-        {
-            x = X;
-            y = Y;
-        }
     }
 }

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using DelftTools.Utils.Collections;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.Calculators;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
 using GeoAPI.Extensions.Coverages;
@@ -225,12 +224,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.Calculators
 
         [Test]
         [TestCaseSource(nameof(GetClosestAlignedValueParameterNullData))]
-        public void GetClosestAlignedValueWithNormal_ParameterNull_ThrowsArgumentNullException(IEnumerable<Tuple<int, Vector2D>> valueNormalPairs,
+        public void GetValueClosestAlignedWithNormal_ParameterNull_ThrowsArgumentNullException(IEnumerable<Tuple<int, Vector2D>> valueNormalPairs,
                                                                                                Vector2D referenceNormal,
                                                                                                string expectedParamName)
         { 
             // Call | Assert
-            void Call() => CartesianOrientationCalculatorHelper.GetClosestAlignedValueWithNormal(valueNormalPairs, referenceNormal, 0); 
+            void Call() => CartesianOrientationCalculatorHelper.GetValueClosestAlignedWithNormal(valueNormalPairs, referenceNormal, 0); 
 
             var exception = Assert.Throws<ArgumentNullException>(Call); 
             Assert.That(exception.ParamName, Is.EqualTo(expectedParamName));
@@ -249,7 +248,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.Calculators
         }
 
         [Test]
-        public void GetClosestAlignedValueWithNormal_ExpectedResults()
+        public void GetValueClosestAlignedWithNormal_ExpectedResults()
         {
             var referenceNormal = Vector2D.Create((random.NextDouble() + 0.1)  * 100,
                                                   (random.NextDouble() + 0.1)  * 100);
@@ -261,7 +260,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.Calculators
                                                    .First().Item1;
 
             // Call
-            double result = CartesianOrientationCalculatorHelper.GetClosestAlignedValueWithNormal(valueNormalPairs,
+            double result = CartesianOrientationCalculatorHelper.GetValueClosestAlignedWithNormal(valueNormalPairs,
                                                                                                   referenceNormal,
                                                                                                   0.0);
 

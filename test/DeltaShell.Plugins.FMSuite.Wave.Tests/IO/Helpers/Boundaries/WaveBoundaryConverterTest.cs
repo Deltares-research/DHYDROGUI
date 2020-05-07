@@ -634,6 +634,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
                                                   .ToList();
 
             // Assert
+            Assert.That(result, Has.Count.EqualTo(1));
+            IWaveBoundary waveBoundary = result[0];
+            Assert.That(waveBoundary.GeometricDefinition, Is.SameAs(geometricDefinition));
+
             IEventedList<SupportPoint> supportPoints = geometricDefinition.SupportPoints;
             Assert.That(supportPoints, Has.Count.EqualTo(5));
             Assert.That(supportPoints[0].Distance, Is.EqualTo(0));
@@ -675,6 +679,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
                                                   .ToList();
 
             // Assert
+            Assert.That(result, Has.Count.EqualTo(1));
+            IWaveBoundary waveBoundary = result[0];
+            Assert.That(waveBoundary.GeometricDefinition, Is.SameAs(geometricDefinition));
+
             IEventedList<SupportPoint> supportPoints = geometricDefinition.SupportPoints;
             Assert.That(supportPoints, Has.Count.EqualTo(5));
             Assert.That(supportPoints[0].Distance, Is.EqualTo(0));
