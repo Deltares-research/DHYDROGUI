@@ -231,6 +231,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
             }
 
             waterFlowFMModel.Network?.MakeNamesUnique<ICompositeBranchStructure>();
+            hydroModel.CoordinateSystem = waterFlowFMModel.CoordinateSystem;
         }
 
         public bool IsActive { get; set; }

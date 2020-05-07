@@ -121,6 +121,7 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
             if (hydroModel != null)
             {
                 SetCurrentWorkflow(fmModel, rrModel, hydroModel);
+                hydroModel.CoordinateSystem = fmModel?.CoordinateSystem;
             }
             EventSettings.BubblingEnabled = true;
             watch.Stop();

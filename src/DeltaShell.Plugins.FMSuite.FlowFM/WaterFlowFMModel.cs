@@ -1842,6 +1842,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     Network.CoordinateSystem = value;
                 }
 
+                if (fmRegion != null)
+                {
+                    fmRegion.CoordinateSystem = value;
+                }
+
                 if (Grid != null)
                 {
                     Grid.CoordinateSystem = value;

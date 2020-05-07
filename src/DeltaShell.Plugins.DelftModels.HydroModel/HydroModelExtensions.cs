@@ -70,10 +70,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
             var hydroModelBuilder = new HydroModelBuilder();
             var newHydroModel = hydroModelBuilder.BuildModel(ModelGroup.Empty);
+            newHydroModel.CoordinateSystem = sourceModel.Region?.CoordinateSystem;
 
             folder.Items.Add(newHydroModel);
             MoveActivity(sourceModel, folder, newHydroModel);
-            
+
             ((IEditableObject)sourceModel).EndEdit();
         }
     }

@@ -55,7 +55,30 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
-    <Grid ToolTip="{Binding SelectedCoordinateSystem.Name}">
+    <Grid>
+        <Grid.ToolTip>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                
+                <TextBlock Grid.Column="0" Grid.Row ="0"
+                           Text="Name: "/>
+                <TextBlock Grid.Column="1" Grid.Row ="0"
+                           Text="{Binding SelectedCoordinateSystem.Name}"/>
+
+                <TextBlock Grid.Column="0" Grid.Row ="1" Text="{Binding SelectedCoordinateSystem.Authority, StringFormat=\{0\}:}"/>
+
+                <TextBlock Grid.Column="1" Grid.Row ="1"
+                           Text="{Binding SelectedCoordinateSystem.AuthorityCode}"/>
+            </Grid>
+        </Grid.ToolTip>
         <Grid.DataContext>
             <local:CoordinateSystemPickerViewModel x:Name="ViewModel" />
         </Grid.DataContext>
@@ -71,7 +94,8 @@
         <ToggleButton Grid.Column="1" 
                             Margin="2"
                             x:Name="CoordinateSystemButton" 
-                            Content=" ... " />
+                            Content=" ... "
+                            ToolTip="Set model coordinate system (does not adjust model coordinates, but can affect rendering and model results)"/>
 
         <Popup AllowsTransparency="False" 
                            StaysOpen="False"
