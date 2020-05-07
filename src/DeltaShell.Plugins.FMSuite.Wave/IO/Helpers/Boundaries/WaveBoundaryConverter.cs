@@ -107,8 +107,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
                 case DefinitionImportType.Oriented:
                     return GetGeometricDefinitionFromOrientation(boundaryBlock);
                 case DefinitionImportType.SpectrumFile:
-                default:
                     return null;
+                default:
+                    throw new InvalidOperationException($"{boundaryBlock.DefinitionType} is an invalid Definition Type.");
             }
         }
 

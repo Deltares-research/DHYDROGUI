@@ -96,7 +96,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.Calculators
 
         /// <summary>
         /// Gets the normalised normal associated with the vector defined
-        /// by <paramref name="coordinate1"/> minus <paramref name="coordinate0"/>.
+        /// by <paramref name="coordinate1"/> minus <paramref name="coordinate0"/>
+        /// by rotating 90 degrees clockwise.
         /// </summary>
         /// <param name="coordinate0">The first coordinate.</param>
         /// <param name="coordinate1">The second coordinate.</param>
@@ -110,44 +111,44 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.Calculators
                             coordinate0.X - coordinate1.X).Normalize();
 
         /// <summary>
-        /// Gets the value associated with the normal in the
-        /// provided <paramref name="valueNormalPairs"/> closest aligned to the
-        /// <paramref name="referenceNormal"/>.
+        /// Gets the value associated with the vector in the
+        /// provided <paramref name="valueVectorPairs"/> closest aligned to the
+        /// <paramref name="referenceVector"/>.
         /// </summary>
         /// <typeparam name="T">The value type.</typeparam>
-        /// <param name="valueNormalPairs">The value normal pairs.</param>
-        /// <param name="referenceNormal">The reference normal.</param>
+        /// <param name="valueVectorPairs">The value-vector pairs.</param>
+        /// <param name="referenceVector">The reference vector.</param>
         /// <param name="defaultValue">The default value.</param>
         /// <returns>
-        /// The <typeparamref name="T"/> value in <paramref name="valueNormalPairs"/> of
-        /// which the normal aligns most with the provided <paramref name="referenceNormal"/>.
-        /// If <paramref name="valueNormalPairs"/> is empty, then <paramref name="defaultValue"/>
+        /// The <typeparamref name="T"/> value in <paramref name="valueVectorPairs"/> of
+        /// which the vector aligns most with the provided <paramref name="referenceVector"/>.
+        /// If <paramref name="valueVectorPairs"/> is empty, then <paramref name="defaultValue"/>
         /// is returned.
         /// </returns>
         /// <exception cref="ArgumentNullException">
-        /// Thrown when <paramref name="valueNormalPairs"/> or <paramref name="referenceNormal"/>
+        /// Thrown when <paramref name="valueVectorPairs"/> or <paramref name="referenceVector"/>
         /// is <c>null</c>.
         /// </exception>
-        internal static T GetValueClosestAlignedWithNormal<T>(IEnumerable<Tuple<T, Vector2D>> valueNormalPairs, 
-                                                              Vector2D referenceNormal, 
+        internal static T GetValueClosestAlignedWithVector<T>(IEnumerable<Tuple<T, Vector2D>> valueVectorPairs, 
+                                                              Vector2D referenceVector, 
                                                               T defaultValue)
         {
-            Ensure.NotNull(valueNormalPairs, nameof(valueNormalPairs));
-            Ensure.NotNull(referenceNormal, nameof(referenceNormal));
+            Ensure.NotNull(valueVectorPairs, nameof(valueVectorPairs));
+            Ensure.NotNull(referenceVector, nameof(referenceVector));
 
             // The dot product between two normalized vectors is equal to cos theta
             // where theta is the angle between the vectors. Any dot product will
             // thus lie between -1 and 1, where the highest value will correspond with
-            // the smallest angle between the referenceNormal and the normal associated with
+            // the smallest angle between the referenceVector and the normal associated with
             // the value. We leverage this to find the result value.
-            Vector2D referenceNormalized = referenceNormal.Normalize();
+            Vector2D referenceNormalized = referenceVector.Normalize();
 
             double largestDotProduct = -1.0;
             T result = defaultValue;
 
-            foreach ((T value, Vector2D normal) in valueNormalPairs)
+            foreach ((T value, Vector2D vector) in valueVectorPairs)
             {
-                double dotProduct = normal.Normalize()
+                double dotProduct = vector.Normalize()
                                           .Dot(referenceNormalized);
 
                 if (largestDotProduct >= dotProduct)
