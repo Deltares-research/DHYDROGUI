@@ -904,6 +904,14 @@ src/DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui/Concepts/HbvDataView.cs -t
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui/Concepts/HbvMeteoStationSelection.Designer.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui/Concepts/HbvMeteoStationSelection.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui/Concepts/HbvMeteoStationSelection.resx -text
+src/DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui/Concepts/Nwrw/NwrwDefinitionView.Designer.cs -text
+src/DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui/Concepts/Nwrw/NwrwDefinitionView.cs -text
+src/DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui/Concepts/Nwrw/NwrwDryWeatherFlowDefinitionDailyVolumePercentagesForm.Designer.cs -text
+src/DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui/Concepts/Nwrw/NwrwDryWeatherFlowDefinitionDailyVolumePercentagesForm.cs -text
+src/DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui/Concepts/Nwrw/NwrwDryWeatherFlowDefinitionDailyVolumePercentagesForm.resx -text
+src/DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui/Concepts/Nwrw/NwrwDryWeatherFlowDefinitionView.Designer.cs -text
+src/DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui/Concepts/Nwrw/NwrwDryWeatherFlowDefinitionView.cs -text
+src/DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui/Concepts/Nwrw/NwrwDryWeatherFlowDefinitionView.resx -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui/Concepts/NwrwDataRow.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui/Concepts/OpenWaterDataRow.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui/Concepts/OpenWaterDataView.Designer.cs -text
@@ -981,7 +989,9 @@ src/DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui/Importers/LandUsePolderMap
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui/Importers/LandUsePolderMappingWizardPage.resx -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui/NodePresenters/CatchmentModelDataProjectNodePresenter.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui/NodePresenters/CatchmentModelDataTreeFolderProjectNodePresenter.cs -text
+src/DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui/NodePresenters/DryWeatherFlowDefinitionsProjectNodePresenter.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui/NodePresenters/MeteoDataProjectNodePresenter.cs -text
+src/DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui/NodePresenters/NwrwDefinitionsProjectNodePresenter.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui/NodePresenters/RainfallRunoffBoundaryDataProjectNodePresenter.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui/NodePresenters/RainfallRunoffInitialConditionsProjectNodePresenter.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui/NodePresenters/RainfallRunoffModelProjectNodePresenter.cs -text
@@ -1052,12 +1062,12 @@ src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Domain/Concepts/Nwrw/NwrwDryWe
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Domain/Concepts/Nwrw/NwrwDryWeatherFlowDefinition.hbm.xml -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Domain/Concepts/Nwrw/NwrwDwfComponentFileWriter.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Domain/Concepts/Nwrw/NwrwEnums.cs -text
-src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Domain/Concepts/Nwrw/NwrwFileHelper.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Domain/Concepts/Nwrw/NwrwFileReader.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Domain/Concepts/Nwrw/NwrwKeywords.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Domain/Concepts/Nwrw/NwrwModelFileWriter.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Domain/Concepts/Nwrw/NwrwSpecialArea.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Domain/Concepts/Nwrw/NwrwSpecialArea.hbm.xml -text
+src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Domain/Concepts/Nwrw/NwrwSurfaceTypeHelper.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Domain/Concepts/Nwrw/NwrwTpComponentFileWriter.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Domain/Concepts/OpenWaterData.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Domain/Concepts/OpenWaterData.hbm.xml -text
@@ -1168,6 +1178,7 @@ src/DeltaShell.Plugins.DelftModels.RainfallRunoff/ModelControllers/MeteoDataMode
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/ModelControllers/ModelLink.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/ModelControllers/RainfallRunoffModelController.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/ModelControllers/RainfallRunoffModelOutputController.cs -text
+src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Properties/Annotations.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Properties/AssemblyInfo.cs.svn -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Properties/PluginInfo.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/Properties/Resources.Designer.cs -text

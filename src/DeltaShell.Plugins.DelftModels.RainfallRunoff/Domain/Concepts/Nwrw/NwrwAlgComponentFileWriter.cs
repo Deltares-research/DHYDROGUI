@@ -57,7 +57,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
         private void AppendMaximumStorage(StringBuilder line, IList<NwrwDefinition> nwrwDefinitions)
         {
             line.Append($"{NwrwKeywords.Pluv_alg_ms} ");
-            foreach (NwrwSurfaceType nwrwSurfaceType in NwrwFileHelper.SurfaceTypesInCorrectOrder)
+            foreach (NwrwSurfaceType nwrwSurfaceType in NwrwSurfaceTypeHelper.SurfaceTypesInCorrectOrder)
             {
                 line.Append($"{nwrwDefinitions.FirstOrDefault(nd => nd.SurfaceType.Equals(nwrwSurfaceType))?.SurfaceStorage} ");
             }

@@ -46,7 +46,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
             // 'ar' + area (12 types) as combination of 3 kind of slopes and 4 types of surfaces
             line.Append($"{NwrwKeywords.Pluv_3b_ar} ");
 
-            foreach (var surfaceType in NwrwFileHelper.SurfaceTypesInCorrectOrder)
+            foreach (var surfaceType in NwrwSurfaceTypeHelper.SurfaceTypesInCorrectOrder)
             {
                 if (surfaceLevelDict.ContainsKey(surfaceType))
                     line.Append(surfaceLevelDict[surfaceType]);

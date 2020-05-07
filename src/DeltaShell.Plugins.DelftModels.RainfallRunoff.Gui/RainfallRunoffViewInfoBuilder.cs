@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using DelftTools.Controls;
+﻿using DelftTools.Controls;
 using DelftTools.Hydro;
 using DelftTools.Shell.Gui;
 using DelftTools.Shell.Gui.Swf;
@@ -11,10 +7,12 @@ using DelftTools.Utils;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.FeatureCoverageProviders;
+using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Polder;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Meteo;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.FeatureCoverageProviders;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts;
+using DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts.Nwrw;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts.Polder;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Controls;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.DataRows;
@@ -22,6 +20,11 @@ using DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Importers;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.NodePresenters;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Importers;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Validation;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
+using DelftTools.Utils.Collections.Generic;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui
 {
@@ -31,6 +34,16 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui
 
         public static IEnumerable<ViewInfo> BuildViewInfoObjects(RainfallRunoffGuiPlugin rainfallRunoffGuiPlugin)
         {
+            yield return new ViewInfo<IEventedList<NwrwDryWeatherFlowDefinition>, NwrwDryWeatherFlowDefinitionView>
+                {
+                    Description = "Dryweather flow view",
+                    GetViewName = (v, o) => "Dryweather Flow Definitions",
+                };
+            yield return new ViewInfo<IEventedList<NwrwDefinition>, NwrwDefinitionView>
+            {
+                Description = "Nwrw surface settings view",
+                GetViewName = (v, o) => "Nwrw Surface Settings",
+            };
             yield return new ViewInfo<UnpavedData, UnpavedDataView>
                 {
                     Description = "Unpaved view",

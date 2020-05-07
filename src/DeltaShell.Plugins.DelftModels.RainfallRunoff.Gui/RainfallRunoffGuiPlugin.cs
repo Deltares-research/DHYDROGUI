@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using DelftTools.Controls;
+﻿using DelftTools.Controls;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Gui;
@@ -14,6 +13,7 @@ using DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Controls;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.NodePresenters;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.PropertyClasses;
 using Mono.Addins;
+using System.Collections.Generic;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui
 {
@@ -92,6 +92,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui
             yield return new MeteoDataProjectNodePresenter(this);
             yield return new RainfallRunoffInitialConditionsProjectNodePresenter();
             yield return new RainfallRunoffBoundaryDataProjectNodePresenter();
+            yield return new DryWeatherFlowDefinitionsProjectNodePresenter();
+            yield return new NwrwDefinitionsProjectNodePresenter();
         }
         public override IGui Gui
         {

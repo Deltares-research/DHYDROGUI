@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw;
 using NUnit.Framework;
 
@@ -90,7 +91,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Domain.Concepts.Nw
         {
             var surfaceLevelDict = new Dictionary<NwrwSurfaceType, double>();
 
-            NwrwSurfaceType[] surfaceTypes = NwrwFileHelper.SurfaceTypesInCorrectOrder.ToArray();
+            NwrwSurfaceType[] surfaceTypes = NwrwSurfaceTypeHelper.SurfaceTypesInCorrectOrder.ToArray();
 
             for (int i = 0; i < surfaceTypes.Length; i++)
             {
@@ -100,9 +101,9 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Domain.Concepts.Nw
             return surfaceLevelDict;
         }
 
-        public static IList<NwrwDefinition> GenerateNwrwDefinitions()
+        public static EventedList<NwrwDefinition> GenerateNwrwDefinitions()
         {
-            var nwrwDefinitions = new List<NwrwDefinition>();
+            var nwrwDefinitions = new EventedList<NwrwDefinition>();
 
             var gvhHelDefinition = new NwrwDefinition()
             {
@@ -264,14 +265,13 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Domain.Concepts.Nw
 
         }
 
-        public static IList<NwrwDryWeatherFlowDefinition> GenerateNwrwDryWeatherFlowDefinitions()
+        public static IEventedList<NwrwDryWeatherFlowDefinition> GenerateNwrwDryWeatherFlowDefinitions()
         {
-            var dryweatherFlowDefinitions = new List<NwrwDryWeatherFlowDefinition>();
+            var dryweatherFlowDefinitions = new EventedList<NwrwDryWeatherFlowDefinition>();
 
             var constantDwfDefinition = new NwrwDryWeatherFlowDefinition()
             {
                 Name = "Constant DWF definition",
-                DryWeatherFlowId = "Constant DWF definition",
                 DailyVolumeConstant = 10,
                 DailyVolumeVariable = 50,
                 DayNumber = 3,
@@ -284,7 +284,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Domain.Concepts.Nw
             var dailyDwfDefinition = new NwrwDryWeatherFlowDefinition()
             {
                 Name = "Daily DWF definition",
-                DryWeatherFlowId = "Daily DWF definition",
                 DailyVolumeConstant = 123,
                 DailyVolumeVariable = 456,
                 DayNumber = 7,

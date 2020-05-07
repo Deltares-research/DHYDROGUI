@@ -55,6 +55,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
         private RainfallRunoffModelController modelController;
         private RainfallRunoffOutputSettingData outputSettings;
         private IEventedList<CatchmentModelData> modelData;
+        private IEventedList<NwrwDryWeatherFlowDefinition> nwrwDryWeatherFlowDefinitions;
+        private IEventedList<NwrwDefinition> nwrwDefinitions;
         private IList<ExplicitValueConverterLookupItem> explicitValueConverterLookupItems;
 
         public RainfallRunoffModel() : base("Rainfall Runoff")
@@ -150,6 +152,11 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
                 };
 
             ModelData = new EventedList<CatchmentModelData>();
+            NwrwDryWeatherFlowDefinitions = new EventedList<NwrwDryWeatherFlowDefinition>()
+            {
+                NwrwDryWeatherFlowDefinition.CreateDefaultDwaDefinition()
+            };
+            NwrwDefinitions = NwrwDefinition.CreateDefaultNwrwDefinitions();
             BoundaryData = new EventedList<RunoffBoundaryData>();
             MeteoStations = new EventedList<string>();
             TemperatureStations = new EventedList<string>();
@@ -631,9 +638,64 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
         {
             BubbleCollectionChangedEvent(sender ,e);
         }
-        
-        public IList<NwrwDryWeatherFlowDefinition> NwrwDryWeatherFlowDefinitions { get; set; } = new List<NwrwDryWeatherFlowDefinition>(){NwrwDryWeatherFlowDefinition.CreateDefaultDwaDefinition()};
-        public IList<NwrwDefinition> NwrwDefinitions { get; set; } = new List<NwrwDefinition>();
+
+        public IEventedList<NwrwDryWeatherFlowDefinition> NwrwDryWeatherFlowDefinitions
+        {
+            get { return nwrwDryWeatherFlowDefinitions; }
+            set
+            {
+                if (nwrwDryWeatherFlowDefinitions != null)
+                {
+                    nwrwDryWeatherFlowDefinitions.CollectionChanging -= NwrwDryWeatherFlowDefinitionCollectionChanging;
+                    nwrwDryWeatherFlowDefinitions.CollectionChanged -= NwrwDryWeatherFlowDefinitionCollectionChanged;
+                }
+                nwrwDryWeatherFlowDefinitions = value;
+                if (nwrwDryWeatherFlowDefinitions != null)
+                {
+                    nwrwDryWeatherFlowDefinitions.CollectionChanging += NwrwDryWeatherFlowDefinitionCollectionChanging;
+                    nwrwDryWeatherFlowDefinitions.CollectionChanged += NwrwDryWeatherFlowDefinitionCollectionChanged;
+                }
+            }
+        }
+
+        private void NwrwDryWeatherFlowDefinitionCollectionChanging(object sender, NotifyCollectionChangingEventArgs e)
+        {
+            BubbleCollectionChangingEvent(sender, e);
+        }
+
+        private void NwrwDryWeatherFlowDefinitionCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            BubbleCollectionChangedEvent(sender, e);
+        }
+
+        public IEventedList<NwrwDefinition> NwrwDefinitions
+        {
+            get { return nwrwDefinitions; }
+            set
+            {
+                if (nwrwDefinitions != null)
+                {
+                    nwrwDefinitions.CollectionChanging -= NwrwDefinitionCollectionChanging;
+                    nwrwDefinitions.CollectionChanged -= NwrwDefinitionCollectionChanged;
+                }
+                nwrwDefinitions = value;
+                if (nwrwDefinitions != null)
+                {
+                    nwrwDefinitions.CollectionChanging += NwrwDefinitionCollectionChanging;
+                    nwrwDefinitions.CollectionChanged += NwrwDefinitionCollectionChanged;
+                }
+            }
+        }
+
+        private void NwrwDefinitionCollectionChanging(object sender, NotifyCollectionChangingEventArgs e)
+        {
+            BubbleCollectionChangingEvent(sender, e);
+        }
+
+        private void NwrwDefinitionCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            BubbleCollectionChangedEvent(sender, e);
+        }
 
         public IEventedList<RunoffBoundaryData> BoundaryData
         {

@@ -197,10 +197,8 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
                double auxDouble;
                int auxInt;
 
-               nwrwDryWeatherFlowDefinition.DryWeatherFlowId = gwswElement
+               nwrwDryWeatherFlowDefinition.Name = gwswElement
                    .GetAttributeFromList(SewerConnectionMapping.PropertyKeys.DistributionId).ValueAsString;
-               nwrwDryWeatherFlowDefinition.Name = nwrwDryWeatherFlowDefinition.DryWeatherFlowId;
-
 
                var distributionType = gwswElement
                    .GetAttributeFromList(SewerConnectionMapping.PropertyKeys.DistributionType).ValueAsString;

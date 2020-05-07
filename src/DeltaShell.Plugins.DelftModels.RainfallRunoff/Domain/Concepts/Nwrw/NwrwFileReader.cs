@@ -64,7 +64,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
                         nwrwData.LateralSurface = ParseDouble(values[++i], LineNumber, parseErrors);
                         break;
                     case NwrwKeywords.Pluv_3b_ar:
-                        foreach (NwrwSurfaceType nwrwSurfaceType in NwrwFileHelper.SurfaceTypesInCorrectOrder)
+                        foreach (NwrwSurfaceType nwrwSurfaceType in NwrwSurfaceTypeHelper.SurfaceTypesInCorrectOrder)
                         {
                             nwrwData.SurfaceLevelDict[nwrwSurfaceType] = ParseDouble(values[++i], LineNumber, parseErrors);
                         }

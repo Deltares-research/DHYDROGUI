@@ -1,7 +1,11 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using DelftTools.Hydro;
+using DelftTools.Utils.Aop;
 using DelftTools.Utils.Data;
+using DeltaShell.Plugins.DelftModels.RainfallRunoff.Annotations;
 using GeoAPI.Geometries;
 using log4net;
 
@@ -11,12 +15,12 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
     /// Object for storing dry weather flow definitions from verloop.csv.
     /// </summary>
     /// <seealso cref="INwrwFeature" />
+    [Entity]
     public class NwrwDryWeatherFlowDefinition : Unique<long>, INwrwFeature
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(NwrwDryWeatherFlowDefinition));
 
         public string Name { get; set; } //VER_IDE
-        public string DryWeatherFlowId { get; set; } // VER_IDE
         public DwfDistributionType DistributionType { get; set; } // VER_TYPE
         public int DayNumber { get; set; } // VER_DAG
         public double DailyVolumeVariable { get; set; } // VER_VOL
@@ -61,14 +65,11 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
             if (DistributionType == DwfDistributionType.Variable)
             {
                 throw new NotSupportedException($"Could not add '{Name}' DWF definition to {nameof(RainfallRunoffModel)}. The given distribution type '{DistributionType}' is not yet supported.");
-                //Log.Warn($"Could not add '{Name}' DWF definition to {nameof(RainfallRunoffModel)}. The given distribution type '{DistributionType}' is not yet supported.");
-                //return true;
             }
 
             if (DistributionType == DwfDistributionType.Constant && DayNumber != default(int))
             {
                 throw new NotSupportedException($"Could not add '{Name}' DWF definition to {nameof(RainfallRunoffModel)}. The given distribution type '{DistributionType}' is not yet supported in combination with a value of '{DayNumber}' for VER_DAG.");
-                //return true;
             }
 
             return false;
@@ -79,7 +80,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
             return new NwrwDryWeatherFlowDefinition
             {
                 Name = "Default_DWA",
-                DryWeatherFlowId = "Default_DWA",
                 DistributionType = DwfDistributionType.Constant,
                 DailyVolumeConstant = 12,
                 DailyVolumeVariable = 120,

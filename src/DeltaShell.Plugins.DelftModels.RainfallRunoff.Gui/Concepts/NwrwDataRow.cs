@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using DelftTools.Controls;
+﻿using DelftTools.Controls;
 using DelftTools.Controls.Swf.Editors;
 using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.DataRows;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
 {
@@ -182,7 +181,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
             {
                 return data.DryWeatherFlows.Count >= 1
                     ? data.DryWeatherFlows[0].DryWeatherFlowId
-                    : String.Empty;
+                    : string.Empty;
             }
             set { data.DryWeatherFlows[0].DryWeatherFlowId = value; }
         }
@@ -200,13 +199,13 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
         }
 
         [Description("DWF definition (company)")]
-        public string LastFirstDryWeatherFlowId
+        public string LastDryWeatherFlowId
         {
             get
             {
                 return data.DryWeatherFlows.Count >= 2
                     ? data.DryWeatherFlows[1].DryWeatherFlowId
-                    : String.Empty;
+                    : string.Empty;
             }
             set { data.DryWeatherFlows[1].DryWeatherFlowId = value; }
         }
@@ -221,29 +220,24 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
         public override void SetColumnEditorForDataWithModel(RainfallRunoffModel model,
             IEnumerable<ITableViewColumn> tableViewColumns)
         {
-            // First definition must start with "Inwoner".
-            // Second definition must start with "Bedrijf".
-            // See issue FM1D2D-535.
             var dwfidcolumn = tableViewColumns.FirstOrDefault(c =>
                 c.Caption.Equals(TypeUtils.GetMemberDescription(() => new NwrwDataRow().FirstDryWeatherFlowId)));
             if (dwfidcolumn != null)
             {
                 dwfidcolumn.Editor = new ComboBoxTypeEditor
-                    {Items = model?.NwrwDryWeatherFlowDefinitions
-                        .Where(dwfd => dwfd.DryWeatherFlowId.StartsWith("Inwoner", StringComparison.InvariantCultureIgnoreCase)
-                        || dwfd.DryWeatherFlowId.Equals(NwrwData.DEFAULT_DWA_ID))
-                        .Select(dwfd => dwfd.DryWeatherFlowId)
+                    {
+                        Items = model?.NwrwDryWeatherFlowDefinitions
+                            .Select(dwfd => dwfd.Name)
                 };
             }
             dwfidcolumn = tableViewColumns.FirstOrDefault(c =>
-                c.Caption.Equals(TypeUtils.GetMemberDescription(() => new NwrwDataRow().LastFirstDryWeatherFlowId)));
+                c.Caption.Equals(TypeUtils.GetMemberDescription(() => new NwrwDataRow().LastDryWeatherFlowId)));
             if (dwfidcolumn != null)
             {
                 dwfidcolumn.Editor = new ComboBoxTypeEditor
-                    { Items = model?.NwrwDryWeatherFlowDefinitions
-                        .Where(dwfd => dwfd.DryWeatherFlowId.StartsWith("Bedrijf", StringComparison.InvariantCultureIgnoreCase)
-                        || dwfd.DryWeatherFlowId.Equals(NwrwData.DEFAULT_DWA_ID))
-                        .Select(dwfd => dwfd.DryWeatherFlowId)
+                    { 
+                        Items = model?.NwrwDryWeatherFlowDefinitions
+                            .Select(dwfd => dwfd.Name)
                     };
             }
         }

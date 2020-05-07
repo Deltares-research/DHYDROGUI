@@ -10,6 +10,7 @@ using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Shell.Gui;
 using DelftTools.Shell.Gui.Swf;
 using DelftTools.Shell.Gui.Swf.Validation;
+using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Properties;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using MessageBox = System.Windows.Forms.MessageBox;
@@ -36,6 +37,13 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.NodePresenters
             yield return new TreeFolder(model, GetMeteoDataItems(model), "Meteorological Data", FolderImageType.None);
             yield return new TreeFolder(model, GetInitialConditions(model), "Initial Conditions", FolderImageType.None);
             yield return new CatchmentModelDataTreeFolder(model, model.ModelData, CatchmentDataFolderName, FolderImageType.None);
+            yield return new TreeFolder(model, GetNwrwDataItems(model), "Nwrw", FolderImageType.None);
+        }
+
+        private IEnumerable GetNwrwDataItems(RainfallRunoffModel model)
+        {
+            yield return new DataItem(model.NwrwDryWeatherFlowDefinitions, "Dryweather Flow Definitions");
+            yield return new DataItem(model.NwrwDefinitions, "Surface Settings");
         }
         
         private IEnumerable GetMeteoDataItems(RainfallRunoffModel model)
