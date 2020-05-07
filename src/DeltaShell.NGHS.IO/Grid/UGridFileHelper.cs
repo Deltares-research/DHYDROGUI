@@ -643,6 +643,9 @@ namespace DeltaShell.NGHS.IO.Grid
 
         private static bool IsValidPath(string path)
         {
+            if (path == null)
+                return false;
+
             var fileInfo = new FileInfo(path);
             return fileInfo.Exists && 
                    fileInfo.Length != 0 && 
