@@ -93,15 +93,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries
 
             // skip the first and last points, these are always the begin and endpoint and will be added during construction of the WaveBoundary
             IEventedList<SupportPoint> oldSupportPoints = boundary.WaveBoundary.GeometricDefinition.SupportPoints;
-            if (oldSupportPoints.Count <= 2)
-            {
-                return waveBoundary;
-            }
+            var dict = new Dictionary<SupportPoint, SupportPoint>();
 
             SupportPoint firstPoint = FirstPoint(oldSupportPoints);
             SupportPoint lastPoint = LastPoint(oldSupportPoints);
 
-            var dict = new Dictionary<SupportPoint, SupportPoint>();
+            dict.Add(firstPoint, FirstPoint(newGeometricDefinition.SupportPoints));
+            dict.Add(lastPoint, LastPoint(newGeometricDefinition.SupportPoints));
+            
             foreach (SupportPoint supportPoint in oldSupportPoints)
             {
                 if (supportPoint == firstPoint || supportPoint == lastPoint)

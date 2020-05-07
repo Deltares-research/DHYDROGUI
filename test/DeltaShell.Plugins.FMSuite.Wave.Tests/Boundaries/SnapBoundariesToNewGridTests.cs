@@ -199,19 +199,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries
             Assert.AreEqual(5, points[2].Distance);
         }
 
-        [Ignore]
         [Test]
-        public void RestoreBoundariesIfPossible_SupportPointsIncludingToBig()
+        public void RestoreBoundariesIfPossible_ReplacesAllValidSupportPointsSavingSupportPointSettings()
         {
-            // Arrange
             var cachedBoundaries = new List<CachedBoundary>();
             var cachedBoundary = CachedBoundaryCreator(1, 1, 10, "one");
-
-            // Add a single support point falling within the length of the waveBoundary
             var supportPoint = new SupportPoint(5, cachedBoundary.WaveBoundary.GeometricDefinition);
-            var supportPointTooBig = new SupportPoint(30, cachedBoundary.WaveBoundary.GeometricDefinition);
             cachedBoundary.WaveBoundary.GeometricDefinition.SupportPoints.Add(supportPoint);
-            cachedBoundary.WaveBoundary.GeometricDefinition.SupportPoints.Add(supportPointTooBig);
             cachedBoundaries.Add(cachedBoundary);
 
             var boundarySnappingCalculator = Substitute.For<IBoundarySnappingCalculator>();
@@ -220,19 +214,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries
             boundarySnappingCalculator.SnapCoordinateToGridBoundaryCoordinate(Arg.Any<Coordinate>()).Returns(x => beginPointGridCoordinates, x => endPointGridCoordinates);
             boundarySnappingCalculator.CalculateDistanceBetweenBoundaryIndices(Arg.Any<int>(), Arg.Any<int>(), Arg.Any<GridSide>()).ReturnsForAnyArgs(10);
 
-            // Act
             var result = SnapBoundariesToNewGrid.RestoreBoundariesIfPossible(cachedBoundaries, boundarySnappingCalculator);
 
-            // Assert
             Assert.IsNotNull(result);
             Assert.AreEqual(1, result.Count());
-            Assert.AreNotSame(result.First(), cachedBoundaries.First().WaveBoundary);
-            Assert.AreEqual(cachedBoundaries.First().WaveBoundary.Name, result.First().Name);
-            Assert.AreEqual(3, result.First().GeometricDefinition.SupportPoints.Count());
-            var points = result.First().GeometricDefinition.SupportPoints;
-            Assert.AreEqual(0, points[0].Distance);
-            Assert.AreEqual(10, points[1].Distance);
-            Assert.AreEqual(5, points[2].Distance);
+
+            // Assert
+            var newWaveBoundary = result.First();
+            Assert.IsFalse(newWaveBoundary.GeometricDefinition.SupportPoints.Contains(cachedBoundaries[0].WaveBoundary.GeometricDefinition.SupportPoints[0]));
+            Assert.IsFalse(newWaveBoundary.GeometricDefinition.SupportPoints.Contains(cachedBoundaries[0].WaveBoundary.GeometricDefinition.SupportPoints[1]));
+            Assert.IsFalse(newWaveBoundary.GeometricDefinition.SupportPoints.Contains(cachedBoundaries[0].WaveBoundary.GeometricDefinition.SupportPoints[2]));
         }
 
         private static CachedBoundary CachedBoundaryCreator(double begin, double end, int length, string name)
