@@ -16,6 +16,7 @@ using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.CrossSections.StandardShapes;
+using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Gui;
 using DelftTools.Utils;
@@ -1009,7 +1010,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
                 return false;
             }
 
-            if (!NetworkRoute.Network.IsEditing && RouteHelper.IsDisconnected(NetworkRoute))
+            if (!NetworkRoute.Network.IsEditing && RouteHelper.IsDisconnected(NetworkRoute) && !NetworkRoute.Locations.Values.All(l => l.Branch is ISewerConnection && Equals(l.Branch?.Source, l.Branch?.Target)))
             {
                 message = string.Format("{0} is not a valid route; is the route disconnected?", NetworkRoute.Name);
                 log.ErrorFormat(message);

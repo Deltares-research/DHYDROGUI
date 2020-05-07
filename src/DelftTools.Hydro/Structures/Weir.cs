@@ -283,6 +283,7 @@ namespace DelftTools.Hydro.Structures
             {
                 sewerConnection = GetNewSewerConnectionWithWeirToNetwork(hydroNetwork, helper);
                 sewerConnection.AddToHydroNetwork(hydroNetwork, helper);
+                return;
             }
 
             var weirs = sewerConnection?.BranchFeatures.OfType<IWeir>().Where(bf =>

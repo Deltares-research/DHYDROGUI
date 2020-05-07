@@ -498,6 +498,7 @@ namespace DelftTools.Hydro.SewerFeatures
             }
             if(Geometry == null)
                 Geometry = new LineString(new []{new Coordinate(0,0),new Coordinate(0,1)}); //stupid placeholder.
+            UpdateBranchFeatureGeometries();
         }
 
         public void SetLengthOfConnectionBasedOnConnectedCompartmentsOrSetAFake()
@@ -557,7 +558,11 @@ namespace DelftTools.Hydro.SewerFeatures
         public void UpdateBranchFeatureGeometries()
         {
             if (SourceCompartment != null && TargetCompartment != null)
-                BranchFeatures.ForEach(bf => bf.Geometry = GetBranchFeatureGeometry());
+                BranchFeatures.ForEach(bf =>
+                {
+                    bf.Geometry = GetBranchFeatureGeometry();
+                    bf.Chainage = Length / 2;
+                });
         }
 
         private Point GetBranchFeatureGeometry()

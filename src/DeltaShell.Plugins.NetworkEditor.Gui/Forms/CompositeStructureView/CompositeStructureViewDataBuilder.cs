@@ -1,5 +1,7 @@
 using System;
+using System.Linq;
 using DelftTools.Hydro.CrossSections;
+using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView;
 using NetTopologySuite.Extensions.Coverages;
@@ -63,7 +65,15 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
 
             var route = RouteHelper.CreateRoute(new NetworkLocation(compositeBranchStructure.Branch, startPosition),
                                                 new NetworkLocation(compositeBranchStructure.Branch, endPosition));
-            
+            if (!route.Segments.Values.Any() && compositeBranchStructure.Branch is ISewerConnection)
+                route.Segments.AddValues(new[]
+                {
+                    new NetworkSegment()
+                    {
+                        Branch = compositeBranchStructure.Branch, Length = endPosition - startPosition,
+                        Chainage = startPosition
+                    }
+                });
             SideViewDataCounter++;
             var networkSideViewData = new CompositeStructureViewDataController(compositeBranchStructure, route, null)
                                           {
