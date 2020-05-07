@@ -277,6 +277,25 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Boundary &apos;{0}&apos; is defined in a clockwise fashion. This boundary will be converted to a counter-clockwise, any support points distances will be adjusted accordingly. This may lead to unexpected results, please inspect your support points..
+        /// </summary>
+        public static string WaveBoundaryConverter_Boundary_is_defined_in_a_clockwise_fashion_and_will_be_converted {
+            get {
+                return ResourceManager.GetString("WaveBoundaryConverter_Boundary_is_defined_in_a_clockwise_fashion_and_will_be_conv" +
+                        "erted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Converting boundary &apos;{0}&apos;, from {1} to {2}, this may lead to unexpected results, please inspect your boundaries..
+        /// </summary>
+        public static string WaveBoundaryConverter_Converting_boundary_this_may_lead_to_unexpected_results {
+            get {
+                return ResourceManager.GetString("WaveBoundaryConverter_Converting_boundary_this_may_lead_to_unexpected_results", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Boundary &apos;{0}&apos; contains a support point at distance {1}, which is located outside the geometry. This support point will not be imported..
         /// </summary>
         public static string WaveBoundaryConverter_Support_point_outside_geometry_point_will_be_skipped {

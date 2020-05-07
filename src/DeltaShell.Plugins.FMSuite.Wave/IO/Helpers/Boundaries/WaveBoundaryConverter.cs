@@ -18,7 +18,6 @@ using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.Utilities;
 using DeltaShell.Plugins.FMSuite.Wave.Properties;
 using GeoAPI.Geometries;
-using log4net;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
 {
@@ -28,8 +27,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
     /// </summary>
     public class WaveBoundaryConverter
     {
-        private static readonly ILog log = LogManager.GetLogger(typeof(WaveBoundaryConverter));
-
         private readonly IImportBoundaryConditionDataComponentFactory importDataComponentFactory;
         private readonly IWaveBoundaryGeometricDefinitionFactory geometricDefinitionFactory;
 
@@ -128,7 +125,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
 
             if (geometricDefinitionFactory.HasInvertedOrderingCoordinates(geometricDefinition, startCoordinate))
             {
-                InvertSupportPointDistances(boundaryBlock, geometricDefinition.Length);
+                InvertSupportPointDistances(boundaryBlock, geometricDefinition.Length, logHandler);
             }
 
             CreateSupportPoints(boundaryBlock, geometricDefinition, logHandler);
@@ -143,7 +140,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
                 return null;
             }
 
-            logHandler.ReportWarningFormat("Converting boundary '{0}', from {1} to {2}, this may lead to unexpected results, please inspect your boundaries.",
+            logHandler.ReportWarningFormat(Resources.WaveBoundaryConverter_Converting_boundary_this_may_lead_to_unexpected_results,
                                            boundaryBlock.Name,
                                            DefinitionImportType.Oriented.GetDescription(),
                                            DefinitionImportType.Coordinates.GetDescription());
@@ -152,7 +149,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
 
             if (boundaryBlock.DistanceDirType == DistanceDirType.Clockwise)
             {
-                InvertSupportPointDistances(boundaryBlock, geometricDefinition.Length);
+                InvertSupportPointDistances(boundaryBlock, geometricDefinition.Length, logHandler);
             }
 
             CreateSupportPoints(boundaryBlock, geometricDefinition, logHandler);
@@ -161,12 +158,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
         }
 
         private static void InvertSupportPointDistances(BoundaryMdwBlock boundaryBlock,
-                                                        double geometricDefinitionLength)
+                                                        double geometricDefinitionLength,
+                                                        ILogHandler logHandler)
         {
-            log.WarnFormat("Boundary '{0}' is defined in a clockwise fashion. This boundary will be converted to a " +
-                           "counter-clockwise, any support points distances will be adjusted accordingly. This may " +
-                           "lead to unexpected results, please inspect your support points.",
-                           boundaryBlock.Name);
+            logHandler.ReportWarningFormat(Resources.WaveBoundaryConverter_Boundary_is_defined_in_a_clockwise_fashion_and_will_be_converted,
+                                           boundaryBlock.Name);
             boundaryBlock.Distances = boundaryBlock.Distances.Select(d => geometricDefinitionLength - d).ToArray();
         }
 
