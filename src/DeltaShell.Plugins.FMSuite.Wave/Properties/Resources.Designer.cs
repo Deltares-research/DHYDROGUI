@@ -277,6 +277,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Boundary &apos;{0}&apos; contains a support point at distance {1}, which is located outside the geometry. This support point will not be imported..
+        /// </summary>
+        public static string WaveBoundaryConverter_Support_point_outside_geometry_point_will_be_skipped {
+            get {
+                return ResourceManager.GetString("WaveBoundaryConverter_Support_point_outside_geometry_point_will_be_skipped", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Communications file &apos;{0}&apos; does not exist..
         /// </summary>
         public static string WaveCouplingValidator_Validate_Communications_file___0___does_not_exist_ {

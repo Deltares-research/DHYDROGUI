@@ -4,6 +4,7 @@ using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Utils.Guards;
 using DelftTools.Utils.Reflection;
+using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.NGHS.Common.Utils;
 using DeltaShell.NGHS.IO.DelftIniObjects;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
@@ -15,6 +16,7 @@ using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spreading;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.WaveEnergyFunctions;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.Utilities;
+using DeltaShell.Plugins.FMSuite.Wave.Properties;
 using GeoAPI.Geometries;
 using log4net;
 
@@ -57,6 +59,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
         /// <param name="boundaryCategories">The boundary categories.</param>
         /// <param name="timeSeriesData">The time series data from the .bcw file. </param>
         /// <param name="mdwDirPath">The path to the directory where the .mdw file is located.</param>
+        /// <param name="logHandler">The log handler.</param>
         /// <returns>
         /// The converted collection of <see cref="IWaveBoundary"/>
         /// </returns>
@@ -65,24 +68,27 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
         /// </exception>
         public IEnumerable<IWaveBoundary> Convert(IEnumerable<DelftIniCategory> boundaryCategories,
                                                   IDictionary<string, List<IFunction>> timeSeriesData,
-                                                  string mdwDirPath)
+                                                  string mdwDirPath,
+                                                  ILogHandler logHandler)
         {
             Ensure.NotNull(boundaryCategories, nameof(boundaryCategories));
             Ensure.NotNull(timeSeriesData, nameof(timeSeriesData));
             Ensure.NotNull(mdwDirPath, nameof(mdwDirPath));
+            Ensure.NotNull(logHandler, nameof(logHandler));
 
-            return CreateWaveBoundaries(boundaryCategories, timeSeriesData, mdwDirPath);
+            return CreateWaveBoundaries(boundaryCategories, timeSeriesData, mdwDirPath, logHandler);
         }
 
         private IEnumerable<IWaveBoundary> CreateWaveBoundaries(IEnumerable<DelftIniCategory> boundaryCategories,
-                                                                IDictionary<string, List<IFunction>> timeSeriesData, 
-                                                                string mdwDirPath)
+                                                                IDictionary<string, List<IFunction>> timeSeriesData,
+                                                                string mdwDirPath,
+                                                                ILogHandler logHandler)
         {
             foreach (DelftIniCategory category in boundaryCategories)
             {
                 BoundaryMdwBlock boundaryBlock = BoundaryCategoryConverter.Convert(category, mdwDirPath);
-                
-                IWaveBoundaryGeometricDefinition geometricDefinition = GetGeometricDefinition(boundaryBlock);
+
+                IWaveBoundaryGeometricDefinition geometricDefinition = GetGeometricDefinition(boundaryBlock, logHandler);
 
                 if (geometricDefinition == null)
                 {
@@ -98,14 +104,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
             }
         }
 
-        private IWaveBoundaryGeometricDefinition GetGeometricDefinition(BoundaryMdwBlock boundaryBlock)
+        private IWaveBoundaryGeometricDefinition GetGeometricDefinition(BoundaryMdwBlock boundaryBlock, ILogHandler logHandler)
         {
             switch (boundaryBlock.DefinitionType)
             {
                 case DefinitionImportType.Coordinates:
-                    return GetGeometricDefinitionFromCoordinates(boundaryBlock);
+                    return GetGeometricDefinitionFromCoordinates(boundaryBlock, logHandler);
                 case DefinitionImportType.Oriented:
-                    return GetGeometricDefinitionFromOrientation(boundaryBlock);
+                    return GetGeometricDefinitionFromOrientation(boundaryBlock, logHandler);
                 case DefinitionImportType.SpectrumFile:
                     return null;
                 default:
@@ -113,45 +119,43 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
             }
         }
 
-        private IWaveBoundaryGeometricDefinition GetGeometricDefinitionFromCoordinates(BoundaryMdwBlock boundaryBlock)
+        private IWaveBoundaryGeometricDefinition GetGeometricDefinitionFromCoordinates(BoundaryMdwBlock boundaryBlock, ILogHandler logHandler)
         {
             var startCoordinate = new Coordinate(boundaryBlock.XStartCoordinate, boundaryBlock.YStartCoordinate);
             var endCoordinate = new Coordinate(boundaryBlock.XEndCoordinate, boundaryBlock.YEndCoordinate);
 
-            IWaveBoundaryGeometricDefinition geometricDefinition = geometricDefinitionFactory
-                .ConstructWaveBoundaryGeometricDefinition(startCoordinate, endCoordinate);
+            IWaveBoundaryGeometricDefinition geometricDefinition = geometricDefinitionFactory.ConstructWaveBoundaryGeometricDefinition(startCoordinate, endCoordinate);
 
             if (geometricDefinitionFactory.HasInvertedOrderingCoordinates(geometricDefinition, startCoordinate))
             {
                 InvertSupportPointDistances(boundaryBlock, geometricDefinition.Length);
             }
 
-            CreateSupportPoints(boundaryBlock, geometricDefinition);
+            CreateSupportPoints(boundaryBlock, geometricDefinition, logHandler);
 
             return geometricDefinition;
         }
 
-        private IWaveBoundaryGeometricDefinition GetGeometricDefinitionFromOrientation(BoundaryMdwBlock boundaryBlock)
+        private IWaveBoundaryGeometricDefinition GetGeometricDefinitionFromOrientation(BoundaryMdwBlock boundaryBlock, ILogHandler logHandler)
         {
             if (boundaryBlock.OrientationType == null)
             {
                 return null;
             }
 
-            log.WarnFormat("Converting boundary '{0}', from {1} to {2}, this may lead to unexpected results, please inspect your boundaries.",
-                           boundaryBlock.Name, 
-                           DefinitionImportType.Oriented.GetDescription(), 
-                           DefinitionImportType.Coordinates.GetDescription());
+            logHandler.ReportWarningFormat("Converting boundary '{0}', from {1} to {2}, this may lead to unexpected results, please inspect your boundaries.",
+                                           boundaryBlock.Name,
+                                           DefinitionImportType.Oriented.GetDescription(),
+                                           DefinitionImportType.Coordinates.GetDescription());
 
-            IWaveBoundaryGeometricDefinition geometricDefinition = geometricDefinitionFactory
-                .ConstructWaveBoundaryGeometricDefinition(boundaryBlock.OrientationType.Value);
+            IWaveBoundaryGeometricDefinition geometricDefinition = geometricDefinitionFactory.ConstructWaveBoundaryGeometricDefinition(boundaryBlock.OrientationType.Value);
 
             if (boundaryBlock.DistanceDirType == DistanceDirType.Clockwise)
             {
                 InvertSupportPointDistances(boundaryBlock, geometricDefinition.Length);
             }
 
-            CreateSupportPoints(boundaryBlock, geometricDefinition);
+            CreateSupportPoints(boundaryBlock, geometricDefinition, logHandler);
 
             return geometricDefinition;
         }
@@ -199,12 +203,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
             if (IsSpatiallyVariant(boundaryBlock))
             {
                 IEnumerable<SupportPoint> supportPoints = boundaryBlock.Distances.Select(d => GetSupportPointWithDistance(geometricDefinition, d));
-                return importDataComponentFactory.CreateSpatiallyVaryingFileBasedComponent(supportPoints.Zip(boundaryBlock.SpectrumFiles, Tuple.Create));
+                IEnumerable<Tuple<SupportPoint, string>> dataPerSupportPoint = supportPoints.Zip(boundaryBlock.SpectrumFiles, Tuple.Create).Where(data => data.Item1 != null);
+                return importDataComponentFactory.CreateSpatiallyVaryingFileBasedComponent(dataPerSupportPoint);
             }
 
             return importDataComponentFactory.CreateUniformFileBasedComponent(boundaryBlock.SpectrumFiles.FirstOrDefault());
         }
-
 
         private ISpatiallyDefinedDataComponent CreateDataComponent(BoundaryMdwBlock boundaryBlock,
                                                                    IList<IFunction> timeSeriesData,
@@ -294,15 +298,35 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
 
         private static IEnumerable<T> GetFunctionValues<T>(IEnumerable<IVariable> components, string componentName) => components.GetByName(componentName).Values.OfType<T>();
 
-        private static void CreateSupportPoints(BoundaryMdwBlock boundaryBlock, IWaveBoundaryGeometricDefinition geometricDefinition)
+        private static void CreateSupportPoints(BoundaryMdwBlock boundaryBlock, IWaveBoundaryGeometricDefinition geometricDefinition, ILogHandler logHandler)
         {
-            IEnumerable<double> existingDistances = geometricDefinition.SupportPoints.Select(s => s.Distance);
+            IEnumerable<double> existingDistances = geometricDefinition.SupportPoints.Select(s => s.Distance).ToArray();
 
-            IEnumerable<SupportPoint> newSupportPoints = boundaryBlock
-                                                         .Distances.Where(d => !Exists(existingDistances, d))
-                                                         .Select(d => new SupportPoint(d, geometricDefinition));
+            var newSupportPoints = new List<SupportPoint>();
+
+            foreach (double distance in boundaryBlock.Distances)
+            {
+                if (Exists(existingDistances, distance))
+                {
+                    continue;
+                }
+
+                if (IsInValidRange(geometricDefinition, distance))
+                {
+                    newSupportPoints.Add(new SupportPoint(distance, geometricDefinition));
+                }
+                else
+                {
+                    logHandler.ReportWarning(string.Format(Resources.WaveBoundaryConverter_Support_point_outside_geometry_point_will_be_skipped, boundaryBlock.Name, distance));
+                }
+            }
 
             geometricDefinition.SupportPoints.AddRange(newSupportPoints);
+        }
+
+        private static bool IsInValidRange(IWaveBoundaryGeometricDefinition geometricDefinition, double d)
+        {
+            return d >= 0.0 && d <= geometricDefinition.Length;
         }
 
         private static bool IsSpatiallyVariant(BoundaryMdwBlock boundaryBlock) => boundaryBlock.Distances.Any();

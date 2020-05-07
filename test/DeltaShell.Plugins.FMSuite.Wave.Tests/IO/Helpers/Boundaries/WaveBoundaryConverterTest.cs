@@ -6,6 +6,7 @@ using DelftTools.Functions;
 using DelftTools.Functions.Generic;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Reflection;
+using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.NGHS.IO.DelftIniObjects;
 using DeltaShell.NGHS.TestUtils;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
@@ -68,7 +69,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
                                                       Substitute.For<IWaveBoundaryGeometricDefinitionFactory>());
 
             // Call
-            void Call() => converter.Convert(null, Substitute.For<IDictionary<string, List<IFunction>>>(), "path");
+            void Call() => converter.Convert(null, Substitute.For<IDictionary<string, List<IFunction>>>(), "path", Substitute.For<ILogHandler>());
 
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(Call);
@@ -83,7 +84,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
                                                       Substitute.For<IWaveBoundaryGeometricDefinitionFactory>());
 
             // Call
-            void Call() => converter.Convert(Substitute.For<IEnumerable<DelftIniCategory>>(), null, "path");
+            void Call() => converter.Convert(Substitute.For<IEnumerable<DelftIniCategory>>(), null, "path", Substitute.For<ILogHandler>());
 
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(Call);
@@ -98,11 +99,26 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
                                                       Substitute.For<IWaveBoundaryGeometricDefinitionFactory>());
 
             // Call
-            void Call() => converter.Convert(Substitute.For<IEnumerable<DelftIniCategory>>(), Substitute.For<IDictionary<string, List<IFunction>>>(), null);
+            void Call() => converter.Convert(Substitute.For<IEnumerable<DelftIniCategory>>(), Substitute.For<IDictionary<string, List<IFunction>>>(), null, Substitute.For<ILogHandler>());
 
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(Call);
             Assert.That(exception.ParamName, Is.EqualTo("mdwDirPath"));
+        }
+        
+        [Test]
+        public void Convert_LogHandlerNull_ThrowsArgumentNullException()
+        {
+            // Setup
+            var converter = new WaveBoundaryConverter(Substitute.For<IImportBoundaryConditionDataComponentFactory>(),
+                                                      Substitute.For<IWaveBoundaryGeometricDefinitionFactory>());
+
+            // Call
+            void Call() => converter.Convert(Substitute.For<IEnumerable<DelftIniCategory>>(), Substitute.For<IDictionary<string, List<IFunction>>>(), "path", null);
+
+            // Assert
+            var exception = Assert.Throws<ArgumentNullException>(Call);
+            Assert.That(exception.ParamName, Is.EqualTo("logHandler"));
         }
 
         [Test]
@@ -131,7 +147,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             var converter = new WaveBoundaryConverter(importDataComponentFactory, geometricDefinitionFactory);
 
             // Call
-            List<IWaveBoundary> result = converter.Convert(categories, new Dictionary<string, List<IFunction>>(), "path")
+            List<IWaveBoundary> result = converter.Convert(categories, new Dictionary<string, List<IFunction>>(), "path", Substitute.For<ILogHandler>())
                                                   .ToList();
 
             // Assert
@@ -176,7 +192,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             var converter = new WaveBoundaryConverter(importDataComponentFactory, geometricDefinitionFactory);
 
             // Call
-            List<IWaveBoundary> result = converter.Convert(categories, timeSeriesData, "path")
+            List<IWaveBoundary> result = converter.Convert(categories, timeSeriesData, "path", Substitute.For<ILogHandler>())
                                                   .ToList();
 
             // Assert
@@ -217,7 +233,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             var converter = new WaveBoundaryConverter(importDataComponentFactory, geometricDefinitionFactory);
 
             // Call
-            List<IWaveBoundary> result = converter.Convert(categories, new Dictionary<string, List<IFunction>>(), @"C:\path")
+            List<IWaveBoundary> result = converter.Convert(categories, new Dictionary<string, List<IFunction>>(), @"C:\path", Substitute.For<ILogHandler>())
                                                   .ToList();
 
             // Assert
@@ -244,6 +260,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             var mdwValues = new MdwTestValues(gaussianSpreading, peakEnhancementFactor);
 
             var geometricDefinition = Substitute.For<IWaveBoundaryGeometricDefinition>();
+            geometricDefinition.Length.Returns(1);
             IWaveBoundaryGeometricDefinitionFactory geometricDefinitionFactory = GetMockedGeometricDefinitionFactory(geometricDefinition, mdwValues);
             geometricDefinition.SupportPoints.Add(new SupportPoint(mdwValues.Distances[0], geometricDefinition));
             geometricDefinition.SupportPoints.Add(new SupportPoint(mdwValues.Distances[1], geometricDefinition));
@@ -261,7 +278,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             var converter = new WaveBoundaryConverter(importDataComponentFactory, geometricDefinitionFactory);
 
             // Call
-            List<IWaveBoundary> result = converter.Convert(categories, new Dictionary<string, List<IFunction>>(), "path")
+            List<IWaveBoundary> result = converter.Convert(categories, new Dictionary<string, List<IFunction>>(), "path", Substitute.For<ILogHandler>())
                                                   .ToList();
 
             // Assert
@@ -296,6 +313,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             var bcwValues = new BcwTestValues();
 
             var geometricDefinition = Substitute.For<IWaveBoundaryGeometricDefinition>();
+            geometricDefinition.Length.Returns(1);
             IWaveBoundaryGeometricDefinitionFactory geometricDefinitionFactory = GetMockedGeometricDefinitionFactory(geometricDefinition, mdwValues);
             geometricDefinition.SupportPoints.Add(new SupportPoint(mdwValues.Distances[0], geometricDefinition));
             geometricDefinition.SupportPoints.Add(new SupportPoint(mdwValues.Distances[1], geometricDefinition));
@@ -314,7 +332,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             var converter = new WaveBoundaryConverter(importDataComponentFactory, geometricDefinitionFactory);
 
             // Call
-            List<IWaveBoundary> result = converter.Convert(categories, timeSeriesData, "path")
+            List<IWaveBoundary> result = converter.Convert(categories, timeSeriesData, "path", Substitute.For<ILogHandler>())
                                                   .ToList();
 
             // Assert
@@ -345,6 +363,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             var mdwValues = new MdwTestValues(gaussianSpreading, peakEnhancementFactor);
 
             var geometricDefinition = Substitute.For<IWaveBoundaryGeometricDefinition>();
+            geometricDefinition.Length.Returns(1);
             IWaveBoundaryGeometricDefinitionFactory geometricDefinitionFactory = GetMockedGeometricDefinitionFactory(geometricDefinition, mdwValues);
             geometricDefinition.SupportPoints.Add(new SupportPoint(mdwValues.Distances[0], geometricDefinition));
             geometricDefinition.SupportPoints.Add(new SupportPoint(mdwValues.Distances[1], geometricDefinition));
@@ -362,7 +381,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             var converter = new WaveBoundaryConverter(importDataComponentFactory, geometricDefinitionFactory);
 
             // Call
-            List<IWaveBoundary> result = converter.Convert(categories, new Dictionary<string, List<IFunction>>(), @"C:\path")
+            List<IWaveBoundary> result = converter.Convert(categories, new Dictionary<string, List<IFunction>>(), @"C:\path", Substitute.For<ILogHandler>())
                                                   .ToList();
 
             // Assert
@@ -402,7 +421,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             var converter = new WaveBoundaryConverter(importDataComponentFactory, geometricDefinitionFactory);
 
             // Call
-            void Call() => converter.Convert(categories, new Dictionary<string, List<IFunction>>(), "path").ToList();
+            void Call() => converter.Convert(categories, new Dictionary<string, List<IFunction>>(), "path", Substitute.For<ILogHandler>()).ToList();
 
             // Assert
             Assert.Throws<NotSupportedException>(Call);
@@ -427,7 +446,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             var converter = new WaveBoundaryConverter(importDataComponentFactory, geometricDefinitionFactory);
 
             // Call
-            List<IWaveBoundary> result = converter.Convert(categories, new Dictionary<string, List<IFunction>>(), "path")
+            List<IWaveBoundary> result = converter.Convert(categories, new Dictionary<string, List<IFunction>>(), "path", Substitute.For<ILogHandler>())
                                                   .ToList();
 
             // Assert
@@ -446,6 +465,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             var mdwValues = new MdwTestValues(gaussianSpreading, peakEnhancementFactor);
 
             var geometricDefinition = Substitute.For<IWaveBoundaryGeometricDefinition>();
+            geometricDefinition.Length.Returns(1);
             IWaveBoundaryGeometricDefinitionFactory geometricDefinitionFactory = GetMockedGeometricDefinitionFactory(geometricDefinition, mdwValues);
             geometricDefinition.SupportPoints.Add(new SupportPoint(0, geometricDefinition));
             geometricDefinition.SupportPoints.Add(new SupportPoint(10, geometricDefinition));
@@ -463,7 +483,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             var converter = new WaveBoundaryConverter(importDataComponentFactory, geometricDefinitionFactory);
 
             // Call
-            List<IWaveBoundary> result = converter.Convert(categories, new Dictionary<string, List<IFunction>>(), "path")
+            List<IWaveBoundary> result = converter.Convert(categories, new Dictionary<string, List<IFunction>>(), "path", Substitute.For<ILogHandler>())
                                                   .ToList();
 
             // Assert
@@ -526,7 +546,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             var converter = new WaveBoundaryConverter(importDataComponentFactory, geometricDefinitionFactory);
 
             // Call
-            List<IWaveBoundary> result = converter.Convert(categories, new Dictionary<string, List<IFunction>>(), "path")
+            List<IWaveBoundary> result = converter.Convert(categories, new Dictionary<string, List<IFunction>>(), "path", Substitute.For<ILogHandler>())
                                                   .ToList();
 
             // Assert
@@ -569,7 +589,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             var converter = new WaveBoundaryConverter(importDataComponentFactory, geometricDefinitionFactory);
 
             // Call
-            List<IWaveBoundary> result = converter.Convert(categories, new Dictionary<string, List<IFunction>>(), "path")
+            List<IWaveBoundary> result = converter.Convert(categories, new Dictionary<string, List<IFunction>>(), "path", Substitute.For<ILogHandler>())
                                                   .ToList();
 
             // Assert
@@ -630,7 +650,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             var converter = new WaveBoundaryConverter(importDataComponentFactory, geometricDefinitionFactory);
 
             // Call
-            List<IWaveBoundary> result = converter.Convert(categories, new Dictionary<string, List<IFunction>>(), "path")
+            List<IWaveBoundary> result = converter.Convert(categories, new Dictionary<string, List<IFunction>>(), "path", Substitute.For<ILogHandler>())
                                                   .ToList();
 
             // Assert
@@ -675,7 +695,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             var converter = new WaveBoundaryConverter(importDataComponentFactory, geometricDefinitionFactory);
 
             // Call
-            List<IWaveBoundary> result = converter.Convert(categories, new Dictionary<string, List<IFunction>>(), "path")
+            List<IWaveBoundary> result = converter.Convert(categories, new Dictionary<string, List<IFunction>>(), "path", Substitute.For<ILogHandler>())
                                                   .ToList();
 
             // Assert
@@ -692,6 +712,87 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             Assert.That(supportPoints[4].Distance, Is.EqualTo(10 - mdwValues.Distances[2]));
         }
 
+        [Test]
+        [TestCaseSource(nameof(InvalidDistanceTestCases))]
+        public void Convert_InvalidDistanceAndOrientedBoundary_ExpectedResults(double invalidDistance)
+        {
+            // Setup
+            var logHandler = Substitute.For<ILogHandler>();
+            var mdwValues = new MdwTestValues(RandomDouble, RandomDouble);
+
+            var geometricDefinition = Substitute.For<IWaveBoundaryGeometricDefinition>();
+            geometricDefinition.Length.Returns(10.0);
+            IWaveBoundaryGeometricDefinitionFactory geometricDefinitionFactory = GetMockedGeometricDefinitionFactoryOriented(geometricDefinition, mdwValues);
+
+            var importDataComponentFactory = Substitute.For<IImportBoundaryConditionDataComponentFactory>();
+            importDataComponentFactory.CreateSpatiallyVaryingConstantComponent<T>(Arg.Any<IEnumerable<Tuple<SupportPoint, ParametersBlock>>>())
+                                      .Returns(new SpatiallyVaryingDataComponent<ConstantParameters<T>>());
+
+            DelftIniCategory category = GetBoundaryCategory(ShapeImportType.Gauss, 
+                                                            PeriodImportExportType.Mean, 
+                                                            mdwValues, 
+                                                            definition:KnownWaveBoundariesFileConstants.OrientationDefinitionType);
+            category.AddProperty(KnownWaveProperties.CondSpecAtDist, ToString(invalidDistance));
+            category.AddProperty(KnownWaveProperties.Orientation, mdwValues.OrientationType.GetDescription());
+
+            AddParametersToCategory(mdwValues, category, 0);
+
+            DelftIniCategory[] categories =
+            {
+                category
+            };
+
+            var converter = new WaveBoundaryConverter(importDataComponentFactory, geometricDefinitionFactory);
+
+            // Call
+            List<IWaveBoundary> result = converter.Convert(categories, new Dictionary<string, List<IFunction>>(), "path", logHandler).ToList();
+
+            // Assert
+            Assert.That(result, Has.Count.EqualTo(1));
+
+            Assert.That(geometricDefinition.SupportPoints, Is.Empty);
+            logHandler.Received().ReportWarning($"Boundary 'boundary_name' contains a support point at distance {invalidDistance}, which is located outside the geometry. This support point will not be imported.");
+        }
+
+        [Test]
+        [TestCaseSource(nameof(InvalidDistanceTestCases))]
+        public void Convert_InvalidDistanceAndCoordinatesBoundary_ExpectedResults(double invalidDistance)
+        {
+            // Setup
+            var logHandler = Substitute.For<ILogHandler>();
+            var mdwValues = new MdwTestValues(RandomDouble, RandomDouble);
+
+            var geometricDefinition = Substitute.For<IWaveBoundaryGeometricDefinition>();
+            geometricDefinition.Length.Returns(10.0);
+            IWaveBoundaryGeometricDefinitionFactory geometricDefinitionFactory = GetMockedGeometricDefinitionFactory(geometricDefinition, mdwValues);
+
+            var importDataComponentFactory = Substitute.For<IImportBoundaryConditionDataComponentFactory>();
+            importDataComponentFactory.CreateSpatiallyVaryingConstantComponent<T>(Arg.Any<IEnumerable<Tuple<SupportPoint, ParametersBlock>>>())
+                                      .Returns(new SpatiallyVaryingDataComponent<ConstantParameters<T>>());
+
+            DelftIniCategory category = GetBoundaryCategory(ShapeImportType.Gauss, 
+                                                            PeriodImportExportType.Mean, 
+                                                            mdwValues);
+            category.AddProperty(KnownWaveProperties.CondSpecAtDist, ToString(invalidDistance));
+
+            AddParametersToCategory(mdwValues, category, 0);
+
+            DelftIniCategory[] categories =
+            {
+                category
+            };
+
+            var converter = new WaveBoundaryConverter(importDataComponentFactory, geometricDefinitionFactory);
+
+            // Call
+            List<IWaveBoundary> result = converter.Convert(categories, new Dictionary<string, List<IFunction>>(), "path", logHandler).ToList();
+
+            // Assert
+            Assert.That(result, Has.Count.EqualTo(1));
+
+            Assert.That(geometricDefinition.SupportPoints, Is.Empty);
+            logHandler.Received().ReportWarning($"Boundary 'boundary_name' contains a support point at distance {invalidDistance}, which is located outside the geometry. This support point will not be imported.");
+        }
 
         private static SpreadingImportType GetSpreadingImportType()
         {
@@ -732,6 +833,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             yield return new TestCaseData(ShapeImportType.PiersonMoskowitz, PeriodImportExportType.Peak,
                                           new PiersonMoskowitzShape(), BoundaryConditionPeriodType.Peak,
                                           gaussianSpreading, peakEnhancementFactor);
+        }
+
+        private static IEnumerable<TestCaseData> InvalidDistanceTestCases()
+        {
+            yield return new TestCaseData(-100.0);
+            yield return new TestCaseData(0.0 - 1e-7);
+            yield return new TestCaseData(10.0 + 1e-7);
+            yield return new TestCaseData(100.0);
         }
 
         private static IWaveBoundaryGeometricDefinitionFactory GetMockedGeometricDefinitionFactory(

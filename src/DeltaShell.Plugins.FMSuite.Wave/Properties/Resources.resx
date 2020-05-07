@@ -259,4 +259,7 @@
   <data name="MdwFile_Load_loading_the_D_Waves_model" xml:space="preserve">
     <value>loading the D-Waves model</value>
   </data>
+  <data name="WaveBoundaryConverter_Support_point_outside_geometry_point_will_be_skipped" xml:space="preserve">
+    <value>Boundary '{0}' contains a support point at distance {1}, which is located outside the geometry. This support point will not be imported.</value>
+  </data>
 </root>
