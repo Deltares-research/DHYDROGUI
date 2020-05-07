@@ -129,7 +129,11 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts.Nwrw
 
         private void AddVolumeColumn()
         {
-            tableView.AddColumn(nameof(NwrwDryWeatherFlowDefinition.DailyVolumeVariable), "Daily volume (dm³/day)");
+            tableView.AddColumn(nameof(NwrwDryWeatherFlowDefinition.DailyVolumeVariable),
+                columnCaption: "Daily volume (dm³/day)", 
+                readOnly: false,
+                width: 100,
+                displayFormat: "0.###");
         }
 
         private void AddButtonColumn()
