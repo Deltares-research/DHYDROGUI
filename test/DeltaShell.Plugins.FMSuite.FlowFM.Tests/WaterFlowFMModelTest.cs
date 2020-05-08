@@ -15,6 +15,7 @@ using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.KnownStructureProperties;
 using DelftTools.Hydro.Structures.WeirFormula;
+using DelftTools.Hydro.Tests.Helpers;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
@@ -2233,6 +2234,128 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             // Assert
             Assert.AreEqual(1, counter);
+        }
+
+        [Test]
+        public void GivenFMModelWith1DChannelNetworkWithBranchWithBoundaryCondition1DAtNode2_WhenAddingAndConnectionANewBranchTargetNodeToNode2_ThenBoundaryCondition1DAtNode2WillNotBeRemoved()
+        {
+            // Setup
+            var model = new WaterFlowFMModel();
+            HydroNetworkHelper.AddSnakeHydroNetwork(model.Network,new [] {new Point(0,0),new Point(100,0)});
+            Assert.That(model.BoundaryConditions1D.Count, Is.EqualTo(2));
+            model.BoundaryConditions1D[1].DataType = Model1DBoundaryNodeDataType.WaterLevelConstant;
+            IDataItem myDataItem = null;
+            Assert.DoesNotThrow(() => myDataItem = model.BoundaryConditions1DDataItemSet.DataItems.SingleOrDefault(di => di.ValueType == typeof(Model1DBoundaryNodeData) && di.Value is Model1DBoundaryNodeData model1DBoundaryNodeData && Equals(model1DBoundaryNodeData.Feature, model.Network.Nodes[1])));
+            Assert.That(myDataItem, Is.Not.Null);
+            Assert.That(myDataItem.Hidden, Is.False);
+
+            //Call
+            var channel = new Channel();
+            model.Network.Branches.Add(channel);
+            var sourceNode = new HydroNode()
+            {
+                Name = "Node3",
+                Geometry = new Point(100, 100),
+            };
+            model.Network.Nodes.Add(sourceNode);
+            channel.Source = sourceNode;
+            channel.Target = model.Network.Nodes[1];
+
+            // Assert
+            Assert.That(model.BoundaryConditions1D.Count, Is.EqualTo(3));
+            myDataItem = null;
+            Assert.DoesNotThrow(() => myDataItem = model.BoundaryConditions1DDataItemSet.DataItems.SingleOrDefault(di => di.ValueType == typeof(Model1DBoundaryNodeData) && di.Value is Model1DBoundaryNodeData model1DBoundaryNodeData && Equals(model1DBoundaryNodeData.Feature, model.Network.Nodes[1])));
+            Assert.That(myDataItem, Is.Not.Null);
+            Assert.That(myDataItem.Hidden, Is.False);
+            Assert.That(model.BoundaryConditions1D[1].DataType, Is.EqualTo(Model1DBoundaryNodeDataType.WaterLevelConstant));
+        }
+
+        [Test]
+        public void GivenFMModelWith1DChannelNetworkWithBranchWithBoundaryCondition1DAtNode2_WhenAddingAndConnectionANewBranchTargetNodeToNode2AndOneBranchWithSourceFromNode2_ThenBoundaryCondition1DAtNode2WillBeRemoved()
+        {
+            // Setup
+            var model = new WaterFlowFMModel();
+            HydroNetworkHelper.AddSnakeHydroNetwork(model.Network,new [] {new Point(0,0),new Point(100,0)});
+            Assert.That(model.BoundaryConditions1D.Count, Is.EqualTo(2));
+            model.BoundaryConditions1D[1].DataType = Model1DBoundaryNodeDataType.WaterLevelConstant;
+            IDataItem myDataItem = null;
+            Assert.DoesNotThrow(() => myDataItem = model.BoundaryConditions1DDataItemSet.DataItems.SingleOrDefault(di => di.ValueType == typeof(Model1DBoundaryNodeData) && di.Value is Model1DBoundaryNodeData model1DBoundaryNodeData && Equals(model1DBoundaryNodeData.Feature, model.Network.Nodes[1])));
+            Assert.That(myDataItem, Is.Not.Null);
+            Assert.That(myDataItem.Hidden, Is.False);
+
+            //Call2
+            var channelToNode2 = new Channel();
+            model.Network.Branches.Add(channelToNode2);
+            var sourceNode = new HydroNode()
+            {
+                Name = "Node3",
+                Geometry = new Point(100, 100),
+            };
+            model.Network.Nodes.Add(sourceNode);
+            channelToNode2.Source = sourceNode;
+            channelToNode2.Target = model.Network.Nodes[1];
+
+            //Assert1
+            Assert.That(model.BoundaryConditions1D.Count, Is.EqualTo(3));
+            myDataItem = null;
+            Assert.DoesNotThrow(() => myDataItem = model.BoundaryConditions1DDataItemSet.DataItems.SingleOrDefault(di => di.ValueType == typeof(Model1DBoundaryNodeData) && di.Value is Model1DBoundaryNodeData model1DBoundaryNodeData && Equals(model1DBoundaryNodeData.Feature, model.Network.Nodes[1])));
+            Assert.That(myDataItem, Is.Not.Null);
+            Assert.That(myDataItem.Hidden, Is.False);
+            Assert.That(model.BoundaryConditions1D[1].DataType, Is.EqualTo(Model1DBoundaryNodeDataType.WaterLevelConstant));
+
+            //Call2
+            var channelFromNode2 = new Channel();
+            model.Network.Branches.Add(channelFromNode2);
+            var targetNode = new HydroNode()
+            {
+                Name = "Node4",
+                Geometry = new Point(0, 100),
+            };
+            model.Network.Nodes.Add(targetNode);
+            channelFromNode2.Source = model.Network.Nodes[1];
+            channelFromNode2.Target = targetNode; 
+
+            // Assert2
+            Assert.That(model.BoundaryConditions1D.Count, Is.EqualTo(4));
+            myDataItem = null;
+            Assert.DoesNotThrow(() => myDataItem = model.BoundaryConditions1DDataItemSet.DataItems.SingleOrDefault(di => di.ValueType == typeof(Model1DBoundaryNodeData) && di.Value is Model1DBoundaryNodeData model1DBoundaryNodeData && Equals(model1DBoundaryNodeData.Feature, model.Network.Nodes[1])));
+            Assert.That(myDataItem, Is.Not.Null);
+            Assert.That(myDataItem.Hidden, Is.True);
+            Assert.That(model.BoundaryConditions1D[1].DataType, Is.EqualTo(Model1DBoundaryNodeDataType.None));
+        }
+
+        [Test]
+        public void GivenFMModelWith1DChannelNetworkWithBranchWithBoundaryCondition1DAtNode2_WhenAddingAndConnectionANewBranchSourceNodeToNode2_ThenBoundaryCondition1DAtNode2WillBeRemoved()
+        {
+            // Setup
+            var model = new WaterFlowFMModel();
+            HydroNetworkHelper.AddSnakeHydroNetwork(model.Network,new [] {new Point(0,0),new Point(100,0)});
+            Assert.That(model.BoundaryConditions1D.Count, Is.EqualTo(2));
+            model.BoundaryConditions1D[1].DataType = Model1DBoundaryNodeDataType.WaterLevelConstant;
+            IDataItem myDataItem = null;
+            Assert.DoesNotThrow(() => myDataItem = model.BoundaryConditions1DDataItemSet.DataItems.SingleOrDefault(di => di.ValueType == typeof(Model1DBoundaryNodeData) && di.Value is Model1DBoundaryNodeData model1DBoundaryNodeData && Equals(model1DBoundaryNodeData.Feature, model.Network.Nodes[1])));
+            Assert.That(myDataItem, Is.Not.Null);
+            Assert.That(myDataItem.Hidden, Is.False);
+
+            //Call
+            var channel = new Channel();
+            model.Network.Branches.Add(channel);
+            var targetNode = new HydroNode()
+            {
+                Name = "Node3",
+                Geometry = new Point(100, 100),
+            };
+            model.Network.Nodes.Add(targetNode);
+            channel.Source = model.Network.Nodes[1]; 
+            channel.Target = targetNode;
+
+            // Assert
+            Assert.That(model.BoundaryConditions1D.Count, Is.EqualTo(3));
+            myDataItem = null;
+            Assert.DoesNotThrow(() => myDataItem = model.BoundaryConditions1DDataItemSet.DataItems.SingleOrDefault(di => di.ValueType == typeof(Model1DBoundaryNodeData) && di.Value is Model1DBoundaryNodeData model1DBoundaryNodeData && Equals(model1DBoundaryNodeData.Feature, model.Network.Nodes[1])));
+            Assert.That(myDataItem, Is.Not.Null);
+            Assert.That(myDataItem.Hidden, Is.True);
+            Assert.That(model.BoundaryConditions1D[1].DataType, Is.EqualTo(Model1DBoundaryNodeDataType.None));
         }
     }
 }

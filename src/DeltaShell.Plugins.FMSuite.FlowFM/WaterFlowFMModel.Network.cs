@@ -134,7 +134,36 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             {
                 OnEndingBranchSplit((BranchSplitAction)Network.CurrentEditAction);
             }
+
+            if (sender is IBranch branch)
+            {
+                if (string.Equals(e.PropertyName, nameof(IBranch.Source), StringComparison.InvariantCultureIgnoreCase))
+                    ClearBoundaryConditionDataIfNodeIsNotAnEndNodeAnymore(branch.Source);
+                else if (string.Equals(e.PropertyName, nameof(IBranch.Target), StringComparison.InvariantCultureIgnoreCase))
+                    ClearBoundaryConditionDataIfNodeIsNotAnEndNodeAnymore(branch.Target);
+            }
         }
+
+        [InvokeRequired]
+        private void ClearBoundaryConditionDataIfNodeIsNotAnEndNodeAnymore(INode node)
+        {
+            /*if ((node.IncomingBranches.Count > 1 
+                 && node.OutgoingBranches.Count >=1)
+                || (node.IncomingBranches.Count >= 1
+                    && node.OutgoingBranches.Count > 1)*/
+            if (node.IncomingBranches.Count >= 1 
+                && node.OutgoingBranches.Count >=1
+                && boundaryConditions1D.Any(bc =>
+                    bc.DataType != Model1DBoundaryNodeDataType.None && Equals(bc.Feature, node)))
+            {
+                boundaryConditions1D
+                    .Where(bc =>
+                        bc.DataType != Model1DBoundaryNodeDataType.None
+                        && Equals(bc.Feature, node))
+                    .ForEach(bc => bc.DataType = Model1DBoundaryNodeDataType.None);
+            }
+        }
+
         private void OnEndingBranchSplit(BranchSplitAction splitAction)
         {
             var locations = (splitAction.NewBranch.Source == splitAction.SplittedBranch.Target
