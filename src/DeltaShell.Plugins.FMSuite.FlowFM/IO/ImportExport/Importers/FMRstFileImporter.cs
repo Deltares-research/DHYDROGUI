@@ -29,12 +29,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
             }
         }
 
-        public bool CanImportOn(object targetObject)
-        {
-            return GetFMModelForRestartState != null &&
-                   GetFMModelForRestartState(targetObject as FileBasedRestartState) != null;
-        }
-
         public bool CanImportOnRootLevel => false;
 
         public string FileFilter => $"FM restart files|*{FileConstants.RestartFileExtension}";
@@ -46,6 +40,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
         public ImportProgressChangedDelegate ProgressChanged { get; set; }
 
         public bool OpenViewAfterImport { get; private set; }
+
+        public bool CanImportOn(object targetObject)
+        {
+            return GetFMModelForRestartState != null &&
+                   GetFMModelForRestartState(targetObject as FileBasedRestartState) != null;
+        }
 
         public object ImportItem(string path, object target = null)
         {

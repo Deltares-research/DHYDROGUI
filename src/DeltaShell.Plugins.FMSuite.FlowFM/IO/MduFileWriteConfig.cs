@@ -4,8 +4,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 {
     /// <summary>
     /// IMduFileWriteConfig collects a set of boolean values used to configure
-    /// which parts should be written, when <see cref="MduFile.Write" /> and
-    /// <see cref="MduFile.WriteProperties" /> are called.
+    /// which parts should be written, when <see cref="MduFile.Write"/> and
+    /// <see cref="MduFile.WriteProperties"/> are called.
     /// </summary>
     public interface IMduFileWriteConfig
     {
@@ -47,13 +47,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
     }
 
     /// <summary>
-    /// Concrete implementation of the <see cref="IMduFileWriteConfig" /> interface.
+    /// Concrete implementation of the <see cref="IMduFileWriteConfig"/> interface.
     /// </summary>
-    /// <seealso cref="DeltaShell.Plugins.FMSuite.FlowFM.IO.IMduFileWriteConfig" />
+    /// <seealso cref="DeltaShell.Plugins.FMSuite.FlowFM.IO.IMduFileWriteConfig"/>
     public class MduFileWriteConfig : IMduFileWriteConfig
     {
         /// <summary>
-        /// Initializs a new instance of the <see cref="MduFileWriteConfig" /> class with default values.
+        /// Initializs a new instance of the <see cref="MduFileWriteConfig"/> class with default values.
         /// </summary>
         /// <remarks>
         /// The default values are:

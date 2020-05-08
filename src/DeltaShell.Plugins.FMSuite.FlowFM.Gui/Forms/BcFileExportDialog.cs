@@ -22,7 +22,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
         public BcFileExportDialog()
         {
             InitializeComponent();
-         
+
             quantities =
                 FlowBoundaryConditionEditorController.SupportedFlowQuantities.ToDictionary(
                     FlowBoundaryCondition.GetDescription, q => q);
@@ -42,15 +42,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
             }
         }
 
-        private void ExportModeComboBoxFormat(object sender, ListControlConvertEventArgs e)
-        {
-            if (e.ListItem is BcFile.WriteMode)
-            {
-                e.Value = ((BcFile.WriteMode) e.ListItem).GetDescription();
-            }
-        }
-
         public string Title { get; set; }
+
+        public object Data { get; set; }
+
+        public Image Image { get; set; }
+
+        public ViewInfo ViewInfo { get; set; }
 
         public virtual DelftDialogResult ShowModal()
         {
@@ -65,11 +63,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
             {
                 return DelftDialogResult.Cancel;
             }
+
             FilePath = saveFileDialog.FileName;
             return ShowDialog() == DialogResult.OK ? DelftDialogResult.OK : DelftDialogResult.Cancel;
         }
-
-        protected string FilePath { get; set; }
 
         public DelftDialogResult ShowModal(object owner)
         {
@@ -97,13 +94,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
             }
         }
 
-        public object Data { get; set; }
-        
-        public Image Image { get; set; }
-        
-        public void EnsureVisible(object item){}
+        public void EnsureVisible(object item) {}
 
-        public ViewInfo ViewInfo { get; set; }
+        protected string FilePath { get; set; }
+
+        private void ExportModeComboBoxFormat(object sender, ListControlConvertEventArgs e)
+        {
+            if (e.ListItem is BcFile.WriteMode)
+            {
+                e.Value = ((BcFile.WriteMode) e.ListItem).GetDescription();
+            }
+        }
 
         private void ButtonOkClick(object sender, EventArgs e)
         {

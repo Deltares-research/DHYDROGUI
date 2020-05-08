@@ -8,7 +8,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers.Providers
     /// <see cref="ObstacleLayerSubProvider"/> implements
     /// <see cref="Feature2DLayerSubProvider"/> for <see cref="WaveModel.Obstacles"/>.
     /// </summary>
-    /// <seealso cref="Feature2DLayerSubProvider" />
+    /// <seealso cref="Feature2DLayerSubProvider"/>
     public class ObstacleLayerSubProvider : Feature2DLayerSubProvider
     {
         /// <summary>
@@ -23,7 +23,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers.Providers
         protected override bool IsCorrectFeatureSet(IEnumerable<Feature2D> features, IWaveModel model) =>
             Equals(features, model.Obstacles);
 
-        protected override ILayer CreateFeatureLayer(IWaveModel model) => 
+        protected override ILayer CreateFeatureLayer(IWaveModel model) =>
             Factory.CreateObstacleLayer(model);
     }
 }

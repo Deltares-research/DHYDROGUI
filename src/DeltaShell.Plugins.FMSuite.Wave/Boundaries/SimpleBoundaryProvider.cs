@@ -7,7 +7,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries
     /// <see cref="SimpleBoundaryProvider"/> implements the <see cref="IBoundaryProvider"/>
     /// interface containing the specified boundaries.
     /// </summary>
-    /// <seealso cref="IBoundaryProvider" />
+    /// <seealso cref="IBoundaryProvider"/>
     public class SimpleBoundaryProvider : IBoundaryProvider
     {
         /// <summary>

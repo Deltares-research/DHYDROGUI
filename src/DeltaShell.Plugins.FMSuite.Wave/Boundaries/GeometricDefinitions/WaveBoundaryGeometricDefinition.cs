@@ -8,9 +8,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions
     /// <see cref="WaveBoundaryGeometricDefinition"/> implements the geometric
     /// attributes of a <see cref="IWaveBoundary"/>.
     /// </summary>
-    /// <seealso cref="IWaveBoundaryGeometricDefinition" />
+    /// <seealso cref="IWaveBoundaryGeometricDefinition"/>
     public class WaveBoundaryGeometricDefinition : IWaveBoundaryGeometricDefinition
     {
+        private int startingIndex;
+
+        private int endingIndex;
+
+        private GridSide gridSide = GridSide.North;
+
         /// <summary>
         /// Creates a new instance of the <see cref="WaveBoundaryGeometricDefinition"/>.
         /// </summary>
@@ -67,21 +73,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions
             }
         }
 
-        private int startingIndex;
-
-        private void ValidateStartingIndex(int value)
-        {
-            if (value < 0)
-            {
-                throw new ArgumentException($"{nameof(StartingIndex)} should be greater or equal to zero.");
-            }
-
-            if (value >= EndingIndex)
-            {
-                throw new ArgumentException($"{nameof(StartingIndex)} should be smaller than {nameof(EndingIndex)}.");
-            }
-        }
-
         public int EndingIndex
         {
             get => endingIndex;
@@ -91,16 +82,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions
                 endingIndex = value;
             }
         }
-
-        private void ValidateEndingIndex(int value)
-        {
-            if (value <= StartingIndex)
-            {
-                throw new ArgumentException($"{nameof(EndingIndex)} should be greater than {nameof(StartingIndex)}.");
-            }
-        }
-
-        private int endingIndex;
 
         public GridSide GridSide
         {
@@ -116,10 +97,29 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions
             }
         }
 
-        private GridSide gridSide = GridSide.North;
-
         public double Length { get; }
 
         public IEventedList<SupportPoint> SupportPoints { get; }
+
+        private void ValidateStartingIndex(int value)
+        {
+            if (value < 0)
+            {
+                throw new ArgumentException($"{nameof(StartingIndex)} should be greater or equal to zero.");
+            }
+
+            if (value >= EndingIndex)
+            {
+                throw new ArgumentException($"{nameof(StartingIndex)} should be smaller than {nameof(EndingIndex)}.");
+            }
+        }
+
+        private void ValidateEndingIndex(int value)
+        {
+            if (value <= StartingIndex)
+            {
+                throw new ArgumentException($"{nameof(EndingIndex)} should be greater than {nameof(StartingIndex)}.");
+            }
+        }
     }
 }

@@ -17,16 +17,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
 {
     public class WaveMapViewDecorator
     {
-        private static readonly Bitmap ObstacleIcon = Resources.wall_brick;
-        private static readonly Bitmap BoundaryIcon = Common.Gui.Properties.Resources.boundary;
-        private static readonly Bitmap ObservationPointIcon = Common.Gui.Properties.Resources.Observation;
-        private static readonly Bitmap ObservationCrossSectionIcon = Common.Gui.Properties.Resources.ObservationCS;
-
         internal const string ObstacleToolName = "Obstacle Tool (Waves)";
         internal const string BoundaryToolName = "Boundary Tool (Waves)";
 
         internal const string ObservationPointToolName = "Observation Point Tool (Waves)";
         internal const string ObservationCrossSectionToolName = "Observation Cross-Section Tool (Waves)";
+        private static readonly Bitmap ObstacleIcon = Resources.wall_brick;
+        private static readonly Bitmap BoundaryIcon = Common.Gui.Properties.Resources.boundary;
+        private static readonly Bitmap ObservationPointIcon = Common.Gui.Properties.Resources.Observation;
+        private static readonly Bitmap ObservationCrossSectionIcon = Common.Gui.Properties.Resources.ObservationCS;
 
         private static readonly string ModelName = typeof(WaveModel).Name;
 

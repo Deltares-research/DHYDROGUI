@@ -7,7 +7,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.ModelDefinition
     /// <see cref="ModelDefinitionReferenceDateTimeProvider"/> implements <see cref="IReferenceDateTimeProvider"/>
     /// by wrapping the <see cref="WaveModelDefinition"/>.
     /// </summary>
-    /// <seealso cref="IReferenceDateTimeProvider" />
+    /// <seealso cref="IReferenceDateTimeProvider"/>
     public class ModelDefinitionReferenceDateTimeProvider : IReferenceDateTimeProvider
     {
         private readonly WaveModelDefinition modelDefinition;

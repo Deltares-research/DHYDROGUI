@@ -127,7 +127,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
             announceDataComponentChanged = mediator;
         }
 
-        private DirectionalSpreadingViewType GetSpreadingViewType() => 
+        private DirectionalSpreadingViewType GetSpreadingViewType() =>
             viewEnumFromDataComponentQuerier.GetDirectionalSpreadingViewType(observedBoundary.ConditionDefinition.DataComponent);
 
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)

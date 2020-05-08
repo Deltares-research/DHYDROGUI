@@ -1,5 +1,4 @@
-﻿using System;
-using System.Drawing;
+﻿using System.Drawing;
 using DelftTools.Controls.Swf.Charting;
 using DelftTools.Controls.Swf.Charting.Series;
 using DelftTools.Functions;
@@ -16,7 +15,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
         {
             INetworkSegment segment = RouteHelper.GetSegmentForNetworkLocation(route,
                                                                                new NetworkLocation(structure.Channel, structure.Chainage));
-            return (segment != null) && (segment.EndChainage < segment.Chainage);
+            return segment != null && segment.EndChainage < segment.Chainage;
         }
 
         /// <summary>
@@ -31,23 +30,27 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
             {
                 return;
             }
+
             double fakeRange = min * 0.10;
             //unless this is 0..then we have to guess take five ;)
             if (fakeRange == 0)
+            {
                 fakeRange = 5;
+            }
+
             min -= fakeRange;
             max += fakeRange;
         }
 
         public static ILineChartSeries GetLineSeries(IFunction function, IVariable xArgument, IVariable yComponent, FunctionBindingList functionBindingList, Color penColor)
         {
-            var lineSeries = ChartSeriesFactory.CreateLineSeries();
+            ILineChartSeries lineSeries = ChartSeriesFactory.CreateLineSeries();
 
             lineSeries.DataSource = functionBindingList;
 
             // Set chart series data members and title
-            lineSeries.Title = String.Format("{0} [{1}]", function.Name, function.Components[0].Unit.Symbol);
-            lineSeries.XValuesDataMember = xArgument.DisplayName; // x, double (offset along the route)
+            lineSeries.Title = string.Format("{0} [{1}]", function.Name, function.Components[0].Unit.Symbol);
+            lineSeries.XValuesDataMember = xArgument.DisplayName;  // x, double (offset along the route)
             lineSeries.YValuesDataMember = yComponent.DisplayName; // y, double (value)
             lineSeries.Color = penColor;
             lineSeries.PointerStyle = PointerStyles.Nothing;
@@ -59,16 +62,16 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
             return lineSeries;
         }
 
-        public static IPointChartSeries GetPointSeries(IFunction function, IVariable xArgument, IVariable yComponent, FunctionBindingList functionBindingList, 
-            Color fillColor, PointerStyles pointerStyles, int pointerSize)
+        public static IPointChartSeries GetPointSeries(IFunction function, IVariable xArgument, IVariable yComponent, FunctionBindingList functionBindingList,
+                                                       Color fillColor, PointerStyles pointerStyles, int pointerSize)
         {
-            var pointSeries = ChartSeriesFactory.CreatePointSeries();
+            IPointChartSeries pointSeries = ChartSeriesFactory.CreatePointSeries();
 
             pointSeries.DataSource = functionBindingList;
             pointSeries.NoDataValues.Add(function.Components[0].NoDataValues.Count > 0 ? (double) function.Components[0].NoDataValues[0] : double.NaN);
             // Set chart series data members and title
-            pointSeries.Title = String.Format("{0} [{1}]", function.Name, function.Components[0].Unit.Symbol);
-            pointSeries.XValuesDataMember = xArgument.DisplayName; // x, double (offset along the route)
+            pointSeries.Title = string.Format("{0} [{1}]", function.Name, function.Components[0].Unit.Symbol);
+            pointSeries.XValuesDataMember = xArgument.DisplayName;  // x, double (offset along the route)
             pointSeries.YValuesDataMember = yComponent.DisplayName; // y, double (value)
             pointSeries.Color = fillColor;
             pointSeries.LineColor = Color.Black;
@@ -83,15 +86,15 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
 
         public static IAreaChartSeries GetAreaSeries(IFunction function, IVariable xArgument, IVariable yComponent, FunctionBindingList functionBindingList, Color fillColor)
         {
-            var areaSeries = ChartSeriesFactory.CreateAreaSeries();
+            IAreaChartSeries areaSeries = ChartSeriesFactory.CreateAreaSeries();
 
             // Set the data source
-            
+
             areaSeries.DataSource = functionBindingList;
 
             // Set chart series data members and title
-            areaSeries.Title = String.Format("{0} [{1}]", function.Name, function.Components[0].Unit.Symbol);
-            areaSeries.XValuesDataMember = xArgument.DisplayName; // x, double (offset along the route)
+            areaSeries.Title = string.Format("{0} [{1}]", function.Name, function.Components[0].Unit.Symbol);
+            areaSeries.XValuesDataMember = xArgument.DisplayName;  // x, double (offset along the route)
             areaSeries.YValuesDataMember = yComponent.DisplayName; // y, double (value)
             areaSeries.Color = fillColor;
 

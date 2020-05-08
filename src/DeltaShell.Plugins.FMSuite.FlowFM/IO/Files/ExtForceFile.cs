@@ -934,7 +934,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                     }
 
                     logHandler.ReportWarning(warnMsg);
- 
+
                     continue;
                 }
 

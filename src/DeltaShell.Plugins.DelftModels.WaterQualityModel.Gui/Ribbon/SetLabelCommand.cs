@@ -88,10 +88,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Ribbon
             };
             setValueOperation.SetInputData(SpatialOperation.MaskInputName,
                                            new FeatureCollection(new EventedList<IFeature>(Polygons.Concat(Points)),
-                                                                 typeof(Feature2D))
-                                           {
-                                               CoordinateSystem = SourceCoordinateSystem
-                                           });
+                                                                 typeof(Feature2D)) {CoordinateSystem = SourceCoordinateSystem});
             return setValueOperation;
         }
 

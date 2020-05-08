@@ -17,9 +17,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
         private readonly bool horizontalAxisIsReversed;
         private int LevelCircleFeatureRadius = 5;
 
-
-        public CulvertInSideViewShape(IChart chart, double offset, ICulvert culvert,bool horizontalAxisIsReversed)
-            : base(chart,offset,culvert)
+        public CulvertInSideViewShape(IChart chart, double offset, ICulvert culvert, bool horizontalAxisIsReversed)
+            : base(chart, offset, culvert)
         {
             this.horizontalAxisIsReversed = horizontalAxisIsReversed;
         }
@@ -44,12 +43,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
             PolygonShapeFeature tube = GetTube();
             if (tube != null)
             {
-                features.Add(tube);    
+                features.Add(tube);
             }
-            
+
             features.Add(GetInletFeature());
             features.Add(GetOutletFeature());
-            
+
             if (Structure.GroundLayerEnabled)
             {
                 features.Add(GetGroundLayerLine());
@@ -60,8 +59,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
                 features.Add(GetSiphonOnLevelFeature());
                 features.Add(GetSiphonOffLevelFeature());
             }
+
             //set a disabled style to use in structureview when the culvert is not 'active'
-            foreach (var feature in features)
+            foreach (IShapeFeature feature in features)
             {
                 feature.DisabledStyle = DisabledStyle;
             }
@@ -71,39 +71,35 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
 
         private IShapeFeature GetOutletFeature()
         {
-            double x = horizontalAxisIsReversed ?
-                OffsetInSideView - Structure.Length / 2 :
-                OffsetInSideView + Structure.Length / 2;
+            double x = horizontalAxisIsReversed ? OffsetInSideView - (Structure.Length / 2) : OffsetInSideView + (Structure.Length / 2);
 
             double y = Structure.OutletLevel;
-            
-            var xRadius = GetWorldWidth(LevelCircleFeatureRadius);
-            var yRadius = GetWorldHeigth(LevelCircleFeatureRadius);
+
+            double xRadius = GetWorldWidth(LevelCircleFeatureRadius);
+            double yRadius = GetWorldHeigth(LevelCircleFeatureRadius);
             var feature = new CircleShapeFeature(Chart, new Coordinate(x, y), xRadius, yRadius)
-                              {
-                                  NormalStyle = CulvertStyling.NormalOutletStyle,
-                                  SelectedStyle = CulvertStyling.SelectedOutletStyle
-                              };
+            {
+                NormalStyle = CulvertStyling.NormalOutletStyle,
+                SelectedStyle = CulvertStyling.SelectedOutletStyle
+            };
             return feature;
         }
 
         private IShapeFeature GetInletFeature()
         {
             double x = horizontalAxisIsReversed
-                           ?
-                               OffsetInSideView + Structure.Length/2
-                           :
-                               OffsetInSideView - Structure.Length/2;
+                           ? OffsetInSideView + (Structure.Length / 2)
+                           : OffsetInSideView - (Structure.Length / 2);
 
             double y = Structure.InletLevel;
 
-            var xRadius = GetWorldWidth(LevelCircleFeatureRadius);
-            var yRadius = GetWorldHeigth(LevelCircleFeatureRadius);
+            double xRadius = GetWorldWidth(LevelCircleFeatureRadius);
+            double yRadius = GetWorldHeigth(LevelCircleFeatureRadius);
             var feature = new CircleShapeFeature(Chart, new Coordinate(x, y), xRadius, yRadius)
-                              {
-                                  NormalStyle = CulvertStyling.NormalInletStyle,
-                                  SelectedStyle = CulvertStyling.SelectedInletStyle
-                              };
+            {
+                NormalStyle = CulvertStyling.NormalInletStyle,
+                SelectedStyle = CulvertStyling.SelectedInletStyle
+            };
             return feature;
         }
 
@@ -111,6 +107,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
         {
             return GetCenteredHorizontalLine(Structure.SiphonOnLevel, CulvertStyling.NormalSiphonOnLevelStyle, CulvertStyling.SelectedSiphonOnLevelStyle);
         }
+
         private IShapeFeature GetSiphonOffLevelFeature()
         {
             return GetCenteredHorizontalLine(Structure.SiphonOffLevel, CulvertStyling.NormalSiphonOffLevelStyle, CulvertStyling.SelectedSiphonOffLevelStyle);
@@ -130,9 +127,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
             const int width = 10;
 
             //lower level line at YOffset of 6 pixels wide
-            var x = OffsetInSideView - (GetWorldWidth(width) / 2);
-
-
+            double x = OffsetInSideView - (GetWorldWidth(width) / 2);
 
             var feature = new FixedRectangleShapeFeature(Chart, x, level, width, height, false, false)
             {
@@ -148,11 +143,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
             VectorStyle normalStyle = CulvertStyling.NormalInletStyle;
             VectorStyle selectedStyle = CulvertStyling.SelectedInletStyle;
 
-            var level = Structure.GroundLayerThickness + Structure.BottomLevel;
-            var x = OffsetInSideView - Structure.Length / 2;
-            var width = Structure.Length;
+            double level = Structure.GroundLayerThickness + Structure.BottomLevel;
+            double x = OffsetInSideView - (Structure.Length / 2);
+            double width = Structure.Length;
 
-            var thickness = Math.Max(0.1, Structure.GroundLayerThickness); //always show something when its enabled
+            double thickness = Math.Max(0.1, Structure.GroundLayerThickness); //always show something when its enabled
 
             var feature = new FixedRectangleShapeFeature(Chart, x, level, width, thickness, true, true)
             {
@@ -169,38 +164,37 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
         /// <returns></returns>
         private PolygonShapeFeature GetTube()
         {
-            var yzvalues = Structure.CrossSectionDefinitionAtInletAbsolute.Profile;
+            IEnumerable<Coordinate> yzvalues = Structure.CrossSectionDefinitionAtInletAbsolute.Profile;
             if (yzvalues.Count() == 0)
+            {
                 return null;
+            }
 
             //unless the axis is reversed the inlet has a smaller chainage.
-            var leftPointZ = horizontalAxisIsReversed?Structure.OutletLevel : Structure.InletLevel;
-            var rightPointZ = horizontalAxisIsReversed ? Structure.InletLevel: Structure.OutletLevel;
+            double leftPointZ = horizontalAxisIsReversed ? Structure.OutletLevel : Structure.InletLevel;
+            double rightPointZ = horizontalAxisIsReversed ? Structure.InletLevel : Structure.OutletLevel;
             //the height of the culvert is defined by the range of the crossection.
-            var height = Structure.CrossSectionDefinitionAtInletAbsolute.HighestPoint -
-                         Structure.CrossSectionDefinitionAtInletAbsolute.LowestPoint;
+            double height = Structure.CrossSectionDefinitionAtInletAbsolute.HighestPoint -
+                            Structure.CrossSectionDefinitionAtInletAbsolute.LowestPoint;
 
-            var minX = OffsetInSideView - Structure.Length / 2;
-            var maxX = OffsetInSideView + Structure.Length / 2;
-            
+            double minX = OffsetInSideView - (Structure.Length / 2);
+            double maxX = OffsetInSideView + (Structure.Length / 2);
+
             var vertices = new List<Coordinate>();
             vertices.Add(new Coordinate(minX, leftPointZ));
             vertices.Add(new Coordinate(maxX, rightPointZ));
-            vertices.Add(new Coordinate(maxX, rightPointZ+height));
-            vertices.Add(new Coordinate(minX, leftPointZ+height));
+            vertices.Add(new Coordinate(maxX, rightPointZ + height));
+            vertices.Add(new Coordinate(minX, leftPointZ + height));
             //close the polygon
             vertices.Add(new Coordinate(minX, leftPointZ));
-            
+
             ILinearRing newLinearRing = GeometryFactory.CreateLinearRing(vertices.ToArray());
             IPolygon polygon = GeometryFactory.CreatePolygon(newLinearRing, null);
-
 
             var feature = new PolygonShapeFeature(Chart, polygon);
             feature.NormalStyle = CulvertStyling.NormalStyle;
             feature.SelectedStyle = CulvertStyling.SelectedStyle;
             return feature;
         }
-
-        
     }
 }

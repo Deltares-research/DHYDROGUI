@@ -1,5 +1,7 @@
+using System;
 using System.Drawing;
 using System.Windows.Forms;
+using DeltaShell.Plugins.FMSuite.Common.Gui.Properties;
 
 namespace DeltaShell.Plugins.FMSuite.Common.Gui.Editors
 {
@@ -7,7 +9,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Editors
     {
         private static readonly SolidBrush TransparentOverlay = new SolidBrush(Color.FromArgb(200, Color.White));
 
-        bool ignoreCheck;
+        private bool ignoreCheck;
         private SolidBrush backColorBrush;
         private Bitmap itemRenderBuffer;
         private ToolStripItem[] contextMenuItems;
@@ -26,7 +28,10 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Editors
 
         public ToolStripItem[] ContextMenuItems
         {
-            get { return contextMenuItems; }
+            get
+            {
+                return contextMenuItems;
+            }
             set
             {
                 contextMenuItems = value;
@@ -38,19 +43,26 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Editors
             }
         }
 
-        void SupportPointListBoxResize(object sender, System.EventArgs e)
+        public new void SetItemChecked(int index, bool value)
         {
-            if (itemRenderBuffer != null)
-                itemRenderBuffer.Dispose();
-            itemRenderBuffer = Width == 0 ? null : new Bitmap(Width, ItemHeight);
+            ignoreCheck = false;
+            base.SetItemChecked(index, value);
         }
 
-        protected override void OnBackColorChanged(System.EventArgs e)
+        public new void SetItemCheckState(int index, CheckState checkState)
+        {
+            ignoreCheck = false;
+            base.SetItemCheckState(index, checkState);
+        }
+
+        protected override void OnBackColorChanged(EventArgs e)
         {
             base.OnBackColorChanged(e);
 
             if (backColorBrush != null)
+            {
                 backColorBrush.Dispose();
+            }
 
             backColorBrush = new SolidBrush(BackColor);
         }
@@ -66,15 +78,15 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Editors
                 return;
             }
 
-            var isItemChecked = DesignMode || GetItemChecked(e.Index); // breaks in designer?!
-            var selected = (e.State & DrawItemState.Selected) == DrawItemState.Selected;
+            bool isItemChecked = DesignMode || GetItemChecked(e.Index); // breaks in designer?!
+            bool selected = (e.State & DrawItemState.Selected) == DrawItemState.Selected;
 
-            using (var bufferGraphics = Graphics.FromImage(itemRenderBuffer))
+            using (Graphics bufferGraphics = Graphics.FromImage(itemRenderBuffer))
             {
                 var newBounds = new Rectangle(0, 0, e.Bounds.Width, e.Bounds.Height);
-                var x = newBounds.X;
-                var y = newBounds.Y;
-                var dim = ItemHeight;
+                int x = newBounds.X;
+                int y = newBounds.Y;
+                int dim = ItemHeight;
 
                 var args = new DrawItemEventArgs(bufferGraphics, e.Font, newBounds,
                                                  e.Index, e.State,
@@ -88,36 +100,50 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Editors
                 bufferGraphics.FillRectangle(backColorBrush, x, y, dim, dim); // first remove checkbox
 
                 if (isItemChecked)
-                    bufferGraphics.DrawImage(Properties.Resources.arrow, x, y, dim, dim); // overlay image
+                {
+                    bufferGraphics.DrawImage(Resources.arrow, x, y, dim, dim); // overlay image
+                }
 
-                bufferGraphics.DrawImage(isItemChecked ? Properties.Resources.Delete : Properties.Resources.add,
-                                             newBounds.Width - dim, y,
-                                             dim, dim); // overlay image
+                bufferGraphics.DrawImage(isItemChecked ? Resources.Delete : Resources.add,
+                                         newBounds.Width - dim, y,
+                                         dim, dim); // overlay image
 
                 if (!selected) //semi-transparent overlay to make icon less visible
+                {
                     bufferGraphics.FillRectangle(TransparentOverlay,
                                                  newBounds.Width - dim, y, dim, dim);
+                }
 
                 e.Graphics.DrawImageUnscaled(itemRenderBuffer, e.Bounds.X, e.Bounds.Y);
             }
         }
-        
-        void SupportPointListBoxMouseUp(object sender, MouseEventArgs e)
+
+        private void SupportPointListBoxResize(object sender, EventArgs e)
+        {
+            if (itemRenderBuffer != null)
+            {
+                itemRenderBuffer.Dispose();
+            }
+
+            itemRenderBuffer = Width == 0 ? null : new Bitmap(Width, ItemHeight);
+        }
+
+        private void SupportPointListBoxMouseUp(object sender, MouseEventArgs e)
         {
             CheckIgnoreOrNot(e);
-            if (ContextMenuItems != null && e.Button==MouseButtons.Right)
+            if (ContextMenuItems != null && e.Button == MouseButtons.Right)
             {
-                var index = IndexFromPoint(e.Location);
+                int index = IndexFromPoint(e.Location);
                 ContextMenuStrip.Visible = index == SelectedIndex && index != NoMatches;
             }
         }
 
-        void SupportPointListBoxMouseClick(object sender, MouseEventArgs e)
+        private void SupportPointListBoxMouseClick(object sender, MouseEventArgs e)
         {
             CheckIgnoreOrNot(e);
         }
-        
-        void SupportPointListBoxMouseDown(object sender, MouseEventArgs e)
+
+        private void SupportPointListBoxMouseDown(object sender, MouseEventArgs e)
         {
             CheckIgnoreOrNot(e);
         }
@@ -127,21 +153,12 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Editors
             ignoreCheck = e.X < ClientSize.Width - ItemHeight;
         }
 
-        void SupportPointListBoxItemCheck(object sender, ItemCheckEventArgs e)
+        private void SupportPointListBoxItemCheck(object sender, ItemCheckEventArgs e)
         {
-            if (ignoreCheck) e.NewValue = e.CurrentValue;
-        }
-        
-        public new void SetItemChecked(int index, bool value)
-        {
-            ignoreCheck = false;
-            base.SetItemChecked(index, value);
-        }
-
-        public new void SetItemCheckState(int index, CheckState checkState)
-        {
-            ignoreCheck = false;
-            base.SetItemCheckState(index, checkState);
+            if (ignoreCheck)
+            {
+                e.NewValue = e.CurrentValue;
+            }
         }
     }
 }

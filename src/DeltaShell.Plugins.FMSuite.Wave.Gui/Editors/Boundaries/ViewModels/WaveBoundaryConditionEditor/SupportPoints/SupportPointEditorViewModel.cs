@@ -19,7 +19,7 @@ using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Validation;
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor.SupportPoints
 {
     /// <summary>
-    /// <see cref="SupportPointEditorViewModel" /> defines the view model for the support point editor view.
+    /// <see cref="SupportPointEditorViewModel"/> defines the view model for the support point editor view.
     /// </summary>
     /// <remarks>
     /// The assumption is made that end points cannot
@@ -33,8 +33,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         private SupportPointViewModel selectedSupportPointViewModel;
         private double newDistance;
 
+        private bool isEnabled;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
         /// <summary>
-        /// Initializes a new instance of the <see cref="SupportPointEditorViewModel" /> class.
+        /// Initializes a new instance of the <see cref="SupportPointEditorViewModel"/> class.
         /// </summary>
         /// <param name="geometricDefinition">The observed <see cref="IWaveBoundaryGeometricDefinition"/>.</param>
         /// <param name="supportPointDataComponentViewModel">The observed <see cref="supportPointDataComponentViewModel"/>.</param>
@@ -93,7 +97,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
 
                 if (IsEnabled)
                 {
-                    supportPointDataComponentViewModel.SelectedSupportPoint = 
+                    supportPointDataComponentViewModel.SelectedSupportPoint =
                         SelectedSupportPointViewModel?.SupportPoint;
                 }
 
@@ -118,26 +122,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
                 OnPropertyChanged();
             }
         }
-
-        private bool isEnabled;
-
-        public void RefreshIsEnabled()
-        {
-            IsEnabled = supportPointDataComponentViewModel.IsEnabled();
-
-            if (IsEnabled)
-            {
-                supportPointDataComponentViewModel.SelectedSupportPoint = SelectedSupportPointViewModel.SupportPoint;
-                SupportPointViewModels.ForEach(RefreshIsEnabledSupportPoint);
-            }
-            else
-            {
-                SupportPointViewModels.ForEach(x => x.IsEnabled = false);
-            }
-        }
-
-        private void RefreshIsEnabledSupportPoint(SupportPointViewModel vm) =>
-            vm.IsEnabled = supportPointDataComponentViewModel.IsEnabledSupportPoint(vm.SupportPoint);
 
         /// <summary>
         /// Gets the add support point command.
@@ -166,6 +150,29 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
             get => newDistance;
             set => newDistance = SpatialDouble.Round(value);
         }
+
+        public void Dispose()
+        {
+            Unsubscribe();
+        }
+
+        public void RefreshIsEnabled()
+        {
+            IsEnabled = supportPointDataComponentViewModel.IsEnabled();
+
+            if (IsEnabled)
+            {
+                supportPointDataComponentViewModel.SelectedSupportPoint = SelectedSupportPointViewModel.SupportPoint;
+                SupportPointViewModels.ForEach(RefreshIsEnabledSupportPoint);
+            }
+            else
+            {
+                SupportPointViewModels.ForEach(x => x.IsEnabled = false);
+            }
+        }
+
+        private void RefreshIsEnabledSupportPoint(SupportPointViewModel vm) =>
+            vm.IsEnabled = supportPointDataComponentViewModel.IsEnabledSupportPoint(vm.SupportPoint);
 
         private void AddSupportPointAction(object value)
         {
@@ -220,7 +227,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
             bool isSelected = SelectedSupportPointViewModel == oldViewModel;
 
             var newSupportPoint = new SupportPoint(oldViewModel.Distance, geometricDefinition);
-            ReplaceConditionData(oldViewModel.SupportPoint, 
+            ReplaceConditionData(oldViewModel.SupportPoint,
                                  newSupportPoint);
 
             RemoveViewModel(oldViewModel);
@@ -245,14 +252,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
 
         private IEnumerable<SupportPointViewModel> GetSortedViewModels()
         {
-            SupportPoint[] sortedSupportPoints = 
+            SupportPoint[] sortedSupportPoints =
                 geometricDefinition.SupportPoints.OrderBy(sp => sp.Distance).ToArray();
 
             int nSupportPoints = sortedSupportPoints.Length;
             for (var i = 0; i < nSupportPoints; i++)
             {
                 bool isFirstOrLast = i == 0 || i == nSupportPoints - 1;
-                yield return new SupportPointViewModel(sortedSupportPoints[i], 
+                yield return new SupportPointViewModel(sortedSupportPoints[i],
                                                        supportPointDataComponentViewModel,
                                                        !isFirstOrLast);
             }
@@ -349,16 +356,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
             viewModel.PropertyChanged -= OnSupportPointModelPropertyChanged;
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
-
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        public void Dispose()
-        {
-            Unsubscribe();
         }
     }
 }

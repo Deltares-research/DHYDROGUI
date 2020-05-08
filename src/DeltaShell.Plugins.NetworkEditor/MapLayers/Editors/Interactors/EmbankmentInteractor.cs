@@ -12,10 +12,7 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors
     public class EmbankmentInteractor : Feature2DLineInteractor
     {
         public EmbankmentInteractor(ILayer layer, IFeature feature, IEditableObject editableObject)
-            : base(layer, feature, ((VectorLayer) layer).Style, editableObject)
-        {
-
-        }
+            : base(layer, feature, ((VectorLayer) layer).Style, editableObject) {}
 
         public override void Stop()
         {
@@ -23,9 +20,9 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors
 
             var embankment = (Embankment) SourceFeature;
 
-            foreach (var link in embankment.Links)
+            foreach (HydroLink link in embankment.Links)
             {
-                var geometry = link.Geometry;
+                IGeometry geometry = link.Geometry;
                 geometry.Coordinates[0] = embankment.Geometry.Coordinates[0];
                 link.Geometry = geometry;
             }

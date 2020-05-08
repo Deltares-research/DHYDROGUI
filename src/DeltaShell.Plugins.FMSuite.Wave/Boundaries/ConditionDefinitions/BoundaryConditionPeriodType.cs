@@ -7,7 +7,7 @@
     public enum BoundaryConditionPeriodType
     {
         Peak = 1,
-        
+
         Mean = 2,
     }
 }

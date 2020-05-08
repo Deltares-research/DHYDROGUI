@@ -16,9 +16,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Helper
     /// by the <see cref="IWaveBoundaryFactoryHelper"/> to obtain the correct wave boundary
     /// data from view data.
     /// </summary>
-    /// <seealso cref="IWaveBoundaryFactoryHelper" />
+    /// <seealso cref="IWaveBoundaryFactoryHelper"/>
     public class WaveBoundaryFactoryHelper : IWaveBoundaryFactoryHelper
-    { 
+    {
         private readonly ISpatiallyDefinedDataComponentFactory componentFactory;
 
         /// <summary>
@@ -49,14 +49,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Helper
         public IWaveBoundaryConditionDefinition GetConditionDefinition()
         {
             var shape = new JonswapShape {PeakEnhancementFactor = 3.3};
-            const BoundaryConditionPeriodType periodType = 
+            const BoundaryConditionPeriodType periodType =
                 BoundaryConditionPeriodType.Peak;
 
             var dataComponent =
                 componentFactory.ConstructDefaultDataComponent<UniformDataComponent<ConstantParameters<PowerDefinedSpreading>>>();
 
-            return new WaveBoundaryConditionDefinition(shape, 
-                                                       periodType, 
+            return new WaveBoundaryConditionDefinition(shape,
+                                                       periodType,
                                                        dataComponent);
         }
     }

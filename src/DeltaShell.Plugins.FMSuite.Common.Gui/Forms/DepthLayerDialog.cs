@@ -11,9 +11,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Forms
         private readonly IList<DepthLayerType> supportedDepthLayerTypes;
 
         public DepthLayerDialog()
-            : this(Enum.GetValues(typeof(DepthLayerType)).Cast<DepthLayerType>())
-        {
-        }
+            : this(Enum.GetValues(typeof(DepthLayerType)).Cast<DepthLayerType>()) {}
 
         public DepthLayerDialog(IEnumerable<DepthLayerType> supportedDepthLayerTypes)
         {
@@ -24,14 +22,38 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Forms
 
         public bool CanSpecifyLayerThicknesses
         {
-            get { return depthLayerControl.CanSpecifyThicknesses; }
-            set { depthLayerControl.CanSpecifyThicknesses = value; }
+            get
+            {
+                return depthLayerControl.CanSpecifyThicknesses;
+            }
+            set
+            {
+                depthLayerControl.CanSpecifyThicknesses = value;
+            }
         }
 
         public DepthLayerDefinition DepthLayerDefinition
         {
-            get { return depthLayerControl.DepthLayerDefinition; }
-            set { depthLayerControl.DepthLayerDefinition = value; }
+            get
+            {
+                return depthLayerControl.DepthLayerDefinition;
+            }
+            set
+            {
+                depthLayerControl.DepthLayerDefinition = value;
+            }
+        }
+
+        protected override bool ProcessDialogKey(Keys keyData)
+        {
+            if (keyData == Keys.Escape)
+            {
+                AutoValidate = AutoValidate.Disable;
+                ButtonCancelClick(buttonCancel, new EventArgs());
+                return true;
+            }
+
+            return base.ProcessDialogKey(keyData);
         }
 
         private void ButtonOkClick(object sender, EventArgs e)
@@ -44,17 +66,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Forms
         {
             DialogResult = DialogResult.Cancel;
             Close();
-        }
-
-        protected override bool ProcessDialogKey(Keys keyData)
-        {
-            if (keyData == Keys.Escape)
-            {
-                AutoValidate = AutoValidate.Disable;
-                ButtonCancelClick(buttonCancel,new EventArgs());
-                return true;
-            }
-            return base.ProcessDialogKey(keyData);
         }
 
         private void OnMouseUp(object sender, MouseEventArgs mouseEventArgs)

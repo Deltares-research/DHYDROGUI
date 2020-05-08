@@ -9,15 +9,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Helper
     /// <see cref="IUniqueBoundaryNameProvider"/> implements the method to obtain a unique
     /// boundary name.
     /// </summary>
-    /// <seealso cref="IUniqueBoundaryNameProvider" />
+    /// <seealso cref="IUniqueBoundaryNameProvider"/>
     public class UniqueBoundaryNameProvider : IUniqueBoundaryNameProvider
     {
-        private readonly IBoundaryProvider boundaryProvider;
-
         /// <summary>
         /// The default boundary name
         /// </summary>
         public const string DefaultBoundaryName = "Boundary";
+
+        private readonly IBoundaryProvider boundaryProvider;
 
         /// <summary>
         /// Creates a new <see cref="UniqueBoundaryNameProvider"/> with the given

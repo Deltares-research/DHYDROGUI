@@ -3,7 +3,8 @@
 namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions
 {
     /// <summary>
-    /// <see cref="IVisitableWaveBoundaryConditionDefinition"/> defines method to accept a <see cref="IBoundaryConditionVisitor"/>
+    /// <see cref="IVisitableWaveBoundaryConditionDefinition"/> defines method to accept a
+    /// <see cref="IBoundaryConditionVisitor"/>
     /// </summary>
     public interface IVisitableWaveBoundaryConditionDefinition
     {

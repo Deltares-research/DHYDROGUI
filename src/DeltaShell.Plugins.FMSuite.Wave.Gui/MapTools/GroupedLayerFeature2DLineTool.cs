@@ -12,7 +12,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.MapTools
     /// <see cref="GroupLayer"/> in the same way as you would for a regular
     /// <see cref="VectorLayer"/>.
     /// </summary>
-    /// <seealso cref="Feature2DLineTool" />
+    /// <seealso cref="Feature2DLineTool"/>
     public class GroupedLayerFeature2DLineTool : Feature2DLineTool
     {
         /// <summary>
@@ -24,7 +24,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.MapTools
         /// <param name="icon">The icon.</param>
         public GroupedLayerFeature2DLineTool(string targetGroupLayerName,
                                              string targetChildVectorLayerName,
-                                             string name, 
+                                             string name,
                                              Bitmap icon) :
             base(targetGroupLayerName, name, icon)
         {

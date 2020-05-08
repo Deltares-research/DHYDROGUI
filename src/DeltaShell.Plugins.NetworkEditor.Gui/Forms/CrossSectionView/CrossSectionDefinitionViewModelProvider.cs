@@ -7,18 +7,15 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
 {
     public static class CrossSectionDefinitionViewModelProvider
     {
-        public static CrossSectionDefinitionViewModel GetViewModel(ICrossSectionDefinition crossSectionDefinition,IHydroNetwork hydroNetwork = null)
+        public static CrossSectionDefinitionViewModel GetViewModel(ICrossSectionDefinition crossSectionDefinition, IHydroNetwork hydroNetwork = null)
         {
-            var model = GetViewModelForType(crossSectionDefinition);
+            CrossSectionDefinitionViewModel model = GetViewModelForType(crossSectionDefinition);
 
-            model.CrossSectionSectionTypes = hydroNetwork != null ? 
-                hydroNetwork.CrossSectionSectionTypes : 
-                new EventedList<CrossSectionSectionType>();
+            model.CrossSectionSectionTypes = hydroNetwork != null ? hydroNetwork.CrossSectionSectionTypes : new EventedList<CrossSectionSectionType>();
             model.HydroNetwork = hydroNetwork;
             return model;
         }
-        
-        
+
         private static CrossSectionDefinitionViewModel GetViewModelForType(ICrossSectionDefinition crossSectionDefinition)
         {
             switch (crossSectionDefinition.CrossSectionType)
@@ -35,6 +32,5 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
                     throw new ArgumentOutOfRangeException();
             }
         }
-
     }
 }

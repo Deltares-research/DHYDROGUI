@@ -17,6 +17,35 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Exporters
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(CmpFileExporter));
 
+        public override IEnumerable<BoundaryConditionDataType> ForcingTypes
+        {
+            get
+            {
+                yield return BoundaryConditionDataType.AstroComponents;
+                yield return BoundaryConditionDataType.AstroCorrection;
+                yield return BoundaryConditionDataType.Harmonics;
+                yield return BoundaryConditionDataType.HarmonicCorrection;
+            }
+        }
+
+        private IEnumerable<HarmonicComponent> CreateHarmonicSeries(IBoundaryCondition boundaryCondition,
+                                                                    int selectedIndex)
+        {
+            if (boundaryCondition == null)
+            {
+                return Enumerable.Empty<HarmonicComponent>();
+            }
+
+            IFunction data = boundaryCondition.GetDataAtPoint(selectedIndex);
+
+            if (data == null || !ForcingTypes.Contains(boundaryCondition.DataType))
+            {
+                return Enumerable.Empty<HarmonicComponent>();
+            }
+
+            return ExtForceFileHelper.ToHarmonicComponents(data);
+        }
+
         #region IFileExporter
 
         [ExcludeFromCodeCoverage]
@@ -66,34 +95,5 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Exporters
         }
 
         #endregion
-
-        public override IEnumerable<BoundaryConditionDataType> ForcingTypes
-        {
-            get
-            {
-                yield return BoundaryConditionDataType.AstroComponents;
-                yield return BoundaryConditionDataType.AstroCorrection;
-                yield return BoundaryConditionDataType.Harmonics;
-                yield return BoundaryConditionDataType.HarmonicCorrection;
-            }
-        }
-
-        private IEnumerable<HarmonicComponent> CreateHarmonicSeries(IBoundaryCondition boundaryCondition,
-                                                                    int selectedIndex)
-        {
-            if (boundaryCondition == null)
-            {
-                return Enumerable.Empty<HarmonicComponent>();
-            }
-
-            IFunction data = boundaryCondition.GetDataAtPoint(selectedIndex);
-
-            if (data == null || !ForcingTypes.Contains(boundaryCondition.DataType))
-            {
-                return Enumerable.Empty<HarmonicComponent>();
-            }
-
-            return ExtForceFileHelper.ToHarmonicComponents(data);
-        }
     }
 }

@@ -21,15 +21,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         public ConstantParametersViewModelGeneric(ConstantParameters<TSpreading> parameters)
         {
             Ensure.NotNull(parameters, nameof(parameters));
-            
+
             ObservedParameters = parameters;
             SpreadingUnit = SpreadingConversion.GetSpreadingUnit<TSpreading>().Symbol;
         }
-
-        /// <summary>
-        /// Gets the observed parameters.
-        /// </summary>
-        public ConstantParameters<TSpreading> ObservedParameters { get; }
 
         public override double Height
         {
@@ -56,6 +51,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         }
 
         public override string SpreadingUnit { get; }
+
+        /// <summary>
+        /// Gets the observed parameters.
+        /// </summary>
+        public ConstantParameters<TSpreading> ObservedParameters { get; }
 
         private double GetSpreadingValue()
         {

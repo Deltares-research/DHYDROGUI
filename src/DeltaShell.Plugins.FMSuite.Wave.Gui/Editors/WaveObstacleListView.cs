@@ -22,6 +22,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors
         private readonly ITableViewColumn reflTypeColumn;
         private readonly ITableViewColumn reflCoefColumn;
 
+        private IList<WaveObstacle> data;
+
+        public event EventHandler SelectedFeaturesChanged;
+
         public WaveObstacleListView()
         {
             InitializeComponent();
@@ -49,6 +53,68 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors
             Controls.Add(tableView);
         }
 
+        public Action<IList<WaveObstacle>> RemoveObstacles { private get; set; }
+
+        public object Data
+        {
+            get => data;
+            set
+            {
+                data = value as IList<WaveObstacle>;
+                tableView.Data = data;
+            }
+        }
+
+        public Image Image { get; set; }
+
+        public ViewInfo ViewInfo { get; set; }
+
+        public IEnumerable<IFeature> SelectedFeatures
+        {
+            get
+            {
+                if (tableView.Data != null)
+                {
+                    var obstacles = tableView.Data as IList<WaveObstacle>;
+                    if (obstacles != null)
+                    {
+                        return
+                            tableView.SelectedRowsIndices.Select(
+                                i => obstacles[tableView.GetDataSourceIndexByRowIndex(i)]);
+                    }
+                }
+
+                return Enumerable.Empty<IFeature>();
+            }
+            set
+            {
+                if (value == null)
+                {
+                    return;
+                }
+
+                List<WaveObstacle> selectedInMap = value.OfType<WaveObstacle>().ToList();
+                var allConditions = tableView.Data as IList<WaveObstacle>;
+                if (allConditions == null)
+                {
+                    return;
+                }
+
+                IEnumerable<WaveObstacle> selectedBoundaries = allConditions.Intersect(selectedInMap);
+                int[] selectedIndices = selectedBoundaries.Select(allConditions.IndexOf).ToArray();
+
+                tableView.ClearSelection();
+                tableView.SelectRows(selectedIndices);
+                tableView.FocusedRowIndex = tableView.SelectedRowsIndices.FirstOrDefault();
+            }
+        }
+
+        public ILayer Layer { get; set; }
+        public void EnsureVisible(object item) {}
+
+        public void OnActivated() {}
+        public void OnDeactivated() {}
+
         private void TableViewOnSelectionChanged(object sender, TableSelectionChangedEventArgs e)
         {
             if (SelectedFeaturesChanged != null)
@@ -71,8 +137,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors
 
             return false;
         }
-
-        public Action<IList<WaveObstacle>> RemoveObstacles { private get; set; }
 
         private bool DisplayCellFilter(TableViewCellStyle cellStyle)
         {
@@ -128,68 +192,5 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors
 
             return false;
         }
-
-        private IList<WaveObstacle> data;
-
-        public object Data
-        {
-            get => data;
-            set
-            {
-                data = value as IList<WaveObstacle>;
-                tableView.Data = data;
-            }
-        }
-
-        public Image Image { get; set; }
-        public void EnsureVisible(object item) {}
-
-        public ViewInfo ViewInfo { get; set; }
-
-        public IEnumerable<IFeature> SelectedFeatures
-        {
-            get
-            {
-                if (tableView.Data != null)
-                {
-                    var obstacles = tableView.Data as IList<WaveObstacle>;
-                    if (obstacles != null)
-                    {
-                        return
-                            tableView.SelectedRowsIndices.Select(
-                                i => obstacles[tableView.GetDataSourceIndexByRowIndex(i)]);
-                    }
-                }
-
-                return Enumerable.Empty<IFeature>();
-            }
-            set
-            {
-                if (value == null)
-                {
-                    return;
-                }
-
-                List<WaveObstacle> selectedInMap = value.OfType<WaveObstacle>().ToList();
-                var allConditions = tableView.Data as IList<WaveObstacle>;
-                if (allConditions == null)
-                {
-                    return;
-                }
-
-                IEnumerable<WaveObstacle> selectedBoundaries = allConditions.Intersect(selectedInMap);
-                int[] selectedIndices = selectedBoundaries.Select(allConditions.IndexOf).ToArray();
-
-                tableView.ClearSelection();
-                tableView.SelectRows(selectedIndices);
-                tableView.FocusedRowIndex = tableView.SelectedRowsIndices.FirstOrDefault();
-            }
-        }
-
-        public event EventHandler SelectedFeaturesChanged;
-        public ILayer Layer { get; set; }
-
-        public void OnActivated() {}
-        public void OnDeactivated() {}
     }
 }

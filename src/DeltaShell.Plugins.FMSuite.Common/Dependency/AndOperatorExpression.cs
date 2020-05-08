@@ -16,8 +16,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.Dependency
             this.dependencies = dependencies;
         }
 
-        protected override string Regex => @"(?<left>^.*)&&(?<right>.*$)";
-
         public override bool CanHandleExpression(string expression)
         {
             if (string.IsNullOrEmpty(expression))
@@ -103,5 +101,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Dependency
                 return leftIsEnabled(properties) && rightIsEnabled(properties);
             };
         }
+
+        protected override string Regex => @"(?<left>^.*)&&(?<right>.*$)";
     }
 }

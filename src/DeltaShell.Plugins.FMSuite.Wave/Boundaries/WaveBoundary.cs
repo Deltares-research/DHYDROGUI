@@ -7,9 +7,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries
     /// <summary>
     /// <see cref="WaveBoundary"/> implements a WaveBoundary.
     /// </summary>
-    /// <seealso cref="IWaveBoundary" />
+    /// <seealso cref="IWaveBoundary"/>
     public class WaveBoundary : IWaveBoundary
     {
+        private string name;
+
         /// <summary>
         /// Creates a new instance of the <see cref="WaveBoundary"/>.
         /// </summary>
@@ -32,12 +34,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries
         //
         public string Name
         {
-            get => name; 
-            set => name = !string.IsNullOrEmpty(value) ? value 
-                              : throw new ArgumentNullException(nameof(value)); 
+            get => name;
+            set => name = !string.IsNullOrEmpty(value)
+                              ? value
+                              : throw new ArgumentNullException(nameof(value));
         }
-
-        private string name;
 
         public IWaveBoundaryGeometricDefinition GeometricDefinition { get; }
         public IWaveBoundaryConditionDefinition ConditionDefinition { get; }

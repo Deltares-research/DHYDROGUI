@@ -7,9 +7,9 @@ using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoun
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor.BoundaryParameterSpecific
 {
-
     /// <summary>
-    /// <see cref="TimeDependentUniformParametersViewModel{TSpreading}"/> defines the view model for the TimeDependentParametersView.
+    /// <see cref="TimeDependentUniformParametersViewModel{TSpreading}"/> defines the view model for the
+    /// TimeDependentParametersView.
     /// </summary>
     /// <typeparam name="TSpreading">The type of the spreading.</typeparam>
     public class TimeDependentUniformParametersViewModel<TSpreading> : TimeDependentParametersViewModel
@@ -34,17 +34,20 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
             this.generateSeries = generateSeries;
             ObservedParameters = parameters;
 
-            TimeDependentParametersFunctions = new[] {ObservedParameters.WaveEnergyFunction.UnderlyingFunction};
+            TimeDependentParametersFunctions = new[]
+            {
+                ObservedParameters.WaveEnergyFunction.UnderlyingFunction
+            };
         }
+
+        public override IEnumerable<IFunction> TimeDependentParametersFunctions { get; }
 
         /// <summary>
         /// Gets the observed parameters.
         /// </summary>
         public TimeDependentParameters<TSpreading> ObservedParameters { get; }
 
-        public override IEnumerable<IFunction> TimeDependentParametersFunctions { get; }
-
-        protected override void GenerateSeries() => 
+        protected override void GenerateSeries() =>
             generateSeries.Execute(ObservedParameters.WaveEnergyFunction);
     }
 }

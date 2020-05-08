@@ -21,7 +21,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
         ICompositeBranchStructure CompositeBranchStructure { get; }
         double ZMinValue { get; }
         double ZMaxValue { get; }
+        HydroNetwork HydroNetwork { get; }
         void ResetMinMaxZ();
-        HydroNetwork HydroNetwork { get;  }
     }
 }

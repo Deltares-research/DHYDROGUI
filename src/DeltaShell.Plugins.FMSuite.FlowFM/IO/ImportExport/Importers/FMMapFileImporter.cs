@@ -29,11 +29,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
 
         public bool OpenViewAfterImport => true;
 
-        public bool CanImportOn(object targetObject)
-        {
-            return true;
-        }
-
         public bool CanImportOnRootLevel => true;
 
         public string FileFilter => $"FM Map File|*{FileConstants.MapFileExtension}";
@@ -44,15 +39,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
 
         public ImportProgressChangedDelegate ProgressChanged { get; set; }
 
+        public bool CanImportOn(object targetObject)
+        {
+            return true;
+        }
+
         public object ImportItem(string path, object target = null)
         {
-            return new DataItem
-            {
-                Value = new FMMapFileFunctionStore
-                {
-                    Path = path
-                }
-            };
+            return new DataItem {Value = new FMMapFileFunctionStore {Path = path}};
         }
     }
 };

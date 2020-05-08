@@ -19,34 +19,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
             {WindComponent.Angle, new Unit("degrees", "deg")}
         };
 
-        public static UniformWindField CreateWindXSeries()
-        {
-            return new UniformWindField(WindComponent.X) {Quantity = WindQuantity.VelocityX};
-        }
-
-        public static UniformWindField CreateWindYSeries()
-        {
-            return new UniformWindField(WindComponent.Y) {Quantity = WindQuantity.VelocityY};
-        }
-
-        public static UniformWindField CreateWindXYSeries()
-        {
-            return new UniformWindField(WindComponent.X, WindComponent.Y) {Quantity = WindQuantity.VelocityVector};
-        }
-
-        public static UniformWindField CreateWindPolarSeries()
-        {
-            return new UniformWindField(WindComponent.Magnitude, WindComponent.Angle)
-            {
-                Quantity = WindQuantity.VelocityVector
-            };
-        }
-
-        public static UniformWindField CreatePressureSeries()
-        {
-            return new UniformWindField(WindComponent.Pressure) {Quantity = WindQuantity.AirPressure};
-        }
-
         private readonly IList<WindComponent> components;
         private WindQuantity quantity;
 
@@ -70,6 +42,45 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
 
         public IEnumerable<WindComponent> Components => components;
 
+        public WindQuantity Quantity
+        {
+            get => quantity;
+            private set
+            {
+                quantity = value;
+                UpdateName();
+            }
+        }
+
+        public IFunction Data { get; private set; }
+
+        public string Name { get; private set; }
+
+        public static UniformWindField CreateWindXSeries()
+        {
+            return new UniformWindField(WindComponent.X) {Quantity = WindQuantity.VelocityX};
+        }
+
+        public static UniformWindField CreateWindYSeries()
+        {
+            return new UniformWindField(WindComponent.Y) {Quantity = WindQuantity.VelocityY};
+        }
+
+        public static UniformWindField CreateWindXYSeries()
+        {
+            return new UniformWindField(WindComponent.X, WindComponent.Y) {Quantity = WindQuantity.VelocityVector};
+        }
+
+        public static UniformWindField CreateWindPolarSeries()
+        {
+            return new UniformWindField(WindComponent.Magnitude, WindComponent.Angle) {Quantity = WindQuantity.VelocityVector};
+        }
+
+        public static UniformWindField CreatePressureSeries()
+        {
+            return new UniformWindField(WindComponent.Pressure) {Quantity = WindQuantity.AirPressure};
+        }
+
         private static string CreateName(WindQuantity windQuantity, IList<WindComponent> components)
         {
             switch (windQuantity)
@@ -92,24 +103,10 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
             }
         }
 
-        public WindQuantity Quantity
-        {
-            get => quantity;
-            private set
-            {
-                quantity = value;
-                UpdateName();
-            }
-        }
-
         [EditAction]
         private void UpdateName()
         {
             Name = CreateName(Quantity, components);
         }
-
-        public IFunction Data { get; private set; }
-
-        public string Name { get; private set; }
     }
 }

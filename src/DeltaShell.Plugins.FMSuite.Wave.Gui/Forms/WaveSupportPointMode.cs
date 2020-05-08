@@ -9,10 +9,12 @@
         /// The selected active support point
         /// </summary>
         SelectedActiveSupportPoint,
+
         /// <summary>
         /// All active support points
         /// </summary>
         AllActiveSupportPoints,
+
         /// <summary>
         /// The no support points
         /// </summary>

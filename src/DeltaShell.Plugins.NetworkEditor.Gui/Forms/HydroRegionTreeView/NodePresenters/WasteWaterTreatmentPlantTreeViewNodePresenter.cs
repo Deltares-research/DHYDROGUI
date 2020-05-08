@@ -3,17 +3,16 @@ using DelftTools.Controls;
 using DelftTools.Hydro;
 using DelftTools.Shell.Gui;
 using DelftTools.Shell.Gui.Swf;
+using DeltaShell.Plugins.NetworkEditor.Gui.Properties;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView.NodePresenters
 {
     public class WasteWaterTreatmentPlantTreeViewNodePresenter : TreeViewNodePresenterBaseForPluginGui<WasteWaterTreatmentPlant>
     {
-        private static readonly Image WWTPImage = Properties.Resources.wwtp;
+        private static readonly Image WWTPImage = Resources.wwtp;
 
         public WasteWaterTreatmentPlantTreeViewNodePresenter(GuiPlugin guiPlugin)
-            : base(guiPlugin)
-        {
-        }
+            : base(guiPlugin) {}
 
         public override void UpdateNode(ITreeNode parentNode, ITreeNode node, WasteWaterTreatmentPlant nodeData)
         {
@@ -21,12 +20,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView.NodePre
             UpdateNodeText(nodeData, node);
         }
 
-        protected override bool CanRemove(WasteWaterTreatmentPlant nodeData)
+        public override bool CanRenameNode(ITreeNode node)
         {
             return true;
         }
 
-        public override bool CanRenameNode(ITreeNode node)
+        protected override bool CanRemove(WasteWaterTreatmentPlant nodeData)
         {
             return true;
         }

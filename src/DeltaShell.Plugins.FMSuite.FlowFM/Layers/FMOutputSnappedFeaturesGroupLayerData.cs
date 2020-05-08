@@ -12,12 +12,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Layers
 {
     public class FMOutputSnappedFeaturesGroupLayerData
     {
-        private readonly string modelOutputSnappedFeaturesPath;
-        private readonly string modelMduFilePath;
-        public ICoordinateSystem coordinateSystem;
-        private static readonly ILog Log = LogManager.GetLogger(typeof(FMOutputSnappedFeaturesGroupLayerData));
-
         public static readonly string OutputSnappedFeaturePostfix = "_snapped";
+        private static readonly ILog Log = LogManager.GetLogger(typeof(FMOutputSnappedFeaturesGroupLayerData));
 
         private static readonly Dictionary<string, string> SnappedFeatureDict = new Dictionary<string, string>
         {
@@ -32,6 +28,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Layers
             {"Enclosures", "_enc"},
             {"Sources", "_src"},
         };
+
+        private readonly string modelOutputSnappedFeaturesPath;
+        private readonly string modelMduFilePath;
+        public ICoordinateSystem coordinateSystem;
 
         public FMOutputSnappedFeaturesGroupLayerData(WaterFlowFMModel model)
         {

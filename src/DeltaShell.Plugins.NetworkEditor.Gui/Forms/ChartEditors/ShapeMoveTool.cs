@@ -10,8 +10,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors
 {
     public class ShapeMoveTool : ShapeLayerTool
     {
-        ShapeSelectTool ShapeSelectTool { get; set; }
         public event ShapeChangedEvendHandler ShapeChanged;
+
+        public ShapeMoveTool(ShapeSelectTool shapeSelectTool)
+        {
+            ShapeSelectTool = shapeSelectTool;
+        }
 
         public IShapeFeatureEditor ShapeFeatureEditor
         {
@@ -25,17 +29,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors
             }
         }
 
-        public ShapeMoveTool(ShapeSelectTool shapeSelectTool)
-        {
-            ShapeSelectTool = shapeSelectTool;
-        }
-
-        Point Down { get; set; }
-
-
         public override void MouseEvent(ChartMouseEvent kind, MouseEventArgs e, Cursor c)
         {
-            Point tmP = new Point(e.X, e.Y);
+            var tmP = new Point(e.X, e.Y);
             if (null != ShapeSelectTool.ShapeFeatureEditor)
             {
                 IPoint tracker = ShapeSelectTool.GetTrackerAt(ShapeSelectTool.ShapeFeatureEditor, tmP);
@@ -46,6 +42,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors
             {
                 c = Cursors.Default;
             }
+
             if (e.Button != MouseButtons.Left)
             {
                 return;
@@ -61,35 +58,40 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors
                         ShapeSelectTool.ShapeFeatureEditor.Start();
                         IsBusy = true;
                     }
+
                     break;
                 case ChartMouseEvent.Move:
+                {
+                    if (!IsBusy)
                     {
-                        if (!IsBusy)
+                        return;
+                    }
+
+                    if (null != ShapeSelectTool.ShapeFeatureEditor && null != ShapeSelectTool.ShapeFeatureEditor.CurrentTracker)
+                    {
+                        var coordinate = new Coordinate(
+                            ChartCoordinateService.ToWorldX(ShapeModifyTool.Chart, tmP.X), ChartCoordinateService.ToWorldY(ShapeModifyTool.Chart, tmP.Y));
+                        double deltaX = ChartCoordinateService.ToWorldX(ShapeModifyTool.Chart, tmP.X) - ChartCoordinateService.ToWorldX(ShapeModifyTool.Chart, Down.X);
+                        double deltaY = ChartCoordinateService.ToWorldY(ShapeModifyTool.Chart, tmP.Y) - ChartCoordinateService.ToWorldY(ShapeModifyTool.Chart, Down.Y);
+                        if (Math.Abs(deltaX) < 1.0e-6 && Math.Abs(deltaY) < 1.0e-6)
                         {
                             return;
                         }
-                        if ((null != ShapeSelectTool.ShapeFeatureEditor) && (null != ShapeSelectTool.ShapeFeatureEditor.CurrentTracker))
-                        {
-                            Coordinate coordinate = new Coordinate(
-                                ChartCoordinateService.ToWorldX(ShapeModifyTool.Chart, tmP.X), ChartCoordinateService.ToWorldY(ShapeModifyTool.Chart, tmP.Y));
-                            double deltaX = ChartCoordinateService.ToWorldX(ShapeModifyTool.Chart, tmP.X) - ChartCoordinateService.ToWorldX(ShapeModifyTool.Chart, Down.X);
-                            double deltaY = ChartCoordinateService.ToWorldY(ShapeModifyTool.Chart, tmP.Y) - ChartCoordinateService.ToWorldY(ShapeModifyTool.Chart, Down.Y);
-                            if ((Math.Abs(deltaX) < 1.0e-6) && (Math.Abs(deltaY) < 1.0e-6))
-                            {
-                                return;
-                            }
-                            ShapeFeatureEditor.MoveTracker(ShapeFeatureEditor.CurrentTracker, coordinate, deltaX, deltaY);
-                            ShapeModifyTool.Chart.CancelMouseEvents = true;
-                            ((ShapeFeatureEditor)ShapeFeatureEditor).ShapeFeature.Invalidate();
-                        }
-                        Down = tmP;
+
+                        ShapeFeatureEditor.MoveTracker(ShapeFeatureEditor.CurrentTracker, coordinate, deltaX, deltaY);
+                        ShapeModifyTool.Chart.CancelMouseEvents = true;
+                        ((ShapeFeatureEditor) ShapeFeatureEditor).ShapeFeature.Invalidate();
                     }
+
+                    Down = tmP;
+                }
                     break;
                 case ChartMouseEvent.Up:
                     if (null != ShapeFeatureEditor)
                     {
                         ShapeFeatureEditor.Stop();
                     }
+
                     if (IsBusy)
                     {
                         ShapeModifyTool.Chart.CancelMouseEvents = true;
@@ -100,8 +102,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors
                             ShapeChanged(this, new ShapeEventArgs(ShapeModifyTool.SelectedShape));
                         }
                     }
+
                     break;
             } // switch (kind)
         }
+
+        private ShapeSelectTool ShapeSelectTool { get; set; }
+
+        private Point Down { get; set; }
     }
 }

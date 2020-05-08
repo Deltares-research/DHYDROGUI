@@ -29,7 +29,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Provid
         /// <paramref name="geometryFactory"/> is <c>null</c>.
         /// </exception>
         public SelectedSupportPointFromBoundaryBehaviour(SupportPointDataComponentViewModel supportPointDataComponentViewModel,
-                                                       IWaveBoundaryGeometryFactory geometryFactory)
+                                                         IWaveBoundaryGeometryFactory geometryFactory)
         {
             Ensure.NotNull(supportPointDataComponentViewModel, nameof(supportPointDataComponentViewModel));
             Ensure.NotNull(geometryFactory, nameof(geometryFactory));
@@ -63,7 +63,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Provid
                 yield break;
             }
 
-            yield return new Feature2DPoint { Geometry = geom };
+            yield return new Feature2DPoint {Geometry = geom};
         }
     }
 }

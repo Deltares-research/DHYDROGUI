@@ -11,16 +11,18 @@ using DelftTools.Controls.Swf.Charting;
 using DelftTools.Controls.Swf.Table;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Utils.Threading;
+using DeltaShell.Plugins.NetworkEditor.Gui.Properties;
+using GeoAPI.Geometries;
 using log4net;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
 {
-    public partial class CrossSectionDefinitionView : UserControl,IReusableView, ICrossSectionHistoryCapableView
+    public partial class CrossSectionDefinitionView : UserControl, IReusableView, ICrossSectionHistoryCapableView
     {
-        private readonly ILog Log = LogManager.GetLogger(typeof (CrossSectionDefinitionView));
-        private static readonly Bitmap XYZImage = Properties.Resources.CrossSectionSmallXYZ;
-        private static readonly Bitmap YZImage = Properties.Resources.CrossSectionSmall;
-        private static readonly Bitmap ZWImage = Properties.Resources.CrossSectionTabulatedSmall;
+        private static readonly Bitmap XYZImage = Resources.CrossSectionSmallXYZ;
+        private static readonly Bitmap YZImage = Resources.CrossSectionSmall;
+        private static readonly Bitmap ZWImage = Resources.CrossSectionTabulatedSmall;
+        private readonly ILog Log = LogManager.GetLogger(typeof(CrossSectionDefinitionView));
 
         private ICrossSectionDefinition crossSectionDefinition;
 
@@ -31,39 +33,25 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
         private bool editingSelection;
         private CrossSectionDefinitionViewModel viewModel;
 
+        public event EventHandler StatusMessage;
+
         public CrossSectionDefinitionView()
         {
             InitializeComponent();
             Text = "Cross Section View";
-            
+
             InitializeTableView();
             InitializeChartView();
             InitializeRoughnessSectionsView();
         }
 
-        public bool HistoryToolEnabled
-        {
-            get { return crossSectionChart.HistoryToolEnabled; }
-            set { crossSectionChart.HistoryToolEnabled = value; }
-        }
-
-        private ICrossSectionDefinition CrossSectionDefinition
-        {
-            get { return crossSectionDefinition; }
-            set
-            {
-                Cleanup();
-
-                crossSectionDefinition = value;
-
-                Setup();
-            }
-        }
-
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public CrossSectionDefinitionViewModel ViewModel
         {
-            get { return viewModel; }
+            get
+            {
+                return viewModel;
+            }
             set
             {
                 Cleanup();
@@ -74,23 +62,60 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
             }
         }
 
+        public bool HistoryToolEnabled
+        {
+            get
+            {
+                return crossSectionChart.HistoryToolEnabled;
+            }
+            set
+            {
+                crossSectionChart.HistoryToolEnabled = value;
+            }
+        }
+
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public object Data
         {
-            get { return CrossSectionDefinition; }
+            get
+            {
+                return CrossSectionDefinition;
+            }
             set
             {
                 CrossSectionDefinition = (ICrossSectionDefinition) value;
 
-                if (CrossSectionDefinition == null) return;
-                
+                if (CrossSectionDefinition == null)
+                {
+                    return;
+                }
+
                 Enabled = !CrossSectionDefinition.IsProxy;
+            }
+        }
+
+        private ICrossSectionDefinition CrossSectionDefinition
+        {
+            get
+            {
+                return crossSectionDefinition;
+            }
+            set
+            {
+                Cleanup();
+
+                crossSectionDefinition = value;
+
+                Setup();
             }
         }
 
         private SectionsBindingList CrossSectionSections
         {
-            get { return crossSectionSections; }
+            get
+            {
+                return crossSectionSections;
+            }
             set
             {
                 if (crossSectionSections != null)
@@ -124,7 +149,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
             SetupChartView();
             SetupRoughnessSectionsView();
             SetupSummerDikeView();
-            
+
             SetupCrossSectionDataView();
         }
 
@@ -133,19 +158,21 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
             if (CrossSectionDefinition != null)
             {
                 CrossSectionDefinition.ForceSectionsSpanFullWidth = true;
-                ((INotifyPropertyChanged)CrossSectionDefinition).PropertyChanged += LevelShiftChanged;
-                var innerDefinition = CrossSectionDefinition;
+                ((INotifyPropertyChanged) CrossSectionDefinition).PropertyChanged += LevelShiftChanged;
+                ICrossSectionDefinition innerDefinition = CrossSectionDefinition;
                 if (innerDefinition is CrossSectionDefinitionProxy)
                 {
-                    innerDefinition = ((CrossSectionDefinitionProxy)CrossSectionDefinition).InnerDefinition;
+                    innerDefinition = ((CrossSectionDefinitionProxy) CrossSectionDefinition).InnerDefinition;
                 }
+
                 if (innerDefinition is INotifyPropertyChanged)
                 {
-                    ((INotifyPropertyChanged)innerDefinition).PropertyChanged += CrossSectionDefinitionPropertyChanged;
-                    ((INotifyPropertyChanged)innerDefinition).PropertyChanged += CrossSectionDefinitionDataChanged;
-                    ((INotifyPropertyChanged)innerDefinition.Sections).PropertyChanged +=
+                    ((INotifyPropertyChanged) innerDefinition).PropertyChanged += CrossSectionDefinitionPropertyChanged;
+                    ((INotifyPropertyChanged) innerDefinition).PropertyChanged += CrossSectionDefinitionDataChanged;
+                    ((INotifyPropertyChanged) innerDefinition.Sections).PropertyChanged +=
                         CrossSectionSectionsPropertyChanged;
                 }
+
                 innerDefinition.Sections.CollectionChanged += CrossSectionSectionsCollectionChanged;
             }
         }
@@ -155,10 +182,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
             if (CrossSectionDefinition != null)
             {
                 CrossSectionDefinition.ForceSectionsSpanFullWidth = false;
-                ((INotifyPropertyChanged)CrossSectionDefinition).PropertyChanged -= LevelShiftChanged;
-                var innerDefinition = CrossSectionDefinition;
+                ((INotifyPropertyChanged) CrossSectionDefinition).PropertyChanged -= LevelShiftChanged;
+                ICrossSectionDefinition innerDefinition = CrossSectionDefinition;
 
-                if(innerDefinition is CrossSectionDefinitionProxy)
+                if (innerDefinition is CrossSectionDefinitionProxy)
                 {
                     innerDefinition = ((CrossSectionDefinitionProxy) CrossSectionDefinition).InnerDefinition;
                 }
@@ -192,9 +219,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
             }
         }
 
-        void CrossSectionSectionsPropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void CrossSectionSectionsPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            var recalculateSectionWidths = e.PropertyName != "MinY" && e.PropertyName != "MaxY";
+            bool recalculateSectionWidths = e.PropertyName != "MinY" && e.PropertyName != "MaxY";
             RefreshView(recalculateSectionWidths);
         }
 
@@ -205,7 +232,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
 
             CrossSectionSections = null; //unsubscribe
 
-            crossSectionChart.SetData(null, null,null);
+            crossSectionChart.SetData(null, null, null);
             crossSectionViewZwSectionsView1.Data = null;
             crossSectionSectionsTable.Data = null;
             summerDikeView.Data = null;
@@ -221,10 +248,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
                 crossSectionZWSectionsViewModel = null;
             }
         }
-        
+
         private void SetupChartView()
         {
-            crossSectionChart.SetData(CrossSectionDefinition, CrossSectionSections,ViewModel);
+            crossSectionChart.SetData(CrossSectionDefinition, CrossSectionSections, ViewModel);
         }
 
         private void SetupCrossSectionDataView()
@@ -235,12 +262,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
                 splitContainerCrossSectionData.Panel2Collapsed = false;
 
                 //use the inner definition if it is a proxy
-                var standardDefinition = CrossSectionDefinition.IsProxy
-                                             ? ((CrossSectionDefinitionProxy)
-                                                CrossSectionDefinition).InnerDefinition
-                                             : CrossSectionDefinition;
-                
-                crossSectionStandardDataView1.Data = (CrossSectionDefinitionStandard)standardDefinition;
+                ICrossSectionDefinition standardDefinition = CrossSectionDefinition.IsProxy
+                                                                 ? ((CrossSectionDefinitionProxy)
+                                                                       CrossSectionDefinition).InnerDefinition
+                                                                 : CrossSectionDefinition;
+
+                crossSectionStandardDataView1.Data = (CrossSectionDefinitionStandard) standardDefinition;
             }
             else
             {
@@ -256,7 +283,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
 
         private void SetupRoughnessSectionsView()
         {
-            var isCrossSectionZW = CrossSectionDefinition.CrossSectionType == CrossSectionType.ZW;
+            bool isCrossSectionZW = CrossSectionDefinition.CrossSectionType == CrossSectionType.ZW;
             splitContainerSectionViews.Panel2Collapsed = !isCrossSectionZW;
             splitContainerSectionViews.Panel1Collapsed = isCrossSectionZW;
             if (isCrossSectionZW)
@@ -267,12 +294,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
             {
                 SetupSectionsViewForNonZW();
             }
-            
         }
 
         private void SetupSectionsViewForZW()
         {
-            crossSectionZWSectionsViewModel = new ZWSectionsViewModel(CrossSectionDefinition,ViewModel.CrossSectionSectionTypes);
+            crossSectionZWSectionsViewModel = new ZWSectionsViewModel(CrossSectionDefinition, ViewModel.CrossSectionSectionTypes);
             crossSectionViewZwSectionsView1.Data = crossSectionZWSectionsViewModel;
         }
 
@@ -281,7 +307,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
             crossSectionSectionsTable.MaximumNumberOfRoughnessSections = ViewModel.MaxSections;
             crossSectionSectionsTable.Data = CrossSectionSections;
             crossSectionSectionsTable.SectionTypeList = ViewModel.CrossSectionSectionTypes;
-            
+
             SetSectionsMinMax();
         }
 
@@ -289,12 +315,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
         {
             //potential summerdike
             var summerDikeDefinition = CrossSectionDefinition as ISummerDikeEnabledDefinition;
-            if ((summerDikeDefinition != null) && (summerDikeDefinition.CanHaveSummerDike))
+            if (summerDikeDefinition != null && summerDikeDefinition.CanHaveSummerDike)
             {
                 summerDikeView.Data = summerDikeDefinition.SummerDike;
                 summerDikeView.Visible = true;
                 leftSplitContainer.Panel2Collapsed = false;
-                leftSplitContainer.SplitterDistance = leftSplitContainer.Height - summerDikeView.Height;    
+                leftSplitContainer.SplitterDistance = leftSplitContainer.Height - summerDikeView.Height;
             }
             else
             {
@@ -310,7 +336,15 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
         {
             crossSectionChart.ChartView.SelectionPointChanged += (s, e) => SynchronizeSelection(true, crossSectionChart.ChartView.SelectedPointIndex);
             crossSectionChart.SectionSelectionChanged += (s, e) => SynchronizeSectionSelection(true, s as CrossSectionSection);
-            crossSectionChart.StatusMessage += (s, e) => { if (StatusMessage == null) return; StatusMessage(s, e); };
+            crossSectionChart.StatusMessage += (s, e) =>
+            {
+                if (StatusMessage == null)
+                {
+                    return;
+                }
+
+                StatusMessage(s, e);
+            };
         }
 
         private void InitializeTableView()
@@ -327,24 +361,27 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
         {
             // Determine if a block selection was done across whole rows, 
             // by ensuring the number of selected cells per row is equal to the number of visible columns.
-            var doingRowSelection = tableView.SelectedCells.GroupBy(c => c.RowIndex)
-                                                           .All(g => g.Count() == tableView.Columns.Count(c => c.Visible));
+            bool doingRowSelection = tableView.SelectedCells.GroupBy(c => c.RowIndex)
+                                              .All(g => g.Count() == tableView.Columns.Count(c => c.Visible));
             if (doingRowSelection &&
                 crossSectionDefinition.RawData.Rows.Count - tableView.SelectedRowsIndices.Count() < ViewModel.MinimalNumberOfTableRows)
             {
-                Log.ErrorFormat("Cannot delete the selected rows, as a minimum number of rows equal to {0} is required for {1}.", 
-                    ViewModel.MinimalNumberOfTableRows, ViewModel.TableDescription);
+                Log.ErrorFormat("Cannot delete the selected rows, as a minimum number of rows equal to {0} is required for {1}.",
+                                ViewModel.MinimalNumberOfTableRows, ViewModel.TableDescription);
                 return false;
             }
+
             return true;
         }
 
         private DelftTools.Utils.Tuple<string, bool> InputValidator(TableViewCell tableViewCell, object o)
         {
-            var sortedRowIndex = tableView.GetDataSourceIndexByRowIndex(tableViewCell.RowIndex);
+            int sortedRowIndex = tableView.GetDataSourceIndexByRowIndex(tableViewCell.RowIndex);
 
             if (sortedRowIndex < 0 || sortedRowIndex >= tableView.RowCount)
+            {
                 return new DelftTools.Utils.Tuple<string, bool>("", true);
+            }
 
             return crossSectionDefinition.ValidateCellValue(sortedRowIndex, tableViewCell.Column.AbsoluteIndex, o);
         }
@@ -358,7 +395,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
 
         #region Changed Events
 
-        void CrossSectionSectionsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private void CrossSectionSectionsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             RefreshView();
         }
@@ -370,7 +407,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
                 return;
             }
 
-            var recalculateSectionWidths = e.PropertyName != "MinY" && e.PropertyName != "MaxY";
+            bool recalculateSectionWidths = e.PropertyName != "MinY" && e.PropertyName != "MaxY";
             RefreshView(recalculateSectionWidths);
         }
 
@@ -385,6 +422,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
             {
                 crossSectionZWSectionsViewModel.UpdateViewModelFromCrossSection(recalculateSectionWidths);
             }
+
             SubscribeToData();
         }
 
@@ -396,17 +434,17 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
         #endregion
 
         #region Synchronization
-        
+
         private ChartRectangle GetProfileRectangle()
         {
-            var profile = CrossSectionDefinition.Profile.ToList();
+            List<Coordinate> profile = CrossSectionDefinition.Profile.ToList();
 
             if (profile.Any())
             {
                 double minX = profile.Min(c => c.X);
                 double maxX = profile.Max(c => c.X);
 
-                var flowProfile = CrossSectionDefinition.FlowProfile.ToList();
+                List<Coordinate> flowProfile = CrossSectionDefinition.FlowProfile.ToList();
                 double minY = Math.Min(profile.Min(c => c.Y), flowProfile.Min(c => c.Y));
                 double maxY = Math.Max(profile.Max(c => c.Y), flowProfile.Max(c => c.Y));
 
@@ -415,13 +453,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
 
             return new ChartRectangle(0, 0, 0, 0);
         }
-        
+
         private void SetSectionsMinMax()
         {
-            var profileRectangle = GetProfileRectangle();
+            ChartRectangle profileRectangle = GetProfileRectangle();
             crossSectionSectionsTable.MinY = ViewModel.IsSymmetrical ? 0.0 : profileRectangle.Left;
             crossSectionSectionsTable.MaxY = profileRectangle.Right;
         }
+
         private void SynchronizeSelection(bool chartInitiated, int index)
         {
             if (editingSelection)
@@ -435,9 +474,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
                 tableView.ClearSelection();
 
                 //set the table row for table based definitions
-                if ((index != -1) && CrossSectionDefinition.RawData != null)
+                if (index != -1 && CrossSectionDefinition.RawData != null)
                 {
-                    var displayRowIndex = tableView.GetRowIndexByDataSourceIndex(((CrossSectionDefinition)CrossSectionDefinition).GetRawDataTableIndex(index));
+                    int displayRowIndex = tableView.GetRowIndexByDataSourceIndex(((CrossSectionDefinition) CrossSectionDefinition).GetRawDataTableIndex(index));
                     tableView.SelectRow(displayRowIndex);
                     tableView.FocusedRowIndex = displayRowIndex;
                 }
@@ -446,13 +485,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
             {
                 crossSectionChart.SelectIndex(index);
             }
+
             editingSelection = false;
         }
 
         private void SynchronizeSectionSelection(bool chartInitiated, CrossSectionSection section)
         {
-            
-            if ((editingSelection) || (CrossSectionDefinition is CrossSectionDefinitionZW))
+            if (editingSelection || CrossSectionDefinition is CrossSectionDefinitionZW)
             {
                 return;
             }
@@ -467,18 +506,15 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
             {
                 crossSectionChart.SelectSection(section);
             }
+
             editingSelection = false;
         }
 
         #endregion
 
-        public event EventHandler StatusMessage;
-
         #region View
 
-        public void EnsureVisible(object item)
-        {
-        }
+        public void EnsureVisible(object item) {}
 
         public ViewInfo ViewInfo { get; set; }
 
@@ -489,24 +525,39 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
                 if (Data != null)
                 {
                     if (CrossSectionDefinition.CrossSectionType == CrossSectionType.GeometryBased)
+                    {
                         return XYZImage;
+                    }
+
                     if (CrossSectionDefinition.CrossSectionType == CrossSectionType.YZ)
+                    {
                         return YZImage;
+                    }
+
                     if (CrossSectionDefinition.CrossSectionType == CrossSectionType.ZW)
+                    {
                         return ZWImage;
+                    }
                 }
+
                 return null;
             }
-            set { }
+            set {}
         }
 
         public bool Locked
         {
-            get { return locked; }
+            get
+            {
+                return locked;
+            }
             set
             {
                 if (locked == value)
+                {
                     return;
+                }
+
                 locked = value;
                 if (LockedChanged != null)
                 {
@@ -520,11 +571,20 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
         #endregion
     }
 
-        /// <summary>
-    /// big ugly hack..partially for undo redo. Why ThreadsafeBindingList got involved I have no idea, but I don't want to worry about it either
+    /// <summary>
+    /// big ugly hack..partially for undo redo. Why ThreadsafeBindingList got involved I have no idea, but I don't want to
+    /// worry about it either
     /// </summary>
     public class SectionsBindingList : ThreadsafeBindingList<CrossSectionSection>
     {
+        public SectionsBindingList(SynchronizationContext context)
+            : base(context) {}
+
+        public SectionsBindingList(SynchronizationContext context, IList<CrossSectionSection> list)
+            : base(context, list) {}
+
+        public SectionsBindingList(IList<CrossSectionSection> list) : base(SynchronizationContext.Current, list) {}
+
         public Action<CrossSectionSection> BeforeAddItem { get; set; }
 
         protected override void OnAddingNew(AddingNewEventArgs e)
@@ -533,22 +593,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
             if (BeforeAddItem != null)
             {
                 e.NewObject = new CrossSectionSection();
-                BeforeAddItem((CrossSectionSection)e.NewObject);
+                BeforeAddItem((CrossSectionSection) e.NewObject);
             }
-        }
-
-        public SectionsBindingList(SynchronizationContext context)
-            : base(context)
-        {
-        }
-
-        public SectionsBindingList(SynchronizationContext context, IList<CrossSectionSection> list)
-            : base(context, list)
-        {
-        }
-
-        public SectionsBindingList(IList<CrossSectionSection> list) : base(SynchronizationContext.Current, list)
-        {
         }
     }
 }

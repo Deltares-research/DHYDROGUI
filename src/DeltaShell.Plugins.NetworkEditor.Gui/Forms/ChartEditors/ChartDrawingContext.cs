@@ -5,16 +5,13 @@ using SharpMap.Styles;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors
 {
-    class ChartDrawingContext : IChartDrawingContext
+    internal class ChartDrawingContext : IChartDrawingContext
     {
-        private ChartGraphics g;
         private readonly Color oldBackColor;
         private readonly int oldPenWidth;
         private readonly DashStyle oldPenStyle;
         private readonly Color oldPenColor;
-
-        public VectorStyle Style { get; set; }
-        public object Graphics { get { return g;} }
+        private ChartGraphics g;
 
         internal ChartDrawingContext(ChartGraphics g, VectorStyle style)
         {
@@ -26,14 +23,24 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors
             this.g = g;
 
             Style = style;
-            
+
             g.BackColor = style.Fill is SolidBrush
                               ? ((SolidBrush) style.Fill).Color
                               : Color.Transparent;
-            
+
             g.PenColor = style.Line.Color;
             g.PenWidth = (int) style.Line.Width;
             g.PenStyle = style.Line.DashStyle;
+        }
+
+        public VectorStyle Style { get; set; }
+
+        public object Graphics
+        {
+            get
+            {
+                return g;
+            }
         }
 
         public void Reset()

@@ -20,18 +20,22 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Forms
                 {
                     return SupportPointMode.SelectedPoint;
                 }
+
                 if (radioButtonActiveSP.Checked)
                 {
                     return SupportPointMode.ActivePoints;
                 }
+
                 if (radioButtonInactiveSP.Checked)
                 {
                     return SupportPointMode.InactivePoints;
                 }
+
                 if (radioButtonAllSP.Checked)
                 {
                     return SupportPointMode.AllPoints;
                 }
+
                 return SupportPointMode.NoPoints;
             }
         }

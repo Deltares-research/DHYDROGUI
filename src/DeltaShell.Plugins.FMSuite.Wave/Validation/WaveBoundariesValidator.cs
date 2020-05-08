@@ -16,7 +16,6 @@ using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
 using DeltaShell.Plugins.FMSuite.Wave.IO;
 using DeltaShell.Plugins.FMSuite.Wave.Properties;
 
-
 namespace DeltaShell.Plugins.FMSuite.Wave.Validation
 {
     /// <summary>
@@ -24,11 +23,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
     /// </summary>
     public static class WaveBoundariesValidator
     {
+        private static string VariableDescription = "Wave Energy Density";
+
         /// <summary>
         /// Validates all boundaries of the boundary container
         /// </summary>
-        /// <param name="boundaries"> The boundaries of the boundary
-        /// container in the model definition.</param>
+        /// <param name="boundaries">
+        /// The boundaries of the boundary
+        /// container in the model definition.
+        /// </param>
         /// <param name="modelStartTime"> Model start time. </param>
         /// <returns> A <see cref="ValidationReport"/></returns>
         /// <exception cref="ArgumentNullException">
@@ -39,7 +42,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
         {
             Ensure.NotNull(boundaries, nameof(boundaries));
             IList<ValidationReport> subReports = new List<ValidationReport>();
-               
+
             foreach (IWaveBoundary boundary in boundaries)
             {
                 IEnumerable<ValidationIssue> validationIssues = CollectAllValidationIssues(boundary, modelStartTime);
@@ -64,17 +67,26 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
             List<ValidationIssue> validationIssues = visitor.ValidationIssues;
 
             // constant parameters
-            if (dateTimesPerFunction.Count == 0) return;
+            if (dateTimesPerFunction.Count == 0)
+            {
+                return;
+            }
 
             IList<DateTime> values = dateTimesPerFunction.SelectMany(v => v.Values).ToList();
 
             // empty time serie
-            if (!values.Any()) return;
+            if (!values.Any())
+            {
+                return;
+            }
 
             ValidateIfModelStartTimeIsNotAfterAllTimeArguments(boundary, modelStartTime, values, validationIssues);
 
             // nothing to compare
-            if (dateTimesPerFunction.Count == 1) return;
+            if (dateTimesPerFunction.Count == 1)
+            {
+                return;
+            }
 
             ValidateFunctionsIfTheyContainTheSameTimeArguments(boundary, dateTimesPerFunction, validationIssues);
         }
@@ -94,8 +106,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
 
         private static void ValidateFunctionsIfTheyContainTheSameTimeArguments(INameable boundary, List<IVariable<DateTime>> dateTimesPerFunction, List<ValidationIssue> validationIssues)
         {
-            
-
             List<DateTime> times = dateTimesPerFunction[0].Values.ToList();
             foreach (IVariable<DateTime> f in dateTimesPerFunction.Skip(1))
             {
@@ -111,9 +121,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
             }
         }
 
-        private static string VariableDescription = "Wave Energy Density";
-        
-        private class ValidatorVisitor :  IBoundaryConditionVisitor, ISpatiallyDefinedDataComponentVisitor, IForcingTypeDefinedParametersVisitor, IShapeVisitor, ISpreadingVisitor
+        private class ValidatorVisitor : IBoundaryConditionVisitor, ISpatiallyDefinedDataComponentVisitor, IForcingTypeDefinedParametersVisitor, IShapeVisitor, ISpreadingVisitor
         {
             private bool isUniform = true;
 
@@ -132,15 +140,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
             }
 
             public List<ValidationIssue> ValidationIssues { get; } = new List<ValidationIssue>();
-            
+
             public List<IVariable<DateTime>> DateTimesPerFunction { get; } = new List<IVariable<DateTime>>();
 
-            private IWaveBoundary Boundary { get; }
-
-            private IEventedList<SupportPoint> AllDefinedSupportPoints { get; set; }
-            
             /// <summary>
-            /// Visit method for calling the next AcceptVisitor methods of the shape and data component. 
+            /// Visit method for calling the next AcceptVisitor methods of the shape and data component.
             /// </summary>
             /// <param name="waveBoundaryConditionDefinition"> The visited <see cref="IWaveBoundaryConditionDefinition"/></param>
             /// <exception cref="ArgumentNullException">
@@ -154,6 +158,148 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
             }
 
             /// <summary>
+            /// Visit method for validating <see cref="ConstantParameters{TSpreading}"/>. Calls the next
+            /// AcceptVisitor method for the spreading.
+            /// </summary>
+            /// <param name="constantParameters"> The visited <see cref="ConstantParameters{TSpreading}"/></param>
+            /// <exception cref="ArgumentNullException">
+            /// <typeparam name="T"> The type of spreading.</typeparam>
+            /// Thrown when <paramref name="constantParameters"/> is <c>null</c>.
+            /// </exception>
+            public void Visit<T>(ConstantParameters<T> constantParameters) where T : IBoundaryConditionSpreading, new()
+            {
+                Ensure.NotNull(constantParameters, nameof(constantParameters));
+
+                if (!isUniform)
+                {
+                    supportPointCounter++;
+                    precedingSupportPointNumberText = $"Point {supportPointCounter}: ";
+                }
+
+                if (IsOutsideOfRange(constantParameters.Height, 0, 25))
+                {
+                    ValidationIssues.Add(new ValidationIssue(VariableDescription,
+                                                             ValidationSeverity.Error,
+                                                             precedingSupportPointNumberText + Resources
+                                                                 .WaveBoundariesValidator_Validate_Parameter_Height_must_be_greater_than_0_and_smaller_or_equal_to_25_,
+                                                             Boundary));
+                }
+
+                if (IsOutsideOfRange(constantParameters.Period, 0.1, 20.0))
+                {
+                    ValidationIssues.Add(new ValidationIssue(VariableDescription,
+                                                             ValidationSeverity.Error,
+                                                             precedingSupportPointNumberText + Resources
+                                                                 .WaveBoundariesValidator_Validate_Parameter_Period_must_be_a_value_within_the_range_,
+                                                             Boundary));
+                }
+
+                if (IsOutsideOfRange(constantParameters.Direction, -360.0, 360.0))
+                {
+                    ValidationIssues.Add(new ValidationIssue(VariableDescription,
+                                                             ValidationSeverity.Error,
+                                                             precedingSupportPointNumberText + Resources
+                                                                 .WaveBoundariesValidator_Validate_Parameter_Direction_must_be_a_value_within_the_range_360_360_,
+                                                             Boundary));
+                }
+
+                constantParameters.Spreading.AcceptVisitor(this);
+            }
+
+            /// <summary>
+            /// Visit method for validating <see cref="TimeDependentParameters{TSpreading}"/>
+            /// including spreading values.
+            /// </summary>
+            /// <typeparam name="T"> The type of spreading. </typeparam>
+            /// <param name="timeDependentParameters"> The visited <see cref="TimeDependentParameters{TSpreading}"/></param>
+            /// <exception cref="ArgumentNullException">
+            /// Thrown when <paramref name="timeDependentParameters"/>
+            /// is <c>null</c>.
+            /// </exception>
+            public void Visit<T>(TimeDependentParameters<T> timeDependentParameters) where T : IBoundaryConditionSpreading, new()
+            {
+                Ensure.NotNull(timeDependentParameters, nameof(timeDependentParameters));
+
+                if (!isUniform)
+                {
+                    supportPointCounter++;
+                    precedingSupportPointNumberText = $"Point {supportPointCounter}: ";
+                }
+
+                IVariable<DateTime> timeArgument = timeDependentParameters.WaveEnergyFunction.TimeArgument;
+
+                if (timeArgument?.Values == null || timeArgument.Values.Count == 0)
+                {
+                    ValidationIssues.Add(new ValidationIssue(null, ValidationSeverity.Error,
+                                                             precedingSupportPointNumberText + Resources
+                                                                 .WaveBoundariesValidator_Validate_Boundary_does_not_contain_any_valid_boundary_data,
+                                                             Boundary));
+                }
+
+                IVariable<double> heightComponent = timeDependentParameters.WaveEnergyFunction.HeightComponent;
+
+                if (heightComponent?.Values != null && heightComponent.Values.Any(v => IsOutsideOfRange(v, 0.0, 25.0)))
+                {
+                    ValidationIssues.Add(new ValidationIssue(null, ValidationSeverity.Error,
+                                                             precedingSupportPointNumberText + Resources
+                                                                 .WaveBoundariesValidator_Validate_Values_in_column_Hs_in_the_time_series_table_must_be_within_expected_range,
+                                                             Boundary));
+                }
+
+                IVariable<double> periodComponent = timeDependentParameters.WaveEnergyFunction.PeriodComponent;
+
+                if (periodComponent?.Values != null && periodComponent.Values.Any(v => IsOutsideOfRange(v, 0.1, 20.0)))
+                {
+                    ValidationIssues.Add(new ValidationIssue(null, ValidationSeverity.Error,
+                                                             precedingSupportPointNumberText + Resources
+                                                                 .WaveBoundariesValidator_Validate_Values_in_column_Tp_in_the_time_series_table_must_be_within_expected_range,
+                                                             Boundary));
+                }
+
+                IVariable<double> directionComponent = timeDependentParameters.WaveEnergyFunction.DirectionComponent;
+
+                if (directionComponent?.Values != null && directionComponent.Values.Any(v => IsOutsideOfRange(v, -360.0, 360.0)))
+                {
+                    ValidationIssues.Add(new ValidationIssue(null, ValidationSeverity.Error,
+                                                             precedingSupportPointNumberText + Resources
+                                                                 .WaveBoundariesValidator_Validate_Values_in_column_Direction_in_the_time_series_table_must_be_within_expected_range,
+                                                             Boundary));
+                }
+
+                IVariable<double> spreadingComponent = timeDependentParameters.WaveEnergyFunction.SpreadingComponent;
+
+                if (typeof(T) == typeof(PowerDefinedSpreading) && spreadingComponent?.Values != null &&
+                    spreadingComponent.Values.Any(v => IsOutsideOfRange(v, 1.0, 800.0)))
+                {
+                    ValidationIssues.Add(new ValidationIssue(null, ValidationSeverity.Error,
+                                                             precedingSupportPointNumberText + Resources
+                                                                 .WaveBoundariesValidator_Validate_Values_in_column_Spreading_in_the_time_series_table_must_be_a_value_within_the_range_1_800,
+                                                             Boundary));
+                }
+
+                if (typeof(T) == typeof(DegreesDefinedSpreading) && spreadingComponent?.Values != null &&
+                    spreadingComponent.Values.Any(v => IsOutsideOfRange(v, 2.0, 180.0)))
+                {
+                    ValidationIssues.Add(new ValidationIssue(VariableDescription, ValidationSeverity.Error,
+                                                             precedingSupportPointNumberText + Resources
+                                                                 .WaveBoundariesValidator_Validate_Values_in_column_Spreading_in_the_time_series_table_must_be_a_value_within_the_range_2_180,
+                                                             Boundary));
+                }
+
+                DateTimesPerFunction.Add(timeArgument);
+            }
+
+            /// <summary>
+            /// Visit method for doing nothing, since there are not validation rules for <see cref="FileBasedParameters"/>.
+            /// Must be defined for visitor pattern.
+            /// </summary>
+            /// <param name="fileBasedParameters"> The visited <see cref="FileBasedParameters"/>. </param>
+            public void Visit(FileBasedParameters fileBasedParameters)
+            {
+                // No validation rules.
+            }
+
+            /// <summary>
             /// Visit method for doing nothing, since there are not validation rules for this shape.
             /// Must be defined for visitor pattern.
             /// </summary>
@@ -164,7 +310,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
             }
 
             /// <summary>
-            /// Visit method for validating the jonswap shape"/>. 
+            /// Visit method for validating the jonswap shape"/>.
             /// </summary>
             /// <param name="jonswapShape"> The visited <see cref="JonswapShape"/></param>
             /// <exception cref="ArgumentNullException">
@@ -180,7 +326,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
                                                                  .WaveBoundariesValidator_Validate_Peak_Enhancement_Factor_must_be_a_value_within_the_range_1_10_,
                                                              Boundary));
                 }
-
             }
 
             /// <summary>
@@ -194,7 +339,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
             }
 
             /// <summary>
-            /// Visit method for calling the next AcceptVisitor method of the Data stored in <see cref="UniformDataComponent{T}"/>. 
+            /// Visit method for calling the next AcceptVisitor method of the Data stored in <see cref="UniformDataComponent{T}"/>.
             /// </summary>
             /// <typeparam name="T"> The forcing type.</typeparam>
             /// <param name="uniformDataComponent"> The visited <see cref="UniformDataComponent{T}"/></param>
@@ -209,8 +354,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
             }
 
             /// <summary>
-            /// Visit method for validating if there are inactive support points. Calls the next AcceptVisitors methods of the stored data
-            /// for all support points in <see cref="SpatiallyVaryingDataComponent{T}"/>. 
+            /// Visit method for validating if there are inactive support points. Calls the next AcceptVisitors methods of the stored
+            /// data
+            /// for all support points in <see cref="SpatiallyVaryingDataComponent{T}"/>.
             /// </summary>
             /// <typeparam name="T"> The forcing type.</typeparam>
             /// <param name="spatiallyVaryingDataComponent"> The visited <see cref="SpatiallyVaryingDataComponent{T}"/></param>
@@ -234,159 +380,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
                                             Boundary));
                 }
 
-
                 IOrderedEnumerable<KeyValuePair<SupportPoint, T>> sortedDictionary = spatiallyVaryingDataComponent.Data.OrderBy(kvp => kvp.Key.Distance);
                 foreach (KeyValuePair<SupportPoint, T> supportPointKeyValuePair in sortedDictionary)
                 {
                     supportPointKeyValuePair.Value.AcceptVisitor(this);
                 }
             }
-            
-            /// <summary>
-            /// Visit method for validating <see cref="ConstantParameters{TSpreading}"/>. Calls the next
-            /// AcceptVisitor method for the spreading.
-            /// </summary>
-            /// <param name="constantParameters"> The visited <see cref="ConstantParameters{TSpreading}"/></param>
-            /// <exception cref="ArgumentNullException">
-            /// <typeparam name="T"> The type of spreading.</typeparam>
-            /// Thrown when <paramref name="constantParameters"/> is <c>null</c>.
-            /// </exception>
-            public void Visit<T>(ConstantParameters<T> constantParameters) where T : IBoundaryConditionSpreading, new()
-            {
-                Ensure.NotNull(constantParameters, nameof(constantParameters));
-                
-                if (!isUniform)
-                {
-                    supportPointCounter++;
-                    precedingSupportPointNumberText = $"Point {supportPointCounter}: ";
-                }
-
-                if (IsOutsideOfRange(constantParameters.Height, 0, 25))
-                {
-                    ValidationIssues.Add( new ValidationIssue(VariableDescription,
-                                                     ValidationSeverity.Error,
-                                                     precedingSupportPointNumberText + Resources
-                                                         .WaveBoundariesValidator_Validate_Parameter_Height_must_be_greater_than_0_and_smaller_or_equal_to_25_,
-                                                     Boundary));
-                }
-
-                if (IsOutsideOfRange(constantParameters.Period,0.1, 20.0))
-                {
-                    ValidationIssues.Add(new ValidationIssue(VariableDescription,
-                                                     ValidationSeverity.Error,
-                                                     precedingSupportPointNumberText + Resources
-                                                         .WaveBoundariesValidator_Validate_Parameter_Period_must_be_a_value_within_the_range_,
-                                                     Boundary));
-                }
-
-                if (IsOutsideOfRange(constantParameters.Direction,- 360.0, 360.0))
-                {
-                    ValidationIssues.Add(new ValidationIssue(VariableDescription,
-                                                     ValidationSeverity.Error,
-                                                     precedingSupportPointNumberText + Resources
-                                                         .WaveBoundariesValidator_Validate_Parameter_Direction_must_be_a_value_within_the_range_360_360_,
-                                                     Boundary));
-                }
-
-                constantParameters.Spreading.AcceptVisitor(this);
-            }
 
             /// <summary>
-            /// Visit method for validating <see cref="TimeDependentParameters{TSpreading}"/>
-            /// including spreading values.
-            /// </summary>
-            /// <typeparam name="T"> The type of spreading. </typeparam>
-            /// <param name="timeDependentParameters"> The visited <see cref="TimeDependentParameters{TSpreading}"/></param>
-            /// <exception cref="ArgumentNullException">
-            /// Thrown when <paramref name="timeDependentParameters"/>
-            /// is <c>null</c>.
-            /// </exception>
-            public void Visit<T>(TimeDependentParameters<T> timeDependentParameters) where T : IBoundaryConditionSpreading, new()
-            {
-                Ensure.NotNull(timeDependentParameters, nameof(timeDependentParameters));
-                
-                if (!isUniform)
-                {
-                    supportPointCounter++;
-                    precedingSupportPointNumberText = $"Point {supportPointCounter}: ";
-                }
-
-                IVariable<DateTime> timeArgument = timeDependentParameters.WaveEnergyFunction.TimeArgument;
-                
-                if (timeArgument?.Values == null || timeArgument.Values.Count == 0)
-                {
-                    ValidationIssues.Add(new ValidationIssue(null, ValidationSeverity.Error,
-                                                             precedingSupportPointNumberText + Resources
-                                                                 .WaveBoundariesValidator_Validate_Boundary_does_not_contain_any_valid_boundary_data,
-                                                             Boundary));
-
-                }
-
-                IVariable<double> heightComponent = timeDependentParameters.WaveEnergyFunction.HeightComponent;
-                
-                if (heightComponent?.Values != null && heightComponent.Values.Any(v=> IsOutsideOfRange(v, 0.0, 25.0)))
-                {
-                    ValidationIssues.Add(new ValidationIssue(null, ValidationSeverity.Error,
-                                                             precedingSupportPointNumberText + Resources
-                                                                 .WaveBoundariesValidator_Validate_Values_in_column_Hs_in_the_time_series_table_must_be_within_expected_range,
-                                                             Boundary));
-                }
-
-                IVariable<double> periodComponent = timeDependentParameters.WaveEnergyFunction.PeriodComponent;
-
-                if (periodComponent?.Values != null && periodComponent.Values.Any(v => IsOutsideOfRange(v,0.1, 20.0)))
-                {
-                    ValidationIssues.Add(new ValidationIssue(null, ValidationSeverity.Error,
-                                                             precedingSupportPointNumberText + Resources
-                                                         .WaveBoundariesValidator_Validate_Values_in_column_Tp_in_the_time_series_table_must_be_within_expected_range,
-                                                     Boundary));
-                }
-
-                IVariable<double> directionComponent = timeDependentParameters.WaveEnergyFunction.DirectionComponent;
-
-                if (directionComponent?.Values != null && directionComponent.Values.Any(v => IsOutsideOfRange(v,-360.0, 360.0)))
-                {
-                    ValidationIssues.Add(new ValidationIssue(null, ValidationSeverity.Error,
-                                                             precedingSupportPointNumberText + Resources
-                                                         .WaveBoundariesValidator_Validate_Values_in_column_Direction_in_the_time_series_table_must_be_within_expected_range,
-                                                     Boundary));
-                }
-
-                IVariable<double> spreadingComponent = timeDependentParameters.WaveEnergyFunction.SpreadingComponent;
-
-                if (typeof(T) == typeof(PowerDefinedSpreading) && spreadingComponent?.Values != null &&
-                    spreadingComponent.Values.Any(v => IsOutsideOfRange(v,1.0, 800.0)))
-                {
-                    ValidationIssues.Add(new ValidationIssue(null, ValidationSeverity.Error,
-                                                             precedingSupportPointNumberText + Resources
-                                                         .WaveBoundariesValidator_Validate_Values_in_column_Spreading_in_the_time_series_table_must_be_a_value_within_the_range_1_800,
-                                                     Boundary));
-                }
-
-                if (typeof(T) == typeof(DegreesDefinedSpreading) && spreadingComponent?.Values != null &&
-                    spreadingComponent.Values.Any(v => IsOutsideOfRange(v,2.0, 180.0)))
-                {
-                    ValidationIssues.Add(new ValidationIssue(VariableDescription, ValidationSeverity.Error,
-                                                             precedingSupportPointNumberText + Resources
-                                                         .WaveBoundariesValidator_Validate_Values_in_column_Spreading_in_the_time_series_table_must_be_a_value_within_the_range_2_180,
-                                                     Boundary));
-                }
-
-                DateTimesPerFunction.Add(timeArgument);
-            }
-
-            /// <summary>
-            /// Visit method for doing nothing, since there are not validation rules for <see cref="FileBasedParameters"/>.
-            /// Must be defined for visitor pattern.
-            /// </summary>
-            /// <param name="fileBasedParameters"> The visited <see cref="FileBasedParameters"/>. </param>
-            public void Visit(FileBasedParameters fileBasedParameters)
-            {
-                // No validation rules.
-            }
-
-            /// <summary>
-            /// Visit method for validating <see cref="DegreesDefinedSpreading"/>. 
+            /// Visit method for validating <see cref="DegreesDefinedSpreading"/>.
             /// </summary>
             /// <param name="degreesDefinedSpreading"> The visited <see cref="DegreesDefinedSpreading"/></param>
             /// <exception cref="ArgumentNullException">
@@ -396,19 +398,19 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
             public void Visit(DegreesDefinedSpreading degreesDefinedSpreading)
             {
                 Ensure.NotNull(degreesDefinedSpreading, nameof(degreesDefinedSpreading));
-                
-                if (IsOutsideOfRange(degreesDefinedSpreading.DegreesSpreading,2.0, 180.0))
+
+                if (IsOutsideOfRange(degreesDefinedSpreading.DegreesSpreading, 2.0, 180.0))
                 {
                     ValidationIssues.Add(new ValidationIssue(VariableDescription,
-                                                     ValidationSeverity.Error,
-                                                     precedingSupportPointNumberText + Resources
-                                                         .WaveBoundariesValidator_Validate_Parameter_Spreading_must_be_a_value_within_the_range_2_180,
-                                                     Boundary));
+                                                             ValidationSeverity.Error,
+                                                             precedingSupportPointNumberText + Resources
+                                                                 .WaveBoundariesValidator_Validate_Parameter_Spreading_must_be_a_value_within_the_range_2_180,
+                                                             Boundary));
                 }
             }
 
             /// <summary>
-            /// Visit method for validating <see cref="PowerDefinedSpreading"/>. 
+            /// Visit method for validating <see cref="PowerDefinedSpreading"/>.
             /// </summary>
             /// <param name="powerDefinedSpreading"> The visited <see cref="PowerDefinedSpreading"/></param>
             /// <exception cref="ArgumentNullException">
@@ -421,11 +423,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
                 if (IsOutsideOfRange(powerDefinedSpreading.SpreadingPower, 1.0, 800.0))
                 {
                     ValidationIssues.Add(new ValidationIssue(VariableDescription,
-                                                     ValidationSeverity.Error,
-                                                     precedingSupportPointNumberText + Resources
-                                                         .WaveBoundariesValidator_Validate_Parameter_Spreading__must_be_a_value_within_the_range_1_800,
-                                                     Boundary)); }
+                                                             ValidationSeverity.Error,
+                                                             precedingSupportPointNumberText + Resources
+                                                                 .WaveBoundariesValidator_Validate_Parameter_Spreading__must_be_a_value_within_the_range_1_800,
+                                                             Boundary));
+                }
             }
+
+            private IWaveBoundary Boundary { get; }
+
+            private IEventedList<SupportPoint> AllDefinedSupportPoints { get; set; }
 
             private static bool IsOutsideOfRange(double value, double lowerLimit, double upperLimit) => value - lowerLimit <= -double.Epsilon || value - upperLimit >= double.Epsilon;
         }

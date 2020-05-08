@@ -8,10 +8,10 @@ using DelftTools.Utils.Aop;
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
 {
     /// <summary>
-    /// Data presentation class for weirView 
+    /// Data presentation class for weirView
     /// </summary>
-    [Entity(FireOnCollectionChange=false)]
-    public class WeirViewData 
+    [Entity(FireOnCollectionChange = false)]
+    public class WeirViewData
     {
         //private CrestShape crestShape;
         private IDictionary<string, CrestShape> crestShapeDictionary;
@@ -44,7 +44,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
         {
             return geometryDictionary[geometryName];
         }
-        
+
         public IWeirFormula GetWeirCurrentFormula(Type weirType)
         {
             return weirFormulaDictionary[weirType];
@@ -60,40 +60,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
             return geometryDictionary;
         }
 
-        private void SetDictionaries(IEnumerable<IWeirFormula> supportedFormulas)
-        {
-            weirFormulaDictionary = supportedFormulas != null
-                                        ? supportedFormulas.ToDictionary(f => f.GetType(), f => f)
-                                        : new Dictionary<Type, IWeirFormula>
-                                            {
-                                                {typeof (FreeFormWeirFormula), new FreeFormWeirFormula()},
-                                                {typeof (GatedWeirFormula), new GatedWeirFormula()},
-                                                {typeof (PierWeirFormula), PierWeirFormula.CreateDefault()},
-                                                {typeof (RiverWeirFormula), RiverWeirFormula.CreateDefault()},
-                                                {typeof (SimpleWeirFormula), new SimpleWeirFormula()},
-                                                {typeof (GeneralStructureWeirFormula), new GeneralStructureWeirFormula()}
-                                            };
-            
-            // synchronize settings from formula to common properties: this is a hack due to design error
-
-            weirFormulaTypeDictionary = weirFormulaDictionary.ToDictionary(kvp => kvp.Value.Name, kvp=>kvp.Key);
-                
-
-            crestShapeDictionary = new Dictionary<string, CrestShape>
-                                       {
-                                           {"Sharp crested", CrestShape.Sharp},
-                                           {"Broad crested", CrestShape.Broad},
-                                           {"Round crested", CrestShape.Round},
-                                           {"Triangular crested", CrestShape.Triangular}
-                                       };
-
-            geometryDictionary = new Dictionary<string, bool>
-                                     {
-                                         {"Rectangle", false},
-                                         {"Free form", true}
-                                     };
-        }
-
         public void UpdateDataWithWeir(IWeir weir)
         {
             // Update dictionary with WeirFormula information
@@ -102,12 +68,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
 
         public static bool IsValidGate(Type weirFormulaType)
         {
-            return (weirFormulaType == typeof (GatedWeirFormula));
+            return weirFormulaType == typeof(GatedWeirFormula);
         }
 
-        
         /// <summary>
-        /// Validates the properties against the formula.  
+        /// Validates the properties against the formula.
         /// </summary>
         /// <param name="weirFormula"></param>
         /// <param name="crestShape"></param>
@@ -116,12 +81,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
         {
             const bool freeFormValid = false;
             const bool gatedValid = false;
-            bool crestShapeValid = false;
+            var crestShapeValid = false;
             if (weirFormula is SimpleWeirFormula)
             {
-                
                 crestShapeValid = crestShape == CrestShape.Sharp;
             }
+
             if (weirFormula is RiverWeirFormula)
             {
                 crestShapeValid = true;
@@ -131,14 +96,17 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
             {
                 crestShapeValid = crestShape == CrestShape.Sharp;
             }
+
             if (weirFormula is PierWeirFormula)
             {
                 crestShapeValid = true;
             }
+
             if (weirFormula is FreeFormWeirFormula)
             {
                 crestShapeValid = true;
             }
+
             return new WeirViewValidationResult(freeFormValid, gatedValid, crestShapeValid);
         }
 
@@ -152,38 +120,70 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
             return ValidateData(weir.WeirFormula, weir.CrestShape);
         }
 
-
-        public bool IsValidGeometry(string geometryName,IWeir weir)
+        public bool IsValidGeometry(string geometryName, IWeir weir)
         {
-            var validationResult = ValidateData(weir.WeirFormula, CrestShape.Sharp);
+            WeirViewValidationResult validationResult = ValidateData(weir.WeirFormula, CrestShape.Sharp);
             return validationResult.FreeFormValid;
         }
 
         public string GetWeirFormulaTypeName(IWeirFormula formula)
         {
             return weirFormulaTypeDictionary
-                .Where(kvp => kvp.Value == formula.GetType())
-                .Select(kvp => kvp.Key).FirstOrDefault();
+                   .Where(kvp => kvp.Value == formula.GetType())
+                   .Select(kvp => kvp.Key).FirstOrDefault();
         }
 
         public string GetCrestShapeName(CrestShape shape)
         {
             return crestShapeDictionary
-                .Where(kvp => kvp.Value == shape)
-                .Select(kvp => kvp.Key).FirstOrDefault();
+                   .Where(kvp => kvp.Value == shape)
+                   .Select(kvp => kvp.Key).FirstOrDefault();
         }
 
         public string GetGeometryName(bool freeForm)
         {
             return geometryDictionary
-                .Where(kvp => kvp.Value == freeForm)
-                .Select(kvp => kvp.Key).FirstOrDefault();
+                   .Where(kvp => kvp.Value == freeForm)
+                   .Select(kvp => kvp.Key).FirstOrDefault();
         }
 
         public bool IsValidShape(IWeirFormula formula, CrestShape shape)
         {
-            var validationResult = ValidateData(formula, shape);
+            WeirViewValidationResult validationResult = ValidateData(formula, shape);
             return validationResult.CrestShapeValid;
+        }
+
+        private void SetDictionaries(IEnumerable<IWeirFormula> supportedFormulas)
+        {
+            weirFormulaDictionary = supportedFormulas != null
+                                        ? supportedFormulas.ToDictionary(f => f.GetType(), f => f)
+                                        : new Dictionary<Type, IWeirFormula>
+                                        {
+                                            {typeof(FreeFormWeirFormula), new FreeFormWeirFormula()},
+                                            {typeof(GatedWeirFormula), new GatedWeirFormula()},
+                                            {typeof(PierWeirFormula), PierWeirFormula.CreateDefault()},
+                                            {typeof(RiverWeirFormula), RiverWeirFormula.CreateDefault()},
+                                            {typeof(SimpleWeirFormula), new SimpleWeirFormula()},
+                                            {typeof(GeneralStructureWeirFormula), new GeneralStructureWeirFormula()}
+                                        };
+
+            // synchronize settings from formula to common properties: this is a hack due to design error
+
+            weirFormulaTypeDictionary = weirFormulaDictionary.ToDictionary(kvp => kvp.Value.Name, kvp => kvp.Key);
+
+            crestShapeDictionary = new Dictionary<string, CrestShape>
+            {
+                {"Sharp crested", CrestShape.Sharp},
+                {"Broad crested", CrestShape.Broad},
+                {"Round crested", CrestShape.Round},
+                {"Triangular crested", CrestShape.Triangular}
+            };
+
+            geometryDictionary = new Dictionary<string, bool>
+            {
+                {"Rectangle", false},
+                {"Free form", true}
+            };
         }
     }
 }

@@ -76,8 +76,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
             return block;
         }
 
-        
-
         private static void ConvertFileBasedProperties(DelftIniCategory boundaryCategory, BoundaryMdwBlock block, string mdwDirPath)
         {
             block.SpectrumFiles = boundaryCategory.GetStringValues(KnownWaveProperties.Spectrum).Select(s => GetAbsolutePath(mdwDirPath, s)).ToArray();

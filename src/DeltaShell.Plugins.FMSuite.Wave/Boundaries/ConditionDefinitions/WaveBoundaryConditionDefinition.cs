@@ -8,12 +8,18 @@ using DeltaShell.Plugins.FMSuite.Wave.IO;
 namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions
 {
     /// <summary>
-    /// <see cref="WaveBoundaryConditionDefinition"/> implements the condition 
+    /// <see cref="WaveBoundaryConditionDefinition"/> implements the condition
     /// attributes of a <see cref="IWaveBoundary"/>.
     /// </summary>
-    /// <seealso cref="IWaveBoundaryConditionDefinition" />
+    /// <seealso cref="IWaveBoundaryConditionDefinition"/>
     public class WaveBoundaryConditionDefinition : IWaveBoundaryConditionDefinition
     {
+        private IBoundaryConditionShape shape;
+
+        private BoundaryConditionPeriodType periodType;
+
+        private ISpatiallyDefinedDataComponent dataComponent;
+
         /// <summary>
         /// Creates a new instance of the <see cref="WaveBoundaryConditionDefinition"/>.
         /// </summary>
@@ -35,29 +41,24 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions
             DataComponent = dataComponent ?? throw new ArgumentNullException(nameof(dataComponent));
         }
 
-
-        public IBoundaryConditionShape Shape 
-        { 
-            get => shape; 
+        public IBoundaryConditionShape Shape
+        {
+            get => shape;
             set => shape = value ?? throw new ArgumentNullException(nameof(value));
         }
-
-        private IBoundaryConditionShape shape;
 
         public BoundaryConditionPeriodType PeriodType
         {
             get => periodType;
             set => periodType = Enum.IsDefined(typeof(BoundaryConditionPeriodType), value)
                                     ? value
-                                    : throw new InvalidEnumArgumentException($"Undefined enum value: {value}"); 
+                                    : throw new InvalidEnumArgumentException($"Undefined enum value: {value}");
         }
-
-        private BoundaryConditionPeriodType periodType;
 
         public ISpatiallyDefinedDataComponent DataComponent
         {
-            get => dataComponent; 
-            set => dataComponent = value ?? throw new ArgumentNullException(nameof(value)); 
+            get => dataComponent;
+            set => dataComponent = value ?? throw new ArgumentNullException(nameof(value));
         }
 
         public void AcceptVisitor(IBoundaryConditionVisitor visitor)
@@ -65,7 +66,5 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions
             Ensure.NotNull(visitor, nameof(visitor));
             visitor.Visit(this);
         }
-
-        private ISpatiallyDefinedDataComponent dataComponent;
     }
 }

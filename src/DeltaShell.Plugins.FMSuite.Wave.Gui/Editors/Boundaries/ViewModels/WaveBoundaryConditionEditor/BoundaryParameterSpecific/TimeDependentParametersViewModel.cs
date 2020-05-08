@@ -35,5 +35,4 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         /// </summary>
         protected abstract void GenerateSeries();
     }
-
 }

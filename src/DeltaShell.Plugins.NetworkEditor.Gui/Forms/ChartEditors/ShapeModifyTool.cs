@@ -20,9 +20,15 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors
 
     public class ShapeModifyTool : ShapeTool, IChartViewTool
     {
-        readonly List<IShapeLayerTool> tools = new List<IShapeLayerTool>();
+        private readonly List<IShapeLayerTool> tools = new List<IShapeLayerTool>();
         public ShapeEditMode ShapeEditMode;
         private IShapeFeature selectedShape;
+
+        public event EventHandler<EventArgs> ActiveChanged;
+
+        public event EventHandler BeforeDraw;
+
+        public event SelectionChangedEventHandler SelectionChanged;
 
         public ShapeModifyTool(IChart chart) : base(chart)
         {
@@ -35,15 +41,15 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors
             ShapeDeletePointTool = new ShapeDeletePointTool();
 
             SelectStyle = new VectorStyle
-                              {
-                                  Fill = new SolidBrush(Color.FromArgb(150, Color.Magenta)),
-                                  Line = new Pen(Color.Black)
-                              };
+            {
+                Fill = new SolidBrush(Color.FromArgb(150, Color.Magenta)),
+                Line = new Pen(Color.Black)
+            };
             DefaultStyle = new VectorStyle
-                               {
-                                   Fill = new SolidBrush(Color.FromArgb(100, Color.Gold)),
-                                   Line = new Pen(Color.Black)
-                               };
+            {
+                Fill = new SolidBrush(Color.FromArgb(100, Color.Gold)),
+                Line = new Pen(Color.Black)
+            };
 
             tools.Add(ShapeSelectTool);
             tools.Add(ShapeMoveTool);
@@ -63,23 +69,26 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors
 
         public IShapeFeature SelectedShape
         {
-            get { return selectedShape; }
+            get
+            {
+                return selectedShape;
+            }
             set
             {
                 //we have already updated selection
                 if (selectedShape == value)
+                {
                     return;
+                }
+
                 shapeFeatures.ForEach(
-                    sf =>
-                        {
-                            sf.Selected = false;
-                        });
+                    sf => { sf.Selected = false; });
                 selectedShape = value;
                 if (null != selectedShape)
                 {
                     selectedShape.Selected = true;
                 }
-                
+
                 if (null != SelectionChanged)
                 {
                     SelectionChanged(this, new ShapeEventArgs(selectedShape));
@@ -91,13 +100,22 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors
 
         public bool Enabled
         {
-            get { throw new NotImplementedException(); }
-            set { throw new NotImplementedException(); }
+            get
+            {
+                throw new NotImplementedException();
+            }
+            set
+            {
+                throw new NotImplementedException();
+            }
         }
 
         public new bool Active
         {
-            get { return base.Active; }
+            get
+            {
+                return base.Active;
+            }
             set
             {
                 base.Active = value;
@@ -105,23 +123,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors
                 {
                     ActiveChanged(this, null);
                 }
-            }
-        }
-
-        public event EventHandler<EventArgs> ActiveChanged;
-
-        private IShapeLayerTool ActiveTool
-        {
-            get
-            {
-                foreach (var tool in tools)
-                {
-                    if (tool.IsActive)
-                    {
-                        return tool;   
-                    }
-                }
-                return null;
             }
         }
 
@@ -145,10 +146,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors
 
         public void RemoveShape(IShapeFeature shapeFeature)
         {
-            if ((null != ShapeFeatureEditor) && (ShapeFeatureEditor.ShapeFeature == shapeFeature))
+            if (null != ShapeFeatureEditor && ShapeFeatureEditor.ShapeFeature == shapeFeature)
             {
                 ShapeFeatureEditor = null;
             }
+
             shapeFeatures.Remove(shapeFeature);
         }
 
@@ -165,14 +167,26 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors
             tools.ForEach(t => t.Paint());
         }
 
+        private IShapeLayerTool ActiveTool
+        {
+            get
+            {
+                foreach (IShapeLayerTool tool in tools)
+                {
+                    if (tool.IsActive)
+                    {
+                        return tool;
+                    }
+                }
+
+                return null;
+            }
+        }
+
         private void MouseEvent(ChartMouseEvent kind, MouseEventArgs e, Cursor c)
         {
             ShapeHoverTool.MouseEvent(kind, e, c);
             ActiveTool.MouseEvent(kind, e, c);
         }
-
-        public event EventHandler BeforeDraw;
-
-        public event SelectionChangedEventHandler SelectionChanged;
     }
 }

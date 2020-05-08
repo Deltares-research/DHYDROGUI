@@ -24,7 +24,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         /// Thrown when <paramref name="parameters"/> or <paramref name="generateSeries"/>
         /// is <c>null</c>.
         /// </exception>
-        public UniformTimeDependentParametersSettingsViewModel(TimeDependentParameters<TSpreading> parameters, IGenerateSeries generateSeries) : 
+        public UniformTimeDependentParametersSettingsViewModel(TimeDependentParameters<TSpreading> parameters, IGenerateSeries generateSeries) :
             base(generateSeries, Resources.UniformTimeDependentParametersSettingsViewModel_GroupBoxTitle)
         {
             Ensure.NotNull(parameters, nameof(parameters));

@@ -6,7 +6,7 @@
     public class ParametersBlock
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="ParametersBlock" /> class.
+        /// Initializes a new instance of the <see cref="ParametersBlock"/> class.
         /// </summary>
         /// <param name="waveHeight"> The wave height. </param>
         /// <param name="period"> The period. </param>

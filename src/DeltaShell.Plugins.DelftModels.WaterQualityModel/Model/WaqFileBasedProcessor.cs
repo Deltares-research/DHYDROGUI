@@ -1,9 +1,9 @@
+using System;
+using System.Text.RegularExpressions;
 using DelftTools.Utils.RegularExpressions;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.IO;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Utils;
 using log4net;
-using System;
-using System.Text.RegularExpressions;
 
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
 {
@@ -12,9 +12,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
     /// </summary>
     public class WaqFileBasedProcessor : IWaqProcessor
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(WaqFileBasedProcessor));
-
         private const int NoDataValue = -999;
+        private static readonly ILog Log = LogManager.GetLogger(typeof(WaqFileBasedProcessor));
 
         public bool TryToCancel { get; set; }
 

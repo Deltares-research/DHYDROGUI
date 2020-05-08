@@ -8,9 +8,7 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors
 {
     public class HydroLinkInteractor : LineStringInteractor
     {
-        public HydroLinkInteractor(ILayer layer, IFeature feature, VectorStyle vectorStyle, IEditableObject editableObject) : base(layer, feature, vectorStyle, editableObject)
-        {
-        }
+        public HydroLinkInteractor(ILayer layer, IFeature feature, VectorStyle vectorStyle, IEditableObject editableObject) : base(layer, feature, vectorStyle, editableObject) {}
 
         protected override bool AllowDeletionCore()
         {

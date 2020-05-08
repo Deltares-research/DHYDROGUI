@@ -21,9 +21,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
                 return;
             }
 
-            var containsData = DesignMode || DataPointIndices.Contains(e.Index); // breaks in designer?!
+            bool containsData = DesignMode || DataPointIndices.Contains(e.Index); // breaks in designer?!
 
-            var args = new DrawItemEventArgs(e.Graphics, e.Font, new Rectangle(e.Bounds.Location,e.Bounds.Size), 
+            var args = new DrawItemEventArgs(e.Graphics, e.Font, new Rectangle(e.Bounds.Location, e.Bounds.Size),
                                              e.Index, e.State, containsData ? e.ForeColor : Color.LightGray,
                                              e.BackColor);
             base.OnDrawItem(args);

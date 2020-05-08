@@ -26,13 +26,48 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         public const string QuantityKey = "quantity";
         public const string LocationFileKey = "locationfile";
         public const string ForcingFileKey = "forcingfile";
-        private const string AreaKey = "area";
-        private const string ThatcherHarlemanTimeLagKey = "return_time";
-        private const string OpenBoundaryToleranceKey = "OpenBoundaryTolerance";
 
         public static double
             OpenBoundaryTolerance =
                 0.5; // made public static while this value still needs to be tweaked *run away run away*
+
+        private const string AreaKey = "area";
+        private const string ThatcherHarlemanTimeLagKey = "return_time";
+        private const string OpenBoundaryToleranceKey = "OpenBoundaryTolerance";
+
+        private const BcFile.WriteMode BcFileWriteMode = BcFile.WriteMode.FilePerQuantity;
+        private const BcFile.WriteMode BcmFileWriteMode = BcFile.WriteMode.SingleFile;
+
+        private static readonly ILog Log = LogManager.GetLogger(typeof(BndExtForceFile));
+
+        // items that existed in the file when the file was read
+        private readonly IDictionary<Feature2D, string> existingPolylineFiles;
+        private readonly IDictionary<IBoundaryCondition, DelftIniCategory> existingBndForceFileItems;
+
+        private string bndExtFilePath;
+
+        private string bndExtSubFilesReferenceFilePath;
+
+        public BndExtForceFile()
+        {
+            existingPolylineFiles = new Dictionary<Feature2D, string>();
+            existingBndForceFileItems = new Dictionary<IBoundaryCondition, DelftIniCategory>();
+            WriteToDisk = true;
+        }
+
+        public bool WriteToDisk { get; set; }
+
+        private string BndExtFilePath
+        {
+            get => bndExtFilePath;
+            set => bndExtFilePath = value;
+        }
+
+        private string BndExtSubFilesReferenceFilePath
+        {
+            get => bndExtSubFilesReferenceFilePath;
+            set => bndExtSubFilesReferenceFilePath = value;
+        }
 
         private static DelftIniCategory CreateBoundaryBlock(string quantity, string locationFilePath,
                                                             string forcingFilePath, TimeSpan thatcherHarlemanTimeLag,
@@ -67,33 +102,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             return block;
         }
 
-        private static readonly ILog Log = LogManager.GetLogger(typeof(BndExtForceFile));
-
-        private const BcFile.WriteMode BcFileWriteMode = BcFile.WriteMode.FilePerQuantity;
-        private const BcFile.WriteMode BcmFileWriteMode = BcFile.WriteMode.SingleFile;
-
-        // items that existed in the file when the file was read
-        private readonly IDictionary<Feature2D, string> existingPolylineFiles;
-        private readonly IDictionary<IBoundaryCondition, DelftIniCategory> existingBndForceFileItems;
-
-        public bool WriteToDisk { get; set; }
-
-        private string bndExtFilePath;
-
-        private string BndExtFilePath
-        {
-            get => bndExtFilePath;
-            set => bndExtFilePath = value;
-        }
-        
-        private string bndExtSubFilesReferenceFilePath;
-
-        private string BndExtSubFilesReferenceFilePath
-        {
-            get => bndExtSubFilesReferenceFilePath;
-            set => bndExtSubFilesReferenceFilePath = value;
-        }
-
         private string GetFullPathForReading(string relativePath)
         {
             return Path.Combine(Path.GetDirectoryName(BndExtSubFilesReferenceFilePath), relativePath);
@@ -102,13 +110,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         private string GetFullPathForWriting(string relativePath)
         {
             return Path.Combine(Path.GetDirectoryName(BndExtFilePath), relativePath);
-        }
-
-        public BndExtForceFile()
-        {
-            existingPolylineFiles = new Dictionary<Feature2D, string>();
-            existingBndForceFileItems = new Dictionary<IBoundaryCondition, DelftIniCategory>();
-            WriteToDisk = true;
         }
 
         #region write logic

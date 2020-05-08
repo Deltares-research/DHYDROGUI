@@ -7,7 +7,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Shapes
     /// <see cref="JonswapShape"/> defines the Jonswap type of
     /// <see cref="IBoundaryConditionShape"/> with a <see cref="PeakEnhancementFactor"/>.
     /// </summary>
-    /// <seealso cref="IBoundaryConditionShape" />
+    /// <seealso cref="IBoundaryConditionShape"/>
     public class JonswapShape : IBoundaryConditionShape
     {
         /// <summary>

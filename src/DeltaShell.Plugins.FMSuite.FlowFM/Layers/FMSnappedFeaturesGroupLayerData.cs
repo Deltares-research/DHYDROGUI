@@ -12,7 +12,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Layers
     {
         private readonly WaterFlowFMModel model;
         private IList<SnappedFeatureCollection> childData;
-        private int SnapVersion { get; set; }
 
         public FMSnappedFeaturesGroupLayerData(WaterFlowFMModel model)
         {
@@ -40,6 +39,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Layers
                 return childData;
             }
         }
+
+        private int SnapVersion { get; set; }
 
         private static IEnumerable<SnappedFeatureCollection> GetChildDataForModel(WaterFlowFMModel model)
         {

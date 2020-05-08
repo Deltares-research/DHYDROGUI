@@ -12,7 +12,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapeEdit
     {
         private int collapsed = 1;
 
-
         public CircleShapeEditor(IShapeFeature shapeFeature, IChartCoordinateService chartCoordinateService, ShapeEditMode shapeEditMode)
             : base(shapeFeature, chartCoordinateService, shapeEditMode)
         {
@@ -22,39 +21,38 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapeEdit
         private void Initialize()
         {
             points.Clear();
-            if (((ShapeEditMode & ShapeEditMode.ShapeMove) != ShapeEditMode.ShapeMove) &&
-                ((ShapeEditMode & ShapeEditMode.ShapeResize) != ShapeEditMode.ShapeResize))
+            if ((ShapeEditMode & ShapeEditMode.ShapeMove) != ShapeEditMode.ShapeMove &&
+                (ShapeEditMode & ShapeEditMode.ShapeResize) != ShapeEditMode.ShapeResize)
             {
                 // only add Trackers if there something to do.
                 return;
             }
 
-            var circleShapeFeature = (CircleShapeFeature)ShapeFeature;
+            var circleShapeFeature = (CircleShapeFeature) ShapeFeature;
             // bottom
             points.Add(GeometryFactory.CreatePoint(
                            circleShapeFeature.Center.X,
-                           circleShapeFeature.Center.Y + circleShapeFeature.YRadius / 2));
+                           circleShapeFeature.Center.Y + (circleShapeFeature.YRadius / 2)));
             // right
             points.Add(GeometryFactory.CreatePoint(
-                           circleShapeFeature.Center.X + circleShapeFeature.XRadius / 2,
+                           circleShapeFeature.Center.X + (circleShapeFeature.XRadius / 2),
                            circleShapeFeature.Center.Y));
             // top
             points.Add(GeometryFactory.CreatePoint(
                            circleShapeFeature.Center.X,
-                           circleShapeFeature.Center.Y - circleShapeFeature.YRadius / 2));
+                           circleShapeFeature.Center.Y - (circleShapeFeature.YRadius / 2)));
             // left
             points.Add(GeometryFactory.CreatePoint(
-                           circleShapeFeature.Center.X - circleShapeFeature.XRadius / 2,
+                           circleShapeFeature.Center.X - (circleShapeFeature.XRadius / 2),
                            circleShapeFeature.Center.Y));
             CenterTracker = GeometryFactory.CreatePoint(0, 0);
         }
 
         #region IShapeFeatureEditor Members
 
-
         public bool MoveTracker(IPoint trackerFeature, Coordinate worldPosition, double deltaX, double deltaY)
         {
-            CircleShapeFeature circleShapeFeature = (CircleShapeFeature)ShapeFeature;
+            var circleShapeFeature = (CircleShapeFeature) ShapeFeature;
             if (trackerFeature == points[0])
             {
                 // bottom
@@ -101,31 +99,40 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapeEdit
                 circleShapeFeature.Center.X += deltaX;
                 circleShapeFeature.Center.Y += deltaY;
                 // update all Trackers
-                for (int i = 0; i < points.Count; i++)
+                for (var i = 0; i < points.Count; i++)
                 {
                     GeometryHelper.MoveCoordinate(points[i], 0, deltaX, deltaY);
                     points[i].GeometryChangedAction();
                 }
             }
+
             if (circleShapeFeature.XRadius < 0)
             {
                 circleShapeFeature.XRadius = Math.Abs(circleShapeFeature.XRadius);
                 collapsed *= -1;
             }
+
             if (circleShapeFeature.YRadius < 0)
             {
                 circleShapeFeature.YRadius = Math.Abs(circleShapeFeature.YRadius);
                 collapsed *= -1;
             }
+
             return true;
         }
 
         public override Cursor GetCursor(IPoint trackerFeature)
         {
-            if ((trackerFeature == points[0]) || (trackerFeature == points[2]))
+            if (trackerFeature == points[0] || trackerFeature == points[2])
+            {
                 return Cursors.SizeNS;
-            if ((trackerFeature == points[1]) || (trackerFeature == points[3]))
+            }
+
+            if (trackerFeature == points[1] || trackerFeature == points[3])
+            {
                 return Cursors.SizeWE;
+            }
+
             return base.GetCursor(trackerFeature);
         }
 

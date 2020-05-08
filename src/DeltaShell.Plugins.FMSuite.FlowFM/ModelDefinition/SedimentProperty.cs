@@ -16,14 +16,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         private readonly string dataTemplateName = "SedimentPropertyDefaultTemplate";
         private bool isVisible;
 
-        protected virtual Dictionary<Type, string> SedimentPropertiesDataTemplateNames =>
-            new Dictionary<Type, string>
-            {
-                {typeof(bool), "SedimentPropertyBoolTemplate"},
-                {typeof(int), "SedimentPropertyIntegerTemplate"},
-                {typeof(double), "SedimentPropertyDoubleTemplate"},
-            };
-
         public SedimentProperty(string name, T defaultValue, T minValue, bool minIsOpened, T maxValue, bool maxIsOpened,
                                 string unit,
                                 string description, bool mduOnly, Func<List<ISediment>, bool> enabled = null,
@@ -54,28 +46,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
 
             Visible = visible;
 
-            string dataTemplate = string.Empty;
+            var dataTemplate = string.Empty;
             if (SedimentPropertiesDataTemplateNames.TryGetValue(typeof(T), out dataTemplate))
             {
                 dataTemplateName = dataTemplate;
             }
-        }
-
-        public virtual void SedimentPropertyWrite(DelftIniCategory category)
-        {
-            category.AddSedimentProperty(Name, string.Format(CultureInfo.InvariantCulture, "{0}", Value), Unit,
-                                         Description);
-        }
-
-        public virtual void SedimentPropertyLoad(DelftIniCategory category)
-        {
-            DelftIniProperty property = category.Properties.FirstOrDefault(p => p.Name == Name);
-            if (property == null)
-            {
-                return;
-            }
-
-            Value = (T) Convert.ChangeType(property.Value, typeof(T), CultureInfo.InvariantCulture);
         }
 
         public string Name { get; set; }
@@ -104,14 +79,36 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         {
             return Name;
         }
+
+        public virtual void SedimentPropertyWrite(DelftIniCategory category)
+        {
+            category.AddSedimentProperty(Name, string.Format(CultureInfo.InvariantCulture, "{0}", Value), Unit,
+                                         Description);
+        }
+
+        public virtual void SedimentPropertyLoad(DelftIniCategory category)
+        {
+            DelftIniProperty property = category.Properties.FirstOrDefault(p => p.Name == Name);
+            if (property == null)
+            {
+                return;
+            }
+
+            Value = (T) Convert.ChangeType(property.Value, typeof(T), CultureInfo.InvariantCulture);
+        }
+
+        protected virtual Dictionary<Type, string> SedimentPropertiesDataTemplateNames =>
+            new Dictionary<Type, string>
+            {
+                {typeof(bool), "SedimentPropertyBoolTemplate"},
+                {typeof(int), "SedimentPropertyIntegerTemplate"},
+                {typeof(double), "SedimentPropertyDoubleTemplate"},
+            };
     }
 
     [Entity]
     public class SpatiallyVaryingSedimentProperty<T> : SedimentProperty<T>, ISpatiallyVaryingSedimentProperty<T>
     {
-        protected override Dictionary<Type, string> SedimentPropertiesDataTemplateNames =>
-            new Dictionary<Type, string> {{typeof(double), "SpatiallyVaryingSedimentPropertyDoubleTemplate"}};
-
         public SpatiallyVaryingSedimentProperty(string name, T defaultValue, T minValue, bool minIsOpened, T maxValue,
                                                 bool maxIsOpened, string unit,
                                                 string description, bool isSpatiallyVarying, bool mduOnly,
@@ -122,6 +119,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         {
             IsSpatiallyVarying = isSpatiallyVarying;
         }
+
+        public bool IsSpatiallyVarying { get; set; }
+
+        public string SpatiallyVaryingName { get; set; }
+
+        protected override Dictionary<Type, string> SedimentPropertiesDataTemplateNames =>
+            new Dictionary<Type, string> {{typeof(double), "SpatiallyVaryingSedimentPropertyDoubleTemplate"}};
 
         #region Overrides of SedimentProperty<T>
 
@@ -169,9 +173,5 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         }
 
         #endregion
-
-        public bool IsSpatiallyVarying { get; set; }
-
-        public string SpatiallyVaryingName { get; set; }
     }
 }

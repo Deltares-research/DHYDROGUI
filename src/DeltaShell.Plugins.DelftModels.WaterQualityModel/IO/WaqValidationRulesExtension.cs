@@ -216,8 +216,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         private static string GetRuleLimitMessage(this WaqProcessValidationRule rule)
         {
             double value = double.NaN;
-            string minString = string.Empty;
-            string maxString = string.Empty;
+            var minString = string.Empty;
+            var maxString = string.Empty;
             if (double.TryParse(rule.MinValue, out value) && !double.IsInfinity(value))
             {
                 minString = $"at least {rule.MinValue}";

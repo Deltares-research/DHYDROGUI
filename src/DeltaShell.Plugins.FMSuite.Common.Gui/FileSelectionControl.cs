@@ -17,7 +17,10 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui
 
         public string FilePath
         {
-            get { return filePath; }
+            get
+            {
+                return filePath;
+            }
             set
             {
                 filePath = value;
@@ -27,17 +30,33 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui
 
         public string FileFilter { get; set; }
 
-        public string LabelText { get { return label.Text; } set { label.Text = value; } }
+        public string LabelText
+        {
+            get
+            {
+                return label.Text;
+            }
+            set
+            {
+                label.Text = value;
+            }
+        }
 
-        public Action<string,int> AfterFileSelected { get; set; }
+        public Action<string, int> AfterFileSelected { get; set; }
 
         private void FileOpenButtonClick(object sender, EventArgs e)
         {
-            var dialog = new OpenFileDialog {AddExtension = true, Filter = FileFilter, Multiselect = false};
+            var dialog = new OpenFileDialog
+            {
+                AddExtension = true,
+                Filter = FileFilter,
+                Multiselect = false
+            };
             if (dialog.ShowDialog(this) == DialogResult.OK)
             {
                 FilePath = dialog.FileName;
             }
+
             if (AfterFileSelected != null)
             {
                 AfterFileSelected(FilePath, dialog.FilterIndex - 1);

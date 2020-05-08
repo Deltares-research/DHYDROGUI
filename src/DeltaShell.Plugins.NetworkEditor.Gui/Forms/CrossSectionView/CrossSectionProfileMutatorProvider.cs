@@ -10,18 +10,19 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
         {
             if (crossSectionDefinition.IsProxy)
             {
-                var crossSectionDefinitionProxy = (CrossSectionDefinitionProxy)crossSectionDefinition;
-                var innerMutator = crossSectionDefinitionProxy.InnerDefinition.GetFlowProfileMutator();
+                var crossSectionDefinitionProxy = (CrossSectionDefinitionProxy) crossSectionDefinition;
+                ICrossSectionProfileMutator innerMutator = crossSectionDefinitionProxy.InnerDefinition.GetFlowProfileMutator();
                 return new ProxyProfileMutator(crossSectionDefinitionProxy, innerMutator);
             }
+
             switch (crossSectionDefinition.CrossSectionType)
             {
                 case CrossSectionType.GeometryBased:
-                    return new XYZFlowProfileMutator((CrossSectionDefinitionXYZ)crossSectionDefinition);
+                    return new XYZFlowProfileMutator((CrossSectionDefinitionXYZ) crossSectionDefinition);
                 case CrossSectionType.YZ:
-                    return new YZFlowProfileMutator((CrossSectionDefinitionYZ)crossSectionDefinition);
+                    return new YZFlowProfileMutator((CrossSectionDefinitionYZ) crossSectionDefinition);
                 case CrossSectionType.ZW:
-                    return new ZWFlowProfileMutator((CrossSectionDefinitionZW)crossSectionDefinition);
+                    return new ZWFlowProfileMutator((CrossSectionDefinitionZW) crossSectionDefinition);
                 case CrossSectionType.Standard:
                     return new ImmutableProfileMutator();
                 default:
@@ -33,18 +34,19 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
         {
             if (crossSectionDefinition.IsProxy)
             {
-                var crossSectionDefinitionProxy = (CrossSectionDefinitionProxy)crossSectionDefinition;
-                var innerMutator = crossSectionDefinitionProxy.InnerDefinition.GetProfileMutator();
+                var crossSectionDefinitionProxy = (CrossSectionDefinitionProxy) crossSectionDefinition;
+                ICrossSectionProfileMutator innerMutator = crossSectionDefinitionProxy.InnerDefinition.GetProfileMutator();
                 return new ProxyProfileMutator(crossSectionDefinitionProxy, innerMutator);
             }
+
             switch (crossSectionDefinition.CrossSectionType)
             {
                 case CrossSectionType.GeometryBased:
-                    return new XYZProfileMutator((CrossSectionDefinitionXYZ)crossSectionDefinition);
+                    return new XYZProfileMutator((CrossSectionDefinitionXYZ) crossSectionDefinition);
                 case CrossSectionType.YZ:
-                    return new YZProfileMutator((CrossSectionDefinitionYZ)crossSectionDefinition);
+                    return new YZProfileMutator((CrossSectionDefinitionYZ) crossSectionDefinition);
                 case CrossSectionType.ZW:
-                    return new ZWProfileMutator((CrossSectionDefinitionZW)crossSectionDefinition);
+                    return new ZWProfileMutator((CrossSectionDefinitionZW) crossSectionDefinition);
                 case CrossSectionType.Standard:
                     return new ImmutableProfileMutator();
                 default:

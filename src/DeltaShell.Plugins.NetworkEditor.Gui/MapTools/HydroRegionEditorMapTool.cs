@@ -16,6 +16,7 @@ using DeltaShell.Plugins.NetworkEditor.Gui.Forms;
 using DeltaShell.Plugins.NetworkEditor.Gui.Properties;
 using DeltaShell.Plugins.NetworkEditor.MapLayers;
 using DeltaShell.Plugins.NetworkEditor.MapLayers.Providers;
+using GeoAPI.CoordinateSystems.Transformations;
 using GeoAPI.Extensions.CoordinateSystems;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Feature;
@@ -77,16 +78,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
         public const string EnclosureToolName = "Enclosure tool";
         public const string BridgePillarToolName = "Bridge pillar tool";
 
-        // TODO: Why does a maptool needs a list of other maptools, if they are available through the MapControl anyway? 
-        private readonly List<IMapTool> mapTools = new List<IMapTool>();
-
-        private Coordinate contextMenuWorldPosition;
-
-        private IMap map;
-
         private static bool TopologyRulesEnabledState;
-
-        private INetworkCoverageGroupLayer activeNetworkCoverageGroupLayer;
 
         private static readonly Cursor PointCrossSectionCuror = MapCursors.CreateArrowOverlayCuror(Resources.CrossSectionSmall);
         private static readonly Cursor NewInsertNodeCursor = MapCursors.CreateArrowOverlayCuror(Resources.NodeOnMultipleBranches);
@@ -105,165 +97,30 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
         private static readonly Cursor NewLinkToolCursor = MapCursors.CreateArrowOverlayCuror(Resources.Link);
         private static readonly Cursor AddInterpolatedCrossSectionToolCursor = MapCursors.CreateArrowOverlayCuror(Resources.AddInterpolatedCrossSection);
 
-        private bool FeatureTypeLayerFilter<T>(ILayer layer)
-        {
-            // TODO: extend this filter to take only selected HydroRegionLayer into account
-            if (layer.DataSource == null || layer is LabelLayer)
-            {
-                return false;
-            }
+        // TODO: Why does a maptool needs a list of other maptools, if they are available through the MapControl anyway? 
+        private readonly List<IMapTool> mapTools = new List<IMapTool>();
 
-            return typeof(T).IsAssignableFrom(layer.DataSource.FeatureType);
-        }
+        private Coordinate contextMenuWorldPosition;
 
-        private void AddNetworkEditorTools()
-        {
-            // TODO: extend to multiple regions!
+        private IMap map;
 
-            // HydroNetwork
-            var newLineTool = new NewLineTool(FeatureTypeLayerFilter<Channel>, AddChannelToolName)
-                                  {
-                                      AutoCurve = false,
-                                      MinDistance = 0,
-                                      IsActive = false,
-                                      Cursor = MapCursors.CreateArrowOverlayCuror(Resources.new_branch_small)
-                                  };
-            AddMapTool(newLineTool);
-
-            var newLineTool2 = new NewLineTool(FeatureTypeLayerFilter<Channel>, AddChannelScribleToolName)
-                                   {
-                                       AutoCurve = true,
-                                       MinDistance = 15,
-                                       IsActive = false,
-                                       Cursor = MapCursors.CreateArrowOverlayCuror(Resources.new_autobranch_small)
-                                   };
-            AddMapTool(newLineTool2);
-
-            var newInsertNodeTool = new NewPointFeatureTool<HydroNode>(InsertNodeToolName) { Cursor = NewInsertNodeCursor };
-            AddMapTool(newInsertNodeTool);
-
-            var newPointCrossSectionTool = new NewPointFeatureTool<CrossSection>(AddPointCrossSectionToolName) { Cursor = PointCrossSectionCuror };
-            AddMapTool(newPointCrossSectionTool);
-
-            var newLineCrossSectionTool = new NewLineTool(FeatureTypeLayerFilter<CrossSection>, AddLineCrossSectionToolName)
-            {
-                AutoCurve = true,
-                Cursor = NewLineCrossSectionCursor
-            };
-            AddMapTool(newLineCrossSectionTool);
-
-            var newStructureFeatureTool = new NewPointFeatureTool<CompositeBranchStructure>(AddCompositeStructureToolName) { Cursor = AddCompositeStructureCursor };
-            AddMapTool(newStructureFeatureTool);
-
-            var newPumpTool = new NewPointFeatureTool(layer => layer.DataSource != null && !(layer is LabelLayer)
-                  && layer.DataSource.FeatureType == typeof(Pump) && (layer.DataSource is HydroNetworkFeatureCollection), AddPumpToolName) { Cursor = NewPumpCursor };
-
-            AddMapTool(newPumpTool);
-
-            var newLateralSourceTool = new NewPointFeatureTool<LateralSource>(AddLateralSourceToolName) { Cursor = NewLateralSourceCursor };
-            AddMapTool(newLateralSourceTool);
-
-            var newDiffuseLateralSourceTool = new NewLineTool(FeatureTypeLayerFilter<LateralSource>, AddDiffuseLateralSourceToolName)
-                                                  {
-                                                      AutoCurve = true,
-                                                      Cursor = NewLateralSourceCursor
-                                                  };
-            AddMapTool(newDiffuseLateralSourceTool);
-
-            var newRetentionTool = new NewPointFeatureTool<Retention>(AddRetentionToolName) { Cursor = NewRetentionToolCursor };
-            AddMapTool(newRetentionTool);
-
-            var newObservationPointTool = new NewPointFeatureTool<ObservationPoint>(AddObservationPointToolName) { Cursor = NewObservationPointToolCursor };
-            AddMapTool(newObservationPointTool);
-
-            var newWeirTool = new NewPointFeatureTool(layer => layer.DataSource != null && !(layer is LabelLayer)
-                  && layer.DataSource.FeatureType == typeof(Weir) && (layer.DataSource is HydroNetworkFeatureCollection), AddWeirToolName) { Cursor = AddNewWeirCursor };
-            AddMapTool(newWeirTool);
-
-            var newCulvertTool = new NewPointFeatureTool<Culvert>(AddCulvertToolName) { Cursor = NewCulvertToolCursor };
-            AddMapTool(newCulvertTool);
-
-            var newBridgeTool = new NewPointFeatureTool<Bridge>(AddBridgeToolName) { Cursor = NewBridgeToolCursor };
-            AddMapTool(newBridgeTool);
-
-            var newExtraResistanceTool = new NewPointFeatureTool<ExtraResistance>(AddExtraResistanceToolName) { Cursor = NewExtraResistanceToolCursor };
-            AddMapTool(newExtraResistanceTool);
-
-            // DrainageBasin
-            Func<ILayer, bool> isCatchmentLayer = FeatureTypeLayerFilter<Catchment>;
-            var newLineToolCatchment = new NewLineTool(isCatchmentLayer, AddCatchmentToolName)
-            {
-                CloseLine = true,
-                KeepDuplicates = true,
-                AutoCurve = true,
-                MinDistance = 10,
-                IsActive = false,
-                ActualSnapping = false
-            };
-            AddMapTool(newLineToolCatchment);
-
-            var newWwtpTool = new NewPointFeatureTool<WasteWaterTreatmentPlant>(AddWasteWaterTreatmentPlantToolName) { Cursor = NewWwtpToolCursor };
-            AddMapTool(newWwtpTool);
-
-            var newRunoffBoundaryTool = new NewPointFeatureTool<RunoffBoundary>(AddRunoffBoundaryToolName) { Cursor = NewRunoffBoundaryToolCursor };
-            AddMapTool(newRunoffBoundaryTool);
-
-            var newLinkTool = new NewArrowLineTool(FeatureTypeLayerFilter<HydroLink>, AddHydroLinkToolName)
-                {
-                    AddNewFeature = (g, cs, sourecSr, targetSr, tool) =>
-                        {
-                            // Find the correct link layer to add to
-                            var region = HydroRegion.GetCommonRegion((IHydroObject) sourecSr.SnappedFeature,(IHydroObject) targetSr.SnappedFeature);
-                            var layer = tool.Layers.FirstOrDefault(l => Equals(l.DataSource.Features, region.Links));
-                            if (layer == null) return;
-
-                            layer.DataSource.Add(GetLocalGeometry(g, cs, layer.CoordinateSystem));
-                            layer.RenderRequired = true;
-                        },
-                    Cursor = NewLinkToolCursor
-                };
-
-            AddMapTool(newLinkTool);
-
-            AddMapTool(new Feature2DLineTool(HydroAreaLayerNames.ThinDamsPluralName, ThinDamToolName, Resources.thindam));
-            AddMapTool(new Feature2DLineTool(HydroAreaLayerNames.FixedWeirsPluralName, FixedWeirToolName, Resources.fixedweir));
-            AddMapTool(new Feature2DPointTool(HydroAreaLayerNames.ObservationPointsPluralName, ObservationPointToolName, Resources.Observation));
-            AddMapTool(new Feature2DLineTool(HydroAreaLayerNames.ObservationCrossSectionsPluralName, ObservationCrossSectionToolName, Resources.observationcs2d));
-            AddMapTool(new Feature2DLineTool(HydroAreaLayerNames.PumpsPluralName, PumpToolName, Resources.pump));
-            AddMapTool(new Feature2DLineTool(HydroAreaLayerNames.WeirsPluralName, WeirToolName, Resources.Weir) { MaxPoints = 2 });
-            AddMapTool(new Feature2DLineTool(HydroAreaLayerNames.LandBoundariesPluralName, LandBoundaryToolName, Resources.landboundary));
-            AddMapTool(new Feature2DPointTool(HydroAreaLayerNames.DryPointsPluralName, DryPointToolName, Resources.dry_point));
-            AddMapTool(new Feature2DLineTool(HydroAreaLayerNames.DryAreasPluralName, DryAreaToolName, Resources.dry_area) { CloseLine = true });
-            AddMapTool(new Feature2DLineTool(HydroAreaLayerNames.EmbankmentsPluralName, EmbankmentToolName, Resources.Embankment));
-            AddMapTool(new SingleFeature2DLineTool(HydroAreaLayerNames.EnclosureName, EnclosureToolName, Resources.enclosure) { CloseLine = true });
-            AddMapTool(new Feature2DLineTool(HydroAreaLayerNames.BridgePillarsPluralName, BridgePillarToolName, Resources.BridgeSmall));
-
-            var addInterpolatedCrossSectionTool = new NewPointFeatureTool(FeatureTypeLayerFilter<CrossSection>, AddInterpolatedCrossSectionToolName) { Cursor = AddInterpolatedCrossSectionToolCursor };
-            AddMapTool(addInterpolatedCrossSectionTool);
-
-            MapControl.ActivateTool(MapControl.SelectTool);
-        }
-
-        private static IGeometry GetLocalGeometry(IGeometry geometry, ICoordinateSystem sourceCoordinateSystem, ICoordinateSystem targetCoordinateSystem)
-        {
-            if (sourceCoordinateSystem == null || targetCoordinateSystem == null ||
-                sourceCoordinateSystem == targetCoordinateSystem)
-            {
-                return geometry;
-            }
-
-            var coordinateSystemFactory = new OgrCoordinateSystemFactory();
-            var transformation = coordinateSystemFactory.CreateTransformation(sourceCoordinateSystem, targetCoordinateSystem);
-
-            return GeometryTransform.TransformGeometry(geometry, transformation.MathTransform);
-        }
-
-        private IMapTool NetworkLocationTool { get; set; }
-
+        private INetworkCoverageGroupLayer activeNetworkCoverageGroupLayer;
 
         public HydroRegionEditorMapTool()
         {
             Tolerance = 1;
+        }
+
+        /// <summary>
+        /// All topology rules work only when user is editing data (currently it is between mouse down and mouse up).
+        /// </summary>
+        public bool TopologyRulesEnabled { get; set; }
+
+        public virtual float Tolerance { get; set; }
+
+        public IEnumerable<IHydroRegion> HydroRegions
+        {
+            get { return Map.GetAllLayers(true).OfType<HydroRegionMapLayer>().Select(l => l.Region); }
         }
 
         /// <summary>
@@ -274,7 +131,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
             get { return activeNetworkCoverageGroupLayer; }
             set
             {
-                bool activateTool = false;
+                var activateTool = false;
                 if (activeNetworkCoverageGroupLayer != null)
                 {
                     if (null != NetworkLocationTool)
@@ -327,13 +184,323 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
                     control.KeyDown += MapControlKeyDown;
                     control.KeyUp += MapControlKeyUp;
 
-                    var networkCoverageGroupLayer = Map.GetAllVisibleLayers(true).OfType<NetworkCoverageGroupLayer>().FirstOrDefault();
+                    NetworkCoverageGroupLayer networkCoverageGroupLayer = Map.GetAllVisibleLayers(true).OfType<NetworkCoverageGroupLayer>().FirstOrDefault();
                     if(networkCoverageGroupLayer != null)
                     {
                         ActiveNetworkCoverageGroupLayer = networkCoverageGroupLayer;
                     }
                 }
             }
+        }
+
+        public override bool IsActive
+        {
+            get { return true; }
+            set { }
+        }
+
+        public void ReverseBranch(IChannel branch)
+        {
+            if (branch.BranchFeatures.OfType<IStructure1D>().Any(IsOriented))
+            {
+                DialogResult result = MessageBox.Show(
+                    "Your branch contains oriented structures and cross sections, which will not be reversed upon reversal of the flow direction. Continue?",
+                    "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                if (result != DialogResult.Yes)
+                {
+                    return;
+                }
+            }
+            HydroNetworkHelper.ReverseBranch(branch);
+            MapControl.Refresh();
+        }
+
+        // TODO: currently interactor is always active, should be removed after "Edit Network ..." menu or toolbar will be added to activate interactor for a selected network
+
+        public override void OnMouseDown(Coordinate worldPosition, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                TopologyRulesEnabled = true;
+            }
+
+            //log.DebugFormat("Mouse down");
+
+            if (e.Button != MouseButtons.Right)
+            {
+                return;
+            }
+            // select the nearest object, maybe this is redundant and select tool should always do it?
+            MapControl.SelectTool.OnMouseDown(worldPosition, e);
+        }
+
+        public override IEnumerable<MapToolContextMenuItem> GetContextMenuItems(Coordinate worldPosition)
+        {
+            contextMenuWorldPosition = worldPosition;
+
+            INetworkCoverageGroupLayer firstDiscretizationLayer = MapControl.Map.GetAllLayers(true)
+                                                                            .OfType<INetworkCoverageGroupLayer>()
+                                                                            .FirstOrDefault(cl => cl.Coverage is IDiscretization);
+
+            IDiscretization discretization = firstDiscretizationLayer != null ? (IDiscretization)firstDiscretizationLayer.NetworkCoverage : null;
+            if (discretization != null)
+            {
+                if (discretization.Locations.Values.Count > 0)
+                {
+                    yield return new MapToolContextMenuItem
+                    {
+                        Priority = 4,
+                        MenuItem = new ToolStripMenuItem("Remove computational grid nodes", null, (s, e) =>
+                            {
+                                RemoveNetworkSegments(discretization);
+                                firstDiscretizationLayer.Visible = true;
+                            })
+                    };
+                }
+
+                yield return new MapToolContextMenuItem
+                    {
+                        Priority = 4,
+                        MenuItem = new ToolStripMenuItem("Generate computational grid nodes", null, (s, e) =>
+                            {
+                                GenerateBranchSegments(discretization, null);
+                                firstDiscretizationLayer.Visible = true;
+                            })
+                    };
+            }
+
+            if (MapControl.SelectedFeatures == null)
+            {
+                yield break;
+            }
+
+            List<IChannel> channels = MapControl.SelectedFeatures.OfType<IChannel>().ToList();
+            if (channels.Count > 0)
+            {
+                if (discretization != null)
+                {
+                    if (discretization.Locations.Values.Any(nl => channels.Contains(nl.Branch)))
+                    {
+                        yield return new MapToolContextMenuItem
+                            {
+                                Priority = 3,
+                                MenuItem = new ToolStripMenuItem("Remove computational grid nodes in selected branch(es)", null,
+                                    (sender, args) =>
+                                        {
+                                            RemoveBranchSegments(discretization, channels);
+                                            firstDiscretizationLayer.Visible = true;
+                                        })
+                            };
+                    }
+
+                    yield return new MapToolContextMenuItem
+                        {
+                            Priority = 3,
+                            MenuItem = new ToolStripMenuItem("Generate computational grid nodes in selected branch(es)", null,
+                                (s, e) =>
+                                    {
+                                        GenerateBranchSegments(discretization, channels);
+                                        firstDiscretizationLayer.Visible = true;
+                                    })
+                        };
+                }
+
+                yield return new MapToolContextMenuItem
+                    {
+                        Priority = 3,
+                        MenuItem = new ToolStripMenuItem("Insert Node", null, (s, e) => InsertNode(channels))
+                    };
+                
+                yield return new MapToolContextMenuItem
+                    {
+                        Priority = 3,
+                        MenuItem = new ToolStripMenuItem("Reverse direction", null, (s,e) => ReverseBranch(channels))
+                    };
+            }
+
+            List<INetworkLocation> networkLocations = MapControl.SelectedFeatures.OfType<INetworkLocation>().ToList();
+            if (networkLocations.Count > 0)
+            {
+                if (discretization != null && discretization.Locations.Values.Any(networkLocations.Contains))
+                {
+                    yield return new MapToolContextMenuItem
+                        {
+                            Priority = 3,
+                            MenuItem = new ToolStripMenuItem("Fixed gridpoint", null, (s, e) => ToggleFixedGridPoint(discretization, networkLocations))
+                                {
+                                    Checked = networkLocations.Any(discretization.IsFixedPoint)
+                                }
+                        };
+                }
+            }
+
+            List<ICrossSection> crossSections = MapControl.SelectedFeatures.OfType<ICrossSection>().ToList();
+            if (crossSections.Count > 0)
+            {
+                yield return new MapToolContextMenuItem
+                    {
+                        Priority = 3,
+                        MenuItem = new ToolStripMenuItem("Shift Level...", null, (s, e) => LevelShift(crossSections))
+                    };
+            }
+        }
+
+        private IMapTool NetworkLocationTool { get; set; }
+
+        private bool FeatureTypeLayerFilter<T>(ILayer layer)
+        {
+            // TODO: extend this filter to take only selected HydroRegionLayer into account
+            if (layer.DataSource == null || layer is LabelLayer)
+            {
+                return false;
+            }
+
+            return typeof(T).IsAssignableFrom(layer.DataSource.FeatureType);
+        }
+
+        private void AddNetworkEditorTools()
+        {
+            // TODO: extend to multiple regions!
+
+            // HydroNetwork
+            var newLineTool = new NewLineTool(FeatureTypeLayerFilter<Channel>, AddChannelToolName)
+                                  {
+                                      AutoCurve = false,
+                                      MinDistance = 0,
+                                      IsActive = false,
+                                      Cursor = MapCursors.CreateArrowOverlayCuror(Resources.new_branch_small)
+                                  };
+            AddMapTool(newLineTool);
+
+            var newLineTool2 = new NewLineTool(FeatureTypeLayerFilter<Channel>, AddChannelScribleToolName)
+                                   {
+                                       AutoCurve = true,
+                                       MinDistance = 15,
+                                       IsActive = false,
+                                       Cursor = MapCursors.CreateArrowOverlayCuror(Resources.new_autobranch_small)
+                                   };
+            AddMapTool(newLineTool2);
+
+            var newInsertNodeTool = new NewPointFeatureTool<HydroNode>(InsertNodeToolName) { Cursor = NewInsertNodeCursor };
+            AddMapTool(newInsertNodeTool);
+
+            var newPointCrossSectionTool = new NewPointFeatureTool<CrossSection>(AddPointCrossSectionToolName) { Cursor = PointCrossSectionCuror };
+            AddMapTool(newPointCrossSectionTool);
+
+            var newLineCrossSectionTool = new NewLineTool(FeatureTypeLayerFilter<CrossSection>, AddLineCrossSectionToolName)
+            {
+                AutoCurve = true,
+                Cursor = NewLineCrossSectionCursor
+            };
+            AddMapTool(newLineCrossSectionTool);
+
+            var newStructureFeatureTool = new NewPointFeatureTool<CompositeBranchStructure>(AddCompositeStructureToolName) { Cursor = AddCompositeStructureCursor };
+            AddMapTool(newStructureFeatureTool);
+
+            var newPumpTool = new NewPointFeatureTool(layer => layer.DataSource != null && !(layer is LabelLayer)
+                  && layer.DataSource.FeatureType == typeof(Pump) && layer.DataSource is HydroNetworkFeatureCollection, AddPumpToolName) { Cursor = NewPumpCursor };
+
+            AddMapTool(newPumpTool);
+
+            var newLateralSourceTool = new NewPointFeatureTool<LateralSource>(AddLateralSourceToolName) { Cursor = NewLateralSourceCursor };
+            AddMapTool(newLateralSourceTool);
+
+            var newDiffuseLateralSourceTool = new NewLineTool(FeatureTypeLayerFilter<LateralSource>, AddDiffuseLateralSourceToolName)
+                                                  {
+                                                      AutoCurve = true,
+                                                      Cursor = NewLateralSourceCursor
+                                                  };
+            AddMapTool(newDiffuseLateralSourceTool);
+
+            var newRetentionTool = new NewPointFeatureTool<Retention>(AddRetentionToolName) { Cursor = NewRetentionToolCursor };
+            AddMapTool(newRetentionTool);
+
+            var newObservationPointTool = new NewPointFeatureTool<ObservationPoint>(AddObservationPointToolName) { Cursor = NewObservationPointToolCursor };
+            AddMapTool(newObservationPointTool);
+
+            var newWeirTool = new NewPointFeatureTool(layer => layer.DataSource != null && !(layer is LabelLayer)
+                  && layer.DataSource.FeatureType == typeof(Weir) && layer.DataSource is HydroNetworkFeatureCollection, AddWeirToolName) { Cursor = AddNewWeirCursor };
+            AddMapTool(newWeirTool);
+
+            var newCulvertTool = new NewPointFeatureTool<Culvert>(AddCulvertToolName) { Cursor = NewCulvertToolCursor };
+            AddMapTool(newCulvertTool);
+
+            var newBridgeTool = new NewPointFeatureTool<Bridge>(AddBridgeToolName) { Cursor = NewBridgeToolCursor };
+            AddMapTool(newBridgeTool);
+
+            var newExtraResistanceTool = new NewPointFeatureTool<ExtraResistance>(AddExtraResistanceToolName) { Cursor = NewExtraResistanceToolCursor };
+            AddMapTool(newExtraResistanceTool);
+
+            // DrainageBasin
+            Func<ILayer, bool> isCatchmentLayer = FeatureTypeLayerFilter<Catchment>;
+            var newLineToolCatchment = new NewLineTool(isCatchmentLayer, AddCatchmentToolName)
+            {
+                CloseLine = true,
+                KeepDuplicates = true,
+                AutoCurve = true,
+                MinDistance = 10,
+                IsActive = false,
+                ActualSnapping = false
+            };
+            AddMapTool(newLineToolCatchment);
+
+            var newWwtpTool = new NewPointFeatureTool<WasteWaterTreatmentPlant>(AddWasteWaterTreatmentPlantToolName) { Cursor = NewWwtpToolCursor };
+            AddMapTool(newWwtpTool);
+
+            var newRunoffBoundaryTool = new NewPointFeatureTool<RunoffBoundary>(AddRunoffBoundaryToolName) { Cursor = NewRunoffBoundaryToolCursor };
+            AddMapTool(newRunoffBoundaryTool);
+
+            var newLinkTool = new NewArrowLineTool(FeatureTypeLayerFilter<HydroLink>, AddHydroLinkToolName)
+                {
+                    AddNewFeature = (g, cs, sourecSr, targetSr, tool) =>
+                        {
+                            // Find the correct link layer to add to
+                            IHydroRegion region = HydroRegion.GetCommonRegion((IHydroObject) sourecSr.SnappedFeature,(IHydroObject) targetSr.SnappedFeature);
+                            ILayer layer = tool.Layers.FirstOrDefault(l => Equals(l.DataSource.Features, region.Links));
+                            if (layer == null)
+                            {
+                                return;
+                            }
+
+                            layer.DataSource.Add(GetLocalGeometry(g, cs, layer.CoordinateSystem));
+                            layer.RenderRequired = true;
+                        },
+                    Cursor = NewLinkToolCursor
+                };
+
+            AddMapTool(newLinkTool);
+
+            AddMapTool(new Feature2DLineTool(HydroAreaLayerNames.ThinDamsPluralName, ThinDamToolName, Resources.thindam));
+            AddMapTool(new Feature2DLineTool(HydroAreaLayerNames.FixedWeirsPluralName, FixedWeirToolName, Resources.fixedweir));
+            AddMapTool(new Feature2DPointTool(HydroAreaLayerNames.ObservationPointsPluralName, ObservationPointToolName, Resources.Observation));
+            AddMapTool(new Feature2DLineTool(HydroAreaLayerNames.ObservationCrossSectionsPluralName, ObservationCrossSectionToolName, Resources.observationcs2d));
+            AddMapTool(new Feature2DLineTool(HydroAreaLayerNames.PumpsPluralName, PumpToolName, Resources.pump));
+            AddMapTool(new Feature2DLineTool(HydroAreaLayerNames.WeirsPluralName, WeirToolName, Resources.Weir) { MaxPoints = 2 });
+            AddMapTool(new Feature2DLineTool(HydroAreaLayerNames.LandBoundariesPluralName, LandBoundaryToolName, Resources.landboundary));
+            AddMapTool(new Feature2DPointTool(HydroAreaLayerNames.DryPointsPluralName, DryPointToolName, Resources.dry_point));
+            AddMapTool(new Feature2DLineTool(HydroAreaLayerNames.DryAreasPluralName, DryAreaToolName, Resources.dry_area) { CloseLine = true });
+            AddMapTool(new Feature2DLineTool(HydroAreaLayerNames.EmbankmentsPluralName, EmbankmentToolName, Resources.Embankment));
+            AddMapTool(new SingleFeature2DLineTool(HydroAreaLayerNames.EnclosureName, EnclosureToolName, Resources.enclosure) { CloseLine = true });
+            AddMapTool(new Feature2DLineTool(HydroAreaLayerNames.BridgePillarsPluralName, BridgePillarToolName, Resources.BridgeSmall));
+
+            var addInterpolatedCrossSectionTool = new NewPointFeatureTool(FeatureTypeLayerFilter<CrossSection>, AddInterpolatedCrossSectionToolName) { Cursor = AddInterpolatedCrossSectionToolCursor };
+            AddMapTool(addInterpolatedCrossSectionTool);
+
+            MapControl.ActivateTool(MapControl.SelectTool);
+        }
+
+        private static IGeometry GetLocalGeometry(IGeometry geometry, ICoordinateSystem sourceCoordinateSystem, ICoordinateSystem targetCoordinateSystem)
+        {
+            if (sourceCoordinateSystem == null || targetCoordinateSystem == null ||
+                sourceCoordinateSystem == targetCoordinateSystem)
+            {
+                return geometry;
+            }
+
+            var coordinateSystemFactory = new OgrCoordinateSystemFactory();
+            ICoordinateTransformation transformation = coordinateSystemFactory.CreateTransformation(sourceCoordinateSystem, targetCoordinateSystem);
+
+            return GeometryTransform.TransformGeometry(geometry, transformation.MathTransform);
         }
 
         private void MapControlKeyDown(object sender, KeyEventArgs e)
@@ -349,32 +516,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
             TopologyRulesEnabled = TopologyRulesEnabledState;
         }
 
-        void MapControlMouseUp(object sender, MouseEventArgs e)
+        private void MapControlMouseUp(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left)
             {
                 TopologyRulesEnabled = false;
             }
         }
-
-        public override bool IsActive
-        {
-            get { return true; }
-            set { }
-        }
-
-        /// <summary>
-        /// All topology rules work only when user is editing data (currently it is between mouse down and mouse up).
-        /// </summary>
-        public bool TopologyRulesEnabled { get; set; }
-
-        public virtual float Tolerance { get; set; }
-
-        public IEnumerable<IHydroRegion> HydroRegions
-        {
-            get { return Map.GetAllLayers(true).OfType<HydroRegionMapLayer>().Select(l => l.Region); }
-        }
-
 
         private void RemoveNetworkEditorTools()
         {
@@ -430,10 +578,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
 
             return location;
         }
-        
+
         private void LayersCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            var removedOrAddedItem = e.GetRemovedOrAddedItem();
+            object removedOrAddedItem = e.GetRemovedOrAddedItem();
             if (removedOrAddedItem is INetworkCoverageGroupLayer)
             {
                 var networkCoverageLayer = (INetworkCoverageGroupLayer)removedOrAddedItem;
@@ -479,12 +627,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
                 }
             }
         }
-        
+
         [EditAction]
         private void SetCurrentNetworkCoverageEditor(INetworkCoverageGroupLayer networkCoverageGroupLayer, bool activateTool)
         {
             if (null == networkCoverageGroupLayer)
+            {
                 return;
+            }
 
             NetworkLocationTool = new NewPointFeatureTool(l => l.Equals(networkCoverageGroupLayer.LocationLayer), AddNetworkLocationToolName)
                                       {
@@ -505,35 +655,21 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
         private void ResetCurrentNetworkCoverageEditor(INetworkCoverageGroupLayer networkCoverageGroupLayer)
         {
             if (null == NetworkLocationTool || null == networkCoverageGroupLayer)
+            {
                 return;
+            }
+
             RemoveMapTool(NetworkLocationTool);
             NetworkLocationTool = null;
             if (networkCoverageGroupLayer.LocationLayer.DataSource != null)
+            {
                 networkCoverageGroupLayer.LocationLayer.DataSource.AddNewFeatureFromGeometryDelegate = null;
-        }
-
-        // TODO: currently interactor is always active, should be removed after "Edit Network ..." menu or toolbar will be added to activate interactor for a selected network
-
-        public override void OnMouseDown(Coordinate worldPosition, MouseEventArgs e)
-        {
-            if (e.Button == MouseButtons.Left)
-            {
-                TopologyRulesEnabled = true;
             }
-
-            //log.DebugFormat("Mouse down");
-
-            if (e.Button != MouseButtons.Right)
-            {
-                return;
-            }
-            // select the nearest object, maybe this is redundant and select tool should always do it?
-            MapControl.SelectTool.OnMouseDown(worldPosition, e);
         }
 
         private void RemoveBranchSegments(IDiscretization discretization, IEnumerable<IChannel> channels)
         {
-            foreach (var channel in channels)
+            foreach (IChannel channel in channels)
             {
                 NetworkHelper.ClearLocations(discretization, channel);
             }
@@ -550,7 +686,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
 
         private void RemoveNetworkSegments(IDiscretization discretization)
         {
-            if (discretization == null) return;
+            if (discretization == null)
+            {
+                return;
+            }
 
             discretization.SegmentGenerationMethod = SegmentGenerationMethod.None;
             discretization.Clear();
@@ -559,118 +698,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
             MapControl.Refresh();
         }
 
-        public override IEnumerable<MapToolContextMenuItem> GetContextMenuItems(Coordinate worldPosition)
-        {
-            contextMenuWorldPosition = worldPosition;
-
-            var firstDiscretizationLayer = MapControl.Map.GetAllLayers(true)
-                .OfType<INetworkCoverageGroupLayer>()
-                .FirstOrDefault(cl => cl.Coverage is IDiscretization);
-
-            var discretization = firstDiscretizationLayer != null ? (IDiscretization)firstDiscretizationLayer.NetworkCoverage : null;
-            if (discretization != null)
-            {
-                if (discretization.Locations.Values.Count > 0)
-                {
-                    yield return new MapToolContextMenuItem
-                    {
-                        Priority = 4,
-                        MenuItem = new ToolStripMenuItem("Remove computational grid nodes", null, (s, e) =>
-                            {
-                                RemoveNetworkSegments(discretization);
-                                firstDiscretizationLayer.Visible = true;
-                            })
-                    };
-                }
-
-                yield return new MapToolContextMenuItem
-                    {
-                        Priority = 4,
-                        MenuItem = new ToolStripMenuItem("Generate computational grid nodes", null, (s, e) =>
-                            {
-                                GenerateBranchSegments(discretization, null);
-                                firstDiscretizationLayer.Visible = true;
-                            })
-                    };
-            }
-
-            if (MapControl.SelectedFeatures == null) yield break;
-
-            var channels = MapControl.SelectedFeatures.OfType<IChannel>().ToList();
-            if (channels.Count > 0)
-            {
-                if (discretization != null)
-                {
-                    if (discretization.Locations.Values.Any(nl => channels.Contains(nl.Branch)))
-                    {
-                        yield return new MapToolContextMenuItem
-                            {
-                                Priority = 3,
-                                MenuItem = new ToolStripMenuItem("Remove computational grid nodes in selected branch(es)", null,
-                                    (sender, args) =>
-                                        {
-                                            RemoveBranchSegments(discretization, channels);
-                                            firstDiscretizationLayer.Visible = true;
-                                        })
-                            };
-                    }
-
-                    yield return new MapToolContextMenuItem
-                        {
-                            Priority = 3,
-                            MenuItem = new ToolStripMenuItem("Generate computational grid nodes in selected branch(es)", null,
-                                (s, e) =>
-                                    {
-                                        GenerateBranchSegments(discretization, channels);
-                                        firstDiscretizationLayer.Visible = true;
-                                    })
-                        };
-                }
-
-                yield return new MapToolContextMenuItem
-                    {
-                        Priority = 3,
-                        MenuItem = new ToolStripMenuItem("Insert Node", null, (s, e) => InsertNode(channels))
-                    };
-                
-                yield return new MapToolContextMenuItem
-                    {
-                        Priority = 3,
-                        MenuItem = new ToolStripMenuItem("Reverse direction", null, (s,e) => ReverseBranch(channels))
-                    };
-            }
-
-            var networkLocations = MapControl.SelectedFeatures.OfType<INetworkLocation>().ToList();
-            if (networkLocations.Count > 0)
-            {
-                if ((discretization != null) && discretization.Locations.Values.Any(networkLocations.Contains))
-                {
-                    yield return new MapToolContextMenuItem
-                        {
-                            Priority = 3,
-                            MenuItem = new ToolStripMenuItem("Fixed gridpoint", null, (s, e) => ToggleFixedGridPoint(discretization, networkLocations))
-                                {
-                                    Checked = networkLocations.Any(discretization.IsFixedPoint)
-                                }
-                        };
-                }
-            }
-
-            var crossSections = MapControl.SelectedFeatures.OfType<ICrossSection>().ToList();
-            if (crossSections.Count > 0)
-            {
-                yield return new MapToolContextMenuItem
-                    {
-                        Priority = 3,
-                        MenuItem = new ToolStripMenuItem("Shift Level...", null, (s, e) => LevelShift(crossSections))
-                    };
-            }
-        }
-
         private void InsertNode(IList<IChannel> channels)
         {
             if (contextMenuWorldPosition == null)
+            {
                 return;
+            }
 
             if (channels == null || !channels.Any())
             {
@@ -685,8 +718,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
             else
             {
                 var point = new Point(contextMenuWorldPosition);
-                var distanceLookup = channels.ToDictionary(c => c, c => c.Geometry.Distance(point));
-                var lowestDistance = distanceLookup.Min(kvp => kvp.Value);
+                Dictionary<IChannel, double> distanceLookup = channels.ToDictionary(c => c, c => c.Geometry.Distance(point));
+                double lowestDistance = distanceLookup.Min(kvp => kvp.Value);
 
                 branch = distanceLookup.First(kvp => Math.Abs(kvp.Value - lowestDistance) < 0.000000001).Key;
             }
@@ -719,34 +752,24 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
         {
             if (channels.Any(c => c.BranchFeatures.Any(IsOriented)))
             {
-                var result = MessageBox.Show(
+                DialogResult result = MessageBox.Show(
                     "Your branch contains oriented structures and cross sections, which will not be reversed upon reversal of the flow direction. Continue?",
                     "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-                if (result != DialogResult.Yes) return;
+                if (result != DialogResult.Yes)
+                {
+                    return;
+                }
             }
-            foreach (var channel in channels)
+            foreach (IChannel channel in channels)
             {
                 HydroNetworkHelper.ReverseBranch(channel);
             }
             MapControl.Refresh();
         }
 
-        public void ReverseBranch(IChannel branch)
-        {
-            if (branch.BranchFeatures.OfType<IStructure1D>().Any(IsOriented))
-            {
-                var result = MessageBox.Show(
-                    "Your branch contains oriented structures and cross sections, which will not be reversed upon reversal of the flow direction. Continue?",
-                    "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-                if (result != DialogResult.Yes) return;
-            }
-            HydroNetworkHelper.ReverseBranch(branch);
-            MapControl.Refresh();
-        }
-
         private static void ToggleFixedGridPoint(IDiscretization discretization, IEnumerable<INetworkLocation> networkLocations)
         {
-            foreach (var networkLocation in networkLocations)
+            foreach (INetworkLocation networkLocation in networkLocations)
             {
                 discretization.ToggleFixedPoint(networkLocation);
             }
@@ -757,7 +780,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
             var formLevelShift = new FormLevelShift();
             if (formLevelShift.ShowDialog() == DialogResult.OK)
             {
-                foreach (var crossSection in crossSections)
+                foreach (ICrossSection crossSection in crossSections)
                 {
                     crossSection.Definition.ShiftLevel(formLevelShift.Shift);
                 }

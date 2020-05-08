@@ -17,8 +17,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [PropertyOrder(1)]
         public string Name
         {
-            get { return data.Name; }
-            set { data.Name = value; }
+            get
+            {
+                return data.Name;
+            }
+            set
+            {
+                data.Name = value;
+            }
         }
 
         [Description("Number of branches")]
@@ -26,7 +32,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [PropertyOrder(2)]
         public int BranchCount
         {
-            get { return data.Branches.Count; }
+            get
+            {
+                return data.Branches.Count;
+            }
         }
 
         [Description("Number of nodes")]
@@ -34,15 +43,24 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [PropertyOrder(3)]
         public int NodeCount
         {
-            get { return data.Nodes.Count; }
+            get
+            {
+                return data.Nodes.Count;
+            }
         }
 
         [TypeConverter(typeof(CoordinateSystemStringTypeConverter))]
         [Editor(typeof(CoordinateSystemTypeEditor), typeof(UITypeEditor))]
         public ICoordinateSystem CoordinateSystem
         {
-            get { return data.CoordinateSystem; }
-            set { data.CoordinateSystem = value; }
+            get
+            {
+                return data.CoordinateSystem;
+            }
+            set
+            {
+                data.CoordinateSystem = value;
+            }
         }
     }
 }

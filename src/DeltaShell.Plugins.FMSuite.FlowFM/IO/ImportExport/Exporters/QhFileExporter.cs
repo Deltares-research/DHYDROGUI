@@ -15,6 +15,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Exporters
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(QhFileExporter));
 
+        public override IEnumerable<BoundaryConditionDataType> ForcingTypes
+        {
+            get
+            {
+                yield return BoundaryConditionDataType.Qh;
+            }
+        }
+
         #region IFileExporter
 
         public string Name => "Boundary data to .qh file";
@@ -64,13 +72,5 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Exporters
         }
 
         #endregion
-
-        public override IEnumerable<BoundaryConditionDataType> ForcingTypes
-        {
-            get
-            {
-                yield return BoundaryConditionDataType.Qh;
-            }
-        }
     }
 }

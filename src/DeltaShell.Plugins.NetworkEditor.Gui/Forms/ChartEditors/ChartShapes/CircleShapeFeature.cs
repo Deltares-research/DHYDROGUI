@@ -7,10 +7,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapes
 {
     public class CircleShapeFeature : ShapeFeatureBase
     {
-        public Coordinate Center { get; set; }
-        public double XRadius { get; set; }
-        public double YRadius { get; set; }
-
         public CircleShapeFeature(IChart chart, Coordinate center, double xRadius, double yRadius)
             : base(chart)
         {
@@ -19,21 +15,25 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapes
             YRadius = yRadius;
         }
 
+        public Coordinate Center { get; set; }
+        public double XRadius { get; set; }
+        public double YRadius { get; set; }
+
         public override Rectangle GetBounds()
         {
-            Rectangle rectangle = new Rectangle
-                                      {
-                                          X = ChartCoordinateService.ToDeviceX(Chart, Center.X - XRadius/2),
-                                          Y = ChartCoordinateService.ToDeviceY(Chart, Center.Y + YRadius/2),
-                                          Width = ChartCoordinateService.ToDeviceWidth(Chart, XRadius),
-                                          Height = ChartCoordinateService.ToDeviceHeight(Chart, YRadius)
-                                      };
+            var rectangle = new Rectangle
+            {
+                X = ChartCoordinateService.ToDeviceX(Chart, Center.X - (XRadius / 2)),
+                Y = ChartCoordinateService.ToDeviceY(Chart, Center.Y + (YRadius / 2)),
+                Width = ChartCoordinateService.ToDeviceWidth(Chart, XRadius),
+                Height = ChartCoordinateService.ToDeviceHeight(Chart, YRadius)
+            };
             return rectangle;
         }
 
         public override void Paint(IChartDrawingContext chartDrawingContext)
         {
-            var g = (ChartGraphics)chartDrawingContext.Graphics;
+            var g = (ChartGraphics) chartDrawingContext.Graphics;
             g.Ellipse(GetBounds());
         }
 

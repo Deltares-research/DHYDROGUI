@@ -10,11 +10,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(SpiderWebWindField));
 
-        public static SpiderWebWindField Create(string filePath)
-        {
-            return new SpiderWebWindField(filePath);
-        }
-
         private SpiderWebWindField(string filePath)
         {
             WindFilePath = filePath;
@@ -27,6 +22,11 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
         public IFunction Data => null;
 
         public string Name => "Spider web";
+
+        public static SpiderWebWindField Create(string filePath)
+        {
+            return new SpiderWebWindField(filePath);
+        }
 
         #region IFileBased
 

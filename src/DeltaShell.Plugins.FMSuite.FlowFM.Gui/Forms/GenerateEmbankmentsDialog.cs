@@ -10,6 +10,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
             InitializeComponent();
         }
 
+        private void RadioButtonConstantDistanceCheckedChanged(object sender, EventArgs e)
+        {
+            constantDistanceTextBox.Enabled = radioButtonConstantDistance.Checked;
+        }
+
         #region Public return values
 
         public double ConstantDistance
@@ -17,28 +22,40 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
             get
             {
                 double constantDistance;
-                return Double.TryParse(constantDistanceTextBox.Text, out constantDistance) ? constantDistance : double.NaN;
+                return double.TryParse(constantDistanceTextBox.Text, out constantDistance) ? constantDistance : double.NaN;
             }
         }
 
         public bool CrossSectionBased
         {
-            get { return radioButtonCrossSectionBased.Checked; }
+            get
+            {
+                return radioButtonCrossSectionBased.Checked;
+            }
         }
 
         public bool GenerateLeftEmbankments
         {
-            get { return checkBoxGenerateLeftEmbankments.Checked; }
+            get
+            {
+                return checkBoxGenerateLeftEmbankments.Checked;
+            }
         }
 
         public bool GenerateRightEmbankments
         {
-            get { return checkBoxGenerateRightEmbankments.Checked; }
+            get
+            {
+                return checkBoxGenerateRightEmbankments.Checked;
+            }
         }
 
         public bool MergeAutomatically
         {
-            get { return checkBoxAutomaticMerge.Checked; }
+            get
+            {
+                return checkBoxAutomaticMerge.Checked;
+            }
         }
 
         #endregion
@@ -58,10 +75,5 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
         }
 
         #endregion
-
-        private void RadioButtonConstantDistanceCheckedChanged(object sender, EventArgs e)
-        {
-            constantDistanceTextBox.Enabled = radioButtonConstantDistance.Checked;
-        }
     }
 }

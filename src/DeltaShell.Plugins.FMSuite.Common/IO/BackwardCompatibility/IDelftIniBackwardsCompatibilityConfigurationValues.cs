@@ -15,7 +15,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.BackwardCompatibility
         /// Note that all properties are assumed to be case-insensitive, as
         /// such it is required for all properties in <see cref="ObsoleteProperties"/>
         /// to be written in lowercase, i.e. the following invariant should hold:
-        /// 
         /// FORALL p IN <see cref="ObsoleteProperties"/>: p == p.ToLower()
         /// </remarks>
         ISet<string> ObsoleteProperties { get; }
@@ -29,7 +28,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.BackwardCompatibility
         /// such it is required for all keys (and only the keys) in
         /// <see cref="LegacyPropertyMapping"/> to be written in lowercase,
         /// i.e. the following invariant should hold:
-        /// 
         /// FORALL p IN LegacyPropertyMapping.Keys: p == p.ToLower()
         /// </remarks>
         IReadOnlyDictionary<string, string> LegacyPropertyMapping { get; }
@@ -43,7 +41,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.BackwardCompatibility
         /// such it is required for all keys (and only the keys) in
         /// <see cref="LegacyCategoryMapping"/> to be written in lowercase,
         /// i.e. the following invariant should hold:
-        /// 
         /// FORALL p IN LegacyCategoryMapping.Keys: p == p.ToLower()
         /// </remarks>
         IReadOnlyDictionary<string, string> LegacyCategoryMapping { get; }

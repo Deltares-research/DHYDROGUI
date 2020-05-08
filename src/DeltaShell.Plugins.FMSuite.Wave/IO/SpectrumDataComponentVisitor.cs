@@ -23,11 +23,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
         private readonly SpectrumParametersVisitor parametersVisitor;
 
         /// <summary>
-        /// Gets spectrum type of the boundary.
-        /// </summary>
-        public SpectrumImportExportType SpectrumType { get; private set; }
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="SpectrumDataComponentVisitor"/> class.
         /// </summary>
         /// <param name="category">The delft ini category.</param>
@@ -43,6 +38,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             this.category = category;
             parametersVisitor = new SpectrumParametersVisitor(category, filesManager);
         }
+
+        /// <summary>
+        /// Gets spectrum type of the boundary.
+        /// </summary>
+        public SpectrumImportExportType SpectrumType { get; private set; }
 
         public void Visit<T>(UniformDataComponent<T> uniformDataComponent) where T : IForcingTypeDefinedParameters
         {

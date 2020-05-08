@@ -14,7 +14,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         private const string ugridString = "UGRID-";
 
         /// <summary>
-        /// Determines whether the file at specified <paramref name="path" /> has the supported convention.
+        /// Determines whether the file at specified <paramref name="path"/> has the supported convention.
         /// </summary>
         /// <param name="path"> The path. </param>
         /// <returns>
@@ -24,7 +24,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         /// Supported UGrid convention is 1.0 and higher.
         /// Supported CF convention is 1.6 and higher.
         /// </remarks>
-        /// <exception cref="FileNotFoundException"> Thrown when <paramref name="path" /> does not exist. </exception>
+        /// <exception cref="FileNotFoundException"> Thrown when <paramref name="path"/> does not exist. </exception>
         public static bool HasSupportedConvention(string path)
         {
             if (!File.Exists(path))
@@ -43,7 +43,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
                 return false;
             }
 
-            string attributeValue = conventionAttribute.Value.ToString();
+            var attributeValue = conventionAttribute.Value.ToString();
 
             if (TryGetConvention(attributeValue, cfString, out double cfConvention))
             {

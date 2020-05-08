@@ -15,8 +15,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers.Providers
     /// <see cref="DiscreteGridPointCoverageLayerSubProvider"/> implements the
     /// <see cref="ILayerSubProvider"/> for data of type <see cref="IDiscreteGridPointCoverage"/>.
     /// </summary>
-    /// <seealso cref="ILayerSubProvider" />
-    public class DiscreteGridPointCoverageLayerSubProvider : ILayerSubProvider 
+    /// <seealso cref="ILayerSubProvider"/>
+    public class DiscreteGridPointCoverageLayerSubProvider : ILayerSubProvider
     {
         private readonly IWaveLayerFactory factory;
         private readonly Func<IEnumerable<WaveModel>> getWaveModelsFunc;
@@ -56,6 +56,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers.Providers
             return factory.CreateGridLayer(discreteGrid, coordinateSystem);
         }
 
+        public IEnumerable<object> GenerateChildLayerObjects(object data)
+        {
+            yield break;
+        }
+
         private ICoordinateSystem GetGridCoordinateSystem(object parent, IDiscreteGridPointCoverage discreteGrid)
         {
             if (parent is IWaveModel model)
@@ -72,11 +77,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers.Providers
                                                         .FirstOrDefault(w => w.GetAllItemsRecursive()
                                                                               .Contains(discreteGrid));
             return ownerWaveModel?.CoordinateSystem;
-        }
-
-        public IEnumerable<object> GenerateChildLayerObjects(object data)
-        {
-            yield break;
         }
     }
 }

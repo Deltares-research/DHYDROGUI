@@ -15,7 +15,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factor
     /// <see cref="IWaveBoundary"/> from view data with the help of
     /// <see cref="IWaveBoundaryFactoryHelper"/>.
     /// </summary>
-    /// <seealso cref="IWaveBoundaryFactory" />
+    /// <seealso cref="IWaveBoundaryFactory"/>
     public sealed class WaveBoundaryFactory : IWaveBoundaryFactory
     {
         private readonly IBoundarySnappingCalculatorProvider snappingCalculatorProvider;
@@ -32,8 +32,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factor
         /// Thrown when any argument is <c>null</c>.
         /// </exception>
         public WaveBoundaryFactory(IBoundarySnappingCalculatorProvider snappingCalculatorProvider,
-                                    IWaveBoundaryFactoryHelper factoryHelper,
-                                    IUniqueBoundaryNameProvider nameProvider)
+                                   IWaveBoundaryFactoryHelper factoryHelper,
+                                   IUniqueBoundaryNameProvider nameProvider)
         {
             Ensure.NotNull(snappingCalculatorProvider, nameof(snappingCalculatorProvider));
             Ensure.NotNull(factoryHelper, nameof(factoryHelper));
@@ -55,10 +55,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factor
             }
 
             IEnumerable<GridBoundaryCoordinate> snappedCoordinates =
-                factoryHelper.GetSnappedEndPoints(calculator, 
+                factoryHelper.GetSnappedEndPoints(calculator,
                                                   geometry.Coordinates);
 
-            IWaveBoundaryGeometricDefinition geometricDefinition = 
+            IWaveBoundaryGeometricDefinition geometricDefinition =
                 factoryHelper.GetGeometricDefinition(snappedCoordinates, calculator);
 
             if (geometricDefinition == null)

@@ -3,8 +3,23 @@ using SharpMap.UI.Tools;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Commands
 {
-    class InsertNewNodeCommand : NetworkEditorCommand
+    internal class InsertNewNodeCommand : NetworkEditorCommand
     {
+        public override bool Checked
+        {
+            get
+            {
+                if (null != MapView && null != CurrentTool)
+                {
+                    return CurrentTool.IsActive;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+        }
+
         protected IMapTool CurrentTool
         {
             get
@@ -12,20 +27,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Commands
                 return MapView.MapControl.GetToolByName(HydroRegionEditorMapTool.InsertNodeToolName);
             }
         }
+
         protected override void OnExecute(params object[] arguments)
         {
-            MapView.MapControl.ActivateTool(CurrentTool);  // TODO: use better tool lookup algoritm here
+            MapView.MapControl.ActivateTool(CurrentTool); // TODO: use better tool lookup algoritm here
         }
-        public override bool Checked
-        {
-            get
-            {
-                if ((null != MapView) && (null != CurrentTool))
-                    return CurrentTool.IsActive;
-                else
-                    return false;
-            }
-        }
-
     }
 }

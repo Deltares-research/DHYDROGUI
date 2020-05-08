@@ -14,14 +14,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Utils
 
         /// <summary>
         /// Returns whether or not
-        /// <param name="function" />
+        /// <param name="function"/>
         /// is of a specific type
         /// </summary>
         bool IsThisFunctionType(IFunction function);
 
         /// <summary>
         /// Transforms
-        /// <param name="function" />
+        /// <param name="function"/>
         /// into a function of a specific type
         /// </summary>
         /// <returns> The transformed function </returns>
@@ -29,44 +29,44 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Utils
 
         /// <summary>
         /// Return the default value of
-        /// <param name="function" />
+        /// <param name="function"/>
         /// </summary>
-        /// <remarks> double.NaN is returned when <see cref="IsThisFunctionType" /> is false </remarks>
+        /// <remarks> double.NaN is returned when <see cref="IsThisFunctionType"/> is false </remarks>
         double GetDefaultValueForFunction(IFunction function);
 
         /// <summary>
         /// Sets the default value of
-        /// <param name="function" />
+        /// <param name="function"/>
         /// </summary>
-        /// <remarks> Nothing is set when <see cref="IsThisFunctionType" /> is false </remarks>
+        /// <remarks> Nothing is set when <see cref="IsThisFunctionType"/> is false </remarks>
         void SetDefaultValueForFunction(IFunction function, double defaultValue);
 
         /// <summary>
         /// Return the unit of
-        /// <param name="function" />
+        /// <param name="function"/>
         /// </summary>
-        /// <remarks> An empty string is returned when <see cref="IsThisFunctionType" /> is false </remarks>
+        /// <remarks> An empty string is returned when <see cref="IsThisFunctionType"/> is false </remarks>
         string GetUnitForFunction(IFunction function);
 
         /// <summary>
         /// Sets the unit of
-        /// <param name="function" />
+        /// <param name="function"/>
         /// </summary>
-        /// <remarks> Nothing is set when <see cref="IsThisFunctionType" /> is false </remarks>
+        /// <remarks> Nothing is set when <see cref="IsThisFunctionType"/> is false </remarks>
         void SetUnitForFunction(IFunction function, string unit);
 
         /// <summary>
         /// Return the url of
-        /// <param name="function" />
+        /// <param name="function"/>
         /// </summary>
-        /// <remarks> An empty string is returned when <see cref="IsThisFunctionType" /> is false </remarks>
+        /// <remarks> An empty string is returned when <see cref="IsThisFunctionType"/> is false </remarks>
         string GetUrlForFunction(IFunction function);
 
         /// <summary>
         /// Sets the url of
-        /// <param name="function" />
+        /// <param name="function"/>
         /// </summary>
-        /// <remarks> Nothing is set when <see cref="IsThisFunctionType" /> is false </remarks>
+        /// <remarks> Nothing is set when <see cref="IsThisFunctionType"/> is false </remarks>
         void SetUrlForFunction(IFunction function, string url);
 
         /// <summary>

@@ -1,12 +1,12 @@
-﻿using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using DelftTools.Utils.Guards;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.Calculators;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using DelftTools.Utils.Guards;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factories
 {
@@ -50,7 +50,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factor
             }
 
             IWaveBoundaryGeometricDefinition geomDefinition = waveBoundary.GeometricDefinition;
-            int nElements = geomDefinition.EndingIndex - geomDefinition.StartingIndex + 1;
+            int nElements = (geomDefinition.EndingIndex - geomDefinition.StartingIndex) + 1;
 
             IEnumerable<Coordinate> relevantCoordinates =
                 gridBoundary[geomDefinition.GridSide]
@@ -75,19 +75,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factor
                                       waveBoundary.GeometricDefinition.GridSide);
         }
 
-        private IPoint ConstructGridPoint(int index, GridSide gridSide)
-        {
-            IGridBoundary gridBoundary = gridBoundaryProvider.GetGridBoundary();
-
-            if (gridBoundary == null)
-            {
-                return null;
-            }
-
-            Coordinate coordinate = GetCoordinate(index, gridSide, gridBoundary);
-            return new Point(coordinate);
-        }
-
         public IPoint ConstructBoundarySupportPoint(SupportPoint supportPoint)
         {
             Ensure.NotNull(supportPoint, nameof(supportPoint));
@@ -101,6 +88,19 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factor
 
             Coordinate coordinate = calculator.CalculateCoordinateFromSupportPoint(supportPoint);
 
+            return new Point(coordinate);
+        }
+
+        private IPoint ConstructGridPoint(int index, GridSide gridSide)
+        {
+            IGridBoundary gridBoundary = gridBoundaryProvider.GetGridBoundary();
+
+            if (gridBoundary == null)
+            {
+                return null;
+            }
+
+            Coordinate coordinate = GetCoordinate(index, gridSide, gridBoundary);
             return new Point(coordinate);
         }
 

@@ -47,10 +47,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui
                     Name = "Blocked Flow Links",
                     NameIsReadOnly = true,
                     Selectable = false,
-                    Renderer = new GridEdgeRenderer(Color.DarkRed)
-                    {
-                        GridEdgeRenderMode = GridEdgeRenderMode.EdgesWithBlockedFlowLinks
-                    }
+                    Renderer = new GridEdgeRenderer(Color.DarkRed) {GridEdgeRenderMode = GridEdgeRenderMode.EdgesWithBlockedFlowLinks}
                 });
                 group.Layers.Add(new UnstructuredGridLayer
                 {
@@ -228,10 +225,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui
             var featureCollection = new WaqModelFeatureCollection(model);
             featureCollection.AddNewFeatureFromGeometryDelegate = (provider, geometry) =>
             {
-                var feature = new T
-                {
-                    Geometry = new Point(geometry.Coordinate.X, geometry.Coordinate.Y, model.GetDefaultZ())
-                };
+                var feature = new T {Geometry = new Point(geometry.Coordinate.X, geometry.Coordinate.Y, model.GetDefaultZ())};
                 featureCollection.Features.Add(feature);
                 return feature;
             };

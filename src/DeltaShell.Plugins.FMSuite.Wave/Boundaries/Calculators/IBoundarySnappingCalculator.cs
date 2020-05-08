@@ -7,7 +7,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.Calculators
 {
     /// <summary>
     /// <see cref="IBoundarySnappingCalculator"/> defines a set of equations
-    /// to snap coordinates to a <see cref="IGridBoundary"/>. 
+    /// to snap coordinates to a <see cref="IGridBoundary"/>.
     /// </summary>
     public interface IBoundarySnappingCalculator
     {
@@ -36,7 +36,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.Calculators
         /// <param name="coordinateToSnap">The coordinate to snap to the grid.</param>
         /// <param name="tolerance">The allowed tolerance.</param>
         /// <returns>
-        /// The set of closest <see cref="GridBoundaryCoordinate"/> if the provided coordinate 
+        /// The set of closest <see cref="GridBoundaryCoordinate"/> if the provided coordinate
         /// can be snapped, an empty list otherwise.
         /// </returns>
         /// <exception cref="ArgumentNullException">
@@ -75,7 +75,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.Calculators
         /// <exception cref="ArgumentOutOfRangeException">
         /// Thrown when <paramref name="indexA"/> or <paramref name="indexB"/> are smaller than 0
         /// or when they are equal to or larger than the number of coordinates of the <see cref="IGridBoundary"/>
-        /// at the specified <param name="gridSide"></param>
+        /// at the specified
+        /// <param name="gridSide"></param>
         /// </exception>
         double CalculateDistanceBetweenBoundaryIndices(int indexA, int indexB, GridSide gridSide);
     }

@@ -9,7 +9,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.Calculators
 {
     /// <summary>
     /// <see cref="BoundarySnappingCalculator"/> provides a set of equations
-    /// to snap coordinates to a <see cref="GridBoundary"/>. 
+    /// to snap coordinates to a <see cref="GridBoundary"/>.
     /// </summary>
     public class BoundarySnappingCalculator : IBoundarySnappingCalculator
     {
@@ -69,9 +69,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.Calculators
             ValidateCoordinate(indexB, nameof(indexB), gridSide);
 
             int startIndex = Math.Min(indexA, indexB);
-            int endIndex   = Math.Max(indexA, indexB);
+            int endIndex = Math.Max(indexA, indexB);
 
-            int nCoordinates = endIndex - startIndex + 1;
+            int nCoordinates = (endIndex - startIndex) + 1;
             Coordinate[] coordinates =
                 GridBoundary[gridSide].Skip(startIndex)
                                       .Take(nCoordinates)
@@ -87,23 +87,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.Calculators
             return distance;
         }
 
-        private void ValidateCoordinate(int index, string indexName, GridSide gridSide)
-        {
-            int sideLength = GridBoundary[gridSide].Count();
-
-            if (index < 0 || index >= sideLength)
-            {
-                throw new ArgumentOutOfRangeException(indexName);
-            }
-        }
-
         public Coordinate CalculateCoordinateFromSupportPoint(SupportPoint supportPoint)
         {
             Ensure.NotNull(supportPoint, nameof(supportPoint));
 
             IWaveBoundaryGeometricDefinition geometricDefinition = supportPoint.GeometricDefinition;
 
-            int nElements = geometricDefinition.EndingIndex - geometricDefinition.StartingIndex + 1;
+            int nElements = (geometricDefinition.EndingIndex - geometricDefinition.StartingIndex) + 1;
 
             Coordinate[] coordinates = GridBoundary[geometricDefinition.GridSide]
                                        .Skip(geometricDefinition.StartingIndex)
@@ -123,6 +113,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.Calculators
             }
 
             return BoundarySnappingCalculatorHelper.CalculateCoordinateFromDistance(distance, coordinates, DistanceCalculator);
+        }
+
+        private void ValidateCoordinate(int index, string indexName, GridSide gridSide)
+        {
+            int sideLength = GridBoundary[gridSide].Count();
+
+            if (index < 0 || index >= sideLength)
+            {
+                throw new ArgumentOutOfRangeException(indexName);
+            }
         }
     }
 }

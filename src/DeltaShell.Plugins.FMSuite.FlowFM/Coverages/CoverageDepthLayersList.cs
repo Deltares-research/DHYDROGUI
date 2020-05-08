@@ -9,14 +9,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Coverages
     [Entity]
     public class CoverageDepthLayersList
     {
-        private VerticalProfileDefinition verticalProfileDefinition;
         private readonly Func<string, ICoverage> createCoverageFunc;
+        private VerticalProfileDefinition verticalProfileDefinition;
+
+        public CoverageDepthLayersList(Func<string, ICoverage> createCoverageFunc, bool isDepthIndependent = false)
+        {
+            this.createCoverageFunc = createCoverageFunc;
+            IsDepthIndependent = isDepthIndependent;
+            Coverages = new EventedList<ICoverage>();
+            verticalProfileDefinition = new VerticalProfileDefinition();
+        }
 
         public string Name { get; set; }
 
         public IEventedList<ICoverage> Coverages { get; private set; }
-
-        private bool IsDepthIndependent { get; set; }
 
         public VerticalProfileDefinition VerticalProfile
         {
@@ -27,6 +33,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Coverages
                 AfterVerticalProfileSet();
             }
         }
+
+        private bool IsDepthIndependent { get; set; }
 
         [EditAction]
         private void AfterVerticalProfileSet()
@@ -56,14 +64,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Coverages
                     AddDepthLayer(i);
                 }
             }
-        }
-
-        public CoverageDepthLayersList(Func<string, ICoverage> createCoverageFunc, bool isDepthIndependent = false)
-        {
-            this.createCoverageFunc = createCoverageFunc;
-            IsDepthIndependent = isDepthIndependent;
-            Coverages = new EventedList<ICoverage>();
-            verticalProfileDefinition = new VerticalProfileDefinition();
         }
 
         private void AddDepthLayer(int layer)

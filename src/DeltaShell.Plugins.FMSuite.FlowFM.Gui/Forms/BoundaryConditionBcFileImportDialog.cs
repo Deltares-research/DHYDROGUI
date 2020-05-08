@@ -5,7 +5,7 @@ using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers;
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
 {
     public partial class BoundaryConditionBcFileImportDialog : Form
-    { 
+    {
         public BoundaryConditionBcFileImportDialog()
         {
             InitializeComponent();

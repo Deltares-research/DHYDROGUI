@@ -56,7 +56,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.ObservationAreas
         }
 
         /// <summary>
-        /// Marks the type of operation being performed when calling <see cref="SpatialOperation.Execute" />.
+        /// Marks the type of operation being performed when calling <see cref="SpatialOperation.Execute"/>.
         /// </summary>
         public virtual PointwiseOperationType OperationType
         {
@@ -66,6 +66,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.ObservationAreas
                 operationType = value;
                 SetDirty();
             }
+        }
+
+        public override string ToString()
+        {
+            return Name + " : " + Label;
         }
 
         protected override void OnExecute()
@@ -103,7 +108,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.ObservationAreas
         /// <param name="maskValue"> The value associated with the mask. </param>
         /// <param name="noDataValue"> The value representing the absence of data. </param>
         /// <param name="operationType"> Type of the operation. </param>
-        /// <returns> The new value that should replace <paramref name="originalValue" />. </returns>
+        /// <returns> The new value that should replace <paramref name="originalValue"/>. </returns>
         private static int Evaluate(int originalValue, int maskValue, int noDataValue,
                                     PointwiseOperationType operationType)
         {
@@ -116,11 +121,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.ObservationAreas
                 default:
                     throw new NotImplementedException("Operation not supported");
             }
-        }
-
-        public override string ToString()
-        {
-            return Name + " : " + Label;
         }
     }
 }

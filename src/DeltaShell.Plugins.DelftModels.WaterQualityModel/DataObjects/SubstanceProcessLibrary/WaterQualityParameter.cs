@@ -13,11 +13,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.Substance
     public class WaterQualityParameter : Unique<long>, INameable, ICloneable
     {
         /// <summary>
-        /// The name of the parameter
-        /// </summary>
-        public string Name { get; set; }
-
-        /// <summary>
         /// The description of the parameter
         /// </summary>
         public string Description { get; set; }
@@ -31,6 +26,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.Substance
         /// The default value of the parameter
         /// </summary>
         public double DefaultValue { get; set; }
+
+        /// <summary>
+        /// The name of the parameter
+        /// </summary>
+        public string Name { get; set; }
 
         public object Clone()
         {

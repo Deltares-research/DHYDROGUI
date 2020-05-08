@@ -8,8 +8,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
 {
     public class FlowBoundaryConditionPointData
     {
-        private int SupportPoint { get; }
-
         /// <summary>
         /// Initializes a new instance of the <see cref="FlowBoundaryConditionPointData"/> class.
         /// </summary>
@@ -34,7 +32,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             get
             {
                 if (BoundaryCondition.FlowQuantity == FlowBoundaryQuantityType.MorphologyBedLoadTransport)
+                {
                     return BoundaryCondition.SedimentFractionNames.Count;
+                }
+
                 switch (ForcingType)
                 {
                     case BoundaryConditionDataType.Empty:
@@ -66,14 +67,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
         /// <returns></returns>
         public IEnumerable<IVariable> FilterLayersAndComponents(int layer, int variableComponent)
         {
-            if (Function == null) yield break;
+            if (Function == null)
+            {
+                yield break;
+            }
 
-            int startIndex = (variableComponent + layer * VariableDimension) * ForcingTypeDimension;
+            int startIndex = (variableComponent + (layer * VariableDimension)) * ForcingTypeDimension;
 
             for (int i = startIndex; i < startIndex + ForcingTypeDimension; i++)
             {
                 yield return Function.Components[i];
             }
         }
+
+        private int SupportPoint { get; }
     }
 }

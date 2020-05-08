@@ -11,13 +11,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Featur
     public class SupportPointFeature : Feature2D
     {
         /// <summary>
-        /// Gets or sets the observed support point.
-        /// </summary>
-        public SupportPoint ObservedSupportPoint { get; set; }
-
-        /// <summary>
         /// Gets or sets the geometry.
         /// </summary>
         public override IGeometry Geometry { get; set; }
+
+        /// <summary>
+        /// Gets or sets the observed support point.
+        /// </summary>
+        public SupportPoint ObservedSupportPoint { get; set; }
     }
 }

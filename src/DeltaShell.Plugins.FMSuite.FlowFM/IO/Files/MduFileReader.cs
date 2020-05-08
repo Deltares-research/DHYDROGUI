@@ -36,14 +36,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             UpdateLegacyNames(categories);
 
             AddOrUpdateProperties(definition, categories);
-            
+
             ExecutePostReadActions(definition);
         }
 
         private static void RemoveRedundantProperties(IEnumerable<DelftIniCategory> categories, WaterFlowFMModelDefinition definition)
         {
             var backwardsCompatibilityHelper = new DelftIniBackwardsCompatibilityHelper(new MduFileBackwardsCompatibilityConfigurationValues());
-            categories.ForEach(category => 
+            categories.ForEach(category =>
             {
                 category.RemoveAllPropertiesWhere(p => definition.ContainsProperty(p.Name) && p.Value == string.Empty);
                 category.RemoveAllPropertiesWhere(p => backwardsCompatibilityHelper.IsObsoletePropertyName(p.Name));
@@ -56,13 +56,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
             categories.ForEach(category =>
             {
-                category.Name = 
-                    backwardsCompatibilityHelper.GetUpdatedCategoryName(category.Name) ?? 
+                category.Name =
+                    backwardsCompatibilityHelper.GetUpdatedCategoryName(category.Name) ??
                     category.Name;
                 category.Properties.ForEach(property =>
                 {
                     property.Name =
-                        backwardsCompatibilityHelper.GetUpdatedPropertyName(property.Name) ?? 
+                        backwardsCompatibilityHelper.GetUpdatedPropertyName(property.Name) ??
                         property.Name;
                 });
             });
@@ -85,7 +85,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                     SetPropertyValue(definition, property, logHandler);
                 }
             }
-            
+
             logHandler.LogReport();
         }
 

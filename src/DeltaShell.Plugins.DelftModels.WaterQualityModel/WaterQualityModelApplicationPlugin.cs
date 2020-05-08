@@ -40,6 +40,71 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
 
         public override string FileFormatVersion => "3.5.3.0";
 
+        public override IApplication Application
+        {
+            get => base.Application;
+            set
+            {
+                if (Application != null)
+                {
+                    Application.ActivityRunner.ActivityStatusChanged -= ActivityRunner_OnActivityStatusChanged;
+                    Application.ProjectOpened -= Application_OnProjectOpened;
+                    Application.ProjectClosing -= Application_OnProjectClosing;
+                    Application.ProjectSaving -= Application_ProjectSaving;
+                    Application.ProjectSaveFailed -= Application_ProjectSaveFinished;
+                    Application.ProjectSaved -= Application_ProjectSaveFinished;
+                }
+
+                base.Application = value;
+
+                if (Application != null)
+                {
+                    // list to activities. Especially the importers, so you can set extra information on them
+                    Application.ActivityRunner.ActivityStatusChanged += ActivityRunner_OnActivityStatusChanged;
+                    Application.ProjectOpened += Application_OnProjectOpened;
+                    Application.ProjectClosing += Application_OnProjectClosing;
+                    Application.ProjectSaving += Application_ProjectSaving;
+                    Application.ProjectSaveFailed += Application_ProjectSaveFinished;
+                    Application.ProjectSaved += Application_ProjectSaveFinished;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Function that can be called if the hyd file could not be found.
+        /// Can be used to throw a modal popup.
+        /// </summary>
+        public Action<WaterQualityModel, string> HydFileNotFoundGuiHandler { get; set; }
+
+        /// <summary>
+        /// Function that can be called if the process definition file could not be found.
+        /// Can be used to throw a modal popup.
+        /// </summary>
+        public Action<WaterQualityModel, string> ProcessDefinitionFilesNotFoundGuiHandler { get; set; }
+
+        /// <summary>
+        /// Excecutes all spatial operations available in <see cref="WaterQualityModel"/>
+        /// instances available in the <see cref="Project"/>.
+        /// </summary>
+        public static void ExecuteAllWaterQualitySpatialOperations(Project project)
+        {
+            foreach (IDataItem dataItem in project.GetAllItemsRecursive().OfType<WaterQualityModel>()
+                                                  .SelectMany(waq => waq.AllDataItems))
+            {
+                var spatialOperationSetValueConverter = dataItem.ValueConverter as SpatialOperationSetValueConverter;
+
+                if (spatialOperationSetValueConverter != null)
+                {
+                    spatialOperationSetValueConverter.LoadConvertedValue(dataItem.ComposedValue);
+
+                    // this execute is required to get the result of the spatial operation set in the value converter.
+                    // The value converter listens to events, but no events are sent when the project is loading.
+                    // See TOOLS-22124 for more info
+                    spatialOperationSetValueConverter.SpatialOperationSet.Execute();
+                }
+            }
+        }
+
         public override IEnumerable<ModelInfo> GetModelInfos()
         {
             yield return new ModelInfo
@@ -85,34 +150,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
             yield return typeof(FileBasedFolder).Assembly;
         }
 
-        public override IApplication Application
+        public IEnumerable<IDataAccessListener> CreateDataAccessListeners()
         {
-            get => base.Application;
-            set
-            {
-                if (Application != null)
-                {
-                    Application.ActivityRunner.ActivityStatusChanged -= ActivityRunner_OnActivityStatusChanged;
-                    Application.ProjectOpened -= Application_OnProjectOpened;
-                    Application.ProjectClosing -= Application_OnProjectClosing;
-                    Application.ProjectSaving -= Application_ProjectSaving;
-                    Application.ProjectSaveFailed -= Application_ProjectSaveFinished;
-                    Application.ProjectSaved -= Application_ProjectSaveFinished;
-                }
-
-                base.Application = value;
-
-                if (Application != null)
-                {
-                    // list to activities. Especially the importers, so you can set extra information on them
-                    Application.ActivityRunner.ActivityStatusChanged += ActivityRunner_OnActivityStatusChanged;
-                    Application.ProjectOpened += Application_OnProjectOpened;
-                    Application.ProjectClosing += Application_OnProjectClosing;
-                    Application.ProjectSaving += Application_ProjectSaving;
-                    Application.ProjectSaveFailed += Application_ProjectSaveFinished;
-                    Application.ProjectSaved += Application_ProjectSaveFinished;
-                }
-            }
+            yield return new WaterQualityModelDataAccessListener();
         }
 
         private void Application_ProjectSaveFinished(Project obj)
@@ -140,6 +180,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
                 FileUtils.DeleteIfExists(model.ModelSettings.OutputDirectory);
             }
         }
+
         private void Application_ProjectSaving(Project obj)
         {
             if (Application.Project == null)
@@ -158,17 +199,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
             ((INotifyPropertyChanged) obj).PropertyChanged -= Project_OnPropertyChanged;
         }
 
-        public IEnumerable<IDataAccessListener> CreateDataAccessListeners()
-        {
-            yield return new WaterQualityModelDataAccessListener();
-        }
-
-        /// <summary>
-        /// Function that can be called if the hyd file could not be found.
-        /// Can be used to throw a modal popup.
-        /// </summary>
-        public Action<WaterQualityModel, string> HydFileNotFoundGuiHandler { get; set; }
-
         private void OnHydroDataNotFound(WaterQualityModel model, string filePath)
         {
             if (HydFileNotFoundGuiHandler != null)
@@ -176,12 +206,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
                 HydFileNotFoundGuiHandler(model, filePath);
             }
         }
-
-        /// <summary>
-        /// Function that can be called if the process definition file could not be found.
-        /// Can be used to throw a modal popup.
-        /// </summary>
-        public Action<WaterQualityModel, string> ProcessDefinitionFilesNotFoundGuiHandler { get; set; }
 
         private void OnProcessDefinitionFilesNotFound(WaterQualityModel model, string filePath)
         {
@@ -268,7 +292,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
             IEnumerable<WaterQualityModel> allWaqModels =
                 Application.GetAllModelsInProject().OfType<WaterQualityModel>().ToList();
 
-            allWaqModels.ForEach(m => m.SetWorkingDirectoryInModelSettings( () => Application.WorkDirectory));
+            allWaqModels.ForEach(m => m.SetWorkingDirectoryInModelSettings(() => Application.WorkDirectory));
             allWaqModels.ForEach(ReimportHydFileForWaterQualityModel);
             allWaqModels.ForEach(RelinkToProcessDefinitionFiles);
 
@@ -311,29 +335,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
             if (!File.Exists(processDefinitionFileName + ".def"))
             {
                 OnProcessDefinitionFilesNotFound(waqModel, processDefinitionFileName);
-            }
-        }
-
-        /// <summary>
-        /// Excecutes all spatial operations available in <see cref="WaterQualityModel" />
-        /// instances available in the <see cref="Project" />.
-        /// </summary>
-        public static void ExecuteAllWaterQualitySpatialOperations(Project project)
-        {
-            foreach (IDataItem dataItem in project.GetAllItemsRecursive().OfType<WaterQualityModel>()
-                                                  .SelectMany(waq => waq.AllDataItems))
-            {
-                var spatialOperationSetValueConverter = dataItem.ValueConverter as SpatialOperationSetValueConverter;
-
-                if (spatialOperationSetValueConverter != null)
-                {
-                    spatialOperationSetValueConverter.LoadConvertedValue(dataItem.ComposedValue);
-
-                    // this execute is required to get the result of the spatial operation set in the value converter.
-                    // The value converter listens to events, but no events are sent when the project is loading.
-                    // See TOOLS-22124 for more info
-                    spatialOperationSetValueConverter.SpatialOperationSet.Execute();
-                }
             }
         }
 

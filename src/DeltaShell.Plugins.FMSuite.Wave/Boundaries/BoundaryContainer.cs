@@ -10,7 +10,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries
     /// </summary>
     public class BoundaryContainer : IBoundaryContainer
     {
-        private bool definitionPerFileUsed; 
+        private bool definitionPerFileUsed;
+        private IBoundarySnappingCalculator snappingCalculator;
+        private IGridBoundary currentGridBoundary;
 
         /// <summary>
         /// Get the boundaries defined on the current outer grid.
@@ -33,6 +35,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries
                 {
                     Boundaries.Clear();
                 }
+
                 definitionPerFileUsed = value;
             }
         }
@@ -46,9 +49,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries
         }
 
         public IBoundarySnappingCalculator GetBoundarySnappingCalculator() => snappingCalculator;
-        private IBoundarySnappingCalculator snappingCalculator;
 
         public IGridBoundary GetGridBoundary() => currentGridBoundary;
-        private IGridBoundary currentGridBoundary;
     }
 }

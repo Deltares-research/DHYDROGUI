@@ -55,13 +55,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions
         /// </value>
         public int Index { get; }
 
-        public override bool Equals(object obj) =>
-            obj is GridBoundaryCoordinate otherCoordinate &&
-            otherCoordinate.Index == Index &&
-            otherCoordinate.GridSide == GridSide;
-
-        public override int GetHashCode() => (Index << 2) ^ (int) GridSide;
-
         /// <summary>
         /// Deconstructs this <see cref="GridBoundaryCoordinate"/> to its
         /// <see cref="GridSide"/> and <see cref="Index"/>
@@ -73,5 +66,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions
             gridSide = GridSide;
             index = Index;
         }
+
+        public override bool Equals(object obj) =>
+            obj is GridBoundaryCoordinate otherCoordinate &&
+            otherCoordinate.Index == Index &&
+            otherCoordinate.GridSide == GridSide;
+
+        public override int GetHashCode() => (Index << 2) ^ (int) GridSide;
     }
 }

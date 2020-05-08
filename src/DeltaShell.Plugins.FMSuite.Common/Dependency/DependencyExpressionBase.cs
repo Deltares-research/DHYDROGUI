@@ -8,11 +8,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.Dependency
 {
     public abstract class DependencyExpressionBase : IDependencyExpression
     {
-        /// <summary>
-        /// Regular expression used to determine if this class can handle the dependency expression.
-        /// </summary>
-        protected abstract string Regex { get; }
-
         public virtual bool CanHandleExpression(string expression)
         {
             if (string.IsNullOrEmpty(expression))
@@ -54,7 +49,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Dependency
         /// <param name="evaluatedProperty"> Property whose dependencyExpression are to be compiled. </param>
         /// <param name="allProperties"> Dictionary of all available model properties. </param>
         /// <param name="dependencyExpression">
-        /// A substring from <see cref="ModelPropertyDefinition.EnabledDependencies" />, to be
+        /// A substring from <see cref="ModelPropertyDefinition.EnabledDependencies"/>, to be
         /// determined by combinatory expressions.
         /// </param>
         /// <returns> Error message, or empty string or null when okey. </returns>
@@ -68,11 +63,16 @@ namespace DeltaShell.Plugins.FMSuite.Common.Dependency
         /// <param name="evaluatedProperty"> Property whose dependencyExpression are to be compiled. </param>
         /// <param name="allProperties"> Dictionary of all available model properties. </param>
         /// <param name="dependencyExpression">
-        /// A substring from <see cref="ModelPropertyDefinition.EnabledDependencies" />, to be
+        /// A substring from <see cref="ModelPropertyDefinition.EnabledDependencies"/>, to be
         /// determined by combinatory expressions.
         /// </param>
         /// <returns> The method returning the enabled state. </returns>
         protected internal abstract Func<IEnumerable<ModelProperty>, bool> OnCompile(
             ModelProperty evaluatedProperty, IEnumerable<ModelProperty> allProperties, string dependencyExpression);
+
+        /// <summary>
+        /// Regular expression used to determine if this class can handle the dependency expression.
+        /// </summary>
+        protected abstract string Regex { get; }
     }
 }

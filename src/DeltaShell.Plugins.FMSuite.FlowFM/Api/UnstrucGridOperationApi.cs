@@ -33,10 +33,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
         public const string WaterLevelBnd = "waterlevelbnd";
         public const string VelocityBnd = "velocitybnd";
         public const string DischargeBnd = "dischargebnd";
-
-        private readonly string tempPath;
-        private IFlexibleMeshModelApi api;
-        private readonly string mduFilePath;
         private const double MissingValue = -999.0;
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(UnstrucGridOperationApi));
@@ -62,6 +58,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
             KnownProperties.TrtDef,
             KnownProperties.TrtL
         };
+
+        private readonly string tempPath;
+        private readonly string mduFilePath;
+        private IFlexibleMeshModelApi api;
 
         private bool disposed;
 
@@ -138,6 +138,36 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
         }
 
         public string MduFilePath => mduFilePath;
+
+        public void Dispose()
+        {
+            if (disposed)
+            {
+                return;
+            }
+
+            if (api != null)
+            {
+                api.Finish();
+                api.Dispose();
+                api = null;
+                Thread.Sleep(100);
+                try
+                {
+                    FileUtils.DeleteIfExists(tempPath);
+                    disposed = true;
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("Unable to clean up temp snap directory: " + e);
+                }
+                finally
+                {
+                    // Must always ensure this happens to prevent GC deadlock on project close!
+                    GC.SuppressFinalize(this);
+                }
+            }
+        }
 
         public bool SnapsToGrid(IGeometry geometry)
         {
@@ -425,36 +455,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
             }
 
             return new LineString(coordinates.ToArray());
-        }
-
-        public void Dispose()
-        {
-            if (disposed)
-            {
-                return;
-            }
-
-            if (api != null)
-            {
-                api.Finish();
-                api.Dispose();
-                api = null;
-                Thread.Sleep(100);
-                try
-                {
-                    FileUtils.DeleteIfExists(tempPath);
-                    disposed = true;
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine("Unable to clean up temp snap directory: " + e);
-                }
-                finally
-                {
-                    // Must always ensure this happens to prevent GC deadlock on project close!
-                    GC.SuppressFinalize(this);
-                }
-            }
         }
     }
 }

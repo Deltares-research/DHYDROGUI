@@ -20,6 +20,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(Area2DStructuresImporter));
 
+        public Func<HydroArea, WaterFlowFMModel> GetModelForArea { get; set; }
+
+        public bool OpenViewAfterImport => false;
+
         #region IFileImporter
 
         public string Name => "2D structures";
@@ -85,6 +89,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
                     {
                         Log.ErrorFormat("Cannot import structures on an integrated model (yet).");
                     }
+
                     return null;
                 }
             }
@@ -120,23 +125,26 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
 
         private static string ComposeLogStringsForStructures(int simpleWeirIni, int gatedWeirIni, int generalFormulaIni, int pumpsIni)
         {
-            string logPumpsIniString = "";
-            string simpleWeirString = "";
-            string gatedWeirString = "";
-            string generalFormulaString = "";
+            var logPumpsIniString = "";
+            var simpleWeirString = "";
+            var gatedWeirString = "";
+            var generalFormulaString = "";
 
             if (pumpsIni > 0)
             {
                 logPumpsIniString = "Pumps : " + pumpsIni + " ";
             }
+
             if (simpleWeirIni > 0)
             {
                 simpleWeirString = "Weirs: " + simpleWeirIni + " ";
             }
+
             if (gatedWeirIni > 0)
             {
                 gatedWeirString = "Gates : " + gatedWeirIni + " ";
             }
+
             if (generalFormulaIni > 0)
             {
                 generalFormulaString = "General structures: " + generalFormulaIni;
@@ -203,9 +211,5 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
         }
 
         #endregion
-
-        public bool OpenViewAfterImport => false;
-
-        public Func<HydroArea, WaterFlowFMModel> GetModelForArea { get; set; }
     }
 }

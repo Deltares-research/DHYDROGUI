@@ -3,23 +3,8 @@ using DelftTools.Shell.Gui;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Commands
 {
-    class ShowHydroRegionTreeViewCommand:Command, IGuiCommand
+    internal class ShowHydroRegionTreeViewCommand : Command, IGuiCommand
     {
-        protected override void OnExecute(params object[] arguments)
-        {
-            var view = NetworkEditorGuiPlugin.Instance.HydroRegionContents;
-            var active = Gui.ToolWindowViews.Contains(view);
-
-            if (active)
-            {
-                Gui.ToolWindowViews.Remove(view);
-            }
-            else
-            {
-                NetworkEditorGuiPlugin.Instance.InitializeHydroRegionTreeView();
-            }
-        }
-
         public override bool Checked
         {
             get
@@ -30,9 +15,27 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Commands
 
         public override bool Enabled
         {
-            get { return true; }
+            get
+            {
+                return true;
+            }
         }
 
         public IGui Gui { get; set; }
+
+        protected override void OnExecute(params object[] arguments)
+        {
+            IView view = NetworkEditorGuiPlugin.Instance.HydroRegionContents;
+            bool active = Gui.ToolWindowViews.Contains(view);
+
+            if (active)
+            {
+                Gui.ToolWindowViews.Remove(view);
+            }
+            else
+            {
+                NetworkEditorGuiPlugin.Instance.InitializeHydroRegionTreeView();
+            }
+        }
     }
 }

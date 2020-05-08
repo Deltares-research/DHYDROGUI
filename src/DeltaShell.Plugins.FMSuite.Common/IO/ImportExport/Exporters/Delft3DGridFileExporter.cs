@@ -18,6 +18,10 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.ImportExport.Exporters
 
         public string Description => string.Empty;
 
+        public string FileFilter => "Delft3D Grid File (*.grd)|*.grd";
+
+        public Bitmap Icon { get; private set; }
+
         public bool Export(object item, string path)
         {
             var grid = item as CurvilinearGrid;
@@ -43,10 +47,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.ImportExport.Exporters
         {
             yield return typeof(CurvilinearGrid);
         }
-
-        public string FileFilter => "Delft3D Grid File (*.grd)|*.grd";
-
-        public Bitmap Icon { get; private set; }
 
         public bool CanExportFor(object item)
         {

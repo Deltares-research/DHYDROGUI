@@ -14,20 +14,19 @@ using SharpMap.Editors.Interactors.Network;
 
 namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors
 {
-    class BranchToCrossSectionRelationInteractor : FeatureRelationInteractor
+    internal class BranchToCrossSectionRelationInteractor : FeatureRelationInteractor
     {
-        List<double> fractions = new List<double>();
+        private List<double> fractions = new List<double>();
         private IFallOffPolicy fallOffPolicy;
 
-        IFeature lastFeature;
-        IGeometry lastGeometry;
-        IList<ICrossSection> originalRelatedFeatures;
-        IList<ICrossSection> clonedRelatedFeatures;
+        private IFeature lastFeature;
+        private IGeometry lastGeometry;
+        private IList<ICrossSection> originalRelatedFeatures;
+        private IList<ICrossSection> clonedRelatedFeatures;
 
         public IHydroNetwork Network { get; set; }
 
         #region ITopologyRule Members
-
 
         public override void UpdateRelatedFeatures(IFeature feature, IGeometry newGeometry, IList<int> trackerIndices)
         {
@@ -36,15 +35,15 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors
                 throw new ArgumentException("You must call FillRelatedFeature first!");
             }
 
-            var branch = (IChannel)feature;
-            ILineString newLineString = (ILineString)newGeometry;
+            var branch = (IChannel) feature;
+            var newLineString = (ILineString) newGeometry;
 
             IList<double> newFractions = BranchToBranchFeatureService.UpdateNewFractions(
-                (ILineString)lastFeature.Geometry, newLineString,
+                (ILineString) lastFeature.Geometry, newLineString,
                 fractions, trackerIndices, FallOffPolicy);
             // performance improvement: test with dottrace show LineString.get_Length as a very expensive operation
             // locally store the length. This is relevant for branches with many coordinates and many cross sections.
-            for (int i = 0; i < newFractions.Count; i++)
+            for (var i = 0; i < newFractions.Count; i++)
             {
                 UpdateCrossSectionGeometry(clonedRelatedFeatures[i], newLineString, i, newFractions, branch);
             }
@@ -78,15 +77,15 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors
             //since crosss section calculates it's geomtry based on definition + branch we only have to update the offset here.
             //we need to call InvalidateGeometry to force the CS to recalculate.
 
-            var branch = (IChannel)feature;
-            var newLineString = (ILineString)newGeometry;
+            var branch = (IChannel) feature;
+            var newLineString = (ILineString) newGeometry;
 
-            var newFractions = BranchToBranchFeatureService.UpdateNewFractions((ILineString)lastGeometry,
-                                                                               newLineString, fractions, trackerIndices, FallOffPolicy);
+            IList<double> newFractions = BranchToBranchFeatureService.UpdateNewFractions((ILineString) lastGeometry,
+                                                                                         newLineString, fractions, trackerIndices, FallOffPolicy);
 
             // Only update non geometry based cross sections
-            int fractionIndex = 0;
-            foreach (var crossSection in branch.CrossSections.Where(c => !c.GeometryBased))
+            var fractionIndex = 0;
+            foreach (ICrossSection crossSection in branch.CrossSections.Where(c => !c.GeometryBased))
             {
                 UpdateCrossSectionGeometry(crossSection, newLineString, fractionIndex++, newFractions, branch);
             }
@@ -95,10 +94,10 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors
         private IFeatureRelationInteractor CloneRule()
         {
             var branchLayerToCrossSectionTopologyRule = new BranchToCrossSectionRelationInteractor
-                                                                                           {
-                                                                                               FallOffPolicy = FallOffPolicy,
-                                                                                               Network = Network
-                                                                                           };
+            {
+                FallOffPolicy = FallOffPolicy,
+                Network = Network
+            };
             return branchLayerToCrossSectionTopologyRule;
         }
 
@@ -107,53 +106,66 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors
             FallOffPolicy = fallOffPolicy ?? new NoFallOffPolicy();
             if (feature is IChannel)
             {
-                var branch = (IChannel)feature;
-                
+                var branch = (IChannel) feature;
+
                 if (branch.BranchFeatures.Count > 0)
                 {
                     // Only activate the rule when there is something to do.
-                    var cloneRule = (BranchToCrossSectionRelationInteractor)CloneRule();
+                    var cloneRule = (BranchToCrossSectionRelationInteractor) CloneRule();
                     cloneRule.Start(branch, cloneFeature as IChannel, addRelatedFeature, level);
                     return cloneRule;
                 }
             }
+
             return null;
         }
 
         private void Start(IChannel branch, IChannel cloneBranch, AddRelatedFeature addRelatedFeature, int level)
         {
             lastFeature = branch;
-            lastGeometry = (IGeometry)branch.Geometry.Clone();
+            lastGeometry = (IGeometry) branch.Geometry.Clone();
             originalRelatedFeatures = new List<ICrossSection>();
             clonedRelatedFeatures = new List<ICrossSection>();
             fractions.Clear();
             double length = branch.Length;
-            foreach (var crossSection in branch.CrossSections)
+            foreach (ICrossSection crossSection in branch.CrossSections)
             {
                 if (!crossSection.Definition.GeometryBased)
                 {
                     fractions.Add(crossSection.Chainage / length); // = optimization of GeometryHelper.LineStringGetFraction
                     originalRelatedFeatures.Add(crossSection);
-                    var clone = (ICrossSection)crossSection.Clone();
+                    var clone = (ICrossSection) crossSection.Clone();
                     clone.Branch = cloneBranch;
                     cloneBranch.BranchFeatures.Add(clone);
                     clonedRelatedFeatures.Add(clone);
                     if (null != addRelatedFeature)
+                    {
                         addRelatedFeature(activeRules, crossSection, clone, level);
+                    }
                 }
             }
         }
 
-        List<IFeatureRelationInteractor> activeRules = new List<IFeatureRelationInteractor>();
+        private List<IFeatureRelationInteractor> activeRules = new List<IFeatureRelationInteractor>();
+
         public IList<IFeatureRelationInteractor> ActiveTopologyRules
         {
-            get { return activeRules; }
+            get
+            {
+                return activeRules;
+            }
         }
 
         public IFallOffPolicy FallOffPolicy
         {
-            get { return fallOffPolicy; }
-            set { fallOffPolicy = value; }
+            get
+            {
+                return fallOffPolicy;
+            }
+            set
+            {
+                fallOffPolicy = value;
+            }
         }
 
         #endregion

@@ -15,6 +15,75 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
     {
         private string originalCurrentDirectory;
 
+        public DateTime StartTime
+        {
+            get
+            {
+                double startTime;
+                FlexibleMeshModelDll.get_start_time(out startTime);
+                return GetRefDate().AddSeconds(startTime);
+            }
+        }
+
+        public DateTime StopTime
+        {
+            get
+            {
+                double stopTime;
+                FlexibleMeshModelDll.get_end_time(out stopTime);
+                return GetRefDate().AddSeconds(stopTime);
+            }
+        }
+
+        public DateTime CurrentTime
+        {
+            get
+            {
+                double t;
+                FlexibleMeshModelDll.get_current_time(out t);
+                return GetRefDate().AddSeconds(t);
+            }
+        }
+
+        public TimeSpan TimeStep
+        {
+            get
+            {
+                double dt;
+                FlexibleMeshModelDll.get_time_step(out dt);
+                return new TimeSpan((long) (TimeSpan.TicksPerSecond * dt));
+            }
+        }
+
+        public string[] VariableNames
+        {
+            get
+            {
+                int count = GetVariableCount();
+                if (count == 0)
+                {
+                    return new string[0];
+                }
+
+                var names = new string[count];
+                for (var i = 0; i < count; i++)
+                {
+                    names[i] = GetVariableName(i);
+                }
+
+                return names;
+            }
+        }
+
+        public Logger Logger { get; set; }
+
+        public string GetVariableLocation(string variableName)
+        {
+            var variableLocationBuilder = new StringBuilder(FlexibleMeshModelDll.MAXSTRLEN);
+            FlexibleMeshModelDll.get_var_location(variableName, variableLocationBuilder);
+            return variableLocationBuilder.ToString();
+        }
+
         public int Initialize(string path)
         {
             originalCurrentDirectory = Environment.CurrentDirectory;
@@ -68,7 +137,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
             // get value type
             var typeNameBuilder = new StringBuilder(FlexibleMeshModelDll.MAXSTRLEN);
             FlexibleMeshModelDll.get_var_type(variable, typeNameBuilder);
-            string typeName = typeNameBuilder.ToString();
+            var typeName = typeNameBuilder.ToString();
 
             // copy to 1D array
             int totalLength = GetTotalLength(shape);
@@ -82,7 +151,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
 
             // convert to nD array
             Type valueType = ToType(typeName);
-            Array values = Array.CreateInstance(valueType, shape);
+            var values = Array.CreateInstance(valueType, shape);
             Buffer.BlockCopy(values1D, 0, values, 0, values1D.Length * Marshal.SizeOf(valueType));
 
             return values;
@@ -128,79 +197,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
             throw new NotImplementedException();
         }
 
-        public DateTime StartTime
-        {
-            get
-            {
-                double startTime;
-                FlexibleMeshModelDll.get_start_time(out startTime);
-                return GetRefDate().AddSeconds(startTime);
-            }
-        }
-
-        public DateTime StopTime
-        {
-            get
-            {
-                double stopTime;
-                FlexibleMeshModelDll.get_end_time(out stopTime);
-                return GetRefDate().AddSeconds(stopTime);
-            }
-        }
-
-        public DateTime CurrentTime
-        {
-            get
-            {
-                double t;
-                FlexibleMeshModelDll.get_current_time(out t);
-                return GetRefDate().AddSeconds(t);
-            }
-        }
-
         private static DateTime GetRefDate()
         {
             var sb = new StringBuilder(FlexibleMeshModelDll.MAXSTRLEN);
             FlexibleMeshModelDll.get_string_attribute("refdat", sb);
             DateTime refDate = DateTime.ParseExact(sb.ToString(), "yyyyMMdd", CultureInfo.InvariantCulture);
             return refDate;
-        }
-
-        public TimeSpan TimeStep
-        {
-            get
-            {
-                double dt;
-                FlexibleMeshModelDll.get_time_step(out dt);
-                return new TimeSpan((long) (TimeSpan.TicksPerSecond * dt));
-            }
-        }
-
-        public string GetVariableLocation(string variableName)
-        {
-            var variableLocationBuilder = new StringBuilder(FlexibleMeshModelDll.MAXSTRLEN);
-            FlexibleMeshModelDll.get_var_location(variableName, variableLocationBuilder);
-            return variableLocationBuilder.ToString();
-        }
-
-        public string[] VariableNames
-        {
-            get
-            {
-                int count = GetVariableCount();
-                if (count == 0)
-                {
-                    return new string[0];
-                }
-
-                var names = new string[count];
-                for (var i = 0; i < count; i++)
-                {
-                    names[i] = GetVariableName(i);
-                }
-
-                return names;
-            }
         }
 
         private int GetVariableCount()
@@ -216,8 +218,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
             FlexibleMeshModelDll.get_var_name(index, variableNameBuilder);
             return variableNameBuilder.ToString();
         }
-
-        public Logger Logger { get; set; }
 
         private static Type ToType(string typeName)
         {

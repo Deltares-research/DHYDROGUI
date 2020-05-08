@@ -11,6 +11,20 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers
         private HydroArea hydroArea;
         private bool layersInitialized;
 
+        public override IEventedList<ILayer> Layers
+        {
+            get
+            {
+                if (!layersInitialized)
+                {
+                    InitializeLayers();
+                }
+
+                return base.Layers;
+            }
+            set => base.Layers = value;
+        }
+
         [Aggregation]
         public virtual HydroArea HydroArea
         {
@@ -27,20 +41,6 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers
                 layersInitialized = false;
                 ShowInLegend = false;
             }
-        }
-
-        public override IEventedList<ILayer> Layers
-        {
-            get
-            {
-                if (!layersInitialized)
-                {
-                    InitializeLayers();
-                }
-
-                return base.Layers;
-            }
-            set => base.Layers = value;
         }
 
         private void InitializeLayers()

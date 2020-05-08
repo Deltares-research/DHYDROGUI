@@ -18,8 +18,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.ObservationAreas
     {
         public const string NoDataLabel = null;
 
-        protected WaterQualityObservationAreaCoverage() {} // NHibernate
-
         public WaterQualityObservationAreaCoverage(UnstructuredGrid grid) : base(grid, false)
         {
             // Data is stored as int as this makes visualization easier, while exposing this as a coverage of 'strings' in the UI.
@@ -30,6 +28,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.ObservationAreas
                 NoDataValue = -999
             });
         }
+
+        protected WaterQualityObservationAreaCoverage() {} // NHibernate
 
         /// <summary>
         /// Gives all specified observation areas by name and their corresponding grid cells.
@@ -58,32 +58,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.ObservationAreas
         }
 
         /// <summary>
-        /// Find the label corresponding to the integer value that is used in the coverage.
-        /// </summary>
-        /// <returns> Null if the int was no data value </returns>
-        private string GetLabel(int intValue)
-        {
-            if (intValue == (int) Components[0].NoDataValue)
-            {
-                return NoDataLabel;
-            }
-
-            string intString = intValue.ToString();
-            KeyValuePair<string, string>
-                result = Components[0].Attributes.FirstOrDefault(kvp => kvp.Value == intString);
-
-            if (!Equals(result, default(KeyValuePair<string, string>)))
-            {
-                return result.Key;
-            }
-            else
-            {
-                return NoDataLabel;
-            }
-        }
-
-        /// <summary>
-        /// Calls <see cref="Function.SetValues{T}" /> with ints. The labels that were not yet present
+        /// Calls <see cref="Function.SetValues{T}"/> with ints. The labels that were not yet present
         /// are added to the list of labels. Then SetValues is called to actually
         /// set the ints on the coverage.
         /// Use null as NoDataValue.
@@ -102,7 +77,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.ObservationAreas
         }
 
         /// <summary>
-        /// Calls <see cref="IFunction.GetValues{T}" /> and transforms all
+        /// Calls <see cref="IFunction.GetValues{T}"/> and transforms all
         /// ints into the corresponding labels.
         /// </summary>
         public virtual IList<string> GetValuesAsLabels()
@@ -127,8 +102,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.ObservationAreas
 
         /// <summary>
         /// Add a label to the list of labels.
-        /// This can be used if a method calls <see cref="Function.SetValues{T}" /> instead of
-        /// <see cref="SetValuesAsLabels" /> afterwards.
+        /// This can be used if a method calls <see cref="Function.SetValues{T}"/> instead of
+        /// <see cref="SetValuesAsLabels"/> afterwards.
         /// </summary>
         /// <returns> The index that can be used in SetValues{int}. Returns NoDataValue when label is null. </returns>
         public virtual int AddLabel(string label)
@@ -159,6 +134,31 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.ObservationAreas
             return Components[0].Attributes != null
                        ? Components[0].Attributes.Keys
                        : Enumerable.Empty<string>().ToList();
+        }
+
+        /// <summary>
+        /// Find the label corresponding to the integer value that is used in the coverage.
+        /// </summary>
+        /// <returns> Null if the int was no data value </returns>
+        private string GetLabel(int intValue)
+        {
+            if (intValue == (int) Components[0].NoDataValue)
+            {
+                return NoDataLabel;
+            }
+
+            var intString = intValue.ToString();
+            KeyValuePair<string, string>
+                result = Components[0].Attributes.FirstOrDefault(kvp => kvp.Value == intString);
+
+            if (!Equals(result, default(KeyValuePair<string, string>)))
+            {
+                return result.Key;
+            }
+            else
+            {
+                return NoDataLabel;
+            }
         }
     }
 }

@@ -2,6 +2,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using DeltaShell.Plugins.FMSuite.Common.DepthLayers;
 using DeltaShell.Plugins.FMSuite.Common.Gui.Forms;
+using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Properties;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 
@@ -11,17 +12,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors.Buttons
     {
         public static string ToolTip = "Adjust layers";
         public static string Label = "Layer";
-        public static Bitmap ButtonImage = Properties.Resources.waterLayers;
+        public static Bitmap ButtonImage = Resources.waterLayers;
 
         public static void ButtonAction(object inputObject)
         {
             var model = inputObject as WaterFlowFMModel;
-            if (model == null) return;
+            if (model == null)
+            {
+                return;
+            }
+
             var view = new DepthLayerDialog(WaterFlowFMModelDefinition.SupportedDepthLayerTypes)
-                {
-                    CanSpecifyLayerThicknesses = WaterFlowFMModelDefinition.CanSpecifyLayerThicknesses,
-                    DepthLayerDefinition = model.DepthLayerDefinition.Clone() as DepthLayerDefinition
-                };
+            {
+                CanSpecifyLayerThicknesses = WaterFlowFMModelDefinition.CanSpecifyLayerThicknesses,
+                DepthLayerDefinition = model.DepthLayerDefinition.Clone() as DepthLayerDefinition
+            };
 
             if (view.ShowDialog() == DialogResult.OK)
             {

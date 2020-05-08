@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Layers.Providers
         /// <inheritdoc/>
         public ILayer CreateLayer(object sourceData, object parentData) =>
             sourceData is IHydroRegion hydroRegion
-                ? new HydroRegionMapLayer() 
+                ? new HydroRegionMapLayer()
                 {
                     Name = hydroRegion.Name,
                     Region = hydroRegion,

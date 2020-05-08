@@ -58,7 +58,6 @@
 
         public const string SpectrumFileExtension = ".sp2";
 
-
         #endregion
     }
 }

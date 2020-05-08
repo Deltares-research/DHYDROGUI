@@ -9,11 +9,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors
 
     public class ShapeEventArgs : EventArgs
     {
-        public IShapeFeature ShapeFeature { get; set; }
-
         public ShapeEventArgs(IShapeFeature shapeFeature)
         {
             ShapeFeature = shapeFeature;
         }
+
+        public IShapeFeature ShapeFeature { get; set; }
     }
 }

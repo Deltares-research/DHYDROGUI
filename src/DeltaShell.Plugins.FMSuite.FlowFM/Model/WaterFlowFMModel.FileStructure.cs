@@ -3,20 +3,27 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using DeltaShell.Dimr;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers;
-using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
-using DeltaShell.Plugins.SharpMapGis.ImportExport;
 using DeltaShell.NGHS.Common;
 using DeltaShell.Plugins.FMSuite.Common.IO;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers.CopyHandlers;
+using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
+using DeltaShell.Plugins.SharpMapGis.ImportExport;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 {
     public partial class WaterFlowFMModel
     {
+        public Func<string> WorkingDirectoryPathFunc =
+            () => Path.Combine(DefaultModelSettings.DefaultDeltaShellWorkingDirectory);
+
         private string currentOutputDirectoryPath;
         private string outputSnappedFeaturesPath;
+
+        private CacheFile cacheFile = null;
+
+        public event PropertyChangedEventHandler OutputSnappedFeaturesPathPropertyChanged;
 
         /// <summary>
         /// Gets the mdu file.
@@ -26,28 +33,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         /// </value>
         public MduFile MduFile { get; } = new MduFile();
 
-        public Func<string> WorkingDirectoryPathFunc =
-            () => Path.Combine(DefaultModelSettings.DefaultDeltaShellWorkingDirectory);
-
-        public event PropertyChangedEventHandler OutputSnappedFeaturesPathPropertyChanged;
-
         /// <summary>
         /// Gets the cache file.
         /// </summary>
         /// <value>
         /// The cache file.
         /// </value>
-        public CacheFile CacheFile => 
+        public CacheFile CacheFile =>
             cacheFile ?? (cacheFile = new CacheFile(this, new OverwriteCopyHandler()));
 
-        private CacheFile cacheFile = null;
-
-        protected void OnOutputSnappedFeaturesPathPropertyChanged(string name)
-        {
-            OutputSnappedFeaturesPathPropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
-        }
-
-        public virtual string KernelDirectoryLocation => DimrApiDataSet.DFlowFmDllPath;
         public string DelwaqOutputDirectoryName => FileConstants.PrefixDelwaqDirectoryName + Name;
 
         /// <summary>
@@ -73,42 +67,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             Path.Combine(WorkingDirectoryPath, DirectoryName, FileConstants.OutputDirectoryName);
 
         public string PersistentOutputDirectoryPath => Path.Combine(ModelDirectoryPath, FileConstants.OutputDirectoryName);
-        public virtual string MduFilePath { get; protected set; }
-
-        #region Implementation of IHydFileModel
-
-        /// <summary>
-        /// Path to the produced hyd file.
-        /// </summary>
-        /// <returns>Returns the expected absolute path of the hyd file when the directory has been set, otherwise returns an empty string.</returns>
-        public string HydFilePath =>
-            DelwaqOutputDirectoryPath != null
-                ? Path.Combine(DelwaqOutputDirectoryPath, $"{Path.GetFileNameWithoutExtension(MduFilePath)}.hyd")
-                : string.Empty;
-
-        #endregion
 
         public string MduSavePath => GetMduPathFromDeltaShellPath(RecursivelyGetModelDirectoryPathFromMduFile());
-
-        private string RecursivelyGetModelDirectoryPathFromMduFile()
-        {
-            if (string.IsNullOrEmpty(MduFilePath))
-            {
-                return Name;
-            }
-
-            string modelDirectoryName = Path.GetFileNameWithoutExtension(MduFilePath);
-            var modelDir = new DirectoryInfo(MduFilePath);
-            while (modelDir != null && modelDir.Name != modelDirectoryName)
-            {
-                modelDir = modelDir.Parent;
-            }
-
-            return modelDir?.Parent == null // should never happen, unless the file-based repository is corrupted
-                       ? Path.GetDirectoryName(
-                           Path.GetDirectoryName(MduFilePath)) // default behaviour (e.g. model renamed)
-                       : modelDir.FullName;
-        }
 
         public string HisSavePath
         {
@@ -257,15 +217,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             }
         }
 
-        private string GetMduPathFromDeltaShellPath(string path, string subFoldersFromModelFolder = FileConstants.InputDirectoryName)
-        {
-            string directoryName = path != null
-                                       ? Path.GetDirectoryName(path) ?? ""
-                                       : "";
-
-            return Path.Combine(directoryName, Name, subFoldersFromModelFolder, Name + FileConstants.MduFileExtension);
-        }
-
         public IEnumerable<KeyValuePair<WaterFlowFMProperty, string>> SubFiles
         {
             get
@@ -315,6 +266,60 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             }
         }
 
+        public virtual string KernelDirectoryLocation => DimrApiDataSet.DFlowFmDllPath;
+
+        #region Implementation of IHydFileModel
+
+        /// <summary>
+        /// Path to the produced hyd file.
+        /// </summary>
+        /// <returns>
+        /// Returns the expected absolute path of the hyd file when the directory has been set, otherwise returns an empty
+        /// string.
+        /// </returns>
+        public string HydFilePath =>
+            DelwaqOutputDirectoryPath != null
+                ? Path.Combine(DelwaqOutputDirectoryPath, $"{Path.GetFileNameWithoutExtension(MduFilePath)}.hyd")
+                : string.Empty;
+
+        #endregion
+
+        public virtual string MduFilePath { get; protected set; }
+
+        protected void OnOutputSnappedFeaturesPathPropertyChanged(string name)
+        {
+            OutputSnappedFeaturesPathPropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        }
+
+        private string RecursivelyGetModelDirectoryPathFromMduFile()
+        {
+            if (string.IsNullOrEmpty(MduFilePath))
+            {
+                return Name;
+            }
+
+            string modelDirectoryName = Path.GetFileNameWithoutExtension(MduFilePath);
+            var modelDir = new DirectoryInfo(MduFilePath);
+            while (modelDir != null && modelDir.Name != modelDirectoryName)
+            {
+                modelDir = modelDir.Parent;
+            }
+
+            return modelDir?.Parent == null // should never happen, unless the file-based repository is corrupted
+                       ? Path.GetDirectoryName(
+                           Path.GetDirectoryName(MduFilePath)) // default behaviour (e.g. model renamed)
+                       : modelDir.FullName;
+        }
+
+        private string GetMduPathFromDeltaShellPath(string path, string subFoldersFromModelFolder = FileConstants.InputDirectoryName)
+        {
+            string directoryName = path != null
+                                       ? Path.GetDirectoryName(path) ?? ""
+                                       : "";
+
+            return Path.Combine(directoryName, Name, subFoldersFromModelFolder, Name + FileConstants.MduFileExtension);
+        }
+
         private void RenameSubFilesIfApplicable()
         {
             foreach (KeyValuePair<WaterFlowFMProperty, string> subFile in SubFiles)
@@ -359,7 +364,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
         public virtual string GetExporterPath(string directoryName)
         {
-            return Path.Combine(directoryName, InputFile == null ? Name + FileConstants.MduFileExtension: Path.GetFileName(InputFile));
+            return Path.Combine(directoryName, InputFile == null ? Name + FileConstants.MduFileExtension : Path.GetFileName(InputFile));
         }
 
         public virtual string DimrExportDirectoryPath

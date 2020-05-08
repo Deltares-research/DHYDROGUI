@@ -1,6 +1,7 @@
 using DelftTools.Controls.Swf.Charting;
 using DelftTools.Hydro.Structures;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapes;
+using DeltaShell.Plugins.NetworkEditor.Gui.Properties;
 using SharpMap.Styles;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChartShapes
@@ -13,7 +14,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
             : base(chart, 0, 0, SymbolShapeFeatureHorizontalAlignment.Left, SymbolShapeFeatureVerticalAlignment.Bottom)
         {
             this.extraResistance = extraResistance;
-            Image = Properties.Resources.ExtraResistanceSmall;
+            Image = Resources.ExtraResistanceSmall;
         }
 
         /// <summary>

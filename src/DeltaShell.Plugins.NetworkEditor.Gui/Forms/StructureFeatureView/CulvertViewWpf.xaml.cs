@@ -10,6 +10,7 @@ using DelftTools.Functions;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DeltaShell.Plugins.CommonTools.Gui.Forms.Functions;
+using ComboBox = System.Windows.Controls.ComboBox;
 using Image = System.Drawing.Image;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
@@ -29,6 +30,15 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
             InitializeComponent();
             SetComboBoxes();
         }
+
+        #region Implementation of IDisposable
+
+        public void Dispose()
+        {
+            DataContext = null;
+        }
+
+        #endregion
 
         private void GateDialog_OnClick(object sender, RoutedEventArgs e)
         {
@@ -52,9 +62,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
         }
 
         private void DataGridGeometryTabulated_AutoGeneratingColumn(object sender,
-            DataGridAutoGeneratingColumnEventArgs e)
+                                                                    DataGridAutoGeneratingColumnEventArgs e)
         {
-            var acceptedColumns = new List<String>() {"z", "width", "storagewidth"};
+            var acceptedColumns = new List<string>() {"z", "width", "storagewidth"};
             if (!acceptedColumns.Contains(e.Column.Header.ToString().ToLower()))
             {
                 e.Column.Visibility = Visibility.Hidden;
@@ -70,7 +80,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
             SetComboWithEnum<CulvertType>(comboBoxCulvertType);
         }
 
-        private void SetComboWithEnum<T>(System.Windows.Controls.ComboBox comboBox)
+        private void SetComboWithEnum<T>(ComboBox comboBox)
         {
             comboBox.ItemsSource = Enum.GetValues(typeof(T)).Cast<object>().ToArray();
             comboBox.IsEnabled = true;
@@ -108,7 +118,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
 
         private void OnPropertyChanged(object sender, PropertyChangedEventArgs propertyChangedEventArgs)
         {
-            if (settingViewModel) return;
+            if (settingViewModel)
+            {
+                return;
+            }
+
             settingViewModel = true;
 
             // full refresh
@@ -130,15 +144,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
 
         public string Text { get; set; }
         public bool Visible { get; private set; }
-
-        #endregion
-
-        #region Implementation of IDisposable
-
-        public void Dispose()
-        {
-            DataContext = null;
-        }
 
         #endregion
     }

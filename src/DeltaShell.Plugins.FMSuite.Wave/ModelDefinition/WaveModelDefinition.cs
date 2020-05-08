@@ -16,18 +16,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.ModelDefinition
     public class WaveModelDefinition
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(WaveModelDefinition));
-        public IEventedList<WaveModelProperty> Properties { get; set; }
-        public ModelPropertySchema<WaveModelPropertyDefinition> ModelSchema { get; private set; }
-        public IWaveDomainData OuterDomain { get; set; }
-        public IEventedList<WaveObstacle> Obstacles { get; set; }
-        public IEventedList<Feature2DPoint> ObservationPoints { get; set; }
-        public IEventedList<Feature2D> ObservationCrossSections { get; set; }
-
-        public string ObstaclePolylineFile { get; set; }
-
-        public WaveInputFieldData TimePointData { get; set; }
-
-        public IBoundaryContainer BoundaryContainer { get; }
 
         /// <summary>
         /// Create default/empty model definition and set the correct default values depending on other properties.
@@ -79,6 +67,19 @@ namespace DeltaShell.Plugins.FMSuite.Wave.ModelDefinition
             ObservationCrossSections = new EventedList<Feature2D>();
             BoundaryContainer = new BoundaryContainer();
         }
+
+        public IEventedList<WaveModelProperty> Properties { get; set; }
+        public ModelPropertySchema<WaveModelPropertyDefinition> ModelSchema { get; private set; }
+        public IWaveDomainData OuterDomain { get; set; }
+        public IEventedList<WaveObstacle> Obstacles { get; set; }
+        public IEventedList<Feature2DPoint> ObservationPoints { get; set; }
+        public IEventedList<Feature2D> ObservationCrossSections { get; set; }
+
+        public string ObstaclePolylineFile { get; set; }
+
+        public WaveInputFieldData TimePointData { get; set; }
+
+        public IBoundaryContainer BoundaryContainer { get; }
 
         public void SetModelProperty(string fileCategoryName, string filePropertyName, WaveModelProperty property)
         {

@@ -22,11 +22,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Importers
             }
         }
 
-        public bool CanImportOn(object targetObject)
-        {
-            return true;
-        }
-
         public bool CanImportOnRootLevel => true;
         public string FileFilter => "WAVM file|*.nc";
 
@@ -35,6 +30,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Importers
         public ImportProgressChangedDelegate ProgressChanged { get; set; }
 
         public bool OpenViewAfterImport => false;
+
+        public bool CanImportOn(object targetObject)
+        {
+            return true;
+        }
 
         public object ImportItem(string path, object target = null)
         {

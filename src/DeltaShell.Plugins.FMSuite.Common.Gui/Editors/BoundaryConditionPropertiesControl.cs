@@ -8,15 +8,19 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Editors
 {
     public partial class BoundaryConditionPropertiesControl : UserControl
     {
+        private IBoundaryCondition boundaryCondition;
+
         protected BoundaryConditionPropertiesControl()
         {
             InitializeComponent();
         }
-        
-        private IBoundaryCondition boundaryCondition;
+
         public virtual IBoundaryCondition BoundaryCondition
         {
-            protected get { return boundaryCondition; }
+            protected get
+            {
+                return boundaryCondition;
+            }
             set
             {
                 boundaryCondition = value;
@@ -25,7 +29,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Editors
                 if (boundaryCondition != null)
                 {
                     bcTypeLabel.Text = boundaryCondition.VariableDescription;
-                    var supportedDataTypes = GetSupportedDataTypes(boundaryCondition.VariableName).ToList();
+                    List<BoundaryConditionDataType> supportedDataTypes = GetSupportedDataTypes(boundaryCondition.VariableName).ToList();
                     if (supportedDataTypes.Any())
                     {
                         dataTypeComboBox.Visible = true;
@@ -50,8 +54,11 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Editors
             yield break;
         }
 
-        
-        
+        protected virtual bool ShowMessageBoxUponChangeDataType(BoundaryConditionDataType targetDataType)
+        {
+            return boundaryCondition.PointData.Any(f => f.Components.Any(v => v.Values.Count != 0));
+        }
+
         private void DataTypeComboBoxOnSelectedValueChanged(object sender, EventArgs eventArgs)
         {
             if (boundaryCondition != null)
@@ -61,7 +68,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Editors
                 {
                     if (ShowMessageBoxUponChangeDataType(boundaryConditionDataType))
                     {
-                        var dialogResult = MessageBox.Show(
+                        DialogResult dialogResult = MessageBox.Show(
                             "All data for this boundary condition will be removed. Continue?", "Change forcing type",
                             MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
 
@@ -80,11 +87,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Editors
                     }
                 }
             }
-        }
-
-        protected virtual bool ShowMessageBoxUponChangeDataType(BoundaryConditionDataType targetDataType)
-        {
-            return boundaryCondition.PointData.Any(f => f.Components.Any(v => v.Values.Count != 0));
         }
     }
 }

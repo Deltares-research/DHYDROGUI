@@ -44,15 +44,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Forcin
         public const string MinuteUnitName = "minutes";
 
         /// <summary>
-        /// Constructs a new meter <see cref="Unit"/>.
-        /// </summary>
-        /// <returns>
-        /// A new meter <see cref="Unit"/>.
-        /// </returns>
-        public static Unit ConstructMeterUnit() => new Unit(MeterUnitName, 
-                                                            MeterUnitSymbol);
-
-        /// <summary>
         /// The meter unit name.
         /// </summary>
         public const string MeterUnitName = "meter";
@@ -61,15 +52,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Forcin
         /// The meter unit symbol.
         /// </summary>
         public const string MeterUnitSymbol = "m";
-
-        /// <summary>
-        /// Construct a new second <see cref="Unit"/>.
-        /// </summary>
-        /// <returns>
-        /// A new second <see cref="Unit"/>.
-        /// </returns>
-        public static Unit ConstructSecondUnit() => new Unit(SecondUnitName, 
-                                                             SecondUnitSymbol);
 
         /// <summary>
         /// The second unit name.
@@ -82,15 +64,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Forcin
         public const string SecondUnitSymbol = "s";
 
         /// <summary>
-        /// Constructs a new degrees <see cref="Unit"/>.
-        /// </summary>
-        /// <returns>
-        /// A new degrees <see cref="Unit"/>.
-        /// </returns>
-        public static Unit ConstructDegreesUnit() => new Unit(DegreesUnitName, 
-                                                              DegreesUnitSymbol);
-
-        /// <summary>
         /// The degrees unit name.
         /// </summary>
         public const string DegreesUnitName = "degrees";
@@ -99,15 +72,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Forcin
         /// The degrees unit symbol.
         /// </summary>
         public const string DegreesUnitSymbol = "deg";
-
-        /// <summary>
-        /// Constructs a new Power <see cref="Unit"/>.
-        /// </summary>
-        /// <returns>
-        /// A new power <see cref="Unit"/>.
-        /// </returns>
-        public static Unit ConstructPowerUnit() => new Unit(PowerUnitName, 
-                                                            PowerUnitSymbol);
 
         /// <summary>
         /// The power unit name.
@@ -123,5 +87,41 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Forcin
         /// The non equidistant time function attribute name.
         /// </summary>
         public const string NonEquidistantTimeFunctionAttributeName = "non-equidistant";
+
+        /// <summary>
+        /// Constructs a new meter <see cref="Unit"/>.
+        /// </summary>
+        /// <returns>
+        /// A new meter <see cref="Unit"/>.
+        /// </returns>
+        public static Unit ConstructMeterUnit() => new Unit(MeterUnitName,
+                                                            MeterUnitSymbol);
+
+        /// <summary>
+        /// Construct a new second <see cref="Unit"/>.
+        /// </summary>
+        /// <returns>
+        /// A new second <see cref="Unit"/>.
+        /// </returns>
+        public static Unit ConstructSecondUnit() => new Unit(SecondUnitName,
+                                                             SecondUnitSymbol);
+
+        /// <summary>
+        /// Constructs a new degrees <see cref="Unit"/>.
+        /// </summary>
+        /// <returns>
+        /// A new degrees <see cref="Unit"/>.
+        /// </returns>
+        public static Unit ConstructDegreesUnit() => new Unit(DegreesUnitName,
+                                                              DegreesUnitSymbol);
+
+        /// <summary>
+        /// Constructs a new Power <see cref="Unit"/>.
+        /// </summary>
+        /// <returns>
+        /// A new power <see cref="Unit"/>.
+        /// </returns>
+        public static Unit ConstructPowerUnit() => new Unit(PowerUnitName,
+                                                            PowerUnitSymbol);
     }
 }

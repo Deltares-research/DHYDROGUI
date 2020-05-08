@@ -7,7 +7,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spread
     /// <see cref="PowerDefinedSpreading"/> defines the spreading
     /// defined by the power value contained in <see cref="SpreadingPower"/>.
     /// </summary>
-    /// <seealso cref="IBoundaryConditionSpreading" />
+    /// <seealso cref="IBoundaryConditionSpreading"/>
     public class PowerDefinedSpreading : IBoundaryConditionSpreading
     {
         /// <summary>

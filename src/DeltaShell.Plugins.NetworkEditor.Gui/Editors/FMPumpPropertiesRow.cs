@@ -19,27 +19,16 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors
             Pump = pump;
         }
 
-        private IPump Pump
-        {
-            get { return pump; }
-            set
-            {
-                if (pump != null)
-                {
-                    ((INotifyPropertyChanged)pump).PropertyChanged -= PumpPropertiesRowPropertyChanged;
-                }
-                pump = value;
-                if (pump != null)
-                {
-                    ((INotifyPropertyChanged)pump).PropertyChanged += PumpPropertiesRowPropertyChanged;
-                }
-            }
-        }
-
         public string Name
         {
-            get { return pump.Name; } 
-            set { pump.Name = value; }
+            get
+            {
+                return pump.Name;
+            }
+            set
+            {
+                pump.Name = value;
+            }
         }
 
         [DynamicReadOnly]
@@ -49,8 +38,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors
             {
                 if (pump.CanBeTimedependent && pump.UseCapacityTimeSeries)
                 {
-                    return String.Format("{0}_{1}.tim", pump.Name, KnownStructureProperties.Capacity);
+                    return string.Format("{0}_{1}.tim", pump.Name, KnownStructureProperties.Capacity);
                 }
+
                 return pump.Capacity.ToString(CultureInfo.CurrentCulture);
             }
             set
@@ -59,6 +49,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors
                 {
                     throw new InvalidOperationException("Cannot set value from row when using time dependent pump capacity.");
                 }
+
                 pump.Capacity = double.Parse(value, CultureInfo.CurrentCulture);
             }
         }
@@ -66,17 +57,43 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors
         [DynamicReadOnlyValidationMethod]
         public bool IsReadOnly(string propertyName)
         {
-            if (pump == null) return false;
+            if (pump == null)
+            {
+                return false;
+            }
+
             if (propertyName == "Capacity")
             {
                 return pump.CanBeTimedependent && pump.UseCapacityTimeSeries;
             }
+
             return false;
         }
 
         public void Dispose()
         {
             Pump = null;
+        }
+
+        private IPump Pump
+        {
+            get
+            {
+                return pump;
+            }
+            set
+            {
+                if (pump != null)
+                {
+                    ((INotifyPropertyChanged) pump).PropertyChanged -= PumpPropertiesRowPropertyChanged;
+                }
+
+                pump = value;
+                if (pump != null)
+                {
+                    ((INotifyPropertyChanged) pump).PropertyChanged += PumpPropertiesRowPropertyChanged;
+                }
+            }
         }
 
         private void PumpPropertiesRowPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -94,6 +111,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors
 
         [Browsable(false)]
         public bool HasParent { get; set; }
+
         public IFeature GetFeature()
         {
             return pump;

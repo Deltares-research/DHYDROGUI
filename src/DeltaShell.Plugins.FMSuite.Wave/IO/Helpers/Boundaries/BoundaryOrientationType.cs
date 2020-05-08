@@ -10,18 +10,25 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
     {
         [Description(KnownWaveBoundariesFileConstants.EastBoundaryOrientationType)]
         East,
+
         [Description(KnownWaveBoundariesFileConstants.NorthEastBoundaryOrientationType)]
         NorthEast,
+
         [Description(KnownWaveBoundariesFileConstants.NorthBoundaryOrientationType)]
         North,
+
         [Description(KnownWaveBoundariesFileConstants.NorthWestBoundaryOrientationType)]
         NorthWest,
+
         [Description(KnownWaveBoundariesFileConstants.WestBoundaryOrientationType)]
         West,
+
         [Description(KnownWaveBoundariesFileConstants.SouthWestBoundaryOrientationType)]
         SouthWest,
+
         [Description(KnownWaveBoundariesFileConstants.SouthBoundaryOrientationType)]
-        South, 
+        South,
+
         [Description(KnownWaveBoundariesFileConstants.SouthEastBoundaryOrientationType)]
         SouthEast,
     }

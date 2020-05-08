@@ -10,14 +10,19 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.DomainSpecificDataEditor.V
     /// <summary>
     /// View model for the main domain specific editor view
     /// </summary>
-    /// <seealso cref="System.ComponentModel.INotifyPropertyChanged" />
-    /// <seealso cref="System.IDisposable" />
+    /// <seealso cref="System.ComponentModel.INotifyPropertyChanged"/>
+    /// <seealso cref="System.IDisposable"/>
     public sealed class MainDomainSpecificDataViewModel : INotifyPropertyChanged, IDisposable
     {
         private bool disposed = false;
         private ObservableCollection<DomainSpecificSettingsViewModel> domainSpecificDataViewModelsList = new ObservableCollection<DomainSpecificSettingsViewModel>();
         private DomainSpecificSettingsViewModel selectedViewModel;
         private IWaveDomainData rootDomain;
+
+        /// <summary>
+        /// Occurs when [property changed].
+        /// </summary>
+        public event PropertyChangedEventHandler PropertyChanged;
 
         /// <summary>
         /// Constructor for setting the RootDomain
@@ -61,6 +66,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.DomainSpecificDataEditor.V
             }
         }
 
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
         private IWaveDomainData RootDomain
         {
             get => rootDomain;
@@ -81,11 +92,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.DomainSpecificDataEditor.V
                 Update(rootDomain);
             }
         }
-
-        /// <summary>
-        /// Occurs when [property changed].
-        /// </summary>
-        public event PropertyChangedEventHandler PropertyChanged;
 
         private void UnSubscribe()
         {
@@ -134,16 +140,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.DomainSpecificDataEditor.V
             {
                 return;
             }
-            
+
             List<DomainSpecificSettingsViewModel> viewModelsList = CreateNewDomainSpecificSettingsViewModels();
 
             DomainSpecificSettingsViewModel selectedViewModelInNewList = FindSelectedViewModelInNewList(viewModelsList);
 
             DomainSpecificDataViewModelsList = new ObservableCollection<DomainSpecificSettingsViewModel>(viewModelsList);
-            
+
             SelectedViewModel = selectedViewModelInNewList ?? DomainSpecificDataViewModelsList.FirstOrDefault();
         }
-        
+
         private void OnPropertyChanged(string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -166,12 +172,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.DomainSpecificDataEditor.V
         {
             IList<IWaveDomainData> allDomains = WaveDomainHelper.GetAllDomains(rootDomain);
             return allDomains.Select(domain => new DomainSpecificSettingsViewModel(domain)).ToList();
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
         }
 
         private void Dispose(bool disposing)

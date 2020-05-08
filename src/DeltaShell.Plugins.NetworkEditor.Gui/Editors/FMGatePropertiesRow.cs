@@ -11,19 +11,8 @@ namespace DeltaShell.Plugins.HydroNetworkEditor.Gui.Editors
         public FMGatePropertiesRow(IGate gate)
             : base(gate)
         {
-            ((INotifyPropertyChanged)gate).PropertyChanged += OnPropertyChanged;
+            ((INotifyPropertyChanged) gate).PropertyChanged += OnPropertyChanged;
             UpdateTimeSerieStrings();
-        }
-
-        private void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName == "Name") UpdateTimeSerieStrings();
-        }
-
-        private void UpdateTimeSerieStrings()
-        {
-            OpeningWidthTimeSeriesString = string.Format("{0}_{1}.tim", gate.Name, KnownStructureProperties.GateOpeningWidth);
-            TimeSeriesString = string.Format("{0}_{1}.tim", gate.Name, KnownStructureProperties.GateLowerEdgeLevel);
         }
 
         [Browsable(false)] // Hide it
@@ -59,8 +48,22 @@ namespace DeltaShell.Plugins.HydroNetworkEditor.Gui.Editors
 
         public override void Dispose()
         {
-            ((INotifyPropertyChanged)gate).PropertyChanged -= OnPropertyChanged;
+            ((INotifyPropertyChanged) gate).PropertyChanged -= OnPropertyChanged;
             base.Dispose();
+        }
+
+        private void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == "Name")
+            {
+                UpdateTimeSerieStrings();
+            }
+        }
+
+        private void UpdateTimeSerieStrings()
+        {
+            OpeningWidthTimeSeriesString = string.Format("{0}_{1}.tim", gate.Name, KnownStructureProperties.GateOpeningWidth);
+            TimeSeriesString = string.Format("{0}_{1}.tim", gate.Name, KnownStructureProperties.GateLowerEdgeLevel);
         }
     }
 }

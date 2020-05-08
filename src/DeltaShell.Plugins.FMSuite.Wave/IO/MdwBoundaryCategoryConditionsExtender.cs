@@ -21,7 +21,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
     /// category with condition properties. This class has a visitor as private
     /// nested class, since the visitor must only be used in this context.
     /// </summary>
-    public static class MdwBoundaryCategoryConditionsExtender 
+    public static class MdwBoundaryCategoryConditionsExtender
     {
         /// <summary>
         /// Static method for retrieving boundary condition properties of each boundary
@@ -79,7 +79,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             private int supportPointCounter;
 
             /// <summary>
-            /// The constructor should set the category. 
+            /// The constructor should set the category.
             /// </summary>
             /// <param name="boundaryCategory"> The boundary category that needs to be extended</param>
             public Visitor(DelftIniCategory boundaryCategory)
@@ -87,51 +87,43 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                 BoundaryCategory = boundaryCategory;
             }
 
-            private DelftIniCategory BoundaryCategory { get; }
-
-            private IList<SupportPoint> SupportPoints { get; set; }
-
             /// <summary>
-            /// Visit method for setting <see cref="isUniform"/> and calls the next AcceptVisitor method
-            /// of the Data stored in the <see cref="UniformDataComponent{T}"/> object.
+            /// Visit method for adding place holders for shape type and directional spreading type. Also adds
+            /// period type to the category. Calls next shape object to visit and data component.
             /// </summary>
-            /// <typeparam name="T"> An <see cref="IForcingTypeDefinedParameters"/> object</typeparam>
-            /// <param name="uniformDataComponent">The visited <see cref="UniformDataComponent{T}"/></param>
+            /// <param name="waveBoundaryConditionDefinition">The visited <see cref="IWaveBoundaryConditionDefinition"/></param>
             /// <exception cref="System.ArgumentNullException">
-            /// Thrown when <paramref name="uniformDataComponent"/>
+            /// Thrown when <paramref name="waveBoundaryConditionDefinition"/>
             /// is <c>null</c>.
             /// </exception>
-            public void Visit<T>(UniformDataComponent<T> uniformDataComponent) where T : IForcingTypeDefinedParameters
+            public void Visit(IWaveBoundaryConditionDefinition waveBoundaryConditionDefinition)
             {
-                Ensure.NotNull(uniformDataComponent, nameof(uniformDataComponent));
-                isUniform = true;
-                uniformDataComponent.Data.AcceptVisitor(this);
-            }
+                Ensure.NotNull(waveBoundaryConditionDefinition, nameof(waveBoundaryConditionDefinition));
 
-            /// <summary>
-            /// Visit method for setting <see cref="isUniform"/> and <see cref="SupportPoints"/>.
-            /// Calls the next AcceptVisitors methods of the stored data for all support points in
-            /// the <see cref="SpatiallyVaryingDataComponent{T}"/> object.
-            /// </summary>
-            /// <typeparam name="T"> An <see cref="IForcingTypeDefinedParameters"/> object</typeparam>
-            /// <param name="spatiallyVaryingDataComponent"> The visited <see cref="SpatiallyVaryingDataComponent{T}"/></param>
-            /// <exception cref="System.ArgumentNullException">
-            /// Thrown when <paramref name="spatiallyVaryingDataComponent"/>
-            /// is <c>null</c>.
-            /// </exception>
-            public void Visit<T>(SpatiallyVaryingDataComponent<T> spatiallyVaryingDataComponent) where T : IForcingTypeDefinedParameters
-            {
-                Ensure.NotNull(spatiallyVaryingDataComponent, nameof(spatiallyVaryingDataComponent));
-                
-                isUniform = false;
-                SupportPoints = spatiallyVaryingDataComponent.Data.Keys.OrderBy(sp => sp.Distance).ToList();
+                //place holder
+                BoundaryCategory.AddProperty(KnownWaveProperties.ShapeType, string.Empty);
 
-                IOrderedEnumerable<KeyValuePair<SupportPoint, T>> sortedDictionary = spatiallyVaryingDataComponent.Data.OrderBy(kvp => kvp.Key.Distance);
+                string periodTypePropertyValue;
 
-                foreach (KeyValuePair<SupportPoint, T> supportPointKeyValuePair in sortedDictionary)
+                switch (waveBoundaryConditionDefinition.PeriodType)
                 {
-                    supportPointKeyValuePair.Value.AcceptVisitor(this);
+                    case BoundaryConditionPeriodType.Mean:
+                        periodTypePropertyValue = PeriodImportExportType.Mean.GetDescription();
+                        break;
+                    case BoundaryConditionPeriodType.Peak:
+                        periodTypePropertyValue = PeriodImportExportType.Peak.GetDescription();
+                        break;
+                    default:
+                        throw new NotSupportedException($"Value '{waveBoundaryConditionDefinition.PeriodType}' is not a valid period type for the exporter.");
                 }
+
+                BoundaryCategory.AddProperty(KnownWaveProperties.PeriodType, periodTypePropertyValue);
+
+                BoundaryCategory.AddProperty(KnownWaveProperties.DirectionalSpreadingType, string.Empty);
+
+                waveBoundaryConditionDefinition.Shape.AcceptVisitor(this);
+
+                waveBoundaryConditionDefinition.DataComponent.AcceptVisitor(this);
             }
 
             /// <summary>
@@ -196,6 +188,95 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             }
 
             /// <summary>
+            /// Visit method for setting the shape type at the place holder and adding the Gaussian spreading
+            /// to the category.
+            /// </summary>
+            /// <param name="gaussShape"> The visited <see cref="GaussShape"/></param>
+            /// <exception cref="System.ArgumentNullException">
+            /// Thrown when <paramref name="gaussShape"/>
+            /// is <c>null</c>.
+            /// </exception>
+            public void Visit(GaussShape gaussShape)
+            {
+                Ensure.NotNull(gaussShape, nameof(gaussShape));
+                BoundaryCategory.SetProperty(KnownWaveProperties.ShapeType, KnownWaveBoundariesFileConstants.GaussShape);
+                BoundaryCategory.AddProperty(KnownWaveProperties.GaussianSpreading, gaussShape.GaussianSpread);
+            }
+
+            /// <summary>
+            /// Visit method for setting the shape type at the place holder and adding the Peak Enhancement factor
+            /// to the category.
+            /// </summary>
+            /// <param name="jonswapShape">The visited <see cref="JonswapShape"/></param>
+            /// <exception cref="System.ArgumentNullException">
+            /// Thrown when <paramref name="jonswapShape"/>
+            /// is <c>null</c>.
+            /// </exception>
+            public void Visit(JonswapShape jonswapShape)
+            {
+                Ensure.NotNull(jonswapShape, nameof(jonswapShape));
+                BoundaryCategory.SetProperty(KnownWaveProperties.ShapeType, KnownWaveBoundariesFileConstants.JonswapShape);
+                BoundaryCategory.AddProperty(KnownWaveProperties.PeakEnhancementFactor, jonswapShape.PeakEnhancementFactor);
+            }
+
+            /// <summary>
+            /// Visit method for setting the shape type at the place holder in the category.
+            /// </summary>
+            /// <param name="piersonMoskowitzShape"> The visited <see cref="PiersonMoskowitzShape"/></param>
+            /// <exception cref="System.ArgumentNullException">
+            /// Thrown when <paramref name="piersonMoskowitzShape"/>
+            /// is <c>null</c>.
+            /// </exception>
+            public void Visit(PiersonMoskowitzShape piersonMoskowitzShape)
+            {
+                Ensure.NotNull(piersonMoskowitzShape, nameof(piersonMoskowitzShape));
+                BoundaryCategory.SetProperty(KnownWaveProperties.ShapeType, KnownWaveBoundariesFileConstants.PiersonMoskowitzShape);
+            }
+
+            /// <summary>
+            /// Visit method for setting <see cref="isUniform"/> and calls the next AcceptVisitor method
+            /// of the Data stored in the <see cref="UniformDataComponent{T}"/> object.
+            /// </summary>
+            /// <typeparam name="T"> An <see cref="IForcingTypeDefinedParameters"/> object</typeparam>
+            /// <param name="uniformDataComponent">The visited <see cref="UniformDataComponent{T}"/></param>
+            /// <exception cref="System.ArgumentNullException">
+            /// Thrown when <paramref name="uniformDataComponent"/>
+            /// is <c>null</c>.
+            /// </exception>
+            public void Visit<T>(UniformDataComponent<T> uniformDataComponent) where T : IForcingTypeDefinedParameters
+            {
+                Ensure.NotNull(uniformDataComponent, nameof(uniformDataComponent));
+                isUniform = true;
+                uniformDataComponent.Data.AcceptVisitor(this);
+            }
+
+            /// <summary>
+            /// Visit method for setting <see cref="isUniform"/> and <see cref="SupportPoints"/>.
+            /// Calls the next AcceptVisitors methods of the stored data for all support points in
+            /// the <see cref="SpatiallyVaryingDataComponent{T}"/> object.
+            /// </summary>
+            /// <typeparam name="T"> An <see cref="IForcingTypeDefinedParameters"/> object</typeparam>
+            /// <param name="spatiallyVaryingDataComponent"> The visited <see cref="SpatiallyVaryingDataComponent{T}"/></param>
+            /// <exception cref="System.ArgumentNullException">
+            /// Thrown when <paramref name="spatiallyVaryingDataComponent"/>
+            /// is <c>null</c>.
+            /// </exception>
+            public void Visit<T>(SpatiallyVaryingDataComponent<T> spatiallyVaryingDataComponent) where T : IForcingTypeDefinedParameters
+            {
+                Ensure.NotNull(spatiallyVaryingDataComponent, nameof(spatiallyVaryingDataComponent));
+
+                isUniform = false;
+                SupportPoints = spatiallyVaryingDataComponent.Data.Keys.OrderBy(sp => sp.Distance).ToList();
+
+                IOrderedEnumerable<KeyValuePair<SupportPoint, T>> sortedDictionary = spatiallyVaryingDataComponent.Data.OrderBy(kvp => kvp.Key.Distance);
+
+                foreach (KeyValuePair<SupportPoint, T> supportPointKeyValuePair in sortedDictionary)
+                {
+                    supportPointKeyValuePair.Value.AcceptVisitor(this);
+                }
+            }
+
+            /// <summary>
             /// Visit method for setting the directional spreading type and adding the directional
             /// spreading value to the category.
             /// </summary>
@@ -239,90 +320,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                 }
             }
 
-            /// <summary>
-            /// Visit method for setting the shape type at the place holder and adding the Gaussian spreading
-            /// to the category.
-            /// </summary>
-            /// <param name="gaussShape"> The visited <see cref="GaussShape"/></param>
-            /// <exception cref="System.ArgumentNullException">
-            /// Thrown when <paramref name="gaussShape"/>
-            /// is <c>null</c>.
-            /// </exception>
-            public void Visit(GaussShape gaussShape)
-            {
-                Ensure.NotNull(gaussShape, nameof(gaussShape));
-                BoundaryCategory.SetProperty(KnownWaveProperties.ShapeType, KnownWaveBoundariesFileConstants.GaussShape);
-                BoundaryCategory.AddProperty(KnownWaveProperties.GaussianSpreading, gaussShape.GaussianSpread);
-            }
+            private DelftIniCategory BoundaryCategory { get; }
 
-            /// <summary>
-            /// Visit method for setting the shape type at the place holder and adding the Peak Enhancement factor 
-            /// to the category.
-            /// </summary>
-            /// <param name="jonswapShape">The visited <see cref="JonswapShape"/></param>
-            /// <exception cref="System.ArgumentNullException">
-            /// Thrown when <paramref name="jonswapShape"/>
-            /// is <c>null</c>.
-            /// </exception>
-            public void Visit(JonswapShape jonswapShape)
-            {
-                Ensure.NotNull(jonswapShape, nameof(jonswapShape));
-                BoundaryCategory.SetProperty(KnownWaveProperties.ShapeType, KnownWaveBoundariesFileConstants.JonswapShape);
-                BoundaryCategory.AddProperty(KnownWaveProperties.PeakEnhancementFactor, jonswapShape.PeakEnhancementFactor);
-            }
-
-            /// <summary>
-            /// Visit method for setting the shape type at the place holder in the category.
-            /// </summary>
-            /// <param name="piersonMoskowitzShape"> The visited <see cref="PiersonMoskowitzShape"/></param>
-            /// <exception cref="System.ArgumentNullException">
-            /// Thrown when <paramref name="piersonMoskowitzShape"/>
-            /// is <c>null</c>.
-            /// </exception>
-            public void Visit(PiersonMoskowitzShape piersonMoskowitzShape)
-            {
-                Ensure.NotNull(piersonMoskowitzShape, nameof(piersonMoskowitzShape));
-                BoundaryCategory.SetProperty(KnownWaveProperties.ShapeType, KnownWaveBoundariesFileConstants.PiersonMoskowitzShape);
-            }
-
-            /// <summary>
-            /// Visit method for adding place holders for shape type and directional spreading type. Also adds
-            /// period type to the category. Calls next shape object to visit and data component.
-            /// </summary>
-            /// <param name="waveBoundaryConditionDefinition">The visited <see cref="IWaveBoundaryConditionDefinition"/></param>
-            /// <exception cref="System.ArgumentNullException">
-            /// Thrown when <paramref name="waveBoundaryConditionDefinition"/>
-            /// is <c>null</c>.
-            /// </exception>
-            public void Visit(IWaveBoundaryConditionDefinition waveBoundaryConditionDefinition)
-            {
-                Ensure.NotNull(waveBoundaryConditionDefinition, nameof(waveBoundaryConditionDefinition));
-                
-                //place holder
-                BoundaryCategory.AddProperty(KnownWaveProperties.ShapeType, string.Empty);
-                
-                string periodTypePropertyValue;
-
-                switch (waveBoundaryConditionDefinition.PeriodType)
-                {
-                    case BoundaryConditionPeriodType.Mean:
-                        periodTypePropertyValue = PeriodImportExportType.Mean.GetDescription();
-                        break;
-                    case BoundaryConditionPeriodType.Peak:
-                        periodTypePropertyValue = PeriodImportExportType.Peak.GetDescription();
-                        break;
-                    default:
-                        throw new NotSupportedException($"Value '{waveBoundaryConditionDefinition.PeriodType}' is not a valid period type for the exporter.");
-                }
-
-                BoundaryCategory.AddProperty(KnownWaveProperties.PeriodType, periodTypePropertyValue);
-                
-                BoundaryCategory.AddProperty(KnownWaveProperties.DirectionalSpreadingType, string.Empty);
-                
-                waveBoundaryConditionDefinition.Shape.AcceptVisitor(this);
-
-                waveBoundaryConditionDefinition.DataComponent.AcceptVisitor(this);
-            }
+            private IList<SupportPoint> SupportPoints { get; set; }
         }
     }
 }

@@ -14,21 +14,23 @@ using NetTopologySuite.Extensions.Coverages;
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
 {
     /// <summary>
-    /// This class listenens to a collection of items (typically Project.RootFolder) and whenever a coverage is added or removed
+    /// This class listenens to a collection of items (typically Project.RootFolder) and whenever a coverage is added or
+    /// removed
     /// it calls delegate functions to keep a listener up to date. It also supports initial coverages to be defined.
     /// </summary>
     public class NetworkSideViewCoverageManager : IDisposable
     {
+        private readonly Dictionary<IVariable, ICoverage> coverageQueue = new Dictionary<IVariable, ICoverage>();
+        public OnRouteRemovedDelegate OnRouteRemoved;
+        public OnCoverageAddedRemovedDelegate OnCoverageAddedToProject;
+        public OnCoverageAddedRemovedDelegate OnCoverageRemovedFromProject;
         private INotifyCollectionChange projectItems;
         private IEnumerable<ICoverage> initialCoverages;
         private Route route;
 
         public delegate void OnRouteRemovedDelegate();
-        public OnRouteRemovedDelegate OnRouteRemoved;
 
         public delegate void OnCoverageAddedRemovedDelegate(ICoverage coverage);
-        public OnCoverageAddedRemovedDelegate OnCoverageAddedToProject;
-        public OnCoverageAddedRemovedDelegate OnCoverageRemovedFromProject;
 
         public NetworkSideViewCoverageManager(Route route, INotifyCollectionChange projectItems, IEnumerable<ICoverage> initialCoverages)
         {
@@ -41,21 +43,46 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
                 projectItems.CollectionChanged += ProjectItemsCollectionChanged;
             }
         }
-        
+
         /// <summary>
-        /// Triggers the initial coverages to be set through the delegate OnCoverageAddedToProject. Should be called after registering the delegate.
+        /// Triggers the initial coverages to be set through the delegate OnCoverageAddedToProject. Should be called after
+        /// registering the delegate.
         /// </summary>
         public void RequestInitialCoverages()
         {
             if (initialCoverages == null)
+            {
                 return;
+            }
 
-            foreach (var coverage in initialCoverages.Where(coverage => coverage != null))
+            foreach (ICoverage coverage in initialCoverages.Where(coverage => coverage != null))
             {
                 AddCoverage(coverage);
             }
 
             initialCoverages = null;
+        }
+
+        public void Dispose()
+        {
+            OnRouteRemoved = null;
+            OnCoverageAddedToProject = null;
+            OnCoverageRemovedFromProject = null;
+
+            if (projectItems != null)
+            {
+                projectItems.CollectionChanged -= ProjectItemsCollectionChanged;
+            }
+
+            if (coverageQueue != null)
+            {
+                foreach (IVariable timeKey in coverageQueue.Keys)
+                {
+                    timeKey.ValuesChanged -= TimeValuesChanged;
+                }
+
+                coverageQueue.Clear();
+            }
         }
 
         private void ModelItemRemoved(object item)
@@ -72,7 +99,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
         private void ProjectItemsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             //start updating our stuff
-            var removedOrAddedItem = e.GetRemovedOrAddedItem();
+            object removedOrAddedItem = e.GetRemovedOrAddedItem();
             if (removedOrAddedItem is Route)
             {
                 var routeItem = removedOrAddedItem as Route;
@@ -91,34 +118,37 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
             }
             else if (removedOrAddedItem is IDataItem)
             {
-                var value = ((IDataItem)removedOrAddedItem).Value;
+                object value = ((IDataItem) removedOrAddedItem).Value;
 
                 if (!(value is ICoverage))
+                {
                     return;
+                }
 
                 switch (e.Action)
                 {
                     case NotifyCollectionChangedAction.Add:
-                        AddCoverage((ICoverage)value);
+                        AddCoverage((ICoverage) value);
                         break;
                     case NotifyCollectionChangedAction.Remove:
                         if (OnCoverageRemovedFromProject != null)
                         {
-                            OnCoverageRemovedFromProject((ICoverage)value);
+                            OnCoverageRemovedFromProject((ICoverage) value);
                         }
+
                         break;
                     case NotifyCollectionChangedAction.Replace:
                         break;
                 }
             }
         }
-        
-        private readonly Dictionary<IVariable, ICoverage> coverageQueue = new Dictionary<IVariable, ICoverage>();
 
         private void AddCoverage(ICoverage coverage)
         {
             if (coverage is Route)
+            {
                 return; //filter routes out
+            }
 
             if (coverage.IsTimeDependent && coverage.Time.Values.Count == 0)
             {
@@ -127,7 +157,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
                 //without valid values.
 
                 //we may receive a notification for the same coverage multiple times in case of nested models (eg, flow in rtc)
-                if (coverageQueue.ContainsKey(coverage.Time)) 
+                if (coverageQueue.ContainsKey(coverage.Time))
                 {
                     return;
                 }
@@ -146,37 +176,17 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
 
         private void TimeValuesChanged(object sender, FunctionValuesChangingEventArgs e)
         {
-            var time = (IVariable)sender;
-            var coverage = coverageQueue[time];
+            var time = (IVariable) sender;
+            ICoverage coverage = coverageQueue[time];
             if (coverage.Time.Values.Count > 0)
             {
                 if (OnCoverageAddedToProject != null)
                 {
                     OnCoverageAddedToProject(coverage);
                 }
+
                 coverageQueue.Remove(time);
                 coverage.Time.ValuesChanged -= TimeValuesChanged;
-            }
-        }
-
-        public void Dispose()
-        {
-            OnRouteRemoved = null;
-            OnCoverageAddedToProject = null;
-            OnCoverageRemovedFromProject = null;
-
-            if (projectItems != null)
-            {
-                projectItems.CollectionChanged -= ProjectItemsCollectionChanged;
-            }
-
-            if (coverageQueue != null)
-            {
-                foreach(IVariable timeKey in coverageQueue.Keys)
-                {
-                    timeKey.ValuesChanged -= TimeValuesChanged;
-                }
-                coverageQueue.Clear();
             }
         }
     }

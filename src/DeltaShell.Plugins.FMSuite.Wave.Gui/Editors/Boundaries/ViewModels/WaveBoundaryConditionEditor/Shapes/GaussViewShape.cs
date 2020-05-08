@@ -7,7 +7,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
     /// <summary>
     /// <see cref="GaussViewShape"/> defines the Gauss shape within the View layer.
     /// </summary>
-    /// <seealso cref="IViewShape" />
+    /// <seealso cref="IViewShape"/>
     [Description("Gauss")]
     public class GaussViewShape : IViewShape
     {

@@ -44,21 +44,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         private static string FMSuiteFlowModelVersion;
         private static string FMDllVersion;
 
-        private int propertyKeyAlignmentLength;
-        private int propertyValueAlignmentLength;
-
-
-
-        private LdbFile landBoundariesFile;
-        private PliFile<ThinDam2D> thinDamFile;
-        private PlizFile<FixedWeir> fixedWeirFile;
-        private PlizFile<BridgePillar> bridgePillarFile;
-        private StructuresFile structuresFile;
-        private ObsFile<GroupableFeature2DPoint> obsFile;
-        private PliFile<ObservationCrossSection2D> obsCrsFile;
-        private PolFile<GroupableFeature2DPolygon> dryAreaFile;
-        private PolFile<GroupableFeature2DPolygon> enclosureFile;
-
         // the following mdu-referenced files are written by the UI, or at least should not be copied along blindly 
         // (please keep this list up-to-date!):
 
@@ -93,6 +78,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                 {KnownProperties.ObsCrsFile, "CrsFile"},
             };
 
+        private int propertyKeyAlignmentLength;
+        private int propertyValueAlignmentLength;
+
+        private LdbFile landBoundariesFile;
+        private PliFile<ThinDam2D> thinDamFile;
+        private PlizFile<FixedWeir> fixedWeirFile;
+        private PlizFile<BridgePillar> bridgePillarFile;
+        private StructuresFile structuresFile;
+        private ObsFile<GroupableFeature2DPoint> obsFile;
+        private PliFile<ObservationCrossSection2D> obsCrsFile;
+        private PolFile<GroupableFeature2DPolygon> dryAreaFile;
+        private PolFile<GroupableFeature2DPolygon> enclosureFile;
+
         public MduFile()
         {
             if (FMDllVersion != null)
@@ -126,16 +124,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             FMSuiteFlowModelVersion = waterFlowFMAssembly.GetName().Version.ToString();
         }
 
-        internal string Path { get; set; }
-
         public ExtForceFile ExternalForcingsFile { get; private set; }
 
         public BndExtForceFile BoundaryExternalForcingsFile { get; private set; }
 
+        internal string Path { get; set; }
+
         #region write logic
 
         /// <summary>
-        /// Write this <see cref="MduFile" /> to the specified target mdu file path given the specified parameters.
+        /// Write this <see cref="MduFile"/> to the specified target mdu file path given the specified parameters.
         /// </summary>
         /// <param name="targetMduFilePath"> The target mdu file path. </param>
         /// <param name="modelDefinition"> The model definition. </param>
@@ -145,7 +143,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         /// <param name="switchTo"> if set to <c> true </c> [switch to]. </param>
         /// <param name="sedimentModelData"> The sediment model data. </param>
         /// <remarks>
-        /// If <paramref name="config" /> is null, the default MduFileWriteConfig will be used.
+        /// If <paramref name="config"/> is null, the default MduFileWriteConfig will be used.
         /// </remarks>
         public void Write(string targetMduFilePath,
                           WaterFlowFMModelDefinition modelDefinition,
@@ -207,7 +205,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         }
 
         /// <summary>
-        /// Write the properties to the specified <paramref name="filePath" />.
+        /// Write the properties to the specified <paramref name="filePath"/>.
         /// </summary>
         /// <param name="filePath"> The file path. </param>
         /// <param name="modelDefinition"> The model definition. </param>
@@ -215,7 +213,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         /// <param name="writePartionFile"> if set to <c> true </c> [write partion file]. </param>
         /// <param name="useNetCDFMapFormat"> if set to <c> true </c> [use net CDF map format]. </param>
         /// <remarks>
-        /// If <paramref name="config" /> is null, the default MduFileWriteConfig will be used.
+        /// If <paramref name="config"/> is null, the default MduFileWriteConfig will be used.
         /// </remarks>
         public void WriteProperties(string filePath,
                                     IEnumerable<WaterFlowFMProperty> modelDefinition,
@@ -500,7 +498,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         private string GetProjectedCoordinateSystemNameFromNetFile(string targetFile)
         {
             NetCdfFile netCdfFile = null;
-            string nameProjectedCS = string.Empty;
+            var nameProjectedCS = string.Empty;
 
             try
             {
@@ -523,9 +521,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         }
 
         private void WriteMduGroup(IMduFileWriteConfig config,
-                                  bool writePartionFile,
-                                  bool useNetCDFMapFormat,
-                                  IGrouping<string, WaterFlowFMProperty> propertyGroup)
+                                   bool writePartionFile,
+                                   bool useNetCDFMapFormat,
+                                   IGrouping<string, WaterFlowFMProperty> propertyGroup)
         {
             WriteLine("");
             WriteLine("[" + propertyGroup.Key + "]");
@@ -579,7 +577,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                       FMDllVersion);
             SetValueToPropertyIfExists(properties, KnownProperties.Version, FMDllVersion);
             SetValueToPropertyIfExists(properties, KnownProperties.GuiVersion, FMSuiteFlowModelVersion);
-            IEnumerable<IGrouping<string, WaterFlowFMProperty>> propertiesByGroup = 
+            IEnumerable<IGrouping<string, WaterFlowFMProperty>> propertiesByGroup =
                 properties.Where(IsMduFileProperty)
                           .GroupBy(p => p.PropertyDefinition.FileCategoryName);
 
@@ -904,10 +902,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             var bridgePillarFile = fileWriter as PlizFile<BridgePillar>;
             if (bridgePillarFile != null)
             {
-                bridgePillarFile.CreateDelegate = delegate(List<Coordinate> points, string name)
-                {
-                    return CreateDelegateBridgePillar(name, points);
-                };
+                bridgePillarFile.CreateDelegate = delegate(List<Coordinate> points, string name) { return CreateDelegateBridgePillar(name, points); };
             }
 
             var structuresFileWriter = fileWriter as StructuresFile;
@@ -1237,7 +1232,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
             dataColumn.ValueList = loadedData.ToList();
         }
-        
+
         private static void ReadFeatures<TFeat, TFile>(string mduFilePath, WaterFlowFMModelDefinition modelDefinition,
                                                        string propertyKey, IList<TFeat> features, ref TFile fileReader,
                                                        string extension) where TFile : IFeature2DFileBase<TFeat>, new()
@@ -1262,7 +1257,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                 {
                     string structuresSubFilesReferenceFilePath =
                         (bool) modelDefinition.GetModelProperty(KnownProperties.PathsRelativeToParent).Value
-                            ? featuresFilePath : mduFilePath;
+                            ? featuresFilePath
+                            : mduFilePath;
                     var structuresFile = fileReader as StructuresFile;
                     featuresToAdd =
                         (IList<TFeat>) structuresFile.ReadStructuresFileRelativeToReferenceFile(featuresFilePath, structuresSubFilesReferenceFilePath);
@@ -1486,7 +1482,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         /// <param name="featureFilePaths"> The group names of all features, retrieved from the mdu file of the FM Model. </param>
         /// <param name="mduFilePath"> The file path of the mdu file. </param>
         /// <param name="modelDefinition"> The model definition of the FM Model. </param>
-       private static void RemoveAllStructuresFilesWithBadReferences(ICollection<string> featureFilePaths, string mduFilePath,
+        private static void RemoveAllStructuresFilesWithBadReferences(ICollection<string> featureFilePaths, string mduFilePath,
                                                                       WaterFlowFMModelDefinition modelDefinition)
         {
             var pathsRelativeToParent =

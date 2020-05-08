@@ -5,16 +5,15 @@ using DelftTools.Hydro.CrossSections;
 using DelftTools.Shell.Gui;
 using DelftTools.Shell.Gui.Swf;
 using DelftTools.Utils.Collections.Generic;
+using DeltaShell.Plugins.NetworkEditor.Gui.Properties;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView.NodePresenters
 {
     public class SharedCrossSectionDefinitionsTreeViewNodePresenter : TreeViewNodePresenterBaseForPluginGui<IEventedList<ICrossSectionDefinition>>
     {
-        private static readonly Image SharedCrossSectionDefinitionsImage= Properties.Resources.SharedCrossSectionDefinitions;
+        private static readonly Image SharedCrossSectionDefinitionsImage = Resources.SharedCrossSectionDefinitions;
 
-        public SharedCrossSectionDefinitionsTreeViewNodePresenter(GuiPlugin guiPlugin) : base(guiPlugin)
-        {
-        }
+        public SharedCrossSectionDefinitionsTreeViewNodePresenter(GuiPlugin guiPlugin) : base(guiPlugin) {}
 
         public override void UpdateNode(ITreeNode parentNode, ITreeNode node, IEventedList<ICrossSectionDefinition> nodeData)
         {
@@ -24,7 +23,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView.NodePre
 
         public override IEnumerable GetChildNodeObjects(IEventedList<ICrossSectionDefinition> parentNodeData, ITreeNode node)
         {
-            foreach (var crossSectionSectionType in parentNodeData)
+            foreach (ICrossSectionDefinition crossSectionSectionType in parentNodeData)
             {
                 yield return crossSectionSectionType;
             }
@@ -36,6 +35,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView.NodePre
             {
                 return null;
             }
+
             return GuiPlugin.GetContextMenu(sender, nodeData);
         }
     }

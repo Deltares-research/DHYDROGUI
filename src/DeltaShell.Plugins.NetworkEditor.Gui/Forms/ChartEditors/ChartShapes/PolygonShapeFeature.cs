@@ -24,7 +24,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapes
             }
             catch (Exception)
             {
-
                 return false;
             }
         }
@@ -38,18 +37,19 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapes
 
         public override void Paint(IChartDrawingContext chartDrawingContext)
         {
-            var g = (ChartGraphics)chartDrawingContext.Graphics;
+            var g = (ChartGraphics) chartDrawingContext.Graphics;
             //ChartBrush brush = new ChartBrush(Chart);
             //ChartPen pen = new ChartPen(Chart, Color.Black);
             /*g.Pen = pen;
             g.Brush = brush;
             g.BackColor = ((SolidBrush)chartDrawingContext.Style.Fill).Color;*/
-            Point[] devicePoint = new Point[Geometry.Coordinates.Length];
-            for (int i = 0; i < devicePoint.Length; i++)
+            var devicePoint = new Point[Geometry.Coordinates.Length];
+            for (var i = 0; i < devicePoint.Length; i++)
             {
                 devicePoint[i].X = ChartCoordinateService.ToDeviceX(Chart, Geometry.Coordinates[i].X);
                 devicePoint[i].Y = ChartCoordinateService.ToDeviceY(Chart, Geometry.Coordinates[i].Y);
             }
+
             g.Polygon(devicePoint);
             //brush.Dispose();
             //pen.Dispose();
@@ -57,7 +57,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapes
 
         public override object Clone()
         {
-            return new PolygonShapeFeature(Chart, (IPolygon)Geometry);
+            return new PolygonShapeFeature(Chart, (IPolygon) Geometry);
         }
 
         public override IShapeFeatureEditor CreateShapeFeatureEditor(ShapeEditMode shapeEditMode)

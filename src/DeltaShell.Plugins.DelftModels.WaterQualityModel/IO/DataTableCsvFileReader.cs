@@ -11,7 +11,7 @@ using log4net;
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
 {
     /// <summary>
-    /// Reads data from a csv file to create <see cref="DataTable" /> objects from.
+    /// Reads data from a csv file to create <see cref="DataTable"/> objects from.
     /// </summary>
     /// <example>
     /// Accepted fileformat, for linear- or constant interpolated respectively:
@@ -106,18 +106,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
                 },
                 FieldToColumnMapping = new Dictionary<CsvRequiredField, CsvColumnInfo>
                 {
-                    {
-                        new CsvRequiredField("time", typeof(DateTime)),
-                        new CsvColumnInfo(0, new DateTimeFormatInfo {FullDateTimePattern = "yyyy-MM-dd HH:mm:ss"})
-                    },
-                    {
-                        new CsvRequiredField(LocationHeaderName, typeof(string)),
-                        new CsvColumnInfo(1, CultureInfo.InvariantCulture)
-                    },
-                    {
-                        new CsvRequiredField("substance", typeof(string)),
-                        new CsvColumnInfo(2, CultureInfo.InvariantCulture)
-                    },
+                    {new CsvRequiredField("time", typeof(DateTime)), new CsvColumnInfo(0, new DateTimeFormatInfo {FullDateTimePattern = "yyyy-MM-dd HH:mm:ss"})},
+                    {new CsvRequiredField(LocationHeaderName, typeof(string)), new CsvColumnInfo(1, CultureInfo.InvariantCulture)},
+                    {new CsvRequiredField("substance", typeof(string)), new CsvColumnInfo(2, CultureInfo.InvariantCulture)},
                     {new CsvRequiredField("value", typeof(string)), new CsvColumnInfo(3, CultureInfo.InvariantCulture)},
                 }
             };

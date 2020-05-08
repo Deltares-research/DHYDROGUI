@@ -5,7 +5,6 @@ using System.Windows.Data;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Converters
 {
-
     /// <summary>
     /// <see cref="UnitStringToUnitDisplayStringConverter"/> converts a Unit
     /// string, e.g. 'm' or 'Kg', to its display equivalent, respectively
@@ -26,7 +25,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Converters
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-
             if (value is string unit && targetType == typeof(string))
             {
                 return unit.Substring(1, unit.Length - 2);

@@ -8,6 +8,7 @@ using DeltaShell.Plugins.FMSuite.Common.Layers;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.NetworkEditor.MapLayers;
 using DeltaShell.Plugins.SharpMapGis.Gui.Commands;
+using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using Fluent;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Ribbon
@@ -25,61 +26,83 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Ribbon
 
             mapTab.Group = geospatialContextualGroup;
 
-            buttonCommands.Add(ButtonAddBoundary, new MapToolCommand(FlowFMMapViewDecorator.BoundaryToolName) { LayerType = typeof(HydroAreaLayer) });
-            buttonCommands.Add(ButtonAddSourceSink, new MapToolCommand(FlowFMMapViewDecorator.SourceAndSinkToolName) { LayerType = typeof(HydroAreaLayer) });
-            buttonCommands.Add(ButtonAddSource, new MapToolCommand(FlowFMMapViewDecorator.SourceToolName) { LayerType = typeof(HydroAreaLayer) });
-            buttonCommands.Add(ButtonReverseLine, new MapToolCommand(FlowFMMapViewDecorator.Reverse2DLineToolName) { LayerType = typeof(HydroAreaLayer), ToolAction = ToolAction.Execute});
-            buttonCommands.Add(ButtonGenerateEmbankments, new MapToolCommand(FlowFMMapViewDecorator.GenerateEmbankmentsToolName) { LayerType = typeof(HydroAreaLayer), ToolAction = ToolAction.Execute});
-            buttonCommands.Add(ButtonMergeEmbankments, new MapToolCommand(FlowFMMapViewDecorator.MergeEmbankmentsToolName) { LayerType = typeof(HydroAreaLayer), ToolAction = ToolAction.Execute });
-            buttonCommands.Add(ButtonGridWizard, new MapToolCommand(FlowFMMapViewDecorator.GridWizardToolName) { LayerType = typeof(HydroAreaLayer) });
+            buttonCommands.Add(ButtonAddBoundary, new MapToolCommand(FlowFMMapViewDecorator.BoundaryToolName) {LayerType = typeof(HydroAreaLayer)});
+            buttonCommands.Add(ButtonAddSourceSink, new MapToolCommand(FlowFMMapViewDecorator.SourceAndSinkToolName) {LayerType = typeof(HydroAreaLayer)});
+            buttonCommands.Add(ButtonAddSource, new MapToolCommand(FlowFMMapViewDecorator.SourceToolName) {LayerType = typeof(HydroAreaLayer)});
+            buttonCommands.Add(ButtonReverseLine, new MapToolCommand(FlowFMMapViewDecorator.Reverse2DLineToolName)
+            {
+                LayerType = typeof(HydroAreaLayer),
+                ToolAction = ToolAction.Execute
+            });
+            buttonCommands.Add(ButtonGenerateEmbankments, new MapToolCommand(FlowFMMapViewDecorator.GenerateEmbankmentsToolName)
+            {
+                LayerType = typeof(HydroAreaLayer),
+                ToolAction = ToolAction.Execute
+            });
+            buttonCommands.Add(ButtonMergeEmbankments, new MapToolCommand(FlowFMMapViewDecorator.MergeEmbankmentsToolName)
+            {
+                LayerType = typeof(HydroAreaLayer),
+                ToolAction = ToolAction.Execute
+            });
+            buttonCommands.Add(ButtonGridWizard, new MapToolCommand(FlowFMMapViewDecorator.GridWizardToolName) {LayerType = typeof(HydroAreaLayer)});
 
             ButtonReverseLine.ToolTip = new ScreenTip
-                {
-                    Title = "Reverse line(s)",
-                    Text = "Reverses the selected poly-line features.",
-                    DisableReason = "Required to have exclusively 2D/3D oriented polyline features selected.",
-                    MaxWidth = 250,
-                };
+            {
+                Title = "Reverse line(s)",
+                Text = "Reverses the selected poly-line features.",
+                DisableReason = "Required to have exclusively 2D/3D oriented polyline features selected.",
+                MaxWidth = 250,
+            };
         }
 
         public IEnumerable<ICommand> Commands
         {
-            get { return buttonCommands.Values; }
+            get
+            {
+                return buttonCommands.Values;
+            }
         }
 
         public void ValidateItems()
         {
-            var mapView = FlowFMGuiPlugin.ActiveMapView;
-            var visible = mapView != null && mapView.Map != null && mapView.Map.GetAllLayers(true).OfType<ModelGroupLayer>().Any(l => l.Model is WaterFlowFMModel);
+            MapView mapView = FlowFMGuiPlugin.ActiveMapView;
+            bool visible = mapView != null && mapView.Map != null && mapView.Map.GetAllLayers(true).OfType<ModelGroupLayer>().Any(l => l.Model is WaterFlowFMModel);
 
-            foreach (var buttonCommandPair in buttonCommands)
+            foreach (KeyValuePair<ButtonBase, ICommand> buttonCommandPair in buttonCommands)
             {
-                var button = buttonCommandPair.Key;
-                var command = buttonCommandPair.Value;
+                ButtonBase button = buttonCommandPair.Key;
+                ICommand command = buttonCommandPair.Value;
                 button.IsEnabled = command.Enabled;
-                
+
                 button.Visibility = visible ? Visibility.Visible : Visibility.Collapsed;
 
                 var toggleButton = button as IToggleButton;
                 if (toggleButton != null)
+                {
                     toggleButton.IsChecked = command.Checked;
+                }
             }
         }
 
         public bool IsContextualTabVisible(string tabGroupName, string tabName)
         {
             if (tabName != "tabRegion")
+            {
                 return false;
+            }
 
             // return true if any button is enabled on the tab
             return buttonCommands.Keys.Any(b => b.IsEnabled);
         }
 
-        public object GetRibbonControl() { return RibbonControl; }
+        public object GetRibbonControl()
+        {
+            return RibbonControl;
+        }
 
         private void OnClick(object sender, RoutedEventArgs e)
         {
-            buttonCommands[(ButtonBase)sender].Execute();
+            buttonCommands[(ButtonBase) sender].Execute();
             ValidateItems();
         }
     }

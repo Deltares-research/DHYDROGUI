@@ -36,9 +36,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factor
             IWaveBoundaryGeometryFactory geometryFactory = ConstructGeometryFactory(boundaryContainer);
             IAddBehaviour addBehaviour = ConstructBoundaryFromLineAddBehaviour(boundaryContainer);
 
-            return ConstructFeaturesContainer(boundaryContainer, 
-                                              coordinateSystem, 
-                                              addBehaviour, 
+            return ConstructFeaturesContainer(boundaryContainer,
+                                              coordinateSystem,
+                                              addBehaviour,
                                               geometryFactory);
         }
 
@@ -64,9 +64,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factor
 
             IAddBehaviour addBehaviour = constructReadOnlyAddBehaviour();
 
-            return ConstructFeaturesContainer(boundaryProvider, 
-                                              coordinateSystem, 
-                                              addBehaviour, 
+            return ConstructFeaturesContainer(boundaryProvider,
+                                              coordinateSystem,
+                                              addBehaviour,
                                               geometryFactory);
         }
 
@@ -75,20 +75,20 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factor
                                                                                IAddBehaviour addBehaviour,
                                                                                IWaveBoundaryGeometryFactory geometryFactory)
         {
-            var boundaryLineMapFeatureProvider = 
+            var boundaryLineMapFeatureProvider =
                 new BoundaryLineMapFeatureProvider(boundaryProvider,
                                                    coordinateSystem,
-                                                   geometryFactory, 
+                                                   geometryFactory,
                                                    addBehaviour);
 
-            var boundaryStartPointMapFeatureProvider = 
-                new BoundaryReadOnlyMapFeatureProvider(boundaryProvider, 
-                                                       coordinateSystem, 
+            var boundaryStartPointMapFeatureProvider =
+                new BoundaryReadOnlyMapFeatureProvider(boundaryProvider,
+                                                       coordinateSystem,
                                                        new StartingPointFromBoundaryBehaviour(geometryFactory));
 
-            var boundaryEndPointMapFeatureProvider = 
-                new BoundaryReadOnlyMapFeatureProvider(boundaryProvider, 
-                                                       coordinateSystem, 
+            var boundaryEndPointMapFeatureProvider =
+                new BoundaryReadOnlyMapFeatureProvider(boundaryProvider,
+                                                       coordinateSystem,
                                                        new EndPointFromBoundaryBehaviour(geometryFactory));
 
             var supportPointMapFeatureProvider =
@@ -97,28 +97,27 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factor
                                                            geometryFactory);
 
             return new BoundaryMapFeaturesContainer(boundaryLineMapFeatureProvider,
-                                                    boundaryStartPointMapFeatureProvider, 
+                                                    boundaryStartPointMapFeatureProvider,
                                                     boundaryEndPointMapFeatureProvider,
                                                     supportPointMapFeatureProvider);
         }
 
-        private static BoundaryFromLineAddBehaviour ConstructBoundaryFromLineAddBehaviour(IBoundaryContainer boundaryContainer) 
+        private static BoundaryFromLineAddBehaviour ConstructBoundaryFromLineAddBehaviour(IBoundaryContainer boundaryContainer)
         {
             var parametersFactory = new ForcingTypeDefinedParametersFactory();
             var dataComponentFactory = new SpatiallyDefinedDataComponentFactory(parametersFactory);
             var waveBoundaryFactory = new WaveBoundaryFactory(boundaryContainer,
-                                                              new WaveBoundaryFactoryHelper(dataComponentFactory), 
+                                                              new WaveBoundaryFactoryHelper(dataComponentFactory),
                                                               new UniqueBoundaryNameProvider(boundaryContainer));
 
-            return new BoundaryFromLineAddBehaviour(boundaryContainer, 
-                                                     waveBoundaryFactory);
+            return new BoundaryFromLineAddBehaviour(boundaryContainer,
+                                                    waveBoundaryFactory);
         }
 
         private static ReadOnlyAddBehaviour constructReadOnlyAddBehaviour() =>
             new ReadOnlyAddBehaviour();
 
-        private static IWaveBoundaryGeometryFactory ConstructGeometryFactory(IBoundaryContainer boundaryContainer) => 
+        private static IWaveBoundaryGeometryFactory ConstructGeometryFactory(IBoundaryContainer boundaryContainer) =>
             new WaveBoundaryGeometryFactory(boundaryContainer, boundaryContainer);
-
     }
 }

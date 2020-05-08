@@ -13,7 +13,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers.Providers
     /// <see cref="WaveModelLayerSubProvider"/> implements the
     /// <see cref="ILayerSubProvider"/> for data of type <see cref="WaveModel"/>.
     /// </summary>
-    /// <seealso cref="ILayerSubProvider" />
+    /// <seealso cref="ILayerSubProvider"/>
     public class WaveModelLayerSubProvider : ILayerSubProvider
     {
         private readonly IWaveLayerFactory factory;
@@ -38,9 +38,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers.Providers
         }
 
         public ILayer CreateLayer(object sourceData, object parentData)
-        { 
-            return sourceData is WaveModel waveModel ? factory.CreateModelGroupLayer(waveModel) 
-                                                     : null;
+        {
+            return sourceData is WaveModel waveModel
+                       ? factory.CreateModelGroupLayer(waveModel)
+                       : null;
         }
 
         public IEnumerable<object> GenerateChildLayerObjects(object data)
@@ -51,7 +52,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers.Providers
             }
 
             yield return BoundaryMapFeaturesContainerFactory.ConstructEditableBoundaryMapFeaturesContainer(
-                model.BoundaryContainer, 
+                model.BoundaryContainer,
                 model.CoordinateSystem);
 
             yield return model.Obstacles;
@@ -64,7 +65,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers.Providers
             }
 
             IEnumerable<WavmFileFunctionStore> relevantFunctionStores =
-                model.WavmFunctionStores.Where(fs => fs.Functions.Any() && 
+                model.WavmFunctionStores.Where(fs => fs.Functions.Any() &&
                                                      !string.IsNullOrEmpty(fs.Path));
             foreach (WavmFileFunctionStore wavmFunctionStore in relevantFunctionStores)
             {

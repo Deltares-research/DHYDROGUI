@@ -5,7 +5,7 @@ using DelftTools.Utils.RegularExpressions;
 namespace DeltaShell.Plugins.FMSuite.Common.IO.Readers
 {
     /// <summary>
-    /// ReaderHelper for shared read logic. 
+    /// ReaderHelper for shared read logic.
     /// </summary>
     public static class ReaderHelper
     {
@@ -21,7 +21,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Readers
         /// <exception cref="FormatException">Invalid key-value-comment line on line {lineNumber} in file {inputFilePath}</exception>
         public static string[] GetKeyValueComment(string line, int lineNumber, string inputFilePath)
         {
-
             var result = new string[3];
 
             MatchCollection matches = RegularExpression.GetMatches(KeyValueCommentPattern, line);

@@ -20,6 +20,26 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Api
                     Environment.Is64BitOperatingSystem, null, showConsole, typeof(DimrApi).Assembly);
         }
 
+        public DateTime StartTime => remoteInstanceApi.StartTime;
+        public DateTime StopTime => remoteInstanceApi.StopTime;
+
+        public DateTime CurrentTime => remoteInstanceApi.CurrentTime;
+
+        public TimeSpan TimeStep => remoteInstanceApi.TimeStep;
+        public string[] VariableNames => remoteInstanceApi.VariableNames;
+
+        public Logger Logger
+        {
+            get => remoteInstanceApi.Logger;
+            set => remoteInstanceApi.Logger = value;
+        }
+
+        public DateTime ReferenceDateTime
+        {
+            get => remoteInstanceApi.ReferenceDateTime;
+            set => remoteInstanceApi.ReferenceDateTime = value;
+        }
+
         public int Initialize(string mdwFilePath)
         {
             return remoteInstanceApi.Initialize(mdwFilePath);
@@ -70,32 +90,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Api
             remoteInstanceApi.SetValues(variable, index, values);
         }
 
-        public DateTime StartTime => remoteInstanceApi.StartTime;
-        public DateTime StopTime => remoteInstanceApi.StopTime;
-
-        public DateTime CurrentTime => remoteInstanceApi.CurrentTime;
-
-        public TimeSpan TimeStep => remoteInstanceApi.TimeStep;
-        public string[] VariableNames => remoteInstanceApi.VariableNames;
-
-        public Logger Logger
-        {
-            get => remoteInstanceApi.Logger;
-            set => remoteInstanceApi.Logger = value;
-        }
-
-        public DateTime ReferenceDateTime
-        {
-            get => remoteInstanceApi.ReferenceDateTime;
-            set => remoteInstanceApi.ReferenceDateTime = value;
-        }
-
-        ~RemoteWaveModelApi()
-        {
-            // in case someone forgets to dispose..
-            DisposeInternal();
-        }
-
         public void Dispose()
         {
             if (disposed)
@@ -117,6 +111,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Api
             remoteInstanceApi = null;
             disposed = true;
             Thread.Sleep(100); // wait for process to truly exit
+        }
+
+        ~RemoteWaveModelApi()
+        {
+            // in case someone forgets to dispose..
+            DisposeInternal();
         }
     }
 }

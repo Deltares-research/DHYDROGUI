@@ -17,8 +17,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [PropertyOrder(1)]
         public string Name
         {
-            get { return data.Name; }
-            set { data.Name = value; }
+            get
+            {
+                return data.Name;
+            }
+            set
+            {
+                data.Name = value;
+            }
         }
 
         [DisplayName("Catchment count")]
@@ -27,7 +33,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [PropertyOrder(2)]
         public int CatchmentCount
         {
-            get { return data.Catchments.Count; }
+            get
+            {
+                return data.Catchments.Count;
+            }
         }
 
         [DisplayName("WWTP count")]
@@ -36,7 +45,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [PropertyOrder(3)]
         public int WWWTPCount
         {
-            get { return data.WasteWaterTreatmentPlants.Count; }
+            get
+            {
+                return data.WasteWaterTreatmentPlants.Count;
+            }
         }
 
         [DisplayName("Runoff boundary count")]
@@ -45,15 +57,24 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [PropertyOrder(4)]
         public int RunoffBoundaryCount
         {
-            get { return data.Boundaries.Count; }
+            get
+            {
+                return data.Boundaries.Count;
+            }
         }
 
         [TypeConverter(typeof(CoordinateSystemStringTypeConverter))]
         [Editor(typeof(CoordinateSystemTypeEditor), typeof(UITypeEditor))]
         public ICoordinateSystem CoordinateSystem
         {
-            get { return data.CoordinateSystem; }
-            set { data.CoordinateSystem = value; }
+            get
+            {
+                return data.CoordinateSystem;
+            }
+            set
+            {
+                data.CoordinateSystem = value;
+            }
         }
     }
 }

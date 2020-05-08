@@ -16,8 +16,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [PropertyOrder(1)]
         public string Name
         {
-            get { return data.Name; }
-            set { data.Name = value; }
+            get
+            {
+                return data.Name;
+            }
+            set
+            {
+                data.Name = value;
+            }
         }
 
         [TypeConverter(typeof(CoordinateSystemStringTypeConverter))]
@@ -25,7 +31,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [DisplayName("Coordinate System")]
         public ICoordinateSystem CoordinateSystem
         {
-            get { return data.CoordinateSystem; }
+            get
+            {
+                return data.CoordinateSystem;
+            }
         }
     }
 }

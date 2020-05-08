@@ -21,16 +21,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
         private readonly IFilesManager filesManager;
 
         /// <summary>
-        /// Gets the spectrum file name.
-        /// </summary>
-        public string SpectrumFile { get; private set; }
-
-        /// <summary>
-        /// Gets the spectrum type of the boundary.
-        /// </summary>
-        public SpectrumImportExportType SpectrumType { get; private set; }
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="SpectrumParametersVisitor"/> class.
         /// </summary>
         /// <param name="category">The category.</param>
@@ -47,6 +37,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             this.category = category;
             this.filesManager = filesManager;
         }
+
+        /// <summary>
+        /// Gets the spectrum file name.
+        /// </summary>
+        public string SpectrumFile { get; private set; }
+
+        /// <summary>
+        /// Gets the spectrum type of the boundary.
+        /// </summary>
+        public SpectrumImportExportType SpectrumType { get; private set; }
 
         public void Visit<T>(ConstantParameters<T> constantParameters) where T : IBoundaryConditionSpreading, new()
         {

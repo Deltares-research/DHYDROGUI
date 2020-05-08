@@ -114,6 +114,5 @@
         /// The counter clockwise distance dir type
         /// </summary>
         public const string CounterClockwiseDistanceDirType = "counter-clockwise";
-
     }
 }

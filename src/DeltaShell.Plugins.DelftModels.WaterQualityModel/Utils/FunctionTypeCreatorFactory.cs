@@ -59,7 +59,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Utils
         /// </summary>
         /// <param name="isAllowedFunction">
         /// Function that should return true if the creator
-        /// should be applicable for a given <see cref="IFunction" /> and return false when
+        /// should be applicable for a given <see cref="IFunction"/> and return false when
         /// it's not.
         /// </param>
         /// <param name="getFilePath">
@@ -103,7 +103,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Utils
         /// is of the type this creator creates (returning true) or not (returning false).
         /// </param>
         /// <param name="createFunction">
-        /// The <see cref="IFunction" /> creation method, where:
+        /// The <see cref="IFunction"/> creation method, where:
         /// <list type="bullet">
         ///     <item> 1st argument: function name </item>
         ///     <item> 2nd argument: default value </item>

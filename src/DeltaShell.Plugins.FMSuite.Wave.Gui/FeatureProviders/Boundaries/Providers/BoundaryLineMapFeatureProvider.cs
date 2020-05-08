@@ -34,17 +34,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Provid
         private readonly IWaveBoundaryGeometryFactory waveBoundaryGeometryFactory;
         private readonly IAddBehaviour addBehaviour;
 
-        private Tuple<IWaveBoundary, IEventedList<IWaveBoundary>> ObtainWaveBoundaryFromFeature(BoundaryLineFeature feature) =>
-            new Tuple<IWaveBoundary, IEventedList<IWaveBoundary>>(feature.ObservedWaveBoundary,
-                                                                  boundaryProvider.Boundaries);
-
-        private BoundaryLineFeature CreateBoundaryLineFeature(IWaveBoundary waveBoundary) =>
-            new BoundaryLineFeature()
-            {
-                ObservedWaveBoundary = waveBoundary,
-                Geometry = waveBoundaryGeometryFactory.ConstructBoundaryLineGeometry(waveBoundary),
-            };
-
         /// <summary>
         /// Creates a new <see cref="BoundaryLineMapFeatureProvider"/>.
         /// </summary>
@@ -55,8 +44,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Provid
         /// <exception cref="ArgumentNullException">
         /// Thrown when ay parameter except the <paramref name="coordinateSystem"/> is <c>null</c>.
         /// </exception>
-        public BoundaryLineMapFeatureProvider(IBoundaryProvider boundaryProvider, 
-                                              ICoordinateSystem coordinateSystem, 
+        public BoundaryLineMapFeatureProvider(IBoundaryProvider boundaryProvider,
+                                              ICoordinateSystem coordinateSystem,
                                               IWaveBoundaryGeometryFactory waveBoundaryGeometryFactory,
                                               IAddBehaviour addBehaviour)
         {
@@ -71,10 +60,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Provid
 
             this.boundaryProvider = boundaryProvider;
 
-            lineFeatures = new MultiIEventedListAdapter<IWaveBoundary, BoundaryLineFeature>(ObtainWaveBoundaryFromFeature, 
+            lineFeatures = new MultiIEventedListAdapter<IWaveBoundary, BoundaryLineFeature>(ObtainWaveBoundaryFromFeature,
                                                                                             CreateBoundaryLineFeature);
             lineFeatures.RegisterList(this.boundaryProvider.Boundaries);
             SubscribeToEventing();
+        }
+
+        public override IList Features
+        {
+            get => lineFeatures;
+            set => throw new NotSupportedException("Setting the Features to another value is currently not supported.");
         }
 
         /// <summary>
@@ -83,17 +78,28 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Provid
         /// </summary>
         /// <param name="geometry">The geometry.</param>
         /// <returns>
-        /// <c>null</c>
+        ///     <c>null</c>
         /// </returns>
         public override IFeature Add(IGeometry geometry)
         {
             addBehaviour.Execute(geometry);
             // We do not want to return this here, however the interface requires this (but never uses it).
-            return null; 
+            return null;
         }
 
-        public override bool Add(IFeature feature) => 
+        public override bool Add(IFeature feature) =>
             throw new NotSupportedException("This is currently not supported, implement when needed.");
+
+        private Tuple<IWaveBoundary, IEventedList<IWaveBoundary>> ObtainWaveBoundaryFromFeature(BoundaryLineFeature feature) =>
+            new Tuple<IWaveBoundary, IEventedList<IWaveBoundary>>(feature.ObservedWaveBoundary,
+                                                                  boundaryProvider.Boundaries);
+
+        private BoundaryLineFeature CreateBoundaryLineFeature(IWaveBoundary waveBoundary) =>
+            new BoundaryLineFeature()
+            {
+                ObservedWaveBoundary = waveBoundary,
+                Geometry = waveBoundaryGeometryFactory.ConstructBoundaryLineGeometry(waveBoundary),
+            };
 
         private void SubscribeToEventing()
         {
@@ -108,12 +114,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Provid
         private void OnFeaturesCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             FireFeaturesChanged();
-        }
-
-        public override IList Features
-        {
-            get => lineFeatures;
-            set => throw new NotSupportedException("Setting the Features to another value is currently not supported.");
         }
 
         #region IDisposable
@@ -136,6 +136,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Provid
                 UnsubscribeFromEventing();
             }
         }
+
         #endregion
     }
 }

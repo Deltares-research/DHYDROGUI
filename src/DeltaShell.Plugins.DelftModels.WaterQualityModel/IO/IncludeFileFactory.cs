@@ -19,6 +19,85 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
 {
     public static class IncludeFileFactory
     {
+        private static string CreateSpatialIncludeContents(ICollection<IFunction> functionCollection,
+                                                           string spatialDataGroupName, int numberOfLayers)
+        {
+            using (var writer = new StringWriter(new StringBuilder()))
+            {
+                foreach (IFunction locationDependentSpatialData in functionCollection.Where(
+                    pc => pc.IsUnstructuredGridCellCoverage()))
+                {
+                    CreateSpatialIncludeData(spatialDataGroupName, numberOfLayers, writer, locationDependentSpatialData,
+                                             locationDependentSpatialData.Name);
+                }
+
+                return writer.ToString();
+            }
+        }
+
+        /// <summary>
+        /// Creates the spatial include data.
+        /// </summary>
+        /// <param name="spatialDataGroupName"> Name of the spatial data group, such as "PARAMETERS". </param>
+        /// <param name="numberOfLayers"> The number of water quality layers. </param>
+        /// <param name="writer"> The writer to add text to. </param>
+        /// <param name="spatialData"> The spatial data. </param>
+        /// <param name="spatialDataName"> The name to identify the data with. </param>
+        private static void CreateSpatialIncludeData(string spatialDataGroupName, int numberOfLayers,
+                                                     StringWriter writer,
+                                                     IFunction spatialData, string spatialDataName)
+        {
+            writer.WriteLine(spatialDataGroupName);
+            writer.WriteLine("'{0}'", spatialDataName);
+            writer.WriteLine("ALL");
+            writer.WriteLine("DATA");
+
+            IMultiDimensionalArray<double> cellValues = spatialData.GetValues<double>();
+
+            // set values on the segments uniform over all layers
+            for (var i = 0; i < numberOfLayers; i++)
+            {
+                foreach (double cellValue in cellValues)
+                {
+                    writer.WriteLine(cellValue.ToString(CultureInfo.InvariantCulture));
+                }
+            }
+
+            writer.WriteLine();
+        }
+
+        /// <summary>
+        /// Write the location aliases as required for boundaries or loads.
+        /// </summary>
+        /// <example>
+        ///     <c>
+        ///     USEDATA_ITEM 'boei 23' FORITEM
+        ///     'sea'
+        ///     'laguna'
+        ///     'ocean'
+        ///     USEDATA_ITEM 'boei 34' FORITEM
+        ///     'sea'
+        ///     </c>
+        /// </example>
+        private static string CreateLocationAliases(IDictionary<string, IList<string>> locationAliases)
+        {
+            using (var writer = new StringWriter(new StringBuilder()))
+            {
+                foreach (KeyValuePair<string, IList<string>> measureLocation in locationAliases)
+                {
+                    writer.WriteLine("USEDATA_ITEM '{0}' FORITEM", measureLocation.Key);
+                    foreach (string boundary in measureLocation.Value)
+                    {
+                        writer.WriteLine("'{0}'", boundary);
+                    }
+
+                    writer.WriteLine();
+                }
+
+                return writer.ToString();
+            }
+        }
+
         #region Block 1
 
         public static string CreateT0Include(DateTime referenceTime)
@@ -71,7 +150,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         /// <summary>
         /// Write the output locations (monitoring locations)
         /// Monitoring locations are determined in
-        /// <see cref="WaqInitializationSettingsBuilder.CreateOutputLocationInformation" />.
+        /// <see cref="WaqInitializationSettingsBuilder.CreateOutputLocationInformation"/>.
         /// </summary>
         public static string CreateOutputLocationsInclude(IDictionary<string, IList<int>> outputLocations)
         {
@@ -170,7 +249,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         }
 
         /// <summary>
-        /// Creates a formatted string based on a <see cref="startTime" />, a <see cref="stopTime" /> and a <see cref="timeStep" />
+        /// Creates a formatted string based on a <see cref="startTime"/>, a <see cref="stopTime"/> and a <see cref="timeStep"/>
         /// </summary>
         /// <param name="startTime"> The start time </param>
         /// <param name="stopTime"> The stop time </param>
@@ -829,7 +908,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         /// Write an output parameter include.
         /// Starts with a 2, because this are additional parameters to the default parameter.
         /// The second nummer is the number of items listed.
-        /// Then a list of parameters is defined between quotes. If <paramref name="addParameterType" /> is true, a second column
+        /// Then a list of parameters is defined between quotes. If <paramref name="addParameterType"/> is true, a second column
         /// is written with 'volume'.
         /// </summary>
         /// <param name="outputParameters"> The output parameters. </param>
@@ -860,85 +939,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         }
 
         #endregion Block 9
-
-        private static string CreateSpatialIncludeContents(ICollection<IFunction> functionCollection,
-                                                           string spatialDataGroupName, int numberOfLayers)
-        {
-            using (var writer = new StringWriter(new StringBuilder()))
-            {
-                foreach (IFunction locationDependentSpatialData in functionCollection.Where(
-                    pc => pc.IsUnstructuredGridCellCoverage()))
-                {
-                    CreateSpatialIncludeData(spatialDataGroupName, numberOfLayers, writer, locationDependentSpatialData,
-                                             locationDependentSpatialData.Name);
-                }
-
-                return writer.ToString();
-            }
-        }
-
-        /// <summary>
-        /// Creates the spatial include data.
-        /// </summary>
-        /// <param name="spatialDataGroupName"> Name of the spatial data group, such as "PARAMETERS". </param>
-        /// <param name="numberOfLayers"> The number of water quality layers. </param>
-        /// <param name="writer"> The writer to add text to. </param>
-        /// <param name="spatialData"> The spatial data. </param>
-        /// <param name="spatialDataName"> The name to identify the data with. </param>
-        private static void CreateSpatialIncludeData(string spatialDataGroupName, int numberOfLayers,
-                                                     StringWriter writer,
-                                                     IFunction spatialData, string spatialDataName)
-        {
-            writer.WriteLine(spatialDataGroupName);
-            writer.WriteLine("'{0}'", spatialDataName);
-            writer.WriteLine("ALL");
-            writer.WriteLine("DATA");
-
-            IMultiDimensionalArray<double> cellValues = spatialData.GetValues<double>();
-
-            // set values on the segments uniform over all layers
-            for (var i = 0; i < numberOfLayers; i++)
-            {
-                foreach (double cellValue in cellValues)
-                {
-                    writer.WriteLine(cellValue.ToString(CultureInfo.InvariantCulture));
-                }
-            }
-
-            writer.WriteLine();
-        }
-
-        /// <summary>
-        /// Write the location aliases as required for boundaries or loads.
-        /// </summary>
-        /// <example>
-        ///     <c>
-        ///     USEDATA_ITEM 'boei 23' FORITEM
-        ///     'sea'
-        ///     'laguna'
-        ///     'ocean'
-        ///     USEDATA_ITEM 'boei 34' FORITEM
-        ///     'sea'
-        ///     </c>
-        /// </example>
-        private static string CreateLocationAliases(IDictionary<string, IList<string>> locationAliases)
-        {
-            using (var writer = new StringWriter(new StringBuilder()))
-            {
-                foreach (KeyValuePair<string, IList<string>> measureLocation in locationAliases)
-                {
-                    writer.WriteLine("USEDATA_ITEM '{0}' FORITEM", measureLocation.Key);
-                    foreach (string boundary in measureLocation.Value)
-                    {
-                        writer.WriteLine("'{0}'", boundary);
-                    }
-
-                    writer.WriteLine();
-                }
-
-                return writer.ToString();
-            }
-        }
 
         /// <summary>
         /// Create the T0 include content.

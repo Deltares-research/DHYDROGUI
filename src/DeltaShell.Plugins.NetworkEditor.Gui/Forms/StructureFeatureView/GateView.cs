@@ -23,16 +23,30 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
         private IGate data;
         private bool handlingPropertyChanged;
 
+        public GateView()
+        {
+            gateViewData = new GateViewData();
+            InitializeComponent();
+            sillLevelButton = CreateTimeseriesButton(SillLevelButtonClick);
+            lowerEdgeLevelButton = CreateTimeseriesButton(LowerEdgeLevelButtonClick);
+            openingWidthButton = CreateTimeseriesButton(OpeningWidthButtonClick);
+            FillOpeningDirectionCombobox();
+        }
+
         public object Data
         {
-            get { return data; }
+            get
+            {
+                return data;
+            }
             set
             {
                 if (data != null)
                 {
                     UnSubscribeToGate();
                 }
-                data = (IGate)value;
+
+                data = (IGate) value;
 
                 //set formula etc in data class
                 bindingSourceGate.DataSource = Data ?? typeof(Gate);
@@ -48,27 +62,27 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
                 {
                     SubscribeToGate();
                 }
+
                 ConfigureTimeDependentControls();
                 UpdateUseSillWidth();
             }
         }
 
+        public Image Image { get; set; }
+        public ViewInfo ViewInfo { get; set; }
+
+        public void EnsureVisible(object item) {}
+
         private void UpdateUseSillWidth()
         {
-            if (data == null) return;
-            var useSillWidth = data.SillWidth > 0.0;
+            if (data == null)
+            {
+                return;
+            }
+
+            bool useSillWidth = data.SillWidth > 0.0;
             checkBoxUseSillWidth.Checked = useSillWidth;
             sillWidthTextBox.Enabled = useSillWidth;
-        }
-
-        public GateView()
-        {
-            gateViewData = new GateViewData();
-            InitializeComponent();
-            sillLevelButton = CreateTimeseriesButton(SillLevelButtonClick);
-            lowerEdgeLevelButton = CreateTimeseriesButton(LowerEdgeLevelButtonClick);
-            openingWidthButton = CreateTimeseriesButton(OpeningWidthButtonClick);
-            FillOpeningDirectionCombobox();
         }
 
         private void ConfigureTimeDependentControls()
@@ -76,7 +90,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
             if (data != null)
             {
                 sillLevelCheckBox.Checked = data.UseSillLevelTimeSeries;
-                ConfigureSillLevelTimeSeries();                
+                ConfigureSillLevelTimeSeries();
 
                 lowerEdgeLevelCheckBox.Checked = data.UseLowerEdgeLevelTimeSeries;
                 ConfigureLowerEdgeLevelTimeSeries();
@@ -182,11 +196,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
             }
         }
 
-        public Image Image { get; set; }
-
-        public void EnsureVisible(object item) { }
-        public ViewInfo ViewInfo { get; set; }
-
         private void FillOpeningDirectionCombobox()
         {
             var bindingList = new ThreadsafeBindingList<string>(SynchronizationContext.Current, gateViewData.GetGateOpeningTypes().Keys.ToList());
@@ -205,7 +214,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
 
         private static Button CreateTimeseriesButton(EventHandler handler)
         {
-            var result = new Button {Dock = DockStyle.Fill, Text = "Time series..."};
+            var result = new Button
+            {
+                Dock = DockStyle.Fill,
+                Text = "Time series..."
+            };
             result.Click += handler;
 
             return result;
@@ -238,7 +251,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
 
         private void OpeningWidthButtonClick(object sender, EventArgs e)
         {
-            var dialogData = (TimeSeries)data.OpeningWidthTimeSeries.Clone(true);
+            var dialogData = (TimeSeries) data.OpeningWidthTimeSeries.Clone(true);
 
             var editFunctionDialog = new EditFunctionDialog
             {
@@ -264,7 +277,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
 
         private void SillLevelButtonClick(object sender, EventArgs e)
         {
-            var dialogData = (TimeSeries)data.SillLevelTimeSeries.Clone(true);
+            var dialogData = (TimeSeries) data.SillLevelTimeSeries.Clone(true);
 
             var editFunctionDialog = new EditFunctionDialog
             {
@@ -290,7 +303,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
 
         private void LowerEdgeLevelButtonClick(object sender, EventArgs e)
         {
-            var dialogData = (TimeSeries)data.LowerEdgeLevelTimeSeries.Clone(true);
+            var dialogData = (TimeSeries) data.LowerEdgeLevelTimeSeries.Clone(true);
 
             var editFunctionDialog = new EditFunctionDialog
             {
@@ -316,7 +329,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
 
         private void GatePropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (handlingPropertyChanged) return;
+            if (handlingPropertyChanged)
+            {
+                return;
+            }
 
             handlingPropertyChanged = true;
 
@@ -356,15 +372,15 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
 
         private void OpeningDirectionComboboxSelectionChanged(object sender, EventArgs e)
         {
-            var selectedOpeningType = gateViewData.GetGateOpeningType((string) openingDirectionComboBox.SelectedItem);
+            GateOpeningDirection selectedOpeningType = gateViewData.GetGateOpeningType((string) openingDirectionComboBox.SelectedItem);
 
             if (data.HorizontalOpeningDirection == selectedOpeningType)
             {
                 return;
             }
+
             data.HorizontalOpeningDirection = selectedOpeningType;
         }
-
 
         private void SillLevelCheckBoxCheckedChanged(object sender, EventArgs e)
         {
@@ -431,7 +447,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
 
         private void CheckBoxUseSillWidthCheckedChanged(object sender, EventArgs e)
         {
-            if (handlingPropertyChanged || Data == null) return;
+            if (handlingPropertyChanged || Data == null)
+            {
+                return;
+            }
 
             if (checkBoxUseSillWidth.Checked && data.SillWidth <= 0.0)
             {
@@ -453,7 +472,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
 
         public bool Locked
         {
-            get { return locked; }
+            get
+            {
+                return locked;
+            }
             set
             {
                 locked = value;

@@ -9,19 +9,19 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
     internal class GateViewData
     {
         private readonly Dictionary<string, GateOpeningDirection> gateOpeningDirections;
- 
+
         public GateViewData()
         {
             // generate a dictionary of gate opening directions with nice names
             gateOpeningDirections = new Dictionary<string, GateOpeningDirection>();
-            foreach (var dir in Enum.GetValues(typeof(GateOpeningDirection)))
+            foreach (object dir in Enum.GetValues(typeof(GateOpeningDirection)))
             {
-                var name = ((GateOpeningDirection)dir).GetDescription();
-                gateOpeningDirections[name] = (GateOpeningDirection)dir;
+                string name = ((GateOpeningDirection) dir).GetDescription();
+                gateOpeningDirections[name] = (GateOpeningDirection) dir;
             }
         }
 
-        public IDictionary<string,GateOpeningDirection> GetGateOpeningTypes()
+        public IDictionary<string, GateOpeningDirection> GetGateOpeningTypes()
         {
             return gateOpeningDirections;
         }

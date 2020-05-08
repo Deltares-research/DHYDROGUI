@@ -14,7 +14,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories
     public class ViewShapeFactory : IViewShapeFactory
     {
         private readonly Dictionary<ViewShapeType, Func<IViewShape>> mappingDefault =
-         new Dictionary<ViewShapeType, Func<IViewShape>>();
+            new Dictionary<ViewShapeType, Func<IViewShape>>();
 
         private readonly IBoundaryConditionShapeFactory factory;
 
@@ -32,13 +32,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories
             Ensure.NotNull(factory, nameof(factory));
             this.factory = factory;
             InitialiseDefaultMapping();
-        }
-
-        private void InitialiseDefaultMapping()
-        {
-            mappingDefault.Add(ViewShapeType.Gauss, ConstructDefaultGaussViewShape);
-            mappingDefault.Add(ViewShapeType.Jonswap, ConstructDefaultJonswapViewShape);
-            mappingDefault.Add(ViewShapeType.PiersonMoskowitz, ConstructDefaultPiersonMoskowitzViewShape);
         }
 
         public IViewShape ConstructFromType(ViewShapeType type)
@@ -70,6 +63,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories
                 typeof(JonswapViewShape),
                 typeof(PiersonMoskowitzViewShape),
             };
+        }
+
+        private void InitialiseDefaultMapping()
+        {
+            mappingDefault.Add(ViewShapeType.Gauss, ConstructDefaultGaussViewShape);
+            mappingDefault.Add(ViewShapeType.Jonswap, ConstructDefaultJonswapViewShape);
+            mappingDefault.Add(ViewShapeType.PiersonMoskowitz, ConstructDefaultPiersonMoskowitzViewShape);
         }
 
         private GaussViewShape ConstructDefaultGaussViewShape() =>

@@ -12,63 +12,73 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Editors.Buttons
 {
     public abstract class ToolboxesPanel : ICustomControlHelper
     {
-        private static ILog log = LogManager.GetLogger(typeof (ToolboxesPanel));
+        private static ILog log = LogManager.GetLogger(typeof(ToolboxesPanel));
+
+        public Control CreateControl()
+        {
+            var panel = new FlowLayoutPanel
+            {
+                Dock = DockStyle.Top,
+                AutoSize = true,
+                FlowDirection = FlowDirection.LeftToRight,
+                WrapContents = true
+            };
+
+            try
+            {
+                string toolboxPath = GetToolBoxesDirectory();
+                // load commands from disk (cache?)
+                foreach (ScriptCommand command in ToolboxCommands.LoadFrom(toolboxPath))
+                {
+                    ScriptCommand localCommand = command;
+                    var button = new Button
+                    {
+                        Image = command.Image,
+                        TextImageRelation = TextImageRelation.ImageAboveText,
+                        TextAlign = ContentAlignment.BottomCenter,
+                        Text = command.Title,
+                        Width = 120,
+                        Height = 60
+                    };
+
+                    button.Click += (s, e) =>
+                    {
+                        Cursor oldCursor = panel.Cursor;
+                        panel.Cursor = Cursors.WaitCursor;
+
+                        RunCommand(localCommand);
+
+                        panel.Cursor = oldCursor;
+                    };
+                    panel.Controls.Add(button);
+                }
+            }
+            catch (Exception e)
+            {
+                panel.Controls.Add(new Label
+                {
+                    AutoSize = true,
+                    Text = string.Format("Unable to load toolboxes: {0}", e.Message)
+                });
+            }
+
+            return panel;
+        }
+
+        public void SetData(Control control, object rootObject, object propertyValue)
+        {
+            Model = (IModel) rootObject;
+        }
+
+        public bool HideCaptionAndUnitLabel()
+        {
+            return true;
+        }
 
         protected IModel Model { get; set; }
         protected abstract string GetToolBoxesDirectory();
         protected abstract Dictionary<string, object> GetScriptPredefinedVariables();
 
-        public Control CreateControl()
-        {
-            var panel = new FlowLayoutPanel
-                {
-                    Dock = DockStyle.Top,
-                    AutoSize = true,
-                    FlowDirection = FlowDirection.LeftToRight,
-                    WrapContents = true
-                };
-
-            try
-            {
-                var toolboxPath = GetToolBoxesDirectory();
-                // load commands from disk (cache?)
-                foreach (var command in ToolboxCommands.LoadFrom(toolboxPath))
-                {
-                    var localCommand = command;
-                    var button = new Button
-                        {
-                            Image = command.Image,
-                            TextImageRelation = TextImageRelation.ImageAboveText,
-                            TextAlign = ContentAlignment.BottomCenter,
-                            Text = command.Title,
-                            Width = 120,
-                            Height = 60
-                        };
-
-                    button.Click += (s, e) =>
-                        {
-                            var oldCursor = panel.Cursor;
-                            panel.Cursor = Cursors.WaitCursor;
-
-                            RunCommand(localCommand);
-
-                            panel.Cursor = oldCursor;
-                        };
-                    panel.Controls.Add(button);
-                }
-            }
-            catch(Exception e)
-            {
-                panel.Controls.Add(new Label
-                    {
-                        AutoSize = true,
-                        Text = string.Format("Unable to load toolboxes: {0}", e.Message)
-                    });
-            }
-
-            return panel;
-        }
-        
         private void RunCommand(ScriptCommand command)
         {
             var logger = new ScriptLogger();
@@ -80,10 +90,16 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Editors.Buttons
                 command.Execute(logger, GetScriptPredefinedVariables());
 
                 // forward any log messages to the message window / log file
-                foreach (var info in logger.Infos)
+                foreach (string info in logger.Infos)
+                {
                     log.Info(info);
-                foreach (var error in logger.Errors)
+                }
+
+                foreach (string error in logger.Errors)
+                {
                     log.Error(error);
+                }
+
                 errors.AddRange(logger.Errors.ToList());
             }
             catch (Exception e)
@@ -113,16 +129,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Editors.Buttons
             {
                 Errors.Add(string.Format(format, args));
             }
-        }
-        
-        public void SetData(Control control, object rootObject, object propertyValue)
-        {
-            Model = (IModel)rootObject;
-        }
-
-        public bool HideCaptionAndUnitLabel()
-        {
-            return true;
         }
     }
 }

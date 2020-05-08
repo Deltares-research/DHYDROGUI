@@ -17,7 +17,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories
     /// <see cref="GeometryPreviewMapConfigurator"/> implements the interface
     /// with which to configure the <see cref="IMap"/> of a geometry preview.
     /// </summary>
-    /// <seealso cref="IGeometryPreviewMapConfigurator" />
+    /// <seealso cref="IGeometryPreviewMapConfigurator"/>
     public class GeometryPreviewMapConfigurator : IGeometryPreviewMapConfigurator
     {
         private readonly IWaveBoundaryGeometryFactory geometryFactory;
@@ -46,8 +46,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories
             this.coordinateSystem = coordinateSystem;
         }
 
-        public void ConfigureMap(IMap map, 
-                                 IBoundaryProvider boundaryProvider, 
+        public void ConfigureMap(IMap map,
+                                 IBoundaryProvider boundaryProvider,
                                  SupportPointDataComponentViewModel supportPointDataComponentViewModel,
                                  IRefreshGeometryView refreshGeometryView)
         {
@@ -56,7 +56,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories
             Ensure.NotNull(supportPointDataComponentViewModel, nameof(supportPointDataComponentViewModel));
             Ensure.NotNull(refreshGeometryView, nameof(refreshGeometryView));
 
-            IBoundaryMapFeaturesContainer featuresContainer = 
+            IBoundaryMapFeaturesContainer featuresContainer =
                 BoundaryMapFeaturesContainerFactory.ConstructReadOnlyBoundaryMapFeaturesContainer(boundaryProvider,
                                                                                                   geometryFactory,
                                                                                                   coordinateSystem);
@@ -97,13 +97,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories
             lineLayer.RenderOrder = 5;
         }
 
-        private void ConstructActiveSupportPointLayers(IBoundaryProvider boundaryProvider, 
+        private void ConstructActiveSupportPointLayers(IBoundaryProvider boundaryProvider,
                                                        SupportPointDataComponentViewModel supportPointDataComponentViewModel,
                                                        IMap map)
         {
             var activeSupportPointBehaviour =
-                new ToggledSupportPointsFromBoundaryBehaviour(true, 
-                                                              supportPointDataComponentViewModel, 
+                new ToggledSupportPointsFromBoundaryBehaviour(true,
+                                                              supportPointDataComponentViewModel,
                                                               geometryFactory);
             var activeSupportPointProvider =
                 new BoundaryReadOnlyMapFeatureProvider(boundaryProvider,
@@ -118,13 +118,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories
             activeSupportPointLayer.RenderOrder = 3;
         }
 
-        private void ConstructInactiveSupportPointLayers(IBoundaryProvider boundaryProvider, 
+        private void ConstructInactiveSupportPointLayers(IBoundaryProvider boundaryProvider,
                                                          SupportPointDataComponentViewModel supportPointDataComponentViewModel,
                                                          IMap map)
         {
             var inactiveSupportPointBehaviour =
-                new ToggledSupportPointsFromBoundaryBehaviour(false, 
-                                                              supportPointDataComponentViewModel, 
+                new ToggledSupportPointsFromBoundaryBehaviour(false,
+                                                              supportPointDataComponentViewModel,
                                                               geometryFactory);
             var inactiveSupportPointProvider =
                 new BoundaryReadOnlyMapFeatureProvider(boundaryProvider,
@@ -139,7 +139,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories
             inactiveSupportPointLayer.RenderOrder = 4;
         }
 
-        private void ConstructSelectedSupportPointLayers(IBoundaryProvider boundaryProvider, 
+        private void ConstructSelectedSupportPointLayers(IBoundaryProvider boundaryProvider,
                                                          SupportPointDataComponentViewModel supportPointDataComponentViewModel,
                                                          IMap map)
         {
@@ -149,8 +149,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories
 
             var selectedSupportPointProvider =
                 new BoundaryReadOnlyMapFeatureProvider(boundaryProvider,
-                    coordinateSystem,
-                    selectedSupportPointBehaviour);
+                                                       coordinateSystem,
+                                                       selectedSupportPointBehaviour);
 
             ILayer selectedSupportPointLayer =
                 layerFactory.CreateSelectedSupportPointLayer(selectedSupportPointProvider);

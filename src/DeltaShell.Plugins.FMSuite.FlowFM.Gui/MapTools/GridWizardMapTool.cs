@@ -28,9 +28,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
 {
     public class GridWizardMapTool : MapTool
     {
-        private static readonly ILog log = LogManager.GetLogger(typeof(GridWizardMapTool));
-
         private const string BoundingPolygonLayerName = "temp_layer";
+        private static readonly ILog log = LogManager.GetLogger(typeof(GridWizardMapTool));
         private NewLineTool boundingPolygonTool;
         private Cursor boundingPolygonCursor;
         private VectorLayer cachedPolygonLayer;
@@ -41,16 +40,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
             Name = FlowFMMapViewDecorator.GridWizardToolName;
             Func<ILayer, bool> boundingPolygonLayerFilter = l => l.Equals(BoundingPolygonLayer);
             boundingPolygonCursor = MapCursors.CreateArrowOverlayCuror(Resources.guide);
-            boundingPolygonTool = new NewLineTool(boundingPolygonLayerFilter, "bounding_polygon_tool")
-            {
-                Cursor = boundingPolygonCursor
-            };
+            boundingPolygonTool = new NewLineTool(boundingPolygonLayerFilter, "bounding_polygon_tool") {Cursor = boundingPolygonCursor};
             InDrawingStage = false;
         }
-
-        // This tool has 2 stages: first user draws a bounding polygon, during which InDrawingStage == true.
-        // After drawing was finished by user (double-click) the function ExecuteWizard is called.
-        private bool InDrawingStage { get; set; }
 
         public override bool Enabled
         {
@@ -58,24 +50,28 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
             {
                 // Check whether flow1d discretization can be found. 
                 flowDiscretizationLayer = Map.GetAllLayers(false).OfType<NetworkCoverageLocationLayer>()
-                    .FirstOrDefault(l => l.Coverage is IDiscretization);
+                                             .FirstOrDefault(l => l.Coverage is IDiscretization);
                 if (flowDiscretizationLayer == null)
                 {
                     return false;
                 }
+
                 var grid = flowDiscretizationLayer.Coverage as IDiscretization;
                 if (grid == null)
                 {
                     return false;
                 }
 
-                return (GetEmbankments().Any() && grid.Locations.GetValues().Any());
+                return GetEmbankments().Any() && grid.Locations.GetValues().Any();
             }
         }
 
         public override Cursor Cursor
         {
-            get { return boundingPolygonCursor; }
+            get
+            {
+                return boundingPolygonCursor;
+            }
         }
 
         public override void OnMouseDown(Coordinate worldPosition, MouseEventArgs e)
@@ -84,7 +80,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
             {
                 InDrawingStage = true;
                 EnterBoundingBoxDrawingMode();
-        }
+            }
+
             boundingPolygonTool.OnMouseDown(worldPosition, e);
         }
 
@@ -97,7 +94,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
         }
 
         public override void OnMouseUp(Coordinate worldPosition, MouseEventArgs e)
-            {
+        {
             if (InDrawingStage)
             {
                 boundingPolygonTool.OnMouseUp(worldPosition, e);
@@ -105,7 +102,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
         }
 
         public override void OnMouseDoubleClick(object sender, MouseEventArgs e)
-            {
+        {
             if (InDrawingStage)
             {
                 InDrawingStage = false;
@@ -123,17 +120,49 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
             }
         }
 
-        private void Cleanup()
+        // This tool has 2 stages: first user draws a bounding polygon, during which InDrawingStage == true.
+        // After drawing was finished by user (double-click) the function ExecuteWizard is called.
+        private bool InDrawingStage { get; set; }
+
+        private VectorLayer BoundingPolygonLayer
+        {
+            get
             {
+                if (cachedPolygonLayer != null)
+                {
+                    return cachedPolygonLayer;
+                }
+
+                cachedPolygonLayer = new VectorLayer(BoundingPolygonLayerName)
+                {
+                    DataSource = new FeatureCollection(new List<IFeature>(), typeof(Feature)),
+                    Visible = true,
+                    Style = new VectorStyle
+                    {
+                        Fill = new SolidBrush(Color.Tomato),
+                        Symbol = null,
+                        Line = new Pen(Color.Tomato, 2),
+                        Outline = new Pen(Color.FromArgb(50, Color.Tomato), 2)
+                    },
+                    ShowInTreeView = false,
+                    NameIsReadOnly = true,
+                    CanBeRemovedByUser = false
+                };
+                return cachedPolygonLayer;
+            }
+        }
+
+        private void Cleanup()
+        {
             // remove temporary layer
             Map.Layers.Remove(BoundingPolygonLayer);
             cachedPolygonLayer = null;
             Map.ZoomToExtents();
-            }
+        }
 
         private void ExecuteWizard()
         {
-            var rgfgridPolygons = GetRgfGridPolygons();
+            IEnumerable<IPolygon> rgfgridPolygons = GetRgfGridPolygons();
             if (!rgfgridPolygons.Any())
             {
                 Cleanup();
@@ -141,7 +170,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
             }
 
             // Check whether FM group layer can be found. 
-            var fmLayer = Map.GetAllLayers(true).OfType<ModelGroupLayer>().FirstOrDefault(l => l.Model is WaterFlowFMModel);
+            ModelGroupLayer fmLayer = Map.GetAllLayers(true).OfType<ModelGroupLayer>().FirstOrDefault(l => l.Model is WaterFlowFMModel);
             if (fmLayer == null)
             {
                 log.Error("Can not find the FM layer to create the grid on.");
@@ -149,7 +178,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
                 return;
             }
 
-            var fmModel = (WaterFlowFMModel)fmLayer.Model;
+            var fmModel = (WaterFlowFMModel) fmLayer.Model;
 
             RgfGridEditor.OpenGrid(fmModel.NetFilePath, fmModel.Grid == null || fmModel.Grid.IsEmpty, rgfgridPolygons, "polygon.pol");
             try
@@ -180,9 +209,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
 
         private IEnumerable<IPolygon> GetRgfGridPolygons()
         {
-            var discretization = flowDiscretizationLayer != null
-                ? flowDiscretizationLayer.Coverage as IDiscretization
-                : null;
+            IDiscretization discretization = flowDiscretizationLayer != null
+                                                 ? flowDiscretizationLayer.Coverage as IDiscretization
+                                                 : null;
 
             if (discretization == null)
             {
@@ -192,7 +221,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
 
             // Check whether polygon is okay
             var feature = BoundingPolygonLayer.DataSource.Features[0] as Feature;
-            var lineString = feature != null ? feature.Geometry as ILineString : null;
+            ILineString lineString = feature != null ? feature.Geometry as ILineString : null;
 
             if (lineString == null)
             {
@@ -201,13 +230,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
             }
 
             // Construct the userPolygon
-            var userPolygon = ConvertToPolygon(lineString);
+            Polygon userPolygon = ConvertToPolygon(lineString);
             if (userPolygon == null)
             {
                 return Enumerable.Empty<IPolygon>();
             }
 
-            var embankmentLayer = GetEmbankmentLayer();
+            ILayer embankmentLayer = GetEmbankmentLayer();
             if (embankmentLayer != null && embankmentLayer.CoordinateTransformation != null)
             {
                 userPolygon = (Polygon) GeometryTransform.TransformPolygon(userPolygon, embankmentLayer.CoordinateTransformation.MathTransform.Inverse());
@@ -224,18 +253,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
             // The last clause (Area<0.001) is used for channels that are entirely horizontal or vertical (these envelopes with an area
             // equal to 0.0 cannot intersect any polygon, so have to be taken into account in the FindGridBoundingPolygon routine).
 
-            var embankments =
+            List<Feature2D> embankments =
                 GetEmbankments()
                     .Where(b => b.Geometry.Intersects(userPolygon)).Select(f => (Feature2D) f.Clone())
                     .ToList();
-            var polygons = DoWithoutNodingValidator(() => GridWizardMapToolHelper.ComputePolygons(discretization, embankments, userPolygon,
-                                gridWizard.SupportPointDistance, gridWizard.MinimumSupportPointDistance));
+            IList<IPolygon> polygons = DoWithoutNodingValidator(() => GridWizardMapToolHelper.ComputePolygons(discretization, embankments, userPolygon,
+                                                                                                              gridWizard.SupportPointDistance, gridWizard.MinimumSupportPointDistance));
             return polygons ?? Enumerable.Empty<IPolygon>();
         }
 
         private static Polygon ConvertToPolygon(ILineString lineString)
-            {
-            var coordinates = lineString.Coordinates.Distinct().ToArray();
+        {
+            Coordinate[] coordinates = lineString.Coordinates.Distinct().ToArray();
             if (coordinates.Length < 3)
             {
                 log.Error("Polygon should have at least three vertices.");
@@ -247,15 +276,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
 
             // todo: add check if polygon intersects itself
             return new Polygon(new LinearRing(closedUserCoordinates.ToCoordinateArray()));
-            }
+        }
 
         private static T DoWithoutNodingValidator<T>(Func<T> function)
         {
             // This noding validator has a dramatic effect on the performance. Disable it here temporarily. 
-            var oldNodingValidatorDisabled = OverlayOp.NodingValidatorDisabled;
+            bool oldNodingValidatorDisabled = OverlayOp.NodingValidatorDisabled;
             OverlayOp.NodingValidatorDisabled = true;
 
-            var result = function();
+            T result = function();
 
             // Set the noding validator to the value it had before. 
             OverlayOp.NodingValidatorDisabled = oldNodingValidatorDisabled;
@@ -271,37 +300,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
         private IEnumerable<Embankment> GetEmbankments()
         {
             IList<Embankment> embankments = null;
-            var embankmentLayer = GetEmbankmentLayer();
+            ILayer embankmentLayer = GetEmbankmentLayer();
             if (embankmentLayer != null)
             {
                 embankments = embankmentLayer.DataSource.Features as IList<Embankment>;
             }
+
             return embankments ?? new List<Embankment>();
         }
-
-        private VectorLayer BoundingPolygonLayer
-        {
-            get
-            {
-                if (cachedPolygonLayer != null) return cachedPolygonLayer;
-                cachedPolygonLayer = new VectorLayer(BoundingPolygonLayerName)
-                {
-                    DataSource = new FeatureCollection(new List<IFeature>(), typeof (Feature)),
-                    Visible = true,
-                    Style = new VectorStyle
-                    {
-                        Fill = new SolidBrush(Color.Tomato),
-                        Symbol = null,
-                        Line = new Pen(Color.Tomato, 2),
-                        Outline = new Pen(Color.FromArgb(50, Color.Tomato), 2)
-                    },
-                    ShowInTreeView = false,
-                    NameIsReadOnly = true,
-                    CanBeRemovedByUser = false
-                };
-                return cachedPolygonLayer;
-            }
-        }
-
     }
 }

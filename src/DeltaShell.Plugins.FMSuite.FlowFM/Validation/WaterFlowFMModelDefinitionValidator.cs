@@ -57,12 +57,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                             && int.TryParse(waterFlowFmProperty.GetValueAsString(), out bedLevelTypeNumber) &&
                             !bedLevelTypeNumber.Equals((int) UnstructuredGridFileHelper.BedLevelLocation.Faces))
                         {
-                            var validationShortcut = new FmValidationShortcut{
+                            var validationShortcut = new FmValidationShortcut
+                            {
                                 FlowFmModel = model,
                                 TabName = PhysicalParametersTabName
                             };
                             issues.Add(new ValidationIssue(
-                                           model, 
+                                           model,
                                            ValidationSeverity.Error,
                                            Resources.WaterFlowFMModelDefinitionValidator_Validate_Bed_level_locations_should_be_set_to__faces__when_morphology_is_active_,
                                            validationShortcut)

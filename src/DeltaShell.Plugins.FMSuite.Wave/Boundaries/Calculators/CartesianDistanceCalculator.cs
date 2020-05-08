@@ -7,7 +7,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.Calculators
     /// <see cref="CartesianDistanceCalculator"/> implements <see cref="IDistanceCalculator"/>
     /// by calculating the distance assuming cartesian coordinates.
     /// </summary>
-    /// <seealso cref="IDistanceCalculator" />
+    /// <seealso cref="IDistanceCalculator"/>
     public class CartesianDistanceCalculator : IDistanceCalculator
     {
         public double CalculateDistanceSquared(Coordinate coordinateA, Coordinate coordinateB)
@@ -24,7 +24,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.Calculators
 
             double xDiff = coordinateA.X - coordinateB.X;
             double yDiff = coordinateA.Y - coordinateB.Y;
-            return xDiff * xDiff + yDiff * yDiff;
+            return (xDiff * xDiff) + (yDiff * yDiff);
         }
 
         public double CalculateDistance(Coordinate coordinateA, Coordinate coordinateB)

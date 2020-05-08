@@ -15,10 +15,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
     public static class WaqInitializationSettingsBuilder
     {
         /// <summary>
-        /// Builds <see cref="WaqInitializationSettings" /> for the provided
-        /// <param name="waterQualityModel" />
+        /// Builds <see cref="WaqInitializationSettings"/> for the provided
+        /// <param name="waterQualityModel"/>
         /// </summary>
-        /// <param name="waterQualityModel"> Model to create <see cref="WaqInitializationSettings" /> for </param>
+        /// <param name="waterQualityModel"> Model to create <see cref="WaqInitializationSettings"/> for </param>
         public static WaqInitializationSettings BuildWaqInitializationSettings(WaterQualityModel waterQualityModel)
         {
             if (waterQualityModel.HydroData == null)

@@ -10,21 +10,17 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
     /// A shapefeature to display the crest of weirs in a side view
     /// It has a special property CrestOffset to amnipulate the size of the crest. This is typically the only
     /// property a user is allowed to manupulate.
-    /// 
-    ///    /-\
-    ///   /   \
-    ///  /     \
+    /// /-\
+    /// /   \
+    /// /     \
     /// /       \
     /// |   x   |  ^
     /// |       |  |  CrestOffset
     /// |       |  v
     /// ---------
-    /// 
     /// </summary>
-    class CrestShapeFeature : FixedRectangleShapeFeature
+    internal class CrestShapeFeature : FixedRectangleShapeFeature
     {
-        public double CrestOffset { get; set; }
-
         public CrestShapeFeature(IChart chart, double x, double top, double pixelWidth, double bottom, double crestOffset)
             : base(chart, x, top, pixelWidth, Math.Max(0, top - bottom), false, true)
         {
@@ -32,6 +28,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
             CrestOffset = crestOffset;
             Bottom = bottom;
         }
+
+        public double CrestOffset { get; set; }
 
         public double Bottom { get; private set; }
 

@@ -17,14 +17,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
     /// <remarks>
     /// The following invariants have been defined:
     /// * The <see cref="CacheFile"/> always points to the last version of the .cache file
-    ///   even if this file is incorrect or corrupted.
+    /// even if this file is incorrect or corrupted.
     /// * The .cache file is not validated, this is the responsibility of the kernel.
     /// * If the option is turned on, the .cache file is never deleted, but might be
-    ///   overwritten.
+    /// overwritten.
     /// * The name of the .cache file is assumed to be always equal to the .mdu file
-    ///   and will be updated accordingly.
+    /// and will be updated accordingly.
     /// * A model will always have one, and only one <see cref="CacheFile"/>, regardless
-    ///   of the option setting.
+    /// of the option setting.
     /// </remarks>
     public class CacheFile
     {
@@ -51,6 +51,30 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         }
 
         /// <summary>
+        /// Gets the path of this <see cref="CacheFile"/>.
+        /// </summary>
+        /// <value>
+        /// The path.
+        /// </value>
+        public string Path { get; private set; }
+
+        /// <summary>
+        /// Gets a value indicating whether the .cache file at <see cref="Path"/> of this <see cref="CacheFile"/>  exists.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if the .cache file exists; otherwise, <c>false</c>.
+        /// </value>
+        public bool Exists => File.Exists(Path);
+
+        /// <summary>
+        /// Gets a value indicating whether use caching has been turned on for this model.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if caching has been turned on; otherwise, <c>false</c>.
+        /// </value>
+        public bool UseCaching => (bool) model.ModelDefinition.GetModelProperty(KnownProperties.UseCaching).Value;
+
+        /// <summary>
         /// Exports this <see cref="CacheFile"/> to the specified export directory.
         /// </summary>
         /// <param name="exportMduPath">The path to the mdu file being exported.</param>
@@ -65,6 +89,27 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         public void Export(string exportMduPath)
         {
             Export(exportMduPath, new LogHandler("CacheFile export:", typeof(CacheFile)));
+        }
+
+        /// <summary>
+        /// Updates the path to correspond to with the provided <paramref name="mduFilePath"/>.
+        /// </summary>
+        /// <param name="mduFilePath">The mdu file path.</param>
+        /// <remarks>
+        /// If <paramref name="mduFilePath"/> is <c>null</c> then (new this).Path will be null.
+        /// It is assumed that <paramref name="mduFilePath"/> is a valid path, no further
+        /// checks are done. If an incorrect path is provided, the behaviour is undetermined.
+        /// </remarks>
+        public void UpdatePathToMduLocation(string mduFilePath)
+        {
+            if (mduFilePath != null)
+            {
+                Path = GetPathFromMduFilePath(mduFilePath);
+            }
+            else
+            {
+                Path = null;
+            }
         }
 
         /// <summary>
@@ -97,8 +142,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             string fullSourceCacheFilePath = System.IO.Path.GetFullPath(Path);
             string fullTargetCacheFilePath = System.IO.Path.GetFullPath(targetCacheFilePath);
 
-            if (string.Equals(fullSourceCacheFilePath, 
-                              fullTargetCacheFilePath, 
+            if (string.Equals(fullSourceCacheFilePath,
+                              fullTargetCacheFilePath,
                               StringComparison.InvariantCultureIgnoreCase))
             {
                 return;
@@ -116,40 +161,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             }
             catch (FileCopyException e)
             {
-                logHandler?.ReportWarningFormat(Resources.CacheFile_CopyInternally_Could_not_copy__0__to__1__due_to___2_, 
-                                                sourceCacheFilePath, 
-                                                targetCacheFilePath, 
+                logHandler?.ReportWarningFormat(Resources.CacheFile_CopyInternally_Could_not_copy__0__to__1__due_to___2_,
+                                                sourceCacheFilePath,
+                                                targetCacheFilePath,
                                                 e.Message ?? "An undocumented exception.");
-            }
-        }
-
-        /// <summary>
-        /// Gets the path of this <see cref="CacheFile"/>.
-        /// </summary>
-        /// <value>
-        /// The path.
-        /// </value>
-        public string Path { get; private set; }
-
-        /// <summary>
-        /// Updates the path to correspond to with the provided <paramref name="mduFilePath"/>.
-        /// </summary>
-        /// <param name="mduFilePath">The mdu file path.</param>
-        /// <remarks>
-        /// If <paramref name="mduFilePath"/> is <c>null</c> then (new this).Path will be null.
-        ///
-        /// It is assumed that <paramref name="mduFilePath"/> is a valid path, no further
-        /// checks are done. If an incorrect path is provided, the behaviour is undetermined.
-        /// </remarks>
-        public void UpdatePathToMduLocation(string mduFilePath)
-        {
-            if (mduFilePath != null)
-            {
-                Path = GetPathFromMduFilePath(mduFilePath);
-            }
-            else
-            {
-                Path = null;
             }
         }
 
@@ -157,21 +172,5 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         {
             return System.IO.Path.ChangeExtension(mduFilePath, FileConstants.CachingFileExtension);
         }
-
-        /// <summary>
-        /// Gets a value indicating whether the .cache file at <see cref="Path"/> of this <see cref="CacheFile"/>  exists.
-        /// </summary>
-        /// <value>
-        ///   <c>true</c> if the .cache file exists; otherwise, <c>false</c>.
-        /// </value>
-        public bool Exists => File.Exists(Path);
-
-        /// <summary>
-        /// Gets a value indicating whether use caching has been turned on for this model.
-        /// </summary>
-        /// <value>
-        ///   <c>true</c> if caching has been turned on; otherwise, <c>false</c>.
-        /// </value>
-        public bool UseCaching => (bool) model.ModelDefinition.GetModelProperty(KnownProperties.UseCaching).Value;
     }
 }

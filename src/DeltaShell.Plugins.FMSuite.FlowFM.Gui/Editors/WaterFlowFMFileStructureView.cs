@@ -39,28 +39,27 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             treeView.SelectedNodeChanged += SelectedNodeChanged;
         }
 
-        private void SelectedNodeChanged(object sender, EventArgs eventArgs)
-        {
-            var item = treeView.SelectedNode.Tag as FileBasedModelItem;
-            propertyGrid1.SelectedObject = item == null ? null : new FileBasedItemProperties(item);
-        }
-
         public WaterFlowFMModel Model
         {
-            get { return model; }
+            get
+            {
+                return model;
+            }
             set
             {
                 if (model != null)
                 {
-                    ((INotifyPropertyChanged)model).PropertyChanged -= ModelPropertyChanged;
-                    ((INotifyCollectionChanged)model).CollectionChanged -= ModelCollectionChanged;
+                    ((INotifyPropertyChanged) model).PropertyChanged -= ModelPropertyChanged;
+                    ((INotifyCollectionChanged) model).CollectionChanged -= ModelCollectionChanged;
                 }
+
                 model = value;
                 if (model != null)
                 {
-                    ((INotifyPropertyChanged)model).PropertyChanged += ModelPropertyChanged;
-                    ((INotifyCollectionChanged)model).CollectionChanged += ModelCollectionChanged;
+                    ((INotifyPropertyChanged) model).PropertyChanged += ModelPropertyChanged;
+                    ((INotifyCollectionChanged) model).CollectionChanged += ModelCollectionChanged;
                 }
+
                 if (model != null)
                 {
                     var nodePresenter =
@@ -70,8 +69,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
                         nodePresenter.Model = model;
                     }
                 }
+
                 RefreshTree();
             }
+        }
+
+        private void SelectedNodeChanged(object sender, EventArgs eventArgs)
+        {
+            var item = treeView.SelectedNode.Tag as FileBasedModelItem;
+            propertyGrid1.SelectedObject = item == null ? null : new FileBasedItemProperties(item);
         }
 
         private void ModelCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -101,13 +107,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             {
                 parentNode.Clear();
             }
+
             treeView.Data = model == null ? null : WaterFlowFMFileBasedItemFactory.CreateParentNode(model);
         }
 
         #region IView
 
-        public object Data { get { return Model; } set { Model = value as WaterFlowFMModel; } }
-        
+        public object Data
+        {
+            get
+            {
+                return Model;
+            }
+            set
+            {
+                Model = value as WaterFlowFMModel;
+            }
+        }
+
         public Image Image { get; set; }
 
         public void EnsureVisible(object item)

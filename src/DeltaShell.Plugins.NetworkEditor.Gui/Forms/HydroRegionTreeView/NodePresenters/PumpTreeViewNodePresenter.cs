@@ -2,16 +2,17 @@
 using DelftTools.Controls;
 using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Gui;
+using DeltaShell.Plugins.NetworkEditor.Gui.Properties;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView.NodePresenters
 {
-    class PumpTreeViewNodePresenter : StructureViewNodePresenter<IPump>
+    internal class PumpTreeViewNodePresenter : StructureViewNodePresenter<IPump>
     {
-        private static readonly Image PumpSmallImage= Properties.Resources.PumpSmall;
+        private static readonly Image PumpSmallImage = Resources.PumpSmall;
+
         public PumpTreeViewNodePresenter(GuiPlugin guiPlugin)
-            : base(guiPlugin)
-        {
-        }
+            : base(guiPlugin) {}
+
         public override void UpdateNode(ITreeNode parentNode, ITreeNode node, IPump data)
         {
             node.Image = PumpSmallImage;

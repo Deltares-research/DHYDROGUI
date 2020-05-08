@@ -16,7 +16,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
         /// Validate entities that can occur in an Area of a WaterFlowFMModel. The anomalies are returned as messages in the
         /// ValidationReport.
         /// </summary>
-        /// <param name="model"> The <see cref="WaterFlowFMModel" /> object of which the structures are to be validated. </param>
+        /// <param name="model"> The <see cref="WaterFlowFMModel"/> object of which the structures are to be validated. </param>
         /// <returns> ValidationReport that contains the validation messages which can be Info, Warning or Error </returns>
         public static ValidationReport Validate(WaterFlowFMModel model)
         {

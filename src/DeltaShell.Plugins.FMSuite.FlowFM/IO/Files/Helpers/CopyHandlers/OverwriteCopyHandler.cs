@@ -7,7 +7,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers.CopyHandlers
     /// <see cref="OverwriteCopyHandler"/> defines a copy operation which will
     /// overwrite the targetPath if it already exists.
     /// </summary>
-    /// <seealso cref="ICopyHandler" />
+    /// <seealso cref="ICopyHandler"/>
     public class OverwriteCopyHandler : ICopyHandler
     {
         public void Copy(string sourcePath, string targetPath)

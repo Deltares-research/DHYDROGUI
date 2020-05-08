@@ -12,13 +12,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
 {
     public static class EmbankmentGenerator
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(EmbankmentGenerator));
-
         private const int DoLeft = 1;
         private const int DoRight = -1;
-
-        private static Dictionary<string, Embankment> ChannelToLeftEmbankments { get; set; }
-        private static Dictionary<string, Embankment> ChannelToRightEmbankments { get; set; }
+        private static readonly ILog Log = LogManager.GetLogger(typeof(EmbankmentGenerator));
 
         public static bool GenerateEmbankments(IList<Channel> branches, IList<Embankment> embankmentDefinitions,
                                                bool crossSectionBased, double constantDistance,
@@ -47,6 +43,336 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
 
             return result;
         }
+
+        public static bool GenerateEmbankmentsAtConstantDistance(IList<Channel> channels,
+                                                                 IList<Embankment> embankmentDefinitions,
+                                                                 double distance, bool generateLeftEmbankment,
+                                                                 bool generateRightEmbankment)
+        {
+            if (distance <= 0.0)
+            {
+                Log.Warn("Given distance must be greater than zero. No embankments are generated.");
+                return false;
+            }
+
+            if (distance > 10000.0d)
+            {
+                Log.Warn("Given distance to branch is too large. No embankments are generated.");
+                return false;
+            }
+
+            foreach (Channel channel in channels)
+            {
+                var coordinatesLeft = new List<Coordinate>();
+                var coordinatesRight = new List<Coordinate>();
+
+                var leftEmbankment = new Embankment();
+                var rightEmbankment = new Embankment();
+
+                var radiansUp = 0.0;
+
+                var prevRadians = 0.0;
+                Coordinate prevPoint = channel.Geometry.Coordinates[0];
+                var prevChainage = 0.0;
+                var turningDirection = 0; // -1: Left, 1:Right, 0:Straight
+
+                var skipLeftPoint = false;
+                var skipRightPoint = false;
+
+                for (var i = 0; i < channel.Geometry.Coordinates.Count(); i++)
+                {
+                    Coordinate point1;
+                    Coordinate point2;
+                    Coordinate refPoint;
+
+                    double pointChainage;
+
+                    if (i < channel.Geometry.Coordinates.Count() - 1)
+                    {
+                        point1 = channel.Geometry.Coordinates[i];
+                        point2 = channel.Geometry.Coordinates[i + 1];
+                        refPoint = point1;
+
+                        pointChainage =
+                            NetworkHelper.GetBranchFeatureChainageFromGeometry(channel, new Point(refPoint));
+                    }
+                    else
+                    {
+                        point1 = channel.Geometry.Coordinates[i - 1];
+                        point2 = channel.Geometry.Coordinates[i];
+                        refPoint = point2;
+
+                        pointChainage = channel.Length;
+                    }
+
+                    double x = point2.X - point1.X;
+                    double y = point2.Y - point1.Y;
+
+                    double radiansDown = Math.Atan2(y, x);
+                    if (radiansDown < 0.0)
+                    {
+                        radiansDown = (Math.PI * 2.0) + radiansDown;
+                    }
+
+                    if (i == channel.Geometry.Coordinates.Count() - 1)
+                    {
+                        // Skip if necessary according the Rodriguez Aguilera criterium (TOOLS-22145)
+                        skipLeftPoint = false;
+                        if (generateLeftEmbankment && turningDirection == -1)
+                        {
+                            double beta = (radiansDown - prevRadians) / 2.0;
+                            skipLeftPoint = (pointChainage - prevChainage) / distance < Math.Tan(beta);
+                        }
+
+                        skipRightPoint = false;
+                        if (generateRightEmbankment && turningDirection == 1)
+                        {
+                            double beta = (prevRadians - radiansDown) / 2.0;
+                            skipRightPoint = (pointChainage - prevChainage) / distance < Math.Tan(beta);
+                        }
+                    }
+
+                    if (i == 0 || i == channel.Geometry.Coordinates.Count() - 1)
+                    {
+                        radiansUp = radiansDown;
+                    }
+
+                    if (generateLeftEmbankment && !skipLeftPoint)
+                    {
+                        Coordinate leftPoint = GetPoint(radiansUp, radiansDown, refPoint, distance, DoLeft);
+                        coordinatesLeft.Add(leftPoint);
+                    }
+
+                    if (generateRightEmbankment && !skipRightPoint)
+                    {
+                        Coordinate rightPoint = GetPoint(radiansUp, radiansDown, refPoint, distance, DoRight);
+                        coordinatesRight.Add(rightPoint);
+                    }
+
+                    turningDirection = 0;
+                    if (i == channel.Geometry.Coordinates.Count() - 2)
+                    {
+                        turningDirection = GetTurningDirection(prevPoint, point1, point2);
+                    }
+
+                    prevRadians = radiansUp;
+                    radiansUp = radiansDown;
+                    prevPoint = point1;
+                    prevChainage = pointChainage;
+                }
+
+                if (generateLeftEmbankment)
+                {
+                    leftEmbankment.Geometry = new LineString(coordinatesLeft.ToArray());
+                    leftEmbankment.Name =
+                        NetworkHelper.GetUniqueName("Embankment{0:D2}", embankmentDefinitions, "Embankment");
+                    embankmentDefinitions.Add(leftEmbankment);
+                    ChannelToLeftEmbankments[channel.Name] = leftEmbankment;
+                }
+
+                if (generateRightEmbankment)
+                {
+                    rightEmbankment.Geometry = new LineString(coordinatesRight.ToArray());
+                    rightEmbankment.Name =
+                        NetworkHelper.GetUniqueName("Embankment{0:D2}", embankmentDefinitions, "Embankment");
+                    embankmentDefinitions.Add(rightEmbankment);
+                    ChannelToRightEmbankments[channel.Name] = rightEmbankment;
+                }
+            }
+
+            return true;
+        }
+
+        public static bool GenerateEmbankmentsBasedOnCrossSection(IList<Channel> channels,
+                                                                  IList<Embankment> embankmentDefinitions,
+                                                                  bool generateLeftEmbankment,
+                                                                  bool generateRightEmbankment)
+        {
+            foreach (Channel channel in channels)
+            {
+                var crossData = new CrossData();
+
+                if (!channel.CrossSections.Any())
+                {
+                    Log.Warn(string.Format(
+                                 "Channel '{0}' has no cross-sections; no embankments created for this channel.",
+                                 channel.Name));
+                    continue;
+                }
+
+                bool crossFound = channel.CrossSections.Any(
+                    c => c.CrossSectionType == CrossSectionType.YZ ||
+                         c.CrossSectionType == CrossSectionType.ZW);
+
+                if (!crossFound)
+                {
+                    Log.Warn(string.Format(
+                                 "No suitable cross-sectons found in channel '{0}'; no embankments created for this channel.",
+                                 channel.Name));
+                    continue;
+                }
+
+                var coordinatesLeft = new List<Coordinate>();
+                var coordinatesRight = new List<Coordinate>();
+
+                var leftEmbankment = new Embankment();
+                var rightEmbankment = new Embankment();
+
+                var radiansUp = 0.0;
+
+                var prevRadians = 0.0;
+                Coordinate prevPoint = channel.Geometry.Coordinates[0];
+                var prevChainage = 0.0;
+                var lastChainage = 0.0;
+                var turningDirection = 0; // -1: Left, 1:Right, 0:Straight
+
+                crossData.Initialize(channel);
+
+                for (var i = 0; i < channel.Geometry.Coordinates.Count(); i++)
+                {
+                    Coordinate point1;
+                    Coordinate point2;
+                    Coordinate refPoint;
+
+                    double pointChainage;
+
+                    if (i < channel.Geometry.Coordinates.Count() - 1)
+                    {
+                        point1 = channel.Geometry.Coordinates[i];
+                        point2 = channel.Geometry.Coordinates[i + 1];
+                        refPoint = point1;
+                        pointChainage =
+                            NetworkHelper.GetBranchFeatureChainageFromGeometry(channel, new Point(refPoint));
+                    }
+                    else
+                    {
+                        point1 = channel.Geometry.Coordinates[i - 1];
+                        point2 = channel.Geometry.Coordinates[i];
+                        refPoint = point2;
+                        pointChainage = channel.Length;
+                    }
+
+                    double x = point2.X - point1.X;
+                    double y = point2.Y - point1.Y;
+
+                    double radiansDown = Math.Atan2(y, x);
+                    if (radiansDown < 0.0)
+                    {
+                        radiansDown = (Math.PI * 2.0) + radiansDown;
+                    }
+
+                    if (i == 0 || i == channel.Geometry.Coordinates.Count() - 1)
+                    {
+                        radiansUp = radiansDown;
+                    }
+
+                    var doAgain = true;
+
+                    while (doAgain)
+                    {
+                        double leftDistance;
+                        double leftHeight;
+                        double rightDistance;
+                        double rightHeight;
+
+                        double actualChainage = pointChainage;
+                        lastChainage = prevChainage;
+
+                        doAgain = crossData.GetValuesForChainage(ref actualChainage, out leftDistance,
+                                                                 out rightDistance,
+                                                                 out leftHeight, out rightHeight);
+
+                        // Skip if necessary according the Rodriguez Aguilera criterium (TOOLS-22145)
+                        var skipLeftPoint = false;
+                        if (generateLeftEmbankment && turningDirection == -1)
+                        {
+                            double beta = (radiansDown - prevRadians) / 2.0;
+                            skipLeftPoint = (actualChainage - lastChainage) / leftDistance < Math.Tan(beta);
+                        }
+
+                        var skipRightPoint = false;
+                        if (generateRightEmbankment && turningDirection == 1)
+                        {
+                            double beta = (prevRadians - radiansDown) / 2.0;
+                            skipRightPoint = (actualChainage - lastChainage) / rightDistance < Math.Tan(beta);
+                        }
+
+                        if (doAgain)
+                        {
+                            Coordinate crossPoint = GetPointFromChainage(
+                                NetworkHelper.GetBranchFeatureChainageFromGeometry(channel, new Point(prevPoint)),
+                                actualChainage, prevPoint, refPoint);
+
+                            if (generateLeftEmbankment && !skipLeftPoint)
+                            {
+                                Coordinate leftPoint = GetPoint(radiansUp, radiansUp, crossPoint, leftDistance, DoLeft);
+                                leftPoint.Z = leftHeight;
+                                coordinatesLeft.Add(leftPoint);
+                            }
+
+                            if (generateRightEmbankment && !skipRightPoint)
+                            {
+                                Coordinate rightPoint =
+                                    GetPoint(radiansUp, radiansUp, crossPoint, rightDistance, DoRight);
+                                rightPoint.Z = rightHeight;
+                                coordinatesRight.Add(rightPoint);
+                            }
+
+                            lastChainage = actualChainage;
+                        }
+                        else
+                        {
+                            if (generateLeftEmbankment && !skipLeftPoint)
+                            {
+                                Coordinate leftPoint = GetPoint(radiansUp, radiansDown, refPoint, leftDistance, DoLeft);
+                                leftPoint.Z = leftHeight;
+                                coordinatesLeft.Add(leftPoint);
+                            }
+
+                            if (generateRightEmbankment && !skipRightPoint)
+                            {
+                                Coordinate rightPoint =
+                                    GetPoint(radiansUp, radiansDown, refPoint, rightDistance, DoRight);
+                                rightPoint.Z = rightHeight;
+                                coordinatesRight.Add(rightPoint);
+                            }
+                        }
+                    }
+
+                    turningDirection = 0;
+                    if (i > 0 && i < channel.Geometry.Coordinates.Count() - 1)
+                    {
+                        turningDirection = GetTurningDirection(prevPoint, point1, point2);
+                    }
+
+                    prevRadians = radiansUp;
+                    radiansUp = radiansDown;
+                    prevPoint = point1;
+                    prevChainage = pointChainage;
+                }
+
+                if (generateLeftEmbankment)
+                {
+                    leftEmbankment.Geometry = new LineString(coordinatesLeft.ToArray());
+                    leftEmbankment.Name =
+                        NetworkHelper.GetUniqueName("Embankment{0:D2}", embankmentDefinitions, "Embankment");
+                    embankmentDefinitions.Add(leftEmbankment);
+                }
+
+                if (generateRightEmbankment)
+                {
+                    rightEmbankment.Geometry = new LineString(coordinatesRight.ToArray());
+                    rightEmbankment.Name =
+                        NetworkHelper.GetUniqueName("Embankment{0:D2}", embankmentDefinitions, "Embankment");
+                    embankmentDefinitions.Add(rightEmbankment);
+                }
+            }
+
+            return true;
+        }
+
+        private static Dictionary<string, Embankment> ChannelToLeftEmbankments { get; set; }
+        private static Dictionary<string, Embankment> ChannelToRightEmbankments { get; set; }
 
         private static void MergeAllEmbankments(IList<Channel> branches, IList<Embankment> embankmentDefinitions)
         {
@@ -195,145 +521,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
             }
         }
 
-        public static bool GenerateEmbankmentsAtConstantDistance(IList<Channel> channels,
-                                                                 IList<Embankment> embankmentDefinitions,
-                                                                 double distance, bool generateLeftEmbankment,
-                                                                 bool generateRightEmbankment)
-        {
-            if (distance <= 0.0)
-            {
-                Log.Warn("Given distance must be greater than zero. No embankments are generated.");
-                return false;
-            }
-
-            if (distance > 10000.0d)
-            {
-                Log.Warn("Given distance to branch is too large. No embankments are generated.");
-                return false;
-            }
-
-            foreach (Channel channel in channels)
-            {
-                var coordinatesLeft = new List<Coordinate>();
-                var coordinatesRight = new List<Coordinate>();
-
-                var leftEmbankment = new Embankment();
-                var rightEmbankment = new Embankment();
-
-                var radiansUp = 0.0;
-
-                var prevRadians = 0.0;
-                Coordinate prevPoint = channel.Geometry.Coordinates[0];
-                var prevChainage = 0.0;
-                var turningDirection = 0; // -1: Left, 1:Right, 0:Straight
-
-                var skipLeftPoint = false;
-                var skipRightPoint = false;
-
-                for (var i = 0; i < channel.Geometry.Coordinates.Count(); i++)
-                {
-                    Coordinate point1;
-                    Coordinate point2;
-                    Coordinate refPoint;
-
-                    double pointChainage;
-
-                    if (i < channel.Geometry.Coordinates.Count() - 1)
-                    {
-                        point1 = channel.Geometry.Coordinates[i];
-                        point2 = channel.Geometry.Coordinates[i + 1];
-                        refPoint = point1;
-
-                        pointChainage =
-                            NetworkHelper.GetBranchFeatureChainageFromGeometry(channel, new Point(refPoint));
-                    }
-                    else
-                    {
-                        point1 = channel.Geometry.Coordinates[i - 1];
-                        point2 = channel.Geometry.Coordinates[i];
-                        refPoint = point2;
-
-                        pointChainage = channel.Length;
-                    }
-
-                    double x = point2.X - point1.X;
-                    double y = point2.Y - point1.Y;
-
-                    double radiansDown = Math.Atan2(y, x);
-                    if (radiansDown < 0.0)
-                    {
-                        radiansDown = (Math.PI * 2.0) + radiansDown;
-                    }
-
-                    if (i == channel.Geometry.Coordinates.Count() - 1)
-                    {
-                        // Skip if necessary according the Rodriguez Aguilera criterium (TOOLS-22145)
-                        skipLeftPoint = false;
-                        if (generateLeftEmbankment && turningDirection == -1)
-                        {
-                            double beta = (radiansDown - prevRadians) / 2.0;
-                            skipLeftPoint = (pointChainage - prevChainage) / distance < Math.Tan(beta);
-                        }
-
-                        skipRightPoint = false;
-                        if (generateRightEmbankment && turningDirection == 1)
-                        {
-                            double beta = (prevRadians - radiansDown) / 2.0;
-                            skipRightPoint = (pointChainage - prevChainage) / distance < Math.Tan(beta);
-                        }
-                    }
-
-                    if (i == 0 || i == channel.Geometry.Coordinates.Count() - 1)
-                    {
-                        radiansUp = radiansDown;
-                    }
-
-                    if (generateLeftEmbankment && !skipLeftPoint)
-                    {
-                        Coordinate leftPoint = GetPoint(radiansUp, radiansDown, refPoint, distance, DoLeft);
-                        coordinatesLeft.Add(leftPoint);
-                    }
-
-                    if (generateRightEmbankment && !skipRightPoint)
-                    {
-                        Coordinate rightPoint = GetPoint(radiansUp, radiansDown, refPoint, distance, DoRight);
-                        coordinatesRight.Add(rightPoint);
-                    }
-
-                    turningDirection = 0;
-                    if (i == channel.Geometry.Coordinates.Count() - 2)
-                    {
-                        turningDirection = GetTurningDirection(prevPoint, point1, point2);
-                    }
-
-                    prevRadians = radiansUp;
-                    radiansUp = radiansDown;
-                    prevPoint = point1;
-                    prevChainage = pointChainage;
-                }
-
-                if (generateLeftEmbankment)
-                {
-                    leftEmbankment.Geometry = new LineString(coordinatesLeft.ToArray());
-                    leftEmbankment.Name =
-                        NetworkHelper.GetUniqueName("Embankment{0:D2}", embankmentDefinitions, "Embankment");
-                    embankmentDefinitions.Add(leftEmbankment);
-                    ChannelToLeftEmbankments[channel.Name] = leftEmbankment;
-                }
-
-                if (generateRightEmbankment)
-                {
-                    rightEmbankment.Geometry = new LineString(coordinatesRight.ToArray());
-                    rightEmbankment.Name =
-                        NetworkHelper.GetUniqueName("Embankment{0:D2}", embankmentDefinitions, "Embankment");
-                    embankmentDefinitions.Add(rightEmbankment);
-                    ChannelToRightEmbankments[channel.Name] = rightEmbankment;
-                }
-            }
-
-            return true;
-        }
-
         private static Coordinate GetPoint(double radiansUp, double radiansDn, Coordinate refPoint, double distance,
                                            int side)
         {
@@ -362,6 +549,57 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
             point.Y = (length * Math.Sin(radiansSide)) + refPoint.Y;
 
             return point;
+        }
+
+        private static int GetTurningDirection(Coordinate p1, Coordinate p2, Coordinate p3)
+        {
+            // See: http://en.wikipedia.org/wiki/Graham_scan
+            // Three points are a counter-clockwise turn if ccw > 0, clockwise if
+            // ccw < 0, and collinear if ccw = 0 because ccw is a determinant that
+            // gives twice the signed  area of the triangle formed by p1, p2 and p3.
+            // function ccw(p1, p2, p3):
+            // return (p2.x - p1.x)*(p3.y - p1.y) - (p2.y - p1.y)*(p3.x - p1.x)
+
+            double ccw = ((p2.X - p1.X) * (p3.Y - p1.Y)) - ((p2.Y - p1.Y) * (p3.X - p1.X));
+
+            if (ccw > 0.0)
+            {
+                return -1;
+            }
+
+            if (ccw < 0.0)
+            {
+                return 1;
+            }
+
+            return 0;
+        }
+
+        private static Coordinate GetPointFromChainage(double startchainage, double chainage, Coordinate point1,
+                                                       Coordinate point2)
+        {
+            var chainagePoint = new Coordinate();
+            double factor = (chainage - startchainage) / point1.Distance(point2);
+
+            if (Math.Abs(point2.X - point1.X) < 1.0E-8)
+            {
+                chainagePoint.X = point1.X;
+            }
+            else
+            {
+                chainagePoint.X = point1.X + ((point2.X - point1.X) * factor);
+            }
+
+            if (Math.Abs(point2.Y - point1.Y) < 1.0E-8)
+            {
+                chainagePoint.Y = point1.Y;
+            }
+            else
+            {
+                chainagePoint.Y = point1.Y + ((point2.Y - point1.Y) * factor);
+            }
+
+            return chainagePoint;
         }
 
         private class CrossData
@@ -554,245 +792,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
 
                 return false;
             }
-        }
-
-        public static bool GenerateEmbankmentsBasedOnCrossSection(IList<Channel> channels,
-                                                                  IList<Embankment> embankmentDefinitions,
-                                                                  bool generateLeftEmbankment,
-                                                                  bool generateRightEmbankment)
-        {
-            foreach (Channel channel in channels)
-            {
-                var crossData = new CrossData();
-
-                if (!channel.CrossSections.Any())
-                {
-                    Log.Warn(string.Format(
-                                 "Channel '{0}' has no cross-sections; no embankments created for this channel.",
-                                 channel.Name));
-                    continue;
-                }
-
-                bool crossFound = channel.CrossSections.Any(
-                    c => c.CrossSectionType == CrossSectionType.YZ ||
-                         c.CrossSectionType == CrossSectionType.ZW);
-
-                if (!crossFound)
-                {
-                    Log.Warn(string.Format(
-                                 "No suitable cross-sectons found in channel '{0}'; no embankments created for this channel.",
-                                 channel.Name));
-                    continue;
-                }
-
-                var coordinatesLeft = new List<Coordinate>();
-                var coordinatesRight = new List<Coordinate>();
-
-                var leftEmbankment = new Embankment();
-                var rightEmbankment = new Embankment();
-
-                var radiansUp = 0.0;
-
-                var prevRadians = 0.0;
-                Coordinate prevPoint = channel.Geometry.Coordinates[0];
-                var prevChainage = 0.0;
-                var lastChainage = 0.0;
-                var turningDirection = 0; // -1: Left, 1:Right, 0:Straight
-
-                crossData.Initialize(channel);
-
-                for (var i = 0; i < channel.Geometry.Coordinates.Count(); i++)
-                {
-                    Coordinate point1;
-                    Coordinate point2;
-                    Coordinate refPoint;
-
-                    double pointChainage;
-
-                    if (i < channel.Geometry.Coordinates.Count() - 1)
-                    {
-                        point1 = channel.Geometry.Coordinates[i];
-                        point2 = channel.Geometry.Coordinates[i + 1];
-                        refPoint = point1;
-                        pointChainage =
-                            NetworkHelper.GetBranchFeatureChainageFromGeometry(channel, new Point(refPoint));
-                    }
-                    else
-                    {
-                        point1 = channel.Geometry.Coordinates[i - 1];
-                        point2 = channel.Geometry.Coordinates[i];
-                        refPoint = point2;
-                        pointChainage = channel.Length;
-                    }
-
-                    double x = point2.X - point1.X;
-                    double y = point2.Y - point1.Y;
-
-                    double radiansDown = Math.Atan2(y, x);
-                    if (radiansDown < 0.0)
-                    {
-                        radiansDown = (Math.PI * 2.0) + radiansDown;
-                    }
-
-                    if (i == 0 || i == channel.Geometry.Coordinates.Count() - 1)
-                    {
-                        radiansUp = radiansDown;
-                    }
-
-                    var doAgain = true;
-
-                    while (doAgain)
-                    {
-                        double leftDistance;
-                        double leftHeight;
-                        double rightDistance;
-                        double rightHeight;
-
-                        double actualChainage = pointChainage;
-                        lastChainage = prevChainage;
-
-                        doAgain = crossData.GetValuesForChainage(ref actualChainage, out leftDistance,
-                                                                 out rightDistance,
-                                                                 out leftHeight, out rightHeight);
-
-                        // Skip if necessary according the Rodriguez Aguilera criterium (TOOLS-22145)
-                        var skipLeftPoint = false;
-                        if (generateLeftEmbankment && turningDirection == -1)
-                        {
-                            double beta = (radiansDown - prevRadians) / 2.0;
-                            skipLeftPoint = (actualChainage - lastChainage) / leftDistance < Math.Tan(beta);
-                        }
-
-                        var skipRightPoint = false;
-                        if (generateRightEmbankment && turningDirection == 1)
-                        {
-                            double beta = (prevRadians - radiansDown) / 2.0;
-                            skipRightPoint = (actualChainage - lastChainage) / rightDistance < Math.Tan(beta);
-                        }
-
-                        if (doAgain)
-                        {
-                            Coordinate crossPoint = GetPointFromChainage(
-                                NetworkHelper.GetBranchFeatureChainageFromGeometry(channel, new Point(prevPoint)),
-                                actualChainage, prevPoint, refPoint);
-
-                            if (generateLeftEmbankment && !skipLeftPoint)
-                            {
-                                Coordinate leftPoint = GetPoint(radiansUp, radiansUp, crossPoint, leftDistance, DoLeft);
-                                leftPoint.Z = leftHeight;
-                                coordinatesLeft.Add(leftPoint);
-                            }
-
-                            if (generateRightEmbankment && !skipRightPoint)
-                            {
-                                Coordinate rightPoint =
-                                    GetPoint(radiansUp, radiansUp, crossPoint, rightDistance, DoRight);
-                                rightPoint.Z = rightHeight;
-                                coordinatesRight.Add(rightPoint);
-                            }
-
-                            lastChainage = actualChainage;
-                        }
-                        else
-                        {
-                            if (generateLeftEmbankment && !skipLeftPoint)
-                            {
-                                Coordinate leftPoint = GetPoint(radiansUp, radiansDown, refPoint, leftDistance, DoLeft);
-                                leftPoint.Z = leftHeight;
-                                coordinatesLeft.Add(leftPoint);
-                            }
-
-                            if (generateRightEmbankment && !skipRightPoint)
-                            {
-                                Coordinate rightPoint =
-                                    GetPoint(radiansUp, radiansDown, refPoint, rightDistance, DoRight);
-                                rightPoint.Z = rightHeight;
-                                coordinatesRight.Add(rightPoint);
-                            }
-                        }
-                    }
-
-                    turningDirection = 0;
-                    if (i > 0 && i < channel.Geometry.Coordinates.Count() - 1)
-                    {
-                        turningDirection = GetTurningDirection(prevPoint, point1, point2);
-                    }
-
-                    prevRadians = radiansUp;
-                    radiansUp = radiansDown;
-                    prevPoint = point1;
-                    prevChainage = pointChainage;
-                }
-
-                if (generateLeftEmbankment)
-                {
-                    leftEmbankment.Geometry = new LineString(coordinatesLeft.ToArray());
-                    leftEmbankment.Name =
-                        NetworkHelper.GetUniqueName("Embankment{0:D2}", embankmentDefinitions, "Embankment");
-                    embankmentDefinitions.Add(leftEmbankment);
-                }
-
-                if (generateRightEmbankment)
-                {
-                    rightEmbankment.Geometry = new LineString(coordinatesRight.ToArray());
-                    rightEmbankment.Name =
-                        NetworkHelper.GetUniqueName("Embankment{0:D2}", embankmentDefinitions, "Embankment");
-                    embankmentDefinitions.Add(rightEmbankment);
-                }
-            }
-
-            return true;
-        }
-
-        private static int GetTurningDirection(Coordinate p1, Coordinate p2, Coordinate p3)
-        {
-            // See: http://en.wikipedia.org/wiki/Graham_scan
-            // Three points are a counter-clockwise turn if ccw > 0, clockwise if
-            // ccw < 0, and collinear if ccw = 0 because ccw is a determinant that
-            // gives twice the signed  area of the triangle formed by p1, p2 and p3.
-            // function ccw(p1, p2, p3):
-            // return (p2.x - p1.x)*(p3.y - p1.y) - (p2.y - p1.y)*(p3.x - p1.x)
-
-            double ccw = ((p2.X - p1.X) * (p3.Y - p1.Y)) - ((p2.Y - p1.Y) * (p3.X - p1.X));
-
-            if (ccw > 0.0)
-            {
-                return -1;
-            }
-
-            if (ccw < 0.0)
-            {
-                return 1;
-            }
-
-            return 0;
-        }
-
-        private static Coordinate GetPointFromChainage(double startchainage, double chainage, Coordinate point1,
-                                                       Coordinate point2)
-        {
-            var chainagePoint = new Coordinate();
-            double factor = (chainage - startchainage) / point1.Distance(point2);
-
-            if (Math.Abs(point2.X - point1.X) < 1.0E-8)
-            {
-                chainagePoint.X = point1.X;
-            }
-            else
-            {
-                chainagePoint.X = point1.X + ((point2.X - point1.X) * factor);
-            }
-
-            if (Math.Abs(point2.Y - point1.Y) < 1.0E-8)
-            {
-                chainagePoint.Y = point1.Y;
-            }
-            else
-            {
-                chainagePoint.Y = point1.Y + ((point2.Y - point1.Y) * factor);
-            }
-
-            return chainagePoint;
         }
     }
 }

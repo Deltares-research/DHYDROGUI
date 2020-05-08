@@ -18,7 +18,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation.Area
         /// Validate the source and sinks and return any issues encountered.
         /// </summary>
         /// <param name="sourcesAndSinks"> The the set of sources and sinks to be evaluated. </param>
-        /// <param name="gridExtent"> The <see cref="Envelope" /> object that describes the extent of the FM model grid. </param>
+        /// <param name="gridExtent"> The <see cref="Envelope"/> object that describes the extent of the FM model grid. </param>
         /// <param name="modelStartTime"> The model start time. </param>
         /// <param name="modelStopTime"> The model stop time. </param>
         /// <returns> A set of validation issues encountered. </returns>

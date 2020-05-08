@@ -10,9 +10,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value == null) return DependencyProperty.UnsetValue;
+            if (value == null)
+            {
+                return DependencyProperty.UnsetValue;
+            }
 
-            var description = ((Enum)value).GetDescription();
+            string description = ((Enum) value).GetDescription();
             return description;
         }
 

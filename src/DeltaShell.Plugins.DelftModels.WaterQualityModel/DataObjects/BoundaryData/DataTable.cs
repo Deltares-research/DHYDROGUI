@@ -15,11 +15,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.BoundaryD
         }
 
         /// <summary>
-        /// Name of this DataTable
-        /// </summary>
-        public virtual string Name { get; set; }
-
-        /// <summary>
         /// Indicates whether this instance is enabled and used or not.
         /// </summary>
         public virtual bool IsEnabled { get; set; }
@@ -33,5 +28,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.BoundaryD
         /// Gets or sets the substance usefors file.
         /// </summary>
         public virtual TextDocumentFromFile SubstanceUseforFile { get; set; }
+
+        /// <summary>
+        /// Name of this DataTable
+        /// </summary>
+        public virtual string Name { get; set; }
     }
 }

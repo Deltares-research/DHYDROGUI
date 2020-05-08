@@ -14,10 +14,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spatia
     /// <typeparam name="T">
     /// The type of <see cref="IForcingTypeDefinedParameters"/>.
     /// </typeparam>
-    /// <seealso cref="ISpatiallyDefinedDataComponent" />
+    /// <seealso cref="ISpatiallyDefinedDataComponent"/>
     public class SpatiallyVaryingDataComponent<T> : ISpatiallyDefinedDataComponent where T : IForcingTypeDefinedParameters
     {
-        private readonly Dictionary<SupportPoint, T> data = 
+        private readonly Dictionary<SupportPoint, T> data =
             new Dictionary<SupportPoint, T>();
 
         /// <summary>
@@ -70,7 +70,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spatia
         /// Thrown when <paramref name="oldSupportPoint"/> does not exist within Data or
         /// when <paramref name="newSupportPoint"/> already exists within Data.
         /// </exception>
-        public void ReplaceSupportPoint(SupportPoint oldSupportPoint, 
+        public void ReplaceSupportPoint(SupportPoint oldSupportPoint,
                                         SupportPoint newSupportPoint)
         {
             Ensure.NotNull(oldSupportPoint, nameof(oldSupportPoint));

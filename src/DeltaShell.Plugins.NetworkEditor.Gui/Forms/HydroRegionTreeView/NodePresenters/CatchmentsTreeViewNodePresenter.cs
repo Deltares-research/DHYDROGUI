@@ -6,16 +6,15 @@ using DelftTools.Hydro;
 using DelftTools.Shell.Gui;
 using DelftTools.Shell.Gui.Swf;
 using DelftTools.Utils.Collections.Generic;
+using DeltaShell.Plugins.NetworkEditor.Gui.Properties;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView.NodePresenters
 {
     public class CatchmentsTreeViewNodePresenter : TreeViewNodePresenterBaseForPluginGui<IEventedList<Catchment>>
     {
-        public CatchmentsTreeViewNodePresenter(GuiPlugin guiPlugin) : base(guiPlugin)
-        {
-        }
+        private static readonly Image CatchmentImage = Resources.catchment;
 
-        private static readonly Image CatchmentImage = Properties.Resources.catchment;
+        public CatchmentsTreeViewNodePresenter(GuiPlugin guiPlugin) : base(guiPlugin) {}
 
         public override void UpdateNode(ITreeNode parentNode, ITreeNode node, IEventedList<Catchment> nodeData)
         {

@@ -17,6 +17,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Exporters
 
         public string Description => string.Empty;
 
+        public string FileFilter => "Master Definition WAVE File|*.mdw";
+
+        public Bitmap Icon { get; private set; }
+
         public bool Export(object item, string path)
         {
             var wm = item as WaveModel;
@@ -50,10 +54,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Exporters
         {
             yield return typeof(WaveModel);
         }
-
-        public string FileFilter => "Master Definition WAVE File|*.mdw";
-
-        public Bitmap Icon { get; private set; }
 
         public bool CanExportFor(object item)
         {

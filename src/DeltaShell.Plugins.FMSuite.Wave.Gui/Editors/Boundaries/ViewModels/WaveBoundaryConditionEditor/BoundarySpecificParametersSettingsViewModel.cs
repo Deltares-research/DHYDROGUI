@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using DelftTools.Utils.Guards;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions;
@@ -76,7 +77,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
             }
             else
             {
-                throw new System.InvalidOperationException(
+                throw new InvalidOperationException(
                     "Cannot set the selected view point when the data is not spatially variant.");
             }
         }

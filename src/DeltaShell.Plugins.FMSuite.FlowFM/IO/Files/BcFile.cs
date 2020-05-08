@@ -14,15 +14,28 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 {
     public class BcFile : FMSuiteFileBase
     {
-        protected readonly ILog log = LogManager.GetLogger(typeof(BcFile));
+        public enum WriteMode
+        {
+            [Description("Single file")]
+            SingleFile,
+
+            [Description("File per boundary")]
+            FilePerFeature,
+
+            [Description("File per process")]
+            FilePerProcess,
+
+            [Description("File per quantity")]
+            FilePerQuantity
+        }
 
         public const string Extension = ".bc";
 
         public const string BlockKey = "[forcing]";
+        public const string QuantityKey = "Quantity";
         private const string SupportPointKey = "Name";
         private const string ForcingTypeKey = "Function";
         private const string SeriesIndexKey = "FunctionIndex";
-        public const string QuantityKey = "Quantity";
         private const string UnitKey = "Unit";
         private const string TimeInterpolationKey = "Time-interpolation";
         private const string VerticalIntepolationKey = "Vertical interpolation";
@@ -31,6 +44,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         private const string VerticalPositionKey = "Vertical position";
         private const string OffsetKey = "Offset";
         private const string FactorKey = "Factor";
+        protected readonly ILog log = LogManager.GetLogger(typeof(BcFile));
 
         private readonly List<FlowBoundaryQuantityType> supportedProcesses = new List<FlowBoundaryQuantityType>()
         {
@@ -52,38 +66,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
         private readonly int columnWidth = VerticalPositionSpecKey.Length;
 
-        public enum WriteMode
-        {
-            [Description("Single file")]
-            SingleFile,
-
-            [Description("File per boundary")]
-            FilePerFeature,
-
-            [Description("File per process")]
-            FilePerProcess,
-
-            [Description("File per quantity")]
-            FilePerQuantity
-        }
-
-        private static Func<IBoundaryCondition, string> BcDiscriminator(WriteMode writeMode)
-        {
-            switch (writeMode)
-            {
-                case WriteMode.SingleFile:
-                    return bc => string.Empty;
-                case WriteMode.FilePerFeature:
-                    return bc => bc.Feature.ToString();
-                case WriteMode.FilePerProcess:
-                    return bc => bc.ProcessName;
-                case WriteMode.FilePerQuantity:
-                    return bc => bc.VariableName;
-                default:
-                    throw new ArgumentException("File split mode " + writeMode + " is not supported by BC file writer");
-            }
-        }
-
         public BcFile()
         {
             MultiFileMode = WriteMode.SingleFile;
@@ -92,26 +74,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         public WriteMode MultiFileMode { get; set; }
 
         public bool CorrectionFile { private get; set; }
-
-        private static string AppendToFile(string filePath, string tag)
-        {
-            string extension = Path.GetExtension(filePath);
-            if (extension == null)
-            {
-                return filePath + tag;
-            }
-
-            return filePath.Substring(0, filePath.Length - extension.Length) + tag + extension;
-        }
-
-        protected virtual List<string> SupportedProcesses
-        {
-            get
-            {
-                return supportedProcesses.Select(sp => FlowBoundaryCondition.GetProcessNameForQuantity(sp)).Distinct()
-                                         .ToList();
-            }
-        }
 
         public IEnumerable<IGrouping<string, Tuple<IBoundaryCondition, BoundaryConditionSet>>> GroupBoundaryConditions(
             IEnumerable<BoundaryConditionSet> boundaryConditionSets)
@@ -143,31 +105,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         {
             return dataType == BoundaryConditionDataType.AstroCorrection ||
                    dataType == BoundaryConditionDataType.HarmonicCorrection;
-        }
-
-        private static bool SimilarDataType(BoundaryConditionDataType dt1, BoundaryConditionDataType dt2)
-        {
-            if (dt1 == BoundaryConditionDataType.AstroCorrection && dt2 == BoundaryConditionDataType.AstroComponents)
-            {
-                return true;
-            }
-
-            if (dt1 == BoundaryConditionDataType.AstroComponents && dt2 == BoundaryConditionDataType.AstroCorrection)
-            {
-                return true;
-            }
-
-            if (dt1 == BoundaryConditionDataType.HarmonicCorrection && dt2 == BoundaryConditionDataType.Harmonics)
-            {
-                return true;
-            }
-
-            if (dt1 == BoundaryConditionDataType.Harmonics && dt2 == BoundaryConditionDataType.HarmonicCorrection)
-            {
-                return true;
-            }
-
-            return dt1 == dt2;
         }
 
         public virtual void Write(
@@ -213,9 +150,42 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             }
         }
 
-        private void WriteKeyValuePairLine(string keyString, string valueString)
+        public virtual IEnumerable<BcBlockData> Read(string inputFile)
         {
-            WriteLine(keyString.PadRight(columnWidth) + " = " + valueString);
+            OpenInputFile(inputFile);
+            try
+            {
+                string line = GetNextLine();
+                while (line != null)
+                {
+                    if (line.StartsWith(BlockKey))
+                    {
+                        BcBlockData block = ReadDataBlock(out line);
+                        if (block != null)
+                        {
+                            yield return block;
+                        }
+                    }
+                    else
+                    {
+                        log.WarnFormat("Omitting line {0} not starting with {1}", LineNumber, BlockKey);
+                        line = GetNextLine();
+                    }
+                }
+            }
+            finally
+            {
+                CloseInputFile();
+            }
+        }
+
+        protected virtual List<string> SupportedProcesses
+        {
+            get
+            {
+                return supportedProcesses.Select(sp => FlowBoundaryCondition.GetProcessNameForQuantity(sp)).Distinct()
+                                         .ToList();
+            }
         }
 
         protected virtual void WriteBlock(BcBlockData block)
@@ -294,33 +264,62 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             }
         }
 
-        public virtual IEnumerable<BcBlockData> Read(string inputFile)
+        private static Func<IBoundaryCondition, string> BcDiscriminator(WriteMode writeMode)
         {
-            OpenInputFile(inputFile);
-            try
+            switch (writeMode)
             {
-                string line = GetNextLine();
-                while (line != null)
-                {
-                    if (line.StartsWith(BlockKey))
-                    {
-                        BcBlockData block = ReadDataBlock(out line);
-                        if (block != null)
-                        {
-                            yield return block;
-                        }
-                    }
-                    else
-                    {
-                        log.WarnFormat("Omitting line {0} not starting with {1}", LineNumber, BlockKey);
-                        line = GetNextLine();
-                    }
-                }
+                case WriteMode.SingleFile:
+                    return bc => string.Empty;
+                case WriteMode.FilePerFeature:
+                    return bc => bc.Feature.ToString();
+                case WriteMode.FilePerProcess:
+                    return bc => bc.ProcessName;
+                case WriteMode.FilePerQuantity:
+                    return bc => bc.VariableName;
+                default:
+                    throw new ArgumentException("File split mode " + writeMode + " is not supported by BC file writer");
             }
-            finally
+        }
+
+        private static string AppendToFile(string filePath, string tag)
+        {
+            string extension = Path.GetExtension(filePath);
+            if (extension == null)
             {
-                CloseInputFile();
+                return filePath + tag;
             }
+
+            return filePath.Substring(0, filePath.Length - extension.Length) + tag + extension;
+        }
+
+        private static bool SimilarDataType(BoundaryConditionDataType dt1, BoundaryConditionDataType dt2)
+        {
+            if (dt1 == BoundaryConditionDataType.AstroCorrection && dt2 == BoundaryConditionDataType.AstroComponents)
+            {
+                return true;
+            }
+
+            if (dt1 == BoundaryConditionDataType.AstroComponents && dt2 == BoundaryConditionDataType.AstroCorrection)
+            {
+                return true;
+            }
+
+            if (dt1 == BoundaryConditionDataType.HarmonicCorrection && dt2 == BoundaryConditionDataType.Harmonics)
+            {
+                return true;
+            }
+
+            if (dt1 == BoundaryConditionDataType.Harmonics && dt2 == BoundaryConditionDataType.HarmonicCorrection)
+            {
+                return true;
+            }
+
+            return dt1 == dt2;
+        }
+
+        private void WriteKeyValuePairLine(string keyString, string valueString)
+        {
+            WriteLine(keyString.PadRight(columnWidth) + " = " + valueString);
         }
 
         private static string[] SplitString(string str)

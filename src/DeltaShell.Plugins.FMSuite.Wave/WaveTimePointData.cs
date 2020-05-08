@@ -12,6 +12,26 @@ namespace DeltaShell.Plugins.FMSuite.Wave
     [Entity]
     public class WaveInputFieldData
     {
+        public WaveInputFieldData()
+        {
+            HydroDataType = InputFieldDataType.Constant;
+            WindDataType = InputFieldDataType.Constant;
+            WaterLevelConstant = 0.0;
+            VelocityXConstant = 0.0;
+            VelocityYConstant = 0.0;
+            WindSpeedConstant = 0.0;
+            WindDirectionConstant = 0.0;
+            MeteoData = new WaveMeteoData();
+
+            InputFields = new Function("wave_input_fields");
+            InputFields.Arguments.Add(new Variable<DateTime>("Time") {DefaultValue = DateTime.Today});
+            InputFields.Components.Add(new Variable<double>("Water Level", new Unit("meter", "m")));
+            InputFields.Components.Add(new Variable<double>("Velocity X", new Unit("meter per second", "m/s")));
+            InputFields.Components.Add(new Variable<double>("Velocity Y", new Unit("meter per second", "m/s")));
+            InputFields.Components.Add(new Variable<double>("Wind Speed", new Unit("meter per second", "m/s")));
+            InputFields.Components.Add(new Variable<double>("Wind Direction", new Unit("-", "-")));
+        }
+
         public InputFieldDataType HydroDataType { get; set; }
         public InputFieldDataType WindDataType { get; set; }
 
@@ -33,26 +53,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         public IFunction InputFields { get; set; }
 
         public IList<DateTime> TimePoints => InputFields.Arguments[0].Values.OfType<DateTime>().ToList();
-
-        public WaveInputFieldData()
-        {
-            HydroDataType = InputFieldDataType.Constant;
-            WindDataType = InputFieldDataType.Constant;
-            WaterLevelConstant = 0.0;
-            VelocityXConstant = 0.0;
-            VelocityYConstant = 0.0;
-            WindSpeedConstant = 0.0;
-            WindDirectionConstant = 0.0;
-            MeteoData = new WaveMeteoData();
-
-            InputFields = new Function("wave_input_fields");
-            InputFields.Arguments.Add(new Variable<DateTime>("Time") { DefaultValue = DateTime.Today });
-            InputFields.Components.Add(new Variable<double>("Water Level", new Unit("meter", "m")));
-            InputFields.Components.Add(new Variable<double>("Velocity X", new Unit("meter per second", "m/s")));
-            InputFields.Components.Add(new Variable<double>("Velocity Y", new Unit("meter per second", "m/s")));
-            InputFields.Components.Add(new Variable<double>("Wind Speed", new Unit("meter per second", "m/s")));
-            InputFields.Components.Add(new Variable<double>("Wind Direction", new Unit("-", "-")));
-        }
     }
 
     public enum InputFieldDataType

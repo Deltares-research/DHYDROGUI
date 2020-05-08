@@ -5,7 +5,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Provid
     /// <summary>
     /// <see cref="IAddBehaviour"/> defines the add behaviour to which
     /// <see cref="SharpMap.Api.IFeatureProvider"/> of <see cref="Providers"/>
-    /// can delegate their add methods. 
+    /// can delegate their add methods.
     /// </summary>
     public interface IAddBehaviour
     {

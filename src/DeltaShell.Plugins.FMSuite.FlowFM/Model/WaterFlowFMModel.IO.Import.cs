@@ -35,7 +35,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         /// <param name="mduFilePath"> The mdu file path. </param>
         /// <param name="progressChanged"> The progressChanged delegate provided by the importer. </param>
         /// <returns>
-        /// A WaterFlowFMModel describing the mdu defined at the <paramref name="mduFilePath" />
+        /// A WaterFlowFMModel describing the mdu defined at the <paramref name="mduFilePath"/>
         /// </returns>
         public static WaterFlowFMModel Import(string mduFilePath, ImportProgressChangedDelegate progressChanged)
         {
@@ -81,10 +81,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             Grid = ReadGridFromNetFile(NetFilePath) ?? new UnstructuredGrid();
 
             UnstructuredGridFileHelper.DoIfUgrid(NetFilePath,
-                                                 uGridAdaptor =>
-                                                 {
-                                                     bathymetryNoDataValue = uGridAdaptor.uGrid.ZCoordinateFillValue;
-                                                 });
+                                                 uGridAdaptor => { bathymetryNoDataValue = uGridAdaptor.uGrid.ZCoordinateFillValue; });
 
             FireImportProgressChanged(this, "Renaming sub files", 5, TotalImportSteps);
             RenameSubFilesIfApplicable();

@@ -9,9 +9,9 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Editors
 {
     public partial class MultipleFunctionChart : Form
     {
-        private IDictionary<string, Func<IEnumerable<IFunction>>> availableFunctions;
         private readonly IDictionary<string, IFunction> cachedFunctions;
         private readonly MultipleFunctionView multipleFunctionView;
+        private IDictionary<string, Func<IEnumerable<IFunction>>> availableFunctions;
 
         public MultipleFunctionChart()
         {
@@ -23,7 +23,10 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Editors
 
         public IDictionary<string, Func<IEnumerable<IFunction>>> AvailableFunctions
         {
-            private get { return availableFunctions; }
+            private get
+            {
+                return availableFunctions;
+            }
             set
             {
                 availableFunctions = value;
@@ -47,18 +50,19 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Editors
         private void FunctionsListBoxItemCheck(object sender, ItemCheckEventArgs e)
         {
             multipleFunctionView.Data = null;
-            var selectedItems = functionsListBox.CheckedItems.OfType<string>().ToList();
+            List<string> selectedItems = functionsListBox.CheckedItems.OfType<string>().ToList();
             if (e.NewValue == CheckState.Checked)
             {
                 selectedItems.Add((string) functionsListBox.Items[e.Index]);
             }
             else if (e.NewValue == CheckState.Unchecked)
             {
-                selectedItems.Remove((string)functionsListBox.Items[e.Index]);
+                selectedItems.Remove((string) functionsListBox.Items[e.Index]);
             }
+
             var cachedFunctionsClone = new Dictionary<string, IFunction>(cachedFunctions);
 
-            foreach (var cachedFunction in cachedFunctionsClone)
+            foreach (KeyValuePair<string, IFunction> cachedFunction in cachedFunctionsClone)
             {
                 if (!selectedItems.Contains(cachedFunction.Key))
                 {
@@ -69,10 +73,12 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Editors
                     selectedItems.Remove(cachedFunction.Key);
                 }
             }
-            foreach (var selectedItem in selectedItems)
+
+            foreach (string selectedItem in selectedItems)
             {
                 cachedFunctions.Add(selectedItem, availableFunctions[selectedItem]().FirstOrDefault());
             }
+
             if (cachedFunctions.Any())
             {
                 multipleFunctionView.Data = cachedFunctions.Values;

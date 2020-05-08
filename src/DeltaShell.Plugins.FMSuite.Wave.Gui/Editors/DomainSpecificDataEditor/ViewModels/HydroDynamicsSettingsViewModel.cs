@@ -12,6 +12,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.DomainSpecificDataEditor.V
         private readonly HydroFromFlowSettings hydroFromFlowData;
 
         /// <summary>
+        /// Occurs when [property changed].
+        /// </summary>
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="HydroDynamicsSettingsViewModel"/> class.
         /// </summary>
         /// <param name="hydroFromFlowData">The hydro from flow data.</param>
@@ -116,11 +121,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.DomainSpecificDataEditor.V
         }
 
         /// <summary>
-        /// Occurs when [property changed].
-        /// </summary>
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        /// <summary>
         /// Called when [property changed].
         /// </summary>
         /// <param name="propertyName">Name of the property.</param>
@@ -189,7 +189,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.DomainSpecificDataEditor.V
             }
         }
     }
-    
+
     /// <summary>
     /// Velocity types.
     /// </summary>
@@ -205,5 +205,4 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.DomainSpecificDataEditor.V
         [Description("Wave dependent")]
         WaveDependent
     }
-
 }

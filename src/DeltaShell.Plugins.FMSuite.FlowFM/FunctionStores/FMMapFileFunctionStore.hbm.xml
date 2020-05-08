@@ -7,13 +7,13 @@
     <id name="Id" column="id" type="long">
       <generator class="increment" />
     </id>
-    <property name="Path"/>
+    <property name="Path" />
   </class>
 
   <class name="FMHisFileFunctionStore" table="fm_his_function_store" lazy="false">
     <id name="Id" column="id" type="long">
       <generator class="increment" />
     </id>
-    <property name="Path"/>
+    <property name="Path" />
   </class>
 </hibernate-mapping>

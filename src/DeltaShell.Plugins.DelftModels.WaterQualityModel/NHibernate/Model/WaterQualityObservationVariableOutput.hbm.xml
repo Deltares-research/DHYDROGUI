@@ -1,4 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
+
 <hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"
                    auto-import="false"
                    namespace="DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.Model"
@@ -9,16 +10,16 @@
          table="wq_observation_variable_output">
 
     <id name="Id" column="wq_observation_variable_output_id" type="Int64">
-      <generator class="increment"/>
+      <generator class="increment" />
     </id>
 
-    <property name="name" access="field" column="name"/>
+    <property name="name" access="field" column="name" />
 
     <many-to-one name="ObservationVariable"
                  lazy="false"
                  cascade="save-update"
                  class="GeoAPI.Extensions.Feature.IFeature, GeoAPI.Extensions"
-                 column="observation_variable_id"/>
+                 column="observation_variable_id" />
 
     <list name="timeSeriesList"
           access="field"
@@ -26,9 +27,9 @@
           batch-size="10"
           cascade="all-delete-orphan"
           table="wq_observation_variable_time_series">
-      <key column="wq_observation_variable_output_id"/>
-      <index column="time_series_list_index"/>
-      <one-to-many class="DelftTools.Functions.TimeSeries"/>
+      <key column="wq_observation_variable_output_id" />
+      <index column="time_series_list_index" />
+      <one-to-many class="DelftTools.Functions.TimeSeries" />
     </list>
 
   </class>

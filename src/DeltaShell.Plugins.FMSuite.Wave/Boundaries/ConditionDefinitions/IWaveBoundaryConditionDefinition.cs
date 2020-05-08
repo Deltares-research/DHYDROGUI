@@ -4,7 +4,7 @@ using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.SpatiallyD
 namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions
 {
     /// <summary>
-    /// <see cref="IWaveBoundaryConditionDefinition"/> defines the condition 
+    /// <see cref="IWaveBoundaryConditionDefinition"/> defines the condition
     /// attributes of a <see cref="IWaveBoundary"/>.
     /// </summary>
     public interface IWaveBoundaryConditionDefinition : IVisitableWaveBoundaryConditionDefinition

@@ -1,3 +1,4 @@
+using System;
 using System.Drawing;
 using System.Windows.Forms;
 using DelftTools.Controls;
@@ -9,6 +10,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView.WeirFo
 {
     public partial class RiverWeirFormulaView : UserControl, IView
     {
+        private RiverWeirFormula data;
+
         public RiverWeirFormulaView()
         {
             InitializeComponent();
@@ -19,23 +22,26 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView.WeirFo
         /// </summary>
         public Image Image { get; set; }
 
-        public void EnsureVisible(object item) { }
         public ViewInfo ViewInfo { get; set; }
 
-        private RiverWeirFormula data;
-
         /// <summary>
-        /// Gets or sets data shown by this view. Usually it is any object in the system which can be shown by some IView derived class.
+        /// Gets or sets data shown by this view. Usually it is any object in the system which can be shown by some IView derived
+        /// class.
         /// </summary>
         public object Data
         {
-            get { return data; }
+            get
+            {
+                return data;
+            }
             set
             {
                 data = (RiverWeirFormula) value;
                 bindingSourceRiverWeir.DataSource = data;
             }
         }
+
+        public void EnsureVisible(object item) {}
 
         private static IFunction EditReductionTable(IFunction source, string title)
         {
@@ -54,14 +60,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView.WeirFo
             return DialogResult.OK == editFunctionDialog.ShowDialog() ? dialogData : source;
         }
 
-        private void buttonFlowReduction_Click(object sender, System.EventArgs e)
+        private void buttonFlowReduction_Click(object sender, EventArgs e)
         {
             RiverWeirFormula riverWeirFormula = data;
             riverWeirFormula.SubmergeReductionPos = EditReductionTable(riverWeirFormula.SubmergeReductionPos,
                                                                        "Reduction Curve Table for Positive Flow");
         }
 
-        private void buttonReductionReverse_Click(object sender, System.EventArgs e)
+        private void buttonReductionReverse_Click(object sender, EventArgs e)
         {
             RiverWeirFormula riverWeirFormula = data;
             riverWeirFormula.SubmergeReductionNeg = EditReductionTable(riverWeirFormula.SubmergeReductionNeg,

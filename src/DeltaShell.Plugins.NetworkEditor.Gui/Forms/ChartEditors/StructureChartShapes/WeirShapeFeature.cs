@@ -11,6 +11,17 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
     /// </summary>
     public class WeirShapeFeature : CompositeShapeFeature
     {
+        public WeirShapeFeature(IChart chart, double left, double top, double right, double minY, double maxY) : base(chart)
+        {
+            double waterTop = Math.Max(maxY, top);
+            double waterBottom = top;
+            WaterShape = new RectangleShapeFeature(Chart, left, waterTop, right, waterBottom);
+            ShapeFeatures.Add(WaterShape);
+
+            WeirShape = new RectangleShapeFeature(chart, left, top, right, minY);
+            ShapeFeatures.Add(WeirShape);
+        }
+
         public RectangleShapeFeature WeirShape { get; set; }
         public RectangleShapeFeature WaterShape { get; set; }
 
@@ -18,24 +29,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
         {
             set
             {
-                VectorStyle transparentStyle = (VectorStyle)value.Clone();
+                var transparentStyle = (VectorStyle) value.Clone();
                 transparentStyle.Fill = Brushes.Transparent;
 
                 WaterShape.NormalStyle = value;
                 WaterShape.DisabledStyle = transparentStyle;
                 WaterShape.SelectedStyle = value;
             }
-        }
-
-        public WeirShapeFeature(IChart chart, double left, double top, double right, double minY, double maxY) : base(chart)
-        {
-            var waterTop = Math.Max(maxY, top);
-            var waterBottom = top;
-            WaterShape = new RectangleShapeFeature(Chart, left, waterTop, right, waterBottom);
-            ShapeFeatures.Add(WaterShape);
-
-            WeirShape = new RectangleShapeFeature(chart, left, top, right, minY);
-            ShapeFeatures.Add(WeirShape);
         }
     }
 }

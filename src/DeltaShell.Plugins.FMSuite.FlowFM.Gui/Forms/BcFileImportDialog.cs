@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
@@ -15,8 +16,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
     public partial class BcFileImportDialog : Form, IConfigureDialog, IView
     {
         protected readonly IDictionary<string, FlowBoundaryQuantityType> quantities;
-        protected readonly IDictionary<string,BoundaryConditionDataType> dataTypes;
-        
+        protected readonly IDictionary<string, BoundaryConditionDataType> dataTypes;
+
         public BcFileImportDialog()
         {
             InitializeComponent();
@@ -41,9 +42,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
             overwriteCheckBox.Checked = true;
         }
 
-        protected string[] FilePaths { get; set; }
-
         public string Title { get; set; }
+
+        public object Data { get; set; }
+        public Image Image { get; set; }
+
+        public ViewInfo ViewInfo { get; set; }
 
         public virtual DelftDialogResult ShowModal()
         {
@@ -53,16 +57,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
             {
                 return DelftDialogResult.Cancel;
             }
+
             FilePaths = openFileDialog.FileNames;
-            var result = ShowDialog() == DialogResult.OK ? DelftDialogResult.OK : DelftDialogResult.Cancel;
+            DelftDialogResult result = ShowDialog() == DialogResult.OK ? DelftDialogResult.OK : DelftDialogResult.Cancel;
             if (result == DelftDialogResult.OK && deleteDataCheckBox.Checked &&
-                quantitiesListBox.CheckedItems.Count*dataTypesListBox.CheckedItems.Count == 0)
+                quantitiesListBox.CheckedItems.Count * dataTypesListBox.CheckedItems.Count == 0)
             {
-                var extraResult = MessageBox.Show(
+                DialogResult extraResult = MessageBox.Show(
                     "You are deleting data without importing any boundary condition data. Do you wish to continue?",
                     "Deleting data", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1);
                 return extraResult == DialogResult.Yes ? DelftDialogResult.OK : DelftDialogResult.Cancel;
             }
+
             return result;
         }
 
@@ -93,25 +99,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
             }
         }
 
-        private void ButtonOkClick(object sender, System.EventArgs e)
+        public void EnsureVisible(object item) {}
+
+        protected string[] FilePaths { get; set; }
+
+        private void ButtonOkClick(object sender, EventArgs e)
         {
             DialogResult = DialogResult.OK;
             Close();
         }
 
-        private void ButtonCancelClick(object sender, System.EventArgs e)
+        private void ButtonCancelClick(object sender, EventArgs e)
         {
             DialogResult = DialogResult.Cancel;
             Close();
         }
-
-        public object Data { get; set; }
-        public Image Image { get; set; }
-        public void EnsureVisible(object item)
-        {
-            
-        }
-
-        public ViewInfo ViewInfo { get; set; }
     }
 }

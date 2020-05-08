@@ -80,7 +80,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Provid
             }
 
             IPoint p = geometryFactory.ConstructBoundarySupportPoint(sp);
-            return p != null ? new Feature2DPoint { Geometry = p } : null;
+            return p != null ? new Feature2DPoint {Geometry = p} : null;
         }
     }
 }

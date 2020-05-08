@@ -13,18 +13,19 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Commands
         /// Returns a list with all models in the project
         /// </summary>
         /// <returns></returns>
-        static public IList<IModel> GetAllModelsContainingHydroNetwork(INetwork network, Project project)
+        public static IList<IModel> GetAllModelsContainingHydroNetwork(INetwork network, Project project)
         {
             IList<IModel> models = new List<IModel>();
-            var modelsInProject = project.RootFolder.GetAllItemsRecursive().OfType<IModel>();
-            foreach (var model in modelsInProject)
+            IEnumerable<IModel> modelsInProject = project.RootFolder.GetAllItemsRecursive().OfType<IModel>();
+            foreach (IModel model in modelsInProject)
             {
-                var networks = model.GetAllItemsRecursive().OfType<INetwork>();
+                IEnumerable<INetwork> networks = model.GetAllItemsRecursive().OfType<INetwork>();
                 if (networks.Any(modelNetwork => modelNetwork == network))
                 {
                     models.Add(model);
                 }
             }
+
             return models;
         }
     }

@@ -15,38 +15,38 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Views.WaveBound
     /// </summary>
     public static class MultipleFunctionViewWindowsFormsHostMap
     {
-        public static readonly DependencyProperty ChartViewOptionProperty = 
-            DependencyProperty.RegisterAttached(nameof(MultipleFunctionView.ChartViewOption), 
-                                                typeof(ChartViewOptions), 
+        public static readonly DependencyProperty ChartViewOptionProperty =
+            DependencyProperty.RegisterAttached(nameof(MultipleFunctionView.ChartViewOption),
+                                                typeof(ChartViewOptions),
                                                 typeof(MultipleFunctionViewWindowsFormsHostMap),
                                                 new PropertyMetadata(PropertyChanged));
 
-        public static readonly DependencyProperty ChartSeriesTypeProperty = 
-            DependencyProperty.RegisterAttached(nameof(MultipleFunctionView.ChartSeriesType), 
-                                                typeof(ChartSeriesType), 
+        public static readonly DependencyProperty ChartSeriesTypeProperty =
+            DependencyProperty.RegisterAttached(nameof(MultipleFunctionView.ChartSeriesType),
+                                                typeof(ChartSeriesType),
                                                 typeof(MultipleFunctionViewWindowsFormsHostMap),
                                                 new PropertyMetadata(PropertyChanged));
 
-        public static readonly DependencyProperty DockProperty = 
-            DependencyProperty.RegisterAttached(nameof(MultipleFunctionView.Dock), 
-                                                typeof(DockStyle), 
+        public static readonly DependencyProperty DockProperty =
+            DependencyProperty.RegisterAttached(nameof(MultipleFunctionView.Dock),
+                                                typeof(DockStyle),
                                                 typeof(MultipleFunctionViewWindowsFormsHostMap),
                                                 new PropertyMetadata(PropertyChanged));
 
-        public static readonly DependencyProperty FunctionsProperty = 
-            DependencyProperty.RegisterAttached(nameof(MultipleFunctionView.Functions), 
-                                                typeof(IEnumerable<IFunction>), 
+        public static readonly DependencyProperty FunctionsProperty =
+            DependencyProperty.RegisterAttached(nameof(MultipleFunctionView.Functions),
+                                                typeof(IEnumerable<IFunction>),
                                                 typeof(MultipleFunctionViewWindowsFormsHostMap),
                                                 new PropertyMetadata(PropertyChanged));
 
         public static ChartViewOptions GetChartViewOption(DependencyObject element) =>
-            (ChartViewOptions) element.GetValue((ChartViewOptionProperty));
+            (ChartViewOptions) element.GetValue(ChartViewOptionProperty);
 
         public static void SetChartViewOption(DependencyObject element, ChartViewOptions value) =>
             element.SetValue(ChartViewOptionProperty, value);
 
         public static ChartSeriesType GetChartSeriesType(DependencyObject element) =>
-            (ChartSeriesType) element.GetValue((ChartSeriesTypeProperty));
+            (ChartSeriesType) element.GetValue(ChartSeriesTypeProperty);
 
         public static void SetChartSeriesType(DependencyObject element, ChartSeriesType value) =>
             element.SetValue(ChartSeriesTypeProperty, value);
@@ -65,7 +65,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Views.WaveBound
 
         private static void PropertyChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            if (!((sender as WindowsFormsHost)?.Child is MultipleFunctionView multipleFunctionView)) return;
+            if (!((sender as WindowsFormsHost)?.Child is MultipleFunctionView multipleFunctionView))
+            {
+                return;
+            }
 
             if (e.Property == ChartViewOptionProperty)
             {

@@ -7,7 +7,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
     /// <summary>
     /// <see cref="PiersonMoskowitzViewShape"/> defines the Pierson-Moskowitz shape within the View layer.
     /// </summary>
-    /// <seealso cref="IViewShape" />
+    /// <seealso cref="IViewShape"/>
     [Description("Pierson-Moskowitz")]
     public class PiersonMoskowitzViewShape : IViewShape
     {

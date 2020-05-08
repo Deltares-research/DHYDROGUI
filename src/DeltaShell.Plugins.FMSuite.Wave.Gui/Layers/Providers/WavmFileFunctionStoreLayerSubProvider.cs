@@ -14,7 +14,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers.Providers
     /// <see cref="WavmFileFunctionStoreLayerSubProvider"/> implements the
     /// <see cref="ILayerSubProvider"/> for data of type <see cref="WavmFileFunctionStore"/>.
     /// </summary>
-    /// <seealso cref="ILayerSubProvider" />
+    /// <seealso cref="ILayerSubProvider"/>
     public class WavmFileFunctionStoreLayerSubProvider : ILayerSubProvider
     {
         private readonly IWaveLayerFactory factory;
@@ -29,7 +29,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers.Providers
         /// Throw when <paramref name="factory"/> or
         /// <paramref name="getWaveModelsFunc"/> is <c>null</c>.
         /// </exception>
-        public WavmFileFunctionStoreLayerSubProvider(IWaveLayerFactory factory, 
+        public WavmFileFunctionStoreLayerSubProvider(IWaveLayerFactory factory,
                                                      Func<IEnumerable<WaveModel>> getWaveModelsFunc)
         {
             Ensure.NotNull(factory, nameof(factory));
@@ -47,7 +47,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers.Providers
 
         public ILayer CreateLayer(object sourceData, object parentData)
         {
-
             if (!(sourceData is WavmFileFunctionStore store &&
                   store.Functions.Any()))
             {
@@ -79,13 +78,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers.Providers
             {
                 yield break;
             }
-            
+
             WaveModel waveModel = getWaveModelsFunc?.Invoke().FirstOrDefault(m => m.WavmFunctionStores.Contains(store));
             if (waveModel == null)
             {
                 yield return store.Grid;
             }
-            
+
             foreach (IFunction coverage in store.Functions)
             {
                 yield return coverage;

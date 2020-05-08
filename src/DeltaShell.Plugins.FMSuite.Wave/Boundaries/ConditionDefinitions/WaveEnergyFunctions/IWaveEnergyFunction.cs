@@ -44,7 +44,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.WaveEn
         /// </summary>
         IVariable<double> SpreadingComponent { get; }
 
-        /// <summary>`
+        /// <summary>
+        /// `
         /// Gets the underlying function.
         /// </summary>
         /// <remarks>
@@ -52,7 +53,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.WaveEn
         /// This allows for bypassing the extra verification provided in this
         /// class. Prefer using the properties and methods provided in this class,
         /// rather than relying on the underlying function.
-        ///
         /// Note that adding or removing components or arguments will violate
         /// assumptions made in child functions. Use at your own caution.
         /// </remarks>

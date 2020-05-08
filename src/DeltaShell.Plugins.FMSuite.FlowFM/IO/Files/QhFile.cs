@@ -34,15 +34,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         /// </summary>
         /// <param name="filePath"> </param>
         /// <returns> </returns>
-        /// <exception cref="ArgumentException"> <paramref name="filePath" /> is an empty string (""). </exception>
-        /// <exception cref="ArgumentNullException"> <paramref name="filePath" /> is null. </exception>
+        /// <exception cref="ArgumentException"> <paramref name="filePath"/> is an empty string (""). </exception>
+        /// <exception cref="ArgumentNullException"> <paramref name="filePath"/> is null. </exception>
         /// <exception cref="System.IO.FileNotFoundException"> The file cannot be found. </exception>
         /// <exception cref="System.IO.DirectoryNotFoundException">
         /// The specified path is invalid, such as being on an unmapped
         /// drive.
         /// </exception>
         /// <exception cref="System.IO.IOException">
-        /// <paramref name="filePath" /> includes an incorrect or invalid syntax for file
+        /// <paramref name="filePath"/> includes an incorrect or invalid syntax for file
         /// name, directory name, or volume label.
         /// </exception>
         /// <exception cref="OutOfMemoryException"> There is insufficient memory to allocate a buffer for the returned string. </exception>

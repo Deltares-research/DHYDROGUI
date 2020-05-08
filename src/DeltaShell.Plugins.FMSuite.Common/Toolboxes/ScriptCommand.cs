@@ -7,16 +7,15 @@ namespace DeltaShell.Plugins.FMSuite.Common.Toolboxes
 {
     public class ScriptCommand
     {
-        public string Title { get; private set; }
-        public Image Image { get; private set; }
-        private string ScriptPath { get; set; }
-
         public ScriptCommand(string title, Image image, string scriptPath)
         {
             Title = title;
             Image = image;
             ScriptPath = scriptPath;
         }
+
+        public string Title { get; private set; }
+        public Image Image { get; private set; }
 
         public void Execute(IScriptLogger scriptLogger = null, Dictionary<string, object> predefVariables = null)
         {
@@ -36,6 +35,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.Toolboxes
 
             RedirectOutputToLogger(host, scriptLogger);
         }
+
+        private string ScriptPath { get; set; }
 
         private void RedirectOutputToLogger(ScriptHost host, IScriptLogger scriptLogger)
         {

@@ -1,7 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.Windows.Forms;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using GeoAPI.Extensions.CoordinateSystems;
+using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Geometries;
 using NetTopologySuite.Geometries;
 using SharpMap.CoordinateSystems.Transformations;
@@ -26,9 +29,9 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Forms
 
             errorProvider.SetIconAlignment(textBox1, ErrorIconAlignment.BottomRight);
 
-            var geometry = boundaryConditionSet.Feature.Geometry;
-            
-            var coordinate = geometry.Coordinates[index];
+            IGeometry geometry = boundaryConditionSet.Feature.Geometry;
+
+            Coordinate coordinate = geometry.Coordinates[index];
 
             XCoordinateLabel.Text = coordinate.X.ToString("F2");
             YCoordinateLabel.Text = coordinate.Y.ToString("F2");
@@ -47,16 +50,27 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Forms
             {
                 distanceToStartingPoint = GeometryHelper.LineStringGetDistance(geometry as LineString, index);
             }
+
             ChainageLabel.Text = distanceToStartingPoint.ToString("F2");
 
-            var name = boundaryConditionSet.SupportPointNames[index];
+            string name = boundaryConditionSet.SupportPointNames[index];
 
             textBox1.Text = name;
             textBox1.CausesValidation = true;
             textBox1.Validating += TextBoxValidating;
         }
 
-        void TextBoxValidating(object sender, System.ComponentModel.CancelEventArgs e)
+        protected override bool ProcessDialogKey(Keys keyData)
+        {
+            if (keyData == Keys.Escape)
+            {
+                canceling = true;
+            }
+
+            return base.ProcessDialogKey(keyData);
+        }
+
+        private void TextBoxValidating(object sender, CancelEventArgs e)
         {
             if (canceling)
             {
@@ -64,6 +78,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Forms
                 e.Cancel = false;
                 return;
             }
+
             if (string.IsNullOrEmpty(textBox1.Text))
             {
                 errorProvider.SetError(textBox1, "Invalid support point name entered");
@@ -80,25 +95,19 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Forms
             }
         }
 
-        private void OkButtonClick(object sender, System.EventArgs e)
+        private void OkButtonClick(object sender, EventArgs e)
         {
             boundaryConditionSet.SupportPointNames[index] = textBox1.Text;
             DialogResult = DialogResult.OK;
         }
 
-        private void CancelButtonClick(object sender, System.EventArgs e)
+        private void CancelButtonClick(object sender, EventArgs e)
         {
             canceling = true;
             DialogResult = DialogResult.Cancel;
         }
 
-        protected override bool ProcessDialogKey(Keys keyData)
-        {
-            if (keyData == Keys.Escape) canceling = true;
-            return base.ProcessDialogKey(keyData);
-        }
-
-        private void defaultNameButton_Click(object sender, System.EventArgs e)
+        private void defaultNameButton_Click(object sender, EventArgs e)
         {
             textBox1.Text = BoundaryConditionSet.DefaultLocationName(boundaryConditionSet.Feature, index);
         }

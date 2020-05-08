@@ -40,8 +40,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories
         /// with the <paramref name="forcingType"/> and <paramref name="spatialDefinition"/>.
         /// </returns>
         ISpatiallyDefinedDataComponent ConstructBoundaryConditionDataComponent(ForcingViewType forcingType,
-                                                                                SpatialDefinitionViewType spatialDefinition,
-                                                                                DirectionalSpreadingViewType spreadingType);
+                                                                               SpatialDefinitionViewType spatialDefinition,
+                                                                               DirectionalSpreadingViewType spreadingType);
 
         /// <summary>
         /// Converts the provided <paramref name="currentDataComponent"/> to a similar

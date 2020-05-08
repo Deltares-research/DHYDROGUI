@@ -16,13 +16,11 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Editors
         private Keys lastKey;
         private DepthLayerDefinition depthLayerDefinition;
 
-        public DepthLayerControl() : this(Enum.GetValues(typeof (DepthLayerType)).Cast<DepthLayerType>().ToList())
-        {
-        }
+        public DepthLayerControl() : this(Enum.GetValues(typeof(DepthLayerType)).Cast<DepthLayerType>().ToList()) {}
 
         public DepthLayerControl(IList<DepthLayerType> supportedDepthLayerTypes)
         {
-            var bindingSource =
+            List<KeyValuePair<DepthLayerType, string>> bindingSource =
                 EnumBindingHelper.ToList<DepthLayerType>().Where(kvp => supportedDepthLayerTypes.Contains(kvp.Key)).ToList();
 
             CanSpecifyThicknesses = true;
@@ -64,7 +62,10 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Editors
                 if (depthLayerDefinition == null)
                 {
                     selectedDepthLayerType = DepthLayerType.Single;
-                    layerThicknesses = new List<double>(new[] {1.0});
+                    layerThicknesses = new List<double>(new[]
+                    {
+                        1.0
+                    });
                     layerCount = 1;
                     layerTypeComboBox.Enabled = false;
                 }
@@ -74,66 +75,22 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Editors
                     CopyLayerThicknesses();
                     layerTypeComboBox.Enabled = true;
                 }
+
                 RefreshView();
             }
         }
 
         public bool CanSpecifyThicknesses { get; set; }
 
-        private void CopyLayerThicknesses()
-        {
-            switch (selectedDepthLayerType)
-            {
-                case DepthLayerType.Single:
-                    layerThicknesses = new List<double>(new[] {1.0});
-                    layerCount = 1;
-                    break;
-                case DepthLayerType.Sigma:
-                    layerThicknesses =
-                        depthLayerDefinition.LayerThicknesses.Select(d => 100*d).ToList();
-                    layerCount = depthLayerDefinition.NumLayers;
-                    break;
-                case DepthLayerType.Z:
-                    layerThicknesses = depthLayerDefinition.LayerThicknesses.ToList();
-                    layerCount = depthLayerDefinition.NumLayers;
-                    break;
-            }
-        }
-
-        private DepthLayerDefinition CreateDepthLayerDefinition
-        {
-            get
-            {
-                switch (selectedDepthLayerType)
-                {
-                    case DepthLayerType.Single:
-                        return new DepthLayerDefinition(DepthLayerType.Single, Enumerable.Empty<double>());
-                    case DepthLayerType.Sigma:
-                        return new DepthLayerDefinition(DepthLayerType.Sigma,layerThicknesses.Select(t => t/totalThickness));
-                    case DepthLayerType.Z:
-                        return new DepthLayerDefinition(DepthLayerType.Z,layerThicknesses.ToList());
-
-                    default:
-                        throw new ArgumentException("Depth layer type not supported");
-                }
-            }
-        }
-
-        private void UpdateDepthLayerDefinition()
-        {
-            depthLayerDefinition = CreateDepthLayerDefinition;
-            if (AfterDepthLayerDefinitionCreated != null)
-            {
-                AfterDepthLayerDefinitionCreated(depthLayerDefinition);
-            }
-        }
-        
         // needs to be public for data binding
         [Browsable(false)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public int LayerCount
         {
-            get { return layerCount; }
+            get
+            {
+                return layerCount;
+            }
             set
             {
                 if (layerCount != value && value > 0)
@@ -151,7 +108,10 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Editors
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public DepthLayerType SelectedDepthLayerType
         {
-            get { return selectedDepthLayerType; }
+            get
+            {
+                return selectedDepthLayerType;
+            }
             set
             {
                 if (value != selectedDepthLayerType)
@@ -163,10 +123,74 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Editors
             }
         }
 
+        public static Color BlueShade(int i, int layers)
+        {
+            return ChangeColorBrightness(Color.DeepSkyBlue, 1 - ((2 * (float) (i + 1)) / (layers + 1)));
+        }
+
+        private DepthLayerDefinition CreateDepthLayerDefinition
+        {
+            get
+            {
+                switch (selectedDepthLayerType)
+                {
+                    case DepthLayerType.Single:
+                        return new DepthLayerDefinition(DepthLayerType.Single, Enumerable.Empty<double>());
+                    case DepthLayerType.Sigma:
+                        return new DepthLayerDefinition(DepthLayerType.Sigma, layerThicknesses.Select(t => t / totalThickness));
+                    case DepthLayerType.Z:
+                        return new DepthLayerDefinition(DepthLayerType.Z, layerThicknesses.ToList());
+
+                    default:
+                        throw new ArgumentException("Depth layer type not supported");
+                }
+            }
+        }
+
+        private IEnumerable<TextBox> TextBoxes
+        {
+            get
+            {
+                return layersPanel.Controls.OfType<Control>().SelectMany(c => c.Controls.OfType<TextBox>());
+            }
+        }
+
+        private void CopyLayerThicknesses()
+        {
+            switch (selectedDepthLayerType)
+            {
+                case DepthLayerType.Single:
+                    layerThicknesses = new List<double>(new[]
+                    {
+                        1.0
+                    });
+                    layerCount = 1;
+                    break;
+                case DepthLayerType.Sigma:
+                    layerThicknesses =
+                        depthLayerDefinition.LayerThicknesses.Select(d => 100 * d).ToList();
+                    layerCount = depthLayerDefinition.NumLayers;
+                    break;
+                case DepthLayerType.Z:
+                    layerThicknesses = depthLayerDefinition.LayerThicknesses.ToList();
+                    layerCount = depthLayerDefinition.NumLayers;
+                    break;
+            }
+        }
+
+        private void UpdateDepthLayerDefinition()
+        {
+            depthLayerDefinition = CreateDepthLayerDefinition;
+            if (AfterDepthLayerDefinitionCreated != null)
+            {
+                AfterDepthLayerDefinitionCreated(depthLayerDefinition);
+            }
+        }
+
         private void UpdateControl()
         {
-            var layers = SelectedDepthLayerType == DepthLayerType.Single ? 1 : 2;
-            var layersChanged = layers != LayerCount;
+            int layers = SelectedDepthLayerType == DepthLayerType.Single ? 1 : 2;
+            bool layersChanged = layers != LayerCount;
             LayerCount = layers;
             if (!layersChanged && layerCount > 0)
             {
@@ -189,15 +213,19 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Editors
             switch (SelectedDepthLayerType)
             {
                 case DepthLayerType.Single:
-                    layerThicknesses = new List<double>(new[] {0.0});
+                    layerThicknesses = new List<double>(new[]
+                    {
+                        0.0
+                    });
                     break;
                 case DepthLayerType.Sigma:
-                    var fraction = 100.0/LayerCount;
+                    double fraction = 100.0 / LayerCount;
                     layerThicknesses.Clear();
                     for (var i = 0; i < LayerCount; ++i)
                     {
                         layerThicknesses.Add(fraction);
                     }
+
                     break;
                 case DepthLayerType.Z:
                     layerThicknesses.Clear();
@@ -205,6 +233,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Editors
                     {
                         layerThicknesses.Add(1.0);
                     }
+
                     break;
                 default:
                     throw new ArgumentException("Depth layer type is not supported");
@@ -223,16 +252,11 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Editors
             }
         }
 
-        public static Color BlueShade(int i, int layers)
-        {
-            return ChangeColorBrightness(Color.DeepSkyBlue, 1 - 2*(float) (i + 1)/(layers + 1));
-        }
-
         private static Color ChangeColorBrightness(Color color, float correctionFactor)
         {
-            var red = (float)color.R;
-            var green = (float)color.G;
-            var blue = (float)color.B;
+            var red = (float) color.R;
+            var green = (float) color.G;
+            var blue = (float) color.B;
 
             if (correctionFactor < 0)
             {
@@ -243,15 +267,15 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Editors
             }
             else
             {
-                red = (255 - red) * correctionFactor + red;
-                green = (255 - green) * correctionFactor + green;
-                blue = (255 - blue) * correctionFactor + blue;
+                red = ((255 - red) * correctionFactor) + red;
+                green = ((255 - green) * correctionFactor) + green;
+                blue = ((255 - blue) * correctionFactor) + blue;
             }
 
-            return Color.FromArgb(color.A, (int)red, (int)green, (int)blue);
+            return Color.FromArgb(color.A, (int) red, (int) green, (int) blue);
         }
 
-        Control CreateLayerEntry(int i, double thickness, string unit)
+        private Control CreateLayerEntry(int i, double thickness, string unit)
         {
             var control = new Control();
 
@@ -269,8 +293,16 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Editors
             textBox.Validated += TextBoxValidated;
 
             control.Controls.Add(textBox);
-            control.Controls.Add(new Label { Text = unit, Location = new Point(85, 5) });
-            control.Controls.Add(new Label {Text = "Layer " + i, Location = new Point(5, 5)});
+            control.Controls.Add(new Label
+            {
+                Text = unit,
+                Location = new Point(85, 5)
+            });
+            control.Controls.Add(new Label
+            {
+                Text = "Layer " + i,
+                Location = new Point(5, 5)
+            });
 
             control.Enabled = CanSpecifyThicknesses;
 
@@ -279,7 +311,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Editors
 
         private void FillDepthLayersPanel()
         {
-            foreach (var textBox in layersPanel.Controls.OfType<TextBox>())
+            foreach (TextBox textBox in layersPanel.Controls.OfType<TextBox>())
             {
                 textBox.Validating -= TextBoxValidating;
                 textBox.Validated -= TextBoxValidated;
@@ -287,7 +319,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Editors
             }
 
             Controls.Remove(layersPanel);
-            layersPanel = new TableLayoutPanel{Dock = DockStyle.Fill};
+            layersPanel = new TableLayoutPanel {Dock = DockStyle.Fill};
             Controls.Add(layersPanel);
             layersPanel.BringToFront();
 
@@ -296,14 +328,14 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Editors
                 layersPanel.Visible = false;
                 return;
             }
+
             layersPanel.Visible = true;
 
             layersPanel.SuspendLayout();
-            var rowCount = LayerCount + 1;
+            int rowCount = LayerCount + 1;
             layersPanel.RowCount = rowCount;
 
-
-            var height = (float) 100/rowCount;
+            float height = (float) 100 / rowCount;
 
             for (var i = 0; i < rowCount; i++)
             {
@@ -312,10 +344,10 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Editors
 
             layersPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
 
-            for (int i = 0; i < LayerCount; i++)
+            for (var i = 0; i < LayerCount; i++)
             {
-                var control = CreateLayerEntry(LayerCount - i, layerThicknesses[i],
-                                               SelectedDepthLayerType == DepthLayerType.Sigma ? "%" : "m");
+                Control control = CreateLayerEntry(LayerCount - i, layerThicknesses[i],
+                                                   SelectedDepthLayerType == DepthLayerType.Sigma ? "%" : "m");
                 control.Dock = DockStyle.Fill;
                 layersPanel.Controls.Add(control, 0, i);
             }
@@ -338,17 +370,18 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Editors
             {
                 return;
             }
+
             GenerateColors();
-            var graphics = e.Graphics;
+            Graphics graphics = e.Graphics;
             var picture = (PictureBox) sender;
             graphics.Clear(picture.BackColor);
             var offset = 0.0;
             var j = 0;
-            foreach (var layerThickness in layerThicknesses.Reverse())
+            foreach (double layerThickness in layerThicknesses.Reverse())
             {
-                var height = picture.Height*layerThickness/totalThickness;
+                double height = (picture.Height * layerThickness) / totalThickness;
                 graphics.FillRectangle(new SolidBrush(colors[j++]), 0, (float) offset,
-                    picture.Width, (float) height);
+                                       picture.Width, (float) height);
                 offset += height;
             }
         }
@@ -371,14 +404,15 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Editors
                         box.Focus();
                     }
                 }
-                ((TextBox)sender).Select(0,((TextBox)sender).Text.Length);
+
+                ((TextBox) sender).Select(0, ((TextBox) sender).Text.Length);
             }
         }
 
         private void LayerCountTextBoxValidating(object sender, CancelEventArgs e)
         {
-            var textBox = ((TextBox)sender);
-            var text = textBox.Text;
+            var textBox = (TextBox) sender;
+            string text = textBox.Text;
             int result;
             if (!int.TryParse(text, out result))
             {
@@ -387,6 +421,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Editors
                 errorProvider.SetError(textBox, "value is not a valid number of layers");
                 return;
             }
+
             if (result < 1 || result > 99)
             {
                 e.Cancel = true;
@@ -394,6 +429,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Editors
                 errorProvider.SetError(textBox, "value is not a valid number of layers");
                 return;
             }
+
             errorProvider.SetError(textBox, string.Empty);
             e.Cancel = false;
             LayerCount = result;
@@ -404,48 +440,44 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Editors
             }
         }
 
-        private IEnumerable<TextBox> TextBoxes
+        private void TextBoxValidating(object sender, CancelEventArgs e)
         {
-            get { return layersPanel.Controls.OfType<Control>().SelectMany(c => c.Controls.OfType<TextBox>()); }
-        }
-
-        void TextBoxValidating(object sender, CancelEventArgs e)
-        {
-            var textBox = ((TextBox)sender);
-            var text = textBox.Text;
+            var textBox = (TextBox) sender;
+            string text = textBox.Text;
             double result;
             if (double.TryParse(text, out result))
             {
-                var max = selectedDepthLayerType == DepthLayerType.Sigma ? 100 : 1000000;
+                int max = selectedDepthLayerType == DepthLayerType.Sigma ? 100 : 1000000;
 
                 if (layerThicknesses.Count == 1 || result > 0 && result < max)
                 {
                     e.Cancel = false;
                     errorProvider.SetError(textBox, string.Empty);
-                    var index = TextBoxes.ToList().IndexOf(textBox);
+                    int index = TextBoxes.ToList().IndexOf(textBox);
                     layerThicknesses[index] = result;
                     textBox.Text = Math.Round(result, 2).ToString(CultureInfo.InvariantCulture);
                     return;
                 }
             }
+
             e.Cancel = true;
             textBox.Select(0, text.Length);
             if (SelectedDepthLayerType == DepthLayerType.Sigma)
             {
                 errorProvider.SetError(textBox, "value is not a valid percentage");
             }
+
             if (SelectedDepthLayerType == DepthLayerType.Z)
             {
-                errorProvider.SetError(textBox, "value is not a valid thickness");                
+                errorProvider.SetError(textBox, "value is not a valid thickness");
             }
         }
 
-        
-        void TextBoxValidated(object sender, EventArgs e)
+        private void TextBoxValidated(object sender, EventArgs e)
         {
             totalThickness = 0;
             UpdateTotalSum();
-            
+
             if (picture != null)
             {
                 picture.Invalidate();
@@ -455,17 +487,18 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Editors
         private void UpdateTotalSum()
         {
             totalThickness = SelectedDepthLayerType == DepthLayerType.Sigma
-                ? Math.Round(layerThicknesses.Sum())
-                : layerThicknesses.Sum();
+                                 ? Math.Round(layerThicknesses.Sum())
+                                 : layerThicknesses.Sum();
 
-            var totalSumLabel =
+            Label totalSumLabel =
                 layersPanel.Controls.OfType<Label>().FirstOrDefault(l => l.Name == "totalSumLabel");
             if (totalSumLabel == null)
             {
                 return;
             }
+
             totalSumLabel.Text = "Total: " + totalThickness + (SelectedDepthLayerType == DepthLayerType.Sigma ? "%" : " m");
-            
+
             if (SelectedDepthLayerType == DepthLayerType.Sigma)
             {
                 var integerSum = (int) totalThickness;

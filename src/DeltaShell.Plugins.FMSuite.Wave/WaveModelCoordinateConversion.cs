@@ -101,18 +101,18 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             }
         }
 
-        private static bool CanConvertModel(WaveModel model, ICoordinateTransformation transformation)
-        {
-            List<IFeature> features = GetAllModelFeatures(model).ToList();
-            return CoordinateSystemValidator.CanConvertByTransformation(
-                features.Select(f => f.Geometry), transformation);
-        }
-
         public static IEnumerable<IFeature> GetAllModelFeatures(WaveModel model)
         {
             return model.ObservationPoints.OfType<IFeature>()
                         .Concat(model.ObservationCrossSections)
                         .Concat(model.Obstacles);
+        }
+
+        private static bool CanConvertModel(WaveModel model, ICoordinateTransformation transformation)
+        {
+            List<IFeature> features = GetAllModelFeatures(model).ToList();
+            return CoordinateSystemValidator.CanConvertByTransformation(
+                features.Select(f => f.Geometry), transformation);
         }
     }
 }

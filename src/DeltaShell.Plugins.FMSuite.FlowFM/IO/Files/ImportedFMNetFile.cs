@@ -7,6 +7,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 {
     public class ImportedFMNetFile : Unique<long>
     {
+        private UnstructuredGrid grid;
+
         // nhib
         public ImportedFMNetFile() {}
 
@@ -14,8 +16,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         {
             Path = path;
         }
-
-        private UnstructuredGrid grid;
 
         public UnstructuredGrid Grid
         {
@@ -30,6 +30,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             }
         }
 
+        public string Path { get; set; }
+
         private void LoadGrid()
         {
             try
@@ -41,7 +43,5 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                 Console.WriteLine(e);
             }
         }
-
-        public string Path { get; set; }
     }
 }

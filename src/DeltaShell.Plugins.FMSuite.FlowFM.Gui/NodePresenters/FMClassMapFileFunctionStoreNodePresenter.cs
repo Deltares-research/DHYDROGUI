@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.Controls;
+using DelftTools.Functions;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Shell.Gui.Swf;
 using DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores;
+using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Properties;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using NetTopologySuite.Extensions.Coverages;
 
@@ -14,9 +16,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
     /// <summary>
     /// Presents the nodes for the Class Map file function store.
     /// </summary>
-    /// <seealso cref="DelftTools.Shell.Gui.Swf.TreeViewNodePresenterBaseForPluginGui{FMClassMapFileFunctionStore}" />
+    /// <seealso cref="DelftTools.Shell.Gui.Swf.TreeViewNodePresenterBaseForPluginGui{FMClassMapFileFunctionStore}"/>
     public class FMClassMapFileFunctionStoreNodePresenter : TreeViewNodePresenterBaseForPluginGui<FMClassMapFileFunctionStore>
     {
+        private static readonly IList<DataItem> DataItems = new List<DataItem>();
+
         /// <summary>
         /// Updates the node.
         /// </summary>
@@ -26,7 +30,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
         public override void UpdateNode(ITreeNode parentNode, ITreeNode node, FMClassMapFileFunctionStore nodeData)
         {
             node.Text = Path.GetFileName(nodeData.Path);
-            node.Image = Properties.Resources.unstrucWater;
+            node.Image = Resources.unstrucWater;
         }
 
         /// <summary>
@@ -37,17 +41,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
         /// <returns></returns>
         public override IEnumerable GetChildNodeObjects(FMClassMapFileFunctionStore parent, ITreeNode node)
         {
-            var model = GetModelByFunctionStore(parent);
+            WaterFlowFMModel model = GetModelByFunctionStore(parent);
 
             if (model == null)
             {
-                var coverage = parent.Functions.OfType<UnstructuredGridCoverage>().FirstOrDefault();
+                UnstructuredGridCoverage coverage = parent.Functions.OfType<UnstructuredGridCoverage>().FirstOrDefault();
                 if (coverage != null)
                 {
                     yield return WrapIntoOutputItem(coverage.Grid, parent, "grid");
                 }
             }
-            foreach (var function in parent.Functions)
+
+            foreach (IFunction function in parent.Functions)
             {
                 yield return WrapIntoOutputItem(function, parent, function.Name);
             }
@@ -55,24 +60,27 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
 
         private IDataItem WrapIntoOutputItem(object o, FMClassMapFileFunctionStore store, string tag)
         {
-            var model = GetModelByFunctionStore(store);
+            WaterFlowFMModel model = GetModelByFunctionStore(store);
 
-            var existingItem = DataItems.FirstOrDefault(di => Equals(di.Tag, tag) && Equals(di.Owner, model));
+            DataItem existingItem = DataItems.FirstOrDefault(di => Equals(di.Tag, tag) && Equals(di.Owner, model));
             if (existingItem == null)
             {
-                var newItem = new DataItem(o, DataItemRole.Output) { Tag = tag, Owner = model };
+                var newItem = new DataItem(o, DataItemRole.Output)
+                {
+                    Tag = tag,
+                    Owner = model
+                };
                 DataItems.Add(newItem);
                 return newItem;
             }
+
             return existingItem;
         }
 
         private WaterFlowFMModel GetModelByFunctionStore(FMClassMapFileFunctionStore store)
         {
             return Gui?.Application?.Project?.RootFolder?.Models?.OfType<WaterFlowFMModel>()
-                .FirstOrDefault(m => Equals(m.OutputClassMapFileStore, store));
+                      .FirstOrDefault(m => Equals(m.OutputClassMapFileStore, store));
         }
-
-        private static readonly IList<DataItem> DataItems = new List<DataItem>();
     }
 }

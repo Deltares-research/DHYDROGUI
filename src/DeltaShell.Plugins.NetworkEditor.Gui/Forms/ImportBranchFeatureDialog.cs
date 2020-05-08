@@ -6,24 +6,36 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
 {
     public partial class ImportBranchFeatureDialog : Form
     {
-        public double Tolerance { get; set; }
-
         public ImportBranchFeatureDialog()
         {
             InitializeComponent();
             textBox1.DataBindings.Add("Text", this, "Tolerance", false, DataSourceUpdateMode.OnPropertyChanged);
         }
 
+        public double Tolerance { get; set; }
+
         public IList DataSource
         {
-            get { return selectBranchFeatureListBox.DataSource as IList; }
-            set { selectBranchFeatureListBox.DataSource = value; }
+            get
+            {
+                return selectBranchFeatureListBox.DataSource as IList;
+            }
+            set
+            {
+                selectBranchFeatureListBox.DataSource = value;
+            }
         }
 
         public string DisplayMember
         {
-            get { return selectBranchFeatureListBox.DisplayMember; }
-            set { selectBranchFeatureListBox.DisplayMember = value; }
+            get
+            {
+                return selectBranchFeatureListBox.DisplayMember;
+            }
+            set
+            {
+                selectBranchFeatureListBox.DisplayMember = value;
+            }
         }
 
         public object SelectedItem

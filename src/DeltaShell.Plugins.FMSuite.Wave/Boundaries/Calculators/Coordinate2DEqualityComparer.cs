@@ -4,10 +4,10 @@ using GeoAPI.Geometries;
 namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.Calculators
 {
     /// <summary>
-    /// <see cref="Coordinate2DEqualityComparer"/> provides an <see cref="IEqualityComparer{Coordinate}"/>.
+    /// <see cref="Coordinate2DEqualityComparer"/> provides an <see cref="IEqualityComparer{T}"/>.
     /// It leverages the internal <see cref="Coordinate.Equals2D(Coordinate)"/> to obtain equality.
     /// </summary>
-    /// <seealso cref="IEqualityComparer{Coordinate}" />
+    /// <seealso cref="IEqualityComparer{Coordinate}"/>
     public class Coordinate2DEqualityComparer : IEqualityComparer<Coordinate>
     {
         public bool Equals(Coordinate x, Coordinate y)

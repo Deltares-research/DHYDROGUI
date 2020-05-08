@@ -65,7 +65,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Forcin
                 spreading = value;
             }
         }
-        
+
         public void AcceptVisitor(IForcingTypeDefinedParametersVisitor visitor)
         {
             Ensure.NotNull(visitor, nameof(visitor));

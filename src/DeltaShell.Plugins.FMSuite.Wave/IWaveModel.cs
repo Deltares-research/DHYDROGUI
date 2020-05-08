@@ -10,9 +10,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave
     /// <summary>
     /// <see cref="IWaveModel"/> describes the content of a wave model.
     /// </summary>
-    /// <seealso cref="ITimeDependentModel" />
-    /// <seealso cref="IHasCoordinateSystem" />
-    /// <seealso cref="IEditableObject" />
+    /// <seealso cref="ITimeDependentModel"/>
+    /// <seealso cref="IHasCoordinateSystem"/>
+    /// <seealso cref="IEditableObject"/>
     public interface IWaveModel : ITimeDependentModel, IHasCoordinateSystem, IEditableObject
     {
         /// <summary>

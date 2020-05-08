@@ -112,10 +112,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Readers
 
             // [nSize,mSize] is the shape of the data, following our convention
             // in multidimensionalarray: [rows,columns]
-            var grid = new CurvilinearGrid(nSize, mSize, xCoordinates, yCoordinates, coordinateSystem)
-            {
-                IsTimeDependent = false
-            };
+            var grid = new CurvilinearGrid(nSize, mSize, xCoordinates, yCoordinates, coordinateSystem) {IsTimeDependent = false};
 
             return grid;
         }

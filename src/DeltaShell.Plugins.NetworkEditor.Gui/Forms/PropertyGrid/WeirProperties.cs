@@ -20,8 +20,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [PropertyOrder(0)]
         public string Name
         {
-            get { return data.Name; }
-            set { data.Name = value; }
+            get
+            {
+                return data.Name;
+            }
+            set
+            {
+                data.Name = value;
+            }
         }
 
         [DynamicVisible]
@@ -29,8 +35,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [PropertyOrder(1)]
         public string LongName
         {
-            get { return data.LongName; }
-            set { data.LongName = value; }
+            get
+            {
+                return data.LongName;
+            }
+            set
+            {
+                data.LongName = value;
+            }
         }
 
         [Description("Level of the weir above datum.")]
@@ -39,8 +51,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [PropertyOrder(3)]
         public double CrestLevel
         {
-            get { return data.CrestLevel; }
-            set { data.CrestLevel = value; }
+            get
+            {
+                return data.CrestLevel;
+            }
+            set
+            {
+                data.CrestLevel = value;
+            }
         }
 
         [Description("Indicates whether the weir has a movable gate.")]
@@ -49,7 +67,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [PropertyOrder(6)]
         public bool Gate
         {
-            get { return data.IsGated; }
+            get
+            {
+                return data.IsGated;
+            }
         }
 
         [DynamicVisible]
@@ -59,7 +80,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [PropertyOrder(7)]
         public string CrestShape
         {
-            get { return data.CrestShape.ToString(); }
+            get
+            {
+                return data.CrestShape.ToString();
+            }
         }
 
         [Description("Is flow in negative direction allowed.")]
@@ -69,8 +93,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [DynamicReadOnly]
         public bool AllowNegativeFlow
         {
-            get { return data.AllowNegativeFlow; }
-            set { data.AllowNegativeFlow = value; }
+            get
+            {
+                return data.AllowNegativeFlow;
+            }
+            set
+            {
+                data.AllowNegativeFlow = value;
+            }
         }
 
         [Description("Is flow in positive direction allowed.")]
@@ -80,16 +110,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [DynamicReadOnly]
         public bool AllowPositiveFlow
         {
-            get { return data.AllowPositiveFlow; }
-            set { data.AllowPositiveFlow = value; }
-        }
-
-        // This works only for the AllowPositive/AllowNegative/Flowdirection Flow properties;
-
-        [DynamicReadOnlyValidationMethod]
-        public bool IsReadOnly(string propertyName)
-        {
-            return (data.WeirFormula is RiverWeirFormula || data.WeirFormula is GeneralStructureWeirFormula || data.WeirFormula is PierWeirFormula);
+            get
+            {
+                return data.AllowPositiveFlow;
+            }
+            set
+            {
+                data.AllowPositiveFlow = value;
+            }
         }
 
         [Category("General")]
@@ -98,7 +126,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [TypeConverter(typeof(AttributeArrayConverter<object>))]
         public AttributeProperties<object>[] Attributes
         {
-            get { return data.Attributes.Select(x => new AttributeProperties<object>(data.Attributes, x.Key)).ToArray(); }
+            get
+            {
+                return data.Attributes.Select(x => new AttributeProperties<object>(data.Attributes, x.Key)).ToArray();
+            }
         }
 
         [DynamicVisible]
@@ -107,7 +138,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [Category("Administration")]
         public string Channel
         {
-            get { return data.Channel.ToString(); }
+            get
+            {
+                return data.Channel.ToString();
+            }
         }
 
         [DynamicVisible]
@@ -116,7 +150,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [Category("Administration")]
         public string CompositeStructure
         {
-            get { return data.ParentStructure.ToString(); }
+            get
+            {
+                return data.ParentStructure.ToString();
+            }
         }
 
         [DynamicVisible]
@@ -127,7 +164,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [DisplayFormat("0.00")]
         public double Chainage
         {
-            get { return NetworkHelper.MapChainage(data.ParentStructure); }
+            get
+            {
+                return NetworkHelper.MapChainage(data.ParentStructure);
+            }
         }
 
         [DynamicVisible]
@@ -137,8 +177,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [DisplayName("Chainage")]
         public double CompuChainage
         {
-            get { return data.ParentStructure.Chainage; }
-            set { HydroRegionEditorHelper.MoveBranchFeatureTo(data, value); }
+            get
+            {
+                return data.ParentStructure.Chainage;
+            }
+            set
+            {
+                HydroRegionEditorHelper.MoveBranchFeatureTo(data, value);
+            }
         }
 
         [DynamicVisible]
@@ -147,7 +193,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [PropertyOrder(15)]
         public string YOffSet
         {
-            get { return string.Format("{0:0.##}", data.OffsetY); }
+            get
+            {
+                return string.Format("{0:0.##}", data.OffsetY);
+            }
             //set { weir.OffsetY = double.Parse(value); }
         }
 
@@ -158,8 +207,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [DynamicReadOnly]
         public FlowDirection FlowDirection
         {
-            get { return data.FlowDirection; }
-            set { data.FlowDirection = value; }
+            get
+            {
+                return data.FlowDirection;
+            }
+            set
+            {
+                data.FlowDirection = value;
+            }
         }
 
         [Category("General")]
@@ -171,7 +226,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         {
             get
             {
-                var formula = data.WeirFormula;
+                IWeirFormula formula = data.WeirFormula;
 
                 if (formula is SimpleWeirFormula)
                 {
@@ -207,6 +262,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
             }
         }
 
+        // This works only for the AllowPositive/AllowNegative/Flowdirection Flow properties;
+
+        [DynamicReadOnlyValidationMethod]
+        public bool IsReadOnly(string propertyName)
+        {
+            return data.WeirFormula is RiverWeirFormula || data.WeirFormula is GeneralStructureWeirFormula || data.WeirFormula is PierWeirFormula;
+        }
+
         [DynamicVisibleValidationMethod]
         public bool IsVisible(string propertyName)
         {
@@ -216,7 +279,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
             {
                 return data.Branch != null;
             }
-            
+
             return true;
         }
     }

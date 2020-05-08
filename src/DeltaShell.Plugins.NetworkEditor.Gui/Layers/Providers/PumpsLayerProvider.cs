@@ -19,10 +19,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Layers.Providers
         /// <inheritdoc/>
         protected override IFeatureEditor GetLayerFeatureEditor(HydroArea hydroArea)
         {
-            return new Feature2DEditor(hydroArea)
-            {
-                CreateNewFeature = l => new Pump2D(true)
-            };
+            return new Feature2DEditor(hydroArea) {CreateNewFeature = l => new Pump2D(true)};
         }
 
         /// <inheritdoc/>

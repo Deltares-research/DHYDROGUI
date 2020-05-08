@@ -19,8 +19,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         /// <returns>
         /// The <see cref="TimeSeriesGeneratorDialog"/> after querying the user.
         /// </returns>
-        TimeSeriesGeneratorDialog GetTimeSeriesGeneratorResponse(DateTime startTime, 
-                                                                 DateTime stopTime, 
+        TimeSeriesGeneratorDialog GetTimeSeriesGeneratorResponse(DateTime startTime,
+                                                                 DateTime stopTime,
                                                                  TimeSpan timeStep);
 
         /// <summary>

@@ -60,6 +60,42 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Utils
 
         public string FunctionTypeName => name;
 
+        /// <summary>
+        /// Replaces the function in a collection for a new one created with a creator.
+        /// </summary>
+        /// <param name="functionCollection"> The function collection containing the function to be replaced. </param>
+        /// <param name="function"> The function to be replaced. </param>
+        /// <param name="creator">
+        /// The creator handling the creation of a new <see cref="IFunction"/>
+        /// based on <paramref name="function"/>.
+        /// </param>
+        /// <param name="dataOwner"> The data owner or <paramref name="function"/>. </param>
+        /// <param name="previousType">
+        /// Optional textual description of the original function type.
+        /// this is only used for undo/redo messaging.
+        /// </param>
+        /// <returns> The newly created function that has been inserted into <paramref name="functionCollection"/>. </returns>
+        public static IFunction ReplaceFunctionUsingCreator(IList<IFunction> functionCollection,
+                                                            IFunction function, IFunctionTypeCreator creator,
+                                                            IEditableObject dataOwner, string previousType = "")
+        {
+            int oldFunctionIndex = functionCollection.IndexOf(function);
+
+            IFunction newfunction = creator.TransformToFunctionType(function);
+
+            // TODO : replace with "functions[oldFunctionIndex] = Function;" and remove BeginEdit/EndEdit when treeview can handle replace
+            string editActionMessage = string.Format("Changing function type of {0} {1}to {2}", function, previousType,
+                                                     creator.FunctionTypeName);
+            dataOwner.BeginEdit(new DefaultEditAction(editActionMessage));
+
+            functionCollection.RemoveAt(oldFunctionIndex);
+            functionCollection.Insert(oldFunctionIndex, newfunction);
+
+            dataOwner.EndEdit();
+
+            return newfunction;
+        }
+
         public bool IsThisFunctionType(IFunction function)
         {
             return checkFunction(function);
@@ -112,42 +148,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Utils
         public bool IsAllowed(IFunction function)
         {
             return isAllowedFunction(function);
-        }
-
-        /// <summary>
-        /// Replaces the function in a collection for a new one created with a creator.
-        /// </summary>
-        /// <param name="functionCollection"> The function collection containing the function to be replaced. </param>
-        /// <param name="function"> The function to be replaced. </param>
-        /// <param name="creator">
-        /// The creator handling the creation of a new <see cref="IFunction" />
-        /// based on <paramref name="function" />.
-        /// </param>
-        /// <param name="dataOwner"> The data owner or <paramref name="function" />. </param>
-        /// <param name="previousType">
-        /// Optional textual description of the original function type.
-        /// this is only used for undo/redo messaging.
-        /// </param>
-        /// <returns> The newly created function that has been inserted into <paramref name="functionCollection" />. </returns>
-        public static IFunction ReplaceFunctionUsingCreator(IList<IFunction> functionCollection,
-                                                            IFunction function, IFunctionTypeCreator creator,
-                                                            IEditableObject dataOwner, string previousType = "")
-        {
-            int oldFunctionIndex = functionCollection.IndexOf(function);
-
-            IFunction newfunction = creator.TransformToFunctionType(function);
-
-            // TODO : replace with "functions[oldFunctionIndex] = Function;" and remove BeginEdit/EndEdit when treeview can handle replace
-            string editActionMessage = string.Format("Changing function type of {0} {1}to {2}", function, previousType,
-                                                     creator.FunctionTypeName);
-            dataOwner.BeginEdit(new DefaultEditAction(editActionMessage));
-
-            functionCollection.RemoveAt(oldFunctionIndex);
-            functionCollection.Insert(oldFunctionIndex, newfunction);
-
-            dataOwner.EndEdit();
-
-            return newfunction;
         }
     }
 }

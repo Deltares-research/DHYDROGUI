@@ -4,8 +4,8 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using DelftTools.Utils.NetCdf;
-using log4net;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Properties;
+using log4net;
 
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
 {
@@ -17,9 +17,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         private static readonly ILog log = LogManager.GetLogger(typeof(NetCdfFileReaderHelper));
 
         /// <summary>
-        /// Parses the values of the time variable to <see cref="IEnumerable{DateTime}" />.
+        /// Parses the values of the time variable to <see cref="IEnumerable{DateTime}"/>.
         /// </summary>
-        /// <param name="file"> The <see cref="NetCdfFile" /> object that is used to read from the file. </param>
+        /// <param name="file"> The <see cref="NetCdfFile"/> object that is used to read from the file. </param>
         /// <param name="timeVariableName"> Name of the time variable in the file. </param>
         /// <returns>The parsed <see cref="DateTime"/> objects.</returns>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="file"/> is <c>null</c>.</exception>
@@ -51,13 +51,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         }
 
         /// <summary>
-        /// Performs an action with a <see cref="NetCdfFile" />.
+        /// Performs an action with a <see cref="NetCdfFile"/>.
         /// </summary>
-        /// <typeparam name="T"> Return type of <paramref name="netCdfFunction" />. </typeparam>
+        /// <typeparam name="T"> Return type of <paramref name="netCdfFunction"/>. </typeparam>
         /// <param name="path"> The path of the NetCdf file. </param>
-        /// <param name="netCdfFunction"> The function that performs an action with a <see cref="NetCdfFile" />. </param>
-        /// <returns> Returns the result of the <paramref name="netCdfFunction" />. </returns>
-        /// <exception cref="FileNotFoundException"> Thrown when <paramref name="path" /> does not exist. </exception>
+        /// <param name="netCdfFunction"> The function that performs an action with a <see cref="NetCdfFile"/>. </param>
+        /// <returns> Returns the result of the <paramref name="netCdfFunction"/>. </returns>
+        /// <exception cref="FileNotFoundException"> Thrown when <paramref name="path"/> does not exist. </exception>
         public static T DoWithNetCdfFile<T>(string path, Func<NetCdfFile, T> netCdfFunction)
         {
             if (!File.Exists(path))

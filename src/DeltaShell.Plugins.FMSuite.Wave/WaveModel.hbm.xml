@@ -7,16 +7,16 @@
                    extends="DelftTools.Shell.Core.Workflow.IModel, DelftTools.Shell.Core" table="wave_model">
     <key column="project_item_id" />
 
-    <property name="Path"/>
-    
-    <property name="CoordinateSystem" column="coordinate_system" type="DeltaShell.Plugins.SharpMapGis.HibernateMappings.CoordinateSystemUserType, DeltaShell.Plugins.SharpMapGis"/>
+    <property name="Path" />
 
-    <property name="IsCoupledToFlow"/>
-    <property name="StartTime"/>
-    <property name="StopTime"/>
-    <property name="TimeStep"/>
+    <property name="CoordinateSystem" column="coordinate_system" type="DeltaShell.Plugins.SharpMapGis.HibernateMappings.CoordinateSystemUserType, DeltaShell.Plugins.SharpMapGis" />
+
+    <property name="IsCoupledToFlow" />
+    <property name="StartTime" />
+    <property name="StopTime" />
+    <property name="TimeStep" />
     <!--This is required because otherwise NHibernate will not notice we need to be saved-->
-    <property name="dirtyCounter" access="field"/>
+    <property name="dirtyCounter" access="field" />
 
   </joined-subclass>
 </hibernate-mapping>

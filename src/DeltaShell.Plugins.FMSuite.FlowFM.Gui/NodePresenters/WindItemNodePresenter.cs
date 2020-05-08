@@ -12,49 +12,11 @@ using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
 {
-    class WindItemNodePresenter: FMSuiteNodePresenterBase<IWindField>
+    internal class WindItemNodePresenter : FMSuiteNodePresenterBase<IWindField>
     {
         private static readonly Bitmap UniformWindImage = Resources.TimeSeries;
         private static readonly Bitmap GriddedWindImage = Resources.FunctionGrid2D;
         private static readonly Bitmap SpiderWebWindImage = Resources.hurricane2;
-
-        protected override string GetNodeText(IWindField data)
-        {
-            return data.Name;
-        }
-
-        protected override Image GetNodeImage(IWindField data)
-        {
-            if (data is UniformWindField)
-            {
-                return UniformWindImage;
-            }
-            if (data is GriddedWindField)
-            {
-                return GriddedWindImage;
-            }
-            if (data is SpiderWebWindField)
-            {
-                return SpiderWebWindImage;
-            }
-            return null;
-        }
-
-        protected override bool RemoveNodeData(object parentNodeData, IWindField nodeData)
-        {
-            var windFields = parentNodeData as IEventedList<IWindField>;
-            if (windFields != null)
-            {
-                windFields.Remove(nodeData);
-                return true;
-            }
-            return false;
-        }
-
-        protected override bool CanRemove(IWindField nodeData)
-        {
-            return true;
-        }
 
         public override bool CanRenameNode(ITreeNode node)
         {
@@ -63,7 +25,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
 
         public override IMenuItem GetContextMenu(ITreeNode sender, object nodeData)
         {
-            var menu = base.GetContextMenu(sender, nodeData);
+            IMenuItem menu = base.GetContextMenu(sender, nodeData);
             var menuStrip = new ContextMenuStrip();
             var deleteItem = new ClonableToolStripMenuItem
             {
@@ -77,16 +39,58 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
             return menu;
         }
 
+        protected override string GetNodeText(IWindField data)
+        {
+            return data.Name;
+        }
+
+        protected override Image GetNodeImage(IWindField data)
+        {
+            if (data is UniformWindField)
+            {
+                return UniformWindImage;
+            }
+
+            if (data is GriddedWindField)
+            {
+                return GriddedWindImage;
+            }
+
+            if (data is SpiderWebWindField)
+            {
+                return SpiderWebWindImage;
+            }
+
+            return null;
+        }
+
+        protected override bool RemoveNodeData(object parentNodeData, IWindField nodeData)
+        {
+            var windFields = parentNodeData as IEventedList<IWindField>;
+            if (windFields != null)
+            {
+                windFields.Remove(nodeData);
+                return true;
+            }
+
+            return false;
+        }
+
+        protected override bool CanRemove(IWindField nodeData)
+        {
+            return true;
+        }
+
         private void DeleteItem(object sender, EventArgs e)
         {
-            var data = ((ToolStripMenuItem)sender).Tag as IWindField;
-            if (data!=null)
+            var data = ((ToolStripMenuItem) sender).Tag as IWindField;
+            if (data != null)
             {
-                var list =
+                IEventedList<IWindField> list =
                     GuiPlugin.Gui.Application.GetAllModelsInProject()
-                        .OfType<WaterFlowFMModel>()
-                        .First(m => m.WindFields.Contains(data))
-                        .WindFields;
+                             .OfType<WaterFlowFMModel>()
+                             .First(m => m.WindFields.Contains(data))
+                             .WindFields;
 
                 list.Remove(data);
             }

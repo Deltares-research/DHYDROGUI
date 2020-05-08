@@ -18,7 +18,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.Model
         /// </summary>
         public WaterQualityModelSettings()
         {
-            WorkingDirectoryPathFuncWithModelName = 
+            WorkingDirectoryPathFuncWithModelName =
                 () => Path.Combine(DefaultModelSettings.DefaultDeltaShellWorkingDirectory, "Water_Quality");
             HisStartTime = DateTime.Now.Date;
             HisStopTime = HisStartTime.AddHours(24);
@@ -54,15 +54,64 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.Model
         }
 
         /// <summary>
-        /// The directory where all the temporary files are placed
-        /// </summary>
-        public string WorkDirectory => WorkingDirectoryPathFuncWithModelName();
-
-        /// <summary>
         /// Function for retrieving the latest status of the DeltaShell framework
         /// working directory and model name from the model
         /// </summary>
         public Func<string> WorkingDirectoryPathFuncWithModelName { get; set; }
+
+        /// <summary>
+        /// Whether or not to use a forester filter
+        /// </summary>
+        /// <remarks>
+        /// A forester filter (in the vertical) is available for the numerical schemes 3, 11, 12, 16 and 19
+        /// </remarks>
+        public bool UseForesterFilter { get; set; }
+
+        /// <summary>
+        /// Whether or not to use an anti creep filter
+        /// </summary>
+        /// <remarks>
+        /// An anti creep filter can only be used for numerical schemes 19 and 20
+        /// </remarks>
+        public bool UseAnticreepFilter { get; set; }
+
+        /// <summary>
+        /// Whether or not to skip writing balance output for monitoring points.
+        /// </summary>
+        public bool NoBalanceMonitoringPoints { get; set; }
+
+        /// <summary>
+        /// Whether or not to skip writing balance output for monitoring areas.
+        /// </summary>
+        public bool NoBalanceMonitoringAreas { get; set; }
+
+        /// <summary>
+        /// Whether or not to skip writing model wide balance output.
+        /// </summary>
+        public bool NoBalanceMonitoringModelWide { get; set; }
+
+        /// <summary>
+        /// The monitoring output level
+        /// </summary>
+        public MonitoringOutputLevel MonitoringOutputLevel { get; set; }
+
+        /// <summary>
+        /// Whether or not to perform corrections for evaporation nodes
+        /// </summary>
+        public bool CorrectForEvaporation { get; set; }
+
+        /// <summary>
+        /// Gets or sets the output directory.
+        /// </summary>
+        /// <value>
+        /// The persistent output directory.
+        /// </value>
+        public string OutputDirectory { get; set; }
+
+        /// <summary>
+        /// The directory where all the temporary files are placed
+        /// </summary>
+        public string WorkDirectory => WorkingDirectoryPathFuncWithModelName();
 
         /// <summary>
         /// The start time of the his output
@@ -130,22 +179,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.Model
         public bool UseFirstOrder { get; set; }
 
         /// <summary>
-        /// Whether or not to use a forester filter
-        /// </summary>
-        /// <remarks>
-        /// A forester filter (in the vertical) is available for the numerical schemes 3, 11, 12, 16 and 19
-        /// </remarks>
-        public bool UseForesterFilter { get; set; }
-
-        /// <summary>
-        /// Whether or not to use an anti creep filter
-        /// </summary>
-        /// <remarks>
-        /// An anti creep filter can only be used for numerical schemes 19 and 20
-        /// </remarks>
-        public bool UseAnticreepFilter { get; set; }
-
-        /// <summary>
         /// Whether or not to calculate mass balance
         /// </summary>
         public bool Balance { get; set; }
@@ -177,21 +210,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.Model
         public bool SuppressTime { get; set; }
 
         /// <summary>
-        /// Whether or not to skip writing balance output for monitoring points.
-        /// </summary>
-        public bool NoBalanceMonitoringPoints { get; set; }
-
-        /// <summary>
-        /// Whether or not to skip writing balance output for monitoring areas.
-        /// </summary>
-        public bool NoBalanceMonitoringAreas { get; set; }
-
-        /// <summary>
-        /// Whether or not to skip writing model wide balance output.
-        /// </summary>
-        public bool NoBalanceMonitoringModelWide { get; set; }
-
-        /// <summary>
         /// The balance unit
         /// </summary>
         public BalanceUnit BalanceUnit { get; set; }
@@ -203,16 +221,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.Model
         /// This setting is only used during file based preprocessing
         /// </remarks>
         public bool ProcessesActive { get; set; }
-
-        /// <summary>
-        /// The monitoring output level
-        /// </summary>
-        public MonitoringOutputLevel MonitoringOutputLevel { get; set; }
-
-        /// <summary>
-        /// Whether or not to perform corrections for evaporation nodes
-        /// </summary>
-        public bool CorrectForEvaporation { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether Delwaq should correct water volumes when
@@ -250,14 +258,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.Model
         /// Gets or sets whether the report about the iteration should be written (true) or not.
         /// </summary>
         public bool WriteIterationReport { get; set; }
-
-        /// <summary>
-        /// Gets or sets the output directory.
-        /// </summary>
-        /// <value>
-        /// The persistent output directory.
-        /// </value>
-        public string OutputDirectory { get; set; }
 
         /// <summary>
         /// Gets or sets the working output directory.

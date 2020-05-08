@@ -7,6 +7,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors
     {
         private string label;
 
+        private string fileName;
+
         public MeteoFileSelectionControl()
         {
             InitializeComponent();
@@ -23,8 +25,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors
         {
             set => openFileDialog1.Filter = value;
         }
-
-        private string fileName;
 
         public string FileName
         {

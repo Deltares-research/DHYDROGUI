@@ -20,7 +20,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
             remoteInstanceApi = api;
         }
 
-        private string WorkingDirectory { get; set; }
+        public DateTime StartTime => remoteInstanceApi.StartTime;
+
+        public DateTime StopTime => remoteInstanceApi.StopTime;
+
+        public DateTime CurrentTime => remoteInstanceApi.CurrentTime;
+
+        public TimeSpan TimeStep => remoteInstanceApi.TimeStep;
+
+        public string[] VariableNames => remoteInstanceApi.VariableNames;
+
+        public Logger Logger
+        {
+            get => remoteInstanceApi.Logger;
+            set => remoteInstanceApi.Logger = value;
+        }
 
         public int Initialize(string path)
         {
@@ -139,47 +153,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
             remoteInstanceApi.SetValues(variable, index, values);
         }
 
-        private static void TryThrowWithKernelLoggedErrors(Exception innerException, string runDirectory)
-        {
-            string[] diaFiles = Directory.GetFiles(runDirectory, "*.dia", SearchOption.AllDirectories);
-
-            if (diaFiles.Length <= 0)
-            {
-                throw new FileNotFoundException("Could not detect diagnostics file in " + runDirectory);
-            }
-
-            IEnumerable<string> errorMessages;
-            string diaFilePath = diaFiles[0];
-
-            try
-            {
-                using(var reader = new StreamReader(diaFilePath))
-                {
-                    Dictionary<DiaFileLogSeverity, IList<string>> messagesDictionary = DiaFileReader.GetAllMessages(reader);
-                    errorMessages = messagesDictionary[DiaFileLogSeverity.Error].Concat(messagesDictionary[DiaFileLogSeverity.Fatal])
-                                    .ToArray();
-                }
-            }
-            catch (Exception e)
-            {
-                throw new FileFormatException(string.Format(Resources.RemoteFlexibleMeshModelApi_Unable_to_read_diagnostics_file__0____1_, diaFilePath,
-                                                            e.Message));
-            }
-
-            if (!errorMessages.Any())
-            {
-                throw new InvalidOperationException(string.Format(
-                                                        Resources.RemoteFlexibleMeshModelApi_No_errors_were_reported_in_the_diagnostics_file__0_,
-                                                        diaFilePath));
-            }
-
-            throw new InvalidOperationException(string.Format(
-                                                    Resources.RemoteFlexibleMeshModelApi_The_kernel_reported_the_following_error_s___0__1__0__Errors_extracted_from_diagnostics_file__2__,
-                                                    Environment.NewLine,
-                                                    string.Join(Environment.NewLine, errorMessages), diaFilePath),
-                                                innerException);
-        }
-
         public string GetVersionString()
         {
             return remoteInstanceApi.GetVersionString();
@@ -260,22 +233,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
             return remoteInstanceApi.GetVariableLocation(variable);
         }
 
-        public DateTime StartTime => remoteInstanceApi.StartTime;
-
-        public DateTime StopTime => remoteInstanceApi.StopTime;
-
-        public DateTime CurrentTime => remoteInstanceApi.CurrentTime;
-
-        public TimeSpan TimeStep => remoteInstanceApi.TimeStep;
-
-        public string[] VariableNames => remoteInstanceApi.VariableNames;
-
-        public Logger Logger
-        {
-            get => remoteInstanceApi.Logger;
-            set => remoteInstanceApi.Logger = value;
-        }
-
         public bool GetSnappedFeature(string featureType, double[] xin, double[] yin, ref double[] xout,
                                       ref double[] yout,
                                       ref int[] featureIds)
@@ -338,17 +295,54 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
             remoteInstanceApi.WritePartitioning(inputFileName, outputFileName, numDomains, contiguous);
         }
 
-        ~RemoteFlexibleMeshModelApi()
-        {
-            // in case someone forgets to dispose..
-            Dispose(false);
-        }
-
         public void Dispose()
         {
             Dispose(true);
             // Must always ensure this happens to prevent GC deadlock on project close!
             GC.SuppressFinalize(this);
+        }
+
+        private string WorkingDirectory { get; set; }
+
+        private static void TryThrowWithKernelLoggedErrors(Exception innerException, string runDirectory)
+        {
+            string[] diaFiles = Directory.GetFiles(runDirectory, "*.dia", SearchOption.AllDirectories);
+
+            if (diaFiles.Length <= 0)
+            {
+                throw new FileNotFoundException("Could not detect diagnostics file in " + runDirectory);
+            }
+
+            IEnumerable<string> errorMessages;
+            string diaFilePath = diaFiles[0];
+
+            try
+            {
+                using (var reader = new StreamReader(diaFilePath))
+                {
+                    Dictionary<DiaFileLogSeverity, IList<string>> messagesDictionary = DiaFileReader.GetAllMessages(reader);
+                    errorMessages = messagesDictionary[DiaFileLogSeverity.Error].Concat(messagesDictionary[DiaFileLogSeverity.Fatal])
+                                                                                .ToArray();
+                }
+            }
+            catch (Exception e)
+            {
+                throw new FileFormatException(string.Format(Resources.RemoteFlexibleMeshModelApi_Unable_to_read_diagnostics_file__0____1_, diaFilePath,
+                                                            e.Message));
+            }
+
+            if (!errorMessages.Any())
+            {
+                throw new InvalidOperationException(string.Format(
+                                                        Resources.RemoteFlexibleMeshModelApi_No_errors_were_reported_in_the_diagnostics_file__0_,
+                                                        diaFilePath));
+            }
+
+            throw new InvalidOperationException(string.Format(
+                                                    Resources.RemoteFlexibleMeshModelApi_The_kernel_reported_the_following_error_s___0__1__0__Errors_extracted_from_diagnostics_file__2__,
+                                                    Environment.NewLine,
+                                                    string.Join(Environment.NewLine, errorMessages), diaFilePath),
+                                                innerException);
         }
 
         private void DisposeInternal()
@@ -382,6 +376,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
 
                 disposed = true;
             }
+        }
+
+        ~RemoteFlexibleMeshModelApi()
+        {
+            // in case someone forgets to dispose..
+            Dispose(false);
         }
     }
 }

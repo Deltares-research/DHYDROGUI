@@ -54,9 +54,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions
 
             boundaries = new Dictionary<GridSide, IReadOnlyList<GridCoordinate>>
             {
-                {GridSide.East,  orderedSides[worldEastIndex]},
+                {GridSide.East, orderedSides[worldEastIndex]},
                 {GridSide.North, orderedSides[(worldEastIndex + 1) % 4]},
-                {GridSide.West,  orderedSides[(worldEastIndex + 2) % 4]},
+                {GridSide.West, orderedSides[(worldEastIndex + 2) % 4]},
                 {GridSide.South, orderedSides[(worldEastIndex + 3) % 4]},
             };
         }
@@ -71,7 +71,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions
             Ensure.NotNull(boundaryCoordinate, nameof(boundaryCoordinate));
 
             GridCoordinate gridCoordinate = boundaries[boundaryCoordinate.GridSide]
-                                                      [boundaryCoordinate.Index];
+                [boundaryCoordinate.Index];
             return observedGrid.GetCoordinateAt(gridCoordinate);
         }
 
@@ -92,7 +92,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions
 
             int mMax = sizeM - 1;
             int nMax = sizeN - 1;
-
 
             bool isCounterClockWise = CartesianOrientationCalculatorHelper.IsCounterClockwisePolygon(observedGrid.GetCoordinateAt(0, 0),
                                                                                                      observedGrid.GetCoordinateAt(mMax, 0),
@@ -140,7 +139,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions
 
         private int GetIndexOfWorldEast(IReadOnlyList<IReadOnlyList<GridCoordinate>> sideCoordinates)
         {
-            IEnumerable<Tuple<int, Vector2D>> normals = 
+            IEnumerable<Tuple<int, Vector2D>> normals =
                 Enumerable.Range(0, sides.Count)
                           .Select(x => new Tuple<int, Vector2D>(x, GetNormalFromSide(sideCoordinates[x])));
 
@@ -151,6 +150,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions
         private Vector2D GetNormalFromSide(IEnumerable<GridCoordinate> coordinates) =>
             CartesianOrientationCalculatorHelper.GetNormal(observedGrid.GetCoordinateAt(coordinates.First()),
                                                            observedGrid.GetCoordinateAt(coordinates.Last()));
+
         private bool IsDryPoint(GridCoordinate coordinate)
         {
             Coordinate worldCoordinate = observedGrid.GetCoordinateAt(coordinate);

@@ -12,6 +12,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors
 {
     public partial class WaveDomainEditor : UserControl, ILayerEditorView
     {
+        private WaveDomainData data;
+        public event EventHandler SelectedFeaturesChanged;
+
         public WaveDomainEditor()
         {
             InitializeComponent();
@@ -40,32 +43,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors
             useDefaultHydroCBox.CheckedChanged += UseDefaultHydroCBoxOnCheckedChanged;
         }
 
-        private void UseDefaultMeteoCBoxOnCheckedChanged(object sender, EventArgs eventArgs)
-        {
-            waveMeteoPanel.Visible = !useDefaultMeteoCBox.Checked;
-        }
-
-        private void UseDefaultHydroCBoxOnCheckedChanged(object sender, EventArgs eventArgs)
-        {
-            hydroPanel.Visible = !useDefaultHydroCBox.Checked;
-        }
-
-        private void UseDefaultFreqSpaceCBoxOnCheckedChanged(object sender, EventArgs eventArgs)
-        {
-            frequencyPanel.Visible = !useDefaultFreqSpaceCBox.Checked;
-        }
-
-        private void UseDefaultDirSpaceCBoxOnCheckedChanged(object sender, EventArgs eventArgs)
-        {
-            directionalPanel.Visible = !useDefaultDirSpaceCBox.Checked;
-        }
-
         public bool IsCoupledToFlow
         {
             set => hydroGroupBox.Visible = value;
         }
 
-        private WaveDomainData data;
+        public Func<string, string> ImportIntoModelDirectory { private get; set; }
 
         public object Data
         {
@@ -98,7 +81,33 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors
             }
         }
 
-        public Func<string, string> ImportIntoModelDirectory { private get; set; }
+        public Image Image { get; set; }
+        public ViewInfo ViewInfo { get; set; }
+        public IEnumerable<IFeature> SelectedFeatures { get; set; }
+        public ILayer Layer { get; set; }
+        public void EnsureVisible(object item) {}
+        public void OnActivated() {}
+        public void OnDeactivated() {}
+
+        private void UseDefaultMeteoCBoxOnCheckedChanged(object sender, EventArgs eventArgs)
+        {
+            waveMeteoPanel.Visible = !useDefaultMeteoCBox.Checked;
+        }
+
+        private void UseDefaultHydroCBoxOnCheckedChanged(object sender, EventArgs eventArgs)
+        {
+            hydroPanel.Visible = !useDefaultHydroCBox.Checked;
+        }
+
+        private void UseDefaultFreqSpaceCBoxOnCheckedChanged(object sender, EventArgs eventArgs)
+        {
+            frequencyPanel.Visible = !useDefaultFreqSpaceCBox.Checked;
+        }
+
+        private void UseDefaultDirSpaceCBoxOnCheckedChanged(object sender, EventArgs eventArgs)
+        {
+            directionalPanel.Visible = !useDefaultDirSpaceCBox.Checked;
+        }
 
         private void BindControls()
         {
@@ -172,14 +181,5 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors
             velocityTypeBox.DataBindings.Clear();
             windBox.DataBindings.Clear();
         }
-
-        public Image Image { get; set; }
-        public void EnsureVisible(object item) {}
-        public ViewInfo ViewInfo { get; set; }
-        public IEnumerable<IFeature> SelectedFeatures { get; set; }
-        public event EventHandler SelectedFeaturesChanged;
-        public ILayer Layer { get; set; }
-        public void OnActivated() {}
-        public void OnDeactivated() {}
     }
 }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using DelftTools.Controls.Swf.Charting;
 using DelftTools.Utils.Collections;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapeEditors;
@@ -15,11 +16,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapes
     /// </summary>
     public class RectangleSeriesShapeFeature : CompositeShapeFeature
     {
-        private readonly IChart chart;
         public readonly List<double> Borders = new List<double>();
         public readonly List<IShapeFeature> BorderShapes = new List<IShapeFeature>();
+        private readonly IChart chart;
 
-        public RectangleSeriesShapeFeature(IChart chart, double x, double y, double width, double height, double top, bool widthIsWorld, bool heightIsWorld) :base(chart)
+        public RectangleSeriesShapeFeature(IChart chart, double x, double y, double width, double height, double top, bool widthIsWorld, bool heightIsWorld) : base(chart)
         {
             this.chart = chart;
 
@@ -35,26 +36,27 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapes
         }
 
         /// <summary>
-        /// The x coordinate of the shape. 
+        /// The x coordinate of the shape.
         /// if HorizontalShapeAlignment is HorizontalShapeAlignment.Left X is the left coordinate of the bounding box
-        /// if HorizontalShapeAlignment is HorizontalShapeAlignment.Center X is the horizontal center coordinate of the bounding box
+        /// if HorizontalShapeAlignment is HorizontalShapeAlignment.Center X is the horizontal center coordinate of the bounding
+        /// box
         /// </summary>
         public double X { get; set; }
 
         /// <summary>
-        /// The y coordinate of the shape. 
+        /// The y coordinate of the shape.
         /// if VerticalShapeAlignment is VerticalShapeAlignment.Top Y is the top coordinate of the bounding box
         /// if VerticalShapeAlignment is VerticalShapeAlignment.Center Y is the vertical center coordinate of the bounding box
         /// </summary>
         public double Y { get; set; }
 
         /// <summary>
-        /// Width of the shape either in world coordinates (WidthIsWorld == true) of device coordinates (WidthIsWorld == false) 
+        /// Width of the shape either in world coordinates (WidthIsWorld == true) of device coordinates (WidthIsWorld == false)
         /// </summary>
         public double Width { get; set; }
 
         /// <summary>
-        /// Height of the shape either in world coordinates (HeightIsWorld == true) of device coordinates (HeightIsWorld == false) 
+        /// Height of the shape either in world coordinates (HeightIsWorld == true) of device coordinates (HeightIsWorld == false)
         /// </summary>
         public double Height { get; set; }
 
@@ -92,18 +94,19 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapes
         /// <param name="borderValue"></param>
         public void SetBorder(int index, double borderValue)
         {
-            if (index >= (Borders.Count - 1))
+            if (index >= Borders.Count - 1)
             {
                 return;
             }
+
             Borders[index] = borderValue;
             // adjust the following shapes
             // previous shapefeature of the border : width
-            ((FixedRectangleShapeFeature)ShapeFeatures[index]).Width = borderValue - ((FixedRectangleShapeFeature)ShapeFeatures[index]).X;
+            ((FixedRectangleShapeFeature) ShapeFeatures[index]).Width = borderValue - ((FixedRectangleShapeFeature) ShapeFeatures[index]).X;
             // next shapefeature of the border : X ans width
-            ((FixedRectangleShapeFeature)ShapeFeatures[index + 1]).X = borderValue;
-            double nextBorder = (index < Borders.Count - 2) ? ((FixedRectangleShapeFeature)ShapeFeatures[index + 2]).X : X + Width;
-            ((FixedRectangleShapeFeature)ShapeFeatures[index + 1]).Width = nextBorder - borderValue;
+            ((FixedRectangleShapeFeature) ShapeFeatures[index + 1]).X = borderValue;
+            double nextBorder = index < Borders.Count - 2 ? ((FixedRectangleShapeFeature) ShapeFeatures[index + 2]).X : X + Width;
+            ((FixedRectangleShapeFeature) ShapeFeatures[index + 1]).Width = nextBorder - borderValue;
             // The shape used to represent the border
             ((FixedRectangleShapeFeature) BorderShapes[index]).X = borderValue;
             Invalidate();
@@ -113,46 +116,45 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapes
         {
             if (Borders.Count > 0)
             {
-                VectorStyle vectorStyle = new VectorStyle
-                                              {
-                                                  Fill = new SolidBrush(Color.FromArgb(150, Color.Orange)),
-                                                  Line = new Pen(Color.FromArgb(50, Color.Orange), 1)
-                                                             {
-                                                                 DashStyle = System.Drawing.Drawing2D.DashStyle.Dot
-                                                             }
-                                              };
-                FixedRectangleShapeFeature border = new FixedRectangleShapeFeature(chart, 
-                                                                                    Borders[Borders.Count - 1], 
-                                                                                    Top,
-                                                                                    2, 
-                                                                                    Math.Abs(Y - Top),
-                                                                                    false, 
-                                                                                    true)
-                            { 
-                                HorizontalShapeAlignment = HorizontalShapeAlignment.Center,
-                                NormalStyle = vectorStyle,
-                                SelectedStyle = vectorStyle,
-                                Tag = tag,
-                                StickToBottom = StickToBottom
-                            };
+                var vectorStyle = new VectorStyle
+                {
+                    Fill = new SolidBrush(Color.FromArgb(150, Color.Orange)),
+                    Line = new Pen(Color.FromArgb(50, Color.Orange), 1) {DashStyle = DashStyle.Dot}
+                };
+                var border = new FixedRectangleShapeFeature(chart,
+                                                            Borders[Borders.Count - 1],
+                                                            Top,
+                                                            2,
+                                                            Math.Abs(Y - Top),
+                                                            false,
+                                                            true)
+                {
+                    HorizontalShapeAlignment = HorizontalShapeAlignment.Center,
+                    NormalStyle = vectorStyle,
+                    SelectedStyle = vectorStyle,
+                    Tag = tag,
+                    StickToBottom = StickToBottom
+                };
                 BorderShapes.Add(border);
             }
+
             double left = X;
             if (Borders.Count > 0)
             {
                 left = Borders[Borders.Count - 1];
             }
-            FixedRectangleShapeFeature feature = new FixedRectangleShapeFeature(chart, left, Y, right - left, Height,
-                                                                                WidthIsWorld, HeightIsWorld)
-                                                     {
-                                                         NormalStyle = normalStyle,
-                                                         VerticalShapeAlignment = VerticalShapeAlignment,
-                                                         SelectedStyle = selectedStyle,
-                                                         Label = label,
-                                                         Tag = tag,
-                                                         TopMargin = 5,
-                                                         StickToBottom = StickToBottom
-                                                     };
+
+            var feature = new FixedRectangleShapeFeature(chart, left, Y, right - left, Height,
+                                                         WidthIsWorld, HeightIsWorld)
+            {
+                NormalStyle = normalStyle,
+                VerticalShapeAlignment = VerticalShapeAlignment,
+                SelectedStyle = selectedStyle,
+                Label = label,
+                Tag = tag,
+                TopMargin = 5,
+                StickToBottom = StickToBottom
+            };
             ShapeFeatures.Add(feature);
             Borders.Add(right);
         }
@@ -171,7 +173,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapes
 
         public override bool Contains(int x, int y)
         {
-            bool contains = false;
+            var contains = false;
             BorderShapes.ForEach(cs => contains |= cs.Contains(x, y));
             return !contains ? base.Contains(x, y) : contains;
         }

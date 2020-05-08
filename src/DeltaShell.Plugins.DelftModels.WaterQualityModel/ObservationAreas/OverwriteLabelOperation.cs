@@ -63,6 +63,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.ObservationAreas
 
         public virtual ICoordinateSystem InputCoordinateSystem { get; set; }
 
+        public override string ToString()
+        {
+            return Name + " : " + Label;
+        }
+
         protected override void OnExecute()
         {
             var coverage = MainInput.Provider.GetFeature(0) as WaterQualityObservationAreaCoverage;
@@ -113,11 +118,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.ObservationAreas
                     CoordinateSystem = CoordinateSystem
                 };
             }
-        }
-
-        public override string ToString()
-        {
-            return Name + " : " + Label;
         }
     }
 }

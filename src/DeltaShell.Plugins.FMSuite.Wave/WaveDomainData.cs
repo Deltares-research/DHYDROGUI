@@ -10,29 +10,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
     [Entity]
     public class WaveDomainData : IWaveDomainData
     {
-        public IEventedList<IWaveDomainData> SubDomains { get; private set; }
-
-        public string GridFileName { get; set; }
-        public CurvilinearGrid Grid { get; set; }
-        public string BedLevelGridFileName { get; set; }
-
-        public CurvilinearCoverage Bathymetry { get; set; }
-
-        public string BedLevelFileName { get; set; }
-
-        public SpectralDomainData SpectralDomainData { get; set; }
-        public HydroFromFlowSettings HydroFromFlowData { get; set; }
-        public WaveMeteoData MeteoData { get; set; }
-        public bool UseGlobalMeteoData { get; set; }
-        public bool Output { get; set; }
-
-        public int NestedInDomain { get; set; }
-
-        [Aggregation]
-        public IWaveDomainData SuperDomain { get; set; }
-
-        public string Name => Path.GetFileNameWithoutExtension(GridFileName);
-
         public WaveDomainData(string name)
         {
             SpectralDomainData = new SpectralDomainData
@@ -60,6 +37,28 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
             Output = true;
         }
+
+        public int NestedInDomain { get; set; }
+        public IEventedList<IWaveDomainData> SubDomains { get; private set; }
+
+        public string GridFileName { get; set; }
+        public CurvilinearGrid Grid { get; set; }
+        public string BedLevelGridFileName { get; set; }
+
+        public CurvilinearCoverage Bathymetry { get; set; }
+
+        public string BedLevelFileName { get; set; }
+
+        public SpectralDomainData SpectralDomainData { get; set; }
+        public HydroFromFlowSettings HydroFromFlowData { get; set; }
+        public WaveMeteoData MeteoData { get; set; }
+        public bool UseGlobalMeteoData { get; set; }
+        public bool Output { get; set; }
+
+        [Aggregation]
+        public IWaveDomainData SuperDomain { get; set; }
+
+        public string Name => Path.GetFileNameWithoutExtension(GridFileName);
     }
 
     [Entity]

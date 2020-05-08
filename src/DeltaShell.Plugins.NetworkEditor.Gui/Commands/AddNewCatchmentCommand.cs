@@ -25,31 +25,47 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Commands
         {
             get
             {
-                var featureEditor = FeatureEditors.FirstOrDefault();
+                CatchmentFeatureEditor featureEditor = FeatureEditors.FirstOrDefault();
                 return featureEditor != null && featureEditor.NewCatchmentType == catchmentType && GetCurrentTool().IsActive;
             }
         }
 
         public override bool Enabled
         {
-            get { return FeatureEditors.Any(); }
+            get
+            {
+                return FeatureEditors.Any();
+            }
+        }
+
+        protected override void OnExecute(params object[] arguments)
+        {
+            var newLineTool = (NewLineTool) GetCurrentTool();
+            newLineTool.Cursor = MapCursors.CreateArrowOverlayCuror(catchmentType.Icon);
+            GetMapView().MapControl.ActivateTool(newLineTool);
+
+            // setup feature editors
+            foreach (CatchmentFeatureEditor featureEditor in FeatureEditors)
+            {
+                featureEditor.NewCatchmentType = catchmentType;
+            }
         }
 
         private IEnumerable<CatchmentFeatureEditor> FeatureEditors
         {
             get
             {
-                var mapView = GetMapView();
+                MapView mapView = GetMapView();
                 if (mapView == null || mapView.Map == null || GetCurrentTool() == null)
                 {
                     return Enumerable.Empty<CatchmentFeatureEditor>();
                 }
 
-                var regionMapLayers = mapView.Map.GetAllVisibleLayers(true).OfType<HydroRegionMapLayer>().Where(l => l.Region is DrainageBasin);
-                var selectMany = regionMapLayers.SelectMany(GetSubLayersRecursive);
-                var catchmentFeatureEditors = selectMany.Select(l => l.FeatureEditor)
-                                                        .Where(e => e != null)
-                                                        .OfType<CatchmentFeatureEditor>();
+                IEnumerable<HydroRegionMapLayer> regionMapLayers = mapView.Map.GetAllVisibleLayers(true).OfType<HydroRegionMapLayer>().Where(l => l.Region is DrainageBasin);
+                IEnumerable<ILayer> selectMany = regionMapLayers.SelectMany(GetSubLayersRecursive);
+                IEnumerable<CatchmentFeatureEditor> catchmentFeatureEditors = selectMany.Select(l => l.FeatureEditor)
+                                                                                        .Where(e => e != null)
+                                                                                        .OfType<CatchmentFeatureEditor>();
 
                 return catchmentFeatureEditors;
             }
@@ -60,7 +76,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Commands
             var groupLayer = layer as IGroupLayer;
             if (groupLayer != null)
             {
-                foreach (var subLayer in groupLayer.Layers.SelectMany(GetSubLayersRecursive))
+                foreach (ILayer subLayer in groupLayer.Layers.SelectMany(GetSubLayersRecursive))
                 {
                     yield return subLayer;
                 }
@@ -69,42 +85,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Commands
             yield return layer;
         }
 
-        protected override void OnExecute(params object[] arguments)
-        {
-            var newLineTool = (NewLineTool) GetCurrentTool();
-            newLineTool.Cursor = MapCursors.CreateArrowOverlayCuror(catchmentType.Icon);
-            GetMapView().MapControl.ActivateTool(newLineTool);
-
-            // setup feature editors
-            foreach (var featureEditor in FeatureEditors)
-            {
-                featureEditor.NewCatchmentType = catchmentType;
-            }
-        }
-
         private static MapView GetMapView()
         {
             return NetworkEditorGuiPlugin.GetFocusedMapView();
         }
-        
+
         private static IMapTool GetCurrentTool()
         {
             return GetMapView().MapControl.GetToolByName(HydroRegionEditorMapTool.AddCatchmentToolName);
-        }
-
-        public class AddNewPolderCommand : AddNewCatchmentCommand
-        {
-            public AddNewPolderCommand() : base(CatchmentType.Polder) {}
-        }
-
-        public class AddNewUnpavedCommand : AddNewCatchmentCommand
-        {
-            public AddNewUnpavedCommand(): base(CatchmentType.Unpaved) {}
-        }
-
-        public class AddNewPavedCommand : AddNewCatchmentCommand
-        {
-            public AddNewPavedCommand() : base(CatchmentType.Paved) {}
         }
 
         public class AddNewGreenHouseCommand : AddNewCatchmentCommand
@@ -112,19 +100,34 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Commands
             public AddNewGreenHouseCommand() : base(CatchmentType.GreenHouse) {}
         }
 
+        public class AddNewHbvCommand : AddNewCatchmentCommand
+        {
+            public AddNewHbvCommand() : base(CatchmentType.Hbv) {}
+        }
+
         public class AddNewOpenWaterCommand : AddNewCatchmentCommand
         {
             public AddNewOpenWaterCommand() : base(CatchmentType.OpenWater) {}
         }
 
-        public class AddNewSacramentoCommand: AddNewCatchmentCommand
+        public class AddNewPavedCommand : AddNewCatchmentCommand
         {
-            public AddNewSacramentoCommand() : base(CatchmentType.Sacramento) { }
+            public AddNewPavedCommand() : base(CatchmentType.Paved) {}
         }
 
-        public class AddNewHbvCommand: AddNewCatchmentCommand
+        public class AddNewPolderCommand : AddNewCatchmentCommand
         {
-            public AddNewHbvCommand() : base(CatchmentType.Hbv) { }
+            public AddNewPolderCommand() : base(CatchmentType.Polder) {}
+        }
+
+        public class AddNewSacramentoCommand : AddNewCatchmentCommand
+        {
+            public AddNewSacramentoCommand() : base(CatchmentType.Sacramento) {}
+        }
+
+        public class AddNewUnpavedCommand : AddNewCatchmentCommand
+        {
+            public AddNewUnpavedCommand() : base(CatchmentType.Unpaved) {}
         }
     }
 }

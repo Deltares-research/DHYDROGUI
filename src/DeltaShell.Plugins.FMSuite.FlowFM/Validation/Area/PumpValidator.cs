@@ -15,7 +15,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation.Area
         /// Validates the pumps.
         /// </summary>
         /// <param name="pumps"> The set of pumps to be evaluated. </param>
-        /// <param name="gridExtent"> The <see cref="Envelope" /> object that describes the extent of the FM model grid. </param>
+        /// <param name="gridExtent"> The <see cref="Envelope"/> object that describes the extent of the FM model grid. </param>
         /// <param name="modelStartTime"> The model start time. </param>
         /// <param name="modelStopTime"> The model stop time. </param>
         /// <returns> An enumeration of encountered validation issues. </returns>

@@ -23,10 +23,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Layers
             {
                 var vectorLayer = layer as VectorLayer;
                 VectorStyle vectorStyle = vectorLayer != null ? vectorLayer.Style : null;
-                return new Boundary2DInteractor(layer, feature, vectorStyle, EditableObject)
-                {
-                    AllowRemovePoint = AllowRemovePoint
-                };
+                return new Boundary2DInteractor(layer, feature, vectorStyle, EditableObject) {AllowRemovePoint = AllowRemovePoint};
             }
 
             return base.CreateInteractor(layer, feature);

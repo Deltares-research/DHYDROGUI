@@ -20,6 +20,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
             ArrowHeadPosition = arrowHeadPosition;
         }
 
+        /// <summary>
+        /// Color used to fill space behind text
+        /// </summary>
+        public Color BackColor { get; set; }
+
         public string Line1 { get; set; }
         public string Line2 { get; set; }
         public HoverType HoverType { get; set; }
@@ -29,11 +34,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
         /// </summary>
         public Color ForeColor { get; set; }
 
-        /// <summary>
-        /// Color used to fill space behind text
-        /// </summary>
-        public Color BackColor { get; set; }
-
         public IShapeFeature ShapeFeature { get; set; }
         public HoverPosition HoverPosition { get; set; }
         public ArrowHeadPosition ArrowHeadPosition { get; set; }
@@ -41,8 +41,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
 
         public void Render(List<Rectangle> usedSpace, IChart chart, Graphics graphics)
         {
-            SolidBrush brush = new SolidBrush(ForeColor);
-            Pen pen = new Pen(ForeColor, 1);
+            var brush = new SolidBrush(ForeColor);
+            var pen = new Pen(ForeColor, 1);
             switch (HoverPosition)
             {
                 case HoverPosition.Left:
@@ -58,6 +58,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
                     DrawBottom(graphics, pen, brush, usedSpace, chart);
                     break;
             }
+
             pen.Dispose();
             brush.Dispose();
         }
@@ -71,60 +72,59 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
             switch (arrowHeadPosition)
             {
                 case ArrowHeadPosition.Left:
-                    g.DrawLines(pen, new []
-                                         {
-                                             new Point(x + arrowLength, y - arrowWidth), 
-                                             new Point(x + interoffset, y),
-                                             new Point(x + arrowLength, y + arrowWidth),
-                                             new Point(x + arrowLength, y - arrowWidth)
-                                         });
+                    g.DrawLines(pen, new[]
+                    {
+                        new Point(x + arrowLength, y - arrowWidth),
+                        new Point(x + interoffset, y),
+                        new Point(x + arrowLength, y + arrowWidth),
+                        new Point(x + arrowLength, y - arrowWidth)
+                    });
                     break;
                 case ArrowHeadPosition.Top:
                     g.DrawLines(pen, new[]
-                                         {
-                                             new Point(x - arrowWidth, y + arrowLength), 
-                                             new Point(x, y + interoffset),
-                                             new Point(x + arrowWidth, y + arrowLength),
-                                             new Point(x - arrowWidth, y + arrowLength)
-                                         });
+                    {
+                        new Point(x - arrowWidth, y + arrowLength),
+                        new Point(x, y + interoffset),
+                        new Point(x + arrowWidth, y + arrowLength),
+                        new Point(x - arrowWidth, y + arrowLength)
+                    });
                     break;
                 case ArrowHeadPosition.Right:
                     g.DrawLines(pen, new[]
-                                         {
-                                             new Point(x - arrowLength, y - arrowWidth), 
-                                             new Point(x - interoffset, y),
-                                             new Point(x - arrowLength, y + arrowWidth),
-                                             new Point(x - arrowLength, y - arrowWidth)
-                                         });
+                    {
+                        new Point(x - arrowLength, y - arrowWidth),
+                        new Point(x - interoffset, y),
+                        new Point(x - arrowLength, y + arrowWidth),
+                        new Point(x - arrowLength, y - arrowWidth)
+                    });
                     break;
                 case ArrowHeadPosition.Down:
                     g.DrawLines(pen, new[]
-                                         {
-                                             new Point(x - arrowWidth, y - arrowLength), 
-                                             new Point(x, y - interoffset),
-                                             new Point(x + arrowWidth, y - arrowLength),
-                                             new Point(x - arrowWidth, y - arrowLength)
-                                         });
+                    {
+                        new Point(x - arrowWidth, y - arrowLength),
+                        new Point(x, y - interoffset),
+                        new Point(x + arrowWidth, y - arrowLength),
+                        new Point(x - arrowWidth, y - arrowLength)
+                    });
                     break;
             }
         }
 
-
         private void DrawTop(Graphics graphics, Pen pen, Brush brush, List<Rectangle> usedSpace, IChart chart)
         {
-            var g = chart.Graphics;
-            var bounds = ShapeFeature.GetBounds();
-            var y = Math.Max(ChartCoordinateService.ToDeviceY(chart, chart.LeftAxis.Maximum), bounds.Top);
+            ChartGraphics g = chart.Graphics;
+            Rectangle bounds = ShapeFeature.GetBounds();
+            int y = Math.Max(ChartCoordinateService.ToDeviceY(chart, chart.LeftAxis.Maximum), bounds.Top);
 
-            using (var font = (Font)g.Font.Clone())
+            using (var font = (Font) g.Font.Clone())
             {
                 int from = bounds.Left;
                 int to = bounds.Right;
 
                 ArrowHeadPosition arrowHeadPosition;
 
-                CalculateHorizontalMargin(ref from, ref to, (int)graphics.MeasureString("O", font).Height / 2, out arrowHeadPosition);
-                bool cancel = false;
+                CalculateHorizontalMargin(ref from, ref to, (int) graphics.MeasureString("O", font).Height / 2, out arrowHeadPosition);
+                var cancel = false;
                 CenterTextHorizontal(usedSpace, graphics, font, brush, Line1, bounds, ref y, ref cancel);
                 if (!cancel)
                 {
@@ -139,13 +139,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
 
         private void DrawBottom(Graphics graphics, Pen pen, Brush brush, List<Rectangle> usedSpace, IChart chart)
         {
-            var g = chart.Graphics;
-            var bounds = ShapeFeature.GetBounds();
-            var y = ChartCoordinateService.ToDeviceY(chart, chart.LeftAxis.Minimum);
+            ChartGraphics g = chart.Graphics;
+            Rectangle bounds = ShapeFeature.GetBounds();
+            int y = ChartCoordinateService.ToDeviceY(chart, chart.LeftAxis.Minimum);
 
-            using (var font = (Font)g.Font.Clone())
+            using (var font = (Font) g.Font.Clone())
             {
-                int margin = (int)graphics.MeasureString("O", font).Height;
+                var margin = (int) graphics.MeasureString("O", font).Height;
 
                 int from = bounds.Left;
                 int to = bounds.Right;
@@ -155,9 +155,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
 
                 if (ShowLine)
                 {
-                    y -= 2*margin;
+                    y -= 2 * margin;
                 }
-                bool cancel = false;
+
+                var cancel = false;
                 CenterTextHorizontal(usedSpace, graphics, font, brush, Line2, bounds, ref y, ref cancel);
                 if (!cancel)
                 {
@@ -172,13 +173,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
 
         private void DrawLeft(Graphics graphics, Pen pen, Brush brush, List<Rectangle> usedSpace, IChart chart)
         {
-            var g = chart.Graphics;
-            var bounds = ShapeFeature.GetBounds();
-            var x = bounds.Left + 5;
+            ChartGraphics g = chart.Graphics;
+            Rectangle bounds = ShapeFeature.GetBounds();
+            int x = bounds.Left + 5;
 
-            using (var font = (Font)g.Font.Clone())
+            using (var font = (Font) g.Font.Clone())
             {
-                var bottom = ChartCoordinateService.ToDeviceY(chart, chart.LeftAxis.Minimum);
+                int bottom = ChartCoordinateService.ToDeviceY(chart, chart.LeftAxis.Minimum);
                 if (bottom > bounds.Top)
                 {
                     int from = bounds.Top;
@@ -186,9 +187,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
                     int y;
                     ArrowHeadPosition arrowHeadPosition;
 
-                    CalculateVerticalMargin(ref from, ref to, bounds, (int)graphics.MeasureString(Line1, font).Height / 2, out y, out arrowHeadPosition);
+                    CalculateVerticalMargin(ref from, ref to, bounds, (int) graphics.MeasureString(Line1, font).Height / 2, out y, out arrowHeadPosition);
 
-                    bool cancel = false;
+                    var cancel = false;
                     LeftText(usedSpace, graphics, font, brush, Line1, bounds, ref y, ref cancel);
 
                     if (!cancel)
@@ -205,13 +206,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
 
         private void DrawRight(Graphics graphics, Pen pen, Brush brush, List<Rectangle> usedSpace, IChart chart)
         {
-            var g = chart.Graphics;
-            var bounds = ShapeFeature.GetBounds();
-            var x = bounds.Left + 5;
+            ChartGraphics g = chart.Graphics;
+            Rectangle bounds = ShapeFeature.GetBounds();
+            int x = bounds.Left + 5;
 
-            using (var font = (Font)g.Font.Clone())
+            using (var font = (Font) g.Font.Clone())
             {
-                var bottom = ChartCoordinateService.ToDeviceY(chart, chart.LeftAxis.Minimum);
+                int bottom = ChartCoordinateService.ToDeviceY(chart, chart.LeftAxis.Minimum);
                 if (bottom > bounds.Top)
                 {
                     int from = bounds.Top;
@@ -219,9 +220,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
                     int y;
                     ArrowHeadPosition arrowHeadPosition;
 
-                    CalculateVerticalMargin(ref from, ref to, bounds, (int)graphics.MeasureString(Line1, font).Height / 2, out y, out arrowHeadPosition);
+                    CalculateVerticalMargin(ref from, ref to, bounds, (int) graphics.MeasureString(Line1, font).Height / 2, out y, out arrowHeadPosition);
 
-                    bool cancel = false;
+                    var cancel = false;
                     RightText(usedSpace, graphics, font, brush, Line1, bounds, ref y, ref cancel);
 
                     if (!cancel)
@@ -237,7 +238,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
         }
 
         /// <summary>
-        /// Calculates the dimensions of the horizontal line given a margin. If there is no room for the defined arrowhead 
+        /// Calculates the dimensions of the horizontal line given a margin. If there is no room for the defined arrowhead
         /// it is removed
         /// </summary>
         /// <param name="from"></param>
@@ -249,11 +250,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
             arrowHeadPosition = ArrowHeadPosition;
             if (to - from > 10 + (2 * margin))
             {
-                if ((ArrowHeadPosition == ArrowHeadPosition.Left) || (ArrowHeadPosition == ArrowHeadPosition.LeftRight))
+                if (ArrowHeadPosition == ArrowHeadPosition.Left || ArrowHeadPosition == ArrowHeadPosition.LeftRight)
                 {
                     from += margin;
                 }
-                if ((ArrowHeadPosition == ArrowHeadPosition.Right) || (ArrowHeadPosition == ArrowHeadPosition.LeftRight))
+
+                if (ArrowHeadPosition == ArrowHeadPosition.Right || ArrowHeadPosition == ArrowHeadPosition.LeftRight)
                 {
                     to -= margin;
                 }
@@ -264,9 +266,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
             }
         }
 
-
         /// <summary>
-        /// Calculates the dimensions of the vertical line given a margin. If there is no room for the defined arrowhead 
+        /// Calculates the dimensions of the vertical line given a margin. If there is no room for the defined arrowhead
         /// it is removed
         /// </summary>
         /// <param name="from"></param>
@@ -280,11 +281,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
             arrowHeadPosition = ArrowHeadPosition;
             if (to - from > 10 + (2 * margin))
             {
-                if ((ArrowHeadPosition == ArrowHeadPosition.Top) || (ArrowHeadPosition == ArrowHeadPosition.TopDown))
+                if (ArrowHeadPosition == ArrowHeadPosition.Top || ArrowHeadPosition == ArrowHeadPosition.TopDown)
                 {
                     from += margin;
                 }
-                if ((ArrowHeadPosition == ArrowHeadPosition.Down) || (ArrowHeadPosition == ArrowHeadPosition.TopDown))
+
+                if (ArrowHeadPosition == ArrowHeadPosition.Down || ArrowHeadPosition == ArrowHeadPosition.TopDown)
                 {
                     to -= margin;
                 }
@@ -293,32 +295,37 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
             {
                 arrowHeadPosition = ArrowHeadPosition.None;
             }
-            y = (bounds.Top + ((bounds.Height)) / 2 - margin);
+
+            y = (bounds.Top + (bounds.Height / 2)) - margin;
         }
 
         private static void DrawHorizontalLine(Graphics g, Pen pen, int to, int from, ArrowHeadPosition arrowHeadPosition, int y)
         {
-            if ((arrowHeadPosition == ArrowHeadPosition.Left) || (arrowHeadPosition == ArrowHeadPosition.LeftRight))
+            if (arrowHeadPosition == ArrowHeadPosition.Left || arrowHeadPosition == ArrowHeadPosition.LeftRight)
             {
                 DrawArrowHead(g, pen, from, y, ArrowHeadPosition.Left);
             }
-            if ((arrowHeadPosition == ArrowHeadPosition.Right) || (arrowHeadPosition == ArrowHeadPosition.LeftRight))
+
+            if (arrowHeadPosition == ArrowHeadPosition.Right || arrowHeadPosition == ArrowHeadPosition.LeftRight)
             {
                 DrawArrowHead(g, pen, to, y, ArrowHeadPosition.Right);
             }
+
             g.DrawLine(pen, from, y, to, y);
         }
 
         private static void DrawVerticalLine(Graphics g, Pen pen, int from, int to, ArrowHeadPosition arrowHeadPosition, int x)
         {
-            if ((arrowHeadPosition == ArrowHeadPosition.Top) || (arrowHeadPosition == ArrowHeadPosition.TopDown))
+            if (arrowHeadPosition == ArrowHeadPosition.Top || arrowHeadPosition == ArrowHeadPosition.TopDown)
             {
                 DrawArrowHead(g, pen, x, from, ArrowHeadPosition.Top);
             }
-            if ((arrowHeadPosition == ArrowHeadPosition.Down) || (arrowHeadPosition == ArrowHeadPosition.TopDown))
+
+            if (arrowHeadPosition == ArrowHeadPosition.Down || arrowHeadPosition == ArrowHeadPosition.TopDown)
             {
                 DrawArrowHead(g, pen, x, to, ArrowHeadPosition.Down);
             }
+
             g.DrawLine(pen, x, from, x, to);
         }
 
@@ -335,12 +342,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
         /// <param name="cancel"></param>
         private void LeftText(ICollection<Rectangle> usedSpace, Graphics g, Font font, Brush brush, string text, Rectangle bounds, ref int y, ref bool cancel)
         {
-            if ((text == null) || (text.Trim() == ""))
+            if (text == null || text.Trim() == "")
             {
                 return;
             }
+
             int x = bounds.Left + 10;
-            var size = g.MeasureString(text, font);
+            SizeF size = g.MeasureString(text, font);
             DrawTextInFreeSpace(text, g, font, brush, x, ref y, size, usedSpace, ref cancel);
         }
 
@@ -357,51 +365,53 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
         /// <param name="cancel"></param>
         private void RightText(ICollection<Rectangle> usedSpace, Graphics g, Font font, Brush brush, string text, Rectangle bounds, ref int y, ref bool cancel)
         {
-            if ((text == null) || (text.Trim() == ""))
+            if (text == null || text.Trim() == "")
             {
                 return;
             }
-            var size = g.MeasureString(text, font);
-            int x = (int) (bounds.Left - 10 - size.Width);
+
+            SizeF size = g.MeasureString(text, font);
+            var x = (int) (bounds.Left - 10 - size.Width);
             DrawTextInFreeSpace(text, g, font, brush, x, ref y, size, usedSpace, ref cancel);
         }
 
-
         private void CenterTextHorizontal(ICollection<Rectangle> usedSpace, Graphics g, Font font, Brush brush, string text, Rectangle bounds, ref int y, ref bool cancel)
         {
-            if ((text == null) || (text.Trim() == ""))
+            if (text == null || text.Trim() == "")
             {
                 return;
             }
-            var size = g.MeasureString(text, font);
-            int x = (int)(bounds.Left + (bounds.Width - size.Width) / 2);
+
+            SizeF size = g.MeasureString(text, font);
+            var x = (int) (bounds.Left + ((bounds.Width - size.Width) / 2));
             DrawTextInFreeSpace(text, g, font, brush, x, ref y, size, usedSpace, ref cancel);
         }
 
         private void DrawTextInFreeSpace(string text, Graphics g, Font font, Brush brush, int x, ref int y, SizeF size, ICollection<Rectangle> usedSpace, ref bool cancel)
         {
-            var rectangle = new Rectangle(x, y, (int)size.Width, (int)size.Height);
+            var rectangle = new Rectangle(x, y, (int) size.Width, (int) size.Height);
             foreach (Rectangle space in usedSpace)
             {
                 if (!space.IntersectsWith(rectangle))
                 {
                     continue;
                 }
+
                 cancel = true;
                 return;
             }
+
             usedSpace.Add(rectangle);
             if (BackColor != Color.Transparent)
             {
-                SolidBrush solidBrush = new SolidBrush(BackColor);
+                var solidBrush = new SolidBrush(BackColor);
                 g.FillRectangle(solidBrush, rectangle);
                 g.DrawRectangle(Pens.Black, rectangle);
                 solidBrush.Dispose();
-
             }
-            g.DrawString(text, font, brush, x, y);
-            y += (int)size.Height;
-        }
 
+            g.DrawString(text, font, brush, x, y);
+            y += (int) size.Height;
+        }
     }
 }

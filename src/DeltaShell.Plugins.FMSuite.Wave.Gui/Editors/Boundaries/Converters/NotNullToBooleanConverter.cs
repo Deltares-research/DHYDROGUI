@@ -9,7 +9,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Converters
     /// <see cref="NotNullToBooleanConverter"/> defines the <see cref="IValueConverter"/>
     /// to check whether a provided value is not <c>null</c>, and map this to a boolean.
     /// </summary>
-    /// <seealso cref="IValueConverter" />
+    /// <seealso cref="IValueConverter"/>
     [ValueConversion(typeof(object), typeof(bool))]
     public class NotNullToBooleanConverter : IValueConverter
     {
@@ -22,7 +22,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Converters
         /// <param name="parameter">The converter parameter to use.</param>
         /// <param name="culture">The culture to use in the converter.</param>
         /// <returns>
-        /// A converted value. If the method returns <see langword="null" />, the valid null value is used.
+        /// A converted value. If the method returns <see langword="null"/>, the valid null value is used.
         /// </returns>
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
@@ -37,7 +37,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Converters
         /// <summary>
         /// Converting booleans to objects is not possible.
         /// </summary>
-        /// <exception cref="NotSupportedException"/> 
+        /// <exception cref="NotSupportedException"/>
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             throw new NotSupportedException("Converting booleans to objects is not possible.");

@@ -33,7 +33,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         /// </summary>
         /// <remarks>
         /// The order in which observation variable values are added for a timestep should reflect the order of output
-        /// variables (<see cref="AddValueForTimeStep" />)
+        /// variables (<see cref="AddValueForTimeStep"/>)
         /// </remarks>
         public string[] OutputVariables { get; set; }
 
@@ -44,7 +44,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         /// <param name="value"> The observation variable value to add </param>
         /// <remarks>
         /// The order in which observation variable values are added for a timestep should reflect the output variables
-        /// order (<see cref="OutputVariables" />)
+        /// order (<see cref="OutputVariables"/>)
         /// </remarks>
         public void AddValueForTimeStep(DateTime timeStep, double value)
         {
@@ -62,8 +62,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         /// <param name="timeStep"> The timestep to get the observation variable values for </param>
         /// <returns> A list of observation variable values </returns>
         /// <remarks>
-        /// If added correctly (<see cref="AddValueForTimeStep" />), the observation variable values order reflects the
-        /// output variables order (<see cref="OutputVariables" />)
+        /// If added correctly (<see cref="AddValueForTimeStep"/>), the observation variable values order reflects the
+        /// output variables order (<see cref="OutputVariables"/>)
         /// </remarks>
         public List<double> GetValuesForTimeStep(DateTime timeStep)
         {
@@ -79,7 +79,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         {
             IEnumerable<double> defaultValue = Enumerable.Empty<double>();
             if (OutputVariables == null || !OutputVariables.Any())
+            {
                 return defaultValue;
+            }
+
             int variableIndex = Array.IndexOf(OutputVariables, outputVariableName);
             return variableIndex == -1 ? defaultValue : valuesPerTimeStep.Values.Select(v => v[variableIndex]);
         }

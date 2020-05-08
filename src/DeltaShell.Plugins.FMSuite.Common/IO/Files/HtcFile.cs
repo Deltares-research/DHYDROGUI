@@ -5,7 +5,8 @@ using DeltaShell.Plugins.FMSuite.Common.IO.Readers;
 namespace DeltaShell.Plugins.FMSuite.Common.IO.Files
 {
     /// <summary>
-    /// HtcFile responsible for formulating the absolute grid file path and for testing the expectations for the output of the htcFileReader. 
+    /// HtcFile responsible for formulating the absolute grid file path and for testing the expectations for the output of the
+    /// htcFileReader.
     /// </summary>
     public static class HtcFile
     {

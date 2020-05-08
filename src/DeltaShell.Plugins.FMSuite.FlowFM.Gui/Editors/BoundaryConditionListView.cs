@@ -20,8 +20,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
     public partial class BoundaryConditionListView : UserControl, ILayerEditorView
     {
         private readonly TableView boundaryConditionTableView;
-        private IEventedList<FlowBoundaryCondition> boundaryConditions; 
+        private IEventedList<FlowBoundaryCondition> boundaryConditions;
         private IEventedList<BoundaryConditionSet> data;
+
+        public event EventHandler SelectedFeaturesChanged;
 
         public BoundaryConditionListView()
         {
@@ -48,27 +50,23 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             Controls.Add(boundaryConditionTableView);
         }
 
-        private void TableViewOnSelectionChanged(object sender, TableSelectionChangedEventArgs e)
-        {
-            if (SelectedFeaturesChanged != null)
-            {
-                SelectedFeaturesChanged(this, e);
-            }
-        }
-
         public Action<IFeature> ZoomToFeature { get; set; }
 
         public Action<object> OpenViewMethod { get; set; }
 
         public object Data
         {
-            get { return data; }
+            get
+            {
+                return data;
+            }
             set
             {
                 if (data != null)
                 {
                     UnSubscribeToData();
                 }
+
                 data = value as IEventedList<BoundaryConditionSet>;
                 if (data != null)
                 {
@@ -87,11 +85,68 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             }
         }
 
+        public Image Image
+        {
+            get
+            {
+                return boundaryConditionTableView.Image;
+            }
+            set
+            {
+                boundaryConditionTableView.Image = value;
+            }
+        }
+
+        public ViewInfo ViewInfo { get; set; }
+
+        public IEnumerable<IFeature> SelectedFeatures
+        {
+            get
+            {
+                IEnumerable<FlowBoundaryCondition> selectedBcs = boundaryConditionTableView.SelectedRowsIndices.Select(
+                    i => boundaryConditions[boundaryConditionTableView.GetDataSourceIndexByRowIndex(i)]);
+                return
+                    selectedBcs.Select(bc => data.FirstOrDefault(bcs => bcs.BoundaryConditions.Contains(bc))).Distinct();
+            }
+            set
+            {
+                IEnumerable<BoundaryConditionSet> selectedBcsets = value.OfType<BoundaryConditionSet>();
+                IEnumerable<int> selectedBcs =
+                    selectedBcsets.SelectMany(bcs => bcs.BoundaryConditions)
+                                  .OfType<FlowBoundaryCondition>()
+                                  .Select(bc => boundaryConditions.IndexOf(bc)).Except(new[]
+                                  {
+                                      -1
+                                  });
+
+                boundaryConditionTableView.SelectRows(selectedBcs.ToArray());
+            }
+        }
+
+        public ILayer Layer { get; set; }
+
+        public void EnsureVisible(object item)
+        {
+            boundaryConditionTableView.EnsureVisible(item);
+        }
+
+        public void OnActivated() {}
+
+        public void OnDeactivated() {}
+
+        private void TableViewOnSelectionChanged(object sender, TableSelectionChangedEventArgs e)
+        {
+            if (SelectedFeaturesChanged != null)
+            {
+                SelectedFeaturesChanged(this, e);
+            }
+        }
+
         private void OnBoundaryConditionRemoved(object sender, NotifyCollectionChangedEventArgs e)
         {
             if (e.Action == NotifyCollectionChangedAction.Remove)
             {
-                foreach (var boundaryConditionSet in data)
+                foreach (BoundaryConditionSet boundaryConditionSet in data)
                 {
                     boundaryConditionSet.BoundaryConditions.Remove(e.GetRemovedOrAddedItem() as IBoundaryCondition);
                 }
@@ -102,7 +157,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
         {
             data.CollectionChanged += OnBoundaryConditionSetsChanged;
             boundaryConditions.CollectionChanged += OnBoundaryConditionRemoved;
-            foreach (var boundaryConditionSet in data)
+            foreach (BoundaryConditionSet boundaryConditionSet in data)
             {
                 boundaryConditionSet.BoundaryConditions.CollectionChanged += OnBoundaryConditionSetsChanged;
             }
@@ -112,16 +167,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
         {
             data.CollectionChanged -= OnBoundaryConditionSetsChanged;
             boundaryConditions.CollectionChanged -= OnBoundaryConditionRemoved;
-            foreach (var boundaryConditionSet in data)
+            foreach (BoundaryConditionSet boundaryConditionSet in data)
             {
                 boundaryConditionSet.BoundaryConditions.CollectionChanged -= OnBoundaryConditionSetsChanged;
             }
         }
-        
+
         [InvokeRequired]
         private void OnBoundaryConditionSetsChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            var removedOrAddedItem = e.GetRemovedOrAddedItem();
+            object removedOrAddedItem = e.GetRemovedOrAddedItem();
             switch (e.Action)
             {
                 case NotifyCollectionChangedAction.Add:
@@ -136,13 +191,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
                         if (set != null)
                         {
                             foreach (
-                                var flowBoundaryCondition in
-                                    set.BoundaryConditions.OfType<FlowBoundaryCondition>())
+                                FlowBoundaryCondition flowBoundaryCondition in
+                                set.BoundaryConditions.OfType<FlowBoundaryCondition>())
                             {
                                 boundaryConditions.Add(flowBoundaryCondition);
                             }
                         }
                     }
+
                     break;
                 case NotifyCollectionChangedAction.Remove:
                     var condition = removedOrAddedItem as FlowBoundaryCondition;
@@ -156,62 +212,23 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
                         if (set != null)
                         {
                             foreach (
-                                var flowBoundaryCondition in
-                                    set.BoundaryConditions.OfType<FlowBoundaryCondition>())
+                                FlowBoundaryCondition flowBoundaryCondition in
+                                set.BoundaryConditions.OfType<FlowBoundaryCondition>())
                             {
                                 boundaryConditions.Remove(flowBoundaryCondition);
                             }
                         }
                     }
+
                     break;
                 case NotifyCollectionChangedAction.Replace:
                     if (removedOrAddedItem is FlowBoundaryCondition || removedOrAddedItem is BoundaryConditionSet)
                     {
                         throw new NotImplementedException("Replacing boundary conditions is not supported");
                     }
+
                     break;
             }
         }
-
-        public Image Image
-        {
-            get { return boundaryConditionTableView.Image; }
-            set { boundaryConditionTableView.Image = value; }
-        }
-        public void EnsureVisible(object item)
-        {
-            boundaryConditionTableView.EnsureVisible(item);
-        }
-
-        public ViewInfo ViewInfo { get; set; }
-
-        public IEnumerable<IFeature> SelectedFeatures
-        {
-            get
-            {
-                var selectedBcs = boundaryConditionTableView.SelectedRowsIndices.Select(
-                    i => boundaryConditions[boundaryConditionTableView.GetDataSourceIndexByRowIndex(i)]);
-                return
-                    selectedBcs.Select(bc => data.FirstOrDefault(bcs => bcs.BoundaryConditions.Contains(bc))).Distinct();
-            }
-            set
-            {
-                var selectedBcsets = value.OfType<BoundaryConditionSet>();
-                var selectedBcs =
-                    selectedBcsets.SelectMany(bcs => bcs.BoundaryConditions)
-                        .OfType<FlowBoundaryCondition>()
-                        .Select(bc => boundaryConditions.IndexOf(bc)).Except(new[] {-1});
-
-                boundaryConditionTableView.SelectRows(selectedBcs.ToArray());
-            }
-        }
-        
-        public event EventHandler SelectedFeaturesChanged;
-        
-        public ILayer Layer { get; set; }
-        
-        public void OnActivated(){}
-
-        public void OnDeactivated(){}
     }
 }

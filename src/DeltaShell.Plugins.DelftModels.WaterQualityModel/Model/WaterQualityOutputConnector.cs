@@ -17,7 +17,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
         private static readonly ILog log = LogManager.GetLogger(typeof(WaterQualityOutputConnector));
 
         /// <summary>
-        /// Connects the specified <paramref name="model" /> to the output.
+        /// Connects the specified <paramref name="model"/> to the output.
         /// </summary>
         /// <param name="model"> The model. </param>
         /// <remarks>If <paramref name="model"/> or its OutputFolder is <c>null</c>, this method will return.</remarks>
@@ -38,7 +38,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
         /// Connects the output map files to the model.
         /// </summary>
         /// <remarks>
-        /// When both the binary and NetCDF file exist in the output directory, then the method attempts to connect to the NetCDF file.
+        /// When both the binary and NetCDF file exist in the output directory, then the method attempts to connect to the NetCDF
+        /// file.
         /// NetCdf files with an unsupported convention will not be connected and the model remains unconnected.
         /// </remarks>
         private static void ConnectMapOutput(WaterQualityModel model)

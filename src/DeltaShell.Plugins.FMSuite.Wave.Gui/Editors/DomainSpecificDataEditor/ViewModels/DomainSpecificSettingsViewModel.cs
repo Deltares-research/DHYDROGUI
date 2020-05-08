@@ -8,12 +8,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.DomainSpecificDataEditor.V
     /// </summary>
     public class DomainSpecificSettingsViewModel : INotifyPropertyChanged
     {
+        private readonly IWaveDomainData domainData;
         private DirectionalSpaceSettingsViewModel directionalSpaceSettings;
         private FrequencySpaceSettingsViewModel frequencySpaceSettings;
         private HydroDynamicsSettingsViewModel hydroDynamicsSettings;
         private WindSettingsViewModel windSettings;
 
-        private readonly IWaveDomainData domainData;
+        /// <summary>
+        /// Occurs when [property changed].
+        /// </summary>
+        public event PropertyChangedEventHandler PropertyChanged;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DomainSpecificSettingsViewModel"/> class.
@@ -22,13 +26,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.DomainSpecificDataEditor.V
         public DomainSpecificSettingsViewModel(IWaveDomainData domainData)
         {
             this.domainData = domainData;
-            
+
             DirectionalSpaceSettings = new DirectionalSpaceSettingsViewModel(domainData.SpectralDomainData);
             FrequencySpaceSettings = new FrequencySpaceSettingsViewModel(domainData.SpectralDomainData);
             HydroDynamicsSettings = new HydroDynamicsSettingsViewModel(domainData.HydroFromFlowData);
             WindSettings = new WindSettingsViewModel(domainData.MeteoData);
         }
-        
+
         /// <summary>
         /// Gets the name of the domain.
         /// </summary>
@@ -41,7 +45,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.DomainSpecificDataEditor.V
         /// Gets or sets a value indicating whether to use custom directional space settings or model defaults.
         /// </summary>
         /// <value>
-        ///   <c>true</c> if custom settings are used; otherwise, <c>false</c>.
+        /// <c>true</c> if custom settings are used; otherwise, <c>false</c>.
         /// </value>
         public bool UseCustomDirectionalSpaceSettings
         {
@@ -60,7 +64,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.DomainSpecificDataEditor.V
         /// Gets or sets a value indicating whether to use custom frequency space settings or model defaults.
         /// </summary>
         /// <value>
-        ///   <c>true</c> if custom settings are used; otherwise, <c>false</c>.
+        /// <c>true</c> if custom settings are used; otherwise, <c>false</c>.
         /// </value>
         public bool UseCustomFrequencySpaceSettings
         {
@@ -79,7 +83,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.DomainSpecificDataEditor.V
         /// Gets or sets a value indicating whether to use custom hydrodynamic settings or model defaults.
         /// </summary>
         /// <value>
-        ///   <c>true</c> if custom settings are used; otherwise, <c>false</c>.
+        /// <c>true</c> if custom settings are used; otherwise, <c>false</c>.
         /// </value>
         public bool UseCustomHydroDynamicsSettings
         {
@@ -98,7 +102,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.DomainSpecificDataEditor.V
         /// Gets or sets a value indicating whether to use custom wind settings or model defaults.
         /// </summary>
         /// <value>
-        ///   <c>true</c> if custom settings are used; otherwise, <c>false</c>.
+        /// <c>true</c> if custom settings are used; otherwise, <c>false</c>.
         /// </value>
         public bool UseCustomWindSettings
         {
@@ -188,11 +192,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.DomainSpecificDataEditor.V
                 }
             }
         }
-
-        /// <summary>
-        /// Occurs when [property changed].
-        /// </summary>
-        public event PropertyChangedEventHandler PropertyChanged;
 
         /// <summary>
         /// Called when [property changed].

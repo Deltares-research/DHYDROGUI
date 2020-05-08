@@ -1,3 +1,6 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using DelftTools.Controls;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
@@ -11,6 +14,12 @@ using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf;
 using DeltaShell.Plugins.FMSuite.Common.Gui;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Views;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factories;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Features;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.Layers;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters;
 using DeltaShell.Plugins.FMSuite.Wave.IO.Importers;
 using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
@@ -21,22 +30,20 @@ using Mono.Addins;
 using NetTopologySuite.Extensions.Features;
 using SharpMap.Api.Layers;
 using SharpMap.Layers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories;
-using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels;
-using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Views;
-using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factories;
-using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Features;
-using DeltaShell.Plugins.FMSuite.Wave.Gui.Layers;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui
 {
     [Extension(typeof(IPlugin))]
     public class WaveGuiPlugin : GuiPlugin
     {
+        private static Func<MapView> getActiveMapViewFunc;
         private IMapLayerProvider mapLayerProvider;
+        private string _wavesSettings = " (Waves settings)";
+
+        public WaveGuiPlugin()
+        {
+            getActiveMapViewFunc = GetActiveMapView;
+        }
 
         public override string Name => "Delft3D Wave (Gui)";
 
@@ -47,6 +54,39 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
         public override string Version => GetType().Assembly.GetName().Version.ToString();
 
         public override string FileFormatVersion => "1.1.0.0";
+
+        public override IMapLayerProvider MapLayerProvider =>
+            mapLayerProvider
+            ?? (mapLayerProvider = WaveMapLayerProviderFactory.ConstructMapLayerProvider(GetWaveModels));
+
+        public override IRibbonCommandHandler RibbonCommandHandler => new Ribbon.Ribbon();
+
+        public override IGui Gui
+        {
+            get => base.Gui;
+            set
+            {
+                if (base.Gui != null)
+                {
+                    base.Gui.Application.ActivityRunner.ActivityStatusChanged -= OnActivityRunnerStatusChanged;
+                }
+
+                base.Gui = value;
+                if (base.Gui != null)
+                {
+                    base.Gui.Application.ActivityRunner.ActivityStatusChanged += OnActivityRunnerStatusChanged;
+                }
+
+                // HACK: setting the Gui happens just before Activate in DeltaShellGui, 
+                // hence we set the spatial operations flag here:
+                if (value != null)
+                {
+                    SharpMapGisGuiPlugin.Instance.SpatialOperationsEnabled = true;
+                }
+            }
+        }
+
+        public static MapView ActiveMapView => getActiveMapViewFunc();
 
         public override bool CanCopy(IProjectItem item)
         {
@@ -137,8 +177,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
             var boundaryViewInfo = new ViewInfo<IWaveBoundary, WaveBoundaryConditionEditorView>()
             {
                 Description = Properties.Resources.WaveGuiPlugin_Spatially_Varying_Boundary_Editor,
-                GetViewName = (v, o) => 
-                    string.Format(Properties.Resources.WaveGuiPlugin_Boundary_Editor____0___, o.Name) ,
+                GetViewName = (v, o) =>
+                    string.Format(Properties.Resources.WaveGuiPlugin_Boundary_Editor____0___, o.Name),
                 AdditionalDataCheck = o => WaveModels.Any(m => m.BoundaryContainer.Boundaries.Contains(o)),
                 AfterCreate = (view, data) =>
                 {
@@ -154,19 +194,19 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
                                                                           model.BoundaryContainer);
                     var referenceDateTimeProvider = new ModelDefinitionReferenceDateTimeProvider(model.ModelDefinition);
 
-                    var geometryPreviewConfigurator = new GeometryPreviewMapConfigurator(geometryFactory, 
-                                                                                         new WaveLayerFactory(), 
+                    var geometryPreviewConfigurator = new GeometryPreviewMapConfigurator(geometryFactory,
+                                                                                         new WaveLayerFactory(),
                                                                                          model.CoordinateSystem);
 
-                    view.DataContext = new WaveBoundaryConditionEditorViewModel(data, 
-                                                                                geometryPreviewConfigurator, 
+                    view.DataContext = new WaveBoundaryConditionEditorViewModel(data,
+                                                                                geometryPreviewConfigurator,
                                                                                 referenceDateTimeProvider);
                 },
                 CloseForData = (v, o) => v.Data.Equals(o)
             };
 
             yield return boundaryViewInfo;
-            yield return ViewInfoWrapper<BoundaryLineFeature>.Create(boundaryViewInfo, 
+            yield return ViewInfoWrapper<BoundaryLineFeature>.Create(boundaryViewInfo,
                                                                      f => f.ObservedWaveBoundary);
 
             // obstacles
@@ -257,30 +297,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
             };
         }
 
-        private bool IsModelObstacle(Feature2D f)
-        {
-            return WaveModels.FirstOrDefault(m => m.Obstacles.Contains(f)) != null;
-        }
-
-        private IEventedList<WaveObstacle> FindObstaclesForFeature(Feature2D f)
-        {
-            return WaveModels.First(m => m.Obstacles.Contains(f)) != null
-                       ? WaveModels.First(m => m.Obstacles.Contains(f)).Obstacles
-                       : null;
-        }
-
-        private IEnumerable<WaveModel> WaveModels => Gui != null
-                                                         ? Gui.Application.GetAllModelsInProject().OfType<WaveModel>()
-                                                         : Enumerable.Empty<WaveModel>();
-
-        private IEnumerable<WaveModel> GetWaveModels() =>
-            Gui?.Application?.GetAllModelsInProject().OfType<WaveModel>() ??
-            Enumerable.Empty<WaveModel>();
-
-        public override IMapLayerProvider MapLayerProvider => 
-            mapLayerProvider 
-            ?? (mapLayerProvider = WaveMapLayerProviderFactory.ConstructMapLayerProvider(GetWaveModels));
-
         public override IEnumerable<PropertyInfo> GetPropertyInfos()
         {
             yield return new PropertyInfo<GridBaseLayer, DynamicObjectProperties>();
@@ -302,17 +318,39 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
             yield return new SpatiallyVariantBoundaryNodePresenter(GetBoundaryContainerFromBoundaryFunc);
         }
 
-        public override IRibbonCommandHandler RibbonCommandHandler => new Ribbon.Ribbon();
-
-        public WaveGuiPlugin()
+        public override void OnActiveViewChanged(IView view)
         {
-            getActiveMapViewFunc = GetActiveMapView;
+            if (view == null)
+            {
+                return;
+            }
+
+            MapView mapView = FindMapView(view);
+            if (mapView != null)
+            {
+                WaveMapViewDecorator.AddMapToolsIfMissing(mapView);
+            }
         }
 
-        private static Func<MapView> getActiveMapViewFunc;
-        private string _wavesSettings = " (Waves settings)";
+        private IEnumerable<WaveModel> WaveModels => Gui != null
+                                                         ? Gui.Application.GetAllModelsInProject().OfType<WaveModel>()
+                                                         : Enumerable.Empty<WaveModel>();
 
-        public static MapView ActiveMapView => getActiveMapViewFunc();
+        private bool IsModelObstacle(Feature2D f)
+        {
+            return WaveModels.FirstOrDefault(m => m.Obstacles.Contains(f)) != null;
+        }
+
+        private IEventedList<WaveObstacle> FindObstaclesForFeature(Feature2D f)
+        {
+            return WaveModels.First(m => m.Obstacles.Contains(f)) != null
+                       ? WaveModels.First(m => m.Obstacles.Contains(f)).Obstacles
+                       : null;
+        }
+
+        private IEnumerable<WaveModel> GetWaveModels() =>
+            Gui?.Application?.GetAllModelsInProject().OfType<WaveModel>() ??
+            Enumerable.Empty<WaveModel>();
 
         private MapView GetActiveMapView()
         {
@@ -336,20 +374,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
             return null;
         }
 
-        public override void OnActiveViewChanged(IView view)
-        {
-            if (view == null)
-            {
-                return;
-            }
-
-            MapView mapView = FindMapView(view);
-            if (mapView != null)
-            {
-                WaveMapViewDecorator.AddMapToolsIfMissing(mapView);
-            }
-        }
-
         private static MapView FindMapView(IView activeView)
         {
             var mapView = activeView as MapView;
@@ -363,31 +387,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
 
             //todo: recursion
             return compositeView != null ? compositeView.ChildViews.OfType<MapView>().FirstOrDefault() : null;
-        }
-
-        public override IGui Gui
-        {
-            get => base.Gui;
-            set
-            {
-                if (base.Gui != null)
-                {
-                    base.Gui.Application.ActivityRunner.ActivityStatusChanged -= OnActivityRunnerStatusChanged;
-                }
-
-                base.Gui = value;
-                if (base.Gui != null)
-                {
-                    base.Gui.Application.ActivityRunner.ActivityStatusChanged += OnActivityRunnerStatusChanged;
-                }
-
-                // HACK: setting the Gui happens just before Activate in DeltaShellGui, 
-                // hence we set the spatial operations flag here:
-                if (value != null)
-                {
-                    SharpMapGisGuiPlugin.Instance.SpatialOperationsEnabled = true;
-                }
-            }
         }
 
         [InvokeRequired]

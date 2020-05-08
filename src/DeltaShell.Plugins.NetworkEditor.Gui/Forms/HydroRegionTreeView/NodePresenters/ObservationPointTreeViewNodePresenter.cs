@@ -3,29 +3,15 @@ using DelftTools.Controls;
 using DelftTools.Hydro;
 using DelftTools.Shell.Gui;
 using DelftTools.Utils.Editing;
+using DeltaShell.Plugins.NetworkEditor.Gui.Properties;
+using GeoAPI.Extensions.Networks;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView.NodePresenters
 {
-    class ObservationPointTreeViewNodePresenter : BranchFeatureTreeViewNodePresenterBase<ObservationPoint>
+    internal class ObservationPointTreeViewNodePresenter : BranchFeatureTreeViewNodePresenterBase<ObservationPoint>
     {
         public ObservationPointTreeViewNodePresenter(GuiPlugin guiPlugin)
-            : base(guiPlugin)
-        {
-        }
-
-        protected override bool CanRemove(ObservationPoint nodeData)
-        {
-            return true;
-        }
-
-        protected override bool RemoveNodeData(object parentNodeData, ObservationPoint observationPoint)
-        {
-            var network = observationPoint.Branch.Network;
-            network.BeginEdit(new DefaultEditAction("Delete feature " + observationPoint.Name));
-            observationPoint.Branch.BranchFeatures.Remove(observationPoint);
-            network.EndEdit();
-            return true;
-        }
+            : base(guiPlugin) {}
 
         /// <summary>
         /// Lateral sources can be renamed by the user
@@ -37,9 +23,23 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView.NodePre
             return true;
         }
 
+        protected override bool CanRemove(ObservationPoint nodeData)
+        {
+            return true;
+        }
+
+        protected override bool RemoveNodeData(object parentNodeData, ObservationPoint observationPoint)
+        {
+            INetwork network = observationPoint.Branch.Network;
+            network.BeginEdit(new DefaultEditAction("Delete feature " + observationPoint.Name));
+            observationPoint.Branch.BranchFeatures.Remove(observationPoint);
+            network.EndEdit();
+            return true;
+        }
+
         protected override Image GetImage(ObservationPoint feature)
         {
-            return Properties.Resources.Observation;
+            return Resources.Observation;
         }
     }
 }

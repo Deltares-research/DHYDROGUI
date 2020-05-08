@@ -32,7 +32,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.Substance
 
         /// <summary>
         /// Creates a substance process library with
-        /// <param name="substances" />
+        /// <param name="substances"/>
         /// </summary>
         /// <param name="substances"> The substances of the substance process library </param>
         public SubstanceProcessLibrary(IEventedList<WaterQualitySubstance> substances)
@@ -44,11 +44,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.Substance
 
             ProcessDefinitionFilesPath = DefaultSobekProcessDefinitionFilesPath;
         }
-
-        /// <summary>
-        /// The name of the substance process library
-        /// </summary>
-        public string Name { get; set; }
 
         /// <summary>
         /// The substances of the substance process library
@@ -105,6 +100,21 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.Substance
 
         public string ImportedSubstanceFilePath { get; set; }
 
+        /// <summary>
+        /// The name of the substance process library
+        /// </summary>
+        public string Name { get; set; }
+
+        public void Clear()
+        {
+            Substances.Clear();
+            Parameters.Clear();
+            Processes.Clear();
+            OutputParameters.Clear();
+
+            ProcessDefinitionFilesPath = DefaultSobekProcessDefinitionFilesPath;
+        }
+
         public override string ToString()
         {
             var libraryString = "";
@@ -131,16 +141,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.Substance
             clone.OutputParameters.AddRange(OutputParameters.Select(op => (WaterQualityOutputParameter) op.Clone()));
 
             return clone;
-        }
-
-        public void Clear()
-        {
-            Substances.Clear();
-            Parameters.Clear();
-            Processes.Clear();
-            OutputParameters.Clear();
-
-            ProcessDefinitionFilesPath = DefaultSobekProcessDefinitionFilesPath;
         }
     }
 }

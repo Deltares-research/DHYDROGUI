@@ -8,7 +8,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
     /// <see cref="WaveModelTreeShortcut"/> implements a TreeView short cut for
     /// wave model properties.
     /// </summary>
-    /// <seealso cref="ModelTreeShortcut" />
+    /// <seealso cref="ModelTreeShortcut"/>
     public class WaveModelTreeShortcut : ModelTreeShortcut
     {
         /// <summary>
@@ -20,9 +20,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
         /// <param name="data">The data.</param>
         /// <param name="shortCutType">Short type of the cut.</param>
         /// <param name="childObjects">The child objects.</param>
-        public WaveModelTreeShortcut(string text, 
-                                     Bitmap image, 
-                                     WaveModel model, 
+        public WaveModelTreeShortcut(string text,
+                                     Bitmap image,
+                                     WaveModel model,
                                      object data,
                                      ShortCutType shortCutType = ShortCutType.SettingsTab,
                                      IEnumerable<object> childObjects = null)

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
 using DelftTools.Controls;
 using DelftTools.Hydro;
 using DelftTools.Shell.Gui.Forms;
@@ -9,6 +10,7 @@ using DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView;
 using DeltaShell.Plugins.NetworkEditor.Gui.MapTools;
 using DeltaShell.Plugins.NetworkEditor.MapLayers;
 using DeltaShell.Plugins.SharpMapGis.Gui.Commands;
+using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using Fluent;
 using SharpMap.Layers;
 
@@ -35,7 +37,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
         private ICommand insertNewNodeCommand = new InsertNewNodeCommand();
         private ICommand addNewCrossSectionYZCommand = new AddNewCrossSectionYZCommand();
         private ICommand addNewCrossSectionZWCommand = new AddNewCrossSectionZWCommand();
-        private ICommand addNewCrossSectionXYZCommand= new AddNewCrossSectionXYZCommand();
+        private ICommand addNewCrossSectionXYZCommand = new AddNewCrossSectionXYZCommand();
         private ICommand addNewCrossSectionStandardCommand = new AddNewCrossSectionStandardCommand();
         private ICommand addNewCrossSectionDefaultCommand = new AddNewDefaultCrossSectionCommand();
         private ICommand addNewCrossSectionInterpolatedCommand = new AddInterpolatedCrossSectionCommand();
@@ -63,17 +65,17 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
         private ICommand showSideViewCommand = new ShowSideViewCommand();
         private ICommand openCaseAnalysisCommand = new OpenCaseAnalysisViewCommand();
 
-        private ICommand addThinDam2dCommand = new MapToolCommand(HydroRegionEditorMapTool.ThinDamToolName){LayerType = typeof(HydroAreaLayer)};
-        private ICommand addFixedWeir2dCommand = new MapToolCommand(HydroRegionEditorMapTool.FixedWeirToolName) { LayerType = typeof(HydroAreaLayer) };
-        private ICommand addObs2dCommand = new MapToolCommand(HydroRegionEditorMapTool.ObservationPointToolName) { LayerType = typeof(HydroAreaLayer) };
-        private ICommand addObsCS2dCommand = new MapToolCommand(HydroRegionEditorMapTool.ObservationCrossSectionToolName) { LayerType = typeof(HydroAreaLayer) };
-        private ICommand addPump2dCommand = new MapToolCommand(HydroRegionEditorMapTool.PumpToolName) { LayerType = typeof(HydroAreaLayer) };
-        private ICommand addWeir2dCommand = new MapToolCommand(HydroRegionEditorMapTool.WeirToolName) { LayerType = typeof(HydroAreaLayer) };
-        private ICommand addLandBoundary2dCommand = new MapToolCommand(HydroRegionEditorMapTool.LandBoundaryToolName) { LayerType = typeof(HydroAreaLayer) };
-        private ICommand addDryPoint2dCommand = new MapToolCommand(HydroRegionEditorMapTool.DryPointToolName) { LayerType = typeof(HydroAreaLayer) };
-        private ICommand addDryArea2dCommand = new MapToolCommand(HydroRegionEditorMapTool.DryAreaToolName) { LayerType = typeof(HydroAreaLayer) };
-        private ICommand addNewEmbankmentCommand = new MapToolCommand(HydroRegionEditorMapTool.EmbankmentToolName) { LayerType = typeof(HydroAreaLayer) };
-        private ICommand addEnclosure2dCommand = new MapToolCommand(HydroRegionEditorMapTool.EnclosureToolName) { LayerType = typeof(HydroAreaLayer) };
+        private ICommand addThinDam2dCommand = new MapToolCommand(HydroRegionEditorMapTool.ThinDamToolName) {LayerType = typeof(HydroAreaLayer)};
+        private ICommand addFixedWeir2dCommand = new MapToolCommand(HydroRegionEditorMapTool.FixedWeirToolName) {LayerType = typeof(HydroAreaLayer)};
+        private ICommand addObs2dCommand = new MapToolCommand(HydroRegionEditorMapTool.ObservationPointToolName) {LayerType = typeof(HydroAreaLayer)};
+        private ICommand addObsCS2dCommand = new MapToolCommand(HydroRegionEditorMapTool.ObservationCrossSectionToolName) {LayerType = typeof(HydroAreaLayer)};
+        private ICommand addPump2dCommand = new MapToolCommand(HydroRegionEditorMapTool.PumpToolName) {LayerType = typeof(HydroAreaLayer)};
+        private ICommand addWeir2dCommand = new MapToolCommand(HydroRegionEditorMapTool.WeirToolName) {LayerType = typeof(HydroAreaLayer)};
+        private ICommand addLandBoundary2dCommand = new MapToolCommand(HydroRegionEditorMapTool.LandBoundaryToolName) {LayerType = typeof(HydroAreaLayer)};
+        private ICommand addDryPoint2dCommand = new MapToolCommand(HydroRegionEditorMapTool.DryPointToolName) {LayerType = typeof(HydroAreaLayer)};
+        private ICommand addDryArea2dCommand = new MapToolCommand(HydroRegionEditorMapTool.DryAreaToolName) {LayerType = typeof(HydroAreaLayer)};
+        private ICommand addNewEmbankmentCommand = new MapToolCommand(HydroRegionEditorMapTool.EmbankmentToolName) {LayerType = typeof(HydroAreaLayer)};
+        private ICommand addEnclosure2dCommand = new MapToolCommand(HydroRegionEditorMapTool.EnclosureToolName) {LayerType = typeof(HydroAreaLayer)};
         private ICommand addBridgePillarCommand = new MapToolCommand(HydroRegionEditorMapTool.BridgePillarToolName) {LayerType = typeof(HydroAreaLayer)};
 
         public Ribbon()
@@ -137,14 +139,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
 
         public void ValidateItems()
         {
-            var mapview = NetworkEditorGuiPlugin.GetFocusedMapView();
-            var regions = (mapview != null && mapview.Map != null
-                ? mapview.Map.GetAllLayers(true).OfType<HydroRegionMapLayer>().Select(l => l.Region)
-                : Enumerable.Empty<IHydroRegion>()).ToList();
+            MapView mapview = NetworkEditorGuiPlugin.GetFocusedMapView();
+            List<IHydroRegion> regions = (mapview != null && mapview.Map != null
+                                              ? mapview.Map.GetAllLayers(true).OfType<HydroRegionMapLayer>().Select(l => l.Region)
+                                              : Enumerable.Empty<IHydroRegion>()).ToList();
 
-            var showNetworkTools = regions.OfType<IHydroNetwork>().Any();
-            var showBasinTools = regions.OfType<DrainageBasin>().Any();
-            var showArea2DTools = true;  // regions.OfType<Area>().Any();  TODO. 
+            bool showNetworkTools = regions.OfType<IHydroNetwork>().Any();
+            bool showBasinTools = regions.OfType<DrainageBasin>().Any();
+            var showArea2DTools = true; // regions.OfType<Area>().Any();  TODO. 
 
             ButtonShowHydroRegionContents.SetState(showHydroRegionContentsCommand);
 
@@ -170,7 +172,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             ButtonAddNewLateralSource.SetState(addNewLateralSourceCommand, showNetworkTools);
             ButtonAddNewRetention.SetState(addNewRetentionCommand, showNetworkTools);
             ButtonAddNewObservationPoint.SetState(addNewObservationPointCommand, showNetworkTools);
-            
+
             ButtonAddNewRoute.SetState(addNewRouteCommand, showNetworkTools);
             ButtonShowCrossSectionHistory.SetState(showCrossSectionHistoryCommand);
 
@@ -182,7 +184,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             ButtonAddNewCatchmentGreenHouse.SetState(addNewCatchmentGreenHouseCommand, showBasinTools);
             ButtonAddNewCatchmentSacramento.SetState(addNewCatchmentSacramentoCommand, showBasinTools);
             ButtonAddNewCatchmentHbv.SetState(addNewCatchmentHbvCommand, showBasinTools);
-            
+
             ButtonAddNewWasteWaterTreatmentPlant.SetState(addNewWasteWaterTreatmentPlantCommand, showBasinTools);
             ButtonAddNewRunoffBoundary.SetState(addNewRunoffBoundaryCommand, showBasinTools);
 
@@ -201,7 +203,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             ButtonAddBridgePillar.SetState(addBridgePillarCommand, showArea2DTools);
 
             ButtonAddNewLink.SetState(addNewLinkCommand, regions.Count > 0);
-            
+
             ButtonShowSideView.IsEnabled = showSideViewCommand.Enabled;
             ButtonShowSideView.Visibility = showNetworkTools ? Visibility.Visible : Visibility.Collapsed;
 
@@ -213,55 +215,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             // Depends on SetCoverageComboBox
             ButtonAddNewNetworkLocation.SetState(addNewNetworkLocationCommand);
             NetworkCoverageEditPanel.Visibility = showNetworkTools ? Visibility.Visible : Visibility.Collapsed;
-        }
-
-        private void SetCoverageComboBox()
-        {
-            var mapview = NetworkEditorGuiPlugin.GetFocusedMapView();
-            if (mapview == null || mapview.Map == null)
-            {
-                ComboBoxSelectNetworkCoverage.SelectionChanged -= ComboBoxSelectNetworkCoverageSelectionChanged;
-                ComboBoxSelectNetworkCoverage.Items.Clear();
-                ComboBoxSelectNetworkCoverage.SelectionChanged += ComboBoxSelectNetworkCoverageSelectionChanged;
-                return;
-            }
-
-            var coverageLayers = mapview.Map.GetAllVisibleLayers(true).OfType<INetworkCoverageGroupLayer>().Where(c => c.Coverage.IsEditable).ToList();
-            var oldCoverageGroupLayers = ComboBoxSelectNetworkCoverage.Items.Cast<INetworkCoverageGroupLayer>().ToList();
-            
-            var tool = mapview.MapControl.GetToolByType<HydroRegionEditorMapTool>();
-            var currentSelection = tool == null
-                ? ComboBoxSelectNetworkCoverage.SelectedItem as INetworkCoverageGroupLayer
-                : tool.ActiveNetworkCoverageGroupLayer;
-
-            if (oldCoverageGroupLayers.Count == coverageLayers.Count && 
-                oldCoverageGroupLayers.Union(coverageLayers).Count() == ComboBoxSelectNetworkCoverage.Items.Count &&
-                ComboBoxSelectNetworkCoverage.SelectedItem as INetworkCoverageGroupLayer == currentSelection)
-            {
-                return;
-            }
-            
-            ComboBoxSelectNetworkCoverage.SelectionChanged -= ComboBoxSelectNetworkCoverageSelectionChanged;
-
-            ComboBoxSelectNetworkCoverage.Items.Clear();
-            foreach (var layer in coverageLayers)
-            {
-                ComboBoxSelectNetworkCoverage.Items.Add(layer);
-            }
-
-            if (ComboBoxSelectNetworkCoverage.Items.Contains(currentSelection))
-            {
-                ComboBoxSelectNetworkCoverage.SelectedItem = currentSelection;
-            }
-            else if (ComboBoxSelectNetworkCoverage.Items.Count != 0)
-            {
-                ComboBoxSelectNetworkCoverage.SelectedIndex = ComboBoxSelectNetworkCoverage.Items.Count - 1;
-            }
-
-            UpdateAddNetworkLocationHeaderTooltip();
-
-            ComboBoxSelectNetworkCoverage.SelectionChanged += ComboBoxSelectNetworkCoverageSelectionChanged;
-
         }
 
         public bool IsContextualTabVisible(string tabGroupName, string tabName)
@@ -279,6 +232,59 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             return false;
         }
 
+        public object GetRibbonControl()
+        {
+            return RibbonControl;
+        }
+
+        private void SetCoverageComboBox()
+        {
+            MapView mapview = NetworkEditorGuiPlugin.GetFocusedMapView();
+            if (mapview == null || mapview.Map == null)
+            {
+                ComboBoxSelectNetworkCoverage.SelectionChanged -= ComboBoxSelectNetworkCoverageSelectionChanged;
+                ComboBoxSelectNetworkCoverage.Items.Clear();
+                ComboBoxSelectNetworkCoverage.SelectionChanged += ComboBoxSelectNetworkCoverageSelectionChanged;
+                return;
+            }
+
+            List<INetworkCoverageGroupLayer> coverageLayers = mapview.Map.GetAllVisibleLayers(true).OfType<INetworkCoverageGroupLayer>().Where(c => c.Coverage.IsEditable).ToList();
+            List<INetworkCoverageGroupLayer> oldCoverageGroupLayers = ComboBoxSelectNetworkCoverage.Items.Cast<INetworkCoverageGroupLayer>().ToList();
+
+            var tool = mapview.MapControl.GetToolByType<HydroRegionEditorMapTool>();
+            INetworkCoverageGroupLayer currentSelection = tool == null
+                                                              ? ComboBoxSelectNetworkCoverage.SelectedItem as INetworkCoverageGroupLayer
+                                                              : tool.ActiveNetworkCoverageGroupLayer;
+
+            if (oldCoverageGroupLayers.Count == coverageLayers.Count &&
+                oldCoverageGroupLayers.Union(coverageLayers).Count() == ComboBoxSelectNetworkCoverage.Items.Count &&
+                ComboBoxSelectNetworkCoverage.SelectedItem as INetworkCoverageGroupLayer == currentSelection)
+            {
+                return;
+            }
+
+            ComboBoxSelectNetworkCoverage.SelectionChanged -= ComboBoxSelectNetworkCoverageSelectionChanged;
+
+            ComboBoxSelectNetworkCoverage.Items.Clear();
+            foreach (INetworkCoverageGroupLayer layer in coverageLayers)
+            {
+                ComboBoxSelectNetworkCoverage.Items.Add(layer);
+            }
+
+            if (ComboBoxSelectNetworkCoverage.Items.Contains(currentSelection))
+            {
+                ComboBoxSelectNetworkCoverage.SelectedItem = currentSelection;
+            }
+            else if (ComboBoxSelectNetworkCoverage.Items.Count != 0)
+            {
+                ComboBoxSelectNetworkCoverage.SelectedIndex = ComboBoxSelectNetworkCoverage.Items.Count - 1;
+            }
+
+            UpdateAddNetworkLocationHeaderTooltip();
+
+            ComboBoxSelectNetworkCoverage.SelectionChanged += ComboBoxSelectNetworkCoverageSelectionChanged;
+        }
+
         private static bool IsCrossSectionViewActive()
         {
             return NetworkEditorGuiPlugin.Instance != null &&
@@ -287,7 +293,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
 
         private bool IsActiveViewMapViewWithRegion()
         {
-            var mapView = NetworkEditorGuiPlugin.GetFocusedMapView();
+            MapView mapView = NetworkEditorGuiPlugin.GetFocusedMapView();
 
             if (mapView == null || mapView.Map == null)
             {
@@ -301,9 +307,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
 
             return false;
         }
-
-        public object GetRibbonControl() { return RibbonControl; }
-
 
         private void ButtonShowHydroRegionContents_Click(object sender, RoutedEventArgs e)
         {
@@ -577,32 +580,39 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
 
         private void UpdateAddNetworkLocationHeaderTooltip()
         {
-            var mapView = NetworkEditorGuiPlugin.GetFocusedMapView();
-            if (mapView == null) return;
+            MapView mapView = NetworkEditorGuiPlugin.GetFocusedMapView();
+            if (mapView == null)
+            {
+                return;
+            }
 
             var tool = mapView.MapControl.GetToolByType<HydroRegionEditorMapTool>();
-            if (tool == null) return;
+            if (tool == null)
+            {
+                return;
+            }
 
             var activeNetworkCoverageGroupLayer = ComboBoxSelectNetworkCoverage.SelectedItem as INetworkCoverageGroupLayer;
             tool.ActiveNetworkCoverageGroupLayer = activeNetworkCoverageGroupLayer;
 
             ButtonAddNewNetworkLocation.Header = activeNetworkCoverageGroupLayer != null
-                ? string.Format("Add {0} location", activeNetworkCoverageGroupLayer.Name)
-                : "Add Network Location";
+                                                     ? string.Format("Add {0} location", activeNetworkCoverageGroupLayer.Name)
+                                                     : "Add Network Location";
             ButtonAddNewNetworkLocation.ToolTip = activeNetworkCoverageGroupLayer != null
-                ? string.Format("Add location to {0} data", activeNetworkCoverageGroupLayer.Name)
-                : "Add location to network data";
+                                                      ? string.Format("Add location to {0} data", activeNetworkCoverageGroupLayer.Name)
+                                                      : "Add location to network data";
         }
 
-        private void ComboBoxSelectNetworkCoverageSelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        private void ComboBoxSelectNetworkCoverageSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             UpdateAddNetworkLocationHeaderTooltip();
-            
+
             // activate addNewNetworkLocation tool
-            if(!addNewNetworkLocationCommand.Enabled)
+            if (!addNewNetworkLocationCommand.Enabled)
             {
                 addNewNetworkLocationCommand.Execute();
             }
+
             ValidateItems();
         }
     }

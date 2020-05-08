@@ -21,35 +21,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.ModelDefinition
 
     public static class KnownWaveProperties
     {
-        #region Wave boundary conditions
-
-        public const string Name = "Name";
-        public const string Definition = "Definition";
-        public const string StartCoordinateX = "StartCoordX";
-        public const string EndCoordinateX = "EndCoordX";
-        public const string StartCoordinateY = "StartCoordY";
-        public const string EndCoordinateY = "EndCoordY";
-        public const string SpectrumSpec = "SpectrumSpec";
-        public const string Orientation = "Orientation";
-        public const string DistanceDir = "DistanceDir";
-
-        public const string ShapeType = "SpShapeType";
-        public const string PeriodType = "PeriodType";
-        public const string DirectionalSpreadingType = "DirSpreadType";
-        public const string PeakEnhancementFactor = "PeakEnhanceFac";
-        public const string GaussianSpreading = "GaussSpread";
-
-        public const string Spectrum = "Spectrum";
-        public const string WaveHeight = "WaveHeight";
-        public const string Period = "Period";
-        public const string Direction = "Direction";
-        public const string DirectionalSpreadingValue = "DirSpreading";
-
-        public const string CondSpecAtDist = "CondSpecAtDist";
-        public const string OverallSpecFile = "OverallSpecfile";
-
-        #endregion
-
         public const string Time = "Time";
         public const string TimeStep = "TimeStep";
         public const string StartTime = "StartTime";
@@ -95,5 +66,34 @@ namespace DeltaShell.Plugins.FMSuite.Wave.ModelDefinition
         public const string FlowVelocityUsageType = "FlowVelocityType";
         public const string FlowWindUsage = "FlowWind";
         public const string MaxIter = "MaxIter";
+
+        #region Wave boundary conditions
+
+        public const string Name = "Name";
+        public const string Definition = "Definition";
+        public const string StartCoordinateX = "StartCoordX";
+        public const string EndCoordinateX = "EndCoordX";
+        public const string StartCoordinateY = "StartCoordY";
+        public const string EndCoordinateY = "EndCoordY";
+        public const string SpectrumSpec = "SpectrumSpec";
+        public const string Orientation = "Orientation";
+        public const string DistanceDir = "DistanceDir";
+
+        public const string ShapeType = "SpShapeType";
+        public const string PeriodType = "PeriodType";
+        public const string DirectionalSpreadingType = "DirSpreadType";
+        public const string PeakEnhancementFactor = "PeakEnhanceFac";
+        public const string GaussianSpreading = "GaussSpread";
+
+        public const string Spectrum = "Spectrum";
+        public const string WaveHeight = "WaveHeight";
+        public const string Period = "Period";
+        public const string Direction = "Direction";
+        public const string DirectionalSpreadingValue = "DirSpreading";
+
+        public const string CondSpecAtDist = "CondSpecAtDist";
+        public const string OverallSpecFile = "OverallSpecfile";
+
+        #endregion
     }
 }

@@ -51,7 +51,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
             return new VectorLayer(WaveLayerNames.ObstacleLayerName)
             {
                 DataSource = new Feature2DCollection().Init(waveModel.Obstacles,
-                                                            "Obstacle", 
+                                                            "Obstacle",
                                                             waveModelName,
                                                             waveModel.CoordinateSystem),
                 FeatureEditor = new Feature2DEditor(waveModel),
@@ -77,7 +77,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
                     GeometryType = typeof(IPoint),
                     Symbol = WaveLayerIcons.ObservationPoint
                 },
-                DataSource = new Feature2DCollection().Init(waveModel.ObservationPoints, 
+                DataSource = new Feature2DCollection().Init(waveModel.ObservationPoints,
                                                             "ObservationPoints",
                                                             waveModelName,
                                                             waveModel.CoordinateSystem),
@@ -90,7 +90,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
 
             return new VectorLayer(WaveLayerNames.ObservationCrossSectionLayerName)
             {
-                DataSource = new Feature2DCollection().Init(waveModel.ObservationCrossSections, 
+                DataSource = new Feature2DCollection().Init(waveModel.ObservationCrossSections,
                                                             "CrS",
                                                             waveModelName,
                                                             waveModel.CoordinateSystem),
@@ -108,7 +108,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
         {
             Ensure.NotNull(domainName, nameof(domainName));
 
-            string layerName = overrideLayerName ? domainName 
+            string layerName = overrideLayerName
+                                   ? domainName
                                    : WaveLayerNames.GetOutputLayerName(domainName);
 
             return new GroupLayer(layerName)
@@ -118,40 +119,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
         }
 
         public ILayer CreateGridLayer(IDiscreteGridPointCoverage discreteGrid,
-                                             ICoordinateSystem coordinateSystem)
+                                      ICoordinateSystem coordinateSystem)
         {
             Ensure.NotNull(discreteGrid, nameof(discreteGrid));
 
-            return discreteGrid is CurvilinearGrid 
-                       ? CreateCurvilinearGridLayer(discreteGrid, coordinateSystem) 
+            return discreteGrid is CurvilinearGrid
+                       ? CreateCurvilinearGridLayer(discreteGrid, coordinateSystem)
                        : CreateCurvilinearVertexCoverageLayer(discreteGrid, coordinateSystem);
-        }
-
-        private static ILayer CreateCurvilinearGridLayer(IDiscreteGridPointCoverage discreteGrid,
-                                                         ICoordinateSystem coordinateSystem)
-        {
-            return new CurvilinearGridLayer
-            {
-                Name = discreteGrid.Name,
-                CurviLinearGrid = discreteGrid,
-                OptimizeRendering = discreteGrid.X.Values.Count > 50000,
-                DataSource = new WaveGridBasedDataSource(discreteGrid) {CoordinateSystem = coordinateSystem},
-                ReadOnly = true // to exclude from spatial editor
-            };
-        }
-
-        private static ILayer CreateCurvilinearVertexCoverageLayer(IDiscreteGridPointCoverage discreteGrid,
-                                                                   ICoordinateSystem coordinateSystem)
-        {
-            return new CurvilinearVertexCoverageLayer
-            {
-                Name = discreteGrid.Name,
-                Coverage = discreteGrid,
-                Visible = false,
-                OptimizeRendering = discreteGrid.X.Values.Count > 30000,
-                DataSource = new WaveGridBasedDataSource(discreteGrid) {CoordinateSystem = coordinateSystem},
-                ReadOnly = !discreteGrid.IsEditable // Exclude output from spatial editor
-            };
         }
 
         public ILayer CreateBoundaryLayer(IBoundaryMapFeaturesContainer featuresProviderContainer)
@@ -166,14 +140,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
             groupLayer.Layers.AddRange(CreateBoundaryLayers(featuresProviderContainer));
 
             return groupLayer;
-        }
-
-        private IEnumerable<ILayer> CreateBoundaryLayers(IBoundaryMapFeaturesContainer featuresProviderContainer)
-        {
-            yield return CreateBoundaryStartPointLayer(featuresProviderContainer.BoundaryStartPointMapFeatureProvider);
-            yield return CreateBoundaryEndPointLayer(featuresProviderContainer.BoundaryEndPointMapFeatureProvider);
-            yield return CreateSupportPointsLayer(featuresProviderContainer.SupportPointMapFeatureProvider);
-            yield return CreateBoundaryLineLayer(featuresProviderContainer.BoundaryLineMapFeatureProvider);
         }
 
         public ILayer CreateSupportPointsLayer(IFeatureProvider featureProvider)
@@ -244,7 +210,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
         public ILayer CreateInactiveSupportPointsLayer(IFeatureProvider featureProvider)
         {
             Ensure.NotNull(featureProvider, nameof(featureProvider));
-            
+
             var style = new VectorStyle
             {
                 Fill = new SolidBrush(Color.LightGray),
@@ -283,6 +249,41 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
             };
 
             return CreateReadOnlyLayer(WaveLayerNames.SelectedSupportPointLayerName, featureProvider, style);
+        }
+
+        private static ILayer CreateCurvilinearGridLayer(IDiscreteGridPointCoverage discreteGrid,
+                                                         ICoordinateSystem coordinateSystem)
+        {
+            return new CurvilinearGridLayer
+            {
+                Name = discreteGrid.Name,
+                CurviLinearGrid = discreteGrid,
+                OptimizeRendering = discreteGrid.X.Values.Count > 50000,
+                DataSource = new WaveGridBasedDataSource(discreteGrid) {CoordinateSystem = coordinateSystem},
+                ReadOnly = true // to exclude from spatial editor
+            };
+        }
+
+        private static ILayer CreateCurvilinearVertexCoverageLayer(IDiscreteGridPointCoverage discreteGrid,
+                                                                   ICoordinateSystem coordinateSystem)
+        {
+            return new CurvilinearVertexCoverageLayer
+            {
+                Name = discreteGrid.Name,
+                Coverage = discreteGrid,
+                Visible = false,
+                OptimizeRendering = discreteGrid.X.Values.Count > 30000,
+                DataSource = new WaveGridBasedDataSource(discreteGrid) {CoordinateSystem = coordinateSystem},
+                ReadOnly = !discreteGrid.IsEditable // Exclude output from spatial editor
+            };
+        }
+
+        private IEnumerable<ILayer> CreateBoundaryLayers(IBoundaryMapFeaturesContainer featuresProviderContainer)
+        {
+            yield return CreateBoundaryStartPointLayer(featuresProviderContainer.BoundaryStartPointMapFeatureProvider);
+            yield return CreateBoundaryEndPointLayer(featuresProviderContainer.BoundaryEndPointMapFeatureProvider);
+            yield return CreateSupportPointsLayer(featuresProviderContainer.SupportPointMapFeatureProvider);
+            yield return CreateBoundaryLineLayer(featuresProviderContainer.BoundaryLineMapFeatureProvider);
         }
 
         private static VectorLayer CreateReadOnlyLayer(string layerName,

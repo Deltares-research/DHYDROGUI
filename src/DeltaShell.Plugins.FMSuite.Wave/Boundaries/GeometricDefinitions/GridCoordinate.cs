@@ -1,4 +1,6 @@
-﻿namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions
+﻿using System;
+
+namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions
 {
     /// <summary>
     /// <see cref="GridCoordinate"/> defines a discrete point on a grid.
@@ -17,12 +19,12 @@
         {
             if (x < 0)
             {
-                throw new System.ArgumentOutOfRangeException(nameof(x));
+                throw new ArgumentOutOfRangeException(nameof(x));
             }
 
             if (y < 0)
             {
-                throw new System.ArgumentOutOfRangeException(nameof(y));
+                throw new ArgumentOutOfRangeException(nameof(y));
             }
 
             X = x;

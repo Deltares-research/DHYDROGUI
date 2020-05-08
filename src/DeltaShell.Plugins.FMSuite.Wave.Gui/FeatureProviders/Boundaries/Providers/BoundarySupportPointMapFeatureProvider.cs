@@ -18,14 +18,14 @@ using SharpMap.Data.Providers;
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Providers
 {
     /// <summary>
-    /// <see cref="BoundarySupportPointMapFeatureProvider" /> is responsible for showing
+    /// <see cref="BoundarySupportPointMapFeatureProvider"/> is responsible for showing
     /// the appropriate boundary support points given a boundary provider.
     /// It provides the appropriate methods such that these features and their
     /// underlying data can be created through the Map.
     /// </summary>
-    /// <seealso cref="SharpMap.Data.Providers.FeatureCollection" />
+    /// <seealso cref="SharpMap.Data.Providers.FeatureCollection"/>
     /// <remarks>
-    /// This class leverages the <see cref="MultiIEventedListAdapter{TObserved,TDisplayed}" />
+    /// This class leverages the <see cref="MultiIEventedListAdapter{TObserved,TDisplayed}"/>
     /// to create the appropriate lists. These classes are necessary to play
     /// nice with the framework, and ensure a good separation of concerns between
     /// view and data. As such, this feature provider can be seen as a view model

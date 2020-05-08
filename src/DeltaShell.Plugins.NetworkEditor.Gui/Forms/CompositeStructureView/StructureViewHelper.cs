@@ -3,11 +3,11 @@ using DelftTools.Hydro.CrossSections;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
 {
-    class StructureViewHelper
+    internal class StructureViewHelper
     {
         public static ILineChartSeries MakeCrossSectionDefinitionSeries(ICrossSectionDefinition crossSectionDefinition)
         {
-            var crossSectionDefinitionSeries = ChartSeriesFactory.CreateLineSeries();
+            ILineChartSeries crossSectionDefinitionSeries = ChartSeriesFactory.CreateLineSeries();
 
             if (crossSectionDefinitionSeries != null)
             {

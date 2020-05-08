@@ -10,7 +10,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Converters
     /// <see cref="TypeToVisibilityConverter"/> defines the <see cref="IValueConverter"/>
     /// to convert a <see cref="Type"/> and an additional parameter to a <see cref="Visibility"/> value.
     /// </summary>
-    /// <seealso cref="IValueConverter" />
+    /// <seealso cref="IValueConverter"/>
     [ValueConversion(typeof(Type), typeof(Visibility), ParameterType = typeof(Type))]
     public class TypeToVisibilityConverter : IValueConverter
     {
@@ -25,7 +25,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Converters
         /// <returns>
         /// Visible if <paramref name="value"/> matches <paramref name="parameter"/>,
         /// Collapsed if <paramref name="value"/> does not match <paramref name="parameter"/>.
-        /// If the method returns <see langword="null" />, the valid null value is used.
+        /// If the method returns <see langword="null"/>, the valid null value is used.
         /// </returns>
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {

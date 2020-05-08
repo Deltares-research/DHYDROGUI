@@ -20,11 +20,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters
         private static readonly Bitmap boundaryImage = Resources.boundary;
         private readonly Func<IWaveBoundary, IBoundaryContainer> getBoundaryContainerFunc;
 
-        private IBoundaryContainer GetBoundaryContainer(IWaveBoundary waveBoundary)
-        {
-            return getBoundaryContainerFunc.Invoke(waveBoundary);
-        }
-
         /// <summary>
         /// Creates a new <see cref="SpatiallyVariantBoundaryNodePresenter"/>.
         /// </summary>
@@ -41,18 +36,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters
                                             throw new ArgumentNullException(nameof(getBoundaryContainerFunc));
         }
 
-        protected override string GetNodeText(IWaveBoundary data) => data.Name;
-
-        [ExcludeFromCodeCoverage]
-        protected override Image GetNodeImage(IWaveBoundary data) => boundaryImage;
-
-        protected override bool CanRemove(IWaveBoundary data) => true;
-        
-        protected override bool RemoveNodeData(object parentNodeData, IWaveBoundary data)
-        {
-            return OnDeleteBoundary(data);
-        }
-
         public override IMenuItem GetContextMenu(ITreeNode sender, object nodeData)
         {
             if (!(nodeData is IWaveBoundary waveBoundary))
@@ -64,6 +47,23 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters
 
             ContextMenuStrip contextMenu = GetDeleteContextMenu(waveBoundary, boundaryContainer);
             return new MenuItemContextMenuStripAdapter(contextMenu);
+        }
+
+        protected override string GetNodeText(IWaveBoundary data) => data.Name;
+
+        [ExcludeFromCodeCoverage]
+        protected override Image GetNodeImage(IWaveBoundary data) => boundaryImage;
+
+        protected override bool CanRemove(IWaveBoundary data) => true;
+
+        protected override bool RemoveNodeData(object parentNodeData, IWaveBoundary data)
+        {
+            return OnDeleteBoundary(data);
+        }
+
+        private IBoundaryContainer GetBoundaryContainer(IWaveBoundary waveBoundary)
+        {
+            return getBoundaryContainerFunc.Invoke(waveBoundary);
         }
 
         private ContextMenuStrip GetDeleteContextMenu(IWaveBoundary waveBoundary,

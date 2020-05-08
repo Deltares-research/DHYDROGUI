@@ -13,13 +13,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
     [Entity]
     public class HeatFluxModel
     {
-        public string GridFilePath { get; set; }
-        public string GriddedHeatFluxFilePath { get; set; }
-        public IFunction MeteoData => meteoData;
-
         private HeatFluxModelType modelType;
         private IFunction meteoData;
         private bool containsSolarRadiation;
+        public string GridFilePath { get; set; }
+        public string GriddedHeatFluxFilePath { get; set; }
+        public IFunction MeteoData => meteoData;
 
         public HeatFluxModelType Type
         {
@@ -64,6 +63,50 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
                 containsSolarRadiation = value;
                 UpdateSolarRadiationInMeteoData();
             }
+        }
+
+        /// <summary>
+        /// CopyTo method copies file-based model data to save location. switchTo is true for saving and false for exporting.
+        /// </summary>
+        /// <param name="destinationPath"></param>
+        /// <param name="switchTo"></param>
+        public void CopyTo(string destinationPath, bool switchTo = true)
+        {
+            if (!File.Exists(GriddedHeatFluxFilePath))
+            {
+                throw new FileNotFoundException($"Could not find heat flux data file {GriddedHeatFluxFilePath}");
+            }
+
+            if (!File.Exists(GridFilePath))
+            {
+                throw new FileNotFoundException($"Could not find heat flux grid file {GridFilePath}");
+            }
+
+            string sourceGriddedHeatFluxFile = Path.GetFullPath(GriddedHeatFluxFilePath);
+            string sourceGridFile = Path.GetFullPath(GridFilePath);
+            destinationPath = Path.GetFullPath(destinationPath);
+
+            string targetDirectory = Path.GetDirectoryName(destinationPath);
+
+            FileUtils.CreateDirectoryIfNotExists(targetDirectory);
+
+            if (sourceGriddedHeatFluxFile != destinationPath)
+            {
+                File.Copy(GriddedHeatFluxFilePath, destinationPath, true);
+                GriddedHeatFluxFilePath = switchTo ? destinationPath : GriddedHeatFluxFilePath;
+            }
+
+            string destGridFilePath = GetCorrespondingGridFilePath(destinationPath);
+            if (sourceGridFile != Path.GetFullPath(destGridFilePath))
+            {
+                File.Copy(GridFilePath, destGridFilePath, true);
+                GridFilePath = switchTo ? destGridFilePath : GridFilePath;
+            }
+        }
+
+        public static string GetCorrespondingGridFilePath(string filePath)
+        {
+            return HtcFile.GetCorrespondingGridFilePath(filePath);
         }
 
         [EditAction]
@@ -116,49 +159,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             });
 
             return result;
-        }
-        /// <summary>
-        /// CopyTo method copies file-based model data to save location. switchTo is true for saving and false for exporting. 
-        /// </summary>
-        /// <param name="destinationPath"></param>
-        /// <param name="switchTo"></param>
-        public void CopyTo(string destinationPath, bool switchTo = true)
-        {
-            if (!File.Exists(GriddedHeatFluxFilePath))
-            {
-                throw new FileNotFoundException($"Could not find heat flux data file {GriddedHeatFluxFilePath}");
-            }
-
-            if (!File.Exists(GridFilePath))
-            {
-                throw new FileNotFoundException($"Could not find heat flux grid file {GridFilePath}");
-            }
-            
-            string sourceGriddedHeatFluxFile = Path.GetFullPath(GriddedHeatFluxFilePath);
-            string sourceGridFile = Path.GetFullPath(GridFilePath);
-            destinationPath = Path.GetFullPath(destinationPath);
-
-            string targetDirectory = Path.GetDirectoryName(destinationPath);
-
-            FileUtils.CreateDirectoryIfNotExists(targetDirectory);
-
-            if (sourceGriddedHeatFluxFile != destinationPath)
-            {
-                File.Copy(GriddedHeatFluxFilePath, destinationPath, true);
-                GriddedHeatFluxFilePath = switchTo ? destinationPath : GriddedHeatFluxFilePath;
-            }
-
-            string destGridFilePath = GetCorrespondingGridFilePath(destinationPath);
-            if (sourceGridFile != Path.GetFullPath(destGridFilePath))
-            {
-                File.Copy(GridFilePath, destGridFilePath, true);
-                GridFilePath = switchTo ? destGridFilePath : GridFilePath;
-            }
-        }
-       
-        public static string GetCorrespondingGridFilePath(string filePath)
-        {
-            return HtcFile.GetCorrespondingGridFilePath(filePath);
         }
     }
 }

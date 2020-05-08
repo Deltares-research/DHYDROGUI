@@ -8,12 +8,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
     public static class DelwaqHistoryFileReader
     {
         /// <summary>
-        /// Reads from <paramref name="delwaqOutputFile" /> and returns a List of <see cref="DelwaqHisFileData" />.
+        /// Reads from <paramref name="delwaqOutputFile"/> and returns a List of <see cref="DelwaqHisFileData"/>.
         /// </summary>
         /// <param name="delwaqOutputFile"> </param>
         /// <returns>
         /// Returns an empty List if file does not exist or is emtpy.
-        /// Otherwise returns a list of <see cref="DelwaqHisFileData" />.
+        /// Otherwise returns a list of <see cref="DelwaqHisFileData"/>.
         /// </returns>
         public static DelwaqHisFileData[] Read(string delwaqOutputFile)
         {

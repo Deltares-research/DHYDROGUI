@@ -5,16 +5,15 @@ using DelftTools.Controls;
 using DelftTools.Hydro;
 using DelftTools.Shell.Gui;
 using DelftTools.Shell.Gui.Swf;
+using DeltaShell.Plugins.NetworkEditor.Gui.Properties;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView.NodePresenters
 {
     public class CatchmentTreeViewNodePresenter : TreeViewNodePresenterBaseForPluginGui<Catchment>
     {
-        private static readonly Image CatchmentImage = Properties.Resources.catchment;
+        private static readonly Image CatchmentImage = Resources.catchment;
 
-        public CatchmentTreeViewNodePresenter(GuiPlugin guiPlugin) : base(guiPlugin)
-        {
-        }
+        public CatchmentTreeViewNodePresenter(GuiPlugin guiPlugin) : base(guiPlugin) {}
 
         public override void UpdateNode(ITreeNode parentNode, ITreeNode node, Catchment nodeData)
         {
@@ -22,12 +21,17 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView.NodePre
             UpdateNodeText(nodeData, node);
         }
 
-        protected override bool CanRemove(Catchment nodeData)
+        public override bool CanRenameNode(ITreeNode node)
         {
             return true;
         }
 
-        public override bool CanRenameNode(ITreeNode node)
+        public override IEnumerable GetChildNodeObjects(Catchment parentNodeData, ITreeNode node)
+        {
+            return parentNodeData.SubCatchments.Cast<object>();
+        }
+
+        protected override bool CanRemove(Catchment nodeData)
         {
             return true;
         }
@@ -40,6 +44,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView.NodePre
                 parentCatchment.SubCatchments.Remove(source);
                 return true;
             }
+
             source.Basin.Catchments.Remove(source);
             return true;
         }
@@ -50,12 +55,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView.NodePre
                                       string.IsNullOrEmpty(source.Name)
                                           ? string.Format("<no name>")
                                           : string.Format("{0}", source.Name),
-                                          source.CatchmentType != null ? source.CatchmentType.Name : "<no type>");
-        }
-
-        public override IEnumerable GetChildNodeObjects(Catchment parentNodeData, ITreeNode node)
-        {
-            return parentNodeData.SubCatchments.Cast<object>();
+                                      source.CatchmentType != null ? source.CatchmentType.Name : "<no type>");
         }
     }
 }

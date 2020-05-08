@@ -15,6 +15,26 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
             InitializeComponent();
         }
 
+        public object Data
+        {
+            get
+            {
+                return summerDike;
+            }
+            set
+            {
+                Unbind();
+                summerDike = (SummerDike) value;
+                Bind();
+            }
+        }
+
+        public Image Image { get; set; }
+
+        public ViewInfo ViewInfo { get; set; }
+
+        public void EnsureVisible(object item) {}
+
         private void cbxHasSummerdike_CheckedChanged(object sender, EventArgs e)
         {
             UpdateVisibleState(cbxHasSummerdike.Checked);
@@ -27,7 +47,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
             txtFloodSurface.Enabled = show;
             txtTotalSurface.Enabled = show;
         }
-        
+
         private void Bind()
         {
             if (summerDike != null)
@@ -47,7 +67,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
                                                  DataSourceUpdateMode.OnValidation, null, "N2");
             }
         }
-        
+
         private void Unbind()
         {
             cbxHasSummerdike.DataBindings.Clear();
@@ -56,24 +76,5 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
             txtFloodSurface.DataBindings.Clear();
             txtTotalSurface.DataBindings.Clear();
         }
-
-        public object Data
-        {
-            get { return summerDike; }
-            set
-            {
-                Unbind();
-                summerDike = (SummerDike) value;
-                Bind();
-            }
-        }
-
-        public Image Image
-        {
-            get; set;
-        }
-
-        public void EnsureVisible(object item) { }
-        public ViewInfo ViewInfo { get; set; }
     }
 }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Globalization;
 using System.Windows.Forms;
 using DelftTools.Hydro;
@@ -56,7 +57,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
         public IDiscretization UpdateDiscretization { get; set; }
 
         public IDiscretization SourceDiscretization { get; private set; }
-        
+
         public bool Erase { get; set; }
 
         /// <summary>
@@ -64,8 +65,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
         /// </summary>
         public bool UseOpacity
         {
-            get { return useOpacity; }
-            set { useOpacity = value; }
+            get
+            {
+                return useOpacity;
+            }
+            set
+            {
+                useOpacity = value;
+            }
         }
 
         private void CalculationGridWizard_Load(object sender, EventArgs e)
@@ -102,24 +109,41 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
 
         private void CalculationGridWizard_Move(object sender, EventArgs e)
         {
-            if (!useOpacity) return;
+            if (!useOpacity)
+            {
+                return;
+            }
+
             Opacity = Math.Max(0.4, Opacity - 0.01);
         }
 
         private void CalculationGridWizard_MouseCaptureChanged(object sender, EventArgs e)
         {
-            if (!useOpacity) return;
+            if (!useOpacity)
+            {
+                return;
+            }
+
             Opacity = 0.99;
         }
 
         private void btnOk_Click(object sender, EventArgs e)
         {
-            if ((textBoxPreferredLength.Enabled) && (errorProvider1.GetError(textBoxPreferredLength).Length > 0))
+            if (textBoxPreferredLength.Enabled && errorProvider1.GetError(textBoxPreferredLength).Length > 0)
+            {
                 return;
-            if ((textBoxStructureDistance.Enabled) && (errorProvider1.GetError(textBoxStructureDistance).Length > 0))
+            }
+
+            if (textBoxStructureDistance.Enabled && errorProvider1.GetError(textBoxStructureDistance).Length > 0)
+            {
                 return;
-            if ((textBoxMinimumDistance.Enabled) && (errorProvider1.GetError(textBoxMinimumDistance).Length > 0))
+            }
+
+            if (textBoxMinimumDistance.Enabled && errorProvider1.GetError(textBoxMinimumDistance).Length > 0)
+            {
                 return;
+            }
+
             AllBranches = radioAllBranches.Checked;
             OverwriteSegments = radioOverwrite.Checked;
             DialogResult = DialogResult.OK;
@@ -142,12 +166,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
             {
                 textBoxPreferredLength.Enabled = !checkBoxNone.Checked;
                 if (!textBoxPreferredLength.Enabled)
+                {
                     errorProvider1.Clear();
+                }
             }
-            
         }
 
-        private void textBoxFixed_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        private void textBoxFixed_Validating(object sender, CancelEventArgs e)
         {
             double result;
             if (CheckDoubleTextBox(checkBoxPreferred, textBoxPreferredLength, out result))
@@ -159,7 +184,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
         private bool CheckDoubleTextBox(CheckBox checkBox, TextBox textBox, out double result)
         {
             result = 0;
-            if ((checkBox.Enabled) && (checkBox.Checked))
+            if (checkBox.Enabled && checkBox.Checked)
             {
                 double.TryParse(textBox.Text, NumberStyles.Any, CultureInfo.InvariantCulture, out result);
                 if (result <= 0.0)
@@ -176,6 +201,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
             {
                 errorProvider1.SetError(textBox, "");
             }
+
             return false;
         }
 
@@ -184,7 +210,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
             textBoxPreferredLength.Enabled = checkBoxPreferred.Checked;
         }
 
-        private void tbStructureBefore_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        private void tbStructureBefore_Validating(object sender, CancelEventArgs e)
         {
             double result;
             if (CheckDoubleTextBox(checkBoxStructure, textBoxStructureDistance, out result))
@@ -193,7 +219,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
             }
         }
 
-        private void tbStructureAfter_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        private void tbStructureAfter_Validating(object sender, CancelEventArgs e)
         {
             double result;
             if (CheckDoubleTextBox(checkBoxStructure, textBoxMinimumDistance, out result))
@@ -207,9 +233,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
             textBoxStructureDistance.Enabled = checkBoxStructure.Checked;
         }
 
-        private void groupBox3_Enter(object sender, EventArgs e)
-        {
-
-        }
+        private void groupBox3_Enter(object sender, EventArgs e) {}
     }
 }

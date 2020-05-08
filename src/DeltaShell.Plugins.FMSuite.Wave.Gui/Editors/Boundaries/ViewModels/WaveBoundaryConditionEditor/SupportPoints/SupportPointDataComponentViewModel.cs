@@ -10,7 +10,7 @@ using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Mediators;
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor.SupportPoints
 {
     /// <summary>
-    /// <see cref="SupportPointDataComponentViewModel" /> implements the methods
+    /// <see cref="SupportPointDataComponentViewModel"/> implements the methods
     /// for the Support Point Editor to interact with the wave boundary condition.
     /// It provides the abstraction, such that the geometry does not need to know
     /// about the construction of the relevant parameters.
@@ -24,7 +24,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         private SupportPoint selectedSupportPoint;
 
         /// <summary>
-        /// Creates a new <see cref="SupportPointDataComponentViewModel" />.
+        /// Creates a new <see cref="SupportPointDataComponentViewModel"/>.
         /// </summary>
         /// <param name="conditionDefinition">The condition definition</param>
         /// <param name="parametersFactory">The parameters factory.</param>
@@ -78,14 +78,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
             ObservedDataComponent is SpatiallyVaryingDataComponent<FileBasedParameters>;
 
         /// <summary>
-        /// Determines whether the specified <paramref name="supportPoint" /> is enabled.
+        /// Determines whether the specified <paramref name="supportPoint"/> is enabled.
         /// </summary>
         /// <param name="supportPoint">The support point.</param>
         /// <returns>
         /// <c>true</c> if the specified support point is enabled; otherwise, <c>false</c>.
         /// </returns>
         /// <exception cref="ArgumentNullException">
-        /// Thrown when <paramref name="supportPoint" /> is <c>null</c>.
+        /// Thrown when <paramref name="supportPoint"/> is <c>null</c>.
         /// </exception>
         public bool IsEnabledSupportPoint(SupportPoint supportPoint)
         {
@@ -109,14 +109,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         }
 
         /// <summary>
-        /// Adds a set of default parameters linked to the provided <paramref name="supportPoint" />.
+        /// Adds a set of default parameters linked to the provided <paramref name="supportPoint"/>.
         /// </summary>
         /// <param name="supportPoint">The support point.</param>
         /// <exception cref="ArgumentNullException">
-        /// Thrown when <paramref name="supportPoint" /> is <c>null</c>.
+        /// Thrown when <paramref name="supportPoint"/> is <c>null</c>.
         /// </exception>
         /// <exception cref="InvalidOperationException">
-        /// Thrown when <see cref="ObservedDataComponent" /> is not supported.
+        /// Thrown when <see cref="ObservedDataComponent"/> is not supported.
         /// </exception>
         public void AddDefaultParameters(SupportPoint supportPoint)
         {
@@ -157,14 +157,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         }
 
         /// <summary>
-        /// Removes the parameters associated with the <paramref name="supportPoint" />.
+        /// Removes the parameters associated with the <paramref name="supportPoint"/>.
         /// </summary>
         /// <param name="supportPoint">The support point.</param>
         /// <exception cref="ArgumentNullException">
-        /// Thrown when <paramref name="supportPoint" /> is <c>null</c>.
+        /// Thrown when <paramref name="supportPoint"/> is <c>null</c>.
         /// </exception>
         /// <exception cref="InvalidOperationException">
-        /// Thrown when <see cref="ObservedDataComponent" /> is not supported.
+        /// Thrown when <see cref="ObservedDataComponent"/> is not supported.
         /// </exception>
         public void RemoveParameters(SupportPoint supportPoint)
         {
@@ -208,9 +208,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         /// Thrown when any parameter is <c>null</c>.
         /// </exception>
         /// <exception cref="InvalidOperationException">
-        /// Thrown when <see cref="ObservedDataComponent" /> is not supported or
-        /// <paramref name="oldSupportPoint" /> does not exists within the data component or
-        /// <paramref name="newSupportPoint" /> already exists within the data.
+        /// Thrown when <see cref="ObservedDataComponent"/> is not supported or
+        /// <paramref name="oldSupportPoint"/> does not exists within the data component or
+        /// <paramref name="newSupportPoint"/> already exists within the data.
         /// </exception>
         public void ReplaceSupportPoint(SupportPoint oldSupportPoint,
                                         SupportPoint newSupportPoint)
@@ -235,7 +235,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
                 default:
                     throw new InvalidOperationException("Currently stored data component is not supported.");
             }
-            
+
             AnnounceSupportPointsChanged();
         }
 

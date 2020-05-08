@@ -75,13 +75,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
         }
 
         private IEnumerable<IWaveBoundary> CreateWaveBoundaries(IEnumerable<DelftIniCategory> boundaryCategories,
-                                                                IDictionary<string, List<IFunction>> timeSeriesData, 
+                                                                IDictionary<string, List<IFunction>> timeSeriesData,
                                                                 string mdwDirPath)
         {
             foreach (DelftIniCategory category in boundaryCategories)
             {
                 BoundaryMdwBlock boundaryBlock = BoundaryCategoryConverter.Convert(category, mdwDirPath);
-                
+
                 IWaveBoundaryGeometricDefinition geometricDefinition = GetGeometricDefinition(boundaryBlock);
 
                 if (geometricDefinition == null)
@@ -138,8 +138,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
             }
 
             log.WarnFormat("Converting boundary '{0}', from {1} to {2}, this may lead to unexpected results, please inspect your boundaries.",
-                           boundaryBlock.Name, 
-                           DefinitionImportType.Oriented.GetDescription(), 
+                           boundaryBlock.Name,
+                           DefinitionImportType.Oriented.GetDescription(),
                            DefinitionImportType.Coordinates.GetDescription());
 
             IWaveBoundaryGeometricDefinition geometricDefinition = geometricDefinitionFactory
@@ -203,7 +203,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
 
             return importDataComponentFactory.CreateUniformFileBasedComponent(boundaryBlock.SpectrumFiles.FirstOrDefault());
         }
-
 
         private ISpatiallyDefinedDataComponent CreateDataComponent(BoundaryMdwBlock boundaryBlock,
                                                                    IList<IFunction> timeSeriesData,

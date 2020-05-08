@@ -7,7 +7,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Forms
     /// <see cref="WaveSupportPointSelectionForm"/> allows for selecting which
     /// support points should be effected by a generate series.
     /// </summary>
-    /// <seealso cref="Form" />
+    /// <seealso cref="Form"/>
     public partial class WaveSupportPointSelectionForm : Form
     {
         /// <summary>
@@ -31,10 +31,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Forms
                 {
                     return WaveSupportPointMode.SelectedActiveSupportPoint;
                 }
+
                 if (radioButtonActiveSP.Checked)
                 {
                     return WaveSupportPointMode.AllActiveSupportPoints;
                 }
+
                 return WaveSupportPointMode.NoSupportPoints;
             }
         }

@@ -31,13 +31,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         /// <paramref name="generateSeries"/> is <c>null</c>.
         /// </exception>
         public SpatiallyVariantTimeDependentParametersSettingsViewModel(IReadOnlyDictionary<SupportPoint, TimeDependentParameters<TSpreading>> supportPointToParametersMapping,
-                                                                        IGenerateSeries generateSeries) : 
+                                                                        IGenerateSeries generateSeries) :
             base(generateSeries, Resources.SpatiallyVariantTimeDependentParametersSettingsViewModel_GroupBoxTitle)
         {
             Ensure.NotNull(supportPointToParametersMapping, nameof(supportPointToParametersMapping));
 
             this.supportPointToParametersMapping = supportPointToParametersMapping;
-
         }
 
         public void UpdateActiveSupportPoint(SupportPoint supportPoint)

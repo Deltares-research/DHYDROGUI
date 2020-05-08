@@ -46,7 +46,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
 
         private static IEnumerable<IDataColumn> GetExpectedColumns(FixedWeirSchemes scheme)
         {
-            var defaultValueGroundHeight = scheme.GetMinimalAllowedGroundHeight();
+            double defaultValueGroundHeight = scheme.GetMinimalAllowedGroundHeight();
 
             switch (scheme)
             {

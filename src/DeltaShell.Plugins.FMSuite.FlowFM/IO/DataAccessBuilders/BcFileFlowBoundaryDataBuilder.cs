@@ -19,13 +19,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
     // TODO: this class is a mess, needs refactoring
     public class BcFileFlowBoundaryDataBuilder
     {
-        private class ForcingTypeDefinition
-        {
-            public BoundaryConditionDataType ForcingType;
-            public string[] ArgumentDefinitions;
-            public string[] ComponentDefinitions;
-        }
-
         private static readonly ILog Log = LogManager.GetLogger(typeof(BcFileFlowBoundaryDataBuilder));
 
         private static readonly IDictionary<string, ForcingTypeDefinition> ForcingTypeDefinitions =
@@ -142,9 +135,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
                 {BoundaryConditionDataType.AstroCorrection, BoundaryConditionDataType.AstroComponents}
             };
 
-        protected virtual IDictionary<string, FlowBoundaryQuantityType> QuantityNameToTypeDictionary =>
-            quantityNameToTypeDictionary;
-
         private static readonly IDictionary<string, FlowBoundaryQuantityType> quantityNameToTypeDictionary =
             new Dictionary<string, FlowBoundaryQuantityType>
             {
@@ -193,6 +183,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
                 {"percentage from top", VerticalProfileType.PercentageFromSurface}
             };
 
+        public BcFileFlowBoundaryDataBuilder()
+        {
+            ExcludedDataTypes = new List<BoundaryConditionDataType>();
+            ExcludedQuantities = new List<FlowBoundaryQuantityType>();
+            OverwriteExistingData = true;
+            CanCreateNewBoundaryCondition = true;
+        }
+
         public static IEnumerable<string> CorrectionFunctionTypes
         {
             get
@@ -214,14 +212,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
         public bool CanCreateNewBoundaryCondition { private get; set; }
 
         public IFeature LocationFilter { private get; set; }
-
-        public BcFileFlowBoundaryDataBuilder()
-        {
-            ExcludedDataTypes = new List<BoundaryConditionDataType>();
-            ExcludedQuantities = new List<FlowBoundaryQuantityType>();
-            OverwriteExistingData = true;
-            CanCreateNewBoundaryCondition = true;
-        }
 
         public void InsertBoundaryData(IEnumerable<BoundaryConditionSet> boundaryConditionSets,
                                        IEnumerable<BcBlockData> dataBlock, string thatcherHarlemanTimeLag = null)
@@ -632,6 +622,246 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
             return !skippedAny;
         }
 
+        public IEnumerable<BcBlockData> CreateBlockData(FlowBoundaryCondition boundaryCondition,
+                                                        IEnumerable<string> supportPointNames, DateTime? refDate,
+                                                        int seriesIndex = 0, bool correctionFile = false)
+        {
+            supportPointNames = supportPointNames.ToList();
+            foreach (int dataPointIndex in boundaryCondition.DataPointIndices)
+            {
+                string supportPoint = supportPointNames.ElementAt(dataPointIndex);
+                BcBlockData dataBlock = CreateBlockData(boundaryCondition, supportPoint);
+
+                if (PopulateBcBlockData(boundaryCondition, dataPointIndex, supportPoint,
+                                        refDate, seriesIndex, correctionFile, dataBlock))
+                {
+                    yield return dataBlock;
+                }
+                else
+                {
+                    yield return null;
+                }
+            }
+        }
+
+        public void InsertEmptyBoundaryData(List<BoundaryConditionSet> bcSets,
+                                            FlowBoundaryQuantityType flowBoundaryQuantityType)
+        {
+            // Get matching set for this dataBlock from ALL boundaryConditionSets (the other boundaryConditionSets are not used...)
+            BoundaryConditionSet selectedSet = bcSets.FirstOrDefault();
+            if (selectedSet == null)
+            {
+                Log.WarnFormat("Support points are not found in boundaries; omitting block.");
+                return;
+            }
+
+            // If we are filtering on location and the location doesn't match up, return
+            if (LocationFilter != null && !Equals(selectedSet.Feature, LocationFilter))
+            {
+                return;
+            }
+
+            // parse and validate forcingType
+            if (ExcludedDataTypes?.Contains(BoundaryConditionDataType.Empty) == true)
+            {
+                Log.InfoFormat("Skipping boundary dataBlock of function type {0}.", BoundaryConditionDataType.Empty);
+                return;
+            }
+
+            var boundaryCondition =
+                new FlowBoundaryCondition(flowBoundaryQuantityType,
+                                          BoundaryConditionDataType.Empty) {Feature = selectedSet.Feature};
+
+            if (!selectedSet.BoundaryConditions.Contains(boundaryCondition))
+            {
+                selectedSet.BoundaryConditions.Add(boundaryCondition);
+            }
+        }
+
+        protected virtual IDictionary<string, FlowBoundaryQuantityType> QuantityNameToTypeDictionary =>
+            quantityNameToTypeDictionary;
+
+        protected virtual FlowBoundaryCondition CreateNewBoundaryCondition(string quantityName,
+                                                                           FlowBoundaryQuantityType flowQuantityEnum,
+                                                                           BoundaryConditionDataType forcingType,
+                                                                           Feature2D feature,
+                                                                           TimeSpan timelag,
+                                                                           IGrouping<FlowBoundaryQuantityType,
+                                                                                   KeyValuePair<System.Tuple<
+                                                                                       FlowBoundaryQuantityType
+                                                                                       , int>, BcQuantityData>>
+                                                                               grouping)
+        {
+            var boundaryCondition = new FlowBoundaryCondition(flowQuantityEnum, forcingType)
+            {
+                Feature = feature,
+                ThatcherHarlemanTimeLag = timelag,
+                SedimentFractionNames = GetFractionNames(grouping).ToList()
+            };
+
+            if (flowQuantityEnum != FlowBoundaryQuantityType.SedimentConcentration)
+            {
+                return boundaryCondition;
+            }
+
+            KeyValuePair<string, FlowBoundaryQuantityType> flowQuantityComponentsPair =
+                QuantityNameToTypeDictionary.FirstOrDefault(kvp => kvp.Key.Equals(quantityName));
+            if (flowQuantityComponentsPair.Key == null)
+            {
+                flowQuantityComponentsPair =
+                    QuantityNameToTypeDictionary.FirstOrDefault(kvp => quantityName.StartsWith(kvp.Key));
+            }
+
+            if (flowQuantityComponentsPair.Key == null)
+            {
+                return boundaryCondition;
+            }
+
+            string fractionName = GetFractionNameFromQuantityName(quantityName);
+            boundaryCondition.SedimentFractionName = fractionName;
+
+            return boundaryCondition;
+        }
+
+        protected virtual IEnumerable<object> ParseValues(BcQuantityData quantityData, Type type)
+        {
+            IEnumerable<string> stringValues = quantityData.Values;
+            string format = quantityData.Unit;
+            if (type == typeof(DateTime))
+            {
+                if (string.IsNullOrEmpty(format) || format == "-")
+                {
+                    return
+                        stringValues.Select(s => DateTime.ParseExact(s, "yyyyMMddHHmmss", CultureInfo.InvariantCulture))
+                                    .Cast<object>();
+                }
+
+                List<string> splittedFormat = format.Split().ToList();
+                if (splittedFormat[1] == "since")
+                {
+                    string dateString = string.Join(" ", splittedFormat.Skip(2));
+
+                    bool succes = DateTime.TryParseExact(dateString, "yyyy-MM-dd", CultureInfo.InvariantCulture,
+                                                         DateTimeStyles.AdjustToUniversal, out DateTime startDate);
+
+                    if (!succes)
+                    {
+                        succes = DateTime.TryParseExact(dateString, "yyyy-MM-dd HH:mm:ss",
+                                                        CultureInfo.InvariantCulture,
+                                                        DateTimeStyles.AdjustToUniversal, out startDate);
+                    }
+
+                    if (!succes)
+                    {
+                        throw new FormatException("Time format " + dateString + " is not supported by bc file parser");
+                    }
+
+                    switch (splittedFormat[0].ToLower())
+                    {
+                        case "seconds":
+                            return stringValues
+                                   .Select(s => startDate + new TimeSpan(0, 0, 0, Convert.ToInt32(double.Parse(s))))
+                                   .Cast<object>();
+                        case "minutes":
+                            return stringValues
+                                   .Select(s => startDate + new TimeSpan(0, 0, Convert.ToInt32(double.Parse(s)), 0))
+                                   .Cast<object>();
+                        case "hours":
+                            return stringValues
+                                   .Select(s => startDate + new TimeSpan(0, Convert.ToInt32(double.Parse(s)), 0, 0))
+                                   .Cast<object>();
+                        case "days":
+                            return stringValues
+                                   .Select(s => startDate + new TimeSpan(Convert.ToInt32(double.Parse(s)), 0, 0, 0))
+                                   .Cast<object>();
+                    }
+                }
+            }
+
+            if (type == typeof(string))
+            {
+                return stringValues;
+            }
+
+            if (type != typeof(double))
+            {
+                throw new ArgumentException($"Value type {type} with unit {format} not supported by bc file parser.");
+            }
+
+            if (format?.ToLower().Equals("minutes") == true)
+            {
+                return
+                    stringValues.Select(double.Parse)
+                                .Select(FlowBoundaryCondition.GetFrequencyInDegPerHour)
+                                .Cast<object>();
+            }
+
+            return stringValues.Select(double.Parse).Cast<object>();
+        }
+
+        protected virtual BcBlockData CreateBlockData(FlowBoundaryCondition boundaryCondition, string supportPoint)
+        {
+            return new BcBlockData
+            {
+                SupportPoint = boundaryCondition.IsHorizontallyUniform
+                                   ? boundaryCondition.FeatureName
+                                   : supportPoint
+            };
+        }
+
+        protected virtual BcQuantityData CreateBcQuantityDataForArgument(string quantity, IVariable argument,
+                                                                         DateTime? referenceTime)
+        {
+            string unit = argument.Unit?.Symbol;
+            Func<double, double> converter = null;
+            if (argument.ValueType == typeof(DateTime) && referenceTime != null)
+            {
+                unit = "seconds since " + referenceTime.Value.ToString("yyyy-MM-dd HH:mm:ss");
+            }
+
+            if (argument.ValueType != typeof(double) || unit?.ToLower() != "deg/h")
+            {
+                return CreateBcQuantityData(quantity, argument, referenceTime, unit, converter);
+            }
+
+            unit = "minutes";
+            converter = FlowBoundaryCondition.GetPeriodInMinutes;
+
+            return CreateBcQuantityData(quantity, argument, referenceTime, unit, converter);
+        }
+
+        protected virtual IEnumerable<string> PrintValues(IVariable variable, DateTime? referenceTime,
+                                                          Func<double, double> converter)
+        {
+            if (variable.ValueType == typeof(string))
+            {
+                return variable.GetValues<string>();
+            }
+
+            if (variable.ValueType == typeof(double))
+            {
+                return converter == null
+                           ? variable.GetValues<double>().Select(d => d.ToString(CultureInfo.InvariantCulture))
+                           : variable.GetValues<double>()
+                                     .Select(d => converter(d).ToString(CultureInfo.InvariantCulture));
+            }
+
+            if (variable.ValueType != typeof(DateTime))
+            {
+                return Enumerable.Empty<string>();
+            }
+
+            if (referenceTime == null)
+            {
+                return variable.GetValues<DateTime>().Select(d => d.ToString("yyyyMMddHHmmss"));
+            }
+
+            return
+                variable.GetValues<DateTime>()
+                        .Select(d => (d - referenceTime.Value).TotalSeconds)
+                        .Select(m => m.ToString(CultureInfo.InvariantCulture));
+        }
+
         private string ParseQuantityName(string[] componentKeys, string quantityName,
                                          ForcingTypeDefinition forcingTypeDefinition)
         {
@@ -701,48 +931,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
                 $"File {dataBlock.FilePath}, block starting at line {dataBlock.LineNumber}: {propertyName} {propertyValue} could not be parsed; omitting dataBlock block.");
         }
 
-        protected virtual FlowBoundaryCondition CreateNewBoundaryCondition(string quantityName,
-                                                                           FlowBoundaryQuantityType flowQuantityEnum,
-                                                                           BoundaryConditionDataType forcingType,
-                                                                           Feature2D feature,
-                                                                           TimeSpan timelag,
-                                                                           IGrouping<FlowBoundaryQuantityType,
-                                                                                   KeyValuePair<System.Tuple<
-                                                                                       FlowBoundaryQuantityType
-                                                                                       , int>, BcQuantityData>>
-                                                                               grouping)
-        {
-            var boundaryCondition = new FlowBoundaryCondition(flowQuantityEnum, forcingType)
-            {
-                Feature = feature,
-                ThatcherHarlemanTimeLag = timelag,
-                SedimentFractionNames = GetFractionNames(grouping).ToList()
-            };
-
-            if (flowQuantityEnum != FlowBoundaryQuantityType.SedimentConcentration)
-            {
-                return boundaryCondition;
-            }
-
-            KeyValuePair<string, FlowBoundaryQuantityType> flowQuantityComponentsPair =
-                QuantityNameToTypeDictionary.FirstOrDefault(kvp => kvp.Key.Equals(quantityName));
-            if (flowQuantityComponentsPair.Key == null)
-            {
-                flowQuantityComponentsPair =
-                    QuantityNameToTypeDictionary.FirstOrDefault(kvp => quantityName.StartsWith(kvp.Key));
-            }
-
-            if (flowQuantityComponentsPair.Key == null)
-            {
-                return boundaryCondition;
-            }
-
-            string fractionName = GetFractionNameFromQuantityName(quantityName);
-            boundaryCondition.SedimentFractionName = fractionName;
-
-            return boundaryCondition;
-        }
-
         private static string GetFractionNameFromQuantityName(string quantityName)
         {
             return quantityName.Replace(ExtForceQuantNames.ConcentrationAtBound, string.Empty);
@@ -787,28 +975,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
                            bc.DataType == BoundaryConditionDataType.HarmonicCorrection;
                 default:
                     return bc.DataType == forcingTypeDefinition.ForcingType;
-            }
-        }
-
-        public IEnumerable<BcBlockData> CreateBlockData(FlowBoundaryCondition boundaryCondition,
-                                                        IEnumerable<string> supportPointNames, DateTime? refDate,
-                                                        int seriesIndex = 0, bool correctionFile = false)
-        {
-            supportPointNames = supportPointNames.ToList();
-            foreach (int dataPointIndex in boundaryCondition.DataPointIndices)
-            {
-                string supportPoint = supportPointNames.ElementAt(dataPointIndex);
-                BcBlockData dataBlock = CreateBlockData(boundaryCondition, supportPoint);
-
-                if (PopulateBcBlockData(boundaryCondition, dataPointIndex, supportPoint,
-                                        refDate, seriesIndex, correctionFile, dataBlock))
-                {
-                    yield return dataBlock;
-                }
-                else
-                {
-                    yield return null;
-                }
             }
         }
 
@@ -1012,92 +1178,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
                 default:
                     return null;
             }
-        }
-
-        protected virtual IEnumerable<object> ParseValues(BcQuantityData quantityData, Type type)
-        {
-            IEnumerable<string> stringValues = quantityData.Values;
-            string format = quantityData.Unit;
-            if (type == typeof(DateTime))
-            {
-                if (string.IsNullOrEmpty(format) || format == "-")
-                {
-                    return
-                        stringValues.Select(s => DateTime.ParseExact(s, "yyyyMMddHHmmss", CultureInfo.InvariantCulture))
-                                    .Cast<object>();
-                }
-
-                List<string> splittedFormat = format.Split().ToList();
-                if (splittedFormat[1] == "since")
-                {
-                    string dateString = string.Join(" ", splittedFormat.Skip(2));
-
-                    bool succes = DateTime.TryParseExact(dateString, "yyyy-MM-dd", CultureInfo.InvariantCulture,
-                                                         DateTimeStyles.AdjustToUniversal, out DateTime startDate);
-
-                    if (!succes)
-                    {
-                        succes = DateTime.TryParseExact(dateString, "yyyy-MM-dd HH:mm:ss",
-                                                        CultureInfo.InvariantCulture,
-                                                        DateTimeStyles.AdjustToUniversal, out startDate);
-                    }
-
-                    if (!succes)
-                    {
-                        throw new FormatException("Time format " + dateString + " is not supported by bc file parser");
-                    }
-
-                    switch (splittedFormat[0].ToLower())
-                    {
-                        case "seconds":
-                            return stringValues
-                                   .Select(s => startDate + new TimeSpan(0, 0, 0, Convert.ToInt32(double.Parse(s))))
-                                   .Cast<object>();
-                        case "minutes":
-                            return stringValues
-                                   .Select(s => startDate + new TimeSpan(0, 0, Convert.ToInt32(double.Parse(s)), 0))
-                                   .Cast<object>();
-                        case "hours":
-                            return stringValues
-                                   .Select(s => startDate + new TimeSpan(0, Convert.ToInt32(double.Parse(s)), 0, 0))
-                                   .Cast<object>();
-                        case "days":
-                            return stringValues
-                                   .Select(s => startDate + new TimeSpan(Convert.ToInt32(double.Parse(s)), 0, 0, 0))
-                                   .Cast<object>();
-                    }
-                }
-            }
-
-            if (type == typeof(string))
-            {
-                return stringValues;
-            }
-
-            if (type != typeof(double))
-            {
-                throw new ArgumentException($"Value type {type} with unit {format} not supported by bc file parser.");
-            }
-
-            if (format?.ToLower().Equals("minutes") == true)
-            {
-                return
-                    stringValues.Select(double.Parse)
-                                .Select(FlowBoundaryCondition.GetFrequencyInDegPerHour)
-                                .Cast<object>();
-            }
-
-            return stringValues.Select(double.Parse).Cast<object>();
-        }
-
-        protected virtual BcBlockData CreateBlockData(FlowBoundaryCondition boundaryCondition, string supportPoint)
-        {
-            return new BcBlockData
-            {
-                SupportPoint = boundaryCondition.IsHorizontallyUniform
-                                   ? boundaryCondition.FeatureName
-                                   : supportPoint
-            };
         }
 
         private bool PopulateBcBlockData(FlowBoundaryCondition boundaryCondition, int index, string supportPoint,
@@ -1304,27 +1384,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
             return forcingTypeDefinition;
         }
 
-        protected virtual BcQuantityData CreateBcQuantityDataForArgument(string quantity, IVariable argument,
-                                                                         DateTime? referenceTime)
-        {
-            string unit = argument.Unit?.Symbol;
-            Func<double, double> converter = null;
-            if (argument.ValueType == typeof(DateTime) && referenceTime != null)
-            {
-                unit = "seconds since " + referenceTime.Value.ToString("yyyy-MM-dd HH:mm:ss");
-            }
-
-            if (argument.ValueType != typeof(double) || unit?.ToLower() != "deg/h")
-            {
-                return CreateBcQuantityData(quantity, argument, referenceTime, unit, converter);
-            }
-
-            unit = "minutes";
-            converter = FlowBoundaryCondition.GetPeriodInMinutes;
-
-            return CreateBcQuantityData(quantity, argument, referenceTime, unit, converter);
-        }
-
         private BcQuantityData CreateBcQuantityData(string quantity, IVariable argument, DateTime? referenceTime,
                                                     string unit,
                                                     Func<double, double> converter)
@@ -1337,70 +1396,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
             };
         }
 
-        protected virtual IEnumerable<string> PrintValues(IVariable variable, DateTime? referenceTime,
-                                                          Func<double, double> converter)
+        private class ForcingTypeDefinition
         {
-            if (variable.ValueType == typeof(string))
-            {
-                return variable.GetValues<string>();
-            }
-
-            if (variable.ValueType == typeof(double))
-            {
-                return converter == null
-                           ? variable.GetValues<double>().Select(d => d.ToString(CultureInfo.InvariantCulture))
-                           : variable.GetValues<double>()
-                                     .Select(d => converter(d).ToString(CultureInfo.InvariantCulture));
-            }
-
-            if (variable.ValueType != typeof(DateTime))
-            {
-                return Enumerable.Empty<string>();
-            }
-
-            if (referenceTime == null)
-            {
-                return variable.GetValues<DateTime>().Select(d => d.ToString("yyyyMMddHHmmss"));
-            }
-
-            return
-                variable.GetValues<DateTime>()
-                        .Select(d => (d - referenceTime.Value).TotalSeconds)
-                        .Select(m => m.ToString(CultureInfo.InvariantCulture));
-        }
-
-        public void InsertEmptyBoundaryData(List<BoundaryConditionSet> bcSets,
-                                            FlowBoundaryQuantityType flowBoundaryQuantityType)
-        {
-            // Get matching set for this dataBlock from ALL boundaryConditionSets (the other boundaryConditionSets are not used...)
-            BoundaryConditionSet selectedSet = bcSets.FirstOrDefault();
-            if (selectedSet == null)
-            {
-                Log.WarnFormat("Support points are not found in boundaries; omitting block.");
-                return;
-            }
-
-            // If we are filtering on location and the location doesn't match up, return
-            if (LocationFilter != null && !Equals(selectedSet.Feature, LocationFilter))
-            {
-                return;
-            }
-
-            // parse and validate forcingType
-            if (ExcludedDataTypes?.Contains(BoundaryConditionDataType.Empty) == true)
-            {
-                Log.InfoFormat("Skipping boundary dataBlock of function type {0}.", BoundaryConditionDataType.Empty);
-                return;
-            }
-
-            var boundaryCondition =
-                new FlowBoundaryCondition(flowBoundaryQuantityType,
-                                          BoundaryConditionDataType.Empty) {Feature = selectedSet.Feature};
-
-            if (!selectedSet.BoundaryConditions.Contains(boundaryCondition))
-            {
-                selectedSet.BoundaryConditions.Add(boundaryCondition);
-            }
+            public BoundaryConditionDataType ForcingType;
+            public string[] ArgumentDefinitions;
+            public string[] ComponentDefinitions;
         }
     }
 }

@@ -86,8 +86,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories
         }
 
         public ISpatiallyDefinedDataComponent ConstructBoundaryConditionDataComponent(ForcingViewType forcingType,
-                                                                                       SpatialDefinitionViewType spatialDefinition,
-                                                                                       DirectionalSpreadingViewType spreadingType)
+                                                                                      SpatialDefinitionViewType spatialDefinition,
+                                                                                      DirectionalSpreadingViewType spreadingType)
         {
             switch (forcingType)
             {
@@ -103,7 +103,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories
         }
 
         public ISpatiallyDefinedDataComponent ConvertBoundaryConditionDataComponentSpreadingType(ISpatiallyDefinedDataComponent currentDataComponent,
-                                                                                                  DirectionalSpreadingViewType newSpreadingType)
+                                                                                                 DirectionalSpreadingViewType newSpreadingType)
         {
             Ensure.NotNull(currentDataComponent, nameof(currentDataComponent));
 

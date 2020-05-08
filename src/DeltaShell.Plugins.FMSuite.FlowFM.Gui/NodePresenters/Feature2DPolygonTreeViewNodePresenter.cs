@@ -31,7 +31,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
         {
             var nodeTag = parentNode.Tag as IDataItem;
             var area = (nodeTag != null ? nodeTag.Value : parentNode.Tag) as HydroArea;
-            if (area == null) return;
+            if (area == null)
+            {
+                return;
+            }
 
             if (nodeData == area.Enclosures)
             {

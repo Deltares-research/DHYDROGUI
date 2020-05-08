@@ -37,16 +37,20 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
                 {
                     return 0;
                 }
+
                 if (Math.Abs(crossSectionx.Chainage - crossSectiony.Chainage) < BranchFeature.Epsilon)
                 {
                     return 0;
                 }
+
                 if (crossSectionx.Chainage > crossSectiony.Chainage)
                 {
                     return 1;
                 }
+
                 return -1;
             }
+
             return 0;
         }
     }

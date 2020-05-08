@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Linq;
+using System.Windows.Forms;
 using DelftTools.Controls;
 using DelftTools.Controls.Swf;
 using DelftTools.Shell.Core.Extensions;
@@ -38,7 +39,10 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.NodePresenters
         public override bool OnNodeDoubleClicked(object nodeData)
         {
             var shortcut = nodeData as T;
-            if (shortcut == null) return true;
+            if (shortcut == null)
+            {
+                return true;
+            }
 
             switch (shortcut.ShortCutType)
             {
@@ -63,15 +67,20 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.NodePresenters
 
         public override IMenuItem GetContextMenu(ITreeNode node, object nodeData)
         {
-            var menuBase = base.GetContextMenu(node, nodeData);
-            var menu = NodePresenterHelper.GetContextMenuFromPluginGuis(Gui, node, nodeData);
+            IMenuItem menuBase = base.GetContextMenu(node, nodeData);
+            IMenuItem menu = NodePresenterHelper.GetContextMenuFromPluginGuis(Gui, node, nodeData);
             if (menuBase != null)
+            {
                 menu.Add(menuBase);
+            }
 
             var shortcut = nodeData as ModelTreeShortcut;
-            if (shortcut == null || shortcut.ShortCutType == ShortCutType.SettingsTab) return menu;
+            if (shortcut == null || shortcut.ShortCutType == ShortCutType.SettingsTab)
+            {
+                return menu;
+            }
 
-            var menu1 = ContextMenuFactory.CreateMenuFor(shortcut.Data, Gui, this, node);
+            ContextMenuStrip menu1 = ContextMenuFactory.CreateMenuFor(shortcut.Data, Gui, this, node);
             menu.Add(new MenuItemContextMenuStripAdapter(menu1));
             return menu;
         }
@@ -81,12 +90,17 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.NodePresenters
             return Gui.DocumentViews.OfType<ProjectItemMapView>().FirstOrDefault(mv => ContainsModel(mv.Data, shortcut.Model));
         }
 
+        protected abstract void OpenGridEditor(T shortcut);
+
         private void ConfigureSpatialEditor(ModelTreeShortcut shortcut)
         {
-            var projectItemMapView = GetProjectItemMapView(shortcut);
-            if (projectItemMapView == null) return;
+            ProjectItemMapView projectItemMapView = GetProjectItemMapView(shortcut);
+            if (projectItemMapView == null)
+            {
+                return;
+            }
 
-            var layer = projectItemMapView.MapView.Map.GetAllLayers(true).FirstOrDefault(l => MatchLayerForCoverage(l, shortcut.Data as ICoverage));
+            ILayer layer = projectItemMapView.MapView.Map.GetAllLayers(true).FirstOrDefault(l => MatchLayerForCoverage(l, shortcut.Data as ICoverage));
 
             if (layer != null)
             {
@@ -97,7 +111,10 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.NodePresenters
 
         private static bool ContainsModel(object viewData, IModel model)
         {
-            if (Equals(viewData, model)) return true;
+            if (Equals(viewData, model))
+            {
+                return true;
+            }
 
             var compositeActivity = viewData as ICompositeActivity;
             return compositeActivity != null && compositeActivity.GetAllActivitiesRecursive<IModel>().Contains(model);
@@ -126,7 +143,5 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.NodePresenters
 
             return false;
         }
-
-        protected abstract void OpenGridEditor(T shortcut);
     }
 }

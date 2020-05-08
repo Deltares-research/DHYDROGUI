@@ -8,9 +8,11 @@ using NetTopologySuite.Extensions.Coverages;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
 {
-    class SideViewCoveragesContextMenu : IChartViewContextMenuTool
+    internal class SideViewCoveragesContextMenu : IChartViewContextMenuTool
     {
         private bool active;
+
+        public event EventHandler<EventArgs> ActiveChanged;
 
         public SideViewCoveragesContextMenu(IChartView chartView)
         {
@@ -26,7 +28,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
 
         public new bool Active
         {
-            get { return active; }
+            get
+            {
+                return active;
+            }
             set
             {
                 active = value;
@@ -37,8 +42,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
             }
         }
 
-        public event EventHandler<EventArgs> ActiveChanged;
-
         public void OnBeforeContextMenu(ContextMenuStrip menu)
         {
             if (menu.Items.Count > 0)
@@ -48,49 +51,53 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
 
             // all not rendered coverages can be added
             var dropDownMenuItem = new ToolStripMenuItem
-                                       {
-                                           Text = "Select Spatial Data",
-
-                                       };
+            {
+                Text = "Select Spatial Data",
+            };
             dropDownMenuItem.DropDown.Closing += DropDown_Closing;
 
-            var allCoverages =
+            IEnumerable<ICoverage> allCoverages =
                 NetworkSideViewDataController.AllNetworkCoverages.OfType<ICoverage>().Concat(
                     NetworkSideViewDataController.AllFeatureCoverages.OfType<ICoverage>()).Where(c => c.Time == null || c.Time.Values.Count > 0);
 
-            var modelGroupedCoverages = allCoverages.GroupBy(c => NetworkSideViewDataController.GetModelNameForCoverage(c));
-            
+            IEnumerable<IGrouping<string, ICoverage>> modelGroupedCoverages = allCoverages.GroupBy(c => NetworkSideViewDataController.GetModelNameForCoverage(c));
+
             if (modelGroupedCoverages.Count() == 1)
             {
                 AddCoveragesToMenuItem(modelGroupedCoverages.First(), dropDownMenuItem);
             }
             else
             {
-                foreach (var coveragesPerModel in modelGroupedCoverages)
+                foreach (IGrouping<string, ICoverage> coveragesPerModel in modelGroupedCoverages)
                 {
                     var modelItem = new ToolStripMenuItem(coveragesPerModel.Key);
                     AddCoveragesToMenuItem(coveragesPerModel, modelItem);
                     dropDownMenuItem.DropDown.Items.Add(modelItem);
-                }    
+                }
             }
+
             menu.Items.Add(dropDownMenuItem);
         }
 
         private void AddCoveragesToMenuItem(IEnumerable<ICoverage> coveragesPerModel, ToolStripMenuItem dropDownMenuItem)
         {
-            foreach (var coverage in coveragesPerModel)
+            foreach (ICoverage coverage in coveragesPerModel)
             {
                 var selectCoverageMenuItem = new ToolStripMenuItem
-                                                 {
-                                                     Text = coverage.Name,
-                                                     Tag = coverage,
-                                                     Checked = IsShown(coverage)
-                                                 };
+                {
+                    Text = coverage.Name,
+                    Tag = coverage,
+                    Checked = IsShown(coverage)
+                };
                 if (coverage is INetworkCoverage)
+                {
                     selectCoverageMenuItem.Click += SelectNetworkCoverageMenuItemClick;
+                }
                 else
+                {
                     selectCoverageMenuItem.Click += SelectFeatureCoverageMenuItemClick;
-                
+                }
+
                 selectCoverageMenuItem.CheckOnClick = true;
                 dropDownMenuItem.DropDown.Items.Add(selectCoverageMenuItem);
             }
@@ -102,13 +109,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
             {
                 return NetworkSideViewDataController.RenderedFeatureCoverages.Contains(coverage as IFeatureCoverage);
             }
+
             return NetworkSideViewDataController.RenderedNetworkCoverages.Contains(coverage as INetworkCoverage);
         }
 
-        void SelectNetworkCoverageMenuItemClick(object sender, EventArgs e)
+        private void SelectNetworkCoverageMenuItemClick(object sender, EventArgs e)
         {
             //get the coverage and add it to the rendered coverages
-            var coverage = (NetworkCoverage)((ToolStripMenuItem)sender).Tag;
+            var coverage = (NetworkCoverage) ((ToolStripMenuItem) sender).Tag;
             if (NetworkSideViewDataController.RenderedNetworkCoverages.Contains(coverage))
             {
                 NetworkSideViewDataController.RemoveRenderedCoverage(coverage);
@@ -121,10 +129,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
             }
         }
 
-        void SelectFeatureCoverageMenuItemClick(object sender, EventArgs e)
+        private void SelectFeatureCoverageMenuItemClick(object sender, EventArgs e)
         {
             //get the coverage and add it to the rendered coverages
-            var coverage = (IFeatureCoverage)((ToolStripMenuItem)sender).Tag;
+            var coverage = (IFeatureCoverage) ((ToolStripMenuItem) sender).Tag;
             if (NetworkSideViewDataController.RenderedFeatureCoverages.Contains(coverage))
             {
                 NetworkSideViewDataController.RemoveRenderedCoverage(coverage);
@@ -137,13 +145,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
             }
         }
 
-        static void DropDown_Closing(object sender, ToolStripDropDownClosingEventArgs e)
+        private static void DropDown_Closing(object sender, ToolStripDropDownClosingEventArgs e)
         {
             //prevent popup to close when item is clicked
             if (e.CloseReason == ToolStripDropDownCloseReason.ItemClicked)
             {
                 e.Cancel = true;
-                ((ToolStripDropDownMenu)sender).Invalidate();
+                ((ToolStripDropDownMenu) sender).Invalidate();
             }
         }
     }

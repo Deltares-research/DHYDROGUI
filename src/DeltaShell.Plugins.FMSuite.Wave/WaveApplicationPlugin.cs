@@ -27,6 +27,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
         public override string FileFormatVersion => "1.1.0.0";
 
+        public IEnumerable<WaveModel> GetModels()
+        {
+            return Application.Project.RootFolder.GetAllItemsRecursive().OfType<WaveModel>();
+        }
+
         public override IEnumerable<ModelInfo> GetModelInfos()
         {
             yield return new ModelInfo
@@ -66,11 +71,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         public override IEnumerable<Assembly> GetPersistentAssemblies()
         {
             yield return typeof(WaveModel).Assembly;
-        }
-
-        public IEnumerable<WaveModel> GetModels()
-        {
-            return Application.Project.RootFolder.GetAllItemsRecursive().OfType<WaveModel>();
         }
 
         public IEnumerable<IDataAccessListener> CreateDataAccessListeners()

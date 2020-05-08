@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Drawing;
 using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
@@ -54,7 +55,6 @@ using PropertyInfo = DelftTools.Shell.Gui.PropertyInfo;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui
 {
-
     [Extension(typeof(IPlugin))]
     public class NetworkEditorGuiPlugin : GuiPlugin
     {
@@ -79,36 +79,52 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             MapLayerProvider = NetworkEditorMapLayerProviderCreator.CreateMapLayerProvider();
         }
 
-        public static NetworkEditorGuiPlugin Instance { get; private set; }
-
         public override string Name
         {
-            get { return "Network (UI)"; }
+            get
+            {
+                return "Network (UI)";
+            }
         }
 
         public override string DisplayName
         {
-            get { return "Hydro Region Plugin (UI)"; }
+            get
+            {
+                return "Hydro Region Plugin (UI)";
+            }
         }
 
         public override string Description
         {
-            get { return "Provides network editing functionality"; }
+            get
+            {
+                return "Provides network editing functionality";
+            }
         }
 
         public override string Version
         {
-            get { return GetType().Assembly.GetName().Version.ToString(); }
+            get
+            {
+                return GetType().Assembly.GetName().Version.ToString();
+            }
         }
 
         public override string FileFormatVersion
         {
-            get { return "3.5.0.0"; }
+            get
+            {
+                return "3.5.0.0";
+            }
         }
 
         public override IGui Gui
         {
-            get { return gui; }
+            get
+            {
+                return gui;
+            }
             set
             {
                 if (gui != null)
@@ -122,12 +138,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 {
                     gui.Application.ProjectClosing += ApplicationProjectClosed;
                     gui.Application.ProjectOpened += ApplicationProjectOpened;
-                    
+
                     gui.SelectionChanged += GuiSelectionChanged;
 
                     if (!gui.Application.FileExporters.Any(e => e is HydroRegionShapeFileExporter))
                     {
-                        ((List<IFileExporter>)gui.Application.FileExporters).Add(new HydroRegionShapeFileExporter(Gui));
+                        ((List<IFileExporter>) gui.Application.FileExporters).Add(new HydroRegionShapeFileExporter(Gui));
                     }
                 }
             }
@@ -135,7 +151,49 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
 
         public override IRibbonCommandHandler RibbonCommandHandler
         {
-            get { return new Ribbon(); }
+            get
+            {
+                return new Ribbon();
+            }
+        }
+
+        public override IMapLayerProvider MapLayerProvider { get; }
+
+        public static NetworkEditorGuiPlugin Instance { get; private set; }
+
+        public IView HydroRegionContents
+        {
+            get
+            {
+                return hydroRegionTreeView;
+            }
+        }
+
+        public void InitializeHydroRegionTreeView()
+        {
+            if (hydroRegionTreeView == null || hydroRegionTreeView.IsDisposed)
+            {
+                hydroRegionTreeView = new HydroRegionTreeView(this);
+                hydroRegionTreeView.Text = "Region";
+                hydroRegionTreeView.TreeView.DoubleClick += TreeViewDoubleClick;
+                hydroRegionTreeView.TreeView.SelectedNodeChanged += TreeViewSelectedNodeChanged;
+            }
+
+            Gui.ToolWindowViews.Add(hydroRegionTreeView, ViewLocation.Right);
+            Gui.ToolWindowViews.ActiveView = hydroRegionTreeView;
+        }
+
+        public void SetActiveRegion(IHydroRegion region)
+        {
+            if (hydroRegionTreeView == null)
+            {
+                return;
+            }
+
+            if (hydroRegionTreeView.Region != region)
+            {
+                hydroRegionTreeView.Region = region;
+            }
         }
 
         public override IEnumerable<PropertyInfo> GetPropertyInfos()
@@ -151,7 +209,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             yield return new PropertyInfo<INetworkCoverage, NetworkCoverageProperties>();
             yield return new PropertyInfo<IFeatureCoverage, FeatureCoverageProperties>();
             yield return new PropertyInfo<ICompositeBranchStructure, CompositeStructureProperties>();
-            yield return new PropertyInfo<IWeir, WeirProperties>{AdditionalDataCheck = w => w.HydroNetwork != null};
+            yield return new PropertyInfo<IWeir, WeirProperties> {AdditionalDataCheck = w => w.HydroNetwork != null};
             yield return new PropertyInfo<IGate, GateProperties>();
             yield return new PropertyInfo<IPump, PumpProperties>();
             yield return new PropertyInfo<IBridge, BridgeProperties>();
@@ -173,11 +231,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
         public override IEnumerable<ViewInfo> GetViewInfoObjects()
         {
             yield return new ViewInfo<IPump, PumpView>
-                {
-                    AdditionalDataCheck = o => o != null && o.Branch != null,
-                    CompositeViewType = typeof(CompositeStructureView),
-                    GetCompositeViewData = o => o.ParentStructure,
-                };
+            {
+                AdditionalDataCheck = o => o != null && o.Branch != null,
+                CompositeViewType = typeof(CompositeStructureView),
+                GetCompositeViewData = o => o.ParentStructure,
+            };
             yield return new ViewInfo<IWeir, WeirView>
             {
                 AdditionalDataCheck = o => o != null && o.Branch != null,
@@ -216,71 +274,71 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 AdditionalDataCheck = o => o.All(gate => gate.Branch != null),
                 CompositeViewType = typeof(ProjectItemMapView),
                 GetCompositeViewData = o => gui.Application.Project.GetAllItemsRecursive()
-                                                .OfType<IDataItem>()
-                                                .FirstOrDefault(d => d.Value is IHydroNetwork &&
-                                                                     ((IHydroNetwork)d.Value).Gates == o),
+                                               .OfType<IDataItem>()
+                                               .FirstOrDefault(d => d.Value is IHydroNetwork &&
+                                                                    ((IHydroNetwork) d.Value).Gates == o),
                 GetViewData = o =>
                 {
-                    var centralMap = Gui.DocumentViews.OfType<ProjectItemMapView>().FirstOrDefault(v => v.MapView.GetLayerForData(o) != null);
+                    ProjectItemMapView centralMap = Gui.DocumentViews.OfType<ProjectItemMapView>().FirstOrDefault(v => v.MapView.GetLayerForData(o) != null);
                     return centralMap.MapView.GetLayerForData(o);
                 },
                 AfterCreate = (v, o) =>
                 {
-                    var centralMap = Gui.DocumentViews.OfType<ProjectItemMapView>().FirstOrDefault(vi => vi.MapView.GetLayerForData(o) != null);
-                    if (centralMap == null) return;
+                    ProjectItemMapView centralMap = Gui.DocumentViews.OfType<ProjectItemMapView>().FirstOrDefault(vi => vi.MapView.GetLayerForData(o) != null);
+                    if (centralMap == null)
+                    {
+                        return;
+                    }
 
                     v.DeleteSelectedFeatures = () => centralMap.MapView.MapControl.DeleteTool.DeleteSelection();
                     v.OpenViewMethod = ob => Gui.CommandHandler.OpenView(ob);
                     v.ZoomToFeature = feature => centralMap.MapView.EnsureVisible(feature);
-                    v.SetCreateFeatureRowFunction(feature => new GatePropertiesRow((IGate)feature));
+                    v.SetCreateFeatureRowFunction(feature => new GatePropertiesRow((IGate) feature));
                 }
             };
             yield return new ViewInfo<ICrossSection, CrossSectionView>
+            {
+                Description = "Cross-section view",
+                AfterCreate = (v, o) =>
                 {
-                    Description = "Cross-section view",
-                    AfterCreate = (v, o) =>
-                        {
-                            v.StatusMessage += (s, e) => Gui.MainWindow.StatusBarMessage = s as string;
-                            v.EditDefinitionClicked += (s, e) => Gui.CommandHandler.OpenView(e.Item);
-                        }
-                };
+                    v.StatusMessage += (s, e) => Gui.MainWindow.StatusBarMessage = s as string;
+                    v.EditDefinitionClicked += (s, e) => Gui.CommandHandler.OpenView(e.Item);
+                }
+            };
             yield return new ViewInfo<ICrossSectionDefinition, CrossSectionDefinitionView>
+            {
+                AfterCreate = (v, o) =>
                 {
-                    AfterCreate = (v, o) =>
-                        {
-                            v.StatusMessage += (s, e) => Gui.MainWindow.StatusBarMessage = s as string;
-                            
-                            //get the network that has this definition.
-                            var network = Gui.Application.Project.GetAllItemsRecursive().OfType<IHydroNetwork>().FirstOrDefault(n => n.SharedCrossSectionDefinitions.Contains(o));
-                            var viewModel = CrossSectionDefinitionViewModelProvider.GetViewModel(o, network);
-                            v.ViewModel = viewModel;
-                        }
-                };
+                    v.StatusMessage += (s, e) => Gui.MainWindow.StatusBarMessage = s as string;
+
+                    //get the network that has this definition.
+                    IHydroNetwork network = Gui.Application.Project.GetAllItemsRecursive().OfType<IHydroNetwork>().FirstOrDefault(n => n.SharedCrossSectionDefinitions.Contains(o));
+                    CrossSectionDefinitionViewModel viewModel = CrossSectionDefinitionViewModelProvider.GetViewModel(o, network);
+                    v.ViewModel = viewModel;
+                }
+            };
             yield return new ViewInfo<Route, NetworkSideView>
+            {
+                Description = "Network side view",
+                AdditionalDataCheck = r => r.Locations.Values.Count > 1,
+                AfterCreate = (v, o) =>
                 {
-                    Description = "Network side view",
-                    AdditionalDataCheck = r => r.Locations.Values.Count > 1,
-                    AfterCreate = (v, o) =>
-                        {
-                            var project = Gui.Application.Project;
-                            var coverages = project.GetAllItemsRecursive().OfType<ICoverage>().Distinct();
-                            var manager = new NetworkSideViewCoverageManager(o, (INotifyCollectionChange) project,
-                                                                             coverages)
-                                {
-                                    OnRouteRemoved = () => Gui.DocumentViews.Remove(v)
-                                };
-                            v.DataController = new NetworkSideViewDataController(o, manager, GetModelNameForCoverage);
-                        }
-                };
+                    Project project = Gui.Application.Project;
+                    IEnumerable<ICoverage> coverages = project.GetAllItemsRecursive().OfType<ICoverage>().Distinct();
+                    var manager = new NetworkSideViewCoverageManager(o, (INotifyCollectionChange) project,
+                                                                     coverages) {OnRouteRemoved = () => Gui.DocumentViews.Remove(v)};
+                    v.DataController = new NetworkSideViewDataController(o, manager, GetModelNameForCoverage);
+                }
+            };
             yield return new ViewInfo<Embankment, IGeometry, GeometryEditor>
             {
                 GetViewData = (v) => v.Geometry,
-                GetViewName = (v,g) => ((Embankment)v.Tag).Name,
+                GetViewName = (v, g) => ((Embankment) v.Tag).Name,
                 AfterCreate = (v, o) =>
-                    {
-                        v.Name = o.Name;
-                        v.Tag = o;
-                    } 
+                {
+                    v.Name = o.Name;
+                    v.Tag = o;
+                }
             };
 
             yield return new ViewInfo<IStructure1D, AreaStructureView>()
@@ -311,200 +369,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             yield return GetViewInfoForHydroAreaFeatureCollection(ha => ha.BridgePillars);
         }
 
-        private ViewInfo GetViewInfoForHydroAreaFeatureCollection<TFeature>(Func<HydroArea, IEventedList<TFeature>> getCollection)
-        {
-            var viewInfo1 = SharpMapGisGuiPlugin.CreateAttributeTableViewInfo(getCollection, () => Gui);
-
-            var viewInfo = SharpMapGisGuiPlugin.CreateAttributeTableViewInfo(getCollection, () => Gui);
-            viewInfo.AfterCreate = (view, features) =>
-            {
-                viewInfo1.AfterCreate(view, features);
-                view.CanAddDeleteAttributes = false;
-                view.DynamicAttributeVisible = s => s == Feature2D.LocationKey;
-
-                if (typeof(TFeature).Implements(typeof(IGroupableFeature)))
-                {
-                    CreateAddRemoveContextMenu(features, view.TableView.RowContextMenu.Items);
-                    view.TableView.RowContextMenu.Opening += (f, v) => UpdateContextMenu(features, view.TableView.RowContextMenu.Items);
-                }
-            };
-
-            return viewInfo;
-        }
-
-        private ViewInfo<IEventedList<T>, ILayer, VectorLayerAttributeTableView> CreateAreaStructureCollectionViewInfo<T>(string name) where T : IStructure1D
-        {
-            return new ViewInfo<IEventedList<T>, ILayer, VectorLayerAttributeTableView>
-            {
-                Description = name,
-                AdditionalDataCheck = o => o != null && o.All<T>(structure => structure.Branch == null),
-                GetViewData = o =>
-                {
-                    var centralMap = Gui.DocumentViews.OfType<ProjectItemMapView>().FirstOrDefault(v => v.MapView.GetLayerForData(o) != null);
-                    return centralMap == null ? null : centralMap.MapView.GetLayerForData(o);
-                },
-                CompositeViewType = typeof(ProjectItemMapView),
-                GetCompositeViewData = o => Gui.Application.ModelService.GetModelsByData(Gui.Application.Project, o).FirstOrDefault(),
-                AfterCreate = (view, features) =>
-                {
-                    var centralMap = Gui.DocumentViews.OfType<ProjectItemMapView>().FirstOrDefault(vi => vi.MapView.GetLayerForData(features) != null);
-                    if (centralMap == null) return;
-
-                    view.DeleteSelectedFeatures = () => centralMap.MapView.MapControl.DeleteTool.DeleteSelection();
-                    view.OpenViewMethod = ob => Gui.CommandHandler.OpenView(ob);
-                    view.ZoomToFeature = feature => centralMap.MapView.EnsureVisible(feature);
-                    view.CanAddDeleteAttributes = false;
-                    ConfigureAreaFeatureRowCreation<T>(view);
-
-                    if (typeof(T).Implements(typeof(IGroupableFeature)))
-                    {
-                        CreateAddRemoveContextMenu(features, view.TableView.RowContextMenu.Items);
-                        view.TableView.RowContextMenu.Opening += (f, v) => UpdateContextMenu(features, view.TableView.RowContextMenu.Items);
-                    }
-                }
-            };
-        }
-
-        private void CreateAddRemoveContextMenu<TFeature>(IEnumerable<TFeature> features, ToolStripItemCollection stripItemCollection) //where TFeature : IGroupableFeature
-        {
-            var eventedList = (IEventedList<TFeature>) features;
-
-            // add separator
-            var separator = new ToolStripSeparator()
-            {
-                Name = SeparatorToolStripMenuKey
-            };
-            stripItemCollection.Add(separator);
-
-            // add addgroup
-            var addAreaItemsGroup = new ToolStripMenuItem
-            {
-                Name = AddGroupToolStripMenuKey,
-                Text = Properties.Resources.NetworkEditorGuiPlugin_GetViewInfoForHydroAreaFeatureCollection_Add_group,
-                Enabled = Gui.CommandHandler.CanImportOn(eventedList), 
-            };
-            addAreaItemsGroup.Click += (s, e) => { Gui.CommandHandler.ImportOn(eventedList); };
-            stripItemCollection.Add(addAreaItemsGroup);
-            
-            // add remove by group
-            var removeAreaItemsGroup = new ToolStripMenuItem
-            {
-                Name = RemoveGroupToolStripMenuKey,
-                Text = Properties.Resources.NetworkEditorGuiPlugin_CreateAreaStructureCollectionViewInfo_Remove_group,
-                Visible = eventedList.OfType<IGroupableFeature>().Select(g => g.GroupName).Any(name => !string.IsNullOrWhiteSpace(name))
-            };
-            
-            removeAreaItemsGroup.DropDownOpening += (sender, args) =>
-            {
-                removeAreaItemsGroup.DropDownItems.Clear();
-
-                var groupableList = eventedList.OfType<IGroupableFeature>().Select(g => g.GroupName).Where(name => !string.IsNullOrWhiteSpace(name));
-                var groups = groupableList.Distinct().ToList();
-                foreach (var groupName in groups)
-                {
-                    var groupMenuItem = new ToolStripMenuItem
-                    {
-                        Text = groupName,
-                    };
-
-                    groupMenuItem.Click += (s, e) => eventedList.RemoveGroup(groupName);
-                    removeAreaItemsGroup.DropDownItems.Add(groupMenuItem);
-                }
-            };
-            stripItemCollection.Add(removeAreaItemsGroup);
-            
-            // add remove ungrouped
-            var removeUngroupedItems = new ToolStripMenuItem()
-            {
-                Name = RemoveUngroupedToolStripMenuKey,
-                Text = Properties.Resources.NetworkEditorGuiPlugin_CreateAddRemoveContextMenu_Remove_ungrouped,
-                Visible = eventedList.OfType<IGroupableFeature>().Where(g => string.IsNullOrWhiteSpace(g.GroupName)).OfType<TFeature>().Any()
-            };
-            removeUngroupedItems.Click += (s, e) => eventedList.RemoveUngroupedItems();
-            stripItemCollection.Add(removeUngroupedItems);
-        }
-
-        private void UpdateContextMenu<TFeature>(IEnumerable<TFeature> features, ToolStripItemCollection items)
-        {
-            var eventedList = (IEventedList<TFeature>)features;
-
-            if (items.ContainsKey(AddGroupToolStripMenuKey))
-            {
-                var item = items[AddGroupToolStripMenuKey];
-                item.Enabled = Gui.CommandHandler.CanImportOn(eventedList);
-            }
-
-            if (items.ContainsKey(RemoveGroupToolStripMenuKey))
-            {
-                var item = items[RemoveGroupToolStripMenuKey];
-                item.Visible = eventedList.OfType<IGroupableFeature>().Select(g => g.GroupName).Any(name => !string.IsNullOrWhiteSpace(name));
-            }
-
-            if (items.ContainsKey(RemoveUngroupedToolStripMenuKey))
-            {
-                var item = items[RemoveUngroupedToolStripMenuKey];
-                item.Visible = eventedList.OfType<IGroupableFeature>().Where(g => string.IsNullOrWhiteSpace(g.GroupName)).OfType<TFeature>().Any();
-            }
-        }
-
-        private static void ConfigureAreaFeatureRowCreation<T>(VectorLayerAttributeTableView view) where T : IStructure1D
-        {
-            if (typeof(T) == typeof(IWeir))
-            {
-                view.SetCreateFeatureRowFunction(feature => new FMWeirPropertiesRow((IWeir)feature));
-            }
-            if (typeof(T) == typeof(IPump))
-            {
-                view.SetCreateFeatureRowFunction(feature => new FMPumpPropertiesRow((IPump)feature));
-            }
-            if (typeof(T) == typeof(IGate))
-            {
-                view.SetCreateFeatureRowFunction(feature => new FMGatePropertiesRow((IGate)feature));
-            }
-        }
-
-        public override IMapLayerProvider MapLayerProvider { get; }
-
-        public IView HydroRegionContents
-        {
-            get { return hydroRegionTreeView; }
-        }
-
-        private void InitializeComponent()
-        {   
-            generateCalculationGridLocationsToolStripMenuItem = new ClonableToolStripMenuItem
-            {
-                Image = Properties.Resources.GeneratePoints,
-                Name = "generateCalculationGridLocationsToolStripMenuItem",
-                Text = Properties.Resources.NetworkEditorGuiPlugin_InitializeComponent_Generate_Computational_Grid_Nodes___
-            };
-
-            removeCalculationGridLocationsToolStripMenuItem = new ClonableToolStripMenuItem
-            {
-                Image = Properties.Resources.RemovePoints,
-                Name = "removeCalculationGridLocationsToolStripMenuItem",
-                Text = Properties.Resources.NetworkEditorGuiPlugin_InitializeComponent_Remove_Computational_Grid_Nodes
-            };
-            convertCoordinateSystemToolStripMenuItem = new ClonableToolStripMenuItem
-            {
-                Image = Properties.Resources.HydroRegion,
-                Name = "convertCoordinateSystemToolStripMenuItem",
-                Text = "Convert to Coordinate System..."
-            };
-
-            generateCalculationGridLocationsToolStripMenuItem.Click += GenerateCalculationGridLocationsToolStripMenuItemClick;
-            removeCalculationGridLocationsToolStripMenuItem.Click += RemoveCalculationGridLocationsToolStripMenuItem_Click;
-            convertCoordinateSystemToolStripMenuItem.Click += ConvertCoordinateSystemToolStripMenuItemClick;
-            
-            calculationGridMenu = new ContextMenuStrip { Name = "calculationGridMenu", Size = new System.Drawing.Size(210, 48) };
-            calculationGridMenu.Items.AddRange(new ToolStripItem[] {generateCalculationGridLocationsToolStripMenuItem, removeCalculationGridLocationsToolStripMenuItem});
-
-            hydroRegionContextMenu = new ContextMenuStrip {Name = "addNewHydroRegion", Size = new System.Drawing.Size(210, 48)};
-
-            convertCoordinateSystemContextMenu = new ContextMenuStrip { Name = "convertCoordinateSystemMenu" };
-            convertCoordinateSystemContextMenu.Items.AddRange(new ToolStripItem[] {convertCoordinateSystemToolStripMenuItem});
-        }
-
         public override void Activate()
         {
             InitializeHydroRegionTreeView();
@@ -517,7 +381,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             Gui.Application.ProjectClosing += ApplicationProjectClosed;
             Gui.Application.ProjectOpened += ApplicationProjectOpened;
             Gui.SelectionChanged += GuiSelectionChanged;
-            
+
             if (Gui.Application.Project != null)
             {
                 // if project already exist call registered handler
@@ -526,10 +390,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
 
             if (Gui.UndoRedoManager != null)
             {
-                var excludedTypes = Gui.UndoRedoManager.ChangeTracker.ExcludedTypes;
-                excludedTypes.Add(typeof (NetworkCoverageGroupLayer));
-                excludedTypes.Add(typeof (NetworkCoverageLocationLayer));
-                excludedTypes.Add(typeof (NetworkCoverageSegmentLayer));
+                IList<Type> excludedTypes = Gui.UndoRedoManager.ChangeTracker.ExcludedTypes;
+                excludedTypes.Add(typeof(NetworkCoverageGroupLayer));
+                excludedTypes.Add(typeof(NetworkCoverageLocationLayer));
+                excludedTypes.Add(typeof(NetworkCoverageSegmentLayer));
             }
 
             base.Activate();
@@ -558,11 +422,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
         {
             if (hydroRegionTreeView != null)
             {
-                ((IView)hydroRegionTreeView).Data = null;
+                ((IView) hydroRegionTreeView).Data = null;
                 hydroRegionTreeView.Dispose();
                 hydroRegionTreeView = null;
             }
-            
+
             base.Dispose();
 
             Instance = null;
@@ -570,12 +434,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
 
         public override IMenuItem GetContextMenu(object sender, object data)
         {
-            if (hydroRegionTreeView != null && sender != null && ((TreeNode)sender).TreeView == hydroRegionTreeView.TreeView)
+            if (hydroRegionTreeView != null && sender != null && ((TreeNode) sender).TreeView == hydroRegionTreeView.TreeView)
             {
                 if (data is HydroRegion)
                 {
                     return new MenuItemContextMenuStripAdapter(hydroRegionContextMenu);
                 }
+
                 return hydroRegionTreeView.GetContextMenu(sender, data);
             }
 
@@ -616,8 +481,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
 
         public override IEnumerable<ITreeNodePresenter> GetProjectTreeViewNodePresenters()
         {
-            yield return new HydroRegionProjectTreeViewNodePresenter { GuiPlugin = this };
-            yield return new HydroAreaProjectTreeViewNodePresenter { GuiPlugin = this };
+            yield return new HydroRegionProjectTreeViewNodePresenter {GuiPlugin = this};
+            yield return new HydroAreaProjectTreeViewNodePresenter {GuiPlugin = this};
         }
 
         public override IEnumerable<Assembly> GetPersistentAssemblies()
@@ -625,58 +490,273 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             yield return GetType().Assembly;
         }
 
-        public void InitializeHydroRegionTreeView()
+        public override void OnViewAdded(IView view)
         {
-            if ((hydroRegionTreeView == null) || (hydroRegionTreeView.IsDisposed))
-            {
-                hydroRegionTreeView = new HydroRegionTreeView(this);
-                hydroRegionTreeView.Text = "Region";
-                hydroRegionTreeView.TreeView.DoubleClick += TreeViewDoubleClick;
-                hydroRegionTreeView.TreeView.SelectedNodeChanged += TreeViewSelectedNodeChanged;
-            }
-            
-            Gui.ToolWindowViews.Add(hydroRegionTreeView, ViewLocation.Right);
-            Gui.ToolWindowViews.ActiveView = hydroRegionTreeView;
+            OnDocumentViewAdded(view);
         }
 
-        public void SetActiveRegion(IHydroRegion region)
+        public override void OnViewRemoved(IView view)
         {
-            if (hydroRegionTreeView == null)
+            if (view is MapView mapView)
             {
-                return;
+                HydroRegionEditorHelper.RemoveHydroRegionEditorMapTool(mapView.MapControl);
             }
 
-            if (hydroRegionTreeView.Region != region)
+            //if the view contains a mapview remove the tool from the mapcontrol..
+            if (view is ICompositeView compositeView)
             {
-                hydroRegionTreeView.Region = region;
+                compositeView.ChildViews
+                             .OfType<MapView>()
+                             .ForEach(mv => HydroRegionEditorHelper.RemoveHydroRegionEditorMapTool(mv.MapControl));
+            }
+
+            if (view is NetworkSideView networkSideView)
+            {
+                networkSideView.SelectionChanged -= NetworkSideViewSelectionChanged;
             }
         }
 
-        void NetworkSideViewSelectionChanged(object sender, SelectedItemChangedEventArgs e)
+        public override void OnActiveViewChanged(IView view)
+        {
+            SetActiveRegion(GetRegionFromActiveView());
+        }
+
+        internal static MapView GetFocusedMapView()
+        {
+            IView viewToSearch = Instance.Gui?.DocumentViews?.ActiveView;
+            return viewToSearch.GetViewsOfType<MapView>().FirstOrDefault();
+        }
+
+        private ViewInfo GetViewInfoForHydroAreaFeatureCollection<TFeature>(Func<HydroArea, IEventedList<TFeature>> getCollection)
+        {
+            ViewInfo<IEnumerable<TFeature>, ILayer, VectorLayerAttributeTableView> viewInfo1 = SharpMapGisGuiPlugin.CreateAttributeTableViewInfo(getCollection, () => Gui);
+
+            ViewInfo<IEnumerable<TFeature>, ILayer, VectorLayerAttributeTableView> viewInfo = SharpMapGisGuiPlugin.CreateAttributeTableViewInfo(getCollection, () => Gui);
+            viewInfo.AfterCreate = (view, features) =>
+            {
+                viewInfo1.AfterCreate(view, features);
+                view.CanAddDeleteAttributes = false;
+                view.DynamicAttributeVisible = s => s == Feature2D.LocationKey;
+
+                if (typeof(TFeature).Implements(typeof(IGroupableFeature)))
+                {
+                    CreateAddRemoveContextMenu(features, view.TableView.RowContextMenu.Items);
+                    view.TableView.RowContextMenu.Opening += (f, v) => UpdateContextMenu(features, view.TableView.RowContextMenu.Items);
+                }
+            };
+
+            return viewInfo;
+        }
+
+        private ViewInfo<IEventedList<T>, ILayer, VectorLayerAttributeTableView> CreateAreaStructureCollectionViewInfo<T>(string name) where T : IStructure1D
+        {
+            return new ViewInfo<IEventedList<T>, ILayer, VectorLayerAttributeTableView>
+            {
+                Description = name,
+                AdditionalDataCheck = o => o != null && o.All<T>(structure => structure.Branch == null),
+                GetViewData = o =>
+                {
+                    ProjectItemMapView centralMap = Gui.DocumentViews.OfType<ProjectItemMapView>().FirstOrDefault(v => v.MapView.GetLayerForData(o) != null);
+                    return centralMap == null ? null : centralMap.MapView.GetLayerForData(o);
+                },
+                CompositeViewType = typeof(ProjectItemMapView),
+                GetCompositeViewData = o => Gui.Application.ModelService.GetModelsByData(Gui.Application.Project, o).FirstOrDefault(),
+                AfterCreate = (view, features) =>
+                {
+                    ProjectItemMapView centralMap = Gui.DocumentViews.OfType<ProjectItemMapView>().FirstOrDefault(vi => vi.MapView.GetLayerForData(features) != null);
+                    if (centralMap == null)
+                    {
+                        return;
+                    }
+
+                    view.DeleteSelectedFeatures = () => centralMap.MapView.MapControl.DeleteTool.DeleteSelection();
+                    view.OpenViewMethod = ob => Gui.CommandHandler.OpenView(ob);
+                    view.ZoomToFeature = feature => centralMap.MapView.EnsureVisible(feature);
+                    view.CanAddDeleteAttributes = false;
+                    ConfigureAreaFeatureRowCreation<T>(view);
+
+                    if (typeof(T).Implements(typeof(IGroupableFeature)))
+                    {
+                        CreateAddRemoveContextMenu(features, view.TableView.RowContextMenu.Items);
+                        view.TableView.RowContextMenu.Opening += (f, v) => UpdateContextMenu(features, view.TableView.RowContextMenu.Items);
+                    }
+                }
+            };
+        }
+
+        private void CreateAddRemoveContextMenu<TFeature>(IEnumerable<TFeature> features, ToolStripItemCollection stripItemCollection) //where TFeature : IGroupableFeature
+        {
+            var eventedList = (IEventedList<TFeature>) features;
+
+            // add separator
+            var separator = new ToolStripSeparator() {Name = SeparatorToolStripMenuKey};
+            stripItemCollection.Add(separator);
+
+            // add addgroup
+            var addAreaItemsGroup = new ToolStripMenuItem
+            {
+                Name = AddGroupToolStripMenuKey,
+                Text = Properties.Resources.NetworkEditorGuiPlugin_GetViewInfoForHydroAreaFeatureCollection_Add_group,
+                Enabled = Gui.CommandHandler.CanImportOn(eventedList),
+            };
+            addAreaItemsGroup.Click += (s, e) => { Gui.CommandHandler.ImportOn(eventedList); };
+            stripItemCollection.Add(addAreaItemsGroup);
+
+            // add remove by group
+            var removeAreaItemsGroup = new ToolStripMenuItem
+            {
+                Name = RemoveGroupToolStripMenuKey,
+                Text = Properties.Resources.NetworkEditorGuiPlugin_CreateAreaStructureCollectionViewInfo_Remove_group,
+                Visible = eventedList.OfType<IGroupableFeature>().Select(g => g.GroupName).Any(name => !string.IsNullOrWhiteSpace(name))
+            };
+
+            removeAreaItemsGroup.DropDownOpening += (sender, args) =>
+            {
+                removeAreaItemsGroup.DropDownItems.Clear();
+
+                IEnumerable<string> groupableList = eventedList.OfType<IGroupableFeature>().Select(g => g.GroupName).Where(name => !string.IsNullOrWhiteSpace(name));
+                List<string> groups = groupableList.Distinct().ToList();
+                foreach (string groupName in groups)
+                {
+                    var groupMenuItem = new ToolStripMenuItem
+                    {
+                        Text = groupName,
+                    };
+
+                    groupMenuItem.Click += (s, e) => eventedList.RemoveGroup(groupName);
+                    removeAreaItemsGroup.DropDownItems.Add(groupMenuItem);
+                }
+            };
+            stripItemCollection.Add(removeAreaItemsGroup);
+
+            // add remove ungrouped
+            var removeUngroupedItems = new ToolStripMenuItem()
+            {
+                Name = RemoveUngroupedToolStripMenuKey,
+                Text = Properties.Resources.NetworkEditorGuiPlugin_CreateAddRemoveContextMenu_Remove_ungrouped,
+                Visible = eventedList.OfType<IGroupableFeature>().Where(g => string.IsNullOrWhiteSpace(g.GroupName)).OfType<TFeature>().Any()
+            };
+            removeUngroupedItems.Click += (s, e) => eventedList.RemoveUngroupedItems();
+            stripItemCollection.Add(removeUngroupedItems);
+        }
+
+        private void UpdateContextMenu<TFeature>(IEnumerable<TFeature> features, ToolStripItemCollection items)
+        {
+            var eventedList = (IEventedList<TFeature>) features;
+
+            if (items.ContainsKey(AddGroupToolStripMenuKey))
+            {
+                ToolStripItem item = items[AddGroupToolStripMenuKey];
+                item.Enabled = Gui.CommandHandler.CanImportOn(eventedList);
+            }
+
+            if (items.ContainsKey(RemoveGroupToolStripMenuKey))
+            {
+                ToolStripItem item = items[RemoveGroupToolStripMenuKey];
+                item.Visible = eventedList.OfType<IGroupableFeature>().Select(g => g.GroupName).Any(name => !string.IsNullOrWhiteSpace(name));
+            }
+
+            if (items.ContainsKey(RemoveUngroupedToolStripMenuKey))
+            {
+                ToolStripItem item = items[RemoveUngroupedToolStripMenuKey];
+                item.Visible = eventedList.OfType<IGroupableFeature>().Where(g => string.IsNullOrWhiteSpace(g.GroupName)).OfType<TFeature>().Any();
+            }
+        }
+
+        private static void ConfigureAreaFeatureRowCreation<T>(VectorLayerAttributeTableView view) where T : IStructure1D
+        {
+            if (typeof(T) == typeof(IWeir))
+            {
+                view.SetCreateFeatureRowFunction(feature => new FMWeirPropertiesRow((IWeir) feature));
+            }
+
+            if (typeof(T) == typeof(IPump))
+            {
+                view.SetCreateFeatureRowFunction(feature => new FMPumpPropertiesRow((IPump) feature));
+            }
+
+            if (typeof(T) == typeof(IGate))
+            {
+                view.SetCreateFeatureRowFunction(feature => new FMGatePropertiesRow((IGate) feature));
+            }
+        }
+
+        private void InitializeComponent()
+        {
+            generateCalculationGridLocationsToolStripMenuItem = new ClonableToolStripMenuItem
+            {
+                Image = Properties.Resources.GeneratePoints,
+                Name = "generateCalculationGridLocationsToolStripMenuItem",
+                Text = Properties.Resources.NetworkEditorGuiPlugin_InitializeComponent_Generate_Computational_Grid_Nodes___
+            };
+
+            removeCalculationGridLocationsToolStripMenuItem = new ClonableToolStripMenuItem
+            {
+                Image = Properties.Resources.RemovePoints,
+                Name = "removeCalculationGridLocationsToolStripMenuItem",
+                Text = Properties.Resources.NetworkEditorGuiPlugin_InitializeComponent_Remove_Computational_Grid_Nodes
+            };
+            convertCoordinateSystemToolStripMenuItem = new ClonableToolStripMenuItem
+            {
+                Image = Properties.Resources.HydroRegion,
+                Name = "convertCoordinateSystemToolStripMenuItem",
+                Text = "Convert to Coordinate System..."
+            };
+
+            generateCalculationGridLocationsToolStripMenuItem.Click += GenerateCalculationGridLocationsToolStripMenuItemClick;
+            removeCalculationGridLocationsToolStripMenuItem.Click += RemoveCalculationGridLocationsToolStripMenuItem_Click;
+            convertCoordinateSystemToolStripMenuItem.Click += ConvertCoordinateSystemToolStripMenuItemClick;
+
+            calculationGridMenu = new ContextMenuStrip
+            {
+                Name = "calculationGridMenu",
+                Size = new Size(210, 48)
+            };
+            calculationGridMenu.Items.AddRange(new ToolStripItem[]
+            {
+                generateCalculationGridLocationsToolStripMenuItem,
+                removeCalculationGridLocationsToolStripMenuItem
+            });
+
+            hydroRegionContextMenu = new ContextMenuStrip
+            {
+                Name = "addNewHydroRegion",
+                Size = new Size(210, 48)
+            };
+
+            convertCoordinateSystemContextMenu = new ContextMenuStrip {Name = "convertCoordinateSystemMenu"};
+            convertCoordinateSystemContextMenu.Items.AddRange(new ToolStripItem[]
+            {
+                convertCoordinateSystemToolStripMenuItem
+            });
+        }
+
+        private void NetworkSideViewSelectionChanged(object sender, SelectedItemChangedEventArgs e)
         {
             Gui.Selection = e.Item;
         }
 
-        void ApplicationProjectOpened(Project project)
+        private void ApplicationProjectOpened(Project project)
         {
             project.RootFolder.CollectionChanged += RootFolderCollectionChanged;
         }
 
         /// <summary>
-        /// Listen to changes in the project and close views 
+        /// Listen to changes in the project and close views
         /// hack: this logic should be in ProjectExplorerGuiPlugin::Project_CollectionChanged or
         /// merged with logic there.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         [EditAction]
-        void RootFolderCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private void RootFolderCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            var removedOrAddedItem = e.GetRemovedOrAddedItem();
+            object removedOrAddedItem = e.GetRemovedOrAddedItem();
             if (!(removedOrAddedItem is IProjectItem)) // NB IModel and IDataItem derive from IProjectItem
             {
                 return;
             }
+
             object value;
             if (removedOrAddedItem is IDataItem item) // NB IModel and IDataItem derive from IProjectItem
             {
@@ -696,19 +776,21 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                         RemoveNetworkViews(network);
                         return;
                     }
+
                     if (value is IModel)
                     {
                         // only close views for networks 
-                        var networks =
+                        List<object> networks =
                             (removedOrAddedItem as IProjectItem).GetAllItemsRecursive().Where(
-                                i =>
-                                ((i is IDataItem) && (((IDataItem) i).Value is INetwork) && (!((IDataItem) i).IsLinked)))
-                                .ToList();
+                                                                    i =>
+                                                                        i is IDataItem && ((IDataItem) i).Value is INetwork && !((IDataItem) i).IsLinked)
+                                                                .ToList();
                         foreach (IDataItem networkDataItem in networks)
                         {
-                            RemoveNetworkViews((INetwork)networkDataItem.Value);
+                            RemoveNetworkViews((INetwork) networkDataItem.Value);
                         }
                     }
+
                     break;
                 case NotifyCollectionChangedAction.Replace:
                 case NotifyCollectionChangedAction.Add:
@@ -718,36 +800,35 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
 
         private void RemoveNetworkViews(INetwork network)
         {
-            var networkViews =
+            IView[] networkViews =
                 Gui.DocumentViews.Where(v => v.Data is INetworkFeature && ((INetworkFeature) v.Data).Network == network)
-                    .ToArray();
-            foreach (var view in networkViews)
+                   .ToArray();
+            foreach (IView view in networkViews)
             {
                 Gui.DocumentViews.Remove(view);
             }
 
-            var csDefinitionViews =
+            IView[] csDefinitionViews =
                 Gui.DocumentViews.Where(
                     v => v.Data is ICrossSectionDefinition &&
                          network.BranchFeatures.OfType<ICrossSection>()
-                             .Any(
-                                 cs =>
-                                     cs.Definition is CrossSectionDefinitionProxy &&
-                                     ((CrossSectionDefinitionProxy) cs.Definition).InnerDefinition.Equals(v.Data))).ToArray();
+                                .Any(
+                                    cs =>
+                                        cs.Definition is CrossSectionDefinitionProxy &&
+                                        ((CrossSectionDefinitionProxy) cs.Definition).InnerDefinition.Equals(v.Data))).ToArray();
 
-            foreach (var view in csDefinitionViews)
+            foreach (IView view in csDefinitionViews)
             {
                 Gui.DocumentViews.Remove(view);
             }
 
-            
             // remove network layer from all maps
-            var mapViews = Gui.DocumentViews.AllViews.OfType<MapView>().ToArray();
-            foreach (var view in mapViews)
+            MapView[] mapViews = Gui.DocumentViews.AllViews.OfType<MapView>().ToArray();
+            foreach (MapView view in mapViews)
             {
                 //only remove layers from the deleted network
-                var hydroNetworkMapLayers = view.Map.Layers.OfType<HydroRegionMapLayer>().Where(l=>l.Region == network).ToArray();
-                foreach (var layer in hydroNetworkMapLayers)
+                HydroRegionMapLayer[] hydroNetworkMapLayers = view.Map.Layers.OfType<HydroRegionMapLayer>().Where(l => l.Region == network).ToArray();
+                foreach (HydroRegionMapLayer layer in hydroNetworkMapLayers)
                 {
                     view.Map.Layers.Remove(layer);
                 }
@@ -759,42 +840,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             if (project != null)
             {
                 project.RootFolder.CollectionChanged -= RootFolderCollectionChanged;
-                foreach (var network in project.RootFolder.GetAllItemsRecursive().OfType<INetwork>())
+                foreach (INetwork network in project.RootFolder.GetAllItemsRecursive().OfType<INetwork>())
                 {
                     RemoveNetworkViews(network);
                 }
             }
-            
-            ((IView)hydroRegionTreeView).Data = null;
-        }
 
-        public override void OnViewAdded(IView view)
-        {
-            OnDocumentViewAdded(view);
-        }
-
-        public override void OnViewRemoved(IView view)
-        {
-            if (view is MapView mapView)
-            {
-                HydroRegionEditorHelper.RemoveHydroRegionEditorMapTool(mapView.MapControl);
-            }
-            //if the view contains a mapview remove the tool from the mapcontrol..
-            if (view is ICompositeView compositeView)
-            {
-                compositeView.ChildViews
-                             .OfType<MapView>()
-                             .ForEach(mv => HydroRegionEditorHelper.RemoveHydroRegionEditorMapTool(mv.MapControl));
-            }
-            if (view is NetworkSideView networkSideView)
-            {
-                networkSideView.SelectionChanged -= NetworkSideViewSelectionChanged;
-            }
-        }
-
-        public override void OnActiveViewChanged(IView view)
-        {
-            SetActiveRegion(GetRegionFromActiveView());
+            ((IView) hydroRegionTreeView).Data = null;
         }
 
         private void OnDocumentViewAdded(IView view)
@@ -807,16 +859,20 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
 
             if (coverageView != null)
             {
-                var mapView = coverageView.ChildViews.OfType<MapView>().FirstOrDefault();
-                if (mapView == null) return;
-                var map = mapView.Map;
+                MapView mapView = coverageView.ChildViews.OfType<MapView>().FirstOrDefault();
+                if (mapView == null)
+                {
+                    return;
+                }
+
+                IMap map = mapView.Map;
 
                 // add network as a layer
                 // TODO: move to (Network)CoverageView this part should temporary stay here, before we will make network coverage independent from hydro network editor
                 if (coverageView.Coverage is INetworkCoverage)
                 {
-                    var networkCoverage = (INetworkCoverage)coverageView.Coverage;
-                    
+                    var networkCoverage = (INetworkCoverage) coverageView.Coverage;
+
                     if (!map.Layers.OfType<HydroRegionMapLayer>().Any())
                     {
                         AddRegionLayer((IHydroRegion) networkCoverage.Network, map);
@@ -826,10 +882,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 {
                     // add region
                     var featureCoverage = (IFeatureCoverage) coverageView.Coverage;
-                    
+
                     if (!map.Layers.OfType<HydroRegionMapLayer>().Any())
                     {
-                        var region = GetRegionForFeatureCoverage(featureCoverage);
+                        IRegion region = GetRegionForFeatureCoverage(featureCoverage);
                         if (region != null)
                         {
                             AddRegionLayer(region, map);
@@ -846,17 +902,17 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
 
         private void AddRegionLayer(IRegion region, IMap map)
         {
-            var layer = MapLayerProviderHelper.CreateLayersRecursive(region, null, Gui.Plugins.Select(p => p.MapLayerProvider).ToList());
+            ILayer layer = MapLayerProviderHelper.CreateLayersRecursive(region, null, Gui.Plugins.Select(p => p.MapLayerProvider).ToList());
             map.DoWithLayerRecursive(layer, l =>
+            {
+                var layerToSet = l as Layer;
+                if (layerToSet == null)
                 {
-                    var layerToSet = l as Layer;
-                    if (layerToSet == null)
-                    {
-                        return;
-                    }
+                    return;
+                }
 
-                    layerToSet.ReadOnly = true;
-                });
+                layerToSet.ReadOnly = true;
+            });
             map.Layers.Add(layer);
         }
 
@@ -864,33 +920,30 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
         {
             if (featureCoverage.Features.Any())
             {
-                var firstFeature = featureCoverage.Features[0];
-                var allRegions = Gui.Application.Project.GetAllItemsRecursive().OfType<IRegion>();
-                var matchingRegion = allRegions.FirstOrDefault(hr => hr.GetDirectChildren().Contains(firstFeature));
+                IFeature firstFeature = featureCoverage.Features[0];
+                IEnumerable<IRegion> allRegions = Gui.Application.Project.GetAllItemsRecursive().OfType<IRegion>();
+                IRegion matchingRegion = allRegions.FirstOrDefault(hr => hr.GetDirectChildren().Contains(firstFeature));
                 return GetRootRegion(matchingRegion);
             }
+
             return null;
         }
 
         private IRegion GetRootRegion(IRegion matchingRegion)
         {
             if (matchingRegion == null)
+            {
                 return null;
+            }
 
             return matchingRegion.Parent != null
-                ? GetRootRegion(matchingRegion.Parent)
-                : matchingRegion;
-        }
-
-        internal static MapView GetFocusedMapView()
-        {
-            var viewToSearch = Instance.Gui?.DocumentViews?.ActiveView;
-            return viewToSearch.GetViewsOfType<MapView>().FirstOrDefault();
+                       ? GetRootRegion(matchingRegion.Parent)
+                       : matchingRegion;
         }
 
         private IHydroRegion GetRegionFromActiveView()
         {
-            var activeView = Gui.DocumentViews.ActiveView;
+            IView activeView = Gui.DocumentViews.ActiveView;
             if (activeView == null || activeView.Data == null)
             {
                 return null; // strange bug
@@ -903,34 +956,34 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             if (activeView is MapView || activeView is ProjectItemMapView)
             {
                 // when region is dragged onto an opened mapview
-                var mapView = activeView is ProjectItemMapView
-                                  ? ((ProjectItemMapView)activeView).MapView
-                                  : (MapView) activeView;
+                MapView mapView = activeView is ProjectItemMapView
+                                      ? ((ProjectItemMapView) activeView).MapView
+                                      : (MapView) activeView;
 
                 HydroRegionEditorHelper.AddHydroRegionEditorMapTool(mapView.MapControl);
                 region = HydroRegionEditorHelper.RootGetHydroRegion(mapView);
             }
-            else if ((activeView is CrossSectionView))
+            else if (activeView is CrossSectionView)
             {
                 var crossSection = activeView.Data as ICrossSection;
                 if (crossSection != null)
                 {
-                    region = (IHydroRegion)crossSection.Network;
+                    region = (IHydroRegion) crossSection.Network;
                 }
             }
-            else if ((activeView is CrossSectionDefinitionView))
+            else if (activeView is CrossSectionDefinitionView)
             {
                 region = (activeView as CrossSectionDefinitionView).ViewModel.HydroNetwork;
             }
             else if (activeView is CompositeStructureView)
             {
-                var structureView = (CompositeStructureView)activeView;
+                var structureView = (CompositeStructureView) activeView;
 
                 var structure = structureView.Data as IStructure1D;
 
                 if (structure != null)
                 {
-                    region = (IHydroNetwork)structure.Network;
+                    region = (IHydroNetwork) structure.Network;
                 }
             }
             else if (activeView is NetworkSideView)
@@ -949,15 +1002,17 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
         private void GuiSelectionChanged(object sender, SelectedItemChangedEventArgs e)
         {
             if (settingGuiSelection)
+            {
                 return;
+            }
 
             //show network if selected
             if (Gui.Selection is IDataItem dataItem && typeof(IHydroRegion).IsAssignableFrom(dataItem.ValueType))
             {
-                hydroRegionTreeView.Region = (IHydroRegion)dataItem.Value;
+                hydroRegionTreeView.Region = (IHydroRegion) dataItem.Value;
                 return;
             }
-            
+
             //no network selected, so get it from the active view
             SetActiveRegion(GetRegionFromActiveView());
         }
@@ -969,7 +1024,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             {
                 return;
             }
-            
+
             if (!hydroRegionTreeView.SynchronizingGuiSelection)
             {
                 settingGuiSelection = true;
@@ -983,11 +1038,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
 
             var crossSection = Gui.Selection as ICrossSection;
 
-            if (crossSection == null) return;
-            
-            var crossSectionViews = Gui.DocumentViews.OfType<CrossSectionView>();
+            if (crossSection == null)
+            {
+                return;
+            }
 
-            foreach (var view in crossSectionViews.Where(v=>!v.Locked))
+            IEnumerable<CrossSectionView> crossSectionViews = Gui.DocumentViews.OfType<CrossSectionView>();
+
+            foreach (CrossSectionView view in crossSectionViews.Where(v => !v.Locked))
             {
                 view.Data = crossSection;
             }
@@ -1001,7 +1059,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
 
         private void GenerateCalculationGridLocationsToolStripMenuItemClick(object sender, EventArgs e)
         {
-            var discretization = (IDiscretization)((ToolStripMenuItem)sender).Tag;
+            var discretization = (IDiscretization) ((ToolStripMenuItem) sender).Tag;
             var hydroNetwork = (IHydroNetwork) discretization.Network;
 
             // if the actievview is the discretization view allow generation of gridpoints 
@@ -1013,14 +1071,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 MapView mapView = coverageView.ChildViews.OfType<MapView>().FirstOrDefault();
                 mapControl = mapView?.MapControl;
             }
-            
+
             IList<IChannel> selectedChannels = null;
             if (mapControl != null)
             {
-                selectedChannels = mapControl.SelectedFeatures.OfType<IChannel>().Where(f =>Equals(f.Network, hydroNetwork)).ToList();
+                selectedChannels = mapControl.SelectedFeatures.OfType<IChannel>().Where(f => Equals(f.Network, hydroNetwork)).ToList();
             }
 
-            var hasRun = HydroNetworkEditorMapToolHelper.RunCalculationGridWizard(selectedChannels,discretization);
+            bool hasRun = HydroNetworkEditorMapToolHelper.RunCalculationGridWizard(selectedChannels, discretization);
             if (hasRun)
             {
                 Gui.CommandHandler.OpenView(discretization);
@@ -1030,16 +1088,16 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
 
         private void RemoveCalculationGridLocationsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var discretization = (IDiscretization)((ToolStripMenuItem)sender).Tag;
+            var discretization = (IDiscretization) ((ToolStripMenuItem) sender).Tag;
             discretization.Clear();
-            
+
             //this should not be necessary...but collectionchanged is not properly handled in map
             RefreshMapViewSelection();
         }
 
         private void RefreshMapViewSelection()
         {
-            var mapView = Gui.DocumentViews.ActiveView.GetViewsOfType<MapView>().FirstOrDefault();
+            MapView mapView = Gui.DocumentViews.ActiveView.GetViewsOfType<MapView>().FirstOrDefault();
             mapView?.MapControl.SelectTool.RefreshSelection();
         }
 
@@ -1047,27 +1105,29 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
         {
             var network = ((ToolStripMenuItem) sender).Tag as INetwork;
             if (network == null)
+            {
                 throw new InvalidOperationException("Can not find network when converting the coordinate system.");
+            }
 
             if (NetworkCoordinateConvertor.Convert(network))
             {
-                var mapView = GetFocusedMapView();
+                MapView mapView = GetFocusedMapView();
                 mapView?.Map?.ZoomToExtents();
             }
         }
 
         private string GetModelNameForCoverage(ICoverage coverage)
         {
-            var allModels = Gui.Application.GetAllModelsInProject();
-            var models = allModels.Where(m => m.GetAllItemsRecursive().Any(obj => obj is IFunction &&
-                                                                      coverage.IsEqualOrDescendant(obj as IFunction))).ToList();
+            IEnumerable<IModel> allModels = Gui.Application.GetAllModelsInProject();
+            List<IModel> models = allModels.Where(m => m.GetAllItemsRecursive().Any(obj => obj is IFunction &&
+                                                                                           coverage.IsEqualOrDescendant(obj as IFunction))).ToList();
 
             if (models.Count > 1) //several matches, do more filtering
             {
                 models = models.Where(m => !(m is CompositeModel)).ToList();
             }
 
-            var model = models.FirstOrDefault();
+            IModel model = models.FirstOrDefault();
             return model != null ? model.Name : "";
         }
     }

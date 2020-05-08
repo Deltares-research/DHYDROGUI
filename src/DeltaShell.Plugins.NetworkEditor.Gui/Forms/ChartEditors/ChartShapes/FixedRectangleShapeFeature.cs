@@ -23,7 +23,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapes
     }
 
     /// <summary>
-    /// FixedRectangleShapeFeature implements a rectangular shape that can either zoom with the chart (WidthIsWorld/HeightIsWorld 
+    /// FixedRectangleShapeFeature implements a rectangular shape that can either zoom with the chart
+    /// (WidthIsWorld/HeightIsWorld
     /// true) or retain its size (WidthIsWorld/HeightIsWorld false)
     /// </summary>
     public class FixedRectangleShapeFeature : ShapeFeatureBase
@@ -34,7 +35,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapes
             HorizontalShapeAlignment = HorizontalShapeAlignment.Left;
             VerticalShapeAlignment = VerticalShapeAlignment.Top;
         }
-
 
         public FixedRectangleShapeFeature(IChart chart, double x, double y, double width, double height, bool widthIsWorld, bool heightIsWorld)
             : base(chart)
@@ -50,26 +50,57 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapes
         }
 
         /// <summary>
-        /// The x coordinate of the shape. 
+        /// Returns the geometry in world coordinates
+        /// </summary>
+        public override IGeometry Geometry
+        {
+            get
+            {
+                Rectangle rectangle = GetBounds();
+                double left = ChartCoordinateService.ToWorldWidth(Chart, rectangle.Left);
+                double right = ChartCoordinateService.ToWorldWidth(Chart, rectangle.Right);
+                double bottom = ChartCoordinateService.ToWorldWidth(Chart, rectangle.Top);
+                double top = ChartCoordinateService.ToWorldWidth(Chart, rectangle.Bottom);
+
+                var vertices = new List<Coordinate>
+                {
+                    new Coordinate(left, bottom),
+                    new Coordinate(right, bottom),
+                    new Coordinate(right, top),
+                    new Coordinate(left, top)
+                };
+                vertices.Add((Coordinate) vertices[0].Clone());
+                ILinearRing newLinearRing = GeometryFactory.CreateLinearRing(vertices.ToArray());
+                return GeometryFactory.CreatePolygon(newLinearRing, null);
+            }
+            set
+            {
+                base.Geometry = value;
+            }
+        }
+
+        /// <summary>
+        /// The x coordinate of the shape.
         /// if HorizontalShapeAlignment is HorizontalShapeAlignment.Left X is the left coordinate of the bounding box
-        /// if HorizontalShapeAlignment is HorizontalShapeAlignment.Center X is the horizontal center coordinate of the bounding box
+        /// if HorizontalShapeAlignment is HorizontalShapeAlignment.Center X is the horizontal center coordinate of the bounding
+        /// box
         /// </summary>
         public virtual double X { get; set; }
 
         /// <summary>
-        /// The y coordinate of the shape. 
+        /// The y coordinate of the shape.
         /// if VerticalShapeAlignment is VerticalShapeAlignment.Top Y is the top coordinate of the bounding box
         /// if VerticalShapeAlignment is VerticalShapeAlignment.Center Y is the vertical center coordinate of the bounding box
         /// </summary>
         public virtual double Y { get; set; }
 
         /// <summary>
-        /// Width of the shape either in world coordinates (WidthIsWorld == true) of device coordinates (WidthIsWorld == false) 
+        /// Width of the shape either in world coordinates (WidthIsWorld == true) of device coordinates (WidthIsWorld == false)
         /// </summary>
         public virtual double Width { get; set; }
 
         /// <summary>
-        /// Height of the shape either in world coordinates (HeightIsWorld == true) of device coordinates (HeightIsWorld == false) 
+        /// Height of the shape either in world coordinates (HeightIsWorld == true) of device coordinates (HeightIsWorld == false)
         /// </summary>
         public virtual double Height { get; set; }
 
@@ -96,39 +127,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapes
         public VerticalShapeAlignment VerticalShapeAlignment { get; set; }
 
         /// <summary>
-        /// Add an extra margin when drawing the rectangle at the top. This enables to float a rectangle to 
+        /// Add an extra margin when drawing the rectangle at the top. This enables to float a rectangle to
         /// </summary>
         public int TopMargin { get; set; }
-
-        /// <summary>
-        /// Returns the geometry in world coordinates
-        /// </summary>
-        public override IGeometry Geometry
-        {
-            get
-            {
-                Rectangle rectangle = GetBounds();
-                var left = ChartCoordinateService.ToWorldWidth(Chart, rectangle.Left);
-                var right = ChartCoordinateService.ToWorldWidth(Chart, rectangle.Right);
-                var bottom = ChartCoordinateService.ToWorldWidth(Chart, rectangle.Top);
-                var top = ChartCoordinateService.ToWorldWidth(Chart, rectangle.Bottom);
-
-                var vertices = new List<Coordinate>
-                                   {
-                                       new Coordinate(left, bottom),
-                                       new Coordinate(right, bottom),
-                                       new Coordinate(right, top),
-                                       new Coordinate(left, top)
-                                   };
-                vertices.Add((Coordinate)vertices[0].Clone());
-                ILinearRing newLinearRing = GeometryFactory.CreateLinearRing(vertices.ToArray());
-                return GeometryFactory.CreatePolygon(newLinearRing, null);
-            }
-            set
-            {
-                base.Geometry = value;
-            }
-        }
 
         /// <summary>
         /// Returns the bounding rect in device coordinates. Used for drawing and hit testing.
@@ -136,8 +137,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapes
         /// <returns></returns>
         public override Rectangle GetBounds()
         {
-            var width = WidthIsWorld ? ChartCoordinateService.ToDeviceWidth(Chart, Width) : (int)Width;
-            var height = HeightIsWorld ? ChartCoordinateService.ToDeviceHeight(Chart, Height) : (int)Height;
+            int width = WidthIsWorld ? ChartCoordinateService.ToDeviceWidth(Chart, Width) : (int) Width;
+            int height = HeightIsWorld ? ChartCoordinateService.ToDeviceHeight(Chart, Height) : (int) Height;
             int x, y;
 
             if (HorizontalShapeAlignment == HorizontalShapeAlignment.Left)
@@ -146,7 +147,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapes
             }
             else if (HorizontalShapeAlignment == HorizontalShapeAlignment.Center)
             {
-                x = ChartCoordinateService.ToDeviceX(Chart, X) - width/2;
+                x = ChartCoordinateService.ToDeviceX(Chart, X) - (width / 2);
             }
             else
             {
@@ -165,14 +166,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapes
                 }
                 else if (VerticalShapeAlignment == VerticalShapeAlignment.Center)
                 {
-                    y = ChartCoordinateService.ToDeviceY(Chart, Y) - height/2;
+                    y = ChartCoordinateService.ToDeviceY(Chart, Y) - (height / 2);
                 }
                 else
                 {
                     y = ChartCoordinateService.ToDeviceY(Chart, Y) - height;
                 }
             }
-            
+
             var rectangle = new Rectangle
             {
                 X = x,
@@ -192,23 +193,24 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapes
 
         public override void Paint(IChartDrawingContext chartDrawingContext)
         {
-            var g = (ChartGraphics)chartDrawingContext.Graphics;
-            var bounds = GetBounds();
+            var g = (ChartGraphics) chartDrawingContext.Graphics;
+            Rectangle bounds = GetBounds();
             bounds.Y += TopMargin;
             g.Rectangle(bounds);
             if (string.IsNullOrEmpty(Label))
             {
                 return;
             }
-            var size = g.MeasureString(Label);
-            int xpos = (int)(bounds.Left + bounds.Width / 2 - size.Width / 2);
-            int ypos = (int)(bounds.Top + bounds.Height / 2 - size.Height / 2);
+
+            SizeF size = g.MeasureString(Label);
+            var xpos = (int) ((bounds.Left + (bounds.Width / 2)) - (size.Width / 2));
+            var ypos = (int) ((bounds.Top + (bounds.Height / 2)) - (size.Height / 2));
             g.TextOut(xpos, ypos, Label);
         }
 
         public override object Clone()
         {
-            return new FixedRectangleShapeFeature(Chart, X, Y, Width, Height, WidthIsWorld, HeightIsWorld) { StickToBottom = StickToBottom };
+            return new FixedRectangleShapeFeature(Chart, X, Y, Width, Height, WidthIsWorld, HeightIsWorld) {StickToBottom = StickToBottom};
         }
 
         public override IShapeFeatureEditor CreateShapeFeatureEditor(ShapeEditMode shapeEditMode)

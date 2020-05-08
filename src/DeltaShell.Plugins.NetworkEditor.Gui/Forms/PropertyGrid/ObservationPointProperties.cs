@@ -17,15 +17,27 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [PropertyOrder(1)]
         public string Name
         {
-            get { return data.Name; }
-            set { data.Name = value; }
+            get
+            {
+                return data.Name;
+            }
+            set
+            {
+                data.Name = value;
+            }
         }
 
         [Category("General")]
         public string LongName
         {
-            get { return data.LongName; }
-            set { data.LongName = value; }
+            get
+            {
+                return data.LongName;
+            }
+            set
+            {
+                data.LongName = value;
+            }
         }
 
         [Category("General")]
@@ -33,7 +45,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [TypeConverter(typeof(AttributeArrayConverter<object>))]
         public AttributeProperties<object>[] Attributes
         {
-            get { return data.Attributes.Select(x => new AttributeProperties<object>(data.Attributes, x.Key)).ToArray(); }
+            get
+            {
+                return data.Attributes.Select(x => new AttributeProperties<object>(data.Attributes, x.Key)).ToArray();
+            }
         }
 
         [Category("Administration")]
@@ -41,7 +56,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [PropertyOrder(2)]
         public string Channel
         {
-            get { return data.Branch.ToString(); }
+            get
+            {
+                return data.Branch.ToString();
+            }
         }
 
         [Description("Chainage of the point in the channel on the map.")]
@@ -50,7 +68,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [DisplayName("Chainage (Map)")]
         public double Chainage
         {
-            get { return NetworkHelper.MapChainage(data); }
+            get
+            {
+                return NetworkHelper.MapChainage(data);
+            }
         }
 
         [Description("Chainage of the point in the channel as used in the simulation.")]
@@ -59,8 +80,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [DisplayName("Chainage")]
         public double CompuChainage
         {
-            get { return data.Chainage; }
-            set { HydroRegionEditorHelper.MoveBranchFeatureTo(data, value); }
+            get
+            {
+                return data.Chainage;
+            }
+            set
+            {
+                HydroRegionEditorHelper.MoveBranchFeatureTo(data, value);
+            }
         }
     }
 }

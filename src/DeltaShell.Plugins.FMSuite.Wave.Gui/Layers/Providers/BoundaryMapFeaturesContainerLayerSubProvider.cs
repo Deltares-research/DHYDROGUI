@@ -11,7 +11,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers.Providers
     /// <see cref="BoundaryMapFeaturesContainerLayerSubProvider"/> implements the
     /// <see cref="ILayerSubProvider"/> for data of type <see cref="BoundaryMapFeaturesContainer"/>.
     /// </summary>
-    /// <seealso cref="ILayerSubProvider" />
+    /// <seealso cref="ILayerSubProvider"/>
     public class BoundaryMapFeaturesContainerLayerSubProvider : ILayerSubProvider
     {
         private readonly IWaveLayerFactory factory;
@@ -36,7 +36,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers.Providers
         public ILayer CreateLayer(object sourceData, object parentData) =>
             sourceData is IBoundaryMapFeaturesContainer container &&
             parentData is IWaveModel
-                ? factory.CreateBoundaryLayer(container) 
+                ? factory.CreateBoundaryLayer(container)
                 : null;
 
         public IEnumerable<object> GenerateChildLayerObjects(object data)

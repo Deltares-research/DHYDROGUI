@@ -4,14 +4,15 @@ using DelftTools.Controls;
 using DelftTools.Hydro;
 using DelftTools.Shell.Gui;
 using DelftTools.Shell.Gui.Swf;
+using DeltaShell.Plugins.NetworkEditor.Gui.Properties;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView.NodePresenters
 {
     public class DrainageBasinTreeViewNodePresenter : TreeViewNodePresenterBaseForPluginGui<DrainageBasin>
     {
-        private static readonly Image BasinImage = Properties.Resources.DrainageBasin;
+        private static readonly Image BasinImage = Resources.DrainageBasin;
 
-        public DrainageBasinTreeViewNodePresenter(GuiPlugin guiPlugin) : base(guiPlugin) { }
+        public DrainageBasinTreeViewNodePresenter(GuiPlugin guiPlugin) : base(guiPlugin) {}
 
         public override void UpdateNode(ITreeNode parentNode, ITreeNode node, DrainageBasin basin)
         {
@@ -23,7 +24,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView.NodePre
         {
             return true;
         }
-        
+
         public override void OnNodeRenamed(DrainageBasin basin, string newName)
         {
             if (basin.Name != newName)

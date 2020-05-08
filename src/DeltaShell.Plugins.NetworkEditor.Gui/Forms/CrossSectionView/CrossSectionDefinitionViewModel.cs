@@ -5,11 +5,26 @@ using DelftTools.Utils.Collections.Generic;
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
 {
     /// <summary>
-    /// Contains meta-information about the crossection that is only used in views. Possibly move more functionality from crossection to the viewmodel to
+    /// Contains meta-information about the crossection that is only used in views. Possibly move more functionality from
+    /// crossection to the viewmodel to
     /// keep the CS clean.
     /// </summary>
     public class CrossSectionDefinitionViewModel
     {
+        private readonly bool isSymmetrical;
+
+        private readonly string tableDescription;
+
+        private readonly int maxSections;
+
+        private readonly int minimalNumberOfTableRows;
+
+        private readonly bool fixOnScreenRatio;
+
+        private string yUnit;
+
+        private string xUnit;
+
         public CrossSectionDefinitionViewModel(bool isSymmetrical, string tableDescription, int maxSections, int minimalNumberOfTableRows, string xUnit, string yUnit, bool fixOnScreenRatio)
         {
             this.isSymmetrical = isSymmetrical;
@@ -20,63 +35,71 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
             this.yUnit = yUnit;
             this.xUnit = xUnit;
         }
-        
-        private readonly bool isSymmetrical;
+
         /// <summary>
-        /// Is the cross section reflection-symmetrical (along a vertical axis). Typically true for height-width defined cross sections
+        /// Is the cross section reflection-symmetrical (along a vertical axis). Typically true for height-width defined cross
+        /// sections
         /// </summary>
         public bool IsSymmetrical
         {
-            get { return isSymmetrical; }
+            get
+            {
+                return isSymmetrical;
+            }
         }
 
-
-        private readonly string tableDescription;
         public string TableDescription
         {
-            get { return tableDescription; }
+            get
+            {
+                return tableDescription;
+            }
         }
-
-        private readonly int maxSections;
 
         /// <summary>
         /// Maximum number of roughness sections this cross section supports
         /// </summary>
         public virtual int MaxSections
         {
-            get { return maxSections; }
+            get
+            {
+                return maxSections;
+            }
         }
 
-        private readonly int minimalNumberOfTableRows;
-        
         public virtual int MinimalNumberOfTableRows
         {
-            get { return minimalNumberOfTableRows; }
+            get
+            {
+                return minimalNumberOfTableRows;
+            }
         }
 
-        private readonly bool fixOnScreenRatio;
         public bool FixOnScreenRatio
         {
-            get { return fixOnScreenRatio; }
-
+            get
+            {
+                return fixOnScreenRatio;
+            }
         }
 
-        private string yUnit;
         public string YUnit
         {
-            get { return yUnit; }
+            get
+            {
+                return yUnit;
+            }
         }
 
-        private string xUnit;
         public string XUnit
         {
-            get { return xUnit; }
+            get
+            {
+                return xUnit;
+            }
         }
 
-        public IEventedList<CrossSectionSectionType> CrossSectionSectionTypes
-        {
-            get; set;
-        }
+        public IEventedList<CrossSectionSectionType> CrossSectionSectionTypes { get; set; }
 
         public IHydroNetwork HydroNetwork { get; set; }
     }

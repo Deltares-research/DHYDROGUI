@@ -10,15 +10,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spread
     public static class SpreadingConversion
     {
         /// <summary>
-        /// Gets the spreading unit corresponding with the <typeparamref name="TSpreading" />
-        /// with the spreading value specified by <paramref name="value" />.
+        /// Gets the spreading unit corresponding with the <typeparamref name="TSpreading"/>
+        /// with the spreading value specified by <paramref name="value"/>.
         /// </summary>
         /// <typeparam name="TSpreading"> The type of the spreading. </typeparam>
         /// <param name="value"> The spreading value. </param>
         /// <returns> The spreading unit. </returns>
         /// <exception cref="NotSupportedException">
-        /// Thrown when the <typeparamref name="TSpreading" /> is not a <see cref="PowerDefinedSpreading" />
-        /// or a <see cref="DegreesDefinedSpreading" />.
+        /// Thrown when the <typeparamref name="TSpreading"/> is not a <see cref="PowerDefinedSpreading"/>
+        /// or a <see cref="DegreesDefinedSpreading"/>.
         /// </exception>
         public static TSpreading FromDouble<TSpreading>(double value)
             where TSpreading : class, IBoundaryConditionSpreading, new()
@@ -58,10 +58,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spread
             where TSpreading : class, IBoundaryConditionSpreading, new()
         {
             if (typeof(TSpreading) == typeof(DegreesDefinedSpreading))
+            {
                 return WaveTimeDependentParametersConstants.ConstructDegreesUnit();
+            }
 
             if (typeof(TSpreading) == typeof(PowerDefinedSpreading))
+            {
                 return WaveTimeDependentParametersConstants.ConstructPowerUnit();
+            }
 
             throw new NotSupportedException($"{typeof(TSpreading)} is not supported.");
         }
@@ -80,10 +84,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spread
             where TSpreading : class, IBoundaryConditionSpreading, new()
         {
             if (typeof(TSpreading) == typeof(DegreesDefinedSpreading))
+            {
                 return WaveSpreadingConstants.DegreesDefaultSpreading;
+            }
 
             if (typeof(TSpreading) == typeof(PowerDefinedSpreading))
+            {
                 return WaveSpreadingConstants.PowerDefaultSpreading;
+            }
 
             throw new NotSupportedException($"{typeof(TSpreading)} is not supported.");
         }

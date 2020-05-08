@@ -60,7 +60,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels
 
             var dataComponentConverter = new ViewEnumFromDataComponentQuerier();
             DescriptionViewModel = new BoundaryDescriptionViewModel(observedBoundary,
-                                                                    dataComponentFactory, 
+                                                                    dataComponentFactory,
                                                                     dataComponentConverter);
 
             var viewShapeFactory = new ViewShapeFactory(new BoundaryConditionShapeFactory());

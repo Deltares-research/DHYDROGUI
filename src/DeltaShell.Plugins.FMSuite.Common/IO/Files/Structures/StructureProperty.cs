@@ -11,10 +11,10 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
         /// </summary>
         /// <param name="propertyDefinition"> Property definition for this property. </param>
         /// <param name="valueAsString"> String representing the initial value of this property. </param>
-        /// <exception cref="System.ArgumentNullException"> When <paramref name="propertyDefinition" /> is null. </exception>
+        /// <exception cref="System.ArgumentNullException"> When <paramref name="propertyDefinition"/> is null. </exception>
         /// <exception cref="System.FormatException">
-        /// When <paramref name="valueAsString" /> does not properly express the <see cref="ModelPropertyDefinition.DataType" />
-        /// specified in <paramref name="propertyDefinition" />. Check <see cref="System.Exception.InnerException" /> for
+        /// When <paramref name="valueAsString"/> does not properly express the <see cref="ModelPropertyDefinition.DataType"/>
+        /// specified in <paramref name="propertyDefinition"/>. Check <see cref="System.Exception.InnerException"/> for
         /// underlying cause.
         /// </exception>
         public StructureProperty(ModelPropertyDefinition propertyDefinition, string valueAsString) : base(

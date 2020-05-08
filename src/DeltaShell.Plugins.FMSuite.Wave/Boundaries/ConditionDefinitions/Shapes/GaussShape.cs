@@ -7,7 +7,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Shapes
     /// <see cref="GaussShape"/> defines the Gaussian type of
     /// <see cref="IBoundaryConditionShape"/> with a <see cref="GaussianSpread"/>.
     /// </summary>
-    /// <seealso cref="IBoundaryConditionShape" />
+    /// <seealso cref="IBoundaryConditionShape"/>
     public class GaussShape : IBoundaryConditionShape
     {
         /// <summary>

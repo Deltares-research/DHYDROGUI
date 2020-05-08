@@ -14,24 +14,29 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors.ModelFeatureCoordinateDa
     /// </summary>
     public class ModelFeatureCoordinateDataViewViewModel : INotifyPropertyChanged, IDisposable
     {
+        private readonly List<PropertyDescriptor> coordinateDataRowPropertyDescriptors = new List<PropertyDescriptor>();
         private IModelFeatureCoordinateData modelFeatureCoordinateData;
         private ObservableCollection<CoordinateDataRow> coordinateDataRows;
-        private readonly List<PropertyDescriptor> coordinateDataRowPropertyDescriptors = new List<PropertyDescriptor>();
         private int selectedCoordinateIndex;
+
+        public event PropertyChangedEventHandler PropertyChanged;
 
         /// <summary>
         /// <see cref="IModelFeatureCoordinateData"/> that is wrapped by this view model
         /// </summary>
         public IModelFeatureCoordinateData ModelFeatureCoordinateData
         {
-            get { return modelFeatureCoordinateData; }
+            get
+            {
+                return modelFeatureCoordinateData;
+            }
             set
             {
                 UnSubscribeToEvents();
 
                 modelFeatureCoordinateData = value;
 
-                SubscribeToEvents(); 
+                SubscribeToEvents();
 
                 UpdateColumnPropertyInformation();
                 UpdateRowsForGeometry();
@@ -42,7 +47,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors.ModelFeatureCoordinateDa
 
         public ObservableCollection<CoordinateDataRow> CoordinateDataRows
         {
-            get { return coordinateDataRows; }
+            get
+            {
+                return coordinateDataRows;
+            }
             set
             {
                 coordinateDataRows = value;
@@ -52,7 +60,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors.ModelFeatureCoordinateDa
 
         public int SelectedCoordinateIndex
         {
-            get { return selectedCoordinateIndex; }
+            get
+            {
+                return selectedCoordinateIndex;
+            }
             set
             {
                 selectedCoordinateIndex = value;
@@ -63,7 +74,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors.ModelFeatureCoordinateDa
         /// <summary>
         /// Function for adding dynamic property columns of <see cref="ModelFeatureCoordinateData"/>
         /// </summary>
-        public Action<string,string,bool,string> AddColumn { get; set; }
+        public Action<string, string, bool, string> AddColumn { get; set; }
 
         /// <summary>
         /// Function for clearing previous dynamic properties columns for <see cref="ModelFeatureCoordinateData"/>
@@ -75,8 +86,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors.ModelFeatureCoordinateDa
             UnSubscribeToEvents();
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
-
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -84,10 +93,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors.ModelFeatureCoordinateDa
 
         private void SubscribeToEvents()
         {
-            if (modelFeatureCoordinateData == null) return;
+            if (modelFeatureCoordinateData == null)
+            {
+                return;
+            }
 
             ((INotifyCollectionChanged) modelFeatureCoordinateData).CollectionChanged += OnModelFeatureCoordinateDataCollectionChanged;
-            ((INotifyPropertyChanged)modelFeatureCoordinateData).PropertyChanged += OnModelFeatureCoordinateDataPropertyChanged;
+            ((INotifyPropertyChanged) modelFeatureCoordinateData).PropertyChanged += OnModelFeatureCoordinateDataPropertyChanged;
 
             if (modelFeatureCoordinateData.Feature != null)
             {
@@ -97,21 +109,27 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors.ModelFeatureCoordinateDa
 
         private void UnSubscribeToEvents()
         {
-            if (modelFeatureCoordinateData == null) return;
+            if (modelFeatureCoordinateData == null)
+            {
+                return;
+            }
 
-            ((INotifyCollectionChanged)modelFeatureCoordinateData).CollectionChanged -= OnModelFeatureCoordinateDataCollectionChanged;
-            ((INotifyPropertyChanged)modelFeatureCoordinateData).PropertyChanged -= OnModelFeatureCoordinateDataPropertyChanged;
+            ((INotifyCollectionChanged) modelFeatureCoordinateData).CollectionChanged -= OnModelFeatureCoordinateDataCollectionChanged;
+            ((INotifyPropertyChanged) modelFeatureCoordinateData).PropertyChanged -= OnModelFeatureCoordinateDataPropertyChanged;
 
             if (modelFeatureCoordinateData.Feature != null)
             {
-                ((INotifyPropertyChanged)modelFeatureCoordinateData.Feature).PropertyChanged -= OnGeometryChanged;
+                ((INotifyPropertyChanged) modelFeatureCoordinateData.Feature).PropertyChanged -= OnGeometryChanged;
             }
         }
 
         private void OnModelFeatureCoordinateDataPropertyChanged(object sender, PropertyChangedEventArgs propertyChangedEventArgs)
         {
             var dataColumn = sender as IDataColumn;
-            if (dataColumn == null || propertyChangedEventArgs.PropertyName != nameof(dataColumn.IsActive)) return;
+            if (dataColumn == null || propertyChangedEventArgs.PropertyName != nameof(dataColumn.IsActive))
+            {
+                return;
+            }
 
             UpdateColumnPropertyInformation();
         }
@@ -120,12 +138,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors.ModelFeatureCoordinateDa
         {
             if (e.PropertyName == nameof(modelFeatureCoordinateData.Feature.Geometry))
 
-            UpdateRowsForGeometry();
+            {
+                UpdateRowsForGeometry();
+            }
         }
 
         private void OnModelFeatureCoordinateDataCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            if (sender != modelFeatureCoordinateData.DataColumns) return;
+            if (sender != modelFeatureCoordinateData.DataColumns)
+            {
+                return;
+            }
 
             UpdateColumnPropertyInformation();
         }
@@ -134,29 +157,23 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors.ModelFeatureCoordinateDa
         {
             var defaultCoordinateDescriptors = new[]
             {
-                new CoordinateDataRowGeometryPropertyDescriptor("X")
-                {
-                    Type = GeometryPropertyDescriptorType.XValue
-                },
-                new CoordinateDataRowGeometryPropertyDescriptor("Y")
-                {
-                    Type = GeometryPropertyDescriptorType.YValue
-                }
+                new CoordinateDataRowGeometryPropertyDescriptor("X") {Type = GeometryPropertyDescriptorType.XValue},
+                new CoordinateDataRowGeometryPropertyDescriptor("Y") {Type = GeometryPropertyDescriptorType.YValue}
             };
 
-            var rowPropertyDescriptors = modelFeatureCoordinateData?.DataColumns
-                                             .Where(dc => dc.IsActive)
-                                             .Select((c, i) => new CoordinateDataRowPropertyDescriptor(GetPropertyName(c.Name), c.Name, c.DataType, i)) 
-                                         ?? Enumerable.Empty<PropertyDescriptor>();
+            IEnumerable<PropertyDescriptor> rowPropertyDescriptors = modelFeatureCoordinateData?.DataColumns
+                                                                                               .Where(dc => dc.IsActive)
+                                                                                               .Select((c, i) => new CoordinateDataRowPropertyDescriptor(GetPropertyName(c.Name), c.Name, c.DataType, i))
+                                                                     ?? Enumerable.Empty<PropertyDescriptor>();
 
             coordinateDataRowPropertyDescriptors.Clear();
             coordinateDataRowPropertyDescriptors.AddRange(defaultCoordinateDescriptors.Concat(rowPropertyDescriptors));
 
             ClearColumns?.Invoke();
 
-            foreach (var rowPropertyDescriptor in coordinateDataRowPropertyDescriptors)
+            foreach (PropertyDescriptor rowPropertyDescriptor in coordinateDataRowPropertyDescriptors)
             {
-                var isCoordinatePropertyDescriptor = rowPropertyDescriptor is CoordinateDataRowGeometryPropertyDescriptor;
+                bool isCoordinatePropertyDescriptor = rowPropertyDescriptor is CoordinateDataRowGeometryPropertyDescriptor;
                 AddColumn?.Invoke(rowPropertyDescriptor.Name, rowPropertyDescriptor.DisplayName, isCoordinatePropertyDescriptor, isCoordinatePropertyDescriptor ? "{0:E3}" : null);
             }
         }

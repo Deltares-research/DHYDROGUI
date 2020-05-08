@@ -29,8 +29,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Layers
 
         internal static IEnumerable<ILayerSubProvider> GetSubLayerProviders()
         {
-            yield return new HydroAreaLayerProvider(); 
-            yield return new HydroRegionLayerProvider(); 
+            yield return new HydroAreaLayerProvider();
+            yield return new HydroRegionLayerProvider();
             yield return new ThinDamsLayerProvider();
             yield return new FixedWeirsLayerProvider();
             yield return new ObservationPointsLayerProvider();

@@ -20,7 +20,7 @@ using Point = System.Windows.Point;
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.MapTools
 {
     /// <summary>
-    /// This map tool attempts to find a grid cell for a <see cref="WaterQualityModel" /> grid
+    /// This map tool attempts to find a grid cell for a <see cref="WaterQualityModel"/> grid
     /// given a cell index. It takes into account layering of the model, informing at which
     /// layer-index the grid cell is at.
     /// </summary>
@@ -42,32 +42,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.MapTools
             LayerFilter = IsToolAllowedOnLayer;
             transformationCache = new CoordinateTransformationCache();
         }
-
-        private bool IsToolAllowedOnLayer(ILayer layer)
-        {
-            var unstructuredGridLayer = layer as UnstructuredGridLayer;
-            if (unstructuredGridLayer != null && GetWaqModelForGrid != null)
-            {
-                var renderer = unstructuredGridLayer.Renderer as GridEdgeRenderer;
-                var isBlockedLinksRenderer = false;
-                if (renderer != null)
-                {
-                    isBlockedLinksRenderer =
-                        renderer.GridEdgeRenderMode == GridEdgeRenderMode.EdgesWithBlockedFlowLinks;
-                }
-
-                return !isBlockedLinksRenderer && GetWaqModelForGrid(unstructuredGridLayer.Grid) != null;
-            }
-
-            return false;
-        }
-
-        /// <summary>
-        /// Method injection point to retrieve a <see cref="WaterQualityModel" /> for a given
-        /// <see cref="UnstructuredGrid" />. It is required to have this method set before
-        /// using the maptool.
-        /// </summary>
-        public Func<UnstructuredGrid, WaterQualityModel> GetWaqModelForGrid { get; set; }
 
         public override bool Enabled
         {
@@ -121,10 +95,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.MapTools
                     int initialSelectedGridCell =
                         segmentIndex >= 1 && segmentIndex <= maximumGridCell ? segmentIndex : 1;
 
-                    var askGridCellDialog = new FindGridCellDialog(maximumGridCell, initialSelectedGridCell)
-                    {
-                        StartPosition = FormStartPosition.CenterScreen
-                    };
+                    var askGridCellDialog = new FindGridCellDialog(maximumGridCell, initialSelectedGridCell) {StartPosition = FormStartPosition.CenterScreen};
 
                     DialogResult dialogResult = askGridCellDialog.ShowDialog();
                     if (dialogResult == DialogResult.OK)
@@ -140,26 +111,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.MapTools
             }
         }
 
-        private void FindGridCell(UnstructuredGridLayer gridLayer, PointToGridCellMapper gridCellMapper)
-        {
-            UnstructuredGrid grid = gridLayer.Grid;
-
-            Cell gridCell = gridCellMapper.GetCellFromWaqSegmentId(segmentIndex);
-
-            chosenCellPolygon = gridCell.ToPolygon(grid);
-            layerNumber =
-                (segmentIndex / grid.Cells.Count) + 1; // + 1 because waq is one based with layer indices as well
-
-            Polygon projectedCell = GetTransformedCellPolygon(gridLayer);
-
-            Envelope envelopeInternal = projectedCell.EnvelopeInternal.Clone();
-            // add 10% margin:
-            envelopeInternal.ExpandBy(
-                projectedCell.EnvelopeInternal.Width * 0.1,
-                projectedCell.EnvelopeInternal.Height * 0.1);
-
-            Map.ZoomToFit(envelopeInternal);
-        }
+        /// <summary>
+        /// Method injection point to retrieve a <see cref="WaterQualityModel"/> for a given
+        /// <see cref="UnstructuredGrid"/>. It is required to have this method set before
+        /// using the maptool.
+        /// </summary>
+        public Func<UnstructuredGrid, WaterQualityModel> GetWaqModelForGrid { get; set; }
 
         public override void Cancel()
         {
@@ -191,6 +148,46 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.MapTools
 
             RenderHighlightedGridCell(graphics, projectedCell);
             RenderLayerIndexText(graphics, projectedCell);
+        }
+
+        private bool IsToolAllowedOnLayer(ILayer layer)
+        {
+            var unstructuredGridLayer = layer as UnstructuredGridLayer;
+            if (unstructuredGridLayer != null && GetWaqModelForGrid != null)
+            {
+                var renderer = unstructuredGridLayer.Renderer as GridEdgeRenderer;
+                var isBlockedLinksRenderer = false;
+                if (renderer != null)
+                {
+                    isBlockedLinksRenderer =
+                        renderer.GridEdgeRenderMode == GridEdgeRenderMode.EdgesWithBlockedFlowLinks;
+                }
+
+                return !isBlockedLinksRenderer && GetWaqModelForGrid(unstructuredGridLayer.Grid) != null;
+            }
+
+            return false;
+        }
+
+        private void FindGridCell(UnstructuredGridLayer gridLayer, PointToGridCellMapper gridCellMapper)
+        {
+            UnstructuredGrid grid = gridLayer.Grid;
+
+            Cell gridCell = gridCellMapper.GetCellFromWaqSegmentId(segmentIndex);
+
+            chosenCellPolygon = gridCell.ToPolygon(grid);
+            layerNumber =
+                (segmentIndex / grid.Cells.Count) + 1; // + 1 because waq is one based with layer indices as well
+
+            Polygon projectedCell = GetTransformedCellPolygon(gridLayer);
+
+            Envelope envelopeInternal = projectedCell.EnvelopeInternal.Clone();
+            // add 10% margin:
+            envelopeInternal.ExpandBy(
+                projectedCell.EnvelopeInternal.Width * 0.1,
+                projectedCell.EnvelopeInternal.Height * 0.1);
+
+            Map.ZoomToFit(envelopeInternal);
         }
 
         private void RenderHighlightedGridCell(Graphics graphics, Polygon projectedCell)

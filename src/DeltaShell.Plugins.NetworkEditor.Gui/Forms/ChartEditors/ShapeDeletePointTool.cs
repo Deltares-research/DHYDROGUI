@@ -10,31 +10,33 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors
     {
         public override void MouseEvent(ChartMouseEvent kind, MouseEventArgs e, Cursor c)
         {
-            Point tmP = new Point(e.X, e.Y);
+            var tmP = new Point(e.X, e.Y);
 
             switch (kind)
             {
                 case ChartMouseEvent.Down:
+                {
+                    if (e.Button != MouseButtons.Left)
                     {
-                        if (e.Button != MouseButtons.Left)
+                        return;
+                    }
+
+                    if (null != ShapeModifyTool.ShapeFeatureEditor)
+                    {
+                        IPoint tracker = ShapeModifyTool.ShapeSelectTool.GetTrackerAt(ShapeModifyTool.ShapeFeatureEditor, tmP);
+                        if (null != tracker)
                         {
-                            return;
-                        }
-                        if (null != ShapeModifyTool.ShapeFeatureEditor)
-                        {
-                            IPoint tracker = ShapeModifyTool.ShapeSelectTool.GetTrackerAt(ShapeModifyTool.ShapeFeatureEditor, tmP);
-                            if (null != tracker)
+                            if (ShapeModifyTool.ShapeFeatureEditor.CanDeleteTracker(tracker))
                             {
-                                if (ShapeModifyTool.ShapeFeatureEditor.CanDeleteTracker(tracker))
-                                {
-                                    ShapeModifyTool.ShapeFeatureEditor.DeleteTracker(tracker);
-                                    ((ShapeFeatureEditor)ShapeModifyTool.ShapeFeatureEditor).ShapeFeature.Invalidate();
-                                    return;
-                                }
+                                ShapeModifyTool.ShapeFeatureEditor.DeleteTracker(tracker);
+                                ((ShapeFeatureEditor) ShapeModifyTool.ShapeFeatureEditor).ShapeFeature.Invalidate();
+                                return;
                             }
                         }
-                        ShapeModifyTool.ShapeSelectTool.MouseEvent(kind, e, c);
                     }
+
+                    ShapeModifyTool.ShapeSelectTool.MouseEvent(kind, e, c);
+                }
                     break;
                 case ChartMouseEvent.Move:
                     if (null != ShapeModifyTool.ShapeFeatureEditor)
@@ -48,8 +50,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors
                                 return;
                             }
                         }
+
                         c = Cursors.Default;
                     }
+
                     break;
             }
         }

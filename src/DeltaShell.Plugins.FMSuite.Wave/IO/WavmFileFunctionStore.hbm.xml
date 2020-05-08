@@ -7,7 +7,7 @@
     <id name="Id" column="id" type="long">
       <generator class="increment" />
     </id>
-    <property name="Path"/>
+    <property name="Path" />
   </class>
 
 </hibernate-mapping>

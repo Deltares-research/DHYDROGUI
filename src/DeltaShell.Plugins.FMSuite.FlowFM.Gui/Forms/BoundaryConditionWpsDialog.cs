@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
@@ -49,91 +50,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
 
         public ICoordinateSystem CoordinateSystem { get; set; }
 
+        public string Title { get; set; }
+
         public BoundaryConditionWpsImporter CreateImporter()
         {
             var importer = new BoundaryConditionWpsImporter();
             Configure(importer);
             return importer;
         }
-
-        private BoundaryConditionWpsImporter CreateTemporaryImporter()
-        {
-            return new BoundaryConditionWpsImporter {StartDate = StartTime, EndDate = StopTime, TimeStep = TimeStep};
-        }
-
-        private void FillControl()
-        {
-            startDatePicker.Value = StartTime;
-            startTimePicker.Value = StartTime;
-            endDatePicker.Value = StopTime;
-            endTimePicker.Value = StopTime;
-
-            var temporaryImporter = CreateTemporaryImporter();
-            try
-            {
-                temporaryImporter.InitializeClient();
-            }
-            catch (Exception e)
-            {
-                processDescriptionLabel.Text = e.Message;
-                okButton.Enabled = false;
-                return;
-            }
-            serverPathLabel.Text = temporaryImporter.Client.Server.ToString();
-            var link = temporaryImporter.Client.Server + "?Request=GetCapabilities&Service=wps";
-            serverPathLabel.Links.Add(0, link.Length, link);
-            processLabel.Text = temporaryImporter.Process;
-
-            try
-            {
-                var process = temporaryImporter.Client.Processes.First(i => i.Id == temporaryImporter.Process);
-                processDescriptionLabel.Text = process.Description;
-                timeStepComboBox.Items.Clear();
-                var input = process.Inputs.First(i => i.Id == "frequency") as WpsDataTypeLiteral;
-                if (input != null)
-                {
-                    timeStepComboBox.Items.AddRange(input.AllowedValues.OfType<object>().ToArray());
-                }
-                timeStepComboBox.SelectedItem = temporaryImporter.Frequency;    
-            }
-            catch (Exception e)
-            {
-                processDescriptionLabel.Text = e.Message;
-                okButton.Enabled = false;
-            }
-        }
-
-        private void OkButtonClick(object sender, EventArgs e)
-        {            
-            DialogResult = DialogResult.OK;
-            Close();
-        }
-
-        private void CancelButtonClick(object sender, EventArgs e)
-        {
-            DialogResult = DialogResult.Cancel;
-            Close();
-        }
-
-        void ServerPathLabelLinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            System.Diagnostics.Process.Start(e.Link.LinkData.ToString());
-        }
-
-        private void ImportToExistingBcButtonCheckedChanged(object sender, EventArgs e)
-        {
-            if (createNewSeriesButton.Checked)
-            {
-                importOnAllPointsButton.Checked = true;
-                groupBox3.Enabled = false;
-            }
-            else
-            {
-                groupBox3.Enabled = true;
-            }
-        }
-
-        public string Title { get; set; }
 
         public DelftDialogResult ShowModal()
         {
@@ -142,6 +66,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
             {
                 return DelftDialogResult.OK;
             }
+
             return DelftDialogResult.Cancel;
         }
 
@@ -176,19 +101,105 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
                 {
                     importer.ImportMode = BoundaryConditionWpsImporter.SupportPointImportMode.Active;
                 }
+
                 if (importOnInactivePointsButton.Checked)
                 {
                     importer.ImportMode = BoundaryConditionWpsImporter.SupportPointImportMode.Inactive;
                 }
+
                 if (importOnAllPointsButton.Checked)
                 {
                     importer.ImportMode = BoundaryConditionWpsImporter.SupportPointImportMode.All;
                 }
+
                 if (importOnSelectedPointButton.Checked)
                 {
                     importer.ImportMode = BoundaryConditionWpsImporter.SupportPointImportMode.Selected;
                 }
+            }
+        }
 
+        private BoundaryConditionWpsImporter CreateTemporaryImporter()
+        {
+            return new BoundaryConditionWpsImporter
+            {
+                StartDate = StartTime,
+                EndDate = StopTime,
+                TimeStep = TimeStep
+            };
+        }
+
+        private void FillControl()
+        {
+            startDatePicker.Value = StartTime;
+            startTimePicker.Value = StartTime;
+            endDatePicker.Value = StopTime;
+            endTimePicker.Value = StopTime;
+
+            BoundaryConditionWpsImporter temporaryImporter = CreateTemporaryImporter();
+            try
+            {
+                temporaryImporter.InitializeClient();
+            }
+            catch (Exception e)
+            {
+                processDescriptionLabel.Text = e.Message;
+                okButton.Enabled = false;
+                return;
+            }
+
+            serverPathLabel.Text = temporaryImporter.Client.Server.ToString();
+            string link = temporaryImporter.Client.Server + "?Request=GetCapabilities&Service=wps";
+            serverPathLabel.Links.Add(0, link.Length, link);
+            processLabel.Text = temporaryImporter.Process;
+
+            try
+            {
+                WpsClient.WpsProcess process = temporaryImporter.Client.Processes.First(i => i.Id == temporaryImporter.Process);
+                processDescriptionLabel.Text = process.Description;
+                timeStepComboBox.Items.Clear();
+                var input = process.Inputs.First(i => i.Id == "frequency") as WpsDataTypeLiteral;
+                if (input != null)
+                {
+                    timeStepComboBox.Items.AddRange(input.AllowedValues.OfType<object>().ToArray());
+                }
+
+                timeStepComboBox.SelectedItem = temporaryImporter.Frequency;
+            }
+            catch (Exception e)
+            {
+                processDescriptionLabel.Text = e.Message;
+                okButton.Enabled = false;
+            }
+        }
+
+        private void OkButtonClick(object sender, EventArgs e)
+        {
+            DialogResult = DialogResult.OK;
+            Close();
+        }
+
+        private void CancelButtonClick(object sender, EventArgs e)
+        {
+            DialogResult = DialogResult.Cancel;
+            Close();
+        }
+
+        private void ServerPathLabelLinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            Process.Start(e.Link.LinkData.ToString());
+        }
+
+        private void ImportToExistingBcButtonCheckedChanged(object sender, EventArgs e)
+        {
+            if (createNewSeriesButton.Checked)
+            {
+                importOnAllPointsButton.Checked = true;
+                groupBox3.Enabled = false;
+            }
+            else
+            {
+                groupBox3.Enabled = true;
             }
         }
 
@@ -196,7 +207,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
 
         public object Data { get; set; }
         public Image Image { get; set; }
-        public void EnsureVisible(object item){}
+        public void EnsureVisible(object item) {}
 
         public ViewInfo ViewInfo { get; set; }
 

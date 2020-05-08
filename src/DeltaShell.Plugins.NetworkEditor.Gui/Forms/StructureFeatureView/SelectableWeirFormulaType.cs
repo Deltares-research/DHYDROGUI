@@ -8,9 +8,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
     {
         [Description("Simple weir")]
         SimpleWeir,
+
         [Description("Simple gate")]
         SimpleGate,
+
         [Description("General structure")]
-        GeneralStructure,    
+        GeneralStructure,
     }
 }

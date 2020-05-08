@@ -12,7 +12,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Converters
     /// <see cref="TypeToDescriptionConverter"/> defines the <see cref="IValueConverter"/>
     /// to convert a <see cref="Type"/> to its DescriptionAttribute value.
     /// </summary>
-    /// <seealso cref="IValueConverter" />
+    /// <seealso cref="IValueConverter"/>
     [ValueConversion(typeof(Type), typeof(string))]
     public class TypeToDescriptionConverter : IValueConverter
     {
@@ -25,7 +25,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Converters
         /// <param name="culture">The culture to use in the converter.</param>
         /// <returns>
         /// The value of the DescriptionAttribute of <paramref name="value"/>.
-        /// If the method returns <see langword="null" />, the valid null value is used.
+        /// If the method returns <see langword="null"/>, the valid null value is used.
         /// </returns>
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
@@ -52,5 +52,4 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Converters
             return descriptions.FirstOrDefault()?.Description;
         }
     }
-
 }

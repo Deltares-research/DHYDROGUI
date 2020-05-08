@@ -1,5 +1,6 @@
 ﻿using System;
 using DelftTools.Hydro.CrossSections;
+using DelftTools.Hydro.CrossSections.DataSets;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView.ProfileMutators
 {
@@ -12,13 +13,69 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView.ProfileMut
             this.crossSectionDefinition = crossSectionDefinition;
         }
 
+        public bool CanDelete
+        {
+            get
+            {
+                return false;
+            }
+        }
+
+        public bool CanAdd
+        {
+            get
+            {
+                return false;
+            }
+        }
+
+        public bool CanMove
+        {
+            get
+            {
+                return true;
+            }
+        }
+
+        public bool ClipHorizontal
+        {
+            get
+            {
+                return false;
+            }
+        }
+
+        public bool ClipVertical
+        {
+            get
+            {
+                return false;
+            }
+        }
+
+        public bool FixHorizontal
+        {
+            get
+            {
+                return true;
+            }
+        }
+
+        public bool FixVertical
+        {
+            get
+            {
+                return false;
+            }
+        }
+
         public void MovePoint(int index, double y, double z)
         {
             crossSectionDefinition.BeginEdit(CrossSectionDefinition.DefaultEditAction);
             try
             {
-                var row = crossSectionDefinition.XYZDataTable[index];
-                var storage = z - row.Z;
+                CrossSectionDataSet.CrossSectionXYZRow row = crossSectionDefinition.XYZDataTable[index];
+                double storage = z - row.Z;
                 row.DeltaZStorage = Math.Max(0.0, storage);
             }
             finally
@@ -35,41 +92,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView.ProfileMut
         public void DeletePoint(int index)
         {
             throw new NotSupportedException("Cannot delete point to storage profile, add point to normal profile instead");
-        }
-
-        public bool CanDelete
-        {
-            get { return false; }
-        }
-
-        public bool CanAdd
-        {
-            get { return false; }
-        }
-
-        public bool CanMove
-        {
-            get { return true; }
-        }
-
-        public bool ClipHorizontal
-        {
-            get { return false; }
-        }
-
-        public bool ClipVertical
-        {
-            get { return false;  }
-        }
-
-        public bool FixHorizontal
-        {
-            get { return true; }
-        }
-
-        public bool FixVertical
-        {
-            get { return false; }
         }
     }
 }

@@ -14,25 +14,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Commands
 {
     public abstract class AddNewCrossSectionCommandBase : NetworkEditorCommand
     {
-        private static AddNewCrossSectionCommandBase ActiveAddNewCrossSectionCommand { get; set; }
-
-        protected override void OnExecute(params object[] arguments)
+        public override bool Checked
         {
-            ActiveAddNewCrossSectionCommand = this;
-            //activate the crossection map tool
-            MapControl mapControl = MapView.MapControl;
+            get
+            {
+                bool commandIsActive = this == ActiveAddNewCrossSectionCommand;
 
-            //set the geotype. HACK #1
-            var hydroRegionMapLayer = mapControl.Map.GetAllLayers(true).OfType<HydroRegionMapLayer>().FirstOrDefault(l => l.Region is IHydroNetwork);
-            if (hydroRegionMapLayer == null) return;
-
-            VectorLayer crossSectionLayer = hydroRegionMapLayer.Layers.OfType<VectorLayer>().FirstOrDefault(l => l.DataSource.FeatureType == typeof (CrossSection));
-            crossSectionLayer.FeatureEditor.CreateNewFeature = CreateNew;
-
-            var maptool = (MapTool)CurrentTool;
-            maptool.Cursor = Cursor;
-
-            mapControl.ActivateTool(CurrentTool);
+                return MapView != null && CurrentTool != null && CurrentTool.IsActive && commandIsActive;
+            }
         }
 
         protected abstract Cursor Cursor { get; }
@@ -41,29 +30,43 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Commands
         /// Creation delegate to be inserted in the layer when this command is activated
         /// </summary>
         //protected abstract Func<IFeature> CreateNew { get; }
-        
+
         /// <summary>
         /// Name of the maptool associated with this command
         /// </summary>
         protected abstract IMapTool CurrentTool { get; }
-        
-        public override bool Checked
-        {
-            get
-            {
-                var commandIsActive = (this == ActiveAddNewCrossSectionCommand);
-
-
-                return (MapView != null) && (CurrentTool != null) && CurrentTool.IsActive && commandIsActive;
-            }
-        }
-
 
         protected Func<ILayer, IFeature> CreateNew
         {
-            get { return CreateDefault; }
+            get
+            {
+                return CreateDefault;
+            }
+        }
+
+        protected override void OnExecute(params object[] arguments)
+        {
+            ActiveAddNewCrossSectionCommand = this;
+            //activate the crossection map tool
+            MapControl mapControl = MapView.MapControl;
+
+            //set the geotype. HACK #1
+            HydroRegionMapLayer hydroRegionMapLayer = mapControl.Map.GetAllLayers(true).OfType<HydroRegionMapLayer>().FirstOrDefault(l => l.Region is IHydroNetwork);
+            if (hydroRegionMapLayer == null)
+            {
+                return;
+            }
+
+            VectorLayer crossSectionLayer = hydroRegionMapLayer.Layers.OfType<VectorLayer>().FirstOrDefault(l => l.DataSource.FeatureType == typeof(CrossSection));
+            crossSectionLayer.FeatureEditor.CreateNewFeature = CreateNew;
+
+            var maptool = (MapTool) CurrentTool;
+            maptool.Cursor = Cursor;
+
+            mapControl.ActivateTool(CurrentTool);
         }
 
         protected abstract ICrossSection CreateDefault(ILayer layer);
+        private static AddNewCrossSectionCommandBase ActiveAddNewCrossSectionCommand { get; set; }
     }
 }

@@ -102,41 +102,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers
             ReplaceUndesiredCharactersInGroupNames(features, extension, defaultGroupName);
         }
 
-        private static void UpdateIsDefaultGroupFlag<TFeat>(IList<TFeat> features, string extension,
-                                                            string defaultGroupName)
-        {
-            features.OfType<IGroupableFeature>()
-                    .Where(f => f.IsDefaultGroup && !f.HasDefaultGroupName(extension, defaultGroupName))
-                    .ForEach(f => f.IsDefaultGroup = false);
-        }
-
-        private static void UpdateDefaultNamedFeatures<TFeat>(IList<TFeat> features, string extension,
-                                                              string defaultGroupName)
-        {
-            features.OfType<IGroupableFeature>()
-                    .Where(f => string.IsNullOrEmpty(f.GroupName) || f.GroupName.Equals(defaultGroupName) ||
-                                f.IsDefaultGroup)
-                    .ForEach(f =>
-                    {
-                        f.GroupName = string.Concat(defaultGroupName, extension);
-                        f.IsDefaultGroup = true;
-                    });
-        }
-
-        private static void ReplaceUndesiredCharactersInGroupNames<TFeat>(
-            IList<TFeat> features, string extension, string defaultGroupName)
-        {
-            features.OfType<IGroupableFeature>().Where(f => f.GroupName.Contains(" ") || f.GroupName.Contains(@"\"))
-                    .ForEach(f =>
-                    {
-                        f.GroupName = f.GroupName.Replace(" ", "_").Replace(@"\", "/");
-                        if (f.HasDefaultGroupName(extension, defaultGroupName))
-                        {
-                            f.IsDefaultGroup = true;
-                        }
-                    });
-        }
-
         /// <summary>
         /// Returns unique group names according to Windows. Windows does not make a distinction between uppercase and lowercase
         /// named
@@ -227,30 +192,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers
             return groupNames.Distinct().ToArray();
         }
 
-        private static string GetFilePathWithExtension(string filePath, string extension,
-                                                       params string[] alternativeExtensions)
-        {
-            if (extension != null && filePath.EndsWith(Path.GetExtension(extension))
-                || alternativeExtensions != null && alternativeExtensions.Any(filePath.EndsWith))
-            {
-                return filePath;
-            }
-
-            return filePath + (extension != null && filePath.EndsWith(extension) ? string.Empty : extension);
-        }
-
-        private static string GetCombinedPath(string mduFilePath, string fileName)
-        {
-            if (!string.IsNullOrEmpty(fileName))
-            {
-                return FileUtils.PathIsRelative(fileName)
-                           ? Path.GetFullPath(Path.Combine(Path.GetDirectoryName(mduFilePath), fileName))
-                           : fileName;
-            }
-
-            return null;
-        }
-
         public static bool IsMultipleFileValued(WaterFlowFMProperty property)
         {
             if (property.PropertyDefinition.IsMultipleFile
@@ -278,8 +219,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers
         }
 
         /// <summary>
-        /// This method copies feature files at the given <paramref name="featureGroupNames"/> to locations in the mdu folder if the file paths point
-        /// to a location outside of the mdu folder. In case a file path has '../' in its path, the path is replaced by its absolute path.
+        /// This method copies feature files at the given <paramref name="featureGroupNames"/> to locations in the mdu folder if
+        /// the file paths point
+        /// to a location outside of the mdu folder. In case a file path has '../' in its path, the path is replaced by its
+        /// absolute path.
         /// The corresponding ModelProperty is updated for every file path change.
         /// If the target file already exists, the file is overwritten.
         /// </summary>
@@ -325,6 +268,65 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers
             featureGroupNames.RemoveAllWhere(fp => fp == null);
             IEnumerable<string> relativePaths = featureGroupNames.Select(fp => FileUtils.GetRelativePath(mduDirectory, fp, true));
             modelDefinition.GetModelProperty(propertyKey).SetValueAsString(string.Join(" ", relativePaths));
+        }
+
+        private static void UpdateIsDefaultGroupFlag<TFeat>(IList<TFeat> features, string extension,
+                                                            string defaultGroupName)
+        {
+            features.OfType<IGroupableFeature>()
+                    .Where(f => f.IsDefaultGroup && !f.HasDefaultGroupName(extension, defaultGroupName))
+                    .ForEach(f => f.IsDefaultGroup = false);
+        }
+
+        private static void UpdateDefaultNamedFeatures<TFeat>(IList<TFeat> features, string extension,
+                                                              string defaultGroupName)
+        {
+            features.OfType<IGroupableFeature>()
+                    .Where(f => string.IsNullOrEmpty(f.GroupName) || f.GroupName.Equals(defaultGroupName) ||
+                                f.IsDefaultGroup)
+                    .ForEach(f =>
+                    {
+                        f.GroupName = string.Concat(defaultGroupName, extension);
+                        f.IsDefaultGroup = true;
+                    });
+        }
+
+        private static void ReplaceUndesiredCharactersInGroupNames<TFeat>(
+            IList<TFeat> features, string extension, string defaultGroupName)
+        {
+            features.OfType<IGroupableFeature>().Where(f => f.GroupName.Contains(" ") || f.GroupName.Contains(@"\"))
+                    .ForEach(f =>
+                    {
+                        f.GroupName = f.GroupName.Replace(" ", "_").Replace(@"\", "/");
+                        if (f.HasDefaultGroupName(extension, defaultGroupName))
+                        {
+                            f.IsDefaultGroup = true;
+                        }
+                    });
+        }
+
+        private static string GetFilePathWithExtension(string filePath, string extension,
+                                                       params string[] alternativeExtensions)
+        {
+            if (extension != null && filePath.EndsWith(Path.GetExtension(extension))
+                || alternativeExtensions != null && alternativeExtensions.Any(filePath.EndsWith))
+            {
+                return filePath;
+            }
+
+            return filePath + (extension != null && filePath.EndsWith(extension) ? string.Empty : extension);
+        }
+
+        private static string GetCombinedPath(string mduFilePath, string fileName)
+        {
+            if (!string.IsNullOrEmpty(fileName))
+            {
+                return FileUtils.PathIsRelative(fileName)
+                           ? Path.GetFullPath(Path.Combine(Path.GetDirectoryName(mduFilePath), fileName))
+                           : fileName;
+            }
+
+            return null;
         }
     }
 }

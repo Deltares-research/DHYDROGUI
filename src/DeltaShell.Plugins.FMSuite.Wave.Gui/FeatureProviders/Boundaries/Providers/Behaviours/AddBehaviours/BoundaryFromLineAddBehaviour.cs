@@ -11,7 +11,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Provid
     /// <see cref="ILineString"/>. When something else is provided, nothing
     /// will be constructed.
     /// </summary>
-    /// <seealso cref="IAddBehaviour" />
+    /// <seealso cref="IAddBehaviour"/>
     public sealed class BoundaryFromLineAddBehaviour : IAddBehaviour
     {
         private readonly IBoundaryProvider boundaryProvider;

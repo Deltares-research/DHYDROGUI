@@ -9,13 +9,13 @@ using NetTopologySuite.Mathematics;
 namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions
 {
     /// <summary>
-    /// <see cref="WaveBoundaryGeometricDefinitionFactoryHelper" /> provides the set of methods
+    /// <see cref="WaveBoundaryGeometricDefinitionFactoryHelper"/> provides the set of methods
     /// to obtain the correct wave boundary geometric definition.
     /// </summary>
     public static class WaveBoundaryGeometricDefinitionFactoryHelper
     {
         /// <summary>
-        /// Gets the snapped end points for the specified <paramref name="coordinates" />.
+        /// Gets the snapped end points for the specified <paramref name="coordinates"/>.
         /// </summary>
         /// <param name="boundarySnappingCalculator"> The boundary snapping calculator. </param>
         /// <param name="coordinates"> The coordinates. </param>
@@ -46,7 +46,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions
         }
 
         /// <summary>
-        /// Gets the geometric definition with the specified <paramref name="snappedCoordinates" />.
+        /// Gets the geometric definition with the specified <paramref name="snappedCoordinates"/>.
         /// </summary>
         /// <param name="snappedCoordinates"> The snapped coordinates. </param>
         /// <param name="calculator"> The boundary snapping calculator. </param>
@@ -93,12 +93,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions
         }
 
         /// <summary>
-        /// Gets the geometric definition of a boundary located at the specified <paramref name="orientation" />.
+        /// Gets the geometric definition of a boundary located at the specified <paramref name="orientation"/>.
         /// </summary>
         /// <param name="orientation"> The world side of the grid at which the boundary should be located. </param>
         /// <param name="calculator"> The boundary snapping calculator. </param>
         /// <returns> The geometric definition. </returns>
-        public static IWaveBoundaryGeometricDefinition GetGeometricDefinition(BoundaryOrientationType orientation, 
+        public static IWaveBoundaryGeometricDefinition GetGeometricDefinition(BoundaryOrientationType orientation,
                                                                               IBoundarySnappingCalculator calculator)
         {
             IGridBoundary gridBoundary = calculator.GridBoundary;

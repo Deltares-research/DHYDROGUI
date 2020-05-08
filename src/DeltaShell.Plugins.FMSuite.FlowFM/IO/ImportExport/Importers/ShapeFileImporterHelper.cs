@@ -81,7 +81,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
         }
 
         /// <summary>
-        /// Converts the geometry from the <paramref name="shapeFeature"/> to an <see cref="IGeometry" />.
+        /// Converts the geometry from the <paramref name="shapeFeature"/> to an <see cref="IGeometry"/>.
         /// </summary>
         /// <typeparam name="T"> The Type of <see cref="IGeometry"/> to which to convert to. </typeparam>
         /// <param name="shapeFeature"> The shape feature containing the geometry. </param>
@@ -96,7 +96,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
         /// This function currently supports IPoint, ILineString, and IPolygon, other geometries will
         /// return null.
         /// </remarks>
-        public static IGeometry ConvertGeometry<T>(IFeature shapeFeature, 
+        public static IGeometry ConvertGeometry<T>(IFeature shapeFeature,
                                                    IGeometryFactory factory = null) where T : IGeometry
         {
             Coordinate[] coordinates = shapeFeature.Geometry.Coordinates;

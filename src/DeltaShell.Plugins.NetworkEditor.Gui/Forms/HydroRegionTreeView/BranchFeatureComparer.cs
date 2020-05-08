@@ -10,16 +10,18 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
     {
         public int Compare(ITreeNode x, ITreeNode y)
         {
-            var branchFeatureX = (IBranchFeature)x.Tag;
-            var branchFeatureY = (IBranchFeature)y.Tag;
+            var branchFeatureX = (IBranchFeature) x.Tag;
+            var branchFeatureY = (IBranchFeature) y.Tag;
             if (Math.Abs(branchFeatureX.Chainage - branchFeatureY.Chainage) < BranchFeature.Epsilon)
             {
                 return 0;
             }
+
             if (branchFeatureX.Chainage > branchFeatureY.Chainage)
             {
                 return 1;
             }
+
             return -1;
         }
     }

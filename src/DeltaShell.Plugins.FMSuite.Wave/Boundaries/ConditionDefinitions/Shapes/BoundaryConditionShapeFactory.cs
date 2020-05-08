@@ -4,7 +4,7 @@
     /// <see cref="BoundaryConditionShapeFactory"/> implements the interface to construct
     /// the different <see cref="IBoundaryConditionShape"/>.
     /// </summary>
-    /// <seealso cref="IBoundaryConditionShapeFactory" />
+    /// <seealso cref="IBoundaryConditionShapeFactory"/>
     public class BoundaryConditionShapeFactory : IBoundaryConditionShapeFactory
     {
         public GaussShape ConstructDefaultGaussShape()

@@ -23,6 +23,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters
 
         private readonly Func<WaveDomainData, WaveModel> getModelForDomain;
 
+        private readonly string gridMemberName = nameof(WaveDomainData.Grid);
+        private readonly string bathymetryMemberName = nameof(WaveDomainData.Bathymetry);
+
         public WaveDomainNodePresenter(Func<WaveDomainData, WaveModel> getModel)
         {
             getModelForDomain = getModel;
@@ -32,25 +35,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters
         {
             node.Text = nodeData.Name;
             node.Image = DomainFolderImage;
-        }
-
-        private readonly string gridMemberName = nameof(WaveDomainData.Grid);
-        private readonly string bathymetryMemberName = nameof(WaveDomainData.Bathymetry);
-
-        protected override void OnPropertyChanged(WaveDomainData item, ITreeNode node, PropertyChangedEventArgs e)
-        {
-            if (node == null)
-            {
-                return;
-            }
-
-            if (e.PropertyName == gridMemberName ||
-                e.PropertyName == bathymetryMemberName)
-            {
-                node.Update();
-            }
-
-            base.OnPropertyChanged(item, node, e);
         }
 
         public override IEnumerable GetChildNodeObjects(WaveDomainData parentNodeData, ITreeNode node)
@@ -78,18 +62,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters
             return nodeData.SuperDomain != null
                        ? DragOperations.Move
                        : DragOperations.None;
-        }
-
-        protected override bool CanRemove(WaveDomainData nodeData)
-        {
-            return true;
-        }
-
-        protected override bool RemoveNodeData(object parentNodeData, WaveDomainData nodeData)
-        {
-            WaveModel model = getModelForDomain(nodeData);
-            DeleteDomain(model, nodeData);
-            return true;
         }
 
         public override void OnDragDrop(object item, object sourceParentNodeData, WaveDomainData target,
@@ -137,6 +109,34 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters
             return null;
         }
 
+        protected override void OnPropertyChanged(WaveDomainData item, ITreeNode node, PropertyChangedEventArgs e)
+        {
+            if (node == null)
+            {
+                return;
+            }
+
+            if (e.PropertyName == gridMemberName ||
+                e.PropertyName == bathymetryMemberName)
+            {
+                node.Update();
+            }
+
+            base.OnPropertyChanged(item, node, e);
+        }
+
+        protected override bool CanRemove(WaveDomainData nodeData)
+        {
+            return true;
+        }
+
+        protected override bool RemoveNodeData(object parentNodeData, WaveDomainData nodeData)
+        {
+            WaveModel model = getModelForDomain(nodeData);
+            DeleteDomain(model, nodeData);
+            return true;
+        }
+
         private ToolStripItem CreateAddSuperDomainMenuItem(WaveModel model, WaveDomainData waveDomain)
         {
             var item = new ClonableToolStripMenuItem
@@ -182,7 +182,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters
                 // here we know what to do
                 model.BeginEdit("Delete outer domain ...");
                 IWaveDomainData newOuterDomain = model.OuterDomain.SubDomains[0];
-                newOuterDomain.SuperDomain = null; // First set this to update domain specific view if open before removing subdomains otherwise view will not be updated
+                newOuterDomain.SuperDomain = null;    // First set this to update domain specific view if open before removing subdomains otherwise view will not be updated
                 model.OuterDomain.SubDomains.Clear(); // disconnect
                 model.OuterDomain = newOuterDomain;
                 model.EndEdit();

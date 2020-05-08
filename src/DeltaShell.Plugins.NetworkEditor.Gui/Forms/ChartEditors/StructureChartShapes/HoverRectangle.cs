@@ -8,10 +8,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
 {
     public class HoverRectangle : IHoverFeature
     {
-        public Color ForeColor { get; set; }
-        public IShapeFeature ShapeFeature { get; set; }
-        public VectorStyle Style { get; set; }
-
         public HoverRectangle(IShapeFeature shapeFeature, Color color)
         {
             ShapeFeature = shapeFeature;
@@ -24,9 +20,15 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
             Style = style;
         }
 
+        public VectorStyle Style { get; set; }
+        public Color ForeColor { get; set; }
+        public IShapeFeature ShapeFeature { get; set; }
+
+        public HoverType HoverType { get; set; }
+
         public void Render(List<Rectangle> usedSpace, IChart chart, Graphics graphics)
         {
-            var bounds = ShapeFeature.GetBounds();
+            Rectangle bounds = ShapeFeature.GetBounds();
             if (Style != null)
             {
                 graphics.DrawRectangle(Style.Outline, bounds);
@@ -38,7 +40,5 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
                 brush.Dispose();
             }
         }
-
-        public HoverType HoverType { get; set; }
     }
 }

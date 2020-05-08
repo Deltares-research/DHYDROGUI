@@ -3,7 +3,7 @@ using DelftTools.Hydro.Structures.WeirFormula;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
 {
-    internal static class WeirViewModelDesignerDataContext 
+    internal static class WeirViewModelDesignerDataContext
     {
         public static WeirViewModel SimpleWeirViewModel = new WeirViewModel
         {
@@ -11,7 +11,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
             {
                 CrestWidth = 100,
                 WeirFormula = new SimpleWeirFormula(),
-                
             },
             SelectedWeirType = SelectableWeirFormulaType.SimpleWeir
         };
@@ -23,7 +22,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
                 CrestWidth = 100,
                 CrestLevel = 20,
                 WeirFormula = new GeneralStructureWeirFormula(),
-
             },
             SelectedWeirType = SelectableWeirFormulaType.GeneralStructure
         };

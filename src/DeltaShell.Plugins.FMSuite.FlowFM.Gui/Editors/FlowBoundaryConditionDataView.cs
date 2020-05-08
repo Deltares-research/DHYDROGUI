@@ -38,6 +38,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
 {
     public partial class FlowBoundaryConditionDataView : UserControl, ICompositeView
     {
+        private enum ViewMode
+        {
+            Single,
+            Combined
+        };
+
+        private const string NoDataText = "No data defined; to create boundary data, activate a support" + " point.";
+        private const string NoBcText = "No boundary condition defined; to create one, click the '+' button.";
         private static readonly ILog log = LogManager.GetLogger(typeof(FlowBoundaryConditionDataView));
 
         private readonly OpenFileDialog FileDialog = new OpenFileDialog()
@@ -51,116 +59,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             DefaultExt = BcFile.Extension
         };
 
-        private class AddSeriesTool : IChartViewContextMenuTool
-        {
-            public readonly IList<IBoundaryCondition> AddedBoundaryConditions = new List<IBoundaryCondition>();
+        private readonly FlowBoundaryConditionSeriesFactory seriesFactory;
 
-            public IChartView ChartView { get; set; }
-
-            public bool Active
-            {
-                get => active;
-                set
-                {
-                    active = value;
-                    if (ActiveChanged != null)
-                    {
-                        ActiveChanged(this, EventArgs.Empty);
-                    }
-                }
-            }
-
-            public bool Enabled { get; set; }
-            public event EventHandler<EventArgs> ActiveChanged;
-
-            public void OnBeforeContextMenu(ContextMenuStrip menu)
-            {
-                List<IGrouping<string, IBoundaryCondition>> procsToAdd =
-                    BoundaryConditionSet.BoundaryConditions.Except(
-                                            AddedBoundaryConditions.Concat(new[]
-                                            {
-                                                BoundaryCondition
-                                            }))
-                                        .Where(bc => bc.DataPointIndices.Contains(SelectedIndex))
-                                        .GroupBy(bc => bc.ProcessName).ToList();
-
-                if (procsToAdd.Any())
-                {
-                    if (menu.Items.Count > 0)
-                    {
-                        menu.Items.Add(new ToolStripSeparator());
-                    }
-
-                    menu.Items.Add(new ToolStripMenuItem("Add series", null,
-                                                         procsToAdd.Select(
-                                                                       g => CreateMenuItem(
-                                                                           g, AddBoundaryConditionSeries))
-                                                                   .ToArray()));
-                }
-
-                List<IGrouping<string, IBoundaryCondition>> procsToRemove =
-                    AddedBoundaryConditions.GroupBy(bc => bc.ProcessName).ToList();
-
-                if (procsToRemove.Any())
-                {
-                    menu.Items.Add(new ToolStripMenuItem("Remove series", null,
-                                                         procsToRemove.Select(
-                                                                          g => CreateMenuItem(
-                                                                              g, RemoveBoundaryConditionSeries))
-                                                                      .ToArray()));
-                }
-            }
-
-            private ToolStripItem CreateMenuItem(IGrouping<string, IBoundaryCondition> grouping,
-                                                 EventHandler eventHandler)
-            {
-                return new ToolStripMenuItem(grouping.Key, null,
-                                             grouping.Select(
-                                                         bc =>
-                                                             new ToolStripMenuItem(bc.Name, null, eventHandler))
-                                                     .Cast<ToolStripItem>()
-                                                     .ToArray());
-            }
-
-            public BoundaryConditionSet BoundaryConditionSet { get; set; }
-            public IBoundaryCondition BoundaryCondition { get; set; }
-            public int SelectedIndex { get; set; }
-
-            private void AddBoundaryConditionSeries(object sender, EventArgs e)
-            {
-                IBoundaryCondition boundaryCondition =
-                    BoundaryConditionSet.BoundaryConditions.FirstOrDefault(
-                        bc => bc.Name == ((ToolStripMenuItem) sender).Text);
-                AddedBoundaryConditions.Add(boundaryCondition);
-                if (AddSeriesToView != null)
-                {
-                    AddSeriesToView(boundaryCondition);
-                }
-            }
-
-            private void RemoveBoundaryConditionSeries(object sender, EventArgs e)
-            {
-                IBoundaryCondition boundaryCondition =
-                    BoundaryConditionSet.BoundaryConditions.FirstOrDefault(
-                        bc => bc.Name == ((ToolStripMenuItem) sender).Text);
-                AddedBoundaryConditions.Remove(boundaryCondition);
-                if (RemoveSeriesFromView != null)
-                {
-                    RemoveSeriesFromView(boundaryCondition);
-                }
-            }
-
-            public Action<IBoundaryCondition> AddSeriesToView;
-            public Action<IBoundaryCondition> RemoveSeriesFromView;
-            private bool active;
-        }
+        private readonly AddSeriesTool addSeriesTool;
 
         private IBoundaryCondition boundaryCondition;
         private BoundaryConditionSet boundaryConditionSet;
         private IFunction boundaryConditionData;
-        private const string NoDataText = "No data defined; to create boundary data, activate a support" + " point.";
-        private const string NoBcText = "No boundary condition defined; to create one, click the '+' button.";
-        private readonly FlowBoundaryConditionSeriesFactory seriesFactory;
+
+        private WaterFlowFMModel model;
+
+        private ViewMode mode;
+
+        private bool componentsChanged;
 
         public FlowBoundaryConditionDataView()
         {
@@ -208,6 +119,189 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             UpdateControl();
 
             Mode = ViewMode.Single;
+        }
+
+        public int SupportPointIndex { private get; set; }
+
+        public IBoundaryCondition BoundaryCondition
+        {
+            private get
+            {
+                return boundaryCondition;
+            }
+            set
+            {
+                if (Equals(value, boundaryCondition))
+                {
+                    return;
+                }
+
+                if (boundaryCondition != null)
+                {
+                    ((INotifyPropertyChanged) boundaryCondition).PropertyChanged -= BoundaryConditionPropertyChanged;
+                }
+
+                boundaryCondition = value;
+                addSeriesTool.BoundaryCondition = value;
+                if (boundaryCondition != null)
+                {
+                    ((INotifyPropertyChanged) boundaryCondition).PropertyChanged += BoundaryConditionPropertyChanged;
+                }
+
+                SupportPointIndex = 0;
+                RefreshBoundaryData();
+            }
+        }
+
+        public WaterFlowFMModel Model
+        {
+            private get
+            {
+                return model;
+            }
+            set
+            {
+                if (model != null)
+                {
+                    ((INotifyPropertyChanged) model).PropertyChanged -= ModelPropertyChanged;
+                }
+
+                model = value;
+                if (model != null)
+                {
+                    ((INotifyPropertyChanged) model).PropertyChanged += ModelPropertyChanged;
+                    seriesFactory.ModelStartTime = model.StartTime;
+                    seriesFactory.ModelStopTime = model.StopTime;
+                    seriesFactory.ModelReferenceTime = model.ReferenceTime;
+                }
+            }
+        }
+
+        public BoundaryConditionSet BoundaryConditionSet
+        {
+            private get
+            {
+                return boundaryConditionSet;
+            }
+            set
+            {
+                if (Equals(value, boundaryConditionSet))
+                {
+                    return;
+                }
+
+                boundaryConditionSet = value;
+                addSeriesTool.BoundaryConditionSet = boundaryConditionSet;
+            }
+        }
+
+        public object Data { get; set; }
+        public Image Image { get; set; }
+
+        public ViewInfo ViewInfo { get; set; }
+
+        public IEventedList<IView> ChildViews => functionView.ChildViews;
+
+        public bool HandlesChildViews => true;
+
+        public void RefreshBoundaryData()
+        {
+            BoundaryConditionData = BoundaryCondition != null && SupportPointIndex != -1
+                                        ? BoundaryCondition.GetDataAtPoint(SupportPointIndex)
+                                        : null;
+        }
+
+        public void OnSupportPointChanged(object sender, EventArgs<int> e)
+        {
+            SupportPointIndex = e.Value;
+            addSeriesTool.SelectedIndex = SupportPointIndex;
+            RefreshBoundaryData();
+        }
+
+        [InvokeRequired]
+        public void UpdateControl()
+        {
+            ClearFunctionView();
+            ConfigureSeriesFactory();
+            FillCheckedListBox();
+            FillFunctionView();
+            UpdateFunctionViewMode();
+            UpdateButtons();
+        }
+
+        public void EnsureVisible(object item) {}
+
+        public void ActivateChildView(IView childView) {}
+
+        private IDictionary<string, double> AstroComponents { get; set; }
+
+        private IFunction BoundaryConditionData
+        {
+            get => boundaryConditionData;
+            set
+            {
+                if (ReferenceEquals(boundaryConditionData, value))
+                {
+                    return;
+                }
+
+                if (boundaryConditionData != null)
+                {
+                    boundaryConditionData.Components.CollectionChanged -= ComponentsCollectionChanged;
+                    if (model != null)
+                    {
+                        model.SedimentFractions.CollectionChanged -= SedimentsCollectionChanged;
+                    }
+
+                    ((INotifyPropertyChange) boundaryConditionData).PropertyChanged -= OnPropertyChanged;
+                }
+
+                boundaryConditionData = value;
+                if (boundaryConditionData != null)
+                {
+                    boundaryConditionData.Components.CollectionChanged += ComponentsCollectionChanged;
+                    if (model != null)
+                    {
+                        model.SedimentFractions.CollectionChanged += SedimentsCollectionChanged;
+                    }
+
+                    ((INotifyPropertyChange) boundaryConditionData).PropertyChanged += OnPropertyChanged;
+                }
+
+                UpdateControl();
+
+                if (boundaryConditionData != null && Model != null)
+                {
+                    TimeArgumentConfigurer.Configure(BoundaryConditionData, Model);
+                }
+            }
+        }
+
+        private DateTime ModelStartTime => Model == null ? DateTime.MinValue : Model.StartTime;
+
+        private DateTime ModelStopTime => Model == null ? ModelStartTime.AddDays(1) : Model.StopTime;
+
+        private TimeSpan ModelTimeStep => Model == null ? new TimeSpan(0, 1, 0, 0) : Model.TimeStep;
+
+        private ICoordinateSystem ModelCoordinateSystem => Model == null ? null : Model.CoordinateSystem;
+
+        private bool FourierDataType =>
+            BoundaryCondition.DataType == BoundaryConditionDataType.AstroComponents ||
+            BoundaryCondition.DataType == BoundaryConditionDataType.AstroCorrection ||
+            BoundaryCondition.DataType == BoundaryConditionDataType.Harmonics ||
+            BoundaryCondition.DataType == BoundaryConditionDataType.HarmonicCorrection;
+
+        private ViewMode Mode
+        {
+            get => mode;
+            set
+            {
+                if (mode != value)
+                {
+                    mode = value;
+                    UpdateFunctionViewMode();
+                }
+            }
         }
 
         private void BoundaryDataListBoxOnItemCheck(object sender, ItemCheckEventArgs itemCheckEventArgs)
@@ -266,60 +360,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             return BoundaryConditionWrapper(BoundaryCondition as FlowBoundaryCondition);
         }
 
-        private IDictionary<string, double> AstroComponents { get; set; }
-
-        public int SupportPointIndex { private get; set; }
-
-        private WaterFlowFMModel model;
-
-        private readonly AddSeriesTool addSeriesTool;
-
-        private ViewMode mode;
-
-        private IFunction BoundaryConditionData
-        {
-            get => boundaryConditionData;
-            set
-            {
-                if (ReferenceEquals(boundaryConditionData, value))
-                {
-                    return;
-                }
-
-                if (boundaryConditionData != null)
-                {
-                    boundaryConditionData.Components.CollectionChanged -= ComponentsCollectionChanged;
-                    if (model != null)
-                    {
-                        model.SedimentFractions.CollectionChanged -= SedimentsCollectionChanged;
-                    }
-
-                    ((INotifyPropertyChange) boundaryConditionData).PropertyChanged -= OnPropertyChanged;
-                }
-
-                boundaryConditionData = value;
-                if (boundaryConditionData != null)
-                {
-                    boundaryConditionData.Components.CollectionChanged += ComponentsCollectionChanged;
-                    if (model != null)
-                    {
-                        model.SedimentFractions.CollectionChanged += SedimentsCollectionChanged;
-                    }
-
-                    ((INotifyPropertyChange) boundaryConditionData).PropertyChanged += OnPropertyChanged;
-                }
-
-                UpdateControl();
-
-                if (boundaryConditionData != null && Model != null)
-                {
-                    TimeArgumentConfigurer.Configure(BoundaryConditionData, Model);
-                }
-            }
-        }
-
-        private bool componentsChanged;
-
         private void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (boundaryConditionData.IsNestedEditingDone() && componentsChanged)
@@ -338,74 +378,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
         private void ComponentsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             componentsChanged = true;
-        }
-
-        public void RefreshBoundaryData()
-        {
-            BoundaryConditionData = BoundaryCondition != null && SupportPointIndex != -1
-                                        ? BoundaryCondition.GetDataAtPoint(SupportPointIndex)
-                                        : null;
-        }
-
-        public void OnSupportPointChanged(object sender, EventArgs<int> e)
-        {
-            SupportPointIndex = e.Value;
-            addSeriesTool.SelectedIndex = SupportPointIndex;
-            RefreshBoundaryData();
-        }
-
-        public IBoundaryCondition BoundaryCondition
-        {
-            private get
-            {
-                return boundaryCondition;
-            }
-            set
-            {
-                if (Equals(value, boundaryCondition))
-                {
-                    return;
-                }
-
-                if (boundaryCondition != null)
-                {
-                    ((INotifyPropertyChanged) boundaryCondition).PropertyChanged -= BoundaryConditionPropertyChanged;
-                }
-
-                boundaryCondition = value;
-                addSeriesTool.BoundaryCondition = value;
-                if (boundaryCondition != null)
-                {
-                    ((INotifyPropertyChanged) boundaryCondition).PropertyChanged += BoundaryConditionPropertyChanged;
-                }
-
-                SupportPointIndex = 0;
-                RefreshBoundaryData();
-            }
-        }
-
-        public WaterFlowFMModel Model
-        {
-            private get
-            {
-                return model;
-            }
-            set
-            {
-                if (model != null)
-                {
-                    ((INotifyPropertyChanged) model).PropertyChanged -= ModelPropertyChanged;
-                }
-
-                model = value;
-                if (model != null)
-                {
-                    ((INotifyPropertyChanged) model).PropertyChanged += ModelPropertyChanged;
-                    seriesFactory.ModelStartTime = model.StartTime;
-                    seriesFactory.ModelStopTime = model.StopTime;
-                    seriesFactory.ModelReferenceTime = model.ReferenceTime;
-                }
-            }
         }
 
         private void ModelPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -442,43 +414,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
                 RefreshBoundaryData();
                 UpdateControl();
             }
-        }
-
-        public BoundaryConditionSet BoundaryConditionSet
-        {
-            private get
-            {
-                return boundaryConditionSet;
-            }
-            set
-            {
-                if (Equals(value, boundaryConditionSet))
-                {
-                    return;
-                }
-
-                boundaryConditionSet = value;
-                addSeriesTool.BoundaryConditionSet = boundaryConditionSet;
-            }
-        }
-
-        private DateTime ModelStartTime => Model == null ? DateTime.MinValue : Model.StartTime;
-
-        private DateTime ModelStopTime => Model == null ? ModelStartTime.AddDays(1) : Model.StopTime;
-
-        private TimeSpan ModelTimeStep => Model == null ? new TimeSpan(0, 1, 0, 0) : Model.TimeStep;
-
-        private ICoordinateSystem ModelCoordinateSystem => Model == null ? null : Model.CoordinateSystem;
-
-        [InvokeRequired]
-        public void UpdateControl()
-        {
-            ClearFunctionView();
-            ConfigureSeriesFactory();
-            FillCheckedListBox();
-            FillFunctionView();
-            UpdateFunctionViewMode();
-            UpdateButtons();
         }
 
         private void FillCheckedListBox()
@@ -822,12 +757,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             FillFunctionView();
         }
 
-        private bool FourierDataType =>
-            BoundaryCondition.DataType == BoundaryConditionDataType.AstroComponents ||
-            BoundaryCondition.DataType == BoundaryConditionDataType.AstroCorrection ||
-            BoundaryCondition.DataType == BoundaryConditionDataType.Harmonics ||
-            BoundaryCondition.DataType == BoundaryConditionDataType.HarmonicCorrection;
-
         private void TimeSeriesDialog()
         {
             var generateDialog = new TimeSeriesGeneratorDialog {ApplyOnAccept = false};
@@ -1077,37 +1006,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             FillFunctionView();
         }
 
-        public object Data { get; set; }
-        public Image Image { get; set; }
-        public void EnsureVisible(object item) {}
-
-        public ViewInfo ViewInfo { get; set; }
-
-        public IEventedList<IView> ChildViews => functionView.ChildViews;
-
-        public bool HandlesChildViews => true;
-
-        public void ActivateChildView(IView childView) {}
-
-        private enum ViewMode
-        {
-            Single,
-            Combined
-        };
-
-        private ViewMode Mode
-        {
-            get => mode;
-            set
-            {
-                if (mode != value)
-                {
-                    mode = value;
-                    UpdateFunctionViewMode();
-                }
-            }
-        }
-
         private void UpdateFunctionViewMode()
         {
             if (mode == ViewMode.Single)
@@ -1157,6 +1055,110 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             catch (NotSupportedException exception)
             {
                 log.ErrorFormat(exception.Message);
+            }
+        }
+
+        private class AddSeriesTool : IChartViewContextMenuTool
+        {
+            public readonly IList<IBoundaryCondition> AddedBoundaryConditions = new List<IBoundaryCondition>();
+
+            public Action<IBoundaryCondition> AddSeriesToView;
+            public Action<IBoundaryCondition> RemoveSeriesFromView;
+            private bool active;
+            public event EventHandler<EventArgs> ActiveChanged;
+
+            public BoundaryConditionSet BoundaryConditionSet { get; set; }
+            public IBoundaryCondition BoundaryCondition { get; set; }
+            public int SelectedIndex { get; set; }
+
+            public IChartView ChartView { get; set; }
+
+            public bool Active
+            {
+                get => active;
+                set
+                {
+                    active = value;
+                    if (ActiveChanged != null)
+                    {
+                        ActiveChanged(this, EventArgs.Empty);
+                    }
+                }
+            }
+
+            public bool Enabled { get; set; }
+
+            public void OnBeforeContextMenu(ContextMenuStrip menu)
+            {
+                List<IGrouping<string, IBoundaryCondition>> procsToAdd =
+                    BoundaryConditionSet.BoundaryConditions.Except(
+                                            AddedBoundaryConditions.Concat(new[]
+                                            {
+                                                BoundaryCondition
+                                            }))
+                                        .Where(bc => bc.DataPointIndices.Contains(SelectedIndex))
+                                        .GroupBy(bc => bc.ProcessName).ToList();
+
+                if (procsToAdd.Any())
+                {
+                    if (menu.Items.Count > 0)
+                    {
+                        menu.Items.Add(new ToolStripSeparator());
+                    }
+
+                    menu.Items.Add(new ToolStripMenuItem("Add series", null,
+                                                         procsToAdd.Select(
+                                                                       g => CreateMenuItem(
+                                                                           g, AddBoundaryConditionSeries))
+                                                                   .ToArray()));
+                }
+
+                List<IGrouping<string, IBoundaryCondition>> procsToRemove =
+                    AddedBoundaryConditions.GroupBy(bc => bc.ProcessName).ToList();
+
+                if (procsToRemove.Any())
+                {
+                    menu.Items.Add(new ToolStripMenuItem("Remove series", null,
+                                                         procsToRemove.Select(
+                                                                          g => CreateMenuItem(
+                                                                              g, RemoveBoundaryConditionSeries))
+                                                                      .ToArray()));
+                }
+            }
+
+            private ToolStripItem CreateMenuItem(IGrouping<string, IBoundaryCondition> grouping,
+                                                 EventHandler eventHandler)
+            {
+                return new ToolStripMenuItem(grouping.Key, null,
+                                             grouping.Select(
+                                                         bc =>
+                                                             new ToolStripMenuItem(bc.Name, null, eventHandler))
+                                                     .Cast<ToolStripItem>()
+                                                     .ToArray());
+            }
+
+            private void AddBoundaryConditionSeries(object sender, EventArgs e)
+            {
+                IBoundaryCondition boundaryCondition =
+                    BoundaryConditionSet.BoundaryConditions.FirstOrDefault(
+                        bc => bc.Name == ((ToolStripMenuItem) sender).Text);
+                AddedBoundaryConditions.Add(boundaryCondition);
+                if (AddSeriesToView != null)
+                {
+                    AddSeriesToView(boundaryCondition);
+                }
+            }
+
+            private void RemoveBoundaryConditionSeries(object sender, EventArgs e)
+            {
+                IBoundaryCondition boundaryCondition =
+                    BoundaryConditionSet.BoundaryConditions.FirstOrDefault(
+                        bc => bc.Name == ((ToolStripMenuItem) sender).Text);
+                AddedBoundaryConditions.Remove(boundaryCondition);
+                if (RemoveSeriesFromView != null)
+                {
+                    RemoveSeriesFromView(boundaryCondition);
+                }
             }
         }
     }

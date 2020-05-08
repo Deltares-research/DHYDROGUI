@@ -29,7 +29,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries
             // The dependency on WaveModel is an unfortunate result of the lack of well designed
             // interface, such that the properties can be separated correctly from their implementation.
             Ensure.NotNull(model, nameof(model));
-            
+
             this.model = model;
 
             ((INotifyPropertyChange) model.OuterDomain).PropertyChanged += OnOuterGridChanged;
@@ -77,13 +77,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries
             IEnumerable<CachedBoundary> cache = SnapBoundariesToNewGrid.CreateCachedBoundaries(
                 model.BoundaryContainer.Boundaries.ToList(),
                 model.BoundaryContainer.GetGridBoundary());
-            
+
             model.BoundaryContainer.Boundaries.Clear();
             model.BoundaryContainer.UpdateGridBoundary(CreateGridBoundary(outerDomainGrid));
 
             IEnumerable<IWaveBoundary> reSnappedBoundaries = SnapBoundariesToNewGrid.RestoreBoundariesIfPossible(cache, model.BoundaryContainer.GetBoundarySnappingCalculator());
 
-            foreach (var bound in reSnappedBoundaries)
+            foreach (IWaveBoundary bound in reSnappedBoundaries)
             {
                 model.BoundaryContainer.Boundaries.Add(bound);
             }
@@ -91,7 +91,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries
 
         private static IGridBoundary CreateGridBoundary(IDiscreteGridPointCoverage outerDomainGrid)
         {
-            if (outerDomainGrid == null   || 
+            if (outerDomainGrid == null ||
                 outerDomainGrid.Size1 < 2 ||
                 outerDomainGrid.Size2 < 2)
             {

@@ -9,7 +9,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Mediators
     /// to depend upon each other directly. Instead the actual coupling, and
     /// wiring of different calls is encapsulated here.
     /// </summary>
-    /// <seealso cref="IAnnounceDataComponentChanged" />
+    /// <seealso cref="IAnnounceDataComponentChanged"/>
     public class WaveBoundaryConditionEditorMediator : IAnnounceDataComponentChanged
     {
         private readonly IRefreshIsEnabledOnDataComponentChanged dataComponentIsEnabledDependentViewModel;

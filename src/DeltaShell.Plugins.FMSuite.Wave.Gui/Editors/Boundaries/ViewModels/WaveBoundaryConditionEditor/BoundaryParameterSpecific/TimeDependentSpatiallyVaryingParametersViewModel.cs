@@ -10,7 +10,8 @@ using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoun
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor.BoundaryParameterSpecific
 {
     /// <summary>
-    /// <see cref="TimeDependentSpatiallyVaryingParametersViewModel{TSpreading}"/> defines the view model for the TimeDependentParametersView
+    /// <see cref="TimeDependentSpatiallyVaryingParametersViewModel{TSpreading}"/> defines the view model for the
+    /// TimeDependentParametersView
     /// of spatially varying wave boundaries.
     /// </summary>
     /// <typeparam name="TSpreading">The type of the spreading.</typeparam>
@@ -30,9 +31,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         /// Thrown when any parameter is <c>null</c>.
         /// </exception>
         public TimeDependentSpatiallyVaryingParametersViewModel(IGenerateSeries generateSeries,
-                                                                TimeDependentParameters<TSpreading> parameters, 
+                                                                TimeDependentParameters<TSpreading> parameters,
                                                                 IReadOnlyDictionary<SupportPoint, TimeDependentParameters<TSpreading>> supportPointToParametersMapping)
-                                                                
+
         {
             Ensure.NotNull(generateSeries, nameof(generateSeries));
             Ensure.NotNull(parameters, nameof(parameters));
@@ -42,18 +43,21 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
             ObservedParameters = parameters;
             this.supportPointToParametersMapping = supportPointToParametersMapping;
 
-            TimeDependentParametersFunctions = new[] {ObservedParameters.WaveEnergyFunction.UnderlyingFunction};
+            TimeDependentParametersFunctions = new[]
+            {
+                ObservedParameters.WaveEnergyFunction.UnderlyingFunction
+            };
         }
+
+        public override IEnumerable<IFunction> TimeDependentParametersFunctions { get; }
 
         /// <summary>
         /// Gets the observed parameters.
         /// </summary>
         public TimeDependentParameters<TSpreading> ObservedParameters { get; }
 
-        public override IEnumerable<IFunction> TimeDependentParametersFunctions { get; }
-
-        protected override void GenerateSeries() => 
-            generateSeries.Execute(ObservedParameters.WaveEnergyFunction, 
+        protected override void GenerateSeries() =>
+            generateSeries.Execute(ObservedParameters.WaveEnergyFunction,
                                    supportPointToParametersMapping.Values
                                                                   .Where(p => p != ObservedParameters)
                                                                   .Select(p => p.WaveEnergyFunction));

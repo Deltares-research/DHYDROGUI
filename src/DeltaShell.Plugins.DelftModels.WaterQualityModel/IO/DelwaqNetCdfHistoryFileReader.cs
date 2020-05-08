@@ -22,10 +22,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         private static readonly ILog log = LogManager.GetLogger(typeof(DelwaqNetCdfHistoryFileReader));
 
         /// <summary>
-        /// Reads <see cref="DelwaqHisFileData" /> objects from a file at the specified <paramref name="filePath"/>.
+        /// Reads <see cref="DelwaqHisFileData"/> objects from a file at the specified <paramref name="filePath"/>.
         /// </summary>
         /// <param name="filePath"> The file path. </param>
-        /// <returns>The read <see cref="DelwaqHisFileData" /> objects.</returns>
+        /// <returns>The read <see cref="DelwaqHisFileData"/> objects.</returns>
         /// <exception cref="ArgumentException"> Thrown when <paramref name="filePath"/> is <c>null</c> or empty.</exception>
         public static DelwaqHisFileData[] Read(string filePath)
         {

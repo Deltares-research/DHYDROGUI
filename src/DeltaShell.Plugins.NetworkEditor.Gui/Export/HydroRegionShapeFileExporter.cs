@@ -7,13 +7,14 @@ using DelftTools.Shell.Core;
 using DelftTools.Shell.Gui;
 using DeltaShell.Plugins.SharpMapGis.ImportExport;
 using log4net;
+using SharpMap.Api.Layers;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Export
 {
     public class HydroRegionShapeFileExporter : IFileExporter
     {
-        private readonly IGui gui;
         private static readonly ILog log = LogManager.GetLogger(typeof(HydroRegionShapeFileExporter));
+        private readonly IGui gui;
 
         public HydroRegionShapeFileExporter(IGui gui)
         {
@@ -22,14 +23,37 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Export
 
         public string Name
         {
-            get { return "HydroRegion to Esri Shapefile"; }
+            get
+            {
+                return "HydroRegion to Esri Shapefile";
+            }
         }
 
-        public string Category { get { return "General"; } }
+        public string Category
+        {
+            get
+            {
+                return "General";
+            }
+        }
+
         public string Description
         {
-            get { return string.Empty; }
+            get
+            {
+                return string.Empty;
+            }
         }
+
+        public string FileFilter
+        {
+            get
+            {
+                return "Esri shapefiles (*.shp)|*.shp";
+            }
+        }
+
+        public Bitmap Icon { get; private set; }
 
         public bool Export(object item, string path)
         {
@@ -39,7 +63,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Export
                 return false;
             }
 
-            var layer = MapLayerProviderHelper.CreateLayersRecursive(hydroRegion, null, gui.Plugins.Select(p => p.MapLayerProvider).ToList());
+            ILayer layer = MapLayerProviderHelper.CreateLayersRecursive(hydroRegion, null, gui.Plugins.Select(p => p.MapLayerProvider).ToList());
             var exporter = new ShapeFileExporter();
 
             if (!exporter.Export(layer, path))
@@ -56,12 +80,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Export
             yield return typeof(IHydroRegion);
         }
 
-        public string FileFilter
-        {
-            get { return "Esri shapefiles (*.shp)|*.shp"; }
-        }
-
-        public Bitmap Icon { get; private set; }
         public bool CanExportFor(object item)
         {
             return true;

@@ -5,7 +5,7 @@
         /// <summary>
         /// Boolean property for using a .sp2 file for defining boundaries
         /// for the whole domain or creating boundaries by yourself by using
-        /// the boundaries of <see cref="IBoundaryProvider"/>. 
+        /// the boundaries of <see cref="IBoundaryProvider"/>.
         /// </summary>
         bool DefinitionPerFileUsed { get; set; }
 

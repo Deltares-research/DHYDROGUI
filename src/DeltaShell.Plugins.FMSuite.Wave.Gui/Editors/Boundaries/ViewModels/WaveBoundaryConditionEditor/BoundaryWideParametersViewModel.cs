@@ -145,13 +145,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         /// <summary>
         /// Gets whether the parameters should be visible.
         /// </summary>
-        public bool IsVisible => 
+        public bool IsVisible =>
             viewEnumFromDataComponentQuerier.GetForcingType(observedBoundaryCondition.DataComponent) != ForcingViewType.FileBased;
-
-        public void RefreshViewModel()
-        {
-            OnPropertyChanged(string.Empty);
-        }
 
         /// <summary>
         /// Sets the mediator on this class that should announce changes.
@@ -166,6 +161,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         {
             Ensure.NotNull(mediator, nameof(mediator));
             announceDataComponentChanged = mediator;
+        }
+
+        public void RefreshViewModel()
+        {
+            OnPropertyChanged(string.Empty);
         }
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)

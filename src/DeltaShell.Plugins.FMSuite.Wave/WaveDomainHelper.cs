@@ -14,15 +14,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             return list;
         }
 
-        private static void AddSubDomains(IWaveDomainData domain, ref List<IWaveDomainData> list)
-        {
-            foreach (IWaveDomainData subDomain in domain.SubDomains)
-            {
-                list.Add(subDomain);
-                AddSubDomains(subDomain, ref list); // recursively!!
-            }
-        }
-
         public static bool IsValidDomainName(string name, WaveModel model)
         {
             IList<IWaveDomainData> allDomains = GetAllDomains(model.OuterDomain);
@@ -38,6 +29,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         public static bool IsDryPoint(double x, double y)
         {
             return double.IsNaN(x) && double.IsNaN(y);
+        }
+
+        private static void AddSubDomains(IWaveDomainData domain, ref List<IWaveDomainData> list)
+        {
+            foreach (IWaveDomainData subDomain in domain.SubDomains)
+            {
+                list.Add(subDomain);
+                AddSubDomains(subDomain, ref list); // recursively!!
+            }
         }
     }
 }

@@ -52,9 +52,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Ribbon
 
                 if (Equals(button, ButtonAddBoundary) && modelGroupLayer != null)
                 {
-                    CurvilinearGrid curvilinearGrid = ((WaveModel)modelGroupLayer.Model).OuterDomain.Grid;
+                    CurvilinearGrid curvilinearGrid = ((WaveModel) modelGroupLayer.Model).OuterDomain.Grid;
                     bool hasGrid = curvilinearGrid != null && !curvilinearGrid.IsEmpty;
-                    bool boundaryDefinedByFile = ((WaveModel)modelGroupLayer.Model).BoundaryContainer.DefinitionPerFileUsed;
+                    bool boundaryDefinedByFile = ((WaveModel) modelGroupLayer.Model).BoundaryContainer.DefinitionPerFileUsed;
                     button.IsEnabled = hasGrid && !boundaryDefinedByFile && command.Enabled;
                 }
                 else

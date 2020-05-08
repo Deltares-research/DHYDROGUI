@@ -17,8 +17,14 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Readers
         /// </summary>
         /// <param name="streamReader"> The reader to read with. </param>
         /// <returns> A dictionary containing all messages per log severity. </returns>
-        /// <exception cref="ArgumentNullException"> In case <param name="streamReader"/> is <c>null</c>. </exception>
-        /// <exception cref="ArgumentException"> In case <param name="streamReader"/> is not readable (i.e. closed). </exception>
+        /// <exception cref="ArgumentNullException"> In case
+        /// <param name="streamReader"/>
+        /// is <c>null</c>.
+        /// </exception>
+        /// <exception cref="ArgumentException"> In case
+        /// <param name="streamReader"/>
+        /// is not readable (i.e. closed).
+        /// </exception>
         /// <remarks>
         /// Messages in diagnostics files may be split up on multiple consecutive lines. They will be read as one message.
         /// Lines that start with "* " are seen as comments and will not be parsed.
@@ -35,7 +41,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Readers
                 {DiaFileLogSeverity.Error, new List<string>()},
                 {DiaFileLogSeverity.Fatal, new List<string>()}
             };
-            
+
             var messageBuilder = new MessageBuilder();
 
             while (!streamReader.EndOfStream)
@@ -77,7 +83,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Readers
             }
         }
 
-        private static void AddMessage(this IReadOnlyDictionary<DiaFileLogSeverity, IList<string>> messagesDictionary, 
+        private static void AddMessage(this IReadOnlyDictionary<DiaFileLogSeverity, IList<string>> messagesDictionary,
                                        MessageBuilder messageBuilder)
         {
             messagesDictionary[messageBuilder.MessageSeverityType].Add(messageBuilder.GetMessage());
@@ -117,9 +123,9 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Readers
             /// <c>true</c> in case the message was extended with <paramref name="line"/>.
             /// <c>false</c> in case the message could not be extended with <paramref name="line"/>.
             /// Reasons for this are:
-            ///  - We currently do not have a message,
-            ///  - <paramref name="line"/> is a new message,
-            ///  - <paramref name="line"/> is a comment.
+            /// - We currently do not have a message,
+            /// - <paramref name="line"/> is a new message,
+            /// - <paramref name="line"/> is a comment.
             /// </returns>
             public bool TryExtendMessageWithLine(string line)
             {

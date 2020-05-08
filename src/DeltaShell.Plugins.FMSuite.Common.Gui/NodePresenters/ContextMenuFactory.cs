@@ -13,27 +13,35 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.NodePresenters
         private static readonly Bitmap Properties = Resources.properties;
 
         /// <summary>
-        /// Generates a context menu for the provided <param name="data"/>.
+        /// Generates a context menu for the provided
+        /// <param name="data"/>
+        /// .
         /// </summary>
         /// <param name="data"> Data to generate a menu for. </param>
         /// <param name="gui"> The gui (needed for calling commands) </param>
-        /// <param name="nodePresenter"> The node presenter for the <param name="data"/> object. </param>
-        /// <param name="node"> Tree node for the <param name="data"/> object. </param>
+        /// <param name="nodePresenter"> The node presenter for the
+        /// <param name="data"/>
+        /// object.
+        /// </param>
+        /// <param name="node"> Tree node for the
+        /// <param name="data"/>
+        /// object.
+        /// </param>
         /// <returns> A <see cref="ContextMenuStrip"/> object with defined functionality. </returns>
         public static ContextMenuStrip CreateMenuFor(object data, IGui gui, ITreeNodePresenter nodePresenter, ITreeNode node)
         {
             var menu = new ContextMenuStrip();
-            
+
             var openWithItem = new ClonableToolStripMenuItem
             {
                 Text = Resources.FMSuiteNodePresenterBase_GetContextMenu_Open__With___,
                 Tag = data,
                 Enabled = gui.CommandHandler.CanOpenSelectViewDialog()
             };
-            
+
             openWithItem.Click += (s, a) =>
             {
-                gui.Selection = ((ToolStripMenuItem)s).Tag;
+                gui.Selection = ((ToolStripMenuItem) s).Tag;
                 gui.CommandHandler.OpenSelectViewDialog();
             };
 
@@ -43,7 +51,13 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.NodePresenters
             var addToolStripSeparator = false;
             if (node != null && nodePresenter.CanRemove(null, node.Tag))
             {
-                var deleteItem = new ClonableToolStripMenuItem { Text = "Delete", Tag = data, Enabled = true, Image = Resources.DeleteHS };
+                var deleteItem = new ClonableToolStripMenuItem
+                {
+                    Text = "Delete",
+                    Tag = data,
+                    Enabled = true,
+                    Image = Resources.DeleteHS
+                };
                 deleteItem.Click += (s, e) => nodePresenter.RemoveNodeData(node.Parent.Tag, data);
                 menu.Items.Add(deleteItem);
                 addToolStripSeparator = true;
@@ -51,7 +65,12 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.NodePresenters
 
             if (nodePresenter.CanRenameNode(node))
             {
-                var renameItem = new ClonableToolStripMenuItem { Text = "Rename", Tag = data, Enabled = true };
+                var renameItem = new ClonableToolStripMenuItem
+                {
+                    Text = "Rename",
+                    Tag = data,
+                    Enabled = true
+                };
                 renameItem.Click += (s, e) => node.TreeView.StartLabelEdit();
                 menu.Items.Add(renameItem);
                 addToolStripSeparator = true;
@@ -79,10 +98,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.NodePresenters
                 Tag = data,
                 Enabled = gui.CommandHandler.CanExportFrom(data)
             };
-            exportItem.Click += (s, a) =>
-            {
-                gui.CommandHandler.ExportFrom(data);
-            };
+            exportItem.Click += (s, a) => { gui.CommandHandler.ExportFrom(data); };
             menu.Items.Add(exportItem);
 
             menu.Items.Add(new ToolStripSeparator());
@@ -94,7 +110,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.NodePresenters
                 Image = Properties
             };
 
-            propertiesItem.Click += (s,a)=>
+            propertiesItem.Click += (s, a) =>
             {
                 gui.Selection = data;
                 gui.CommandHandler.ShowProperties();

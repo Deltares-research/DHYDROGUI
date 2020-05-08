@@ -16,6 +16,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
 {
     public class WaterFlowFMFileImporter : IDimrModelFileImporter
     {
+        private readonly ILog log = LogManager.GetLogger(typeof(WaterFlowFMFileImporter));
+
+        private Func<string> StoreWorkingDirectoryPathFunc;
+
         /// <summary>
         /// Constructor needed for connecting the Application.WorkingDirectory to the WaterFlowFMModel Working Directory.
         /// </summary>
@@ -24,10 +28,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
         {
             StoreWorkingDirectoryPathFunc = getWorkingDirectoryPathFunc;
         }
-
-        private Func<string> StoreWorkingDirectoryPathFunc;
-
-        private readonly ILog log = LogManager.GetLogger(typeof(WaterFlowFMFileImporter));
 
         public string Name => "Flow Flexible Mesh Model";
 
@@ -47,11 +47,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
 
         public bool OpenViewAfterImport => true;
 
-        public bool CanImportOn(object targetObject)
-        {
-            return targetObject is ICompositeActivity || targetObject is WaterFlowFMModel;
-        }
-
         public bool CanImportOnRootLevel => true;
 
         public string FileFilter => $"Flexible Mesh Model Definition|*{FileConstants.MduFileExtension}";
@@ -61,6 +56,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
         public bool ShouldCancel { get; set; }
 
         public ImportProgressChangedDelegate ProgressChanged { get; set; }
+
+        public string MasterFileExtension => "mdu";
+
+        public bool CanImportOn(object targetObject)
+        {
+            return targetObject is ICompositeActivity || targetObject is WaterFlowFMModel;
+        }
 
         public object ImportItem(string path, object target = null)
         {
@@ -130,7 +132,5 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
 
             ProgressChanged(currentStepName, currentStep, totalSteps);
         }
-
-        public string MasterFileExtension => "mdu";
     }
 }

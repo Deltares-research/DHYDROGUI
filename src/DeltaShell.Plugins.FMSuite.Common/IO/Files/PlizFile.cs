@@ -19,24 +19,24 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files
         }
 
         /// <summary>
-        /// Reads a .pliz file and creates a collection of features of type <typeparamref name="T" />.
+        /// Reads a .pliz file and creates a collection of features of type <typeparamref name="T"/>.
         /// </summary>
         /// <param name="filePath">The file path.</param>
-        /// <returns> A collection of features of type <typeparamref name="T" />.</returns>
+        /// <returns> A collection of features of type <typeparamref name="T"/>.</returns>
         public override IList<T> Read(string filePath)
         {
             return Read(filePath, null);
         }
 
         /// <summary>
-        /// Reads a .pliz file and creates a collection of features of type <typeparamref name="T" /> and optionally
+        /// Reads a .pliz file and creates a collection of features of type <typeparamref name="T"/> and optionally
         /// reports reading progress information to the user.
         /// </summary>
         /// <param name="filePath">The file path.</param>
         /// <param name="progress">
         /// Action that is invoked when reading a line in the file.
         /// </param>
-        /// <returns> A collection of features of type <typeparamref name="T" />.</returns>
+        /// <returns> A collection of features of type <typeparamref name="T"/>.</returns>
         public override IList<T> Read(string filePath, Action<string, int, int> progress)
         {
             IList<T> features = base.Read(filePath, progress);

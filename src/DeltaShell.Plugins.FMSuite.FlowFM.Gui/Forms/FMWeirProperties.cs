@@ -18,8 +18,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
         [PropertyOrder(0)]
         public string Name
         {
-            get { return data.Name; }
-            set { data.Name = value; }
+            get
+            {
+                return data.Name;
+            }
+            set
+            {
+                data.Name = value;
+            }
         }
 
         /// <summary>
@@ -60,10 +66,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
                         {
                             BedLevelStructureCentre = data.CrestLevel,
                             WidthStructureCentre = data.CrestWidth,
-
-                            WidthStructureLeftSide    = double.NaN,
-                            WidthStructureRightSide   = double.NaN,
-                            WidthLeftSideOfStructure  = double.NaN,
+                            WidthStructureLeftSide = double.NaN,
+                            WidthStructureRightSide = double.NaN,
+                            WidthLeftSideOfStructure = double.NaN,
                             WidthRightSideOfStructure = double.NaN,
                         };
                         data.WeirFormula = generalStructureWeirFormula;
@@ -85,11 +90,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
                 {
                     return "Time series";
                 }
+
                 return data.CrestLevel.ToString(CultureInfo.CurrentCulture);
             }
             set
             {
-                if (double.TryParse(value, out var crestLevel))
+                if (double.TryParse(value, out double crestLevel))
                 {
                     data.CrestLevel = crestLevel;
                 }
@@ -102,8 +108,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
         [PropertyOrder(3)]
         public TimeDependency UseCrestLevelTimeSeries
         {
-            get { return data.UseCrestLevelTimeSeries ? TimeDependency.TimeDependent : TimeDependency.Constant; }
-            set { data.UseCrestLevelTimeSeries = value == TimeDependency.TimeDependent; }
+            get
+            {
+                return data.UseCrestLevelTimeSeries ? TimeDependency.TimeDependent : TimeDependency.Constant;
+            }
+            set
+            {
+                data.UseCrestLevelTimeSeries = value == TimeDependency.TimeDependent;
+            }
         }
 
         /// <summary>
@@ -126,10 +138,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
             get
             {
                 if (double.IsNaN(data.CrestWidth))
+                {
                     return null;
+                }
+
                 return data.CrestWidth;
             }
-            set { data.CrestWidth = value ?? double.NaN; }
+            set
+            {
+                data.CrestWidth = value ?? double.NaN;
+            }
         }
 
         [Category("General")]
@@ -138,8 +156,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
         [Description("If true then use the crest width value else calculate with the weir geometry")]
         public bool UseCrestWidth
         {
-            get { return data.CrestWidth > 0; }
-            set { data.CrestWidth = (value ? data.Geometry.Length : double.NaN); }
+            get
+            {
+                return data.CrestWidth > 0;
+            }
+            set
+            {
+                data.CrestWidth = value ? data.Geometry.Length : double.NaN;
+            }
         }
 
         /// <summary>
@@ -147,7 +171,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
         /// </summary>
         /// <param name="propertyName">Name of the property.</param>
         /// <returns>
-        ///   <c>true</c> if the specified property name is readonly; otherwise, <c>false</c>.
+        /// <c>true</c> if the specified property name is readonly; otherwise, <c>false</c>.
         /// </returns>
         [DynamicReadOnlyValidationMethod]
         public bool IsReadonly(string propertyName)
@@ -156,10 +180,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
             {
                 return data.UseCrestLevelTimeSeries;
             }
+
             if (propertyName == "CrestWidth")
             {
                 return double.IsNaN(data.CrestWidth) || data.CrestWidth <= 0.0;
             }
+
             return false;
         }
     }

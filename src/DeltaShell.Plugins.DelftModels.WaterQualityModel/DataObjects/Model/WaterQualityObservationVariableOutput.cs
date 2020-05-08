@@ -18,22 +18,22 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.Model
     [Entity(FireOnCollectionChange = false)]
     public class WaterQualityObservationVariableOutput : Unique<long>, INameable, ICloneable
     {
-        private string name;
         private readonly IList<TimeSeries> timeSeriesList = new List<TimeSeries>();
+        private string name;
 
         [Obsolete("Implemented for NHibernate only")]
         public WaterQualityObservationVariableOutput() : this(
             Enumerable.Empty<DelftTools.Utils.Tuple<string, string>>()) {}
 
         /// <summary>
-        /// Creates an observation variable output object according to the provided <paramref name="outputVariableTuples" />:
-        /// a time series will be added to <see cref="TimeSeriesList" /> for each element in
-        /// <paramref name="outputVariableTuples" />
+        /// Creates an observation variable output object according to the provided <paramref name="outputVariableTuples"/>:
+        /// a time series will be added to <see cref="TimeSeriesList"/> for each element in
+        /// <paramref name="outputVariableTuples"/>
         /// </summary>
         /// <param name="outputVariableTuples"> An enumerable of output variable name/unit tuples </param>
         /// <exception cref="ArgumentNullException">
         /// Thrown when
-        /// <param name="outputVariableTuples" />
+        /// <param name="outputVariableTuples"/>
         /// is null
         /// </exception>
         public WaterQualityObservationVariableOutput(
@@ -57,6 +57,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.Model
         public IFeature ObservationVariable { get; set; }
 
         /// <summary>
+        /// List of time series for the observation variable
+        /// </summary>
+        public IEnumerable<TimeSeries> TimeSeriesList => timeSeriesList;
+
+        /// <summary>
         /// The name of the observation variable
         /// </summary>
         public string Name
@@ -68,13 +73,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.Model
         }
 
         /// <summary>
-        /// List of time series for the observation variable
-        /// </summary>
-        public IEnumerable<TimeSeries> TimeSeriesList => timeSeriesList;
-
-        /// <summary>
-        /// Adds a time series to <see cref="TimeSeriesList" /> for
-        /// <param name="outputVariableTuple" />
+        /// Adds a time series to <see cref="TimeSeriesList"/> for
+        /// <param name="outputVariableTuple"/>
         /// </summary>
         /// <param name="outputVariableTuple"> A tuple of output variable name (1st) and output variable unit (2nd) </param>
         /// <param name="insertIndex"> The index to insert the output variable time series at </param>
@@ -91,10 +91,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.Model
                 IsEditable = false
             };
 
-            timeSeries.Components.Add(new Variable<double>(outputVariableTuple.First)
-            {
-                Unit = new Unit(outputVariableTuple.Second, outputVariableTuple.Second)
-            });
+            timeSeries.Components.Add(new Variable<double>(outputVariableTuple.First) {Unit = new Unit(outputVariableTuple.Second, outputVariableTuple.Second)});
 
             if (insertIndex < 0 || insertIndex > timeSeriesList.Count)
             {
@@ -108,8 +105,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.Model
 
         /// <summary>
         /// Removes the time series with name
-        /// <param name="outputVariableName" />
-        /// from <see cref="TimeSeriesList" />
+        /// <param name="outputVariableName"/>
+        /// from <see cref="TimeSeriesList"/>
         /// </summary>
         /// <param name="outputVariableName"> The name of the output variable to remove the time series for </param>
         public void RemoveTimeSeries(string outputVariableName)

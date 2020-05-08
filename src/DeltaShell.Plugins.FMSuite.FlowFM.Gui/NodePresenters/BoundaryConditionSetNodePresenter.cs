@@ -1,13 +1,25 @@
 ﻿using System.Collections.Generic;
 using System.Drawing;
+using DelftTools.Controls;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.Gui.NodePresenters;
+using DeltaShell.Plugins.FMSuite.Common.Gui.Properties;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
 {
     public class BoundaryConditionSetNodePresenter : FMSuiteNodePresenterBase<BoundaryConditionSet>
     {
-        private static readonly Bitmap BoundaryImage = Common.Gui.Properties.Resources.boundary;
+        private static readonly Bitmap BoundaryImage = Resources.boundary;
+
+        public override bool CanRenameNode(ITreeNode node)
+        {
+            return true;
+        }
+
+        public override void OnNodeRenamed(BoundaryConditionSet data, string newName)
+        {
+            data.Feature.Name = newName;
+        }
 
         protected override string GetNodeText(BoundaryConditionSet data)
         {
@@ -41,17 +53,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
                     return boundaryConditionSets.Remove(nodeData);
                 }
             }
+
             return false;
-        }
-
-        public override bool CanRenameNode(DelftTools.Controls.ITreeNode node)
-        {
-            return true;
-        }
-
-        public override void OnNodeRenamed(BoundaryConditionSet data, string newName)
-        {
-            data.Feature.Name = newName;
         }
     }
 }

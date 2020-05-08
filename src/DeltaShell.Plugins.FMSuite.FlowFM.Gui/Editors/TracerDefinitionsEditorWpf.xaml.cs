@@ -17,7 +17,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
 
             ViewModel.MayRemove = (s) =>
             {
-                var result = MessageBox.Show(
+                MessageBoxResult result = MessageBox.Show(
                     $"Removing \"{s}\" tracer definition will remove all boundary conditions and initial tracers. All data will be lost. Continue?",
                     "All data will be lost", MessageBoxButton.OKCancel, MessageBoxImage.Exclamation);
 
@@ -26,11 +26,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
         }
 
         /// <summary>
-        /// 
         /// </summary>
         public IEventedList<string> Tracers
         {
-            get { return tracers; }
+            get
+            {
+                return tracers;
+            }
             set
             {
                 tracers = value;

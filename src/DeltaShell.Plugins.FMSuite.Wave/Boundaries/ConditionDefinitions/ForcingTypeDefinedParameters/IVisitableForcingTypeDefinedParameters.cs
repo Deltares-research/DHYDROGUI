@@ -3,7 +3,8 @@
 namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.ForcingTypeDefinedParameters
 {
     /// <summary>
-    /// <see cref="IVisitableForcingTypeDefinedParameters"/> defines method to accept a <see cref="IForcingTypeDefinedParametersVisitor"/>
+    /// <see cref="IVisitableForcingTypeDefinedParameters"/> defines method to accept a
+    /// <see cref="IForcingTypeDefinedParametersVisitor"/>
     /// </summary>
     public interface IVisitableForcingTypeDefinedParameters
     {

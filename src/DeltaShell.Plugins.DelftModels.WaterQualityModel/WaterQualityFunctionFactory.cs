@@ -103,7 +103,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         }
 
         /// <summary>
-        /// Returns a <see cref="NetworkCoverage" /> (as a function) wtih the supplied parameters
+        /// Returns a <see cref="NetworkCoverage"/> (as a function) wtih the supplied parameters
         /// </summary>
         /// <param name="name"> Name of the new function </param>
         /// <param name="defaultValue"> Default value of the component </param>
@@ -121,7 +121,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         }
 
         /// <summary>
-        /// Returns a <see cref="UnstructuredGridCellCoverage" /> (as a function) wtih the supplied parameters
+        /// Returns a <see cref="UnstructuredGridCellCoverage"/> (as a function) wtih the supplied parameters
         /// </summary>
         /// <param name="name"> Name of the new function </param>
         /// <param name="defaultValue"> Default value of the component </param>

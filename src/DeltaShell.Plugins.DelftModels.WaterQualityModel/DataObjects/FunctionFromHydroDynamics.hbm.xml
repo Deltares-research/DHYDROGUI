@@ -1,4 +1,5 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8"?>
+
 <hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"
                    auto-import="false"
                    namespace="DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects"
@@ -8,8 +9,8 @@
             extends="DelftTools.Functions.Function, DelftTools.Functions"
             discriminator-value="waq_function_from_hydro_dynamics">
 
-    <property name="FilePath"/>
+    <property name="FilePath" />
 
   </subclass>
-  
+
 </hibernate-mapping>

@@ -7,6 +7,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView.WeirFo
 {
     public partial class GeneralStructureWeirFormulaView : UserControl, IView
     {
+        private GeneralStructureWeirFormula data;
+
         public GeneralStructureWeirFormulaView()
         {
             InitializeComponent();
@@ -17,22 +19,25 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView.WeirFo
         /// </summary>
         public Image Image { get; set; }
 
-        public void EnsureVisible(object item) { }
         public ViewInfo ViewInfo { get; set; }
 
-        private GeneralStructureWeirFormula data;
-
         /// <summary>
-        /// Gets or sets data shown by this view. Usually it is any object in the system which can be shown by some IView derived class.
+        /// Gets or sets data shown by this view. Usually it is any object in the system which can be shown by some IView derived
+        /// class.
         /// </summary>
         public object Data
         {
-            get { return data; }
+            get
+            {
+                return data;
+            }
             set
             {
                 data = (GeneralStructureWeirFormula) value;
                 bindingSourceGeneralStructure.DataSource = data;
             }
         }
+
+        public void EnsureVisible(object item) {}
     }
 }

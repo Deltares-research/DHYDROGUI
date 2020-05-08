@@ -9,7 +9,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers.Providers
     /// <see cref="ObservationPointLayerSubProvider"/> implements
     /// <see cref="Feature2DLayerSubProvider"/> for <see cref="WaveModel.ObservationPoints"/>.
     /// </summary>
-    /// <seealso cref="Feature2DLayerSubProvider" />
+    /// <seealso cref="Feature2DLayerSubProvider"/>
     public class ObservationPointLayerSubProvider : Feature2DLayerSubProvider
     {
         /// <summary>

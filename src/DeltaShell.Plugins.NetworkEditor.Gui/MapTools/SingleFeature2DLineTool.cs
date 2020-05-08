@@ -3,8 +3,8 @@ using System.Drawing;
 using System.Windows.Forms;
 using DeltaShell.Plugins.NetworkEditor.Gui.Properties;
 using GeoAPI.Geometries;
-using SharpMap.UI.Tools;
 using log4net;
+using SharpMap.UI.Tools;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
 {
@@ -17,10 +17,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(SingleFeature2DLineTool));
         private bool warningGiven = false;
-        public SingleFeature2DLineTool(string targetLayerName, string name, Bitmap icon) : base(targetLayerName, name, icon)
-        {
 
-        }
+        public SingleFeature2DLineTool(string targetLayerName, string name, Bitmap icon) : base(targetLayerName, name, icon) {}
 
         /// <summary>
         /// Override IsActive to warn the user when activating the tool
@@ -37,7 +35,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
                 {
                     warningGiven = false; // Reset warning flag
                 }
-                else if(HasExistingFeatures())
+                else if (HasExistingFeatures())
                 {
                     LogWarning();
                 }
@@ -45,7 +43,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
                 base.IsActive = value;
             }
         }
-        
+
         /// <summary>
         /// Override OnMouseDown to warn the user when the tool is already active
         /// </summary>
@@ -54,7 +52,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
         public override void OnMouseDown(Coordinate worldPosition, MouseEventArgs e)
         {
             if (!warningGiven && HasExistingFeatures())
+            {
                 LogWarning();
+            }
 
             base.OnMouseDown(worldPosition, e);
         }
@@ -70,13 +70,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
             {
                 VectorLayer.DataSource.Features.Clear();
             }
+
             base.OnMouseDoubleClick(sender, e);
         }
 
-
         private void LogWarning()
         {
-            Log.WarnFormat(Resources.SingleFeature2DLineTool_LogWarning_only_one_feature_supported, 
+            Log.WarnFormat(Resources.SingleFeature2DLineTool_LogWarning_only_one_feature_supported,
                            Name, LayerName, Environment.NewLine);
 
             warningGiven = true;
@@ -90,8 +90,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
             {
                 return VectorLayer.DataSource.Features.Count > 0;
             }
+
             return false;
         }
-
     }
 }

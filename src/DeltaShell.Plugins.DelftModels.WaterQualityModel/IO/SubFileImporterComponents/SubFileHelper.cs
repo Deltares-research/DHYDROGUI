@@ -13,7 +13,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO.SubFileImporterCom
         /// Gets a regex pattern based on its input arguments.
         /// </summary>
         /// <param name="propertyRegexInfos">
-        /// The collection of <see cref="SubFilePropertyRegexInfo" />
+        /// The collection of <see cref="SubFilePropertyRegexInfo"/>
         /// to create the regex for.
         /// </param>
         /// <param name="propertySeparator"> The separator between the different properties. </param>

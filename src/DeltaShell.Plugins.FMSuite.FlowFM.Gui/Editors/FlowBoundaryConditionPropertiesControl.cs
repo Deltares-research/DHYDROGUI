@@ -7,6 +7,7 @@ using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.Gui.Editors;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
+using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
 {
@@ -24,11 +25,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
 
         private bool updatingView;
 
-        private static void ComboBoxFormat(object sender, ListControlConvertEventArgs e)
-        {
-            e.Value = ((Enum)e.Value).GetDescription();
-        }
-
         public FlowBoundaryConditionPropertiesControl()
         {
             InitializeComponent();
@@ -37,26 +33,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             SubscribeEventHandlers();
         }
 
-        private FlowBoundaryCondition GetFlowBoundaryCondition
-        {
-            get { return BoundaryCondition as FlowBoundaryCondition; }
-        }
-
         public override IBoundaryCondition BoundaryCondition
         {
-            protected get { return base.BoundaryCondition; }
+            protected get
+            {
+                return base.BoundaryCondition;
+            }
             set
             {
                 if (BoundaryCondition != null)
                 {
-                    ((INotifyPropertyChanged)BoundaryCondition).PropertyChanged -= BoundaryDataPropertyChanged;
+                    ((INotifyPropertyChanged) BoundaryCondition).PropertyChanged -= BoundaryDataPropertyChanged;
                 }
 
                 base.BoundaryCondition = value as FlowBoundaryCondition;
 
                 if (BoundaryCondition != null)
                 {
-                    ((INotifyPropertyChanged)BoundaryCondition).PropertyChanged += BoundaryDataPropertyChanged;
+                    ((INotifyPropertyChanged) BoundaryCondition).PropertyChanged += BoundaryDataPropertyChanged;
                 }
 
                 UpdateView();
@@ -68,14 +62,51 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             return Controller.GetSupportedDataTypesForVariable(variable);
         }
 
+        protected override bool ShowMessageBoxUponChangeDataType(BoundaryConditionDataType targetDataType)
+        {
+            return !BoundaryDataConverter.CanConvert(BoundaryCondition.DataType, targetDataType) &&
+                   base.ShowMessageBoxUponChangeDataType(targetDataType);
+        }
+
+        private FlowBoundaryCondition GetFlowBoundaryCondition
+        {
+            get
+            {
+                return BoundaryCondition as FlowBoundaryCondition;
+            }
+        }
+
+        private static void ComboBoxFormat(object sender, ListControlConvertEventArgs e)
+        {
+            e.Value = ((Enum) e.Value).GetDescription();
+        }
+
         private void SubscribeEventHandlers()
         {
             verticalInterpolationComboBox.SelectionChangeCommitted += ComboBoxSelectionChangeCommitted;
-            reflectionParameterTextBox.KeyDown += (s, e) => { if (e.KeyCode == Keys.Enter) CommitReflectionText(); };
+            reflectionParameterTextBox.KeyDown += (s, e) =>
+            {
+                if (e.KeyCode == Keys.Enter)
+                {
+                    CommitReflectionText();
+                }
+            };
             reflectionParameterTextBox.Validated += (s, e) => CommitReflectionText();
-            factorTextBox.KeyDown += (s, e) => { if (e.KeyCode == Keys.Enter) CommitFactorText(); };
+            factorTextBox.KeyDown += (s, e) =>
+            {
+                if (e.KeyCode == Keys.Enter)
+                {
+                    CommitFactorText();
+                }
+            };
             factorTextBox.Validated += (s, e) => CommitFactorText();
-            offsetTextBox.KeyDown += (s, e) => { if (e.KeyCode == Keys.Enter) CommitOffsetText(); };
+            offsetTextBox.KeyDown += (s, e) =>
+            {
+                if (e.KeyCode == Keys.Enter)
+                {
+                    CommitOffsetText();
+                }
+            };
             offsetTextBox.Validated += (s, e) => CommitOffsetText();
             verticalInterpolationComboBox.Format += ComboBoxFormat;
             thatcherTimeSpanEditor.ValueChanged += (s, e) => CommitThatcherHarlemanTimeLag();
@@ -87,10 +118,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             {
                 return;
             }
+
             updatingView = true;
             try
             {
-                var flowModel = ((FlowBoundaryConditionEditorController) Controller).Model;
+                WaterFlowFMModel flowModel = ((FlowBoundaryConditionEditorController) Controller).Model;
                 bool hasDepthLayers = flowModel != null && flowModel.UseDepthLayers;
                 verticalInterpolationComboBox.Items.Clear();
                 if (!GetFlowBoundaryCondition.IsVerticallyUniform && hasDepthLayers)
@@ -125,13 +157,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
                 label8.Enabled = thatcherTimeSpanEditor.Enabled;
                 if (thatcherTimeSpanEditor.Enabled)
                 {
-                    thatcherTimeSpanEditor.Value = GetFlowBoundaryCondition.ThatcherHarlemanTimeLag;    
+                    thatcherTimeSpanEditor.Value = GetFlowBoundaryCondition.ThatcherHarlemanTimeLag;
                 }
                 else
                 {
                     thatcherTimeSpanEditor.Value = TimeSpan.Zero;
                 }
-
 
                 factorTextBox.Text = string.Format("{0:0.00}", GetFlowBoundaryCondition.Factor);
                 offsetTextBox.Text = string.Format("{0:0.00}", GetFlowBoundaryCondition.Offset);
@@ -154,7 +185,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             if (e.PropertyName == forcingTypePropertyName || e.PropertyName == verticalProfilePropertyName ||
                 e.PropertyName == conditionTypePropertyName || e.PropertyName == reflectionAlphaPropertyName ||
                 e.PropertyName == factorPropertyName || e.PropertyName == offsetPropertyName || e.PropertyName == tracerNamePropertyName ||
-                e.PropertyName == thatcherHarlemanPropertyName || e.PropertyName == sedimentFractionNamePropertyName )
+                e.PropertyName == thatcherHarlemanPropertyName || e.PropertyName == sedimentFractionNamePropertyName)
             {
                 UpdateView();
             }
@@ -163,7 +194,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
         private void CommitReflectionText()
         {
             if (BoundaryCondition == null || updatingView)
+            {
                 return;
+            }
 
             double reflectionAlpha;
             if (double.TryParse(reflectionParameterTextBox.Text, out reflectionAlpha))
@@ -175,7 +208,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
         private void CommitFactorText()
         {
             if (BoundaryCondition == null || updatingView)
+            {
                 return;
+            }
 
             double factor;
             if (double.TryParse(factorTextBox.Text, out factor))
@@ -187,7 +222,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
         private void CommitThatcherHarlemanTimeLag()
         {
             if (BoundaryCondition == null || updatingView)
+            {
                 return;
+            }
 
             GetFlowBoundaryCondition.ThatcherHarlemanTimeLag = thatcherTimeSpanEditor.Value;
         }
@@ -195,7 +232,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
         private void CommitOffsetText()
         {
             if (BoundaryCondition == null || updatingView)
+            {
                 return;
+            }
 
             double offset;
             if (double.TryParse(offsetTextBox.Text, out offset))
@@ -209,14 +248,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             if (BoundaryCondition != null && sender == verticalInterpolationComboBox)
             {
                 GetFlowBoundaryCondition.VerticalInterpolationType =
-                    (VerticalInterpolationType)verticalInterpolationComboBox.SelectedItem;
+                    (VerticalInterpolationType) verticalInterpolationComboBox.SelectedItem;
             }
-        }
-
-        protected override bool ShowMessageBoxUponChangeDataType(BoundaryConditionDataType targetDataType)
-        {
-            return !BoundaryDataConverter.CanConvert(BoundaryCondition.DataType, targetDataType) &&
-                   base.ShowMessageBoxUponChangeDataType(targetDataType);
         }
     }
 }

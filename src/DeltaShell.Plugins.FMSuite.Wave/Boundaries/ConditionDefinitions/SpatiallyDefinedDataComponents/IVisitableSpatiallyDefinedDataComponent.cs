@@ -3,7 +3,8 @@
 namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.SpatiallyDefinedDataComponents
 {
     /// <summary>
-    /// <see cref="IVisitableSpatiallyDefinedDataComponent"/> defines method to accept a <see cref="ISpatiallyDefinedDataComponentVisitor"/>
+    /// <see cref="IVisitableSpatiallyDefinedDataComponent"/> defines method to accept a
+    /// <see cref="ISpatiallyDefinedDataComponentVisitor"/>
     /// </summary>
     public interface IVisitableSpatiallyDefinedDataComponent
     {

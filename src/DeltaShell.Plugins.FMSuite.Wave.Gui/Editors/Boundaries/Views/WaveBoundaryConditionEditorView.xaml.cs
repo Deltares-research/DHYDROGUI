@@ -17,6 +17,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Views
             InitializeComponent();
         }
 
+        public object Data { get; set; }
+        public string Text { get; set; }
+        public Image Image { get; set; }
+        public ViewInfo ViewInfo { get; set; }
+
         public void Dispose()
         {
             BoundaryGeometryView.Dispose();
@@ -26,10 +31,5 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Views
         {
             // No specific object requires focus.
         }
-
-        public object Data { get; set; }
-        public string Text { get; set; }
-        public Image Image { get; set; }
-        public ViewInfo ViewInfo { get; set; }
     }
 }

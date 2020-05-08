@@ -15,8 +15,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [PropertyOrder(0)]
         public string Name
         {
-            get { return data.Name; }
-            set { data.Name = value; }
+            get
+            {
+                return data.Name;
+            }
+            set
+            {
+                data.Name = value;
+            }
         }
 
         [Category("General")]
@@ -32,6 +38,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
                 {
                     return "Time series";
                 }
+
                 return data.SillLevel.ToString(CultureInfo.CurrentCulture);
             }
             set
@@ -50,8 +57,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [Description("Use a time series for the sill level or use a time constant value")]
         public TimeDependency UseSillLevelTimeSeries
         {
-            get { return data.UseSillLevelTimeSeries ? TimeDependency.TimeDependent : TimeDependency.Constant; }
-            set { data.UseSillLevelTimeSeries = value == TimeDependency.TimeDependent; }
+            get
+            {
+                return data.UseSillLevelTimeSeries ? TimeDependency.TimeDependent : TimeDependency.Constant;
+            }
+            set
+            {
+                data.UseSillLevelTimeSeries = value == TimeDependency.TimeDependent;
+            }
         }
 
         [Category("General")]
@@ -60,8 +73,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [Description("Height of the gate door")]
         public double DoorHeight
         {
-            get { return data.DoorHeight; }
-            set { data.DoorHeight = value; }
+            get
+            {
+                return data.DoorHeight;
+            }
+            set
+            {
+                data.DoorHeight = value;
+            }
         }
 
         [Category("General")]
@@ -70,8 +89,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [Description("Horizontal opening direction of gate doors")]
         public GateOpeningDirection HorizontalOpeningDirection
         {
-            get { return data.HorizontalOpeningDirection; }
-            set { data.HorizontalOpeningDirection = value; }
+            get
+            {
+                return data.HorizontalOpeningDirection;
+            }
+            set
+            {
+                data.HorizontalOpeningDirection = value;
+            }
         }
 
         [Category("General")]
@@ -87,6 +112,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
                 {
                     return "Time series";
                 }
+
                 return data.LowerEdgeLevel.ToString(CultureInfo.CurrentCulture);
             }
             set
@@ -105,10 +131,15 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [Description("Use a time series for the lower edge level or use a time constant value")]
         public TimeDependency UseLowerEdgeLevelTimeSeries
         {
-            get { return data.UseLowerEdgeLevelTimeSeries ? TimeDependency.TimeDependent : TimeDependency.Constant; }
-            set { data.UseLowerEdgeLevelTimeSeries = value == TimeDependency.TimeDependent; }
+            get
+            {
+                return data.UseLowerEdgeLevelTimeSeries ? TimeDependency.TimeDependent : TimeDependency.Constant;
+            }
+            set
+            {
+                data.UseLowerEdgeLevelTimeSeries = value == TimeDependency.TimeDependent;
+            }
         }
-
 
         [Category("General")]
         [DisplayName("Gate opening width")]
@@ -123,6 +154,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
                 {
                     return "Time series";
                 }
+
                 return data.OpeningWidth.ToString(CultureInfo.CurrentCulture);
             }
             set
@@ -138,11 +170,17 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [Category("General")]
         [DisplayName("Gate opening width input")]
         [Description("Use a time series for the opening width or use a time constant value")]
-        [PropertyOrder(8)]        
+        [PropertyOrder(8)]
         public TimeDependency UseOpeningWidthTimeSeries
         {
-            get { return data.UseOpeningWidthTimeSeries ? TimeDependency.TimeDependent : TimeDependency.Constant; }
-            set { data.UseOpeningWidthTimeSeries = value == TimeDependency.TimeDependent; }
+            get
+            {
+                return data.UseOpeningWidthTimeSeries ? TimeDependency.TimeDependent : TimeDependency.Constant;
+            }
+            set
+            {
+                data.UseOpeningWidthTimeSeries = value == TimeDependency.TimeDependent;
+            }
         }
 
         [Category("General")]
@@ -152,8 +190,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [DynamicReadOnly]
         public double SillWidth
         {
-            get { return data.SillWidth; }
-            set { data.SillWidth = value; }
+            get
+            {
+                return data.SillWidth;
+            }
+            set
+            {
+                data.SillWidth = value;
+            }
         }
 
         [Category("General")]
@@ -162,8 +206,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [Description("Use sill width or use gate geometry")]
         public bool UseSillWidth
         {
-            get { return data.SillWidth > 0; }
-            set { data.SillWidth = (value ? data.Geometry.Length : 0.0); }
+            get
+            {
+                return data.SillWidth > 0;
+            }
+            set
+            {
+                data.SillWidth = value ? data.Geometry.Length : 0.0;
+            }
         }
 
         [DynamicReadOnlyValidationMethod]
@@ -173,18 +223,22 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
             {
                 return data.UseSillLevelTimeSeries;
             }
+
             if (propertyName == "LowerEdgeLevel")
             {
                 return data.UseLowerEdgeLevelTimeSeries;
             }
+
             if (propertyName == "GateOpeningWidth")
             {
                 return data.UseOpeningWidthTimeSeries;
             }
-            if(propertyName == "SillWidth")
+
+            if (propertyName == "SillWidth")
             {
                 return data.SillWidth <= 0;
             }
+
             return false;
         }
     }

@@ -14,39 +14,41 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui
         public static ViewInfo<IEventedList<TFeature>, ILayer, VectorLayerAttributeTableView> CreateViewInfo<TFeature, TModel>(string name, Func<TModel, IEventedList<TFeature>> getCollection, Func<IGui> getGui)
         {
             return new ViewInfo<IEventedList<TFeature>, ILayer, VectorLayerAttributeTableView>
+            {
+                Description = name,
+                GetViewName = (v, o) => o.Name,
+                AdditionalDataCheck = o =>
                 {
-                    Description = name,
-                    GetViewName = (v, o) => o.Name,
-                    AdditionalDataCheck = o =>
-                        {
-                            var model = getGui().Application.GetAllModelsInProject().OfType<TModel>().FirstOrDefault(m => Equals(o, getCollection(m)));
-                            return model != null;
-                        },
-                    GetViewData = o =>
-                        {
-                            var centralMap =
-                                getGui()
-                                    .DocumentViews.OfType<ProjectItemMapView>()
-                                    .FirstOrDefault(v => v.MapView.GetLayerForData(o) != null);
-                            return centralMap == null ? null : centralMap.MapView.GetLayerForData(o);
-                        },
-                    CompositeViewType = typeof (ProjectItemMapView),
-                    GetCompositeViewData = o => getGui().Application.GetAllModelsInProject().OfType<TModel>().FirstOrDefault(m => Equals(o, getCollection(m))),
-                    AfterCreate = (v, o) =>
-                        {
-                            var centralMap =
-                                getGui()
-                                    .DocumentViews.OfType<ProjectItemMapView>()
-                                    .FirstOrDefault(vi => vi.MapView.GetLayerForData(o) != null);
-                            if (centralMap == null) return;
+                    TModel model = getGui().Application.GetAllModelsInProject().OfType<TModel>().FirstOrDefault(m => Equals(o, getCollection(m)));
+                    return model != null;
+                },
+                GetViewData = o =>
+                {
+                    ProjectItemMapView centralMap =
+                        getGui()
+                            .DocumentViews.OfType<ProjectItemMapView>()
+                            .FirstOrDefault(v => v.MapView.GetLayerForData(o) != null);
+                    return centralMap == null ? null : centralMap.MapView.GetLayerForData(o);
+                },
+                CompositeViewType = typeof(ProjectItemMapView),
+                GetCompositeViewData = o => getGui().Application.GetAllModelsInProject().OfType<TModel>().FirstOrDefault(m => Equals(o, getCollection(m))),
+                AfterCreate = (v, o) =>
+                {
+                    ProjectItemMapView centralMap =
+                        getGui()
+                            .DocumentViews.OfType<ProjectItemMapView>()
+                            .FirstOrDefault(vi => vi.MapView.GetLayerForData(o) != null);
+                    if (centralMap == null)
+                    {
+                        return;
+                    }
 
-                            v.DeleteSelectedFeatures = () => centralMap.MapView.MapControl.DeleteTool.DeleteSelection();
-                            v.ZoomToFeature = feature => centralMap.MapView.EnsureVisible(feature);
-                            v.DynamicAttributeVisible = s => s != Feature2D.LocationKey;
-                            v.CanAddDeleteAttributes = false;
-                        }
-                };
+                    v.DeleteSelectedFeatures = () => centralMap.MapView.MapControl.DeleteTool.DeleteSelection();
+                    v.ZoomToFeature = feature => centralMap.MapView.EnsureVisible(feature);
+                    v.DynamicAttributeVisible = s => s != Feature2D.LocationKey;
+                    v.CanAddDeleteAttributes = false;
+                }
+            };
         }
-
     }
 }

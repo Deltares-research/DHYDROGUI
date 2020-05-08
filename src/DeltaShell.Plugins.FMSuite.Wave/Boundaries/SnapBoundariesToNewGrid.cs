@@ -26,6 +26,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries
             {
                 return Enumerable.Empty<IWaveBoundary>();
             }
+
             if (snappingCalculator == null)
             {
                 return new List<IWaveBoundary>();
@@ -51,6 +52,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries
             {
                 return Enumerable.Empty<CachedBoundary>();
             }
+
             if (gridBoundary == null)
             {
                 return Enumerable.Empty<CachedBoundary>();

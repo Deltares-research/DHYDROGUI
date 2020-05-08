@@ -16,13 +16,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
 
         public static DependencyProperty GetUpdatePropertySourceWhenEnterPressed(DependencyObject dp)
         {
-            return (DependencyProperty)dp.GetValue(UpdatePropertySourceWhenEnterPressedProperty);
+            return (DependencyProperty) dp.GetValue(UpdatePropertySourceWhenEnterPressedProperty);
         }
 
         private static void OnUpdatePropertySourceWhenEnterPressedPropertyChanged(DependencyObject dp, DependencyPropertyChangedEventArgs e)
         {
             var element = dp as UIElement;
-            if (element == null) return;
+            if (element == null)
+            {
+                return;
+            }
 
             if (e.OldValue != null)
             {
@@ -35,23 +38,35 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             }
         }
 
-        static void HandlePreviewKeyDown(object sender, KeyEventArgs e)
+        private static void HandlePreviewKeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Key != Key.Enter) return;
+            if (e.Key != Key.Enter)
+            {
+                return;
+            }
 
             DoUpdateSource(e.Source);
         }
 
-        static void DoUpdateSource(object source)
+        private static void DoUpdateSource(object source)
         {
-            var property = GetUpdatePropertySourceWhenEnterPressed(source as DependencyObject);
-            if (property == null) return;
+            DependencyProperty property = GetUpdatePropertySourceWhenEnterPressed(source as DependencyObject);
+            if (property == null)
+            {
+                return;
+            }
 
             var elt = source as UIElement;
-            if (elt == null) return;
+            if (elt == null)
+            {
+                return;
+            }
 
-            var binding = BindingOperations.GetBindingExpression(elt, property);
-            if (binding == null) return;
+            BindingExpression binding = BindingOperations.GetBindingExpression(elt, property);
+            if (binding == null)
+            {
+                return;
+            }
 
             binding.UpdateSource();
         }

@@ -15,16 +15,16 @@ namespace DeltaShell.Plugins.FMSuite.Common
         private static readonly ILog Log = LogManager.GetLogger(typeof(FMParser));
 
         /// <summary>
-        /// Returns the C# value <see cref="Type" /> for a property in the schema csv file.
+        /// Returns the C# value <see cref="Type"/> for a property in the schema csv file.
         /// </summary>
         /// <param name="propertyKeyName"> The name of property as it appears in the csv schema file. </param>
         /// <param name="typeField"> The value type as it appears in the csv schema file. </param>
-        /// <param name="captionField"> The caption of how <paramref name="propertyKeyName" /> should be shown in the UI. </param>
+        /// <param name="captionField"> The caption of how <paramref name="propertyKeyName"/> should be shown in the UI. </param>
         /// <param name="schemaFileName"> The schema file name. </param>
         /// <param name="lineNumber"> The line being evaluated in the schema file. </param>
-        /// <returns> The C# value <see cref="Type" /> of the variable. </returns>
+        /// <returns> The C# value <see cref="Type"/> of the variable. </returns>
         /// <exception cref="FormatException"> When there is a syntax error in the schema file. </exception>
-        /// <exception cref="ArgumentException"> When <paramref name="typeField" /> cannot be translated to a type. </exception>
+        /// <exception cref="ArgumentException"> When <paramref name="typeField"/> cannot be translated to a type. </exception>
         public static Type GetClrType(string propertyKeyName, string typeField, ref string captionField,
                                       string schemaFileName, int lineNumber)
         {
@@ -191,19 +191,19 @@ namespace DeltaShell.Plugins.FMSuite.Common
         /// Parses a string for a given value type.
         /// </summary>
         /// <param name="str"> String to be parsed. </param>
-        /// <param name="dataType"> Expected data type represented by <paramref name="str" />. </param>
+        /// <param name="dataType"> Expected data type represented by <paramref name="str"/>. </param>
         /// <returns> The parsed object. </returns>
-        /// <seealso cref="FromString{T}(string)" />
+        /// <seealso cref="FromString{T}(string)"/>
         /// <exception cref="ArgumentNullException">
-        /// Can occur for some <paramref name="dataType" /> when <paramref name="str" />
+        /// Can occur for some <paramref name="dataType"/> when <paramref name="str"/>
         /// is null.
         /// </exception>
         /// <exception cref="FormatException">
-        /// Can occur for some <paramref name="dataType" /> when <paramref name="str" /> is in
+        /// Can occur for some <paramref name="dataType"/> when <paramref name="str"/> is in
         /// invalid format.
         /// </exception>
         /// <exception cref="OverflowException">
-        /// Can occur for some <paramref name="dataType" /> when <paramref name="str" />
+        /// Can occur for some <paramref name="dataType"/> when <paramref name="str"/>
         /// represent a value that is too big or too small.
         /// </exception>
         public static object FromString(string str, Type dataType)
@@ -241,7 +241,7 @@ namespace DeltaShell.Plugins.FMSuite.Common
             if (dataType == typeof(bool))
             {
                 string strTrim = str.Trim();
-                return strTrim.Equals("1") || 
+                return strTrim.Equals("1") ||
                        strTrim.Equals("true", StringComparison.InvariantCultureIgnoreCase); //simple version
             }
 
@@ -328,23 +328,23 @@ namespace DeltaShell.Plugins.FMSuite.Common
         /// <summary>
         /// Parses a string for a given value type.
         /// </summary>
-        /// <typeparam name="T"> Expected data type represented by <paramref name="str" />. </typeparam>
+        /// <typeparam name="T"> Expected data type represented by <paramref name="str"/>. </typeparam>
         /// <param name="str"> String to be parsed. </param>
         /// <returns> The parsed object. </returns>
         /// <remarks> This method cannot be used for enumerations </remarks>
         /// <exception cref="ArgumentNullException">
-        /// Can occur for some <typeparamref name="T" /> when <paramref name="str" /> is
+        /// Can occur for some <typeparamref name="T"/> when <paramref name="str"/> is
         /// null.
         /// </exception>
         /// <exception cref="FormatException">
-        /// Can occur for some <typeparamref name="T" /> when <paramref name="str" /> is in
+        /// Can occur for some <typeparamref name="T"/> when <paramref name="str"/> is in
         /// invalid format.
         /// </exception>
         /// <exception cref="OverflowException">
-        /// Can occur for some <typeparamref name="T" /> when <paramref name="str" />
+        /// Can occur for some <typeparamref name="T"/> when <paramref name="str"/>
         /// represent a value that is too big or too small.
         /// </exception>
-        /// <seealso cref="FromString(string,Type)" />
+        /// <seealso cref="FromString(string,Type)"/>
         public static T FromString<T>(string str)
         {
             Type type = typeof(T);
@@ -357,12 +357,12 @@ namespace DeltaShell.Plugins.FMSuite.Common
         }
 
         /// <summary>
-        /// Parses a string to <see cref="DateTime" /> expecting 'yyyyMMdd' or 'yyyyMMddHHmmss' format.
+        /// Parses a string to <see cref="DateTime"/> expecting 'yyyyMMdd' or 'yyyyMMddHHmmss' format.
         /// </summary>
         /// <param name="valueAsString"> Value to be parsed. </param>
-        /// <returns> Parsed date-time, or <see cref="DateTime.Now" /> when <paramref name="valueAsString" /> empty or null. </returns>
+        /// <returns> Parsed date-time, or <see cref="DateTime.Now"/> when <paramref name="valueAsString"/> empty or null. </returns>
         /// <exception cref="FormatException">
-        /// When <paramref name="valueAsString" /> does not represent a supported date-time
+        /// When <paramref name="valueAsString"/> does not represent a supported date-time
         /// format.
         /// </exception>
         public static DateTime ParseFMDateTime(string valueAsString)
@@ -388,18 +388,18 @@ namespace DeltaShell.Plugins.FMSuite.Common
         }
 
         /// <summary>
-        /// Parses a string as double, expecting <see cref="CultureInfo.InvariantCulture" /> format.
+        /// Parses a string as double, expecting <see cref="CultureInfo.InvariantCulture"/> format.
         /// </summary>
         /// <param name="valuesAsString"> Value to be parsed. </param>
-        /// <returns> Double value represented by <paramref name="valuesAsString" /> </returns>
-        /// <exception cref="ArgumentNullException"> When <paramref name="valuesAsString" /> is null. </exception>
+        /// <returns> Double value represented by <paramref name="valuesAsString"/> </returns>
+        /// <exception cref="ArgumentNullException"> When <paramref name="valuesAsString"/> is null. </exception>
         /// <exception cref="FormatException">
-        /// When <paramref name="valuesAsString" /> does not represent a number in a valid
+        /// When <paramref name="valuesAsString"/> does not represent a number in a valid
         /// format.
         /// </exception>
         /// <exception cref="OverflowException">
-        /// When <paramref name="valuesAsString" /> represents a number that is less than
-        /// <see cref="double.MinValue" /> or greater than <see cref="double.MaxValue" />.
+        /// When <paramref name="valuesAsString"/> represents a number that is less than
+        /// <see cref="double.MinValue"/> or greater than <see cref="double.MaxValue"/>.
         /// </exception>
         private static double ParseDoubleValue(string valuesAsString)
         {
@@ -429,7 +429,7 @@ namespace DeltaShell.Plugins.FMSuite.Common
         /// <param name="enumType"> </param>
         /// <param name="displayNameString"> </param>
         /// <returns>
-        /// Null if no match was found in <paramref name="enumType" /> with <paramref name="displayNameString" />; Value
+        /// Null if no match was found in <paramref name="enumType"/> with <paramref name="displayNameString"/>; Value
         /// otherwise.
         /// </returns>
         private static object GetEnumValueFromDisplayName(Type enumType, string displayNameString)

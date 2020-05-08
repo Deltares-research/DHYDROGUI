@@ -9,10 +9,10 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Readers
     /// </summary>
     public class HtcFileReader : NGHSFileBase
     {
-        private readonly string filePath;
         private const string GridFileKeyword = "grid_file";
         private const string endOfHeaderKeyword = "time";
-        
+        private readonly string filePath;
+
         public HtcFileReader(string filePath)
         {
             this.filePath = filePath;
@@ -25,7 +25,10 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Readers
         /// <exception cref="ArgumentNullException">Gridded heat flux file path is null</exception>
         /// <exception cref="FileNotFoundException">The file cannot be found.</exception>
         /// <exception cref="DirectoryNotFoundException">The specified path is invalid, such as being on an unmapped drive.</exception>
-        /// <exception cref="IOException"><paramref name="filePath"/> includes an incorrect or invalid syntax for file name, directory name, or volume label.</exception>
+        /// <exception cref="IOException">
+        /// <paramref name="filePath"/> includes an incorrect or invalid syntax for file name,
+        /// directory name, or volume label.
+        /// </exception>
         public string ReadGridFileNameWithExtension()
         {
             OpenInputFile(filePath);
@@ -51,12 +54,13 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Readers
             {
                 CloseInputFile();
             }
+
             return null;
         }
 
         private string[] GetKeyValueComment(string line)
         {
-           return ReaderHelper.GetKeyValueComment(line, LineNumber, InputFilePath);
+            return ReaderHelper.GetKeyValueComment(line, LineNumber, InputFilePath);
         }
     }
 }

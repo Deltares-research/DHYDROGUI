@@ -1,4 +1,5 @@
-﻿using System.Windows.Forms;
+﻿using System;
+using System.Windows.Forms;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
 {
@@ -12,7 +13,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
 
         public int Progress
         {
-            get { return ProgressBar.Value; }
+            get
+            {
+                return ProgressBar.Value;
+            }
             set
             {
                 ProgressBar.Value = value;
@@ -22,10 +26,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
 
         public bool Canceled { get; set; }
 
-        private void buttonCancel_Click(object sender, System.EventArgs e)
+        private void buttonCancel_Click(object sender, EventArgs e)
         {
             Canceled = true;
         }
     }
 }
-

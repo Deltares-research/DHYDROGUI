@@ -64,7 +64,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factor
         /// <param name="supportPoint">The support point.</param>
         /// <returns>The point geometry of the support point.</returns>
         /// <exception
-        /// cref="ArgumentNullException">Thrown when <paramref name="supportPoint" /> is <c>null</c>.
+        ///     cref="ArgumentNullException">
+        /// Thrown when <paramref name="supportPoint"/> is <c>null</c>.
         /// </exception>
         IPoint ConstructBoundarySupportPoint(SupportPoint supportPoint);
     }

@@ -16,39 +16,27 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
             Width = width;
         }
 
-        protected ICrossSectionDefinition CrossSectionDefinition
-        {
-            get;
-            private set;
-        }
-
-        protected double OffsetInSideView
-        {
-            get;
-            private set;
-        }
-
         public override double X
         {
             get
             {
                 return OffsetInSideView;
             }
-            set { }
+            set {}
         }
 
         /// <summary>
-        /// The y coordinate of the shape. 
+        /// The y coordinate of the shape.
         /// if VerticalShapeAlignment is VerticalShapeAlignment.Top Y is the top coordinate of the bounding box
         /// if VerticalShapeAlignment is VerticalShapeAlignment.Center Y is the vertical center coordinate of the bounding box
         /// </summary>
-        public override double Y 
-        { 
+        public override double Y
+        {
             get
             {
                 return CrossSectionDefinition.HighestPoint;
-            } 
-            set { }
+            }
+            set {}
         }
 
         ///// <summary>
@@ -57,15 +45,19 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
         //public override double Width { get; set; }
 
         /// <summary>
-        /// Height of the shape either in world coordinates (HeightIsWorld == true) of device coordinates (HeightIsWorld == false) 
+        /// Height of the shape either in world coordinates (HeightIsWorld == true) of device coordinates (HeightIsWorld == false)
         /// </summary>
         public override double Height
         {
             get
             {
                 return CrossSectionDefinition.HighestPoint - CrossSectionDefinition.LowestPoint;
-            } 
-            set { }
+            }
+            set {}
         }
+
+        protected ICrossSectionDefinition CrossSectionDefinition { get; private set; }
+
+        protected double OffsetInSideView { get; private set; }
     }
 }

@@ -10,23 +10,45 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
     {
         public double Length
         {
-            get { if (data.Geometry != null) return data.Geometry.Length; else return -1.0; }
+            get
+            {
+                if (data.Geometry != null)
+                {
+                    return data.Geometry.Length;
+                }
+                else
+                {
+                    return -1.0;
+                }
+            }
         }
 
         public string Source
         {
-            get { return data.Source.Name; }
+            get
+            {
+                return data.Source.Name;
+            }
         }
 
         public string Target
         {
-            get { return data.Target.Name; }
+            get
+            {
+                return data.Target.Name;
+            }
         }
 
         public string Name
         {
-            get { return data.Name; }
-            set { data.Name = value; }
+            get
+            {
+                return data.Name;
+            }
+            set
+            {
+                data.Name = value;
+            }
         }
     }
 }

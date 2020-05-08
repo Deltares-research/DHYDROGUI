@@ -7,7 +7,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
     /// <summary>
     /// <see cref="JonswapShape"/> defines the Jonswap shape within the View layer.
     /// </summary>
-    /// <seealso cref="IViewShape" />
+    /// <seealso cref="IViewShape"/>
     [Description("Jonswap")]
     public class JonswapViewShape : IViewShape
     {

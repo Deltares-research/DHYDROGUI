@@ -12,13 +12,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
 
         public override ValidationResult Validate(object value, CultureInfo cultureInfo)
         {
-            string strValue = Convert.ToString(value);
+            var strValue = Convert.ToString(value);
 
             if (string.IsNullOrEmpty(strValue))
+            {
                 return new ValidationResult(false, "Value cannot be coverted to string.");
+            }
 
-
-            var validationIssue = WaterFlowFMSedimentMorphologyValidator.ValidateSedimentName(strValue);
+            ValidationIssue validationIssue = WaterFlowFMSedimentMorphologyValidator.ValidateSedimentName(strValue);
             if (validationIssue != null && validationIssue.Severity == ValidationSeverity.Error)
             {
                 return new ValidationResult(false, validationIssue.Message);

@@ -50,27 +50,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
 
         private IEventedList<string> sedimentFractionNames;
         private IEventedList<string> tracerNames;
-   
 
         public SourceAndSink()
         {
             Function = CreateData();
             SedimentFractionNames = new EventedList<string>();
             TracerNames = new EventedList<string>();
-        }
-
-        public bool IsPointSource => Feature.Geometry.Coordinates.Count() == 1;
-
-        public double Area { get; set; }
-
-        public bool MomentumSource => Area > 0;
-
-        public bool CanIncludeMomentum => !IsPointSource;
-
-        public IFunction Function
-        {
-            get => Data;
-            private set => Data = value;
         }
 
         public override Feature2D Feature
@@ -93,13 +78,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
             }
         }
 
-        private void FeaturePropertyChanged(object sender, PropertyChangedEventArgs e)
+        public bool IsPointSource => Feature.Geometry.Coordinates.Count() == 1;
+
+        public double Area { get; set; }
+
+        public bool MomentumSource => Area > 0;
+
+        public bool CanIncludeMomentum => !IsPointSource;
+
+        public IFunction Function
         {
-            if (e.PropertyName == nameof(Feature.Name))
-            {
-                Name = Feature.Name + " data";
-                Function.Name = Name;
-            }
+            get => Data;
+            private set => Data = value;
         }
 
         public IEventedList<string> SedimentFractionNames
@@ -165,39 +155,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
             }
         }
 
-        private void AddSedimentFractionToComponents(string name)
-        {
-            IVariable secondaryFlow =
-                Function.Components.FirstOrDefault(c => c.Name.Equals(SecondaryFlowVariableName));
-            IVariable firstTracer = tracerNames.Any()
-                                        ? Function.Components.FirstOrDefault(c => c.Name.Equals(tracerNames.First()))
-                                        : null;
-
-            if (secondaryFlow != null)
-            {
-                Function.Components.Insert(Function.Components.IndexOf(secondaryFlow),
-                                           CreateSedimentFractionVariable(name));
-            }
-            else if (firstTracer != null)
-            {
-                Function.Components.Insert(Function.Components.IndexOf(firstTracer),
-                                           CreateSedimentFractionVariable(name));
-            }
-            else
-            {
-                Function.Components.Add(CreateSedimentFractionVariable(name));
-            }
-        }
-
-        private IVariable CreateSedimentFractionVariable(string name)
-        {
-            return new Variable<double>(name)
-            {
-                Unit = new Unit(SourceSinkVariableInfo.SedimentFractionUnitDescription,
-                                SourceSinkVariableInfo.SedimentFractionUnitSymbol)
-            };
-        }
-
         public void TracerNamesCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             var tracerName = e.GetRemovedOrAddedItem() as string;
@@ -237,6 +194,48 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
                     break;
                 default: throw new ArgumentOutOfRangeException();
             }
+        }
+
+        private void FeaturePropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(Feature.Name))
+            {
+                Name = Feature.Name + " data";
+                Function.Name = Name;
+            }
+        }
+
+        private void AddSedimentFractionToComponents(string name)
+        {
+            IVariable secondaryFlow =
+                Function.Components.FirstOrDefault(c => c.Name.Equals(SecondaryFlowVariableName));
+            IVariable firstTracer = tracerNames.Any()
+                                        ? Function.Components.FirstOrDefault(c => c.Name.Equals(tracerNames.First()))
+                                        : null;
+
+            if (secondaryFlow != null)
+            {
+                Function.Components.Insert(Function.Components.IndexOf(secondaryFlow),
+                                           CreateSedimentFractionVariable(name));
+            }
+            else if (firstTracer != null)
+            {
+                Function.Components.Insert(Function.Components.IndexOf(firstTracer),
+                                           CreateSedimentFractionVariable(name));
+            }
+            else
+            {
+                Function.Components.Add(CreateSedimentFractionVariable(name));
+            }
+        }
+
+        private IVariable CreateSedimentFractionVariable(string name)
+        {
+            return new Variable<double>(name)
+            {
+                Unit = new Unit(SourceSinkVariableInfo.SedimentFractionUnitDescription,
+                                SourceSinkVariableInfo.SedimentFractionUnitSymbol)
+            };
         }
 
         [EditAction]

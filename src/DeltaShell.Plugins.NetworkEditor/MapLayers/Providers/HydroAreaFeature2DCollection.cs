@@ -16,27 +16,11 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Providers
 
         public override ICoordinateSystem CoordinateSystem
         {
-            get { return Area2D != null ? Area2D.CoordinateSystem : null; }
-            set { } 
-        }
-
-        private HydroArea Area2D
-        {
-            get { return area2D; }
-            set
+            get
             {
-                var previousCoordinateSystem = CoordinateSystem;
-                if (area2D != null)
-                    area2D.PropertyChanged -= HydroAreaOnPropertyChanged;
-            
-                area2D = value;
-
-                if (area2D != null)
-                    area2D.PropertyChanged += HydroAreaOnPropertyChanged;
-
-                if (area2D != null && area2D.CoordinateSystem != previousCoordinateSystem)
-                    OnCoordinateSystemChanged();
+                return Area2D != null ? Area2D.CoordinateSystem : null;
             }
+            set {}
         }
 
         public override void Dispose()
@@ -45,9 +29,41 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Providers
             Area2D = null;
         }
 
+        private HydroArea Area2D
+        {
+            get
+            {
+                return area2D;
+            }
+            set
+            {
+                ICoordinateSystem previousCoordinateSystem = CoordinateSystem;
+                if (area2D != null)
+                {
+                    area2D.PropertyChanged -= HydroAreaOnPropertyChanged;
+                }
+
+                area2D = value;
+
+                if (area2D != null)
+                {
+                    area2D.PropertyChanged += HydroAreaOnPropertyChanged;
+                }
+
+                if (area2D != null && area2D.CoordinateSystem != previousCoordinateSystem)
+                {
+                    OnCoordinateSystemChanged();
+                }
+            }
+        }
+
         private void HydroAreaOnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName != "CoordinateSystem") return;
+            if (e.PropertyName != "CoordinateSystem")
+            {
+                return;
+            }
+
             OnCoordinateSystemChanged();
         }
     }

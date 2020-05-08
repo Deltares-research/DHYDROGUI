@@ -21,46 +21,20 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
         {
             InitializeComponent();
 
-            tableViewTabulatedData.PasteController = new TableViewArgumentBasedPasteController(tableViewTabulatedData, new List<int> { 0 });
+            tableViewTabulatedData.PasteController = new TableViewArgumentBasedPasteController(tableViewTabulatedData, new List<int> {0});
             tableViewTabulatedData.InputValidator += InputValidator;
         }
 
-        public new void Dispose()
-        {
-            Data = null;
-            tableViewTabulatedData.Dispose();
-            base.Dispose();
-        }
-
-        private void SubscribeEvents()
-        {
-            ((INotifyPropertyChanged)bridge).PropertyChanged += Bridge_PropertyChanged;
-        }
-
-        private void UnSubscribeEvents()
-        {
-            if (bridge != null)
-            {
-                ((INotifyPropertyChanged)bridge).PropertyChanged -= Bridge_PropertyChanged;
-            }
-
-            if (tableViewTabulatedData != null)
-            {
-                tableViewTabulatedData.FocusedRowChanged -= OnTableViewTabulatedDataOnFocusedRowChanged;
-            }
-        }
-
-        void Bridge_PropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            SyncUI();
-        }
-
         /// <summary>
-        /// Gets or sets data shown by this view. Usually it is any object in the system which can be shown by some IView derived class.
+        /// Gets or sets data shown by this view. Usually it is any object in the system which can be shown by some IView derived
+        /// class.
         /// </summary>
         public object Data
         {
-            get { return bridge; }
+            get
+            {
+                return bridge;
+            }
             set
             {
                 UnsubscribeFrictionTypeComboBox();
@@ -69,21 +43,56 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
                 tableViewTabulatedData.Data = null;
                 tableViewTabulatedData.EditableObject = null;
 
-                bindingSourceBridge.DataSource = (object)bridge ?? typeof(Bridge);
-                
+                bindingSourceBridge.DataSource = (object) bridge ?? typeof(Bridge);
+
                 if (value == null)
                 {
                     return;
                 }
 
                 SetComboboxDataSources();
-                
+
                 SetTableData();
 
                 SubscribeEvents();
                 SyncUI();
                 SubscribeFrictionTypeComboBox();
             }
+        }
+
+        public Image Image { get; set; }
+        public ViewInfo ViewInfo { get; set; }
+
+        public new void Dispose()
+        {
+            Data = null;
+            tableViewTabulatedData.Dispose();
+            base.Dispose();
+        }
+
+        public void EnsureVisible(object item) {}
+
+        private void SubscribeEvents()
+        {
+            ((INotifyPropertyChanged) bridge).PropertyChanged += Bridge_PropertyChanged;
+        }
+
+        private void UnSubscribeEvents()
+        {
+            if (bridge != null)
+            {
+                ((INotifyPropertyChanged) bridge).PropertyChanged -= Bridge_PropertyChanged;
+            }
+
+            if (tableViewTabulatedData != null)
+            {
+                tableViewTabulatedData.FocusedRowChanged -= OnTableViewTabulatedDataOnFocusedRowChanged;
+            }
+        }
+
+        private void Bridge_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            SyncUI();
         }
 
         private void SubscribeFrictionTypeComboBox()
@@ -102,7 +111,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
             tableViewTabulatedData.EditableObject = bridge.TabulatedCrossSectionDefinition;
             tableViewTabulatedData.FocusedRowChanged += OnTableViewTabulatedDataOnFocusedRowChanged;
 
-            for (int i = 0; i < tableViewTabulatedData.Columns.Count; i++)
+            for (var i = 0; i < tableViewTabulatedData.Columns.Count; i++)
             {
                 if (i > 1)
                 {
@@ -124,8 +133,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
 
         private void SetFrictionComboboxDataSource(ComboBox comboBox)
         {
-            var enumVals = (from BridgeFrictionType value in Enum.GetValues(typeof (BridgeFrictionType)) 
-                            select new ListItem<BridgeFrictionType>(value, GetFrictionDescription(value))).ToList();
+            List<ListItem<BridgeFrictionType>> enumVals = (from BridgeFrictionType value in Enum.GetValues(typeof(BridgeFrictionType))
+                                                           select new ListItem<BridgeFrictionType>(value, GetFrictionDescription(value))).ToList();
 
             comboBox.ValueMember = "Key";
             comboBox.DisplayMember = "Description";
@@ -163,8 +172,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
         {
             bridgeTypeCombobox.SelectedItem = bridge.BridgeType;
             tableViewTabulatedData.Visible = bridge.BridgeType == BridgeType.Tabulated;
-            var isPillar = bridge.BridgeType == BridgeType.Pillar;
-            var isRectangle = bridge.BridgeType == BridgeType.Rectangle;
+            bool isPillar = bridge.BridgeType == BridgeType.Pillar;
+            bool isRectangle = bridge.BridgeType == BridgeType.Rectangle;
 
             geometrySplitContainer.SplitterDistance = isPillar
                                                           ? 0
@@ -193,24 +202,21 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
             textBoxInletLoss.Enabled = !isPillar;
         }
 
-        private DelftTools.Utils.Tuple<string, bool> InputValidator(TableViewCell cell, object o)     
+        private DelftTools.Utils.Tuple<string, bool> InputValidator(TableViewCell cell, object o)
         {
-            var sortedRowIndex = tableViewTabulatedData.GetDataSourceIndexByRowIndex(cell.RowIndex);
+            int sortedRowIndex = tableViewTabulatedData.GetDataSourceIndexByRowIndex(cell.RowIndex);
 
             if (sortedRowIndex < 0 || sortedRowIndex >= tableViewTabulatedData.RowCount)
+            {
                 return new DelftTools.Utils.Tuple<string, bool>("", true);
+            }
 
             return bridge.TabulatedCrossSectionDefinition.ValidateCellValue(sortedRowIndex, cell.Column.AbsoluteIndex, o);
         }
 
-        public Image Image { get; set; }
-
-        public void EnsureVisible(object item) { }
-        public ViewInfo ViewInfo { get; set; }
-
         private void ComboBoxFrictionTypeSelectedValueChanged(object sender, EventArgs e)
         {
-            var oldValue = bridge.FrictionType;
+            BridgeFrictionType oldValue = bridge.FrictionType;
             var newValue = (BridgeFrictionType) comboBoxFrictionType.SelectedValue;
 
             if (oldValue != newValue)
@@ -220,12 +226,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
                 textBoxRoughnessValue.Text = roughness;
                 bindingSourceBridge.EndEdit();
             }
+
             SetFrictionUnitLabels();
         }
 
         private void SetFrictionUnitLabels()
         {
-            var frictionUnit = GetFrictionUnit(bridge.FrictionType);
+            string frictionUnit = GetFrictionUnit(bridge.FrictionType);
             labelFrictionUnit.Text = frictionUnit;
             labelGroundLayerFrictionUnit.Text = frictionUnit;
         }
@@ -263,6 +270,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
                 e.Cancel = true;
                 textBoxPillarWidth.BackColor = Color.OrangeRed;
             }
+
             if (number < 0)
             {
                 e.Cancel = true;

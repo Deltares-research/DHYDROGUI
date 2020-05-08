@@ -17,7 +17,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Utils
         /// <param name="parameters"> The run parameters </param>
         /// <param name="workDirectory"> The working directory while executing </param>
         /// <param name="useTimeOut"> Whether to use an execution time out or not </param>
-        /// <param name="timeOut"> The time out in milliseconds (when <paramref name="useTimeOut" /> is true) </param>
+        /// <param name="timeOut"> The time out in milliseconds (when <paramref name="useTimeOut"/> is true) </param>
         /// <param name="dataReceivedEventHandler"> EventHandler for output that is written to the console (default null) </param>
         /// <returns> Whether the execution ended successfully or not </returns>
         public static bool RunProcess(string exePath, string parameters, string workDirectory, Func<bool> isCanceled,
@@ -137,7 +137,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Utils
         }
 
         /// <summary>
-        /// Trims all white space characters from the front and back of <paramref name="toBeTrimmed" />
+        /// Trims all white space characters from the front and back of <paramref name="toBeTrimmed"/>
         /// </summary>
         /// <param name="toBeTrimmed"> The string to be trimmed </param>
         /// <returns> String where all white space characters from the front and back are removed </returns>

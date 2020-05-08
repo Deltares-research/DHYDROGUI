@@ -11,6 +11,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapes
 {
     public class CompositeShapeFeature : IShapeFeature, ICloneable, IHover
     {
+        protected readonly IList<IHoverFeature> hovers = new List<IHoverFeature>();
         private readonly List<IShapeFeature> shapeFeatures = new List<IShapeFeature>();
         private VectorStyle normalStyle;
         private VectorStyle selectedStyle;
@@ -18,12 +19,20 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapes
         private bool selected;
         private bool active;
 
-        protected readonly IList<IHoverFeature> hovers = new List<IHoverFeature>();
-
         public CompositeShapeFeature(IChart chart)
         {
             this.chart = chart;
             Active = true;
+        }
+
+        public string Label { get; set; }
+
+        public IList<IShapeFeature> ShapeFeatures
+        {
+            get
+            {
+                return shapeFeatures;
+            }
         }
 
         public virtual bool Selected
@@ -55,21 +64,27 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapes
 
         public bool Active
         {
-            get { return active; }
+            get
+            {
+                return active;
+            }
             set
             {
                 active = value;
-                shapeFeatures.ForEach(cs=> cs.Active = value);
+                shapeFeatures.ForEach(cs => cs.Active = value);
             }
         }
 
         public VectorStyle NormalStyle
         {
-            get { return normalStyle; }
+            get
+            {
+                return normalStyle;
+            }
             set
             {
                 normalStyle = value;
-                foreach (var feature in ShapeFeatures)
+                foreach (IShapeFeature feature in ShapeFeatures)
                 {
                     feature.NormalStyle = value;
                 }
@@ -78,52 +93,78 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapes
 
         public VectorStyle SelectedStyle
         {
-            get { return selectedStyle; }
+            get
+            {
+                return selectedStyle;
+            }
             set
             {
                 selectedStyle = value;
-                foreach (var feature in ShapeFeatures)
+                foreach (IShapeFeature feature in ShapeFeatures)
                 {
                     feature.SelectedStyle = value;
                 }
             }
         }
 
-        public VectorStyle DisabledStyle
-        {
-            get; set;
-        }
+        public VectorStyle DisabledStyle { get; set; }
 
         public object Tag { get; set; }
-        
-        public string Label { get; set; }
 
         public IGeometry Geometry
         {
-            get { throw new NotImplementedException(); }
-            set { throw new NotImplementedException(); }
+            get
+            {
+                throw new NotImplementedException();
+            }
+            set
+            {
+                throw new NotImplementedException();
+            }
         }
 
-        public IList<IShapeFeature> ShapeFeatures
+        public object Clone()
         {
-            get { return shapeFeatures; }
+            throw new NotImplementedException();
+        }
+
+        public void AddHover(IHoverFeature hoverText)
+        {
+            hovers.Add(hoverText);
+        }
+
+        public void ClearHovers()
+        {
+            hovers.Clear();
+        }
+
+        public virtual void Hover(List<Rectangle> usedSpace, VectorStyle style, Graphics graphics)
+        {
+            foreach (IHoverFeature hoverFeature in hovers)
+            {
+                if (hoverFeature.HoverType == HoverType.Selected && !Selected)
+                {
+                    continue;
+                }
+
+                hoverFeature.Render(usedSpace, Chart, graphics);
+            }
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="x">X in world coordinates</param>
         /// <param name="y">Y in world coordinates</param>
         /// <returns></returns>
         public virtual bool Contains(double x, double y)
         {
-            bool contains = false;
+            var contains = false;
             shapeFeatures.ForEach(cs => contains |= cs.Contains(x, y));
             return contains;
         }
 
         /// <summary>
-        /// Contains 
+        /// Contains
         /// </summary>
         /// <param name="x">X in device coordinates</param>
         /// <param name="y">Y in device coordinates</param>
@@ -152,37 +193,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapes
 
         public virtual Rectangle GetBounds()
         {
-            Rectangle rectangle = Rectangle.Empty;
+            var rectangle = Rectangle.Empty;
             shapeFeatures.ForEach(
                 cs => rectangle = rectangle.IsEmpty ? cs.GetBounds() : Rectangle.Union(rectangle, cs.GetBounds()));
             return rectangle;
-        }
-
-        public object Clone()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void AddHover(IHoverFeature hoverText)
-        {
-            hovers.Add(hoverText);
-        }
-
-        public void ClearHovers()
-        {
-            hovers.Clear();
-        }
-
-        public virtual void Hover(List<Rectangle> usedSpace, VectorStyle style, Graphics graphics)
-        {
-            foreach (IHoverFeature hoverFeature in hovers)
-            {
-                if ((hoverFeature.HoverType == HoverType.Selected) && (!Selected))
-                {
-                    continue;
-                }
-                hoverFeature.Render(usedSpace, Chart, graphics);
-            }
         }
     }
 }

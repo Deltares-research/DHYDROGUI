@@ -74,7 +74,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         }
 
         /// <summary>
-        /// Check whether <paramref name="substanceProcessLibrary" /> is invalid
+        /// Check whether <paramref name="substanceProcessLibrary"/> is invalid
         /// </summary>
         private static IEnumerable<ValidationIssue> ValidateSubstanceProcessLibrary(
             SubstanceProcessLibrary substanceProcessLibrary)
@@ -160,7 +160,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         }
 
         /// <summary>
-        /// Check whether one of the output timers of <paramref name="model" /> is invalid
+        /// Check whether one of the output timers of <paramref name="model"/> is invalid
         /// </summary>
         private static IEnumerable<ValidationIssue> ValidateOutputTimers(
             ITimeDependentModel model, WaterQualityModelSettings settings)
@@ -313,15 +313,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         }
 
         /// <summary>
-        /// This function checks if <paramref name="checkTime" /> can be expressed as:
-        /// <paramref name="startTime" /> + N * <paramref name="deltaTime" />, for integer N
+        /// This function checks if <paramref name="checkTime"/> can be expressed as:
+        /// <paramref name="startTime"/> + N * <paramref name="deltaTime"/>, for integer N
         /// </summary>
-        /// <param name="checkTime"> The <see cref="DateTime" /> to be checked </param>
-        /// <param name="startTime"> The start <see cref="DateTime" /> </param>
-        /// <param name="deltaTime"> The time increment from <paramref name="startTime" /> </param>
+        /// <param name="checkTime"> The <see cref="DateTime"/> to be checked </param>
+        /// <param name="startTime"> The start <see cref="DateTime"/> </param>
+        /// <param name="deltaTime"> The time increment from <paramref name="startTime"/> </param>
         /// <returns>
-        /// If <paramref name="checkTime" /> can be expressed as multiple of <paramref name="deltaTime" /> starting from
-        /// <paramref name="startTime" />
+        /// If <paramref name="checkTime"/> can be expressed as multiple of <paramref name="deltaTime"/> starting from
+        /// <paramref name="startTime"/>
         /// </returns>
         private static bool IsAlignedWith(DateTime checkTime, DateTime startTime, TimeSpan deltaTime)
         {
@@ -339,8 +339,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
 
         /// <summary>
         /// Determines if input parameters can be expressed as:
-        /// 1) <paramref name="spanOne" /> = N * <paramref name="spanTwo" /> OR
-        /// 2) <paramref name="spanOne" /> = <paramref name="spanTwo" /> / N for integer N > 0
+        /// 1) <paramref name="spanOne"/> = N * <paramref name="spanTwo"/> OR
+        /// 2) <paramref name="spanOne"/> = <paramref name="spanTwo"/> / N for integer N > 0
         /// </summary>
         /// <param name="spanOne"> A non-zero timespan </param>
         /// <param name="spanTwo"> A second non-zero timespan </param>

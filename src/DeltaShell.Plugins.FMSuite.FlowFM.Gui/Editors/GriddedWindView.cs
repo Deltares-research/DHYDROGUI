@@ -16,7 +16,47 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             InitializeComponent();
         }
 
-        public override string Text { get { return "Wind file"; } }
+        public override string Text
+        {
+            get
+            {
+                return "Wind file";
+            }
+        }
+
+        public object Data
+        {
+            get
+            {
+                return WindField;
+            }
+            set
+            {
+                if (value is GriddedWindField || value is SpiderWebWindField)
+                {
+                    WindField = (IWindField) value;
+                }
+            }
+        }
+
+        public Image Image { get; set; }
+
+        public ViewInfo ViewInfo { get; set; }
+
+        public void EnsureVisible(object item) {}
+
+        private IWindField WindField
+        {
+            get
+            {
+                return windField;
+            }
+            set
+            {
+                windField = value;
+                AfterWindFieldSet();
+            }
+        }
 
         private void FileOpenButtonClick(object sender, EventArgs e)
         {
@@ -32,31 +72,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
                 {
                     spiderWebWindField.WindFilePath = dialog.FileName;
                 }
+
                 var griddedWindField = windField as GriddedWindField;
                 if (griddedWindField != null)
                 {
-                    var filePath = dialog.FileName;
+                    string filePath = dialog.FileName;
                     if (griddedWindField.SeparateGridFile)
                     {
-                        var gridFile = WindSelectionDialog.GetCorrespondingGridFile(filePath);
+                        string gridFile = WindSelectionDialog.GetCorrespondingGridFile(filePath);
                         if (gridFile == null)
                         {
                             return;
                         }
+
                         griddedWindField.GridFilePath = gridFile;
                     }
+
                     griddedWindField.WindFilePath = filePath;
                 }
-            }
-        }
-
-        private IWindField WindField
-        {
-            get { return windField; }
-            set
-            {
-                windField = value;
-                AfterWindFieldSet();
             }
         }
 
@@ -64,7 +97,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
         {
             gridFilePathLabel.Visible = false;
             WindGridTextBox.Visible = false;
-            
+
             fileOpenButton.Enabled = windField != null;
 
             var griddedWindField = windField as GriddedWindField;
@@ -82,23 +115,5 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
                 WindDataTextBox.Text = spiderWebWindField.WindFilePath;
             }
         }
-
-        public object Data
-        {
-            get { return WindField; }
-            set
-            {
-                if (value is GriddedWindField || value is SpiderWebWindField)
-                {
-                    WindField = (IWindField) value;
-                }
-            }
-        }
-
-        public Image Image { get; set; }
-        
-        public void EnsureVisible(object item){}
-
-        public ViewInfo ViewInfo { get; set; }
     }
 }

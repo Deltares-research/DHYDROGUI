@@ -27,6 +27,7 @@ using DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapes;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChartShapes;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView;
+using DeltaShell.Plugins.NetworkEditor.Gui.Properties;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Extensions.Networks;
@@ -40,119 +41,66 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
     /// </summary>
     public partial class NetworkSideView : UserControl, INetworkSideView, ITimeNavigatable, ICompositeView
     {
-        private class SideViewChartData : IDisposable
-        {
-            public SideViewChartData(IFunction func, Color color, ChartSeriesType style)
-            {
-                Style = style;
-                Color = color;
-                Function = func;
-            }
-
-            private FunctionBindingList bindingList;
-            public FunctionBindingList FunctionBindingList
-            {
-                get { return bindingList; }
-            }
-
-            private IFunction function;
-            public IFunction Function
-            {
-                get { return function; }
-                set
-                {
-                    function = value;
-                    if (bindingList != null)
-                    {
-                        bindingList.Dispose();
-                    }
-
-                    bindingList = function != null ? new FunctionBindingList(function) {SynchronizeWaitMethod = Application.DoEvents} : null;
-                }
-            }
-
-            public Color Color { get; set; }
-            public ChartSeriesType Style { get; set; }
-
-            public Action<IPointChartSeries> PointStyleCustomizer { get; set; }
-            public Action<ILineChartSeries> LineStyleCustomizer { get; set; }
-            public Action<IAreaChartSeries> AreaStyleCustomizer { get; set; }
-
-            public void CustomizeChart(IChartSeries series)
-            {
-                if (series is IPointChartSeries && PointStyleCustomizer != null)
-                {
-                    PointStyleCustomizer((IPointChartSeries) series);
-                }
-                if (series is ILineChartSeries && LineStyleCustomizer != null)
-                {
-                    LineStyleCustomizer((ILineChartSeries) series);
-                }
-                if(series is IAreaChartSeries && AreaStyleCustomizer != null)
-                {
-                    AreaStyleCustomizer((IAreaChartSeries) series);
-                }
-            }
-
-            public void Dispose()
-            {
-                if (bindingList != null)
-                {
-                    bindingList.Dispose();
-                }
-            }
-        }
-
         private static readonly ILog log = LogManager.GetLogger(typeof(NetworkSideView));
-        private static readonly Bitmap LateralSourceSmallIcon = Properties.Resources.LateralSourceSmall;
-        private static readonly Bitmap RetentionIcon = Properties.Resources.Retention;
-        private static readonly Bitmap ObservationIcon = Properties.Resources.Observation;
+        private static readonly Bitmap LateralSourceSmallIcon = Resources.LateralSourceSmall;
+        private static readonly Bitmap RetentionIcon = Resources.Retention;
+        private static readonly Bitmap ObservationIcon = Resources.Observation;
 
         private readonly VectorStyle normalCrossSectionStyle = new VectorStyle
         {
             Fill = new SolidBrush(Color.FromArgb(100, Color.LightBlue)),
             Line = new Pen(Color.Black)
         };
+
         private readonly VectorStyle selectedCrossSectionStyle = new VectorStyle
         {
             Fill = new SolidBrush(Color.LightBlue),
             Line = new Pen(Color.Black)
         };
+
         private readonly VectorStyle selectStyle = new VectorStyle
         {
             Fill = new SolidBrush(Color.FromArgb(150, Color.Gray)),
             Line = new Pen(Color.Black)
         };
+
         private readonly VectorStyle defaultStyle = new VectorStyle
         {
-            Fill = Brushes.Transparent, 
+            Fill = Brushes.Transparent,
             Line = new Pen(Color.Black)
         };
 
-        
-        /// <summary>
-        /// Holds a list of function pointers (lambda's) with a fixed time parameter to access the coverage (key). 
-        /// The time parameter is taken from the time navigator.
-        /// </summary>
-        private bool contextMenuStripEnabled;
-        private SideViewCoveragesContextMenu sideViewCoveragesContextMenu;
-
-        private Route data;
-        private NetworkSideViewDataController networkSideViewDataController;
         private readonly IList<SideViewChartData> bottomProfileChartData = new List<SideViewChartData>();
         private readonly IList<SideViewChartData> renderedCoveragesChartData = new List<SideViewChartData>();
         private readonly IDictionary<IBranchFeature, IShapeFeature> Structures2Shape = new Dictionary<IBranchFeature, IShapeFeature>();
         private readonly IDictionary<IShapeFeature, IBranchFeature> Shapes2Structures = new Dictionary<IShapeFeature, IBranchFeature>();
-
-        private bool allowFeatureVisibilityChanges;
         private readonly StructurePresenter structurePresenter;
-        private TimeArgumentNavigatable timeNavigator;
-        private ShapeModifyTool shapeModifyTool;
         private readonly IChart chart;
-        private Dictionary<IChartSeries, bool> seriesActiveCache;
 
         private readonly IEventedList<IView> childViews = new EventedList<IView>();
-        
+
+        /// <summary>
+        /// Holds a list of function pointers (lambda's) with a fixed time parameter to access the coverage (key).
+        /// The time parameter is taken from the time navigator.
+        /// </summary>
+        private bool contextMenuStripEnabled;
+
+        private SideViewCoveragesContextMenu sideViewCoveragesContextMenu;
+
+        private Route data;
+        private NetworkSideViewDataController networkSideViewDataController;
+
+        private bool allowFeatureVisibilityChanges;
+        private TimeArgumentNavigatable timeNavigator;
+        private ShapeModifyTool shapeModifyTool;
+        private Dictionary<IChartSeries, bool> seriesActiveCache;
+
+        public event EventHandler<SelectedItemChangedEventArgs> SelectionChanged;
+
+        public event Action CurrentTimeSelectionChanged;
+
+        public event Action TimesChanged;
+
         public NetworkSideView()
         {
             InitializeComponent();
@@ -167,6 +115,88 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
 
             seriesActiveCache = new Dictionary<IChartSeries, bool>();
             childViews.Add(chartView);
+        }
+
+        public bool ContextMenuStripEnabled
+        {
+            get
+            {
+                return contextMenuStripEnabled;
+            }
+            set
+            {
+                if (contextMenuStripEnabled == value)
+                {
+                    return;
+                }
+
+                if (value != contextMenuStripEnabled)
+                {
+                    if (value)
+                    {
+                        chartView.Tools.Add(sideViewCoveragesContextMenu);
+                    }
+                    else
+                    {
+                        chartView.Tools.Remove(sideViewCoveragesContextMenu);
+                    }
+                }
+
+                contextMenuStripEnabled = value;
+            }
+        }
+
+        public bool ChartLegendVisible
+        {
+            get
+            {
+                return chartView.Chart.Legend.Visible;
+            }
+            set
+            {
+                chartView.Chart.Legend.Visible = value;
+            }
+        }
+
+        public bool ChartHeaderVisible
+        {
+            get
+            {
+                return chartView.Chart.TitleVisible;
+            }
+            set
+            {
+                chartView.Chart.TitleVisible = value;
+            }
+        }
+
+        public bool AllowFeatureVisibilityChanges
+        {
+            get
+            {
+                return allowFeatureVisibilityChanges;
+            }
+            set
+            {
+                allowFeatureVisibilityChanges = value;
+                optionsPanel.Visible = allowFeatureVisibilityChanges;
+            }
+        }
+
+        public IEventedList<IView> ChildViews
+        {
+            get
+            {
+                return childViews;
+            }
+        }
+
+        public bool HandlesChildViews
+        {
+            get
+            {
+                return true;
+            }
         }
 
         public IFeature SelectedFeature
@@ -187,13 +217,22 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
         /// </summary>
         public object Data
         {
-            get { return data; }
-            set { data = value as Route; }
+            get
+            {
+                return data;
+            }
+            set
+            {
+                data = value as Route;
+            }
         }
 
         public NetworkSideViewDataController DataController
         {
-            get { return networkSideViewDataController; }
+            get
+            {
+                return networkSideViewDataController;
+            }
             set
             {
                 //unsubscribe old data
@@ -226,122 +265,78 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
         /// </summary>
         public Image Image { get; set; }
 
-        public bool ContextMenuStripEnabled
-        {
-            get { return contextMenuStripEnabled; }
-            set
-            {
-                if (contextMenuStripEnabled == value)
-                {
-                    return;
-                }
-                if (value != contextMenuStripEnabled)
-                {
-                    if (value)
-                    {
-                        chartView.Tools.Add(sideViewCoveragesContextMenu);
-                    }
-                    else
-                    {
-                        chartView.Tools.Remove(sideViewCoveragesContextMenu);
-                    }
-                }
-                contextMenuStripEnabled = value;
-            }
-        }
-
-        public bool ChartLegendVisible
+        public object CommandReceiver
         {
             get
             {
-                return chartView.Chart.Legend.Visible;
-            }
-            set
-            {
-                chartView.Chart.Legend.Visible = value;
+                return structurePresenter;
             }
         }
 
-        public bool ChartHeaderVisible
-        {
-            get { return chartView.Chart.TitleVisible; }
-            set { chartView.Chart.TitleVisible = value; }
-        }
-
-        public bool AllowFeatureVisibilityChanges
-        {
-            get { return allowFeatureVisibilityChanges; }
-            set
-            {
-                allowFeatureVisibilityChanges = value;
-                optionsPanel.Visible = allowFeatureVisibilityChanges;
-            }
-            
-        }
-
-        private Route NetworkRoute
-        {
-            get { return data; }
-        }
-
-        public object CommandReceiver
-        {
-            get { return structurePresenter; }
-        }
+        public ViewInfo ViewInfo { get; set; }
 
         public DateTime? TimeSelectionStart
         {
-            get { return timeNavigator.TimeSelectionStart; }
+            get
+            {
+                return timeNavigator.TimeSelectionStart;
+            }
         }
 
         public DateTime? TimeSelectionEnd
         {
-            get { return timeNavigator.TimeSelectionEnd; }
+            get
+            {
+                return timeNavigator.TimeSelectionEnd;
+            }
         }
 
         public TimeNavigatableLabelFormatProvider CustomDateTimeFormatProvider
         {
-            get { return null; }
+            get
+            {
+                return null;
+            }
         }
 
         public IEnumerable<DateTime> Times
         {
-            get { return timeNavigator.Times; }
+            get
+            {
+                return timeNavigator.Times;
+            }
         }
 
         public TimeSelectionMode SelectionMode
         {
-            get { return TimeSelectionMode.Single; }
+            get
+            {
+                return TimeSelectionMode.Single;
+            }
         }
 
         public SnappingMode SnappingMode
         {
-            get { return SnappingMode.Nearest; }
-        }
-
-        public void UpdateStyles(IBranchFeature branchFeature, VectorStyle normalStyle, VectorStyle selectedStyle)
-        {
-            IShapeFeature shapeFeature;
-            Structures2Shape.TryGetValue(branchFeature, out shapeFeature);
-            if (shapeFeature != null)
+            get
             {
-                shapeFeature.NormalStyle = normalStyle;
-                shapeFeature.SelectedStyle = selectedStyle;
+                return SnappingMode.Nearest;
             }
         }
 
         public void UpdateFilter(ICoverage coverage)
         {
             if (coverage == null || !coverage.IsTimeDependent)
+            {
                 return;
-            
-            var filteredTimeVariable = (IVariable)coverage.Time.Parent;
-            var timeFilter = (IVariableValueFilter)coverage.Filters.FirstOrDefault(f => f.Variable == filteredTimeVariable);
-            timeFilter.Values = new[] { timeNavigator.TimeSelectionStart };
-        }
+            }
 
-        public void EnsureVisible(object item) { }
-        public ViewInfo ViewInfo { get; set; }
+            var filteredTimeVariable = (IVariable) coverage.Time.Parent;
+            var timeFilter = (IVariableValueFilter) coverage.Filters.FirstOrDefault(f => f.Variable == filteredTimeVariable);
+            timeFilter.Values = new[]
+            {
+                timeNavigator.TimeSelectionStart
+            };
+        }
 
         [InvokeRequired]
         public void OnViewDataChanged(bool computeMinMax)
@@ -368,7 +363,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
             chart.Series.Clear();
             shapeModifyTool.Clear();
 
-            string errorMessage = "No route defined for network side view.";
+            var errorMessage = "No route defined for network side view.";
             if (NetworkRoute == null || !IsRouteValid(out errorMessage))
             {
                 chart.Title = errorMessage;
@@ -376,7 +371,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
                 chart.RightAxis.Visible = false;
                 return;
             }
-            
+
             //clear the old binding lists
             bottomProfileChartData.ForEach(cd => cd.Dispose());
             bottomProfileChartData.Clear();
@@ -394,116 +389,45 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
                 chart.Series.Add(CreateSeries(d));
                 renderedCoveragesChartData.Add(d);
             });
-            
+
             chart.Legend.ShowCheckBoxes = true;
             chart.Series.ForEach(s => s.Visible = !seriesActiveCache.ContainsKey(s) || seriesActiveCache[s]);
-            
+
             UpdateCrossSectionShapes();
             UpdateStructureShapes();
             UpdateTitle();
         }
 
-        private IEnumerable<SideViewChartData> CreateRenderedCoverageChartData()
-        {
-            foreach (var sideViewFunction in networkSideViewDataController.RenderedNetworkSideViewFunctions)
-            {
-                var renderedNetworkCoverageChartData = new SideViewChartData(sideViewFunction,
-                                                              ColorHelper.GetIndexedColor(chartView.Chart.Series.Count),
-                                                              ChartSeriesType.LineSeries);
-                renderedNetworkCoverageChartData.FunctionBindingList.SynchronizeInvoke = chartView;
-                renderedNetworkCoverageChartData.LineStyleCustomizer = (lcs) =>
-                                                                           {
-                                                                               lcs.DashStyle = DashStyle.Solid;
-                                                                               lcs.Width = 2;
-                                                                           };
-                yield return renderedNetworkCoverageChartData;
-            }
+        public void ActivateChildView(IView childView) {}
 
-            foreach (var coverage in networkSideViewDataController.RenderedFeatureViewFunctions)
+        public void UpdateStyles(IBranchFeature branchFeature, VectorStyle normalStyle, VectorStyle selectedStyle)
+        {
+            IShapeFeature shapeFeature;
+            Structures2Shape.TryGetValue(branchFeature, out shapeFeature);
+            if (shapeFeature != null)
             {
-                var renderedFeatureCoverageChartData = new SideViewChartData(coverage,
-                                                              ColorHelper.GetIndexedColor(chartView.Chart.Series.Count),
-                                                              ChartSeriesType.PointSeries);
-                renderedFeatureCoverageChartData.FunctionBindingList.SynchronizeInvoke = chartView;
-                renderedFeatureCoverageChartData.PointStyleCustomizer = (pcs) => {};
-                yield return renderedFeatureCoverageChartData;
+                shapeFeature.NormalStyle = normalStyle;
+                shapeFeature.SelectedStyle = selectedStyle;
             }
         }
 
-        private IEnumerable<SideViewChartData> CreateBedLevelChartData()
-        {
-            var waterLevelSideViewFunction = networkSideViewDataController.WaterLevelSideViewFunction;
-            if (waterLevelSideViewFunction != null)
-            {
-                var waterLevelChartData = new SideViewChartData(waterLevelSideViewFunction,
-                                                                      Color.DeepSkyBlue,
-                                                                      ChartSeriesType.AreaSeries);
-                waterLevelChartData.FunctionBindingList.SynchronizeInvoke = chartView;
-                waterLevelChartData.AreaStyleCustomizer = (acs) => acs.LineColor = Color.RoyalBlue;
-                yield return waterLevelChartData;
-            }
-
-            var profileSideViewFunctions = networkSideViewDataController.ProfileSideViewFunctions.ToList();
-
-            var bottomLevelSideViewFunction =
-                profileSideViewFunctions.FirstOrDefault(psvf => psvf.Name == "Bed level");
-            if (bottomLevelSideViewFunction != null)
-            {
-                var bottomLevelChartData = new SideViewChartData(bottomLevelSideViewFunction,
-                                                                      Color.YellowGreen,
-                                                                      ChartSeriesType.AreaSeries);
-                bottomLevelChartData.FunctionBindingList.SynchronizeInvoke = chartView;
-                bottomLevelChartData.AreaStyleCustomizer = (acs) => acs.LineVisible = false;
-                yield return bottomLevelChartData;
-            }
-
-            var lowestEmbankmentSideViewFunction = profileSideViewFunctions.FirstOrDefault(psfv => psfv.Name == "Lowest embankment");
-            if (lowestEmbankmentSideViewFunction != null)
-            {
-                var lowestEmbankmentChartData = new SideViewChartData(lowestEmbankmentSideViewFunction,
-                                                                      Color.SaddleBrown,
-                                                                      ChartSeriesType.LineSeries);
-                lowestEmbankmentChartData.FunctionBindingList.SynchronizeInvoke = chartView;
-                lowestEmbankmentChartData.LineStyleCustomizer = (lcs) => { lcs.DashStyle = DashStyle.Dot; lcs.Width = 3; };
-                yield return lowestEmbankmentChartData;
-            }
-
-            var leftEmbankmentSideViewFunction = profileSideViewFunctions.FirstOrDefault(psfv => psfv.Name == "Left embankment");
-            if (leftEmbankmentSideViewFunction != null)
-            {
-                var leftEmbankmentChartData = new SideViewChartData(leftEmbankmentSideViewFunction,
-                                                                      Color.Goldenrod,
-                                                                      ChartSeriesType.LineSeries);
-                leftEmbankmentChartData.FunctionBindingList.SynchronizeInvoke = chartView;
-                leftEmbankmentChartData.LineStyleCustomizer = (lcs) => { lcs.DashStyle = DashStyle.Dot; lcs.Width = 3; };
-                yield return leftEmbankmentChartData;
-            }
-
-            var rightEmbankmentSideViewFunction = profileSideViewFunctions.FirstOrDefault(psfv => psfv.Name == "Right embankment");
-            if (rightEmbankmentSideViewFunction != null)
-            {
-                var rightEmbankmentChartData = new SideViewChartData(rightEmbankmentSideViewFunction,
-                                                                      Color.RosyBrown,
-                                                                      ChartSeriesType.LineSeries);
-                rightEmbankmentChartData.FunctionBindingList.SynchronizeInvoke = chartView;
-                rightEmbankmentChartData.LineStyleCustomizer = (lcs) => { lcs.DashStyle = DashStyle.Dot; lcs.Width = 3; };
-                yield return rightEmbankmentChartData;
-            }
-        }
+        public void EnsureVisible(object item) {}
 
         public void SetCurrentTimeSelection(DateTime? start, DateTime? end)
         {
             timeNavigator.SetCurrentTimeSelection(start, end);
         }
 
-        /// <summary> 
+        /// <summary>
         /// Clean up any resources being used.
         /// </summary>
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
             if (IsDisposed)
+            {
                 return;
+            }
 
             if (!disposing)
             {
@@ -511,18 +435,20 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
                 return;
             }
 
-            if ((components != null))
+            if (components != null)
             {
                 components.Dispose();
             }
+
             base.Dispose(true);
 
             // dispose function binding lists:
-            foreach (var chartData in bottomProfileChartData)
+            foreach (SideViewChartData chartData in bottomProfileChartData)
             {
                 chartData.Dispose();
             }
-            foreach (var chartData in renderedCoveragesChartData)
+
+            foreach (SideViewChartData chartData in renderedCoveragesChartData)
             {
                 chartData.Dispose();
             }
@@ -531,18 +457,133 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
             UnsubscribeTimeNavigator();
         }
 
-        public event EventHandler<SelectedItemChangedEventArgs> SelectionChanged;
+        protected override void OnHandleCreated(EventArgs e)
+        {
+            if (DataController != null)
+            {
+                DataController.OnSideViewHandleCreated();
+            }
+        }
 
-        public event Action CurrentTimeSelectionChanged;
+        protected override void OnHandleDestroyed(EventArgs e)
+        {
+            if (DataController != null)
+            {
+                DataController.OnSideViewHandleDestroyed();
+            }
+        }
 
-        public event Action TimesChanged;
+        private Route NetworkRoute
+        {
+            get
+            {
+                return data;
+            }
+        }
+
+        private IEnumerable<SideViewChartData> CreateRenderedCoverageChartData()
+        {
+            foreach (IFunction sideViewFunction in networkSideViewDataController.RenderedNetworkSideViewFunctions)
+            {
+                var renderedNetworkCoverageChartData = new SideViewChartData(sideViewFunction,
+                                                                             ColorHelper.GetIndexedColor(chartView.Chart.Series.Count),
+                                                                             ChartSeriesType.LineSeries);
+                renderedNetworkCoverageChartData.FunctionBindingList.SynchronizeInvoke = chartView;
+                renderedNetworkCoverageChartData.LineStyleCustomizer = (lcs) =>
+                {
+                    lcs.DashStyle = DashStyle.Solid;
+                    lcs.Width = 2;
+                };
+                yield return renderedNetworkCoverageChartData;
+            }
+
+            foreach (IFunction coverage in networkSideViewDataController.RenderedFeatureViewFunctions)
+            {
+                var renderedFeatureCoverageChartData = new SideViewChartData(coverage,
+                                                                             ColorHelper.GetIndexedColor(chartView.Chart.Series.Count),
+                                                                             ChartSeriesType.PointSeries);
+                renderedFeatureCoverageChartData.FunctionBindingList.SynchronizeInvoke = chartView;
+                renderedFeatureCoverageChartData.PointStyleCustomizer = (pcs) => {};
+                yield return renderedFeatureCoverageChartData;
+            }
+        }
+
+        private IEnumerable<SideViewChartData> CreateBedLevelChartData()
+        {
+            IFunction waterLevelSideViewFunction = networkSideViewDataController.WaterLevelSideViewFunction;
+            if (waterLevelSideViewFunction != null)
+            {
+                var waterLevelChartData = new SideViewChartData(waterLevelSideViewFunction,
+                                                                Color.DeepSkyBlue,
+                                                                ChartSeriesType.AreaSeries);
+                waterLevelChartData.FunctionBindingList.SynchronizeInvoke = chartView;
+                waterLevelChartData.AreaStyleCustomizer = (acs) => acs.LineColor = Color.RoyalBlue;
+                yield return waterLevelChartData;
+            }
+
+            List<IFunction> profileSideViewFunctions = networkSideViewDataController.ProfileSideViewFunctions.ToList();
+
+            IFunction bottomLevelSideViewFunction =
+                profileSideViewFunctions.FirstOrDefault(psvf => psvf.Name == "Bed level");
+            if (bottomLevelSideViewFunction != null)
+            {
+                var bottomLevelChartData = new SideViewChartData(bottomLevelSideViewFunction,
+                                                                 Color.YellowGreen,
+                                                                 ChartSeriesType.AreaSeries);
+                bottomLevelChartData.FunctionBindingList.SynchronizeInvoke = chartView;
+                bottomLevelChartData.AreaStyleCustomizer = (acs) => acs.LineVisible = false;
+                yield return bottomLevelChartData;
+            }
+
+            IFunction lowestEmbankmentSideViewFunction = profileSideViewFunctions.FirstOrDefault(psfv => psfv.Name == "Lowest embankment");
+            if (lowestEmbankmentSideViewFunction != null)
+            {
+                var lowestEmbankmentChartData = new SideViewChartData(lowestEmbankmentSideViewFunction,
+                                                                      Color.SaddleBrown,
+                                                                      ChartSeriesType.LineSeries);
+                lowestEmbankmentChartData.FunctionBindingList.SynchronizeInvoke = chartView;
+                lowestEmbankmentChartData.LineStyleCustomizer = (lcs) =>
+                {
+                    lcs.DashStyle = DashStyle.Dot;
+                    lcs.Width = 3;
+                };
+                yield return lowestEmbankmentChartData;
+            }
+
+            IFunction leftEmbankmentSideViewFunction = profileSideViewFunctions.FirstOrDefault(psfv => psfv.Name == "Left embankment");
+            if (leftEmbankmentSideViewFunction != null)
+            {
+                var leftEmbankmentChartData = new SideViewChartData(leftEmbankmentSideViewFunction,
+                                                                    Color.Goldenrod,
+                                                                    ChartSeriesType.LineSeries);
+                leftEmbankmentChartData.FunctionBindingList.SynchronizeInvoke = chartView;
+                leftEmbankmentChartData.LineStyleCustomizer = (lcs) =>
+                {
+                    lcs.DashStyle = DashStyle.Dot;
+                    lcs.Width = 3;
+                };
+                yield return leftEmbankmentChartData;
+            }
+
+            IFunction rightEmbankmentSideViewFunction = profileSideViewFunctions.FirstOrDefault(psfv => psfv.Name == "Right embankment");
+            if (rightEmbankmentSideViewFunction != null)
+            {
+                var rightEmbankmentChartData = new SideViewChartData(rightEmbankmentSideViewFunction,
+                                                                     Color.RosyBrown,
+                                                                     ChartSeriesType.LineSeries);
+                rightEmbankmentChartData.FunctionBindingList.SynchronizeInvoke = chartView;
+                rightEmbankmentChartData.LineStyleCustomizer = (lcs) =>
+                {
+                    lcs.DashStyle = DashStyle.Dot;
+                    lcs.Width = 3;
+                };
+                yield return rightEmbankmentChartData;
+            }
+        }
 
         private void AddToolsToChart()
         {
-            shapeModifyTool = new ShapeModifyTool(chart)
-                                  {
-                                      ShapeEditMode = (ShapeEditMode.ShapeSelect)
-                                  };
+            shapeModifyTool = new ShapeModifyTool(chart) {ShapeEditMode = ShapeEditMode.ShapeSelect};
 
             shapeModifyTool.SelectionChanged += ShapeModifyToolSelectionChanged;
             //shapeModifyTool.ShapeChanged += ShapeModifyToolShapeChanged;
@@ -568,13 +609,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
                 filter = networkSideViewDataController.WaterLevelNetworkCoverage.Filters[0];
             }
             else
-            { 
+            {
                 //create empty filter
                 var variable = new Variable<DateTime>();
                 filter = new VariableValueFilter<DateTime>(variable, DateTime.MinValue);
             }
 
-            timeNavigator = new TimeArgumentNavigatable((VariableValueFilter<DateTime>)filter);
+            timeNavigator = new TimeArgumentNavigatable((VariableValueFilter<DateTime>) filter);
             timeNavigator.TimeSelectionChanged += TimeNavigatorPropertyChanged;
             timeNavigator.TimesChanged += TimeNavigatorTimesChanged;
             TimeNavigatorTimesChanged(); //we're new, so times have changed
@@ -608,7 +649,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
 
         private void ShapeModifyToolSelectionChanged(object sender, ShapeEventArgs e)
         {
-            if ((null != e.ShapeFeature) && (Shapes2Structures.ContainsKey(e.ShapeFeature)))
+            if (null != e.ShapeFeature && Shapes2Structures.ContainsKey(e.ShapeFeature))
             {
                 SelectedFeature = Shapes2Structures[e.ShapeFeature];
                 OnSelectedFeatureChanged();
@@ -630,26 +671,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
             OnViewDataChanged(true);
         }
 
-        protected override void OnHandleCreated(EventArgs e)
-        {
-            if (DataController != null)
-            {
-                DataController.OnSideViewHandleCreated();
-            }
-        }
-
-        protected override void OnHandleDestroyed(EventArgs e)
-        {
-            if (DataController != null)
-            {
-                DataController.OnSideViewHandleDestroyed();
-            }
-        }
-
         private void SubscribeToDataController()
         {
-            ((INotifyPropertyChanged)networkSideViewDataController).PropertyChanged += OnViewDataPropertyChanged;
-            ((INotifyCollectionChanged)networkSideViewDataController.Network).CollectionChanged += NetworkCollectionChanged;
+            ((INotifyPropertyChanged) networkSideViewDataController).PropertyChanged += OnViewDataPropertyChanged;
+            ((INotifyCollectionChanged) networkSideViewDataController.Network).CollectionChanged += NetworkCollectionChanged;
             sideViewCoveragesContextMenu.NetworkSideViewDataController = DataController;
             CreateAndSubscribeTimeNavigator();
         }
@@ -661,11 +686,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
                 // Important this unregistering of handlers can occur in response to a collection changed
                 // NetworkCollectionChanged may still be called after unregistering because the event was 
                 // already fired and there are multiplpe listeners
-                ((INotifyPropertyChanged)networkSideViewDataController).PropertyChanged -= OnViewDataPropertyChanged;
+                ((INotifyPropertyChanged) networkSideViewDataController).PropertyChanged -= OnViewDataPropertyChanged;
                 if (networkSideViewDataController.Network != null)
-                    ((INotifyCollectionChanged)networkSideViewDataController.Network).CollectionChanged -= NetworkCollectionChanged;
+                {
+                    ((INotifyCollectionChanged) networkSideViewDataController.Network).CollectionChanged -= NetworkCollectionChanged;
+                }
+
                 sideViewCoveragesContextMenu.NetworkSideViewDataController = null;
-                networkSideViewDataController.Dispose();//need to deregister events..hence dispose.
+                networkSideViewDataController.Dispose(); //need to deregister events..hence dispose.
             }
         }
 
@@ -689,7 +717,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
         private void NetworkCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             if (Data == null)
+            {
                 return; //we're in the process of closing, stop doing anything here
+            }
 
             FullUpdate();
         }
@@ -698,16 +728,16 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
         {
             chartView.Chart.BottomAxis.Title = string.Format("Chainage [{0}] along route", NetworkRoute.Components[0].Unit.Symbol);
             // todo: add support for other coverages, eg. velocity and 2nd axis.
-            var bedLevelCoverage =
+            INetworkCoverage bedLevelCoverage =
                 DataController.ProfileNetworkCoverages.FirstOrDefault(nc => nc.Name == "Bed level");
             if (bedLevelCoverage != null)
             {
                 chartView.Chart.LeftAxis.Title = string.Format("Level [{0}]",
-                                                               bedLevelCoverage.
-                                                                   Components[0].Unit.Symbol);
+                                                               bedLevelCoverage.Components[0].Unit.Symbol);
             }
+
             chartView.Chart.RightAxis.Minimum = 10;
-            chartView.Chart.RightAxis.Maximum= 100;
+            chartView.Chart.RightAxis.Maximum = 100;
 
             chartView.Chart.RightAxis.Visible = true;
             chartView.Chart.RightAxis.Title = "Value";
@@ -726,7 +756,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
                 return;
             }
 
-            foreach (var crossSection in networkSideViewDataController.ActiveBranchFeatures.OfType<ICrossSection>())
+            foreach (ICrossSection crossSection in networkSideViewDataController.ActiveBranchFeatures.OfType<ICrossSection>())
             {
                 AddCrossSectionShape(data, crossSection);
             }
@@ -747,7 +777,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
 
             double minY = chartView.Chart.LeftAxis.Minimum;
 
-            foreach (var branchFeature in networkSideViewDataController.ActiveBranchFeatures)
+            foreach (IBranchFeature branchFeature in networkSideViewDataController.ActiveBranchFeatures)
             {
                 if (branchFeature is ICompositeBranchStructure)
                 {
@@ -775,7 +805,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
                 }
             }
 
-            foreach (var branchFeature in networkSideViewDataController.InactiveBranchFeatures.OfType<ICompositeBranchStructure>())
+            foreach (ICompositeBranchStructure branchFeature in networkSideViewDataController.InactiveBranchFeatures.OfType<ICompositeBranchStructure>())
             {
                 AddStructuresToChart(branchFeature, false);
             }
@@ -786,7 +816,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
             IShapeFeature shape = null;
             foreach (IStructure1D structure in compositeStructure.Structures)
             {
-                switch (structure) {
+                switch (structure)
+                {
                     case IWeir weir:
                         shape = GetWeirShape(weir);
                         break;
@@ -813,7 +844,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
                 AddStructureAndShape(structure, shape);
             }
         }
-        
+
         private CulvertInSideViewShape GetCulvertShape(ICulvert culvert)
         {
             double offset = RouteHelper.GetRouteChainage(NetworkRoute, culvert);
@@ -824,10 +855,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
         private BridgeInSideViewShape GetBrigdeShape(IBridge bridge)
         {
             double offset = RouteHelper.GetRouteChainage(NetworkRoute, bridge);
-         
-            return new BridgeInSideViewShape(chart, offset,bridge);
+
+            return new BridgeInSideViewShape(chart, offset, bridge);
         }
-        
+
         private WeirInSideViewShape GetWeirShape(IWeir weir)
         {
             double offsetInSideView = RouteHelper.GetRouteChainage(NetworkRoute, weir);
@@ -852,12 +883,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
             double offset = RouteHelper.GetRouteChainage(NetworkRoute, extraResistance);
             return new ExtraResistanceInSideViewShape(chart, offset, extraResistance);
         }
-        
+
         private void AddStructureAndShape(IStructure1D structure, IShapeFeature symbolShapeFeature)
         {
-            ((IHover)symbolShapeFeature).AddHover(new HoverRectangle(symbolShapeFeature, Color.FromArgb(50, Color.DarkTurquoise)));
+            ((IHover) symbolShapeFeature).AddHover(new HoverRectangle(symbolShapeFeature, Color.FromArgb(50, Color.DarkTurquoise)));
             var hoverText = new HoverText(structure.Name, null, symbolShapeFeature, Color.Black, HoverPosition.Top, ArrowHeadPosition.None);
-            ((IHover)symbolShapeFeature).AddHover(hoverText);
+            ((IHover) symbolShapeFeature).AddHover(hoverText);
 
             if (structure is IWeir)
             {
@@ -875,6 +906,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
             {
                 hoverText.BackColor = Color.Thistle;
             }
+
             shapeModifyTool.AddShape(symbolShapeFeature);
             Structures2Shape[structure] = symbolShapeFeature;
             Shapes2Structures[symbolShapeFeature] = structure;
@@ -886,12 +918,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
 
             var symbolShapeFeature = new SymbolShapeFeature(chart, offset, minY,
                                                             SymbolShapeFeatureHorizontalAlignment.Center,
-                                                            SymbolShapeFeatureVerticalAlignment.Center)
-                                         {Image = image};
+                                                            SymbolShapeFeatureVerticalAlignment.Center) {Image = image};
             shapeModifyTool.AddShape(symbolShapeFeature);
             symbolShapeFeature.AddHover(new HoverRectangle(symbolShapeFeature, Color.FromArgb(100, Color.Cyan)));
             var hoverText = new HoverText(structure.Name, null, symbolShapeFeature, Color.Black,
-                                          HoverPosition.Bottom, ArrowHeadPosition.None) { BackColor = Color.WhiteSmoke };
+                                          HoverPosition.Bottom, ArrowHeadPosition.None) {BackColor = Color.WhiteSmoke};
             symbolShapeFeature.AddHover(hoverText);
 
             Structures2Shape[structure] = symbolShapeFeature;
@@ -904,26 +935,26 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
             double length = structure.Length;
 
             var renderStyle = new VectorStyle
-                                          {
-                                              Line = new Pen(Color.MediumVioletRed, 2),
-                                              Outline = new Pen(Color.MediumVioletRed, 2)
-                                          };
+            {
+                Line = new Pen(Color.MediumVioletRed, 2),
+                Outline = new Pen(Color.MediumVioletRed, 2)
+            };
 
             renderStyle.Outline.DashStyle = DashStyle.Dash;
             renderStyle.Line.DashStyle = DashStyle.Dash;
 
-            var hoverStyle = renderStyle;
+            VectorStyle hoverStyle = renderStyle;
             hoverStyle.Outline.Color = Color.LightBlue;
 
             var symbolShapeFeature = new FixedRectangleShapeFeature(chart, offset, minY, length, 6, true, false)
-                                         {
-                                             NormalStyle = renderStyle,
-                                         };
+            {
+                NormalStyle = renderStyle,
+            };
 
             shapeModifyTool.AddShape(symbolShapeFeature);
             symbolShapeFeature.AddHover(new HoverRectangle(symbolShapeFeature, hoverStyle));
             var hoverText = new HoverText(structure.Name, null, symbolShapeFeature, Color.Black,
-                                          HoverPosition.Bottom, ArrowHeadPosition.None) { BackColor = Color.WhiteSmoke };
+                                          HoverPosition.Bottom, ArrowHeadPosition.None) {BackColor = Color.WhiteSmoke};
             symbolShapeFeature.AddHover(hoverText);
 
             Structures2Shape[structure] = symbolShapeFeature;
@@ -935,15 +966,15 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
             double offset = RouteHelper.GetRouteChainage(route, crossSection);
 
             var crossSectionShape = new CrossSectionInSideViewShape(chart, offset, 6, crossSection.Definition)
-                                        {
-                                            HorizontalShapeAlignment = HorizontalShapeAlignment.Center,
-                                            VerticalShapeAlignment = VerticalShapeAlignment.Top,
-                                            NormalStyle = normalCrossSectionStyle,
-                                            SelectedStyle = selectedCrossSectionStyle
-                                        };
+            {
+                HorizontalShapeAlignment = HorizontalShapeAlignment.Center,
+                VerticalShapeAlignment = VerticalShapeAlignment.Top,
+                NormalStyle = normalCrossSectionStyle,
+                SelectedStyle = selectedCrossSectionStyle
+            };
             crossSectionShape.AddHover(new HoverRectangle(crossSectionShape, Color.FromArgb(50, Color.Blue)));
             crossSectionShape.AddHover(new HoverText(crossSection.Name, null, crossSectionShape, Color.Black,
-                                                     HoverPosition.Top, ArrowHeadPosition.LeftRight) { BackColor = Color.LightCyan });
+                                                     HoverPosition.Top, ArrowHeadPosition.LeftRight) {BackColor = Color.LightCyan});
             shapeModifyTool.AddShape(crossSectionShape);
             Structures2Shape[crossSection] = crossSectionShape;
             Shapes2Structures[crossSectionShape] = crossSection;
@@ -951,18 +982,21 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
 
         private void TimeNavigatorPropertyChanged(object sender, EventArgs e)
         {
-            var timeDependentNetworkCoverages = DataController.RenderedNetworkCoverages.Concat(new[] { DataController.WaterLevelNetworkCoverage });
+            IEnumerable<INetworkCoverage> timeDependentNetworkCoverages = DataController.RenderedNetworkCoverages.Concat(new[]
+            {
+                DataController.WaterLevelNetworkCoverage
+            });
 
             // HACK: this looks ugly, how can we do it simpler (methods in function)?
             //update time dependent coverages.
-            foreach (var coverage in timeDependentNetworkCoverages)
+            foreach (INetworkCoverage coverage in timeDependentNetworkCoverages)
             {
                 UpdateFilter(coverage);
             }
 
-            var timeDependentFeatureCoverages = DataController.RenderedFeatureCoverages;
-            
-            foreach (var coverage in timeDependentFeatureCoverages)
+            IList<IFeatureCoverage> timeDependentFeatureCoverages = DataController.RenderedFeatureCoverages;
+
+            foreach (IFeatureCoverage coverage in timeDependentFeatureCoverages)
             {
                 UpdateFilter(coverage);
             }
@@ -976,7 +1010,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
             if (null != networkSideViewDataController.WaterLevelNetworkCoverage && null != networkSideViewDataController.WaterLevelNetworkCoverage.Time)
             {
                 chartView.Chart.Title = string.Format("{0} at {1}", NetworkRoute,
-                                                             timeNavigator.TimeSelectionStart);
+                                                      timeNavigator.TimeSelectionStart);
             }
             else
             {
@@ -999,7 +1033,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
             {
                 message = string.Format("{0} is not a valid route; it contains loops.", NetworkRoute.Name);
                 log.ErrorFormat(message);
-                return false;   
+                return false;
             }
 
             if (NetworkRoute.Locations.Values.Count < 2)
@@ -1015,6 +1049,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
                 log.ErrorFormat(message);
                 return false;
             }
+
             return true;
         }
 
@@ -1022,7 +1057,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
         {
             double min = networkSideViewDataController.ZMinValueRenderedCoverages;
             double max = networkSideViewDataController.ZMaxValueRenderedCoverages;
-
 
             NetworkSideViewHelper.UpdateMinMaxToEnsureVerticalResolution(ref min, ref max);
 
@@ -1039,7 +1073,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
         {
             double min = networkSideViewDataController.ZMinValue;
             double max = networkSideViewDataController.ZMaxValue;
-            
 
             NetworkSideViewHelper.UpdateMinMaxToEnsureVerticalResolution(ref min, ref max);
 
@@ -1060,10 +1093,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
 
                 if (Structures2Shape.ContainsKey(structure))
                 {
-                    if(e.PropertyName=="Name")
+                    if (e.PropertyName == "Name")
                     {
-                       FullUpdate();
+                        FullUpdate();
                     }
+
                     // shapes are up-to-update by definition :) only a redraw is necessary
                     chartView.Invalidate();
                     if (!structure.Network.IsEditing)
@@ -1075,15 +1109,16 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
 
             if (sender is ICrossSectionDefinition)
             {
-                foreach(var structure in Structures2Shape.Keys.OfType<ICrossSection>())
+                foreach (ICrossSection structure in Structures2Shape.Keys.OfType<ICrossSection>())
                 {
-                    var crossSectionDefinition = structure.Definition;
-                    if(Equals(sender, crossSectionDefinition))
+                    ICrossSectionDefinition crossSectionDefinition = structure.Definition;
+                    if (Equals(sender, crossSectionDefinition))
                     {
                         FullUpdate();
                         return;
                     }
-                    if(crossSectionDefinition.IsProxy && Equals(sender, ((CrossSectionDefinitionProxy)crossSectionDefinition).InnerDefinition))
+
+                    if (crossSectionDefinition.IsProxy && Equals(sender, ((CrossSectionDefinitionProxy) crossSectionDefinition).InnerDefinition))
                     {
                         FullUpdate();
                         return;
@@ -1091,16 +1126,19 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
                 }
             }
 
-            if(sender is CrossSectionStandardShapeBase)
+            if (sender is CrossSectionStandardShapeBase)
             {
-                foreach (var structure in Structures2Shape.Keys.OfType<ICrossSection>())
+                foreach (ICrossSection structure in Structures2Shape.Keys.OfType<ICrossSection>())
                 {
                     var crossSectionDefinition = (structure.Definition.IsProxy
-                                                     ? ((CrossSectionDefinitionProxy)structure.Definition).
-                                                           InnerDefinition
-                                                     : structure.Definition) as CrossSectionDefinitionStandard;
+                                                      ? ((CrossSectionDefinitionProxy) structure.Definition).InnerDefinition
+                                                      : structure.Definition) as CrossSectionDefinitionStandard;
 
-                    if (crossSectionDefinition == null || !Equals(crossSectionDefinition.Shape, sender)) continue;
+                    if (crossSectionDefinition == null || !Equals(crossSectionDefinition.Shape, sender))
+                    {
+                        continue;
+                    }
+
                     FullUpdate();
                     return;
                 }
@@ -1115,7 +1153,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
                     CreateAndSubscribeTimeNavigator();
                 }
 
-                string[] interestingMembers = 
+                string[] interestingMembers =
                 {
                     nameof(NetworkSideViewDataController.WaterLevelNetworkCoverage),
                     nameof(NetworkSideViewDataController.ProfileNetworkCoverages),
@@ -1132,13 +1170,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
 
         private IChartSeries CreateSeries(SideViewChartData sideViewChartData)
         {
-            var function = sideViewChartData.Function;
+            IFunction function = sideViewChartData.Function;
             ValidateFunction(function);
-            var xArgument = function.GetFirstArgumentVariableOfType<double>();
-            var yComponent = function.GetFirstComponentVariableOfType<double>();
+            IVariable xArgument = function.GetFirstArgumentVariableOfType<double>();
+            IVariable yComponent = function.GetFirstComponentVariableOfType<double>();
 
             IChartSeries chartSeries = null;
-            switch(sideViewChartData.Style)
+            switch (sideViewChartData.Style)
             {
                 case ChartSeriesType.PointSeries:
                     chartSeries = NetworkSideViewHelper.GetPointSeries(function, xArgument, yComponent,
@@ -1150,7 +1188,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
                     chartSeries = NetworkSideViewHelper.GetLineSeries(function, xArgument, yComponent,
                                                                       sideViewChartData.FunctionBindingList,
                                                                       sideViewChartData.Color);
-                    ((ILineChartSeries)chartSeries).DashStyle = DashStyle.Dot;
+                    ((ILineChartSeries) chartSeries).DashStyle = DashStyle.Dot;
                     break;
                 case ChartSeriesType.AreaSeries:
                     chartSeries = NetworkSideViewHelper.GetAreaSeries(function, xArgument, yComponent,
@@ -1187,28 +1225,40 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
         private static void ThrowWhenFunctionIsInvalid(IFunction function)
         {
             if (function == null)
+            {
                 throw new ArgumentException("Couldnt create the view because one of the functions is null / empty");
+            }
 
             if (function.Arguments.Count == 0)
+            {
                 throw new ArgumentException("Couldnt create view because one of the functions doesnt contain arguments");
+            }
 
             if (function.Components.Count == 0)
+            {
                 throw new ArgumentException("Couldnt create view because one of the functions doesnt contain components");
+            }
         }
 
         private static void ThrowWhenFunctionVariableNamesAreInvalid(string argName, string compName)
         {
             if (string.IsNullOrEmpty(argName) || argName.Trim() == "")
+            {
                 throw new ArgumentException(
                     "Couldn't create view because one of the functions doesnt contain a valid argument name");
+            }
 
             if (string.IsNullOrEmpty(compName) || compName.Trim() == "")
+            {
                 throw new ArgumentException(
                     "Couldn't create view because one of the functions doesnt contain a valid component name");
+            }
 
             if (argName == compName)
+            {
                 throw new ArgumentException(
                     "Couldn't create view because one of the functions component name is the same as the argument name which is not allowed");
+            }
         }
 
         private void ShowCrossSectionsCheckedChanged(object sender, EventArgs e)
@@ -1221,13 +1271,77 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
             FullUpdate();
         }
 
-        public IEventedList<IView> ChildViews
+        private class SideViewChartData : IDisposable
         {
-            get { return childViews; }
+            private FunctionBindingList bindingList;
+
+            private IFunction function;
+
+            public SideViewChartData(IFunction func, Color color, ChartSeriesType style)
+            {
+                Style = style;
+                Color = color;
+                Function = func;
+            }
+
+            public FunctionBindingList FunctionBindingList
+            {
+                get
+                {
+                    return bindingList;
+                }
+            }
+
+            public IFunction Function
+            {
+                get
+                {
+                    return function;
+                }
+                set
+                {
+                    function = value;
+                    if (bindingList != null)
+                    {
+                        bindingList.Dispose();
+                    }
+
+                    bindingList = function != null ? new FunctionBindingList(function) {SynchronizeWaitMethod = Application.DoEvents} : null;
+                }
+            }
+
+            public Color Color { get; set; }
+            public ChartSeriesType Style { get; set; }
+
+            public Action<IPointChartSeries> PointStyleCustomizer { get; set; }
+            public Action<ILineChartSeries> LineStyleCustomizer { get; set; }
+            public Action<IAreaChartSeries> AreaStyleCustomizer { get; set; }
+
+            public void CustomizeChart(IChartSeries series)
+            {
+                if (series is IPointChartSeries && PointStyleCustomizer != null)
+                {
+                    PointStyleCustomizer((IPointChartSeries) series);
+                }
+
+                if (series is ILineChartSeries && LineStyleCustomizer != null)
+                {
+                    LineStyleCustomizer((ILineChartSeries) series);
+                }
+
+                if (series is IAreaChartSeries && AreaStyleCustomizer != null)
+                {
+                    AreaStyleCustomizer((IAreaChartSeries) series);
+                }
+            }
+
+            public void Dispose()
+            {
+                if (bindingList != null)
+                {
+                    bindingList.Dispose();
+                }
+            }
         }
-
-        public bool HandlesChildViews { get { return true; } }
-
-        public void ActivateChildView(IView childView) { }
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
+using GeoAPI.Geometries;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors.ModelFeatureCoordinateDataEditor
 {
@@ -19,28 +20,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors.ModelFeatureCoordinateDa
             this.rowIndex = rowIndex;
         }
 
-        public override PropertyDescriptorCollection GetProperties()
-        {
-            return new PropertyDescriptorCollection(propertyDescriptors.ToArray());
-        }
-
-        public override PropertyDescriptorCollection GetProperties(Attribute[] attributes)
-        {
-            return GetProperties();
-        }
-
         /// <summary>
-        /// Gets the value for this row and the specified <param name="columnIndex"/>
+        /// Gets the value for this row and the specified
+        /// <param name="columnIndex"/>
         /// </summary>
         /// <param name="columnIndex">Column index for getting the value</param>
-        /// <returns>Value for this row and the specified <param name="columnIndex"/></returns>
+        /// <returns>Value for this row and the specified
+        /// <param name="columnIndex"/>
+        /// </returns>
         public object GetDataValue(int columnIndex)
         {
             return featureCoordinateData.DataColumns[columnIndex].ValueList[rowIndex];
         }
 
         /// <summary>
-        /// Set the value for this row and the specified <param name="columnIndex"/>
+        /// Set the value for this row and the specified
+        /// <param name="columnIndex"/>
         /// </summary>
         /// <param name="columnIndex">Column index for setting the value</param>
         /// <param name="value">Value to set (must match with propertyDescriptor type)</param>
@@ -56,7 +51,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors.ModelFeatureCoordinateDa
         /// <returns>Coordinate value for this row</returns>
         public double GetCoordinateValue(GeometryPropertyDescriptorType type)
         {
-            var geometryCoordinate = featureCoordinateData.Feature.Geometry.Coordinates[rowIndex];
+            Coordinate geometryCoordinate = featureCoordinateData.Feature.Geometry.Coordinates[rowIndex];
 
             switch (type)
             {
@@ -69,6 +64,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors.ModelFeatureCoordinateDa
                 default:
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);
             }
+        }
+
+        public override PropertyDescriptorCollection GetProperties()
+        {
+            return new PropertyDescriptorCollection(propertyDescriptors.ToArray());
+        }
+
+        public override PropertyDescriptorCollection GetProperties(Attribute[] attributes)
+        {
+            return GetProperties();
         }
     }
 }

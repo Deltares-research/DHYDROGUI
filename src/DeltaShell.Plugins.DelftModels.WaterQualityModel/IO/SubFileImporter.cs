@@ -20,8 +20,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
 {
     public class SubFileImporter : IFileImporter
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(SubFileImporter));
         private const string UnitCharacters = @"[#A-Za-z0-9\s\(\)-\\/\.\+\<\>,\|_&;:\[\]\%\{\}]*";
+        private static readonly ILog Log = LogManager.GetLogger(typeof(SubFileImporter));
+
+        /// <summary>
+        /// Default file path (used in <see cref="ImportItem"/> if no path parameter is provided)
+        /// </summary>
+        public string DefaultFilePath { private get; set; }
 
         public string Name => "Substance Process Library";
 
@@ -38,11 +43,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
             }
         }
 
-        public bool CanImportOn(object targetObject)
-        {
-            return true;
-        }
-
         public bool CanImportOnRootLevel => false;
 
         public string FileFilter => "Sub Files (*.sub)|*.sub";
@@ -55,20 +55,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
 
         public ImportProgressChangedDelegate ProgressChanged { get; set; }
 
-        public object ImportItem(string path, object target)
-        {
-            Import(target as SubstanceProcessLibrary, path ?? DefaultFilePath);
-
-            return target;
-        }
-
         /// <summary>
-        /// Default file path (used in <see cref="ImportItem" /> if no path parameter is provided)
-        /// </summary>
-        public string DefaultFilePath { private get; set; }
-
-        /// <summary>
-        /// Imports substance process library data from <paramref name="path" /> to <paramref name="substanceProcessLibrary" />
+        /// Imports substance process library data from <paramref name="path"/> to <paramref name="substanceProcessLibrary"/>
         /// </summary>
         public void Import(SubstanceProcessLibrary substanceProcessLibrary, string path)
         {
@@ -125,6 +113,18 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
 
             Log.Info(string.Format(Resources.SubFileImporter_Import_Sub_file_successfully_imported_from___0_, path));
             substanceProcessLibrary.ImportedSubstanceFilePath = path;
+        }
+
+        public bool CanImportOn(object targetObject)
+        {
+            return true;
+        }
+
+        public object ImportItem(string path, object target)
+        {
+            Import(target as SubstanceProcessLibrary, path ?? DefaultFilePath);
+
+            return target;
         }
 
         private void ImportSubstances(IEventedList<WaterQualitySubstance> librarySubstances, string subFileText)
@@ -328,8 +328,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         /// <param name="elementsToRemove">The collection of elements that should not be removed.</param>
         /// <param name="elementName">The name of the type of elements that are removed.</param>
         /// <remarks>
-        /// The type constraint is currently loosely based on the <see cref="WaterQualitySubstance" />,
-        /// <see cref="WaterQualitySubstance" />, <see cref="WaterQualityProcess" /> and <see cref="WaterQualityOutputParameter" />
+        /// The type constraint is currently loosely based on the <see cref="WaterQualitySubstance"/>,
+        /// <see cref="WaterQualitySubstance"/>, <see cref="WaterQualityProcess"/> and <see cref="WaterQualityOutputParameter"/>
         /// .
         /// Ideally speaking, a proper abstraction for these elements should be implemented to make this method more restrictive.
         /// </remarks>
@@ -359,8 +359,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         /// <param name="elementsToAdd">The elements that should be added.</param>
         /// <param name="elementName">The name of the type of elements that are added.</param>
         /// <remarks>
-        /// The type constraint is currently loosely based on the <see cref="WaterQualitySubstance" />,
-        /// <see cref="WaterQualitySubstance" />, <see cref="WaterQualityProcess" /> and <see cref="WaterQualityOutputParameter" />
+        /// The type constraint is currently loosely based on the <see cref="WaterQualitySubstance"/>,
+        /// <see cref="WaterQualitySubstance"/>, <see cref="WaterQualityProcess"/> and <see cref="WaterQualityOutputParameter"/>
         /// .
         /// Ideally speaking, a proper abstraction for these elements should be implemented to make this method more restrictive.
         /// </remarks>
@@ -441,13 +441,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         /// Creates a collection of water quality model elements based on its input arguments.
         /// </summary>
         /// <typeparam name="TWaterQualityElement"> The type of element of the water quality model that needs to be created. </typeparam>
-        /// <param name="pattern"> The pattern to extract the elements from the <paramref name="subFileContents" />. </param>
+        /// <param name="pattern"> The pattern to extract the elements from the <paramref name="subFileContents"/>. </param>
         /// <param name="subFileContents"> The contents of the file to extract the elements from. </param>
         /// <param name="createElementFunc"> The function to create the element based on the pattern match. </param>
-        /// <returns> A collection of <typeparamref name="TWaterQualityElement" />. </returns>
+        /// <returns> A collection of <typeparamref name="TWaterQualityElement"/>. </returns>
         /// <remarks>
-        /// The type constraint is currently loosely based on the <see cref="WaterQualitySubstance" />,
-        /// <see cref="WaterQualitySubstance" />, <see cref="WaterQualityProcess" /> and <see cref="WaterQualityOutputParameter" />
+        /// The type constraint is currently loosely based on the <see cref="WaterQualitySubstance"/>,
+        /// <see cref="WaterQualitySubstance"/>, <see cref="WaterQualityProcess"/> and <see cref="WaterQualityOutputParameter"/>
         /// .
         /// Ideally speaking, a proper abstraction for these elements should be implemented to make this method more restrictive.
         /// </remarks>
@@ -502,16 +502,19 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         }
 
         /// <summary>
-        /// Retrieves the collection of new elements from <paramref name="newElements" />.
+        /// Retrieves the collection of new elements from <paramref name="newElements"/>.
         /// </summary>
         /// <typeparam name="TWaterQualityElement"> The type of element of the water quality model. </typeparam>
         /// <param name="existingElements"> The elements that are already present. </param>
         /// <param name="newElements"> The elements to determine the new elements from. </param>
-        /// <param name="getEqualityFunc">The function to determine the equality between two <typeparamref name="TWaterQualityElement"/>. </param>
+        /// <param name="getEqualityFunc">
+        /// The function to determine the equality between two
+        /// <typeparamref name="TWaterQualityElement"/>.
+        /// </param>
         /// <returns> A collection of new elements. </returns>
         /// <remarks>
-        /// The type constraint is currently loosely based on the <see cref="WaterQualitySubstance" />,
-        /// <see cref="WaterQualitySubstance" />, <see cref="WaterQualityProcess" /> and <see cref="WaterQualityOutputParameter" />
+        /// The type constraint is currently loosely based on the <see cref="WaterQualitySubstance"/>,
+        /// <see cref="WaterQualitySubstance"/>, <see cref="WaterQualityProcess"/> and <see cref="WaterQualityOutputParameter"/>
         /// .
         /// Ideally speaking, a proper abstraction for these elements should be implemented to make this method more restrictive.
         /// </remarks>
@@ -546,7 +549,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
             where TWaterQualityElement : Unique<long>, INameable, ICloneable
         {
             /// <summary>
-            /// Creates a new instance of <see cref="ImportElementInformation{TWaterQualityElement}" />.
+            /// Creates a new instance of <see cref="ImportElementInformation{TWaterQualityElement}"/>.
             /// </summary>
             /// <param name="existingElements"> The existing elements of the import. </param>
             /// <param name="newElements"> The new elements that are imported. </param>

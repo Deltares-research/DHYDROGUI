@@ -12,7 +12,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.Calculators
     /// <see cref="CartesianOrientationCalculatorHelper"/> implements several geometric
     /// methods related to the orientation of Cartesian grids.
     /// </summary>
-
     internal static class CartesianOrientationCalculatorHelper
     {
         /// <summary>
@@ -71,7 +70,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.Calculators
 
             if (polygonVertices.Length < 3)
             {
-                throw new System.InvalidOperationException("Cannot calculate the ordering of line segment or point");
+                throw new InvalidOperationException("Cannot calculate the ordering of line segment or point");
             }
 
             var sum = 0.0;
@@ -99,7 +98,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.Calculators
         /// </returns>
         internal static Vector2D GetNormal(Coordinate coordinate0,
                                            Coordinate coordinate1) =>
-            Vector2D.Create(coordinate1.Y - coordinate0.Y, 
+            Vector2D.Create(coordinate1.Y - coordinate0.Y,
                             coordinate0.X - coordinate1.X).Normalize();
 
         /// <summary>
@@ -121,8 +120,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.Calculators
         /// Thrown when <paramref name="valueNormalPairs"/> or <paramref name="referenceNormal"/>
         /// is <c>null</c>.
         /// </exception>
-        internal static T GetClosestAlignedValueWithNormal<T>(IEnumerable<Tuple<T, Vector2D>> valueNormalPairs, 
-                                                              Vector2D referenceNormal, 
+        internal static T GetClosestAlignedValueWithNormal<T>(IEnumerable<Tuple<T, Vector2D>> valueNormalPairs,
+                                                              Vector2D referenceNormal,
                                                               T defaultValue)
         {
             Ensure.NotNull(valueNormalPairs, nameof(valueNormalPairs));

@@ -51,7 +51,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
 
             if (waterFlowFmModel.ReferenceTime > waterFlowFmModel.StartTime)
             {
-                var validationShortcut = new FmValidationShortcut(){
+                var validationShortcut = new FmValidationShortcut()
+                {
                     FlowFmModel = model as WaterFlowFMModel,
                     TabName = "Time Frame"
                 };

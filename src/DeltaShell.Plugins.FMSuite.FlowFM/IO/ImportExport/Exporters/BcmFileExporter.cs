@@ -16,13 +16,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Exporters
 {
     public class BcmFileExporter : IFileExporter
     {
+        public Func<IBoundaryCondition, DateTime?> GetRefDateForBoundaryCondition { private get; set; }
+
+        public BcFile.WriteMode WriteMode { private get; set; }
+
+        public IList<BoundaryConditionDataType> ExcludedDataTypes { private get; set; }
+
+        public IList<FlowBoundaryQuantityType> ExcludedQuantities { private get; set; }
+
+        public string FilePath { private get; set; }
         public string Name => "Boundary data to .bcm file";
 
         public string Category => "General";
 
         public string Description => string.Empty;
 
-        public Func<IBoundaryCondition, DateTime?> GetRefDateForBoundaryCondition { private get; set; }
+        public string FileFilter => "Boundary conditions morphology file|*.bcm";
+
+        [ExcludeFromCodeCoverage]
+        public Bitmap Icon => Resources.TextDocument;
 
         public bool Export(object item, string path)
         {
@@ -131,17 +143,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Exporters
             yield return typeof(BoundaryConditionSet);
         }
 
-        public string FileFilter => "Boundary conditions morphology file|*.bcm";
-
-        [ExcludeFromCodeCoverage]
-        public Bitmap Icon => Resources.TextDocument;
-
         public bool CanExportFor(object item)
         {
             return true;
         }
-
-        public BcFile.WriteMode WriteMode { private get; set; }
 
         private BoundaryConditionSet FilterBoundaryConditionSet(BoundaryConditionSet inputSet)
         {
@@ -168,11 +173,5 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Exporters
 
             return true;
         }
-
-        public IList<BoundaryConditionDataType> ExcludedDataTypes { private get; set; }
-
-        public IList<FlowBoundaryQuantityType> ExcludedQuantities { private get; set; }
-
-        public string FilePath { private get; set; }
     }
 }

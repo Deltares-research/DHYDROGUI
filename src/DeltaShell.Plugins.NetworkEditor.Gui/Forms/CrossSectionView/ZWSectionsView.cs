@@ -12,6 +12,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
     {
         private ZWSectionsViewModel data;
 
+        // HACK: to display binding properties correctly when they
+        // are modified in the ViewModel's setter
+        private bool isResetting;
+
         public ZWSectionsView()
         {
             InitializeComponent();
@@ -22,16 +26,19 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
 
         public object Data
         {
-            get { return data; }
+            get
+            {
+                return data;
+            }
             set
             {
                 data = (ZWSectionsViewModel) value;
 
                 //TODO: null check etc?
-                if (data ==null)
+                if (data == null)
                 {
                     //bind to null gives exception
-                    viewModelBindingSource.DataSource = typeof (ZWSectionsViewModel);
+                    viewModelBindingSource.DataSource = typeof(ZWSectionsViewModel);
                 }
                 else
                 {
@@ -40,17 +47,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
             }
         }
 
-        public Image Image
-        {
-            get; set;
-        }
+        public Image Image { get; set; }
+
+        public ViewInfo ViewInfo { get; set; }
 
         public void EnsureVisible(object item)
         {
-        //    throw new NotImplementedException();
+            //    throw new NotImplementedException();
         }
-
-        public ViewInfo ViewInfo { get; set; }
 
         private void addSectionTypeMain_Click(object sender, EventArgs e)
         {
@@ -67,17 +71,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
             data.AddSection(ZWSectionsViewModel.CrossSectionSectionName.FloodPlain2);
         }
 
-        private void viewModelBindingSource_CurrentChanged(object sender, EventArgs e)
-        {
+        private void viewModelBindingSource_CurrentChanged(object sender, EventArgs e) {}
 
-        }
-
-		// HACK: to display binding properties correctly when they
-		// are modified in the ViewModel's setter
-        private bool isResetting;
         private void viewModelBindingSource_BindingComplete(object sender, BindingCompleteEventArgs e)
         {
-            if (e.BindingCompleteContext == BindingCompleteContext.ControlUpdate || isResetting) return;
+            if (e.BindingCompleteContext == BindingCompleteContext.ControlUpdate || isResetting)
+            {
+                return;
+            }
 
             isResetting = true;
             try

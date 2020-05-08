@@ -19,11 +19,29 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors
             DrainageBasin = basin;
         }
 
-        private DrainageBasin DrainageBasin { get; set; }
+        public INetwork Network { get; set; }
 
         public override IEnumerable<IFeatureRelationInteractor> GetFeatureRelationInteractors(IFeature feature)
         {
             yield return new HydroObjectToHydroLinkRelationInteractor();
+        }
+
+        public override void Add(IFeature feature)
+        {
+            DrainageBasin.Boundaries.Add(feature as RunoffBoundary);
+        }
+
+        public override void Delete()
+        {
+            var plant = (RunoffBoundary) SourceFeature;
+
+            HydroLink[] links = plant.Links.ToArray();
+            foreach (HydroLink link in links)
+            {
+                HydroRegion.RemoveLink(link);
+            }
+
+            DrainageBasin.Boundaries.Remove(plant);
         }
 
         protected override bool AllowDeletionCore()
@@ -36,24 +54,6 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors
             return true;
         }
 
-        public override void Add(IFeature feature)
-        {
-            DrainageBasin.Boundaries.Add(feature as RunoffBoundary);
-        }
-
-        public override void Delete()
-        {
-            var plant = (RunoffBoundary)SourceFeature;
-
-            var links = plant.Links.ToArray();
-            foreach (var link in links)
-            {
-                HydroRegion.RemoveLink(link);
-            }
-
-            DrainageBasin.Boundaries.Remove(plant);
-        }
-
-        public INetwork Network { get; set; }
+        private DrainageBasin DrainageBasin { get; set; }
     }
 }

@@ -62,75 +62,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(WaterFlowFMModelDefinition));
 
-        public List<string> InitialTracerNames { get; private set; }
-        public List<string> InitialSpatiallyVaryingSedimentPropertyNames { get; private set; }
-
-        private static StructureSchema<ModelPropertyDefinition> StructureSchemaInstance { get; set; }
-        private static ModelPropertySchema<WaterFlowFMPropertyDefinition> MorphologyModelPropertySchema { get; set; }
-        private static ModelPropertySchema<WaterFlowFMPropertyDefinition> ModelPropertySchema { get; set; }
-        public IEventedList<WaterFlowFMProperty> Properties { get; private set; }
-
-        /// <summary>
-        /// Gets the GUI property groups from the default properties file and the Morphology properties file.
-        /// </summary>
-        /// <value>
-        /// The GUI property groups.
-        /// </value>
-        public static Dictionary<string, ModelPropertyGroup> GuiPropertyGroups
-        {
-            get
-            {
-                IEnumerable<KeyValuePair<string, ModelPropertyGroup>> modelPropertyGroups =
-                    ModelPropertySchema?.GuiPropertyGroups?
-                        .Union(MorphologyModelPropertySchema.GuiPropertyGroups);
-
-                return modelPropertyGroups?
-                       .GroupBy(kvp => kvp.Key)
-                       .Select(grp => grp.First())
-                       .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
-            }
-        }
-
-        public string ModelDirectory { get; set; }
-        public string ModelName { get; set; }
-        public ICoordinateSystem CoordinateSystem { get; set; }
-
-        public readonly IDictionary<string, IList<ISpatialOperation>> SpatialOperations;
-        public UnstructuredGridCoverage Bathymetry { get; set; }
-
-        public IList<ISpatialOperation> GetSpatialOperations(string quantityName)
-        {
-            IList<ISpatialOperation> result;
-            SpatialOperations.TryGetValue(quantityName, out result);
-            return result;
-        }
-
-        public IEventedList<IWindField> WindFields { get; private set; }
-
-        public IList<IUnsupportedFileBasedExtForceFileItem> UnsupportedFileBasedExtForceFileItems { get; private set; }
-
-        public HeatFluxModel HeatFluxModel { get; private set; }
-
-        public IEventedList<Feature2D> Boundaries { get; private set; }
-
-        public IEventedList<BoundaryConditionSet> BoundaryConditionSets { get; private set; }
-
-        public StructureSchema<ModelPropertyDefinition> StructureSchema => StructureSchemaInstance;
-
-        public IEnumerable<IBoundaryCondition> BoundaryConditions
-        {
-            get
-            {
-                return BoundaryConditionSets.SelectMany(bcs => bcs.BoundaryConditions);
-            }
-        }
-
-        public IEventedList<Feature2D> Pipes { get; private set; }
-
-        public IEventedList<SourceAndSink> SourcesAndSinks { get; private set; }
-
-        public IList<Embankment> Embankments { get; set; }
-
         static WaterFlowFMModelDefinition()
         {
             const string dflowfmCsvFileDirectoryName = "CsvFiles";
@@ -162,6 +93,23 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
                 throw new Exception("Invalid path for DFlowFM properties definition file");
             }
         }
+
+        public readonly IDictionary<string, IList<ISpatialOperation>> SpatialOperations;
+
+        public readonly List<string> KnownWriteOutputSnappedFeatures = new List<string>()
+        {
+            KnownProperties.Wrishp_crs,
+            KnownProperties.Wrishp_obs,
+            KnownProperties.Wrishp_thd,
+            KnownProperties.Wrishp_gate,
+            KnownProperties.Wrishp_emb,
+            KnownProperties.Wrishp_fxw,
+            KnownProperties.Wrishp_weir,
+            KnownProperties.Wrishp_dryarea,
+            KnownProperties.Wrishp_enc,
+            KnownProperties.Wrishp_src,
+            KnownProperties.Wrishp_pump
+        };
 
         public WaterFlowFMModelDefinition()
         {
@@ -212,91 +160,67 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             UpdateWriteOutputSnappedFeatures();
         }
 
-        /// <summary> Sets the default GUI time properties that are derived from the properties (.csv) file. </summary>
-        private void SetDefaultGuiTimeProperties()
-        {
-            var modelStartTime = (double) GetModelProperty(KnownProperties.TStart).Value;
-            GetModelProperty(GuiProperties.StartTime).Value = GetAbsoluteDateTime(modelStartTime, true);
-
-            var modelStopTime = (double) GetModelProperty(KnownProperties.TStop).Value;
-            GetModelProperty(GuiProperties.StopTime).Value = GetAbsoluteDateTime(modelStopTime, true);
-
-            SetDefaultTimeProperties(KnownProperties.HisInterval, GuiProperties.HisOutputDeltaT,
-                                     GuiProperties.HisOutputStartTime, GuiProperties.HisOutputStopTime);
-            SetDefaultTimeProperties(KnownProperties.MapInterval, GuiProperties.MapOutputDeltaT,
-                                     GuiProperties.MapOutputStartTime, GuiProperties.MapOutputStopTime);
-            SetDefaultTimeProperties(KnownProperties.ClassMapInterval, GuiProperties.ClassMapOutputDeltaT);
-            SetDefaultTimeProperties(KnownProperties.RstInterval, GuiProperties.RstOutputDeltaT,
-                                     GuiProperties.RstOutputStartTime, GuiProperties.RstOutputStopTime);
-            SetDefaultTimeProperties(KnownProperties.WaqInterval, GuiProperties.WaqOutputDeltaT,
-                                     GuiProperties.WaqOutputStartTime, GuiProperties.WaqOutputStopTime);
-        }
-
-        private void SetDefaultTimeProperties(string intervalPropertyName,
-                                              string deltaTPropertyName,
-                                              string startTimePropertyName = null,
-                                              string stopTimePropertyName = null)
-        {
-            double intervalInSeconds = ((IList<double>) GetModelProperty(intervalPropertyName).Value)[0];
-            if (intervalInSeconds > 0)
-            {
-                var seconds = (int) Math.Floor(intervalInSeconds);
-                GetModelProperty(deltaTPropertyName).Value = new TimeSpan(0, 0, 0, seconds);
-            }
-
-            if (startTimePropertyName != null)
-            {
-                GetModelProperty(startTimePropertyName).Value = GetModelProperty(GuiProperties.StartTime).Value;
-            }
-
-            if (stopTimePropertyName != null)
-            {
-                GetModelProperty(stopTimePropertyName).Value = GetModelProperty(GuiProperties.StopTime).Value;
-            }
-        }
-
-        public readonly List<string> KnownWriteOutputSnappedFeatures = new List<string>()
-        {
-            KnownProperties.Wrishp_crs,
-            KnownProperties.Wrishp_obs,
-            KnownProperties.Wrishp_thd,
-            KnownProperties.Wrishp_gate,
-            KnownProperties.Wrishp_emb,
-            KnownProperties.Wrishp_fxw,
-            KnownProperties.Wrishp_weir,
-            KnownProperties.Wrishp_dryarea,
-            KnownProperties.Wrishp_enc,
-            KnownProperties.Wrishp_src,
-            KnownProperties.Wrishp_pump
-        };
-
-        private void SetModelProperty(string mduPropertyName, WaterFlowFMProperty property)
-        {
-            WaterFlowFMProperty prop = GetModelProperty(mduPropertyName);
-            if (prop != null)
-            {
-                Properties[Properties.IndexOf(prop)] = property;
-            }
-            else
-            {
-                Properties.Add(property);
-            }
-        }
-
-        public WaterFlowFMProperty GetModelProperty(string propertyName)
-        {
-            return
-                Properties.FirstOrDefault(
-                    p =>
-                        p.PropertyDefinition.MduPropertyName.Equals(propertyName,
-                                                                    StringComparison.InvariantCultureIgnoreCase));
-        }
-
         public WaterFlowFMModelDefinition(string modelDir, string modelName) : this()
         {
             ModelDirectory = modelDir;
             ModelName = modelName;
         }
+
+        public List<string> InitialTracerNames { get; private set; }
+        public List<string> InitialSpatiallyVaryingSedimentPropertyNames { get; private set; }
+        public IEventedList<WaterFlowFMProperty> Properties { get; private set; }
+
+        /// <summary>
+        /// Gets the GUI property groups from the default properties file and the Morphology properties file.
+        /// </summary>
+        /// <value>
+        /// The GUI property groups.
+        /// </value>
+        public static Dictionary<string, ModelPropertyGroup> GuiPropertyGroups
+        {
+            get
+            {
+                IEnumerable<KeyValuePair<string, ModelPropertyGroup>> modelPropertyGroups =
+                    ModelPropertySchema?.GuiPropertyGroups?
+                        .Union(MorphologyModelPropertySchema.GuiPropertyGroups);
+
+                return modelPropertyGroups?
+                       .GroupBy(kvp => kvp.Key)
+                       .Select(grp => grp.First())
+                       .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+            }
+        }
+
+        public string ModelDirectory { get; set; }
+        public string ModelName { get; set; }
+        public ICoordinateSystem CoordinateSystem { get; set; }
+        public UnstructuredGridCoverage Bathymetry { get; set; }
+
+        public IEventedList<IWindField> WindFields { get; private set; }
+
+        public IList<IUnsupportedFileBasedExtForceFileItem> UnsupportedFileBasedExtForceFileItems { get; private set; }
+
+        public HeatFluxModel HeatFluxModel { get; private set; }
+
+        public IEventedList<Feature2D> Boundaries { get; private set; }
+
+        public IEventedList<BoundaryConditionSet> BoundaryConditionSets { get; private set; }
+
+        public StructureSchema<ModelPropertyDefinition> StructureSchema => StructureSchemaInstance;
+
+        public IEnumerable<IBoundaryCondition> BoundaryConditions
+        {
+            get
+            {
+                return BoundaryConditionSets.SelectMany(bcs => bcs.BoundaryConditions);
+            }
+        }
+
+        public IEventedList<Feature2D> Pipes { get; private set; }
+
+        public IEventedList<SourceAndSink> SourcesAndSinks { get; private set; }
+
+        public IList<Embankment> Embankments { get; set; }
 
         public int Kmx
         {
@@ -313,20 +237,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
                 return Enum.TryParse(mapFormatStringValue, out mapFormatValue) ? mapFormatValue : MapFormatType.Unknown;
             }
             set => GetModelProperty(KnownProperties.MapFormat).SetValueAsString(((int) value).ToString());
-        }
-
-        public void SetMapFormatPropertyValue()
-        {
-            if (!UseMorphologySediment || MapFormat == MapFormatType.Ugrid)
-            {
-                return;
-            }
-
-            MapFormat = MapFormatType.Ugrid;
-            Log.InfoFormat(
-                Resources
-                    .WaterFlowFMModelDefinition_SetMapFormatPropertyValue_MapFormat_property_value_of_FlowFM_model__0__is_changed_to_4_due_to_activation_of_Morphology_,
-                ModelName);
         }
 
         public bool WriteSnappedFeatures
@@ -349,15 +259,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         /// <value> The relative class map file path. </value>
         public string ClassMapFileName =>
             GetFileNameFromProperty(ClassMapFilePropertyName, ModelName + FileConstants.ClassMapFileExtension);
-
-        private string GetFileNameFromProperty(string propertyName, string defaultName)
-        {
-            WaterFlowFMProperty property =
-                Properties.FirstOrDefault(p => p.PropertyDefinition.MduPropertyName == propertyName);
-            string fileName = property != null ? (string) property.Value : defaultName;
-
-            return string.IsNullOrEmpty(fileName) ? defaultName : fileName;
-        }
 
         public string RelativeComFilePath
         {
@@ -417,6 +318,36 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         // Enable when kernel supports non-equidistant layering
         public static bool CanSpecifyLayerThicknesses => false;
 
+        public IList<ISpatialOperation> GetSpatialOperations(string quantityName)
+        {
+            IList<ISpatialOperation> result;
+            SpatialOperations.TryGetValue(quantityName, out result);
+            return result;
+        }
+
+        public WaterFlowFMProperty GetModelProperty(string propertyName)
+        {
+            return
+                Properties.FirstOrDefault(
+                    p =>
+                        p.PropertyDefinition.MduPropertyName.Equals(propertyName,
+                                                                    StringComparison.InvariantCultureIgnoreCase));
+        }
+
+        public void SetMapFormatPropertyValue()
+        {
+            if (!UseMorphologySediment || MapFormat == MapFormatType.Ugrid)
+            {
+                return;
+            }
+
+            MapFormat = MapFormatType.Ugrid;
+            Log.InfoFormat(
+                Resources
+                    .WaterFlowFMModelDefinition_SetMapFormatPropertyValue_MapFormat_property_value_of_FlowFM_model__0__is_changed_to_4_due_to_activation_of_Morphology_,
+                ModelName);
+        }
+
         /// <summary>
         /// Sets the mdu time properties from GUI properties for writing his, map, class map, restart and waq files.
         /// </summary>
@@ -460,59 +391,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
                                           GuiProperties.ClassMapOutputDeltaT);
         }
 
-        private void SetMduIntervalFromGuiProperty(string intervalPropName, string doWritePropName,
-                                                   string deltaTPropName)
-        {
-            var timeFrame = new List<double>();
-            var writePropName = (bool) GetModelProperty(doWritePropName).Value;
-            if (writePropName)
-            {
-                var timeSpan = (TimeSpan) GetModelProperty(deltaTPropName).Value;
-                double secondsInInterval = (double) timeSpan.Ticks / TimeSpan.TicksPerSecond;
-                if (secondsInInterval > 0)
-                {
-                    timeFrame.Add(secondsInInterval);
-                }
-            }
-            else
-            {
-                timeFrame.Add(0.0);
-            }
-
-            GetModelProperty(intervalPropName).Value = timeFrame;
-        }
-
-        private void SetMduStartStopDeltaTFromGui(string intervalPropName, string doWritePropName,
-                                                  string deltaTPropName,
-                                                  string specifyStartPropName, string startTimePropName,
-                                                  string specifyStopPropName, string stopTimePropName)
-        {
-            SetMduIntervalFromGuiProperty(intervalPropName, doWritePropName, deltaTPropName);
-
-            var timeFrame = (List<double>) GetModelProperty(intervalPropName).Value;
-
-            var writePropName = (bool) GetModelProperty(doWritePropName).Value;
-            var specifyStartTime = (bool) GetModelProperty(specifyStartPropName).Value;
-            if (writePropName && specifyStartTime)
-            {
-                AddRelativeTimeFromPropertyToList(startTimePropName, timeFrame);
-
-                var specifyStopTime = (bool) GetModelProperty(specifyStopPropName).Value;
-                if (specifyStopTime)
-                {
-                    AddRelativeTimeFromPropertyToList(stopTimePropName, timeFrame);
-                }
-            }
-
-            GetModelProperty(intervalPropName).Value = timeFrame;
-        }
-
-        private void AddRelativeTimeFromPropertyToList(string timePropName, List<double> timeFrame)
-        {
-            var time = (DateTime) GetModelProperty(timePropName).Value;
-            timeFrame.Add(GetRelativeDateTime(time, false));
-        }
-
         /// <summary>
         /// Sets the GUI time properties from mdu properties for writing his, map, class map, restart and waq files.
         /// </summary>
@@ -546,141 +424,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
 
             SetDefaultGuiIntervalFromMdu(KnownProperties.ClassMapInterval, GuiProperties.WriteClassMapFile,
                                          GuiProperties.ClassMapOutputDeltaT);
-        }
-
-        private void SetDefaultGuiIntervalFromMdu(string intervalPropName, string doWritePropName,
-                                                  string deltaTPropName)
-        {
-            var timeFrame = (IList<double>) GetModelProperty(intervalPropName).Value;
-            if (timeFrame.Count == 0)
-            {
-                GetModelProperty(deltaTPropName).Value = new TimeSpan(0, 0, 5, 0);
-                GetModelProperty(doWritePropName).Value = true;
-            }
-            else
-            {
-                // interval is present
-                SetGuiIntervalFromMduProperty(doWritePropName, deltaTPropName, timeFrame);
-            }
-        }
-
-        private void SetGuiStartStopDeltaTFromMdu(string intervalPropName, string doWritePropName,
-                                                  string deltaTPropName,
-                                                  string specifyStartPropName, string startTimePropName,
-                                                  string specifyStopPropName, string stopTimePropName)
-        {
-            var timeFrame = (IList<double>) GetModelProperty(intervalPropName).Value;
-            if (timeFrame.Count == 0)
-            {
-                if (intervalPropName == KnownProperties.MapInterval)
-                {
-                    GetModelProperty(deltaTPropName).Value = new TimeSpan(0, 0, 20, 0);
-                    GetModelProperty(doWritePropName).Value = true;
-                }
-
-                if (intervalPropName == KnownProperties.HisInterval)
-                {
-                    GetModelProperty(deltaTPropName).Value = new TimeSpan(0, 0, 5, 0);
-                    GetModelProperty(doWritePropName).Value = true;
-                }
-
-                if (intervalPropName == KnownProperties.RstInterval)
-                {
-                    GetModelProperty(deltaTPropName).Value = new TimeSpan(0, 24, 0, 0);
-                    GetModelProperty(doWritePropName).Value = true;
-                }
-
-                if (intervalPropName == KnownProperties.WaqInterval)
-                {
-                    GetModelProperty(deltaTPropName).Value = new TimeSpan(0, 0, 0, 0);
-                    GetModelProperty(doWritePropName).Value = true;
-                }
-            }
-
-            if (timeFrame.Count > 0)
-            {
-                // interval is present
-                SetGuiIntervalFromMduProperty(doWritePropName, deltaTPropName, timeFrame);
-            }
-
-            if (timeFrame.Count > 1)
-            {
-                // output start time is specified
-                GetModelProperty(startTimePropName).Value = GetAbsoluteDateTime(timeFrame[1], false);
-                GetModelProperty(specifyStartPropName).Value = true;
-            }
-            else
-            {
-                // output start time not specified, set to model start time
-                GetModelProperty(startTimePropName).Value = GetModelProperty(GuiProperties.StartTime).Value;
-            }
-
-            if (timeFrame.Count > 2)
-            {
-                // output stop time is specified
-                GetModelProperty(stopTimePropName).Value = GetAbsoluteDateTime(timeFrame[2], false);
-                GetModelProperty(specifyStopPropName).Value = true;
-            }
-            else
-            {
-                // output start time not specified, set to model stop time
-                GetModelProperty(stopTimePropName).Value = GetModelProperty(GuiProperties.StopTime).Value;
-            }
-        }
-
-        private void SetGuiIntervalFromMduProperty(string doWritePropName, string deltaTPropName,
-                                                   IList<double> timeFrame)
-        {
-            var seconds = (int) Math.Floor(timeFrame[0]);
-            var millis = (int) ((timeFrame[0] - seconds) * 1000d);
-            var interval = new TimeSpan(0, 0, 0, seconds, millis);
-            GetModelProperty(deltaTPropName).Value = interval;
-            GetModelProperty(doWritePropName).Value = interval.Ticks > 0;
-            // 0 = off (for backward compatibility only)
-        }
-
-        private DateTime GetAbsoluteDateTime(double relativeTime, bool useTUnit)
-        {
-            string unitString = GetModelProperty(KnownProperties.Tunit).GetValueAsString();
-
-            double timeUnitInSeconds = 1;
-            if (useTUnit)
-            {
-                if (unitString.ToLower().Equals("m"))
-                {
-                    timeUnitInSeconds = 60d;
-                }
-                else if (unitString.ToLower().Equals("h"))
-                {
-                    timeUnitInSeconds = 3600d;
-                }
-            }
-
-            var ticks = (long) (TimeSpan.TicksPerSecond * relativeTime * timeUnitInSeconds);
-            var referenceDate = (DateTime) GetModelProperty(KnownProperties.RefDate).Value;
-            return referenceDate.AddTicks(ticks);
-        }
-
-        private double GetRelativeDateTime(DateTime dateTime, bool useTUnit)
-        {
-            string unitString = GetModelProperty(KnownProperties.Tunit).GetValueAsString();
-
-            long numSecondsInTimeStep = 1;
-            if (useTUnit)
-            {
-                if (unitString.ToLower().Equals("m"))
-                {
-                    numSecondsInTimeStep = 60;
-                }
-                else if (unitString.ToLower().Equals("h"))
-                {
-                    numSecondsInTimeStep = 3600;
-                }
-            }
-
-            var referenceDate = (DateTime) GetModelProperty(KnownProperties.RefDate).Value;
-            double ticks = dateTime.Ticks - referenceDate.Ticks;
-            return ticks / TimeSpan.TicksPerSecond / numSecondsInTimeStep;
         }
 
         public bool ContainsProperty(string propertyKey)
@@ -777,10 +520,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
                         continue;
                     }
 
-                    var newOperation = new AddSamplesOperation(false)
-                    {
-                        Name = spatialOperationValueConverter.SpatialOperationSet.Name
-                    };
+                    var newOperation = new AddSamplesOperation(false) {Name = spatialOperationValueConverter.SpatialOperationSet.Name};
                     newOperation.SetInputData(AddSamplesOperation.SamplesInputName,
                                               new PointCloudFeatureProvider
                                               {
@@ -983,6 +723,263 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
                 messageKey, key);
 
             return string.Empty;
+        }
+
+        private static StructureSchema<ModelPropertyDefinition> StructureSchemaInstance { get; set; }
+        private static ModelPropertySchema<WaterFlowFMPropertyDefinition> MorphologyModelPropertySchema { get; set; }
+        private static ModelPropertySchema<WaterFlowFMPropertyDefinition> ModelPropertySchema { get; set; }
+
+        /// <summary> Sets the default GUI time properties that are derived from the properties (.csv) file. </summary>
+        private void SetDefaultGuiTimeProperties()
+        {
+            var modelStartTime = (double) GetModelProperty(KnownProperties.TStart).Value;
+            GetModelProperty(GuiProperties.StartTime).Value = GetAbsoluteDateTime(modelStartTime, true);
+
+            var modelStopTime = (double) GetModelProperty(KnownProperties.TStop).Value;
+            GetModelProperty(GuiProperties.StopTime).Value = GetAbsoluteDateTime(modelStopTime, true);
+
+            SetDefaultTimeProperties(KnownProperties.HisInterval, GuiProperties.HisOutputDeltaT,
+                                     GuiProperties.HisOutputStartTime, GuiProperties.HisOutputStopTime);
+            SetDefaultTimeProperties(KnownProperties.MapInterval, GuiProperties.MapOutputDeltaT,
+                                     GuiProperties.MapOutputStartTime, GuiProperties.MapOutputStopTime);
+            SetDefaultTimeProperties(KnownProperties.ClassMapInterval, GuiProperties.ClassMapOutputDeltaT);
+            SetDefaultTimeProperties(KnownProperties.RstInterval, GuiProperties.RstOutputDeltaT,
+                                     GuiProperties.RstOutputStartTime, GuiProperties.RstOutputStopTime);
+            SetDefaultTimeProperties(KnownProperties.WaqInterval, GuiProperties.WaqOutputDeltaT,
+                                     GuiProperties.WaqOutputStartTime, GuiProperties.WaqOutputStopTime);
+        }
+
+        private void SetDefaultTimeProperties(string intervalPropertyName,
+                                              string deltaTPropertyName,
+                                              string startTimePropertyName = null,
+                                              string stopTimePropertyName = null)
+        {
+            double intervalInSeconds = ((IList<double>) GetModelProperty(intervalPropertyName).Value)[0];
+            if (intervalInSeconds > 0)
+            {
+                var seconds = (int) Math.Floor(intervalInSeconds);
+                GetModelProperty(deltaTPropertyName).Value = new TimeSpan(0, 0, 0, seconds);
+            }
+
+            if (startTimePropertyName != null)
+            {
+                GetModelProperty(startTimePropertyName).Value = GetModelProperty(GuiProperties.StartTime).Value;
+            }
+
+            if (stopTimePropertyName != null)
+            {
+                GetModelProperty(stopTimePropertyName).Value = GetModelProperty(GuiProperties.StopTime).Value;
+            }
+        }
+
+        private void SetModelProperty(string mduPropertyName, WaterFlowFMProperty property)
+        {
+            WaterFlowFMProperty prop = GetModelProperty(mduPropertyName);
+            if (prop != null)
+            {
+                Properties[Properties.IndexOf(prop)] = property;
+            }
+            else
+            {
+                Properties.Add(property);
+            }
+        }
+
+        private string GetFileNameFromProperty(string propertyName, string defaultName)
+        {
+            WaterFlowFMProperty property =
+                Properties.FirstOrDefault(p => p.PropertyDefinition.MduPropertyName == propertyName);
+            string fileName = property != null ? (string) property.Value : defaultName;
+
+            return string.IsNullOrEmpty(fileName) ? defaultName : fileName;
+        }
+
+        private void SetMduIntervalFromGuiProperty(string intervalPropName, string doWritePropName,
+                                                   string deltaTPropName)
+        {
+            var timeFrame = new List<double>();
+            var writePropName = (bool) GetModelProperty(doWritePropName).Value;
+            if (writePropName)
+            {
+                var timeSpan = (TimeSpan) GetModelProperty(deltaTPropName).Value;
+                double secondsInInterval = (double) timeSpan.Ticks / TimeSpan.TicksPerSecond;
+                if (secondsInInterval > 0)
+                {
+                    timeFrame.Add(secondsInInterval);
+                }
+            }
+            else
+            {
+                timeFrame.Add(0.0);
+            }
+
+            GetModelProperty(intervalPropName).Value = timeFrame;
+        }
+
+        private void SetMduStartStopDeltaTFromGui(string intervalPropName, string doWritePropName,
+                                                  string deltaTPropName,
+                                                  string specifyStartPropName, string startTimePropName,
+                                                  string specifyStopPropName, string stopTimePropName)
+        {
+            SetMduIntervalFromGuiProperty(intervalPropName, doWritePropName, deltaTPropName);
+
+            var timeFrame = (List<double>) GetModelProperty(intervalPropName).Value;
+
+            var writePropName = (bool) GetModelProperty(doWritePropName).Value;
+            var specifyStartTime = (bool) GetModelProperty(specifyStartPropName).Value;
+            if (writePropName && specifyStartTime)
+            {
+                AddRelativeTimeFromPropertyToList(startTimePropName, timeFrame);
+
+                var specifyStopTime = (bool) GetModelProperty(specifyStopPropName).Value;
+                if (specifyStopTime)
+                {
+                    AddRelativeTimeFromPropertyToList(stopTimePropName, timeFrame);
+                }
+            }
+
+            GetModelProperty(intervalPropName).Value = timeFrame;
+        }
+
+        private void AddRelativeTimeFromPropertyToList(string timePropName, List<double> timeFrame)
+        {
+            var time = (DateTime) GetModelProperty(timePropName).Value;
+            timeFrame.Add(GetRelativeDateTime(time, false));
+        }
+
+        private void SetDefaultGuiIntervalFromMdu(string intervalPropName, string doWritePropName,
+                                                  string deltaTPropName)
+        {
+            var timeFrame = (IList<double>) GetModelProperty(intervalPropName).Value;
+            if (timeFrame.Count == 0)
+            {
+                GetModelProperty(deltaTPropName).Value = new TimeSpan(0, 0, 5, 0);
+                GetModelProperty(doWritePropName).Value = true;
+            }
+            else
+            {
+                // interval is present
+                SetGuiIntervalFromMduProperty(doWritePropName, deltaTPropName, timeFrame);
+            }
+        }
+
+        private void SetGuiStartStopDeltaTFromMdu(string intervalPropName, string doWritePropName,
+                                                  string deltaTPropName,
+                                                  string specifyStartPropName, string startTimePropName,
+                                                  string specifyStopPropName, string stopTimePropName)
+        {
+            var timeFrame = (IList<double>) GetModelProperty(intervalPropName).Value;
+            if (timeFrame.Count == 0)
+            {
+                if (intervalPropName == KnownProperties.MapInterval)
+                {
+                    GetModelProperty(deltaTPropName).Value = new TimeSpan(0, 0, 20, 0);
+                    GetModelProperty(doWritePropName).Value = true;
+                }
+
+                if (intervalPropName == KnownProperties.HisInterval)
+                {
+                    GetModelProperty(deltaTPropName).Value = new TimeSpan(0, 0, 5, 0);
+                    GetModelProperty(doWritePropName).Value = true;
+                }
+
+                if (intervalPropName == KnownProperties.RstInterval)
+                {
+                    GetModelProperty(deltaTPropName).Value = new TimeSpan(0, 24, 0, 0);
+                    GetModelProperty(doWritePropName).Value = true;
+                }
+
+                if (intervalPropName == KnownProperties.WaqInterval)
+                {
+                    GetModelProperty(deltaTPropName).Value = new TimeSpan(0, 0, 0, 0);
+                    GetModelProperty(doWritePropName).Value = true;
+                }
+            }
+
+            if (timeFrame.Count > 0)
+            {
+                // interval is present
+                SetGuiIntervalFromMduProperty(doWritePropName, deltaTPropName, timeFrame);
+            }
+
+            if (timeFrame.Count > 1)
+            {
+                // output start time is specified
+                GetModelProperty(startTimePropName).Value = GetAbsoluteDateTime(timeFrame[1], false);
+                GetModelProperty(specifyStartPropName).Value = true;
+            }
+            else
+            {
+                // output start time not specified, set to model start time
+                GetModelProperty(startTimePropName).Value = GetModelProperty(GuiProperties.StartTime).Value;
+            }
+
+            if (timeFrame.Count > 2)
+            {
+                // output stop time is specified
+                GetModelProperty(stopTimePropName).Value = GetAbsoluteDateTime(timeFrame[2], false);
+                GetModelProperty(specifyStopPropName).Value = true;
+            }
+            else
+            {
+                // output start time not specified, set to model stop time
+                GetModelProperty(stopTimePropName).Value = GetModelProperty(GuiProperties.StopTime).Value;
+            }
+        }
+
+        private void SetGuiIntervalFromMduProperty(string doWritePropName, string deltaTPropName,
+                                                   IList<double> timeFrame)
+        {
+            var seconds = (int) Math.Floor(timeFrame[0]);
+            var millis = (int) ((timeFrame[0] - seconds) * 1000d);
+            var interval = new TimeSpan(0, 0, 0, seconds, millis);
+            GetModelProperty(deltaTPropName).Value = interval;
+            GetModelProperty(doWritePropName).Value = interval.Ticks > 0;
+            // 0 = off (for backward compatibility only)
+        }
+
+        private DateTime GetAbsoluteDateTime(double relativeTime, bool useTUnit)
+        {
+            string unitString = GetModelProperty(KnownProperties.Tunit).GetValueAsString();
+
+            double timeUnitInSeconds = 1;
+            if (useTUnit)
+            {
+                if (unitString.ToLower().Equals("m"))
+                {
+                    timeUnitInSeconds = 60d;
+                }
+                else if (unitString.ToLower().Equals("h"))
+                {
+                    timeUnitInSeconds = 3600d;
+                }
+            }
+
+            var ticks = (long) (TimeSpan.TicksPerSecond * relativeTime * timeUnitInSeconds);
+            var referenceDate = (DateTime) GetModelProperty(KnownProperties.RefDate).Value;
+            return referenceDate.AddTicks(ticks);
+        }
+
+        private double GetRelativeDateTime(DateTime dateTime, bool useTUnit)
+        {
+            string unitString = GetModelProperty(KnownProperties.Tunit).GetValueAsString();
+
+            long numSecondsInTimeStep = 1;
+            if (useTUnit)
+            {
+                if (unitString.ToLower().Equals("m"))
+                {
+                    numSecondsInTimeStep = 60;
+                }
+                else if (unitString.ToLower().Equals("h"))
+                {
+                    numSecondsInTimeStep = 3600;
+                }
+            }
+
+            var referenceDate = (DateTime) GetModelProperty(KnownProperties.RefDate).Value;
+            double ticks = dateTime.Ticks - referenceDate.Ticks;
+            return ticks / TimeSpan.TicksPerSecond / numSecondsInTimeStep;
         }
     }
 }

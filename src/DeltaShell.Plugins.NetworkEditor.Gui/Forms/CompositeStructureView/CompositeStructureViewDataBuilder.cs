@@ -1,4 +1,5 @@
 using System;
+using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Structures;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView;
@@ -14,11 +15,54 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
     {
         private static int SideViewDataCounter = 0;
 
+        public static CompositeStructureViewDataController GetCompositeStructureViewDataForStructure(ICompositeBranchStructure compositeBranchStructure)
+        {
+            ICrossSection crossSectionBefore;
+            ICrossSection crossSectionAfter;
+
+            NetworkHelper.GetNeighboursOnBranch(compositeBranchStructure.Channel, compositeBranchStructure.Chainage,
+                                                out crossSectionBefore, out crossSectionAfter);
+
+            // set NetworkSideViewData
+            double maxStructureLength = GetMaxStructureLength(compositeBranchStructure);
+
+            double startPosition = compositeBranchStructure.Chainage - maxStructureLength < 0.0
+                                       ? 0.0
+                                       : compositeBranchStructure.Chainage - maxStructureLength;
+
+            double endPosition = compositeBranchStructure.Chainage + maxStructureLength > compositeBranchStructure.Branch.Length
+                                     ? compositeBranchStructure.Branch.Length
+                                     : compositeBranchStructure.Chainage + maxStructureLength;
+
+            if (crossSectionBefore != null)
+            {
+                startPosition = Math.Max(0.0, crossSectionBefore.Chainage - 3);
+            }
+
+            if (crossSectionAfter != null)
+            {
+                endPosition = Math.Min(compositeBranchStructure.Channel.Length, crossSectionAfter.Chainage + 3);
+            }
+
+            Route route = RouteHelper.CreateRoute(new NetworkLocation(compositeBranchStructure.Branch, startPosition),
+                                                  new NetworkLocation(compositeBranchStructure.Branch, endPosition));
+
+            SideViewDataCounter++;
+            var networkSideViewData = new CompositeStructureViewDataController(compositeBranchStructure, route, null)
+            {
+                Name = SideViewDataCounter.ToString(),
+                ActiveCompositeStructure = compositeBranchStructure,
+                CrossSectionBefore = crossSectionBefore,
+                CrossSectionAfter = crossSectionAfter
+            };
+            return networkSideViewData;
+        }
+
         private static double GetMaxStructureLength(ICompositeBranchStructure compositeBranchStructure)
         {
             var maxStructureLength = 0.0;
 
-            foreach (var structure in compositeBranchStructure.Structures)
+            foreach (IStructure1D structure in compositeBranchStructure.Structures)
             {
                 if (maxStructureLength < structure.Length)
                 {
@@ -30,49 +74,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
             {
                 maxStructureLength = 1;
             }
+
             return maxStructureLength;
-        }
-
-        public static CompositeStructureViewDataController GetCompositeStructureViewDataForStructure(ICompositeBranchStructure compositeBranchStructure)
-        {
-            ICrossSection crossSectionBefore;
-            ICrossSection crossSectionAfter;
-
-            NetworkHelper.GetNeighboursOnBranch(compositeBranchStructure.Channel, compositeBranchStructure.Chainage,
-                                                               out crossSectionBefore, out crossSectionAfter);
-
-            // set NetworkSideViewData
-            double maxStructureLength = GetMaxStructureLength(compositeBranchStructure);
-
-            var startPosition = (compositeBranchStructure.Chainage - maxStructureLength < 0.0)
-                                ? 0.0
-                                : compositeBranchStructure.Chainage - maxStructureLength;
-
-            var endPosition = (compositeBranchStructure.Chainage + maxStructureLength > compositeBranchStructure.Branch.Length)
-                                ? compositeBranchStructure.Branch.Length
-                                : compositeBranchStructure.Chainage + maxStructureLength;
-
-            if (crossSectionBefore != null)
-            {
-                startPosition = Math.Max(0.0, crossSectionBefore.Chainage - 3);
-            }
-            if (crossSectionAfter != null)
-            {
-                endPosition = Math.Min(compositeBranchStructure.Channel.Length, crossSectionAfter.Chainage + 3);
-            }
-
-            var route = RouteHelper.CreateRoute(new NetworkLocation(compositeBranchStructure.Branch, startPosition),
-                                                new NetworkLocation(compositeBranchStructure.Branch, endPosition));
-            
-            SideViewDataCounter++;
-            var networkSideViewData = new CompositeStructureViewDataController(compositeBranchStructure, route, null)
-                                          {
-                                              Name = SideViewDataCounter.ToString(),
-                                              ActiveCompositeStructure = compositeBranchStructure,
-                                              CrossSectionBefore = crossSectionBefore,
-                                              CrossSectionAfter = crossSectionAfter
-                                          };
-            return networkSideViewData;
         }
     }
 }

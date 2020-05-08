@@ -21,6 +21,26 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             this.grid = grid;
         }
 
+        public bool SnapsToGrid(IGeometry geometry)
+        {
+            return true;
+        }
+
+        public IGeometry GetGridSnappedGeometry(string featureType, IGeometry geometry)
+        {
+            return GetGridSnappedGeometry(geometry);
+        }
+
+        public IEnumerable<IGeometry> GetGridSnappedGeometry(string featureType, ICollection<IGeometry> geometries)
+        {
+            return geometries.Select(GetGridSnappedGeometry).ToArray();
+        }
+
+        public int[] GetLinkedCells()
+        {
+            throw new NotImplementedException();
+        }
+
         // todo: this is snapping for boundaries only...
         private IGeometry GetGridSnappedGeometry(IGeometry geometry)
         {
@@ -105,7 +125,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         private GridCoordinate FindNearestCoordinate(Coordinate coord, IList<GridCoordinate> envelope)
         {
             GridCoordinate nearestCoordinate = null;
-            double closestApproach = double.MaxValue;
+            var closestApproach = double.MaxValue;
 
             foreach (GridCoordinate c in envelope)
             {
@@ -188,34 +208,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
         private class GridCoordinate
         {
-            public int N { get; private set; }
-            public int M { get; private set; }
-
             public GridCoordinate(int n, int m)
             {
                 N = n;
                 M = m;
             }
-        }
 
-        public bool SnapsToGrid(IGeometry geometry)
-        {
-            return true;
-        }
-
-        public IGeometry GetGridSnappedGeometry(string featureType, IGeometry geometry)
-        {
-            return GetGridSnappedGeometry(geometry);
-        }
-
-        public IEnumerable<IGeometry> GetGridSnappedGeometry(string featureType, ICollection<IGeometry> geometries)
-        {
-            return geometries.Select(GetGridSnappedGeometry).ToArray();
-        }
-
-        public int[] GetLinkedCells()
-        {
-            throw new NotImplementedException();
+            public int N { get; private set; }
+            public int M { get; private set; }
         }
     }
 }

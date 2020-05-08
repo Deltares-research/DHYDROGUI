@@ -31,7 +31,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.Wave
         {
             Ensure.NotNull(generateSeries, nameof(generateSeries));
             Ensure.NotNull(groupBoxTitle, nameof(groupBoxTitle));
-            
+
             GenerateSeries = generateSeries;
             GroupBoxTitle = groupBoxTitle;
         }

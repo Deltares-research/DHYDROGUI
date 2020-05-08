@@ -16,16 +16,19 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Commands
         #region Constructors
 
         public RelayCommand(Action<object> execute)
-            : this(execute, null)
-        {
-        }
+            : this(execute, null) {}
 
         public RelayCommand(Action<object> execute, Predicate<object> canExecute)
         {
-            if (execute == null) throw new ArgumentNullException("execute");
+            if (execute == null)
+            {
+                throw new ArgumentNullException("execute");
+            }
+
             this.execute = execute;
             this.canExecute = canExecute;
         }
+
         #endregion // Constructors
 
         #region ICommand Members
@@ -37,8 +40,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Commands
 
         public event EventHandler CanExecuteChanged
         {
-            add { CommandManager.RequerySuggested += value; }
-            remove { CommandManager.RequerySuggested -= value; }
+            add
+            {
+                CommandManager.RequerySuggested += value;
+            }
+            remove
+            {
+                CommandManager.RequerySuggested -= value;
+            }
         }
 
         public void Execute(object parameter)

@@ -33,7 +33,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         private static bool syncing;
 
         /// <summary>
-        /// Synchronizes <paramref name="waterQualityModel" /> after property changed
+        /// Synchronizes <paramref name="waterQualityModel"/> after property changed
         /// </summary>
         /// <param name="waterQualityModel"> The water quality model to sync </param>
         /// <param name="sender"> The item that has changed </param>
@@ -154,6 +154,47 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
             {
                 syncing = false;
             }
+        }
+
+        public static void SetGridExtentsAsInputMask(ISpatialOperation operation,
+                                                     UnstructuredGridCoverage unstructuredGridCoverage)
+        {
+            if (unstructuredGridCoverage.Grid.IsEmpty)
+            {
+                return;
+            }
+
+            // calculate the extents of the grid
+            Envelope extents = unstructuredGridCoverage.Grid.GetExtents();
+            var polygonCollection = new FeatureCollection(new[]
+            {
+                new Feature
+                {
+                    Geometry = new Polygon(
+                        new LinearRing(new Coordinate[]
+                        {
+                            new Coordinate(extents.MinX, extents.MinY),
+                            new Coordinate(extents.MaxX, extents.MinY),
+                            new Coordinate(extents.MaxX, extents.MaxY),
+                            new Coordinate(extents.MinX, extents.MaxY),
+                            new Coordinate(extents.MinX, extents.MinY)
+                        }))
+                }
+            }, typeof(Feature));
+
+            operation.SetInputData(SpatialOperation.MaskInputName, polygonCollection);
+        }
+
+        public static void InsertMonitoringLocationsDataItem(WaterQualityModel waterQualityModel,
+                                                             string monitoringOutputTag)
+        {
+            var dataItemSet = new DataItemSet(new EventedList<WaterQualityObservationVariableOutput>(),
+                                              "Monitoring locations",
+                                              DataItemRole.Output, true, monitoringOutputTag,
+                                              typeof(WaterQualityObservationVariableOutput));
+            waterQualityModel.DataItems.Insert(GetMonitoringOutputDataItemSetPosition(waterQualityModel), dataItemSet);
+            UpdateMonitoringOutputDataItems(waterQualityModel);
+            // Update the monitoring output data items after adding the new monitoring output data item set; all relevant monitoring output data items will be added
         }
 
         private static IEnumerable<string> GetCurrentMonitoringAreas(WaterQualityModel waterQualityModel)
@@ -471,7 +512,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
                 waterQualityModel.ObservationVariableOutputs.Remove(monitoringPointOutputDataItemToRemove);
             }
 
-            string monitoringAreaName = monitoringOutputDataItemObject.ToString();
+            var monitoringAreaName = monitoringOutputDataItemObject.ToString();
             if (!string.IsNullOrEmpty(monitoringAreaName))
             {
                 WaterQualityObservationVariableOutput monitoringPointOutputDataItemToRemove =
@@ -531,10 +572,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
                 waterQualityModel.MonitoringOutputDataItemSet.DataItems.Insert(
                     insertIndex,
                     new DataItem(
-                        new WaterQualityObservationVariableOutput(outputVariables)
-                        {
-                            ObservationVariable = observationPoint
-                        })
+                        new WaterQualityObservationVariableOutput(outputVariables) {ObservationVariable = observationPoint})
                     {
                         Owner = waterQualityModel,
                         Role = DataItemRole.Output
@@ -543,7 +581,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
                 return;
             }
 
-            string surfaceWaterType = monitoringOutputDataItemObject.ToString();
+            var surfaceWaterType = monitoringOutputDataItemObject.ToString();
             if (!string.IsNullOrEmpty(surfaceWaterType))
             {
                 int observationPointMonitoringoutputDataItemCount =
@@ -567,10 +605,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
                 waterQualityModel.MonitoringOutputDataItemSet.DataItems.Insert(
                     insertIndex,
                     new DataItem(
-                        new WaterQualityObservationVariableOutput(outputVariables)
-                        {
-                            Name = surfaceWaterType
-                        })
+                        new WaterQualityObservationVariableOutput(outputVariables) {Name = surfaceWaterType})
                     {
                         Owner = waterQualityModel,
                         Role = DataItemRole.Output
@@ -626,35 +661,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
                 }
                     break;
             }
-        }
-
-        public static void SetGridExtentsAsInputMask(ISpatialOperation operation,
-                                                     UnstructuredGridCoverage unstructuredGridCoverage)
-        {
-            if (unstructuredGridCoverage.Grid.IsEmpty)
-            {
-                return;
-            }
-
-            // calculate the extents of the grid
-            Envelope extents = unstructuredGridCoverage.Grid.GetExtents();
-            var polygonCollection = new FeatureCollection(new[]
-            {
-                new Feature
-                {
-                    Geometry = new Polygon(
-                        new LinearRing(new Coordinate[]
-                        {
-                            new Coordinate(extents.MinX, extents.MinY),
-                            new Coordinate(extents.MaxX, extents.MinY),
-                            new Coordinate(extents.MaxX, extents.MaxY),
-                            new Coordinate(extents.MinX, extents.MaxY),
-                            new Coordinate(extents.MinX, extents.MinY)
-                        }))
-                }
-            }, typeof(Feature));
-
-            operation.SetInputData(SpatialOperation.MaskInputName, polygonCollection);
         }
 
         private static void UpdateUnstructuredGridCoverage(WaterQualityModel waterQualityModel,
@@ -789,10 +795,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
             waterQualityModel.MapFileFunctionStore.Functions.AddRange(GetAllFunctions(unstructuredGridCellCoverage));
 
             var dataItem =
-                new DataItem(unstructuredGridCellCoverage, DataItemRole.Output, outputDataItemName)
-                {
-                    Name = outputDataItemName
-                };
+                new DataItem(unstructuredGridCellCoverage, DataItemRole.Output, outputDataItemName) {Name = outputDataItemName};
             dataItemSet.DataItems.Insert(insertPosition, dataItem);
         }
 
@@ -850,18 +853,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
 
             // Update the monitoring output data items after having switched from a not-None type to another not-None type
             UpdateMonitoringOutputDataItems(waterQualityModel);
-        }
-
-        public static void InsertMonitoringLocationsDataItem(WaterQualityModel waterQualityModel,
-                                                             string monitoringOutputTag)
-        {
-            var dataItemSet = new DataItemSet(new EventedList<WaterQualityObservationVariableOutput>(),
-                                              "Monitoring locations",
-                                              DataItemRole.Output, true, monitoringOutputTag,
-                                              typeof(WaterQualityObservationVariableOutput));
-            waterQualityModel.DataItems.Insert(GetMonitoringOutputDataItemSetPosition(waterQualityModel), dataItemSet);
-            UpdateMonitoringOutputDataItems(waterQualityModel);
-            // Update the monitoring output data items after adding the new monitoring output data item set; all relevant monitoring output data items will be added
         }
 
         private static int GetMonitoringOutputDataItemSetPosition(WaterQualityModel waterQualityModel)

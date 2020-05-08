@@ -20,7 +20,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Enums
         /// </returns>
         public static PeriodViewType ConvertToPeriodViewType(this BoundaryConditionPeriodType periodType)
         {
-            return (PeriodViewType)periodType;
+            return (PeriodViewType) periodType;
         }
 
         /// <summary>
@@ -32,7 +32,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Enums
         /// </returns>
         public static BoundaryConditionPeriodType ConvertToBoundaryConditionPeriodType(this PeriodViewType periodViewType)
         {
-            return (BoundaryConditionPeriodType)periodViewType;
+            return (BoundaryConditionPeriodType) periodViewType;
         }
     }
 }

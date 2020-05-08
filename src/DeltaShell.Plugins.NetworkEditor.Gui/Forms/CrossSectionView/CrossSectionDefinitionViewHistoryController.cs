@@ -11,8 +11,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
 {
     public class CrossSectionDefinitionViewHistoryController
     {
-        private IList<ICrossSectionDefinition> crossSectionHistory = new List<ICrossSectionDefinition>();
         private readonly IHistoryTool historyTool;
+        private IList<ICrossSectionDefinition> crossSectionHistory = new List<ICrossSectionDefinition>();
 
         public CrossSectionDefinitionViewHistoryController(IHistoryTool historyTool)
         {
@@ -34,12 +34,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
                 return;
             }
 
-            foreach (var oldCrossSection in crossSectionHistory)
+            foreach (ICrossSectionDefinition oldCrossSection in crossSectionHistory)
             {
                 //Align by thalweg
-                var deltaThalweg = currentThalweg - oldCrossSection.Thalweg;
-                var shiftedProfile = oldCrossSection.Profile.Select(c => new Coordinate(c.X + deltaThalweg, c.Y)).ToList();
-                var series = CreateHistoryLineSeries(oldCrossSection.Name, shiftedProfile);
+                double deltaThalweg = currentThalweg - oldCrossSection.Thalweg;
+                List<Coordinate> shiftedProfile = oldCrossSection.Profile.Select(c => new Coordinate(c.X + deltaThalweg, c.Y)).ToList();
+                IChartSeries series = CreateHistoryLineSeries(oldCrossSection.Name, shiftedProfile);
                 series.ShowInLegend = false;
                 historyTool.Add(series);
             }
@@ -69,7 +69,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
 
         private static IChartSeries CreateHistoryLineSeries(string title, List<Coordinate> profile)
         {
-            var profileSeries = (LineChartSeries)ChartSeriesFactory.CreateLineSeries();
+            var profileSeries = (LineChartSeries) ChartSeriesFactory.CreateLineSeries();
             profileSeries.Title = title;
             profileSeries.XValuesDataMember = "X";
             profileSeries.YValuesDataMember = "Y";

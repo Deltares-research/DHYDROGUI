@@ -22,7 +22,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
 
         public override bool AlwaysActive
         {
-            get { return true; }
+            get
+            {
+                return true;
+            }
         }
 
         public override bool Enabled
@@ -30,30 +33,37 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
             get
             {
                 // Only active when at least one 1D channel exists and when there is an Area layer. 
-                var branchesLayer = Layers.FirstOrDefault(
-                        l => l.DataSource != null && l.DataSource.FeatureType == typeof (Channel) && l.Name == "Branches");
+                ILayer branchesLayer = Layers.FirstOrDefault(
+                    l => l.DataSource != null && l.DataSource.FeatureType == typeof(Channel) && l.Name == "Branches");
                 if (branchesLayer == null)
                 {
-                    return false; 
+                    return false;
                 }
+
                 var branches = branchesLayer.DataSource.Features as IList<Channel>;
 
-                return branches != null && branches.Count > 0; 
+                return branches != null && branches.Count > 0;
             }
         }
 
         public override void Execute()
         {
-            var branches = GetBranches();
-            var usingSelected = MapControl.SelectedFeatures.OfType<Channel>().Any();
-            
-            var generateEmbankmentsDialog = new GenerateEmbankmentsDialog{Text = string.Format("Generate embankments for {0} channels", (usingSelected ? "selected": "all"))};
-            
-            if (generateEmbankmentsDialog.ShowDialog() != DialogResult.OK) return;
+            IList<Channel> branches = GetBranches();
+            bool usingSelected = MapControl.SelectedFeatures.OfType<Channel>().Any();
 
-            if (!generateEmbankmentsDialog.GenerateLeftEmbankments && !generateEmbankmentsDialog.GenerateRightEmbankments) return;
+            var generateEmbankmentsDialog = new GenerateEmbankmentsDialog {Text = string.Format("Generate embankments for {0} channels", usingSelected ? "selected" : "all")};
 
-            var embankmentDefinitionsLayer = GetEmbankmentsLayer();
+            if (generateEmbankmentsDialog.ShowDialog() != DialogResult.OK)
+            {
+                return;
+            }
+
+            if (!generateEmbankmentsDialog.GenerateLeftEmbankments && !generateEmbankmentsDialog.GenerateRightEmbankments)
+            {
+                return;
+            }
+
+            ILayer embankmentDefinitionsLayer = GetEmbankmentsLayer();
             if (embankmentDefinitionsLayer == null)
             {
                 throw new InvalidOperationException("Embankment definition layer not found.");
@@ -71,13 +81,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
             }
 
             EmbankmentGenerator.GenerateEmbankments(branches, embankmentDefinitions, generateEmbankmentsDialog.CrossSectionBased,
-                generateEmbankmentsDialog.ConstantDistance, generateEmbankmentsDialog.GenerateLeftEmbankments,
-                generateEmbankmentsDialog.GenerateRightEmbankments, generateEmbankmentsDialog.MergeAutomatically);
+                                                    generateEmbankmentsDialog.ConstantDistance, generateEmbankmentsDialog.GenerateLeftEmbankments,
+                                                    generateEmbankmentsDialog.GenerateRightEmbankments, generateEmbankmentsDialog.MergeAutomatically);
         }
 
         public override IEnumerable<MapToolContextMenuItem> GetContextMenuItems(Coordinate worldPosition)
         {
-            if (GetBranches().Count == 0) yield break;
+            if (GetBranches().Count == 0)
+            {
+                yield break;
+            }
 
             if (GetEmbankmentsLayer() == null)
             {
@@ -95,25 +108,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
 
         private IList<Channel> GetBranches()
         {
-            var selectedBranches = MapControl.SelectedFeatures.OfType<Channel>().ToList();
+            List<Channel> selectedBranches = MapControl.SelectedFeatures.OfType<Channel>().ToList();
             if (selectedBranches.Count > 0)
             {
                 return selectedBranches;
             }
 
-            var branchesLayer = Layers.FirstOrDefault(l => l.DataSource != null && l.DataSource.FeatureType == typeof (Channel) && l.Name == "Branches");
+            ILayer branchesLayer = Layers.FirstOrDefault(l => l.DataSource != null && l.DataSource.FeatureType == typeof(Channel) && l.Name == "Branches");
             return branchesLayer != null
-                ? branchesLayer.DataSource.Features as IList<Channel>
-                : new List<Channel>();
+                       ? branchesLayer.DataSource.Features as IList<Channel>
+                       : new List<Channel>();
         }
 
         private ILayer GetEmbankmentsLayer()
         {
             return Layers.FirstOrDefault(l =>
-                l.DataSource != null &&
-                l.DataSource.FeatureType == typeof (Embankment) &&
-                l.Name == HydroAreaLayerNames.EmbankmentsPluralName);
+                                             l.DataSource != null &&
+                                             l.DataSource.FeatureType == typeof(Embankment) &&
+                                             l.Name == HydroAreaLayerNames.EmbankmentsPluralName);
         }
     }
-
 }

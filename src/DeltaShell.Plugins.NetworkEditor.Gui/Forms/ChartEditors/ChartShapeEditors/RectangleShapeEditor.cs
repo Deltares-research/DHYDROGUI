@@ -7,7 +7,7 @@ using SharpMap.Converters.Geometries;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapeEditors
 {
-    public class RectangleShapeEditor : ShapeFeatureEditor//, IShapeFeatureEditor
+    public class RectangleShapeEditor : ShapeFeatureEditor //, IShapeFeatureEditor
     {
         //public ShapeEditMode ShapeEditMode;
 
@@ -33,40 +33,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapeEdit
             }
         }
 
-        private void UpdateRectangleTrackers()
-        {
-            RectangleShapeFeature rectangleShapeFeature = (RectangleShapeFeature)ShapeFeature;
-            if (!CanResize) 
-                return;
-            // bottom
-            points[0].X = rectangleShapeFeature.Left + rectangleShapeFeature.Width / 2;
-            points[0].Y = rectangleShapeFeature.Bottom;
-            // right
-            points[1].X = rectangleShapeFeature.Right;
-            points[1].Y = rectangleShapeFeature.Bottom + rectangleShapeFeature.Height / 2;
-            // top
-            points[2].X = rectangleShapeFeature.Left + rectangleShapeFeature.Width / 2;
-            points[2].Y = rectangleShapeFeature.Top;
-            // left
-            points[3].X = rectangleShapeFeature.Left;
-            points[3].Y = rectangleShapeFeature.Bottom + rectangleShapeFeature.Height / 2;
-
-            points[0].GeometryChangedAction();
-            points[1].GeometryChangedAction();
-            points[2].GeometryChangedAction();
-            points[3].GeometryChangedAction();
-        }
-
-
-
-        protected virtual void UpdateTrackers()
-        {
-            UpdateRectangleTrackers();
-        }
-
         public override bool MoveTracker(IPoint trackerFeature, Coordinate worldPosition, double deltaX, double deltaY)
         {
-            RectangleShapeFeature rectangleShapeFeature = (RectangleShapeFeature)ShapeFeature;
+            var rectangleShapeFeature = (RectangleShapeFeature) ShapeFeature;
             if (CanResize)
             {
                 if (trackerFeature == points[0])
@@ -78,6 +47,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapeEdit
                     UpdateTrackers();
                     return true;
                 }
+
                 if (trackerFeature == points[1])
                 {
                     // right
@@ -87,6 +57,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapeEdit
                     UpdateTrackers();
                     return true;
                 }
+
                 if (trackerFeature == points[2])
                 {
                     // top
@@ -96,6 +67,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapeEdit
                     UpdateTrackers();
                     return true;
                 }
+
                 if (trackerFeature == points[3])
                 {
                     // left
@@ -106,7 +78,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapeEdit
                     return true;
                 }
             }
-            if ((CanMove) && (trackerFeature == CenterTracker))
+
+            if (CanMove && trackerFeature == CenterTracker)
             {
                 // center
                 rectangleShapeFeature.Left += deltaX;
@@ -116,6 +89,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapeEdit
                 UpdateTrackers();
                 return true;
             }
+
             return false;
         }
 
@@ -123,12 +97,50 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapeEdit
         {
             if (CanResize)
             {
-                if ((trackerFeature == points[0]) || (trackerFeature == points[2]))
+                if (trackerFeature == points[0] || trackerFeature == points[2])
+                {
                     return Cursors.SizeNS;
-                if ((trackerFeature == points[1]) || (trackerFeature == points[3]))
+                }
+
+                if (trackerFeature == points[1] || trackerFeature == points[3])
+                {
                     return Cursors.SizeWE;
+                }
             }
-            return (trackerFeature == CenterTracker) ? base.GetCursor(trackerFeature) : Cursors.Default;
+
+            return trackerFeature == CenterTracker ? base.GetCursor(trackerFeature) : Cursors.Default;
+        }
+
+        protected virtual void UpdateTrackers()
+        {
+            UpdateRectangleTrackers();
+        }
+
+        private void UpdateRectangleTrackers()
+        {
+            var rectangleShapeFeature = (RectangleShapeFeature) ShapeFeature;
+            if (!CanResize)
+            {
+                return;
+            }
+
+            // bottom
+            points[0].X = rectangleShapeFeature.Left + (rectangleShapeFeature.Width / 2);
+            points[0].Y = rectangleShapeFeature.Bottom;
+            // right
+            points[1].X = rectangleShapeFeature.Right;
+            points[1].Y = rectangleShapeFeature.Bottom + (rectangleShapeFeature.Height / 2);
+            // top
+            points[2].X = rectangleShapeFeature.Left + (rectangleShapeFeature.Width / 2);
+            points[2].Y = rectangleShapeFeature.Top;
+            // left
+            points[3].X = rectangleShapeFeature.Left;
+            points[3].Y = rectangleShapeFeature.Bottom + (rectangleShapeFeature.Height / 2);
+
+            points[0].GeometryChangedAction();
+            points[1].GeometryChangedAction();
+            points[2].GeometryChangedAction();
+            points[3].GeometryChangedAction();
         }
     }
 }

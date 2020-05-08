@@ -27,8 +27,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.Calculators
         /// It is a assumed that no parameter is <c>null</c>, the behaviour is undefined in case this happens.
         /// </remarks>
         internal static Tuple<IEnumerable<int>, double> FindClosestIndices(IDistanceCalculator distanceCalculator,
-                                                                         Coordinate coordinateSrc,
-                                                                         IList<Coordinate> coordinates)
+                                                                           Coordinate coordinateSrc,
+                                                                           IList<Coordinate> coordinates)
         {
             double smallestDistanceSq = double.PositiveInfinity;
             var smallestIndices = new List<int>();
@@ -61,7 +61,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.Calculators
         /// </summary>
         /// <param name="coordinate">The coordinate.</param>
         /// <returns>
-        ///   <c>true</c> if the specified coordinate is defined; otherwise, <c>false</c>.
+        /// <c>true</c> if the specified coordinate is defined; otherwise, <c>false</c>.
         /// </returns>
         /// <remarks>
         /// The behaviour of this method is undefined if <paramref name="coordinate"/> is <c>null</c>.

@@ -17,33 +17,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
     {
         private IEventedList<IBoundaryCondition> boundaryConditions;
 
-        protected override void UpdateName()
-        {
-            Name = Feature != null ? Feature.Name + " (Boundary conditions)" : "";
-        }
-
-        public IList<string> SupportPointNames
-        {
-            get
-            {
-                if (Feature == null)
-                {
-                    return null;
-                }
-
-                return Feature.Attributes[Feature2D.LocationKey] as IList<string>;
-            }
-        }
-
-        public IEventedList<IBoundaryCondition> BoundaryConditions
-        {
-            get => boundaryConditions;
-            set
-            {
-                boundaryConditions = value;
-                Data = value;
-            }
-        }
+        private string cachedFeatureName;
 
         public BoundaryConditionSet()
         {
@@ -71,7 +45,70 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
             }
         }
 
-        private string cachedFeatureName;
+        public IList<string> SupportPointNames
+        {
+            get
+            {
+                if (Feature == null)
+                {
+                    return null;
+                }
+
+                return Feature.Attributes[Feature2D.LocationKey] as IList<string>;
+            }
+        }
+
+        public IEventedList<IBoundaryCondition> BoundaryConditions
+        {
+            get => boundaryConditions;
+            set
+            {
+                boundaryConditions = value;
+                Data = value;
+            }
+        }
+
+        public string VariableDescription => BoundaryConditions.Any() ? BoundaryConditions.First().Description : "";
+
+        public IGeometry Geometry
+        {
+            get => Feature.Geometry.Centroid;
+            set => throw new Exception("Boundary condition sets cannot be moved");
+        }
+
+        public IFeatureAttributeCollection Attributes { get; set; }
+
+        public static string DefaultLocationName(IFeature feature, int i)
+        {
+            var feature2D = feature as Feature2D;
+            if (feature2D != null)
+            {
+                return CreateNameByIndex(feature2D.Name, i);
+            }
+
+            return (i + 1).ToString("D4");
+        }
+
+        public bool ContainsData()
+        {
+            return BoundaryConditions.Any(bc => bc.DataPointIndices.Any());
+        }
+
+        public object Clone()
+        {
+            return new BoundaryConditionSet
+            {
+                Feature = Feature,
+                BoundaryConditions =
+                    new EventedList<IBoundaryCondition>(
+                        BoundaryConditions.Select(bc => (IBoundaryCondition) bc.Clone()))
+            };
+        }
+
+        protected override void UpdateName()
+        {
+            Name = Feature != null ? Feature.Name + " (Boundary conditions)" : "";
+        }
 
         private void OnPropertyChanging(object sender, PropertyChangingEventArgs e)
         {
@@ -139,17 +176,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
             };
         }
 
-        public static string DefaultLocationName(IFeature feature, int i)
-        {
-            var feature2D = feature as Feature2D;
-            if (feature2D != null)
-            {
-                return CreateNameByIndex(feature2D.Name, i);
-            }
-
-            return (i + 1).ToString("D4");
-        }
-
         private static string CreateNameByIndex(string featureName, int i)
         {
             return featureName + "_" + (i + 1).ToString("D4");
@@ -166,31 +192,5 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
 
             return false;
         }
-
-        public string VariableDescription => BoundaryConditions.Any() ? BoundaryConditions.First().Description : "";
-
-        public bool ContainsData()
-        {
-            return BoundaryConditions.Any(bc => bc.DataPointIndices.Any());
-        }
-
-        public object Clone()
-        {
-            return new BoundaryConditionSet
-            {
-                Feature = Feature,
-                BoundaryConditions =
-                    new EventedList<IBoundaryCondition>(
-                        BoundaryConditions.Select(bc => (IBoundaryCondition) bc.Clone()))
-            };
-        }
-
-        public IGeometry Geometry
-        {
-            get => Feature.Geometry.Centroid;
-            set => throw new Exception("Boundary condition sets cannot be moved");
-        }
-
-        public IFeatureAttributeCollection Attributes { get; set; }
     }
 }

@@ -7,18 +7,18 @@ using GeoAPI.Geometries;
 namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
 {
     /// <summary>
-    /// Provides the method to create a <see cref="IWaveBoundaryGeometricDefinition" />.
+    /// Provides the method to create a <see cref="IWaveBoundaryGeometricDefinition"/>.
     /// </summary>
     public class WaveBoundaryGeometricDefinitionFactory : IWaveBoundaryGeometricDefinitionFactory
     {
         private readonly IBoundarySnappingCalculatorProvider snappingCalculatorProvider;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="WaveBoundaryGeometricDefinitionFactory" /> class.
+        /// Initializes a new instance of the <see cref="WaveBoundaryGeometricDefinitionFactory"/> class.
         /// </summary>
         /// <param name="snappingCalculatorProvider"> The snapping calculator provider. </param>
         /// <exception cref="System.ArgumentNullException">
-        /// Thrown when <paramref name="snappingCalculatorProvider" /> is <c>null</c>.
+        /// Thrown when <paramref name="snappingCalculatorProvider"/> is <c>null</c>.
         /// </exception>
         public WaveBoundaryGeometricDefinitionFactory(IBoundarySnappingCalculatorProvider snappingCalculatorProvider)
         {
@@ -45,7 +45,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
                 return null;
             }
 
-            IEnumerable<GridBoundaryCoordinate> snappedEndPoints = 
+            IEnumerable<GridBoundaryCoordinate> snappedEndPoints =
                 WaveBoundaryGeometricDefinitionFactoryHelper.GetSnappedEndPoints(calculator, coordinates);
 
             return WaveBoundaryGeometricDefinitionFactoryHelper.GetGeometricDefinition(snappedEndPoints, calculator);
@@ -64,8 +64,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
             return WaveBoundaryGeometricDefinitionFactoryHelper.GetGeometricDefinition(orientation, calculator);
         }
 
-        public bool HasInvertedOrderingCoordinates(IWaveBoundaryGeometricDefinition geometricDefinition, 
-                                                  Coordinate startCoordinate)
+        public bool HasInvertedOrderingCoordinates(IWaveBoundaryGeometricDefinition geometricDefinition,
+                                                   Coordinate startCoordinate)
         {
             Ensure.NotNull(geometricDefinition, nameof(geometricDefinition));
             Ensure.NotNull(startCoordinate, nameof(startCoordinate));

@@ -66,19 +66,19 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
                 generalCategory.AddWpfGuiProperty(coordSys);
 
                 var waveBoundariesPerFileUsed = new WpfGuiProperty(new FieldUIDescription(o => model.ModelDefinition.BoundaryContainer.DefinitionPerFileUsed,
-                                                                  (d, v) => model.ModelDefinition.BoundaryContainer.DefinitionPerFileUsed = (bool)v)
+                                                                                          (d, v) => model.ModelDefinition.BoundaryContainer.DefinitionPerFileUsed = (bool) v)
                 {
                     Category = KnownWaveCategories.GeneralCategory,
                     SubCategory = Resources.WaveSettingsHelper_AddCustomWaveSettings_Boundaries_Category_Name,
                     Label = Resources.WaveSettingsHelper_AddCustomWaveSettings_Use_SWAN_domain_boundary_from_file,
                     ValueType = typeof(bool),
                     ToolTip = Resources.WaveSettingsHelper_AddCustomWaveSettings_When_this_option_is_selected_adding_2D_D_Waves_boundaries_is_not_possible_Existing_2D_D_Waves_boundaries_will_be_removed
-                    });
+                });
                 generalCategory.AddWpfGuiProperty(waveBoundariesPerFileUsed);
 
                 var waveBoundariesPerFileName = new WpfGuiProperty(new FieldUIDescription(o => model.ModelDefinition.BoundaryContainer.FilePathForBoundariesPerFile,
-                                                                                      (d, v) => model.ModelDefinition.BoundaryContainer.FilePathForBoundariesPerFile = (string)v,
-                                                                       d=> model.BoundaryContainer.DefinitionPerFileUsed)
+                                                                                          (d, v) => model.ModelDefinition.BoundaryContainer.FilePathForBoundariesPerFile = (string) v,
+                                                                                          d => model.BoundaryContainer.DefinitionPerFileUsed)
                 {
                     Category = KnownWaveCategories.GeneralCategory,
                     SubCategory = Resources.WaveSettingsHelper_AddCustomWaveSettings_Boundaries_Category_Name,
@@ -95,10 +95,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
         private static WpfGuiCategory GetDomainSpecificSettingsCategory(WaveModel model)
         {
             return new WpfGuiCategory(Resources.WaveSettingsHelper_GetWaveSettings_Domain_specific_settings,
-                                      Enumerable.Empty<FieldUIDescription>().ToList())
-            {
-                CustomControl = new MainDomainSpecificDataView(new MainDomainSpecificDataViewModel(model.OuterDomain))
-            };
+                                      Enumerable.Empty<FieldUIDescription>().ToList()) {CustomControl = new MainDomainSpecificDataView(new MainDomainSpecificDataViewModel(model.OuterDomain))};
         }
 
         private static ObjectUIDescription GetWaveSettings(WaveModel data)
@@ -106,7 +103,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
             ObjectUIDescription objectDescription = WaveModelUIDescription.Extract(data);
 
             var flowCouplingCheckBox = new FieldUIDescription(o => data.IsCoupledToFlow,
-                                                              (d, v) => data.IsCoupledToFlow = (bool)v)
+                                                              (d, v) => data.IsCoupledToFlow = (bool) v)
             {
                 Category = KnownWaveCategories.GeneralCategory,
                 SubCategory = Resources.WaveSettingsHelper_GetWaveSettings_Online_Coupling_Time_Frame,

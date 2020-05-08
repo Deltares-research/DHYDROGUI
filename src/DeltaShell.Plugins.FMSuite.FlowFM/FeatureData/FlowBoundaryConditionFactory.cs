@@ -19,6 +19,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
 
         public WaterFlowFMModel Model { set; private get; }
 
+        public static IBoundaryCondition CreateBoundaryCondition(Feature2D feature2D)
+        {
+            return CreateBoundaryCondition(feature2D, FlowBoundaryQuantityType.WaterLevel,
+                                           BoundaryConditionDataType.TimeSeries, null, null);
+        }
+
         public override IBoundaryCondition CreateBoundaryCondition(Feature2D feature, string variable,
                                                                    BoundaryConditionDataType dataType,
                                                                    string quantityType = null)
@@ -96,12 +102,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
             }
 
             return result;
-        }
-
-        public static IBoundaryCondition CreateBoundaryCondition(Feature2D feature2D)
-        {
-            return CreateBoundaryCondition(feature2D, FlowBoundaryQuantityType.WaterLevel,
-                                           BoundaryConditionDataType.TimeSeries, null, null);
         }
 
         private static IList<ISedimentFraction> FilterSedimentFractions(

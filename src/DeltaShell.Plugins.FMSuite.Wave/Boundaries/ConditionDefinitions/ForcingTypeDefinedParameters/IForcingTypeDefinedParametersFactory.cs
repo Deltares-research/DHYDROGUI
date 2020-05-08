@@ -38,7 +38,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Forcin
         ConstantParameters<TSpreading> ConstructConstantParameters<TSpreading>(double height,
                                                                                double period,
                                                                                double direction,
-                                                                               TSpreading spreading) 
+                                                                               TSpreading spreading)
             where TSpreading : class, IBoundaryConditionSpreading, new();
 
         /// <summary>
@@ -55,7 +55,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Forcin
         /// <exception cref="System.ArgumentNullException">
         /// Thrown when <paramref name="parameters"/> is <c>null</c>.
         /// </exception>
-        ConstantParameters<TNewSpreading> ConvertConstantParameters<TOldSpreading, TNewSpreading>(ConstantParameters<TOldSpreading> parameters) 
+        ConstantParameters<TNewSpreading> ConvertConstantParameters<TOldSpreading, TNewSpreading>(ConstantParameters<TOldSpreading> parameters)
             where TOldSpreading : class, IBoundaryConditionSpreading, new()
             where TNewSpreading : class, IBoundaryConditionSpreading, new();
 
@@ -101,7 +101,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Forcin
         /// <exception cref="System.ArgumentNullException">
         /// Thrown when <paramref name="parameters`"/> is <c>null</c>.
         /// </exception>
-        TimeDependentParameters<TNewSpreading> ConvertTimeDependentParameters<TOldSpreading, TNewSpreading>(TimeDependentParameters<TOldSpreading> parameters) 
+        TimeDependentParameters<TNewSpreading> ConvertTimeDependentParameters<TOldSpreading, TNewSpreading>(TimeDependentParameters<TOldSpreading> parameters)
             where TOldSpreading : class, IBoundaryConditionSpreading, new()
             where TNewSpreading : class, IBoundaryConditionSpreading, new();
 

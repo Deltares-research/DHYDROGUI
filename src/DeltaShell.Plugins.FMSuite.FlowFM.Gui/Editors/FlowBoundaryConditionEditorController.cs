@@ -11,6 +11,7 @@ using DeltaShell.Plugins.FMSuite.Common.Gui.Editors;
 using DeltaShell.Plugins.FMSuite.Common.Gui.Forms;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
+using DeltaShell.Plugins.FMSuite.FlowFM.Sediment;
 using log4net;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
@@ -33,9 +34,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
                 {
                     Editor.SupportedVerticalProfileTypes = SupportedVerticalProfileTypes.BoundaryConditionProfileTypes;
                     Editor.SupportPointListBoxContextMenuItems = new ToolStripItem[]
-                        {
-                            new ToolStripMenuItem("Properties...", null, OnLocationPropertiesClick)
-                        };
+                    {
+                        new ToolStripMenuItem("Properties...", null, OnLocationPropertiesClick)
+                    };
                     if (Model != null)
                     {
                         Editor.ModelDepthLayerDefinition = Model.DepthLayerDefinition;
@@ -45,16 +46,30 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             }
         }
 
+        public override IEnumerable<string> SupportedProcessNames
+        {
+            get
+            {
+                return SupportedFlowQuantities.Select(FlowBoundaryCondition.GetProcessNameForQuantity)
+                                              .Where(IsActiveProcess)
+                                              .ToList().Distinct();
+            }
+        }
+
         public WaterFlowFMModel Model
         {
-            get { return model; }
+            get
+            {
+                return model;
+            }
             set
             {
                 if (model != null)
                 {
-                    ((INotifyPropertyChanged)model).PropertyChanged -= OnModelPropertyChanged;
+                    ((INotifyPropertyChanged) model).PropertyChanged -= OnModelPropertyChanged;
                     ((INotifyCollectionChanged) model).CollectionChanged -= OnModelCollectionChanged;
                 }
+
                 model = value;
                 if (model != null)
                 {
@@ -63,80 +78,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
                         Editor.ModelDepthLayerDefinition = model.DepthLayerDefinition;
                         Editor.DepthLayerControlVisible = model.UseDepthLayers;
                     }
-                    ((INotifyPropertyChanged)model).PropertyChanged += OnModelPropertyChanged;
-                    ((INotifyCollectionChanged)model).CollectionChanged += OnModelCollectionChanged;
+
+                    ((INotifyPropertyChanged) model).PropertyChanged += OnModelPropertyChanged;
+                    ((INotifyCollectionChanged) model).CollectionChanged += OnModelCollectionChanged;
                 }
-            }
-        }
-
-        private void OnModelCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            // return if there is no editor.
-            if (Editor == null || model == null) return;
-
-            if (Equals(sender, model.TracerDefinitions)
-                || Equals(sender, model.SedimentFractions))
-            {
-                Editor.RefreshQuantitiesComboBox();
-            }
-        }
-        private void OnModelPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            // return if there is no editor.
-            if (Editor == null) return;
-
-            if (e.PropertyName == nameof(Model.UseMorSed) ||
-                e.PropertyName == nameof(Model.UseSalinity) ||
-                e.PropertyName == nameof(Model.HeatFluxModelType))
-            {
-                Editor.RefreshAvailableCategories();
-            }
-            else if (e.PropertyName == nameof(Model.UseDepthLayers))
-            {
-                Editor.ModelDepthLayerDefinition = Model.DepthLayerDefinition;
-                Editor.DepthLayerControlVisible = Model.UseDepthLayers;
-                Editor.UpdateGeometryPanel();
-            }
-            else if (e.PropertyName == nameof(Model.DepthLayerDefinition))
-            {
-                Editor.ModelDepthLayerDefinition = Model.DepthLayerDefinition;
-                Editor.UpdateGeometryPanel();
-            }
-        }
-
-        public override void OnBoundaryConditionSelectionChanged(IBoundaryCondition boundaryCondition)
-        {
-            var previousView = Editor.BoundaryConditionDataView as FlowBoundaryConditionDataView;
-            if (previousView != null)
-            {
-                Editor.SelectedSupportPointChanged -= previousView.OnSupportPointChanged;
-                previousView.BoundaryCondition = null;
-                previousView.BoundaryConditionSet = null;
-                previousView.Model = null;
-            }
-            var view = new FlowBoundaryConditionDataView
-                {
-                    Model = Model,
-                    BoundaryConditionSet = (BoundaryConditionSet) Editor.Data,
-                    BoundaryCondition = boundaryCondition,
-                    SupportPointIndex = Editor.SelectedSupportPointIndex,
-                };
-            
-            Editor.SelectedSupportPointChanged += view.OnSupportPointChanged;
-            view.RefreshBoundaryData();
-            view.UpdateControl();
-            Editor.BoundaryConditionDataView = view;
-            Editor.ChildViews.Add(view);
-        }
-
-        private void OnLocationPropertiesClick(object sender, EventArgs eventArgs)
-        {
-            var dialog = new SupportPointPropertiesForm(Editor.BoundaryConditionSet, Editor.SelectedSupportPointIndex,
-                                                        Model == null ? null : Model.CoordinateSystem);
-               
-            if (dialog.ShowDialog(Editor) == DialogResult.OK)
-            {
-                Editor.UpdateSupportPointLabel(Editor.SelectedSupportPointIndex);
             }
         }
 
@@ -166,50 +111,30 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             }
         }
 
-        public override IEnumerable<string> SupportedProcessNames
+        public override void OnBoundaryConditionSelectionChanged(IBoundaryCondition boundaryCondition)
         {
-            get
+            var previousView = Editor.BoundaryConditionDataView as FlowBoundaryConditionDataView;
+            if (previousView != null)
             {
-                return SupportedFlowQuantities.Select(FlowBoundaryCondition.GetProcessNameForQuantity)
-                                              .Where(IsActiveProcess)
-                                              .ToList().Distinct();
+                Editor.SelectedSupportPointChanged -= previousView.OnSupportPointChanged;
+                previousView.BoundaryCondition = null;
+                previousView.BoundaryConditionSet = null;
+                previousView.Model = null;
             }
-        }
 
-        private bool IsActiveProcess(string process)
-        {
-            // Filter out Sediment, SedimentConcentration, Salinity and temperature if not active:
-            if (process == FlowBoundaryCondition.GetProcessNameForQuantity(FlowBoundaryQuantityType.Salinity))
+            var view = new FlowBoundaryConditionDataView
             {
-                return (Model != null && Model.UseSalinity);
-            }
-            if (process == FlowBoundaryCondition.GetProcessNameForQuantity(FlowBoundaryQuantityType.Temperature))
-            {
-                return (Model != null && Model.UseTemperature);
-            }
-            if (process == FlowBoundaryCondition.GetProcessNameForQuantity(FlowBoundaryQuantityType.SedimentConcentration)
-                || process == FlowBoundaryCondition.GetProcessNameForQuantity(FlowBoundaryQuantityType.MorphologyBedLevelPrescribed)
-                || process == FlowBoundaryCondition.GetProcessNameForQuantity(FlowBoundaryQuantityType.MorphologyBedLevelChangePrescribed)
-                || process == FlowBoundaryCondition.GetProcessNameForQuantity(FlowBoundaryQuantityType.MorphologyBedLoadTransport)
-                || process == FlowBoundaryCondition.GetProcessNameForQuantity(FlowBoundaryQuantityType.MorphologyNoBedLevelConstraint)
-                || process == FlowBoundaryCondition.GetProcessNameForQuantity(FlowBoundaryQuantityType.MorphologyBedLevelFixed))
-            {
-                return (Model != null && Model.UseMorSed);
-            }
-            return true;
-        }
+                Model = Model,
+                BoundaryConditionSet = (BoundaryConditionSet) Editor.Data,
+                BoundaryCondition = boundaryCondition,
+                SupportPointIndex = Editor.SelectedSupportPointIndex,
+            };
 
-        private IEnumerable<FlowBoundaryQuantityType> GetQuantitiesForProcess(string process)
-        {
-            if (!IsActiveProcess(process)) yield break;
-
-            foreach (
-                var quantity in
-                    SupportedFlowQuantities.Where(
-                        quantity => FlowBoundaryCondition.GetProcessNameForQuantity(quantity) == process))
-            {
-                yield return quantity;
-            }
+            Editor.SelectedSupportPointChanged += view.OnSupportPointChanged;
+            view.RefreshBoundaryData();
+            view.UpdateControl();
+            Editor.BoundaryConditionDataView = view;
+            Editor.ChildViews.Add(view);
         }
 
         public override IEnumerable<string> GetVariablesForProcess(string category)
@@ -217,75 +142,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             return GetQuantitiesForProcess(category).Select(FlowBoundaryCondition.GetVariableNameForQuantity);
         }
 
-        private static IEnumerable<FlowBoundaryQuantityType> GetAllowedQuantitiesFor(string process,
-            BoundaryConditionSet boundaryConditions)
-        {
-            if (boundaryConditions == null)
-            {
-                return Enumerable.Empty<FlowBoundaryQuantityType>();
-            }
-
-            var existingQuantities =
-                boundaryConditions.BoundaryConditions.OfType<FlowBoundaryCondition>()
-                    .Select(fbc => fbc.FlowQuantity).Distinct().ToList();
-
-            var count = existingQuantities.Except(FlowBoundaryCondition.AlwaysAllowedQuantities).Count() + 1;
-
-            var validCombinationResults =
-                FlowBoundaryCondition.ValidBoundaryConditionCombinations.Where(
-                    l => l.Count == count && l.Except(existingQuantities).Count() == 1)
-                    .SelectMany(l => l).Distinct();
-
-            var allowedQuantities = validCombinationResults.Concat(existingQuantities)
-                                        .Concat(FlowBoundaryCondition.AlwaysAllowedQuantities)
-                                        .Distinct()
-                                        .Where(q => FlowBoundaryCondition.GetProcessNameForQuantity(q) == process).ToList();
-
-            if (boundaryConditions.BoundaryConditions
-                    .Where(bc => FlowBoundaryCondition.IsMorphologyBoundary(bc))
-                    .ToList()
-                    .Count >= 1)
-            {
-                allowedQuantities.RemoveAllWhere(q => FlowBoundaryCondition.IsMorphologyFlowQuantityType(q));
-            }
-
-            return allowedQuantities;
-        }
-
         public override IEnumerable<string> GetAllowedVariablesFor(string category, BoundaryConditionSet boundaryConditions)
         {
             return
                 GetAllowedQuantitiesFor(category, boundaryConditions).Intersect(SupportedFlowQuantities)
-                    .SelectMany(GetVariableNamesForQuantity);
-        }
-
-        private IEnumerable<string> GetVariableNamesForQuantity(FlowBoundaryQuantityType type)
-        {
-            if (type == FlowBoundaryQuantityType.Tracer)
-            {
-                foreach (string tracerDefinition in model.TracerDefinitions)
-                {
-                    yield return tracerDefinition;
-                }
-            }
-            else if (type == FlowBoundaryQuantityType.SedimentConcentration)
-            {
-                foreach (var fraction in model.SedimentFractions.Where(sf => sf.CurrentSedimentType.Key != "bedload"))
-                {
-                    yield return fraction.Name;
-                }
-            }
-            else
-            {
-                yield return FlowBoundaryCondition.GetVariableNameForQuantity(type);
-            }
+                                                                     .SelectMany(GetVariableNamesForQuantity);
         }
 
         public override string GetVariableDescription(string variable, string category = null)
         {
             FlowBoundaryQuantityType flowBoundaryQuantityType;
 
-            if (category != FlowBoundaryQuantityType.Tracer.GetDescription() && // Do not try to match Tracers to enum descriptions
+            if (category != FlowBoundaryQuantityType.Tracer.GetDescription() &&                // Do not try to match Tracers to enum descriptions
                 category != FlowBoundaryQuantityType.SedimentConcentration.GetDescription() && // Do not try to match Fraction names to enum descriptions
                 Enum.TryParse(variable, out flowBoundaryQuantityType))
             {
@@ -301,9 +169,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
 
             if (Enum.TryParse(variable, out flowBoundaryQuantityType))
             {
-                if(!flowBoundaryQuantityType.Equals(FlowBoundaryQuantityType.MorphologyBedLoadTransport) 
+                if (!flowBoundaryQuantityType.Equals(FlowBoundaryQuantityType.MorphologyBedLoadTransport)
                     || flowBoundaryQuantityType.Equals(FlowBoundaryQuantityType.MorphologyBedLoadTransport) && model.SedimentFractions.Count > 0)
+                {
                     return FlowBoundaryCondition.GetSupportedDataTypesForQuantity(flowBoundaryQuantityType);
+                }
                 else
                 {
                     if (flowBoundaryQuantityType.Equals(FlowBoundaryQuantityType.MorphologyBedLoadTransport) &&
@@ -322,6 +192,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             {
                 return FlowBoundaryCondition.GetSupportedDataTypesForQuantity(FlowBoundaryQuantityType.SedimentConcentration);
             }
+
             return Enumerable.Empty<BoundaryConditionDataType>();
         }
 
@@ -340,15 +211,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
                 }
                 else
                 {
-                    var firstTransportConstituent =
+                    FlowBoundaryCondition firstTransportConstituent =
                         boundaryConditionSet.BoundaryConditions.OfType<FlowBoundaryCondition>()
-                            .FirstOrDefault(
-                                bc => FlowBoundaryCondition.AlwaysAllowedQuantities.Contains(bc.FlowQuantity));
-
+                                            .FirstOrDefault(
+                                                bc => FlowBoundaryCondition.AlwaysAllowedQuantities.Contains(bc.FlowQuantity));
 
                     if (firstTransportConstituent != null)
                     {
-                        var index = boundaryConditionSet.BoundaryConditions.IndexOf(firstTransportConstituent);
+                        int index = boundaryConditionSet.BoundaryConditions.IndexOf(firstTransportConstituent);
                         boundaryConditionSet.BoundaryConditions.Insert(index, boundaryCondition);
                     }
                     else
@@ -363,6 +233,158 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
         {
             Model = null;
             base.Dispose();
+        }
+
+        private void OnModelCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            // return if there is no editor.
+            if (Editor == null || model == null)
+            {
+                return;
+            }
+
+            if (Equals(sender, model.TracerDefinitions)
+                || Equals(sender, model.SedimentFractions))
+            {
+                Editor.RefreshQuantitiesComboBox();
+            }
+        }
+
+        private void OnModelPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            // return if there is no editor.
+            if (Editor == null)
+            {
+                return;
+            }
+
+            if (e.PropertyName == nameof(Model.UseMorSed) ||
+                e.PropertyName == nameof(Model.UseSalinity) ||
+                e.PropertyName == nameof(Model.HeatFluxModelType))
+            {
+                Editor.RefreshAvailableCategories();
+            }
+            else if (e.PropertyName == nameof(Model.UseDepthLayers))
+            {
+                Editor.ModelDepthLayerDefinition = Model.DepthLayerDefinition;
+                Editor.DepthLayerControlVisible = Model.UseDepthLayers;
+                Editor.UpdateGeometryPanel();
+            }
+            else if (e.PropertyName == nameof(Model.DepthLayerDefinition))
+            {
+                Editor.ModelDepthLayerDefinition = Model.DepthLayerDefinition;
+                Editor.UpdateGeometryPanel();
+            }
+        }
+
+        private void OnLocationPropertiesClick(object sender, EventArgs eventArgs)
+        {
+            var dialog = new SupportPointPropertiesForm(Editor.BoundaryConditionSet, Editor.SelectedSupportPointIndex,
+                                                        Model == null ? null : Model.CoordinateSystem);
+
+            if (dialog.ShowDialog(Editor) == DialogResult.OK)
+            {
+                Editor.UpdateSupportPointLabel(Editor.SelectedSupportPointIndex);
+            }
+        }
+
+        private bool IsActiveProcess(string process)
+        {
+            // Filter out Sediment, SedimentConcentration, Salinity and temperature if not active:
+            if (process == FlowBoundaryCondition.GetProcessNameForQuantity(FlowBoundaryQuantityType.Salinity))
+            {
+                return Model != null && Model.UseSalinity;
+            }
+
+            if (process == FlowBoundaryCondition.GetProcessNameForQuantity(FlowBoundaryQuantityType.Temperature))
+            {
+                return Model != null && Model.UseTemperature;
+            }
+
+            if (process == FlowBoundaryCondition.GetProcessNameForQuantity(FlowBoundaryQuantityType.SedimentConcentration)
+                || process == FlowBoundaryCondition.GetProcessNameForQuantity(FlowBoundaryQuantityType.MorphologyBedLevelPrescribed)
+                || process == FlowBoundaryCondition.GetProcessNameForQuantity(FlowBoundaryQuantityType.MorphologyBedLevelChangePrescribed)
+                || process == FlowBoundaryCondition.GetProcessNameForQuantity(FlowBoundaryQuantityType.MorphologyBedLoadTransport)
+                || process == FlowBoundaryCondition.GetProcessNameForQuantity(FlowBoundaryQuantityType.MorphologyNoBedLevelConstraint)
+                || process == FlowBoundaryCondition.GetProcessNameForQuantity(FlowBoundaryQuantityType.MorphologyBedLevelFixed))
+            {
+                return Model != null && Model.UseMorSed;
+            }
+
+            return true;
+        }
+
+        private IEnumerable<FlowBoundaryQuantityType> GetQuantitiesForProcess(string process)
+        {
+            if (!IsActiveProcess(process))
+            {
+                yield break;
+            }
+
+            foreach (
+                FlowBoundaryQuantityType quantity in
+                SupportedFlowQuantities.Where(
+                    quantity => FlowBoundaryCondition.GetProcessNameForQuantity(quantity) == process))
+            {
+                yield return quantity;
+            }
+        }
+
+        private static IEnumerable<FlowBoundaryQuantityType> GetAllowedQuantitiesFor(string process,
+                                                                                     BoundaryConditionSet boundaryConditions)
+        {
+            if (boundaryConditions == null)
+            {
+                return Enumerable.Empty<FlowBoundaryQuantityType>();
+            }
+
+            List<FlowBoundaryQuantityType> existingQuantities =
+                boundaryConditions.BoundaryConditions.OfType<FlowBoundaryCondition>()
+                                  .Select(fbc => fbc.FlowQuantity).Distinct().ToList();
+
+            int count = existingQuantities.Except(FlowBoundaryCondition.AlwaysAllowedQuantities).Count() + 1;
+
+            IEnumerable<FlowBoundaryQuantityType> validCombinationResults =
+                FlowBoundaryCondition.ValidBoundaryConditionCombinations.Where(
+                                         l => l.Count == count && l.Except(existingQuantities).Count() == 1)
+                                     .SelectMany(l => l).Distinct();
+
+            List<FlowBoundaryQuantityType> allowedQuantities = validCombinationResults.Concat(existingQuantities)
+                                                                                      .Concat(FlowBoundaryCondition.AlwaysAllowedQuantities)
+                                                                                      .Distinct()
+                                                                                      .Where(q => FlowBoundaryCondition.GetProcessNameForQuantity(q) == process).ToList();
+
+            if (boundaryConditions.BoundaryConditions
+                                  .Where(bc => FlowBoundaryCondition.IsMorphologyBoundary(bc))
+                                  .ToList()
+                                  .Count >= 1)
+            {
+                allowedQuantities.RemoveAllWhere(q => FlowBoundaryCondition.IsMorphologyFlowQuantityType(q));
+            }
+
+            return allowedQuantities;
+        }
+
+        private IEnumerable<string> GetVariableNamesForQuantity(FlowBoundaryQuantityType type)
+        {
+            if (type == FlowBoundaryQuantityType.Tracer)
+            {
+                foreach (string tracerDefinition in model.TracerDefinitions)
+                {
+                    yield return tracerDefinition;
+                }
+            }
+            else if (type == FlowBoundaryQuantityType.SedimentConcentration)
+            {
+                foreach (ISedimentFraction fraction in model.SedimentFractions.Where(sf => sf.CurrentSedimentType.Key != "bedload"))
+                {
+                    yield return fraction.Name;
+                }
+            }
+            else
+            {
+                yield return FlowBoundaryCondition.GetVariableNameForQuantity(type);
+            }
         }
     }
 }

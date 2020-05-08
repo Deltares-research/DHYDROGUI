@@ -45,14 +45,59 @@ namespace DeltaShell.Plugins.FMSuite.Wave
     public class WaveModel : TimeDependentModelBase, IDisposable, IGridOperationApi, IWaveModel, IFileBased,
                              IHydroModel, IDimrModel
     {
+        // Also add model specific dataitems to the exclude list in <see cref="BuildModel"/>
+        public const string WavmStoreDataItemTag = "WavmStoreDataItemTag";
+        public const string SwanLogDataItemTag = "SwanLogDataItemTag";
         private static readonly ILog Log = LogManager.GetLogger(typeof(WaveModel));
+
+        private static readonly string GridPropertyName = nameof(WaveDomainData.Grid);
+
+        private readonly MdwFile mdwFile = new MdwFile();
+
+        private readonly BoundaryContainerSyncService boundaryContainerSyncService;
+
+        private readonly string tempWorkingDirectory;
+        private readonly DimrRunner runner;
         private ICoordinateSystem coordinateSystem;
         private string progressText;
+        private IWaveModelApi waveApi;
 
-        /// <summary>
-        /// Showing the progress of a run.
-        /// </summary>
-        public override string ProgressText => string.IsNullOrEmpty(progressText) ? base.ProgressText : progressText;
+        private IWaveDomainData outerDomain;
+        private string previousGridName;
+
+        private IGridOperationApi gridOperationApi;
+        private double previousProgress = 0;
+
+        public WaveModel() : this(BuildEmptyModel) {}
+
+        public WaveModel(string mdwPath) : this(model => BuildModelFromMdw(model, mdwPath)) {}
+
+        private WaveModel(Action<WaveModel> creationCode) : base("Waves")
+        {
+            runner = new DimrRunner(this);
+            BuildModel(creationCode, false);
+
+            ShowModelRunConsole = false;
+            ValidateBeforeRun = true;
+
+            WaveDomainHelper.GetAllDomains(outerDomain).ForEach(SyncWithModelDefaults);
+            gridOperationApi = new WaveGridOperationApi(outerDomain.Grid);
+
+            ((INotifyPropertyChanged) this).PropertyChanged += (s, e) => MarkDirty();
+            ((INotifyCollectionChanged) this).CollectionChanged += (s, e) => MarkDirty();
+
+            dataItems.Add(new DataItem(new TextDocument(true) {Name = "Swan run log"}, DataItemRole.Output,
+                                       SwanLogDataItemTag));
+
+            tempWorkingDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+
+            InitializeCouplingTime();
+
+            boundaryContainerSyncService = new BoundaryContainerSyncService(this);
+#pragma warning disable 618
+            BoundariesFromBoundaryContainer = BoundaryContainer.Boundaries;
+#pragma warning restore 618
+        }
 
         /// <summary>
         /// Gets a value indicating whether this wave model is online coupled to a fm model.
@@ -167,26 +212,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             }
         }
 
-        public IBoundaryContainer BoundaryContainer
-        {
-            get => ModelDefinition.BoundaryContainer;
-        }
-
-        public IEventedList<Feature2DPoint> ObservationPoints
-        {
-            get => ModelDefinition.ObservationPoints;
-        }
-
-        public IEventedList<Feature2D> ObservationCrossSections
-        {
-            get => ModelDefinition.ObservationCrossSections;
-        }
-
-        public IEventedList<WaveObstacle> Obstacles
-        {
-            get => ModelDefinition.Obstacles;
-        }
-
         public WaveInputFieldData TimePointData
         {
             get => ModelDefinition.TimePointData;
@@ -198,7 +223,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         /// </summary>
         [Obsolete("Use BoundaryContainer.Boundaries")]
         public IEventedList<IWaveBoundary> BoundariesFromBoundaryContainer { get; set; }
-
 
         public WaveModelDefinition ModelDefinition
         {
@@ -219,13 +243,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
                 }
             }
         }
-
-        private readonly MdwFile mdwFile = new MdwFile();
-        private IWaveModelApi waveApi;
-
-        private readonly BoundaryContainerSyncService boundaryContainerSyncService;
-
-        private IWaveDomainData outerDomain;
 
         public IWaveDomainData OuterDomain
         {
@@ -251,6 +268,452 @@ namespace DeltaShell.Plugins.FMSuite.Wave
                     gridOperationApi = new WaveGridOperationApi(outerDomain.Grid);
                 }
             }
+        }
+
+        public IEnumerable<WavmFileFunctionStore> WavmFunctionStores
+        {
+            get
+            {
+                return
+                    WaveDomainHelper.GetAllDomains(outerDomain).Select(
+                                        domain => GetDataItemByTag(WavmStoreDataItemTag + domain.Name))
+                                    .Where(di => di != null)
+                                    .Select(di => di.Value as WavmFileFunctionStore);
+            }
+        }
+
+        public MdwFile MdwFile => mdwFile;
+
+        public string WorkingDirectory => ExplicitWorkingDirectory ?? tempWorkingDirectory;
+
+        [PropertyGrid]
+        [DisplayName("Validate before run")]
+        [Category("Run mode")]
+        public bool ValidateBeforeRun { get; set; }
+
+        [PropertyGrid]
+        [DisplayName("Show model run console")]
+        [Category("Run mode")]
+        public bool ShowModelRunConsole { get; set; }
+
+        public IHydroRegion Region => null;
+
+        /// <summary>
+        /// Showing the progress of a run.
+        /// </summary>
+        public override string ProgressText => string.IsNullOrEmpty(progressText) ? base.ProgressText : progressText;
+
+        public IBoundaryContainer BoundaryContainer
+        {
+            get => ModelDefinition.BoundaryContainer;
+        }
+
+        public IEventedList<Feature2DPoint> ObservationPoints
+        {
+            get => ModelDefinition.ObservationPoints;
+        }
+
+        public IEventedList<Feature2D> ObservationCrossSections
+        {
+            get => ModelDefinition.ObservationCrossSections;
+        }
+
+        public IEventedList<WaveObstacle> Obstacles
+        {
+            get => ModelDefinition.Obstacles;
+        }
+
+        public ICoordinateSystem CoordinateSystem
+        {
+            get => coordinateSystem;
+            set
+            {
+                coordinateSystem = value;
+                AfterCoordinateSystemSet();
+            }
+        }
+
+        public override DateTime StartTime
+        {
+            get => startTime;
+            set
+            {
+                startTime = value;
+                // This base model setting is made to make the base logic right
+                base.StartTime = value;
+            }
+        }
+
+        public override DateTime StopTime
+        {
+            get => stopTime;
+            set
+            {
+                stopTime = value;
+                // This base model setting is made to make the base logic right
+                base.StopTime = value;
+            }
+        }
+
+        public override TimeSpan TimeStep
+        {
+            get => timeStep;
+            set
+            {
+                timeStep = value;
+                // This base model setting is made to make the base logic right
+                base.TimeStep = value;
+            }
+        }
+
+        public override IBasicModelInterface BMIEngine => runner.Api;
+
+        public void AddSubDomain(IWaveDomainData domain, IWaveDomainData subDomain)
+        {
+            domain.SubDomains.Add(subDomain);
+            subDomain.SuperDomain = domain;
+            AddDataItemsForDomain(subDomain);
+            AfterCoordinateSystemSet();
+        }
+
+        public void DeleteSubDomain(IWaveDomainData domain, WaveDomainData subDomain)
+        {
+            domain.SubDomains.Remove(subDomain);
+            RemoveDataItemsForDomain(subDomain);
+        }
+
+        public string ImportIntoModelDirectory(string filePath)
+        {
+            return WaveModelFileHelper.ImportIntoModelDirectory(Path.GetDirectoryName(MdwFilePath), filePath);
+        }
+
+        public void SyncWithModelDefaults(IWaveDomainData domain)
+        {
+            // only when set to default, we shouldn't overwrite domain-parameters
+            SpectralDomainData spectral = domain.SpectralDomainData;
+            if (spectral.UseDefaultDirectionalSpace)
+            {
+                spectral.DirectionalSpaceType = ModelDefinition.DefaultDirectionalSpaceType;
+                spectral.NDir = ModelDefinition.DefaultNumberOfDirections;
+                spectral.StartDir = ModelDefinition.DefaultStartDirection;
+                spectral.EndDir = ModelDefinition.DefaultEndDirection;
+            }
+
+            if (spectral.UseDefaultFrequencySpace)
+            {
+                spectral.NFreq = ModelDefinition.DefaultNumberOfFrequencies;
+                spectral.FreqMin = ModelDefinition.DefaultStartFrequency;
+                spectral.FreqMax = ModelDefinition.DefaultEndFrequency;
+            }
+
+            HydroFromFlowSettings hydro = domain.HydroFromFlowData;
+            if (hydro.UseDefaultHydroFromFlowSettings)
+            {
+                hydro.BedLevelUsage = ModelDefinition.DefaultBedLevelUsage;
+                hydro.WaterLevelUsage = ModelDefinition.DefaultWaterLevelUsage;
+                hydro.VelocityUsage = ModelDefinition.DefaultVelocityUsage;
+                hydro.VelocityUsageType = ModelDefinition.DefaultVelocityUsageType;
+                hydro.WindUsage = ModelDefinition.DefaultWindUsage;
+            }
+        }
+
+        /// <summary>
+        /// Load the grid specified in <paramref name="domain"/> from the <paramref name="workingDirectory"/>.
+        /// </summary>
+        /// <param name="workingDirectory"> The working directory. </param>
+        /// <param name="domain"> The domain. </param>
+        /// <remarks>
+        /// If no file exists, a default grid will be created.
+        /// </remarks>
+        public static void LoadGrid(string workingDirectory, IWaveDomainData domain)
+        {
+            string grdFilePath = Path.Combine(workingDirectory, domain.GridFileName);
+
+            CurvilinearGrid grid = File.Exists(grdFilePath)
+                                       ? Delft3DGridFileReader.Read(grdFilePath)
+                                       : CurvilinearGrid.CreateDefault();
+            grid.Name = $"Grid ({Path.GetFileNameWithoutExtension(grdFilePath)})";
+            grid.CoordinateSystem = grid.Attributes[CurvilinearGrid.CoordinateSystemKey] == "Spherical"
+                                        ? new OgrCoordinateSystemFactory().CreateFromEPSG(4326)
+                                        : null;
+            domain.Grid = grid;
+        }
+
+        /// <summary>
+        /// Load the bathymetry of the specified <paramref name="domain"/> and
+        /// update the <paramref name="model"/>.
+        /// </summary>
+        /// <param name="model"> The model which will be updated. </param>
+        /// <param name="directory"> The working directory in which the Bathymetry of the <paramref name="domain"/> resides. </param>
+        /// <param name="domain"> The domain. </param>
+        /// <remarks>
+        /// If no file of domain.BedLevelFileName exists in the <paramref name="directory"/> then
+        /// an error is logged, and the an empty bathymetry will be loaded on the <paramref name="domain"/>.
+        /// </remarks>
+        public static void LoadBathymetry(WaveModel model, string directory, IWaveDomainData domain)
+        {
+            CurvilinearGrid grid = domain.Grid;
+            var bathymetry = new CurvilinearCoverage(grid.Size1, grid.Size2, grid.X.Values, grid.Y.Values) {Name = $"Bathymetry ({Path.GetFileNameWithoutExtension(domain.BedLevelFileName)})"};
+            bathymetry.Components[0].NoDataValue = -999.0;
+            bathymetry.Components[0].DefaultValue = bathymetry.Components[0].NoDataValue;
+
+            string depthFilePath = Path.Combine(directory, domain.BedLevelFileName);
+            if (File.Exists(depthFilePath) && !grid.IsEmpty)
+            {
+                List<double> bathymetryValues =
+                    Delft3DDepthFileReader.Read(depthFilePath, grid.Size1, grid.Size2).ToList();
+
+                if (bathymetryValues.Count != grid.Size2 * grid.Size1)
+                {
+                    Log.ErrorFormat(
+                        "Failed to load bathymetry; data in file does not match the size of the target grid: {0}x{1}",
+                        grid.Size1, grid.Size2);
+                    return;
+                }
+
+                bathymetry.SetValues(bathymetryValues);
+            }
+
+            IDataItem di = model.DataItems.FirstOrDefault(d => d.Name == domain.Bathymetry.Name);
+
+            domain.Bathymetry = bathymetry;
+            if (di != null)
+            {
+                di.Value = domain.Bathymetry;
+                if (di.ValueConverter is SpatialOperationSetValueConverter)
+                {
+                    ((SpatialOperationSetValueConverter) di.ValueConverter).OriginalValue = domain.Bathymetry.Clone();
+                }
+            }
+        }
+
+        public static bool IsValidCoordinateSystem(ICoordinateSystem system)
+        {
+            return !system.IsGeographic || system.Name == "WGS 84";
+        }
+
+        // all saving should go through here, but beware, NHibernate will disable
+        // event bubbling when saving...
+        public void ModelSaveTo(string targetMdwFilePath, bool switchTo)
+        {
+            string targetDir = Path.GetDirectoryName(targetMdwFilePath);
+            if (!Directory.Exists(targetDir))
+            {
+                Directory.CreateDirectory(targetDir);
+            }
+
+            mdwFile.SaveTo(targetMdwFilePath, ModelDefinition, switchTo);
+
+            // write spatial data:
+            SaveBathymetries(WaveDomainHelper.GetAllDomains(OuterDomain), targetDir);
+
+            SaveOutput(targetDir, switchTo);
+        }
+
+        public void ReloadAllGrids()
+        {
+            BeginEdit(new DefaultEditAction("Reload all grids"));
+            try
+            {
+                WaveDomainHelper.GetAllDomains(OuterDomain).ForEach(LoadWaveDomain);
+            }
+            finally
+            {
+                EndEdit();
+            }
+        }
+
+        public override IProjectItem DeepClone()
+        {
+            string tempDir = FileUtils.CreateTempDirectory();
+            string fileName = Path.GetFileName(MdwFilePath);
+            string tempFilePath = Path.Combine(tempDir, fileName);
+            ModelSaveTo(tempFilePath, false);
+
+            return new WaveModel(tempFilePath);
+        }
+
+        public virtual ValidationReport Validate()
+        {
+            return new WaveModelValidator().Validate(this);
+        }
+
+        public void Dispose()
+        {
+            if (waveApi != null)
+            {
+                waveApi.Dispose();
+            }
+
+            RestoreEnvironment();
+        }
+
+        public IGeometry GetGridSnappedGeometry(string featureType, IGeometry geometry)
+        {
+            return gridOperationApi != null ? gridOperationApi.GetGridSnappedGeometry(featureType, geometry) : geometry;
+        }
+
+        public bool SnapsToGrid(IGeometry geometry)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IEnumerable<IGeometry> GetGridSnappedGeometry(string featureType, ICollection<IGeometry> geometries)
+        {
+            throw new NotImplementedException();
+        }
+
+        public int[] GetLinkedCells()
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool CanSetCoordinateSystem(ICoordinateSystem potentialCoordinateSystem)
+        {
+            return WaveModelCoordinateConversion.IsSaneCoordinateSystemForModel(this, potentialCoordinateSystem);
+        }
+
+        public void TransformCoordinates(ICoordinateTransformation transformation)
+        {
+            BeginEdit(new DefaultEditAction("Converting model coordinates"));
+
+            WaveModelCoordinateConversion.Transform(this, transformation);
+            CoordinateSystem = (ICoordinateSystem) transformation.TargetCS;
+
+            EndEdit();
+
+            // grid(s) transformed, sync data to disk:
+            string modelDir = Path.GetDirectoryName(mdwFile.MdwFilePath);
+            foreach (IWaveDomainData domain in WaveDomainHelper.GetAllDomains(OuterDomain))
+            {
+                string targetGridFileName = Path.Combine(modelDir, domain.GridFileName);
+                Delft3DGridFileWriter.Write(domain.Grid, targetGridFileName);
+            }
+        }
+
+        public override IEnumerable<object> GetDirectChildren()
+        {
+            foreach (object item in base.GetDirectChildren())
+            {
+                yield return item;
+            }
+
+            yield return TimePointData;
+
+            foreach (IWaveDomainData domain in WaveDomainHelper.GetAllDomains(ModelDefinition.OuterDomain))
+            {
+                yield return domain.Grid;
+                yield return domain.Bathymetry;
+            }
+
+            foreach (WavmFileFunctionStore wavmFileFunctionStore in WavmFunctionStores)
+            {
+                if (wavmFileFunctionStore != null && !string.IsNullOrEmpty(wavmFileFunctionStore.Path))
+                {
+                    yield return wavmFileFunctionStore;
+                }
+            }
+
+            foreach (IWaveBoundary boundary in BoundaryContainer.Boundaries)
+            {
+                yield return boundary;
+            }
+        }
+
+        protected override void OnInitialize()
+        {
+            previousProgress = 0;
+
+            ReportProgressText("Initializing");
+
+            DisconnectOutput();
+
+            if (DimrExportDirectoryPath != null)
+            {
+                FileUtils.CreateDirectoryIfNotExists(DimrExportDirectoryPath, true);
+            }
+
+            runner.OnInitialize();
+
+            ReportProgressText();
+        }
+
+        protected override void OnExecute()
+        {
+            runner.OnExecute();
+        }
+
+        protected override void OnFinish()
+        {
+            runner.OnFinish();
+        }
+
+        protected override void OnCleanup()
+        {
+            base.OnCleanup();
+            runner.OnCleanup();
+
+            ReportProgressText();
+        }
+
+        protected override void OnProgressChanged()
+        {
+            // Only update gui for every 1 percent progress (performance)
+            if (ProgressPercentage - previousProgress < 0.01)
+            {
+                return;
+            }
+
+            previousProgress = ProgressPercentage;
+            runner.OnProgressChanged();
+            base.OnProgressChanged();
+        }
+
+        protected override void OnCancel()
+        {
+            if (waveApi == null)
+            {
+                return; // we never got past validation..
+            }
+
+            waveApi.Dispose();
+            waveApi = null;
+
+            base.OnCancel();
+        }
+
+        protected virtual void ReconnectWavmFile(string outputPath)
+        {
+            ReportProgressText("Reading output (WAVM) file");
+            List<IWaveDomainData> domains = WaveDomainHelper.GetAllDomains(OuterDomain).ToList();
+            if (domains.Count > 1)
+            {
+                for (var i = 0; i < domains.Count; ++i)
+                {
+                    string wavmFile = Path.Combine(outputPath, "wavm-" + Name + "-" + domains[i].Name + ".nc");
+                    ConnectWavmFile(wavmFile, i);
+                }
+            }
+            else
+            {
+                string wavmFile = Path.Combine(outputPath, "wavm-" + Name + ".nc");
+                ConnectWavmFile(wavmFile, 0);
+            }
+        }
+
+        protected override void OnClearOutput()
+        {
+            BeginEdit(new DefaultEditAction("Clearing all wave output"));
+            WavmFunctionStores.ForEach(fs => fs.Close());
+            GetDataItemValueByTag<TextDocument>(SwanLogDataItemTag).Content = string.Empty;
+            EndEdit();
+        }
+
+        internal void SyncModelTimesWithBase()
+        {
+            base.StartTime = StartTime;
+            base.StopTime = StopTime;
+            base.TimeStep = TimeStep;
         }
 
         [EditAction]
@@ -288,9 +751,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
                 }
             }
         }
-
-        private static readonly string GridPropertyName = nameof(WaveDomainData.Grid);
-        private string previousGridName;
 
         private void OnOuterDomainPropertyChanging(object sender, PropertyChangingEventArgs e)
         {
@@ -344,7 +804,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         }
 
         /// <summary>
-        /// if current Coordinate System is not set always take <paramref name="potentialCoordinateSystem" />.
+        /// if current Coordinate System is not set always take <paramref name="potentialCoordinateSystem"/>.
         /// if this model has a CoordinateSystem but the new grid doesn't, set the grids coordinate system to the model coordinate
         /// system.
         /// if this model has a CoordinateSystem and the new grid has a coordinate system too check if they are the same. If so do
@@ -396,58 +856,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
                     new OgrCoordinateSystemFactory().CreateTransformation(CoordinateSystem,
                                                                           potentialCoordinateSystem));
             }
-        }
-
-        public IEnumerable<WavmFileFunctionStore> WavmFunctionStores
-        {
-            get
-            {
-                return
-                    WaveDomainHelper.GetAllDomains(outerDomain).Select(
-                                        domain => GetDataItemByTag(WavmStoreDataItemTag + domain.Name))
-                                    .Where(di => di != null)
-                                    .Select(di => di.Value as WavmFileFunctionStore);
-            }
-        }
-
-        private IGridOperationApi gridOperationApi;
-
-        // Also add model specific dataitems to the exclude list in <see cref="BuildModel"/>
-        public const string WavmStoreDataItemTag = "WavmStoreDataItemTag";
-        public const string SwanLogDataItemTag = "SwanLogDataItemTag";
-
-        private readonly string tempWorkingDirectory;
-
-        public WaveModel() : this(BuildEmptyModel) {}
-
-        public WaveModel(string mdwPath) : this(model => BuildModelFromMdw(model, mdwPath)) {}
-
-        private WaveModel(Action<WaveModel> creationCode) : base("Waves")
-        {
-            runner = new DimrRunner(this);
-            BuildModel(creationCode, false);
-            
-
-            ShowModelRunConsole = false;
-            ValidateBeforeRun = true;
-
-            WaveDomainHelper.GetAllDomains(outerDomain).ForEach(SyncWithModelDefaults);
-            gridOperationApi = new WaveGridOperationApi(outerDomain.Grid);
-
-            ((INotifyPropertyChanged) this).PropertyChanged += (s, e) => MarkDirty();
-            ((INotifyCollectionChanged) this).CollectionChanged += (s, e) => MarkDirty();
-
-            dataItems.Add(new DataItem(new TextDocument(true) {Name = "Swan run log"}, DataItemRole.Output,
-                                       SwanLogDataItemTag));
-
-            tempWorkingDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
-
-            InitializeCouplingTime();
-
-            boundaryContainerSyncService = new BoundaryContainerSyncService(this);
-#pragma warning disable 618
-            BoundariesFromBoundaryContainer = BoundaryContainer.Boundaries;
-#pragma warning restore 618
         }
 
         private void InitializeCouplingTime()
@@ -505,25 +913,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             model.BuildWaveDomains(allDomains, mdwDir, model);
         }
 
-        public MdwFile MdwFile => mdwFile;
-
         private static void BuildEmptyModel(WaveModel model)
         {
             model.ModelDefinition = new WaveModelDefinition {OuterDomain = new WaveDomainData("Outer")};
-        }
-
-        public void AddSubDomain(IWaveDomainData domain, IWaveDomainData subDomain)
-        {
-            domain.SubDomains.Add(subDomain);
-            subDomain.SuperDomain = domain;
-            AddDataItemsForDomain(subDomain);
-            AfterCoordinateSystemSet();
-        }
-
-        public void DeleteSubDomain(IWaveDomainData domain, WaveDomainData subDomain)
-        {
-            domain.SubDomains.Remove(subDomain);
-            RemoveDataItemsForDomain(subDomain);
         }
 
         /// <summary>
@@ -643,136 +1035,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             }
         }
 
-        public string ImportIntoModelDirectory(string filePath)
-        {
-            return WaveModelFileHelper.ImportIntoModelDirectory(Path.GetDirectoryName(MdwFilePath), filePath);
-        }
-
         private void BuildWaveDomains(IEnumerable<IWaveDomainData> allDomains, string workingDirectory, WaveModel model)
         {
             foreach (IWaveDomainData domain in allDomains)
             {
                 LoadBathymetry(model, workingDirectory, domain);
             }
-        }
-
-        public void SyncWithModelDefaults(IWaveDomainData domain)
-        {
-            // only when set to default, we shouldn't overwrite domain-parameters
-            SpectralDomainData spectral = domain.SpectralDomainData;
-            if (spectral.UseDefaultDirectionalSpace)
-            {
-                spectral.DirectionalSpaceType = ModelDefinition.DefaultDirectionalSpaceType;
-                spectral.NDir = ModelDefinition.DefaultNumberOfDirections;
-                spectral.StartDir = ModelDefinition.DefaultStartDirection;
-                spectral.EndDir = ModelDefinition.DefaultEndDirection;
-            }
-
-            if (spectral.UseDefaultFrequencySpace)
-            {
-                spectral.NFreq = ModelDefinition.DefaultNumberOfFrequencies;
-                spectral.FreqMin = ModelDefinition.DefaultStartFrequency;
-                spectral.FreqMax = ModelDefinition.DefaultEndFrequency;
-            }
-
-            HydroFromFlowSettings hydro = domain.HydroFromFlowData;
-            if (hydro.UseDefaultHydroFromFlowSettings)
-            {
-                hydro.BedLevelUsage = ModelDefinition.DefaultBedLevelUsage;
-                hydro.WaterLevelUsage = ModelDefinition.DefaultWaterLevelUsage;
-                hydro.VelocityUsage = ModelDefinition.DefaultVelocityUsage;
-                hydro.VelocityUsageType = ModelDefinition.DefaultVelocityUsageType;
-                hydro.WindUsage = ModelDefinition.DefaultWindUsage;
-            }
-        }
-
-        /// <summary>
-        /// Load the grid specified in <paramref name="domain" /> from the <paramref name="workingDirectory" />.
-        /// </summary>
-        /// <param name="workingDirectory"> The working directory. </param>
-        /// <param name="domain"> The domain. </param>
-        /// <remarks>
-        /// If no file exists, a default grid will be created.
-        /// </remarks>
-        public static void LoadGrid(string workingDirectory, IWaveDomainData domain)
-        {
-            string grdFilePath = Path.Combine(workingDirectory, domain.GridFileName);
-
-            CurvilinearGrid grid = File.Exists(grdFilePath)
-                                       ? Delft3DGridFileReader.Read(grdFilePath)
-                                       : CurvilinearGrid.CreateDefault();
-            grid.Name = $"Grid ({Path.GetFileNameWithoutExtension(grdFilePath)})";
-            grid.CoordinateSystem = grid.Attributes[CurvilinearGrid.CoordinateSystemKey] == "Spherical"
-                                        ? new OgrCoordinateSystemFactory().CreateFromEPSG(4326)
-                                        : null;
-            domain.Grid = grid;
-        }
-
-        /// <summary>
-        /// Load the bathymetry of the specified <paramref name="domain" /> and
-        /// update the <paramref name="model" />.
-        /// </summary>
-        /// <param name="model"> The model which will be updated. </param>
-        /// <param name="directory"> The working directory in which the Bathymetry of the <paramref name="domain" /> resides. </param>
-        /// <param name="domain"> The domain. </param>
-        /// <remarks>
-        /// If no file of domain.BedLevelFileName exists in the <paramref name="directory" /> then
-        /// an error is logged, and the an empty bathymetry will be loaded on the <paramref name="domain" />.
-        /// </remarks>
-        public static void LoadBathymetry(WaveModel model, string directory, IWaveDomainData domain)
-        {
-            CurvilinearGrid grid = domain.Grid;
-            var bathymetry = new CurvilinearCoverage(grid.Size1, grid.Size2, grid.X.Values, grid.Y.Values)
-            {
-                Name = $"Bathymetry ({Path.GetFileNameWithoutExtension(domain.BedLevelFileName)})"
-            };
-            bathymetry.Components[0].NoDataValue = -999.0;
-            bathymetry.Components[0].DefaultValue = bathymetry.Components[0].NoDataValue;
-
-            string depthFilePath = Path.Combine(directory, domain.BedLevelFileName);
-            if (File.Exists(depthFilePath) && !grid.IsEmpty)
-            {
-                List<double> bathymetryValues =
-                    Delft3DDepthFileReader.Read(depthFilePath, grid.Size1, grid.Size2).ToList();
-
-                if (bathymetryValues.Count != grid.Size2 * grid.Size1)
-                {
-                    Log.ErrorFormat(
-                        "Failed to load bathymetry; data in file does not match the size of the target grid: {0}x{1}",
-                        grid.Size1, grid.Size2);
-                    return;
-                }
-
-                bathymetry.SetValues(bathymetryValues);
-            }
-
-            IDataItem di = model.DataItems.FirstOrDefault(d => d.Name == domain.Bathymetry.Name);
-
-            domain.Bathymetry = bathymetry;
-            if (di != null)
-            {
-                di.Value = domain.Bathymetry;
-                if (di.ValueConverter is SpatialOperationSetValueConverter)
-                {
-                    ((SpatialOperationSetValueConverter) di.ValueConverter).OriginalValue = domain.Bathymetry.Clone();
-                }
-            }
-        }
-
-        public ICoordinateSystem CoordinateSystem
-        {
-            get => coordinateSystem;
-            set
-            {
-                coordinateSystem = value;
-                AfterCoordinateSystemSet();
-            }
-        }
-
-        public static class CoordinateSystemType
-        {
-            public const string Spherical = "Spherical";
-            public const string Cartesian = "Cartesian";
         }
 
         [EditAction]
@@ -795,52 +1063,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             });
         }
 
-        public bool CanSetCoordinateSystem(ICoordinateSystem potentialCoordinateSystem)
-        {
-            return WaveModelCoordinateConversion.IsSaneCoordinateSystemForModel(this, potentialCoordinateSystem);
-        }
-
-        public static bool IsValidCoordinateSystem(ICoordinateSystem system)
-        {
-            return !system.IsGeographic || system.Name == "WGS 84";
-        }
-
-        public void TransformCoordinates(ICoordinateTransformation transformation)
-        {
-            BeginEdit(new DefaultEditAction("Converting model coordinates"));
-
-            WaveModelCoordinateConversion.Transform(this, transformation);
-            CoordinateSystem = (ICoordinateSystem) transformation.TargetCS;
-
-            EndEdit();
-
-            // grid(s) transformed, sync data to disk:
-            string modelDir = Path.GetDirectoryName(mdwFile.MdwFilePath);
-            foreach (IWaveDomainData domain in WaveDomainHelper.GetAllDomains(OuterDomain))
-            {
-                string targetGridFileName = Path.Combine(modelDir, domain.GridFileName);
-                Delft3DGridFileWriter.Write(domain.Grid, targetGridFileName);
-            }
-        }
-
-        // all saving should go through here, but beware, NHibernate will disable
-        // event bubbling when saving...
-        public void ModelSaveTo(string targetMdwFilePath, bool switchTo)
-        {
-            string targetDir = Path.GetDirectoryName(targetMdwFilePath);
-            if (!Directory.Exists(targetDir))
-            {
-                Directory.CreateDirectory(targetDir);
-            }
-
-            mdwFile.SaveTo(targetMdwFilePath, ModelDefinition, switchTo);
-
-            // write spatial data:
-            SaveBathymetries(WaveDomainHelper.GetAllDomains(OuterDomain), targetDir);
-
-            SaveOutput(targetDir, switchTo);
-        }
-
         private void SaveOutput(string targetDirectory, bool switchTo)
         {
             foreach (WavmFileFunctionStore wavmFileFunctionStore in WavmFunctionStores)
@@ -860,6 +1082,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
                         FileUtils.DeleteIfExists(newOutputFilePath);
                         wavmFileFunctionStore.Path = string.Empty;
                     }
+
                     continue;
                 }
 
@@ -894,118 +1117,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             }
         }
 
-        public string WorkingDirectory => ExplicitWorkingDirectory ?? tempWorkingDirectory;
-
-        public override DateTime StartTime
-        {
-            get => startTime;
-            set
-            {
-                startTime = value;
-                // This base model setting is made to make the base logic right
-                base.StartTime = value;
-            }
-        }
-
-        public override DateTime StopTime
-        {
-            get => stopTime;
-            set
-            {
-                stopTime = value;
-                // This base model setting is made to make the base logic right
-                base.StopTime = value;
-            }
-        }
-
-        public override TimeSpan TimeStep
-        {
-            get => timeStep;
-            set
-            {
-                timeStep = value;
-                // This base model setting is made to make the base logic right
-                base.TimeStep = value;
-            }
-        }
-
-        [PropertyGrid]
-        [DisplayName("Validate before run")]
-        [Category("Run mode")]
-        public bool ValidateBeforeRun { get; set; }
-
-        [PropertyGrid]
-        [DisplayName("Show model run console")]
-        [Category("Run mode")]
-        public bool ShowModelRunConsole { get; set; }
-        private double previousProgress = 0;
-        private readonly DimrRunner runner;
-        public override IBasicModelInterface BMIEngine => runner.Api;
-
-        protected override void OnInitialize()
-        {
-            previousProgress = 0;
-
-            ReportProgressText("Initializing");
-            
-            DisconnectOutput();
-            
-            if (DimrExportDirectoryPath != null)
-            {
-                FileUtils.CreateDirectoryIfNotExists(DimrExportDirectoryPath, true);
-            }
-
-            runner.OnInitialize();
-
-            ReportProgressText();
-        }
-
-        public virtual ValidationReport Validate()
-        {
-            return new WaveModelValidator().Validate(this);
-        }
-
-        protected override void OnExecute()
-        {
-            runner.OnExecute();
-        }
-
-        protected override void OnFinish()
-        {
-            runner.OnFinish();
-        }
-
-        protected override void OnCleanup()
-        {
-            base.OnCleanup();
-            runner.OnCleanup();
-
-            ReportProgressText();
-        }
-
-        protected override void OnProgressChanged()
-        {
-            // Only update gui for every 1 percent progress (performance)
-            if (ProgressPercentage - previousProgress < 0.01)
-            {
-                return;
-            }
-
-            previousProgress = ProgressPercentage;
-            runner.OnProgressChanged();
-            base.OnProgressChanged();
-        }
-        
-        public void Dispose()
-        {
-            if (waveApi != null)
-            {
-                waveApi.Dispose();
-            }
-
-            RestoreEnvironment();
-        }
-
         private static void RestoreEnvironment()
         {
             string oldArch = Environment.GetEnvironmentVariable(WaveEnvironmentConstants.OldArchKey);
@@ -1016,38 +1127,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             }
 
             WaveEnvironmentHelper.DimrRun = false;
-        }
-
-        protected override void OnCancel()
-        {
-            if (waveApi == null)
-            {
-                return; // we never got past validation..
-            }
-
-            waveApi.Dispose();
-            waveApi = null;
-
-            base.OnCancel();
-        }
-
-        protected virtual void ReconnectWavmFile(string outputPath)
-        {
-            ReportProgressText("Reading output (WAVM) file");
-            List<IWaveDomainData> domains = WaveDomainHelper.GetAllDomains(OuterDomain).ToList();
-            if (domains.Count > 1)
-            {
-                for (var i = 0; i < domains.Count; ++i)
-                {
-                    string wavmFile = Path.Combine(outputPath, "wavm-" + Name + "-" + domains[i].Name + ".nc");
-                    ConnectWavmFile(wavmFile, i);
-                }
-            }
-            else
-            {
-                string wavmFile = Path.Combine(outputPath, "wavm-" + Name + ".nc");
-                ConnectWavmFile(wavmFile, 0);
-            }
         }
 
         private void ConnectWavmFile(string wavmFile, int i)
@@ -1066,27 +1145,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
                 Log.WarnFormat(
                     Resources.WaveModel_ReconnectWavmFile_Could_not_find_output_file__0__,
                     wavmFile);
-            }
-        }
-
-        protected override void OnClearOutput()
-        {
-            BeginEdit(new DefaultEditAction("Clearing all wave output"));
-            WavmFunctionStores.ForEach(fs => fs.Close());
-            GetDataItemValueByTag<TextDocument>(SwanLogDataItemTag).Content = string.Empty;
-            EndEdit();
-        }
-
-        public void ReloadAllGrids()
-        {
-            BeginEdit(new DefaultEditAction("Reload all grids"));
-            try
-            {
-                WaveDomainHelper.GetAllDomains(OuterDomain).ForEach(LoadWaveDomain);
-            }
-            finally
-            {
-                EndEdit();
             }
         }
 
@@ -1128,40 +1186,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             }
         }
 
-        public IGeometry GetGridSnappedGeometry(string featureType, IGeometry geometry)
-        {
-            return gridOperationApi != null ? gridOperationApi.GetGridSnappedGeometry(featureType, geometry) : geometry;
-        }
-
-        public bool SnapsToGrid(IGeometry geometry)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IEnumerable<IGeometry> GetGridSnappedGeometry(string featureType, ICollection<IGeometry> geometries)
-        {
-            throw new NotImplementedException();
-        }
-
-        public int[] GetLinkedCells()
-        {
-            throw new NotImplementedException();
-        }
-
-        internal void SyncModelTimesWithBase()
-        {
-            base.StartTime = StartTime;
-            base.StopTime = StopTime;
-            base.TimeStep = TimeStep;
-        }
-
         private void ReconnectSwanDiagFile(string outputPath)
         {
             ReportProgressText("Reading Swan dia file");
             string swanDiagFile = Path.Combine(outputPath,
                                                "swn-diag." + Name);
             var swanLog = GetDataItemValueByTag<TextDocument>(SwanLogDataItemTag);
-           
+
             if (File.Exists(swanDiagFile))
             {
                 try
@@ -1211,33 +1242,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             }
         }
 
-        public override IEnumerable<object> GetDirectChildren()
+        public static class CoordinateSystemType
         {
-            foreach (object item in base.GetDirectChildren())
-            {
-                yield return item;
-            }
-
-            yield return TimePointData;
-
-            foreach (IWaveDomainData domain in WaveDomainHelper.GetAllDomains(ModelDefinition.OuterDomain))
-            {
-                yield return domain.Grid;
-                yield return domain.Bathymetry;
-            }
-
-            foreach (WavmFileFunctionStore wavmFileFunctionStore in WavmFunctionStores)
-            {
-                if (wavmFileFunctionStore != null && !string.IsNullOrEmpty(wavmFileFunctionStore.Path))
-                {
-                    yield return wavmFileFunctionStore;
-                }
-            }
-
-            foreach (IWaveBoundary boundary in BoundaryContainer.Boundaries)
-            {
-                yield return boundary;
-            }
+            public const string Spherical = "Spherical";
+            public const string Cartesian = "Cartesian";
         }
 
         #region IFileBased and NHibernate
@@ -1344,18 +1352,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
         #endregion
 
-        public override IProjectItem DeepClone()
-        {
-            string tempDir = FileUtils.CreateTempDirectory();
-            string fileName = Path.GetFileName(MdwFilePath);
-            string tempFilePath = Path.Combine(tempDir, fileName);
-            ModelSaveTo(tempFilePath, false);
-
-            return new WaveModel(tempFilePath);
-        }
-
-        public IHydroRegion Region => null;
-
         #region IDimrModel
 
         public virtual string LibraryName => "wave";
@@ -1420,7 +1416,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             ReconnectWavmFile(outputPath);
             ReconnectSwanDiagFile(outputPath);
         }
-        
+
         public new virtual ActivityStatus Status
         {
             get => base.Status;

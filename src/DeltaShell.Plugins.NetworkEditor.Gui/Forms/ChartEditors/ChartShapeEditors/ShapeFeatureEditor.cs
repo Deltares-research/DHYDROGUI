@@ -11,23 +11,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapeEdit
 {
     public class ShapeFeatureEditor : IShapeFeatureEditor
     {
-        public IShapeFeature ShapeFeature { get; set; }
         protected readonly List<IPoint> points = new List<IPoint>();
-        protected IPoint CenterTracker { get; set; }
-        protected IChartCoordinateService ChartCoordinateService { get; set; }
-        public ShapeEditMode ShapeEditMode { get; set; }
 
         private IPoint currentTracker;
-        public IPoint CurrentTracker 
-        { 
-            get {return currentTracker;}
-            set
-            {
-                currentTracker = value;
-                //Debug.WriteLine(value);
-                ShapeFeature.Invalidate();
-            } 
-        }
 
         public ShapeFeatureEditor(IShapeFeature shapeFeature, IChartCoordinateService chartCoordinateService, ShapeEditMode shapeEditMode)
         {
@@ -36,12 +22,55 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapeEdit
             ShapeEditMode = shapeEditMode;
         }
 
+        public ShapeEditMode ShapeEditMode { get; set; }
+
+        public bool CanResize
+        {
+            get
+            {
+                return ShapeEditMode.ShapeResize == (ShapeEditMode & ShapeEditMode.ShapeResize);
+            }
+        }
+
+        public bool CanMove
+        {
+            get
+            {
+                return ShapeEditMode.ShapeMove == (ShapeEditMode & ShapeEditMode.ShapeMove);
+            }
+        }
+
+        public bool CanSelect
+        {
+            get
+            {
+                return ShapeEditMode.ShapeSelect == (ShapeEditMode & ShapeEditMode.ShapeSelect);
+            }
+        }
+
+        public IShapeFeature ShapeFeature { get; set; }
+
+        public IPoint CurrentTracker
+        {
+            get
+            {
+                return currentTracker;
+            }
+            set
+            {
+                currentTracker = value;
+                //Debug.WriteLine(value);
+                ShapeFeature.Invalidate();
+            }
+        }
+
         public virtual IEnumerable<IPoint> GetTrackers()
         {
-            for (int i = 0; i < points.Count; i++)
+            for (var i = 0; i < points.Count; i++)
             {
                 yield return points[i];
             }
+
             yield return CenterTracker;
         }
 
@@ -52,22 +81,22 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapeEdit
 
         public virtual IPoint GetTrackerAt(double x, double y, double xMarge, double yMarge)
         {
-            for (int i = 0; i <= points.Count - 1; i++)
+            for (var i = 0; i <= points.Count - 1; i++)
             {
                 // could be generalized with polygon geometry and contains but this is simpler
                 Coordinate coordinate = points[i].Coordinates[0];
-                if (((x >= (coordinate.X - xMarge)) && (x <= (coordinate.X + xMarge))) &&
-                    ((y >= (coordinate.Y - yMarge)) && (y <= (coordinate.Y + yMarge))))
+                if (x >= coordinate.X - xMarge && x <= coordinate.X + xMarge && y >= coordinate.Y - yMarge && y <= coordinate.Y + yMarge)
                 {
                     return points[i];
                 }
             }
+
             return ShapeFeature.Contains(x, y) ? CenterTracker : null;
         }
 
         public virtual Cursor GetCursor(IPoint trackerFeature)
         {
-            return (null == trackerFeature) ? Cursors.Default : Cursors.SizeAll;
+            return null == trackerFeature ? Cursors.Default : Cursors.SizeAll;
         }
 
         public virtual void Paint(IChart chart, ChartGraphics g)
@@ -76,6 +105,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapeEdit
             {
                 return;
             }
+
             var style = new VectorStyle
             {
                 // style is not used; refactor ChartDrawingContext
@@ -85,7 +115,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapeEdit
 
             IChartDrawingContext chartDrawingContext = new ChartDrawingContext(g, style);
 
-            for (int i = 0; i < points.Count; i++)
+            for (var i = 0; i < points.Count; i++)
             {
                 Coordinate coordinate = points[i].Coordinates[0];
                 int x = ChartCoordinateService.ToDeviceX(coordinate.X);
@@ -95,6 +125,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapeEdit
                 g.BackColor = CurrentTracker == points[i] ? Color.LightGreen : Color.DarkMagenta;
                 g.Ellipse(coordinateRect);
             }
+
             chartDrawingContext.Reset();
         }
 
@@ -103,45 +134,27 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapeEdit
             return null;
         }
 
-        public virtual void InsertCoordinate(Coordinate worldPosition, double width, double height)
-        {
-        }
+        public virtual void InsertCoordinate(Coordinate worldPosition, double width, double height) {}
 
-        public virtual void DeleteTracker(IPoint trackerFeature)
-        {
-        }
+        public virtual void DeleteTracker(IPoint trackerFeature) {}
 
         public virtual bool CanDeleteTracker(IPoint trackerFeature)
         {
             return false;
         }
 
-        public virtual void Start()
-        {
-        }
+        public virtual void Start() {}
 
-        public virtual void Stop()
-        {
-        }
+        public virtual void Stop() {}
 
-        public bool CanResize
-        {
-            get { return (ShapeEditMode.ShapeResize == (ShapeEditMode & ShapeEditMode.ShapeResize)); }
-        }
-        public bool CanMove
-        {
-            get { return (ShapeEditMode.ShapeMove == (ShapeEditMode & ShapeEditMode.ShapeMove)); }
-        }
-        public bool CanSelect
-        {
-            get { return (ShapeEditMode.ShapeSelect == (ShapeEditMode & ShapeEditMode.ShapeSelect)); }
-        }
+        protected IPoint CenterTracker { get; set; }
+        protected IChartCoordinateService ChartCoordinateService { get; set; }
 
         protected int GetTrackerIndex(IShapeFeatureEditor shapeFeatureEditor, IPoint trackerFeature)
         {
-            var v = shapeFeatureEditor.GetTrackers();
+            IEnumerable<IPoint> v = shapeFeatureEditor.GetTrackers();
             int index = -1;
-            foreach (var point in v)
+            foreach (IPoint point in v)
             {
                 index++;
                 if (point == trackerFeature)
@@ -149,14 +162,15 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapeEdit
                     return index;
                 }
             }
+
             return -1;
         }
 
         protected IPoint GetTracker(IShapeFeatureEditor shapeFeatureEditor, int index)
         {
-            var v = shapeFeatureEditor.GetTrackers();
+            IEnumerable<IPoint> v = shapeFeatureEditor.GetTrackers();
             int localIndex = -1;
-            foreach (var point in v)
+            foreach (IPoint point in v)
             {
                 localIndex++;
                 if (localIndex == index)
@@ -164,6 +178,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapeEdit
                     return point;
                 }
             }
+
             return null;
         }
     }

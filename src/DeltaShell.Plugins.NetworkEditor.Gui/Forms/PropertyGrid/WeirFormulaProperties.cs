@@ -21,7 +21,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [Browsable(false)]
         public string Name
         {
-            get { return weirFormula.Name; }
+            get
+            {
+                return weirFormula.Name;
+            }
         }
 
         [Category("General")]
@@ -29,14 +32,20 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [Description("Freeform (false) /Rectangle (true)")]
         public bool IsRectangle
         {
-            get { return weirFormula.IsRectangle; }
+            get
+            {
+                return weirFormula.IsRectangle;
+            }
         }
 
         [Category("General")]
         [DisplayName("Has Flow Direction")]
         public bool HasFlowDirection
         {
-            get { return weirFormula.HasFlowDirection; }
+            get
+            {
+                return weirFormula.HasFlowDirection;
+            }
         }
 
         public override string ToString()

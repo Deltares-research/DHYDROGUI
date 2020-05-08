@@ -19,29 +19,36 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
     /// </summary>
     public class TracerDefinitionsEditorWpfViewModel : INotifyPropertyChanged
     {
+        private static readonly string[] DefaultNames = WaterFlowFMModelDefinition.SpatialDataItemNames;
         private ObservableCollection<string> tracers;
         private ICommand removeTracerCommand;
         private ICommand addTracerCommand;
         private IEventedList<string> tracersList;
         private string canAddMessage;
 
-        private static readonly string[] DefaultNames = WaterFlowFMModelDefinition.SpatialDataItemNames;
+        /// <summary>
+        /// Property changed event handler
+        /// </summary>
+        public event PropertyChangedEventHandler PropertyChanged;
 
         public TracerDefinitionsEditorWpfViewModel()
         {
             tracers = new ObservableCollection<string>();
 
             AddTracerCommand = new RelayCommand(
-                p => Tracers.Add((string) p), 
+                p => Tracers.Add((string) p),
                 p => IsNameValid((string) p, DefaultNames, tracers));
 
             RemoveTracerCommand = new RelayCommand(p =>
             {
-                var item = (string)p;
+                var item = (string) p;
 
-                var mayRemove = MayRemove?.Invoke(item) ?? true;
-                if (!mayRemove) return;
-                
+                bool mayRemove = MayRemove?.Invoke(item) ?? true;
+                if (!mayRemove)
+                {
+                    return;
+                }
+
                 Tracers.Remove(item);
             });
         }
@@ -56,7 +63,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
         /// </summary>
         public ICommand AddTracerCommand
         {
-            get { return addTracerCommand; }
+            get
+            {
+                return addTracerCommand;
+            }
             set
             {
                 addTracerCommand = value;
@@ -69,7 +79,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
         /// </summary>
         public ICommand RemoveTracerCommand
         {
-            get { return removeTracerCommand; }
+            get
+            {
+                return removeTracerCommand;
+            }
             set
             {
                 removeTracerCommand = value;
@@ -82,7 +95,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
         /// </summary>
         public ObservableCollection<string> Tracers
         {
-            get { return tracers; }
+            get
+            {
+                return tracers;
+            }
             set
             {
                 if (tracers != null)
@@ -106,7 +122,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
         /// </summary>
         public IEventedList<string> TracersList
         {
-            get { return tracersList; }
+            get
+            {
+                return tracersList;
+            }
             set
             {
                 tracersList = value;
@@ -119,18 +138,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
         /// </summary>
         public string CanAddMessage
         {
-            get { return canAddMessage; }
+            get
+            {
+                return canAddMessage;
+            }
             set
             {
                 canAddMessage = value;
                 OnPropertyChanged();
             }
         }
-
-        /// <summary>
-        /// Property changed event handler
-        /// </summary>
-        public event PropertyChangedEventHandler PropertyChanged;
 
         private void TracersCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {

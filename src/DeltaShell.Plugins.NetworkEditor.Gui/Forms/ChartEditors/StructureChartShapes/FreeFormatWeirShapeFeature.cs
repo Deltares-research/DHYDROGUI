@@ -14,25 +14,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
     // todo use ShapeFeatureBase
     public class FreeFormatWeirShapeFeature : CompositeShapeFeature
     {
-        public PolygonShapeFeature PolygonShapeFeature { get; set; }
-        public RectangleShapeFeature WaterShape { get; set; }
-
-        public IWeir Weir { get; set; }
-        public IList<Coordinate> CrestShape { get; set; }
-        private double MinYValue { get; set; }
-
-        public VectorStyle WaterStyle
-        {
-            set
-            {
-                VectorStyle transparentStyle = (VectorStyle)value.Clone();
-                transparentStyle.Fill = Brushes.Transparent;
-                WaterShape.NormalStyle = transparentStyle;
-                WaterShape.DisabledStyle = transparentStyle;
-                WaterShape.SelectedStyle = value;
-            }
-        }
-
         public FreeFormatWeirShapeFeature(IChart chart, IWeir weir, IGeometry geometry, double minZValue, double maxZValue)
             : base(chart)
         {
@@ -42,11 +23,65 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
             MinYValue = minZValue;
             UpdateGeometry();
             WaterShape = new RectangleShapeFeature(Chart,
-                                                      weir.OffsetY + geometry.Coordinates[0].X,
-                                                      maxZValue,
-                                                      weir.OffsetY + geometry.Coordinates[geometry.Coordinates.Length - 1].X,
-                                                      minZValue);
+                                                   weir.OffsetY + geometry.Coordinates[0].X,
+                                                   maxZValue,
+                                                   weir.OffsetY + geometry.Coordinates[geometry.Coordinates.Length - 1].X,
+                                                   minZValue);
             ShapeFeatures.Add(WaterShape);
+        }
+
+        //public Chart Chart { get; set; }
+//        private Chart chart;
+//        public override Chart Chart
+//        {
+//            get { return chart; }
+//            set
+//            {
+//                if (value == null)
+//                {
+//                    // when chart is disposed by teechart al references to chart in tools are set to null
+////                    CrestShape.ValuesChanged -= CrestShape_ValuesChanged;
+//                }
+//                else
+//                {
+//                    if (chart == null)
+//                    {
+////                        CrestShape.ValuesChanged += CrestShape_ValuesChanged;
+//                    }
+//                }
+//                chart = value;
+//            }
+//        }
+
+        public override bool Selected
+        {
+            get
+            {
+                return base.Selected;
+            }
+            set
+            {
+                PolygonShapeFeature.Selected = value;
+                base.Selected = value;
+            }
+        }
+
+        public PolygonShapeFeature PolygonShapeFeature { get; set; }
+        public RectangleShapeFeature WaterShape { get; set; }
+
+        public IWeir Weir { get; set; }
+        public IList<Coordinate> CrestShape { get; set; }
+
+        public VectorStyle WaterStyle
+        {
+            set
+            {
+                var transparentStyle = (VectorStyle) value.Clone();
+                transparentStyle.Fill = Brushes.Transparent;
+                WaterShape.NormalStyle = transparentStyle;
+                WaterShape.DisabledStyle = transparentStyle;
+                WaterShape.SelectedStyle = value;
+            }
         }
 
         //public void ChangeValue(double oldValue, double newValue, double value)
@@ -86,17 +121,19 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
             {
                 return;
             }
-            var offsetY = Weir.OffsetY;
+
+            double offsetY = Weir.OffsetY;
 
             var vertices = new List<Coordinate>
-                               {
-                                   new Coordinate(offsetY + CrestShape[CrestShape.Count - 1].X, MinYValue), // right bottom
-                                   new Coordinate(offsetY + CrestShape[0].X, MinYValue) // left bottom
-                               };
-            for (int i = 0; i < CrestShape.Count; i++)
+            {
+                new Coordinate(offsetY + CrestShape[CrestShape.Count - 1].X, MinYValue), // right bottom
+                new Coordinate(offsetY + CrestShape[0].X, MinYValue)                     // left bottom
+            };
+            for (var i = 0; i < CrestShape.Count; i++)
             {
                 vertices.Add(new Coordinate(offsetY + CrestShape[i].X, CrestShape[i].Y)); // top line
             }
+
             vertices.Add(new Coordinate(offsetY + CrestShape[CrestShape.Count - 1].X, MinYValue)); // close polygon
             ILinearRing newLinearRing = GeometryFactory.CreateLinearRing(vertices.ToArray());
             IPolygon polygon = GeometryFactory.CreatePolygon(newLinearRing, null);
@@ -104,54 +141,23 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
             {
                 ShapeFeatures.Remove(PolygonShapeFeature);
             }
+
             PolygonShapeFeature = new PolygonShapeFeature(Chart, polygon);
             ShapeFeatures.Add(PolygonShapeFeature);
         }
 
         public IList<Coordinate> GetCoordinates()
         {
-            List<Coordinate> coordinates = new List<Coordinate>();
+            var coordinates = new List<Coordinate>();
 
             int count = PolygonShapeFeature.Geometry.Coordinates.Length - 3;
-            for (int i = 0; i < count; i++)
+            for (var i = 0; i < count; i++)
             {
                 coordinates.Add(new Coordinate(PolygonShapeFeature.Geometry.Coordinates[i + 2].X,
-                                                                 PolygonShapeFeature.Geometry.Coordinates[i + 2].Y));
+                                               PolygonShapeFeature.Geometry.Coordinates[i + 2].Y));
             }
+
             return coordinates;
-        }
-
-        //public Chart Chart { get; set; }
-//        private Chart chart;
-//        public override Chart Chart
-//        {
-//            get { return chart; }
-//            set
-//            {
-//                if (value == null)
-//                {
-//                    // when chart is disposed by teechart al references to chart in tools are set to null
-////                    CrestShape.ValuesChanged -= CrestShape_ValuesChanged;
-//                }
-//                else
-//                {
-//                    if (chart == null)
-//                    {
-////                        CrestShape.ValuesChanged += CrestShape_ValuesChanged;
-//                    }
-//                }
-//                chart = value;
-//            }
-//        }
-
-        public override bool Selected
-        {
-            get { return base.Selected; }
-            set
-            {
-                PolygonShapeFeature.Selected = value;
-                base.Selected = value;
-            }
         }
 
         public override IShapeFeatureEditor CreateShapeFeatureEditor(ShapeEditMode shapeEditMode)
@@ -159,5 +165,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
             return new FreeFormatWeirEditor(this, new ChartCoordinateService(PolygonShapeFeature.Chart), shapeEditMode);
         }
 
+        private double MinYValue { get; set; }
     }
 }

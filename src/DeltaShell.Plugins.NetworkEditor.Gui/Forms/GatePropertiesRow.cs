@@ -14,33 +14,29 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
     {
         protected IGate gate;
 
+        protected string OpeningWidthTimeSeriesString = "Time series";
+
+        protected string TimeSeriesString = "Time series";
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangingEventHandler PropertyChanging;
+
         public GatePropertiesRow(IGate gate)
         {
             Gate = gate;
         }
 
-        private IGate Gate
-        {
-            get { return gate; }
-            set
-            {
-                if (gate != null)
-                {
-                    ((INotifyPropertyChanged)gate).PropertyChanged -= GatePropertiesRowPropertyChanged;
-                }
-                gate = value;
-                if (gate != null)
-                {
-                    ((INotifyPropertyChanged)gate).PropertyChanged += GatePropertiesRowPropertyChanged;
-                }
-            }
-        }
-
         // gate properties
         public virtual string Name
         {
-            get { return Gate.Name; }
-            set { Gate.Name = value; }
+            get
+            {
+                return Gate.Name;
+            }
+            set
+            {
+                Gate.Name = value;
+            }
         }
 
         [DynamicReadOnly]
@@ -54,6 +50,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
                 {
                     return TimeSeriesString;
                 }
+
                 return gate.SillLevel.ToString("0.00", CultureInfo.CurrentCulture);
             }
             set
@@ -62,6 +59,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
                 {
                     throw new InvalidOperationException("Cannot set value from row when using time dependent crest width.");
                 }
+
                 gate.SillLevel = double.Parse(value, CultureInfo.CurrentCulture);
             }
         }
@@ -70,16 +68,28 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
         [PropertyOrder(3)]
         public double DoorHeight
         {
-            get { return Gate.DoorHeight; }
-            set { Gate.DoorHeight = value; }
+            get
+            {
+                return Gate.DoorHeight;
+            }
+            set
+            {
+                Gate.DoorHeight = value;
+            }
         }
 
         [DisplayName(GuiParameterNames.HorizontalOpeningDirection)]
         [PropertyOrder(4)]
         public GateOpeningDirection HorizontalOpeningDirection
         {
-            get { return Gate.HorizontalOpeningDirection; }
-            set { Gate.HorizontalOpeningDirection = value; }
+            get
+            {
+                return Gate.HorizontalOpeningDirection;
+            }
+            set
+            {
+                Gate.HorizontalOpeningDirection = value;
+            }
         }
 
         [DynamicReadOnly]
@@ -93,6 +103,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
                 {
                     return TimeSeriesString;
                 }
+
                 return gate.LowerEdgeLevel.ToString("0.00", CultureInfo.CurrentCulture);
             }
             set
@@ -101,11 +112,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
                 {
                     throw new InvalidOperationException("Cannot set value from row when using time dependent crest width.");
                 }
+
                 gate.LowerEdgeLevel = double.Parse(value, CultureInfo.CurrentCulture);
             }
         }
-
-        protected string OpeningWidthTimeSeriesString = "Time series";
 
         [DynamicReadOnly]
         [DisplayName("Opening width [m]")]
@@ -118,6 +128,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
                 {
                     return OpeningWidthTimeSeriesString;
                 }
+
                 return gate.OpeningWidth.ToString("0.00", CultureInfo.CurrentCulture);
             }
             set
@@ -126,6 +137,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
                 {
                     throw new InvalidOperationException("Cannot set value from row when using time dependent crest level.");
                 }
+
                 gate.OpeningWidth = double.Parse(value, CultureInfo.CurrentCulture);
             }
         }
@@ -135,29 +147,50 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
         [PropertyOrder(7)]
         public string SillWidth
         {
-            get { return gate.SillWidth.ToString("0.00", CultureInfo.CurrentCulture); }
-            set { gate.SillWidth = double.Parse(value, CultureInfo.CurrentCulture); }
+            get
+            {
+                return gate.SillWidth.ToString("0.00", CultureInfo.CurrentCulture);
+            }
+            set
+            {
+                gate.SillWidth = double.Parse(value, CultureInfo.CurrentCulture);
+            }
         }
 
         [DisplayName("Use sill width")]
         [PropertyOrder(8)]
         public bool UseSillWidth
         {
-            get { return gate.SillWidth > 0; }
-            set { gate.SillWidth = (value ? gate.Geometry.Length : 0.0); }
+            get
+            {
+                return gate.SillWidth > 0;
+            }
+            set
+            {
+                gate.SillWidth = value ? gate.Geometry.Length : 0.0;
+            }
         }
 
         [DisplayName("Long name")]
         public virtual string LongName
         {
-            get { return Gate.LongName; }
-            set { Gate.LongName = value; }
+            get
+            {
+                return Gate.LongName;
+            }
+            set
+            {
+                Gate.LongName = value;
+            }
         }
 
         [ReadOnly(true)]
         public virtual IBranch Branch
         {
-            get { return Gate.Branch; }
+            get
+            {
+                return Gate.Branch;
+            }
         }
 
         [ReadOnly(true)]
@@ -165,42 +198,23 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
         [DisplayFormat("0.00")]
         public virtual double Chainage
         {
-            get { return Gate.Chainage; }
+            get
+            {
+                return Gate.Chainage;
+            }
         }
-
-        protected string TimeSeriesString = "Time series";
 
         [Browsable(false)]
         public bool HasParent { get; set; }
 
-        public IFeature GetFeature()
-        {
-            return gate;
-        }
-
-        public virtual void Dispose()
-        {
-            Gate = null;
-            PropertyChanged = null;
-            PropertyChanging = null;
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-        public event PropertyChangingEventHandler PropertyChanging;
-
-
-        private void GatePropertiesRowPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            if (PropertyChanged != null)
-            {
-                PropertyChanged(this, e);
-            }
-        }
-
         [DynamicReadOnlyValidationMethod]
         public bool IsReadOnly(string propertyName)
         {
-            if (gate == null) return false;
+            if (gate == null)
+            {
+                return false;
+            }
+
             switch (propertyName)
             {
                 case "SillLevel":
@@ -213,6 +227,47 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
                     return gate.SillWidth <= 0.0;
                 default:
                     return false;
+            }
+        }
+
+        public virtual void Dispose()
+        {
+            Gate = null;
+            PropertyChanged = null;
+            PropertyChanging = null;
+        }
+
+        public IFeature GetFeature()
+        {
+            return gate;
+        }
+
+        private IGate Gate
+        {
+            get
+            {
+                return gate;
+            }
+            set
+            {
+                if (gate != null)
+                {
+                    ((INotifyPropertyChanged) gate).PropertyChanged -= GatePropertiesRowPropertyChanged;
+                }
+
+                gate = value;
+                if (gate != null)
+                {
+                    ((INotifyPropertyChanged) gate).PropertyChanged += GatePropertiesRowPropertyChanged;
+                }
+            }
+        }
+
+        private void GatePropertiesRowPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (PropertyChanged != null)
+            {
+                PropertyChanged(this, e);
             }
         }
     }

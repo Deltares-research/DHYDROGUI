@@ -12,15 +12,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions
     /// </summary>
     /// <remarks>
     /// The grid is assumed to be structured as follows.
-    ///
-    ///                    -p
-    ///   ( 0, Grid.NMax ) -- ( Grid.MMax, Grid.NMAX)
+    /// -p
+    /// ( 0, Grid.NMax ) -- ( Grid.MMax, Grid.NMAX)
     /// ^   |                          |
     /// |   |                          | |
-    ///     |                          | v 
-    ///   ( 0,         0 ) -- ( Grid.NMax, 0 )
-    ///                    d-
-    ///
+    /// |                          | v
+    /// ( 0,         0 ) -- ( Grid.NMax, 0 )
+    /// d-
     /// The coordinates are structured in a clock-wise fashion.
     /// </remarks>
     public interface IGridBoundary

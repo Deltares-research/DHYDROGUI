@@ -13,9 +13,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spatia
     /// <typeparam name="T">
     /// The type of <see cref="IForcingTypeDefinedParameters"/>.
     /// </typeparam>
-    /// <seealso cref="ISpatiallyDefinedDataComponent" />
+    /// <seealso cref="ISpatiallyDefinedDataComponent"/>
     public class UniformDataComponent<T> : ISpatiallyDefinedDataComponent where T : IForcingTypeDefinedParameters
     {
+        private T data;
+
         /// <summary>
         /// Creates a new <see cref="UniformDataComponent{T}"/>.
         /// </summary>
@@ -44,8 +46,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spatia
                 data = value;
             }
         }
-
-        private T data;
 
         public void AcceptVisitor(ISpatiallyDefinedDataComponentVisitor visitor)
         {

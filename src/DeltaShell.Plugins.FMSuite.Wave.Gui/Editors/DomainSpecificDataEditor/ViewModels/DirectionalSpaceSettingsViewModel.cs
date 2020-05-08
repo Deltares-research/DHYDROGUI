@@ -9,6 +9,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.DomainSpecificDataEditor.V
     {
         private readonly SpectralDomainData spectralDomainData;
 
+        /// <summary>
+        /// Occurs when [property changed].
+        /// </summary>
+        public event PropertyChangedEventHandler PropertyChanged;
+
         public DirectionalSpaceSettingsViewModel(SpectralDomainData spectralDomainData)
         {
             this.spectralDomainData = spectralDomainData;
@@ -96,11 +101,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.DomainSpecificDataEditor.V
                 }
             }
         }
-
-        /// <summary>
-        /// Occurs when [property changed].
-        /// </summary>
-        public event PropertyChangedEventHandler PropertyChanged;
 
         /// <summary>
         /// Called when [property changed].

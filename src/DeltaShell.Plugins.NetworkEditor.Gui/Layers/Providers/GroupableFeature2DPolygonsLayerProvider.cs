@@ -26,10 +26,15 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Layers.Providers
             {
                 if (!(geometry is IPolygon))
                 {
-                    if (geometry.Coordinates.Length < 4) return null;
+                    if (geometry.Coordinates.Length < 4)
+                    {
+                        return null;
+                    }
+
                     geometry = new Polygon(new LinearRing(geometry.Coordinates));
                 }
-                var newFeature = new GroupableFeature2DPolygon { Geometry = geometry };
+
+                var newFeature = new GroupableFeature2DPolygon {Geometry = geometry};
                 provider.Features.Add(newFeature);
 
                 return newFeature;

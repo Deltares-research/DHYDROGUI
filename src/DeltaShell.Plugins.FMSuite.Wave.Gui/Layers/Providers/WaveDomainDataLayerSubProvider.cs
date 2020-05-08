@@ -10,7 +10,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers.Providers
     /// <see cref="WaveDomainDataLayerSubProvider"/> implements the
     /// <see cref="ILayerSubProvider"/> for data of type <see cref="WaveDomainData"/>.
     /// </summary>
-    /// <seealso cref="ILayerSubProvider" />
+    /// <seealso cref="ILayerSubProvider"/>
     public class WaveDomainDataLayerSubProvider : ILayerSubProvider
     {
         private readonly IWaveLayerFactory factory;

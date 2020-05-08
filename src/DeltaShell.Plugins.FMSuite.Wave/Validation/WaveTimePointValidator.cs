@@ -25,7 +25,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
 
             ValidateReferenceTime();
             ValidateTimePoints();
-            
 
             return new ValidationReport("Waves Model Time Points", issues);
         }

@@ -7,7 +7,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Mediators
     /// <see cref="DataComponentChangeMediator"/> implements the interface with which
     /// can be communicated that the data associated with a support point has changed.
     /// </summary>
-    /// <seealso cref="IAnnounceSupportPointDataChanged" />
+    /// <seealso cref="IAnnounceSupportPointDataChanged"/>
     public class DataComponentChangeMediator : IAnnounceSupportPointDataChanged
     {
         private readonly IRefreshDataComponentViewModel selectedSupportPointDependentViewModel;
@@ -25,16 +25,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Mediators
             this.selectedSupportPointDependentViewModel = selectedSupportPointDependentViewModel;
         }
 
+        /// <summary>
+        /// Gets or sets the <see cref="IRefreshGeometryView"/>.
+        /// </summary>
+        public IRefreshGeometryView RefreshGeometryView { get; set; }
+
         public void AnnounceSelectedSupportPointDataChanged(SupportPoint supportPoint)
         {
             Ensure.NotNull(supportPoint, nameof(supportPoint));
             selectedSupportPointDependentViewModel.UpdateSelectedActiveParameters(supportPoint);
         }
-
-        /// <summary>
-        /// Gets or sets the <see cref="IRefreshGeometryView"/>.
-        /// </summary>
-        public IRefreshGeometryView RefreshGeometryView { get; set; }
 
         public void AnnounceSupportPointsChanged()
         {

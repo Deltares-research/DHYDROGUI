@@ -22,6 +22,88 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
             OverwriteExistingData = true;
         }
 
+        public override IEnumerable<BoundaryConditionDataType> ForcingTypes
+        {
+            get
+            {
+                yield return BoundaryConditionDataType.AstroComponents;
+                yield return BoundaryConditionDataType.AstroCorrection;
+                yield return BoundaryConditionDataType.Harmonics;
+                yield return BoundaryConditionDataType.HarmonicCorrection;
+                yield return BoundaryConditionDataType.TimeSeries;
+                yield return BoundaryConditionDataType.Qh;
+            }
+        }
+
+        public IList<BoundaryConditionDataType> ExcludedDataTypes { private get; set; }
+
+        public IList<FlowBoundaryQuantityType> ExcludedQuantities { private get; set; }
+
+        public bool DeleteDataBeforeImport { private get; set; }
+
+        public bool OverwriteExistingData { private get; set; }
+
+        public override void Import(string fileName, FlowBoundaryCondition boundaryCondition)
+        {
+            ImportItem(fileName, boundaryCondition);
+        }
+
+        public override bool CanImportOnBoundaryCondition(FlowBoundaryCondition boundaryCondition)
+        {
+            return
+                FlowBoundaryConditionHelper
+                    .IsBoundaryCondition(boundaryCondition) && ForcingTypes.Contains(boundaryCondition.DataType);
+        }
+
+        private void ImportTo(string filePath, IList<BoundaryConditionSet> boundaryConditionSets, bool createNew)
+        {
+            if (ProgressChanged != null)
+            {
+                ProgressChanged("parsing file...", 0, 2);
+            }
+
+            var fileReader = new BcFile();
+            List<BcBlockData> dataBlocks = fileReader.Read(filePath).ToList();
+            var builder = new BcFileFlowBoundaryDataBuilder
+            {
+                ExcludedDataTypes = ExcludedDataTypes,
+                ExcludedQuantities = ExcludedQuantities,
+                OverwriteExistingData = OverwriteExistingData,
+                CanCreateNewBoundaryCondition = createNew
+            };
+            int blockCount = dataBlocks.Count;
+            var i = 0;
+            foreach (IBoundaryCondition boundaryCondition in boundaryConditionSets.SelectMany(
+                bcs => bcs.BoundaryConditions))
+            {
+                boundaryCondition.BeginEdit(new DefaultEditAction("Begin import bc data..."));
+            }
+
+            foreach (BcBlockData bcBlockData in dataBlocks)
+            {
+                if (ShouldCancel)
+                {
+                    return;
+                }
+
+                if (ProgressChanged != null)
+                {
+                    ProgressChanged("importing data block...", i++, blockCount);
+                }
+
+                builder.InsertBoundaryData(boundaryConditionSets, bcBlockData);
+            }
+
+            foreach (IBoundaryCondition boundaryCondition in boundaryConditionSets.SelectMany(
+                bcs => bcs.BoundaryConditions))
+            {
+                if (boundaryCondition.IsEditing)
+                {
+                    boundaryCondition.EndEdit();
+                }
+            }
+        }
+
         #region IFileImporter
 
         public string Name => "Boundary data from .bc file";
@@ -163,87 +245,5 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
         }
 
         #endregion
-
-        private void ImportTo(string filePath, IList<BoundaryConditionSet> boundaryConditionSets, bool createNew)
-        {
-            if (ProgressChanged != null)
-            {
-                ProgressChanged("parsing file...", 0, 2);
-            }
-
-            var fileReader = new BcFile();
-            List<BcBlockData> dataBlocks = fileReader.Read(filePath).ToList();
-            var builder = new BcFileFlowBoundaryDataBuilder
-            {
-                ExcludedDataTypes = ExcludedDataTypes,
-                ExcludedQuantities = ExcludedQuantities,
-                OverwriteExistingData = OverwriteExistingData,
-                CanCreateNewBoundaryCondition = createNew
-            };
-            int blockCount = dataBlocks.Count;
-            var i = 0;
-            foreach (IBoundaryCondition boundaryCondition in boundaryConditionSets.SelectMany(
-                bcs => bcs.BoundaryConditions))
-            {
-                boundaryCondition.BeginEdit(new DefaultEditAction("Begin import bc data..."));
-            }
-
-            foreach (BcBlockData bcBlockData in dataBlocks)
-            {
-                if (ShouldCancel)
-                {
-                    return;
-                }
-
-                if (ProgressChanged != null)
-                {
-                    ProgressChanged("importing data block...", i++, blockCount);
-                }
-
-                builder.InsertBoundaryData(boundaryConditionSets, bcBlockData);
-            }
-
-            foreach (IBoundaryCondition boundaryCondition in boundaryConditionSets.SelectMany(
-                bcs => bcs.BoundaryConditions))
-            {
-                if (boundaryCondition.IsEditing)
-                {
-                    boundaryCondition.EndEdit();
-                }
-            }
-        }
-
-        public IList<BoundaryConditionDataType> ExcludedDataTypes { private get; set; }
-
-        public IList<FlowBoundaryQuantityType> ExcludedQuantities { private get; set; }
-
-        public bool DeleteDataBeforeImport { private get; set; }
-
-        public bool OverwriteExistingData { private get; set; }
-
-        public override IEnumerable<BoundaryConditionDataType> ForcingTypes
-        {
-            get
-            {
-                yield return BoundaryConditionDataType.AstroComponents;
-                yield return BoundaryConditionDataType.AstroCorrection;
-                yield return BoundaryConditionDataType.Harmonics;
-                yield return BoundaryConditionDataType.HarmonicCorrection;
-                yield return BoundaryConditionDataType.TimeSeries;
-                yield return BoundaryConditionDataType.Qh;
-            }
-        }
-
-        public override void Import(string fileName, FlowBoundaryCondition boundaryCondition)
-        {
-            ImportItem(fileName, boundaryCondition);
-        }
-
-        public override bool CanImportOnBoundaryCondition(FlowBoundaryCondition boundaryCondition)
-        {
-            return
-                FlowBoundaryConditionHelper
-                    .IsBoundaryCondition(boundaryCondition) && ForcingTypes.Contains(boundaryCondition.DataType);
-        }
     }
 }

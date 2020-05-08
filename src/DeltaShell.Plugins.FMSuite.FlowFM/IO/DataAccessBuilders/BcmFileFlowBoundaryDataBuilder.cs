@@ -14,9 +14,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
         public const string BedLevelChangeAtBound = "bed level change";
         public const string BedLoadAtBound = "transport incl pores ";
 
-        protected override IDictionary<string, FlowBoundaryQuantityType> QuantityNameToTypeDictionary =>
-            quantityNameToTypeDictionary;
-
         private static readonly IDictionary<string, FlowBoundaryQuantityType> quantityNameToTypeDictionary =
             new Dictionary<string, FlowBoundaryQuantityType>
             {
@@ -24,6 +21,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
                 {BedLevelChangeAtBound, FlowBoundaryQuantityType.MorphologyBedLevelChangePrescribed},
                 {BedLoadAtBound, FlowBoundaryQuantityType.MorphologyBedLoadTransport},
             };
+
+        protected override IDictionary<string, FlowBoundaryQuantityType> QuantityNameToTypeDictionary =>
+            quantityNameToTypeDictionary;
 
         protected override BcQuantityData CreateBcQuantityDataForArgument(
             string quantity, IVariable argument, DateTime? referenceTime)

@@ -2,7 +2,9 @@
 using System.Windows.Forms;
 using DelftTools.Utils.Editing;
 using DeltaShell.Plugins.FMSuite.Common.Gui.Forms;
+using DeltaShell.Plugins.FMSuite.FlowFM.Coverages;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
+using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Properties;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors.Buttons
@@ -11,14 +13,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors.Buttons
     {
         public static string ToolTip = "Edit number of depth layers.";
         public static string Label = "Depth layers";
-        public static Bitmap ButtonImage = Properties.Resources.waterLayers;
+        public static Bitmap ButtonImage = Resources.waterLayers;
 
         public static void ButtonAction(object inputObject)
         {
             var model = inputObject as WaterFlowFMModel;
-            if (model == null) return;
+            if (model == null)
+            {
+                return;
+            }
 
-            var depthLayerDefinition = model.InitialSalinity;
+            CoverageDepthLayersList depthLayerDefinition = model.InitialSalinity;
 
             var dialog = new VerticalProfileDialog();
             dialog.SetSupportedProfileTypes(SupportedVerticalProfileTypes.InitialConditionProfileTypes);
@@ -37,7 +42,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors.Buttons
         public static string DepthLayersToString(object inputObject)
         {
             var model = inputObject as WaterFlowFMModel;
-            if (model == null) return string.Empty;
+            if (model == null)
+            {
+                return string.Empty;
+            }
 
             return model.InitialSalinity?.VerticalProfile.Type.ToString() ?? string.Empty;
         }

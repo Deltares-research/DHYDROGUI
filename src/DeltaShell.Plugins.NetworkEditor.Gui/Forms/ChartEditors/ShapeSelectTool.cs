@@ -33,48 +33,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors
             return shapeFeatureEditor.GetTrackerAt(worldX, worldY, worldWidth, worldHeight);
         }
 
-
-        public override void MouseEvent(ChartMouseEvent kind, MouseEventArgs e, Cursor c)
-        {
-            Point tmP = new Point(e.X, e.Y);
-            switch (kind)
-            {
-                case ChartMouseEvent.Down:
-                    if (e.Button == MouseButtons.Left)
-                    {
-                        if (null != ShapeFeatureEditor)
-                        {
-                            IPoint tracker = GetTrackerAt(ShapeFeatureEditor, tmP);
-                            if (null != tracker)
-                            {
-                                //Chart.Zoom.Active = false; // zoom is not a tool thus CancelMouse is ignored
-                                ShapeModifyTool.Chart.CancelMouseEvents = true;
-                                ShapeFeatureEditor.CurrentTracker = tracker;
-                                return;
-                            }
-                            ShapeFeatureEditor = null;
-                            ShapeModifyTool.SelectedShape = null;
-                        }
-                        IShapeFeature selectedShape = ShapeModifyTool.Clicked(tmP.X, tmP.Y);
-                        SelectShape(selectedShape);    
-                        
-                        
-                        //ShapeModifyTool.SelectedShape = selectedShape;
-                        //if (null != selectedShape)
-                        //{
-                        //    selectedShape.Selected = true;
-                        //    ShapeFeatureEditor = selectedShape.CreateShapeFeatureAccessor(ShapeModifyTool.ShapeEditMode);
-                        //}
-                        //else
-                        //{
-                        //    ShapeFeatureEditor = null;
-                        //}
-                        ShapeModifyTool.Invalidate();
-                    } //if (Utils.GetMouseButton(e) == MouseButtons.Left)
-                    break;
-            } // switch (kind)
-        }
-
         public void SelectShape(IShapeFeature shapeFeature)
         {
             if (null == shapeFeature)
@@ -96,6 +54,49 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors
         public void Clear()
         {
             ShapeFeatureEditor = null;
+        }
+
+        public override void MouseEvent(ChartMouseEvent kind, MouseEventArgs e, Cursor c)
+        {
+            var tmP = new Point(e.X, e.Y);
+            switch (kind)
+            {
+                case ChartMouseEvent.Down:
+                    if (e.Button == MouseButtons.Left)
+                    {
+                        if (null != ShapeFeatureEditor)
+                        {
+                            IPoint tracker = GetTrackerAt(ShapeFeatureEditor, tmP);
+                            if (null != tracker)
+                            {
+                                //Chart.Zoom.Active = false; // zoom is not a tool thus CancelMouse is ignored
+                                ShapeModifyTool.Chart.CancelMouseEvents = true;
+                                ShapeFeatureEditor.CurrentTracker = tracker;
+                                return;
+                            }
+
+                            ShapeFeatureEditor = null;
+                            ShapeModifyTool.SelectedShape = null;
+                        }
+
+                        IShapeFeature selectedShape = ShapeModifyTool.Clicked(tmP.X, tmP.Y);
+                        SelectShape(selectedShape);
+
+                        //ShapeModifyTool.SelectedShape = selectedShape;
+                        //if (null != selectedShape)
+                        //{
+                        //    selectedShape.Selected = true;
+                        //    ShapeFeatureEditor = selectedShape.CreateShapeFeatureAccessor(ShapeModifyTool.ShapeEditMode);
+                        //}
+                        //else
+                        //{
+                        //    ShapeFeatureEditor = null;
+                        //}
+                        ShapeModifyTool.Invalidate();
+                    } //if (Utils.GetMouseButton(e) == MouseButtons.Left)
+
+                    break;
+            } // switch (kind)
         }
     }
 }

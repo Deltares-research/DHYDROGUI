@@ -9,13 +9,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DelftIniReaders
     /// Reader for mdu files. This reader supports multiple-valued properties that
     /// are defined on multiple lines and are separated by backslashes. Comments that
     /// are not defined at the last line of the property definition are ignored.
-    ///
     /// Examples:
-    /// 
     /// [output]
     /// ObsFile  = obs_1_obs.xyn obs_2_obs.xyn \
     /// obs_3_obs.xyn  # My comment
-    ///
     /// [output]
     /// ObsFile  = obs_1_obs.xyn \
     /// obs_2_obs.xyn \
@@ -24,14 +21,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DelftIniReaders
     public class MduDelftIniReader : DelftIniReader
     {
         private const string valueSlashPattern =
-            @"^\s*" +                   // pre-whitespaces
-            @"(?<value>[^(\)]*)" +      // value, until first backslash
-            @"\\+(?<comment>.*)?$";    // At least one backslash and every character until the end of the line
+            @"^\s*" +               // pre-whitespaces
+            @"(?<value>[^(\)]*)" +  // value, until first backslash
+            @"\\+(?<comment>.*)?$"; // At least one backslash and every character until the end of the line
 
         private const string valueCommentPattern =
-            @"^\s*" +                   // pre-whitespaces
-            @"(?<value>[^#]*)" +        // value, until '#'-sign
-            @"(#\s*(?<comment>.*))?$";  // comment, every character until the end of the line
+            @"^\s*" +                  // pre-whitespaces
+            @"(?<value>[^#]*)" +       // value, until '#'-sign
+            @"(#\s*(?<comment>.*))?$"; // comment, every character until the end of the line
 
         /// <summary>
         /// Parses one or multiple lines expecting a key-value-comment pattern or a multiline defined property.
@@ -41,8 +38,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DelftIniReaders
         protected override string[] GetKeyValueComment(string lineContent)
         {
             string[] keyValueComment = base.GetKeyValueComment(lineContent);
-            return keyValueComment[1].EndsWith(@"\") 
-                       ? ParseMultilineDefinedProperty(keyValueComment) 
+            return keyValueComment[1].EndsWith(@"\")
+                       ? ParseMultilineDefinedProperty(keyValueComment)
                        : keyValueComment;
         }
 
@@ -56,6 +53,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DelftIniReaders
                     break;
                 }
             }
+
             ParseValueCommentLine(keyValueComment, lineContent);
 
             return keyValueComment;
@@ -89,7 +87,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DelftIniReaders
             string existingValue = keyValueComment[1].TrimEnd('\\', ' ');
             string additionalValue = matchesValueComment[0].Groups["value"].Value.Trim();
             keyValueComment[1] = string.Join(" ", existingValue, additionalValue);
-                
+
             if (!keyValueComment[1].EndsWith(@"\"))
             {
                 keyValueComment[2] = matchesValueComment[0].Groups["comment"].Value;
