@@ -21,12 +21,6 @@ namespace DelftTools.Hydro
             Links = new EventedList<HydroLink>();
         }
 
-        public virtual IHydroNetwork HydroNetwork => (IHydroNetwork) network;
-
-        [DisplayName("Long name")]
-        [FeatureAttribute(Order = 2)]
-        public virtual string LongName { get; set; }
-
         [DisplayName("Y")]
         [FeatureAttribute(Order = 4)]
         public virtual double YCoordinate
@@ -48,6 +42,12 @@ namespace DelftTools.Hydro
                 return point != null ? point.X : 0;
             }
         }
+
+        public virtual IHydroNetwork HydroNetwork => (IHydroNetwork) network;
+
+        [DisplayName("Long name")]
+        [FeatureAttribute(Order = 2)]
+        public virtual string LongName { get; set; }
 
         [Aggregation]
         public override IEventedList<IBranch> IncomingBranches
@@ -89,6 +89,15 @@ namespace DelftTools.Hydro
             }
         }
 
+        public virtual IHydroRegion Region => HydroNetwork;
+
+        [Aggregation]
+        public virtual IEventedList<HydroLink> Links { get; set; }
+
+        public virtual bool CanBeLinkSource => false;
+
+        public virtual bool CanBeLinkTarget => !IsConnectedToMultipleBranches;
+
         /// <summary>
         /// Returns the features of the node (as objects)
         /// </summary>
@@ -105,6 +114,21 @@ namespace DelftTools.Hydro
             hydroNode.Links = new EventedList<HydroLink>(Links);
 
             return hydroNode;
+        }
+
+        public virtual HydroLink LinkTo(IHydroObject target)
+        {
+            return Region.AddNewLink(this, target);
+        }
+
+        public virtual void UnlinkFrom(IHydroObject target)
+        {
+            Region.RemoveLink(this, target);
+        }
+
+        public virtual bool CanLinkTo(IHydroObject target)
+        {
+            return Region.CanLinkTo(this, target);
         }
 
         [EditAction]
@@ -130,30 +154,6 @@ namespace DelftTools.Hydro
             {
                 RepairLinks();
             }
-        }
-
-        public virtual IHydroRegion Region => HydroNetwork;
-
-        [Aggregation]
-        public virtual IEventedList<HydroLink> Links { get; set; }
-
-        public virtual bool CanBeLinkSource => false;
-
-        public virtual bool CanBeLinkTarget => !IsConnectedToMultipleBranches;
-
-        public virtual HydroLink LinkTo(IHydroObject target)
-        {
-            return Region.AddNewLink(this, target);
-        }
-
-        public virtual void UnlinkFrom(IHydroObject target)
-        {
-            Region.RemoveLink(this, target);
-        }
-
-        public virtual bool CanLinkTo(IHydroObject target)
-        {
-            return Region.CanLinkTo(this, target);
         }
     }
 }

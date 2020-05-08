@@ -9,9 +9,9 @@ namespace DeltaShell.Dimr
 {
     public class RemoteDimrApi : IDimrApi
     {
+        private static readonly ILog Log = LogManager.GetLogger(typeof(RemoteDimrApi));
         private bool disposed;
         private IDimrApi api;
-        private static readonly ILog Log = LogManager.GetLogger(typeof(RemoteDimrApi));
 
         public RemoteDimrApi()
         {
@@ -40,7 +40,10 @@ namespace DeltaShell.Dimr
 
         protected virtual void Dispose(bool disposing)
         {
-            if (disposed) return;
+            if (disposed)
+            {
+                return;
+            }
 
             if (disposing)
             {
@@ -64,8 +67,10 @@ namespace DeltaShell.Dimr
                         Thread.Sleep(100); // wait for process to truly exit
                     }
                 }
+
                 api = null;
             }
+
             disposed = true;
         }
 
@@ -73,15 +78,35 @@ namespace DeltaShell.Dimr
 
         #region Implementation of IDimrApi
 
-        public string KernelDirs { get { return api.KernelDirs; } set { api.KernelDirs = value; } }
-        public DateTime DimrRefDate { get { return api.DimrRefDate; } set { api.DimrRefDate = value; } }
+        public string KernelDirs
+        {
+            get
+            {
+                return api.KernelDirs;
+            }
+            set
+            {
+                api.KernelDirs = value;
+            }
+        }
+
+        public DateTime DimrRefDate
+        {
+            get
+            {
+                return api.DimrRefDate;
+            }
+            set
+            {
+                api.DimrRefDate = value;
+            }
+        }
 
         public void set_feedback_logger()
         {
             api?.set_feedback_logger();
         }
 
-        
         public int Initialize(string xmlFile)
         {
             return api?.Initialize(xmlFile) ?? 1;
@@ -100,7 +125,8 @@ namespace DeltaShell.Dimr
 
         public int[] GetShape(string variable)
         {
-            return new int[] {};
+            return new int[]
+                {};
         }
 
         public Array GetValues(string variable)
@@ -126,37 +152,95 @@ namespace DeltaShell.Dimr
                 SetValuesDouble(variable, doubles);
                 return;
             }
+
             var ints = values as int[];
             if (ints != null)
             {
                 SetValuesInt(variable, ints);
                 return;
             }
-            if (api != null) api.SetValues(variable, values);
+
+            if (api != null)
+            {
+                api.SetValues(variable, values);
+            }
         }
 
-        public void SetValues(string variable, int[] start, int[] count, Array values)
+        public void SetValues(string variable, int[] start, int[] count, Array values) {}
+
+        public void SetValues(string variable, int[] index, Array values) {}
+
+        public DateTime StartTime
         {
+            get
+            {
+                return api.StartTime;
+            }
         }
 
-        public void SetValues(string variable, int[] index, Array values)
+        public DateTime StopTime
         {
+            get
+            {
+                return api.StopTime;
+            }
         }
 
-        public DateTime StartTime { get { return api.StartTime; } }
-        public DateTime StopTime { get { return api.StopTime; } }
-        public DateTime CurrentTime { get { return api.CurrentTime; } }
-        public TimeSpan TimeStep { get { return api.TimeStep; } }
-        public string[] VariableNames { get { return api.VariableNames; } }
-        public Logger Logger { get { return api.Logger; } set { api.Logger = value; } }
-        
-        public string[] Messages { get { return api != null ? api.Messages :  new []{string.Empty} ; } }
+        public DateTime CurrentTime
+        {
+            get
+            {
+                return api.CurrentTime;
+            }
+        }
+
+        public TimeSpan TimeStep
+        {
+            get
+            {
+                return api.TimeStep;
+            }
+        }
+
+        public string[] VariableNames
+        {
+            get
+            {
+                return api.VariableNames;
+            }
+        }
+
+        public Logger Logger
+        {
+            get
+            {
+                return api.Logger;
+            }
+            set
+            {
+                api.Logger = value;
+            }
+        }
+
+        public string[] Messages
+        {
+            get
+            {
+                return api != null
+                           ? api.Messages
+                           : new[]
+                           {
+                               string.Empty
+                           };
+            }
+        }
+
         public void ProcessMessages()
         {
-            var infoMsgs = Messages;
+            string[] infoMsgs = Messages;
             if (infoMsgs.Length > 0 && !(infoMsgs.Length == 1 && infoMsgs[0] == string.Empty))
             {
-                foreach (var infoMsg in infoMsgs)
+                foreach (string infoMsg in infoMsgs)
                 {
                     Log.Info(infoMsg);
                 }
@@ -165,20 +249,28 @@ namespace DeltaShell.Dimr
 
         public void SetValuesDouble(string variable, double[] values)
         {
-            if (api != null) api.SetValuesDouble(variable, values);
+            if (api != null)
+            {
+                api.SetValuesDouble(variable, values);
+            }
         }
 
         public void SetValuesInt(string variable, int[] values)
         {
-            if (api != null) api.SetValuesInt(variable, values);
+            if (api != null)
+            {
+                api.SetValuesInt(variable, values);
+            }
         }
 
         public void SetLoggingLevel(string logType, Level level)
         {
-            if (api != null) api.SetLoggingLevel(logType, level);
+            if (api != null)
+            {
+                api.SetLoggingLevel(logType, level);
+            }
         }
 
         #endregion
-
     }
 }

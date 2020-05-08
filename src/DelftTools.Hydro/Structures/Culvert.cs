@@ -42,6 +42,14 @@ namespace DelftTools.Hydro.Structures
             CulvertType = CulvertType.Culvert;
         }
 
+        [DisplayName("Length")]
+        [FeatureAttribute(Order = 5, ExportName = "Length")]
+        public virtual double CulvertLength
+        {
+            get => Length;
+            set => Length = value;
+        }
+
         [DisplayName("Flow direction")]
         [FeatureAttribute(Order = 16, ExportName = "FlowDir")]
         public virtual FlowDirection FlowDirection
@@ -51,16 +59,6 @@ namespace DelftTools.Hydro.Structures
             {
                 BeforeFlowDirectionSet(value);
                 flowDirection = value;
-            }
-        }
-
-        [EditAction]
-        private void BeforeFlowDirectionSet(FlowDirection value)
-        {
-            if (CulvertType.Equals(CulvertType.Siphon) &&
-                !(value == FlowDirection.Positive || value == FlowDirection.None))
-            {
-                throw new ArgumentException("Negative flow is not allowed for siphons");
             }
         }
 
@@ -147,14 +145,6 @@ namespace DelftTools.Hydro.Structures
 
         [Browsable(false)]
         public virtual Friction FrictionDataType { get; set; }
-
-        [DisplayName("Length")]
-        [FeatureAttribute(Order = 5, ExportName = "Length")]
-        public virtual double CulvertLength
-        {
-            get => Length;
-            set => Length = value;
-        }
 
         [DynamicReadOnly]
         [FeatureAttribute(Order = 24)]
@@ -290,76 +280,6 @@ namespace DelftTools.Hydro.Structures
             }
         }
 
-        private void UpdateCrossSectionDefinition()
-        {
-            switch (geometryType)
-            {
-                case CulvertGeometryType.Rectangle:
-                    crossSectionDefinition =
-                        new CrossSectionDefinitionStandard(new CrossSectionStandardShapeRectangle
-                        {
-                            Width = Width,
-                            Height = Height
-                        }) {Name = Name};
-                    break;
-                case CulvertGeometryType.Round:
-                    crossSectionDefinition =
-                        new CrossSectionDefinitionStandard(new CrossSectionStandardShapeRound
-                        {
-                            Diameter = Diameter,
-                        }) {Name = Name};
-                    break;
-                case CulvertGeometryType.Ellipse:
-                    crossSectionDefinition =
-                        new CrossSectionDefinitionStandard(new CrossSectionStandardShapeElliptical
-                        {
-                            Width = Width,
-                            Height = Height
-                        }) {Name = Name};
-                    break;
-                case CulvertGeometryType.Egg:
-                    var eggShape = new CrossSectionStandardShapeEgg {Width = Width};
-                    crossSectionDefinition = new CrossSectionDefinitionStandard(eggShape) {Name = Name};
-                    Height = eggShape.Height;
-                    break;
-                case CulvertGeometryType.Arch:
-                    crossSectionDefinition =
-                        new CrossSectionDefinitionStandard(new CrossSectionStandardShapeArch
-                        {
-                            Width = Width,
-                            Height = Height,
-                            ArcHeight = ArcHeight
-                        }) {Name = Name};
-                    break;
-                case CulvertGeometryType.Cunette:
-                    var cunetteShape = new CrossSectionStandardShapeCunette {Width = Width};
-                    crossSectionDefinition = new CrossSectionDefinitionStandard(cunetteShape) {Name = Name};
-                    Height = cunetteShape.Height;
-                    break;
-                case CulvertGeometryType.SteelCunette:
-                    crossSectionDefinition =
-                        new CrossSectionDefinitionStandard(new CrossSectionStandardShapeSteelCunette
-                        {
-                            Height = Height,
-                            RadiusR = Radius,
-                            RadiusR1 = Radius1,
-                            RadiusR2 = Radius2,
-                            RadiusR3 = Radius3,
-                            AngleA = Angle,
-                            AngleA1 = Angle1
-                        }) {Name = Name};
-                    break;
-                default:
-                    crossSectionDefinition = tabulatedCrossSectionDefinition;
-                    if (crossSectionDefinition.Name != Name)
-                    {
-                        crossSectionDefinition.Name = Name;
-                    }
-
-                    break;
-            }
-        }
-
         public virtual bool AllowNegativeFlow
         {
             get =>
@@ -395,75 +315,6 @@ namespace DelftTools.Hydro.Structures
         }
 
         public virtual IFunction GateOpeningLossCoefficientFunction { get; set; }
-
-        public override void CopyFrom(object source)
-        {
-            base.CopyFrom(source);
-            var sourceCulvert = (Culvert) source;
-            CulvertType = sourceCulvert.CulvertType;
-            BendLossCoefficient = sourceCulvert.BendLossCoefficient;
-            Diameter = sourceCulvert.Diameter;
-            FlowDirection = sourceCulvert.FlowDirection;
-            Friction = sourceCulvert.Friction;
-            FrictionType = sourceCulvert.FrictionType;
-            GateInitialOpening = sourceCulvert.GateInitialOpening;
-            GateOpeningLossCoefficientFunction = (IFunction) sourceCulvert.GateOpeningLossCoefficientFunction.Clone();
-            GeometryType = sourceCulvert.GeometryType;
-            Height = sourceCulvert.Height;
-            InletLevel = sourceCulvert.InletLevel;
-            InletLossCoefficient = sourceCulvert.InletLossCoefficient;
-            IsGated = sourceCulvert.IsGated;
-
-            GroundLayerThickness = sourceCulvert.GroundLayerThickness;
-            GroundLayerRoughness = sourceCulvert.GroundLayerRoughness;
-
-            OutletLevel = sourceCulvert.OutletLevel;
-            OutletLossCoefficient = sourceCulvert.OutletLossCoefficient;
-            Radius = sourceCulvert.Radius;
-            Radius1 = sourceCulvert.Radius1;
-            Radius2 = sourceCulvert.Radius2;
-            Radius3 = sourceCulvert.Radius3;
-            SiphonOffLevel = sourceCulvert.SiphonOffLevel;
-            SiphonOnLevel = sourceCulvert.SiphonOnLevel;
-            TabulatedCrossSectionDefinition =
-                (CrossSectionDefinitionZW) sourceCulvert.TabulatedCrossSectionDefinition.Clone();
-            Width = sourceCulvert.Width;
-        }
-
-        [EditAction]
-        private void UpdateFlowDirection(bool allowPositiveFlow, bool allowNegativeFlow)
-        {
-            FlowDirection = GetPossibleFlowDirection(allowPositiveFlow, allowNegativeFlow);
-        }
-
-        private static FlowDirection GetPossibleFlowDirection(bool allowPositiveFlow, bool allowNegativeFlow)
-        {
-            return allowPositiveFlow
-                       ? allowNegativeFlow ? FlowDirection.Both : FlowDirection.Positive
-                       : allowNegativeFlow
-                           ? FlowDirection.Negative
-                           : FlowDirection.None;
-        }
-
-        /// <summary>
-        /// Sets defaults as seen in Sobek 2.12
-        /// </summary>
-        /// <param name="gateFunction"> </param>
-        private static void SetDefaultGateOpeningFunction(IFunction gateFunction)
-        {
-            gateFunction.Clear();
-            gateFunction[0.0] = 2.1;
-            gateFunction[0.1] = 1.96;
-            gateFunction[0.2] = 1.8;
-            gateFunction[0.3] = 1.74;
-            gateFunction[0.4] = 1.71;
-            gateFunction[0.5] = 1.71;
-            gateFunction[0.6] = 1.71;
-            gateFunction[0.7] = 1.64;
-            gateFunction[0.8] = 1.51;
-            gateFunction[0.9] = 1.36;
-            gateFunction[1.0] = 1.19;
-        }
 
         public static Culvert CreateDefault()
         {
@@ -558,6 +409,40 @@ namespace DelftTools.Hydro.Structures
             return false;
         }
 
+        public override void CopyFrom(object source)
+        {
+            base.CopyFrom(source);
+            var sourceCulvert = (Culvert) source;
+            CulvertType = sourceCulvert.CulvertType;
+            BendLossCoefficient = sourceCulvert.BendLossCoefficient;
+            Diameter = sourceCulvert.Diameter;
+            FlowDirection = sourceCulvert.FlowDirection;
+            Friction = sourceCulvert.Friction;
+            FrictionType = sourceCulvert.FrictionType;
+            GateInitialOpening = sourceCulvert.GateInitialOpening;
+            GateOpeningLossCoefficientFunction = (IFunction) sourceCulvert.GateOpeningLossCoefficientFunction.Clone();
+            GeometryType = sourceCulvert.GeometryType;
+            Height = sourceCulvert.Height;
+            InletLevel = sourceCulvert.InletLevel;
+            InletLossCoefficient = sourceCulvert.InletLossCoefficient;
+            IsGated = sourceCulvert.IsGated;
+
+            GroundLayerThickness = sourceCulvert.GroundLayerThickness;
+            GroundLayerRoughness = sourceCulvert.GroundLayerRoughness;
+
+            OutletLevel = sourceCulvert.OutletLevel;
+            OutletLossCoefficient = sourceCulvert.OutletLossCoefficient;
+            Radius = sourceCulvert.Radius;
+            Radius1 = sourceCulvert.Radius1;
+            Radius2 = sourceCulvert.Radius2;
+            Radius3 = sourceCulvert.Radius3;
+            SiphonOffLevel = sourceCulvert.SiphonOffLevel;
+            SiphonOnLevel = sourceCulvert.SiphonOnLevel;
+            TabulatedCrossSectionDefinition =
+                (CrossSectionDefinitionZW) sourceCulvert.TabulatedCrossSectionDefinition.Clone();
+            Width = sourceCulvert.Width;
+        }
+
         public override StructureType GetStructureType()
         {
             switch (CulvertType)
@@ -571,6 +456,121 @@ namespace DelftTools.Hydro.Structures
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+        }
+
+        [EditAction]
+        private void BeforeFlowDirectionSet(FlowDirection value)
+        {
+            if (CulvertType.Equals(CulvertType.Siphon) &&
+                !(value == FlowDirection.Positive || value == FlowDirection.None))
+            {
+                throw new ArgumentException("Negative flow is not allowed for siphons");
+            }
+        }
+
+        private void UpdateCrossSectionDefinition()
+        {
+            switch (geometryType)
+            {
+                case CulvertGeometryType.Rectangle:
+                    crossSectionDefinition =
+                        new CrossSectionDefinitionStandard(new CrossSectionStandardShapeRectangle
+                        {
+                            Width = Width,
+                            Height = Height
+                        }) {Name = Name};
+                    break;
+                case CulvertGeometryType.Round:
+                    crossSectionDefinition =
+                        new CrossSectionDefinitionStandard(new CrossSectionStandardShapeRound
+                        {
+                            Diameter = Diameter,
+                        }) {Name = Name};
+                    break;
+                case CulvertGeometryType.Ellipse:
+                    crossSectionDefinition =
+                        new CrossSectionDefinitionStandard(new CrossSectionStandardShapeElliptical
+                        {
+                            Width = Width,
+                            Height = Height
+                        }) {Name = Name};
+                    break;
+                case CulvertGeometryType.Egg:
+                    var eggShape = new CrossSectionStandardShapeEgg {Width = Width};
+                    crossSectionDefinition = new CrossSectionDefinitionStandard(eggShape) {Name = Name};
+                    Height = eggShape.Height;
+                    break;
+                case CulvertGeometryType.Arch:
+                    crossSectionDefinition =
+                        new CrossSectionDefinitionStandard(new CrossSectionStandardShapeArch
+                        {
+                            Width = Width,
+                            Height = Height,
+                            ArcHeight = ArcHeight
+                        }) {Name = Name};
+                    break;
+                case CulvertGeometryType.Cunette:
+                    var cunetteShape = new CrossSectionStandardShapeCunette {Width = Width};
+                    crossSectionDefinition = new CrossSectionDefinitionStandard(cunetteShape) {Name = Name};
+                    Height = cunetteShape.Height;
+                    break;
+                case CulvertGeometryType.SteelCunette:
+                    crossSectionDefinition =
+                        new CrossSectionDefinitionStandard(new CrossSectionStandardShapeSteelCunette
+                        {
+                            Height = Height,
+                            RadiusR = Radius,
+                            RadiusR1 = Radius1,
+                            RadiusR2 = Radius2,
+                            RadiusR3 = Radius3,
+                            AngleA = Angle,
+                            AngleA1 = Angle1
+                        }) {Name = Name};
+                    break;
+                default:
+                    crossSectionDefinition = tabulatedCrossSectionDefinition;
+                    if (crossSectionDefinition.Name != Name)
+                    {
+                        crossSectionDefinition.Name = Name;
+                    }
+
+                    break;
+            }
+        }
+
+        [EditAction]
+        private void UpdateFlowDirection(bool allowPositiveFlow, bool allowNegativeFlow)
+        {
+            FlowDirection = GetPossibleFlowDirection(allowPositiveFlow, allowNegativeFlow);
+        }
+
+        private static FlowDirection GetPossibleFlowDirection(bool allowPositiveFlow, bool allowNegativeFlow)
+        {
+            return allowPositiveFlow
+                       ? allowNegativeFlow ? FlowDirection.Both : FlowDirection.Positive
+                       : allowNegativeFlow
+                           ? FlowDirection.Negative
+                           : FlowDirection.None;
+        }
+
+        /// <summary>
+        /// Sets defaults as seen in Sobek 2.12
+        /// </summary>
+        /// <param name="gateFunction"> </param>
+        private static void SetDefaultGateOpeningFunction(IFunction gateFunction)
+        {
+            gateFunction.Clear();
+            gateFunction[0.0] = 2.1;
+            gateFunction[0.1] = 1.96;
+            gateFunction[0.2] = 1.8;
+            gateFunction[0.3] = 1.74;
+            gateFunction[0.4] = 1.71;
+            gateFunction[0.5] = 1.71;
+            gateFunction[0.6] = 1.71;
+            gateFunction[0.7] = 1.64;
+            gateFunction[0.8] = 1.51;
+            gateFunction[0.9] = 1.36;
+            gateFunction[1.0] = 1.19;
         }
     }
 }

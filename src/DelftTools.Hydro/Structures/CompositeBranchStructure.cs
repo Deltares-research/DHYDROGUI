@@ -20,6 +20,21 @@ namespace DelftTools.Hydro.Structures
     {
         private IEventedList<IStructure1D> structures;
 
+        public CompositeBranchStructure() : this("StructureFeature", 0) {}
+
+        public CompositeBranchStructure(string name, double offset)
+        {
+            Structures = new EventedList<IStructure1D>();
+            base.Chainage = offset;
+            base.Name = name;
+        }
+
+        /// <summary>
+        /// Hack generate propertychanged for structures.Count change. CollectionChanged
+        /// breaks bubbling.
+        /// </summary>
+        public virtual int Count { get; set; }
+
         [NoNotifyPropertyChange]
         public override double Chainage
         {
@@ -30,12 +45,6 @@ namespace DelftTools.Hydro.Structures
 
                 UpdateChainageInChildStructure(value);
             }
-        }
-
-        [EditAction]
-        private void UpdateChainageInChildStructure(double chainage)
-        {
-            Structures.ForEach(s => s.Chainage = chainage);
         }
 
         /// <summary>
@@ -60,42 +69,6 @@ namespace DelftTools.Hydro.Structures
                     structures.CollectionChanged += StructuresCollectionChanged;
                 }
             }
-        }
-
-        /// <summary>
-        /// Hack generate propertychanged for structures.Count change. CollectionChanged
-        /// breaks bubbling.
-        /// </summary>
-        public virtual int Count { get; set; }
-
-        [EditAction]
-        private void StructuresCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            var structure = (IStructure1D) e.GetRemovedOrAddedItem();
-            switch (e.Action)
-            {
-                case NotifyCollectionChangedAction.Replace:
-                    throw new NotImplementedException();
-
-                case NotifyCollectionChangedAction.Remove:
-                    //structure.ParentStructure = null;
-                    break;
-
-                case NotifyCollectionChangedAction.Add:
-                    //structure.ParentStructure = this;
-                    break;
-            }
-
-            Count = structures.Count;
-        }
-
-        public CompositeBranchStructure() : this("StructureFeature", 0) {}
-
-        public CompositeBranchStructure(string name, double offset)
-        {
-            Structures = new EventedList<IStructure1D>();
-            base.Chainage = offset;
-            base.Name = name;
         }
 
         /// <summary>
@@ -156,6 +129,33 @@ namespace DelftTools.Hydro.Structures
         public override StructureType GetStructureType()
         {
             return StructureType.CompositeBranchStructure;
+        }
+
+        [EditAction]
+        private void UpdateChainageInChildStructure(double chainage)
+        {
+            Structures.ForEach(s => s.Chainage = chainage);
+        }
+
+        [EditAction]
+        private void StructuresCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            var structure = (IStructure1D) e.GetRemovedOrAddedItem();
+            switch (e.Action)
+            {
+                case NotifyCollectionChangedAction.Replace:
+                    throw new NotImplementedException();
+
+                case NotifyCollectionChangedAction.Remove:
+                    //structure.ParentStructure = null;
+                    break;
+
+                case NotifyCollectionChangedAction.Add:
+                    //structure.ParentStructure = this;
+                    break;
+            }
+
+            Count = structures.Count;
         }
     }
 }

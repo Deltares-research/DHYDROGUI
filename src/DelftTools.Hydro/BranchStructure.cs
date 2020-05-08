@@ -45,11 +45,22 @@ namespace DelftTools.Hydro
         [FeatureAttribute(Order = 1)]
         public virtual string LongName { get; set; }
 
-        public override void CopyFrom(object source)
+        [NoNotifyPropertyChange] // this is handled in the base class (BranchFeature)
+        public override double Chainage
         {
-            base.CopyFrom(source);
-            OffsetY = ((BranchStructure) source).OffsetY;
-            LongName = ((BranchStructure) source).LongName;
+            get => ParentStructure != null ? ParentStructure.Chainage : base.Chainage;
+            set
+            {
+                if (ParentStructure != null && Math.Abs(ParentStructure.Chainage - value) >= double.Epsilon)
+                {
+                    // if CompositeBranchStructure has a different chainage then update that (and all children)
+                    ParentStructure.Chainage = value;
+                }
+                else
+                {
+                    base.Chainage = value;
+                }
+            }
         }
 
         //TODO: get this out..this is not something a branchstructure has to do.
@@ -84,22 +95,11 @@ namespace DelftTools.Hydro
             return -1;
         }
 
-        [NoNotifyPropertyChange] // this is handled in the base class (BranchFeature)
-        public override double Chainage
+        public override void CopyFrom(object source)
         {
-            get => ParentStructure != null ? ParentStructure.Chainage : base.Chainage;
-            set
-            {
-                if (ParentStructure != null && Math.Abs(ParentStructure.Chainage - value) >= double.Epsilon)
-                {
-                    // if CompositeBranchStructure has a different chainage then update that (and all children)
-                    ParentStructure.Chainage = value;
-                }
-                else
-                {
-                    base.Chainage = value;
-                }
-            }
+            base.CopyFrom(source);
+            OffsetY = ((BranchStructure) source).OffsetY;
+            LongName = ((BranchStructure) source).LongName;
         }
 
         public override int CompareTo(object obj)

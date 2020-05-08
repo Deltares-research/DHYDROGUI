@@ -16,6 +16,17 @@ namespace DeltaShell.NGHS.Common.Gui.Layers
     {
         private readonly IList<ILayerSubProvider> subProviders = new List<ILayerSubProvider>();
 
+        /// <summary>
+        /// Register the provided <paramref name="layerSubProviders"/> to this layer provider.
+        /// </summary>
+        /// <param name="layerSubProviders"> The layer sub providers to be registered. </param>
+        public void RegisterSubProviders(IList<ILayerSubProvider> layerSubProviders)
+        {
+            Ensure.NotNull(layerSubProviders, nameof(layerSubProviders));
+            layerSubProviders.ForEach(e => Ensure.NotNull(e, nameof(layerSubProviders)));
+            subProviders.AddRange(layerSubProviders);
+        }
+
         public ILayer CreateLayer(object data, object parentData)
         {
             ILayerSubProvider validSubProvider = subProviders.FirstOrDefault(lp => lp.CanCreateLayerFor(data, parentData));
@@ -30,17 +41,6 @@ namespace DeltaShell.NGHS.Common.Gui.Layers
         public IEnumerable<object> ChildLayerObjects(object data)
         {
             return subProviders.SelectMany(lp => lp.GenerateChildLayerObjects(data));
-        }
-
-        /// <summary>
-        /// Register the provided <paramref name="layerSubProviders"/> to this layer provider.
-        /// </summary>
-        /// <param name="layerSubProviders"> The layer sub providers to be registered. </param>
-        public void RegisterSubProviders(IList<ILayerSubProvider> layerSubProviders)
-        {
-            Ensure.NotNull(layerSubProviders, nameof(layerSubProviders));
-            layerSubProviders.ForEach(e => Ensure.NotNull(e, nameof(layerSubProviders)));
-            subProviders.AddRange(layerSubProviders);
         }
     }
 }

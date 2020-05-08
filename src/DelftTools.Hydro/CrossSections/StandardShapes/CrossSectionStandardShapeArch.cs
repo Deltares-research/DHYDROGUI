@@ -6,11 +6,20 @@ namespace DelftTools.Hydro.CrossSections.StandardShapes
     [Entity(FireOnCollectionChange = false)]
     public class CrossSectionStandardShapeArch : CrossSectionStandardShapeBase
     {
+        private double arcHeight;
         public override CrossSectionStandardShapeType Type => CrossSectionStandardShapeType.Arch;
 
-        public override CrossSectionDefinitionZW GetTabulatedDefinition()
+        public virtual double Width { get; set; }
+        public virtual double Height { get; set; }
+
+        public virtual double ArcHeight
         {
-            return StandardCrossSectionsFactory.GetTabulatedCrossSectionFromArch(Width, Height, ArcHeight);
+            get => arcHeight;
+            set
+            {
+                arcHeight = value;
+                AfterArcHeightSet();
+            }
         }
 
         public static CrossSectionStandardShapeArch CreateDefault()
@@ -23,18 +32,9 @@ namespace DelftTools.Hydro.CrossSections.StandardShapes
             };
         }
 
-        public virtual double Width { get; set; }
-        public virtual double Height { get; set; }
-        private double arcHeight;
-
-        public virtual double ArcHeight
+        public override CrossSectionDefinitionZW GetTabulatedDefinition()
         {
-            get => arcHeight;
-            set
-            {
-                arcHeight = value;
-                AfterArcHeightSet();
-            }
+            return StandardCrossSectionsFactory.GetTabulatedCrossSectionFromArch(Width, Height, ArcHeight);
         }
 
         [EditAction]

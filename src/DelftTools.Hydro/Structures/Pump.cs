@@ -48,23 +48,6 @@ namespace DelftTools.Hydro.Structures
             }
         }
 
-        [EditAction]
-        private void OnCanBeTimeDependentSet()
-        {
-            if (canBeTimedependent)
-            {
-                if (CapacityTimeSeries == null)
-                {
-                    CapacityTimeSeries = HydroTimeSeriesFactory.CreateTimeSeries("Capacity", "Capacity", "TODO");
-                }
-            }
-            else
-            {
-                UseCapacityTimeSeries = false;
-                CapacityTimeSeries = null;
-            }
-        }
-
         [DisplayName("Positive direction")]
         [FeatureAttribute(Order = 5, ExportName = "PosDir")]
         public virtual bool DirectionIsPositive { get; set; }
@@ -179,6 +162,23 @@ namespace DelftTools.Hydro.Structures
         public override StructureType GetStructureType()
         {
             return StructureType.Pump;
+        }
+
+        [EditAction]
+        private void OnCanBeTimeDependentSet()
+        {
+            if (canBeTimedependent)
+            {
+                if (CapacityTimeSeries == null)
+                {
+                    CapacityTimeSeries = HydroTimeSeriesFactory.CreateTimeSeries("Capacity", "Capacity", "TODO");
+                }
+            }
+            else
+            {
+                UseCapacityTimeSeries = false;
+                CapacityTimeSeries = null;
+            }
         }
     }
 }

@@ -41,7 +41,7 @@ namespace DelftTools.Hydro.Helpers
                 }
             }
         }
-        
+
         /// <summary>
         /// Sets a default geometry for the cross section. The default geometry is a linestring geometry
         /// perpendicular to the branch.
@@ -275,30 +275,6 @@ namespace DelftTools.Hydro.Helpers
         }
 
         /// <summary>
-        /// Update the envelope. This is not by default updates by NTS because modifying geometries is not done.
-        /// </summary>
-        /// <param name="geometry"> </param>
-        private static void UpdateEnvelopeInternal(IGeometry geometry)
-        {
-            Coordinate[] coordinates = geometry.Coordinates;
-
-            if (coordinates.Length > 1)
-            {
-                for (var i = 0; i < coordinates.Length; i++)
-                {
-                    if (0 == i)
-                    {
-                        geometry.EnvelopeInternal.Init(coordinates[i]);
-                    }
-                    else
-                    {
-                        geometry.EnvelopeInternal.ExpandToInclude(coordinates[i]);
-                    }
-                }
-            }
-        }
-
-        /// <summary>
         /// Validate thalweg to fall between min and max y; better to add limits to the ICursorLineTool
         /// </summary>
         /// <param name="crossSectionDefinition"> </param>
@@ -372,63 +348,6 @@ namespace DelftTools.Hydro.Helpers
             Coordinate thalWeg = intersectionLocation.GetCoordinate(branchGeometry);
 
             return GetLine(maxY - minY, thalWegOffset - minY, thalWeg, line.AngleRad() + (Math.PI / 2.0));
-        }
-
-        /// <summary>
-        /// Creates a line at a certain center with offset, angle and lenght
-        /// </summary>
-        /// <param name="length"> </param>
-        /// <param name="centerOffsetAlongLine"> </param>
-        /// <param name="center"> </param>
-        /// <param name="angleRad"> And in radians </param>
-        /// <returns> </returns>
-        private static ILineString GetLine(double length, double centerOffsetAlongLine, Coordinate center,
-                                           double angleRad)
-        {
-            var yzCoordinates = new List<Coordinate>
-            {
-                new Coordinate(0, 0),
-                new Coordinate(length, 0)
-            };
-
-            var vertices = new List<Coordinate>();
-            for (var i = 0; i < yzCoordinates.Count; i++)
-            {
-                Coordinate yzCoordinate = yzCoordinates[i];
-                double delta = yzCoordinate.X - centerOffsetAlongLine;
-                vertices.Add(new Coordinate(center.X + (delta * Math.Sin(angleRad)),
-                                            center.Y + (delta * Math.Cos(angleRad))));
-            }
-
-            var geometryFactory = new GeometryFactory();
-            ILineString geometry = geometryFactory.CreateLineString(vertices.ToArray());
-            UpdateEnvelopeInternal(geometry);
-            return geometry;
-        }
-
-        private static LineString GetBranchLineAtLocation(IGeometry branchGeometry, LinearLocation location)
-        {
-            var lineComp = (ILineString) branchGeometry.GetGeometryN(location.ComponentIndex);
-            Coordinate p1;
-            Coordinate p0 = lineComp.GetCoordinateN(location.SegmentIndex);
-
-            if (location.SegmentIndex >= lineComp.NumPoints - 1)
-            {
-                p1 = p0;
-                p0 = lineComp.GetCoordinateN(location.SegmentIndex - 1);
-            }
-            else
-            {
-                p1 = lineComp.GetCoordinateN(location.SegmentIndex + 1);
-            }
-
-            /// construct a line segment perpendicular to that of the branchlinesegment
-            /// that crosses the branch at the cross section location
-            return new LineString(new[]
-            {
-                p0,
-                p1
-            });
         }
 
         public static double CalculateStorageArea(IEnumerable<Coordinate> bottomProfile,
@@ -509,10 +428,7 @@ namespace DelftTools.Hydro.Helpers
                                                         .FirstOrDefault(
                                                             cst => cst.Name == CrossSectionDefinition
                                                                        .MainSectionName) ??
-                                                  new CrossSectionSectionType()
-                                                  {
-                                                      Name = CrossSectionDefinition.MainSectionName
-                                                  };
+                                                  new CrossSectionSectionType() {Name = CrossSectionDefinition.MainSectionName};
 
             csDef.AddSection(mainSection, csDef.FlowWidth());
 
@@ -538,6 +454,87 @@ namespace DelftTools.Hydro.Helpers
 
             crossSection.Geometry = geometry;
             return new CrossSection(crossSection);
+        }
+
+        /// <summary>
+        /// Update the envelope. This is not by default updates by NTS because modifying geometries is not done.
+        /// </summary>
+        /// <param name="geometry"> </param>
+        private static void UpdateEnvelopeInternal(IGeometry geometry)
+        {
+            Coordinate[] coordinates = geometry.Coordinates;
+
+            if (coordinates.Length > 1)
+            {
+                for (var i = 0; i < coordinates.Length; i++)
+                {
+                    if (0 == i)
+                    {
+                        geometry.EnvelopeInternal.Init(coordinates[i]);
+                    }
+                    else
+                    {
+                        geometry.EnvelopeInternal.ExpandToInclude(coordinates[i]);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Creates a line at a certain center with offset, angle and lenght
+        /// </summary>
+        /// <param name="length"> </param>
+        /// <param name="centerOffsetAlongLine"> </param>
+        /// <param name="center"> </param>
+        /// <param name="angleRad"> And in radians </param>
+        /// <returns> </returns>
+        private static ILineString GetLine(double length, double centerOffsetAlongLine, Coordinate center,
+                                           double angleRad)
+        {
+            var yzCoordinates = new List<Coordinate>
+            {
+                new Coordinate(0, 0),
+                new Coordinate(length, 0)
+            };
+
+            var vertices = new List<Coordinate>();
+            for (var i = 0; i < yzCoordinates.Count; i++)
+            {
+                Coordinate yzCoordinate = yzCoordinates[i];
+                double delta = yzCoordinate.X - centerOffsetAlongLine;
+                vertices.Add(new Coordinate(center.X + (delta * Math.Sin(angleRad)),
+                                            center.Y + (delta * Math.Cos(angleRad))));
+            }
+
+            var geometryFactory = new GeometryFactory();
+            ILineString geometry = geometryFactory.CreateLineString(vertices.ToArray());
+            UpdateEnvelopeInternal(geometry);
+            return geometry;
+        }
+
+        private static LineString GetBranchLineAtLocation(IGeometry branchGeometry, LinearLocation location)
+        {
+            var lineComp = (ILineString) branchGeometry.GetGeometryN(location.ComponentIndex);
+            Coordinate p1;
+            Coordinate p0 = lineComp.GetCoordinateN(location.SegmentIndex);
+
+            if (location.SegmentIndex >= lineComp.NumPoints - 1)
+            {
+                p1 = p0;
+                p0 = lineComp.GetCoordinateN(location.SegmentIndex - 1);
+            }
+            else
+            {
+                p1 = lineComp.GetCoordinateN(location.SegmentIndex + 1);
+            }
+
+            /// construct a line segment perpendicular to that of the branchlinesegment
+            /// that crosses the branch at the cross section location
+            return new LineString(new[]
+            {
+                p0,
+                p1
+            });
         }
     }
 }

@@ -21,6 +21,20 @@ namespace DelftTools.Hydro.CrossSections.DataSets
         protected LightDataTable(SerializationInfo info, StreamingContext context)
             : base(info, context) {}
 
+        public new T this[int index] => Rows[index];
+
+        public new LightBindingList<T> Rows { get; private set; }
+
+        public override void Clear()
+        {
+            Rows.Clear();
+        }
+
+        public IEnumerator<T> GetEnumerator()
+        {
+            return Rows.GetEnumerator();
+        }
+
         protected override void Initialize()
         {
             Rows = new LightBindingList<T>
@@ -33,20 +47,35 @@ namespace DelftTools.Hydro.CrossSections.DataSets
             Rows.AddingNew += RowsAddingNew;
         }
 
+        protected abstract SortOrder GetSortOrder();
+
+        protected override IList GetRows()
+        {
+            return Rows;
+        }
+
+        protected override LightDataRow GetRow(int index)
+        {
+            return Rows[index];
+        }
+
+        protected override IEnumerator GetEnumeratorCore()
+        {
+            return GetEnumerator();
+        }
+
+        internal override void HandleRowChanged(LightDataRow row, double[] oldState, double[] newState)
+        {
+            ApplySorting(row);
+            Rows.ResetItem(Rows.IndexOf((T) row));
+            base.HandleRowChanged(row, oldState, newState);
+        }
+
         private void RowsAddingNew(object sender, AddingNewEventArgs e)
         {
             var defaultRow = new T();
             EnsureUniqueAndAtEndOfTable(defaultRow);
             e.NewObject = defaultRow;
-        }
-
-        public new T this[int index] => Rows[index];
-
-        public new LightBindingList<T> Rows { get; private set; }
-
-        public IEnumerator<T> GetEnumerator()
-        {
-            return Rows.GetEnumerator();
         }
 
         private void RowsChanged(object sender, ListChangedEventArgs e)
@@ -98,13 +127,6 @@ namespace DelftTools.Hydro.CrossSections.DataSets
             row[0] = value;
         }
 
-        internal override void HandleRowChanged(LightDataRow row, double[] oldState, double[] newState)
-        {
-            ApplySorting(row);
-            Rows.ResetItem(Rows.IndexOf((T) row));
-            base.HandleRowChanged(row, oldState, newState);
-        }
-
         private void ApplySorting(LightDataRow row)
         {
             var typedRow = (T) row;
@@ -114,8 +136,6 @@ namespace DelftTools.Hydro.CrossSections.DataSets
                 Rows.Move(typedRow, sortedIndex);
             }
         }
-
-        protected abstract SortOrder GetSortOrder();
 
         private int GetSortedIndex(LightDataRow row)
         {
@@ -147,32 +167,14 @@ namespace DelftTools.Hydro.CrossSections.DataSets
 
             return index;
         }
-
-        protected override IList GetRows()
-        {
-            return Rows;
-        }
-
-        protected override LightDataRow GetRow(int index)
-        {
-            return Rows[index];
-        }
-
-        protected override IEnumerator GetEnumeratorCore()
-        {
-            return GetEnumerator();
-        }
-
-        public override void Clear()
-        {
-            Rows.Clear();
-        }
     }
 
     [Serializable]
     public abstract class LightDataTable : EditableObjectUnique<long>, IEnumerable, IListSource, ISerializable
     {
         private bool enforceConstraints;
+
+        public event EventHandler<LightDataRowChangeEventArgs> RowChanging;
 
         protected LightDataTable()
         {
@@ -200,17 +202,13 @@ namespace DelftTools.Hydro.CrossSections.DataSets
             EnforceConstraints = true;
         }
 
-        protected abstract void Initialize();
+        public LightDataRow this[int index] => GetRow(index);
 
         public bool HasErrors { get; private set; }
-
-        public LightDataRow this[int index] => GetRow(index);
 
         public int Count => GetRows().Count;
 
         public IList<LightDataRow> Rows => GetRows().Cast<LightDataRow>().ToList().AsReadOnly();
-
-        private IList MutableRows => GetRows();
 
         public bool EnforceConstraints
         {
@@ -230,36 +228,7 @@ namespace DelftTools.Hydro.CrossSections.DataSets
             }
         }
 
-        protected virtual void DoEnforceConstraints() {}
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumeratorCore();
-        }
-
-        public IList GetList()
-        {
-            return GetRows();
-        }
-
         public bool ContainsListCollection => true;
-
-        public void GetObjectData(SerializationInfo info, StreamingContext context)
-        {
-            var writer = new SerializationWriter();
-            writer.Write(Count); // not really needed but very handy in deserialization.
-            foreach (LightDataRow row in Rows)
-            foreach (double item in row.ItemArray)
-            {
-                writer.Write(item);
-            }
-
-            info.AddValue("data", writer.ToArray());
-        }
-
-        protected abstract IList GetRows();
-        protected abstract LightDataRow GetRow(int index);
-        protected abstract IEnumerator GetEnumeratorCore();
 
         public void BeginLoadData() {}
 
@@ -294,16 +263,49 @@ namespace DelftTools.Hydro.CrossSections.DataSets
             return true;
         }
 
-        protected abstract int NumColumns { get; }
-
         public abstract void Clear();
-
-        public event EventHandler<LightDataRowChangeEventArgs> RowChanging;
 
         public void Add(double[] itemArray)
         {
             AddByValues(itemArray);
         }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumeratorCore();
+        }
+
+        public IList GetList()
+        {
+            return GetRows();
+        }
+
+        public void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            var writer = new SerializationWriter();
+            writer.Write(Count); // not really needed but very handy in deserialization.
+            foreach (LightDataRow row in Rows)
+            foreach (double item in row.ItemArray)
+            {
+                writer.Write(item);
+            }
+
+            info.AddValue("data", writer.ToArray());
+        }
+
+        protected abstract int NumColumns { get; }
+
+        protected abstract void Initialize();
+
+        protected virtual void DoEnforceConstraints() {}
+
+        protected abstract IList GetRows();
+        protected abstract LightDataRow GetRow(int index);
+        protected abstract IEnumerator GetEnumeratorCore();
+
+        protected abstract void AddByValues(double[] itemArray);
+
+        private IList MutableRows => GetRows();
 
         private void OnRowChanging(LightDataRow row, DataRowAction action)
         {
@@ -321,8 +323,6 @@ namespace DelftTools.Hydro.CrossSections.DataSets
                 });
             }
         }
-
-        protected abstract void AddByValues(double[] itemArray);
 
         #region Undo/Redo
 
@@ -478,12 +478,6 @@ namespace DelftTools.Hydro.CrossSections.DataSets
         private double[] oldState;
         private bool inTransaction;
 
-        [Browsable(false)]
-        public double[] ItemArray { get; private set; }
-
-        [Browsable(false)]
-        public LightDataTable Table { get; internal set; }
-
         protected LightDataRow(int size)
         {
             ItemArray = new double[size];
@@ -495,29 +489,15 @@ namespace DelftTools.Hydro.CrossSections.DataSets
             set => Set(index, value);
         }
 
-        protected void Set(int index, double value)
-        {
-            BeginEditManually();
-            ItemArray[index] = value;
+        [Browsable(false)]
+        public double[] ItemArray { get; private set; }
 
-            if (!inTransaction) // noone called BeginEdit on us first, so we have to handle this right now
-            {
-                OnRowChanged();
-                oldState = null; // mini transaction
-            }
-        }
+        [Browsable(false)]
+        public LightDataTable Table { get; internal set; }
 
         public void BeginEdit()
         {
             inTransaction = true;
-        }
-
-        private void BeginEditManually()
-        {
-            if (oldState == null)
-            {
-                oldState = (double[]) ItemArray.Clone();
-            }
         }
 
         public void CancelEdit()
@@ -545,6 +525,26 @@ namespace DelftTools.Hydro.CrossSections.DataSets
             }
 
             oldState = null;
+        }
+
+        protected void Set(int index, double value)
+        {
+            BeginEditManually();
+            ItemArray[index] = value;
+
+            if (!inTransaction) // noone called BeginEdit on us first, so we have to handle this right now
+            {
+                OnRowChanged();
+                oldState = null; // mini transaction
+            }
+        }
+
+        private void BeginEditManually()
+        {
+            if (oldState == null)
+            {
+                oldState = (double[]) ItemArray.Clone();
+            }
         }
 
         private void OnRowChanged()

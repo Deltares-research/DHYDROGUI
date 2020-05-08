@@ -1,4 +1,5 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8"?>
+
 <hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="DelftTools.Hydro.Structures.WeirFormula" assembly="DelftTools.Hydro">
   <subclass name="GatedWeirFormula" discriminator-value="gated_weir" extends="DelftTools.Hydro.Structures.IWeirFormula">
     <property name="ContractionCoefficient" column="contr_coefficient" />
@@ -10,4 +11,3 @@
     <property name="UseMaxFlowNeg" column="use_max_flow_neg" />
   </subclass>
 </hibernate-mapping>
-

@@ -1,6 +1,7 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8"?>
+
 <hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
-  <subclass name="DelftTools.Hydro.HydroArea, DelftTools.Hydro"  discriminator-value="hydro_area" extends="DelftTools.Hydro.IHydroRegion, DelftTools.Hydro">
+  <subclass name="DelftTools.Hydro.HydroArea, DelftTools.Hydro" discriminator-value="hydro_area" extends="DelftTools.Hydro.IHydroRegion, DelftTools.Hydro">
     <meta attribute="anyType">IValueConverter.OriginalValue</meta>
 
     <!--<list name="Banks"
@@ -11,6 +12,6 @@
       <index column="flood_bank_area_index"/>
       <one-to-many class="DelftTools.Hydro.FloodBank, DelftTools.Hydro"/>
     </list>-->
-    
+
   </subclass>
 </hibernate-mapping>

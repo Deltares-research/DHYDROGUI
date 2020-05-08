@@ -76,6 +76,57 @@ namespace DelftTools.Hydro
             }
         }
 
+        [DisplayName("Name")]
+        [FeatureAttribute(Order = 1)]
+        [NoNotifyPropertyChange] //handled by baseclass
+        public override string Name
+        {
+            get => base.Name;
+            set => base.Name = value;
+        }
+
+        public virtual IHydroRegion Region => HydroNetwork;
+
+        [Aggregation]
+        public virtual IEventedList<HydroLink> Links { get; set; }
+
+        public virtual bool CanBeLinkSource => false;
+
+        public virtual bool CanBeLinkTarget => false;
+
+        public virtual int CompareTo(IChannel other)
+        {
+            return Network.Branches.IndexOf(this).CompareTo(Network.Branches.IndexOf(other));
+        }
+
+        public static Channel CreateDefault(IHydroNetwork network)
+        {
+            var channel = new Channel();
+            channel.Network = network;
+            channel.Geometry = new WKTReader().Read("LINESTRING(0 0,100 100)");
+            return channel;
+        }
+
+        public virtual IEnumerable<object> GetDirectChildren()
+        {
+            return BranchFeatures.Cast<object>();
+        }
+
+        public virtual HydroLink LinkTo(IHydroObject target)
+        {
+            throw new NotSupportedException();
+        }
+
+        public virtual void UnlinkFrom(IHydroObject target)
+        {
+            throw new NotSupportedException();
+        }
+
+        public virtual bool CanLinkTo(IHydroObject target)
+        {
+            return false; // no linking to / from channel yet
+        }
+
         #region IChannel Members
 
         private IEnumerable<ICrossSection> crossSections;
@@ -138,56 +189,5 @@ namespace DelftTools.Hydro
         //public string Description { get; set; }
 
         #endregion
-
-        public virtual int CompareTo(IChannel other)
-        {
-            return Network.Branches.IndexOf(this).CompareTo(Network.Branches.IndexOf(other));
-        }
-
-        public static Channel CreateDefault(IHydroNetwork network)
-        {
-            var channel = new Channel();
-            channel.Network = network;
-            channel.Geometry = new WKTReader().Read("LINESTRING(0 0,100 100)");
-            return channel;
-        }
-
-        [DisplayName("Name")]
-        [FeatureAttribute(Order = 1)]
-        [NoNotifyPropertyChange] //handled by baseclass
-        public override string Name
-        {
-            get => base.Name;
-            set => base.Name = value;
-        }
-
-        public virtual IEnumerable<object> GetDirectChildren()
-        {
-            return BranchFeatures.Cast<object>();
-        }
-
-        public virtual IHydroRegion Region => HydroNetwork;
-
-        [Aggregation]
-        public virtual IEventedList<HydroLink> Links { get; set; }
-
-        public virtual bool CanBeLinkSource => false;
-
-        public virtual bool CanBeLinkTarget => false;
-
-        public virtual HydroLink LinkTo(IHydroObject target)
-        {
-            throw new NotSupportedException();
-        }
-
-        public virtual void UnlinkFrom(IHydroObject target)
-        {
-            throw new NotSupportedException();
-        }
-
-        public virtual bool CanLinkTo(IHydroObject target)
-        {
-            return false; // no linking to / from channel yet
-        }
     }
 }

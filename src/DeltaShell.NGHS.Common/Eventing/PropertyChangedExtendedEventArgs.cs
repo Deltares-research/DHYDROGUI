@@ -3,21 +3,13 @@
 namespace DeltaShell.NGHS.Common.Eventing
 {
     /// <summary>
-    /// Provides extended data for the <see cref="INotifyPropertyChanged.PropertyChanged" /> event.
+    /// Provides extended data for the <see cref="INotifyPropertyChanged.PropertyChanged"/> event.
     /// </summary>
-    /// <seealso cref="PropertyChangedEventArgs" />
+    /// <seealso cref="PropertyChangedEventArgs"/>
     public class PropertyChangedExtendedEventArgs : PropertyChangedEventArgs
     {
         /// <summary>
-        /// Gets the original property value.
-        /// </summary>
-        /// <value>
-        /// The original property value.
-        /// </value>
-        public virtual object OriginalValue { get; }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="PropertyChangedExtendedEventArgs" /> class.
+        /// Initializes a new instance of the <see cref="PropertyChangedExtendedEventArgs"/> class.
         /// </summary>
         /// <param name="propertyName"> Name of the property. </param>
         /// <param name="originalValue"> The original value of the property. </param>
@@ -26,5 +18,13 @@ namespace DeltaShell.NGHS.Common.Eventing
         {
             OriginalValue = originalValue;
         }
+
+        /// <summary>
+        /// Gets the original property value.
+        /// </summary>
+        /// <value>
+        /// The original property value.
+        /// </value>
+        public virtual object OriginalValue { get; }
     }
 }

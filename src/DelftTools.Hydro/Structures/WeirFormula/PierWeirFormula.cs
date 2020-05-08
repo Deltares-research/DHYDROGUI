@@ -9,8 +9,6 @@ namespace DelftTools.Hydro.Structures.WeirFormula
     [Entity(FireOnCollectionChange = false)]
     public class PierWeirFormula : Unique<long>, IWeirFormula
     {
-        public virtual string Name => "Weir with piers (Advanced weir)";
-
         /// <summary>
         /// Number of piers N (npiers)
         /// </summary>
@@ -56,9 +54,10 @@ namespace DelftTools.Hydro.Structures.WeirFormula
         /// </summary>
         public virtual double AbutmentContractionNeg { get; set; }
 
-        public virtual bool IsRectangle => true;
-
         public virtual bool IsGated => false;
+        public virtual string Name => "Weir with piers (Advanced weir)";
+
+        public virtual bool IsRectangle => true;
 
         public virtual bool HasFlowDirection => false;
 

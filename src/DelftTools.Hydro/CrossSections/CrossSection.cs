@@ -15,7 +15,32 @@ namespace DelftTools.Hydro.CrossSections
     [Entity]
     public class CrossSection : BranchFeatureHydroObject, ICrossSection, IEditableObject
     {
+        private readonly Stack<IEditAction> editActions = new Stack<IEditAction>();
         private IGeometry tmpGeometry;
+
+        [Obsolete("Should only be used by NHibernate")]
+        public CrossSection() //NHibernate and local Activator
+        {}
+
+        public CrossSection(ICrossSectionDefinition crossSectionDefinition)
+        {
+            Name = "cross section";
+            Definition = crossSectionDefinition;
+        }
+
+        [DisplayName("Highest point")]
+        [FeatureAttribute(Order = 6, ExportName = "HighestPt")]
+        public virtual double HighestPoint => Definition.HighestPoint;
+
+        [FeatureAttribute(Order = 8)]
+        public virtual double Width => Definition.Width;
+
+        [FeatureAttribute(Order = 9)]
+        public virtual double Thalweg => Math.Round(Definition.Thalweg, 2);
+
+        [DisplayName("Definition")]
+        [FeatureAttribute(Order = 10, ExportName = "DefName")]
+        public virtual string DefinitionName => Definition.Name;
 
         [DisplayName("Name")]
         [FeatureAttribute(Order = 1)]
@@ -32,16 +57,6 @@ namespace DelftTools.Hydro.CrossSections
                 AfterNameSet();
 
                 EndEdit();
-            }
-        }
-
-        [EditAction]
-        private void AfterNameSet()
-        {
-            //for practical reasons..sync definition name
-            if (Definition != null && !Definition.IsProxy)
-            {
-                Definition.Name = Name;
             }
         }
 
@@ -66,6 +81,65 @@ namespace DelftTools.Hydro.CrossSections
             }
         }
 
+        public virtual ICrossSectionDefinition Definition { get; protected set; }
+
+        public virtual bool GeometryBased => Definition.GeometryBased;
+
+        public override IGeometry Geometry
+        {
+            get =>
+                branch != null && Definition != null
+                    ? Definition.GetGeometry(this)
+                    : tmpGeometry;
+            set
+            {
+                BeforeGeometrySet(value);
+                tmpGeometry = value;
+            }
+        }
+
+        public virtual IHydroNetwork HydroNetwork => (IHydroNetwork) Network;
+
+        [DisplayName("Lowest point")]
+        [FeatureAttribute(Order = 5, ExportName = "LowestPt")]
+        public virtual double LowestPoint => Definition.LowestPoint;
+
+        [DisplayName("Type")]
+        [FeatureAttribute(Order = 7)]
+        public virtual CrossSectionType CrossSectionType => Definition.CrossSectionType;
+
+        [NoNotifyPropertyChange]
+        public virtual IEditAction CurrentEditAction => editActions.Count > 0 ? editActions.Peek() : null;
+
+        [NoNotifyPropertyChange]
+        public virtual bool EditWasCancelled { get; protected set; }
+
+        public virtual bool IsEditing { get; protected set; }
+
+        public static ICrossSection CreateDefault()
+        {
+            return CreateDefault(CrossSectionType.YZ, null, 0);
+        }
+
+        public static ICrossSection CreateDefault(CrossSectionType definitionType, IBranch branch,
+                                                  double chainage = 0.0)
+        {
+            ICrossSectionDefinition definition = GetDefaultDefinition(definitionType);
+            var crossSection = new CrossSection(definition)
+            {
+                Branch = branch,
+                Chainage = chainage
+            };
+
+            if (crossSection.Network != null)
+            {
+                crossSection.Name =
+                    HydroNetworkHelper.GetUniqueFeatureName(crossSection.Network as HydroNetwork, crossSection);
+            }
+
+            return crossSection;
+        }
+
         public override void CopyFrom(object source)
         {
             base.CopyFrom(source);
@@ -85,26 +159,12 @@ namespace DelftTools.Hydro.CrossSections
             //Definition.CopyFrom(((ICrossSection) source).Definition);
         }
 
-        [Obsolete("Should only be used by NHibernate")]
-        public CrossSection() //NHibernate and local Activator
-        {}
-
         public override object Clone()
         {
             var clone = (CrossSection) base.Clone();
             clone.Definition = (ICrossSectionDefinition) Definition.Clone();
             return clone;
         }
-
-        public CrossSection(ICrossSectionDefinition crossSectionDefinition)
-        {
-            Name = "cross section";
-            Definition = crossSectionDefinition;
-        }
-
-        public virtual ICrossSectionDefinition Definition { get; protected set; }
-
-        public virtual bool GeometryBased => Definition.GeometryBased;
 
         public virtual void MakeDefinitionLocal()
         {
@@ -144,112 +204,6 @@ namespace DelftTools.Hydro.CrossSections
             HydroNetwork.SharedCrossSectionDefinitions.CollectionChanging -= LocalDefinitionAddingToSharedDefinitions;
         }
 
-        private void LocalDefinitionAddingToSharedDefinitions(object sender, NotifyCollectionChangingEventArgs e)
-        {
-            if (e.Action != NotifyCollectionChangeAction.Add)
-            {
-                throw new InvalidOperationException("Not expected");
-            }
-
-            Definition = new CrossSectionDefinitionProxy(e.Item as CrossSectionDefinition);
-        }
-
-        public override IGeometry Geometry
-        {
-            get =>
-                branch != null && Definition != null
-                    ? Definition.GetGeometry(this)
-                    : tmpGeometry;
-            set
-            {
-                BeforeGeometrySet(value);
-                tmpGeometry = value;
-            }
-        }
-
-        private void BeforeGeometrySet(IGeometry value)
-        {
-            if (Definition != null)
-            {
-                Definition.SetGeometry(value);
-            }
-        }
-
-        public static ICrossSection CreateDefault()
-        {
-            return CreateDefault(CrossSectionType.YZ, null, 0);
-        }
-
-        public static ICrossSection CreateDefault(CrossSectionType definitionType, IBranch branch,
-                                                  double chainage = 0.0)
-        {
-            ICrossSectionDefinition definition = GetDefaultDefinition(definitionType);
-            var crossSection = new CrossSection(definition)
-            {
-                Branch = branch,
-                Chainage = chainage
-            };
-
-            if (crossSection.Network != null)
-            {
-                crossSection.Name =
-                    HydroNetworkHelper.GetUniqueFeatureName(crossSection.Network as HydroNetwork, crossSection);
-            }
-
-            return crossSection;
-        }
-
-        private static ICrossSectionDefinition GetDefaultDefinition(CrossSectionType definitionType)
-        {
-            switch (definitionType)
-            {
-                case CrossSectionType.YZ:
-                    return CrossSectionDefinitionYZ.CreateDefault();
-                case CrossSectionType.ZW:
-                    return CrossSectionDefinitionZW.CreateDefault();
-                case CrossSectionType.GeometryBased:
-                    return CrossSectionDefinitionXYZ.CreateDefault();
-                case CrossSectionType.Standard:
-                    return CrossSectionDefinitionStandard.CreateDefault();
-            }
-
-            throw new NotImplementedException();
-        }
-
-        public virtual IHydroNetwork HydroNetwork => (IHydroNetwork) Network;
-
-        [DisplayName("Lowest point")]
-        [FeatureAttribute(Order = 5, ExportName = "LowestPt")]
-        public virtual double LowestPoint => Definition.LowestPoint;
-
-        [DisplayName("Highest point")]
-        [FeatureAttribute(Order = 6, ExportName = "HighestPt")]
-        public virtual double HighestPoint => Definition.HighestPoint;
-
-        [DisplayName("Type")]
-        [FeatureAttribute(Order = 7)]
-        public virtual CrossSectionType CrossSectionType => Definition.CrossSectionType;
-
-        [FeatureAttribute(Order = 8)]
-        public virtual double Width => Definition.Width;
-
-        [FeatureAttribute(Order = 9)]
-        public virtual double Thalweg => Math.Round(Definition.Thalweg, 2);
-
-        [DisplayName("Definition")]
-        [FeatureAttribute(Order = 10, ExportName = "DefName")]
-        public virtual string DefinitionName => Definition.Name;
-
-        private readonly Stack<IEditAction> editActions = new Stack<IEditAction>();
-
-        [NoNotifyPropertyChange]
-        public virtual IEditAction CurrentEditAction => editActions.Count > 0 ? editActions.Peek() : null;
-
-        [NoNotifyPropertyChange]
-        public virtual bool EditWasCancelled { get; protected set; }
-
-        public virtual bool IsEditing { get; protected set; }
-
         public virtual void BeginEdit(IEditAction action)
         {
             editActions.Push(action);
@@ -268,6 +222,51 @@ namespace DelftTools.Hydro.CrossSections
         {
             IsEditing = false;
             editActions.Pop();
+        }
+
+        [EditAction]
+        private void AfterNameSet()
+        {
+            //for practical reasons..sync definition name
+            if (Definition != null && !Definition.IsProxy)
+            {
+                Definition.Name = Name;
+            }
+        }
+
+        private void LocalDefinitionAddingToSharedDefinitions(object sender, NotifyCollectionChangingEventArgs e)
+        {
+            if (e.Action != NotifyCollectionChangeAction.Add)
+            {
+                throw new InvalidOperationException("Not expected");
+            }
+
+            Definition = new CrossSectionDefinitionProxy(e.Item as CrossSectionDefinition);
+        }
+
+        private void BeforeGeometrySet(IGeometry value)
+        {
+            if (Definition != null)
+            {
+                Definition.SetGeometry(value);
+            }
+        }
+
+        private static ICrossSectionDefinition GetDefaultDefinition(CrossSectionType definitionType)
+        {
+            switch (definitionType)
+            {
+                case CrossSectionType.YZ:
+                    return CrossSectionDefinitionYZ.CreateDefault();
+                case CrossSectionType.ZW:
+                    return CrossSectionDefinitionZW.CreateDefault();
+                case CrossSectionType.GeometryBased:
+                    return CrossSectionDefinitionXYZ.CreateDefault();
+                case CrossSectionType.Standard:
+                    return CrossSectionDefinitionStandard.CreateDefault();
+            }
+
+            throw new NotImplementedException();
         }
     }
 }

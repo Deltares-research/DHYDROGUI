@@ -60,10 +60,9 @@ namespace DelftTools.Hydro.CrossSections
             }
         }
 
-        [EditAction]
-        private void SetShapeFromType(CrossSectionStandardShapeType shapeType)
+        public static ICrossSectionDefinition CreateDefault()
         {
-            Shape = GetDefaultShape(shapeType);
+            return new CrossSectionDefinitionStandard();
         }
 
         public override object Clone()
@@ -96,6 +95,12 @@ namespace DelftTools.Hydro.CrossSections
             throw new NotImplementedException();
         }
 
+        [EditAction]
+        private void SetShapeFromType(CrossSectionStandardShapeType shapeType)
+        {
+            Shape = GetDefaultShape(shapeType);
+        }
+
         private static ICrossSectionStandardShape GetDefaultShape(CrossSectionStandardShapeType value)
         {
             switch (value)
@@ -121,11 +126,6 @@ namespace DelftTools.Hydro.CrossSections
                 default:
                     throw new ArgumentOutOfRangeException("value");
             }
-        }
-
-        public static ICrossSectionDefinition CreateDefault()
-        {
-            return new CrossSectionDefinitionStandard();
         }
     }
 }

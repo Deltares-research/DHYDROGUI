@@ -32,6 +32,145 @@ namespace DelftTools.Hydro.Structures
             BridgeType = BridgeType.Tabulated;
         }
 
+        /// <summary>
+        /// Set the bridge geometry to a tabulated profile with one single rectangular segment.
+        /// </summary>
+        /// <param name="bedLevel"> </param>
+        /// <param name="width"> </param>
+        /// <param name="height"> </param>
+        public virtual void SetRectangleCrossSection(double bedLevel, double width, double height)
+        {
+            BottomLevel = bedLevel;
+            Width = width;
+            Height = height;
+            //create a single section. Reference level is not used since the crossection is defined absolute. (Ref = 0)
+
+            TabulatedCrossSectionDefinition.SetAsRectangle(bedLevel, width, height);
+        }
+
+        public static Bridge CreateDefault()
+        {
+            var bridge = new Bridge();
+            bridge.TabulatedCrossSectionDefinition.SetWithHfswData(new[]
+            {
+                new HeightFlowStorageWidth(-10, 50, 50),
+                new HeightFlowStorageWidth(0, 100, 100)
+            });
+            bridge.FrictionType = BridgeFrictionType.Chezy;
+            bridge.Friction = 45.0;
+            return bridge;
+        }
+
+        public static Bridge CreateDefault(IBranch branch)
+        {
+            Bridge bridge = CreateDefault();
+            AddStructureToNetwork(bridge, branch);
+            return bridge;
+        }
+
+        [DynamicReadOnlyValidationMethod]
+        public virtual bool DynamicReadOnlyValidationMethod(string propertyName)
+        {
+            if (propertyName == "BridgeLength" || propertyName == "FrictionType" || propertyName == "Friction" ||
+                propertyName == "GroundLayerEnabled" || propertyName == "InletLossCoefficient" ||
+                propertyName == "OutletLossCoefficient")
+            {
+                return IsPillar;
+            }
+
+            if (propertyName == "GroundLayerThickness" || propertyName == "GroundLayerRoughness")
+            {
+                return IsPillar || !GroundLayerEnabled;
+            }
+
+            if (propertyName == "BottomLevel" || propertyName == "Width" || propertyName == "Height")
+            {
+                return !IsRectangle;
+            }
+
+            if (propertyName == "PillarWidth" || propertyName == "ShapeFactor")
+            {
+                return !IsPillar;
+            }
+
+            return false;
+        }
+
+        public override void CopyFrom(object source)
+        {
+            var copyFrom = (Bridge) source;
+            base.CopyFrom(source);
+            InletLossCoefficient = copyFrom.InletLossCoefficient;
+            OutletLossCoefficient = copyFrom.OutletLossCoefficient;
+            FlowDirection = copyFrom.FlowDirection;
+            FrictionType = copyFrom.FrictionType;
+            Friction = copyFrom.Friction;
+
+            GroundLayerThickness = copyFrom.GroundLayerThickness;
+            GroundLayerRoughness = copyFrom.GroundLayerRoughness;
+
+            BridgeType = copyFrom.BridgeType;
+            if (copyFrom.BridgeType == BridgeType.Tabulated)
+            {
+                TabulatedCrossSectionDefinition.ZWDataTable.Clear();
+                foreach (CrossSectionDataSet.CrossSectionZWRow zwwRow in copyFrom
+                                                                         .TabulatedCrossSectionDefinition.ZWDataTable)
+                {
+                    TabulatedCrossSectionDefinition.ZWDataTable.AddCrossSectionZWRow(
+                        zwwRow.Z, zwwRow.Width, zwwRow.StorageWidth);
+                }
+            }
+
+            BottomLevel = copyFrom.BottomLevel;
+            Width = copyFrom.Width;
+            Height = copyFrom.Height;
+            OffsetY = copyFrom.OffsetY;
+            ShapeFactor = copyFrom.ShapeFactor;
+            PillarWidth = copyFrom.PillarWidth;
+        }
+
+        public override StructureType GetStructureType()
+        {
+            return IsPillar
+                       ? StructureType.BridgePillar
+                       : StructureType.Bridge;
+        }
+
+        protected static FlowDirection GetPossibleFlowDirection(bool allowPositiveFlow, bool allowNegativeFlow)
+        {
+            return allowPositiveFlow
+                       ? allowNegativeFlow ? FlowDirection.Both : FlowDirection.Positive
+                       : allowNegativeFlow
+                           ? FlowDirection.Negative
+                           : FlowDirection.None;
+        }
+
+        private void UpdateCrossSectionDefinition(BridgeType type)
+        {
+            switch (type)
+            {
+                case BridgeType.Rectangle:
+                    crossSectionDefinition =
+                        new CrossSectionDefinitionStandard(new CrossSectionStandardShapeRectangle()
+                        {
+                            Width = Width,
+                            Height = Height
+                        }) {Name = Name};
+                    break;
+                case BridgeType.Tabulated:
+                    crossSectionDefinition = tabulatedCrossSectionDefinition;
+                    if (crossSectionDefinition.Name != Name)
+                    {
+                        crossSectionDefinition.Name = Name;
+                    }
+
+                    break;
+                default:
+                    crossSectionDefinition = null;
+                    break;
+            }
+        }
+
         #region IBridge Members
 
         private CrossSectionDefinitionZW tabulatedCrossSectionDefinition;
@@ -252,144 +391,5 @@ namespace DelftTools.Hydro.Structures
         }
 
         #endregion
-
-        public override void CopyFrom(object source)
-        {
-            var copyFrom = (Bridge) source;
-            base.CopyFrom(source);
-            InletLossCoefficient = copyFrom.InletLossCoefficient;
-            OutletLossCoefficient = copyFrom.OutletLossCoefficient;
-            FlowDirection = copyFrom.FlowDirection;
-            FrictionType = copyFrom.FrictionType;
-            Friction = copyFrom.Friction;
-
-            GroundLayerThickness = copyFrom.GroundLayerThickness;
-            GroundLayerRoughness = copyFrom.GroundLayerRoughness;
-
-            BridgeType = copyFrom.BridgeType;
-            if (copyFrom.BridgeType == BridgeType.Tabulated)
-            {
-                TabulatedCrossSectionDefinition.ZWDataTable.Clear();
-                foreach (CrossSectionDataSet.CrossSectionZWRow zwwRow in copyFrom
-                                                                         .TabulatedCrossSectionDefinition.ZWDataTable)
-                {
-                    TabulatedCrossSectionDefinition.ZWDataTable.AddCrossSectionZWRow(
-                        zwwRow.Z, zwwRow.Width, zwwRow.StorageWidth);
-                }
-            }
-
-            BottomLevel = copyFrom.BottomLevel;
-            Width = copyFrom.Width;
-            Height = copyFrom.Height;
-            OffsetY = copyFrom.OffsetY;
-            ShapeFactor = copyFrom.ShapeFactor;
-            PillarWidth = copyFrom.PillarWidth;
-        }
-
-        protected static FlowDirection GetPossibleFlowDirection(bool allowPositiveFlow, bool allowNegativeFlow)
-        {
-            return allowPositiveFlow
-                       ? allowNegativeFlow ? FlowDirection.Both : FlowDirection.Positive
-                       : allowNegativeFlow
-                           ? FlowDirection.Negative
-                           : FlowDirection.None;
-        }
-
-        /// <summary>
-        /// Set the bridge geometry to a tabulated profile with one single rectangular segment.
-        /// </summary>
-        /// <param name="bedLevel"> </param>
-        /// <param name="width"> </param>
-        /// <param name="height"> </param>
-        public virtual void SetRectangleCrossSection(double bedLevel, double width, double height)
-        {
-            BottomLevel = bedLevel;
-            Width = width;
-            Height = height;
-            //create a single section. Reference level is not used since the crossection is defined absolute. (Ref = 0)
-
-            TabulatedCrossSectionDefinition.SetAsRectangle(bedLevel, width, height);
-        }
-
-        public static Bridge CreateDefault()
-        {
-            var bridge = new Bridge();
-            bridge.TabulatedCrossSectionDefinition.SetWithHfswData(new[]
-            {
-                new HeightFlowStorageWidth(-10, 50, 50),
-                new HeightFlowStorageWidth(0, 100, 100)
-            });
-            bridge.FrictionType = BridgeFrictionType.Chezy;
-            bridge.Friction = 45.0;
-            return bridge;
-        }
-
-        public static Bridge CreateDefault(IBranch branch)
-        {
-            Bridge bridge = CreateDefault();
-            AddStructureToNetwork(bridge, branch);
-            return bridge;
-        }
-
-        [DynamicReadOnlyValidationMethod]
-        public virtual bool DynamicReadOnlyValidationMethod(string propertyName)
-        {
-            if (propertyName == "BridgeLength" || propertyName == "FrictionType" || propertyName == "Friction" ||
-                propertyName == "GroundLayerEnabled" || propertyName == "InletLossCoefficient" ||
-                propertyName == "OutletLossCoefficient")
-            {
-                return IsPillar;
-            }
-
-            if (propertyName == "GroundLayerThickness" || propertyName == "GroundLayerRoughness")
-            {
-                return IsPillar || !GroundLayerEnabled;
-            }
-
-            if (propertyName == "BottomLevel" || propertyName == "Width" || propertyName == "Height")
-            {
-                return !IsRectangle;
-            }
-
-            if (propertyName == "PillarWidth" || propertyName == "ShapeFactor")
-            {
-                return !IsPillar;
-            }
-
-            return false;
-        }
-
-        public override StructureType GetStructureType()
-        {
-            return IsPillar
-                       ? StructureType.BridgePillar
-                       : StructureType.Bridge;
-        }
-
-        private void UpdateCrossSectionDefinition(BridgeType type)
-        {
-            switch (type)
-            {
-                case BridgeType.Rectangle:
-                    crossSectionDefinition =
-                        new CrossSectionDefinitionStandard(new CrossSectionStandardShapeRectangle()
-                        {
-                            Width = Width,
-                            Height = Height
-                        }) {Name = Name};
-                    break;
-                case BridgeType.Tabulated:
-                    crossSectionDefinition = tabulatedCrossSectionDefinition;
-                    if (crossSectionDefinition.Name != Name)
-                    {
-                        crossSectionDefinition.Name = Name;
-                    }
-
-                    break;
-                default:
-                    crossSectionDefinition = null;
-                    break;
-            }
-        }
     }
 }

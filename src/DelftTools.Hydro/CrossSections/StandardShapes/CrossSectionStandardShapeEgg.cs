@@ -6,19 +6,11 @@ namespace DelftTools.Hydro.CrossSections.StandardShapes
     [Entity(FireOnCollectionChange = false)]
     public class CrossSectionStandardShapeEgg : CrossSectionStandardShapeWidthHeightBase
     {
-        public static CrossSectionStandardShapeEgg CreateDefault()
-        {
-            return new CrossSectionStandardShapeEgg {Height = 3};
-        }
+        private double height;
+
+        private double width;
 
         public override CrossSectionStandardShapeType Type => CrossSectionStandardShapeType.Egg;
-
-        public override CrossSectionDefinitionZW GetTabulatedDefinition()
-        {
-            return StandardCrossSectionsFactory.GetTabulatedCrossSectionFromEgg(Width);
-        }
-
-        private double height;
 
         /// <summary>
         /// Sets the height and auto-scales the width so width/height ratio remains 2/3
@@ -33,8 +25,6 @@ namespace DelftTools.Hydro.CrossSections.StandardShapes
             }
         }
 
-        private double width;
-
         /// <summary>
         /// Sets the width and auto-scales the height so width/height ratio remains 2/3
         /// </summary>
@@ -46,6 +36,16 @@ namespace DelftTools.Hydro.CrossSections.StandardShapes
                 width = value;
                 height = 1.5 * width;
             }
+        }
+
+        public static CrossSectionStandardShapeEgg CreateDefault()
+        {
+            return new CrossSectionStandardShapeEgg {Height = 3};
+        }
+
+        public override CrossSectionDefinitionZW GetTabulatedDefinition()
+        {
+            return StandardCrossSectionsFactory.GetTabulatedCrossSectionFromEgg(Width);
         }
     }
 }

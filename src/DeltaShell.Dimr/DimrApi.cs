@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -14,25 +15,25 @@ namespace DeltaShell.Dimr
     public class DimrApi : IDimrApi
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(DimrApi));
-        private readonly bool useMessagesBuffering; 
+
+        static DimrApi()
+        {
+            DimrApiDataSet.SetSharedPath();
+            NativeLibrary.LoadNativeDll(DimrApiDataSet.DimrDllName, DimrApiDataSet.DimrDllPath);
+        }
+
+        private readonly bool useMessagesBuffering;
         private double tStart;
         private double tEnd;
         private double tStep;
         private double tCurrent;
         private List<string> messages;
         private bool reduceLogging = false;
-        public string KernelDirs { get; set; }
         private DimrApiWrapper.Message_Callback cMessageCallback; // keep the callback so it doesn't get garbage collected!
         private DateTime currentTime;
         private DateTime dimrRefDate;
         private double relativeStartTime;
-   
-        static DimrApi()
-        {
-            DimrApiDataSet.SetSharedPath();
-            NativeLibrary.LoadNativeDll(DimrApiDataSet.DimrDllName, DimrApiDataSet.DimrDllPath);
-        }
-        public DimrApi():this(true){}
+        public DimrApi() : this(true) {}
 
         public DimrApi(bool useMessagesBuffering)
         {
@@ -46,11 +47,28 @@ namespace DeltaShell.Dimr
             set_feedback_logger();
             Logger = BMI_Logger_function;
         }
+
+        public string KernelDirs { get; set; }
+
+        public void set_logger()
+        {
+            DimrApiWrapper.set_logger(Logger);
+        }
+
+        #region Implementation of IDisposable
+
+        public void Dispose()
+        {
+            DimrApiWrapper.set_logger_callback(null);
+        }
+
+        #endregion
+
         [ExcludeFromCodeCoverage]
         private void BMI_Logger_function(Level level, string message)
         {
-            var msg = message != null ? string.Copy(message) : string.Empty;
-            
+            string msg = message != null ? string.Copy(message) : string.Empty;
+
             msg = string.Format("Dimr [{0}] {1} >> {2}", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), Enum.GetName(typeof(Level), level), msg);
             if (useMessagesBuffering)
             {
@@ -62,16 +80,15 @@ namespace DeltaShell.Dimr
                 Log.DebugFormat(msg);
             }
         }
-        public void set_logger()
-        {
-            DimrApiWrapper.set_logger(Logger);
-        }
 
         #region Implementation of IDimrApi
 
         public virtual DateTime DimrRefDate
         {
-            get { return dimrRefDate; }
+            get
+            {
+                return dimrRefDate;
+            }
             set
             {
                 dimrRefDate = value;
@@ -79,23 +96,30 @@ namespace DeltaShell.Dimr
             }
         }
 
-        public void SetValues(string variable, int[] index, Array values)
-        {
-        }
+        public void SetValues(string variable, int[] index, Array values) {}
 
-        public DateTime StartTime 
+        public DateTime StartTime
         {
-            get { return DimrRefDate.AddSeconds(tStart - relativeStartTime); }
+            get
+            {
+                return DimrRefDate.AddSeconds(tStart - relativeStartTime);
+            }
         }
 
         public DateTime StopTime
         {
-            get { return DimrRefDate.AddSeconds(tEnd - relativeStartTime); }
+            get
+            {
+                return DimrRefDate.AddSeconds(tEnd - relativeStartTime);
+            }
         }
 
         public TimeSpan TimeStep
         {
-            get { return new TimeSpan((long)(TimeSpan.TicksPerSecond * tStep)); }
+            get
+            {
+                return new TimeSpan((long) (TimeSpan.TicksPerSecond * tStep));
+            }
         }
 
         public string[] VariableNames { get; private set; }
@@ -103,7 +127,10 @@ namespace DeltaShell.Dimr
 
         public DateTime CurrentTime
         {
-            get { return currentTime; }
+            get
+            {
+                return currentTime;
+            }
         }
 
         public void set_feedback_logger()
@@ -114,27 +141,28 @@ namespace DeltaShell.Dimr
         [ExcludeFromCodeCoverage]
         private void FeedbackLog(string time, string message, uint level)
         {
-            var msg = message != null ? string.Copy(message) : string.Empty;
-            string dateTimeString = string.Empty;
+            string msg = message != null ? string.Copy(message) : string.Empty;
+            var dateTimeString = string.Empty;
             try
             {
-                var dateTime = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).AddSeconds((long)(double.Parse(time.Split('.')[0], System.Globalization.CultureInfo.InvariantCulture)))
-                    .AddMilliseconds((long)(double.Parse(time.Split('.')[1], System.Globalization.CultureInfo.InvariantCulture)))
-                    .AddDays(-1)
-                    .ToLocalTime();
+                DateTime dateTime = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).AddSeconds((long) double.Parse(time.Split('.')[0], CultureInfo.InvariantCulture))
+                                                                                          .AddMilliseconds((long) double.Parse(time.Split('.')[1], CultureInfo.InvariantCulture))
+                                                                                          .AddDays(-1)
+                                                                                          .ToLocalTime();
                 dateTimeString = dateTime.ToString("yyyy-MM-dd HH:mm:ss.fff");
             }
             catch
             {
                 dateTimeString = time;
             }
-            Level debugLevel = Level.Info;
-            if (Enum.IsDefined(typeof(Level), (int)level))
+
+            var debugLevel = Level.Info;
+            if (Enum.IsDefined(typeof(Level), (int) level))
             {
                 debugLevel = (Level) level;
             }
-            
-            msg = string.Format("Dimr [{0}] {1} >> {2}", dateTimeString , Enum.GetName(typeof(Level), debugLevel), msg);
+
+            msg = string.Format("Dimr [{0}] {1} >> {2}", dateTimeString, Enum.GetName(typeof(Level), debugLevel), msg);
             if (useMessagesBuffering)
             {
                 messages.Add(msg);
@@ -148,28 +176,25 @@ namespace DeltaShell.Dimr
 
         public int Initialize(string xmlFile)
         {
-            
-            var previousDir = Environment.CurrentDirectory;
+            string previousDir = Environment.CurrentDirectory;
             reduceLogging = false;
 
             try
             {
                 Environment.CurrentDirectory = Path.GetDirectoryName(xmlFile);
                 LogMsg(string.Format("Running dimr in : {0}", Environment.CurrentDirectory));
-                
-                var path = Environment.GetEnvironmentVariable(EnvironmentConstants.PathKey);
+
+                string path = Environment.GetEnvironmentVariable(EnvironmentConstants.PathKey);
 
                 path = KernelDirs + ";" +
                        DimrApiDataSet.DimrDllPath + ";" +
                        path;
                 Environment.SetEnvironmentVariable(EnvironmentConstants.PathKey, path, EnvironmentVariableTarget.Process);
-                
+
                 LogMsg(string.Format("Path used: {0}", Environment.GetEnvironmentVariable(EnvironmentConstants.PathKey)));
 
-                
                 byte useMpi = 0;
-                
-                
+
                 // Allocating memory for int
                 IntPtr intPointer = Marshal.AllocHGlobal(sizeof(byte));
 
@@ -181,7 +206,7 @@ namespace DeltaShell.Dimr
 
                 // Free memory
                 Marshal.FreeHGlobal(intPointer);
-                int numranks = 1;
+                var numranks = 1;
 
                 // Allocating memory for int
                 intPointer = Marshal.AllocHGlobal(sizeof(int));
@@ -195,7 +220,7 @@ namespace DeltaShell.Dimr
                 // Free memory
                 Marshal.FreeHGlobal(intPointer);
 
-                int my_rank = 0;
+                var my_rank = 0;
 
                 // Allocating memory for int
                 intPointer = Marshal.AllocHGlobal(sizeof(int));
@@ -214,6 +239,7 @@ namespace DeltaShell.Dimr
                 {
                     return returnCode;
                 }
+
                 DimrApiWrapper.get_start_time(ref tStart);
                 DimrApiWrapper.get_end_time(ref tEnd);
                 DimrApiWrapper.get_time_step(ref tStep);
@@ -229,6 +255,7 @@ namespace DeltaShell.Dimr
             {
                 Environment.CurrentDirectory = previousDir;
             }
+
             return 0;
         }
 
@@ -237,7 +264,7 @@ namespace DeltaShell.Dimr
             // Allocating memory for long
             IntPtr intPointer = Marshal.AllocHGlobal(sizeof(int));
 
-            Marshal.WriteInt32(intPointer, (int)level);
+            Marshal.WriteInt32(intPointer, (int) level);
 
             // sending intPointer to unmanaged code here
 
@@ -248,15 +275,17 @@ namespace DeltaShell.Dimr
 
         private void LogMsg(string message)
         {
-            var msg = message != null ? string.Copy(message) : string.Empty;
+            string msg = message != null ? string.Copy(message) : string.Empty;
             if (useMessagesBuffering)
             {
                 messages.Add(msg);
             }
+
             {
                 Log.Info(msg);
             }
         }
+
         public int Update(double step)
         {
             int returnCode = DimrApiWrapper.update(step);
@@ -265,9 +294,9 @@ namespace DeltaShell.Dimr
             {
                 return returnCode;
             }
-            
+
             DimrApiWrapper.get_current_time(ref tCurrent);
-            currentTime = DimrRefDate.AddSeconds(tCurrent-relativeStartTime);
+            currentTime = DimrRefDate.AddSeconds(tCurrent - relativeStartTime);
             return 0;
         }
 
@@ -279,12 +308,16 @@ namespace DeltaShell.Dimr
 
         public int[] GetShape(string variable)
         {
-            return new int[] {};
+            return new int[]
+                {};
         }
 
         public Array GetValues(string variable)
         {
-            double[] value = { default(double) };
+            double[] value =
+            {
+                default(double)
+            };
             GCHandle handle = GCHandle.Alloc(value.Length * Marshal.SizeOf(typeof(double)), GCHandleType.Pinned);
             IntPtr dPtr = handle.AddrOfPinnedObject();
             try
@@ -295,7 +328,10 @@ namespace DeltaShell.Dimr
             finally
             {
                 if (dPtr != IntPtr.Zero)
+                {
                     handle.Free();
+                }
+
                 dPtr = IntPtr.Zero;
             }
 
@@ -314,7 +350,11 @@ namespace DeltaShell.Dimr
 
         public void SetValuesInt(string variable, int[] values)
         {
-            if (values == null) return;
+            if (values == null)
+            {
+                return;
+            }
+
             // Allocating memory for double[]
             IntPtr intArrayPointer = Marshal.AllocHGlobal(sizeof(int) * values.Length);
 
@@ -327,9 +367,14 @@ namespace DeltaShell.Dimr
             // Free memory
             Marshal.FreeHGlobal(intArrayPointer);
         }
+
         public void SetValuesDouble(string variable, double[] values)
         {
-            if(values == null) return;
+            if (values == null)
+            {
+                return;
+            }
+
             // Allocating memory for double[]
             IntPtr doubleArrayPointer = Marshal.AllocHGlobal(sizeof(double) * values.Length);
 
@@ -349,13 +394,10 @@ namespace DeltaShell.Dimr
             if (valuesDouble != null)
             {
                 SetValuesDouble(variable, valuesDouble);
-
             }
         }
 
-        public void SetValues(string variable, int[] start, int[] count, Array values)
-        {
-        }
+        public void SetValues(string variable, int[] start, int[] count, Array values) {}
 
         public string[] Messages
         {
@@ -365,13 +407,18 @@ namespace DeltaShell.Dimr
                 {
                     messages = new List<string>();
                 }
+
                 if (messages.Any())
                 {
-                    var messagesFromDimr = messages.ToArray();
+                    string[] messagesFromDimr = messages.ToArray();
                     messages.Clear();
                     return messagesFromDimr;
                 }
-                return new [] { string.Empty };
+
+                return new[]
+                {
+                    string.Empty
+                };
             }
         }
 
@@ -379,24 +426,15 @@ namespace DeltaShell.Dimr
         {
             if (useMessagesBuffering)
             {
-                var infoMsgs = Messages;
+                string[] infoMsgs = Messages;
                 if (infoMsgs.Length > 0 && !(infoMsgs.Length == 1 && infoMsgs[0] == string.Empty))
                 {
-                    foreach (var infoMsg in infoMsgs)
+                    foreach (string infoMsg in infoMsgs)
                     {
                         Log.Info(infoMsg);
                     }
                 }
             }
-        }
-        
-        #endregion
-
-        #region Implementation of IDisposable
-
-        public void Dispose()
-        {
-            DimrApiWrapper.set_logger_callback(null);
         }
 
         #endregion

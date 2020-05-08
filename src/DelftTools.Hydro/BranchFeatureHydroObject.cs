@@ -16,6 +16,14 @@ namespace DelftTools.Hydro
 
         public virtual bool CanBeLinkTarget => false;
 
+        public override void CopyFrom(object source)
+        {
+            base.CopyFrom(source);
+
+            var hydroObject = (BranchFeatureHydroObject) source;
+            Links = new EventedList<HydroLink>(hydroObject.Links);
+        }
+
         public virtual HydroLink LinkTo(IHydroObject target)
         {
             return Region.AddNewLink(this, target);
@@ -29,14 +37,6 @@ namespace DelftTools.Hydro
         public virtual bool CanLinkTo(IHydroObject target)
         {
             return Region.CanLinkTo(this, target);
-        }
-
-        public override void CopyFrom(object source)
-        {
-            base.CopyFrom(source);
-
-            var hydroObject = (BranchFeatureHydroObject) source;
-            Links = new EventedList<HydroLink>(hydroObject.Links);
         }
     }
 }

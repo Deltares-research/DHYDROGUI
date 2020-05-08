@@ -17,30 +17,6 @@ namespace DelftTools.Hydro.Structures.WeirFormula
             Initialize();
         }
 
-        private void Initialize()
-        {
-            SetDefaultShape();
-            DischargeCoefficient = 1.0;
-        }
-
-        /// <summary>
-        /// Sets default shape
-        /// </summary>
-        public virtual void SetDefaultShape()
-        {
-            SetShape(new[]
-            {
-                0.0,
-                10.0
-            }, new[]
-            {
-                10.0,
-                10.0
-            });
-        }
-
-        public virtual string Name => "Free form weir (Universal weir)";
-
         /// <summary>
         /// Y values of freeform/cross section. Use SetShape to edit values.
         /// </summary>
@@ -69,25 +45,7 @@ namespace DelftTools.Hydro.Structures.WeirFormula
             set => shape = value;
         }
 
-        /// <summary>
-        /// Update the shape of the weir.
-        /// </summary>
-        public virtual void SetShape(double[] yvalues, double[] zvalues)
-        {
-            var vertices = new List<Coordinate>();
-            for (var i = 0; i < yvalues.Length; i++)
-            {
-                vertices.Add(new Coordinate(yvalues[i], zvalues[i]));
-            }
-
-            Shape = new LineString(vertices.ToArray()); // endGeometry;
-        }
-
-        public virtual bool IsRectangle => false;
-
         public virtual bool IsGated => false;
-
-        public virtual bool HasFlowDirection => true;
 
         public virtual double CrestWidth
         {
@@ -112,6 +70,42 @@ namespace DelftTools.Hydro.Structures.WeirFormula
         /// </summary>
         public virtual double DischargeCoefficient { get; set; }
 
+        public virtual string Name => "Free form weir (Universal weir)";
+
+        public virtual bool IsRectangle => false;
+
+        public virtual bool HasFlowDirection => true;
+
+        /// <summary>
+        /// Sets default shape
+        /// </summary>
+        public virtual void SetDefaultShape()
+        {
+            SetShape(new[]
+            {
+                0.0,
+                10.0
+            }, new[]
+            {
+                10.0,
+                10.0
+            });
+        }
+
+        /// <summary>
+        /// Update the shape of the weir.
+        /// </summary>
+        public virtual void SetShape(double[] yvalues, double[] zvalues)
+        {
+            var vertices = new List<Coordinate>();
+            for (var i = 0; i < yvalues.Length; i++)
+            {
+                vertices.Add(new Coordinate(yvalues[i], zvalues[i]));
+            }
+
+            Shape = new LineString(vertices.ToArray()); // endGeometry;
+        }
+
         public virtual object Clone()
         {
             var clonedFormula = new FreeFormWeirFormula
@@ -120,6 +114,12 @@ namespace DelftTools.Hydro.Structures.WeirFormula
                 DischargeCoefficient = DischargeCoefficient
             };
             return clonedFormula;
+        }
+
+        private void Initialize()
+        {
+            SetDefaultShape();
+            DischargeCoefficient = 1.0;
         }
     }
 }

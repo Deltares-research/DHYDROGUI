@@ -41,11 +41,11 @@ namespace DelftTools.Hydro
         }
 
         /// Ensure that all
-        /// <see cref="ICompositeBranchStructure" />
+        /// <see cref="ICompositeBranchStructure"/>
         /// have a unique name
         /// </summary>
         /// <param name="network"> Network to check </param>
-        /// <param name="enableLogging"> Add log message for changed <see cref="ICompositeBranchStructure" /> names </param>
+        /// <param name="enableLogging"> Add log message for changed <see cref="ICompositeBranchStructure"/> names </param>
         public static void MakeNamesUnique<T>(this IHydroNetwork network, bool enableLogging = true)
             where T : class, IBranchFeature
         {
@@ -56,14 +56,11 @@ namespace DelftTools.Hydro
                              networkNotifyPropertyChanged != null &&
                              networkNotifyPropertyChanging != null;
 
-            string previousName = string.Empty;
+            var previousName = string.Empty;
             var messagesList = new List<string>();
 
             // function to catch previous name
-            PropertyChangingEventHandler onNetworkPropertyChanging = (sender, e) =>
-            {
-                previousName = (sender as T)?.Name;
-            };
+            PropertyChangingEventHandler onNetworkPropertyChanging = (sender, e) => { previousName = (sender as T)?.Name; };
 
             // function to add change log messages
             PropertyChangedEventHandler onNetworkPropertyChanged = (sender, e) =>

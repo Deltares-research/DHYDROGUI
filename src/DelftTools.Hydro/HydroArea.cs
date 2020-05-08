@@ -15,6 +15,22 @@ namespace DelftTools.Hydro
             Initialize();
         }
 
+        public virtual IEventedList<LandBoundary2D> LandBoundaries { get; protected set; }
+        public virtual IEventedList<GroupablePointFeature> DryPoints { get; protected set; }
+        public virtual IEventedList<GroupableFeature2DPolygon> DryAreas { get; protected set; }
+        public virtual IEventedList<ThinDam2D> ThinDams { get; protected set; }
+        public virtual IEventedList<FixedWeir> FixedWeirs { get; protected set; }
+        public virtual IEventedList<GroupableFeature2DPoint> ObservationPoints { get; protected set; }
+        public virtual IEventedList<ObservationCrossSection2D> ObservationCrossSections { get; protected set; }
+        public virtual IEventedList<GroupableFeature2D> DumpingLocations { get; protected set; }
+        public virtual IEventedList<GroupableFeature2D> DredgingLocations { get; protected set; }
+        public virtual IEventedList<Embankment> Embankments { get; protected set; }
+        public virtual IEventedList<GroupableFeature2DPolygon> Enclosures { get; protected set; }
+        public virtual IEventedList<BridgePillar> BridgePillars { get; protected set; }
+
+        public virtual IEventedList<Pump2D> Pumps { get; protected set; }
+        public virtual IEventedList<Weir2D> Weirs { get; protected set; }
+
         private void Initialize()
         {
             Name = "Area";
@@ -36,22 +52,6 @@ namespace DelftTools.Hydro
             Pumps = new EventedList<Pump2D>();
             Weirs = new EventedList<Weir2D>();
         }
-
-        public virtual IEventedList<LandBoundary2D> LandBoundaries { get; protected set; }
-        public virtual IEventedList<GroupablePointFeature> DryPoints { get; protected set; }
-        public virtual IEventedList<GroupableFeature2DPolygon> DryAreas { get; protected set; }
-        public virtual IEventedList<ThinDam2D> ThinDams { get; protected set; }
-        public virtual IEventedList<FixedWeir> FixedWeirs { get; protected set; }
-        public virtual IEventedList<GroupableFeature2DPoint> ObservationPoints { get; protected set; }
-        public virtual IEventedList<ObservationCrossSection2D> ObservationCrossSections { get; protected set; }
-        public virtual IEventedList<GroupableFeature2D> DumpingLocations { get; protected set; }
-        public virtual IEventedList<GroupableFeature2D> DredgingLocations { get; protected set; }
-        public virtual IEventedList<Embankment> Embankments { get; protected set; }
-        public virtual IEventedList<GroupableFeature2DPolygon> Enclosures { get; protected set; }
-        public virtual IEventedList<BridgePillar> BridgePillars { get; protected set; }
-
-        public virtual IEventedList<Pump2D> Pumps { get; protected set; }
-        public virtual IEventedList<Weir2D> Weirs { get; protected set; }
 
         #region IHydroRegion
 

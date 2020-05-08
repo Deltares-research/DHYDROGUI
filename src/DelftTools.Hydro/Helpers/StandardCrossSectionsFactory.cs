@@ -98,42 +98,6 @@ namespace DelftTools.Hydro.Helpers
         }
 
         /// <summary>
-        /// *****************************************************************
-        /// *****************************************************************
-        /// **                                                             **
-        /// **      PROGRAMMA  D I W A                                     **
-        /// **                                                             **
-        /// **      EIGENDOM:  L A N D I N R I C H T I N G S D I E N S T   **
-        /// **                                                             **
-        /// **      PROGRAMMERING EN ANALYSE :   T. GELOK; J. BOUWKNEGT    **
-        /// **      begindatum onderhoud: 09-11-1995                       **
-        /// **                       ---------------                       **
-        /// **       SUBROUTINE :   |  K O O R D E  |                      **
-        /// **                       ---------------                       **
-        /// *****************************************************************
-        /// **                                                             **
-        /// **    Functie Koorde berekent een horizontale koorde ter hoogte**
-        /// **    Y (tov middelpunt) in een cirkel met straal R            **
-        /// **                                                             **
-        /// **    AANGEROEPEN IN: NATOMP_UF                                **
-        /// *****************************************************************
-        /// *****************************************************************
-        /// </summary>
-        /// <param name="radius"> </param>
-        /// <param name="y"> </param>
-        /// <returns> </returns>
-        private static double Koorde(double radius, double y)
-        {
-            double d = (radius - y) * (radius + y);
-            if (d < 0)
-            {
-                return -1;
-            }
-
-            return 2 * Math.Sqrt(d);
-        }
-
-        /// <summary>
         /// Creates a profile from width and height
         /// based on ProfileCunette from ProfileFormules from Sobek UI
         /// </summary>
@@ -643,6 +607,42 @@ namespace DelftTools.Hydro.Helpers
             var crossSection = new CrossSectionDefinitionZW();
             crossSection.SetAsRectangle(0, Math.Max(0.001, width), Math.Max(0.001, height), isClosed);
             return crossSection;
+        }
+
+        /// <summary>
+        /// *****************************************************************
+        /// *****************************************************************
+        /// **                                                             **
+        /// **      PROGRAMMA  D I W A                                     **
+        /// **                                                             **
+        /// **      EIGENDOM:  L A N D I N R I C H T I N G S D I E N S T   **
+        /// **                                                             **
+        /// **      PROGRAMMERING EN ANALYSE :   T. GELOK; J. BOUWKNEGT    **
+        /// **      begindatum onderhoud: 09-11-1995                       **
+        /// **                       ---------------                       **
+        /// **       SUBROUTINE :   |  K O O R D E  |                      **
+        /// **                       ---------------                       **
+        /// *****************************************************************
+        /// **                                                             **
+        /// **    Functie Koorde berekent een horizontale koorde ter hoogte**
+        /// **    Y (tov middelpunt) in een cirkel met straal R            **
+        /// **                                                             **
+        /// **    AANGEROEPEN IN: NATOMP_UF                                **
+        /// *****************************************************************
+        /// *****************************************************************
+        /// </summary>
+        /// <param name="radius"> </param>
+        /// <param name="y"> </param>
+        /// <returns> </returns>
+        private static double Koorde(double radius, double y)
+        {
+            double d = (radius - y) * (radius + y);
+            if (d < 0)
+            {
+                return -1;
+            }
+
+            return 2 * Math.Sqrt(d);
         }
     }
 }

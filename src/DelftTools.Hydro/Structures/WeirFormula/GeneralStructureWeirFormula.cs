@@ -23,46 +23,16 @@ namespace DelftTools.Hydro.Structures.WeirFormula
                     {KnownGeneralStructureProperties.Upstream1Level, (f, v) => f.BedLevelLeftSideStructure = v},
                     {KnownGeneralStructureProperties.Downstream1Level, (f, v) => f.BedLevelRightSideStructure = v},
                     {KnownGeneralStructureProperties.Downstream2Level, (f, v) => f.BedLevelRightSideOfStructure = v},
-                    {
-                        KnownGeneralStructureProperties.PositiveFreeGateFlowCoefficient,
-                        (f, v) => f.PositiveFreeGateFlow = v
-                    },
-                    {
-                        KnownGeneralStructureProperties.PositiveDrownGateFlowCoefficient,
-                        (f, v) => f.PositiveDrownedGateFlow = v
-                    },
-                    {
-                        KnownGeneralStructureProperties.PositiveFreeWeirFlowCoefficient,
-                        (f, v) => f.PositiveFreeWeirFlow = v
-                    },
-                    {
-                        KnownGeneralStructureProperties.PositiveDrownWeirFlowCoefficient,
-                        (f, v) => f.PositiveDrownedWeirFlow = v
-                    },
-                    {
-                        KnownGeneralStructureProperties.PositiveContractionCoefficientFreeGate,
-                        (f, v) => f.PositiveContractionCoefficient = v
-                    },
-                    {
-                        KnownGeneralStructureProperties.NegativeFreeGateFlowCoefficient,
-                        (f, v) => f.NegativeFreeGateFlow = v
-                    },
-                    {
-                        KnownGeneralStructureProperties.NegativeDrownGateFlowCoefficient,
-                        (f, v) => f.NegativeDrownedGateFlow = v
-                    },
-                    {
-                        KnownGeneralStructureProperties.NegativeFreeWeirFlowCoefficient,
-                        (f, v) => f.NegativeFreeWeirFlow = v
-                    },
-                    {
-                        KnownGeneralStructureProperties.NegativeDrownWeirFlowCoefficient,
-                        (f, v) => f.NegativeDrownedWeirFlow = v
-                    },
-                    {
-                        KnownGeneralStructureProperties.NegativeContractionCoefficientFreeGate,
-                        (f, v) => f.NegativeContractionCoefficient = v
-                    },
+                    {KnownGeneralStructureProperties.PositiveFreeGateFlowCoefficient, (f, v) => f.PositiveFreeGateFlow = v},
+                    {KnownGeneralStructureProperties.PositiveDrownGateFlowCoefficient, (f, v) => f.PositiveDrownedGateFlow = v},
+                    {KnownGeneralStructureProperties.PositiveFreeWeirFlowCoefficient, (f, v) => f.PositiveFreeWeirFlow = v},
+                    {KnownGeneralStructureProperties.PositiveDrownWeirFlowCoefficient, (f, v) => f.PositiveDrownedWeirFlow = v},
+                    {KnownGeneralStructureProperties.PositiveContractionCoefficientFreeGate, (f, v) => f.PositiveContractionCoefficient = v},
+                    {KnownGeneralStructureProperties.NegativeFreeGateFlowCoefficient, (f, v) => f.NegativeFreeGateFlow = v},
+                    {KnownGeneralStructureProperties.NegativeDrownGateFlowCoefficient, (f, v) => f.NegativeDrownedGateFlow = v},
+                    {KnownGeneralStructureProperties.NegativeFreeWeirFlowCoefficient, (f, v) => f.NegativeFreeWeirFlow = v},
+                    {KnownGeneralStructureProperties.NegativeDrownWeirFlowCoefficient, (f, v) => f.NegativeDrownedWeirFlow = v},
+                    {KnownGeneralStructureProperties.NegativeContractionCoefficientFreeGate, (f, v) => f.NegativeContractionCoefficient = v},
                     {
                         KnownGeneralStructureProperties.ExtraResistance, (f, v) =>
                         {
@@ -225,7 +195,7 @@ namespace DelftTools.Hydro.Structures.WeirFormula
         public virtual double LowerEdgeLevel { get; set; }
 
         /// <summary>
-        /// When true, use <see cref="LowerEdgeLevelTimeSeries" />, else use <see cref="GateOpening" />.
+        /// When true, use <see cref="LowerEdgeLevelTimeSeries"/>, else use <see cref="GateOpening"/>.
         /// </summary>
         public virtual bool UseLowerEdgeLevelTimeSeries
         {

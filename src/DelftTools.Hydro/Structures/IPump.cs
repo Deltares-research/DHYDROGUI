@@ -9,14 +9,14 @@ namespace DelftTools.Hydro.Structures
         double Chainage { get; set; }
 
         /// <summary>
-        /// Indicates if <see cref="CapacityTimeSeries" /> can be used.
+        /// Indicates if <see cref="CapacityTimeSeries"/> can be used.
         /// </summary>
         bool CanBeTimedependent { get; set; }
 
         bool DirectionIsPositive { get; set; }
 
         /// <summary>
-        /// If true, <see cref="CapacityTimeSeries" /> is used. Otherwise use <see cref="Capacity" />.
+        /// If true, <see cref="CapacityTimeSeries"/> is used. Otherwise use <see cref="Capacity"/>.
         /// </summary>
         bool UseCapacityTimeSeries { get; set; }
 

@@ -1,9 +1,10 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8"?>
+
 <hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"
                    auto-import="false"
-                    namespace="DelftTools.Hydro.Structures"
-                    assembly="DelftTools.Hydro">
-  <subclass name="DelftTools.Hydro.Structures.Gate, DelftTools.Hydro" discriminator-value="branch_structure_gate"  extends="DelftTools.Hydro.IStructure1D, DelftTools.Hydro">
+                   namespace="DelftTools.Hydro.Structures"
+                   assembly="DelftTools.Hydro">
+  <subclass name="DelftTools.Hydro.Structures.Gate, DelftTools.Hydro" discriminator-value="branch_structure_gate" extends="DelftTools.Hydro.IStructure1D, DelftTools.Hydro">
     <meta attribute="anyType">IValueConverter.OriginalValue</meta>
 
     <property name="SillLevel" column="sill_level" />

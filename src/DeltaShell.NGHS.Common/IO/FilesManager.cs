@@ -45,7 +45,7 @@ namespace DeltaShell.NGHS.Common.IO
                     continue;
                 }
 
-                file.CopyTo(targetFile.FullName, overwrite: true);
+                file.CopyTo(targetFile.FullName, true);
 
                 if (switchTo)
                 {

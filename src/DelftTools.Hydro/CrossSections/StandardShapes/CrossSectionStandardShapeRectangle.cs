@@ -6,6 +6,8 @@ namespace DelftTools.Hydro.CrossSections.StandardShapes
     [Entity(FireOnCollectionChange = false)]
     public class CrossSectionStandardShapeRectangle : CrossSectionStandardShapeWidthHeightBase
     {
+        public override CrossSectionStandardShapeType Type => CrossSectionStandardShapeType.Rectangle;
+
         public static CrossSectionStandardShapeRectangle CreateDefault()
         {
             return new CrossSectionStandardShapeRectangle
@@ -14,8 +16,6 @@ namespace DelftTools.Hydro.CrossSections.StandardShapes
                 Width = 1
             };
         }
-
-        public override CrossSectionStandardShapeType Type => CrossSectionStandardShapeType.Rectangle;
 
         public override CrossSectionDefinitionZW GetTabulatedDefinition()
         {

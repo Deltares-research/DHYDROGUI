@@ -6,6 +6,10 @@ namespace DelftTools.Hydro
 {
     public interface IModelMerge : IModel
     {
+        /// <summary>
+        /// containers of models that need to be merged before you can merge this model
+        /// </summary>
+        IEnumerable<IModelMerge> DependendModels { get; }
         /*/// <summary>
         /// The name of the model
         /// </summary>
@@ -22,7 +26,7 @@ namespace DelftTools.Hydro
         /// Merges a model into this model
         /// </summary>
         /// <param name="sourceModel"> The model we want to merge into this model </param>
-        /// <param name="mergedDependendModelsLookup"> A list of merged models listed in <see cref="DependendModels" /> </param>
+        /// <param name="mergedDependendModelsLookup"> A list of merged models listed in <see cref="DependendModels"/> </param>
         /// <returns> If the merge was succesfull </returns>
         bool Merge(IModelMerge sourceModel, IDictionary<IModelMerge, IModelMerge> mergedDependendModelsLookup);
 
@@ -31,10 +35,5 @@ namespace DelftTools.Hydro
         /// <param name="sourceModel"> </param>
         /// </summary>
         bool CanMerge(object sourceModel);
-
-        /// <summary>
-        /// containers of models that need to be merged before you can merge this model
-        /// </summary>
-        IEnumerable<IModelMerge> DependendModels { get; }
     }
 }

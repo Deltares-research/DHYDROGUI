@@ -17,12 +17,15 @@ namespace DelftTools.Hydro
             Attributes = new DictionaryFeatureAttributeCollection();
         }
 
+        [Aggregation]
+        public virtual DrainageBasin Basin { get; set; }
+
+        [FeatureAttribute]
+        public virtual string Description { get; set; }
+
         [DisplayName("Name")]
         [FeatureAttribute]
         public virtual string Name { get; set; }
-
-        [Aggregation]
-        public virtual DrainageBasin Basin { get; set; }
 
         public virtual IHydroRegion Region => Basin;
 
@@ -33,19 +36,13 @@ namespace DelftTools.Hydro
 
         public virtual bool CanBeLinkTarget => true;
 
-        public virtual HydroLink LinkTo(IHydroObject target)
-        {
-            return Region.AddNewLink(this, target);
-        }
+        [DisplayName("Long name")]
+        [FeatureAttribute]
+        public virtual string LongName { get; set; }
 
-        public virtual void UnlinkFrom(IHydroObject target)
+        public override string ToString()
         {
-            Region.RemoveLink(this, target);
-        }
-
-        public virtual bool CanLinkTo(IHydroObject target)
-        {
-            return Region.CanLinkTo(this, target);
+            return Name;
         }
 
         public virtual int CompareTo(object obj)
@@ -83,16 +80,19 @@ namespace DelftTools.Hydro
             throw new InvalidOperationException();
         }
 
-        [DisplayName("Long name")]
-        [FeatureAttribute]
-        public virtual string LongName { get; set; }
-
-        [FeatureAttribute]
-        public virtual string Description { get; set; }
-
-        public override string ToString()
+        public virtual HydroLink LinkTo(IHydroObject target)
         {
-            return Name;
+            return Region.AddNewLink(this, target);
+        }
+
+        public virtual void UnlinkFrom(IHydroObject target)
+        {
+            Region.RemoveLink(this, target);
+        }
+
+        public virtual bool CanLinkTo(IHydroObject target)
+        {
+            return Region.CanLinkTo(this, target);
         }
 
         public override object Clone()

@@ -91,11 +91,7 @@ namespace DelftTools.Hydro.Structures.WeirFormula
         /// Gate opening (openlevel)
         /// </summary>
         public virtual double
-            GateOpening
-        {
-            get;
-            set;
-        } // LowerEdgeLevel, this should be replaced with LowerEdgeLevel value, see LowerEdgeLevelTimeSeries documentation
+            GateOpening { get; set; } // LowerEdgeLevel, this should be replaced with LowerEdgeLevel value, see LowerEdgeLevelTimeSeries documentation
 
         public virtual double DoorHeight { get; set; }
 
@@ -128,7 +124,7 @@ namespace DelftTools.Hydro.Structures.WeirFormula
         public virtual double LowerEdgeLevel { get; set; }
 
         /// <summary>
-        /// When true, use <see cref="LowerEdgeLevelTimeSeries" />, else use <see cref="GateOpening" />.
+        /// When true, use <see cref="LowerEdgeLevelTimeSeries"/>, else use <see cref="GateOpening"/>.
         /// </summary>
         public virtual bool UseLowerEdgeLevelTimeSeries
         {

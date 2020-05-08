@@ -5,17 +5,14 @@ using log4net;
 
 namespace DeltaShell.NGHS.Common.Logging
 {
-    /// <inheritdoc />
-    /// <seealso cref="T:DeltaShell.NGHS.Common.Logging.ILogHandler" />
+    /// <inheritdoc/>
+    /// <seealso cref="T:DeltaShell.NGHS.Common.Logging.ILogHandler"/>
     public class LogHandler : ILogHandler
     {
+        private const char BulletPointCharacter = '-';
         private readonly ILog log;
 
-        public LogMessagesList LogMessagesTable { get; }
-        
         private readonly string activityName;
-
-        private const char BulletPointCharacter = '-';
 
         private readonly string joinSeparator = Environment.NewLine + BulletPointCharacter + " ";
 
@@ -23,18 +20,14 @@ namespace DeltaShell.NGHS.Common.Logging
         /// Initializes a new instance of the <see cref="LogHandler"/> class with a default logger.
         /// </summary>
         /// <param name="activityName">Name of the activity for which log messages will be generated.</param>
-        public LogHandler(string activityName) : this(activityName, typeof(LogHandler))
-        {
-        }
+        public LogHandler(string activityName) : this(activityName, typeof(LogHandler)) {}
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LogHandler"/> class.
         /// </summary>
         /// <param name="activityName">Name of the activity for which log messages will be generated.</param>
         /// <param name="type">The type that will be used to create the logger.</param>
-        public LogHandler(string activityName, Type type) : this(activityName, LogManager.GetLogger(type))
-        {
-        }
+        public LogHandler(string activityName, Type type) : this(activityName, LogManager.GetLogger(type)) {}
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LogHandler"/> class.
@@ -47,6 +40,8 @@ namespace DeltaShell.NGHS.Common.Logging
             LogMessagesTable = new LogMessagesList();
             this.log = log;
         }
+
+        public LogMessagesList LogMessagesTable { get; }
 
         public void ReportInfo(string logMessage)
         {
@@ -131,25 +126,15 @@ namespace DeltaShell.NGHS.Common.Logging
         Error
     }
 
-    /// <inheritdoc />
+    /// <inheritdoc/>
     /// <summary>
-    /// Represent a list of <see cref="T:System.String" /> and <see cref="T:DeltaShell.NGHS.Common.Logging.LogSeverity" /> pairs.
+    /// Represent a list of <see cref="T:System.String"/> and <see cref="T:DeltaShell.NGHS.Common.Logging.LogSeverity"/> pairs.
     /// </summary>
-    /// <seealso cref="T:System.Collections.Generic.List`1" />
+    /// <seealso cref="T:System.Collections.Generic.List`1"/>
     public class LogMessagesList : List<Tuple<string, LogSeverity>>
     {
         /// <summary>
-        /// Adds a new pair of <see cref="System.String" /> and <see cref="LogSeverity" /> to the end of the <see cref="LogMessagesList" />.
-        /// </summary>
-        /// <param name="logMessage">The log message</param>
-        /// <param name="logSeverity">The severity of the log message</param>
-        public void Add(string logMessage, LogSeverity logSeverity)
-        {
-            Add(new Tuple<string, LogSeverity>(logMessage, logSeverity));
-        }
-
-        /// <summary>
-        /// Gets all the log messages with severity <see cref="LogSeverity.Info" />.
+        /// Gets all the log messages with severity <see cref="LogSeverity.Info"/>.
         /// </summary>
         /// <value>
         /// The info messages.
@@ -157,7 +142,7 @@ namespace DeltaShell.NGHS.Common.Logging
         public IEnumerable<string> InfoMessages => GetLogMessagesWithSeverity(LogSeverity.Info);
 
         /// <summary>
-        /// Gets all the log messages with severity <see cref="LogSeverity.Warning" />.
+        /// Gets all the log messages with severity <see cref="LogSeverity.Warning"/>.
         /// </summary>
         /// <value>
         /// The info messages.
@@ -165,7 +150,7 @@ namespace DeltaShell.NGHS.Common.Logging
         public IEnumerable<string> WarningMessages => GetLogMessagesWithSeverity(LogSeverity.Warning);
 
         /// <summary>
-        /// Gets all the log messages with severity <see cref="LogSeverity.Error" />.
+        /// Gets all the log messages with severity <see cref="LogSeverity.Error"/>.
         /// </summary>
         /// <value>
         /// The info messages.
@@ -173,12 +158,23 @@ namespace DeltaShell.NGHS.Common.Logging
         public IEnumerable<string> ErrorMessages => GetLogMessagesWithSeverity(LogSeverity.Error);
 
         /// <summary>
-        /// Gets all the messages the <see cref="LogMessagesList" /> contains.
+        /// Gets all the messages the <see cref="LogMessagesList"/> contains.
         /// </summary>
         /// <value>
         /// The log messages.
         /// </value>
         public IEnumerable<string> AllMessages => this.Select(m => m.Item1);
+
+        /// <summary>
+        /// Adds a new pair of <see cref="System.String"/> and <see cref="LogSeverity"/> to the end of the
+        /// <see cref="LogMessagesList"/>.
+        /// </summary>
+        /// <param name="logMessage">The log message</param>
+        /// <param name="logSeverity">The severity of the log message</param>
+        public void Add(string logMessage, LogSeverity logSeverity)
+        {
+            Add(new Tuple<string, LogSeverity>(logMessage, logSeverity));
+        }
 
         private IEnumerable<string> GetLogMessagesWithSeverity(LogSeverity logSeverity)
         {

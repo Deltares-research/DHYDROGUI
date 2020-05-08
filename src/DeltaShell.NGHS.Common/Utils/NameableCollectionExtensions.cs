@@ -1,6 +1,6 @@
-﻿using DelftTools.Utils;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using DelftTools.Utils;
 using DelftTools.Utils.Guards;
 
 namespace DeltaShell.NGHS.Common.Utils

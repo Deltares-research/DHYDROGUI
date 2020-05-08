@@ -9,11 +9,14 @@ namespace DeltaShell.Dimr
             /*if(useMessagesBuffering)
                 return new DimrExe(useMessagesBuffering);*/
 
-            if (!Environment.Is64BitOperatingSystem || (!runRemote && !Environment.Is64BitProcess)) return null;
-            
-            return runRemote 
-                ? (IDimrApi)new RemoteDimrApi() 
-                : new DimrApi(false);
+            if (!Environment.Is64BitOperatingSystem || !runRemote && !Environment.Is64BitProcess)
+            {
+                return null;
+            }
+
+            return runRemote
+                       ? (IDimrApi) new RemoteDimrApi()
+                       : new DimrApi(false);
         }
     }
 }

@@ -7,6 +7,20 @@ namespace DelftTools.Hydro.Structures
     [Entity(FireOnCollectionChange = false)]
     public class Gate : BranchStructure, IGate
     {
+        public Gate() : this("Gate") {}
+
+        public Gate(string name)
+        {
+            Name = name;
+            SillLevel = 1;
+            OffsetY = 0;
+
+            SillLevelTimeSeries = HydroTimeSeriesFactory.CreateTimeSeries("Sill level", "Sill level", "m");
+            LowerEdgeLevelTimeSeries =
+                HydroTimeSeriesFactory.CreateTimeSeries("Lower edge level", "Lower edge level", "m");
+            OpeningWidthTimeSeries = HydroTimeSeriesFactory.CreateTimeSeries("Opening width", "Opening width", "m");
+        }
+
         [FeatureAttribute]
         public virtual double SillLevel { get; set; }
 
@@ -33,20 +47,6 @@ namespace DelftTools.Hydro.Structures
 
         [FeatureAttribute]
         public virtual double SillWidth { get; set; }
-
-        public Gate() : this("Gate") {}
-
-        public Gate(string name)
-        {
-            Name = name;
-            SillLevel = 1;
-            OffsetY = 0;
-
-            SillLevelTimeSeries = HydroTimeSeriesFactory.CreateTimeSeries("Sill level", "Sill level", "m");
-            LowerEdgeLevelTimeSeries =
-                HydroTimeSeriesFactory.CreateTimeSeries("Lower edge level", "Lower edge level", "m");
-            OpeningWidthTimeSeries = HydroTimeSeriesFactory.CreateTimeSeries("Opening width", "Opening width", "m");
-        }
 
         public override void CopyFrom(object source)
         {

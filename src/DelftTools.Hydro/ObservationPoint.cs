@@ -15,6 +15,12 @@ namespace DelftTools.Hydro
             Name = "observation";
         }
 
+        public virtual IHydroNetwork HydroNetwork => Network as IHydroNetwork;
+
+        [DisplayName("Long name")]
+        [FeatureAttribute(Order = 2)]
+        public virtual string LongName { get; set; }
+
         public static ObservationPoint CreateDefault(IBranch branch)
         {
             var observationPoint = new ObservationPoint
@@ -34,11 +40,5 @@ namespace DelftTools.Hydro
             base.CopyFrom(source);
             var copyFrom = (ObservationPoint) source;
         }
-
-        public virtual IHydroNetwork HydroNetwork => Network as IHydroNetwork;
-
-        [DisplayName("Long name")]
-        [FeatureAttribute(Order = 2)]
-        public virtual string LongName { get; set; }
     }
 }

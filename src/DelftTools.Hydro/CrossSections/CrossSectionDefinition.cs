@@ -18,11 +18,14 @@ namespace DelftTools.Hydro.CrossSections
     public abstract class CrossSectionDefinition : EditableObjectUnique<long>, ICrossSectionDefinition
     {
         public const string MainSectionName = "Main";
+        protected IEventedList<CrossSectionSection> sections;
 
         private double thalweg;
-        protected IEventedList<CrossSectionSection> sections;
         private bool inSectionsPropertyChanged;
         private IGeometry cachedGeometry;
+
+        private int editingCount = 0;
+        private bool enforceConstraintsSkipped;
 
         protected CrossSectionDefinition() : this("") {}
 
@@ -31,6 +34,16 @@ namespace DelftTools.Hydro.CrossSections
             Name = name;
             Sections = new EventedList<CrossSectionSection>();
         }
+
+        public virtual double Right
+        {
+            get
+            {
+                return Profile.Select(c => c.X).DefaultIfEmpty().Max();
+            }
+        }
+
+        public static IEditAction DefaultEditAction => new DefaultEditAction("Cross section profile changed");
 
         /// <summary>
         /// The crossSection is based on a linestring geometry.
@@ -104,14 +117,6 @@ namespace DelftTools.Hydro.CrossSections
             }
         }
 
-        public virtual double Right
-        {
-            get
-            {
-                return Profile.Select(c => c.X).DefaultIfEmpty().Max();
-            }
-        }
-
         [FeatureAttribute]
         public virtual double LowestPoint
         {
@@ -179,18 +184,42 @@ namespace DelftTools.Hydro.CrossSections
 
         public virtual bool IsProxy => false;
 
+        public abstract IGeometry CalculateGeometry(IGeometry branchGeometry, double mapChainage);
+
+        public abstract int GetRawDataTableIndex(int profileIndex);
+
+        /// <summary>
+        /// Returns width of section with given type name.
+        /// </summary>
+        /// <param name="name"> </param>
+        /// <returns> </returns>
+        public virtual double GetSectionWidth(string name)
+        {
+            CrossSectionSection section = Sections.FirstOrDefault(s => s.SectionType.Name == name);
+            if (section != null)
+            {
+                return (section.MaxY - section.MinY) * this.GetWidthFactor();
+            }
+
+            return 0;
+        }
+
+        public virtual void RefreshSectionsWidths()
+        {
+            this.AdjustSectionWidths();
+        }
+
+        public override string ToString()
+        {
+            return Name;
+        }
+
         public virtual void RefreshGeometry()
         {
             cachedGeometry = null;
         }
 
         public abstract Utils.Tuple<string, bool> ValidateCellValue(int rowIndex, int columnIndex, object cellValue);
-
-        protected virtual double SectionsMaxY => Right;
-
-        protected virtual double SectionsMinY => Left;
-
-        public static IEditAction DefaultEditAction => new DefaultEditAction("Cross section profile changed");
 
         public virtual object Clone()
         {
@@ -203,11 +232,6 @@ namespace DelftTools.Hydro.CrossSections
             clone.CopySectionsFrom(this);
 
             return clone;
-        }
-
-        public override string ToString()
-        {
-            return Name;
         }
 
         /// <summary>
@@ -224,8 +248,6 @@ namespace DelftTools.Hydro.CrossSections
                         CalculateGeometry(cs.Branch.Geometry, NetworkHelper.MapChainage(cs.Branch, cs.Chainage)));
         }
 
-        public abstract IGeometry CalculateGeometry(IGeometry branchGeometry, double mapChainage);
-
         public virtual void SetGeometry(IGeometry value)
         {
             if (value == null)
@@ -238,9 +260,6 @@ namespace DelftTools.Hydro.CrossSections
         {
             CopyFrom(source, true);
         }
-
-        private int editingCount = 0;
-        private bool enforceConstraintsSkipped;
 
         public override void BeginEdit(IEditAction action)
         {
@@ -275,39 +294,9 @@ namespace DelftTools.Hydro.CrossSections
             base.EndEdit();
         }
 
-        public abstract int GetRawDataTableIndex(int profileIndex);
+        protected virtual double SectionsMaxY => Right;
 
-        /// <summary>
-        /// Returns width of section with given type name.
-        /// </summary>
-        /// <param name="name"> </param>
-        /// <returns> </returns>
-        public virtual double GetSectionWidth(string name)
-        {
-            CrossSectionSection section = Sections.FirstOrDefault(s => s.SectionType.Name == name);
-            if (section != null)
-            {
-                return (section.MaxY - section.MinY) * this.GetWidthFactor();
-            }
-
-            return 0;
-        }
-
-        public virtual void RefreshSectionsWidths()
-        {
-            this.AdjustSectionWidths();
-        }
-
-        /// <summary>
-        /// Resets the geometry cache and optionally recalculates the thalweg and sections min/max.
-        /// </summary>
-        [EditAction]
-        private void HandleCrossSectionChanged()
-        {
-            cachedGeometry = null;
-            FixThalweg();
-            FixMinMaxOfSections();
-        }
+        protected virtual double SectionsMinY => Left;
 
         protected void CopyFrom(object source, bool copyTable)
         {
@@ -378,6 +367,17 @@ namespace DelftTools.Hydro.CrossSections
             FixMinMaxOfSections();
 
             inSectionsPropertyChanged = false;
+        }
+
+        /// <summary>
+        /// Resets the geometry cache and optionally recalculates the thalweg and sections min/max.
+        /// </summary>
+        [EditAction]
+        private void HandleCrossSectionChanged()
+        {
+            cachedGeometry = null;
+            FixThalweg();
+            FixMinMaxOfSections();
         }
 
         [EditAction]

@@ -61,7 +61,7 @@ namespace DelftTools.Hydro.Helpers
             }
 
             // Are x values increment
-            double lastX = double.MinValue;
+            var lastX = double.MinValue;
             foreach (double x in flowProfile.Select(c => c.X))
             {
                 if (x < lastX)
