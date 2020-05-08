@@ -30,16 +30,19 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
         /// <remarks>If parameter timeSeriesElements or controlGroups is NULL, methods returns.</remarks>
         public void SetTimeSeries(IList<TimeSeriesComplexType> timeSeriesElements, IList<IControlGroup> controlGroups)
         {
-            if (timeSeriesElements == null || controlGroups == null) return;
-
-            foreach(var timeSeriesElement in timeSeriesElements)
+            if (timeSeriesElements == null || controlGroups == null)
             {
-                var timeSeriesItem = timeSeriesElement.header;
-                var locationId = timeSeriesItem.locationId;
-                var missingValue = timeSeriesItem.missVal;
-                var records = timeSeriesElement.@event;
+                return;
+            }
 
-                var correspondingRuleOrCondition = GetCorrespondingRuleOrCondition(locationId, controlGroups);
+            foreach (TimeSeriesComplexType timeSeriesElement in timeSeriesElements)
+            {
+                HeaderComplexType timeSeriesItem = timeSeriesElement.header;
+                string locationId = timeSeriesItem.locationId;
+                double missingValue = timeSeriesItem.missVal;
+                List<EventComplexType> records = timeSeriesElement.@event;
+
+                RtcBaseObject correspondingRuleOrCondition = GetCorrespondingRuleOrCondition(locationId, controlGroups);
 
                 if (!(correspondingRuleOrCondition is ITimeDependentRtcObject timeDependentObject))
                 {
@@ -103,28 +106,34 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
 
         private RtcBaseObject GetCorrespondingRuleOrCondition(string locationId, IEnumerable<IControlGroup> controlGroups)
         {
-            var controlGroup = controlGroups?.GetControlGroupByElementId(locationId, logHandler);
+            IControlGroup controlGroup = controlGroups?.GetControlGroupByElementId(locationId, logHandler);
 
-            if (controlGroup == null) return null;
+            if (controlGroup == null)
+            {
+                return null;
+            }
 
-            var name = RealTimeControlXmlReaderHelper.GetComponentNameFromElementId(locationId);
+            string name = RealTimeControlXmlReaderHelper.GetComponentNameFromElementId(locationId);
 
             return controlGroup.Rules.Concat<RtcBaseObject>(controlGroup.Conditions).FirstOrDefault(o => o.Name == name);
         }
 
         private void SetTimeSeriesFromXmlRecords(TimeSeries timeSeries, IReadOnlyCollection<EventComplexType> records, double missingValue)
         {
-            if (timeSeries == null || records == null) return;
+            if (timeSeries == null || records == null)
+            {
+                return;
+            }
 
-            var dates = records.Select(r => CreateDateTimeFromDateAndTime(r.date, r.time));
-            var doubleValues = records.Select(r => r.value);
+            IEnumerable<DateTime> dates = records.Select(r => CreateDateTimeFromDateAndTime(r.date, r.time));
+            IEnumerable<double> doubleValues = records.Select(r => r.value);
 
             timeSeries.Time.SetValues(dates);
 
             if (timeSeries.Components[0].ValueType == typeof(bool))
             {
                 // because we write the opposite ( 0 = true, 1 = false)
-                var booleanValues = doubleValues.Select(e => !Convert.ToBoolean(e));
+                IEnumerable<bool> booleanValues = doubleValues.Select(e => !Convert.ToBoolean(e));
                 timeSeries.Components[0].SetValues(booleanValues);
             }
             else
@@ -137,8 +146,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
         private DateTime CreateDateTimeFromDateAndTime(DateTime date, DateTime time)
         {
             var timeString = time.ToString("HH:mm:ss", DateTimeFormatInfo.InvariantInfo);
-            var timeTimeSpan = TimeSpan.Parse(timeString);
-            var dateTime = date.Add(timeTimeSpan);
+            TimeSpan timeTimeSpan = TimeSpan.Parse(timeString);
+            DateTime dateTime = date.Add(timeTimeSpan);
             return dateTime;
         }
     }

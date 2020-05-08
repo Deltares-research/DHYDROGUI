@@ -35,7 +35,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.Properties
             get => data.MinimumPeriod;
             set => data.MinimumPeriod = value;
         }
-        
+
         [Editor(typeof(ViewPropertyEditor), typeof(UITypeEditor))]
         [ResourcesCategory(typeof(Resources), "Category_Data")]
         [ResourcesDisplayName(typeof(Resources), "RTC_Timeseries_DisplayName")]
@@ -60,8 +60,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.Properties
         [PropertyOrder(6)]
         public InterpolationHydraulicType Interpolation
         {
-            get => (InterpolationHydraulicType)data.Interpolation;
-            set => data.Interpolation = (InterpolationType)value;
+            get => (InterpolationHydraulicType) data.Interpolation;
+            set => data.Interpolation = (InterpolationType) value;
         }
 
         private void UpdateFunctionArgumentName()
@@ -94,7 +94,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.Properties
         {
             if (data.Outputs.Count == 1)
             {
-                var output = data.Outputs[0];
+                Output output = data.Outputs[0];
 
                 if (!string.IsNullOrEmpty(output.ParameterName))
                 {

@@ -35,7 +35,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
 
         public List<IFeature> Features
         {
-            get { return features; }
+            get
+            {
+                return features;
+            }
             set
             {
                 features = value;
@@ -47,7 +50,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
 
         public Func<IFeature, IList<IDataItem>> GetDataItemsForFeature { get; set; }
 
-        public IDataItem SelectedDataItem { get { return tableViewDataItems.CurrentFocusedRowObject as IDataItem; } }
+        public IDataItem SelectedDataItem
+        {
+            get
+            {
+                return tableViewDataItems.CurrentFocusedRowObject as IDataItem;
+            }
+        }
 
         private void ButtonOkClick(object sender, EventArgs e)
         {
@@ -72,7 +81,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
         private void UpdateDataItemsTableForSelectedLocation()
         {
             var feature = tableViewLocations.CurrentFocusedRowObject as IFeature;
-            if (feature == null || GetDataItemsForFeature == null) return;
+            if (feature == null || GetDataItemsForFeature == null)
+            {
+                return;
+            }
 
             tableViewDataItems.Data = GetDataItemsForFeature(feature);
             tableViewDataItems.BestFitColumns();
@@ -81,23 +93,32 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
 
         private object TableViewDataItemsUnboundColumnData(int column, int dataSourceIndex, bool isGetData, bool isSetData, object value)
         {
-            if (dataSourceIndex < 0 || dataSourceIndex >= ((IList<IDataItem>)tableViewDataItems.Data).Count) return null;
+            if (dataSourceIndex < 0 || dataSourceIndex >= ((IList<IDataItem>) tableViewDataItems.Data).Count)
+            {
+                return null;
+            }
 
-            var dataItem = ((IList<IDataItem>)tableViewDataItems.Data)[dataSourceIndex];
-            if (column != 0) return null;
+            IDataItem dataItem = ((IList<IDataItem>) tableViewDataItems.Data)[dataSourceIndex];
+            if (column != 0)
+            {
+                return null;
+            }
 
             return dataItem.GetParameterName();
         }
 
         private object TableViewLocationsOnUnboundColumnData(int column, int dataSourceIndex, bool isGetData, bool isSetData, object value)
         {
-            if (dataSourceIndex < 0 || dataSourceIndex >= Features.Count) return null;
-            
-            var feature = Features[dataSourceIndex];
-            
+            if (dataSourceIndex < 0 || dataSourceIndex >= Features.Count)
+            {
+                return null;
+            }
+
+            IFeature feature = Features[dataSourceIndex];
+
             if (column == 0)
             {
-                return ((INameable)feature).Name;
+                return ((INameable) feature).Name;
             }
 
             if (column == 1)

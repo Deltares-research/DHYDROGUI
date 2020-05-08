@@ -11,22 +11,24 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.ActivityShapes
         /// the given activity.
         /// </summary>
         /// <param name="activity">Activity to create a shape for.</param>
-        /// <param name="graphControl">The <see cref="Netron.GraphLib.UI.GraphControl"/> for which 
-        /// the shape is going to be used.</param>
+        /// <param name="graphControl">
+        /// The <see cref="Netron.GraphLib.UI.GraphControl"/> for which
+        /// the shape is going to be used.
+        /// </param>
         /// <returns>An activity shape.</returns>
         public static ActivityShapeBase CreateShapeFromActivity(IActivity activity, IGraphSite graphControl)
         {
             var activityWrapper = activity as ActivityWrapper;
             activity = activityWrapper == null ? activity : activityWrapper.Activity;
-        
+
             // Check from most specific to less specific:
             var parallelActivity = activity as ParallelActivity;
             if (parallelActivity != null)
             {
                 var parallelActivityShape = new ParallelActivityShape(graphControl)
-                    {
-                        Activity = activity,
-                    };
+                {
+                    Activity = activity,
+                };
                 parallelActivityShape.ShapeColor = CreateDefaultColorFromActivityShape(parallelActivityShape);
                 parallelActivityShape.Inflate();
                 return parallelActivityShape;
@@ -56,10 +58,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.ActivityShapes
                 return compositeActivityShape;
             }
 
-            var simpleActivityShape = new SimpleActivityShape(graphControl)
-                {
-                    Activity = activity
-                };
+            var simpleActivityShape = new SimpleActivityShape(graphControl) {Activity = activity};
             simpleActivityShape.ShapeColor = CreateDefaultColorFromActivityShape(simpleActivityShape);
             simpleActivityShape.Inflate();
             return simpleActivityShape;
@@ -78,11 +77,13 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.ActivityShapes
             {
                 return Color.SandyBrown;
             }
+
             var sequentialActivityShape = shape as SequentialActivityShape;
             if (sequentialActivityShape != null)
             {
                 return Color.LightSkyBlue;
             }
+
             var compositeActivityShape = shape as CompositeActivityShape;
             if (compositeActivityShape != null)
             {

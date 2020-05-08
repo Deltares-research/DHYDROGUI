@@ -12,9 +12,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
     public sealed class WpfGuiCategory : INotifyPropertyChanged, IDisposable
     {
         private bool disposed;
-        
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
         /// <summary>
-        /// Initializes a new instance of the <see cref="WpfGuiCategory"/> class. 
+        /// Initializes a new instance of the <see cref="WpfGuiCategory"/> class.
         /// Creates all SubCategories <seealso cref="WpfGuiSubCategory"/> and Properties <seealso cref="WpfGuiProperty"/>.
         /// </summary>
         /// <param name="category">The category.</param>
@@ -26,7 +28,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
 
             /*Small trick to force the initialization*/
             if (properties == null)
+            {
                 properties = new List<FieldUIDescription>();
+            }
 
             SubCategories = new ObservableCollection<WpfGuiSubCategory>(
                 properties.GroupBy(fd => fd.SubCategory)
@@ -50,7 +54,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
         /// Gets a value indicating whether this instance has custom control.
         /// </summary>
         /// <value>
-        ///   <c>true</c> if this instance has custom control; otherwise, <c>false</c>.
+        /// <c>true</c> if this instance has custom control; otherwise, <c>false</c>.
         /// </value>
         public bool HasCustomControl
         {
@@ -64,7 +68,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
         /// Gets a value indicating whether this instance is visible.
         /// </summary>
         /// <value>
-        ///   <c>true</c> if this instance is visible; otherwise, <c>false</c>.
+        /// <c>true</c> if this instance is visible; otherwise, <c>false</c>.
         /// </value>
         public bool IsVisible
         {
@@ -119,10 +123,12 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
         {
             //Get model from any of the properties, they should all be the same
             if (property.GetModel == null)
+            {
                 property.GetModel = Properties.FirstOrDefault()?.GetModel;
+            }
 
-            var subCategoryName = property.SubCategory;
-            var subCategory = SubCategories.FirstOrDefault(sc => sc.SubCategoryName?.ToLower() == subCategoryName?.ToLower());
+            string subCategoryName = property.SubCategory;
+            WpfGuiSubCategory subCategory = SubCategories.FirstOrDefault(sc => sc.SubCategoryName?.ToLower() == subCategoryName?.ToLower());
             if (subCategory == null)
             {
                 subCategory = new WpfGuiSubCategory(subCategoryName, new List<FieldUIDescription>());
@@ -134,14 +140,22 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
             Properties.Add(property);
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
 
         /* Flag to avoid Overflow exception while propagating the event PropertyChanged. */
         private bool UpdatingProperties { get; set; }
 
         private void OnPropertyChanged(object sender, PropertyChangedEventArgs propertyChangedEventArgs)
         {
-            if (UpdatingProperties) return;
+            if (UpdatingProperties)
+            {
+                return;
+            }
+
             UpdatingProperties = true;
 
             //Notify to all properties within this category that they need to be updated.
@@ -149,12 +163,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
             SubCategories.ForEach(sc => sc.IsVisible = true);
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("IsVisible"));
             UpdatingProperties = false;
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
         }
 
         private void Dispose(bool disposing)

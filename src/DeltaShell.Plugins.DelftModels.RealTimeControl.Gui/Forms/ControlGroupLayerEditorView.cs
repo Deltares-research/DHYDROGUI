@@ -25,6 +25,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
         private EventedList<ControlGroupConditionWrapper> conditionsList;
         private IModel rtcModel;
 
+        public event EventHandler SelectedFeaturesChanged;
+
         public ControlGroupLayerEditorView()
         {
             InitializeComponent();
@@ -33,32 +35,83 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
 
         public IModel RtcModel
         {
-            get { return rtcModel; }
+            get
+            {
+                return rtcModel;
+            }
             set
             {
                 if (rtcModel != null)
                 {
-                    ((INotifyPropertyChanged)rtcModel).PropertyChanged -= ModelPropertyChanged;
-                    ((INotifyCollectionChanged)rtcModel).CollectionChanged -= ModelCollectionChanged;
+                    ((INotifyPropertyChanged) rtcModel).PropertyChanged -= ModelPropertyChanged;
+                    ((INotifyCollectionChanged) rtcModel).CollectionChanged -= ModelCollectionChanged;
                 }
 
                 rtcModel = value;
 
                 if (rtcModel != null)
                 {
-                    ((INotifyPropertyChanged)rtcModel).PropertyChanged += ModelPropertyChanged;
-                    ((INotifyCollectionChanged)rtcModel).CollectionChanged += ModelCollectionChanged;
+                    ((INotifyPropertyChanged) rtcModel).PropertyChanged += ModelPropertyChanged;
+                    ((INotifyCollectionChanged) rtcModel).CollectionChanged += ModelCollectionChanged;
                 }
             }
         }
 
+        public Action<object> OpenViewAction { get; set; }
+
+        public object Data
+        {
+            get
+            {
+                return controlGroups;
+            }
+            set
+            {
+                if (controlGroups != null)
+                {
+                    controlGroups.CollectionChanged -= ControlGroupsCollectionChanged;
+                    ((INotifyPropertyChanged) controlGroups).PropertyChanged -= ControlGroupLayerEditorViewPropertyChanged;
+                }
+
+                controlGroups = (IEventedList<ControlGroup>) value;
+
+                if (controlGroups == null)
+                {
+                    tableViewRules.Data = null;
+                    return;
+                }
+
+                rulesList = new EventedList<ControlGroupRuleWrapper>(controlGroups.SelectMany(cg => cg.Rules).Select(r => new ControlGroupRuleWrapper(r)));
+                conditionsList = new EventedList<ControlGroupConditionWrapper>(controlGroups.SelectMany(cg => cg.Conditions).Select(c => new ControlGroupConditionWrapper(c)));
+
+                controlGroups.CollectionChanged += ControlGroupsCollectionChanged;
+                ((INotifyPropertyChanged) controlGroups).PropertyChanged += ControlGroupLayerEditorViewPropertyChanged;
+
+                tableViewRules.Data = rulesList;
+                tableViewRules.BestFitColumns();
+
+                tableViewConditions.Data = conditionsList;
+                tableViewConditions.BestFitColumns();
+            }
+        }
+
+        public Image Image { get; set; }
+
+        public IEnumerable<IFeature> SelectedFeatures { get; set; }
+        public ViewInfo ViewInfo { get; set; }
+        public ILayer Layer { set; get; }
+
+        public void EnsureVisible(object item) {}
+        public void OnActivated() {}
+        public void OnDeactivated() {}
+
         private void ModelCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            var removedOrAddedItem = e.GetRemovedOrAddedItem();
+            object removedOrAddedItem = e.GetRemovedOrAddedItem();
             var ruleBase = removedOrAddedItem as RuleBase;
             if (sender is IEventedList<RuleBase> && ruleBase != null)
             {
-                var ruleToRemove = rulesList.FirstOrDefault(rw => rw.GetRuleBase().Equals(ruleBase));
+                ControlGroupRuleWrapper ruleToRemove = rulesList.FirstOrDefault(rw => rw.GetRuleBase().Equals(ruleBase));
                 if (ruleToRemove != null)
                 {
                     rulesList.Remove(ruleToRemove);
@@ -75,21 +128,21 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
             {
                 if (e.Action == NotifyCollectionChangedAction.Remove)
                 {
-                    var conditionToRemove = conditionsList.FirstOrDefault(rw => rw.GetConditionBase().Equals(conditionBase));
+                    ControlGroupConditionWrapper conditionToRemove = conditionsList.FirstOrDefault(rw => rw.GetConditionBase().Equals(conditionBase));
                     if (conditionToRemove != null)
                     {
                         conditionsList.Remove(conditionToRemove);
                     }
                 }
-                
+
                 if (e.Action == NotifyCollectionChangedAction.Add && !conditionsList.Any(w => w.GetConditionBase().Equals(conditionBase)))
                 {
-                    conditionsList.Add(new ControlGroupConditionWrapper(conditionBase)); 
+                    conditionsList.Add(new ControlGroupConditionWrapper(conditionBase));
                 }
             }
         }
 
-        void ModelPropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void ModelPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (sender is ConditionBase)
             {
@@ -102,68 +155,31 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
             }
         }
 
-        public object Data
-        {
-            get { return controlGroups; }
-            set
-            {
-                if (controlGroups != null)
-                {
-                    controlGroups.CollectionChanged -= ControlGroupsCollectionChanged;
-                    ((INotifyPropertyChanged)controlGroups).PropertyChanged -= ControlGroupLayerEditorViewPropertyChanged;
-                }
-
-                controlGroups = (IEventedList<ControlGroup>) value;
-
-                if (controlGroups == null)
-                {
-                    tableViewRules.Data = null;
-                    return;
-                }
-
-                rulesList = new EventedList<ControlGroupRuleWrapper>(controlGroups.SelectMany(cg => cg.Rules).Select(r => new ControlGroupRuleWrapper(r)));
-                conditionsList = new EventedList<ControlGroupConditionWrapper>(controlGroups.SelectMany(cg => cg.Conditions).Select(c => new ControlGroupConditionWrapper(c)));
-                
-                controlGroups.CollectionChanged += ControlGroupsCollectionChanged;
-                ((INotifyPropertyChanged)controlGroups).PropertyChanged += ControlGroupLayerEditorViewPropertyChanged;
-
-                tableViewRules.Data = rulesList;
-                tableViewRules.BestFitColumns();
-
-                tableViewConditions.Data = conditionsList;
-                tableViewConditions.BestFitColumns();
-            }
-        }
-
-        void ControlGroupLayerEditorViewPropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void ControlGroupLayerEditorViewPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             tableViewConditions.ScheduleRefresh();
             tableViewRules.ScheduleRefresh();
         }
 
-        public Action<object> OpenViewAction { get; set; }
-
-        public Image Image { get; set; }
-
-        public IEnumerable<IFeature> SelectedFeatures { get; set; }
-
-        public void EnsureVisible(object item) { }
-        public ViewInfo ViewInfo { get; set; }
-
-        public event EventHandler SelectedFeaturesChanged;
-        public ILayer Layer { set; get; }
-        public void OnActivated() { }
-        public void OnDeactivated() { }
-
         private void AddOpenViewMenuItems()
         {
-            var btnOpenViewMenuItemConditions = new ToolStripMenuItem {Name = "btnOpenViewMenuItem", Text = "Open view...", Image = Resources.PropertiesHS};
+            var btnOpenViewMenuItemConditions = new ToolStripMenuItem
+            {
+                Name = "btnOpenViewMenuItem",
+                Text = "Open view...",
+                Image = Resources.PropertiesHS
+            };
             btnOpenViewMenuItemConditions.Click += BtnOpenViewConditionsClick;
             btnOpenViewMenuItemConditions.Font = new Font(btnOpenViewMenuItemConditions.Font, FontStyle.Bold);
 
             tableViewConditions.RowContextMenu.Items.Add(btnOpenViewMenuItemConditions);
 
-            var btnOpenViewMenuItemRules = new ToolStripMenuItem {Name = "btnOpenViewMenuItem", Text = "Open view...", Image = Resources.PropertiesHS};
+            var btnOpenViewMenuItemRules = new ToolStripMenuItem
+            {
+                Name = "btnOpenViewMenuItem",
+                Text = "Open view...",
+                Image = Resources.PropertiesHS
+            };
             btnOpenViewMenuItemRules.Click += BtnOpenViewRulesClick;
             btnOpenViewMenuItemRules.Font = new Font(btnOpenViewMenuItemRules.Font, FontStyle.Bold);
 
@@ -173,18 +189,24 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
         private void BtnOpenViewRulesClick(object sender, EventArgs e)
         {
             var ruleWrapper = tableViewRules.CurrentFocusedRowObject as ControlGroupRuleWrapper;
-            if (ruleWrapper == null) return;
+            if (ruleWrapper == null)
+            {
+                return;
+            }
 
-            var ruleBase = ruleWrapper.GetRuleBase();
+            RuleBase ruleBase = ruleWrapper.GetRuleBase();
             OpenView(controlGroups.FirstOrDefault(cg => cg.Rules.Contains(ruleBase)));
         }
 
         private void BtnOpenViewConditionsClick(object sender, EventArgs e)
         {
             var condition = tableViewConditions.CurrentFocusedRowObject as ControlGroupConditionWrapper;
-            if (condition == null) return;
+            if (condition == null)
+            {
+                return;
+            }
 
-            var conditionBase = condition.GetConditionBase();
+            ConditionBase conditionBase = condition.GetConditionBase();
             OpenView(controlGroups.FirstOrDefault(cg => cg.Conditions.Contains(conditionBase)));
         }
 
@@ -199,7 +221,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
         private void ControlGroupsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             var controlGroup = e.GetRemovedOrAddedItem() as ControlGroup;
-            if (controlGroup == null) return;
+            if (controlGroup == null)
+            {
+                return;
+            }
 
             switch (e.Action)
             {
@@ -208,15 +233,15 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
                     conditionsList.AddRange(controlGroup.Conditions.Select(c => new ControlGroupConditionWrapper(c)));
                     break;
                 case NotifyCollectionChangedAction.Remove:
-                    var rulesToRemove = rulesList.Where(rw => controlGroup.Rules.Contains(rw.GetRuleBase())).ToList();
-                    var conditionsToRemove = conditionsList.Where(cw => controlGroup.Conditions.Contains(cw.GetConditionBase())).ToList();
+                    List<ControlGroupRuleWrapper> rulesToRemove = rulesList.Where(rw => controlGroup.Rules.Contains(rw.GetRuleBase())).ToList();
+                    List<ControlGroupConditionWrapper> conditionsToRemove = conditionsList.Where(cw => controlGroup.Conditions.Contains(cw.GetConditionBase())).ToList();
 
-                    foreach (var ruleWrapper in rulesToRemove)
+                    foreach (ControlGroupRuleWrapper ruleWrapper in rulesToRemove)
                     {
                         rulesList.Remove(ruleWrapper);
                     }
 
-                    foreach (var conditionWrapper in conditionsToRemove)
+                    foreach (ControlGroupConditionWrapper conditionWrapper in conditionsToRemove)
                     {
                         conditionsList.Remove(conditionWrapper);
                     }
@@ -224,6 +249,76 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
+            }
+        }
+
+        private class ControlGroupConditionWrapper
+        {
+            private readonly ConditionBase condition;
+
+            public ControlGroupConditionWrapper(ConditionBase condition)
+            {
+                this.condition = condition;
+            }
+
+            public string Name
+            {
+                get
+                {
+                    return condition.Name;
+                }
+                set
+                {
+                    condition.Name = value;
+                }
+            }
+
+            public string Description
+            {
+                get
+                {
+                    return condition.LongName;
+                }
+                set
+                {
+                    condition.LongName = value;
+                }
+            }
+
+            public string Input
+            {
+                get
+                {
+                    return condition.Input != null ? condition.Input.Name : " - ";
+                }
+            }
+
+            [DisplayName("True outputs")]
+            public string TrueOutputs
+            {
+                get
+                {
+                    return GiveNameList(condition.TrueOutputs);
+                }
+            }
+
+            [DisplayName("False outputs")]
+            public string FalseOutputs
+            {
+                get
+                {
+                    return GiveNameList(condition.FalseOutputs);
+                }
+            }
+
+            public ConditionBase GetConditionBase()
+            {
+                return condition;
+            }
+
+            private string GiveNameList(IEnumerable<INameable> nameables)
+            {
+                return string.Join(", ", nameables.Select(n => "'" + n.Name + "'"));
             }
         }
 
@@ -236,81 +331,49 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
                 this.rule = rule;
             }
 
-            public RuleBase GetRuleBase()
-            {
-                return rule;
-            }
-
             public string Name
             {
-                get { return rule.Name; }
-                set { rule.Name = value; }
+                get
+                {
+                    return rule.Name;
+                }
+                set
+                {
+                    rule.Name = value;
+                }
             }
 
             public string Description
             {
-                get { return rule.LongName; }
-                set { rule.LongName = value; }
+                get
+                {
+                    return rule.LongName;
+                }
+                set
+                {
+                    rule.LongName = value;
+                }
             }
 
             public string Inputs
             {
-                get { return GiveNameList(rule.Inputs); }
+                get
+                {
+                    return GiveNameList(rule.Inputs);
+                }
             }
 
             public string Outputs
             {
-                get { return GiveNameList(rule.Outputs); }
+                get
+                {
+                    return GiveNameList(rule.Outputs);
+                }
             }
 
-            private string GiveNameList(IEnumerable<INameable> nameables)
+            public RuleBase GetRuleBase()
             {
-                return string.Join(", ", nameables.Select(n => "'" + n.Name + "'"));
-            }
-
-        }
-
-        private class ControlGroupConditionWrapper
-        {
-            private readonly ConditionBase condition;
-
-            public ControlGroupConditionWrapper(ConditionBase condition)
-            {
-                this.condition = condition;
-            }
-
-            public ConditionBase GetConditionBase()
-            {
-                return condition;
-            }
-
-            public string Name
-            {
-                get { return condition.Name; }
-                set { condition.Name = value; }
-            }
-
-            public string Description
-            {
-                get { return condition.LongName; }
-                set { condition.LongName = value; }
-            }
-
-            public string Input
-            {
-                get { return condition.Input != null ? condition.Input.Name : " - "; }
-            }
-
-            [DisplayName("True outputs")]
-            public string TrueOutputs
-            {
-                get { return GiveNameList(condition.TrueOutputs); }
-            }
-
-            [DisplayName("False outputs")]
-            public string FalseOutputs
-            {
-                get { return GiveNameList(condition.FalseOutputs); }
+                return rule;
             }
 
             private string GiveNameList(IEnumerable<INameable> nameables)

@@ -7,16 +7,21 @@ using GeoAPI.Geometries;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
 {
-    [Entity(FireOnCollectionChange=false)]
-    public abstract class ConnectionPoint :RtcBaseObject, IFeature
+    [Entity(FireOnCollectionChange = false)]
+    public abstract class ConnectionPoint : RtcBaseObject, IFeature
     {
         private IFeature feature;
 
         private string parameterName;
 
+        protected ConnectionPoint()
+        {
+            UpdateName();
+        }
+
         [Aggregation]
-        public IFeature Feature 
-        { 
+        public IFeature Feature
+        {
             get
             {
                 return feature;
@@ -34,8 +39,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
         [DisplayName("Parameter")]
         [ReadOnly(true)]
         [FeatureAttribute(Order = 2)]
-        public string ParameterName 
-        { 
+        public string ParameterName
+        {
             get
             {
                 return parameterName;
@@ -51,10 +56,22 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
 
         [DisplayName("Location")]
         [FeatureAttribute(Order = 1)]
-        public string LocationName { get { return Feature == null ? string.Empty : Feature.ToString(); } }
+        public string LocationName
+        {
+            get
+            {
+                return Feature == null ? string.Empty : Feature.ToString();
+            }
+        }
 
-        public bool IsConnected { get { return Feature != null; } }
-        
+        public bool IsConnected
+        {
+            get
+            {
+                return Feature != null;
+            }
+        }
+
         [NoNotifyPropertyChange]
         public double Value { get; set; }
 
@@ -64,7 +81,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
 
         public IGeometry Geometry
         {
-            get { return (Feature != null) ? Feature.Geometry : null; }
+            get
+            {
+                return Feature != null ? Feature.Geometry : null;
+            }
             set
             {
                 if (Feature != null)
@@ -76,7 +96,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
 
         public IFeatureAttributeCollection Attributes
         {
-            get { return (Feature != null) ? Feature.Attributes : null; }
+            get
+            {
+                return Feature != null ? Feature.Attributes : null;
+            }
             set
             {
                 if (Feature != null)
@@ -86,13 +109,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
             }
         }
 
-        protected ConnectionPoint()
-        {
-            UpdateName();
-        }
-
-        public override string ToString() { return Name; }
-
         public void Reset()
         {
             Feature = null;
@@ -100,12 +116,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
             UnitName = "";
         }
 
-        public override object Clone()
-        {
-            var connectionPoint = (ConnectionPoint)Activator.CreateInstance(GetType());
-            connectionPoint.CopyFrom(this);
-            return connectionPoint;
-        }
         public virtual void CopyFrom(object source)
         {
             var connectionPoint = source as ConnectionPoint;
@@ -117,7 +127,19 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
                 Value = connectionPoint.Value;
             }
         }
-        
+
+        public override string ToString()
+        {
+            return Name;
+        }
+
+        public override object Clone()
+        {
+            var connectionPoint = (ConnectionPoint) Activator.CreateInstance(GetType());
+            connectionPoint.CopyFrom(this);
+            return connectionPoint;
+        }
+
         [EditAction]
         private void UpdateName()
         {
@@ -138,7 +160,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
                 return;
             }
 
-            ((INotifyPropertyChange)feature).PropertyChanged += OnFeaturePropertyChanged;
+            ((INotifyPropertyChange) feature).PropertyChanged += OnFeaturePropertyChanged;
         }
 
         private void UnsubscribeFeatureEvents()
@@ -148,7 +170,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
                 return;
             }
 
-            ((INotifyPropertyChange)feature).PropertyChanged -= OnFeaturePropertyChanged;
+            ((INotifyPropertyChange) feature).PropertyChanged -= OnFeaturePropertyChanged;
         }
 
         [EditAction]

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DelftTools.Utils.Guards;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.DataAccess
 {
@@ -25,7 +25,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.DataAccess
         /// <exception cref="System.ArgumentNullException">
         /// Thrown when any parameter is <c>null</c>.
         /// </exception>
-        public static IEnumerable<ExpressionTree> Assemble(IEnumerable<ExpressionObject> expressionObjects, 
+        public static IEnumerable<ExpressionTree> Assemble(IEnumerable<ExpressionObject> expressionObjects,
                                                            string controlGroupName)
         {
             Ensure.NotNull(expressionObjects, nameof(expressionObjects));
@@ -66,7 +66,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.DataAccess
             var branchNode = new BranchNode(@operator, expressionObject.Y);
 
             NodeReference firstNodeReference = branchNode.FirstNodeReference;
-            if (TryCreateLeafNode(expressionObject.FirstReference, 
+            if (TryCreateLeafNode(expressionObject.FirstReference,
                                   expressionObjects,
                                   out ILeafNode firstLeafNode))
             {
@@ -78,7 +78,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.DataAccess
             }
 
             NodeReference secondNodeReference = branchNode.SecondNodeReference;
-            if (TryCreateLeafNode(expressionObject.SecondReference, 
+            if (TryCreateLeafNode(expressionObject.SecondReference,
                                   expressionObjects,
                                   out ILeafNode secondLeafNode))
             {
@@ -92,7 +92,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.DataAccess
             return branchNode;
         }
 
-        private static bool TryCreateLeafNode(IExpressionReference reference, 
+        private static bool TryCreateLeafNode(IExpressionReference reference,
                                               IEnumerable<ExpressionObject> expressionObjects,
                                               out ILeafNode leafNode)
         {

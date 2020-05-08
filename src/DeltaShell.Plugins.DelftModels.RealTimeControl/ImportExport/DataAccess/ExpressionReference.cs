@@ -1,12 +1,12 @@
 ﻿namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.DataAccess
 {
     /// <summary>
-    /// Represents an expression parameter reference that references another <see cref="Xsd.ExpressionXML" />
+    /// Represents an expression parameter reference that references another <see cref="Xsd.ExpressionXML"/>
     /// </summary>
     public class ExpressionReference : IExpressionReference
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="ExpressionReference" /> class.
+        /// Initializes a new instance of the <see cref="ExpressionReference"/> class.
         /// </summary>
         /// <param name="value"> The reference to the expression. </param>
         public ExpressionReference(string value)

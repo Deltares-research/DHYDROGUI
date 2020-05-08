@@ -9,7 +9,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
     /// <seealso cref="Input"/>
     /// </summary>
     public interface IInput : IUnique<long>, INameable
-    { 
+    {
         /// <summary>
         /// SetPoint needed for writing non constant set points of rules,
         /// since inputs are then responsible for writing the input XElement.

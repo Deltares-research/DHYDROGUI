@@ -12,6 +12,7 @@ using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Data;
 using GeoAPI.Extensions.Coverages;
+using IEditableObject = DelftTools.Utils.Editing.IEditableObject;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.ValueConverters
 {
@@ -25,6 +26,215 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.ValueConverters
         private bool initialized;
         private DateTime lastTimeToBeAdded;
         private bool clearing;
+
+        [Aggregation]
+        public TOrig OriginalValue
+        {
+            get
+            {
+                return originalValue;
+            }
+            set
+            {
+                if (originalValue != null)
+                {
+                    ((INotifyPropertyChange) originalValue).PropertyChanged -= OriginalValuePropertyChanged;
+                    originalValue.Arguments[1].ValuesChanged -= OriginalValueSecondArgumentValuesChanged;
+                }
+
+                originalValue = value;
+
+                if (originalValue != null)
+                {
+                    ((INotifyPropertyChange) originalValue).PropertyChanged += OriginalValuePropertyChanged;
+                    originalValue.Arguments[1].ValuesChanged += OriginalValueSecondArgumentValuesChanged;
+                }
+
+                Initialize();
+            }
+        }
+
+        [Aggregation]
+        public TConv ConvertedValue
+        {
+            get
+            {
+                return convertedValue;
+            }
+            set
+            {
+                if (convertedValue != null)
+                {
+                    ((INotifyPropertyChange) convertedValue).PropertyChanged -= ConvertedValuePropertyChanged;
+                    convertedValue.CollectionChanged -= ConvertedValueCollectionChanged;
+                    convertedValue.Arguments[0].ValuesChanged -= ConvertedValueTimeValuesChanged;
+
+                    if (convertedValue.Arguments.Count > 1)
+                    {
+                        convertedValue.Arguments[1].ValuesChanged -= ConvertedValueSecondArgumentValuesChanged;
+                    }
+                }
+
+                convertedValue = value;
+
+                if (convertedValue != null)
+                {
+                    ((INotifyPropertyChange) convertedValue).PropertyChanged += ConvertedValuePropertyChanged;
+                    convertedValue.CollectionChanged += ConvertedValueCollectionChanged;
+                    convertedValue.Arguments[0].ValuesChanged += ConvertedValueTimeValuesChanged;
+                    if (convertedValue.Arguments.Count > 1)
+                    {
+                        convertedValue.Arguments[1].ValuesChanged += ConvertedValueSecondArgumentValuesChanged;
+                    }
+                }
+
+                Initialize();
+            }
+        }
+
+        [Aggregation]
+        public IHydroRegion HydroRegion
+        {
+            get
+            {
+                return hydroRegion;
+            }
+            set
+            {
+                hydroRegion = value;
+                Initialize();
+            }
+        }
+
+        [Aggregation]
+        object IValueConverter.OriginalValue
+        {
+            get
+            {
+                return OriginalValue;
+            }
+            set
+            {
+                OriginalValue = (TOrig) value;
+            }
+        }
+
+        [Aggregation]
+        object IValueConverter.ConvertedValue
+        {
+            get
+            {
+                return ConvertedValue;
+            }
+            set
+            {
+                ConvertedValue = (TConv) value;
+            }
+        }
+
+        public Type OriginalValueType
+        {
+            get
+            {
+                return typeof(TOrig);
+            }
+        }
+
+        public Type ConvertedValueType
+        {
+            get
+            {
+                return typeof(TConv);
+            }
+        }
+
+        public abstract object DeepClone();
+
+        protected virtual void OnOriginalValueModified() {}
+
+        protected virtual void ConvertedValueSecondArgumentValuesChanged(object sender, FunctionValuesChangingEventArgs e) {}
+
+        protected virtual void Initialize()
+        {
+            if (hydroRegion == null || OriginalValue == null || ConvertedValue == null)
+            {
+                DeInitialize();
+                return;
+            }
+
+            initialized = true;
+
+            if (!EventSettings.BubblingEnabled)
+            {
+                return; //hack to make sure we don't call convert during save/load...
+            }
+
+            Convert();
+        }
+
+        protected abstract void Convert(DateTime dateTimeToUpdate = default(DateTime));
+
+        protected DateTime[] SynchronizeTimeValues(DateTime dateTimeToUpdate)
+        {
+            bool updateOnlySpecificTimeSlice = dateTimeToUpdate != default(DateTime);
+
+            if (updateOnlySpecificTimeSlice)
+            {
+                if (ConvertedValue.Time.Values.Count - 1 == OriginalValue.Time.Values.Count) //we're only one timestep off
+                {
+                    if (!OriginalValue.Time.Values.Contains(dateTimeToUpdate))
+                    {
+                        OriginalValue.Time.Values.Add(dateTimeToUpdate);
+                    }
+
+                    return new[]
+                    {
+                        dateTimeToUpdate
+                    };
+                }
+
+                //else: fall through and do full refresh
+            }
+
+            if (OriginalValue.Time.Values.Count > 0)
+            {
+                OriginalValue.Time.RemoveValues();
+            }
+
+            if (ConvertedValue.Time.Values.Count > 0)
+            {
+                OriginalValue.Time.Values.AddRange(ConvertedValue.Time.Values);
+            }
+
+            return ConvertedValue.Time.Values.ToArray();
+        }
+
+        protected static IHydroObject OtherSide(HydroLink hydroLink, IHydroObject me)
+        {
+            return Equals(hydroLink.Source, me) ? hydroLink.Target : hydroLink.Source;
+        }
+
+        protected static int GetActualOrPreviousTimeIndex(IVariable<DateTime> timeVariable, DateTime timeToUpdate)
+        {
+            IMultiDimensionalArray<DateTime> timeValues = timeVariable.Values;
+            int timeIndex = timeValues.IndexOf(timeToUpdate);
+            if (timeIndex == -1)
+            {
+                ArrayList adapter = ArrayList.Adapter(timeValues);
+                // first index smaller:
+                timeIndex = ~adapter.BinarySearch(timeToUpdate) - 1;
+            }
+
+            return timeIndex;
+        }
+
+        private bool IsInitialized
+        {
+            get
+            {
+                return initialized;
+            }
+        }
 
         private void OnConvertedValuePropertyChanged(object sender, PropertyChangedEventArgs e)
         {
@@ -44,10 +254,14 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.ValueConverters
         private void ConvertedValueCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             if (!IsInitialized)
+            {
                 return;
+            }
 
             if (IsConvertedValueInEditMode())
+            {
                 return;
+            }
 
             OnConvertedValueCollectionChanged(sender, e);
         }
@@ -55,10 +269,14 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.ValueConverters
         private void ConvertedValuePropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (!IsInitialized)
+            {
                 return;
+            }
 
             if (IsConvertedValueInEditMode())
+            {
                 return;
+            }
 
             if (e.PropertyName == "IsEditing" && clearing)
             {
@@ -71,34 +289,12 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.ValueConverters
             }
         }
 
-        [Aggregation]
-        public TOrig OriginalValue
-        {
-            get { return originalValue; }
-            set
-            {
-                if (originalValue != null)
-                {
-                    ((INotifyPropertyChange)originalValue).PropertyChanged -= OriginalValuePropertyChanged;
-                    originalValue.Arguments[1].ValuesChanged -= OriginalValueSecondArgumentValuesChanged;
-                }
-
-                originalValue = value;
-             
-                if (originalValue != null)
-                {
-                    ((INotifyPropertyChange)originalValue).PropertyChanged += OriginalValuePropertyChanged;
-                    originalValue.Arguments[1].ValuesChanged += OriginalValueSecondArgumentValuesChanged;
-                }
-
-                Initialize();
-            }
-        }
-
-        void OriginalValuePropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void OriginalValuePropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (!IsInitialized)
+            {
                 return;
+            }
 
             if (e.PropertyName == "IsEditing" && !OriginalValue.IsEditing && Equals(OriginalValue, sender))
             {
@@ -109,10 +305,14 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.ValueConverters
         private void OriginalValueSecondArgumentValuesChanged(object sender, FunctionValuesChangingEventArgs e)
         {
             if (!IsInitialized)
+            {
                 return;
+            }
 
             if (OriginalValue.IsEditing)
+            {
                 return;
+            }
 
             if (e.Action == NotifyCollectionChangeAction.Add)
             {
@@ -121,54 +321,12 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.ValueConverters
             }
         }
 
-        protected virtual void OnOriginalValueModified()
+        private void ConvertedValueTimeValuesChanged(object sender, FunctionValuesChangingEventArgs e)
         {
-        }
-
-        [Aggregation]
-        public TConv ConvertedValue
-        {
-            get { return convertedValue; }
-            set
-            {
-                if (convertedValue != null)
-                {
-                    ((INotifyPropertyChange)convertedValue).PropertyChanged -= ConvertedValuePropertyChanged;
-                    convertedValue.CollectionChanged -= ConvertedValueCollectionChanged;
-                    convertedValue.Arguments[0].ValuesChanged -= ConvertedValueTimeValuesChanged;
-
-                    if (convertedValue.Arguments.Count > 1)
-                    {
-                        convertedValue.Arguments[1].ValuesChanged -= ConvertedValueSecondArgumentValuesChanged;
-                    }
-                }
-
-                convertedValue = value;
-
-                if (convertedValue != null)
-                {
-                    ((INotifyPropertyChange)convertedValue).PropertyChanged += ConvertedValuePropertyChanged;
-                    convertedValue.CollectionChanged += ConvertedValueCollectionChanged;
-                    convertedValue.Arguments[0].ValuesChanged += ConvertedValueTimeValuesChanged;
-                    if (convertedValue.Arguments.Count > 1)
-                    {
-                        convertedValue.Arguments[1].ValuesChanged += ConvertedValueSecondArgumentValuesChanged;
-                    }
-                }
-                Initialize();
-            }
-        }
-
-        protected virtual void ConvertedValueSecondArgumentValuesChanged(object sender, FunctionValuesChangingEventArgs e)
-        {
-        }
-
-        void ConvertedValueTimeValuesChanged(object sender, FunctionValuesChangingEventArgs e)
-        {
-            switch(e.Action)
+            switch (e.Action)
             {
                 case NotifyCollectionChangeAction.Add:
-                    lastTimeToBeAdded = (DateTime)e.Items[0];
+                    lastTimeToBeAdded = (DateTime) e.Items[0];
                     break;
                 case NotifyCollectionChangeAction.Remove:
                     if (!IsBackingArrayInEditMode(e.Function))
@@ -179,6 +337,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.ValueConverters
                     {
                         clearing = true;
                     }
+
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -190,81 +349,22 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.ValueConverters
             var variable = function as IVariable;
             if (variable != null)
             {
-                var editableObject = variable.Values as DelftTools.Utils.Editing.IEditableObject;
+                var editableObject = variable.Values as IEditableObject;
                 if (editableObject != null)
                 {
                     return editableObject.IsEditing;
                 }
             }
+
             return false;
         }
 
         private bool IsConvertedValueInEditMode()
         {
-            var editableObject = ConvertedValue as DelftTools.Utils.Editing.IEditableObject;
-            var isEditing = editableObject != null && editableObject.IsEditing;
+            var editableObject = ConvertedValue as IEditableObject;
+            bool isEditing = editableObject != null && editableObject.IsEditing;
             return isEditing;
         }
-
-        private bool IsInitialized
-        {
-            get { return initialized; }
-        }
-
-        [Aggregation]
-        public IHydroRegion HydroRegion
-        {
-            get { return hydroRegion; }
-            set
-            {
-                hydroRegion = value;
-                Initialize();
-            }
-        }
-        
-        [Aggregation]
-        object IValueConverter.OriginalValue
-        {
-            get { return OriginalValue; }
-            set { OriginalValue = (TOrig) value; }
-        }
-
-        [Aggregation]
-        object IValueConverter.ConvertedValue
-        {
-            get { return ConvertedValue; }
-            set { ConvertedValue = (TConv) value; }
-        }
-
-        public Type OriginalValueType
-        {
-            get { return typeof (TOrig); }
-        }
-
-        public Type ConvertedValueType
-        {
-            get { return typeof (TConv); }
-        }
-
-        public abstract object DeepClone();
-
-        protected virtual void Initialize()
-        {
-            if (hydroRegion == null || OriginalValue == null || ConvertedValue == null)
-            {
-                DeInitialize();
-                return;
-            }
-
-            initialized = true;
-
-            if (!EventSettings.BubblingEnabled)
-                return; //hack to make sure we don't call convert during save/load...
-
-            Convert();
-        }
-
-        protected abstract void Convert(DateTime dateTimeToUpdate = default(DateTime));
 
         private void DeInitialize()
         {
@@ -272,49 +372,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.ValueConverters
             {
                 initialized = false;
             }
-        }
-
-        protected DateTime[] SynchronizeTimeValues(DateTime dateTimeToUpdate)
-        {
-            bool updateOnlySpecificTimeSlice = dateTimeToUpdate != default(DateTime);
-            
-            if (updateOnlySpecificTimeSlice)
-            {
-                if (ConvertedValue.Time.Values.Count - 1 == OriginalValue.Time.Values.Count) //we're only one timestep off
-                {
-                    if (!OriginalValue.Time.Values.Contains(dateTimeToUpdate))
-                    {
-                        OriginalValue.Time.Values.Add(dateTimeToUpdate);
-                    }
-                    return new[] {dateTimeToUpdate};
-                }
-                //else: fall through and do full refresh
-            }
-            
-            if (OriginalValue.Time.Values.Count > 0)
-                OriginalValue.Time.RemoveValues();
-            if (ConvertedValue.Time.Values.Count > 0)
-                OriginalValue.Time.Values.AddRange(ConvertedValue.Time.Values);
-
-            return ConvertedValue.Time.Values.ToArray();
-        }
-
-        protected static IHydroObject OtherSide(HydroLink hydroLink, IHydroObject me)
-        {
-            return Equals(hydroLink.Source, me) ? hydroLink.Target : hydroLink.Source;
-        }
-
-        protected static int GetActualOrPreviousTimeIndex(IVariable<DateTime> timeVariable, DateTime timeToUpdate)
-        {
-            var timeValues = timeVariable.Values;
-            var timeIndex = timeValues.IndexOf(timeToUpdate);
-            if (timeIndex == -1)
-            {
-                var adapter = ArrayList.Adapter(timeValues);
-                // first index smaller:
-                timeIndex = (~adapter.BinarySearch(timeToUpdate)) - 1;
-            }
-            return timeIndex;
         }
     }
 }

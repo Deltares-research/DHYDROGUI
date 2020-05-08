@@ -51,7 +51,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.Properties
             get => (InterpolationHydraulicType) data.Interpolation;
             set => data.Interpolation = (InterpolationType) value;
         }
-        
+
         /// <summary>
         /// Update the column name for better user readability
         /// add an extra [i] to avoid dupliclate names: crestlevel may set crestlevel
@@ -91,7 +91,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.Properties
         {
             if (data.Outputs.Count == 1)
             {
-                var output = data.Outputs[0];
+                Output output = data.Outputs[0];
 
                 if (output.IsConnected)
                 {
@@ -103,6 +103,5 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.Properties
 
             SetVariableName(data.Function.Components[0], "<output undefined>");
         }
-
     }
 }

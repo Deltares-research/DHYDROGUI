@@ -11,8 +11,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export
     /// </summary>
     public abstract class RtcSerializerBase
     {
-        private RtcBaseObject RtcObject { get; }
-
         /// <summary>
         /// Initializes a new instance of the <see cref="RtcSerializerBase"/> class.
         /// </summary>
@@ -23,17 +21,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export
         }
 
         /// <summary>
-        /// Gets the XML tag that is used within the id of the object.
-        /// </summary>
-        protected abstract string XmlTag { get; }
-
-        /// <summary>
-        /// Converts the rtc object to a collection of <see cref="XElement" />
+        /// Converts the rtc object to a collection of <see cref="XElement"/>
         /// to be written to the tools config xml file.
         /// </summary>
         /// <param name="xNamespace"> The xml namespace. </param>
         /// <param name="prefix"> The prefix. </param>
-        /// <returns> The collection of <see cref="XElement" />. </returns>
+        /// <returns> The collection of <see cref="XElement"/>. </returns>
         public abstract IEnumerable<XElement> ToXml(XNamespace xNamespace, string prefix);
 
         /// <summary>
@@ -49,7 +42,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export
         }
 
         /// <summary>
-        /// Override this if the object needs to write a collection of <see cref="XElement" />
+        /// Override this if the object needs to write a collection of <see cref="XElement"/>
         /// to the import series in the data config xml file
         /// and the time series import xml file.
         /// </summary>
@@ -57,7 +50,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export
         /// <param name="start"> The start time of the model. </param>
         /// <param name="stop"> The stop time of the model. </param>
         /// <param name="step"> The time step of the model. </param>
-        /// <returns> The collection of <see cref="XElement" />. </returns>
+        /// <returns> The collection of <see cref="XElement"/>. </returns>
         public virtual IEnumerable<IXmlTimeSeries> XmlImportTimeSeries(string prefix, DateTime start, DateTime stop, TimeSpan step)
         {
             yield break;
@@ -65,15 +58,20 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export
 
         /// <summary>
         /// Override this if the rtc object needs to be converted to a
-        /// collection of <see cref="XElement" /> to be written to
+        /// collection of <see cref="XElement"/> to be written to
         /// export series in the data config xml file.
         /// </summary>
         /// <param name="prefix"> The prefix. </param>
-        /// <returns> The collection of <see cref="XElement" />. </returns>
+        /// <returns> The collection of <see cref="XElement"/>. </returns>
         public virtual IEnumerable<IXmlTimeSeries> XmlExportTimeSeries(string prefix)
         {
             yield break;
         }
+
+        /// <summary>
+        /// Gets the XML tag that is used within the id of the object.
+        /// </summary>
+        protected abstract string XmlTag { get; }
 
         /// <summary>
         /// Gets the xml name with the tag.
@@ -100,5 +98,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export
         {
             return prefix + RtcObject.Name;
         }
+
+        private RtcBaseObject RtcObject { get; }
     }
 }

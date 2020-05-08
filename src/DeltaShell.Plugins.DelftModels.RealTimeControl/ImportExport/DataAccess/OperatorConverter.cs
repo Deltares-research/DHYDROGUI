@@ -9,13 +9,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.DataAccess
     public static class OperatorConverter
     {
         /// <summary>
-        /// Converts the specified <paramref name="@operator" /> to a format string
+        /// Converts the specified <paramref name="@operator"/> to a format string
         /// containing placeholders for two parameters.
         /// </summary>
         /// <param name="operator"> The operator. </param>
         /// <returns> The format string </returns>
         /// <exception cref="System.ComponentModel.InvalidEnumArgumentException">
-        /// Thrown when <paramref name="@operator" /> is not a defined value of <see cref="Operator" />.
+        /// Thrown when <paramref name="@operator"/> is not a defined value of <see cref="Operator"/>.
         /// </exception>
         public static string ToFormatString(this Operator @operator)
         {

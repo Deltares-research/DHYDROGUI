@@ -10,11 +10,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
         {
             var editAction = new MovingModelAction("Upgrade model " + sourceModel.Name + " into an integrated model.");
 
-            ((IEditableObject)sourceModel).BeginEdit(editAction);
+            ((IEditableObject) sourceModel).BeginEdit(editAction);
             try
             {
                 var hydroModelBuilder = new HydroModelBuilder();
-                var newHydroModel = hydroModelBuilder.BuildModel(ModelGroup.Empty);
+                HydroModel newHydroModel = hydroModelBuilder.BuildModel(ModelGroup.Empty);
 
                 newHydroModel.BeginEdit(editAction);
 
@@ -26,7 +26,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             }
             finally
             {
-                ((IEditableObject)sourceModel).EndEdit();
+                ((IEditableObject) sourceModel).EndEdit();
             }
         }
     }

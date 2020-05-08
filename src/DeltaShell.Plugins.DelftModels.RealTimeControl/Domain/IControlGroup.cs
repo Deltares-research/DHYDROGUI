@@ -4,7 +4,7 @@ using DelftTools.Utils.Collections.Generic;
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
 {
     /// <summary>
-    /// Control group for a <see cref="RealTimeControlModel" />.
+    /// Control group for a <see cref="RealTimeControlModel"/>.
     /// </summary>
     public interface IControlGroup : INameable
     {

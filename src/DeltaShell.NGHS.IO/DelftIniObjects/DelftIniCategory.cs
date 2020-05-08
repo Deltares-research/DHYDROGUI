@@ -31,11 +31,6 @@ namespace DeltaShell.NGHS.IO.DelftIniObjects
         }
 
         /// <summary>
-        /// The category name.
-        /// </summary>
-        public string Name { get; set; }
-
-        /// <summary>
         /// The properties that belong to the category.
         /// </summary>
         public IEnumerable<DelftIniProperty> Properties => delftIniProperties;
@@ -46,14 +41,23 @@ namespace DeltaShell.NGHS.IO.DelftIniObjects
         public int LineNumber { get; }
 
         /// <summary>
+        /// The category name.
+        /// </summary>
+        public string Name { get; set; }
+
+        /// <summary>
         /// Gets the property value as a string.
         /// </summary>
         /// <param name="name"> The name of the requested property. </param>
-        /// <param name="defaultValue"> The returned value in case the requested
-        /// property does not exist in <see cref="Properties"/>. </param>
+        /// <param name="defaultValue">
+        /// The returned value in case the requested
+        /// property does not exist in <see cref="Properties"/>.
+        /// </param>
         /// <returns> A string representation of the value of the requested <see cref="DelftIniProperty"/>. </returns>
-        /// <remarks> If multiple properties exist with the requested name, only the value of the
-        /// first property will be returned. </remarks>
+        /// <remarks>
+        /// If multiple properties exist with the requested name, only the value of the
+        /// first property will be returned.
+        /// </remarks>
         public string GetPropertyValue(string name, string defaultValue = null)
         {
             DelftIniProperty property = Properties.FirstOrDefault(p => p.Name == name);

@@ -6,7 +6,7 @@
     public class ParameterLeafReference : IExpressionReference
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="ParameterLeafReference" /> class.
+        /// Initializes a new instance of the <see cref="ParameterLeafReference"/> class.
         /// </summary>
         /// <param name="value"> The parameter reference. </param>
         public ParameterLeafReference(string value)

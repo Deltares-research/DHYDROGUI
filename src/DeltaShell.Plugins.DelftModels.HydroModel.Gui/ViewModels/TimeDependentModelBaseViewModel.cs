@@ -23,14 +23,17 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.ViewModels
             SyncTimesAfterAction();
             Name = timeDependentModel.Name;
 
-            ((INotifyPropertyChanged)timeDependentModel).PropertyChanged +=  OnTimeDependentModelPropertyChanged;
+            ((INotifyPropertyChanged) timeDependentModel).PropertyChanged += OnTimeDependentModelPropertyChanged;
         }
 
         public string Name { get; set; }
 
         public DateTime StartTime
         {
-            get { return startTime; }
+            get
+            {
+                return startTime;
+            }
             set
             {
                 startTime = value;
@@ -40,7 +43,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.ViewModels
 
         public DateTime StopTime
         {
-            get { return stopTime; }
+            get
+            {
+                return stopTime;
+            }
             set
             {
                 stopTime = value;
@@ -50,11 +56,14 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.ViewModels
 
         public TimeSpan TimeStep
         {
-            get { return timeStep; }
+            get
+            {
+                return timeStep;
+            }
             set
             {
                 timeStep = value;
-                SyncTimesAfterAction(()=> Model.TimeStep = timeStep);
+                SyncTimesAfterAction(() => Model.TimeStep = timeStep);
             }
         }
 
@@ -64,12 +73,20 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.ViewModels
 
         public ITimeDependentModel Model
         {
-            get { return timeDependentModel; }
+            get
+            {
+                return timeDependentModel;
+            }
+        }
+
+        public void Dispose()
+        {
+            ((INotifyPropertyChanged) timeDependentModel).PropertyChanged -= OnTimeDependentModelPropertyChanged;
         }
 
         private void UpdateDurationText()
         {
-            var intervalLength = StopTime - StartTime;
+            TimeSpan intervalLength = StopTime - StartTime;
             DurationText = string.Format(Resources.HydroModelTimeSettingsViewModel_UpdateDurationLabel__0__days__1__hours__2__minutes__3__seconds, intervalLength.Days, intervalLength.Hours, intervalLength.Minutes, intervalLength.Seconds);
             DurationIsValid = intervalLength > TimeSpan.Zero && !string.IsNullOrEmpty(DurationText);
         }
@@ -82,14 +99,21 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.ViewModels
             }
 
             var parameter = sender as Parameter;
-            if (parameter == null || e.PropertyName != nameof(Parameter.Value)) return;
+            if (parameter == null || e.PropertyName != nameof(Parameter.Value))
+            {
+                return;
+            }
 
             SyncTimesAfterAction();
         }
 
         private void SyncTimesAfterAction(Action action = null)
         {
-            if (isUpdatingModel) return;
+            if (isUpdatingModel)
+            {
+                return;
+            }
+
             isUpdatingModel = true;
 
             action?.Invoke();
@@ -101,11 +125,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.ViewModels
             UpdateDurationText();
 
             isUpdatingModel = false;
-        }
-
-        public void Dispose()
-        {
-            ((INotifyPropertyChanged)timeDependentModel).PropertyChanged -= OnTimeDependentModelPropertyChanged;
         }
     }
 }

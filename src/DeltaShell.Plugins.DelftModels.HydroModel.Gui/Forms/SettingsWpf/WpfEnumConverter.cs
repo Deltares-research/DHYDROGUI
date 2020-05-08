@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Linq;
 using System.Windows;
 using System.Windows.Data;
@@ -19,11 +20,15 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
         /// <returns>
         /// A converted value. If the method returns null, the valid null value is used.
         /// </returns>
-        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value == null || !(value is Type)) return DependencyProperty.UnsetValue;
+            if (value == null || !(value is Type))
+            {
+                return DependencyProperty.UnsetValue;
+            }
+
             //Get the enum values.
-            var enumValues = Enum.GetValues(value as Type).OfType<Enum>().ToArray();
+            Enum[] enumValues = Enum.GetValues(value as Type).OfType<Enum>().ToArray();
             return enumValues;
         }
 
@@ -38,7 +43,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
         /// <returns>
         /// A converted value. If the method returns null, the valid null value is used.
         /// </returns>
-        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             return value;
         }

@@ -1,4 +1,5 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8"?>
+
 <hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"
                    auto-import="false"
                    namespace="DeltaShell.NGHS.IO.FunctionStores"
@@ -7,9 +8,9 @@
   <subclass name="ReadOnlyMapHisFileFunctionStore"
             extends="DelftTools.Functions.IFunctionStore,DelftTools.Functions"
             discriminator-value="lazy_map_his_file_function_store"
-            lazy="false" >
+            lazy="false">
 
-    <property name="Path"/>
+    <property name="Path" />
 
   </subclass>
 

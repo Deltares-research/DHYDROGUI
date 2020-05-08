@@ -13,8 +13,6 @@ namespace DeltaShell.NGHS.IO.Grid
 {
     public static class UnstructuredGridFileHelper
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(UnstructuredGridFileHelper));
-
         public enum BedLevelLocation
         {
             Faces = 1,
@@ -24,6 +22,8 @@ namespace DeltaShell.NGHS.IO.Grid
             NodesMaxLev = 5,
             FacesMeanLevFromNodes = 6
         }
+
+        private static readonly ILog Log = LogManager.GetLogger(typeof(UnstructuredGridFileHelper));
 
         public static UnstructuredGrid LoadFromFile(string path, bool loadFlowLinksAndCells = false)
         {
@@ -42,8 +42,8 @@ namespace DeltaShell.NGHS.IO.Grid
                     }
                 case GridApiDataSet.DataSetConventions.CONV_OTHER:
                     return loadFlowLinksAndCells
-                        ? NetFileImporter.ImportModelGrid(path)
-                        : NetFileImporter.ImportGrid(path);
+                               ? NetFileImporter.ImportModelGrid(path)
+                               : NetFileImporter.ImportGrid(path);
                 default:
                     return null;
             }
@@ -52,7 +52,7 @@ namespace DeltaShell.NGHS.IO.Grid
         public static double[] ReadZValues(string path, BedLevelLocation location)
         {
             var zValues = new double[0];
-            var fileConvention = GetConvention(path);
+            GridApiDataSet.DataSetConventions fileConvention = GetConvention(path);
             if (fileConvention == GridApiDataSet.DataSetConventions.CONV_UGRID)
             {
                 using (var uGrid = new UGrid(path))
@@ -109,6 +109,7 @@ namespace DeltaShell.NGHS.IO.Grid
                                 throw new ArgumentOutOfRangeException("location", location, null);
                         }
                     }
+
                     break;
                 case GridApiDataSet.DataSetConventions.CONV_OTHER:
                     NetFile.WriteZValues(path, values);
@@ -123,7 +124,11 @@ namespace DeltaShell.NGHS.IO.Grid
                 case GridApiDataSet.DataSetConventions.CONV_UGRID:
                     using (var uGrid = new UGrid(path))
                     {
-                        if(!uGrid.IsInitialized()) uGrid.Initialize();
+                        if (!uGrid.IsInitialized())
+                        {
+                            uGrid.Initialize();
+                        }
+
                         return uGrid.CoordinateSystem;
                     }
                 case GridApiDataSet.DataSetConventions.CONV_OTHER:
@@ -135,8 +140,11 @@ namespace DeltaShell.NGHS.IO.Grid
 
         public static void SetCoordinateSystem(string path, ICoordinateSystem coordinateSystem)
         {
-            var convention = GetConvention(path);
-            if (convention == GridApiDataSet.DataSetConventions.CONV_NULL) return;
+            GridApiDataSet.DataSetConventions convention = GetConvention(path);
+            if (convention == GridApiDataSet.DataSetConventions.CONV_NULL)
+            {
+                return;
+            }
 
             // Note: Temporary solution - UGrid v2 will likely change the way the coordinate systems are written in the NetFile
             if (convention == GridApiDataSet.DataSetConventions.CONV_UGRID)
@@ -146,8 +154,11 @@ namespace DeltaShell.NGHS.IO.Grid
                 {
                     meshName = uGrid.GetMeshName(1);
                 }
+
                 if (string.IsNullOrEmpty(meshName))
+                {
                     return;
+                }
 
                 const string gridMappingAttributeName = "grid_mapping";
                 const string projectedCoordinateSystemAttributeValue = "projected_coordinate_system";
@@ -157,9 +168,11 @@ namespace DeltaShell.NGHS.IO.Grid
                 try
                 {
                     netCdfFile = NetCdfFile.OpenExisting(path, true);
-                    var netCdfVariable = netCdfFile.GetVariableByName(meshName + nodeZVariableName);
+                    NetCdfVariable netCdfVariable = netCdfFile.GetVariableByName(meshName + nodeZVariableName);
                     if (netCdfVariable == null)
+                    {
                         return;
+                    }
 
                     netCdfFile.ReDefine();
                     // when updating the coordinate system in a UGrid file we must also update the grid-mapping attribute of the node_Z variable
@@ -171,7 +184,9 @@ namespace DeltaShell.NGHS.IO.Grid
                 finally
                 {
                     if (netCdfFile != null)
+                    {
                         netCdfFile.Close();
+                    }
                 }
             }
 
@@ -196,14 +211,16 @@ namespace DeltaShell.NGHS.IO.Grid
 
         /// <summary>
         /// Write <paramref name="newCoordinateSystem"/> to the _net.nc file specified at <paramref name="path"/>
-        ///
         /// If <paramref name="writeNullCoordinateSystem"/> is true, and a null coordinate system is provided
         /// A projected_coordinated_system with EPSG 0 will be written to file.
         /// </summary>
         /// <param name="path">Path to the UGrid _net.nc file.</param>
         /// <param name="newCoordinateSystem">The new coordinate system to be written to file.</param>
-        /// <param name="writeNullCoordinateSystem">If true, and <paramref name="newCoordinateSystem"/> == null, then write a projected_coordinate_system with EPSG 0 to file.</param>
-        public static void WriteCoordinateSystemToFile(string path, 
+        /// <param name="writeNullCoordinateSystem">
+        /// If true, and <paramref name="newCoordinateSystem"/> == null, then write a
+        /// projected_coordinate_system with EPSG 0 to file.
+        /// </param>
+        public static void WriteCoordinateSystemToFile(string path,
                                                        ICoordinateSystem newCoordinateSystem,
                                                        bool writeNullCoordinateSystem = false)
         {
@@ -214,21 +231,30 @@ namespace DeltaShell.NGHS.IO.Grid
             // than using the NetFile.WriteCoordinateSystem method.
 
             ICoordinateSystem currentCoordinateSystem = null;
-            var hasCoordinateSystem = 
+            bool hasCoordinateSystem =
                 FileContainsCoordinateSystem(path, out currentCoordinateSystem);
 
             // we do not want to write anything because we passed a null
             // coordinate system.
-            if (newCoordinateSystem == null && !writeNullCoordinateSystem) return;
+            if (newCoordinateSystem == null && !writeNullCoordinateSystem)
+            {
+                return;
+            }
 
             // we want to write a null coordinate system, but a null coordinate
             // system has already been written.
-            if (hasCoordinateSystem && currentCoordinateSystem == null && newCoordinateSystem == null) return;
+            if (hasCoordinateSystem && currentCoordinateSystem == null && newCoordinateSystem == null)
+            {
+                return;
+            }
 
             // we want to write a non null coordinate system, but this coordinate
             // system already exists in file.
             if (hasCoordinateSystem && currentCoordinateSystem != null && newCoordinateSystem != null &&
-                currentCoordinateSystem.AuthorityCode == newCoordinateSystem.AuthorityCode) return;
+                currentCoordinateSystem.AuthorityCode == newCoordinateSystem.AuthorityCode)
+            {
+                return;
+            }
 
             NetCdfFile netCdfFile = null;
             try
@@ -259,18 +285,18 @@ namespace DeltaShell.NGHS.IO.Grid
                 // Update wgs84
                 if ((currentCoordinateSystem?.IsGeographic ?? false) || (newCoordinateSystem?.IsGeographic ?? false))
                 {
-                    var pcs = netCdfFile.GetVariableByName("wgs84") ??
-                              netCdfFile.AddVariable("wgs84", NetCdfDataType.NcInteger, new NetCdfDimension[0]);
+                    NetCdfVariable pcs = netCdfFile.GetVariableByName("wgs84") ??
+                                         netCdfFile.AddVariable("wgs84", NetCdfDataType.NcInteger, new NetCdfDimension[0]);
                     WriteCoordinateSystemWithVariable(netCdfFile, pcs, newCoordinateSystem);
                 }
 
                 // Update projected_coordinate_system
-                if ((newCoordinateSystem == null) ||
-                    (!newCoordinateSystem.IsGeographic) ||
-                    ((!currentCoordinateSystem?.IsGeographic) ?? false))
+                if (newCoordinateSystem == null ||
+                    !newCoordinateSystem.IsGeographic ||
+                    (!currentCoordinateSystem?.IsGeographic ?? false))
                 {
-                    var pcs = netCdfFile.GetVariableByName("projected_coordinate_system") ??
-                              netCdfFile.AddVariable("projected_coordinate_system", NetCdfDataType.NcInteger, new NetCdfDimension[0]);
+                    NetCdfVariable pcs = netCdfFile.GetVariableByName("projected_coordinate_system") ??
+                                         netCdfFile.AddVariable("projected_coordinate_system", NetCdfDataType.NcInteger, new NetCdfDimension[0]);
                     WriteCoordinateSystemWithVariable(netCdfFile, pcs, newCoordinateSystem);
                 }
 
@@ -280,6 +306,64 @@ namespace DeltaShell.NGHS.IO.Grid
             finally
             {
                 netCdfFile?.Close();
+            }
+        }
+
+        public static void WriteGridToFile(string path, UnstructuredGrid grid)
+        {
+            GridApiDataSet.DataSetConventions convention = GetConvention(path);
+
+            if (convention == GridApiDataSet.DataSetConventions.CONV_OTHER)
+            {
+                if (!File.Exists(path))
+                {
+                    if (grid == null || grid.IsEmpty)
+                    {
+                        var file = NetCdfFile.CreateNew(path);
+                        file.Close();
+                        return;
+                    }
+
+                    NetFile.Write(path, grid);
+                }
+                else
+                {
+                    NetFile.WriteToExisting(path, grid);
+                }
+            }
+
+            // throw error ??
+        }
+
+        public static void RewriteGridCoordinates(string path, UnstructuredGrid unstructuredGrid)
+        {
+            switch (GetConvention(path))
+            {
+                case GridApiDataSet.DataSetConventions.CONV_OTHER:
+                    NetFile.RewriteGridCoordinates(path, unstructuredGrid);
+                    break;
+                case GridApiDataSet.DataSetConventions.CONV_UGRID:
+                    using (var uGrid = new UGrid(path, GridApiDataSet.NetcdfOpenMode.nf90_write))
+                    {
+                        uGrid.RewriteGridCoordinatesForMeshId(1, unstructuredGrid.Vertices.Select(v => v.X).ToArray(),
+                                                              unstructuredGrid.Vertices.Select(v => v.Y).ToArray());
+                    }
+
+                    break;
+            }
+        }
+
+        public static void DoIfUgrid(string path, Action<UGridToUnstructuredGridAdapter> ugridAction)
+        {
+            GridApiDataSet.DataSetConventions convention = GetConvention(path);
+            if (convention != GridApiDataSet.DataSetConventions.CONV_UGRID)
+            {
+                return;
+            }
+
+            using (var uGridAdaptor = new UGridToUnstructuredGridAdapter(path))
+            {
+                ugridAction(uGridAdaptor);
             }
         }
 
@@ -317,32 +401,32 @@ namespace DeltaShell.NGHS.IO.Grid
                                                               NetCdfVariable pcs,
                                                               ICoordinateSystem coordinateSystem)
         {
-
-
             file.AddAttribute(pcs, new NetCdfAttribute("name", coordinateSystem?.Name ?? "Unknown projected"));
 
-            var epsg = coordinateSystem != null ? (int)coordinateSystem.AuthorityCode : 0;
+            int epsg = coordinateSystem != null ? (int) coordinateSystem.AuthorityCode : 0;
             file.AddAttribute(pcs, new NetCdfAttribute("epsg", epsg));
 
-
             file.AddAttribute(pcs,
-                new NetCdfAttribute("grid_mapping_name", (coordinateSystem != null &&
-                                                          coordinateSystem.IsGeographic) ? "latitude_longitude" :
-                                                                                           "Unknown projected"));
+                              new NetCdfAttribute("grid_mapping_name", coordinateSystem != null &&
+                                                                       coordinateSystem.IsGeographic
+                                                                           ? "latitude_longitude"
+                                                                           : "Unknown projected"));
 
             file.AddAttribute(pcs, new NetCdfAttribute("longitude_of_prime_meridian", 0.0));
 
-            
-            var semiMajorAxis = coordinateSystem != null ? coordinateSystem.GetSemiMajor() : 6378137.0;
-            var semiMinorAxis = coordinateSystem != null ? coordinateSystem.GetSemiMinor() : 6356752.314245;
-            var inverseFlattening = coordinateSystem != null ? coordinateSystem.GetInverseFlattening() : 298.257223563;
+            double semiMajorAxis = coordinateSystem != null ? coordinateSystem.GetSemiMajor() : 6378137.0;
+            double semiMinorAxis = coordinateSystem != null ? coordinateSystem.GetSemiMinor() : 6356752.314245;
+            double inverseFlattening = coordinateSystem != null ? coordinateSystem.GetInverseFlattening() : 298.257223563;
 
             file.AddAttribute(pcs, new NetCdfAttribute("semi_major_axis", semiMajorAxis));
             file.AddAttribute(pcs, new NetCdfAttribute("semi_minor_axis", semiMinorAxis));
             file.AddAttribute(pcs, new NetCdfAttribute("inverse_flattening", inverseFlattening));
 
             if (coordinateSystem != null)
+            {
                 file.AddAttribute(pcs, new NetCdfAttribute("proj4_params", coordinateSystem.PROJ4));
+            }
+
             file.AddAttribute(pcs, new NetCdfAttribute("EPSG_code", string.Format("EPSG:{0}", epsg)));
 
             if (coordinateSystem != null)
@@ -352,64 +436,9 @@ namespace DeltaShell.NGHS.IO.Grid
             }
         }
 
-
-        public static void WriteGridToFile(string path, UnstructuredGrid grid)
-        {
-            var convention = GetConvention(path);
-
-            if (convention == GridApiDataSet.DataSetConventions.CONV_OTHER)
-            {
-                if (!File.Exists(path))
-                {
-                    if (grid == null || grid.IsEmpty)
-                    {
-                        var file = NetCdfFile.CreateNew(path);
-                        file.Close();
-                        return;
-                    }
-                    NetFile.Write(path, grid);
-                }
-                else
-                {
-                    NetFile.WriteToExisting(path, grid);
-                }
-            }
-
-            // throw error ??
-        }
-
-        public static void RewriteGridCoordinates(string path, UnstructuredGrid unstructuredGrid)
-        {
-            switch (GetConvention(path))
-            {
-                case GridApiDataSet.DataSetConventions.CONV_OTHER:
-                    NetFile.RewriteGridCoordinates(path, unstructuredGrid);
-                    break;
-                case GridApiDataSet.DataSetConventions.CONV_UGRID:
-                    using (var uGrid = new UGrid(path, GridApiDataSet.NetcdfOpenMode.nf90_write))
-                    {
-                        uGrid.RewriteGridCoordinatesForMeshId(1, unstructuredGrid.Vertices.Select(v => v.X).ToArray(),
-                            unstructuredGrid.Vertices.Select(v => v.Y).ToArray());
-                    }
-                    break;
-            }
-        }
-
-        public static void DoIfUgrid(string path, Action<UGridToUnstructuredGridAdapter> ugridAction)
-        {
-            var convention = GetConvention(path);
-            if (convention != GridApiDataSet.DataSetConventions.CONV_UGRID)
-                return;
-
-            using (var uGridAdaptor = new UGridToUnstructuredGridAdapter(path))
-            {
-                ugridAction(uGridAdaptor);
-            }
-        }
-
         private static GridApiDataSet.DataSetConventions GetConvention(string path)
         {
-            var gridApi = GridApiFactory.CreateNew();
+            IUGridApi gridApi = GridApiFactory.CreateNew();
             if (gridApi == null)
             {
                 return GridApiDataSet.DataSetConventions.CONV_NULL;
@@ -418,11 +447,12 @@ namespace DeltaShell.NGHS.IO.Grid
             using (gridApi)
             {
                 GridApiDataSet.DataSetConventions convention;
-                var ierr = gridApi.GetConvention(path, out convention);
+                int ierr = gridApi.GetConvention(path, out convention);
                 if (ierr != GridApiDataSet.GridConstants.NOERR)
                 {
                     throw new Exception("Couldn't get the grid convention because of error number: " + ierr);
                 }
+
                 return convention;
             }
         }

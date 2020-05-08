@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Xml.Linq;
 using DelftTools.Shell.Core;
 using DelftTools.Utils.IO;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Properties;
@@ -19,6 +20,20 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
 
         public string Name => "RTC-Tools xml files";
 
+        public string Category => "Xml files";
+
+        public string Description
+        {
+            get
+            {
+                return string.Empty;
+            }
+        }
+
+        public string FileFilter => "xml files|*.xml";
+
+        public Bitmap Icon => Resources.brick_add;
+
         public bool Export(object item, string path)
         {
             var realTimeControlModel = item as RealTimeControlModel;
@@ -29,14 +44,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
 
             realTimeControlModel.RefreshInitialState();
 
-            var directory = Directory ?? path;
+            string directory = Directory ?? path;
 
             try
             {
                 RealTimeControlXmlWriter.CopyXsds(directory);
 
                 realTimeControlModel.SetTimeLagHydraulicRulesToTimeSteps(realTimeControlModel.ControlGroups,
-                    realTimeControlModel.TimeStep);
+                                                                         realTimeControlModel.TimeStep);
 
                 WriteEngineXmlFiles(realTimeControlModel, directory);
 
@@ -57,20 +72,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
             return true;
         }
 
-        public string Category => "Xml files";
-        public string Description
-        {
-            get { return string.Empty; }
-        }
-
         public IEnumerable<Type> SourceTypes()
         {
             yield break;
         }
-
-        public string FileFilter => "xml files|*.xml";
-
-        public Bitmap Icon => Resources.brick_add;
 
         public bool CanExportFor(object item)
         {
@@ -87,13 +92,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
                 .GetToolsConfigXml(path, model.ControlGroups, model.WriteRestart || model.UseRestart)
                 .Save(Path.Combine(path, RealTimeControlXMLFiles.XmlTools));
 
-            var timeSeriesDoc = RealTimeControlXmlWriter.GetTimeSeriesXml(path, model, model.ControlGroups);
+            XDocument timeSeriesDoc = RealTimeControlXmlWriter.GetTimeSeriesXml(path, model, model.ControlGroups);
             if (timeSeriesDoc != null)
             {
                 timeSeriesDoc.Save(Path.Combine(path, RealTimeControlXMLFiles.XmlTimeSeries));
             }
 
-            var timeSeriesPathFileName = timeSeriesDoc == null ? null : RealTimeControlXMLFiles.XmlTimeSeries;
+            string timeSeriesPathFileName = timeSeriesDoc == null ? null : RealTimeControlXMLFiles.XmlTimeSeries;
             RealTimeControlXmlWriter
                 .GetDataConfigXml(path, model, model.ControlGroups, timeSeriesPathFileName)
                 .Save(Path.Combine(path, RealTimeControlXMLFiles.XmlData));
@@ -108,7 +113,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
             else
             {
                 RealTimeControlXmlWriter.GetStateVectorXml(directory, realTimeControlModel.ControlGroups)
-                    .Save(Path.Combine(path, RealTimeControlXMLFiles.XmlImportState));
+                                        .Save(Path.Combine(path, RealTimeControlXMLFiles.XmlImportState));
             }
         }
     }

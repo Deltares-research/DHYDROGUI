@@ -15,7 +15,7 @@ namespace DeltaShell.NGHS.IO
     {
         /// <summary>
         /// Regular expression for a key/value/comment line, where key is a string without white-spaces,
-        /// value can be anything and an optional comment 
+        /// value can be anything and an optional comment
         /// starting with the '#' character.
         /// </summary>
         private const string KeyValueCommentPattern = @"^\s*(?<key>[^=\s]+)\s*=\s*(?<value>[^#]*)(#(?<comment>.*))?$";
@@ -41,7 +41,10 @@ namespace DeltaShell.NGHS.IO
                 while ((line = GetNextLine()) != null)
                 {
                     line = line.Trim();
-                    if (string.IsNullOrEmpty(line)) continue; // Skip white-space characters.
+                    if (string.IsNullOrEmpty(line))
+                    {
+                        continue; // Skip white-space characters.
+                    }
 
                     if (IsNewCategory(line, ref categoryName))
                     {
@@ -50,7 +53,10 @@ namespace DeltaShell.NGHS.IO
                         continue;
                     }
 
-                    if (currentCategory == null) continue;
+                    if (currentCategory == null)
+                    {
+                        continue;
+                    }
 
                     string[] fields = GetKeyValueComment(line);
                     var delftIniProperty = new DelftIniProperty(fields[0], fields[1], fields[2], LineNumber);
@@ -70,14 +76,20 @@ namespace DeltaShell.NGHS.IO
         /// </summary>
         /// <param name="lineContent">Line to be parsed.</param>
         /// <returns>A size 3 array of strings, where first item is the key, second the value and third the comment.</returns>
-        /// <exception cref="FormatException">When <paramref name="lineContent"/> does not match to <see cref="KeyValueCommentPattern"/>.</exception>
+        /// <exception cref="FormatException">
+        /// When <paramref name="lineContent"/> does not match to
+        /// <see cref="KeyValueCommentPattern"/>.
+        /// </exception>
         protected virtual string[] GetKeyValueComment(string lineContent)
         {
             var result = new string[3];
 
             MatchCollection matches = RegularExpression.GetMatches(KeyValueCommentPattern, lineContent);
-            if(matches.Count == 0) throw new FormatException(string.Format(Resources.DelftIniReader_GetKeyValueComment_Invalid_key_value_comment_line_on_line__0__in_file__1_, 
-                                                                           LineNumber, InputFilePath));
+            if (matches.Count == 0)
+            {
+                throw new FormatException(string.Format(Resources.DelftIniReader_GetKeyValueComment_Invalid_key_value_comment_line_on_line__0__in_file__1_,
+                                                        LineNumber, InputFilePath));
+            }
 
             result[0] = matches[0].Groups["key"].Value.Trim();
             result[1] = matches[0].Groups["value"].Value.Trim();
@@ -103,9 +115,11 @@ namespace DeltaShell.NGHS.IO
                 {
                     throw new FormatException(string.Format(Resources.DelftIniReader_Invalid_group_on_line__0__in_file__1_, LineNumber, InputFilePath));
                 }
+
                 newCategory = line.Substring(1, endIndex - 1).Trim();
                 return true;
             }
+
             return false;
         }
     }

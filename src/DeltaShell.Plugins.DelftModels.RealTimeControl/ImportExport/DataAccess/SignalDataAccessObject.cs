@@ -5,13 +5,13 @@ using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.DataAccess
 {
     /// <summary>
-    /// Data access object for importing a <see cref="SignalBase" /> from the tools config xml file.
+    /// Data access object for importing a <see cref="SignalBase"/> from the tools config xml file.
     /// </summary>
-    /// <seealso cref="IRtcDataAccessObject{SignalBase}" />
+    /// <seealso cref="IRtcDataAccessObject{SignalBase}"/>
     public class SignalDataAccessObject : IRtcDataAccessObject<SignalBase>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="SignalDataAccessObject" /> class.
+        /// Initializes a new instance of the <see cref="SignalDataAccessObject"/> class.
         /// </summary>
         /// <param name="id"> The identifier that was read from the file. </param>
         /// <param name="signal"> The created signal. </param>
@@ -28,10 +28,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.DataAccess
             Object = signal;
         }
 
-        public string Id { get; }
-
-        public string ControlGroupName { get; }
-
         /// <summary>
         /// Gets the references to the signal inputs.
         /// </summary>
@@ -40,8 +36,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.DataAccess
         /// </value>
         public IList<string> InputReferences { get; } = new List<string>();
 
+        public string Id { get; }
+
+        public string ControlGroupName { get; }
+
         /// <summary>
-        /// Gets the <see cref="SignalBase" /> that was created from the tools config file.
+        /// Gets the <see cref="SignalBase"/> that was created from the tools config file.
         /// </summary>
         /// <value>
         /// The created signal.

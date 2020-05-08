@@ -29,12 +29,18 @@ namespace DeltaShell.NGHS.IO.Grid
 
         public AGrid(string filename, UGridGlobalMetaData globalMetaData, GridApiDataSet.NetcdfOpenMode mode = GridApiDataSet.NetcdfOpenMode.nf90_nowrite) : this(filename, mode)
         {
-            if(GlobalMetaData != null) GlobalMetaData = globalMetaData;
+            if (GlobalMetaData != null)
+            {
+                GlobalMetaData = globalMetaData;
+            }
         }
 
         public virtual T GridApi
         {
-            get { return gridApi; }
+            get
+            {
+                return gridApi;
+            }
             set
             {
                 var disposableGridApi = gridApi as IDisposable;
@@ -52,8 +58,7 @@ namespace DeltaShell.NGHS.IO.Grid
 
         public virtual bool IsValid()
         {
-            return GridApi != null && (GridApi.GetConvention() == GridApiDataSet.DataSetConventions.CONV_UGRID &&
-                                       GridApi.GetVersion() >= GridApiDataSet.GridConstants.UG_CONV_MIN_VERSION);
+            return GridApi != null && GridApi.GetConvention() == GridApiDataSet.DataSetConventions.CONV_UGRID && GridApi.GetVersion() >= GridApiDataSet.GridConstants.UG_CONV_MIN_VERSION;
         }
 
         public virtual void Initialize()
@@ -63,12 +68,13 @@ namespace DeltaShell.NGHS.IO.Grid
                 CleanUp();
                 disposed = false;
             }
+
             if (GridApi != null)
             {
                 string errorMessage = Resources.AGrid_Initialize_Couldn_t_open_grid_nc_file__ + filename;
-                var ierr = GridApi.Open(filename, mode);
+                int ierr = GridApi.Open(filename, mode);
                 ThrowIfError(ierr, errorMessage);
-            
+
                 try
                 {
                     int epsg_code;
@@ -78,6 +84,7 @@ namespace DeltaShell.NGHS.IO.Grid
                         CoordinateSystem = null;
                         throw new Exception(Resources.AGrid_Initialize_Couldn_t_get_coordinate_system_code_because_of_err_nr___ + ierr);
                     }
+
                     CoordinateSystem = epsg_code > 0 ? new OgrCoordinateSystemFactory().CreateFromEPSG(epsg_code) : null;
                 }
                 catch (Exception)
@@ -99,61 +106,98 @@ namespace DeltaShell.NGHS.IO.Grid
         {
             if (filename != null && !File.Exists(filename))
             {
-                var ierr = GridApi.CreateFile(filename, GlobalMetaData);
+                int ierr = GridApi.CreateFile(filename, GlobalMetaData);
                 ThrowIfError(ierr, Resources.AGrid_CreateFile_Couldn_t_create_new_NetCDF_file_at_location_ + filename);
             }
         }
 
         public virtual GridApiDataSet.DataSetConventions GetDataSetConvention()
         {
-            if(!IsInitialized()) Initialize();
+            if (!IsInitialized())
+            {
+                Initialize();
+            }
+
             return GridApi.GetConvention();
         }
 
         public int GetNumberOfNetworks()
         {
-            if (!IsInitialized()) Initialize(); 
+            if (!IsInitialized())
+            {
+                Initialize();
+            }
+
             int numberOfNetworks;
-            var ierr = GridApi.GetNumberOfNetworks(out numberOfNetworks);
+            int ierr = GridApi.GetNumberOfNetworks(out numberOfNetworks);
             ThrowIfError(ierr, Resources.AGrid_Couldn_t_get_the_number_of_networks);
             return numberOfNetworks;
         }
 
         public int[] GetNetworkIds()
         {
-            if (!IsInitialized()) Initialize();
+            if (!IsInitialized())
+            {
+                Initialize();
+            }
+
             int[] networkIds;
-            var ierr = GridApi.GetNetworkIds(out networkIds);
+            int ierr = GridApi.GetNetworkIds(out networkIds);
             ThrowIfError(ierr, Resources.AGrid_Couldn_t_get_the_network_ids);
             return networkIds;
         }
 
+        public virtual void Dispose()
+        {
+            if (disposed)
+            {
+                return;
+            }
+
+            try
+            {
+                CleanUp();
+            }
+            finally
+            {
+                // Must always ensure this happens to prevent GC deadlock on project close!
+                GC.SuppressFinalize(this);
+            }
+        }
+
         protected T GetValidGridApi(string errormessage)
         {
-            if (!IsInitialized()) Initialize();
+            if (!IsInitialized())
+            {
+                Initialize();
+            }
+
             var uGridApi = GridApi as T;
-            var isValid = uGridApi != null && IsValid();
+            bool isValid = uGridApi != null && IsValid();
             if (!isValid)
+            {
                 throw new Exception(errormessage + Resources.AGrid___because_the_API_was_not_instantiated_);
+            }
+
             return uGridApi;
         }
 
         protected void DoWithValidGridApi(Func<T, int> function, string errorMessage)
         {
-            var uGridNetworkApi = GetValidGridApi(errorMessage);
-            var ierr = function(uGridNetworkApi);
+            T uGridNetworkApi = GetValidGridApi(errorMessage);
+            int ierr = function(uGridNetworkApi);
             ThrowIfError(ierr, errorMessage);
         }
 
         protected void DoWithValidGridApi(Action<T> action, string errorMessage)
         {
-            var uGridApi = GetValidGridApi(errorMessage);
+            T uGridApi = GetValidGridApi(errorMessage);
             action(uGridApi);
         }
 
-        protected TValue GetFromValidGridApi<TValue>(Func<T,TValue> function, TValue defaultValue, string errorMessage)
+        protected TValue GetFromValidGridApi<TValue>(Func<T, TValue> function, TValue defaultValue, string errorMessage)
         {
-            var uGridApi = GetValidGridApi(errorMessage);
+            T uGridApi = GetValidGridApi(errorMessage);
             return uGridApi != null ? function(uGridApi) : defaultValue;
         }
 
@@ -173,26 +217,6 @@ namespace DeltaShell.NGHS.IO.Grid
             }
         }
 
-        public virtual void Dispose()
-        {
-            if (disposed) return;
-            try
-            {
-                CleanUp();
-            }
-            finally
-            {
-                // Must always ensure this happens to prevent GC deadlock on project close!
-                GC.SuppressFinalize(this);
-            }
-            
-        }
-
-        ~AGrid()
-        {
-            CleanUp();
-        }
-        
         private void CleanUp()
         {
             if (disposed)
@@ -217,6 +241,11 @@ namespace DeltaShell.NGHS.IO.Grid
             }
 
             disposed = true;
+        }
+
+        ~AGrid()
+        {
+            CleanUp();
         }
     }
 }

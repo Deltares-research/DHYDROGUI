@@ -8,10 +8,10 @@ using Netron.GraphLib.Interfaces;
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.ActivityShapes
 {
     [NetronGraphShape("Composite activity shape",
-        NetronLibraryKey,
-        "Activity shapes",
-        "DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.ActivityShapes.CompositeActivityShape",
-        "Composite activity.")]
+                      NetronLibraryKey,
+                      "Activity shapes",
+                      "DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.ActivityShapes.CompositeActivityShape",
+                      "Composite activity.")]
     public class CompositeActivityShape : ActivityShapeBase
     {
         /// <summary>
@@ -27,24 +27,22 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.ActivityShapes
         /// Default constructor, used for instantiations by <see cref="Netron.GraphLib.UI.GraphControl"/>.
         /// In code, please use <see cref="CompositeActivityShape(IGraphSite,string)"/>
         /// </summary>
-        /// <Deprecated>Please use <see cref="CompositeActivityShape(IGraphSite)"/> or 
-        /// <see cref="CompositeActivityShape(IGraphSite,string)"/> instead.</Deprecated>
+        /// <Deprecated>
+        /// Please use <see cref="CompositeActivityShape(IGraphSite)"/> or
+        /// <see cref="CompositeActivityShape(IGraphSite,string)"/> instead.
+        /// </Deprecated>
         [Obsolete("Used only for Netron.GraphLib.UI.GraphControl")]
-        public CompositeActivityShape()
-        {
-            
-        }
+        public CompositeActivityShape() {}
 
         /// <summary>
         /// Creates a shape for a composite activity for a given <see cref="Netron.GraphLib.Interfaces.IGraphSite"/>.
         /// </summary>
         /// <param name="graphControl">The control hosting this shape.</param>
-        public CompositeActivityShape(IGraphSite graphControl) : this(graphControl, "Composite activity")
-        {
-        }
+        public CompositeActivityShape(IGraphSite graphControl) : this(graphControl, "Composite activity") {}
 
         /// <summary>
-        /// Creates a shape for a composite activity with a given name for a given <see cref="Netron.GraphLib.Interfaces.IGraphSite"/>.
+        /// Creates a shape for a composite activity with a given name for a given
+        /// <see cref="Netron.GraphLib.Interfaces.IGraphSite"/>.
         /// </summary>
         /// <param name="graphControl">The control hosting this shape.</param>
         /// <param name="shapeText"><see cref="Netron.GraphLib.Entity.Text"/> of this shape.</param>
@@ -81,29 +79,52 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.ActivityShapes
             }
         }
 
-        private void CacheChildShapes(ICompositeActivity compositeActivity)
+        public override void Paint(Graphics g)
         {
-            // Clear child shapes:
-            foreach (var activityShapeBase in cachedChildShapes.Values)
-            {
-                Site.Shapes.Remove(activityShapeBase);
-            }
-            cachedChildShapes.Clear();
-            if (compositeActivity == null) return;
+            // Measure and apply new size:
+            SizeF requiredSize = MeasureSize(g, true);
+            Rectangle = new RectangleF(Rectangle.X, Rectangle.Y, requiredSize.Width, requiredSize.Height);
 
-            // Create and cache child shapes:
-            foreach (var activity in compositeActivity.Activities)
+            DrawShape(g, Rectangle);
+
+            // Render nested child activities:
+            if (Activity != null)
             {
-                var activityShapeBase = ShapeFactory.CreateShapeFromActivity(activity, Site);
-                cachedChildShapes[activity] = activityShapeBase;
-                Site.Shapes.Add(activityShapeBase);
-                activityShapeBase.ZOrder = ZOrder - 2; // Might seem unintuitive, but is correct.
+                foreach (KeyValuePair<IActivity, ActivityShapeBase> activityAndShape in cachedChildShapes)
+                {
+                    activityAndShape.Value.Rectangle = cachedMeasurements[activityAndShape.Key];
+                    activityAndShape.Value.Paint(g);
+                }
             }
         }
 
         internal override SizeF GetRequiredSize(Graphics g)
         {
             return MeasureSize(g, false);
+        }
+
+        private void CacheChildShapes(ICompositeActivity compositeActivity)
+        {
+            // Clear child shapes:
+            foreach (ActivityShapeBase activityShapeBase in cachedChildShapes.Values)
+            {
+                Site.Shapes.Remove(activityShapeBase);
+            }
+
+            cachedChildShapes.Clear();
+            if (compositeActivity == null)
+            {
+                return;
+            }
+
+            // Create and cache child shapes:
+            foreach (IActivity activity in compositeActivity.Activities)
+            {
+                ActivityShapeBase activityShapeBase = ShapeFactory.CreateShapeFromActivity(activity, Site);
+                cachedChildShapes[activity] = activityShapeBase;
+                Site.Shapes.Add(activityShapeBase);
+                activityShapeBase.ZOrder = ZOrder - 2; // Might seem unintuitive, but is correct.
+            }
         }
 
         private SizeF MeasureSize(Graphics g, bool prepareForPaint)
@@ -114,7 +135,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.ActivityShapes
             }
 
             // Determine minimum required size for base:
-            var requiredSize = base.GetRequiredSize(g);
+            SizeF requiredSize = base.GetRequiredSize(g);
 
             // Determine additional size requirements based on child activities:
             if (Activity != null)
@@ -122,7 +143,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.ActivityShapes
                 // TODO: Extract reusable Horizontal Layout method.
                 var activitiesOrigin = new PointF(Rectangle.X, Rectangle.Y + requiredSize.Height);
                 var activitiesSize = new Size(0, 0);
-                foreach (var activityAndShape in cachedChildShapes)
+                foreach (KeyValuePair<IActivity, ActivityShapeBase> activityAndShape in cachedChildShapes)
                 {
                     // Origin to start layout placement from:
                     var origin =
@@ -130,12 +151,12 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.ActivityShapes
                                    activitiesOrigin.Y + VerticalPadding);
 
                     // Determine activity placeholder:
-                    var size = activityAndShape.Value.GetRequiredSize(g);
+                    SizeF size = activityAndShape.Value.GetRequiredSize(g);
                     var activityRectangle = new RectangleF(
                         origin.X,
                         origin.Y,
-                        size.Width + 2 * HorizontalPadding,
-                        size.Height + 2 * VerticalPadding);
+                        size.Width + (2 * HorizontalPadding),
+                        size.Height + (2 * VerticalPadding));
 
                     // For painting: Cache placeholder
                     if (prepareForPaint)
@@ -144,15 +165,16 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.ActivityShapes
                     }
 
                     // Increase width due to horizontal layout placement:
-                    activitiesSize.Width += (int)Math.Ceiling(activityRectangle.Width + HorizontalPadding);
+                    activitiesSize.Width += (int) Math.Ceiling(activityRectangle.Width + HorizontalPadding);
 
                     // Take largest height of placeholders due to horizontal layout placement:
-                    var height = (int)Math.Ceiling(activityRectangle.Height);
+                    var height = (int) Math.Ceiling(activityRectangle.Height);
                     if (height > activitiesSize.Height)
                     {
                         activitiesSize.Height = height;
                     }
                 }
+
                 // Padding:
                 activitiesSize.Height += VerticalPadding;
                 activitiesSize.Width += HorizontalPadding;
@@ -162,29 +184,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.ActivityShapes
                 {
                     requiredSize.Width = activitiesSize.Width;
                 }
+
                 requiredSize.Height += activitiesSize.Height;
             }
 
             return requiredSize;
-        }
-
-        public override void Paint(Graphics g)
-        {
-            // Measure and apply new size:
-            var requiredSize = MeasureSize(g, true);
-            Rectangle = new RectangleF(Rectangle.X, Rectangle.Y, requiredSize.Width, requiredSize.Height);
-
-            DrawShape(g, Rectangle);
-
-            // Render nested child activities:
-            if (Activity != null)
-            {
-                foreach (var activityAndShape in cachedChildShapes)
-                {
-                    activityAndShape.Value.Rectangle = cachedMeasurements[activityAndShape.Key];
-                    activityAndShape.Value.Paint(g);
-                }
-            }
         }
     }
 }

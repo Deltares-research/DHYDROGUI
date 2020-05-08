@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Shell.Core.Workflow;
@@ -26,16 +25,16 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Validation
             {
                 ValidateRealTimeControlModel(rootObject),
                 RestartTimeRangeValidator.ValidateRestartTimeRangeSettings(true,
-                    rootObject.SaveStateStartTime,
-                    rootObject.SaveStateStopTime,
-                    rootObject.SaveStateTimeStep,
-                    rootObject),
+                                                                           rootObject.SaveStateStartTime,
+                                                                           rootObject.SaveStateStopTime,
+                                                                           rootObject.SaveStateTimeStep,
+                                                                           rootObject),
                 ValidateRestartInputState(rootObject),
             };
             validationReports.AddRange(
                 rootObject.ControlGroups.Select(cg => new ControlGroupValidator().Validate(rootObject, cg)));
             return new ValidationReport(rootObject.Name + " (Real Time Control)",
-                validationReports);
+                                        validationReports);
         }
 
         private static ValidationReport ValidateRealTimeControlModel(RealTimeControlModel model)
@@ -51,12 +50,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Validation
 
             // Controlled models must run simultaneously
             ValidateControlledModels(model, issues);
-            
+
             // Control Group names must be unique:
             RtcBaseObjectCheckForUniqueness(model.ControlGroups, issues, "Control group");
 
             // PostSharp validation:
-            var result = ObjectValidation.Validate(model);
+            ValidationResult result = ObjectValidation.Validate(model);
             if (!result.IsValid)
             {
                 issues.AddRange(result.Messages.Select(m => new ValidationIssue(model, ValidationSeverity.Error, m)));
@@ -68,23 +67,25 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Validation
         private static void ValidateControlledModels(RealTimeControlModel model, List<ValidationIssue> issues)
         {
             var compositeModel = model.Owner as ICompositeActivity;
-            if (compositeModel == null) 
+            if (compositeModel == null)
+            {
                 return;
+            }
 
-            var actualControlledModels = GetActuallyControlledModels(model).ToList();
-            var simultaneousRunningModels = compositeModel.CurrentWorkflow.GetActivitiesOfType<IActivity>().ToList();
-            var controlledModelsNotRunningSimultaneous = actualControlledModels.Except(simultaneousRunningModels);
+            List<IActivity> actualControlledModels = GetActuallyControlledModels(model).ToList();
+            List<IActivity> simultaneousRunningModels = compositeModel.CurrentWorkflow.GetActivitiesOfType<IActivity>().ToList();
+            IEnumerable<IActivity> controlledModelsNotRunningSimultaneous = actualControlledModels.Except(simultaneousRunningModels);
 
             if (!simultaneousRunningModels.Contains(model) && actualControlledModels.Any())
             {
-                foreach (var actualControlledModel in actualControlledModels)
+                foreach (IActivity actualControlledModel in actualControlledModels)
                 {
                     issues.Add(new ValidationIssue(actualControlledModel, ValidationSeverity.Error,
                                                    "This model is being controlled by RTC, but the RTC model is not running simultaneous according to the workflow of the composite model. This is a requirement."));
                 }
-                
             }
-            foreach (var problemModel in controlledModelsNotRunningSimultaneous)
+
+            foreach (IActivity problemModel in controlledModelsNotRunningSimultaneous)
             {
                 issues.Add(new ValidationIssue(problemModel, ValidationSeverity.Error,
                                                "This model is being controlled by RTC, but they are not running simultaneous according to the workflow of the composite model. This is a requirement."));
@@ -97,12 +98,17 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Validation
 
             var controlledModels = new List<IActivity>();
 
-            foreach (var item in model.AllDataItems)
+            foreach (IDataItem item in model.AllDataItems)
             {
-                var relatedDataItems = item.LinkedBy.Concat(item.LinkedTo != null ? new[] {item.LinkedTo} : new IDataItem[0]);
-                foreach (var consumer in relatedDataItems)
+                IEnumerable<IDataItem> relatedDataItems = item.LinkedBy.Concat(item.LinkedTo != null
+                                                                                   ? new[]
+                                                                                   {
+                                                                                       item.LinkedTo
+                                                                                   }
+                                                                                   : new IDataItem[0]);
+                foreach (IDataItem consumer in relatedDataItems)
                 {
-                    var linkedModel = GetOwner(consumer);
+                    IActivity linkedModel = GetOwner(consumer);
 
                     if (linkedModel != null && !linkedModel.Equals(model))
                     {
@@ -117,8 +123,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Validation
         private static IActivity GetOwner(IDataItem dataItem)
         {
             if (dataItem == null)
+            {
                 return null;
-            
+            }
+
             var owner = dataItem.Owner as IActivity;
             return owner ?? GetOwner(dataItem.Parent);
         }
@@ -127,13 +135,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Validation
                                                             IList<ValidationIssue> issueList, string typeObject)
         {
             var ruleNames = new HashSet<string>();
-            foreach (var nameable in nameables)
+            foreach (INameable nameable in nameables)
             {
                 if (ruleNames.Contains(nameable.Name))
                 {
                     issueList.Add(new ValidationIssue(nameable,
                                                       ValidationSeverity.Error,
-                                                      String.Format("The name '{0}' is used by {1} {2}s.",
+                                                      string.Format("The name '{0}' is used by {1} {2}s.",
                                                                     nameable.Name,
                                                                     nameables.Count(bo => bo.Name == nameable.Name),
                                                                     typeObject)));
@@ -147,12 +155,15 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Validation
 
         private ValidationReport ValidateRestartInputState(RealTimeControlModel model)
         {
-            if (!model.UseRestart) return new ValidationReport("Input restart state", Enumerable.Empty<ValidationReport>());
+            if (!model.UseRestart)
+            {
+                return new ValidationReport("Input restart state", Enumerable.Empty<ValidationReport>());
+            }
 
             IEnumerable<string> errors, warnings;
             model.ValidateInputState(out errors, out warnings);
 
-            var issues = errors.Select(error => new ValidationIssue("Input restart state", ValidationSeverity.Error, error)).ToList();
+            List<ValidationIssue> issues = errors.Select(error => new ValidationIssue("Input restart state", ValidationSeverity.Error, error)).ToList();
             issues.AddRange(warnings.Select(warning => new ValidationIssue("Input restart state", ValidationSeverity.Warning, warning)));
 
             return new ValidationReport("Input restart state", issues);

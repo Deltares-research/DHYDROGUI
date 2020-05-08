@@ -6,16 +6,16 @@ using System.Linq;
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.Properties
 {
     /// <summary>
-    /// Property descriptor for a <see cref="KeyValuePair{String,TValue}" />
+    /// Property descriptor for a <see cref="KeyValuePair{TKey,TValue}"/>
     /// </summary>
     /// <typeparam name="T"> Type of key value pair value </typeparam>
-    /// <seealso cref="PropertyDescriptor" />
+    /// <seealso cref="PropertyDescriptor"/>
     public class KeyValuePairPropertyDescriptor<T> : PropertyDescriptor
     {
         private readonly string key;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="KeyValuePairPropertyDescriptor{T}" /> class.
+        /// Initializes a new instance of the <see cref="KeyValuePairPropertyDescriptor{T}"/> class.
         /// </summary>
         /// <param name="name"> The key. </param>
         /// <param name="attrs"> The attributes. </param>
@@ -26,13 +26,22 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.Properties
             IsReadOnly = isReadOnly;
         }
 
+        /// <inheritdoc/>
+        public override bool IsReadOnly { get; }
+
+        /// <inheritdoc/>
+        public override Type ComponentType => typeof(KeyValuePair<string, T>[]);
+
+        /// <inheritdoc/>
+        public override Type PropertyType => typeof(T);
+
         /// <summary>
         /// Gets the value of the key value pair.
         /// </summary>
         /// <param name="component"> The key value pair array. </param>
         /// <returns> The value of corresponding key value pair of this descriptor. </returns>
         /// <exception cref="ArgumentException">
-        /// Thrown when <paramref name="component" /> is not an array of type <see cref="KeyValuePair{String, T}" />
+        /// Thrown when <paramref name="component"/> is not an array of type <see cref="KeyValuePair{String, T}"/>
         /// </exception>
         public override object GetValue(object component)
         {
@@ -53,7 +62,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.Properties
         /// Thrown when the property is read-only.
         /// </exception>
         /// <exception cref="ArgumentException">
-        /// Thrown when <paramref name="component" /> is not an array of type <see cref="KeyValuePair{String, T}" />
+        /// Thrown when <paramref name="component"/> is not an array of type <see cref="KeyValuePair{String, T}"/>
         /// </exception>
         public override void SetValue(object component, object value)
         {
@@ -81,7 +90,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.Properties
         }
 
         /// <summary>
-        /// Throws an <exception cref="NotSupportedException" />.
+        /// Throws an <exception cref="NotSupportedException"/>.
         /// </summary>
         /// <exception cref="NotSupportedException">
         /// Thrown when this method is called.
@@ -96,14 +105,5 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.Properties
         {
             return false;
         }
-
-        /// <inheritdoc/>
-        public override bool IsReadOnly { get; }
-
-        /// <inheritdoc/>
-        public override Type ComponentType => typeof(KeyValuePair<string, T>[]);
-
-        /// <inheritdoc/>
-        public override Type PropertyType => typeof(T);
     }
 }

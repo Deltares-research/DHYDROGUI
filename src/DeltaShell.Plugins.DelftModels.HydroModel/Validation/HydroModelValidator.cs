@@ -21,10 +21,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Validation
             // null-check of current workflow
             if (model.CurrentWorkflow == null)
             {
-                return new ValidationReport(validationReportName, new List<ValidationIssue>
-                {
-                    new ValidationIssue(model.CurrentWorkflow, ValidationSeverity.Error, Resources.HydroModelValidator_Validate_Current_Workflow_cannot_be_empty)
-                });
+                return new ValidationReport(validationReportName, new List<ValidationIssue> {new ValidationIssue(model.CurrentWorkflow, ValidationSeverity.Error, Resources.HydroModelValidator_Validate_Current_Workflow_cannot_be_empty)});
             }
 
             var hydroModelReports = new List<ValidationReport>
@@ -35,7 +32,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Validation
             };
 
             var hydroModelSpecificReports = new ValidationReport(Resources.HydroModelValidator_Validate_HydroModel_Specific, hydroModelReports);
-            var subModelReports = ConstructSubmodelReports(model);
+            IEnumerable<ValidationReport> subModelReports = ConstructSubmodelReports(model);
 
             var reports = new List<ValidationReport> {hydroModelSpecificReports};
             reports.AddRange(subModelReports);
@@ -46,14 +43,14 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Validation
         private static ValidationReport ConstructModelGridReport(ICompositeActivity model)
         {
             var gridCoordinatesIssues = new List<ValidationIssue>();
-            var activitiesWithCoordSyst = model.CurrentWorkflow.Activities.GetActivitiesOfType<IHasCoordinateSystem>().Where( act => act.CoordinateSystem != null).ToList();
+            List<IHasCoordinateSystem> activitiesWithCoordSyst = model.CurrentWorkflow.Activities.GetActivitiesOfType<IHasCoordinateSystem>().Where(act => act.CoordinateSystem != null).ToList();
 
-            if (activitiesWithCoordSyst.Count > 1 && activitiesWithCoordSyst.GroupBy( act => act.CoordinateSystem.IsGeographic ).Count() > 1)
+            if (activitiesWithCoordSyst.Count > 1 && activitiesWithCoordSyst.GroupBy(act => act.CoordinateSystem.IsGeographic).Count() > 1)
             {
                 gridCoordinatesIssues.Add(
                     new ValidationIssue(
-                        model, 
-                        ValidationSeverity.Error, 
+                        model,
+                        ValidationSeverity.Error,
                         Resources.HydroModelValidator_ConstructModelGridReport_Wave_and_WaterFlowFM_Grids_need_to_be_of_the_same_type__either_Spherical_or_Cartesian__));
             }
 
@@ -65,42 +62,43 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Validation
             var subModelReports = new List<ValidationReport>();
             if (model.CurrentWorkflow != null)
             {
-                var dimrModels = model.CurrentWorkflow.Activities.GetActivitiesOfType<IDimrModel>()
-                    .Where(dm => dm != null).ToList();
-                foreach (var dimrModel in dimrModels)
+                List<IDimrModel> dimrModels = model.CurrentWorkflow.Activities.GetActivitiesOfType<IDimrModel>()
+                                                   .Where(dm => dm != null).ToList();
+                foreach (IDimrModel dimrModel in dimrModels)
                 {
                     subModelReports.Add(dimrModel.Validate());
                 }
             }
+
             return subModelReports;
         }
 
         private static ValidationReport ConstructModelStructureReport(ICompositeActivity model)
         {
-            var modelNameIssues = ValidateIfModelNamesAreUnique(model.CurrentWorkflow.Activities.GetActivitiesOfType<IActivity>().ToList());
+            IEnumerable<ValidationIssue> modelNameIssues = ValidateIfModelNamesAreUnique(model.CurrentWorkflow.Activities.GetActivitiesOfType<IActivity>().ToList());
             return new ValidationReport(Resources.HydroModelValidator_ConstructModelStructureReport_Model_structure, modelNameIssues);
         }
 
         private static IEnumerable<ValidationIssue> ValidateIfModelNamesAreUnique(IEnumerable<IActivity> activities)
         {
             var modelStructureIssues = new List<ValidationIssue>();
-            var lowercaseNames = activities.Select(a => a.Name).Where(n => n != null).Select(n => n.ToLowerInvariant()).ToArray();
-            var duplicateNames = lowercaseNames.GroupBy(x => x)
-                .Where(group => group.Count() > 1)
-                .Select(group => group.Key);
-            
-            foreach (var duplicateName in duplicateNames)
+            string[] lowercaseNames = activities.Select(a => a.Name).Where(n => n != null).Select(n => n.ToLowerInvariant()).ToArray();
+            IEnumerable<string> duplicateNames = lowercaseNames.GroupBy(x => x)
+                                                               .Where(group => group.Count() > 1)
+                                                               .Select(group => group.Key);
+
+            foreach (string duplicateName in duplicateNames)
             {
                 modelStructureIssues.Add(new ValidationIssue(duplicateName, ValidationSeverity.Error,
-                    string.Format(Resources.HydroModelValidator_ValidateIfModelNamesAreUnique_Two_or_more_activities_in_the_current_workflow_have_the_same_name___0____possibly_only_differing_by_uppercase_letters__Please_make_sure_that_these_activity_names_are_uniquely_named_, duplicateName.ToLower())));
-
+                                                             string.Format(Resources.HydroModelValidator_ValidateIfModelNamesAreUnique_Two_or_more_activities_in_the_current_workflow_have_the_same_name___0____possibly_only_differing_by_uppercase_letters__Please_make_sure_that_these_activity_names_are_uniquely_named_, duplicateName.ToLower())));
             }
+
             return modelStructureIssues;
         }
 
         private ValidationReport ConstructCurrentWorkflowReport(ICompositeActivity model)
         {
-            var currentWorkflowIssues = ValidateCurrentWorkflow(model.CurrentWorkflow);
+            IEnumerable<ValidationIssue> currentWorkflowIssues = ValidateCurrentWorkflow(model.CurrentWorkflow);
             var currentWorkflowReport = new ValidationReport(Resources.HydroModelValidator_ConstructCurrentWorkflowReport_Workflow, currentWorkflowIssues);
             return currentWorkflowReport;
         }
@@ -111,8 +109,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Validation
             if (!WorkFlowTypeValidatorFactory.GetWorkFlowTypeValidator(activity).Valid())
             {
                 validationIssues.Add(new ValidationIssue(activity, ValidationSeverity.Error,
-                    string.Format(Resources.HydroModel_LogErrorsWhenUnsupportedWorkflow_The_workflow___0___is_currently_not_supported_in_DeltaShell, activity.Name)));
+                                                         string.Format(Resources.HydroModel_LogErrorsWhenUnsupportedWorkflow_The_workflow___0___is_currently_not_supported_in_DeltaShell, activity.Name)));
             }
+
             return validationIssues;
         }
     }

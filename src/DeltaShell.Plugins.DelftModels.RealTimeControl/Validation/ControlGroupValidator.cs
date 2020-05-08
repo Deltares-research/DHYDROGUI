@@ -16,13 +16,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Validation
     {
         public ValidationReport Validate(RealTimeControlModel rootObject, ControlGroup target)
         {
-            return new ValidationReport(target.Name + " (Control Group)", new []
-                {
-                    ValidateControlGroup(target),
-                    ValidateRules(rootObject, target),
-                    ValidateConditions(rootObject, target),
-                    ValidateSignals(target)
-                });
+            return new ValidationReport(target.Name + " (Control Group)", new[]
+            {
+                ValidateControlGroup(target),
+                ValidateRules(rootObject, target),
+                ValidateConditions(rootObject, target),
+                ValidateSignals(target)
+            });
         }
 
         private static ValidationReport ValidateRules(RealTimeControlModel model, ControlGroup controlGroup)
@@ -35,7 +35,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Validation
                 issues.AddRange(ValidateTimeSeriesInRules(model, controlGroup));
             }
 
-            foreach (var rule in controlGroup.Rules.Where(r => r.IsLinkedFromSignal()))
+            foreach (RuleBase rule in controlGroup.Rules.Where(r => r.IsLinkedFromSignal()))
             {
                 if (!controlGroup.Signals.Any(s => s.RuleBases.Contains(rule)))
                 {
@@ -65,9 +65,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Validation
 
             RtcBaseObjectCheckForUniqueness(controlGroup.Signals.Cast<INameable>(), issues, "Signals");
 
-            foreach (var signal in controlGroup.Signals)
+            foreach (SignalBase signal in controlGroup.Signals)
             {
-                foreach (var ruleBase in signal.RuleBases)
+                foreach (RuleBase ruleBase in signal.RuleBases)
                 {
                     if (!ruleBase.IsLinkedFromSignal())
                     {
@@ -92,9 +92,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Validation
             {
                 issues.Add(new ValidationIssue(controlGroup, ValidationSeverity.Error, "Control Group requires at least 1 output"));
             }
-            
+
             // PostSharp validation:
-            var result = controlGroup.Validate();
+            ValidationResult result = controlGroup.Validate();
             if (!result.IsValid)
             {
                 issues.AddRange(result.Messages.Select(m => new ValidationIssue(controlGroup, ValidationSeverity.Error, m)));
@@ -107,7 +107,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Validation
                                                             IList<ValidationIssue> issueList, string typeObject)
         {
             var ruleNames = new HashSet<string>();
-            foreach (var nameable in nameables)
+            foreach (INameable nameable in nameables)
             {
                 if (ruleNames.Contains(nameable.Name))
                 {
@@ -129,10 +129,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Validation
         {
             var issues = new List<ValidationIssue>();
 
-            var startTime = rootObject.StartTime;
-            var timeStep = rootObject.TimeStep;
-            
-            var invalidTimeConditions = controlGroup.Conditions.OfType<TimeCondition>().Where(tc => !ValidateTimeSeries(tc.TimeSeries, startTime, timeStep));
+            DateTime startTime = rootObject.StartTime;
+            TimeSpan timeStep = rootObject.TimeStep;
+
+            IEnumerable<TimeCondition> invalidTimeConditions = controlGroup.Conditions.OfType<TimeCondition>().Where(tc => !ValidateTimeSeries(tc.TimeSeries, startTime, timeStep));
             invalidTimeConditions.ForEach(tc => issues.Add(new ValidationIssue(tc, ValidationSeverity.Error,
                                                                                string.Format(Resources.RealTimeControlControlGroupValidator_SeriesTimesShouldMatchModelTimeStep,
                                                                                              tc.TimeSeries.Name, controlGroup.Name,
@@ -145,26 +145,26 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Validation
         {
             var issues = new List<ValidationIssue>();
 
-            var startTime = rootObject.StartTime;
-            var stopTime = rootObject.StopTime;
-            var timeStep = rootObject.TimeStep;
+            DateTime startTime = rootObject.StartTime;
+            DateTime stopTime = rootObject.StopTime;
+            TimeSpan timeStep = rootObject.TimeStep;
 
-            var pidRules = controlGroup.Rules.OfType<PIDRule>().ToList();
-            var timeRules = controlGroup.Rules.OfType<TimeRule>().ToList();
-            var intervalRules = controlGroup.Rules.OfType<IntervalRule>().ToList();
+            List<PIDRule> pidRules = controlGroup.Rules.OfType<PIDRule>().ToList();
+            List<TimeRule> timeRules = controlGroup.Rules.OfType<TimeRule>().ToList();
+            List<IntervalRule> intervalRules = controlGroup.Rules.OfType<IntervalRule>().ToList();
 
             // Check if time steps of rule match with the model time step
-            var invalidPidRules = pidRules.Where(r => r.PidRuleSetpointType == PIDRule.PIDRuleSetpointType.TimeSeries && !ValidateTimeSeries(r.TimeSeries, startTime, timeStep));
-            var invalidTimeRules = timeRules.Where(r => !ValidateTimeSeries(r.TimeSeries, startTime, timeStep));
-            var invalidIntervalRules = intervalRules.Where(r => !ValidateTimeSeries(r.TimeSeries, startTime, timeStep));
+            IEnumerable<PIDRule> invalidPidRules = pidRules.Where(r => r.PidRuleSetpointType == PIDRule.PIDRuleSetpointType.TimeSeries && !ValidateTimeSeries(r.TimeSeries, startTime, timeStep));
+            IEnumerable<TimeRule> invalidTimeRules = timeRules.Where(r => !ValidateTimeSeries(r.TimeSeries, startTime, timeStep));
+            IEnumerable<IntervalRule> invalidIntervalRules = intervalRules.Where(r => !ValidateTimeSeries(r.TimeSeries, startTime, timeStep));
 
             string validationString = Resources.RealTimeControlControlGroupValidator_SeriesTimesShouldMatchModelTimeStep;
             issues.AddRange(
                 GetInvalidRulesIssues(controlGroup.Name,
-                    invalidPidRules, invalidTimeRules, invalidIntervalRules,
-                    ValidationSeverity.Error,
-                    validationString,
-                    timeStep.ToString()));
+                                      invalidPidRules, invalidTimeRules, invalidIntervalRules,
+                                      ValidationSeverity.Error,
+                                      validationString,
+                                      timeStep.ToString()));
 
             // check start times
             invalidPidRules = pidRules.Where(r => r.PidRuleSetpointType == PIDRule.PIDRuleSetpointType.TimeSeries && TimeSeriesEntriesPrecedeModelStartTime(r.TimeSeries, startTime));
@@ -173,10 +173,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Validation
 
             issues.AddRange(
                 GetInvalidRulesIssues(controlGroup.Name,
-                    invalidPidRules, invalidTimeRules, invalidIntervalRules,
-                    ValidationSeverity.Warning,
-                    Resources.RealTimeControlControlGroupValidator_SeriesHasTimestepsThatPrecedeModelStartTime,
-                    startTime.ToString(CultureInfo.InvariantCulture)));
+                                      invalidPidRules, invalidTimeRules, invalidIntervalRules,
+                                      ValidationSeverity.Warning,
+                                      Resources.RealTimeControlControlGroupValidator_SeriesHasTimestepsThatPrecedeModelStartTime,
+                                      startTime.ToString(CultureInfo.InvariantCulture)));
 
             // check end times
             invalidPidRules = pidRules.Where(r => r.PidRuleSetpointType == PIDRule.PIDRuleSetpointType.TimeSeries && TimeSeriesEntriesExceedModelStopTime(r.TimeSeries, stopTime));
@@ -185,10 +185,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Validation
 
             issues.AddRange(
                 GetInvalidRulesIssues(controlGroup.Name,
-                    invalidPidRules, invalidTimeRules, invalidIntervalRules,
-                    ValidationSeverity.Warning,
-                    Resources.RealTimeControlControlGroupValidator_SeriesHasTimestepsThatExceedModelStopTime,
-                    stopTime.ToString(CultureInfo.InvariantCulture)));
+                                      invalidPidRules, invalidTimeRules, invalidIntervalRules,
+                                      ValidationSeverity.Warning,
+                                      Resources.RealTimeControlControlGroupValidator_SeriesHasTimestepsThatExceedModelStopTime,
+                                      stopTime.ToString(CultureInfo.InvariantCulture)));
 
             return issues;
         }
@@ -197,29 +197,45 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Validation
         {
             var issues = new List<ValidationIssue>();
 
-            pidRules.ForEach(r => issues.Add(new ValidationIssue(r, severity, String.Format(message, r.TimeSeries.Name, controlGroupName, messageArgument), r.TimeSeries)));
-            timeRules.ForEach(r => issues.Add(new ValidationIssue(r, severity, String.Format(message, r.TimeSeries.Name, controlGroupName, messageArgument), r.TimeSeries)));
-            intervalRules.ForEach(r => issues.Add(new ValidationIssue(r, severity, String.Format(message, r.TimeSeries.Name, controlGroupName, messageArgument), r.TimeSeries)));
+            pidRules.ForEach(r => issues.Add(new ValidationIssue(r, severity, string.Format(message, r.TimeSeries.Name, controlGroupName, messageArgument), r.TimeSeries)));
+            timeRules.ForEach(r => issues.Add(new ValidationIssue(r, severity, string.Format(message, r.TimeSeries.Name, controlGroupName, messageArgument), r.TimeSeries)));
+            intervalRules.ForEach(r => issues.Add(new ValidationIssue(r, severity, string.Format(message, r.TimeSeries.Name, controlGroupName, messageArgument), r.TimeSeries)));
 
             return issues;
         }
 
         private static bool ValidateTimeSeries(ITimeSeries timeSeries, DateTime startTime, TimeSpan timeStep)
         {
-            if (timeStep.Equals(TimeSpan.Zero)) return false;
-            if (timeSeries.Time.Values.Count == 0) return true;
-            return timeSeries.Time.Values.All(t => (t - startTime).Ticks%timeStep.Ticks == 0);
+            if (timeStep.Equals(TimeSpan.Zero))
+            {
+                return false;
+            }
+
+            if (timeSeries.Time.Values.Count == 0)
+            {
+                return true;
+            }
+
+            return timeSeries.Time.Values.All(t => (t - startTime).Ticks % timeStep.Ticks == 0);
         }
 
         private static bool TimeSeriesEntriesPrecedeModelStartTime(ITimeSeries timeSeries, DateTime startTime)
         {
-            if (timeSeries.Time.Values.Count == 0) return false;
+            if (timeSeries.Time.Values.Count == 0)
+            {
+                return false;
+            }
+
             return startTime > timeSeries.Time.Values.First();
         }
 
         private static bool TimeSeriesEntriesExceedModelStopTime(ITimeSeries timeSeries, DateTime stopTime)
         {
-            if (timeSeries.Time.Values.Count == 0) return false;
+            if (timeSeries.Time.Values.Count == 0)
+            {
+                return false;
+            }
+
             return stopTime < timeSeries.Time.Values.Last();
         }
     }

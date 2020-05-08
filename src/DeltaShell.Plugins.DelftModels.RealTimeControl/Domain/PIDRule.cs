@@ -12,17 +12,25 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
     [Entity]
     public class PIDRule : RuleBase, ITimeDependentRtcObject
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(PIDRule));
-
-        public PIDRule() : this(null)
+        public enum PIDRuleSetpointType
         {
+            Constant = 0,
+            Signal = 1,
+            TimeSeries = 2
         }
+
+        private static readonly ILog Log = LogManager.GetLogger(typeof(PIDRule));
 
         private TimeSeries timeSeries;
 
+        public PIDRule() : this(null) {}
+
         public PIDRule(string name)
         {
-            if (name != null) Name = name;
+            if (name != null)
+            {
+                Name = name;
+            }
 
             Setting = new Setting {MaxSpeed = 0};
         }
@@ -33,16 +41,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
         public double Kp { get; set; }
         public double Ki { get; set; }
         public double Kd { get; set; }
-
-        public override bool CanBeLinkedFromSignal()
-        {
-            return true;
-        }
-
-        public override bool IsLinkedFromSignal()
-        {
-            return PidRuleSetpointType == PIDRuleSetpointType.Signal;
-        }
 
         [NoNotifyPropertyChange]
         public double ConstantValue
@@ -57,35 +55,20 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
             }
         }
 
-        public TimeSeries TimeSeries
-        {
-            get
-            {
-                // create default time series only when it is really necessary (speeds-up app initialization)
-                if(timeSeries == null)
-                {
-                    timeSeries = new TimeSeries {Name = "Set points"};
-                    timeSeries.Components.Add(new Variable<double> { Name = "Value", NoDataValue = -999.0 });
-                    timeSeries.Components[0].Attributes[FunctionAttributes.StandardName] = FunctionAttributes.StandardNames.RtcPidRule;
-                    ExtrapolationOptionsTime = ExtrapolationType.Constant;
-                }
-
-                return timeSeries;
-            }
-
-            set { timeSeries = value; }
-        }
-
         [NoNotifyPropertyChange]
         public InterpolationType InterpolationOptionsTime
         {
-            get { return TimeSeries.Time.InterpolationType; }
+            get
+            {
+                return TimeSeries.Time.InterpolationType;
+            }
             set
             {
-                if (!Enum.IsDefined(typeof(InterpolationHydraulicType), (InterpolationHydraulicType)value))
+                if (!Enum.IsDefined(typeof(InterpolationHydraulicType), (InterpolationHydraulicType) value))
                 {
                     throw new ArgumentException(string.Format("Interpolation for PID rule does not support {0}", value));
                 }
+
                 TimeSeries.Time.InterpolationType = value;
             }
         }
@@ -93,24 +76,53 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
         [NoNotifyPropertyChange]
         public ExtrapolationType ExtrapolationOptionsTime
         {
-            get { return TimeSeries.Time.ExtrapolationType; }
+            get
+            {
+                return TimeSeries.Time.ExtrapolationType;
+            }
             set
             {
-                if (!Enum.IsDefined(typeof(ExtrapolationTimeSeriesType), (ExtrapolationTimeSeriesType)value))
+                if (!Enum.IsDefined(typeof(ExtrapolationTimeSeriesType), (ExtrapolationTimeSeriesType) value))
                 {
                     throw new ArgumentException(string.Format("Extrapolation for PID rule does not support {0}", value));
                 }
+
                 TimeSeries.Time.ExtrapolationType = value;
             }
         }
 
+        public TimeSeries TimeSeries
+        {
+            get
+            {
+                // create default time series only when it is really necessary (speeds-up app initialization)
+                if (timeSeries == null)
+                {
+                    timeSeries = new TimeSeries {Name = "Set points"};
+                    timeSeries.Components.Add(new Variable<double>
+                    {
+                        Name = "Value",
+                        NoDataValue = -999.0
+                    });
+                    timeSeries.Components[0].Attributes[FunctionAttributes.StandardName] = FunctionAttributes.StandardNames.RtcPidRule;
+                    ExtrapolationOptionsTime = ExtrapolationType.Constant;
+                }
+
+                return timeSeries;
+            }
+
+            set
+            {
+                timeSeries = value;
+            }
+        }
 
         [ValidationMethod]
         public static void Validate(PIDRule pidRule)
         {
             var exceptions = new List<ValidationException>();
 
-            if ((pidRule.PidRuleSetpointType == PIDRuleSetpointType.TimeSeries) && (pidRule.TimeSeries.Arguments[0].Values.Count == 0))
+            if (pidRule.PidRuleSetpointType == PIDRuleSetpointType.TimeSeries && pidRule.TimeSeries.Arguments[0].Values.Count == 0)
             {
                 exceptions.Add(new ValidationException(string.Format("pid rule '{0}' has empty time series.", pidRule.Name)));
             }
@@ -124,6 +136,16 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
             {
                 throw new ValidationContextException(exceptions);
             }
+        }
+
+        public override bool CanBeLinkedFromSignal()
+        {
+            return true;
+        }
+
+        public override bool IsLinkedFromSignal()
+        {
+            return PidRuleSetpointType == PIDRuleSetpointType.Signal;
         }
 
         public override object Clone()
@@ -148,17 +170,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
             }
         }
 
-        public enum PIDRuleSetpointType
-        {
-            Constant = 0,
-            Signal = 1,
-            TimeSeries = 2
-        }
-
         public override IEnumerable<object> GetDirectChildren()
         {
             if (timeSeries != null)
+            {
                 yield return timeSeries;
+            }
         }
     }
 }

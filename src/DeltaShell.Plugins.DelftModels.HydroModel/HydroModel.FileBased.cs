@@ -18,7 +18,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
     {
         // place to save link infos in per hydro model
         private readonly IList<ModelExchangeInfo> modelExchangeInfos = new List<ModelExchangeInfo>();
-        
+
         #region Logic for (un)linking/saving RTC-FlowFM filebased coupling
 
         /// <summary>
@@ -56,17 +56,20 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
         /// </summary>
         public virtual void RelinkDataItems()
         {
-            foreach (var exchangeInfo in modelExchangeInfos)
+            foreach (ModelExchangeInfo exchangeInfo in modelExchangeInfos)
             {
-                var sourceModel = Models.FirstOrDefault(m => Equals(ModelExchangeInfo.GetModelIdentifier(m), exchangeInfo.SourceModelName));
-                var targetModel = Models.FirstOrDefault(m => Equals(ModelExchangeInfo.GetModelIdentifier(m), exchangeInfo.TargetModelName));
+                IModel sourceModel = Models.FirstOrDefault(m => Equals(ModelExchangeInfo.GetModelIdentifier(m), exchangeInfo.SourceModelName));
+                IModel targetModel = Models.FirstOrDefault(m => Equals(ModelExchangeInfo.GetModelIdentifier(m), exchangeInfo.TargetModelName));
 
-                if (sourceModel == null || targetModel == null) continue;
+                if (sourceModel == null || targetModel == null)
+                {
+                    continue;
+                }
 
-                var sourceItems = GetDataItems(sourceModel, DataItemRole.Output).ToList();
-                var targetItems = GetDataItems(targetModel, DataItemRole.Input).ToList();
+                List<IDataItem> sourceItems = GetDataItems(sourceModel, DataItemRole.Output).ToList();
+                List<IDataItem> targetItems = GetDataItems(targetModel, DataItemRole.Input).ToList();
 
-                foreach (var exchange in exchangeInfo.Exchanges)
+                foreach (ModelExchange exchange in exchangeInfo.Exchanges)
                 {
                     IDataItem sourceItem = sourceItems.FirstOrDefault(di => Equals(ModelExchange.GetExchangeIdentifier(di), exchange.SourceName));
 
@@ -99,7 +102,13 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             modelExchangeInfos.AddRange(couplingFile.Read(couplingFile.FilePath));
         }
 
-        public virtual string CouplingFilePath { get { return couplingFile != null ? couplingFile.FilePath : null; } }
+        public virtual string CouplingFilePath
+        {
+            get
+            {
+                return couplingFile != null ? couplingFile.FilePath : null;
+            }
+        }
 
         private bool TryGetFmAndRtcModel(out IModel flowModel, out IModel rtcModel)
         {
@@ -107,7 +116,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             rtcModel = null;
 
             // TODO: Make this work upon abstractions
-            foreach (var model in Models)
+            foreach (IModel model in Models)
             {
                 if (model.GetEntityType().Name.Equals("WaterFlowFMModel"))
                 {
@@ -168,6 +177,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
             return modelExchange;
         }
+
         /// <summary>
         /// Gets the collection of <see cref="ModelExchangeInfo"/> based on its input arguments while breaking the linkage.
         /// </summary>
@@ -181,7 +191,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             IReadOnlyDictionary<IDataItem, string> rtcInputNameMapping = GetDataItemNameMapping(GetDataItems(rtcModel, DataItemRole.Input));
             IReadOnlyDictionary<IDataItem, string> rtcOutputNameMapping = GetDataItemNameMapping(GetDataItems(rtcModel, DataItemRole.Output));
 
-            return new []
+            return new[]
             {
                 CreateUnlinkedModelExchangeInfo(rtcModel, flowModel, rtcInputNameMapping, item => item),
                 CreateUnlinkedModelExchangeInfo(flowModel, rtcModel, rtcOutputNameMapping, item => item.LinkedTo)
@@ -208,7 +218,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             // Cache the linked data input items as due to the unlinking, changes might occur that affects
             // the collection of linked objects.
             IEnumerable<IDataItem> linkedDataInputItems = GetLinkedDataInputItems(inputDataItems, outputDataItems).ToArray();
-            
+
             foreach (IDataItem linkedInputDataItem in linkedDataInputItems)
             {
                 IDataItem dataItemToRestore = getDataItemFunc(linkedInputDataItem);
@@ -243,8 +253,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
         /// Gets the collection of data input items that are linked to output data items.
         /// </summary>
         /// <param name="inputItems">The collection of input items to determine whether they are linked.</param>
-        /// <param name="outputItems">The collection of output items that the <paramref name="inputItems"/>
-        /// could be linked with.</param>
+        /// <param name="outputItems">
+        /// The collection of output items that the <paramref name="inputItems"/>
+        /// could be linked with.
+        /// </param>
         /// <returns>A collection of <paramref name="inputItems"/> that are linked.</returns>
         private static IEnumerable<IDataItem> GetLinkedDataInputItems(IEnumerable<IDataItem> inputItems, IEnumerable<IDataItem> outputItems)
         {
@@ -268,7 +280,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                 var connectionPoint = (INameable) item.ValueConverter.OriginalValue;
                 mapping.Add(item, connectionPoint.Name);
             }
-            
+
             return mapping;
         }
 
@@ -301,8 +313,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
         {
             if (couplingFile == null)
             {
-                couplingFile = new ModelCouplingFile { FilePath = filePath };
+                couplingFile = new ModelCouplingFile {FilePath = filePath};
             }
+
             ModelSaveTo(filePath, false);
         }
 
@@ -325,7 +338,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
         private void BuildModelFromFile(string filePath)
         {
-            couplingFile = new ModelCouplingFile { FilePath = filePath };
+            couplingFile = new ModelCouplingFile {FilePath = filePath};
             LoadLinks();
         }
 
@@ -336,14 +349,18 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
         private void ModelSaveTo(string filePath, bool switchTo)
         {
-            var targetDir = Path.GetDirectoryName(filePath);
+            string targetDir = Path.GetDirectoryName(filePath);
             if (!Directory.Exists(targetDir))
+            {
                 Directory.CreateDirectory(targetDir);
+            }
 
             // write exchanges
             couplingFile.Write(filePath, modelExchangeInfos);
             if (switchTo)
+            {
                 couplingFile.FilePath = filePath;
+            }
         }
 
         #endregion
@@ -353,24 +370,35 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
         //tells NHibernate we need to be saved
         private void MarkDirty()
         {
-            unchecked { dirtyCounter++; }
+            unchecked
+            {
+                dirtyCounter++;
+            }
         }
+
         private int dirtyCounter;
 
         private string path;
 
         string IFileBased.Path
         {
-            get { return path; }
+            get
+            {
+                return path;
+            }
             set
             {
                 if (path == value)
+                {
                     return;
+                }
 
                 path = value;
 
                 if (path == null)
+                {
                     return;
+                }
 
                 if (path.StartsWith("$") && IsOpen)
                 {
@@ -381,10 +409,19 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
         public virtual IEnumerable<string> Paths
         {
-            get { yield return ((IFileBased)this).Path; }
+            get
+            {
+                yield return ((IFileBased) this).Path;
+            }
         }
 
-        public virtual bool IsFileCritical { get { return true; } }
+        public virtual bool IsFileCritical
+        {
+            get
+            {
+                return true;
+            }
+        }
 
         public virtual bool IsOpen { get; protected set; }
 
@@ -417,9 +454,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             IsOpen = true;
         }
 
-        void IFileBased.Delete()
-        {
-        }
+        void IFileBased.Delete() {}
 
         private string GetJSONPathFromDeltaShellPath(string dsPath)
         {

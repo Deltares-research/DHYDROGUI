@@ -20,9 +20,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.XmlValidation
         public Validator(IEnumerable<string> xmlSchemaPaths)
         {
             xmlSchemaSet = new XmlSchemaSet();
-            foreach (var xmlSchemaPath in xmlSchemaPaths)
+            foreach (string xmlSchemaPath in xmlSchemaPaths)
             {
-                xmlSchemaSet.Add(FileToObject.ConvertToXmlSchema(xmlSchemaPath));    
+                xmlSchemaSet.Add(FileToObject.ConvertToXmlSchema(xmlSchemaPath));
             }
         }
 
@@ -44,23 +44,19 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.XmlValidation
         public void Validate(XDocument xDocument)
         {
             var messages = "";
-            xDocument.Validate(xmlSchemaSet, (o, e) =>
-                                                 {
-                                                     messages += e.Message;
-                                                 }, true);
+            xDocument.Validate(xmlSchemaSet, (o, e) => { messages += e.Message; }, true);
 
-           if(messages != "")
-           {
-               throw new XmlException(messages);
-           }
-
+            if (messages != "")
+            {
+                throw new XmlException(messages);
+            }
         }
 
         public bool IsValid(string xmlDocumentPath)
         {
             return IsValid(FileToObject.ConvertToXDocument(xmlDocumentPath));
         }
-                
+
         public bool IsValid(XDocument xDocument)
         {
             try
@@ -72,6 +68,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.XmlValidation
                 Log.Warn(ex.Message);
                 return false;
             }
+
             return true;
         }
     }

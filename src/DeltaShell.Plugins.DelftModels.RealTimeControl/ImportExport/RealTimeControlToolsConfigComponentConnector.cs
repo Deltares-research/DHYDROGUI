@@ -18,7 +18,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
         private IRtcDataAccessObject<RtcBaseObject>[] dataAccessObjects;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="RealTimeControlToolsConfigComponentConnector" /> class.
+        /// Initializes a new instance of the <see cref="RealTimeControlToolsConfigComponentConnector"/> class.
         /// </summary>
         /// <param name="controlGroupName"> Name of the control group. </param>
         public RealTimeControlToolsConfigComponentConnector(string controlGroupName)
@@ -27,7 +27,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
         }
 
         /// <summary>
-        /// Assembles a control group by connecting the specified <paramref name="groupedDataAccessObjects" />.
+        /// Assembles a control group by connecting the specified <paramref name="groupedDataAccessObjects"/>.
         /// </summary>
         /// <param name="groupedDataAccessObjects"> The data access objects that belong to one control group. </param>
         /// <returns>

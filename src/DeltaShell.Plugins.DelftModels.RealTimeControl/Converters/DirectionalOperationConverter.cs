@@ -8,14 +8,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Converters
         public DirectionalOperationConverter()
         {
             ConversionTable = new Dictionary<string, Operation>
-                                  {
-                                      {"Increasing", Operation.Greater},
-                                      {"Increasing or unchanged", Operation.GreaterEqual},
-                                      {"Unchanged", Operation.Equal},
-                                      {"Changed", Operation.Unequal},
-                                      {"Decreasing or unchanged", Operation.LessEqual},
-                                      {"Decreasing", Operation.Less}
-                                  };
+            {
+                {"Increasing", Operation.Greater},
+                {"Increasing or unchanged", Operation.GreaterEqual},
+                {"Unchanged", Operation.Equal},
+                {"Changed", Operation.Unequal},
+                {"Decreasing or unchanged", Operation.LessEqual},
+                {"Decreasing", Operation.Less}
+            };
         }
     }
 }

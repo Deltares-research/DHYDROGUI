@@ -15,17 +15,20 @@ namespace DeltaShell.NGHS.IO
 
         public static void CleanPersistentDirectories(DirectoryInfo persistedDataDirectory, IHydroModel model)
         {
-            if (!persistedDataDirectory.Exists) return;
+            if (!persistedDataDirectory.Exists)
+            {
+                return;
+            }
 
             var compositeActivity = model as ICompositeActivity;
             if (compositeActivity != null)
             {
-                var hydroModelDirectory = Path.Combine(persistedDataDirectory.FullName, compositeActivity.Name);
-                var childModelNames = compositeActivity.Activities.OfType<IHydroModel>().Select(a => a.Name).ToList();
+                string hydroModelDirectory = Path.Combine(persistedDataDirectory.FullName, compositeActivity.Name);
+                List<string> childModelNames = compositeActivity.Activities.OfType<IHydroModel>().Select(a => a.Name).ToList();
 
                 CleanPersistentDirectoryForCompositeModel(new DirectoryInfo(hydroModelDirectory), childModelNames);
-                
-                foreach (var childModelName in childModelNames)
+
+                foreach (string childModelName in childModelNames)
                 {
                     var modelDirectoryInfo = new DirectoryInfo(Path.Combine(hydroModelDirectory, childModelName));
                     CleanPersistentDirectoryForStandAloneModel(modelDirectoryInfo);
@@ -40,22 +43,28 @@ namespace DeltaShell.NGHS.IO
 
         private static void CleanPersistentDirectoryForCompositeModel(DirectoryInfo compositeModelDirectoryInfo, IEnumerable<string> childModelNames)
         {
-            if (!compositeModelDirectoryInfo.Exists) return;
+            if (!compositeModelDirectoryInfo.Exists)
+            {
+                return;
+            }
 
             compositeModelDirectoryInfo.GetDirectories()
-                .Where(d => !childModelNames.Contains(d.Name))
-                .ForEach(d => FileUtils.DeleteIfExists(d.FullName));
+                                       .Where(d => !childModelNames.Contains(d.Name))
+                                       .ForEach(d => FileUtils.DeleteIfExists(d.FullName));
 
             compositeModelDirectoryInfo.GetFiles().ForEach(f => FileUtils.DeleteIfExists(f.FullName));
         }
 
         private static void CleanPersistentDirectoryForStandAloneModel(DirectoryInfo modelDirectoryInfo)
         {
-            if (!modelDirectoryInfo.Exists) return;
+            if (!modelDirectoryInfo.Exists)
+            {
+                return;
+            }
 
             modelDirectoryInfo.GetDirectories()
-                .Where(d => d.Name != InputDirectoryName && d.Name != OutputDirectoryName)
-                .ForEach(d => FileUtils.DeleteIfExists(d.FullName));
+                              .Where(d => d.Name != InputDirectoryName && d.Name != OutputDirectoryName)
+                              .ForEach(d => FileUtils.DeleteIfExists(d.FullName));
 
             modelDirectoryInfo.GetFiles().ForEach(f => FileUtils.DeleteIfExists(f.FullName));
         }

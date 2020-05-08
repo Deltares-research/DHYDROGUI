@@ -8,10 +8,10 @@ using Netron.GraphLib.Interfaces;
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.ActivityShapes
 {
     [NetronGraphShape("Sequential activity shape",
-        NetronLibraryKey,
-        "Activity shapes",
-        "DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.ActivityShapes.SequentialActivityShape",
-        "Sequential activity.")]
+                      NetronLibraryKey,
+                      "Activity shapes",
+                      "DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.ActivityShapes.SequentialActivityShape",
+                      "Sequential activity.")]
     public class SequentialActivityShape : ActivityShapeBase
     {
         /// <summary>
@@ -28,10 +28,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.ActivityShapes
         /// </summary>
         /// <Deprecated>Please use <see cref="SequentialActivityShape(IGraphSite)"/> instead.</Deprecated>
         [Obsolete("Used only for Netron.GraphLib.UI.GraphControl")]
-        public SequentialActivityShape()
-        {
-            
-        }
+        public SequentialActivityShape() {}
 
         /// <summary>
         /// Creates a shape for a sequential activity for a given <see cref="Netron.GraphLib.Interfaces.IGraphSite"/>.
@@ -75,29 +72,52 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.ActivityShapes
             }
         }
 
-        private void CacheChildShapes(SequentialActivity sequentialActivity)
+        public override void Paint(Graphics g)
         {
-            // Clear child shapes:
-            foreach (var activityShapeBase in cachedChildShapes.Values)
-            {
-                Site.Shapes.Remove(activityShapeBase);
-            }
-            cachedChildShapes.Clear();
-            if (sequentialActivity == null) return;
+            // Measure and apply new size:
+            SizeF requiredSize = MeasureSize(g, true);
+            Rectangle = new RectangleF(Rectangle.X, Rectangle.Y, requiredSize.Width, requiredSize.Height);
 
-            // Create and cache child shapes:
-            foreach (var activity in sequentialActivity.Activities)
+            DrawShape(g, Rectangle);
+
+            // Render nested child activities:
+            if (Activity != null)
             {
-                var activityShapeBase = ShapeFactory.CreateShapeFromActivity(activity, Site);
-                cachedChildShapes[activity] = activityShapeBase;
-                Site.Shapes.Add(activityShapeBase);
-                activityShapeBase.ZOrder = ZOrder - 1; // Might seem unintuitive, but is correct.
+                foreach (KeyValuePair<IActivity, ActivityShapeBase> activityAndShape in cachedChildShapes)
+                {
+                    activityAndShape.Value.Rectangle = cachedMeasurements[activityAndShape.Key];
+                    activityAndShape.Value.Paint(g);
+                }
             }
         }
 
         internal override SizeF GetRequiredSize(Graphics g)
         {
             return MeasureSize(g, false);
+        }
+
+        private void CacheChildShapes(SequentialActivity sequentialActivity)
+        {
+            // Clear child shapes:
+            foreach (ActivityShapeBase activityShapeBase in cachedChildShapes.Values)
+            {
+                Site.Shapes.Remove(activityShapeBase);
+            }
+
+            cachedChildShapes.Clear();
+            if (sequentialActivity == null)
+            {
+                return;
+            }
+
+            // Create and cache child shapes:
+            foreach (IActivity activity in sequentialActivity.Activities)
+            {
+                ActivityShapeBase activityShapeBase = ShapeFactory.CreateShapeFromActivity(activity, Site);
+                cachedChildShapes[activity] = activityShapeBase;
+                Site.Shapes.Add(activityShapeBase);
+                activityShapeBase.ZOrder = ZOrder - 1; // Might seem unintuitive, but is correct.
+            }
         }
 
         private SizeF MeasureSize(Graphics g, bool prepareForPaint)
@@ -108,14 +128,14 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.ActivityShapes
             }
 
             // Determine minimum required size for base:
-            var requiredSize = base.GetRequiredSize(g);
+            SizeF requiredSize = base.GetRequiredSize(g);
 
             if (Activity != null)
             {
                 // TODO: Extract reusable Vertical Layout method.
                 var parallelActivitiesOrigin = new PointF(Rectangle.X, Rectangle.Y + requiredSize.Height);
                 var parallelActivitiesSize = new Size(0, 0);
-                foreach (var activityAndShape in cachedChildShapes)
+                foreach (KeyValuePair<IActivity, ActivityShapeBase> activityAndShape in cachedChildShapes)
                 {
                     // Origin to start layout placement from:
                     var origin =
@@ -123,12 +143,12 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.ActivityShapes
                                    parallelActivitiesOrigin.Y + parallelActivitiesSize.Height + VerticalPadding);
 
                     // Determine activity placeholder:
-                    var size = activityAndShape.Value.GetRequiredSize(g);
+                    SizeF size = activityAndShape.Value.GetRequiredSize(g);
                     var activityRectangle = new RectangleF(
                         origin.X,
                         origin.Y,
-                        size.Width + 2 * HorizontalPadding,
-                        size.Height + 2 * VerticalPadding);
+                        size.Width + (2 * HorizontalPadding),
+                        size.Height + (2 * VerticalPadding));
 
                     // For painting: Cache placeholder
                     if (prepareForPaint)
@@ -137,15 +157,16 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.ActivityShapes
                     }
 
                     // Increase height due to vertical layout placement:
-                    parallelActivitiesSize.Height += (int)Math.Ceiling(activityRectangle.Height + VerticalPadding);
+                    parallelActivitiesSize.Height += (int) Math.Ceiling(activityRectangle.Height + VerticalPadding);
 
                     // Take largest width of placeholders due to vertical layout placement:
-                    var width = (int)Math.Ceiling(activityRectangle.Width);
+                    var width = (int) Math.Ceiling(activityRectangle.Width);
                     if (width > parallelActivitiesSize.Width)
                     {
                         parallelActivitiesSize.Width = width;
                     }
                 }
+
                 // Padding:
                 parallelActivitiesSize.Height += VerticalPadding;
                 parallelActivitiesSize.Width += HorizontalPadding;
@@ -155,29 +176,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.ActivityShapes
                 {
                     requiredSize.Width = parallelActivitiesSize.Width;
                 }
+
                 requiredSize.Height += parallelActivitiesSize.Height;
             }
 
             return requiredSize;
-        }
-
-        public override void Paint(Graphics g)
-        {
-            // Measure and apply new size:
-            var requiredSize = MeasureSize(g, true);
-            Rectangle = new RectangleF(Rectangle.X, Rectangle.Y, requiredSize.Width, requiredSize.Height);
-
-            DrawShape(g, Rectangle);
-
-            // Render nested child activities:
-            if (Activity != null)
-            {
-                foreach (var activityAndShape in cachedChildShapes)
-                {
-                    activityAndShape.Value.Rectangle = cachedMeasurements[activityAndShape.Key];
-                    activityAndShape.Value.Paint(g);
-                }
-            }
         }
     }
 }

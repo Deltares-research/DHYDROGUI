@@ -13,28 +13,55 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
     /// <summary>
     /// TimeCondition gives true or false based on a time
     /// The TimeCondition has effect on 3 generated xmls
-    ///  - rtcToolsConfig.xml : same as standardcondition but input is times series found in
-    ///  - rtcDataConfig.xml : time series definition
-    ///  - timeseries_import.xml : the time series contents
+    /// - rtcToolsConfig.xml : same as standardcondition but input is times series found in
+    /// - rtcDataConfig.xml : time series definition
+    /// - timeseries_import.xml : the time series contents
     /// </summary>
     [Entity]
     public class TimeCondition : StandardCondition, IItemContainer, ITimeDependentRtcObject
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(StandardCondition));
 
+        private TimeSeries timeSeries;
+
         public TimeCondition() : base(false)
         {
             Reference = ReferenceType.Implicit; // = IMPLICIT -> timeseries
         }
 
-        private TimeSeries timeSeries;
+        [NoNotifyPropertyChange]
+        public InterpolationType InterpolationOptionsTime
+        {
+            get
+            {
+                return TimeSeries.Time.InterpolationType;
+            }
+            set
+            {
+                TimeSeries.Time.InterpolationType = value;
+            }
+        }
+
+        [NoNotifyPropertyChange]
+        public ExtrapolationType Extrapolation
+        {
+            get
+            {
+                return TimeSeries.Time.ExtrapolationType;
+            }
+            set
+            {
+                TimeSeries.Time.ExtrapolationType = value;
+            }
+        }
+
         public TimeSeries TimeSeries
         {
             get
             {
                 if (timeSeries == null)
                 {
-                    timeSeries = new TimeSeries { Name = "Time Series" };
+                    timeSeries = new TimeSeries {Name = "Time Series"};
                     timeSeries.Time.ExtrapolationType = ExtrapolationType.Constant;
                     timeSeries.Time.InterpolationType = InterpolationType.Constant;
                     timeSeries.Components.Add(new Variable<bool>
@@ -45,33 +72,17 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
                         IsAutoSorted = false,
                         Unit = new Unit("true/false", "true/false")
                     });
-                    timeSeries.Components[0].Attributes[FunctionAttributes.StandardName] = 
+                    timeSeries.Components[0].Attributes[FunctionAttributes.StandardName] =
                         FunctionAttributes.StandardNames.RtcTimeCondition;
                     TimeSeries = timeSeries;
                 }
 
                 return timeSeries;
             }
-            set { timeSeries = value; }
-        }
-
-        public override string GetDescription()
-        {
-            return ""; //todo: show compact notion of time range?
-        }
-
-        [NoNotifyPropertyChange]
-        public InterpolationType InterpolationOptionsTime
-        {
-            get { return TimeSeries.Time.InterpolationType; }
-            set { TimeSeries.Time.InterpolationType = value; }
-        }
-
-        [NoNotifyPropertyChange]
-        public ExtrapolationType Extrapolation
-        {
-            get { return TimeSeries.Time.ExtrapolationType; }
-            set { TimeSeries.Time.ExtrapolationType = value; }
+            set
+            {
+                timeSeries = value;
+            }
         }
 
         [ValidationMethod]
@@ -82,14 +93,20 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
             if (timeCondition.Input != null)
             {
                 exceptions.Add(new ValidationException(
-                        string.Format("Condition '{0}' has input; this is not supported for time conditions.", timeCondition.Name)));
+                                   string.Format("Condition '{0}' has input; this is not supported for time conditions.", timeCondition.Name)));
             }
+
             if (exceptions.Count > 0)
             {
                 throw new ValidationContextException(exceptions);
             }
         }
-    
+
+        public override string GetDescription()
+        {
+            return ""; //todo: show compact notion of time range?
+        }
+
         public override object Clone()
         {
             var timeCondition = new TimeCondition();
@@ -104,7 +121,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
             {
                 base.CopyFrom(source);
                 Reference = timeCondition.Reference;
-                TimeSeries = (TimeSeries)timeCondition.TimeSeries.Clone();
+                TimeSeries = (TimeSeries) timeCondition.TimeSeries.Clone();
                 InterpolationOptionsTime = timeCondition.InterpolationOptionsTime;
                 Extrapolation = timeCondition.Extrapolation;
             }
@@ -113,7 +130,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
         public IEnumerable<object> GetDirectChildren()
         {
             if (timeSeries != null)
+            {
                 yield return timeSeries;
+            }
         }
     }
 }

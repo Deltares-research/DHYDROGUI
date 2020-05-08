@@ -13,8 +13,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
     [Entity]
     public class HydraulicRule : RuleBase
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(HydraulicRule));
         private const string LookupTable = "lookupTable";
+        private static readonly ILog Log = LogManager.GetLogger(typeof(HydraulicRule));
         private int timeLag = 0;
         private int timeLagInTimeSteps = 0;
 
@@ -25,34 +25,24 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
 
         /// <summary>
         /// A function to store the table to make the hydraulic conversion
-        /// This can either be a Discharge or 
+        /// This can either be a Discharge or
         /// </summary>
         public Function Function { get; set; }
-
-        public static Function DefineFunction()
-        {
-            var function = new Function();
-            function.Arguments.Add(new Variable<double>
-                                       {
-                                           Name = "x",
-                                           InterpolationType = InterpolationType.Constant, 
-                                           ExtrapolationType = ExtrapolationType.Constant
-                                       });
-            function.Components.Add(new Variable<double>("f"));
-            function.Name = LookupTable; 
-            return function;
-        }
 
         [NoNotifyPropertyChange]
         public InterpolationType Interpolation
         {
-            get { return Function.Arguments.First().InterpolationType; }
+            get
+            {
+                return Function.Arguments.First().InterpolationType;
+            }
             set
             {
-                if (!Enum.IsDefined(typeof(InterpolationHydraulicType), (InterpolationHydraulicType)value))
+                if (!Enum.IsDefined(typeof(InterpolationHydraulicType), (InterpolationHydraulicType) value))
                 {
                     throw new ArgumentException(string.Format("Interpolation for lookup table rule does not support {0}", value));
                 }
+
                 Function.Arguments.First().InterpolationType = value;
             }
         }
@@ -60,13 +50,17 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
         [NoNotifyPropertyChange]
         public ExtrapolationType Extrapolation
         {
-            get { return Function.Arguments.First().ExtrapolationType; }
+            get
+            {
+                return Function.Arguments.First().ExtrapolationType;
+            }
             set
             {
-                if (!Enum.IsDefined(typeof(ExtrapolationHydraulicType), (ExtrapolationHydraulicType)value))
+                if (!Enum.IsDefined(typeof(ExtrapolationHydraulicType), (ExtrapolationHydraulicType) value))
                 {
                     throw new ArgumentException(string.Format("Extrapolation for lookup table rule does not support {0}", value));
                 }
+
                 Function.Arguments.First().ExtrapolationType = value;
             }
         }
@@ -74,7 +68,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
         //In seconds
         public int TimeLag
         {
-            get { return timeLag; }
+            get
+            {
+                return timeLag;
+            }
             set
             {
                 if (value >= 0)
@@ -84,14 +81,31 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
                 else
                 {
                     Log.Error("Time Lag must be 0 or greater.");
-                } 
+                }
             }
         }
 
         // TimeLag in n TimeSteps. Calculated after SetTimeLagToTimeSteps(TimeSpan modelTimeSte)
         public int TimeLagInTimeSteps
         {
-            get { return timeLagInTimeSteps; }
+            get
+            {
+                return timeLagInTimeSteps;
+            }
+        }
+
+        public static Function DefineFunction()
+        {
+            var function = new Function();
+            function.Arguments.Add(new Variable<double>
+            {
+                Name = "x",
+                InterpolationType = InterpolationType.Constant,
+                ExtrapolationType = ExtrapolationType.Constant
+            });
+            function.Components.Add(new Variable<double>("f"));
+            function.Name = LookupTable;
+            return function;
         }
 
         /// <summary>
@@ -101,14 +115,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
         /// <param name="modelTimeStep"></param>
         public void SetTimeLagToTimeSteps(TimeSpan modelTimeStep)
         {
-            double factorTimeSteps = (double)timeLag/modelTimeStep.TotalSeconds;
+            double factorTimeSteps = (double) timeLag / modelTimeStep.TotalSeconds;
             double nTimeSteps = Math.Floor(factorTimeSteps);
 
             if (factorTimeSteps != nTimeSteps)
             {
-                Log.WarnFormat("Rule {0} has a timelag ({1} seconds) which is not a multiple model time step ({2} seconds). The timelag has been set on {3} timesteps.", this.Name, timeLag, modelTimeStep.Seconds, nTimeSteps.ToString("N0"));
+                Log.WarnFormat("Rule {0} has a timelag ({1} seconds) which is not a multiple model time step ({2} seconds). The timelag has been set on {3} timesteps.", Name, timeLag, modelTimeStep.Seconds, nTimeSteps.ToString("N0"));
             }
-            
+
             timeLagInTimeSteps = Convert.ToInt32(nTimeSteps);
         }
 
@@ -121,14 +135,17 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
             {
                 exceptions.Add(new ValidationException(string.Format("Lookup table rule '{0}' has an empty lookup table.", hydraulicRule.Name)));
             }
+
             if (hydraulicRule.Inputs.Count != 1)
             {
                 exceptions.Add(new ValidationException(string.Format("Lookup table rule '{0}' requires exactly 1 input.", hydraulicRule.Name)));
             }
+
             if (hydraulicRule.Outputs.Count != 1)
             {
                 exceptions.Add(new ValidationException(string.Format("Lookup table rule '{0}' requires exactly 1 output.", hydraulicRule.Name)));
             }
+
             if (exceptions.Count > 0)
             {
                 throw new ValidationContextException(exceptions);

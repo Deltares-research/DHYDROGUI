@@ -15,63 +15,95 @@ using log4net;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Export
 {
-    public class DHydroConfigXmlExporter: IFileExporter
+    public class DHydroConfigXmlExporter : IFileExporter
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof (DHydroConfigXmlExporter));
+        private static readonly ILog Log = LogManager.GetLogger(typeof(DHydroConfigXmlExporter));
 
         public IDictionary<IDimrModel, int> CoreCountDictionary { get; set; }
 
-        public string Name { get { return "DIMR configuration"; } }
-
         public string ExportFilePath { get; set; }
-        
 
-        private void UnInitialize()
+        public string Name
         {
-            CoreCountDictionary = null;
-            ExportFilePath = null;
+            get
+            {
+                return "DIMR configuration";
+            }
+        }
+
+        public string Category
+        {
+            get
+            {
+                return "DIMR";
+            }
+        }
+
+        public string Description
+        {
+            get
+            {
+                return string.Empty;
+            }
+        }
+
+        public string FileFilter
+        {
+            get
+            {
+                return "xml files|*.xml";
+            }
+        }
+
+        public Bitmap Icon
+        {
+            get
+            {
+                return null;
+            }
         }
 
         public bool Export(object item, string path)
         {
-            var workflow = GetWorkflow(item);
+            ICompositeActivity workflow = GetWorkflow(item);
 
-            var exportPath = ExportFilePath ?? path;
+            string exportPath = ExportFilePath ?? path;
             if (exportPath == null)
             {
                 Log.ErrorFormat("Invalid export file path");
                 return false;
             }
 
-            var exportDirectory = Path.GetDirectoryName(Path.GetFullPath(exportPath));
+            string exportDirectory = Path.GetDirectoryName(Path.GetFullPath(exportPath));
             if (exportDirectory == null)
             {
                 Log.ErrorFormat("Invalid export directory");
                 return false;
             }
-            string errorLog = string.Empty;
-            XDocument configDocument; 
+
+            var errorLog = string.Empty;
+            XDocument configDocument;
             try
             {
-                var dimrModels = GetDimrModelsFromItem(item).ToList();
-                var validationReportMessages = ValidateDimrModels(dimrModels);
+                List<IDimrModel> dimrModels = GetDimrModelsFromItem(item).ToList();
+                string validationReportMessages = ValidateDimrModels(dimrModels);
 
                 if (!string.IsNullOrEmpty(validationReportMessages))
                 {
                     throw new InvalidOperationException(Name +
-                                                    " model validation failed; please review the validation report of the submodels.\n\r" +
-                                                    validationReportMessages);
+                                                        " model validation failed; please review the validation report of the submodels.\n\r" +
+                                                        validationReportMessages);
                 }
 
-                foreach (var dimrModel in dimrModels)
+                foreach (IDimrModel dimrModel in dimrModels)
                 {
-                    var exportSubDirectory = Path.Combine(exportDirectory, dimrModel.DirectoryName);
+                    string exportSubDirectory = Path.Combine(exportDirectory, dimrModel.DirectoryName);
                     FileUtils.CreateDirectoryIfNotExists(exportSubDirectory);
 
-                    var dimrModelExporter = (IFileExporter)Activator.CreateInstance(dimrModel.ExporterType);
+                    var dimrModelExporter = (IFileExporter) Activator.CreateInstance(dimrModel.ExporterType);
                     if (!dimrModelExporter.Export(dimrModel, dimrModel.GetExporterPath(exportSubDirectory)))
                     {
-                        var formattedError = string.Format("Export failed for model {0}{1}", dimrModel.Name, Environment.NewLine);
+                        string formattedError = string.Format("Export failed for model {0}{1}", dimrModel.Name, Environment.NewLine);
                         errorLog += formattedError;
                         Log.ErrorFormat(formattedError);
                     }
@@ -91,7 +123,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Export
                 UnInitialize();
                 if (!string.IsNullOrEmpty(errorLog))
                 {
-                    var errorFile = exportPath.Replace(".xml", ".err"); 
+                    string errorFile = exportPath.Replace(".xml", ".err");
                     File.WriteAllText(errorFile, errorLog);
                     Log.InfoFormat("Export error log written: {0} ", errorFile);
                 }
@@ -101,22 +133,41 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Export
             return true;
         }
 
+        public IEnumerable<Type> SourceTypes()
+        {
+            yield return typeof(HydroModel);
+            yield return typeof(IDimrModel);
+        }
+
+        public bool CanExportFor(object item)
+        {
+            var dHydroActivity = item as IDimrModel;
+            return dHydroActivity != null ? dHydroActivity.IsMasterTimeStep : GetDimrModelsFromItem(item).Any();
+        }
+
+        private void UnInitialize()
+        {
+            CoreCountDictionary = null;
+            ExportFilePath = null;
+        }
+
         private static string ValidateDimrModels(List<IDimrModel> dimrModels)
         {
-            string validationReportMessages = string.Empty;
+            var validationReportMessages = string.Empty;
 
-            foreach (var dimrModel in dimrModels)
+            foreach (IDimrModel dimrModel in dimrModels)
             {
-                var validationReport = dimrModel.Validate();
+                ValidationReport validationReport = dimrModel.Validate();
                 if (validationReport != null && validationReport.Severity() == ValidationSeverity.Error)
                 {
-                    var errorMessage = string.Format("Validation errors: {0}",
-                        string.Join("\n", validationReport.GetAllIssuesRecursive()
-                            .Where(i => i.Severity == ValidationSeverity.Error)
-                            .Select(i => string.Format("\t{0}: {1}", i.Subject, i.Message)).ToArray()));
+                    string errorMessage = string.Format("Validation errors: {0}",
+                                                        string.Join("\n", validationReport.GetAllIssuesRecursive()
+                                                                                          .Where(i => i.Severity == ValidationSeverity.Error)
+                                                                                          .Select(i => string.Format("\t{0}: {1}", i.Subject, i.Message)).ToArray()));
                     validationReportMessages += errorMessage + Environment.NewLine;
                 }
             }
+
             return validationReportMessages;
         }
 
@@ -126,7 +177,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Export
             var hydroModel = item as HydroModel;
             if (hydroModel != null)
             {
-               return hydroModel.CurrentWorkflow;
+                return hydroModel.CurrentWorkflow;
             }
 
             var activity = item as IActivity;
@@ -140,42 +191,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Export
             {
                 Log.ErrorFormat("Could not create valid DIMR workflow for object of type {0}", item.GetType());
             }
-            
+
             return workflow;
         }
 
-        public string Category
-        {
-            get { return "DIMR"; }
-        }
-
-        public string Description
-        {
-            get { return string.Empty; }
-        }
-
-        public IEnumerable<Type> SourceTypes()
-        {
-            yield return typeof (HydroModel);
-            yield return typeof (IDimrModel);
-        }
-
-        public string FileFilter
-        {
-            get { return "xml files|*.xml"; }
-        }
-
-        public Bitmap Icon
-        {
-            get { return null; }
-        }
-
-        public bool CanExportFor(object item)
-        {
-            var dHydroActivity = item as IDimrModel;
-            return dHydroActivity != null ? dHydroActivity.IsMasterTimeStep : GetDimrModelsFromItem(item).Any();
-        }
-        
         private static IActivity UnwrapActivity(IActivity activity)
         {
             var activityWrapper = activity as ActivityWrapper;
@@ -194,11 +213,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Export
                 }
 
                 return hydroModel.CurrentWorkflow.Activities.GetActivitiesOfType<IDimrModel>()
-                    .Plus(hydroModel.CurrentWorkflow as IDimrModel)
-                    .Where(dm => dm != null)
-                    .ToList();
+                                 .Plus(hydroModel.CurrentWorkflow as IDimrModel)
+                                 .Where(dm => dm != null)
+                                 .ToList();
             }
-            
+
             var dimrModel = item as IDimrModel;
             return dimrModel != null ? Enumerable.Repeat(dimrModel, 1) : Enumerable.Empty<IDimrModel>();
         }

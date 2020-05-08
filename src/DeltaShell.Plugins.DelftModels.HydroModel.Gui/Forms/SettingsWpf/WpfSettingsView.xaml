@@ -41,7 +41,7 @@
                     </Trigger>
                 </Style.Triggers>
             </Style>
-            
+
             <Style x:Key="TextBlockWithErrorStyle" TargetType="{x:Type TextBox}" BasedOn="{StaticResource ControlStyle}">
                 <Style.Triggers>
                     <Trigger Property="IsReadOnly" Value="true">
@@ -50,7 +50,7 @@
                     </Trigger>
                 </Style.Triggers>
             </Style>
-            
+
 
             <Style x:Key="GridStyle" TargetType="Grid">
                 <d:Style.DataContext>

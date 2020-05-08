@@ -9,16 +9,16 @@ using DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd;
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.DataAccess
 {
     /// <summary>
-    /// Creates a <see cref="SignalDataAccessObject" /> based of a <see cref="RuleXML" />.
+    /// Creates a <see cref="SignalDataAccessObject"/> based of a <see cref="RuleXML"/>.
     /// </summary>
     public static class SignalDataAccessObjectCreator
     {
         /// <summary>
-        /// Creates a <see cref="SignalDataAccessObject" /> from the specified <paramref name="signalElement" />.
+        /// Creates a <see cref="SignalDataAccessObject"/> from the specified <paramref name="signalElement"/>.
         /// </summary>
         /// <param name="signalElement"> The rule XML. </param>
         /// <returns>
-        /// A <see cref="SignalDataAccessObject" /> created from the specified <paramref name="signalElement" />.
+        /// A <see cref="SignalDataAccessObject"/> created from the specified <paramref name="signalElement"/>.
         /// </returns>
         /// <exception cref="System.ArgumentNullException">
         /// Thrown when <paramref name="signalElement"/> is <c>null</c>.

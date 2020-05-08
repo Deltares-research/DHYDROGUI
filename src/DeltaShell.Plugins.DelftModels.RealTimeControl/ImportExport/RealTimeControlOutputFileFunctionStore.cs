@@ -10,6 +10,7 @@ using DelftTools.Utils;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
+using DelftTools.Utils.NetCdf;
 using GeoAPI.Extensions.CoordinateSystems;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Feature;
@@ -19,13 +20,25 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
 {
     public class RealTimeControlOutputFileFunctionStore : ReadOnlyNetCdfFunctionStoreBase, IFileBased
     {
+        protected const string LongNameAttribute = "long_name";
         private const string DateTimeFormat = "yyyy-MM-ddTHH:mm:ss";
         private const string TimeDimensionName = "time";
-        protected const string LongNameAttribute = "long_name";
+
+        private Dictionary<string, IMultiDimensionalArray<IFeature>> cachedFeatureArrays = new Dictionary<string, IMultiDimensionalArray<IFeature>>();
+        private IList<IFeature> features;
+        private ICoordinateSystem coordinateSystem;
+
+        public RealTimeControlOutputFileFunctionStore()
+        {
+            dateTimeFormat = DateTimeFormat;
+        }
 
         public ICoordinateSystem CoordinateSystem
         {
-            get { return coordinateSystem; }
+            get
+            {
+                return coordinateSystem;
+            }
             set
             {
                 coordinateSystem = value;
@@ -35,24 +48,42 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
 
         public IList<IFeature> Features
         {
-            get { return features ?? new List<IFeature>(); }
+            get
+            {
+                return features ?? new List<IFeature>();
+            }
             set
             {
                 features = value;
 
-                var featureCoverages = Functions.OfType<FeatureCoverage>().ToList();
+                List<FeatureCoverage> featureCoverages = Functions.OfType<FeatureCoverage>().ToList();
                 if (featureCoverages.Any())
+                {
                     featureCoverages.ForEach(c => SetFeatureCoverageFeatures(c));
+                }
             }
         }
 
-        private Dictionary<string, IMultiDimensionalArray<IFeature>> cachedFeatureArrays = new Dictionary<string, IMultiDimensionalArray<IFeature>>();
-        private IList<IFeature> features;
-        private ICoordinateSystem coordinateSystem;
-
-        public RealTimeControlOutputFileFunctionStore()
+        protected override IList<string> TimeVariableNames
         {
-            dateTimeFormat = DateTimeFormat;
+            get
+            {
+                return new[]
+                {
+                    GetTimeVariableName(TimeDimensionName)
+                };
+            }
+        }
+
+        protected override IList<string> TimeDimensionNames
+        {
+            get
+            {
+                return new[]
+                {
+                    TimeDimensionName
+                };
+            }
         }
 
         protected override string GetTimeVariableName(string dimName)
@@ -65,16 +96,16 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
             // Note: This override is only here while the RTC kernel does not create a file with a valid reference date!
             // TODO: this whole override should be removed once the RTC kernel correctly writes a reference date 
             // TODO: also consider updating the test-data with the new valid file!
-            DateTime result = new DateTime(1970, 1, 1);
+            var result = new DateTime(1970, 1, 1);
             return result.ToString(DateTimeFormatInfo.InvariantInfo.FullDateTimePattern, CultureInfo.InvariantCulture);
         }
 
         protected override IEnumerable<IFunction> ConstructFunctions(IEnumerable<NetCdfVariableInfo> dataVariables)
         {
-            foreach (var timeVariable in dataVariables.Where(v => v.IsTimeDependent))
+            foreach (NetCdfVariableInfo timeVariable in dataVariables.Where(v => v.IsTimeDependent))
             {
-                var netcdfVariable = timeVariable.NetCdfDataVariable;
-                var longName = netCdfFile.GetAttributeValue(netcdfVariable, LongNameAttribute);
+                NetCdfVariable netcdfVariable = timeVariable.NetCdfDataVariable;
+                string longName = netCdfFile.GetAttributeValue(netcdfVariable, LongNameAttribute);
 
                 string coverageLongName;
                 string outputVariableName;
@@ -93,7 +124,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
                         CoordinateSystem = CoordinateSystem
                     };
 
-                    var dimensions = netCdfFile.GetDimensions(netcdfVariable).ToList();
+                    List<NetCdfDimension> dimensions = netCdfFile.GetDimensions(netcdfVariable).ToList();
                     var featureVariable = new Variable<IFeature>
                     {
                         IsEditable = false,
@@ -104,20 +135,27 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
                             [NcUseVariableSizeAttribute] = "false"
                         }
                     };
-                    
+
                     coverage.Arguments.Add(featureVariable);
 
                     functionTimeVariable = coverage.Time;
                     functionTimeVariable.InterpolationType = InterpolationType.Linear;
-                    
-                    if (!SetFeatureCoverageFeatures(coverage)) yield break;
+
+                    if (!SetFeatureCoverageFeatures(coverage))
+                    {
+                        yield break;
+                    }
 
                     function = coverage;
                 }
 
                 else
                 {
-                    var timeSeries = new TimeSeries { Name = coverageLongName, IsEditable = false };
+                    var timeSeries = new TimeSeries
+                    {
+                        Name = coverageLongName,
+                        IsEditable = false
+                    };
 
                     function = timeSeries;
                     functionTimeVariable = timeSeries.Time;
@@ -148,19 +186,52 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
             }
         }
 
+        protected override IMultiDimensionalArray<T> GetVariableValuesCore<T>(IVariable function, IVariableFilter[] filters)
+        {
+            if (function.Attributes[NcUseVariableSizeAttribute] == "false") // has no explicit variable
+            {
+                if (cachedFeatureArrays.ContainsKey(function.Name))
+                {
+                    return (MultiDimensionalArray<T>) cachedFeatureArrays[function.Name];
+                }
+
+                IMultiDimensionalArray<IFeature> featureArray = new MultiDimensionalArray<IFeature>(new List<IFeature>() {null}, new[]
+                {
+                    GetSize(function)
+                });
+
+                FeatureCoverage matchingFunction = Functions.OfType<FeatureCoverage>().FirstOrDefault(f => f.Arguments.Concat(f.Components).Contains(function));
+                if (matchingFunction != null)
+                {
+                    featureArray = new MultiDimensionalArray<IFeature>(matchingFunction.Features, new[]
+                    {
+                        GetSize(function)
+                    });
+                    cachedFeatureArrays.Add(function.Name, featureArray);
+                }
+
+                return (MultiDimensionalArray<T>) featureArray;
+            }
+
+            return base.GetVariableValuesCore<T>(function, filters);
+        }
+
         private bool SetFeatureCoverageFeatures(IFeatureCoverage coverage)
         {
-            var matchingFeature = Features.Where(f => f is INameable).FirstOrDefault(f => coverage.Name.Contains('_' + ((INameable)f).Name + '_'));
+            IFeature matchingFeature = Features.Where(f => f is INameable).FirstOrDefault(f => coverage.Name.Contains('_' + ((INameable) f).Name + '_'));
 
             coverage.Features = new EventedList<IFeature>();
-            if (matchingFeature == null) return false;
+            if (matchingFeature == null)
+            {
+                return false;
+            }
 
             coverage.Features.Add(matchingFeature);
             return true;
         }
 
         private static void ParseUserFriendlyVariableNamesFromLongName(string longName, out string coverageLongName,
-            out string outputVariableName, out string featureName)
+                                                                       out string outputVariableName, out string featureName)
         {
             /*
                  e.g. taken from sample RTC output file:
@@ -170,52 +241,20 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
              */
 
             // Note: this parsing is done based on the sample output file provided... I expect it will have to change once the RTC kernel work is completed^
-             
-            coverageLongName = longName.Split(new[] {"->"}, StringSplitOptions.None)
-                                   .FirstOrDefault(n => n.Contains("Real-Time Control:")) ?? string.Empty;
+
+            coverageLongName = longName.Split(new[]
+                                       {
+                                           "->"
+                                       }, StringSplitOptions.None)
+                                       .FirstOrDefault(n => n.Contains("Real-Time Control:")) ?? string.Empty;
 
             coverageLongName = coverageLongName.Replace("Real-Time Control:", string.Empty).Trim();
 
-            var index = coverageLongName.LastIndexOf('_');
+            int index = coverageLongName.LastIndexOf('_');
 
-            outputVariableName = index > 0 && index < coverageLongName.Length ? 
-                coverageLongName.Substring(index + 1, coverageLongName.Length - index - 1).Trim() : 
-                string.Empty;
+            outputVariableName = index > 0 && index < coverageLongName.Length ? coverageLongName.Substring(index + 1, coverageLongName.Length - index - 1).Trim() : string.Empty;
 
-            featureName = index > 0 && index < coverageLongName.Length ?
-                coverageLongName.Substring(0, index).Replace("output_", string.Empty).Replace("input_", string.Empty).Trim() :
-                string.Empty;
-        }
-
-
-        protected override IList<string> TimeVariableNames
-        {
-            get { return new[] { GetTimeVariableName(TimeDimensionName) }; }
-        }
-        protected override IList<string> TimeDimensionNames
-        {
-            get { return new[] { TimeDimensionName }; }
-        }
- 
-        protected override IMultiDimensionalArray<T> GetVariableValuesCore<T>(IVariable function, IVariableFilter[] filters)
-        {
-            if (function.Attributes[NcUseVariableSizeAttribute] == "false") // has no explicit variable
-            {
-                if (cachedFeatureArrays.ContainsKey(function.Name))
-                    return (MultiDimensionalArray<T>) cachedFeatureArrays[function.Name];
-
-                IMultiDimensionalArray<IFeature> featureArray = new MultiDimensionalArray<IFeature>(new List<IFeature>() {null}, new[] { GetSize(function) });
-
-                var matchingFunction = Functions.OfType<FeatureCoverage>().FirstOrDefault(f => f.Arguments.Concat(f.Components).Contains(function));
-                if (matchingFunction != null)
-                {
-                    featureArray = new MultiDimensionalArray<IFeature>(matchingFunction.Features, new[] {GetSize(function)});
-                    cachedFeatureArrays.Add(function.Name, featureArray);
-                }
-
-                return (MultiDimensionalArray<T>) featureArray;
-            }
-            return base.GetVariableValuesCore<T>(function, filters);
+            featureName = index > 0 && index < coverageLongName.Length ? coverageLongName.Substring(0, index).Replace("output_", string.Empty).Replace("input_", string.Empty).Trim() : string.Empty;
         }
 
         #region IFileBased implementation
@@ -226,15 +265,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
             Path = path;
         }
 
-        public void Close()
-        {
+        public void Close() {}
 
-        }
-
-        public void Open(string path)
-        {
-
-        }
+        public void Open(string path) {}
 
         public void CopyTo(string destinationPath)
         {
@@ -243,7 +276,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
                 return;
             }
 
-            var dir = new FileInfo(destinationPath).DirectoryName;
+            string dir = new FileInfo(destinationPath).DirectoryName;
             FileUtils.CreateDirectoryIfNotExists(dir);
             FileUtils.CopyFile(Path, destinationPath);
         }
@@ -258,11 +291,32 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
             FileUtils.DeleteIfExists(Path);
         }
 
-        public IEnumerable<string> Paths { get { return new[] { Path }; } }
+        public IEnumerable<string> Paths
+        {
+            get
+            {
+                return new[]
+                {
+                    Path
+                };
+            }
+        }
 
-        public bool IsFileCritical { get { return false; } }
+        public bool IsFileCritical
+        {
+            get
+            {
+                return false;
+            }
+        }
 
-        public bool IsOpen { get { return false; } }
+        public bool IsOpen
+        {
+            get
+            {
+                return false;
+            }
+        }
 
         /// <summary>
         /// Make a copy of the file if it is located in the DeltaShell working directory
@@ -270,6 +324,5 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
         public bool CopyFromWorkingDirectory { get; }
 
         #endregion
-
     }
 }

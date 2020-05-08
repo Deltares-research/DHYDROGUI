@@ -13,7 +13,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
         public void Write(string filePath, IEnumerable<ModelExchangeInfo> exchange)
         {
-            if (!exchange.Any(e => e.Exchanges.Any())) return;
+            if (!exchange.Any(e => e.Exchanges.Any()))
+            {
+                return;
+            }
 
             string newtonResult = JsonConvert.SerializeObject(exchange, Formatting.Indented);
             Console.WriteLine(newtonResult);
@@ -22,13 +25,16 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
         public IEnumerable<ModelExchangeInfo> Read(string filePath)
         {
-            if (!File.Exists(filePath)) yield break;
+            if (!File.Exists(filePath))
+            {
+                yield break;
+            }
 
             var jsonReader = new DataContractJsonSerializer(typeof(IList<ModelExchangeInfo>));
             using (var stream = new FileStream(filePath, FileMode.Open))
             {
                 var infos = (IList<ModelExchangeInfo>) jsonReader.ReadObject(stream);
-                foreach (var info in infos)
+                foreach (ModelExchangeInfo info in infos)
                 {
                     yield return info;
                 }

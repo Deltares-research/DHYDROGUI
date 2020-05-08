@@ -12,6 +12,5 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.rtc_kernel
             DimrApiDataSet.SetSharedPath();
             NativeLibrary.LoadNativeDll(RTCTOOLS_DLL_NAME, DimrApiDataSet.RtcToolsDllPath);
         }
-
     }
 }

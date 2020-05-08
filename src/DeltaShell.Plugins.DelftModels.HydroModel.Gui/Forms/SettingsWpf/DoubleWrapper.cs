@@ -9,7 +9,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
 
         public double WrapperValue
         {
-            get { return _value; }
+            get
+            {
+                return _value;
+            }
             set
             {
                 _value = value;

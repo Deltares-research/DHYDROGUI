@@ -5,7 +5,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.DataAccess
     /// <summary>
     /// Represents an expression branch node containing two child nodes and a mathematical operator.
     /// </summary>
-    /// <seealso cref="IExpressionNode" />
+    /// <seealso cref="IExpressionNode"/>
     public interface IBranchNode : IExpressionNode
     {
         /// <summary>

@@ -20,13 +20,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Helpers
                 return false;
             }
 
-            var dialog = new SelectCoordinateSystemDialog(Map.CoordinateSystemFactory.SupportedCoordinateSystems, Map.CoordinateSystemFactory.CustomCoordinateSystems)
-            {
-                SelectedCoordinateSystem = realTimeControlModel.CoordinateSystem
-            };
+            var dialog = new SelectCoordinateSystemDialog(Map.CoordinateSystemFactory.SupportedCoordinateSystems, Map.CoordinateSystemFactory.CustomCoordinateSystems) {SelectedCoordinateSystem = realTimeControlModel.CoordinateSystem};
 
             if (dialog.ShowDialog() != DialogResult.OK)
+            {
                 return false;
+            }
 
             if (dialog.SelectedCoordinateSystem == null)
             {

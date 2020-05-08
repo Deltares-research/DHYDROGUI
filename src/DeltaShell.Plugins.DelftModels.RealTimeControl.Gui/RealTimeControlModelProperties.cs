@@ -19,10 +19,16 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
         [ResourcesDescription(typeof(Resources), "RealTimeControlModelProperties_Name_Description")]
         public string Name
         {
-            get { return data.Name; }
-            set { data.Name = value; }
+            get
+            {
+                return data.Name;
+            }
+            set
+            {
+                data.Name = value;
+            }
         }
-        
+
         [PropertyOrder(2)]
         [ResourcesCategory(typeof(Resources), "Categories_General")]
         [ResourcesDisplayName(typeof(Resources), "RealTimeControlModelProperties_CoordinateSystem_DisplayName")]
@@ -31,8 +37,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
         [Editor(typeof(CoordinateSystemTypeEditor), typeof(UITypeEditor))]
         public ICoordinateSystem CoordinateSystem
         {
-            get { return data.CoordinateSystem; }
-            set { data.CoordinateSystem = value; }
+            get
+            {
+                return data.CoordinateSystem;
+            }
+            set
+            {
+                data.CoordinateSystem = value;
+            }
         }
 
         [PropertyOrder(0)]
@@ -41,8 +53,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
         [ResourcesDescription(typeof(Resources), "RealTimeControlModelProperties_UseRestart_Description")]
         public bool UseRestart
         {
-            get { return data.UseRestart; }
-            set { data.UseRestart = value; }
+            get
+            {
+                return data.UseRestart;
+            }
+            set
+            {
+                data.UseRestart = value;
+            }
         }
 
         [PropertyOrder(1)]
@@ -51,10 +69,16 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
         [ResourcesDescription(typeof(Resources), "RealTimeControlModelProperties_WriteRestart_Description")]
         public bool WriteRestart
         {
-            get { return data.WriteRestart; }
-            set { data.WriteRestart = value; }
+            get
+            {
+                return data.WriteRestart;
+            }
+            set
+            {
+                data.WriteRestart = value;
+            }
         }
-        
+
         [PropertyOrder(2)]
         [TypeConverter(typeof(DeltaShellDateTimeConverter))]
         [DynamicReadOnly]
@@ -63,8 +87,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
         [ResourcesDescription(typeof(Resources), "RealTimeControlModelProperties_SaveStateStartTime_Description")]
         public DateTime SaveStateStartTime
         {
-            get { return data.SaveStateStartTime; }
-            set { data.SaveStateStartTime = value; }
+            get
+            {
+                return data.SaveStateStartTime;
+            }
+            set
+            {
+                data.SaveStateStartTime = value;
+            }
         }
 
         [PropertyOrder(3)]
@@ -75,8 +105,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
         [ResourcesDescription(typeof(Resources), "RealTimeControlModelProperties_SaveStateTimeStep_Description")]
         public TimeSpan SaveStateTimeStep
         {
-            get { return data.SaveStateTimeStep; }
-            set { data.SaveStateTimeStep = value; }
+            get
+            {
+                return data.SaveStateTimeStep;
+            }
+            set
+            {
+                data.SaveStateTimeStep = value;
+            }
         }
 
         [PropertyOrder(4)]
@@ -87,8 +123,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
         [ResourcesDescription(typeof(Resources), "RealTimeControlModelProperties_SaveStateStopTime_Description")]
         public DateTime SaveStateStopTime
         {
-            get { return data.SaveStateStopTime; }
-            set { data.SaveStateStopTime = value; }
+            get
+            {
+                return data.SaveStateStopTime;
+            }
+            set
+            {
+                data.SaveStateStopTime = value;
+            }
         }
 
         [DynamicReadOnlyValidationMethod]

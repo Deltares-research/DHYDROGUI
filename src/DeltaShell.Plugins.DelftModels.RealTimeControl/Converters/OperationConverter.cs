@@ -7,20 +7,20 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Converters
 {
     public class OperationConverter : StringConverter
     {
+        protected IDictionary<string, Operation> ConversionTable;
+
         public OperationConverter()
         {
             ConversionTable = new Dictionary<string, Operation>
-                                  {
-                                      {">", Operation.Greater},
-                                      {">=", Operation.GreaterEqual},
-                                      {"=", Operation.Equal},
-                                      {"<>", Operation.Unequal},
-                                      {"<=", Operation.LessEqual},
-                                      {"<", Operation.Less}
-                                  };
+            {
+                {">", Operation.Greater},
+                {">=", Operation.GreaterEqual},
+                {"=", Operation.Equal},
+                {"<>", Operation.Unequal},
+                {"<=", Operation.LessEqual},
+                {"<", Operation.Less}
+            };
         }
-
-        protected IDictionary<string, Operation> ConversionTable;
 
         public string OperationToString(Operation operation)
         {
@@ -37,6 +37,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Converters
             //true means show a combobox
             return true;
         }
+
         public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
         {
             //true will limit to list. false will show the list, but allow free-form entry

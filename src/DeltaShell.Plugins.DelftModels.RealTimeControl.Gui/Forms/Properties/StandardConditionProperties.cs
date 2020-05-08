@@ -15,8 +15,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.Properties
         [ResourcesDescription(typeof(Resources), "Rule_Name_Description")]
         public string Name
         {
-            get { return data.Name; }
-            set { data.Name = value; }
+            get
+            {
+                return data.Name;
+            }
+            set
+            {
+                data.Name = value;
+            }
         }
 
         [ResourcesCategory(typeof(Resources), "Categories_General")]
@@ -24,8 +30,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.Properties
         [ResourcesDescription(typeof(Resources), "Rule_LongName_Description")]
         public string LongName
         {
-            get { return data.LongName; }
-            set { data.LongName = value; }
+            get
+            {
+                return data.LongName;
+            }
+            set
+            {
+                data.LongName = value;
+            }
         }
 
         [PropertyOrder(1)]
@@ -34,7 +46,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.Properties
         [ResourcesDescription(typeof(Resources), "DirectionalConditionProperties_Input_Description")]
         public string Input
         {
-            get { return null != data.Input ? data.Input.Name : ""; }
+            get
+            {
+                return null != data.Input ? data.Input.Name : "";
+            }
         }
 
         [TypeConverter(typeof(OperationConverter))]
@@ -44,8 +59,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.Properties
         [ResourcesDescription(typeof(Resources), "DirectionalConditionProperties_Operation_Description")]
         public string Operation
         {
-            get { return new OperationConverter().OperationToString(data.Operation); }
-            set { data.Operation = new OperationConverter().StringToOperation(value); }
+            get
+            {
+                return new OperationConverter().OperationToString(data.Operation);
+            }
+            set
+            {
+                data.Operation = new OperationConverter().StringToOperation(value);
+            }
         }
 
         [PropertyOrder(3)]
@@ -54,8 +75,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.Properties
         [ResourcesDescription(typeof(Resources), "StandardConditionProperties_Value_Description")]
         public double Value
         {
-            get { return data.Value; }
-            set { data.Value = value; }
+            get
+            {
+                return data.Value;
+            }
+            set
+            {
+                data.Value = value;
+            }
         }
     }
 }

@@ -12,6 +12,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
     {
         private bool expanded;
 
+        public event PropertyChangedEventHandler PropertyChanged;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="WpfGuiSubCategory"/> class.
         /// Creates new WpfGuiProperties <seealso cref="WpfGuiProperty"/>.
@@ -26,7 +28,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
 
             /*Small trick to force the initialization*/
             if (properties == null)
+            {
                 properties = new List<FieldUIDescription>();
+            }
 
             Properties = new ObservableCollection<WpfGuiProperty>(properties.Select(p => new WpfGuiProperty(p)));
         }
@@ -43,11 +47,14 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
         /// Gets a value indicating whether this instance has custom control.
         /// </summary>
         /// <value>
-        ///   <c>true</c> if this instance has custom control; otherwise, <c>false</c>.
+        /// <c>true</c> if this instance has custom control; otherwise, <c>false</c>.
         /// </value>
         public bool HasCustomControl
         {
-            get { return CustomControl != null; }
+            get
+            {
+                return CustomControl != null;
+            }
         }
 
         /// <summary>
@@ -62,21 +69,31 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
         /// Gets or sets a value indicating whether this instance is visible.
         /// </summary>
         /// <value>
-        ///   <c>true</c> if this instance is visible; otherwise, <c>false</c>.
+        /// <c>true</c> if this instance is visible; otherwise, <c>false</c>.
         /// </value>
         public bool IsVisible
         {
             get
             {
-                if (Properties == null) return true;
+                if (Properties == null)
+                {
+                    return true;
+                }
+
                 return Properties.Any(p => p.IsVisible);
             }
-            set { OnPropertyChanged(); }
+            set
+            {
+                OnPropertyChanged();
+            }
         }
 
         public bool Expanded
         {
-            get { return expanded; }
+            get
+            {
+                return expanded;
+            }
             set
             {
                 expanded = value;
@@ -91,8 +108,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
         /// The properties.
         /// </value>
         public ObservableCollection<WpfGuiProperty> Properties { get; }
-
-        public event PropertyChangedEventHandler PropertyChanged;
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {

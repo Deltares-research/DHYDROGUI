@@ -14,9 +14,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
         /// <param name="directoryPath">The directory path of RTC</param>
         /// <returns>A RealTimeControl Model</returns>
         /// <remarks>If the path directory path does not exist, the method logs a message and returns null.</remarks>
-        /// <remarks>Import for restart/state files is not yet supported.
+        /// <remarks>
+        /// Import for restart/state files is not yet supported.
         /// The use restart option is automatically set to false after importing.
-        /// for more information please review issue SOBEK3-1704</remarks>
+        /// for more information please review issue SOBEK3-1704
+        /// </remarks>
         public static RealTimeControlModel Read(string directoryPath)
         {
             var logHandler = new LogHandler("Import of the Real-Time Control Model");
@@ -24,15 +26,15 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
             if (!Directory.Exists(directoryPath))
             {
                 logHandler.ReportErrorFormat(Resources.RealTimeControlModelXmlReader_Read_Directory___0___does_not_exist_,
-                    directoryPath);
+                                             directoryPath);
                 logHandler.LogReport();
                 return null;
             }
 
-            var runTimeConfigFilePath = Path.Combine(directoryPath, RealTimeControlXMLFiles.XmlRuntime);
-            var dataConfigFilePath = Path.Combine(directoryPath, RealTimeControlXMLFiles.XmlData);
-            var toolsConfigFilePath = Path.Combine(directoryPath, RealTimeControlXMLFiles.XmlTools);
-            var timeSeriesFilePath = Path.Combine(directoryPath, RealTimeControlXMLFiles.XmlTimeSeries);
+            string runTimeConfigFilePath = Path.Combine(directoryPath, RealTimeControlXMLFiles.XmlRuntime);
+            string dataConfigFilePath = Path.Combine(directoryPath, RealTimeControlXMLFiles.XmlData);
+            string toolsConfigFilePath = Path.Combine(directoryPath, RealTimeControlXMLFiles.XmlTools);
+            string timeSeriesFilePath = Path.Combine(directoryPath, RealTimeControlXMLFiles.XmlTimeSeries);
 
             var rtcModel = new RealTimeControlModel();
 
@@ -42,7 +44,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
             runtimeConfigReader.Read(runTimeConfigFilePath, rtcModel);
 
             var dataAndToolsConfigReader = new RealTimeControlDataAndToolsConfigXmlReader(logHandler);
-            var controlGroups = dataAndToolsConfigReader.Read(dataConfigFilePath, toolsConfigFilePath, rtcModel.TimeStep);
+            IList<IControlGroup> controlGroups = dataAndToolsConfigReader.Read(dataConfigFilePath, toolsConfigFilePath, rtcModel.TimeStep);
 
             var timeSeriesReader = new RealTimeControlTimeSeriesXmlReader(logHandler);
             timeSeriesReader.Read(timeSeriesFilePath, controlGroups);

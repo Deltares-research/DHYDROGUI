@@ -9,24 +9,19 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
 {
     /// <summary>
     /// The trigger reads
-    /// if y(k) > 0 then 1  |<-- 0 seems invalid 
-    ///             else 0
-    /// The following operators are supported: > >= = <= <
+    /// if y(k) > 0 then 1  |
+    /// <-- 0 seems invalid
+    ///     else 0
+    ///     The following operators are supported:>
+    /// >= = <= <
     /// </summary>
-    [Entity(FireOnCollectionChange=false)]
+    [Entity(FireOnCollectionChange = false)]
     public class StandardCondition : ConditionBase
     {
-        private bool inputRequired;
         private static readonly ILog Log = LogManager.GetLogger(typeof(StandardCondition));
+        private bool inputRequired;
 
-        /// <summary>
-        /// valid values are "EXPLICIT" "IMPLICIT"; default is EXPLICIT
-        /// </summary>
-        public virtual string Reference { get; set; }
-
-        public Operation Operation { get; set; }
-
-        public StandardCondition(): this(true){}
+        public StandardCondition() : this(true) {}
 
         public StandardCondition(bool inputRequired)
         {
@@ -35,17 +30,19 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
             this.inputRequired = inputRequired;
         }
 
-        public override string GetDescription()
-        {
-            return new OperationConverter().OperationToString(Operation) + Value;
-        }
+        /// <summary>
+        /// valid values are "EXPLICIT" "IMPLICIT"; default is EXPLICIT
+        /// </summary>
+        public virtual string Reference { get; set; }
+
+        public Operation Operation { get; set; }
 
         [ValidationMethod]
         public static void Validate(StandardCondition standardCondition)
         {
             var exceptions = new List<ValidationException>();
 
-            if ((standardCondition.Input == null) && (standardCondition.inputRequired))
+            if (standardCondition.Input == null && standardCondition.inputRequired)
             {
                 exceptions.Add(new ValidationException(string.Format("Condition '{0}' has no input; this is required for standard conditions.", standardCondition.Name)));
             }
@@ -55,7 +52,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
                 throw new ValidationContextException(exceptions);
             }
         }
-    
+
+        public override string GetDescription()
+        {
+            return new OperationConverter().OperationToString(Operation) + Value;
+        }
+
         public override object Clone()
         {
             var standardCondition = new StandardCondition();
@@ -80,5 +82,4 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
             public const string Implicit = "IMPLICIT";
         }
     }
-
 }

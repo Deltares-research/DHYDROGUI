@@ -5,9 +5,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
     [Entity(FireOnCollectionChange = false)]
     public class Output : ConnectionPoint
     {
+        public override ConnectionType ConnectionType => ConnectionType.Output;
         public string IntegralPart { get; set; }
         public string DifferentialPart { get; set; }
-        public override ConnectionType ConnectionType => ConnectionType.Output;
 
         public override object Clone()
         {

@@ -9,9 +9,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.XmlValidation
     {
         public static XmlSchema ConvertToXmlSchema(string xmlSchemaPath)
         {
-            if (!File.Exists(xmlSchemaPath)) return null;
+            if (!File.Exists(xmlSchemaPath))
+            {
+                return null;
+            }
+
             var reader = new XmlTextReader(xmlSchemaPath);
-            var schema = XmlSchema.Read(reader, ValidationCallBack);
+            XmlSchema schema = XmlSchema.Read(reader, ValidationCallBack);
             reader.Close();
             return schema;
         }

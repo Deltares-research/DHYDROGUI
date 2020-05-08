@@ -23,7 +23,9 @@ namespace DeltaShell.NGHS.IO.FileReaders
         }
 
         /// <summary>
-        /// Reads an <see cref="IXmlParsedObject"/> from the <param name="xmlFileSource"/> file
+        /// Reads an <see cref="IXmlParsedObject"/> from the
+        /// <param name="xmlFileSource"/>
+        /// file
         /// </summary>
         /// <param name="xmlFileSource">Path to the xml file</param>
         /// <typeparam name="T"><see cref="IXmlParsedObject"/> object to parse from the <see cref="xmlFileSource"/></typeparam>
@@ -49,10 +51,13 @@ namespace DeltaShell.NGHS.IO.FileReaders
 
         private void LogMissingFeatures(List<string> unsupportedFeatures, string xmlFileSource)
         {
-            if (unsupportedFeatures.Count == 0) return;
+            if (unsupportedFeatures.Count == 0)
+            {
+                return;
+            }
 
-            var fileName = xmlFileSource?.Split('\\').LastOrDefault() ?? "";
-            var formattedMessages = separator + string.Join(separator, unsupportedFeatures);
+            string fileName = xmlFileSource?.Split('\\').LastOrDefault() ?? "";
+            string formattedMessages = separator + string.Join(separator, unsupportedFeatures);
             logHandler.ReportInfo($"The following features in the {fileName} file are not conforming with the xsd file: {formattedMessages}");
         }
     }

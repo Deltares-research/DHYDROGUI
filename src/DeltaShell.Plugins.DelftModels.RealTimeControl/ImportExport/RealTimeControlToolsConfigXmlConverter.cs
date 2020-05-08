@@ -10,18 +10,18 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
 {
     /// <summary>
     /// Responsible for taking the objects that come from the tools config xml file
-    /// and converting them into a set of <see cref="IRtcDataAccessObject{T}" />.
+    /// and converting them into a set of <see cref="IRtcDataAccessObject{T}"/>.
     /// </summary>
     public static class RealTimeControlToolsConfigXmlConverter
     {
         /// <summary>
-        /// Converts the specified <paramref name="ruleElements" />
-        /// and <paramref name="triggerElements" /> to rtc data access objects.
+        /// Converts the specified <paramref name="ruleElements"/>
+        /// and <paramref name="triggerElements"/> to rtc data access objects.
         /// </summary>
         /// <param name="ruleElements"> The rule xml elements. </param>
         /// <param name="triggerElements"> The trigger xml elements. </param>
         /// <param name="logHandler"> The log handler. </param>
-        /// <returns> A collection of <see cref="IRtcDataAccessObject{T}" />. </returns>
+        /// <returns> A collection of <see cref="IRtcDataAccessObject{T}"/>. </returns>
         public static IEnumerable<IRtcDataAccessObject<RtcBaseObject>> ConvertToDataAccessObjects(RuleXML[] ruleElements,
                                                                                                   TriggerXML[] triggerElements,
                                                                                                   ILogHandler logHandler = null)
@@ -122,7 +122,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
                     ExpressionObject[] expressionObjects = group.ToArray();
                     string controlGroupName = group.Key;
 
-                    IEnumerable<ExpressionTree> expressionTreesInControlGroup = 
+                    IEnumerable<ExpressionTree> expressionTreesInControlGroup =
                         ExpressionTreeAssembler.Assemble(expressionObjects, controlGroupName);
 
                     expressionTrees.AddRange(expressionTreesInControlGroup);

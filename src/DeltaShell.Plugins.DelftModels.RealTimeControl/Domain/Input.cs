@@ -2,18 +2,21 @@
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
 {
-    [Entity(FireOnCollectionChange=false)]
+    [Entity(FireOnCollectionChange = false)]
     public class Input : ConnectionPoint, IInput
     {
+        public override ConnectionType ConnectionType
+        {
+            get
+            {
+                return ConnectionType.Input;
+            }
+        }
+
         /// <summary>
         /// Value of Setpoint in generated xml; will always be regenerated during ToXmlInputReference process
         /// </summary>
         public string SetPoint { get; set; }
-
-        public override ConnectionType ConnectionType
-        {
-            get { return ConnectionType.Input; }
-        }
 
         public override object Clone()
         {
@@ -30,6 +33,5 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
                 base.CopyFrom(source);
             }
         }
-
     }
 }

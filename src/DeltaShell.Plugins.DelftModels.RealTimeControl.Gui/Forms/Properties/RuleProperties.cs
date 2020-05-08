@@ -6,7 +6,7 @@ using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.Properties
 {
-    public abstract class RuleProperties<TRuleBase> : ObjectProperties<TRuleBase> 
+    public abstract class RuleProperties<TRuleBase> : ObjectProperties<TRuleBase>
         where TRuleBase : RuleBase
     {
         [ExcludeFromCodeCoverage]

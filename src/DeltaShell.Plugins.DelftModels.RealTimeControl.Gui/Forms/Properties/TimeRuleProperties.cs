@@ -31,8 +31,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.Properties
         [PropertyOrder(4)]
         public InterpolationHydraulicType Interpolation
         {
-            get => (InterpolationHydraulicType)data.InterpolationOptionsTime;
-            set => data.InterpolationOptionsTime = (InterpolationType)value;
+            get => (InterpolationHydraulicType) data.InterpolationOptionsTime;
+            set => data.InterpolationOptionsTime = (InterpolationType) value;
         }
 
         [ResourcesCategory(typeof(Resources), "RTC_Category_InterpolationExtrapolation")]
@@ -44,6 +44,5 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.Properties
             get => (ExtrapolationTimeSeriesType) data.Periodicity;
             set => data.Periodicity = (ExtrapolationType) value;
         }
-        
     }
 }

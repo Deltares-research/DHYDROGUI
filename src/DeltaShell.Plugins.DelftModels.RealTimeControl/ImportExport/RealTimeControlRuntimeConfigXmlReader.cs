@@ -22,11 +22,16 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
         /// </summary>
         /// <param name="runtimeConfigFilePath">The runtime configuration file path.</param>
         /// <param name="rtcModel">The RealTimeControl Model.</param>
-        /// <remarks>If parameter rtcModel is NULL, the method returns.
-        /// If the runtimeConfigFilePath does not exist, a message is logged and methods returns.</remarks>
+        /// <remarks>
+        /// If parameter rtcModel is NULL, the method returns.
+        /// If the runtimeConfigFilePath does not exist, a message is logged and methods returns.
+        /// </remarks>
         public void Read(string runtimeConfigFilePath, RealTimeControlModel rtcModel)
         {
-            if (rtcModel == null) return;
+            if (rtcModel == null)
+            {
+                return;
+            }
 
             var delftConfigXmlParser = new DelftConfigXmlFileParser(logHandler);
 
@@ -42,7 +47,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
             }
 
             var runTimeSettings = runtimeConfigObject.period.Item as UserDefinedRuntimeXML;
-            var restartSettings = runtimeConfigObject.stateFiles;
+            UserDefinedStateExportXML restartSettings = runtimeConfigObject.stateFiles;
             var simulationModeSettings = runtimeConfigObject.Item as ModeXML;
 
             var runtimeConfigSetter = new RealTimeControlRuntimeConfigSetter(logHandler);

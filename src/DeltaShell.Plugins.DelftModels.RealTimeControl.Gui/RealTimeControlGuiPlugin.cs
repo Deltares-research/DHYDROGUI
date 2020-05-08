@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
+using System.Xml.Linq;
 using DelftTools.Controls;
 using DelftTools.Controls.Swf;
 using DelftTools.Shell.Core;
@@ -26,17 +27,17 @@ using GeoAPI.Extensions.Coverages;
 using log4net;
 using Mono.Addins;
 using ValidationAspects;
+using Clipboard = DelftTools.Controls.Clipboard;
 using PropertyInfo = DelftTools.Shell.Gui.PropertyInfo;
 using TreeNode = DelftTools.Controls.Swf.TreeViewControls.TreeNode;
 using TreeView = DelftTools.Controls.Swf.TreeViewControls.TreeView;
-using Clipboard = DelftTools.Controls.Clipboard;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
 {
     [Extension(typeof(IPlugin))]
     public class RealTimeControlGuiPlugin : GuiPlugin
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof (RealTimeControlGuiPlugin));
+        private static readonly ILog Log = LogManager.GetLogger(typeof(RealTimeControlGuiPlugin));
 
         private IGui gui;
         private ContextMenuStrip contextMenuStripControlGroups;
@@ -55,32 +56,50 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
 
         public override string Name
         {
-            get { return "Real Time Control (UI)"; }
+            get
+            {
+                return "Real Time Control (UI)";
+            }
         }
 
         public override string DisplayName
         {
-            get { return "D-Real Time Control Plugin (UI)"; }
+            get
+            {
+                return "D-Real Time Control Plugin (UI)";
+            }
         }
 
         public override string Description
         {
-            get { return RealTimeControl.Properties.Resources.RealTimeControlApplicationPlugin_Description; }
+            get
+            {
+                return RealTimeControl.Properties.Resources.RealTimeControlApplicationPlugin_Description;
+            }
         }
 
         public override string Version
         {
-            get { return GetType().Assembly.GetName().Version.ToString(); }
+            get
+            {
+                return GetType().Assembly.GetName().Version.ToString();
+            }
         }
 
         public override string FileFormatVersion
         {
-            get { return "3.5.0.0"; }
+            get
+            {
+                return "3.5.0.0";
+            }
         }
 
         public override IGui Gui
         {
-            get { return gui; }
+            get
+            {
+                return gui;
+            }
             set
             {
                 if (base.Gui != null)
@@ -89,25 +108,29 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
                 }
 
                 gui = value;
-                if (gui == null) return;
+                if (gui == null)
+                {
+                    return;
+                }
 
                 Gui.Application.ActivityRunner.ActivityStatusChanged += ActivityRunnerActivityStatusChanged;
             }
         }
 
-        [InvokeRequired]
-        private void ActivityRunnerActivityStatusChanged(object sender, ActivityStatusChangedEventArgs e)
+        public override IMapLayerProvider MapLayerProvider
         {
-            if (!(sender is RealTimeControlModel) || e.NewStatus != ActivityStatus.Failed) return;
-
-            Gui.CommandHandler.OpenView(sender, typeof(ValidationView));
+            get
+            {
+                return new RealTimeControlMapLayerProvider();
+            }
         }
+
         public override IEnumerable<PropertyInfo> GetPropertyInfos()
         {
             yield return new PropertyInfo<RealTimeControlModel, RealTimeControlModelProperties>();
             yield return new PropertyInfo<Output, OutputProperties>();
             yield return new PropertyInfo<Input, InputProperties>();
-            yield return new PropertyInfo<LookupSignal,LookupSignalProperties>();
+            yield return new PropertyInfo<LookupSignal, LookupSignalProperties>();
             yield return new PropertyInfo<PIDRule, PIDRuleProperties>();
             yield return new PropertyInfo<FactorRule, FactorRuleProperties>();
             yield return new PropertyInfo<HydraulicRule, HydraulicRuleProperties>();
@@ -124,27 +147,27 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
         public override IEnumerable<ViewInfo> GetViewInfoObjects()
         {
             yield return new ViewInfo<ControlGroup, ControlGroupGraphView>
+            {
+                Description = "Control Group Editor",
+                AfterCreate = (v, o) =>
                 {
-                    Description = "Control Group Editor",
-                    AfterCreate = (v, o) =>
-                        {
-                            v.Gui = gui;
-                            v.Model = GetModel(o);
-                            v.EnsureVisible(o);
-                        }
-                };
+                    v.Gui = gui;
+                    v.Model = GetModel(o);
+                    v.EnsureVisible(o);
+                }
+            };
             yield return new ViewInfo<IEventedList<ControlGroup>, ControlGroupLayerEditorView>
+            {
+                GetViewName = (v, o) => "Control Group Editor",
+                Description = "Control groups",
+                CompositeViewType = typeof(ProjectItemMapView),
+                GetCompositeViewData = o => GetModel(o),
+                AfterCreate = (v, o) =>
                 {
-                    GetViewName = (v, o) => "Control Group Editor",
-                    Description = "Control groups",
-                    CompositeViewType = typeof(ProjectItemMapView),
-                    GetCompositeViewData = o => GetModel(o),
-                    AfterCreate = (v, o) =>
-                        {
-                            v.RtcModel = GetModel(o);
-                            v.OpenViewAction = ob => Gui.CommandHandler.OpenView(ob);
-                        }
-                };
+                    v.RtcModel = GetModel(o);
+                    v.OpenViewAction = ob => Gui.CommandHandler.OpenView(ob);
+                }
+            };
             yield return new ViewInfo<RealTimeControlModel, ValidationView>
             {
                 Description = "Validation Report",
@@ -163,11 +186,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
                 CompositeViewType = typeof(ProjectItemMapView),
                 GetCompositeViewData = o => GetModelForFeatureCoverage(o)
             };
-        }
-
-        public override IMapLayerProvider MapLayerProvider
-        {
-            get { return new RealTimeControlMapLayerProvider(); }
         }
 
         public override bool CanCopy(IProjectItem item)
@@ -211,6 +229,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
                 contextMenuStripControlGroups.Items[0].Tag = sender;
                 return new MenuItemContextMenuStripAdapter(contextMenuStripControlGroups);
             }
+
             if (data is ControlGroup)
             {
                 contextMenuStripControlGroup.Items[0].Tag = sender;
@@ -218,18 +237,20 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
                 contextMenuStripControlGroup.Items[2].Tag = sender;
                 return new MenuItemContextMenuStripAdapter(contextMenuStripControlGroup);
             }
+
             if (data is IRealTimeControlModel)
             {
                 convertCoordinateSystemToolStripMenuItem.Tag = data;
                 return new MenuItemContextMenuStripAdapter(convertCoordinateSystemContextMenu);
             }
+
             return null;
         }
 
         public override IEnumerable<ITreeNodePresenter> GetProjectTreeViewNodePresenters()
         {
             yield return new RealTimeControlModelNodePresenter(this);
-            yield return new RtcObjectNodePresenter { GuiPlugin = this };
+            yield return new RtcObjectNodePresenter {GuiPlugin = this};
             yield return new RtcOutputFileFunctionStoreNodePresenter();
             yield return new ControlGroupCollectionNodePresenter {GuiPlugin = this};
             yield return new ControlGroupNodePresenter(this);
@@ -241,36 +262,55 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
             yield return typeof(ShapeBase).Assembly;
         }
 
+        [InvokeRequired]
+        private void ActivityRunnerActivityStatusChanged(object sender, ActivityStatusChangedEventArgs e)
+        {
+            if (!(sender is RealTimeControlModel) || e.NewStatus != ActivityStatus.Failed)
+            {
+                return;
+            }
+
+            Gui.CommandHandler.OpenView(sender, typeof(ValidationView));
+        }
+
         private void InitializeComponent()
         {
-            contextMenuStripControlGroups = new ContextMenuStrip {Name = "contextMenuStripControlGroups", Size = new Size(237, 50)};
-            contextMenuStripControlGroup = new ContextMenuStrip {Name = "contextMenuStripControlGroup", Size = new Size(254, 76)};
+            contextMenuStripControlGroups = new ContextMenuStrip
+            {
+                Name = "contextMenuStripControlGroups",
+                Size = new Size(237, 50)
+            };
+            contextMenuStripControlGroup = new ContextMenuStrip
+            {
+                Name = "contextMenuStripControlGroup",
+                Size = new Size(254, 76)
+            };
 
             addNewControlGroupToolStripMenuItem = new ToolStripMenuItem
-                                                      {
-                                                          Image = RealTimeControl.Properties.Resources.controlgroup_add,
-                                                          Name = "addNewControlGroupToolStripMenuItem",
-                                                          Text = "Add New Control Group..."
-                                                      };
-            
+            {
+                Image = RealTimeControl.Properties.Resources.controlgroup_add,
+                Name = "addNewControlGroupToolStripMenuItem",
+                Text = "Add New Control Group..."
+            };
+
             deleteToolStripMenuItem = new ToolStripMenuItem
-                                          {
-                                              Image = RealTimeControl.Properties.Resources.DeleteHS,
-                                              Name = "deleteToolStripMenuItem",
-                                              Text = "Delete"
-                                          };
+            {
+                Image = RealTimeControl.Properties.Resources.DeleteHS,
+                Name = "deleteToolStripMenuItem",
+                Text = "Delete"
+            };
 
             copyXmlToClipboardToolStripMenuItem = new ToolStripMenuItem
-                                                      {
-                                                          Name = "copyXmlToClipboardToolStripMenuItem",
-                                                          Text = "Copy Data Xml to clipboard"
-                                                      };
+            {
+                Name = "copyXmlToClipboardToolStripMenuItem",
+                Text = "Copy Data Xml to clipboard"
+            };
 
             copyToolsXmlToClipboardToolStripMenuItem = new ToolStripMenuItem
-                                                           {
-                                                               Name = "copyToolsXmlToClipboardToolStripMenuItem",
-                                                               Text = "Copy Tools Xml to Clipboard"
-                                                           };
+            {
+                Name = "copyToolsXmlToClipboardToolStripMenuItem",
+                Text = "Copy Tools Xml to Clipboard"
+            };
 
             addNewControlGroupToolStripMenuItem.Click += AddNewControlGroupToolStripMenuItemClick;
             deleteToolStripMenuItem.Click += ButtonDeleteRtcItemToolStripMenuItem_Click;
@@ -278,16 +318,16 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
             copyToolsXmlToClipboardToolStripMenuItem.Click += CopyToolsXmlToClipboardToolStripMenuItemClick;
 
             contextMenuStripControlGroup.Items.AddRange(new ToolStripItem[]
-                                                            {
-                                                                deleteToolStripMenuItem,
-                                                                copyXmlToClipboardToolStripMenuItem,
-                                                                copyToolsXmlToClipboardToolStripMenuItem
-                                                            });
+            {
+                deleteToolStripMenuItem,
+                copyXmlToClipboardToolStripMenuItem,
+                copyToolsXmlToClipboardToolStripMenuItem
+            });
 
             contextMenuStripControlGroups.Items.AddRange(new ToolStripItem[]
-                                                             {
-                                                                 addNewControlGroupToolStripMenuItem
-                                                             });
+            {
+                addNewControlGroupToolStripMenuItem
+            });
             convertCoordinateSystemToolStripMenuItem = new ClonableToolStripMenuItem
             {
                 Image = Properties.Resources.HydroRegion,
@@ -296,25 +336,31 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
             };
             convertCoordinateSystemToolStripMenuItem.Click += ConvertCoordinateSystemToolStripMenuItemClick;
 
-            convertCoordinateSystemContextMenu = new ContextMenuStrip { Name = "convertCoordinateSystemMenu" };
-            convertCoordinateSystemContextMenu.Items.AddRange(new ToolStripItem[] { convertCoordinateSystemToolStripMenuItem });
+            convertCoordinateSystemContextMenu = new ContextMenuStrip {Name = "convertCoordinateSystemMenu"};
+            convertCoordinateSystemContextMenu.Items.AddRange(new ToolStripItem[]
+            {
+                convertCoordinateSystemToolStripMenuItem
+            });
         }
+
         private void ConvertCoordinateSystemToolStripMenuItemClick(object sender, EventArgs e)
         {
-            var realTimeControlModel = ((ToolStripMenuItem)sender).Tag as IRealTimeControlModel;
+            var realTimeControlModel = ((ToolStripMenuItem) sender).Tag as IRealTimeControlModel;
             if (realTimeControlModel == null)
+            {
                 throw new InvalidOperationException("Can not find model when converting the coordinate system.");
+            }
 
             if (RTCModelCoordinateConvertor.Convert(realTimeControlModel))
             {
-                var mapView = GetFocusedMapView();
+                MapView mapView = GetFocusedMapView();
                 mapView?.Map?.ZoomToExtents();
             }
         }
 
         private MapView GetFocusedMapView()
         {
-            var viewToSearch = gui?.DocumentViews?.ActiveView;
+            IView viewToSearch = gui?.DocumentViews?.ActiveView;
             return viewToSearch.GetViewsOfType<MapView>().FirstOrDefault();
         }
 
@@ -328,18 +374,18 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
             var realTimeControlModel = (RealTimeControlModel) ((ToolStripMenuItem) sender).Tag;
 
             //var choices = new[] { emptyGroup, pidGroup, hydraulicGroup };
-            var choices = RealTimeControlModelHelper.StandardControlGroups.ToArray();
+            string[] choices = RealTimeControlModelHelper.StandardControlGroups.ToArray();
 
             var dialog = new ListBasedDialog
-                             {
-                                 DataSource = choices,
-                                 SelectionMode = SelectionMode.One
-                             };
-            var name = RealTimeControlModelHelper.GetUniqueName("Control Group {0}",
-                                                                realTimeControlModel.ControlGroups, "?");
+            {
+                DataSource = choices,
+                SelectionMode = SelectionMode.One
+            };
+            string name = RealTimeControlModelHelper.GetUniqueName("Control Group {0}",
+                                                                   realTimeControlModel.ControlGroups, "?");
             if (DialogResult.OK == dialog.ShowDialog())
             {
-                var controlGroup = RealTimeControlModelHelper.CreateStandardControlGroup((string) dialog.SelectedItems[0]);
+                ControlGroup controlGroup = RealTimeControlModelHelper.CreateStandardControlGroup((string) dialog.SelectedItems[0]);
                 controlGroup.Name = name;
                 realTimeControlModel.ControlGroups.Add(controlGroup);
 
@@ -363,7 +409,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
 
                     var model = (RealTimeControlModel) controlGroupTreeNode.Parent.Parent.Parent.Tag;
 
-                    var xDocument = RealTimeControlXmlWriter.GetDataConfigXml("", model, new List<ControlGroup> {controlGroup}, null);
+                    XDocument xDocument = RealTimeControlXmlWriter.GetDataConfigXml("", model, new List<ControlGroup> {controlGroup}, null);
                     Clipboard.SetText(xDocument.ToString());
                 }
                 catch (Exception exception)
@@ -384,7 +430,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
                     {
                         return;
                     }
-                    var xDocument = RealTimeControlXmlWriter.GetToolsConfigXml("", new List<ControlGroup> {controlGroup});
+
+                    XDocument xDocument = RealTimeControlXmlWriter.GetToolsConfigXml("", new List<ControlGroup> {controlGroup});
                     Clipboard.SetText(xDocument.ToString());
                 }
                 catch (Exception exception)
@@ -396,12 +443,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
 
         private static bool ValidateControlGroup(ControlGroup controlGroup)
         {
-            var result = controlGroup.Validate();
+            ValidationResult result = controlGroup.Validate();
             if (!result.IsValid)
             {
                 result.Messages.ForEach(message => Log.Error(message));
                 return false;
             }
+
             return true;
         }
 
@@ -413,23 +461,23 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
 
         private RealTimeControlModel GetModel(IEventedList<ControlGroup> controlGroups)
         {
-            var allRtcModels = Gui.Application.GetAllModelsInProject().OfType<RealTimeControlModel>();
+            IEnumerable<RealTimeControlModel> allRtcModels = Gui.Application.GetAllModelsInProject().OfType<RealTimeControlModel>();
             return allRtcModels.First(m => m.ControlGroups.Equals(controlGroups));
         }
 
         private RealTimeControlModel GetModel(ControlGroup controlGroup)
         {
-            var allRtcModels = Gui.Application.GetAllModelsInProject().OfType<RealTimeControlModel>();
+            IEnumerable<RealTimeControlModel> allRtcModels = Gui.Application.GetAllModelsInProject().OfType<RealTimeControlModel>();
             return allRtcModels.First(m => m.ControlGroups.Contains(controlGroup));
         }
 
         private RealTimeControlModel GetModelForFeatureCoverage(IFeatureCoverage featureCoverage)
         {
             return Gui.Application.GetAllModelsInProject()
-                    .OfType<RealTimeControlModel>()
-                    .FirstOrDefault(m => 
-                        m.OutputFileFunctionStore != null &&
-                        m.OutputFileFunctionStore.Functions.Contains(featureCoverage));
+                      .OfType<RealTimeControlModel>()
+                      .FirstOrDefault(m =>
+                                          m.OutputFileFunctionStore != null &&
+                                          m.OutputFileFunctionStore.Functions.Contains(featureCoverage));
         }
     }
 }

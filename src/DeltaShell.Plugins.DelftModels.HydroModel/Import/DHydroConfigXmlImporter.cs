@@ -18,6 +18,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
     {
         private readonly ILog log = LogManager.GetLogger(typeof(DHydroConfigXmlImporter));
 
+        /// <summary> Function responsible for reading the model. </summary>
+        private readonly Func<string, IList<IDimrModelFileImporter>, HydroModel> readFunc;
+
+        private readonly Func<IList<IDimrModelFileImporter>> getDimrModelFileImporters;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="DHydroConfigXmlImporter"/> class
         /// with the specified read function and dimrFileImporters.
@@ -38,66 +43,69 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
         /// <param name="dimrFileImporters">The DIMR file importers.</param>
         public DHydroConfigXmlImporter(Func<IList<IDimrModelFileImporter>> dimrFileImporters) : this(
             HydroModelReader.Read,
-            dimrFileImporters)
-        {
+            dimrFileImporters) {}
 
-        }
-
-        /// <inheritdoc />
+        /// <inheritdoc/>
         [ExcludeFromCodeCoverage]
         public string Name => "DIMR Configuration File (*.xml)";
 
-        /// <inheritdoc />
+        /// <inheritdoc/>
         [ExcludeFromCodeCoverage]
         public string Category => "Integrated Model";
 
         public string Description
         {
-            get { return string.Empty; }
+            get
+            {
+                return string.Empty;
+            }
         }
 
-        /// <inheritdoc />
+        /// <inheritdoc/>
         [ExcludeFromCodeCoverage]
         public Bitmap Image { get; }
 
-        /// <inheritdoc />
+        /// <inheritdoc/>
         public IEnumerable<Type> SupportedItemTypes
         {
-            get { yield return typeof(ICompositeActivity); }
+            get
+            {
+                yield return typeof(ICompositeActivity);
+            }
         }
 
-        /// <inheritdoc />
+        /// <inheritdoc/>
         public bool CanImportOnRootLevel => GetDimrModelFileImporters.Any(e => e.CanImportOnRootLevel);
 
-        /// <inheritdoc />
+        /// <inheritdoc/>
         public string FileFilter => "xml|*.xml";
 
-        /// <inheritdoc />
+        /// <inheritdoc/>
         [ExcludeFromCodeCoverage]
         public string TargetDataDirectory { get; set; }
 
-        /// <inheritdoc />
+        /// <inheritdoc/>
         public bool ShouldCancel { get; set; }
 
-        /// <inheritdoc />
+        /// <inheritdoc/>
         [ExcludeFromCodeCoverage]
         public ImportProgressChangedDelegate ProgressChanged { get; set; }
 
-        /// <inheritdoc />
+        /// <inheritdoc/>
         public bool OpenViewAfterImport => true;
 
-        /// <inheritdoc />
+        /// <inheritdoc/>
         public bool CanImportOn(object targetObject)
         {
             return GetDimrModelFileImporters.Any(e => e.CanImportOn(targetObject));
         }
 
-        /// <inheritdoc />
+        /// <inheritdoc/>
         public object ImportItem(string path, object target = null)
         {
             try
             {
-                var importedModel = Read(path);
+                HydroModel importedModel = Read(path);
 
                 var targetModel = target as HydroModel;
                 if (targetModel != null)
@@ -113,18 +121,21 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
 
                 return ShouldCancel ? null : importedModel;
             }
-            catch (Exception e) when (e is ArgumentException               ||
-                                      e is PathTooLongException            ||
-                                      e is FormatException                 ||
-                                      e is OutOfMemoryException            ||
-                                      e is IOException                     ||
-                                      e is InvalidOperationException       ||
+            catch (Exception e) when (e is ArgumentException ||
+                                      e is PathTooLongException ||
+                                      e is FormatException ||
+                                      e is OutOfMemoryException ||
+                                      e is IOException ||
+                                      e is InvalidOperationException ||
                                       e is FileReadingException)
             {
                 log.Error(string.Format(Resources.DHydroConfigXmlImporter_ImportItem_An_error_occurred_while_trying_to_import_a__0__, Name), e);
                 return null;
             }
         }
+
+        private IList<IDimrModelFileImporter> GetDimrModelFileImporters =>
+            getDimrModelFileImporters?.Invoke() ?? new List<IDimrModelFileImporter>();
 
         /// <summary>
         /// Reads the model located at the specified path with this Importers
@@ -136,13 +147,5 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
         {
             return readFunc.Invoke(path, GetDimrModelFileImporters);
         }
-
-        /// <summary> Function responsible for reading the model. </summary>
-        private readonly Func<string, IList<IDimrModelFileImporter>, HydroModel> readFunc;
-
-        private IList<IDimrModelFileImporter> GetDimrModelFileImporters =>
-            getDimrModelFileImporters?.Invoke() ?? new List<IDimrModelFileImporter>();
-
-        private readonly Func<IList<IDimrModelFileImporter>> getDimrModelFileImporters;
     }
 }

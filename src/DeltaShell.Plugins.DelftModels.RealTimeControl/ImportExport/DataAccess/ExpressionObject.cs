@@ -1,6 +1,6 @@
-﻿using DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd;
-using System;
+﻿using System;
 using DelftTools.Utils.Guards;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.DataAccess
 {
@@ -50,9 +50,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.DataAccess
                  ConvertToOperator(expressionXml.mathematicalOperator),
                  ConvertToExpressionInput(expressionXml.Item),
                  ConvertToExpressionInput(expressionXml.Item1),
-                 expressionXml.Item2)
-        {
-        }
+                 expressionXml.Item2) {}
 
         /// <summary>
         /// Gets the id of the object.

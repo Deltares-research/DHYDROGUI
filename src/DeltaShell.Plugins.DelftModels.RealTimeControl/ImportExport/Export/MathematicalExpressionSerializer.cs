@@ -9,12 +9,10 @@ using DeltaShell.Plugins.DelftModels.RealTimeControl.Properties;
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export
 {
     /// <summary>
-    /// Serializer for a <see cref="MathematicalExpression" />.
+    /// Serializer for a <see cref="MathematicalExpression"/>.
     /// </summary>
     public class MathematicalExpressionSerializer : InputSerializerBase
     {
-        private MathematicalExpression MathematicalExpression { get; }
-
         /// <summary>
         /// Creates a MathematicalExpressionSerializer for one GUI Mathematical Expression,
         /// which can be defined by using multiple expression blocks in the toolsconfig.xml.
@@ -26,19 +24,43 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export
             MathematicalExpression = mathematicalExpression;
         }
 
-        protected override string XmlTag { get; }
+        /// <summary>
+        /// Converts the mathematical expression to a collection of <see cref="XElement"/>
+        /// to be written to export time series in the data config xml file.
+        /// </summary>
+        /// <param name="xNamespace"> The xml namespace. </param>
+        /// <returns> The collection of <see cref="XElement"/>. </returns>
+        public IEnumerable<XElement> GetDataConfigXmlElements(XNamespace xNamespace)
+        {
+            IBranchNode rootNode = RetrieveRootBranchNode();
+
+            List<IExpressionNode> allSubNodes = rootNode.GetChildNodes().ToList();
+            List<IBranchNode> subBranchNodes = allSubNodes.OfType<IBranchNode>().ToList();
+            IEnumerable<ParameterLeafNode> subParameterLeafNodes = allSubNodes.OfType<ParameterLeafNode>();
+
+            CorrectAllNodesByUsingOriginalInputNames(rootNode, subBranchNodes, subParameterLeafNodes);
+
+            yield return new XElement(xNamespace + "timeSeries",
+                                      new XAttribute("id", rootNode.YName));
+
+            foreach (IBranchNode branchNode in subBranchNodes)
+            {
+                yield return new XElement(xNamespace + "timeSeries",
+                                          new XAttribute("id", branchNode.YName));
+            }
+        }
 
         /// <summary>
-        /// Converts the mathematical expression to a collection of <see cref="XElement" />
+        /// Converts the mathematical expression to a collection of <see cref="XElement"/>
         /// to be written to the tools config xml file.
         /// </summary>
         /// <param name="xNamespace"> The xml namespace. </param>
         /// <param name="prefix"> The prefix. </param>
-        /// <returns> The collection of <see cref="XElement" />. </returns>
+        /// <returns> The collection of <see cref="XElement"/>. </returns>
         public override IEnumerable<XElement> ToXml(XNamespace xNamespace, string prefix)
         {
             IBranchNode rootNode = RetrieveRootBranchNode();
-            
+
             List<IExpressionNode> allSubNodes = rootNode.GetChildNodes().ToList();
             List<IBranchNode> subBranchNodes = allSubNodes.OfType<IBranchNode>().ToList();
             IEnumerable<ParameterLeafNode> subParameterLeafNodes = allSubNodes.OfType<ParameterLeafNode>();
@@ -64,31 +86,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export
             return MathematicalExpression.Name;
         }
 
-        /// <summary>
-        /// Converts the mathematical expression to a collection of <see cref="XElement" />
-        /// to be written to export time series in the data config xml file.
-        /// </summary>
-        /// <param name="xNamespace"> The xml namespace. </param>
-        /// <returns> The collection of <see cref="XElement" />. </returns>
-        public IEnumerable<XElement> GetDataConfigXmlElements(XNamespace xNamespace)
-        {
-            IBranchNode rootNode = RetrieveRootBranchNode();
-
-            List<IExpressionNode> allSubNodes = rootNode.GetChildNodes().ToList();
-            List<IBranchNode> subBranchNodes = allSubNodes.OfType<IBranchNode>().ToList();
-            IEnumerable<ParameterLeafNode> subParameterLeafNodes = allSubNodes.OfType<ParameterLeafNode>();
-
-            CorrectAllNodesByUsingOriginalInputNames(rootNode, subBranchNodes, subParameterLeafNodes);
-
-            yield return new XElement(xNamespace + "timeSeries",
-                                      new XAttribute("id", rootNode.YName));
-
-            foreach (IBranchNode branchNode in subBranchNodes)
-            {
-                yield return new XElement(xNamespace + "timeSeries",
-                                          new XAttribute("id", branchNode.YName));
-            }
-        }
+        protected override string XmlTag { get; }
+        private MathematicalExpression MathematicalExpression { get; }
 
         private XElement CreateTriggerForExpression(XNamespace xNamespace, IBranchNode branchNode, string id)
         {
@@ -118,7 +117,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export
         {
             var nodeReference = node.ToString();
             if (node is BranchNode)
+            {
                 nodeReference = MathematicalExpression.Name + "/" + nodeReference;
+            }
+
             return nodeReference;
         }
 
@@ -163,7 +165,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export
             if (!(iRootNode is BranchNode rootNode))
             {
                 throw new InvalidOperationException(
-                    String.Format(
+                    string.Format(
                         Resources
                             .MathematicalExpressionSerializer_ParseMathematicalExpressionToRootBranchNode_Mathematical_expression__0__contains_invalid_expression__1__,
                         MathematicalExpression.Name, MathematicalExpression.Expression));
@@ -182,9 +184,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export
                 {
                     IInput expressionInput =
                         MathematicalExpression.Inputs.First(i => i.Name.Equals(parameterKvp.Value));
-                    
-                    InputSerializerBase serializer =
-                        SerializerCreator.CreateSerializerType<InputSerializerBase>((RtcBaseObject)expressionInput);
+
+                    var serializer =
+                        SerializerCreator.CreateSerializerType<InputSerializerBase>((RtcBaseObject) expressionInput);
                     string xmlName = serializer.GetXmlName();
 
                     leafNode.Value = xmlName;

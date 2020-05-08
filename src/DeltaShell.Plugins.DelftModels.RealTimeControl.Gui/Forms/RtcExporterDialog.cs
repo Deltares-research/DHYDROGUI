@@ -10,6 +10,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
     {
         public string Title { get; set; }
 
+        public object Data { get; set; }
+
+        public Image Image { get; set; }
+
+        public ViewInfo ViewInfo { get; set; }
+
         public DelftDialogResult ShowModal()
         {
             var browserDialog = new FolderBrowserDialog {ShowNewFolderButton = true};
@@ -17,11 +23,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
             {
                 return DelftDialogResult.Cancel;
             }
+
             Directory = browserDialog.SelectedPath;
             return DelftDialogResult.OK;
         }
-
-        private string Directory { get; set; }
 
         public DelftDialogResult ShowModal(object owner)
         {
@@ -37,14 +42,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
             }
         }
 
-        public object Data { get; set; }
+        public void EnsureVisible(object item) {}
 
-        public Image Image { get; set; }
-
-        public void EnsureVisible(object item)
-        {
-        }
-
-        public ViewInfo ViewInfo { get; set; }
+        private string Directory { get; set; }
     }
 }

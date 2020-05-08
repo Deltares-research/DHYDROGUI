@@ -4,6 +4,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
 {
     public interface ITimeDependentRtcObject
     {
-        TimeSeries TimeSeries { get; set; } 
+        TimeSeries TimeSeries { get; set; }
     }
 }
