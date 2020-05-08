@@ -12,57 +12,71 @@ using log4net;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries
 {
+    /// <summary>
+    /// <see cref="SnapBoundariesToNewGrid"/> is responsible for caching and restoring
+    /// wave boundaries when the grid is changed.
+    /// </summary>
     internal static class SnapBoundariesToNewGrid
     {
-        /// <summary>
-        /// <see cref="ILog"/> used to log messages.
-        /// </summary>
         private static readonly ILog log = LogManager.GetLogger(typeof(SnapBoundariesToNewGrid));
 
-        internal static IEnumerable<IWaveBoundary> RestoreBoundariesIfPossible(IEnumerable<CachedBoundary> cachedBoundaries, IBoundarySnappingCalculator snappingCalculator)
+        /// <summary>
+        /// Restores the boundaries if possible.
+        /// </summary>
+        /// <param name="cachedBoundaries">The cached boundaries.</param>
+        /// <param name="snappingCalculator">The snapping calculator.</param>
+        /// <returns>
+        /// The <see cref="IEnumerable{IWaveBoundary}"/> containing the successfully
+        /// restored <see cref="IWaveBoundary"/>.
+        /// </returns>
+        /// <exception cref="System.ArgumentNullException">
+        /// Thrown when <paramref name="cachedBoundaries"/> is <c>null</c>.
+        /// </exception>
+        internal static IEnumerable<IWaveBoundary> RestoreBoundariesIfPossible(IEnumerable<CachedBoundary> cachedBoundaries, 
+                                                                               IBoundarySnappingCalculator snappingCalculator)
         {
             Ensure.NotNull(cachedBoundaries, nameof(cachedBoundaries));
-            if (!cachedBoundaries.Any())
-            {
-                return Enumerable.Empty<IWaveBoundary>();
-            }
+
             if (snappingCalculator == null)
             {
-                return new List<IWaveBoundary>();
+                yield break;
             }
 
-            var waveBoundaries = new List<IWaveBoundary>();
             foreach (CachedBoundary cachedBoundary in cachedBoundaries)
             {
                 IWaveBoundary res = HandleBoundary(cachedBoundary, snappingCalculator);
                 if (res != null)
                 {
-                    waveBoundaries.Add(res);
+                    yield return res;
                 }
             }
-
-            return waveBoundaries;
         }
 
+        /// <summary>
+        /// Creates the cached boundaries.
+        /// </summary>
+        /// <param name="boundaries">The boundaries.</param>
+        /// <param name="gridBoundary">The grid boundary.</param>
+        /// <returns>
+        /// The <see cref="IEnumerable{CachedBoundary}"/> containing the
+        /// <see cref="CachedBoundary"/> created from the provided <paramref name="boundaries"/>.
+        /// </returns>
+        /// <exception cref="System.ArgumentNullException">
+        /// Thrown when <paramref name="boundaries"/> is <c>null</c>.
+        /// </exception>
         internal static IEnumerable<CachedBoundary> CreateCachedBoundaries(IEnumerable<IWaveBoundary> boundaries, IGridBoundary gridBoundary)
         {
             Ensure.NotNull(boundaries, nameof(boundaries));
-            if (!boundaries.Any())
-            {
-                return Enumerable.Empty<CachedBoundary>();
-            }
+
             if (gridBoundary == null)
             {
-                return Enumerable.Empty<CachedBoundary>();
+                yield break;
             }
 
-            var caching = new List<CachedBoundary>();
             foreach (IWaveBoundary waveBoundary in boundaries)
             {
-                caching.Add(CreateCachedBoundary(waveBoundary, gridBoundary));
+                yield return CreateCachedBoundary(waveBoundary, gridBoundary);
             }
-
-            return caching;
         }
 
         private static IWaveBoundary HandleBoundary(CachedBoundary boundary, IBoundarySnappingCalculator snappingCalculator)
@@ -174,10 +188,22 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries
             return new CachedBoundary(startingPointWorldCoordinate, endingPointWordCoordinate, boundary);
         }
 
+        /// <summary>
+        /// <see cref="UpdateSupportPointVisitor"/> is responsible for replacing the support points in a
+        /// <see cref="ISpatiallyDefinedDataComponent"/> by newly created support points.
+        /// </summary>
+        /// <seealso cref="ISpatiallyDefinedDataComponentVisitor" />
         internal class UpdateSupportPointVisitor : ISpatiallyDefinedDataComponentVisitor
         {
             private readonly IDictionary<SupportPoint, SupportPoint> toUpdate;
 
+            /// <summary>
+            /// Creates a new <see cref="UpdateSupportPointVisitor"/>.
+            /// </summary>
+            /// <param name="toUpdate">The dictionary containing the mapping of old to new support points to update.</param>
+            /// <exception cref="System.ArgumentNullException">
+            /// Thrown when <paramref name="toUpdate"/> is <c>null</c>.
+            /// </exception>
             public UpdateSupportPointVisitor(IDictionary<SupportPoint, SupportPoint> toUpdate)
             {
                 Ensure.NotNull(toUpdate, nameof(toUpdate));
@@ -189,6 +215,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries
                 // Nothing to update
             }
 
+            /// <summary>
+            /// Update the support points in <paramref name="spatiallyVaryingDataComponent"/> with the new support
+            /// points defined in the toUpdate dictionary.
+            /// </summary>
+            /// <typeparam name="T">The forcing type.</typeparam>
+            /// <param name="spatiallyVaryingDataComponent">The visited <see cref="SpatiallyVaryingDataComponent{T}" /></param>
             public void Visit<T>(SpatiallyVaryingDataComponent<T> spatiallyVaryingDataComponent) where T : IForcingTypeDefinedParameters
             {
                 foreach (KeyValuePair<SupportPoint, SupportPoint> elem in toUpdate)

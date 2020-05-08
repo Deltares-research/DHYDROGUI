@@ -6,7 +6,7 @@ using NUnit.Framework;
 namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries
 {
     [TestFixture]
-    public class CachedBoundaryTests
+    public class CachedBoundaryTest
     {
         [Test]
         public void WhenNewInstance_ConstructorThrowsArgumentNullException_WithNullCoordinateParameter()

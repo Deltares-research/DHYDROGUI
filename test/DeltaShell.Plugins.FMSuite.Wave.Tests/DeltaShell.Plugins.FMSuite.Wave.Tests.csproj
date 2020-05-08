@@ -206,7 +206,7 @@
   <ItemGroup>
     <Compile Include="Boundaries\BoundaryContainerSyncServiceTest.cs" />
     <Compile Include="Boundaries\BoundaryContainerTest.cs" />
-    <Compile Include="Boundaries\CachedBoundaryTests.cs" />
+    <Compile Include="Boundaries\CachedBoundaryTest.cs" />
     <Compile Include="Boundaries\Calculators\BoundarySnappingCalculatorHelperTest.cs" />
     <Compile Include="Boundaries\Calculators\BoundarySnappingCalculatorTest.cs" />
     <Compile Include="Boundaries\Calculators\CartesianDistanceCalculatorTest.cs" />
@@ -245,8 +245,8 @@
     <Compile Include="Boundaries\GeometricDefinitions\GridSideTest.cs" />
     <Compile Include="Boundaries\Utilities\SpatialDoubleTest.cs" />
     <Compile Include="Boundaries\SimpleBoundaryProviderTest.cs" />
-    <Compile Include="Boundaries\SnapBoundariesToNewGridTests.cs" />
-    <Compile Include="Boundaries\UpdateSupportPointVisitorTests.cs" />
+    <Compile Include="Boundaries\SnapBoundariesToNewGridTest.cs" />
+    <Compile Include="Boundaries\UpdateSupportPointVisitorTest.cs" />
     <Compile Include="Boundaries\WaveBoundaryTest.cs" />
     <Compile Include="Api\WaveEnvironmentHelperTest.cs" />
     <Compile Include="Common\IO\Delft3DDepthFileExporterTest.cs" />
