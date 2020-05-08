@@ -22,6 +22,7 @@ using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Shell.Gui;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections;
+using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.IO.DataObjects;
@@ -38,6 +39,7 @@ using DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation;
 using DeltaShell.Plugins.NetworkEditor.Gui;
 using DeltaShell.Plugins.SharpMapGis.ImportExport;
 using DeltaShell.Plugins.SharpMapGis.SpatialOperations;
+using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Features;
@@ -2357,5 +2359,122 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.That(myDataItem.Hidden, Is.True);
             Assert.That(model.BoundaryConditions1D[1].DataType, Is.EqualTo(Model1DBoundaryNodeDataType.None));
         }
+
+        [Test]
+        public void GivenFMModelWithNetworkWithBranchWithBoundaryCondition1DAtNode_WhenAddingMockedBranchConnectionWithTargetNodeToNode2AndOneMockedBranchWithSourceFromNode2_ThenBoundaryCondition1DAtNode2WillBeRemoved()
+        {
+
+            // Setup
+            var channelToNode2 = mocks.StrictMultiMock<IBranch>(typeof(IHydroObject), typeof(INotifyPropertyChanged), typeof(DelftTools.Utils.INotifyPropertyChange));
+            var sourceNode = mocks.StrictMultiMock<INode>(typeof(DelftTools.Utils.INotifyPropertyChange), typeof(IHydroObject));
+            var channelFromNode2 = mocks.StrictMultiMock<IBranch>(typeof(IHydroObject), typeof(INotifyPropertyChanged), typeof(DelftTools.Utils.INotifyPropertyChange));
+            var targetNode = mocks.StrictMultiMock<INode>(typeof(DelftTools.Utils.INotifyPropertyChange), typeof(IHydroObject));
+            var branchFeature = mocks.StrictMock<IBranchFeature>();
+
+            var eventedListOfSourceNodeIncomingBranches = mocks.StrictMultiMock<IEventedList<IBranch>>(typeof(INotifyCollectionChanged));
+            //eventedListOfSourceNodeIncomingBranches.Expect(elb => elb.GetEnumerator()).Return(Enumerable.Empty<IBranch>().GetEnumerator());
+            ((INotifyCollectionChanged)eventedListOfSourceNodeIncomingBranches).Expect(l => l.CollectionChanged += Arg<NotifyCollectionChangedEventHandler>.Is.Anything).Repeat.Once();
+
+            var eventedListOfSourceNodeOutgoingBranches = mocks.StrictMultiMock<IEventedList<IBranch>>(typeof(INotifyCollectionChanged));
+            //eventedListOfSourceNodeOutgoingBranches.Expect(elb => elb.GetEnumerator()).Return(Enumerable.Repeat(channelToNode2, 1).GetEnumerator());
+            ((INotifyCollectionChanged)eventedListOfSourceNodeOutgoingBranches).Expect(l => l.CollectionChanged += Arg<NotifyCollectionChangedEventHandler>.Is.Anything).Repeat.Once();
+
+            var eventedListOfTargetNodeIncomingBranches = mocks.StrictMultiMock<IEventedList<IBranch>>(typeof(INotifyCollectionChanged));
+            //eventedListOfTargetNodeIncomingBranches.Expect(elb => elb.GetEnumerator()).Return(Enumerable.Repeat(channelFromNode2, 1).GetEnumerator());
+            ((INotifyCollectionChanged)eventedListOfTargetNodeIncomingBranches).Expect(l => l.CollectionChanged += Arg<NotifyCollectionChangedEventHandler>.Is.Anything).Repeat.Once();
+
+            var eventedListOfTargetNodeOutgoingBranches = mocks.StrictMultiMock<IEventedList<IBranch>>(typeof(INotifyCollectionChanged));
+            //eventedListOfTargetNodeOutgoingBranches.Expect(elb => elb.GetEnumerator()).Return(Enumerable.Empty<IBranch>().GetEnumerator());
+            ((INotifyCollectionChanged)eventedListOfTargetNodeOutgoingBranches).Expect(l => l.CollectionChanged += Arg<NotifyCollectionChangedEventHandler>.Is.Anything).Repeat.Once();
+
+            var eventedListOfEmptyLinks = mocks.StrictMultiMock<IEventedList<HydroLink>>(typeof(INotifyCollectionChanged));
+            //eventedListOfEmptyLinks.Expect(elb => elb.GetEnumerator()).Return(Enumerable.Empty<HydroLink>().GetEnumerator());
+            ((INotifyCollectionChanged)eventedListOfEmptyLinks).Expect(l => l.CollectionChanged += Arg<NotifyCollectionChangedEventHandler>.Is.Anything).Repeat.Twice();
+
+            var model = new WaterFlowFMModel();
+            HydroNetworkHelper.AddSnakeHydroNetwork(model.Network, new[] { new Point(0, 0), new Point(100, 0) });
+            channelToNode2.Expect(b => b.Network).Return(model.Network).Repeat.Once();
+            //channelToNode2.Expect(b => b.BranchFeatures).Return(Enumerable.Repeat(branchFeature,1) as IEventedList<IBranchFeature>).Repeat.Once();
+            channelToNode2.Expect(b => b.Length).Return(100).Repeat.Times(4);
+            channelToNode2.Expect(b => b.Source).PropertyBehavior().Repeat.Once();
+            channelToNode2.Expect(b => b.Target).Return(model.Network.Nodes[1]).Repeat.Once();
+            ((DelftTools.Utils.INotifyPropertyChange)channelToNode2).Expect(npc => npc.PropertyChanging += Arg<PropertyChangingEventHandler>.Is.Anything).Repeat.Once();
+            ((DelftTools.Utils.INotifyPropertyChange)channelToNode2).Expect(npc => npc.PropertyChanged += Arg<PropertyChangedEventHandler>.Is.Anything).Repeat.Once();
+            channelToNode2.Expect(b => b.Target = Arg<INode>.Is.Anything)
+                .WhenCalled(call =>
+                    channelToNode2.Raise(b => ((INotifyPropertyChanged)b).PropertyChanged += null, channelToNode2, new PropertyChangedEventArgs(nameof(IBranch.Target)))).Repeat.Once();
+
+            channelFromNode2.Expect(b => b.Network).Return(model.Network).Repeat.Once();
+            //channelFromNode2.Expect(b => b.BranchFeatures).Return(Enumerable.Repeat(branchFeature, 1) as IEventedList<IBranchFeature>).Repeat.Once();
+            channelFromNode2.Expect(b => b.Length).Return(100).Repeat.Times(4);
+            channelFromNode2.Expect(b => b.Source = Arg<INode>.Is.Anything)
+                .WhenCalled(call =>
+                {
+                    model.Network.Nodes[1].OutgoingBranches.Add(channelFromNode2);
+                    channelFromNode2.Raise(b => ((INotifyPropertyChanged) b).PropertyChanged += null,
+                            channelFromNode2, new PropertyChangedEventArgs(nameof(IBranch.Source)));
+                }).Repeat.Once();
+            ((DelftTools.Utils.INotifyPropertyChange)channelFromNode2).Expect(npc => npc.PropertyChanging += Arg<PropertyChangingEventHandler>.Is.Anything).Repeat.Once();
+            ((DelftTools.Utils.INotifyPropertyChange)channelFromNode2).Expect(npc => npc.PropertyChanged += Arg<PropertyChangedEventHandler>.Is.Anything).Repeat.Once();
+
+
+            channelFromNode2.Expect(b => b.Source).Return(model.Network.Nodes[1]).Repeat.Once();
+            channelFromNode2.Expect(b => b.Target).PropertyBehavior().Repeat.Once();
+            
+            sourceNode.Expect(n => n.Network).Return(model.Network).Repeat.Once();
+            sourceNode.Expect(n => n.Name).Return("Node3").Repeat.Once();
+            sourceNode.Expect(n => n.IsConnectedToMultipleBranches).Return(false).Repeat.Once();
+            sourceNode.Expect(n => n.IncomingBranches).Return(eventedListOfSourceNodeIncomingBranches).Repeat.Once();
+            sourceNode.Expect(n => n.OutgoingBranches).Return(eventedListOfSourceNodeOutgoingBranches).Repeat.Once();
+            ((IHydroObject)sourceNode).Expect(n => n.Links).Return(eventedListOfEmptyLinks).Repeat.Once();
+            ((DelftTools.Utils.INotifyPropertyChange)sourceNode).Expect(npc => npc.PropertyChanging += Arg<PropertyChangingEventHandler>.Is.Anything).Repeat.Once();
+            ((DelftTools.Utils.INotifyPropertyChange)sourceNode).Expect(npc => npc.PropertyChanged += Arg<PropertyChangedEventHandler>.Is.Anything).Repeat.Twice();
+            
+            targetNode.Expect(n => n.Network).Return(model.Network).Repeat.Once();
+            targetNode.Expect(n => n.Name).Return("Node4").Repeat.Once();
+            targetNode.Expect(n => n.IsConnectedToMultipleBranches).Return(false).Repeat.Once();
+            targetNode.Expect(n => n.IncomingBranches).Return(eventedListOfTargetNodeIncomingBranches).Repeat.Once();
+            targetNode.Expect(n => n.OutgoingBranches).Return(eventedListOfTargetNodeOutgoingBranches).Repeat.Once();
+            ((IHydroObject)targetNode).Expect(n => n.Links).Return(eventedListOfEmptyLinks).Repeat.Once();
+            ((DelftTools.Utils.INotifyPropertyChange)targetNode).Expect(npc => npc.PropertyChanging += Arg<PropertyChangingEventHandler>.Is.Anything).Repeat.Once();
+            ((DelftTools.Utils.INotifyPropertyChange)targetNode).Expect(npc => npc.PropertyChanged += Arg<PropertyChangedEventHandler>.Is.Anything).Repeat.Twice();
+
+            mocks.ReplayAll();
+            Assert.That(model.BoundaryConditions1D.Count, Is.EqualTo(2));
+            model.BoundaryConditions1D[1].DataType = Model1DBoundaryNodeDataType.WaterLevelConstant;
+            IDataItem myDataItem = null;
+            Assert.DoesNotThrow(() => myDataItem = model.BoundaryConditions1DDataItemSet.DataItems.SingleOrDefault(di => di.ValueType == typeof(Model1DBoundaryNodeData) && di.Value is Model1DBoundaryNodeData model1DBoundaryNodeData && Equals(model1DBoundaryNodeData.Feature, model.Network.Nodes[1])));
+            Assert.That(myDataItem, Is.Not.Null);
+            Assert.That(myDataItem.Hidden, Is.False);
+
+            //Call1
+            model.Network.Branches.Add(channelToNode2);
+            model.Network.Nodes.Add(sourceNode);
+            channelToNode2.Source = sourceNode;
+            channelToNode2.Target = model.Network.Nodes[1];
+
+            //Assert1
+            Assert.That(model.BoundaryConditions1D.Count, Is.EqualTo(3));
+            myDataItem = null;
+            Assert.DoesNotThrow(() => myDataItem = model.BoundaryConditions1DDataItemSet.DataItems.SingleOrDefault(di => di.ValueType == typeof(Model1DBoundaryNodeData) && di.Value is Model1DBoundaryNodeData model1DBoundaryNodeData && Equals(model1DBoundaryNodeData.Feature, model.Network.Nodes[1])));
+            Assert.That(myDataItem, Is.Not.Null);
+            Assert.That(myDataItem.Hidden, Is.False);
+            Assert.That(model.BoundaryConditions1D[1].DataType, Is.EqualTo(Model1DBoundaryNodeDataType.WaterLevelConstant));
+
+            //Call2
+            model.Network.Branches.Add(channelFromNode2);
+            model.Network.Nodes.Add(targetNode);
+            channelFromNode2.Source = model.Network.Nodes[1];
+            channelFromNode2.Target = targetNode;
+
+            // Assert2
+            Assert.That(model.BoundaryConditions1D.Count, Is.EqualTo(4));
+            myDataItem = null;
+            Assert.DoesNotThrow(() => myDataItem = model.BoundaryConditions1DDataItemSet.DataItems.SingleOrDefault(di => di.ValueType == typeof(Model1DBoundaryNodeData) && di.Value is Model1DBoundaryNodeData model1DBoundaryNodeData && Equals(model1DBoundaryNodeData.Feature, model.Network.Nodes[1])));
+            Assert.That(myDataItem, Is.Not.Null);
+            Assert.That(myDataItem.Hidden, Is.True);
+            Assert.That(model.BoundaryConditions1D[1].DataType, Is.EqualTo(Model1DBoundaryNodeDataType.None));
+        }
     }
+
 }
