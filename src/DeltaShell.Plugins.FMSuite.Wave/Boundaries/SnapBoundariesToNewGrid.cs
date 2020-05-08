@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Guards;
@@ -7,6 +8,7 @@ using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.ForcingTyp
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.SpatiallyDefinedDataComponents;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
 using DeltaShell.Plugins.FMSuite.Wave.IO;
+using DeltaShell.Plugins.FMSuite.Wave.Properties;
 using GeoAPI.Geometries;
 using log4net;
 
@@ -91,7 +93,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries
 
             if (reSappedBoundaryCoordinates.Count < 2)
             {
-                log.Warn($"Boundary {boundary.WaveBoundary.Name} could not snap to the new grid (begin and or end point problematic). Please inspect your boundaries.");
+                log.WarnFormat(Resources.SnapBoundariesToNewGrid_HandleBoundary_Boundary__0__could_not_snap_to_the_new_grid__begin_and_or_end_point_problematic___Please_inspect_your_boundaries_, 
+                               boundary.WaveBoundary.Name);
                 return null;
             }
 
@@ -99,7 +102,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries
             IWaveBoundaryGeometricDefinition newGeometricDefinition = WaveBoundaryGeometricDefinitionFactoryHelper.GetGeometricDefinition(reSappedBoundaryCoordinates, snappingCalculator);
             if (newGeometricDefinition == null)
             {
-                log.Warn($"Boundary {boundary.WaveBoundary.Name} could not snap to the new grid. Please inspect your boundaries.");
+                log.WarnFormat(Resources.SnapBoundariesToNewGrid_HandleBoundary_Boundary__0__could_not_snap_to_the_new_grid__Please_inspect_your_boundaries_, 
+                               boundary.WaveBoundary.Name);
                 return null;
             }
 
@@ -130,7 +134,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries
                 }
                 else
                 {
-                    log.Warn($"Support point at distance {supportPoint.Distance} does no longer fit on the snapped Boundary {boundary.WaveBoundary.Name}; Removed. Please inspect your support points");
+                    log.WarnFormat(Resources.SnapBoundariesToNewGrid_HandleBoundary_Support_point_at_distance__0__does_no_longer_fit_on_the_snapped_Boundary__1___Removed__Please_inspect_your_support_points, 
+                                   supportPoint.Distance, boundary.WaveBoundary.Name);
                     dict.Add(supportPoint, null);
                 }
             }

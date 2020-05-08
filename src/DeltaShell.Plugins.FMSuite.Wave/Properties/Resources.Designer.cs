@@ -89,6 +89,36 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Boundary {0} could not snap to the new grid (begin and or end point problematic). Please inspect your boundaries..
+        /// </summary>
+        public static string SnapBoundariesToNewGrid_HandleBoundary_Boundary__0__could_not_snap_to_the_new_grid__begin_and_or_end_point_problematic___Please_inspect_your_boundaries_ {
+            get {
+                return ResourceManager.GetString("SnapBoundariesToNewGrid_HandleBoundary_Boundary__0__could_not_snap_to_the_new_gri" +
+                        "d__begin_and_or_end_point_problematic___Please_inspect_your_boundaries_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Boundary {0} could not snap to the new grid. Please inspect your boundaries..
+        /// </summary>
+        public static string SnapBoundariesToNewGrid_HandleBoundary_Boundary__0__could_not_snap_to_the_new_grid__Please_inspect_your_boundaries_ {
+            get {
+                return ResourceManager.GetString("SnapBoundariesToNewGrid_HandleBoundary_Boundary__0__could_not_snap_to_the_new_gri" +
+                        "d__Please_inspect_your_boundaries_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Support point at distance {0} does no longer fit on the snapped Boundary {1}; Removed. Please inspect your support points.
+        /// </summary>
+        public static string SnapBoundariesToNewGrid_HandleBoundary_Support_point_at_distance__0__does_no_longer_fit_on_the_snapped_Boundary__1___Removed__Please_inspect_your_support_points {
+            get {
+                return ResourceManager.GetString("SnapBoundariesToNewGrid_HandleBoundary_Support_point_at_distance__0__does_no_long" +
+                        "er_fit_on_the_snapped_Boundary__1___Removed__Please_inspect_your_support_points", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         public static System.Drawing.Bitmap wave {
