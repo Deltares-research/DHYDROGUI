@@ -234,13 +234,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
                 if (IsTimeDependent(functions))
                 {
                     IEnumerable<Tuple<SupportPoint, IWaveEnergyFunction<TSpreading>>> data =
-                        supportPoints.Zip(functions.Select(CreateWaveEnergyFunction<TSpreading>), Tuple.Create);
+                        supportPoints.Zip(functions.Select(CreateWaveEnergyFunction<TSpreading>), Tuple.Create).Where(d => d.Item1 != null);
                     return importDataComponentFactory.CreateSpatiallyVaryingTimeDependentComponent(data);
                 }
                 else
                 {
                     IEnumerable<Tuple<SupportPoint, ParametersBlock>> data =
-                        supportPoints.Zip(GetParametersBlocks(boundaryBlock), Tuple.Create);
+                        supportPoints.Zip(GetParametersBlocks(boundaryBlock), Tuple.Create).Where(d => d.Item1 != null);
                     return importDataComponentFactory.CreateSpatiallyVaryingConstantComponent<TSpreading>(data);
                 }
             }
@@ -307,7 +307,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
                     continue;
                 }
 
-                if (IsInValidRange(geometricDefinition, distance))
+                if (IsDistanceInsideGeometricDefinition(geometricDefinition, distance))
                 {
                     newSupportPoints.Add(new SupportPoint(distance, geometricDefinition));
                 }
@@ -320,9 +320,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
             geometricDefinition.SupportPoints.AddRange(newSupportPoints);
         }
 
-        private static bool IsInValidRange(IWaveBoundaryGeometricDefinition geometricDefinition, double d)
+        private static bool IsDistanceInsideGeometricDefinition(IWaveBoundaryGeometricDefinition geometricDefinition, double distance)
         {
-            return d >= 0.0 && d <= geometricDefinition.Length;
+            return distance >= 0.0 && distance <= geometricDefinition.Length;
         }
 
         private static bool IsSpatiallyVariant(BoundaryMdwBlock boundaryBlock) => boundaryBlock.Distances.Any();

@@ -30,6 +30,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
     public class WaveBoundaryConverterTest<T> where T : class, IBoundaryConditionSpreading, new()
     {
         private const double doublePrecision = 1E-7;
+        private const string expectedInvalidDistanceMessage = "Boundary 'boundary_name' contains a support point at distance {0}, which is located outside the geometry. This support point will not be imported.";
         private static readonly Random random = new Random(39);
         private readonly SpreadingImportType spreadingType = GetSpreadingImportType();
 
@@ -714,7 +715,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
 
         [Test]
         [TestCaseSource(nameof(InvalidDistanceTestCases))]
-        public void Convert_InvalidDistanceAndOrientedBoundary_ExpectedResults(double invalidDistance)
+        public void Convert_InvalidDistanceAndConstantOrientedBoundary_ExpectedResults(double invalidDistance)
         {
             // Setup
             var logHandler = Substitute.For<ILogHandler>();
@@ -732,8 +733,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
                                                             PeriodImportExportType.Mean, 
                                                             mdwValues, 
                                                             definition:KnownWaveBoundariesFileConstants.OrientationDefinitionType);
-            category.AddProperty(KnownWaveProperties.CondSpecAtDist, ToString(invalidDistance));
             category.AddProperty(KnownWaveProperties.Orientation, mdwValues.OrientationType.GetDescription());
+            category.AddProperty(KnownWaveProperties.CondSpecAtDist, ToString(invalidDistance));
 
             AddParametersToCategory(mdwValues, category, 0);
 
@@ -751,19 +752,20 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             Assert.That(result, Has.Count.EqualTo(1));
 
             Assert.That(geometricDefinition.SupportPoints, Is.Empty);
-            logHandler.Received().ReportWarning($"Boundary 'boundary_name' contains a support point at distance {invalidDistance}, which is located outside the geometry. This support point will not be imported.");
+            logHandler.Received().ReportWarning(string.Format(expectedInvalidDistanceMessage, invalidDistance));
+            importDataComponentFactory.Received().CreateSpatiallyVaryingConstantComponent<T>(Arg.Is<IEnumerable<Tuple<SupportPoint, ParametersBlock>>>(a => !a.Any()));
         }
 
         [Test]
         [TestCaseSource(nameof(InvalidDistanceTestCases))]
-        public void Convert_InvalidDistanceAndCoordinatesBoundary_ExpectedResults(double invalidDistance)
+        public void Convert_InvalidDistanceAndConstantCoordinatesBoundary_ExpectedResults(double invalidDistance)
         {
             // Setup
             var logHandler = Substitute.For<ILogHandler>();
             var mdwValues = new MdwTestValues(RandomDouble, RandomDouble);
 
             var geometricDefinition = Substitute.For<IWaveBoundaryGeometricDefinition>();
-            geometricDefinition.Length.Returns(10.0);
+            geometricDefinition.Length.Returns(10.0 + 1e-8);
             IWaveBoundaryGeometricDefinitionFactory geometricDefinitionFactory = GetMockedGeometricDefinitionFactory(geometricDefinition, mdwValues);
 
             var importDataComponentFactory = Substitute.For<IImportBoundaryConditionDataComponentFactory>();
@@ -791,7 +793,92 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             Assert.That(result, Has.Count.EqualTo(1));
 
             Assert.That(geometricDefinition.SupportPoints, Is.Empty);
-            logHandler.Received().ReportWarning($"Boundary 'boundary_name' contains a support point at distance {invalidDistance}, which is located outside the geometry. This support point will not be imported.");
+            logHandler.Received().ReportWarning(string.Format(expectedInvalidDistanceMessage, invalidDistance));
+            importDataComponentFactory.Received().CreateSpatiallyVaryingConstantComponent<T>(Arg.Is<IEnumerable<Tuple<SupportPoint, ParametersBlock>>>(a => !a.Any()));
+        }
+
+        [Test]
+        [TestCaseSource(nameof(InvalidDistanceTestCases))]
+        public void Convert_InvalidDistanceAndFileBasedBoundary_ExpectedResults(double invalidDistance)
+        {
+            // Setup
+            var logHandler = Substitute.For<ILogHandler>();
+            var mdwValues = new MdwTestValues(RandomDouble, RandomDouble);
+
+            var geometricDefinition = Substitute.For<IWaveBoundaryGeometricDefinition>();
+            geometricDefinition.Length.Returns(10.0);
+            IWaveBoundaryGeometricDefinitionFactory geometricDefinitionFactory = GetMockedGeometricDefinitionFactory(geometricDefinition, mdwValues);
+
+            var importDataComponentFactory = Substitute.For<IImportBoundaryConditionDataComponentFactory>();
+            importDataComponentFactory.CreateSpatiallyVaryingFileBasedComponent(Arg.Any<IEnumerable<Tuple<SupportPoint, string>>>())
+                                      .Returns(new SpatiallyVaryingDataComponent<FileBasedParameters>());
+
+            DelftIniCategory category = GetBoundaryCategory(ShapeImportType.Gauss, 
+                                                            PeriodImportExportType.Mean, 
+                                                            mdwValues,
+                                                            "from file");
+            category.AddProperty(KnownWaveProperties.CondSpecAtDist, ToString(invalidDistance));
+
+            AddParametersToCategory(mdwValues, category, 0);
+
+            DelftIniCategory[] categories =
+            {
+                category
+            };
+
+            var converter = new WaveBoundaryConverter(importDataComponentFactory, geometricDefinitionFactory);
+
+            // Call
+            List<IWaveBoundary> result = converter.Convert(categories, new Dictionary<string, List<IFunction>>(), "path", logHandler).ToList();
+
+            // Assert
+            Assert.That(result, Has.Count.EqualTo(1));
+
+            Assert.That(geometricDefinition.SupportPoints, Is.Empty);
+            logHandler.Received().ReportWarning(string.Format(expectedInvalidDistanceMessage, invalidDistance));
+            importDataComponentFactory.Received().CreateSpatiallyVaryingFileBasedComponent(Arg.Is<IEnumerable<Tuple<SupportPoint, string>>>(a => !a.Any()));
+        }
+        
+        [Test]
+        [TestCaseSource(nameof(InvalidDistanceTestCases))]
+        public void Convert_InvalidDistanceAndTimeDependentBoundary_ExpectedResults(double invalidDistance)
+        {
+            // Setup
+            var logHandler = Substitute.For<ILogHandler>();
+            var mdwValues = new MdwTestValues(RandomDouble, RandomDouble);
+
+            var geometricDefinition = Substitute.For<IWaveBoundaryGeometricDefinition>();
+            geometricDefinition.Length.Returns(10.0);
+            IWaveBoundaryGeometricDefinitionFactory geometricDefinitionFactory = GetMockedGeometricDefinitionFactory(geometricDefinition, mdwValues);
+
+            var importDataComponentFactory = Substitute.For<IImportBoundaryConditionDataComponentFactory>();
+            importDataComponentFactory.CreateSpatiallyVaryingTimeDependentComponent<T>(Arg.Any<IEnumerable<Tuple<SupportPoint, IWaveEnergyFunction<T>>>>())
+                                      .Returns(new SpatiallyVaryingDataComponent<TimeDependentParameters<T>>());
+
+            DelftIniCategory category = GetBoundaryCategory(ShapeImportType.Gauss, 
+                                                            PeriodImportExportType.Mean, 
+                                                            mdwValues);
+            category.AddProperty(KnownWaveProperties.CondSpecAtDist, ToString(invalidDistance));
+
+            AddParametersToCategory(mdwValues, category, 0);
+
+            DelftIniCategory[] categories =
+            {
+                category
+            };
+
+            var converter = new WaveBoundaryConverter(importDataComponentFactory, geometricDefinitionFactory);
+
+            // Call
+            Dictionary<string, List<IFunction>> timeSeriesData = GetSpatiallyVaryingTimeSeries(new BcwTestValues());
+            List<IWaveBoundary> result = converter.Convert(categories, timeSeriesData, "path", logHandler).ToList();
+
+            // Assert
+            Assert.That(result, Has.Count.EqualTo(1));
+
+            Assert.That(geometricDefinition.SupportPoints, Is.Empty);
+            logHandler.Received().ReportWarning(string.Format(expectedInvalidDistanceMessage, invalidDistance));
+            importDataComponentFactory.Received().CreateSpatiallyVaryingTimeDependentComponent<T>(Arg.Is<IEnumerable<Tuple<SupportPoint, IWaveEnergyFunction<T>>>>(a => !a.Any()));
         }
 
         private static SpreadingImportType GetSpreadingImportType()
@@ -868,7 +955,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
 
             return geometricDefinitionFactory;
         }
-
 
         private static bool MatchesCoordinate(Coordinate c, double x, double y) => DoubleEquals(c.X, x) && DoubleEquals(c.Y, y);
 
