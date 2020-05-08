@@ -6,6 +6,8 @@ using DeltaShell.NGHS.TestUtils;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.Calculators;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.ForcingTypeDefinedParameters;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.SpatiallyDefinedDataComponents;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
 using GeoAPI.Geometries;
 using NSubstitute;
@@ -254,6 +256,85 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries
             Assert.IsFalse(newWaveBoundary.GeometricDefinition.SupportPoints.Contains(cachedBoundaries[0].WaveBoundary.GeometricDefinition.SupportPoints[0]));
             Assert.IsFalse(newWaveBoundary.GeometricDefinition.SupportPoints.Contains(cachedBoundaries[0].WaveBoundary.GeometricDefinition.SupportPoints[1]));
             Assert.IsFalse(newWaveBoundary.GeometricDefinition.SupportPoints.Contains(cachedBoundaries[0].WaveBoundary.GeometricDefinition.SupportPoints[2]));
+        }
+
+        [Test]
+        public void RestoreBoundariesIfPossible_IgnoresInvalidGeometricDefinitions()
+        {
+            // Setup
+            using (var messageLogger = new LogAppenderEntriesTester(typeof(SnapBoundariesToNewGrid)))
+            {
+                CachedBoundary cachedBoundary = CachedBoundaryCreator(1, 1, 10, "one");
+
+                var cachedBoundaries = new List<CachedBoundary> {cachedBoundary};
+
+                var boundarySnappingCalculator = Substitute.For<IBoundarySnappingCalculator>();
+                boundarySnappingCalculator.SnapCoordinateToGridBoundaryCoordinate(cachedBoundary.StartingPointWorldCoordinate)
+                                          .Returns(new[]
+                                          {
+                                              new GridBoundaryCoordinate(GridSide.North, 1),
+                                          });
+
+                boundarySnappingCalculator.SnapCoordinateToGridBoundaryCoordinate(cachedBoundary.EndingPointWorldCoordinate)
+                                          .Returns(new[]
+                                          {
+                                              new GridBoundaryCoordinate(GridSide.East, 20),
+                                          });
+
+                // Call
+                IEnumerable<IWaveBoundary> result =
+                    SnapBoundariesToNewGrid.RestoreBoundariesIfPossible(cachedBoundaries, boundarySnappingCalculator)
+                                           .ToArray();
+
+                // Assert
+                Assert.That(result, Is.Empty);
+                Assert.That(messageLogger.Messages.First(), Is.EqualTo($"Boundary {cachedBoundary.WaveBoundary.Name} could not snap to the new grid. Please inspect your boundaries."));
+            }
+        }
+
+        [Test]
+        public void RestoreBoundariesIfPossible_RemovesInvalidSupportPoints()
+        {
+            // Setup
+            using (var messageLogger = new LogAppenderEntriesTester(typeof(SnapBoundariesToNewGrid)))
+            {
+                CachedBoundary cachedBoundary = CachedBoundaryCreator(1, 5, 70, "one");
+                var supportPoint = new SupportPoint(50.0, cachedBoundary.WaveBoundary.GeometricDefinition);
+                cachedBoundary.WaveBoundary.GeometricDefinition.SupportPoints.Add(supportPoint);
+                cachedBoundary.WaveBoundary.GeometricDefinition.Length.Returns(60);
+
+                var fileBasedParameters = new FileBasedParameters("mock");
+                var component = new SpatiallyVaryingDataComponent<FileBasedParameters>();
+                component.AddParameters(supportPoint, fileBasedParameters);
+
+                var conditionDefinition = Substitute.For<IWaveBoundaryConditionDefinition>();
+                conditionDefinition.DataComponent.Returns(component);
+                cachedBoundary.WaveBoundary.ConditionDefinition.Returns(conditionDefinition);
+
+                var cachedBoundaries = new List<CachedBoundary> {cachedBoundary};
+
+                var boundarySnappingCalculator = Substitute.For<IBoundarySnappingCalculator>();
+                var beginPointGridCoordinates = new List<GridBoundaryCoordinate>() {new GridBoundaryCoordinate(GridSide.North, 0)};
+                var endPointGridCoordinates = new List<GridBoundaryCoordinate>() {new GridBoundaryCoordinate(GridSide.North, 1)};
+
+                boundarySnappingCalculator.SnapCoordinateToGridBoundaryCoordinate(Arg.Any<Coordinate>()).Returns(x => beginPointGridCoordinates,
+                                                                                                                 x => endPointGridCoordinates);
+                boundarySnappingCalculator.CalculateDistanceBetweenBoundaryIndices(Arg.Any<int>(), Arg.Any<int>(), Arg.Any<GridSide>()).ReturnsForAnyArgs(10);
+
+                // Call
+                IEnumerable<IWaveBoundary> result =
+                    SnapBoundariesToNewGrid.RestoreBoundariesIfPossible(cachedBoundaries, boundarySnappingCalculator)
+                                           .ToArray();
+
+                // Assert
+                Assert.That(result, Is.Not.Null);
+                Assert.That(result.Count(), Is.EqualTo(1));
+
+                IWaveBoundary boundary = result.First();
+                Assert.That(boundary.ConditionDefinition.DataComponent, Is.SameAs(component));
+                Assert.That(component.Data, Is.Empty);
+                Assert.That(messageLogger.Messages.First(), Is.EqualTo($"Support point at distance {supportPoint.Distance} does no longer fit on the snapped Boundary {cachedBoundary.WaveBoundary.Name}; Removed. Please inspect your support points"));
+            }
         }
 
         private static CachedBoundary CachedBoundaryCreator(double begin, double end, int length, string name)
