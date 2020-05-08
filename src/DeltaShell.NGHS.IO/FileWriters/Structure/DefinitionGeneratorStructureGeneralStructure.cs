@@ -45,7 +45,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
             IniCategory.AddProperty(StructureRegion.NegContrCoefFreeGate.Key, formula.NegativeContractionCoefficient, StructureRegion.NegContrCoefFreeGate.Description, StructureRegion.NegContrCoefFreeGate.Format);
 
             IniCategory.AddProperty(StructureRegion.CrestLength.Key, formula.CrestLength, StructureRegion.CrestLength.Description, StructureRegion.CrestLength.Format);
-            IniCategory.AddProperty(StructureRegion.UseVelocityHeight.Key, weir.UseVelocityHeight.ToString().ToLower());
+            IniCategory.AddProperty(StructureRegion.UseVelocityHeight.Key, formula.UseVelocityHeight.ToString().ToLower());
 
             var extraResistance = formula.UseExtraResistance ? formula.ExtraResistance : 0.0;
             IniCategory.AddProperty(StructureRegion.ExtraResistance.Key, extraResistance, StructureRegion.ExtraResistance.Description, StructureRegion.ExtraResistance.Format);
