@@ -6,6 +6,7 @@ using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.TestUtils;
 using DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures;
+using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
 using DeltaShell.Plugins.FMSuite.Common.Tests.IO;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
@@ -17,53 +18,54 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
     {
         /// <summary>
         /// GIVEN a structures file
-        ///   AND structures containing empty width fields
+        /// AND structures containing empty width fields
         /// WHEN these structures are written
-        ///  AND these structure are read
+        /// AND these structure are read
         /// THEN the obtained structures are equal to the original structures
-        ///  AND no exceptions are thrown
+        /// AND no exceptions are thrown
         /// </summary>
-        [Test, Category(TestCategory.Integration)]
+        [Test]
+        [Category(TestCategory.Integration)]
         public void GivenStructuresContainingEmptyWidthFields_WhenTheseStructuresAreWrittenAndTheseStructuresAreRead_ThenTheObtainedStructuresAreEqualToTheOriginalStructuresAndNoExceptionsAreThrown()
         {
             // Given
-            var structuresFile = GetStructuresFile();
+            StructuresFile structuresFile = GetStructuresFile();
 
             const string simpleWeirName = "Its-weir-d";
-            var simpleWeir = GetSimpleWeir(simpleWeirName);
+            Weir2D simpleWeir = GetSimpleWeir(simpleWeirName);
 
             const string gatedWeirName = "Open-the-gate-a-little";
-            var gatedWeir = GetGatedWeir(gatedWeirName);
+            Weir2D gatedWeir = GetGatedWeir(gatedWeirName);
 
             const string generalStructureName = "general-structure-sir";
-            var generalStructure = GetGeneralStructure(generalStructureName);
+            Weir2D generalStructure = GetGeneralStructure(generalStructureName);
 
-            var writtenStructures = new List<IStructure>() {simpleWeir, gatedWeir, generalStructure};
+            var writtenStructures = new List<IStructure>()
+            {
+                simpleWeir,
+                gatedWeir,
+                generalStructure
+            };
 
             TestHelper.PerformActionInTemporaryDirectory(tempDir =>
             {
-                var exportFilePath = Path.Combine(tempDir, "FlowFM_structures.ini");
+                string exportFilePath = Path.Combine(tempDir, "FlowFM_structures.ini");
 
                 // When | Then
-                Assert.DoesNotThrow(() =>
-                {
-                    structuresFile.Write(exportFilePath, writtenStructures);
-                });
+                Assert.DoesNotThrow(() => { structuresFile.Write(exportFilePath, writtenStructures); });
 
                 IList<IStructure> readStructures = null;
-                Assert.DoesNotThrow(() =>
-                {
-                    readStructures = structuresFile.Read(exportFilePath);
-                });
+                Assert.DoesNotThrow(() => { readStructures = structuresFile.Read(exportFilePath); });
 
                 Assert.That(readStructures, Is.Not.Null, "Expected read structures to not be null.");
                 Assert.That(readStructures.Count, Is.EqualTo(3), "Expected a different number of read structures:");
-                
+
                 AssertThatReadStructuresAreEquivalentToWrittenStructures(readStructures, writtenStructures);
             });
         }
 
         #region TestHelpers
+
         /// <summary>
         /// Assert that the structural values of the read structures are equivalent to those of the written structures.
         /// </summary>
@@ -76,10 +78,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         /// </remarks>
         private static void AssertThatReadStructuresAreEquivalentToWrittenStructures(IEnumerable<IStructure> readStructures, IEnumerable<IStructure> writtenStructures)
         {
-            var readStructuresList = readStructures.ToList();
-            foreach (var writtenStructure in writtenStructures)
+            List<IStructure> readStructuresList = readStructures.ToList();
+            foreach (IStructure writtenStructure in writtenStructures)
             {
-                var readStructure = readStructuresList.FirstOrDefault(s => s.Name == writtenStructure.Name);
+                IStructure readStructure = readStructuresList.FirstOrDefault(s => s.Name == writtenStructure.Name);
                 Assert.That(readStructure, Is.Not.Null, $"Read structures does not contain structure with name {writtenStructure.Name}");
 
                 Assert.That(readStructure, Is.TypeOf<Weir2D>(), $"Expected structure {readStructure.Name} of type <Weir2D>");
@@ -101,10 +103,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                     Assert.That(readGSFormula.BedLevelLeftSideStructure, Is.EqualTo(writtenGSFormula.BedLevelLeftSideStructure));
                     Assert.That(readGSFormula.BedLevelRightSideStructure, Is.EqualTo(writtenGSFormula.BedLevelRightSideStructure));
 
-                    Assert.That(readGSFormula.WidthLeftSideOfStructure,  Is.EqualTo(writtenGSFormula.WidthLeftSideOfStructure));
+                    Assert.That(readGSFormula.WidthLeftSideOfStructure, Is.EqualTo(writtenGSFormula.WidthLeftSideOfStructure));
                     Assert.That(readGSFormula.WidthRightSideOfStructure, Is.EqualTo(writtenGSFormula.WidthRightSideOfStructure));
-                    Assert.That(readGSFormula.WidthStructureLeftSide,    Is.EqualTo(writtenGSFormula.WidthStructureLeftSide));
-                    Assert.That(readGSFormula.WidthStructureRightSide,   Is.EqualTo(writtenGSFormula.WidthStructureRightSide));
+                    Assert.That(readGSFormula.WidthStructureLeftSide, Is.EqualTo(writtenGSFormula.WidthStructureLeftSide));
+                    Assert.That(readGSFormula.WidthStructureRightSide, Is.EqualTo(writtenGSFormula.WidthStructureRightSide));
                 }
             }
         }
@@ -157,7 +159,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         /// <returns> A new StructuresFile with the a default schema.</returns>
         private static StructuresFile GetStructuresFile()
         {
-            var schema = new StructureSchemaCsvFile().ReadStructureSchema(
+            StructureSchema<ModelPropertyDefinition> schema = new StructureSchemaCsvFile().ReadStructureSchema(
                 StructureSchemaCsvFileTest.ApplicationStructuresSchemaCsvFilePath);
 
             var structuresFile = new StructuresFile()
@@ -166,6 +168,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             };
             return structuresFile;
         }
+
         #endregion
     }
 }

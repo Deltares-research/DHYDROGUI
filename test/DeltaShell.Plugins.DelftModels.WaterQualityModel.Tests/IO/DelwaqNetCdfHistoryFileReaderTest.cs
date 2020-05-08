@@ -3,26 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using DelftTools.TestUtils;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.IO;
-using NUnit.Framework;
 using log4net.Core;
+using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
 {
     [TestFixture]
     public class DelwaqNetCdfHistoryFileReaderTest
     {
-        [TestCase("")]
-        [TestCase(null)]
-        public void Read_WithFilePathNullOrEmpty_ThenThrowsArgumentException(string filePathArgument)
-        {
-            // Call
-            void Call() => DelwaqNetCdfHistoryFileReader.Read(filePathArgument);
-
-            // Assert
-            var exception = Assert.Throws<ArgumentException>(Call);
-            Assert.That(exception.Message, Is.EqualTo("Argument 'filePath' cannot be null or empty."));
-        }
-
         [Test]
         public void Read_WithFilePathNotExisting_ThenThrowsArgumentException()
         {
@@ -32,7 +20,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             DelwaqHisFileData[] Call() => DelwaqNetCdfHistoryFileReader.Read(invalidPath);
 
             // Assert
-            DelwaqHisFileData[] data = {};
+            DelwaqHisFileData[] data =
+                {};
             IEnumerable<string> errorMessages = TestHelper.GetAllRenderedMessages(
                 () => data = Call(),
                 Level.Error);
@@ -69,6 +58,18 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
                         "Output variable was different than expected.");
             Assert.That(data.OutputVariables.Last(), Is.EqualTo("EColi"),
                         "Output variable was different than expected.");
+        }
+
+        [TestCase("")]
+        [TestCase(null)]
+        public void Read_WithFilePathNullOrEmpty_ThenThrowsArgumentException(string filePathArgument)
+        {
+            // Call
+            void Call() => DelwaqNetCdfHistoryFileReader.Read(filePathArgument);
+
+            // Assert
+            var exception = Assert.Throws<ArgumentException>(Call);
+            Assert.That(exception.Message, Is.EqualTo("Argument 'filePath' cannot be null or empty."));
         }
 
         private static IEnumerable<DateTime> GetExpectedDateTimes()

@@ -24,7 +24,7 @@ namespace DeltaShell.NGHS.Common.Tests
             var owner = MockRepository.GenerateStub<Folder>();
             Assert.IsNull(ApplicationPluginHelper.FindParentProjectItemInsideProject(null, owner));
         }
-        
+
         [Test]
         public void FindParentProjectItem_WhenAProjectFolderIsSelected_ThenThisRootFolderShouldBeReturned()
         {
@@ -54,10 +54,7 @@ namespace DeltaShell.NGHS.Common.Tests
             var listActivities = new EventedList<IActivity>();
             compositeActivity.Expect(ca => ca.Activities).Return(listActivities);
 
-            var listModels = new List<IModel>
-            {
-                (IModel) compositeActivity
-            };
+            var listModels = new List<IModel> {(IModel) compositeActivity};
             rootFolder.Models = listModels;
             rootFolder.Folders = new List<Folder>();
 
@@ -74,19 +71,13 @@ namespace DeltaShell.NGHS.Common.Tests
         public void FindParentProjectItem_WhenAModelIsSelected_ThenTheCorrespondingCompositeModelShouldBeReturned()
         {
             var rootFolder = MockRepository.GenerateStub<Folder>();
-            
+
             ICompositeActivity compositeActivity = MockRepository.GenerateMock<ICompositeActivity, IModel>();
 
             IActivity activity = MockRepository.GenerateMock<IActivity, IModel>();
-            var listActivities = new EventedList<IActivity>
-            {
-                activity
-            };
+            var listActivities = new EventedList<IActivity> {activity};
 
-            var listModels = new List<IModel>
-            {
-                (IModel) compositeActivity
-            };
+            var listModels = new List<IModel> {(IModel) compositeActivity};
 
             compositeActivity.Expect(ca => ca.Activities).Return(listActivities);
 

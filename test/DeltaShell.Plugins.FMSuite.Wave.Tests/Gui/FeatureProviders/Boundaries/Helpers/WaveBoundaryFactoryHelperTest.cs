@@ -18,27 +18,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
     [TestFixture]
     public class WaveBoundaryFactoryHelperTest
     {
-        [Test]
-        public void Constructor_ExpectedValues()
-        {
-            // Setup
-            var dataComponentFactory = Substitute.For<ISpatiallyDefinedDataComponentFactory>();
-
-            // Call
-            var factoryHelper = new WaveBoundaryFactoryHelper(dataComponentFactory);
-
-            // Assert
-            Assert.That(factoryHelper, Is.InstanceOf(typeof(IWaveBoundaryFactoryHelper)));
-        }
-
-        [Test]
-        public void Constructor_ComponentFactoryNull_ThrowsArgumentNullException()
-        {
-            void Call() => new WaveBoundaryFactoryHelper(null);
-            var exception = Assert.Throws<ArgumentNullException>(Call);
-            Assert.That(exception.ParamName, Is.EqualTo("componentFactory"));
-        }
-
         private static IEnumerable<TestCaseData> TestCaseDataSmallerThanTwoDistinctCoordinates
         {
             get
@@ -46,9 +25,18 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
                 yield return new TestCaseData(Enumerable.Empty<Coordinate>());
 
                 var coord = new Coordinate(0.0, 0.0);
-                yield return new TestCaseData(new List<Coordinate> { coord });
-                yield return new TestCaseData(new List<Coordinate> { coord, coord });
-                yield return new TestCaseData(new List<Coordinate> { coord, coord, coord });
+                yield return new TestCaseData(new List<Coordinate> {coord});
+                yield return new TestCaseData(new List<Coordinate>
+                {
+                    coord,
+                    coord
+                });
+                yield return new TestCaseData(new List<Coordinate>
+                {
+                    coord,
+                    coord,
+                    coord
+                });
                 yield return new TestCaseData(
                     new List<Coordinate>
                     {
@@ -56,25 +44,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
                         new Coordinate(5.0, 5.0),
                     });
             }
-        }
-
-        [Test]
-        [TestCaseSource(nameof(TestCaseDataSmallerThanTwoDistinctCoordinates))]
-        public void GivenABoundarySnappingCalculatorAndASetContainingLessThanTwoDistinctCoordinates_WhenGetSnappedEndPointsIsCalled_ThenAnArgumentExceptionIsThrown(IEnumerable<Coordinate> coordinates)
-        {
-            // Given
-            var dataComponentFactory = Substitute.For<ISpatiallyDefinedDataComponentFactory>();
-            var factoryHelper = new WaveBoundaryFactoryHelper(dataComponentFactory);
-            var calculator = Substitute.For<IBoundarySnappingCalculator>();
-
-            // When
-            void Call() => factoryHelper.GetSnappedEndPoints(calculator, coordinates);
-
-            // Then
-            var exception = 
-                Assert.Throws<ArgumentException>(Call, $"Expected {nameof(WaveBoundaryFactoryHelper.GetSnappedEndPoints)} to throw an {nameof(ArgumentException)}");
-            Assert.That(exception.Message, Is.EqualTo("There should be two or more distinct coordinates in coordinates."), 
-                        "Expected a different message:");
         }
 
         private static IEnumerable<TestCaseData> TestCaseDataGetSnappedEndpoints
@@ -123,7 +92,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
                 };
 
                 yield return new TestCaseData(nonDistinctSetCoordinates2);
-                
+
                 var nonDistinctSetCoordinates3 = new List<Coordinate>
                 {
                     firstCoord,
@@ -154,6 +123,132 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
 
                 yield return new TestCaseData(extraSetCoordinatesNonDistinct);
             }
+        }
+
+        private static IEnumerable<TestCaseData> TestCaseDataGetGeometricDefinitionNotNull
+        {
+            get
+            {
+                double length = new Random().NextDouble();
+
+                const int indexFirst = 0;
+                const int indexLast = 10;
+                var coordinateFirst = new GridBoundaryCoordinate(GridSide.East, indexFirst);
+                var coordinateLast = new GridBoundaryCoordinate(GridSide.East, indexLast);
+
+                GridBoundaryCoordinate[] coordinatesValid = new[]
+                {
+                    coordinateFirst,
+                    coordinateLast
+                };
+
+                yield return new TestCaseData(coordinatesValid,
+                                              new WaveBoundaryGeometricDefinition(indexFirst,
+                                                                                  indexLast,
+                                                                                  GridSide.East,
+                                                                                  length));
+
+                GridBoundaryCoordinate[] coordinatesValidExtra = new[]
+                {
+                    coordinateFirst,
+                    new GridBoundaryCoordinate(GridSide.East, 5),
+                    coordinateLast,
+                    new GridBoundaryCoordinate(GridSide.East, 7),
+                    new GridBoundaryCoordinate(GridSide.East, 0),
+                };
+
+                yield return new TestCaseData(coordinatesValidExtra,
+                                              new WaveBoundaryGeometricDefinition(indexFirst,
+                                                                                  indexLast,
+                                                                                  GridSide.East,
+                                                                                  length));
+
+                var coordinateFirstSmall = new GridBoundaryCoordinate(GridSide.West, 0);
+                var coordinateLastSmall = new GridBoundaryCoordinate(GridSide.West, 3);
+
+                GridBoundaryCoordinate[] coordinatesValidExtraDifferentSide = new[]
+                {
+                    coordinateFirstSmall,
+                    coordinateFirst,
+                    coordinateLast,
+                    coordinateLastSmall,
+                };
+
+                yield return new TestCaseData(coordinatesValidExtraDifferentSide,
+                                              new WaveBoundaryGeometricDefinition(indexFirst,
+                                                                                  indexLast,
+                                                                                  GridSide.East,
+                                                                                  length));
+            }
+        }
+
+        private static IEnumerable<TestCaseData> TestCaseDataGetGeometricDefinitionNull
+        {
+            get
+            {
+                yield return new TestCaseData(Enumerable.Empty<GridBoundaryCoordinate>());
+
+                yield return new TestCaseData(new List<GridBoundaryCoordinate> {new GridBoundaryCoordinate(GridSide.East, 0)});
+
+                const int indexFirst = 0;
+                var coordinate = new GridBoundaryCoordinate(GridSide.East, indexFirst);
+
+                var coordinatesSame = new List<GridBoundaryCoordinate>
+                {
+                    coordinate,
+                    coordinate
+                };
+
+                yield return new TestCaseData(coordinatesSame);
+
+                var coordinatesEqual = new List<GridBoundaryCoordinate>
+                {
+                    new GridBoundaryCoordinate(GridSide.East, 5),
+                    new GridBoundaryCoordinate(GridSide.East, 5),
+                };
+
+                yield return new TestCaseData(coordinatesEqual);
+            }
+        }
+
+        [Test]
+        public void Constructor_ExpectedValues()
+        {
+            // Setup
+            var dataComponentFactory = Substitute.For<ISpatiallyDefinedDataComponentFactory>();
+
+            // Call
+            var factoryHelper = new WaveBoundaryFactoryHelper(dataComponentFactory);
+
+            // Assert
+            Assert.That(factoryHelper, Is.InstanceOf(typeof(IWaveBoundaryFactoryHelper)));
+        }
+
+        [Test]
+        public void Constructor_ComponentFactoryNull_ThrowsArgumentNullException()
+        {
+            void Call() => new WaveBoundaryFactoryHelper(null);
+            var exception = Assert.Throws<ArgumentNullException>(Call);
+            Assert.That(exception.ParamName, Is.EqualTo("componentFactory"));
+        }
+
+        [Test]
+        [TestCaseSource(nameof(TestCaseDataSmallerThanTwoDistinctCoordinates))]
+        public void GivenABoundarySnappingCalculatorAndASetContainingLessThanTwoDistinctCoordinates_WhenGetSnappedEndPointsIsCalled_ThenAnArgumentExceptionIsThrown(IEnumerable<Coordinate> coordinates)
+        {
+            // Given
+            var dataComponentFactory = Substitute.For<ISpatiallyDefinedDataComponentFactory>();
+            var factoryHelper = new WaveBoundaryFactoryHelper(dataComponentFactory);
+            var calculator = Substitute.For<IBoundarySnappingCalculator>();
+
+            // When
+            void Call() => factoryHelper.GetSnappedEndPoints(calculator, coordinates);
+
+            // Then
+            var exception =
+                Assert.Throws<ArgumentException>(Call, $"Expected {nameof(WaveBoundaryFactoryHelper.GetSnappedEndPoints)} to throw an {nameof(ArgumentException)}");
+            Assert.That(exception.Message, Is.EqualTo("There should be two or more distinct coordinates in coordinates."),
+                        "Expected a different message:");
         }
 
         [Test]
@@ -193,69 +288,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
             calculator.Received(1).SnapCoordinateToGridBoundaryCoordinate(coordinatesArray.First());
             calculator.Received(1).SnapCoordinateToGridBoundaryCoordinate(coordinatesArray.Last());
             calculator.DidNotReceive().SnapCoordinateToGridBoundaryCoordinate(
-                Arg.Is<Coordinate>(x => !coordinateComparer.Equals(x, coordinatesArray.First()) && 
+                Arg.Is<Coordinate>(x => !coordinateComparer.Equals(x, coordinatesArray.First()) &&
                                         !coordinateComparer.Equals(x, coordinatesArray.Last())));
 
             IEnumerable<GridBoundaryCoordinate> expectedResult = lastGridCoordinates.Concat(firstGridCoordinates);
             Assert.That(result, Is.EquivalentTo(expectedResult),
-                $"Expected the result of {nameof(IWaveBoundaryFactoryHelper.GetSnappedEndPoints)} to be different:");
-        }
-
-        private static IEnumerable<TestCaseData> TestCaseDataGetGeometricDefinitionNotNull
-        {
-            get
-            {
-                double length = new Random().NextDouble();
-
-                const int indexFirst = 0;
-                const int indexLast = 10;
-                var coordinateFirst = new GridBoundaryCoordinate(GridSide.East, indexFirst);
-                var coordinateLast  = new GridBoundaryCoordinate(GridSide.East, indexLast);
-
-                GridBoundaryCoordinate[] coordinatesValid = new[]
-                {
-                    coordinateFirst,
-                    coordinateLast
-                };
-
-                yield return new TestCaseData(coordinatesValid, 
-                                              new WaveBoundaryGeometricDefinition(indexFirst,
-                                                                                  indexLast,
-                                                                                  GridSide.East,
-                                                                                  length));
-
-                GridBoundaryCoordinate[] coordinatesValidExtra = new[]
-                {
-                    coordinateFirst,
-                    new GridBoundaryCoordinate(GridSide.East, 5), 
-                    coordinateLast,
-                    new GridBoundaryCoordinate(GridSide.East, 7), 
-                    new GridBoundaryCoordinate(GridSide.East, 0), 
-                };
-
-                yield return new TestCaseData(coordinatesValidExtra, 
-                                              new WaveBoundaryGeometricDefinition(indexFirst, 
-                                                                                  indexLast, 
-                                                                                  GridSide.East,
-                                                                                  length));
-
-                var coordinateFirstSmall = new GridBoundaryCoordinate(GridSide.West, 0);
-                var coordinateLastSmall  = new GridBoundaryCoordinate(GridSide.West, 3);
-
-                GridBoundaryCoordinate[] coordinatesValidExtraDifferentSide = new[]
-                {
-                    coordinateFirstSmall,
-                    coordinateFirst,
-                    coordinateLast,
-                    coordinateLastSmall,
-                };
-
-                yield return new TestCaseData(coordinatesValidExtraDifferentSide, 
-                                              new WaveBoundaryGeometricDefinition(indexFirst, 
-                                                                                  indexLast, 
-                                                                                  GridSide.East,
-                                                                                  length));
-            }
+                        $"Expected the result of {nameof(IWaveBoundaryFactoryHelper.GetSnappedEndPoints)} to be different:");
         }
 
         [Test]
@@ -273,7 +311,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
                                                                expectedDefinition.GridSide)
                       .ReturnsForAnyArgs(expectedDefinition.Length);
             // When
-            IWaveBoundaryGeometricDefinition result = 
+            IWaveBoundaryGeometricDefinition result =
                 factoryHelper.GetGeometricDefinition(coordinates, calculator);
 
             // Then
@@ -286,40 +324,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
             Assert.That(result.Length, Is.EqualTo(expectedDefinition.Length),
                         "Expected a different grid side:");
         }
-
-        private static IEnumerable<TestCaseData> TestCaseDataGetGeometricDefinitionNull
-        {
-            get
-            {
-
-                yield return new TestCaseData(Enumerable.Empty<GridBoundaryCoordinate>());
-
-                yield return new TestCaseData(new List<GridBoundaryCoordinate>
-                    {
-                        new GridBoundaryCoordinate(GridSide.East, 0)
-                    });
-
-                const int indexFirst = 0;
-                var coordinate = new GridBoundaryCoordinate(GridSide.East, indexFirst);
-
-                var coordinatesSame = new List<GridBoundaryCoordinate>
-                {
-                    coordinate,
-                    coordinate
-                };
-
-                yield return new TestCaseData(coordinatesSame);
-
-                var coordinatesEqual = new List<GridBoundaryCoordinate>
-                {
-                    new GridBoundaryCoordinate(GridSide.East, 5),
-                    new GridBoundaryCoordinate(GridSide.East, 5),
-                };
-
-                yield return new TestCaseData(coordinatesEqual);
-            }
-        }
-
 
         [Test]
         [TestCaseSource(nameof(TestCaseDataGetGeometricDefinitionNull))]

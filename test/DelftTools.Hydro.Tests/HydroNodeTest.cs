@@ -77,7 +77,7 @@ namespace DelftTools.Hydro.Tests
 
             var source = mocks.Stub<IHydroObject>();
             var links = new EventedList<HydroLink>();
-            
+
             var branch1 = mocks.Stub<IBranch>();
             var branch2 = mocks.Stub<IBranch>();
 
@@ -91,7 +91,11 @@ namespace DelftTools.Hydro.Tests
             mocks.ReplayAll();
 
             // normally done using node.LinkTo
-            var link = new HydroLink { Source = source, Target = node };
+            var link = new HydroLink
+            {
+                Source = source,
+                Target = node
+            };
             node.Links.Add(link);
             source.Links.Add(link);
 
@@ -103,7 +107,7 @@ namespace DelftTools.Hydro.Tests
         [Test]
         public void Clone()
         {
-            var node = new HydroNode("Name") { LongName = "LongName" };
+            var node = new HydroNode("Name") {LongName = "LongName"};
             var clone = (HydroNode) node.Clone();
 
             // TODO: Expand to cover functionality

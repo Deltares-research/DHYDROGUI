@@ -23,16 +23,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
         {
             var category = new DelftIniCategory(KnownWaveCategories.BoundaryCategory);
             var geometryDefinition = Substitute.For<IWaveBoundaryGeometricDefinition>();
-            
+
             var supportPoint1 = new SupportPoint(0, geometryDefinition);
             var supportPoint2 = new SupportPoint(33, geometryDefinition);
-            
+
             var supportPoints = new EventedList<SupportPoint>
             {
                 supportPoint2,
                 supportPoint1
             };
-            
+
             var boundaryContainer = Substitute.For<IBoundaryContainer>();
             var boundarySnappingCalculator = Substitute.For<IBoundarySnappingCalculator>();
 

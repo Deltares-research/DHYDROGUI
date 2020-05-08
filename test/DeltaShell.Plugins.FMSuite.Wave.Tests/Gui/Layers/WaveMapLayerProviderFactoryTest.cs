@@ -34,7 +34,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers
             Assert.That(result, Is.Not.Null);
             Assert.That(result.Count, Is.EqualTo(8));
 
-            Assert.That(result.Any(x => x is BoundaryMapFeaturesContainerLayerSubProvider), 
+            Assert.That(result.Any(x => x is BoundaryMapFeaturesContainerLayerSubProvider),
                         $"Expected one {nameof(BoundaryMapFeaturesContainerLayerSubProvider)}");
             Assert.That(result.Any(x => x is DiscreteGridPointCoverageLayerSubProvider),
                         $"Expected one {nameof(DiscreteGridPointCoverageLayerSubProvider)}");
@@ -92,16 +92,34 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers
         private static void ShowModelLayers(WaveModel model)
         {
             IMapLayerProvider provider =
-                WaveMapLayerProviderFactory.ConstructMapLayerProvider(() => new[] { model });
+                WaveMapLayerProviderFactory.ConstructMapLayerProvider(() => new[]
+                {
+                    model
+                });
 
-            var layer = (IGroupLayer)MapLayerProviderHelper.CreateLayersRecursive(model, null, new[] { provider });
+            var layer = (IGroupLayer) MapLayerProviderHelper.CreateLayersRecursive(model, null, new[]
+            {
+                provider
+            });
 
             layer.Layers.ForEach(l => l.Visible = true);
 
-            var map = new Map { Layers = { layer }, Size = new Size { Width = 800, Height = 800 } };
+            var map = new Map
+            {
+                Layers = {layer},
+                Size = new Size
+                {
+                    Width = 800,
+                    Height = 800
+                }
+            };
             map.ZoomToExtents();
 
-            var mapControl = new MapControl { Map = map, Dock = DockStyle.Fill };
+            var mapControl = new MapControl
+            {
+                Map = map,
+                Dock = DockStyle.Fill
+            };
 
             WindowsFormsTestHelper.ShowModal(mapControl);
         }
@@ -124,7 +142,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers
             };
 
             // Call
-            var layer = (CurvilinearVertexCoverageLayer)mapLayerProvider.CreateLayer(outputCoverage, waveModel);
+            var layer = (CurvilinearVertexCoverageLayer) mapLayerProvider.CreateLayer(outputCoverage, waveModel);
 
             // Assert
             Assert.AreEqual("Name", layer.Name, "The name of the coverage is not correctly set in the layer");
@@ -133,7 +151,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers
             Assert.IsFalse(layer.OptimizeRendering, "The optimize rendering setting of the layer should be false");
             Assert.AreEqual(!isEditable, layer.ReadOnly, "The read only setting is not correctly set in the layer");
 
-            var dataSource = (WaveGridBasedDataSource)layer.DataSource;
+            var dataSource = (WaveGridBasedDataSource) layer.DataSource;
             Assert.AreSame(waveModel.CoordinateSystem, dataSource.CoordinateSystem, "The coordinate system in the data source of the layer is not the same as the coordinate system of the coverage");
         }
     }

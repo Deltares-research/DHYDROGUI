@@ -1,8 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using DelftTools.Functions;
 using DelftTools.TestUtils;
+using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Extentions;
 using NetTopologySuite.Extensions.Coverages;
+using NetTopologySuite.Extensions.Grids;
 using NUnit.Framework;
 using SharpMapTestUtils;
 
@@ -15,7 +19,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Extentions
         [Category(TestCategory.Integration)]
         public void TestIsConst()
         {
-            var constFunction = WaterQualityFunctionFactory.CreateConst("a", 1.0, "a", "a", "a");
+            IFunction constFunction = WaterQualityFunctionFactory.CreateConst("a", 1.0, "a", "a", "a");
 
             Assert.IsTrue(constFunction.IsConst());
             Assert.IsFalse(constFunction.IsTimeSeries());
@@ -28,7 +32,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Extentions
         [Category(TestCategory.Integration)]
         public void TestIsTimeSeries()
         {
-            var timeSeries = WaterQualityFunctionFactory.CreateTimeSeries("a", 1.0, "a", "a", "a");
+            IFunction timeSeries = WaterQualityFunctionFactory.CreateTimeSeries("a", 1.0, "a", "a", "a");
 
             Assert.IsFalse(timeSeries.IsConst());
             Assert.IsTrue(timeSeries.IsTimeSeries());
@@ -41,7 +45,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Extentions
         [Category(TestCategory.Integration)]
         public void TestIsNetworkCoverage()
         {
-            var networkCoverage = WaterQualityFunctionFactory.CreateNetworkCoverage("a", 1.0, "a", "a", "a");
+            IFunction networkCoverage = WaterQualityFunctionFactory.CreateNetworkCoverage("a", 1.0, "a", "a", "a");
 
             Assert.IsFalse(networkCoverage.IsConst());
             Assert.IsFalse(networkCoverage.IsTimeSeries());
@@ -54,7 +58,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Extentions
         [Category(TestCategory.Integration)]
         public void TestIsUnstructuredGridCellCoverage()
         {
-            var cellCoverage = WaterQualityFunctionFactory.CreateUnstructuredGridCellCoverage("a", 1.0, "a", "a", "a");
+            IFunction cellCoverage = WaterQualityFunctionFactory.CreateUnstructuredGridCellCoverage("a", 1.0, "a", "a", "a");
 
             Assert.IsFalse(cellCoverage.IsConst());
             Assert.IsFalse(cellCoverage.IsTimeSeries());
@@ -67,7 +71,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Extentions
         [Category(TestCategory.Integration)]
         public void TestIsFromHydroDynamics()
         {
-            var function = WaterQualityFunctionFactory.CreateFunctionFromHydroDynamics("a", 1.0, "a", "a", "a");
+            FunctionFromHydroDynamics function = WaterQualityFunctionFactory.CreateFunctionFromHydroDynamics("a", 1.0, "a", "a", "a");
 
             Assert.IsFalse(function.IsConst());
             Assert.IsFalse(function.IsTimeSeries());
@@ -80,7 +84,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Extentions
         [Category(TestCategory.Integration)]
         public void Test_IsSegmentFile()
         {
-            var function = WaterQualityFunctionFactory.CreateSegmentFunction("a", 1.0, "a", "a", "a", string.Empty);
+            SegmentFileFunction function = WaterQualityFunctionFactory.CreateSegmentFunction("a", 1.0, "a", "a", "a", string.Empty);
 
             Assert.IsFalse(function.IsConst());
             Assert.IsFalse(function.IsTimeSeries());
@@ -95,10 +99,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Extentions
         public void ClearCoverageForTimeIndependent()
         {
             // setup
-            var grid = UnstructuredGridTestHelper.GenerateRegularGrid(1000, 1000, 10, 10);
+            UnstructuredGrid grid = UnstructuredGridTestHelper.GenerateRegularGrid(1000, 1000, 10, 10);
 
             var rng = new Random(0);
-            var randomData = Enumerable.Repeat(0, grid.Cells.Count).Select(v => 12.34 * rng.NextDouble());
+            IEnumerable<double> randomData = Enumerable.Repeat(0, grid.Cells.Count).Select(v => 12.34 * rng.NextDouble());
 
             const double noDataValue = -999.0;
 
@@ -111,12 +115,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Extentions
 
             // assert
             Assert.AreEqual(1, gridCellCoverage.Arguments.Count);
-            var argumentValues = gridCellCoverage.Arguments[0].GetValues<int>().ToArray();
+            int[] argumentValues = gridCellCoverage.Arguments[0].GetValues<int>().ToArray();
             Assert.AreEqual(grid.Cells.Count, argumentValues.Length);
             CollectionAssert.AreEqual(Enumerable.Range(0, grid.Cells.Count), argumentValues);
 
             Assert.AreEqual(1, gridCellCoverage.Components.Count);
-            var componentValues = gridCellCoverage.Components[0].GetValues<double>().ToArray();
+            double[] componentValues = gridCellCoverage.Components[0].GetValues<double>().ToArray();
             Assert.AreEqual(grid.Cells.Count, componentValues.Length);
             CollectionAssert.AreEqual(Enumerable.Repeat(noDataValue, grid.Cells.Count), componentValues);
         }
@@ -126,7 +130,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Extentions
         public void ClearCoverageForTimeDependent()
         {
             // setup
-            var grid = UnstructuredGridTestHelper.GenerateRegularGrid(1000, 1000, 10, 10);
+            UnstructuredGrid grid = UnstructuredGridTestHelper.GenerateRegularGrid(1000, 1000, 10, 10);
 
             var rng = new Random(0);
 
@@ -142,14 +146,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Extentions
 
             // assert
             Assert.AreEqual(2, gridCellCoverage.Arguments.Count);
-            var timeValues = gridCellCoverage.Arguments[0].GetValues<DateTime>().ToArray();
+            DateTime[] timeValues = gridCellCoverage.Arguments[0].GetValues<DateTime>().ToArray();
             Assert.IsEmpty(timeValues);
-            var argumentValues = gridCellCoverage.Arguments[1].GetValues<int>().ToArray();
+            int[] argumentValues = gridCellCoverage.Arguments[1].GetValues<int>().ToArray();
             Assert.AreEqual(grid.Cells.Count, argumentValues.Length);
             CollectionAssert.AreEqual(Enumerable.Range(0, grid.Cells.Count), argumentValues);
 
             Assert.AreEqual(1, gridCellCoverage.Components.Count);
-            var componentValues = gridCellCoverage.Components[0].GetValues<double>().ToArray();
+            double[] componentValues = gridCellCoverage.Components[0].GetValues<double>().ToArray();
             Assert.IsEmpty(componentValues);
         }
 
@@ -158,10 +162,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Extentions
         public void TestAssigningNewGridToGridCellCoverage()
         {
             // setup
-            var grid = UnstructuredGridTestHelper.GenerateRegularGrid(5, 5, 10, 10);
+            UnstructuredGrid grid = UnstructuredGridTestHelper.GenerateRegularGrid(5, 5, 10, 10);
 
             var rng = new Random(0);
-            var randomData = Enumerable.Repeat(0, grid.Cells.Count).Select(v => 12.34 * rng.NextDouble());
+            IEnumerable<double> randomData = Enumerable.Repeat(0, grid.Cells.Count).Select(v => 12.34 * rng.NextDouble());
 
             const double noDataValue = -999.0;
 
@@ -169,7 +173,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Extentions
             gridCellCoverage.Components[0].NoDataValue = noDataValue;
             gridCellCoverage.SetValues(randomData);
 
-            var newGrid = UnstructuredGridTestHelper.GenerateRegularGrid(7, 2, 10, 10);
+            UnstructuredGrid newGrid = UnstructuredGridTestHelper.GenerateRegularGrid(7, 2, 10, 10);
 
             // call
             gridCellCoverage.AssignNewGridToCoverage(newGrid);
@@ -178,12 +182,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Extentions
             Assert.AreSame(newGrid, gridCellCoverage.Grid);
 
             Assert.AreEqual(1, gridCellCoverage.Arguments.Count);
-            var argumentValues = gridCellCoverage.Arguments[0].GetValues<int>().ToArray();
+            int[] argumentValues = gridCellCoverage.Arguments[0].GetValues<int>().ToArray();
             Assert.AreEqual(newGrid.Cells.Count, argumentValues.Length);
             CollectionAssert.AreEqual(Enumerable.Range(0, newGrid.Cells.Count), argumentValues);
 
             Assert.AreEqual(1, gridCellCoverage.Components.Count);
-            var componentValues = gridCellCoverage.Components[0].GetValues<double>().ToArray();
+            double[] componentValues = gridCellCoverage.Components[0].GetValues<double>().ToArray();
             Assert.AreEqual(newGrid.Cells.Count, componentValues.Length);
             CollectionAssert.AreEqual(Enumerable.Repeat(noDataValue, newGrid.Cells.Count), componentValues);
         }
@@ -193,10 +197,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Extentions
         public void TestAssignNewGridToCoverageWithoutClearingData()
         {
             // setup
-            var grid = UnstructuredGridTestHelper.GenerateRegularGrid(5, 5, 10, 10);
+            UnstructuredGrid grid = UnstructuredGridTestHelper.GenerateRegularGrid(5, 5, 10, 10);
 
             var rng = new Random(0);
-            var randomData = Enumerable.Repeat(0, grid.Cells.Count).Select(v => 12.34 * rng.NextDouble()).ToArray();
+            double[] randomData = Enumerable.Repeat(0, grid.Cells.Count).Select(v => 12.34 * rng.NextDouble()).ToArray();
 
             const double noDataValue = -999.0;
 
@@ -204,7 +208,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Extentions
             gridCellCoverage.Components[0].NoDataValue = noDataValue;
             gridCellCoverage.SetValues(randomData);
 
-            var newGrid = UnstructuredGridTestHelper.GenerateRegularGrid(5, 5, 5, 5); // Identical grid cells, but different size.
+            UnstructuredGrid newGrid = UnstructuredGridTestHelper.GenerateRegularGrid(5, 5, 5, 5); // Identical grid cells, but different size.
 
             // call
             gridCellCoverage.AssignNewGridToCoverage(newGrid, false);
@@ -213,12 +217,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Extentions
             Assert.AreSame(newGrid, gridCellCoverage.Grid);
 
             Assert.AreEqual(1, gridCellCoverage.Arguments.Count);
-            var argumentValues = gridCellCoverage.Arguments[0].GetValues<int>().ToArray();
+            int[] argumentValues = gridCellCoverage.Arguments[0].GetValues<int>().ToArray();
             Assert.AreEqual(newGrid.Cells.Count, argumentValues.Length);
             CollectionAssert.AreEqual(Enumerable.Range(0, newGrid.Cells.Count), argumentValues);
 
             Assert.AreEqual(1, gridCellCoverage.Components.Count);
-            var componentValues = gridCellCoverage.Components[0].GetValues<double>().ToArray();
+            double[] componentValues = gridCellCoverage.Components[0].GetValues<double>().ToArray();
             Assert.AreEqual(newGrid.Cells.Count, componentValues.Length);
             CollectionAssert.AreEqual(randomData, componentValues);
         }

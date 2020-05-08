@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using DelftTools.Functions;
 using DelftTools.Units;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using GeoAPI.Geometries;
@@ -9,7 +10,7 @@ using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.Common.Tests.FeatureData
 {
-    public class TestBoundaryCondition: BoundaryCondition
+    public class TestBoundaryCondition : BoundaryCondition
     {
         public bool isHorizontallyUniform;
         public bool isVerticallyUniform;
@@ -22,37 +23,58 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.FeatureData
 
         public override string ProcessName
         {
-            get { return "TestProcess"; }
+            get
+            {
+                return "TestProcess";
+            }
         }
 
         public override string VariableName
         {
-            get { return "TestVariable"; }
+            get
+            {
+                return "TestVariable";
+            }
         }
 
         public override string VariableDescription
         {
-            get { return "Variable for testing"; }
+            get
+            {
+                return "Variable for testing";
+            }
         }
 
         public override bool IsHorizontallyUniform
         {
-            get { return isHorizontallyUniform; }
+            get
+            {
+                return isHorizontallyUniform;
+            }
         }
 
         public override bool IsVerticallyUniform
         {
-            get { return isVerticallyUniform; }
+            get
+            {
+                return isVerticallyUniform;
+            }
         }
 
         public override IUnit VariableUnit
         {
-            get { return new Unit("Becquerel per nanogauss"); }
+            get
+            {
+                return new Unit("Becquerel per nanogauss");
+            }
         }
 
         public override int VariableDimension
         {
-            get { return 1; }
+            get
+            {
+                return 1;
+            }
         }
     }
 
@@ -63,16 +85,17 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.FeatureData
         public void AddDataPointShouldAddDataAndLayer()
         {
             var feature2D = new Feature2D
-                {
-                    Geometry =
-                        new LineString(new []
-                            {new Coordinate(0, 0), new Coordinate(1, 0), new Coordinate(2, 0)})
-                };
+            {
+                Geometry =
+                    new LineString(new[]
+                    {
+                        new Coordinate(0, 0),
+                        new Coordinate(1, 0),
+                        new Coordinate(2, 0)
+                    })
+            };
 
-            var boundaryCondition = new TestBoundaryCondition(BoundaryConditionDataType.TimeSeries, false, false)
-                {
-                    Feature = feature2D
-                };
+            var boundaryCondition = new TestBoundaryCondition(BoundaryConditionDataType.TimeSeries, false, false) {Feature = feature2D};
 
             boundaryCondition.DataPointIndices.Add(2);
 
@@ -86,13 +109,15 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.FeatureData
             var feature2D = new Feature2D
             {
                 Geometry =
-                    new LineString(new [] { new Coordinate(0, 0), new Coordinate(1, 0), new Coordinate(2, 0) })
+                    new LineString(new[]
+                    {
+                        new Coordinate(0, 0),
+                        new Coordinate(1, 0),
+                        new Coordinate(2, 0)
+                    })
             };
 
-            var boundaryCondition = new TestBoundaryCondition(BoundaryConditionDataType.TimeSeries, false, false)
-            {
-                Feature = feature2D
-            };
+            var boundaryCondition = new TestBoundaryCondition(BoundaryConditionDataType.TimeSeries, false, false) {Feature = feature2D};
 
             boundaryCondition.DataPointIndices.Add(1);
             boundaryCondition.DataPointIndices.Remove(3);
@@ -108,13 +133,15 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.FeatureData
             var feature2D = new Feature2D
             {
                 Geometry =
-                    new LineString(new [] { new Coordinate(0, 0), new Coordinate(1, 0), new Coordinate(2, 0) })
+                    new LineString(new[]
+                    {
+                        new Coordinate(0, 0),
+                        new Coordinate(1, 0),
+                        new Coordinate(2, 0)
+                    })
             };
 
-            var boundaryCondition = new TestBoundaryCondition(BoundaryConditionDataType.TimeSeries, false, false)
-            {
-                Feature = feature2D
-            };
+            var boundaryCondition = new TestBoundaryCondition(BoundaryConditionDataType.TimeSeries, false, false) {Feature = feature2D};
 
             boundaryCondition.DataPointIndices.Add(1);
 
@@ -128,19 +155,21 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.FeatureData
             var feature2D = new Feature2D
             {
                 Geometry =
-                    new LineString(new [] { new Coordinate(0, 0), new Coordinate(1, 0), new Coordinate(2, 0) })
+                    new LineString(new[]
+                    {
+                        new Coordinate(0, 0),
+                        new Coordinate(1, 0),
+                        new Coordinate(2, 0)
+                    })
             };
 
-            var boundaryCondition = new TestBoundaryCondition(BoundaryConditionDataType.TimeSeries, false, false)
-            {
-                Feature = feature2D
-            };
+            var boundaryCondition = new TestBoundaryCondition(BoundaryConditionDataType.TimeSeries, false, false) {Feature = feature2D};
 
             boundaryCondition.AddPoint(1);
             Assert.AreEqual(VerticalProfileType.Uniform,
                             boundaryCondition.GetDepthLayerDefinitionAtPoint(1).Type);
-            
-            var data = boundaryCondition.GetDataAtPoint(1);
+
+            IFunction data = boundaryCondition.GetDataAtPoint(1);
             data[new DateTime(2000, 1, 1)] = 1.0;
             data[new DateTime(2000, 1, 2)] = 2.0;
             data[new DateTime(2000, 1, 3)] = 3.0;
@@ -156,26 +185,40 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.FeatureData
             var feature2D = new Feature2D
             {
                 Geometry =
-                    new LineString(new [] { new Coordinate(0, 0), new Coordinate(1, 0), new Coordinate(2, 0) })
+                    new LineString(new[]
+                    {
+                        new Coordinate(0, 0),
+                        new Coordinate(1, 0),
+                        new Coordinate(2, 0)
+                    })
             };
 
-            var boundaryCondition = new TestBoundaryCondition(BoundaryConditionDataType.TimeSeries, false, false)
-            {
-                Feature = feature2D
-            };
+            var boundaryCondition = new TestBoundaryCondition(BoundaryConditionDataType.TimeSeries, false, false) {Feature = feature2D};
 
             boundaryCondition.AddPoint(1);
             boundaryCondition.PointDepthLayerDefinitions[0] =
                 new VerticalProfileDefinition(VerticalProfileType.PercentageFromBed, 10, 20, 30, 40);
-            var data = boundaryCondition.GetDataAtPoint(1);
-            data[new DateTime(2000, 1, 1)] = new[] {1.0, 2.0, 3.0, 4.0};
+            IFunction data = boundaryCondition.GetDataAtPoint(1);
+            data[new DateTime(2000, 1, 1)] = new[]
+            {
+                1.0,
+                2.0,
+                3.0,
+                4.0
+            };
 
             boundaryCondition.PointDepthLayerDefinitions[0] =
                 new VerticalProfileDefinition(VerticalProfileType.ZFromSurface, -3, -5);
 
             Assert.AreEqual(2, data.Components.Count);
-            Assert.AreEqual(new[] {1.0}, data.Components[0].Values);
-            Assert.AreEqual(new[] {2.0}, data.Components[1].Values);
+            Assert.AreEqual(new[]
+            {
+                1.0
+            }, data.Components[0].Values);
+            Assert.AreEqual(new[]
+            {
+                2.0
+            }, data.Components[1].Values);
         }
 
         [Test]
@@ -184,22 +227,35 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.FeatureData
             var feature2D = new Feature2D
             {
                 Geometry =
-                    new LineString(new [] { new Coordinate(0, 0), new Coordinate(1, 0), new Coordinate(2, 0) })
+                    new LineString(new[]
+                    {
+                        new Coordinate(0, 0),
+                        new Coordinate(1, 0),
+                        new Coordinate(2, 0)
+                    })
             };
 
-            var boundaryCondition = new TestBoundaryCondition(BoundaryConditionDataType.TimeSeries, false, false)
-            {
-                Feature = feature2D
-            };
+            var boundaryCondition = new TestBoundaryCondition(BoundaryConditionDataType.TimeSeries, false, false) {Feature = feature2D};
 
             boundaryCondition.AddPoint(1);
-            var data = boundaryCondition.GetDataAtPoint(1);
-            data[new DateTime(2000, 1, 1)] = new[] { 1.0 };
+            IFunction data = boundaryCondition.GetDataAtPoint(1);
+            data[new DateTime(2000, 1, 1)] = new[]
+            {
+                1.0
+            };
 
-            feature2D.Geometry = new LineString(new [] { new Coordinate(0, 1), new Coordinate(1, 1), new Coordinate(2, 1) });
+            feature2D.Geometry = new LineString(new[]
+            {
+                new Coordinate(0, 1),
+                new Coordinate(1, 1),
+                new Coordinate(2, 1)
+            });
 
             Assert.AreEqual(1, boundaryCondition.PointData.Count);
-            Assert.AreEqual(new[] {new DateTime(2000, 1, 1)}, boundaryCondition.PointData[0].Arguments[0].Values);
+            Assert.AreEqual(new[]
+            {
+                new DateTime(2000, 1, 1)
+            }, boundaryCondition.PointData[0].Arguments[0].Values);
         }
 
         [Test]
@@ -208,55 +264,80 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.FeatureData
             var feature2D = new Feature2D
             {
                 Geometry =
-                    new LineString(new [] { new Coordinate(0, 0), new Coordinate(1, 0), new Coordinate(2, 0) })
+                    new LineString(new[]
+                    {
+                        new Coordinate(0, 0),
+                        new Coordinate(1, 0),
+                        new Coordinate(2, 0)
+                    })
             };
 
-            var boundaryCondition = new TestBoundaryCondition(BoundaryConditionDataType.TimeSeries, false, false)
-            {
-                Feature = feature2D
-            };
+            var boundaryCondition = new TestBoundaryCondition(BoundaryConditionDataType.TimeSeries, false, false) {Feature = feature2D};
 
             boundaryCondition.AddPoint(0);
-            var dataAtZero = boundaryCondition.GetDataAtPoint(0);
-            dataAtZero[new DateTime(2000, 1, 1)] = new[] { 0.0 };
+            IFunction dataAtZero = boundaryCondition.GetDataAtPoint(0);
+            dataAtZero[new DateTime(2000, 1, 1)] = new[]
+            {
+                0.0
+            };
 
             boundaryCondition.AddPoint(1);
-            var dataAtOne = boundaryCondition.GetDataAtPoint(1);
-            dataAtOne[new DateTime(2000, 1, 1)] = new[] { 1.0 };
+            IFunction dataAtOne = boundaryCondition.GetDataAtPoint(1);
+            dataAtOne[new DateTime(2000, 1, 1)] = new[]
+            {
+                1.0
+            };
 
             feature2D.Geometry =
-                new LineString(new []
-                    {new Coordinate(0, 0), new Coordinate(0.5, 0), new Coordinate(1, 0), new Coordinate(2, 0)});
+                new LineString(new[]
+                {
+                    new Coordinate(0, 0),
+                    new Coordinate(0.5, 0),
+                    new Coordinate(1, 0),
+                    new Coordinate(2, 0)
+                });
 
             Assert.AreEqual(2, boundaryCondition.PointData.Count);
             Assert.AreEqual(dataAtZero, boundaryCondition.GetDataAtPoint(0));
             Assert.AreEqual(dataAtOne, boundaryCondition.GetDataAtPoint(2));
         }
-        
+
         [Test]
         public void RemovingCoordinateShouldKeepData()
         {
             var feature2D = new Feature2D
             {
                 Geometry =
-                    new LineString(new [] { new Coordinate(0, 0), new Coordinate(1, 0), new Coordinate(2, 0) })
+                    new LineString(new[]
+                    {
+                        new Coordinate(0, 0),
+                        new Coordinate(1, 0),
+                        new Coordinate(2, 0)
+                    })
             };
 
-            var boundaryCondition = new TestBoundaryCondition(BoundaryConditionDataType.TimeSeries, false, false)
-            {
-                Feature = feature2D
-            };
+            var boundaryCondition = new TestBoundaryCondition(BoundaryConditionDataType.TimeSeries, false, false) {Feature = feature2D};
 
             boundaryCondition.AddPoint(0);
-            var dataAtZero = boundaryCondition.GetDataAtPoint(0);
-            dataAtZero[new DateTime(2000, 1, 1)] = new[] { 0.0 };
+            IFunction dataAtZero = boundaryCondition.GetDataAtPoint(0);
+            dataAtZero[new DateTime(2000, 1, 1)] = new[]
+            {
+                0.0
+            };
 
             boundaryCondition.AddPoint(1);
-            var dataAtOne = boundaryCondition.GetDataAtPoint(1);
-            dataAtOne[new DateTime(2000, 1, 1)] = new[] { 1.0 };
+            IFunction dataAtOne = boundaryCondition.GetDataAtPoint(1);
+            dataAtOne[new DateTime(2000, 1, 1)] = new[]
+            {
+                1.0
+            };
 
             feature2D.Geometry =
-                new LineString(new [] { new Coordinate(1, 0), new Coordinate(2, 0) });
+                new LineString(new[]
+                {
+                    new Coordinate(1, 0),
+                    new Coordinate(2, 0)
+                });
 
             Assert.AreEqual(1, boundaryCondition.PointData.Count);
             Assert.AreEqual(dataAtOne, boundaryCondition.GetDataAtPoint(0));
@@ -268,13 +349,15 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.FeatureData
             var feature2D = new Feature2D
             {
                 Geometry =
-                    new LineString(new [] { new Coordinate(0, 0), new Coordinate(1, 0), new Coordinate(2, 0) })
+                    new LineString(new[]
+                    {
+                        new Coordinate(0, 0),
+                        new Coordinate(1, 0),
+                        new Coordinate(2, 0)
+                    })
             };
 
-            var boundaryCondition = new TestBoundaryCondition(BoundaryConditionDataType.TimeSeries, false, false)
-            {
-                Feature = feature2D
-            };
+            var boundaryCondition = new TestBoundaryCondition(BoundaryConditionDataType.TimeSeries, false, false) {Feature = feature2D};
 
             boundaryCondition.isHorizontallyUniform = true;
             boundaryCondition.DataType = BoundaryConditionDataType.Harmonics;
@@ -297,7 +380,12 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.FeatureData
             var feature2D = new Feature2D
             {
                 Geometry =
-                    new LineString(new [] {new Coordinate(0, 0), new Coordinate(1, 0), new Coordinate(2, 0)}),
+                    new LineString(new[]
+                    {
+                        new Coordinate(0, 0),
+                        new Coordinate(1, 0),
+                        new Coordinate(2, 0)
+                    }),
                 Name = "aap"
             };
 
@@ -320,17 +408,27 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.FeatureData
         {
             var boundaryCondition = new TestBoundaryCondition(BoundaryConditionDataType.TimeSeries, false, false)
             {
-                Feature = new Feature2D {Geometry = new LineString(new[] {new Coordinate(0, 0), new Coordinate(1, 0)})}
+                Feature = new Feature2D
+                {
+                    Geometry = new LineString(new[]
+                    {
+                        new Coordinate(0, 0),
+                        new Coordinate(1, 0)
+                    })
+                }
             };
 
             boundaryCondition.AddPoint(0);
-            boundaryCondition.PointData[0].Arguments[0].SetValues(new[] {DateTime.Now});
+            boundaryCondition.PointData[0].Arguments[0].SetValues(new[]
+            {
+                DateTime.Now
+            });
             boundaryCondition.PointData[0].Components[0].SetValues(new List<double>() {0});
 
             boundaryCondition.AddPoint(1);
             boundaryCondition.PointData.RemoveAt(1);
 
-            var data = boundaryCondition.GetDataAtPoint(0);
+            IFunction data = boundaryCondition.GetDataAtPoint(0);
             Assert.NotNull(data);
 
             Assert.DoesNotThrow(() => { data = boundaryCondition.GetDataAtPoint(1); });

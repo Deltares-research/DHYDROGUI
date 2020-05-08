@@ -88,7 +88,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Readers
                 string.Empty
             };
 
-
             yield return new object[]
             {
                 "[output]"

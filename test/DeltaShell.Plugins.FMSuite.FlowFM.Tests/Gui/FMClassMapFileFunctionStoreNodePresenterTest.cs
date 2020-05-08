@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using DelftTools.Controls;
 using DelftTools.Controls.Swf.TreeViewControls;
 using DelftTools.Shell.Core.Workflow.DataItems;
@@ -21,7 +22,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             // Given
             var mocks = new MockRepository();
             var treeView = mocks.StrictMock<ITreeView>();
-            const string path = "some_file_path";          
+            const string path = "some_file_path";
             var nodeData = new FMClassMapFileFunctionStore(path);
             var treeNode = new TreeNode(treeView);
             var nodePresenter = new FMClassMapFileFunctionStoreNodePresenter();
@@ -39,20 +40,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         public void GivenAClassMapFileFunctionStoreWithAFunctionAndAGrid_WhenGetChildNodeObjectsIsCalled_ThenCorrectDataItemsAreYielded()
         {
             // Given
-            var mocks = new MockRepository();       
-            var store = mocks.Stub<FMClassMapFileFunctionStore>(string.Empty);       
+            var mocks = new MockRepository();
+            var store = mocks.Stub<FMClassMapFileFunctionStore>(string.Empty);
             const string coverageName = "coverage_name";
-            var function = new UnstructuredGridCellCoverage(new UnstructuredGrid(), true) {Name = coverageName };
+            var function = new UnstructuredGridCellCoverage(new UnstructuredGrid(), true) {Name = coverageName};
             store.Functions.Add(function);
             var guiPlugin = mocks.Stub<GuiPlugin>();
-            var nodePresenter = new FMClassMapFileFunctionStoreNodePresenter { GuiPlugin = guiPlugin };
+            var nodePresenter = new FMClassMapFileFunctionStoreNodePresenter {GuiPlugin = guiPlugin};
 
             // When
-            var childNodes = nodePresenter.GetChildNodeObjects(store, null).OfType<DataItem>().ToList();
+            List<DataItem> childNodes = nodePresenter.GetChildNodeObjects(store, null).OfType<DataItem>().ToList();
 
             // Then
             Assert.AreEqual(2, childNodes.Count);
-            Assert.IsNotNull(childNodes.FirstOrDefault(c=>c.Tag == coverageName));
+            Assert.IsNotNull(childNodes.FirstOrDefault(c => c.Tag == coverageName));
             Assert.IsNotNull(childNodes.FirstOrDefault(c => c.Tag == "grid"));
         }
     }

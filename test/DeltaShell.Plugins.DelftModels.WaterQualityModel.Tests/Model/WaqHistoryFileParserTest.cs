@@ -82,36 +82,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Model
                         "Time series for all output variables should have data.");
         }
 
-        private static WaterQualityObservationVariableOutput CreateObservationVariableOutput()
-        {
-            var outputVariableTuples = new List<DelftTools.Utils.Tuple<string, string>>
-            {
-                new DelftTools.Utils.Tuple<string, string>("EColi", ""),
-                new DelftTools.Utils.Tuple<string, string>("Salinity", "")
-            };
-            return new WaterQualityObservationVariableOutput(outputVariableTuples) {Name = "Observation Point01"};
-        }
-
-        [TestCase(null)]
-        [TestCase("")]
-        public void Parse_WithFilePathNullOrEmpty_ThenThrowsArgumentException(string filePathArgument)
-        {
-            var waterQualityModel1D = new WaterQualityModel();
-
-            void Call() => WaqHistoryFileParser.Parse(filePathArgument,
-                                                      waterQualityModel1D.ObservationVariableOutputs,
-                                                      waterQualityModel1D.ModelSettings.MonitoringOutputLevel);
-
-            var exception = Assert.Throws<ArgumentException>(Call);
-            Assert.That(exception.Message, Is.EqualTo("Argument 'filePath' cannot be null or empty."));
-        }
-
         [Test]
         [Category(TestCategory.DataAccess)]
         public void ParseHisFileDataWithoutSkippingSpecificOutput()
         {
             var mocks = new MockRepository();
-            var waterQualityModel1D = CreateWaterQualityModel1DStub(mocks);
+            WaterQualityModel waterQualityModel1D = CreateWaterQualityModel1DStub(mocks);
 
             mocks.ReplayAll();
 
@@ -133,11 +109,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Model
         public void ParseHisFileDataWithIrrelevantObservationPointOutputConfiguration()
         {
             var mocks = new MockRepository();
-            var waterQualityModel1D = CreateWaterQualityModel1DStub(mocks);
+            WaterQualityModel waterQualityModel1D = CreateWaterQualityModel1DStub(mocks);
 
             mocks.ReplayAll();
 
-            var historyFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), "IO", "deltashell.his");
+            string historyFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), "IO", "deltashell.his");
 
             // Monitoring output level "None" => no data should be parsed from the his file
             WaqHistoryFileParser.Parse(historyFilePath, waterQualityModel1D.ObservationVariableOutputs, MonitoringOutputLevel.None);
@@ -158,44 +134,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Model
             AssertObservationVariableOutput(waterQualityModel1D, 1, 0, 0, 0, 0, 0);
         }
 
-        private static WaterQualityModel CreateWaterQualityModel1DStub(MockRepository mocks)
-        {
-            var waterQualityModel1D = mocks.Stub<WaterQualityModel>();
-            var modelSettings = new WaterQualityModelSettings
-                {
-                    MonitoringOutputLevel = MonitoringOutputLevel.PointsAndAreas
-                };
-
-            var outputVariableTuples = new List<DelftTools.Utils.Tuple<string, string>>
-                                           {
-                                               new DelftTools.Utils.Tuple<string, string>("cTR1", ""),
-                                               new DelftTools.Utils.Tuple<string, string>("cTR2", ""),
-                                               new DelftTools.Utils.Tuple<string, string>("cTR3", ""),
-                                               new DelftTools.Utils.Tuple<string, string>("cTR4", ""),
-                                               new DelftTools.Utils.Tuple<string, string>("Continuity", "")
-                                           };
-
-            var observationVariableOutputs = new List<WaterQualityObservationVariableOutput>
-                                                 {
-                                                     new WaterQualityObservationVariableOutput(outputVariableTuples) { Name = "O2" },
-                                                     new WaterQualityObservationVariableOutput(outputVariableTuples) { Name = "ALL SEGMENTS" }
-                                                 };
-
-            waterQualityModel1D.Stub(m => m.ObservationVariableOutputs).Return(observationVariableOutputs);
-            waterQualityModel1D.Stub(m => m.ModelSettings).Return(modelSettings);
-            
-            return waterQualityModel1D;
-        }
-
-        private static void AssertObservationVariableOutput(WaterQualityModel waterQualityModel1D, int observationVariableOutputIndex, int cTR1ValueCount, int cTR2ValueCount, int cTR3ValueCount, int cTR4ValueCount, int continuityValueCount)
-        {
-            Assert.AreEqual(cTR1ValueCount, waterQualityModel1D.ObservationVariableOutputs[observationVariableOutputIndex].TimeSeriesList.ElementAt(0).GetValues().Count);
-            Assert.AreEqual(cTR2ValueCount, waterQualityModel1D.ObservationVariableOutputs[observationVariableOutputIndex].TimeSeriesList.ElementAt(1).GetValues().Count);
-            Assert.AreEqual(cTR3ValueCount, waterQualityModel1D.ObservationVariableOutputs[observationVariableOutputIndex].TimeSeriesList.ElementAt(2).GetValues().Count);
-            Assert.AreEqual(cTR4ValueCount, waterQualityModel1D.ObservationVariableOutputs[observationVariableOutputIndex].TimeSeriesList.ElementAt(3).GetValues().Count);
-            Assert.AreEqual(continuityValueCount, waterQualityModel1D.ObservationVariableOutputs[observationVariableOutputIndex].TimeSeriesList.ElementAt(4).GetValues().Count);
-        }
-
         [Test]
         [Category(TestCategory.DataAccess)]
         public void When_ParseHisFileData_WithSinglePoint_Then_TimeSeriesValues_Are_Added()
@@ -209,7 +147,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Model
             WaterQualityObservationVariableOutput variableOutput = waqModel.ObservationVariableOutputs.SingleOrDefault(ovo => ovo.Name.Equals(obsPointName));
             TimeSeries targetTimeSeries =
                 variableOutput?.TimeSeriesList.SingleOrDefault(tsl => tsl.Name.Equals(timeSeriesName));
-            
+
             // 2. Set up initial expectations
             Assert.That(File.Exists(hisFile), Is.True, "Test file was not found.");
             Assert.That(variableOutput, Is.Not.Null, "Variable output was not found.");
@@ -318,14 +256,70 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Model
             }
         }
 
+        private static WaterQualityObservationVariableOutput CreateObservationVariableOutput()
+        {
+            var outputVariableTuples = new List<DelftTools.Utils.Tuple<string, string>>
+            {
+                new DelftTools.Utils.Tuple<string, string>("EColi", ""),
+                new DelftTools.Utils.Tuple<string, string>("Salinity", "")
+            };
+            return new WaterQualityObservationVariableOutput(outputVariableTuples) {Name = "Observation Point01"};
+        }
+
+        [TestCase(null)]
+        [TestCase("")]
+        public void Parse_WithFilePathNullOrEmpty_ThenThrowsArgumentException(string filePathArgument)
+        {
+            var waterQualityModel1D = new WaterQualityModel();
+
+            void Call() => WaqHistoryFileParser.Parse(filePathArgument,
+                                                      waterQualityModel1D.ObservationVariableOutputs,
+                                                      waterQualityModel1D.ModelSettings.MonitoringOutputLevel);
+
+            var exception = Assert.Throws<ArgumentException>(Call);
+            Assert.That(exception.Message, Is.EqualTo("Argument 'filePath' cannot be null or empty."));
+        }
+
+        private static WaterQualityModel CreateWaterQualityModel1DStub(MockRepository mocks)
+        {
+            var waterQualityModel1D = mocks.Stub<WaterQualityModel>();
+            var modelSettings = new WaterQualityModelSettings {MonitoringOutputLevel = MonitoringOutputLevel.PointsAndAreas};
+
+            var outputVariableTuples = new List<DelftTools.Utils.Tuple<string, string>>
+            {
+                new DelftTools.Utils.Tuple<string, string>("cTR1", ""),
+                new DelftTools.Utils.Tuple<string, string>("cTR2", ""),
+                new DelftTools.Utils.Tuple<string, string>("cTR3", ""),
+                new DelftTools.Utils.Tuple<string, string>("cTR4", ""),
+                new DelftTools.Utils.Tuple<string, string>("Continuity", "")
+            };
+
+            var observationVariableOutputs = new List<WaterQualityObservationVariableOutput>
+            {
+                new WaterQualityObservationVariableOutput(outputVariableTuples) {Name = "O2"},
+                new WaterQualityObservationVariableOutput(outputVariableTuples) {Name = "ALL SEGMENTS"}
+            };
+
+            waterQualityModel1D.Stub(m => m.ObservationVariableOutputs).Return(observationVariableOutputs);
+            waterQualityModel1D.Stub(m => m.ModelSettings).Return(modelSettings);
+
+            return waterQualityModel1D;
+        }
+
+        private static void AssertObservationVariableOutput(WaterQualityModel waterQualityModel1D, int observationVariableOutputIndex, int cTR1ValueCount, int cTR2ValueCount, int cTR3ValueCount, int cTR4ValueCount, int continuityValueCount)
+        {
+            Assert.AreEqual(cTR1ValueCount, waterQualityModel1D.ObservationVariableOutputs[observationVariableOutputIndex].TimeSeriesList.ElementAt(0).GetValues().Count);
+            Assert.AreEqual(cTR2ValueCount, waterQualityModel1D.ObservationVariableOutputs[observationVariableOutputIndex].TimeSeriesList.ElementAt(1).GetValues().Count);
+            Assert.AreEqual(cTR3ValueCount, waterQualityModel1D.ObservationVariableOutputs[observationVariableOutputIndex].TimeSeriesList.ElementAt(2).GetValues().Count);
+            Assert.AreEqual(cTR4ValueCount, waterQualityModel1D.ObservationVariableOutputs[observationVariableOutputIndex].TimeSeriesList.ElementAt(3).GetValues().Count);
+            Assert.AreEqual(continuityValueCount, waterQualityModel1D.ObservationVariableOutputs[observationVariableOutputIndex].TimeSeriesList.ElementAt(4).GetValues().Count);
+        }
+
         private static WaterQualityModel CreateBloomMockWaqModel(string timeSeriesName = null, string variableName = null)
         {
-            MockRepository mocks = new MockRepository();
+            var mocks = new MockRepository();
             var waterQualityModel1D = mocks.Stub<WaterQualityModel>();
-            var modelSettings = new WaterQualityModelSettings
-            {
-                MonitoringOutputLevel = MonitoringOutputLevel.PointsAndAreas
-            };
+            var modelSettings = new WaterQualityModelSettings {MonitoringOutputLevel = MonitoringOutputLevel.PointsAndAreas};
 
             var observationVariableOutputs = new List<WaterQualityObservationVariableOutput>();
             var outputVariableTuples = new List<DelftTools.Utils.Tuple<string, string>>();
@@ -333,6 +327,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Model
             {
                 outputVariableTuples.Add(new DelftTools.Utils.Tuple<string, string>(timeSeriesName, ""));
             }
+
             if (variableName != null)
             {
                 observationVariableOutputs.Add(
@@ -345,6 +340,5 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Model
 
             return waterQualityModel1D;
         }
-
     }
 }

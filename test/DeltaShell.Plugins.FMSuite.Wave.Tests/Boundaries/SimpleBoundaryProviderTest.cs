@@ -1,4 +1,5 @@
-﻿using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
+﻿using System;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -34,7 +35,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries
 
             // Call | Assert
             void Call() => new SimpleBoundaryProvider(boundaries);
-            var exception = Assert.Throws<System.ArgumentNullException>(Call);
+            var exception = Assert.Throws<ArgumentNullException>(Call);
             Assert.That(exception.ParamName, Is.EqualTo("waveBoundaries"));
         }
     }

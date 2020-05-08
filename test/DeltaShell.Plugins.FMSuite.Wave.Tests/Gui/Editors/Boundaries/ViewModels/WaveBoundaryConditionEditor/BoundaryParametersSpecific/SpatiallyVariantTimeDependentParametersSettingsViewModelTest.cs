@@ -27,13 +27,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             var generateSeries = Substitute.For<IGenerateSeries>();
 
             // Call
-            var viewModel = new SpatiallyVariantTimeDependentParametersSettingsViewModel<TSpreading>(dictionary, 
+            var viewModel = new SpatiallyVariantTimeDependentParametersSettingsViewModel<TSpreading>(dictionary,
                                                                                                      generateSeries);
 
             // Assert
             Assert.That(viewModel, Is.InstanceOf<TimeDependentParametersSettingsViewModel>());
             Assert.That(viewModel, Is.InstanceOf<ISpatiallyVariantParametersSettingsViewModel>());
-            Assert.That(viewModel.ActiveParametersViewModel, Is.Null, 
+            Assert.That(viewModel.ActiveParametersViewModel, Is.Null,
                         "Expected ActiveParametersViewModel to be null upon construction.");
             Assert.That(viewModel.GroupBoxTitle, Is.EqualTo("Spatially Varying Time Dependent Parameters"),
                         "Expected a different GroupBoxTitle:");
@@ -65,25 +65,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             Assert.That(exception.ParamName, Is.EqualTo("generateSeries"));
         }
 
-        private static SupportPoint GetDefaultSupportPoint() =>
-            new SupportPoint(20.0, Substitute.For<IWaveBoundaryGeometricDefinition>());
-
-        private static TimeDependentParameters<TSpreading> GetDefaultParameters() =>
-            new TimeDependentParameters<TSpreading>(Substitute.For<IWaveEnergyFunction<TSpreading>>());
-
-
         [Test]
         public void UpdateActiveSupportPoint_ObservedParameters_ValueInDictionary()
         {
             // Setup
             SupportPoint supportPoint = GetDefaultSupportPoint();
-            var dictionary = new Dictionary<SupportPoint, TimeDependentParameters<TSpreading>>()
-            {
-                {supportPoint, GetDefaultParameters()}
-            };
+            var dictionary = new Dictionary<SupportPoint, TimeDependentParameters<TSpreading>>() {{supportPoint, GetDefaultParameters()}};
 
             var generateSeries = Substitute.For<IGenerateSeries>();
-            var viewModel = new SpatiallyVariantTimeDependentParametersSettingsViewModel<TSpreading>(dictionary, 
+            var viewModel = new SpatiallyVariantTimeDependentParametersSettingsViewModel<TSpreading>(dictionary,
                                                                                                      generateSeries);
 
             Assert.That(viewModel.ActiveParametersViewModel, Is.Null, "Precondition violated.");
@@ -97,7 +87,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             // Assert
             Assert.That(viewModel.ActiveParametersViewModel, Is.Not.Null);
             Assert.That(viewModel.ActiveParametersViewModel, Is.InstanceOf<TimeDependentSpatiallyVaryingParametersViewModel<TSpreading>>());
-            TimeDependentParameters<TSpreading> observedParameters = 
+            TimeDependentParameters<TSpreading> observedParameters =
                 ((TimeDependentSpatiallyVaryingParametersViewModel<TSpreading>) viewModel.ActiveParametersViewModel).ObservedParameters;
             Assert.That(observedParameters, Is.SameAs(dictionary[supportPoint]));
 
@@ -105,7 +95,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             Assert.That(propertyChangedObserver.Senders.First(), Is.SameAs(viewModel));
 
             PropertyChangedEventArgs relevantEventArgs = propertyChangedObserver.EventArgses.First();
-            Assert.That(relevantEventArgs.PropertyName, 
+            Assert.That(relevantEventArgs.PropertyName,
                         Is.EqualTo(nameof(SpatiallyVariantTimeDependentParametersSettingsViewModel<TSpreading>.ActiveParametersViewModel)));
         }
 
@@ -114,13 +104,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
         {
             // Setup
             SupportPoint supportPoint = GetDefaultSupportPoint();
-            var dictionary = new Dictionary<SupportPoint, TimeDependentParameters<TSpreading>>()
-            {
-                {supportPoint, GetDefaultParameters()}
-            };
+            var dictionary = new Dictionary<SupportPoint, TimeDependentParameters<TSpreading>>() {{supportPoint, GetDefaultParameters()}};
 
             var generateSeries = Substitute.For<IGenerateSeries>();
-            var viewModel = new SpatiallyVariantTimeDependentParametersSettingsViewModel<TSpreading>(dictionary, 
+            var viewModel = new SpatiallyVariantTimeDependentParametersSettingsViewModel<TSpreading>(dictionary,
                                                                                                      generateSeries);
 
             viewModel.UpdateActiveSupportPoint(supportPoint);
@@ -141,7 +128,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             Assert.That(propertyChangedObserver.Senders.First(), Is.SameAs(viewModel));
 
             PropertyChangedEventArgs relevantEventArgs = propertyChangedObserver.EventArgses.First();
-            Assert.That(relevantEventArgs.PropertyName, 
+            Assert.That(relevantEventArgs.PropertyName,
                         Is.EqualTo(nameof(SpatiallyVariantTimeDependentParametersSettingsViewModel<TSpreading>.ActiveParametersViewModel)));
         }
 
@@ -150,13 +137,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
         {
             // Setup
             SupportPoint supportPoint = GetDefaultSupportPoint();
-            var dictionary = new Dictionary<SupportPoint, TimeDependentParameters<TSpreading>>()
-            {
-                {supportPoint, GetDefaultParameters()}
-            };
+            var dictionary = new Dictionary<SupportPoint, TimeDependentParameters<TSpreading>>() {{supportPoint, GetDefaultParameters()}};
 
             var generateSeries = Substitute.For<IGenerateSeries>();
-            var viewModel = new SpatiallyVariantTimeDependentParametersSettingsViewModel<TSpreading>(dictionary, 
+            var viewModel = new SpatiallyVariantTimeDependentParametersSettingsViewModel<TSpreading>(dictionary,
                                                                                                      generateSeries);
 
             viewModel.UpdateActiveSupportPoint(supportPoint);
@@ -164,7 +148,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             Assert.That(viewModel.ActiveParametersViewModel, Is.InstanceOf<TimeDependentSpatiallyVaryingParametersViewModel<TSpreading>>());
             TimeDependentParameters<TSpreading> initialObservedParameters =
                 ((TimeDependentSpatiallyVaryingParametersViewModel<TSpreading>) viewModel.ActiveParametersViewModel).ObservedParameters;
-            Assert.That(initialObservedParameters, 
+            Assert.That(initialObservedParameters,
                         Is.SameAs(dictionary[supportPoint]), "Precondition violated.");
 
             var propertyChangedObserver = new NotifyPropertyChangedTestObserver();
@@ -178,7 +162,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             Assert.That(viewModel.ActiveParametersViewModel, Is.InstanceOf<TimeDependentSpatiallyVaryingParametersViewModel<TSpreading>>());
             TimeDependentParameters<TSpreading> currentObservedParameters =
                 ((TimeDependentSpatiallyVaryingParametersViewModel<TSpreading>) viewModel.ActiveParametersViewModel).ObservedParameters;
-            Assert.That(currentObservedParameters, 
+            Assert.That(currentObservedParameters,
                         Is.SameAs(dictionary[supportPoint]));
 
             Assert.That(propertyChangedObserver.NCalls, Is.EqualTo(0));
@@ -190,7 +174,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             // Setup
             var generateSeries = Substitute.For<IGenerateSeries>();
             var dictionary = new Dictionary<SupportPoint, TimeDependentParameters<TSpreading>>();
-            var viewModel = new SpatiallyVariantTimeDependentParametersSettingsViewModel<TSpreading>(dictionary, 
+            var viewModel = new SpatiallyVariantTimeDependentParametersSettingsViewModel<TSpreading>(dictionary,
                                                                                                      generateSeries);
 
             var propertyChangedObserver = new NotifyPropertyChangedTestObserver();
@@ -215,7 +199,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             // Setup
             var generateSeries = Substitute.For<IGenerateSeries>();
             var dictionary = new Dictionary<SupportPoint, TimeDependentParameters<TSpreading>>();
-            var viewModel = new SpatiallyVariantTimeDependentParametersSettingsViewModel<TSpreading>(dictionary, 
+            var viewModel = new SpatiallyVariantTimeDependentParametersSettingsViewModel<TSpreading>(dictionary,
                                                                                                      generateSeries);
 
             // Call | Assert
@@ -224,5 +208,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             var exception = Assert.Throws<ArgumentNullException>(Call);
             Assert.That(exception.ParamName, Is.EqualTo("supportPoint"));
         }
+
+        private static SupportPoint GetDefaultSupportPoint() =>
+            new SupportPoint(20.0, Substitute.For<IWaveBoundaryGeometricDefinition>());
+
+        private static TimeDependentParameters<TSpreading> GetDefaultParameters() =>
+            new TimeDependentParameters<TSpreading>(Substitute.For<IWaveEnergyFunction<TSpreading>>());
     }
 }

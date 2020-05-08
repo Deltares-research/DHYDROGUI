@@ -14,13 +14,16 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.DataObjects
         {
             BloomInfo info = CreateBloomInfo();
 
-            var functions = CreateFunctionList();
+            IEventedList<IFunction> functions = CreateFunctionList();
 
-            var result = info.GetKortsPresentInFunctions(functions);
+            IEnumerable<string> result = info.GetKortsPresentInFunctions(functions);
 
             var expected = new[]
             {
-                "1", "2", "3", "5",
+                "1",
+                "2",
+                "3",
+                "5",
             };
 
             CollectionAssert.AreEquivalent(expected, result);
@@ -31,13 +34,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.DataObjects
         {
             BloomInfo info = CreateBloomInfo();
 
-            var functions = CreateFunctionList();
+            IEventedList<IFunction> functions = CreateFunctionList();
 
-            var result = info.GetHeadersPresentInFunctions(functions);
+            IEnumerable<string> result = info.GetHeadersPresentInFunctions(functions);
 
             var expected = new[]
             {
-                "AALG", "BALG", "CALG"
+                "AALG",
+                "BALG",
+                "CALG"
             };
 
             CollectionAssert.AreEquivalent(expected, result);
@@ -47,20 +52,26 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.DataObjects
         {
             return new BloomInfo(
                 new List<string>()
-            {
-                "AALG", "BALG", "CALG", "EALG"
-            },
+                {
+                    "AALG",
+                    "BALG",
+                    "CALG",
+                    "EALG"
+                },
                 new List<string>()
-            {
-                "1", "2", "3", "5",
-            },
+                {
+                    "1",
+                    "2",
+                    "3",
+                    "5",
+                },
                 new List<string>()
-            {
-                "first",
-                "second",
-                "third",
-                "fifth",
-            });
+                {
+                    "first",
+                    "second",
+                    "third",
+                    "fifth",
+                });
         }
 
         public static IEventedList<IFunction> CreateFunctionList()

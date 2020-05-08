@@ -1,11 +1,14 @@
 using System;
 using System.Linq;
+using DelftTools.Functions;
 using DelftTools.Hydro;
+using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Structures;
 using DelftTools.TestUtils;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView;
 using GeoAPI.Extensions.Coverages;
+using GeoAPI.Extensions.Networks;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Networks;
 using NetTopologySuite.Geometries;
@@ -19,18 +22,22 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.NetworkSideView
         [Test]
         public void SideViewDataContainsBranchFeaturesForTheRoute()
         {
-            var data = NetworkSideViewDataTestHelper.CreateDefaultViewData();
-            var network = data.Network;
+            NetworkSideViewDataController data = NetworkSideViewDataTestHelper.CreateDefaultViewData();
+            INetwork network = data.Network;
 
             //action! add a pump
-            var pump = new Pump("pump1") { OffsetY = 150 ,StopDelivery = 35};
+            var pump = new Pump("pump1")
+            {
+                OffsetY = 150,
+                StopDelivery = 35
+            };
             var compositeBranchStructure = new CompositeBranchStructure();
             NetworkHelper.AddBranchFeatureToBranch(compositeBranchStructure, network.Branches[0], 50);
             HydroNetworkHelper.AddStructureToComposite(compositeBranchStructure, pump);
 
             //assert Ymax and branchfeatures were update
-            Assert.IsTrue(data.ActiveBranchFeatures.Contains(((IChannel)network.Branches[0]).CrossSections.ToArray()[0]));
-            Assert.IsTrue(data.ActiveBranchFeatures.Contains(((IChannel)network.Branches[1]).CrossSections.ToArray()[0]));
+            Assert.IsTrue(data.ActiveBranchFeatures.Contains(((IChannel) network.Branches[0]).CrossSections.ToArray()[0]));
+            Assert.IsTrue(data.ActiveBranchFeatures.Contains(((IChannel) network.Branches[1]).CrossSections.ToArray()[0]));
             Assert.IsTrue(data.ActiveBranchFeatures.Contains(compositeBranchStructure));
             Assert.AreEqual(35, data.ZMaxValue);
         }
@@ -38,32 +45,36 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.NetworkSideView
         [Test]
         public void MinMaxValueIsUpdatedForCrossections()
         {
-            var data = NetworkSideViewDataTestHelper.CreateDefaultViewData();
-            var network = data.Network;
+            NetworkSideViewDataController data = NetworkSideViewDataTestHelper.CreateDefaultViewData();
+            INetwork network = data.Network;
             //add a real hight and a real low point
-            var crossSection = ((HydroNetwork) network).CrossSections.First();
+            ICrossSection crossSection = ((HydroNetwork) network).CrossSections.First();
 
             crossSection.Geometry.Coordinates[0].Z = 1000;
             crossSection.Geometry.Coordinates[1].Z = -1000;
 
-            Assert.AreEqual(-1000,data.ZMinValue);
+            Assert.AreEqual(-1000, data.ZMinValue);
             Assert.AreEqual(1000, data.ZMaxValue);
         }
-        
+
         [Test]
         public void MinMaxZForWeirWithoutCrossSections()
         {
             //if no crossection are defined, no bed level can be calculated.
             //a minimum of weir.CrestLevel - 10 is used then.
-            var data = NetworkSideViewDataTestHelper.CreateDefaultViewData(false);
-            var network = data.Network;
+            NetworkSideViewDataController data = NetworkSideViewDataTestHelper.CreateDefaultViewData(false);
+            INetwork network = data.Network;
 
             //add a composite structure
             var compositeBranchStructure = new CompositeBranchStructure();
             NetworkHelper.AddBranchFeatureToBranch(compositeBranchStructure, network.Branches[0], 50);
 
             //action! add a weir
-            var weir = new Weir("pump1") { OffsetY = 150, CrestLevel= 110 };
+            var weir = new Weir("pump1")
+            {
+                OffsetY = 150,
+                CrestLevel = 110
+            };
             HydroNetworkHelper.AddStructureToComposite(compositeBranchStructure, weir);
 
             //assert Ymax and branchfeatures were updated
@@ -76,21 +87,28 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.NetworkSideView
         [Test]
         public void MinMaxZValueIsUpdatedForPumps()
         {
-            var data = NetworkSideViewDataTestHelper.CreateDefaultViewData();
-            var network = data.Network;
+            NetworkSideViewDataController data = NetworkSideViewDataTestHelper.CreateDefaultViewData();
+            INetwork network = data.Network;
 
             //add a composite structure
             var compositeBranchStructure = new CompositeBranchStructure();
             NetworkHelper.AddBranchFeatureToBranch(compositeBranchStructure, network.Branches[0], 50);
-            
+
             //action! add a pump 
-            var pump = new Pump("pump1") { OffsetY = 150,StopDelivery = 150};
+            var pump = new Pump("pump1")
+            {
+                OffsetY = 150,
+                StopDelivery = 150
+            };
             HydroNetworkHelper.AddStructureToComposite(compositeBranchStructure, pump);
 
             //and a pump 
-            var pump2 = new Pump("pump1") { OffsetY = 150,StartDelivery = -250};
+            var pump2 = new Pump("pump1")
+            {
+                OffsetY = 150,
+                StartDelivery = -250
+            };
             HydroNetworkHelper.AddStructureToComposite(compositeBranchStructure, pump2);
-
 
             //assert Ymax and branchfeatures were update
             Assert.IsTrue(data.ActiveBranchFeatures.Contains(compositeBranchStructure));
@@ -102,7 +120,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.NetworkSideView
         public void MinMaxValueIsUpdateForWeir()
         {
             NetworkSideViewDataTestHelper.AssertMinMaxIsUpdatedForStructure(
-                8, 300, new Weir { OffsetY = 150, CrestLevel = 300});
+                8, 300, new Weir
+                {
+                    OffsetY = 150,
+                    CrestLevel = 300
+                });
         }
 
         [Test]
@@ -110,15 +132,15 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.NetworkSideView
         {
             //action! add a culvert
             var culvert = new Culvert
-                              {
-                                  GeometryType = CulvertGeometryType.Rectangle, 
-                                  InletLevel = -20, 
-                                  OutletLevel = 50,
-                                  Width = 2,
-                                  Height = 1
-                              };
+            {
+                GeometryType = CulvertGeometryType.Rectangle,
+                InletLevel = -20,
+                OutletLevel = 50,
+                Width = 2,
+                Height = 1
+            };
             //max is outlet + 1
-            NetworkSideViewDataTestHelper.AssertMinMaxIsUpdatedForStructure(-20,51,culvert);
+            NetworkSideViewDataTestHelper.AssertMinMaxIsUpdatedForStructure(-20, 51, culvert);
         }
 
         [Test]
@@ -126,34 +148,32 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.NetworkSideView
         {
             //action! add a culvert
             var culvert = new Culvert
-                              {
-                                  GeometryType = CulvertGeometryType.Rectangle,
-                                  InletLevel = 10,
-                                  OutletLevel = 20,
-                                  Width = 2,
-                                  Height = 1,
-                                  CulvertType = CulvertType.Siphon,
-                                  SiphonOnLevel = 100,
-                                  SiphonOffLevel = -10
-                              };
+            {
+                GeometryType = CulvertGeometryType.Rectangle,
+                InletLevel = 10,
+                OutletLevel = 20,
+                Width = 2,
+                Height = 1,
+                CulvertType = CulvertType.Siphon,
+                SiphonOnLevel = 100,
+                SiphonOffLevel = -10
+            };
             //min and max defined by siphon levels
             NetworkSideViewDataTestHelper.AssertMinMaxIsUpdatedForStructure(-10, 100, culvert);
-
         }
 
         [Test]
         public void MinMaxZTakesAllTimesIntoAccount()
         {
-            var network = NetworkSideViewTestHelper.GetDefaultHydroNetwork();
-            var waterLevelCoverage = NetworkSideViewTestHelper.CreateTimeDependendWaterLevelCoverage(network, 3);
-            var filteredWaterLevelCoverage = waterLevelCoverage.AddTimeFilter(waterLevelCoverage.Time.Values[1]);
+            HydroNetwork network = NetworkSideViewTestHelper.GetDefaultHydroNetwork();
+            INetworkCoverage waterLevelCoverage = NetworkSideViewTestHelper.CreateTimeDependendWaterLevelCoverage(network, 3);
+            INetworkCoverage filteredWaterLevelCoverage = waterLevelCoverage.AddTimeFilter(waterLevelCoverage.Time.Values[1]);
 
-
-            var viewData = NetworkSideViewTestHelper.CreateDefaultViewData(network,filteredWaterLevelCoverage);
+            NetworkSideViewDataController viewData = NetworkSideViewTestHelper.CreateDefaultViewData(network, filteredWaterLevelCoverage);
 
             //max of 19 is not reached in the first time step. Hence all times are included
             //Assert.AreEqual(19, viewData.ZMaxValue);
-            
+
             //should be above (19) but now we cannot interpolatei becaus too slow
             Assert.AreEqual(18, viewData.ZMaxValue);
             Assert.AreEqual(8, viewData.ZMinValue);
@@ -164,73 +184,72 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.NetworkSideView
         public void MinMaxZIsFast()
         {
             //not so fast here since the we use mem based store. Netcdf is more quick
-            var network = NetworkSideViewTestHelper.GetDefaultHydroNetwork();
-            var coverage = NetworkSideViewTestHelper.CreateTimeDependendWaterLevelCoverage(network, 1500);
-            var filteredCoverage = coverage.AddTimeFilter(coverage.Time.Values[1]);
+            HydroNetwork network = NetworkSideViewTestHelper.GetDefaultHydroNetwork();
+            INetworkCoverage coverage = NetworkSideViewTestHelper.CreateTimeDependendWaterLevelCoverage(network, 1500);
+            INetworkCoverage filteredCoverage = coverage.AddTimeFilter(coverage.Time.Values[1]);
 
-            var viewData = NetworkSideViewTestHelper.CreateDefaultViewData(network,filteredCoverage);
+            NetworkSideViewDataController viewData = NetworkSideViewTestHelper.CreateDefaultViewData(network, filteredCoverage);
 
             PreInitializeQuickGraph(network, filteredCoverage); // required to analyze single test, otherwise very strange results are obtained
-            
-            TestHelper.AssertIsFasterThan(19, ()=>
-                                                   {
-                                                       //should be 31
-                                                       //Assert.AreEqual(31, viewData.ZMaxValue);
-                                                       Assert.AreEqual(18,viewData.ZMaxValue);
-                                                       Assert.AreEqual(8, viewData.ZMinValue);
-                                                   });
-            
+
+            TestHelper.AssertIsFasterThan(19, () =>
+            {
+                //should be 31
+                //Assert.AreEqual(31, viewData.ZMaxValue);
+                Assert.AreEqual(18, viewData.ZMaxValue);
+                Assert.AreEqual(8, viewData.ZMinValue);
+            });
+
             //max of 19 is not reached in the first time step. Hence all times are included
-        }
-
-        private void PreInitializeQuickGraph(HydroNetwork network, INetworkCoverage coverage)
-        {
-            var viewData = NetworkSideViewTestHelper.CreateDefaultViewData(network, coverage);
-
-            var waterLevelFunction = viewData.WaterLevelSideViewFunction;
-            var bedLevelFunction = viewData.ProfileSideViewFunctions.FirstOrDefault(pf => pf.Name == "bed level");
         }
 
         [Test]
         [Category(TestCategory.Performance)]
         public void MinMaxZIsVeryFastForARouteWithLocationsThatAreInTheSource()
         {
-            var viewData = NetworkSideViewDataTestHelper.CreateDefaultViewData();
-            var coverage = NetworkSideViewTestHelper.CreateTimeDependendWaterLevelCoverage(viewData.NetworkRoute.Network, 1);
-            
-            var route = new Route { Network = coverage.Network, SegmentGenerationMethod = SegmentGenerationMethod.RouteBetweenLocations };
-            
+            NetworkSideViewDataController viewData = NetworkSideViewDataTestHelper.CreateDefaultViewData();
+            INetworkCoverage coverage = NetworkSideViewTestHelper.CreateTimeDependendWaterLevelCoverage(viewData.NetworkRoute.Network, 1);
+
+            var route = new Route
+            {
+                Network = coverage.Network,
+                SegmentGenerationMethod = SegmentGenerationMethod.RouteBetweenLocations
+            };
+
             //take two value of the source coverage (both on branch1)
             route[coverage.Locations.Values[0]] = 1.0;
             route[coverage.Locations.Values[1]] = 3.0;
 
-            viewData = new NetworkSideViewDataController(route, new NetworkSideViewCoverageManager(route, null, new[] { coverage }));
+            viewData = new NetworkSideViewDataController(route, new NetworkSideViewCoverageManager(route, null, new[]
+            {
+                coverage
+            }));
 
             PreInitializeQuickGraph(route.Network as HydroNetwork, route);
 
             double max = 0;
             double min = 0;
             TestHelper.AssertIsFasterThan(40, () =>
-                {
-                    max = viewData.ZMaxValue;
-                    min = viewData.ZMinValue;
-                });
+            {
+                max = viewData.ZMaxValue;
+                min = viewData.ZMinValue;
+            });
 
             Assert.AreEqual(18, max);
             Assert.AreEqual(8, min);
         }
-        
+
         [Test]
         [Category(TestCategory.Performance)]
         public void MinMaxIsFastForCoverageInNetCdf()
         {
-            var network = HydroNetworkHelper.GetSnakeHydroNetwork(true, new Point(0, 0), new Point(100, 0),
-                                                                  new Point(100, 100));
-            
-            var coverage = NetworkSideViewDataTestHelper.CreateTimeDependentWaterLevelCoverageInNetCdf(network, 4000);
+            IHydroNetwork network = HydroNetworkHelper.GetSnakeHydroNetwork(true, new Point(0, 0), new Point(100, 0),
+                                                                            new Point(100, 100));
+
+            INetworkCoverage coverage = NetworkSideViewDataTestHelper.CreateTimeDependentWaterLevelCoverageInNetCdf(network, 4000);
             coverage.Name = "Water Level";
 
-            var viewData = NetworkSideViewTestHelper.CreateDefaultViewData(network, coverage);
+            NetworkSideViewDataController viewData = NetworkSideViewTestHelper.CreateDefaultViewData(network, coverage);
 
             Assert.AreEqual(2, viewData.NetworkRoute.Segments.Values.Count);
 
@@ -238,45 +257,46 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.NetworkSideView
             double zMax = 0;
             double zMin = 0;
             TestHelper.AssertIsFasterThan(100, () =>
-                {
-                    zMax = viewData.ZMaxValue;
-                    zMin = viewData.ZMinValue;
-                });
+            {
+                zMax = viewData.ZMaxValue;
+                zMin = viewData.ZMinValue;
+            });
 
             Assert.AreEqual(18, zMax);
             Assert.AreEqual(0, zMin);
         }
-        
+
         [Test]
         [Category(TestCategory.Performance)]
         public void MinMaxIsVeryFastSecondTimeForCoverageInNetCdf()
         {
-            var network = HydroNetworkHelper.GetSnakeHydroNetwork(true, new Point(0, 0), new Point(100, 0),
-                                                                  new Point(100, 100));
-            
-            var coverage = NetworkSideViewDataTestHelper.CreateTimeDependentWaterLevelCoverageInNetCdf(network, 4000, "altName");
+            IHydroNetwork network = HydroNetworkHelper.GetSnakeHydroNetwork(true, new Point(0, 0), new Point(100, 0),
+                                                                            new Point(100, 100));
+
+            INetworkCoverage coverage = NetworkSideViewDataTestHelper.CreateTimeDependentWaterLevelCoverageInNetCdf(network, 4000, "altName");
             coverage.Name = "Water Level";
 
-            var viewData = NetworkSideViewTestHelper.CreateDefaultViewData(network, coverage);
+            NetworkSideViewDataController viewData = NetworkSideViewTestHelper.CreateDefaultViewData(network, coverage);
 
             Assert.AreEqual(2, viewData.NetworkRoute.Segments.Values.Count);
-            
+
             // retrieve values first time (heavier)
-            var zMax = viewData.ZMaxValue;
-            var zMin = viewData.ZMinValue;
+            double zMax = viewData.ZMaxValue;
+            double zMin = viewData.ZMinValue;
 
             // second time is much faster
             TestHelper.AssertIsFasterThan(5, () =>
-                                                 {
-                                                     Assert.AreEqual(18, viewData.ZMaxValue);
-                                                     Assert.AreEqual(0, viewData.ZMinValue);
-                                                 });
+            {
+                Assert.AreEqual(18, viewData.ZMaxValue);
+                Assert.AreEqual(0, viewData.ZMinValue);
+            });
         }
+
         [Test]
         [ExpectedException(typeof(InvalidOperationException))]
         public void AddingCoverageOfWrongNetworkThrowsException()
         {
-            var data = NetworkSideViewDataTestHelper.CreateDefaultViewData();
+            NetworkSideViewDataController data = NetworkSideViewDataTestHelper.CreateDefaultViewData();
 
             var newCoverage = new NetworkCoverage {Network = new Network()};
             //should throw an exception since the network does not match the network of the route
@@ -286,44 +306,53 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.NetworkSideView
         [Test]
         public void AddingCoverageToNetworkSideViewData()
         {
-            var data = NetworkSideViewDataTestHelper.CreateDefaultViewData();
+            NetworkSideViewDataController data = NetworkSideViewDataTestHelper.CreateDefaultViewData();
 
-            var newCoverage = new NetworkCoverage { Network = data.NetworkRoute.Network };
-            data.AllNetworkCoverages = new[] {newCoverage};
+            var newCoverage = new NetworkCoverage {Network = data.NetworkRoute.Network};
+            data.AllNetworkCoverages = new[]
+            {
+                newCoverage
+            };
             //add it to the data
             data.AddRenderedCoverage(newCoverage);
 
             //assert it got 'accepted'
-            Assert.AreEqual(new[] {newCoverage}, data.RenderedNetworkCoverages.ToArray());
+            Assert.AreEqual(new[]
+            {
+                newCoverage
+            }, data.RenderedNetworkCoverages.ToArray());
         }
 
         [Test]
         public void MinMaxValueRenderedCoveragesNoTimeDependent()
         {
-            var data = NetworkSideViewDataTestHelper.CreateDefaultViewData();
+            NetworkSideViewDataController data = NetworkSideViewDataTestHelper.CreateDefaultViewData();
 
-            var newCoverage = new NetworkCoverage { Network = data.Network };
+            var newCoverage = new NetworkCoverage {Network = data.Network};
 
-            
             var location = new NetworkLocation(data.Network.Branches[0], 0);
             var location2 = new NetworkLocation(data.Network.Branches[0], 10);
             newCoverage[location] = 10.0;
             newCoverage[location2] = 100.0;
 
             //add it to the data
-            data.AllNetworkCoverages = new[] { newCoverage};
+            data.AllNetworkCoverages = new[]
+            {
+                newCoverage
+            };
             data.AddRenderedCoverage(newCoverage);
 
             //assert it got 'accepted'
             Assert.AreEqual(100.0, data.ZMaxValueRenderedCoverages);
             Assert.AreEqual(10.0, data.ZMinValueRenderedCoverages);
         }
+
         [Test]
         public void MinMaxValueRenderedCoveragesTakesAllTimesIntoAccount()
         {
-            var data = NetworkSideViewDataTestHelper.CreateDefaultViewData();
+            NetworkSideViewDataController data = NetworkSideViewDataTestHelper.CreateDefaultViewData();
 
-            var newCoverage = new NetworkCoverage { Network = data.Network };
+            var newCoverage = new NetworkCoverage {Network = data.Network};
 
             newCoverage.IsTimeDependent = true;
             var location = new NetworkLocation(data.Network.Branches[0], 0);
@@ -331,30 +360,38 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.NetworkSideView
             newCoverage[new DateTime(2000, 1, 2), location] = 100.0;
 
             //filter it before it is added
-            var filtered = newCoverage.AddTimeFilter(new DateTime(2000, 1, 1));
+            INetworkCoverage filtered = newCoverage.AddTimeFilter(new DateTime(2000, 1, 1));
             //add it to the data
-            data.AllNetworkCoverages = new[] {filtered};
+            data.AllNetworkCoverages = new[]
+            {
+                filtered
+            };
             data.AddRenderedCoverage(filtered);
 
             //assert 
             Assert.AreEqual(100.0, data.ZMaxValueRenderedCoverages);
             Assert.AreEqual(10.0, data.ZMinValueRenderedCoverages);
         }
+
         [Test]
         public void MinMaxValueRenderedCoveragesMultipleCoverages()
         {
-            var data = NetworkSideViewDataTestHelper.CreateDefaultViewData();
+            NetworkSideViewDataController data = NetworkSideViewDataTestHelper.CreateDefaultViewData();
 
-            var coverage1 = new NetworkCoverage { Network = data.Network };
-            var coverage2 = new NetworkCoverage { Network = data.Network };
+            var coverage1 = new NetworkCoverage {Network = data.Network};
+            var coverage2 = new NetworkCoverage {Network = data.Network};
 
             var location = new NetworkLocation(data.Network.Branches[0], 0);
-            
+
             coverage1[location] = 10.0;
             coverage2[location] = 50.0;
 
             //add it to the data
-            data.AllNetworkCoverages = new[] { coverage1 ,coverage2};
+            data.AllNetworkCoverages = new[]
+            {
+                coverage1,
+                coverage2
+            };
             data.AddRenderedCoverage(coverage1);
             data.AddRenderedCoverage(coverage2);
 
@@ -362,7 +399,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.NetworkSideView
             Assert.AreEqual(50.0, data.ZMaxValueRenderedCoverages);
             Assert.AreEqual(10.0, data.ZMinValueRenderedCoverages);
         }
+
+        private void PreInitializeQuickGraph(HydroNetwork network, INetworkCoverage coverage)
+        {
+            NetworkSideViewDataController viewData = NetworkSideViewTestHelper.CreateDefaultViewData(network, coverage);
+
+            IFunction waterLevelFunction = viewData.WaterLevelSideViewFunction;
+            IFunction bedLevelFunction = viewData.ProfileSideViewFunctions.FirstOrDefault(pf => pf.Name == "bed level");
+        }
     }
 }
-
-

@@ -80,8 +80,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Common.IO
 
             // Assert
             Assert.Throws<FormatException>(Call, string.Format(
-                Resources.DelftIniReader_GetKeyValueComment_Invalid_key_value_comment_line_on_line__0__in_file__1_,
-                1, testFilePath));
+                                               Resources.DelftIniReader_GetKeyValueComment_Invalid_key_value_comment_line_on_line__0__in_file__1_,
+                                               1, testFilePath));
         }
     }
 }

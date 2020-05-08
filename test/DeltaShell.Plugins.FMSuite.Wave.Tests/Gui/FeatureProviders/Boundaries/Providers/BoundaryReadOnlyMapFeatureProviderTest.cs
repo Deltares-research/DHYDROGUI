@@ -28,7 +28,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
             var behaviour = Substitute.For<IFeaturesFromBoundaryBehaviour>();
 
             // Call
-            using (var featureProvider = new BoundaryReadOnlyMapFeatureProvider(boundaryProvider, 
+            using (var featureProvider = new BoundaryReadOnlyMapFeatureProvider(boundaryProvider,
                                                                                 coordinateSystem,
                                                                                 behaviour))
             {
@@ -48,8 +48,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
             var behaviour = Substitute.For<IFeaturesFromBoundaryBehaviour>();
 
             // Call
-            void Call() => new BoundaryReadOnlyMapFeatureProvider(null, 
-                                                                  coordinateSystem, 
+            void Call() => new BoundaryReadOnlyMapFeatureProvider(null,
+                                                                  coordinateSystem,
                                                                   behaviour);
 
             // Assert
@@ -65,8 +65,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
             var coordinateSystem = Substitute.For<ICoordinateSystem>();
 
             // Call
-            void Call() => new BoundaryReadOnlyMapFeatureProvider(boundaryProvider, 
-                                                                  coordinateSystem, 
+            void Call() => new BoundaryReadOnlyMapFeatureProvider(boundaryProvider,
+                                                                  coordinateSystem,
                                                                   null);
 
             // Assert

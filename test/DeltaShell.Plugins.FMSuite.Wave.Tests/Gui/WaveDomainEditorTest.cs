@@ -30,7 +30,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
                 HasSpiderWeb = true,
                 SpiderWebFilePath = "spider.spw"
             };
-            
 
             var editor = new WaveDomainEditor {Data = domain};
             WindowsFormsTestHelper.ShowModal(editor);

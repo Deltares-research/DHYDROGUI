@@ -11,10 +11,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Editors
 
             for (var i = 0; i < count; i++)
             {
-                var fractionName = string.Format("Fraction_{0}_of_{1}", i, count);
-                sedimentFractions.Add(new SedimentFraction() { Name = fractionName });
+                string fractionName = string.Format("Fraction_{0}_of_{1}", i, count);
+                sedimentFractions.Add(new SedimentFraction() {Name = fractionName});
             }
-            
+
             return sedimentFractions;
         }
     }

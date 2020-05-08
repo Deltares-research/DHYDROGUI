@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Utils.Collections.Generic;
@@ -15,21 +14,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Layers.Providers
     [TestFixture]
     public class HydroRegionLayerProviderTest
     {
-        private static IEnumerable<TestCaseData> GetCanCreateLayerForData()
-        {
-            var sourceData = Substitute.For<IHydroRegion>();
-            var parentData = new object();
-
-            var incorrectSourceData = new object();
-
-            yield return new TestCaseData(sourceData, parentData, true);
-            yield return new TestCaseData(sourceData, null, true);
-            yield return new TestCaseData(null, null, false);
-            yield return new TestCaseData(new object(), null, false);
-            yield return new TestCaseData(incorrectSourceData, parentData, false);
-            yield return new TestCaseData(incorrectSourceData, null, false);
-        }
-
         [Test]
         [TestCaseSource(nameof(GetCanCreateLayerForData))]
         public void CanCreateLayerFor_ExpectedResults(object sourceData, object parentData, bool expectedResult)
@@ -89,7 +73,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Layers.Providers
                 Substitute.For<IRegion>(),
                 Substitute.For<IRegion>(),
             };
-            
+
             // Call
             object[] childLayerObjects = provider.GenerateChildLayerObjects(sourceData).ToArray();
 
@@ -108,6 +92,21 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Layers.Providers
 
             // Assert
             Assert.IsEmpty(childLayerObjects);
+        }
+
+        private static IEnumerable<TestCaseData> GetCanCreateLayerForData()
+        {
+            var sourceData = Substitute.For<IHydroRegion>();
+            var parentData = new object();
+
+            var incorrectSourceData = new object();
+
+            yield return new TestCaseData(sourceData, parentData, true);
+            yield return new TestCaseData(sourceData, null, true);
+            yield return new TestCaseData(null, null, false);
+            yield return new TestCaseData(new object(), null, false);
+            yield return new TestCaseData(incorrectSourceData, parentData, false);
+            yield return new TestCaseData(incorrectSourceData, null, false);
         }
     }
 }

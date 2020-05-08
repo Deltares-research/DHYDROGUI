@@ -10,6 +10,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries
     [TestFixture]
     public class BoundaryContainerTest
     {
+        private static IEnumerable<TestCaseData> UpdateGridBoundaryData
+        {
+            get
+            {
+                yield return new TestCaseData(null);
+                yield return new TestCaseData(Substitute.For<IGridBoundary>());
+            }
+        }
+
         [Test]
         public void Constructor_ExpectedValues()
         {
@@ -33,7 +42,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries
             var container = new BoundaryContainer();
             var waveBoundary = Substitute.For<IWaveBoundary>();
             container.Boundaries.Add(waveBoundary);
-            
+
             // Call
             container.DefinitionPerFileUsed = true;
 
@@ -72,7 +81,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries
             // Assert
             Assert.That(result, Is.Null);
         }
-
 
         [Test]
         public void GivenABoundaryContainer_WhenUpdateGridBoundaryAndGetBoundarySnappingCalculatorIsCalled_ThenCorrectCalculatorIsReturned()
@@ -119,15 +127,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries
 
             // Assert
             Assert.That(result, Is.SameAs(gridBoundary));
-        }
-
-        private static IEnumerable<TestCaseData> UpdateGridBoundaryData
-        {
-            get
-            {
-                yield return new TestCaseData(null);
-                yield return new TestCaseData(Substitute.For<IGridBoundary>());
-            }
         }
     }
 }

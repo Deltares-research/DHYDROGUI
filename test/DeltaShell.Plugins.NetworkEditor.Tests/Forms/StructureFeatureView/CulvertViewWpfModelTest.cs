@@ -25,7 +25,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
                 Culvert = new Culvert(),
                 SelectedCulvertGeometryType = geometryType
             };
-            
+
             // Then
             Assert.That(viewModel.GeometryHeightEnabled, Is.EqualTo(isEnabled));
         }

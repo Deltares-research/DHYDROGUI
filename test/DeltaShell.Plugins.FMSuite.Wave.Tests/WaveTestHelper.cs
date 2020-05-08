@@ -8,10 +8,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
     {
         public static string CreateLocalCopy(string mdwPath)
         {
-            var dir = Path.GetDirectoryName(mdwPath);
-            var lastDir = new DirectoryInfo(dir).Name;
+            string dir = Path.GetDirectoryName(mdwPath);
+            string lastDir = new DirectoryInfo(dir).Name;
 
-            var newDir = Path.Combine(Environment.CurrentDirectory, lastDir);
+            string newDir = Path.Combine(Environment.CurrentDirectory, lastDir);
 
             if (Directory.Exists(newDir))
             {

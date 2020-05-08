@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Windows.Controls;
 using DelftTools.Hydro;
+using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
@@ -31,16 +32,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [Category(TestCategory.VerySlow)]
         public void ImportLargeAmountOfDryPoints()
         {
-            var xyzFilePath = TestHelper.GetTestFilePath(@"xyzFiles\largeSampleFile.xyz");
-            var tempDir = FileUtils.CreateTempDirectory();
-            var testFilePath = Path.Combine(tempDir, Path.GetFileName(xyzFilePath));
+            string xyzFilePath = TestHelper.GetTestFilePath(@"xyzFiles\largeSampleFile.xyz");
+            string tempDir = FileUtils.CreateTempDirectory();
+            string testFilePath = Path.Combine(tempDir, Path.GetFileName(xyzFilePath));
             FileUtils.CopyFile(xyzFilePath, testFilePath);
 
             try
             {
                 using (var gui = new DeltaShellGui())
                 {
-                    var app = gui.Application;
+                    IApplication app = gui.Application;
                     app.Plugins.Add(new SharpMapGisApplicationPlugin());
                     app.Plugins.Add(new NetworkEditorApplicationPlugin());
                     app.Plugins.Add(new FlowFMApplicationPlugin());
@@ -55,15 +56,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                     Action mainWindowShown = delegate
                     {
                         app.Project.RootFolder.Add(new WaterFlowFMModel());
-                        var targetModel = app.Project.RootFolder.Models.OfType<WaterFlowFMModel>().FirstOrDefault();
+                        WaterFlowFMModel targetModel = app.Project.RootFolder.Models.OfType<WaterFlowFMModel>().FirstOrDefault();
                         Assert.IsNotNull(targetModel);
 
-                        var dryPointsImporter =
+                        GroupablePointCloudImporter dryPointsImporter =
                             app.FileImporters.OfType<GroupablePointCloudImporter>().FirstOrDefault();
                         Assert.IsNotNull(dryPointsImporter);
                         var activity = new FileImportActivity(dryPointsImporter, targetModel.Area.DryPoints)
                         {
-                            Files = new[] {testFilePath}
+                            Files = new[]
+                            {
+                                testFilePath
+                            }
                         };
 
                         // Importing large amount of dry points
@@ -90,7 +94,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var importer = new PointCloudImporter<PointFeature>();
             Assert.IsTrue(importer.CanImportOnRootLevel);
         }
-        
+
         [Test]
         public void GroupablePointCloudImporterCanImportOnRootLevel()
         {
@@ -98,29 +102,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             Assert.IsFalse(importer.CanImportOnRootLevel);
         }
 
-        [TestCase(null)]
-        [TestCase("NotListObject")]
-        public void GivenGroupableCloudImporter_WhenImportingWithTargetThatIsNotAListOrNullObject_ThenNullIsReturned(string target)
-        {
-            var xyzFilePath = TestHelper.GetTestFilePath(@"HydroAreaCollection\FlowFM\dryGroup1_dry.xyz");
-            xyzFilePath = TestHelper.CreateLocalCopy(xyzFilePath);
-            try
-            {
-                var importer = new GroupablePointCloudImporter();
-                var importedFeatures = importer.ImportItem(xyzFilePath, target);
-                Assert.IsNull(importedFeatures);
-            }
-            finally
-            {
-                FileUtils.DeleteIfExists(xyzFilePath);
-            }
-        }
-
         [Test]
         public void ImportDryPointFeatureAssignsGroupName()
         {
             /* This class is located in the framework and fails to import correctly dry points. */
-            var xyzFilePath = TestHelper.GetTestFilePath(@"HydroAreaCollection\FlowFM\dryGroup1_dry.xyz");
+            string xyzFilePath = TestHelper.GetTestFilePath(@"HydroAreaCollection\FlowFM\dryGroup1_dry.xyz");
             Assert.IsTrue(File.Exists(xyzFilePath));
             xyzFilePath = TestHelper.CreateLocalCopy(xyzFilePath);
             try
@@ -128,9 +114,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 var importer = new GroupablePointCloudImporter();
                 var dryPoints = new List<GroupablePointFeature>();
                 importer.ImportItem(xyzFilePath, dryPoints);
-                
+
                 Assert.AreNotEqual(0, dryPoints.Count);
-                var asGroup = dryPoints.GroupBy( g => g.GroupName).ToList();
+                List<IGrouping<string, GroupablePointFeature>> asGroup = dryPoints.GroupBy(g => g.GroupName).ToList();
                 Assert.That(asGroup.Count, Is.EqualTo(1));
                 Assert.That(asGroup.First().Key, Is.EqualTo(xyzFilePath.Replace(@"\", "/")));
             }
@@ -144,7 +130,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         public void ImportDryPointFeatureWithWrongFormatReturnsNull()
         {
             /* This class is located in the framework and fails to import correctly dry points. */
-            var xyzFilePath = TestHelper.GetTestFilePath(@"HydroAreaCollection\FlowFM\badFormatFile.xyz");
+            string xyzFilePath = TestHelper.GetTestFilePath(@"HydroAreaCollection\FlowFM\badFormatFile.xyz");
             Assert.IsTrue(File.Exists(xyzFilePath));
             xyzFilePath = TestHelper.CreateLocalCopy(xyzFilePath);
             try
@@ -202,6 +188,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             };
 
             Assert.That(progressMessages, Is.EqualTo(expectedProgressMessages));
+        }
+
+        [TestCase(null)]
+        [TestCase("NotListObject")]
+        public void GivenGroupableCloudImporter_WhenImportingWithTargetThatIsNotAListOrNullObject_ThenNullIsReturned(string target)
+        {
+            string xyzFilePath = TestHelper.GetTestFilePath(@"HydroAreaCollection\FlowFM\dryGroup1_dry.xyz");
+            xyzFilePath = TestHelper.CreateLocalCopy(xyzFilePath);
+            try
+            {
+                var importer = new GroupablePointCloudImporter();
+                object importedFeatures = importer.ImportItem(xyzFilePath, target);
+                Assert.IsNull(importedFeatures);
+            }
+            finally
+            {
+                FileUtils.DeleteIfExists(xyzFilePath);
+            }
         }
     }
 }

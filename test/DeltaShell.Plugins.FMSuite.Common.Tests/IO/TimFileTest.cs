@@ -21,9 +21,9 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             var minutes = timeSpan.TotalMinutes.ToString(CultureInfo.InvariantCulture);
 
             var reader = new TimFile();
-            var readDateTime = reader.GetDateTime(minutes, dateTime, "time");
+            DateTime? readDateTime = reader.GetDateTime(minutes, dateTime, "time");
 
-            Assert.AreEqual(readDateTime, dateTime + timeSpan,"the imported time");
+            Assert.AreEqual(readDateTime, dateTime + timeSpan, "the imported time");
         }
 
         [Test]
@@ -32,7 +32,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             var dateTime = new DateTime(2013, 8, 29, 17, 8, 20);
 
             var reader = new TimFile();
-            var readDateTime = reader.GetDateTime("9999999999.0", dateTime, "time");
+            DateTime? readDateTime = reader.GetDateTime("9999999999.0", dateTime, "time");
 
             Assert.AreEqual(readDateTime, dateTime + new TimeSpan(0, 999999999, 0), "the imported time");
         }
@@ -44,7 +44,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             const long formattedDateTime = 201308291708;
 
             var reader = new TimFile();
-            var readDateTime = reader.GetDateTime(formattedDateTime.ToString(CultureInfo.InvariantCulture), dateTime, "time");
+            DateTime? readDateTime = reader.GetDateTime(formattedDateTime.ToString(CultureInfo.InvariantCulture), dateTime, "time");
 
             Assert.AreEqual(readDateTime, dateTime, "the imported time");
         }
@@ -65,14 +65,14 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             var valuesList2 = new List<double>();
             var valuesList3 = new List<double>();
 
-            var date = startDate;
+            DateTime date = startDate;
             for (var i = 0; i < count; ++i)
             {
                 timesList.Add(date);
                 date += timeStep;
-                valuesList1.Add(1.0/(i*i + 1));
-                valuesList2.Add(1.0/(i*i + 2));
-                valuesList3.Add(1.0/(i*i + 3));
+                valuesList1.Add(1.0 / ((i * i) + 1));
+                valuesList2.Add(1.0 / ((i * i) + 2));
+                valuesList3.Add(1.0 / ((i * i) + 3));
             }
 
             var function = new TimeSeries();
@@ -88,17 +88,17 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             var fileWriter = new TimFile();
             fileWriter.Write("testFile.tim", function, refDate);
 
-            var readFunction = fileWriter.Read("testFile.tim", refDate);
-            
+            TimeSeries readFunction = fileWriter.Read("testFile.tim", refDate);
+
             Assert.AreEqual(1, readFunction.Arguments.Count);
             Assert.AreEqual(3, readFunction.Components.Count);
             Assert.AreEqual(function.Time.Values, readFunction.Arguments[0].Values);
             ListTestUtils.AssertAreEqual(function.Components[0].GetValues<double>(),
-                readFunction.Components[0].GetValues<double>(), 1e-06);
+                                         readFunction.Components[0].GetValues<double>(), 1e-06);
             ListTestUtils.AssertAreEqual(function.Components[1].GetValues<double>(),
-                readFunction.Components[1].GetValues<double>(), 1e-06);
+                                         readFunction.Components[1].GetValues<double>(), 1e-06);
             ListTestUtils.AssertAreEqual(function.Components[2].GetValues<double>(),
-                readFunction.Components[2].GetValues<double>(), 1e-06);
+                                         readFunction.Components[2].GetValues<double>(), 1e-06);
         }
 
         [Test]
@@ -117,14 +117,14 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             var valuesList2 = new List<double>();
             var valuesList3 = new List<double>();
 
-            var date = startDate;
+            DateTime date = startDate;
             for (var i = 0; i < count; ++i)
             {
                 timesList.Add(date);
                 date += timeStep;
-                valuesList1.Add(1.0 / (i * i + 1));
-                valuesList2.Add(1.0 / (i * i + 2));
-                valuesList3.Add(1.0 / (i * i + 3));
+                valuesList1.Add(1.0 / ((i * i) + 1));
+                valuesList2.Add(1.0 / ((i * i) + 2));
+                valuesList3.Add(1.0 / ((i * i) + 3));
             }
 
             var function = new TimeSeries();
@@ -138,17 +138,17 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             function.Components[2].SetValues(valuesList3);
 
             var fileWriter = new TimFile();
-            var readFunction = fileWriter.Read(TestHelper.GetTestFilePath("timFiles/testFile.tim"), refDate);
+            TimeSeries readFunction = fileWriter.Read(TestHelper.GetTestFilePath("timFiles/testFile.tim"), refDate);
 
             Assert.AreEqual(1, readFunction.Arguments.Count);
             Assert.AreEqual(3, readFunction.Components.Count);
             Assert.AreEqual(function.Time.Values, readFunction.Arguments[0].Values);
             ListTestUtils.AssertAreEqual(function.Components[0].GetValues<double>(),
-                readFunction.Components[0].GetValues<double>(), 1e-06);
+                                         readFunction.Components[0].GetValues<double>(), 1e-06);
             ListTestUtils.AssertAreEqual(function.Components[1].GetValues<double>(),
-                readFunction.Components[1].GetValues<double>(), 1e-06);
+                                         readFunction.Components[1].GetValues<double>(), 1e-06);
             ListTestUtils.AssertAreEqual(function.Components[2].GetValues<double>(),
-                readFunction.Components[2].GetValues<double>(), 1e-06);
+                                         readFunction.Components[2].GetValues<double>(), 1e-06);
         }
 
         [Test]
@@ -166,11 +166,11 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             var fileReader = new TimFile();
             fileReader.Read(TestHelper.GetTestFilePath("timFiles/testFile.tim"), readFunction, refDate);
 
-            var componentAValues = readFunction.Components[0].GetValues<double>();
-            var componentBValues = readFunction.Components[1].GetValues<double>();
-            var componentCValues = readFunction.Components[2].GetValues<double>();
-            var componentDValues = readFunction.Components[3].GetValues<double>();
-            var componentEValues = readFunction.Components[4].GetValues<double>();
+            IMultiDimensionalArray<double> componentAValues = readFunction.Components[0].GetValues<double>();
+            IMultiDimensionalArray<double> componentBValues = readFunction.Components[1].GetValues<double>();
+            IMultiDimensionalArray<double> componentCValues = readFunction.Components[2].GetValues<double>();
+            IMultiDimensionalArray<double> componentDValues = readFunction.Components[3].GetValues<double>();
+            IMultiDimensionalArray<double> componentEValues = readFunction.Components[4].GetValues<double>();
 
             Assert.AreEqual(50, componentAValues.Count);
             Assert.AreEqual(50, componentBValues.Count);

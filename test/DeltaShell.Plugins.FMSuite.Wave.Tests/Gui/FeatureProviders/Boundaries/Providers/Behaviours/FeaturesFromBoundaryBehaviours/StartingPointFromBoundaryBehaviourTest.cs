@@ -87,7 +87,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
         {
             var geometryFactory = Substitute.For<IWaveBoundaryGeometryFactory>();
             var behaviour = new StartingPointFromBoundaryBehaviour(geometryFactory);
-            
+
             void Call() => behaviour.Execute(null).ToList();
 
             var exception = Assert.Throws<ArgumentNullException>(Call);

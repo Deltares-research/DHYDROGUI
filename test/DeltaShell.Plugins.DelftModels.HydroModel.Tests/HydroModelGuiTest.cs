@@ -6,6 +6,7 @@ using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Gui;
 using DelftTools.Shell.Gui.Forms;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui;
+using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Properties;
 using NUnit.Framework;
 using Rhino.Mocks;
 
@@ -18,17 +19,17 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         {
             get
             {
-                var model = new HydroModel() { Name = "Blastoise" };
+                var model = new HydroModel() {Name = "Blastoise"};
                 yield return new TestCaseData(null, model);
-                yield return new TestCaseData(new HydroModel() { Name = "Squirtle" }, model);
+                yield return new TestCaseData(new HydroModel() {Name = "Squirtle"}, model);
                 yield return new TestCaseData(model, model);
             }
         }
 
         /// <summary>
         /// GIVEN a ProjectExplorer with an existing ContextMenu with a Tag
-        ///   AND a HydroModelGuiPlugin using this ProjectExplorer
-        ///   AND some other model not equal to the Tag
+        /// AND a HydroModelGuiPlugin using this ProjectExplorer
+        /// AND some other model not equal to the Tag
         /// WHEN GetContextMenu is called with this model
         /// THEN The the ContextMenu Tag is updated with this model
         /// </summary>
@@ -37,7 +38,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         {
             var validateItem = new ClonableToolStripMenuItem
             {
-                Text = Gui.Properties.Resources.HydroModelGuiPlugin_GetContextMenu_Validate___,
+                Text = Resources.HydroModelGuiPlugin_GetContextMenu_Validate___,
                 Tag = beforeTag,
             };
 
@@ -79,7 +80,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                            .IgnoreArguments()
                            .Return(contextMenuAdapter);
 
-            var plugin = new HydroModelGuiPlugin { Gui = gui };
+            var plugin = new HydroModelGuiPlugin {Gui = gui};
             return plugin;
         }
     }

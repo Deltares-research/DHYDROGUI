@@ -10,10 +10,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.ModelSchema
         [Test]
         public void SettingValueShouldValidateType()
         {
-            var definition = new TestModelPropertyDefinition
-                {
-                    DataType = typeof (DateTime)
-                };
+            var definition = new TestModelPropertyDefinition {DataType = typeof(DateTime)};
             Assert.Throws<FormatException>(() => new TestModelProperty(definition, "1.2"));
 
             var property = new TestModelProperty(definition, "20130102");
@@ -21,13 +18,22 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.ModelSchema
 
             Assert.Throws<ArgumentException>(() => property.Value = 1.2);
 
-            var doubleArrayDefinition = new TestModelPropertyDefinition
-                {
-                    DataType = typeof (IList<double>)
-                };
+            var doubleArrayDefinition = new TestModelPropertyDefinition {DataType = typeof(IList<double>)};
             var doubleArrayProperty = new TestModelProperty(doubleArrayDefinition, "1 2 3");
-            doubleArrayProperty.Value = new List<double> {5, 6, 7, 8}; // Should not throw
-            Assert.AreEqual(new List<double>{5,6,7,8}, doubleArrayProperty.Value);
+            doubleArrayProperty.Value = new List<double>
+            {
+                5,
+                6,
+                7,
+                8
+            }; // Should not throw
+            Assert.AreEqual(new List<double>
+            {
+                5,
+                6,
+                7,
+                8
+            }, doubleArrayProperty.Value);
         }
     }
 }

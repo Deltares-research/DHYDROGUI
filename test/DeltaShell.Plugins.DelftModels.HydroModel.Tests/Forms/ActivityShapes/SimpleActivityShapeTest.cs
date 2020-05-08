@@ -19,18 +19,25 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.ActivityShapes
         [Test]
         public void GetRequiredSize()
         {
-            var graphControl = new GraphControl{AllowDrop = false, AllowAddConnection = false, AllowAddShape = false, AllowDeleteShape = false, AllowMoveShape = false};
-            var graphics = graphControl.Graphics;
+            var graphControl = new GraphControl
+            {
+                AllowDrop = false,
+                AllowAddConnection = false,
+                AllowAddShape = false,
+                AllowDeleteShape = false,
+                AllowMoveShape = false
+            };
+            Graphics graphics = graphControl.Graphics;
 
             var shape = new SimpleActivityShape(graphControl);
             var size = TypeUtils.CallPrivateMethod<SizeF>(shape, "GetRequiredSize", graphics);
 
             Assert.Greater(size.Width, 1,
-                "Should require more width than 1 pixel.");
+                           "Should require more width than 1 pixel.");
             Assert.Greater(size.Height, 1,
-                "Should require mode height than 1 pixel.");
+                           "Should require mode height than 1 pixel.");
             Assert.AreEqual(new RectangleF(0, 0, 1, 1), shape.Rectangle,
-                "GetRequiredSize should not set actual size.");
+                            "GetRequiredSize should not set actual size.");
         }
 
         [Test]

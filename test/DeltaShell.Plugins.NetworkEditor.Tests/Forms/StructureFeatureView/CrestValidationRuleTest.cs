@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using System.Windows.Controls;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView;
@@ -14,13 +15,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
         {
             var viewModel = new WeirViewModel
             {
-                Weir = new Weir(), SelectedWeirType = SelectableWeirFormulaType.SimpleGate
+                Weir = new Weir(),
+                SelectedWeirType = SelectableWeirFormulaType.SimpleGate
             };
 
             Assert.That(viewModel.Weir.WeirFormula is GatedWeirFormula);
             viewModel.BedLevelStructureCentre = 10.0;
 
-            var validationResult = new CrestValidationRule().Validate(viewModel.BedLevelStructureCentre, CultureInfo.CurrentCulture);
+            ValidationResult validationResult = new CrestValidationRule().Validate(viewModel.BedLevelStructureCentre, CultureInfo.CurrentCulture);
             Assert.IsTrue(validationResult.IsValid);
         }
 
@@ -35,10 +37,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
 
             Assert.That(viewModel.Weir.WeirFormula is GatedWeirFormula);
 
-            var validationResult =
+            ValidationResult validationResult =
                 new CrestValidationRule().Validate("1.79769313486232E+310", CultureInfo.CurrentCulture);
             Assert.IsFalse(validationResult.IsValid);
         }
+
         [Test]
         public void GivenAWeirViewModelWhereACrestPropertyOutsideAString_WhenValidatingCrestProperties_ThenAFormatExceptionIsThrown()
         {
@@ -50,7 +53,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
 
             Assert.That(viewModel.Weir.WeirFormula is GatedWeirFormula);
 
-            var validationResult =
+            ValidationResult validationResult =
                 new CrestValidationRule().Validate("ThisIsNotAValidDouble", CultureInfo.CurrentCulture);
             Assert.IsFalse(validationResult.IsValid);
         }
@@ -66,7 +69,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
 
             Assert.That(viewModel.Weir.WeirFormula is GatedWeirFormula);
 
-            var validationResult =
+            ValidationResult validationResult =
                 new CrestValidationRule().Validate(new object(), CultureInfo.CurrentCulture);
             Assert.IsFalse(validationResult.IsValid);
         }

@@ -9,11 +9,11 @@ namespace DeltaShell.NGHS.Common.Tests.Logging
     [TestFixture]
     public class LogMessagesListTest
     {
-        private LogMessagesList logMessagesList;
         private const string LogMessage = "some_log_message";
         private const string InfoLogMessage = "info_log_message";
         private const string WarningLogMessage = "warning_log_message";
         private const string ErrorLogMessage = "error_log_message";
+        private LogMessagesList logMessagesList;
 
         [SetUp]
         public void SetUp()
@@ -25,6 +25,61 @@ namespace DeltaShell.NGHS.Common.Tests.Logging
         public void TearDown()
         {
             logMessagesList = null;
+        }
+
+        [Test]
+        public void GivenMessagesWithAllSeveritiesInList_WhenInfoMessagesCalled_ThenCorrectMessageIsReturned()
+        {
+            // Given
+            AddMessagesWithAllSeveritiesToList();
+
+            // When
+            List<string> infoMessages = logMessagesList.InfoMessages.ToList();
+
+            // Then
+            AssertCorrectMessageRetrieved(infoMessages, InfoLogMessage);
+        }
+
+        [Test]
+        public void GivenMessagesWithAllSeveritiesInList_WhenWarningMessagesCalled_ThenCorrectMessageIsReturned()
+        {
+            // Given
+            AddMessagesWithAllSeveritiesToList();
+
+            // When
+            List<string> warningMessages = logMessagesList.WarningMessages.ToList();
+
+            // Then
+            AssertCorrectMessageRetrieved(warningMessages, WarningLogMessage);
+        }
+
+        [Test]
+        public void GivenMessagesWithAllSeveritiesInList_WhenErrorMessagesCalled_ThenCorrectMessageIsReturned()
+        {
+            // Given
+            AddMessagesWithAllSeveritiesToList();
+
+            // When
+            List<string> errorMessages = logMessagesList.ErrorMessages.ToList();
+
+            // Then
+            AssertCorrectMessageRetrieved(errorMessages, ErrorLogMessage);
+        }
+
+        [Test]
+        public void GivenMessagesWithAllSeveritiesInList_WhenAllMessagesCalled_ThenAllMessagesAreReturned()
+        {
+            // Given
+            AddMessagesWithAllSeveritiesToList();
+
+            // When
+            List<string> allMessages = logMessagesList.AllMessages.ToList();
+
+            // Then
+            Assert.AreEqual(3, allMessages.Count);
+            AssertMessagesContain(allMessages, InfoLogMessage);
+            AssertMessagesContain(allMessages, WarningLogMessage);
+            AssertMessagesContain(allMessages, ErrorLogMessage);
         }
 
         [TestCase(LogSeverity.Info)]
@@ -39,71 +94,16 @@ namespace DeltaShell.NGHS.Common.Tests.Logging
             Assert.AreEqual(logSeverity, logMessagesList.Single().Item2, "Log severity was different than expected.");
         }
 
-        [Test]
-        public void GivenMessagesWithAllSeveritiesInList_WhenInfoMessagesCalled_ThenCorrectMessageIsReturned()
-        {
-            // Given
-            AddMessagesWithAllSeveritiesToList();
-
-            // When
-            var infoMessages = logMessagesList.InfoMessages.ToList();
-
-            // Then
-            AssertCorrectMessageRetrieved(infoMessages, InfoLogMessage);
-        }
-
-        [Test]
-        public void GivenMessagesWithAllSeveritiesInList_WhenWarningMessagesCalled_ThenCorrectMessageIsReturned()
-        {
-            // Given
-            AddMessagesWithAllSeveritiesToList();
-
-            // When
-            var warningMessages = logMessagesList.WarningMessages.ToList();
-
-            // Then
-            AssertCorrectMessageRetrieved(warningMessages, WarningLogMessage);
-        }
-
-        [Test]
-        public void GivenMessagesWithAllSeveritiesInList_WhenErrorMessagesCalled_ThenCorrectMessageIsReturned()
-        {
-            // Given
-            AddMessagesWithAllSeveritiesToList();
-
-            // When
-            var errorMessages = logMessagesList.ErrorMessages.ToList();
-
-            // Then
-            AssertCorrectMessageRetrieved(errorMessages, ErrorLogMessage);
-        }
-
-        [Test]
-        public void GivenMessagesWithAllSeveritiesInList_WhenAllMessagesCalled_ThenAllMessagesAreReturned()
-        {
-            // Given
-            AddMessagesWithAllSeveritiesToList();
-
-            // When
-            var allMessages = logMessagesList.AllMessages.ToList();
-
-            // Then
-            Assert.AreEqual(3, allMessages.Count);
-            AssertMessagesContain(allMessages, InfoLogMessage);
-            AssertMessagesContain(allMessages, WarningLogMessage);
-            AssertMessagesContain(allMessages, ErrorLogMessage);
-        }
-
         private static void AssertMessagesContain(List<string> allMessages, string expectedMessage)
         {
             Assert.IsTrue(allMessages.Contains(expectedMessage),
-                $"Log message '{expectedMessage}' was expected to be in the list.");
+                          $"Log message '{expectedMessage}' was expected to be in the list.");
         }
 
         private static void AssertCorrectMessageRetrieved(IList<string> logMessages, string expectedLogMessage)
         {
             Assert.AreEqual(1, logMessages.Count, "Exactly one message should have been retrieved.");
-            var logMessage = logMessages.Single();
+            string logMessage = logMessages.Single();
             Assert.AreEqual(expectedLogMessage, logMessage, "Log message was different than expected.");
         }
 

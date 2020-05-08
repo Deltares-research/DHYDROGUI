@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System.Collections.ObjectModel;
+using System.ComponentModel;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors.ModelFeatureCoordinateDataEditor;
 using GeoAPI.Extensions.Feature;
@@ -17,41 +18,41 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Editors.ModelFeatureCoordinate
         {
             var lineGeomery = new LineString(new[]
             {
-                new Coordinate(0,0),
-                new Coordinate(10,10),
+                new Coordinate(0, 0),
+                new Coordinate(10, 10),
                 new Coordinate(10, 0),
                 new Coordinate(0, 0)
             });
 
             var mocks = new MockRepository();
-            var feature = (IFeature)mocks.StrictMultiMock(typeof(IFeature), typeof(INotifyPropertyChanged));
+            var feature = (IFeature) mocks.StrictMultiMock(typeof(IFeature), typeof(INotifyPropertyChanged));
 
             feature.Expect(f => f.Geometry).Return(lineGeomery).Repeat.Any();
-            ((INotifyPropertyChanged)feature).Expect(f => f.PropertyChanged += null).IgnoreArguments().Repeat.Times(3);
+            ((INotifyPropertyChanged) feature).Expect(f => f.PropertyChanged += null).IgnoreArguments().Repeat.Times(3);
 
             mocks.ReplayAll();
 
             var dataColumn = new DataColumn<double>
             {
                 Name = "Test",
-                ValueList = { 1.4, 2.4, 4.6, 74 },
+                ValueList =
+                {
+                    1.4,
+                    2.4,
+                    4.6,
+                    74
+                },
                 DefaultValue = -1,
                 IsActive = true
             };
 
-            var modelFeatureCoordinateData = new ModelFeatureCoordinateData<IFeature>
-            {
-                Feature = feature
-            };
+            var modelFeatureCoordinateData = new ModelFeatureCoordinateData<IFeature> {Feature = feature};
 
             modelFeatureCoordinateData.DataColumns.Add(dataColumn);
 
-            var viewModel = new ModelFeatureCoordinateDataViewViewModel
-            {
-                ModelFeatureCoordinateData = modelFeatureCoordinateData
-            };
+            var viewModel = new ModelFeatureCoordinateDataViewViewModel {ModelFeatureCoordinateData = modelFeatureCoordinateData};
 
-            var dataRows = viewModel.CoordinateDataRows;
+            ObservableCollection<CoordinateDataRow> dataRows = viewModel.CoordinateDataRows;
 
             Assert.AreEqual(4, dataRows.Count);
             Assert.AreEqual(3, dataRows[0].GetProperties().Count);
@@ -59,7 +60,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Editors.ModelFeatureCoordinate
             Assert.AreEqual(1.4, dataRows[0].GetProperties()["Test"].GetValue(dataRows[0]));
             Assert.AreEqual(2.4, dataRows[1].GetProperties()["Test"].GetValue(dataRows[1]));
             Assert.AreEqual(4.6, dataRows[2].GetProperties()["Test"].GetValue(dataRows[2]));
-            Assert.AreEqual( 74, dataRows[3].GetProperties()["Test"].GetValue(dataRows[3]));
+            Assert.AreEqual(74, dataRows[3].GetProperties()["Test"].GetValue(dataRows[3]));
 
             mocks.VerifyAll();
         }
@@ -69,24 +70,30 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Editors.ModelFeatureCoordinate
         {
             var lineGeomery = new LineString(new[]
             {
-                new Coordinate(0,0),
-                new Coordinate(10,10),
+                new Coordinate(0, 0),
+                new Coordinate(10, 10),
                 new Coordinate(10, 0),
                 new Coordinate(0, 0)
             });
 
             var mocks = new MockRepository();
-            var feature = (IFeature)mocks.StrictMultiMock(typeof(IFeature), typeof(INotifyPropertyChanged));
+            var feature = (IFeature) mocks.StrictMultiMock(typeof(IFeature), typeof(INotifyPropertyChanged));
 
             feature.Expect(f => f.Geometry).Return(lineGeomery).Repeat.Any();
-            ((INotifyPropertyChanged)feature).Expect(f => f.PropertyChanged += null).IgnoreArguments().Repeat.Times(3);
+            ((INotifyPropertyChanged) feature).Expect(f => f.PropertyChanged += null).IgnoreArguments().Repeat.Times(3);
 
             mocks.ReplayAll();
 
             var dataColumn = new DataColumn<double>
             {
                 Name = "Test",
-                ValueList = { 1.4, 2.4, 4.6, 74 },
+                ValueList =
+                {
+                    1.4,
+                    2.4,
+                    4.6,
+                    74
+                },
                 DefaultValue = -1,
                 IsActive = true
             };
@@ -94,24 +101,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Editors.ModelFeatureCoordinate
             var dataColumn2 = new DataColumn<double>
             {
                 Name = "Test2",
-                ValueList = { 5, 10, 15, 20 },
+                ValueList =
+                {
+                    5,
+                    10,
+                    15,
+                    20
+                },
                 DefaultValue = -1,
                 IsActive = true
             };
 
-            var modelFeatureCoordinateData = new ModelFeatureCoordinateData<IFeature>
-            {
-                Feature = feature
-            };
+            var modelFeatureCoordinateData = new ModelFeatureCoordinateData<IFeature> {Feature = feature};
 
             modelFeatureCoordinateData.DataColumns.Add(dataColumn);
 
-            var viewModel = new ModelFeatureCoordinateDataViewViewModel
-            {
-                ModelFeatureCoordinateData = modelFeatureCoordinateData
-            };
+            var viewModel = new ModelFeatureCoordinateDataViewViewModel {ModelFeatureCoordinateData = modelFeatureCoordinateData};
 
-            var dataRows = viewModel.CoordinateDataRows;
+            ObservableCollection<CoordinateDataRow> dataRows = viewModel.CoordinateDataRows;
 
             Assert.AreEqual(4, dataRows.Count);
             Assert.AreEqual(3, dataRows[0].GetProperties().Count);
@@ -134,39 +141,39 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Editors.ModelFeatureCoordinate
         {
             var lineGeomery = new LineString(new[]
             {
-                new Coordinate(0,0),
-                new Coordinate(10,10),
+                new Coordinate(0, 0),
+                new Coordinate(10, 10),
                 new Coordinate(10, 0),
                 new Coordinate(0, 0)
             });
 
             var mocks = new MockRepository();
-            var feature = (IFeature)mocks.StrictMultiMock(typeof(IFeature), typeof(INotifyPropertyChanged));
+            var feature = (IFeature) mocks.StrictMultiMock(typeof(IFeature), typeof(INotifyPropertyChanged));
 
             feature.Expect(f => f.Geometry).WhenCalled(x => x.ReturnValue = lineGeomery).TentativeReturn().Return(lineGeomery).Repeat.Any();
-            ((INotifyPropertyChanged)feature).Expect(f => f.PropertyChanged += null).IgnoreArguments().Repeat.Times(3);
+            ((INotifyPropertyChanged) feature).Expect(f => f.PropertyChanged += null).IgnoreArguments().Repeat.Times(3);
 
             mocks.ReplayAll();
 
-            var modelFeatureCoordinateData = new ModelFeatureCoordinateData<IFeature>
-            {
-                Feature = feature
-            };
+            var modelFeatureCoordinateData = new ModelFeatureCoordinateData<IFeature> {Feature = feature};
 
             modelFeatureCoordinateData.DataColumns.Add(new DataColumn<double>
             {
                 Name = "Test",
-                ValueList = { 1.4, 2.4, 4.6, 74 },
+                ValueList =
+                {
+                    1.4,
+                    2.4,
+                    4.6,
+                    74
+                },
                 DefaultValue = -1,
                 IsActive = true
             });
 
-            var viewModel = new ModelFeatureCoordinateDataViewViewModel
-            {
-                ModelFeatureCoordinateData = modelFeatureCoordinateData
-            };
+            var viewModel = new ModelFeatureCoordinateDataViewViewModel {ModelFeatureCoordinateData = modelFeatureCoordinateData};
 
-            var dataRows = viewModel.CoordinateDataRows;
+            ObservableCollection<CoordinateDataRow> dataRows = viewModel.CoordinateDataRows;
 
             Assert.AreEqual(4, dataRows.Count);
             Assert.AreEqual(3, dataRows[0].GetProperties().Count);
@@ -178,7 +185,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Editors.ModelFeatureCoordinate
                 new Coordinate(10, 0)
             });
 
-            ((INotifyPropertyChanged)feature).Raise(f => f.PropertyChanged += null, feature, new PropertyChangedEventArgs(nameof(feature.Geometry)));
+            ((INotifyPropertyChanged) feature).Raise(f => f.PropertyChanged += null, feature, new PropertyChangedEventArgs(nameof(feature.Geometry)));
 
             Assert.AreEqual(3, viewModel.CoordinateDataRows.Count);
             Assert.AreEqual(3, viewModel.CoordinateDataRows[0].GetProperties().Count);
@@ -191,39 +198,39 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Editors.ModelFeatureCoordinate
         {
             var lineGeomery = new LineString(new[]
             {
-                new Coordinate(0,0),
-                new Coordinate(10,10),
+                new Coordinate(0, 0),
+                new Coordinate(10, 10),
                 new Coordinate(10, 0),
                 new Coordinate(0, 0)
             });
 
             var mocks = new MockRepository();
-            var feature = (IFeature)mocks.StrictMultiMock(typeof(IFeature), typeof(INotifyPropertyChanged));
+            var feature = (IFeature) mocks.StrictMultiMock(typeof(IFeature), typeof(INotifyPropertyChanged));
 
             feature.Expect(f => f.Geometry).WhenCalled(x => x.ReturnValue = lineGeomery).TentativeReturn().Return(lineGeomery).Repeat.Any();
-            ((INotifyPropertyChanged)feature).Expect(f => f.PropertyChanged += null).IgnoreArguments().Repeat.Times(3);
+            ((INotifyPropertyChanged) feature).Expect(f => f.PropertyChanged += null).IgnoreArguments().Repeat.Times(3);
 
             mocks.ReplayAll();
 
-            var modelFeatureCoordinateData = new ModelFeatureCoordinateData<IFeature>
-            {
-                Feature = feature
-            };
+            var modelFeatureCoordinateData = new ModelFeatureCoordinateData<IFeature> {Feature = feature};
 
             modelFeatureCoordinateData.DataColumns.Add(new DataColumn<double>
             {
                 Name = "Test",
-                ValueList = { 1.4, 2.4, 4.6, 74 },
+                ValueList =
+                {
+                    1.4,
+                    2.4,
+                    4.6,
+                    74
+                },
                 DefaultValue = -1,
                 IsActive = true
             });
 
-            var viewModel = new ModelFeatureCoordinateDataViewViewModel
-            {
-                ModelFeatureCoordinateData = modelFeatureCoordinateData
-            };
+            var viewModel = new ModelFeatureCoordinateDataViewViewModel {ModelFeatureCoordinateData = modelFeatureCoordinateData};
 
-            var dataRows = viewModel.CoordinateDataRows;
+            ObservableCollection<CoordinateDataRow> dataRows = viewModel.CoordinateDataRows;
 
             Assert.AreEqual(4, dataRows.Count);
             Assert.AreEqual(3, dataRows[0].GetProperties().Count);
@@ -241,38 +248,38 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Editors.ModelFeatureCoordinate
         {
             var lineGeomery = new LineString(new[]
             {
-                new Coordinate(0,0),
-                new Coordinate(10,10),
+                new Coordinate(0, 0),
+                new Coordinate(10, 10),
                 new Coordinate(10, 0),
                 new Coordinate(0, 0)
             });
 
             var mocks = new MockRepository();
-            var feature = (IFeature)mocks.StrictMultiMock(typeof(IFeature), typeof(INotifyPropertyChanged));
+            var feature = (IFeature) mocks.StrictMultiMock(typeof(IFeature), typeof(INotifyPropertyChanged));
 
             feature.Expect(f => f.Geometry).WhenCalled(x => x.ReturnValue = lineGeomery).TentativeReturn().Return(lineGeomery).Repeat.Any();
-            ((INotifyPropertyChanged)feature).Expect(f => f.PropertyChanged += null).IgnoreArguments().Repeat.Times(3);
-            ((INotifyPropertyChanged)feature).Expect(f => f.PropertyChanged -= null).IgnoreArguments().Repeat.Times(3);
+            ((INotifyPropertyChanged) feature).Expect(f => f.PropertyChanged += null).IgnoreArguments().Repeat.Times(3);
+            ((INotifyPropertyChanged) feature).Expect(f => f.PropertyChanged -= null).IgnoreArguments().Repeat.Times(3);
 
             mocks.ReplayAll();
 
-            var modelFeatureCoordinateData = new ModelFeatureCoordinateData<IFeature>
-            {
-                Feature = feature
-            };
+            var modelFeatureCoordinateData = new ModelFeatureCoordinateData<IFeature> {Feature = feature};
 
             modelFeatureCoordinateData.DataColumns.Add(new DataColumn<double>
             {
                 Name = "Test",
-                ValueList = { 1.4, 2.4, 4.6, 74 },
+                ValueList =
+                {
+                    1.4,
+                    2.4,
+                    4.6,
+                    74
+                },
                 DefaultValue = -1,
                 IsActive = true
             });
 
-            var viewModel = new ModelFeatureCoordinateDataViewViewModel
-            {
-                ModelFeatureCoordinateData = modelFeatureCoordinateData
-            };
+            var viewModel = new ModelFeatureCoordinateDataViewViewModel {ModelFeatureCoordinateData = modelFeatureCoordinateData};
 
             viewModel.Dispose();
             modelFeatureCoordinateData.Dispose();
@@ -285,36 +292,44 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Editors.ModelFeatureCoordinate
         {
             var lineGeomery = new LineString(new[]
             {
-                new Coordinate(0,0),
-                new Coordinate(10,10),
+                new Coordinate(0, 0),
+                new Coordinate(10, 10),
                 new Coordinate(10, 0),
                 new Coordinate(0, 0)
             });
 
             var mocks = new MockRepository();
-            var feature = (IFeature)mocks.StrictMultiMock(typeof(IFeature), typeof(INotifyPropertyChanged));
+            var feature = (IFeature) mocks.StrictMultiMock(typeof(IFeature), typeof(INotifyPropertyChanged));
 
             feature.Expect(f => f.Geometry).WhenCalled(x => x.ReturnValue = lineGeomery).TentativeReturn().Return(lineGeomery).Repeat.Any();
-            ((INotifyPropertyChanged)feature).Expect(f => f.PropertyChanged += null).IgnoreArguments().Repeat.Times(3);
+            ((INotifyPropertyChanged) feature).Expect(f => f.PropertyChanged += null).IgnoreArguments().Repeat.Times(3);
 
             mocks.ReplayAll();
 
-            var modelFeatureCoordinateData = new ModelFeatureCoordinateData<IFeature>
-            {
-                Feature = feature
-            };
+            var modelFeatureCoordinateData = new ModelFeatureCoordinateData<IFeature> {Feature = feature};
 
             modelFeatureCoordinateData.DataColumns.Add(new DataColumn<double>
             {
                 Name = "Test",
-                ValueList = { 1.4, 2.4, 4.6, 74 },
+                ValueList =
+                {
+                    1.4,
+                    2.4,
+                    4.6,
+                    74
+                },
                 DefaultValue = -1,
                 IsActive = true
             });
 
             var clearColumnsCount = 0;
             var addColumnCount = 0;
-            var expectedPaths = new[] {"X", "Y", "Test"};
+            var expectedPaths = new[]
+            {
+                "X",
+                "Y",
+                "Test"
+            };
 
             var viewModel = new ModelFeatureCoordinateDataViewViewModel
             {

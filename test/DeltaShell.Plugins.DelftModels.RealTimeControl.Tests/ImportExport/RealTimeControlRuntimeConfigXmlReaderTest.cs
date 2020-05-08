@@ -30,7 +30,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
             logHandler = new LogHandler("");
             runtimeConfigReader = new RealTimeControlRuntimeConfigXmlReader(logHandler);
             Assert.IsTrue(Directory.Exists(directoryPath),
-                $"Directory path '{directoryPath}' was expected to exist.");
+                          $"Directory path '{directoryPath}' was expected to exist.");
         }
 
         [TearDown]
@@ -45,9 +45,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
         public void GivenAnExistingFileAndAnRtcModel_WhenReading_ThenExpectedDataIsSetOnModel()
         {
             // Given
-            var filePath = Path.Combine(directoryPath, "rtcRuntimeConfig.xml");
-            Assert.That(File.Exists(filePath), 
-                $"File path '{filePath}' was expected to exist.");
+            string filePath = Path.Combine(directoryPath, "rtcRuntimeConfig.xml");
+            Assert.That(File.Exists(filePath),
+                        $"File path '{filePath}' was expected to exist.");
 
             // When
             runtimeConfigReader.Read(filePath, rtcModel);
@@ -65,7 +65,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
             // Given
             const string filePath = "invalid_path";
             Assert.That(!File.Exists(filePath),
-                $"File path '{filePath}' was expected to not exist.");
+                        $"File path '{filePath}' was expected to not exist.");
 
             RetrieveDefaultValues();
 
@@ -75,7 +75,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
             // Then
             AssertValuesAreDefault();
             Assert.IsTrue(logHandler.LogMessagesTable.AllMessages.Any(m => m.Contains(filePath)),
-                AssertMessage_CollectedLogMessagesDidNotContainExpectedMessage);
+                          AssertMessage_CollectedLogMessagesDidNotContainExpectedMessage);
         }
 
         [Test]
@@ -83,9 +83,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
         public void GivenAnExistingFileAndNullIsGivenAsParameterForModel_WhenReading_ThenMethodDoesNotThrowAnException()
         {
             // Given
-            var filePath = Path.Combine(directoryPath, "rtcRuntimeConfig.xml");
+            string filePath = Path.Combine(directoryPath, "rtcRuntimeConfig.xml");
             Assert.That(File.Exists(filePath),
-                $"File path '{filePath}' was expected to exist.");
+                        $"File path '{filePath}' was expected to exist.");
 
             // When, Then
             Assert.DoesNotThrow(() => runtimeConfigReader.Read(filePath, null));
@@ -94,13 +94,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
         private void AssertValuesAreDefault()
         {
             Assert.AreEqual(defaultStartTime, rtcModel.StartTime,
-                "Start time of model is incorrectly set.");
+                            "Start time of model is incorrectly set.");
             Assert.AreEqual(defaultStopTime, rtcModel.StopTime,
-                "Stop time of model is incorrectly set.");
+                            "Stop time of model is incorrectly set.");
             Assert.AreEqual(defaultTimeStep, rtcModel.TimeStep,
-                "Time step of model is incorrectly set.");
+                            "Time step of model is incorrectly set.");
             Assert.AreEqual(defaultLimitMemory, rtcModel.LimitMemory,
-                $"Option 'limit memory' was expected to be {defaultLimitMemory.ToString()}.");
+                            $"Option 'limit memory' was expected to be {defaultLimitMemory.ToString()}.");
         }
 
         private void RetrieveDefaultValues()

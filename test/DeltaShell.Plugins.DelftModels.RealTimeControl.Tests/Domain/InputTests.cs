@@ -1,5 +1,4 @@
-﻿using System.Xml.Linq;
-using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
+﻿using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils.Domain;
 using NUnit.Framework;
 
@@ -19,15 +18,15 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
         public void CopyFromAndCreateClone()
         {
             var source = new Input
-                             {
-                                 ParameterName = "parameter",
-                                 Feature = new RtcTestFeature { Name = "location" }
-                             };
+            {
+                ParameterName = "parameter",
+                Feature = new RtcTestFeature {Name = "location"}
+            };
 
             var newInput = new Input();
             newInput.CopyFrom(source);
             Assert.AreEqual(source.Name, newInput.Name);
-            var clone = (Input)source.Clone();
+            var clone = (Input) source.Clone();
             Assert.IsFalse(ReferenceEquals(source, clone));
             Assert.AreEqual(source.Name, clone.Name);
             Assert.IsTrue(ReferenceEquals(source.Feature, clone.Feature));

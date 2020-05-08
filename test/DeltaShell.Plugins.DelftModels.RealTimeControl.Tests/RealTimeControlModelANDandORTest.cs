@@ -21,11 +21,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
         {
             RealTimeControlModel rtcModel = GetRtcModelWithHydraulicRule();
 
-            var controlGroup = rtcModel.ControlGroups.First();
+            ControlGroup controlGroup = rtcModel.ControlGroups.First();
 
-            var c1 = (StandardCondition)rtcModel.ControlGroups[0].Conditions[0];
-            var input = c1.Input;
-            var rule = rtcModel.ControlGroups[0].Rules[0];
+            var c1 = (StandardCondition) rtcModel.ControlGroups[0].Conditions[0];
+            IInput input = c1.Input;
+            RuleBase rule = rtcModel.ControlGroups[0].Rules[0];
 
             c1.Name = "C1";
             c1.Operation = Operation.Greater;
@@ -49,8 +49,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                 Value = 0.5
             };
 
-
-
             c1.TrueOutputs.Add(c2);
 
             c2.TrueOutputs.Add(rule);
@@ -70,36 +68,96 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
         public void Execute_C1AndC2_Or_C3ANDC4_TriggerForHydraulicRule()
         {
             // RTC model
-            var hydraulicRuleInput = new Input { Feature = new RtcTestFeature { Name = "f1" }, ParameterName = "hydraulicRuleInput", UnitName = "none" };
-            var hydraulicRuleOutput = new Output { Feature = new RtcTestFeature { Name = "f2" }, ParameterName = "hydraulicRuleOutput", UnitName = "none" };
-            var conditionInput = new Input { Feature = new RtcTestFeature { Name = "f3" }, ParameterName = "conditionInput", UnitName = "none" };
+            var hydraulicRuleInput = new Input
+            {
+                Feature = new RtcTestFeature {Name = "f1"},
+                ParameterName = "hydraulicRuleInput",
+                UnitName = "none"
+            };
+            var hydraulicRuleOutput = new Output
+            {
+                Feature = new RtcTestFeature {Name = "f2"},
+                ParameterName = "hydraulicRuleOutput",
+                UnitName = "none"
+            };
+            var conditionInput = new Input
+            {
+                Feature = new RtcTestFeature {Name = "f3"},
+                ParameterName = "conditionInput",
+                UnitName = "none"
+            };
 
-            var hydraulicRule = new HydraulicRule { Name = "HydraulicRule", Inputs = { hydraulicRuleInput }, Outputs = { hydraulicRuleOutput }};
-            
+            var hydraulicRule = new HydraulicRule
+            {
+                Name = "HydraulicRule",
+                Inputs = {hydraulicRuleInput},
+                Outputs = {hydraulicRuleOutput}
+            };
+
             hydraulicRule.Function[-100.0] = 1.0; // rule on
-            hydraulicRule.Function[100.0] = 1.0; // rule on
-            
-            var c4 = new StandardCondition { Name = "C4", Input = conditionInput, Operation = Operation.Less, Value = -2.0, TrueOutputs = { hydraulicRule } };
-            var c3 = new StandardCondition { Name = "C3", Input = conditionInput, Operation = Operation.Less, Value = -1.0, TrueOutputs = { c4 } };
-            var c2 = new StandardCondition { Name = "C2", Input = conditionInput, Operation = Operation.Greater, Value = 2.0, TrueOutputs = { hydraulicRule }, FalseOutputs = { c3 } };
-            var c1 = new StandardCondition { Name = "C1", Input = conditionInput, Operation = Operation.Greater, Value = 1.0, TrueOutputs = { c2 }, FalseOutputs = { c3 } };
+            hydraulicRule.Function[100.0] = 1.0;  // rule on
+
+            var c4 = new StandardCondition
+            {
+                Name = "C4",
+                Input = conditionInput,
+                Operation = Operation.Less,
+                Value = -2.0,
+                TrueOutputs = {hydraulicRule}
+            };
+            var c3 = new StandardCondition
+            {
+                Name = "C3",
+                Input = conditionInput,
+                Operation = Operation.Less,
+                Value = -1.0,
+                TrueOutputs = {c4}
+            };
+            var c2 = new StandardCondition
+            {
+                Name = "C2",
+                Input = conditionInput,
+                Operation = Operation.Greater,
+                Value = 2.0,
+                TrueOutputs = {hydraulicRule},
+                FalseOutputs = {c3}
+            };
+            var c1 = new StandardCondition
+            {
+                Name = "C1",
+                Input = conditionInput,
+                Operation = Operation.Greater,
+                Value = 1.0,
+                TrueOutputs = {c2},
+                FalseOutputs = {c3}
+            };
 
             var controlGroup = new ControlGroup
             {
                 Name = "Control group",
-                Inputs = { hydraulicRuleInput, conditionInput },
-                Outputs = { hydraulicRuleOutput },
-                Rules = { hydraulicRule },
-                Conditions = { c1, c2, c3, c4 }
+                Inputs =
+                {
+                    hydraulicRuleInput,
+                    conditionInput
+                },
+                Outputs = {hydraulicRuleOutput},
+                Rules = {hydraulicRule},
+                Conditions =
+                {
+                    c1,
+                    c2,
+                    c3,
+                    c4
+                }
             };
 
             var rtcModel = new RealTimeControlModel
-                               {
-                                   ControlGroups = { controlGroup },
-                                   StartTime = new DateTime(2000, 1, 1),
-                                   StopTime = new DateTime(2000, 1, 2),
-                                   TimeStep = new TimeSpan(0, 0, 1)
-                               };
+            {
+                ControlGroups = {controlGroup},
+                StartTime = new DateTime(2000, 1, 1),
+                StopTime = new DateTime(2000, 1, 2),
+                TimeStep = new TimeSpan(0, 0, 1)
+            };
 
             LogHelper.ConfigureLogging(Level.Error);
             rtcModel.Initialize();
@@ -149,11 +207,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
         {
             RealTimeControlModel rtcModel = GetRtcModelWithHydraulicRule();
 
-            var controlGroup = rtcModel.ControlGroups.First();
+            ControlGroup controlGroup = rtcModel.ControlGroups.First();
 
-            var c1 = (StandardCondition)rtcModel.ControlGroups[0].Conditions[0];
-            var input = c1.Input;
-            var rule = rtcModel.ControlGroups[0].Rules[0];
+            var c1 = (StandardCondition) rtcModel.ControlGroups[0].Conditions[0];
+            IInput input = c1.Input;
+            RuleBase rule = rtcModel.ControlGroups[0].Rules[0];
 
             c1.Name = "C1";
             c1.Operation = Operation.Greater;
@@ -177,8 +235,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                 Value = 0.5
             };
 
-
-
             c1.TrueOutputs.Add(c2);
             c1.FalseOutputs.Add(c3);
 
@@ -200,11 +256,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
         {
             RealTimeControlModel rtcModel = GetRtcModelWithHydraulicRule();
 
-            var controlGroup = rtcModel.ControlGroups.First();
+            ControlGroup controlGroup = rtcModel.ControlGroups.First();
 
-            var c1 = (StandardCondition)rtcModel.ControlGroups[0].Conditions[0];
-            var input = c1.Input;
-            var rule = rtcModel.ControlGroups[0].Rules[0];
+            var c1 = (StandardCondition) rtcModel.ControlGroups[0].Conditions[0];
+            IInput input = c1.Input;
+            RuleBase rule = rtcModel.ControlGroups[0].Rules[0];
 
             c1.Name = "C1";
             c1.Operation = Operation.Greater;
@@ -245,27 +301,27 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
         [Obsolete("Don't use these helpers, construct everything in test to keep code readable")]
         private RealTimeControlModel GetRtcModelWithHydraulicRule()
         {
-            var outputFeature = new RtcTestFeature { Name = "output_feature" };
-            var inputFeature = new RtcTestFeature { Name = "input_feature" };
+            var outputFeature = new RtcTestFeature {Name = "output_feature"};
+            var inputFeature = new RtcTestFeature {Name = "input_feature"};
 
             var controlledModel = new ControlledTestModel
             {
                 StartTime = new DateTime(2000, 1, 1, 0, 0, 0),
                 StopTime = new DateTime(2000, 1, 1, 6, 0, 0),
                 TimeStep = new TimeSpan(0, 1, 0, 0),
-                OutputFeatures = { outputFeature },
-                InputFeatures = { inputFeature }
+                OutputFeatures = {outputFeature},
+                InputFeatures = {inputFeature}
             };
 
-            var controlGroup = RealTimeControlModelHelper.CreateGroupHydraulicRule(true);
-            var rtcModel = new RealTimeControlModel { ControlGroups = { controlGroup } };
+            ControlGroup controlGroup = RealTimeControlModelHelper.CreateGroupHydraulicRule(true);
+            var rtcModel = new RealTimeControlModel {ControlGroups = {controlGroup}};
 
             rtcModel.GetDataItemByValue(controlGroup.Inputs[0]).LinkTo(controlledModel.GetChildDataItems(outputFeature).First());
             rtcModel.GetDataItemByValue(controlGroup.Inputs[1]).LinkTo(controlledModel.GetChildDataItems(outputFeature).First());
             controlledModel.GetChildDataItems(inputFeature).First().LinkTo(rtcModel.GetDataItemByValue(controlGroup.Outputs[0]));
 
             //RealTimeControlTestHelper.AddDummyLinksToGroup(controlledModel, controlGroup);
-            ((HydraulicRule)controlGroup.Rules[0]).Function[0.0] = 1.0;  // empy lookupTable is not allowed
+            ((HydraulicRule) controlGroup.Rules[0]).Function[0.0] = 1.0; // empy lookupTable is not allowed
 
             var comp = new CompositeModel();
             comp.Activities.Add(rtcModel);

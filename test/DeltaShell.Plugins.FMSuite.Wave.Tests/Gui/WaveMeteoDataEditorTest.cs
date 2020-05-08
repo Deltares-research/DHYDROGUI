@@ -12,14 +12,17 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
         [Test]
         public void ShowEditor()
         {
-            var editor = new WaveMeteoDataEditor { Data = new WaveMeteoData
+            var editor = new WaveMeteoDataEditor
             {
-                FileType = WindDefinitionType.WindXWindY,
-                HasSpiderWeb = true,
-                SpiderWebFilePath = "someSpider.spw",
-                XComponentFilePath = "theX.wnd",
-                YComponentFilePath = "theY.wnd"
-            } };
+                Data = new WaveMeteoData
+                {
+                    FileType = WindDefinitionType.WindXWindY,
+                    HasSpiderWeb = true,
+                    SpiderWebFilePath = "someSpider.spw",
+                    XComponentFilePath = "theX.wnd",
+                    YComponentFilePath = "theY.wnd"
+                }
+            };
             WindowsFormsTestHelper.ShowModal(editor);
         }
     }

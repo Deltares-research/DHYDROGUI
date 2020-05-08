@@ -15,34 +15,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport.Data
     {
         private readonly Random random = new Random();
 
-        [TestCase(Operator.Add)]
-        [TestCase(Operator.Subtract)]
-        [TestCase(Operator.Multiply)]
-        [TestCase(Operator.Divide)]
-        [TestCase(Operator.Min)]
-        [TestCase(Operator.Max)]
-        public void Constructor_InitializesInstanceCorrectly(Operator @operator)
-        {
-            // Setup
-            const string controlGroupName = "control_group_name";
-            const string id = controlGroupName + "/expression_id";
-            var firstReference = Substitute.For<IExpressionReference>();
-            var secondReference = Substitute.For<IExpressionReference>();
-            const string yValue = "y_value";
-
-            // Call
-            var expressionObject = new ExpressionObject(id, @operator,
-                                                        firstReference, secondReference, yValue);
-
-            // Assert
-            Assert.That(expressionObject.Id, Is.EqualTo(id));
-            Assert.That(expressionObject.ControlGroupName, Is.EqualTo(controlGroupName));
-            Assert.That(expressionObject.Operator, Is.EqualTo(@operator));
-            Assert.That(expressionObject.FirstReference, Is.SameAs(firstReference));
-            Assert.That(expressionObject.SecondReference, Is.SameAs(secondReference));
-            Assert.That(expressionObject.Y, Is.EqualTo(yValue));
-        }
-
         [Test]
         public void Constructor_IdNull_ThrowsArgumentNullException()
         {
@@ -77,6 +49,34 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport.Data
             Assert.That(exception.Message, Is.EqualTo("operator"));
         }
 
+        [TestCase(Operator.Add)]
+        [TestCase(Operator.Subtract)]
+        [TestCase(Operator.Multiply)]
+        [TestCase(Operator.Divide)]
+        [TestCase(Operator.Min)]
+        [TestCase(Operator.Max)]
+        public void Constructor_InitializesInstanceCorrectly(Operator @operator)
+        {
+            // Setup
+            const string controlGroupName = "control_group_name";
+            const string id = controlGroupName + "/expression_id";
+            var firstReference = Substitute.For<IExpressionReference>();
+            var secondReference = Substitute.For<IExpressionReference>();
+            const string yValue = "y_value";
+
+            // Call
+            var expressionObject = new ExpressionObject(id, @operator,
+                                                        firstReference, secondReference, yValue);
+
+            // Assert
+            Assert.That(expressionObject.Id, Is.EqualTo(id));
+            Assert.That(expressionObject.ControlGroupName, Is.EqualTo(controlGroupName));
+            Assert.That(expressionObject.Operator, Is.EqualTo(@operator));
+            Assert.That(expressionObject.FirstReference, Is.SameAs(firstReference));
+            Assert.That(expressionObject.SecondReference, Is.SameAs(secondReference));
+            Assert.That(expressionObject.Y, Is.EqualTo(yValue));
+        }
+
         [TestCaseSource(nameof(GetTestCases))]
         public void Constructor_ExpressionXml_InitializesInstanceCorrectly(ExpressionXML expressionXml,
                                                                            ExpressionObject expectedExpressionObject)
@@ -95,7 +95,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport.Data
             const string id = controlGroupName + "/expression_id";
             const string yValue = "y_value";
 
-            string constantValue = random.Next().ToString();
+            var constantValue = random.Next().ToString();
             const string inputReference = RtcXmlTag.Input + "input_name";
             const string expressionReference = "expression_name";
 
@@ -105,8 +105,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport.Data
                                                                   .WithConstantAsFirstReference(constantValue)
                                                                   .AndConstantAsSecondReference(constantValue);
                 var expectedResult = new ExpressionObject(id, @operator,
-                                                          new ConstantLeafReference(constantValue), 
-                                                          new ConstantLeafReference(constantValue), 
+                                                          new ConstantLeafReference(constantValue),
+                                                          new ConstantLeafReference(constantValue),
                                                           yValue);
 
                 yield return new TestCaseData(expressionXml, expectedResult)
@@ -116,8 +116,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport.Data
                                                     .WithConstantAsFirstReference(constantValue)
                                                     .AndInputAsSecondReference(inputReference);
                 expectedResult = new ExpressionObject(id, @operator,
-                                                      new ConstantLeafReference(constantValue), 
-                                                      new ParameterLeafReference(inputReference), 
+                                                      new ConstantLeafReference(constantValue),
+                                                      new ParameterLeafReference(inputReference),
                                                       yValue);
 
                 yield return new TestCaseData(expressionXml, expectedResult)
@@ -127,7 +127,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport.Data
                                                     .WithConstantAsFirstReference(constantValue)
                                                     .AndInputAsSecondReference(expressionReference);
                 expectedResult = new ExpressionObject(id, @operator,
-                                                      new ConstantLeafReference(constantValue), 
+                                                      new ConstantLeafReference(constantValue),
                                                       new ExpressionReference(expressionReference),
                                                       yValue);
 
@@ -138,8 +138,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport.Data
                                                     .WithInputAsFirstReference(inputReference)
                                                     .AndConstantAsSecondReference(constantValue);
                 expectedResult = new ExpressionObject(id, @operator,
-                                                      new ParameterLeafReference(inputReference), 
-                                                      new ConstantLeafReference(constantValue), 
+                                                      new ParameterLeafReference(inputReference),
+                                                      new ConstantLeafReference(constantValue),
                                                       yValue);
 
                 yield return new TestCaseData(expressionXml, expectedResult)
@@ -149,7 +149,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport.Data
                                                     .WithInputAsFirstReference(inputReference)
                                                     .AndInputAsSecondReference(inputReference);
                 expectedResult = new ExpressionObject(id, @operator,
-                                                      new ParameterLeafReference(inputReference), 
+                                                      new ParameterLeafReference(inputReference),
                                                       new ParameterLeafReference(inputReference),
                                                       yValue);
 
@@ -172,7 +172,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport.Data
                                                     .AndConstantAsSecondReference(constantValue);
                 expectedResult = new ExpressionObject(id, @operator,
                                                       new ExpressionReference(expressionReference),
-                                                      new ConstantLeafReference(constantValue), 
+                                                      new ConstantLeafReference(constantValue),
                                                       yValue);
 
                 yield return new TestCaseData(expressionXml, expectedResult)
@@ -228,6 +228,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport.Data
                        EqualsReference(x.SecondReference, y.SecondReference);
             }
 
+            public int GetHashCode(ExpressionObject obj)
+            {
+                throw new NotImplementedException();
+            }
+
             private static bool EqualsReference(IExpressionReference x, IExpressionReference y)
             {
                 if (x == null && y == null)
@@ -256,11 +261,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport.Data
                 }
 
                 return Equals(x.Value, y.Value);
-            }
-
-            public int GetHashCode(ExpressionObject obj)
-            {
-                throw new NotImplementedException();
             }
         }
     }

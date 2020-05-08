@@ -47,7 +47,119 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
     [TestFixture]
     public class AcceptanceModelsTest
     {
+        #region AcceptanceModelTests
+
+        [Test]
+        [TestCaseSource(nameof(GetAcceptanceModels))]
+        public void Delft3DFM_AcceptanceModelTest(string relativeZipFilePath, string relativeMduFilePath)
+        {
+            // Step 1: Unzip 
+            string testDataFolder = new DirectoryInfo(TestHelper.GetTestWorkingDirectory()).Parent?.Parent?.Parent?.FullName;
+            string testCaseZipFilePath = Path.Combine(testDataFolder, "AcceptanceModels", "Delft3DFM", relativeZipFilePath);
+
+            Assert.IsTrue(File.Exists(testCaseZipFilePath), "Failed to find acceptance model test-data");
+
+            var testDirectory = string.Empty;
+
+            Assert.True(TryPerformAction(() => UnzipModel(relativeZipFilePath, testCaseZipFilePath, out testDirectory)),
+                        string.Format("Failed to unzip file: {0}", testCaseZipFilePath));
+
+            // Step 2: using(running GUI) add correct plugins for Delft3DFM
+            using (var gui = new DeltaShellGui())
+            {
+                //load the plugins
+                gui.Plugins.Add(new DimrGuiPlugin());
+                gui.Plugins.Add(new CommonToolsGuiPlugin());
+                gui.Plugins.Add(new FlowFMGuiPlugin());
+                gui.Plugins.Add(new WaveGuiPlugin());
+                gui.Plugins.Add(new HydroModelGuiPlugin());
+                gui.Plugins.Add(new NetworkEditorGuiPlugin());
+                gui.Plugins.Add(new ProjectExplorerGuiPlugin());
+                gui.Plugins.Add(new RealTimeControlGuiPlugin());
+                gui.Plugins.Add(new ScriptingGuiPlugin());
+                gui.Plugins.Add(new SharpMapGisGuiPlugin());
+                gui.Plugins.Add(new ToolboxGuiPlugin());
+                gui.Plugins.Add(new WaterQualityModelGuiPlugin());
+
+                IApplication app = gui.Application;
+                app.Plugins.Add(new CommonToolsApplicationPlugin());
+                app.Plugins.Add(new NHibernateDaoApplicationPlugin());
+                app.Plugins.Add(new FlowFMApplicationPlugin());
+                app.Plugins.Add(new WaveApplicationPlugin());
+                app.Plugins.Add(new HydroModelApplicationPlugin());
+                app.Plugins.Add(new NetCdfApplicationPlugin());
+                app.Plugins.Add(new NetworkEditorApplicationPlugin());
+                app.Plugins.Add(new RealTimeControlApplicationPlugin());
+                app.Plugins.Add(new ScriptingApplicationPlugin());
+                app.Plugins.Add(new SharpMapGisApplicationPlugin());
+                app.Plugins.Add(new ToolboxApplicationPlugin());
+                app.Plugins.Add(new WaterQualityModelApplicationPlugin());
+
+                gui.Run();
+
+                Action mainWindowShown = delegate
+                {
+                    exportConfig.WorkingDirectory = app.WorkDirectory;
+                    exportConfig.OutputName = TestContext.CurrentContext.Test.Name;
+
+                    // Step 3: Find root project path in zip folder
+                    string projectRootPath = GetProjectRootInUnzippedFolder(testDirectory, relativeMduFilePath);
+                    Assert.That(projectRootPath, Is.Not.Null);
+
+                    // Step 4: Import MDU
+                    string mduPath = Path.Combine(projectRootPath, relativeMduFilePath);
+                    Assert.True(TryPerformAction(() => ImportFlowFMModelAndAddToProject(app, mduPath)),
+                                string.Format("Failed to import model: {0}", mduPath));
+
+                    // Step 5: Save Project As
+                    string projectPath = Path.Combine(testDirectory, @"TestProjectFolder\TestProject.dsproj");
+                    Assert.True(TryPerformAction(() => app.SaveProjectAs(projectPath)),
+                                string.Format("Failed to save project before running the model: {0}", projectPath));
+
+                    // Step 6: Close Project
+                    Assert.True(TryPerformAction(() => app.CloseProject()),
+                                string.Format("Failed to close project after import: {0}", projectPath));
+
+                    // Step 7: Re-Open Project
+                    Assert.True(TryPerformAction(() => app.OpenProject(projectPath)),
+                                string.Format("Failed to reopen project: {0}", projectPath));
+
+                    // Step 8: Validation of the model
+                    ITimeDependentModel rootModel = null;
+                    Assert.True(TryPerformAction(() => GetRootModelAndValidate(app, out rootModel)),
+                                string.Format("Failed to validate model: {0}", rootModel.Name));
+
+                    exportConfig.CurrentModelName = rootModel.Name;
+
+                    // Step 9: Dimr Export of FM model
+                    Assert.True(TryPerformAction(() => ExportDimrConfiguration(testDirectory, rootModel)),
+                                string.Format("Failed to export dimr configuration for model: {0}", rootModel.Name));
+
+                    // Step 10: Adjust Time Settings (10 time steps)
+                    Assert.True(TryPerformAction(() => AdjustTimeSettings(rootModel)),
+                                string.Format("Failed to adjust time settings for model: {0}", rootModel.Name));
+
+                    // Step 11: Run model
+                    Assert.True(TryPerformAction(() => RunModel(rootModel)),
+                                string.Format("Failed to run model: {0}", rootModel.Name));
+
+                    // Step 12: Save Project
+                    Assert.True(TryPerformAction(() => app.SaveProject()),
+                                string.Format("Failed to save project after running the model: {0}", projectPath));
+
+                    // Step 13: Close Project
+                    Assert.True(TryPerformAction(() => app.CloseProject()),
+                                string.Format("Failed to close project after running the model: {0}", projectPath));
+                };
+
+                WpfTestHelper.ShowModal((Control) gui.MainWindow, mainWindowShown);
+            }
+        }
+
+        #endregion
+
         #region TestFixture
+
         private static string TestFixtureDirectory = string.Empty;
 
         private AcceptanceModelExportResultConfig exportConfig;
@@ -61,7 +173,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             FileUtils.DeleteIfExists(AcceptanceModelExportResultConfig.ReportFolder);
             Directory.CreateDirectory(AcceptanceModelExportResultConfig.ReportFolder);
             Directory.CreateDirectory(AcceptanceModelExportResultConfig.Delft3DfmExportDirectory);
-
         }
 
         [TestFixtureTearDown]
@@ -81,13 +192,18 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         public void TearDown()
         {
             // We want to add a "No .dia file found for this run."-dia file when none has been produced this test run.
-            if (exportConfig.HasExportedDiagnostics || string.IsNullOrEmpty(exportConfig.OutputName)) return;
+            if (exportConfig.HasExportedDiagnostics || string.IsNullOrEmpty(exportConfig.OutputName))
+            {
+                return;
+            }
 
             AcceptanceModelExportHelper.ExportEmptyLogFile(exportConfig);
         }
+
         #endregion
 
         #region TestCaseDefinitions
+
         private static DirectoryInfo AssemblyDirectory
         {
             get
@@ -119,12 +235,12 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
         private static IEnumerable<Tuple<FileInfo, bool, DirectoryInfo>> GetZipFilesInModelDirectory(DirectoryInfo modelDirectoryInfo)
         {
-                FileInfo[] candidateZipFiles = modelDirectoryInfo.EnumerateFiles("*.zip", 
-                                                                                 SearchOption.AllDirectories)
-                                                                 .ToArray();
-                bool hasMultipleZipFiles = candidateZipFiles.Length > 1;
+            FileInfo[] candidateZipFiles = modelDirectoryInfo.EnumerateFiles("*.zip",
+                                                                             SearchOption.AllDirectories)
+                                                             .ToArray();
+            bool hasMultipleZipFiles = candidateZipFiles.Length > 1;
 
-                return candidateZipFiles.Select(fi => new Tuple<FileInfo, bool, DirectoryInfo>(fi, hasMultipleZipFiles, modelDirectoryInfo));
+            return candidateZipFiles.Select(fi => new Tuple<FileInfo, bool, DirectoryInfo>(fi, hasMultipleZipFiles, modelDirectoryInfo));
         }
 
         private static IEnumerable<TestCaseData> GetTestCaseDataInZip(Tuple<FileInfo, bool, DirectoryInfo> input)
@@ -132,19 +248,18 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             return GetTestCaseDataInZip(input.Item1, input.Item3, input.Item2);
         }
 
-
-        private static IEnumerable<TestCaseData> GetTestCaseDataInZip(FileInfo candidateZipFile, 
-                                                                      DirectoryInfo modelDirectory, 
+        private static IEnumerable<TestCaseData> GetTestCaseDataInZip(FileInfo candidateZipFile,
+                                                                      DirectoryInfo modelDirectory,
                                                                       bool hasMultipleZipFiles)
         {
-            IList<string> filesInZip = ZipFileUtils.GetFilePathsInZip(candidateZipFile.FullName, 
+            IList<string> filesInZip = ZipFileUtils.GetFilePathsInZip(candidateZipFile.FullName,
                                                                       null);
 
-            string[] relevantMduFilesInZip = 
+            string[] relevantMduFilesInZip =
                 filesInZip.Where(p => p.EndsWith(".mdu") && !IsIgnored(p))
                           .ToArray();
 
-            bool hasMultipleMduFiles = relevantMduFilesInZip.Length> 1;
+            bool hasMultipleMduFiles = relevantMduFilesInZip.Length > 1;
 
             foreach (string candidateMduFile in relevantMduFilesInZip)
             {
@@ -167,10 +282,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             return lowerCase.Contains("dimr_expected") || lowerCase.Contains("_output");
         }
 
-        private static string GetTestName(DirectoryInfo testModel, 
-                                          bool hasMultipleZipFiles, 
+        private static string GetTestName(DirectoryInfo testModel,
+                                          bool hasMultipleZipFiles,
                                           bool hasMultipleMduFiles,
-                                          string candidateZipFileName, 
+                                          string candidateZipFileName,
                                           string candidateMduFileName)
         {
             string testName = $"{testModel.Parent.Name}.{testModel.Name}";
@@ -194,120 +309,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
             return testName;
         }
-        #endregion
-
-        #region AcceptanceModelTests
-        [Test]
-        [TestCaseSource(nameof(GetAcceptanceModels))]
-        public void Delft3DFM_AcceptanceModelTest(string relativeZipFilePath, string relativeMduFilePath)
-        {
-            // Step 1: Unzip 
-            var testDataFolder = new DirectoryInfo(TestHelper.GetTestWorkingDirectory()).Parent?.Parent?.Parent?.FullName;
-            var testCaseZipFilePath = Path.Combine(testDataFolder, "AcceptanceModels", "Delft3DFM", relativeZipFilePath);
-
-            Assert.IsTrue(File.Exists(testCaseZipFilePath), "Failed to find acceptance model test-data");
-
-            var testDirectory = string.Empty;
-
-            Assert.True(TryPerformAction(() => UnzipModel(relativeZipFilePath, testCaseZipFilePath, out testDirectory)),
-                string.Format("Failed to unzip file: {0}", testCaseZipFilePath));
-
-            // Step 2: using(running GUI) add correct plugins for Delft3DFM
-            using (var gui = new DeltaShellGui())
-            {
-                //load the plugins
-                gui.Plugins.Add(new DimrGuiPlugin());
-                gui.Plugins.Add(new CommonToolsGuiPlugin());
-                gui.Plugins.Add(new FlowFMGuiPlugin());
-                gui.Plugins.Add(new WaveGuiPlugin());
-                gui.Plugins.Add(new HydroModelGuiPlugin());
-                gui.Plugins.Add(new NetworkEditorGuiPlugin());
-                gui.Plugins.Add(new ProjectExplorerGuiPlugin());
-                gui.Plugins.Add(new RealTimeControlGuiPlugin());
-                gui.Plugins.Add(new ScriptingGuiPlugin());
-                gui.Plugins.Add(new SharpMapGisGuiPlugin());
-                gui.Plugins.Add(new ToolboxGuiPlugin());
-                gui.Plugins.Add(new WaterQualityModelGuiPlugin());
-
-                var app = gui.Application;
-                app.Plugins.Add(new CommonToolsApplicationPlugin());
-                app.Plugins.Add(new NHibernateDaoApplicationPlugin());
-                app.Plugins.Add(new FlowFMApplicationPlugin());
-                app.Plugins.Add(new WaveApplicationPlugin());
-                app.Plugins.Add(new HydroModelApplicationPlugin());
-                app.Plugins.Add(new NetCdfApplicationPlugin());
-                app.Plugins.Add(new NetworkEditorApplicationPlugin());
-                app.Plugins.Add(new RealTimeControlApplicationPlugin());
-                app.Plugins.Add(new ScriptingApplicationPlugin());
-                app.Plugins.Add(new SharpMapGisApplicationPlugin());
-                app.Plugins.Add(new ToolboxApplicationPlugin());
-                app.Plugins.Add(new WaterQualityModelApplicationPlugin());
-
-                gui.Run();
-
-                Action mainWindowShown = delegate
-                {
-                    exportConfig.WorkingDirectory = app.WorkDirectory;
-                    exportConfig.OutputName = TestContext.CurrentContext.Test.Name;
-
-                    // Step 3: Find root project path in zip folder
-                    var projectRootPath = GetProjectRootInUnzippedFolder(testDirectory, relativeMduFilePath);
-                    Assert.That(projectRootPath, Is.Not.Null);
-
-                    // Step 4: Import MDU
-                    var mduPath = Path.Combine(projectRootPath, relativeMduFilePath);
-                    Assert.True(TryPerformAction(() => ImportFlowFMModelAndAddToProject(app, mduPath)),
-                        string.Format("Failed to import model: {0}", mduPath));
-
-                    // Step 5: Save Project As
-                    var projectPath = Path.Combine(testDirectory, @"TestProjectFolder\TestProject.dsproj");
-                    Assert.True(TryPerformAction(() => app.SaveProjectAs(projectPath)),
-                        string.Format("Failed to save project before running the model: {0}", projectPath));
-
-                    // Step 6: Close Project
-                    Assert.True(TryPerformAction(() => app.CloseProject()),
-                        string.Format("Failed to close project after import: {0}", projectPath));
-
-                    // Step 7: Re-Open Project
-                    Assert.True(TryPerformAction(() => app.OpenProject(projectPath)),
-                        string.Format("Failed to reopen project: {0}", projectPath));
-
-                    // Step 8: Validation of the model
-                    ITimeDependentModel rootModel = null;
-                    Assert.True(TryPerformAction(() => GetRootModelAndValidate(app, out rootModel)),
-                        string.Format("Failed to validate model: {0}", rootModel.Name));
-
-                    exportConfig.CurrentModelName = rootModel.Name;
-
-                    // Step 9: Dimr Export of FM model
-                    Assert.True(TryPerformAction(() => ExportDimrConfiguration(testDirectory, rootModel)),
-                        string.Format("Failed to export dimr configuration for model: {0}", rootModel.Name));
-
-                    // Step 10: Adjust Time Settings (10 time steps)
-                    Assert.True(TryPerformAction(() => AdjustTimeSettings(rootModel)),
-                        string.Format("Failed to adjust time settings for model: {0}", rootModel.Name));
-
-                    // Step 11: Run model
-                    Assert.True(TryPerformAction(() => RunModel(rootModel)),
-                        string.Format("Failed to run model: {0}", rootModel.Name));
-
-                    // Step 12: Save Project
-                    Assert.True(TryPerformAction(() => app.SaveProject()),
-                        string.Format("Failed to save project after running the model: {0}", projectPath));
-
-                    // Step 13: Close Project
-                    Assert.True(TryPerformAction(() => app.CloseProject()),
-                        string.Format("Failed to close project after running the model: {0}", projectPath));
-                };
-
-                WpfTestHelper.ShowModal((Control)gui.MainWindow, mainWindowShown);
-            }
-        }
 
         #endregion
 
         #region HelperFunctions
-        
+
         /// <summary>
         /// Wraps Action in a Try-Catch, returns false if Action results in an exception
         /// </summary>
@@ -322,7 +328,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             }
             catch (Exception debug)
             {
-                if(!string.IsNullOrEmpty(debug.Message)) Console.WriteLine(debug.Message);
+                if (!string.IsNullOrEmpty(debug.Message))
+                {
+                    Console.WriteLine(debug.Message);
+                }
+
                 return false;
             }
         }
@@ -336,12 +346,14 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         /// <returns> The path to the parent directory of <paramref name="projectPath"/> if it exists, null otherwise. </returns>
         private static string GetProjectRootInUnzippedFolder(string unzipFolder, string projectPath)
         {
-            var rootFolder = unzipFolder;
+            string rootFolder = unzipFolder;
             IList<string> subFolders = new List<string>();
             while (true)
             {
                 if (File.Exists(Path.Combine(rootFolder, projectPath)))
+                {
                     return rootFolder;
+                }
 
                 subFolders.AddRange(Directory.GetDirectories(rootFolder));
 
@@ -363,16 +375,18 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
         private static void UnzipModel(string relativeZipFilePath, string testCaseZipFilePath, out string testDirectory)
         {
-            var zipFileName = Path.GetFileName(relativeZipFilePath);
+            string zipFileName = Path.GetFileName(relativeZipFilePath);
             if (string.IsNullOrEmpty(zipFileName))
+            {
                 throw new ArgumentException(string.Format("Unable to retrieve Zip File Name: {0}", relativeZipFilePath));
+            }
 
-            var localZipFilePath = Path.Combine(TestFixtureDirectory, zipFileName);
+            string localZipFilePath = Path.Combine(TestFixtureDirectory, zipFileName);
 
             FileUtils.DeleteIfExists(localZipFilePath);
             FileUtils.CopyFile(testCaseZipFilePath, localZipFilePath);
 
-            var randomFileName = Path.GetRandomFileName().Substring(0, 5);
+            string randomFileName = Path.GetRandomFileName().Substring(0, 5);
             testDirectory = Path.Combine(TestFixtureDirectory, randomFileName);
             FileUtils.DeleteIfExists(testDirectory);
             ZipFileUtils.Extract(localZipFilePath, testDirectory);
@@ -392,13 +406,21 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             ValidationReport report = null;
 
             var hydroModel = timeDependentModel as HydroModel;
-            if (hydroModel != null) report = hydroModel.Validate();
+            if (hydroModel != null)
+            {
+                report = hydroModel.Validate();
+            }
 
             var fmModel = timeDependentModel as WaterFlowFMModel;
-            if (fmModel != null) report = fmModel.Validate();
-            
+            if (fmModel != null)
+            {
+                report = fmModel.Validate();
+            }
+
             if (report == null)
+            {
                 throw new NotImplementedException(string.Format("Unable to Validate Root Model: {0}, did you forget to add support for this model type?", timeDependentModel.Name));
+            }
 
             CheckValidationErrors(report);
         }
@@ -407,15 +429,19 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         {
             if (report.ErrorCount > 0)
             {
-                var debugInfo = string.Join(Environment.NewLine, report.AllErrors.Select(er => er.Message));
+                string debugInfo = string.Join(Environment.NewLine, report.AllErrors.Select(er => er.Message));
                 throw new Exception(debugInfo);
             }
         }
 
         private static T GetRootModel<T>(IApplication app)
         {
-            var model = app.Project.RootFolder.Models.OfType<T>().FirstOrDefault();
-            if (model == null) throw new NullReferenceException("Unable to get Model from Project Root Folder");
+            T model = app.Project.RootFolder.Models.OfType<T>().FirstOrDefault();
+            if (model == null)
+            {
+                throw new NullReferenceException("Unable to get Model from Project Root Folder");
+            }
+
             return model;
         }
 
@@ -430,8 +456,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             if (hydroModel != null)
             {
                 // We get the workflow that runs all models in parallel
-                var workflow = hydroModel.Workflows.FirstOrDefault(w => w.Activities.Count == hydroModel.Activities.Count);
-                if (workflow == null) throw new NullReferenceException("Unable to get Workflow (run all models in parallel)");
+                ICompositeActivity workflow = hydroModel.Workflows.FirstOrDefault(w => w.Activities.Count == hydroModel.Activities.Count);
+                if (workflow == null)
+                {
+                    throw new NullReferenceException("Unable to get Workflow (run all models in parallel)");
+                }
 
                 hydroModel.CurrentWorkflow = workflow;
             }
@@ -442,19 +471,26 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             // Export the dia file for further manual inspection
             AcceptanceModelExportHelper.ExportLogFile(exportConfig);
 
-            if (activity.Status != ActivityStatus.Cleaned) throw new AssertionException(
-                string.Format("Unable to complete Model run{0}Expected status: Cleaned{0}Actual status: {1}",
-                    System.Environment.NewLine, activity.Status.ToString()));
+            if (activity.Status != ActivityStatus.Cleaned)
+            {
+                throw new AssertionException(
+                    string.Format("Unable to complete Model run{0}Expected status: Cleaned{0}Actual status: {1}",
+                                  Environment.NewLine, activity.Status.ToString()));
+            }
         }
-        
+
         private static void ExportDimrConfiguration(string tempDir, IModel model)
         {
-            var dimrExportDir = Path.Combine(tempDir, "Dimr_Export");
+            string dimrExportDir = Path.Combine(tempDir, "Dimr_Export");
             FileUtils.CreateDirectoryIfNotExists(dimrExportDir);
 
-            var exporter = new DHydroConfigXmlExporter { ExportFilePath = Path.Combine(dimrExportDir, "dimr.xml") };
-            if (!exporter.Export(model, null)) throw new Exception();
+            var exporter = new DHydroConfigXmlExporter {ExportFilePath = Path.Combine(dimrExportDir, "dimr.xml")};
+            if (!exporter.Export(model, null))
+            {
+                throw new Exception();
+            }
         }
+
         #endregion
     }
 }

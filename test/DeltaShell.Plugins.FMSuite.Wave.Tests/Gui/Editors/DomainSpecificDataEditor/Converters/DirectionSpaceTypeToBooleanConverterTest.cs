@@ -1,9 +1,9 @@
-﻿using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.DomainSpecificDataEditor.Converters;
-using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.DomainSpecificDataEditor.ViewModels;
-using NUnit.Framework;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Windows;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.DomainSpecificDataEditor.Converters;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.DomainSpecificDataEditor.ViewModels;
+using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.DomainSpecificDataEditor.Converters
 {
@@ -18,16 +18,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.DomainSpecificDataEd
             converter = new DirectionSpaceTypeToBooleanConverter();
         }
 
-        [TestCaseSource(nameof(TestCaseData))]
-        public void Convert_ThenExpectedValueIsReturned(object value, Type targetType, object expectedReturnValue)
-        {
-            // Call
-            object result = converter.Convert(value, targetType, null, null);
-
-            // Assert
-            Assert.That(result, Is.EqualTo(expectedReturnValue));
-        }
-
         [Test]
         public void ConvertBack_ThenNotSupportedExceptionIsThrown()
         {
@@ -36,6 +26,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.DomainSpecificDataEd
 
             // Assert
             Assert.That(Call, Throws.TypeOf<NotSupportedException>());
+        }
+
+        [TestCaseSource(nameof(TestCaseData))]
+        public void Convert_ThenExpectedValueIsReturned(object value, Type targetType, object expectedReturnValue)
+        {
+            // Call
+            object result = converter.Convert(value, targetType, null, null);
+
+            // Assert
+            Assert.That(result, Is.EqualTo(expectedReturnValue));
         }
 
         private static IEnumerable<TestCaseData> TestCaseData()

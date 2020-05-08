@@ -34,7 +34,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         {
             LogHelper.ConfigureLogging(Level.Error);
             var standardLibPath = @"plugins\DeltaShell.Plugins.Scripting\Lib";
-            var sitePackagesPath = Path.Combine(standardLibPath, "site-packages");
+            string sitePackagesPath = Path.Combine(standardLibPath, "site-packages");
             var toolBoxLibPath = @"plugins\DeltaShell.Plugins.Toolbox\Scripts\";
 
             ScriptHost.AdditionalSearchPaths.Add(standardLibPath);
@@ -53,7 +53,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
         private static void SetupPluginsForGui(IGui gui)
         {
-            gui.Plugins.Add(new CommonToolsGuiPlugin());// todo remove
+            gui.Plugins.Add(new CommonToolsGuiPlugin()); // todo remove
         }
 
         private static void SetupPluginsForApp(IApplication app)
@@ -72,20 +72,20 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
         private static void LoadAndRunPythonScript(string path, Action<IEnumerable<KeyValuePair<string, object>>> checks, IDictionary<string, object> variables = null)
         {
-            var file = TestHelper.GetTestFilePath(path);
-            
+            string file = TestHelper.GetTestFilePath(path);
+
             using (var gui = new DeltaShellGui())
             {
-                var app = gui.Application;
+                IApplication app = gui.Application;
                 SetupPluginsForApp(app);
                 SetupPluginsForGui(gui);
                 Map.CoordinateSystemFactory = new OgrCoordinateSystemFactory();
 
                 gui.Run();
-                var code = File.ReadAllText(file);
-                var scriptOutput = app.ScriptRunner.RunScript(code, variables);
+                string code = File.ReadAllText(file);
+                IEnumerable<KeyValuePair<string, object>> scriptOutput = app.ScriptRunner.RunScript(code, variables);
 
-                var currentProject = scriptOutput.FirstOrDefault(kvp => kvp.Key == "CurrentProject");
+                KeyValuePair<string, object> currentProject = scriptOutput.FirstOrDefault(kvp => kvp.Key == "CurrentProject");
                 Assert.That(scriptOutput, Is.Not.Null);
 
                 if (checks != null)
@@ -102,7 +102,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         {
             Action<IEnumerable<KeyValuePair<string, object>>> checks = outputFlowFm =>
             {
-                var keyValuePairs = outputFlowFm as IList<KeyValuePair<string, object>> ?? outputFlowFm.ToList();
+                IList<KeyValuePair<string, object>> keyValuePairs = outputFlowFm as IList<KeyValuePair<string, object>> ?? outputFlowFm.ToList();
                 var fmModel = keyValuePairs.FirstOrDefault(kvp => kvp.Key.Equals("fmModel")).Value as WaterFlowFMModel;
                 var integratedModel = keyValuePairs.FirstOrDefault(kvp => kvp.Key.Equals("integratedModel")).Value as HydroModel;
                 /*Check everything was generated*/
@@ -111,17 +111,14 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 /*Check the model run correctly */
                 Assert.That(integratedModel.Status.Equals(ActivityStatus.Failed), Is.False);
                 /*Check the variables got the values*/
-                foreach (var varName in variables)
+                foreach (string varName in variables)
                 {
-                    var varOutput = keyValuePairs.FirstOrDefault(kvp => kvp.Key.Equals(varName)).Value;
+                    object varOutput = keyValuePairs.FirstOrDefault(kvp => kvp.Key.Equals(varName)).Value;
                     Assert.That(varOutput, Is.Not.Null);
                 }
             };
 
-            var scriptVariables = new Dictionary<string, object>
-                    {
-                        {"WorkingDir", Path.Combine(Path.GetFullPath("."), TestHelper.GetCurrentMethodName())}
-                    };
+            var scriptVariables = new Dictionary<string, object> {{"WorkingDir", Path.Combine(Path.GetFullPath("."), TestHelper.GetCurrentMethodName())}};
 
             LoadAndRunPythonScript(Path.Combine(@"pythonScripts\FlowFm\", scriptPath), checks, scriptVariables);
         }
@@ -132,7 +129,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         {
             Action<IEnumerable<KeyValuePair<string, object>>> checks = outputFlowFmRtc =>
             {
-                var keyValuePairs = outputFlowFmRtc as IList<KeyValuePair<string, object>> ?? outputFlowFmRtc.ToList();
+                IList<KeyValuePair<string, object>> keyValuePairs = outputFlowFmRtc as IList<KeyValuePair<string, object>> ?? outputFlowFmRtc.ToList();
                 var fmModel = keyValuePairs.FirstOrDefault(kvp => kvp.Key.Equals("flowModel")).Value as WaterFlowFMModel;
                 var rtcModel = keyValuePairs.FirstOrDefault(kvp => kvp.Key.Equals("rtcModel")).Value as RealTimeControlModel;
                 var integratedModel = keyValuePairs.FirstOrDefault(kvp => kvp.Key.Equals("integratedModel")).Value as HydroModel;
@@ -143,16 +140,13 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 /*Check the model run correctly */
                 Assert.That(integratedModel.Status.Equals(ActivityStatus.Failed), Is.False);
                 /*Check the variables got the values*/
-                foreach (var varName in variables)
+                foreach (string varName in variables)
                 {
-                    var varOutput = keyValuePairs.FirstOrDefault(kvp => kvp.Key.Equals(varName)).Value;
+                    object varOutput = keyValuePairs.FirstOrDefault(kvp => kvp.Key.Equals(varName)).Value;
                     Assert.That(varOutput, Is.Not.Null);
                 }
             };
-            var scriptVariables = new Dictionary<string, object>
-                    {
-                        {"WorkingDir", Path.Combine(Path.GetFullPath("."), TestHelper.GetCurrentMethodName())}
-                    };
+            var scriptVariables = new Dictionary<string, object> {{"WorkingDir", Path.Combine(Path.GetFullPath("."), TestHelper.GetCurrentMethodName())}};
             LoadAndRunPythonScript(Path.Combine(@"pythonScripts\FlowFmRtc\", scriptPath), checks, scriptVariables);
         }
     }

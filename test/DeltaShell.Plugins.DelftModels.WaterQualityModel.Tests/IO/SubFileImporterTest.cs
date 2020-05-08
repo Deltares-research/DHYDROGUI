@@ -18,32 +18,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
     [Category(TestCategory.DataAccess)]
     public class SubFileImporterTest
     {
-        # region Setup / Teardown
-
-        private CultureInfo originalCulture;
-
-        [TestFixtureSetUp]
-        public void TestFixtureSetUp()
-        {
-            originalCulture = Thread.CurrentThread.CurrentCulture;
-
-            Thread.CurrentThread.CurrentCulture = CultureInfo.CreateSpecificCulture("en-US");
-            Thread.CurrentThread.CurrentUICulture = CultureInfo.CreateSpecificCulture("en-US");
-
-            LogHelper.ConfigureLogging(Level.Warn);
-        }
-
-        [TestFixtureTearDown]
-        public void TestFixtureTearDown()
-        {
-            LogHelper.ResetLogging();
-
-            Thread.CurrentThread.CurrentCulture = originalCulture;
-            Thread.CurrentThread.CurrentUICulture = originalCulture;
-        }
-
-        # endregion
-
         [Test]
         public void Constructor_ExpectedValues()
         {
@@ -259,10 +233,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
 
             string expectedMessage = string.Format(Resources.SubFileImporter_Import_Sub_file_successfully_imported_from___0_, testFilePath);
 
-            Action action = () =>
-            {
-                subFileImporter.Import(library, testFilePath);
-            };
+            Action action = () => { subFileImporter.Import(library, testFilePath); };
             TestHelper.AssertAtLeastOneLogMessagesContains(action, expectedMessage);
         }
 
@@ -330,5 +301,31 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
                 0
             }, parameters.Select(p => p.DefaultValue));
         }
+
+        # region Setup / Teardown
+
+        private CultureInfo originalCulture;
+
+        [TestFixtureSetUp]
+        public void TestFixtureSetUp()
+        {
+            originalCulture = Thread.CurrentThread.CurrentCulture;
+
+            Thread.CurrentThread.CurrentCulture = CultureInfo.CreateSpecificCulture("en-US");
+            Thread.CurrentThread.CurrentUICulture = CultureInfo.CreateSpecificCulture("en-US");
+
+            LogHelper.ConfigureLogging(Level.Warn);
+        }
+
+        [TestFixtureTearDown]
+        public void TestFixtureTearDown()
+        {
+            LogHelper.ResetLogging();
+
+            Thread.CurrentThread.CurrentCulture = originalCulture;
+            Thread.CurrentThread.CurrentUICulture = originalCulture;
+        }
+
+        # endregion
     }
 }

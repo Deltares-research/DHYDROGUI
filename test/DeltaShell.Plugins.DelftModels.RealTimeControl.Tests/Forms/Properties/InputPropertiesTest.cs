@@ -12,7 +12,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms.Properties
         [Category(TestCategory.WindowsForms)]
         public void ShowProperties()
         {
-            WindowsFormsTestHelper.ShowPropertyGridForObject(new InputProperties { Data = new Input() });
+            WindowsFormsTestHelper.ShowPropertyGridForObject(new InputProperties {Data = new Input()});
         }
     }
 }

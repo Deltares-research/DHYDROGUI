@@ -10,18 +10,34 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.ChartEditors
     [TestFixture]
     public class RectangleShapeEditorTest
     {
-        ShapeModifyTool shapeModifyTool;
+        private ShapeModifyTool shapeModifyTool;
+
+        [Test]
+        [Category(TestCategory.WindowsForms)]
+        public void MoveRetangleShape()
+        {
+            ChartView chartView = SetUp();
+
+            // add a dummy series; otherwise chart is not properly drawn
+            AddDummySeres(chartView);
+
+            var rectangleShape = new RectangleShapeFeature(chartView.Chart, 20, 60, 40, 10);
+            shapeModifyTool.AddShape(rectangleShape);
+            shapeModifyTool.ActivateTool(shapeModifyTool.ShapeMoveTool);
+
+            WindowsFormsTestHelper.ShowModal(chartView);
+        }
 
         private ChartView SetUp()
         {
             var chartView = new ChartView();
 
             shapeModifyTool = new ShapeModifyTool(chartView.Chart)
-                                  {
-                                      ShapeEditMode = (ShapeEditMode.ShapeSelect |
-                                                       ShapeEditMode.ShapeMove |
-                                                       ShapeEditMode.ShapeResize)
-                                  };
+            {
+                ShapeEditMode = ShapeEditMode.ShapeSelect |
+                                ShapeEditMode.ShapeMove |
+                                ShapeEditMode.ShapeResize
+            };
 
             chartView.Tools.Add(shapeModifyTool);
             chartView.Chart.LeftAxis.Automatic = false;
@@ -41,22 +57,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.ChartEditors
             linesSeries.Add(90.0, 90.0);
 
             chartView.Chart.Series.Add(linesSeries);
-        }
-
-        [Test]
-        [Category(TestCategory.WindowsForms)]
-        public void MoveRetangleShape()
-        {
-            ChartView chartView = SetUp();
-
-            // add a dummy series; otherwise chart is not properly drawn
-            AddDummySeres(chartView);
-
-            var rectangleShape = new RectangleShapeFeature(chartView.Chart, 20, 60, 40, 10);
-            shapeModifyTool.AddShape(rectangleShape);
-            shapeModifyTool.ActivateTool(shapeModifyTool.ShapeMoveTool);
-
-            WindowsFormsTestHelper.ShowModal(chartView);
         }
     }
 }

@@ -1,9 +1,9 @@
-﻿using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
+﻿using System;
+using System.Collections;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.DataAccess;
 using NSubstitute;
 using NUnit.Framework;
-using System;
-using System.Collections;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport.DataAccess
 {

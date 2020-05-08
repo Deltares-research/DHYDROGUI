@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Reflection;
+using DelftTools.Controls.Swf.Graph;
 using DelftTools.TestUtils;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui;
@@ -35,7 +36,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
         {
             using (var clipboardStub = new ClipboardStub())
             {
-                string ruleText = "ruleTest";
+                var ruleText = "ruleTest";
                 var ruleShape = new RuleShape() {Text = ruleText};
                 var shapeCollection = new ShapeBase[]
                 {
@@ -44,7 +45,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                 };
                 RealTimeControlModelCopyPasteHelper.SetRtcObjectsToClipBoard(shapeCollection);
 
-                var retrievedObjects = RealTimeControlModelCopyPasteHelper.GetClipBoardRtcObjects();
+                IEnumerable<ShapeBase> retrievedObjects = RealTimeControlModelCopyPasteHelper.GetClipBoardRtcObjects();
                 Assert.AreEqual(2, retrievedObjects.Count());
                 foreach (RuleShape retrievedObject in retrievedObjects.OfType<RuleShape>())
                 {
@@ -83,7 +84,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
 
                 var controlGroup = new ControlGroup();
                 var controlGroupEditor = new ControlGroupEditor {Data = controlGroup};
-                var graphControl = controlGroupEditor.GraphControl;
+                GraphControl graphControl = controlGroupEditor.GraphControl;
 
                 hydRule.Inputs.Add(input);
                 hydRule.Outputs.Add(output);
@@ -97,16 +98,16 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                 controlGroup.Outputs.Add(output);
                 controlGroup.Conditions.Add(condition);
                 controlGroup.Signals.Add(signal);
-                var controller = controlGroupEditor.Controller;
-                var shapecollection = graphControl.GetShapes<ShapeBase>();
+                ControlGroupEditorController controller = controlGroupEditor.Controller;
+                IEnumerable<ShapeBase> shapecollection = graphControl.GetShapes<ShapeBase>();
 
                 RealTimeControlModelCopyPasteHelper.SetRtcObjectsToClipBoard(shapecollection);
-                var retievedCollection = RealTimeControlModelCopyPasteHelper.GetClipBoardRtcObjects();
+                IEnumerable<ShapeBase> retievedCollection = RealTimeControlModelCopyPasteHelper.GetClipBoardRtcObjects();
                 RealTimeControlModelCopyPasteHelper.CloneRtcObjectsFromClipBoardAndPlaceOnGraph(retievedCollection, controller, new Point(12, 15));
 
                 Assert.AreEqual(10, graphControl.GetShapes<ShapeBase>().Count());
 
-                var retrievedRules = graphControl.GetShapes<RuleShape>().Select(rs => rs.Tag).Cast<RuleBase>().ToList();
+                List<RuleBase> retrievedRules = graphControl.GetShapes<RuleShape>().Select(rs => rs.Tag).Cast<RuleBase>().ToList();
                 Assert.AreEqual(2, retrievedRules.Count);
 
                 // Original rule inputs and outputs should still be set
@@ -117,12 +118,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                 Assert.AreEqual("[Not Set]", retrievedRules[1].Inputs.First().Name);
                 Assert.AreEqual("[Not Set]", retrievedRules[1].Outputs.First().Name);
 
-                var copiedConditions = graphControl.GetShapes<ConditionShape>().Select(cs => cs.Tag).Cast<ConditionBase>().ToList();
+                List<ConditionBase> copiedConditions = graphControl.GetShapes<ConditionShape>().Select(cs => cs.Tag).Cast<ConditionBase>().ToList();
                 Assert.AreEqual(2, copiedConditions.Count);
                 Assert.IsNotNull(copiedConditions.Last().Input);
                 Assert.AreEqual(1, copiedConditions.Last().TrueOutputs.Count);
 
-                var copiedSignals = graphControl.GetShapes<SignalShape>().Select(ss => ss.Tag).Cast<SignalBase>().ToList();
+                List<SignalBase> copiedSignals = graphControl.GetShapes<SignalShape>().Select(ss => ss.Tag).Cast<SignalBase>().ToList();
                 Assert.AreEqual(2, copiedSignals.Count);
                 Assert.AreEqual(1, copiedSignals.Last().Inputs.Count);
                 Assert.AreEqual(1, copiedSignals.Last().RuleBases.Count);
@@ -134,7 +135,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
         {
             var controlGroup = new ControlGroup();
             var controlGroupEditor = new ControlGroupEditor {Data = controlGroup};
-            var graphControl = controlGroupEditor.GraphControl;
+            GraphControl graphControl = controlGroupEditor.GraphControl;
 
             var pidRule1 = new PIDRule() {Name = "regelNaam1"};
             var pidRule2 = new PIDRule() {Name = "regelNaam2"};
@@ -142,18 +143,17 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
             controlGroup.Rules.Add(pidRule1);
             controlGroup.Rules.Add(pidRule2);
             controlGroup.Rules.Add(pidRule3);
-            var controller = controlGroupEditor.Controller;
-            var shapeCollection = graphControl.GetShapes<ShapeBase>();
+            ControlGroupEditorController controller = controlGroupEditor.Controller;
+            IEnumerable<ShapeBase> shapeCollection = graphControl.GetShapes<ShapeBase>();
             RealTimeControlModelCopyPasteHelper.CloneRtcObjectsFromClipBoardAndPlaceOnGraph(shapeCollection, controller, new Point(12, 13));
             Assert.AreEqual(6, controller.ControlGroup.Rules.Count);
 
-            List<string> names = new List<string>();
-            foreach (var rule in controller.ControlGroup.Rules)
+            var names = new List<string>();
+            foreach (RuleBase rule in controller.ControlGroup.Rules)
             {
                 if (!names.Contains(rule.Name))
                 {
                     names.Add(rule.Name);
-
                 }
                 else
                 {

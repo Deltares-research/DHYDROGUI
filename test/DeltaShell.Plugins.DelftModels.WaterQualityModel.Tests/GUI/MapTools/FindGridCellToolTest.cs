@@ -53,10 +53,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.GUI.MapTools
                 ConfigureWaterQualityModel(model, mocks);
                 var tool = new FindGridCellTool(string.Empty)
                 {
-                    GetWaqModelForGrid = ug =>
-                    {
-                        return model;
-                    },
+                    GetWaqModelForGrid = ug => { return model; },
                     MapControl = mapControl
                 };
 
@@ -102,8 +99,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.GUI.MapTools
         [Test]
         [TestCaseSource(nameof(GetGridRendererConfigurations))]
         public void Enabled_WithUnstructuredGridMapLayerWithVariousRendererConfigurations_ReturnsExpectedValue(
-                IGridRenderer renderer,
-                bool expectedEnabledValue)
+            IGridRenderer renderer,
+            bool expectedEnabledValue)
         {
             // Setup
             var layer = new UnstructuredGridLayer {Renderer = renderer};
@@ -126,10 +123,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.GUI.MapTools
                 ConfigureWaterQualityModel(model, mocks);
                 var tool = new FindGridCellTool(string.Empty)
                 {
-                    GetWaqModelForGrid = ug =>
-                    {
-                        return model;
-                    },
+                    GetWaqModelForGrid = ug => { return model; },
                     MapControl = mapControl
                 };
 
@@ -137,7 +131,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.GUI.MapTools
                 bool isEnabled = tool.Enabled;
 
                 // Assert
-                Assert.That(isEnabled, Is.EqualTo(expectedEnabledValue), 
+                Assert.That(isEnabled, Is.EqualTo(expectedEnabledValue),
                             $"Enabled is {isEnabled} while there are map layers of type {nameof(UnstructuredGridLayer)}.");
             }
 
@@ -171,10 +165,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.GUI.MapTools
                 ConfigureWaterQualityModel(model, mocks);
                 var tool = new FindGridCellTool(string.Empty)
                 {
-                    GetWaqModelForGrid = ug =>
-                    {
-                        return model;
-                    },
+                    GetWaqModelForGrid = ug => { return model; },
                     MapControl = mapControl
                 };
 
@@ -216,10 +207,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.GUI.MapTools
                 ConfigureWaterQualityModel(model, mocks);
                 var tool = new FindGridCellTool(string.Empty)
                 {
-                    GetWaqModelForGrid = ug =>
-                    {
-                        return model;
-                    },
+                    GetWaqModelForGrid = ug => { return model; },
                     MapControl = mapControl
                 };
 
@@ -229,7 +217,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.GUI.MapTools
                 // Assert
                 Assert.That(isEnabled, Is.True, $"Enabled is false while layers and a {nameof(PointToGridCellMapper)} are present.");
             }
-            
+
             mocks.VerifyAll();
         }
 
@@ -259,10 +247,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.GUI.MapTools
             {
                 var tool = new FindGridCellTool(string.Empty)
                 {
-                    GetWaqModelForGrid = ug =>
-                    {
-                        return model;
-                    },
+                    GetWaqModelForGrid = ug => { return model; },
                     MapControl = mapControl
                 };
 

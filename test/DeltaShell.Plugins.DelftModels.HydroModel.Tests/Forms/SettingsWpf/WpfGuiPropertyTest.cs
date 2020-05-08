@@ -20,7 +20,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.SettingsWpf
         [Test]
         public void Test_WpfGuiProperty()
         {
-            var dummyField = new FieldUIDescription( null, null )
+            var dummyField = new FieldUIDescription(null, null)
             {
                 Label = "dummyName",
             };
@@ -34,7 +34,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.SettingsWpf
         public void Test_WpfGuiProperty_ValueType_Int__Is_Correctly_Set()
         {
             var integerValue = 1;
-            var dummyField = new FieldUIDescription((o) => integerValue, (o, o1) => integerValue = (int)o1)
+            var dummyField = new FieldUIDescription((o) => integerValue, (o, o1) => integerValue = (int) o1)
             {
                 Label = "dummyName",
                 ValueType = typeof(int),
@@ -50,7 +50,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.SettingsWpf
         [Test]
         public void Test_WpfGuiProperty_ValueTypeList_Sets_Collection()
         {
-            var doubleList = new List<double>() {1.0, 2.0};
+            var doubleList = new List<double>()
+            {
+                1.0,
+                2.0
+            };
             var dummyField = new FieldUIDescription((o) => doubleList, (o, o1) => doubleList = o1 as List<double>)
             {
                 Label = "dummyName",
@@ -62,7 +66,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.SettingsWpf
             Assert.IsNotNull(prop);
 
             Assert.IsNotNull(prop.ValueCollection);
-            Assert.AreEqual(doubleList, prop.ValueCollection.Select( vc => vc.WrapperValue).ToList());
+            Assert.AreEqual(doubleList, prop.ValueCollection.Select(vc => vc.WrapperValue).ToList());
 
             /*Check the Double Wrapper SetBackValue action works as expected.*/
             prop.ValueCollection[0].WrapperValue = 3.5;
@@ -73,7 +77,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.SettingsWpf
         public void Test_WpfGuiProperty_TimeSpan_Is_Correctly_Set()
         {
             var timeSpanInput = new TimeSpan(0, 01, 00, 01, 400);
-            var dummyField = new FieldUIDescription((o) => timeSpanInput, (o, o1) => timeSpanInput = (TimeSpan)o1)
+            var dummyField = new FieldUIDescription((o) => timeSpanInput, (o, o1) => timeSpanInput = (TimeSpan) o1)
             {
                 Label = "dummyName",
                 ValueType = typeof(TimeSpan),
@@ -127,10 +131,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.SettingsWpf
         [Test]
         public void Test_WpfGuiProperty_Unit_Has_Brackets()
         {
-            var dummyField = new FieldUIDescription(null, null)
-            {
-                Label = "dummyName"
-            };
+            var dummyField = new FieldUIDescription(null, null) {Label = "dummyName"};
 
             var property = new WpfGuiProperty(dummyField);
 
@@ -152,18 +153,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.SettingsWpf
         [TestCase(false, false, true)]
         public void Test_WpfGuiProperty_IsReadOnlyHasCorrectValue(bool isEnabled, bool textBoxEnabled, bool expectedIsReadOnly)
         {
-            var dummyField = new FieldUIDescription(null, null, o => isEnabled)
-            {
-                Label = "dummyName"
-            };
+            var dummyField = new FieldUIDescription(null, null, o => isEnabled) {Label = "dummyName"};
 
-            var property = new WpfGuiProperty(dummyField)
-            {
-                CustomCommand = new CommandHelper(() => {})
-                {
-                    TextBoxEnabled = textBoxEnabled
-                }
-            };
+            var property = new WpfGuiProperty(dummyField) {CustomCommand = new CommandHelper(() => {}) {TextBoxEnabled = textBoxEnabled}};
 
             Assert.That(property.IsReadOnly, Is.EqualTo(expectedIsReadOnly));
         }

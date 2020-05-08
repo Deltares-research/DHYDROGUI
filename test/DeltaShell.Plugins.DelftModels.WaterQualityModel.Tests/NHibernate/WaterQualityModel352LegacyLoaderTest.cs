@@ -38,27 +38,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
             project = null;
         }
 
-        [TestCase("")]
-        [TestCase(null)]
-        [TestCase("folder")]
-        public void OnAfterProjectMigrated_WhenOutputDirectoryAndWorkingDirectoryDoNotExist_ThenOutputFolderIsNull(
-            string nonExistingDirectory)
-        {
-            // Setup
-            model.ModelSettings.OutputDirectory = nonExistingDirectory;
-
-            // Precondition
-            Assert.That(!Directory.Exists(model.ModelDataDirectory + "_output"), "Precondition violated.");
-
-            // Call
-            legacyLoader.OnAfterProjectMigrated(project);
-
-            // Assert
-            Assert.That(model.OutputFolder, Is.Null,
-                        $"After migrating, the {outputFolderName} should be null " +
-                        "when the output directory does not exist.");
-        }
-
         [Test]
         public void OnAfterProjectMigrated_WhenOutputDirectoryExistsButIsEmpty_ThenOutputFolderIsNull()
         {
@@ -152,6 +131,27 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
             }
         }
 
+        [TestCase("")]
+        [TestCase(null)]
+        [TestCase("folder")]
+        public void OnAfterProjectMigrated_WhenOutputDirectoryAndWorkingDirectoryDoNotExist_ThenOutputFolderIsNull(
+            string nonExistingDirectory)
+        {
+            // Setup
+            model.ModelSettings.OutputDirectory = nonExistingDirectory;
+
+            // Precondition
+            Assert.That(!Directory.Exists(model.ModelDataDirectory + "_output"), "Precondition violated.");
+
+            // Call
+            legacyLoader.OnAfterProjectMigrated(project);
+
+            // Assert
+            Assert.That(model.OutputFolder, Is.Null,
+                        $"After migrating, the {outputFolderName} should be null " +
+                        "when the output directory does not exist.");
+        }
+
         [Category(TestCategory.Integration)]
         [TestCase("deltashell-bal.prn", "BalanceOutputTag")]
         [TestCase("deltashell.mon", "MonitoringFileTag")]
@@ -183,7 +183,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
 
                 // Assert
                 Assert.DoesNotThrow(() => dataItem = model.DataItems.Single(di => di.Tag == dataItemTag));
-                Assert.IsTrue(dataItem.Value is TextDocument, 
+                Assert.IsTrue(dataItem.Value is TextDocument,
                               $"Expected DataItem value type is {typeof(TextDocument)}, but was {dataItem.Value.GetType()}");
             }
         }

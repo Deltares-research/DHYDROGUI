@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions;
@@ -20,17 +21,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
     [TestFixture]
     public class SelectedSupportPointFromBoundaryBehaviourTest
     {
-        private static SupportPointDataComponentViewModel GetViewModel()
-        {
-            var conditionDefinition = Substitute.For<IWaveBoundaryConditionDefinition>();
-            var parametersFactory = Substitute.For<IForcingTypeDefinedParametersFactory>();
-            var announceChanged = Substitute.For<IAnnounceSupportPointDataChanged>();
-
-            return new SupportPointDataComponentViewModel(conditionDefinition,
-                                                          parametersFactory,
-                                                          announceChanged);
-        }
-
         [Test]
         public void Constructor_ExpectedResults()
         {
@@ -40,7 +30,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
 
             // Call
             var behaviour = new SelectedSupportPointFromBoundaryBehaviour(viewModel,
-                                                                        geometryFactory);
+                                                                          geometryFactory);
 
             // Assert
             Assert.That(behaviour, Is.InstanceOf<IFeaturesFromBoundaryBehaviour>());
@@ -51,8 +41,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
         {
             var geometryFactory = Substitute.For<IWaveBoundaryGeometryFactory>();
             void Call() => new SelectedSupportPointFromBoundaryBehaviour(null, geometryFactory);
-            var exception = Assert.Throws<System.ArgumentNullException>(Call);
-            
+            var exception = Assert.Throws<ArgumentNullException>(Call);
+
             Assert.That(exception.ParamName, Is.EqualTo("supportPointDataComponentViewModel"));
         }
 
@@ -61,8 +51,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
         {
             SupportPointDataComponentViewModel viewModel = GetViewModel();
             void Call() => new SelectedSupportPointFromBoundaryBehaviour(viewModel, null);
-            var exception = Assert.Throws<System.ArgumentNullException>(Call);
-            
+            var exception = Assert.Throws<ArgumentNullException>(Call);
+
             Assert.That(exception.ParamName, Is.EqualTo("geometryFactory"));
         }
 
@@ -78,7 +68,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
             var viewModel = new SupportPointDataComponentViewModel(conditionDefinition,
                                                                    parametersFactory,
                                                                    announceChanged);
-            viewModel.SelectedSupportPoint = new SupportPoint(10.0, 
+            viewModel.SelectedSupportPoint = new SupportPoint(10.0,
                                                               Substitute.For<IWaveBoundaryGeometricDefinition>());
 
             var point = Substitute.For<IPoint>();
@@ -87,7 +77,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
                            .Returns(point);
 
             var behaviour = new SelectedSupportPointFromBoundaryBehaviour(viewModel,
-                                                                        geometryFactory);
+                                                                          geometryFactory);
 
             var boundary = Substitute.For<IWaveBoundary>();
 
@@ -113,7 +103,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
             var viewModel = new SupportPointDataComponentViewModel(conditionDefinition,
                                                                    parametersFactory,
                                                                    announceChanged);
-            viewModel.SelectedSupportPoint = new SupportPoint(10.0, 
+            viewModel.SelectedSupportPoint = new SupportPoint(10.0,
                                                               Substitute.For<IWaveBoundaryGeometricDefinition>());
 
             var geometryFactory = Substitute.For<IWaveBoundaryGeometryFactory>();
@@ -121,7 +111,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
                            .Returns((IPoint) null);
 
             var behaviour = new SelectedSupportPointFromBoundaryBehaviour(viewModel,
-                                                                        geometryFactory);
+                                                                          geometryFactory);
 
             var boundary = Substitute.For<IWaveBoundary>();
 
@@ -140,7 +130,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
             var geometryFactory = Substitute.For<IWaveBoundaryGeometryFactory>();
 
             var behaviour = new SelectedSupportPointFromBoundaryBehaviour(viewModel,
-                                                                        geometryFactory);
+                                                                          geometryFactory);
 
             var boundary = Substitute.For<IWaveBoundary>();
 
@@ -149,6 +139,17 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
 
             // Assert
             Assert.That(result, Is.Empty);
+        }
+
+        private static SupportPointDataComponentViewModel GetViewModel()
+        {
+            var conditionDefinition = Substitute.For<IWaveBoundaryConditionDefinition>();
+            var parametersFactory = Substitute.For<IForcingTypeDefinedParametersFactory>();
+            var announceChanged = Substitute.For<IAnnounceSupportPointDataChanged>();
+
+            return new SupportPointDataComponentViewModel(conditionDefinition,
+                                                          parametersFactory,
+                                                          announceChanged);
         }
     }
 }

@@ -20,12 +20,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CrossSectionView.ProfileM
             crossSection.YZDataTable[0].DeltaZStorage = 10;
             mutator.AddPoint(10, -20);
             Assert.AreEqual(10, crossSection.YZDataTable.First(r => r.Yq == 10).DeltaZStorage,
-                "Should have set to StorageWidth of direct neighbor");
+                            "Should have set to StorageWidth of direct neighbor");
 
             crossSection.YZDataTable[0].DeltaZStorage = 0;
             mutator.AddPoint(15, -7);
             Assert.AreEqual(5, crossSection.YZDataTable.First(r => r.Yq == 15).DeltaZStorage,
-                "Should have linearly interpolated StorageWidth of direct neighbors");
+                            "Should have linearly interpolated StorageWidth of direct neighbors");
         }
     }
 }

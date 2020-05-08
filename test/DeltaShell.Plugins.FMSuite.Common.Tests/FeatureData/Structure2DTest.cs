@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures;
+using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.Common.Tests.FeatureData
@@ -26,7 +27,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.FeatureData
 
             structure.AddProperty("name", typeof(string), "value");
 
-            var property = structure.GetProperty("NaMe");
+            ModelProperty property = structure.GetProperty("NaMe");
             Assert.IsNotNull(property, "Case insensitivity expected.");
             Assert.AreEqual(structure.Properties.ElementAt(0), property);
         }

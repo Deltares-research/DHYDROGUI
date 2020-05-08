@@ -9,11 +9,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Enums
     public class SpatialDefinitionViewTypeTest :
         EnumValuesTestFixture<SpatialDefinitionViewType>
     {
-        protected override IDictionary<SpatialDefinitionViewType, int> ExpectedValueForEnumValues => 
-        new Dictionary<SpatialDefinitionViewType, int>
-        {
-            {SpatialDefinitionViewType.Uniform, 1 },
-            {SpatialDefinitionViewType.SpatiallyVarying, 2 }
-        };
+        protected override IDictionary<SpatialDefinitionViewType, int> ExpectedValueForEnumValues =>
+            new Dictionary<SpatialDefinitionViewType, int>
+            {
+                {SpatialDefinitionViewType.Uniform, 1},
+                {SpatialDefinitionViewType.SpatiallyVarying, 2}
+            };
     }
 }

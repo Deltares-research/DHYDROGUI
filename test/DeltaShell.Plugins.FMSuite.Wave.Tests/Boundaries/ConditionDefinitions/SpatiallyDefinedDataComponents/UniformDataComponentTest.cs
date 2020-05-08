@@ -35,7 +35,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
 
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(Call);
-            
+
             Assert.That(exception.ParamName, Is.EqualTo("data"),
                         "Expected a different ParamName:");
         }
@@ -52,7 +52,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
 
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(Call);
-            
+
             Assert.That(exception.ParamName, Is.EqualTo("value"),
                         "Expected a different ParamName:");
         }
@@ -63,7 +63,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
             // Setup
             var data = DataComponentTestUtils.ConstructParameters<T>();
             var uniformDataComponent = new UniformDataComponent<T>(data);
-
 
             // Call
             void Call() => uniformDataComponent.AcceptVisitor(null);

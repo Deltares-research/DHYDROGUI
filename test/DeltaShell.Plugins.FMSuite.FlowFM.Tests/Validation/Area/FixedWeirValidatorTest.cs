@@ -44,13 +44,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
             var gridExtent = new Envelope();
 
             // When
-            var issues = fixedWeirs.Validate(gridExtent, new List<ModelFeatureCoordinateData<FixedWeir>>(), scheme).ToList();
+            List<ValidationIssue> issues = fixedWeirs.Validate(gridExtent, new List<ModelFeatureCoordinateData<FixedWeir>>(), scheme).ToList();
 
             // Then
             Assert.AreEqual(1, issues.Count, MessageDifferentNumberValidationIssues);
-            var issue = issues.Single();
+            ValidationIssue issue = issues.Single();
             Assert.AreEqual(ValidationSeverity.Warning, issue.Severity, MessageDifferentValidationSeverity);
-            var expectedMessage = string.Format(Resources.FixedWeirValidator_ValidateSnapping_fixed_weir___0___not_within_grid_extent_, fixedWeir.Name);
+            string expectedMessage = string.Format(Resources.FixedWeirValidator_ValidateSnapping_fixed_weir___0___not_within_grid_extent_, fixedWeir.Name);
             Assert.AreEqual(expectedMessage, issue.Message, MessageDifferentIssueMessage);
         }
 
@@ -81,7 +81,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
             Assert.AreEqual(nExpectedIssues, issues.Count, MessageDifferentNumberValidationIssues);
             for (var i = 0; i < nExpectedIssues; i++)
             {
-                var issue = issues[i];
+                ValidationIssue issue = issues[i];
                 Assert.AreEqual(ValidationSeverity.Info, issue.Severity, MessageDifferentValidationSeverity);
                 string expectedMessage = string.Format(
                     Resources.FixedWeirValidator_Fixed_weir_contains_ground_heights_smaller_than_minimum,

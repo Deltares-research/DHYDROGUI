@@ -1,4 +1,5 @@
-﻿using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Providers.Behaviours.AddBehaviours;
+﻿using System;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Providers.Behaviours.AddBehaviours;
 using GeoAPI.Geometries;
 using NSubstitute;
 using NUnit.Framework;
@@ -27,7 +28,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
 
             // Call | Assert
             void Call() => behaviour.Execute(geometry);
-            Assert.Throws<System.NotSupportedException>(Call);
+            Assert.Throws<NotSupportedException>(Call);
         }
     }
 }

@@ -17,6 +17,5 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
         {
             Assert.That(WaveSpreadingConstants.PowerDefaultSpreading, Is.EqualTo(4.0));
         }
-        
     }
 }

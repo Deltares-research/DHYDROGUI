@@ -31,11 +31,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions
             // Assert
             Assert.That(conditionDefinition, Is.InstanceOf<IWaveBoundaryConditionDefinition>());
 
-            Assert.That(conditionDefinition.Shape, Is.SameAs(shape), 
+            Assert.That(conditionDefinition.Shape, Is.SameAs(shape),
                         "Expected a different Shape:");
-            Assert.That(conditionDefinition.PeriodType, Is.EqualTo(periodType), 
+            Assert.That(conditionDefinition.PeriodType, Is.EqualTo(periodType),
                         "Expected a different PeriodType:");
-            Assert.That(conditionDefinition.DataComponent, Is.SameAs(dataComponent), 
+            Assert.That(conditionDefinition.DataComponent, Is.SameAs(dataComponent),
                         "Expected a different DataComponent:");
         }
 
@@ -53,7 +53,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions
 
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(Call);
-            Assert.That(exception.ParamName, Is.EqualTo("shape"), 
+            Assert.That(exception.ParamName, Is.EqualTo("shape"),
                         "Expected a different value for ParamName:");
         }
 
@@ -71,7 +71,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions
 
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(Call);
-            Assert.That(exception.ParamName, Is.EqualTo("dataComponent"), 
+            Assert.That(exception.ParamName, Is.EqualTo("dataComponent"),
                         "Expected a different value for ParamName:");
         }
 
@@ -109,7 +109,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions
 
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(Call);
-            Assert.That(exception.ParamName, Is.EqualTo("value"), 
+            Assert.That(exception.ParamName, Is.EqualTo("value"),
                         "Expected a different value for ParamName:");
         }
 
@@ -145,11 +145,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions
                                                                           dataComponent);
 
             // Call
-            void Call() => conditionDefinition.DataComponent= null;
+            void Call() => conditionDefinition.DataComponent = null;
 
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(Call);
-            Assert.That(exception.ParamName, Is.EqualTo("value"), 
+            Assert.That(exception.ParamName, Is.EqualTo("value"),
                         "Expected a different value for ParamName:");
         }
 
@@ -160,7 +160,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions
             var shape = Substitute.For<IBoundaryConditionShape>();
             var periodType = random.NextEnumValue<BoundaryConditionPeriodType>();
             var dataComponent = Substitute.For<ISpatiallyDefinedDataComponent>();
-           
+
             var conditionDefinition = new WaveBoundaryConditionDefinition(shape,
                                                                           periodType,
                                                                           dataComponent);
@@ -185,7 +185,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions
             var conditionDefinition = new WaveBoundaryConditionDefinition(shape,
                                                                           periodType,
                                                                           dataComponent);
-            
+
             // Call
             conditionDefinition.AcceptVisitor(visitor);
 

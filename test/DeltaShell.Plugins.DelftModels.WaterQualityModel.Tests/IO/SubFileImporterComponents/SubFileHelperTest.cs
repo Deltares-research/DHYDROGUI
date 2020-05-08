@@ -60,9 +60,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO.SubFileImpor
                 variableOne,
                 variableTwo
             }, propertySeparator);
-            
+
             // Assert
-            string expectedPattern = 
+            string expectedPattern =
                 $@"\s*{variableOne.PropertyName}\s*'(?<{variableOne.CaptureGroupName}>{variableOne.CaptureGroupPattern})'{propertySeparator}" +
                 $@"\s*{variableTwo.PropertyName}\s*'(?<{variableTwo.CaptureGroupName}>{variableTwo.CaptureGroupPattern})'{propertySeparator}";
 

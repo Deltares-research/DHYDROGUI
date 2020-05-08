@@ -12,9 +12,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms.Properties
         [Category(TestCategory.WindowsForms)]
         public void ShowProperties()
         {
-            WindowsFormsTestHelper.ShowPropertyGridForObject(new PIDRuleProperties { Data = new PIDRule() });
+            WindowsFormsTestHelper.ShowPropertyGridForObject(new PIDRuleProperties {Data = new PIDRule()});
         }
-
 
         [TestCase("ConstantSetpoint", PIDRule.PIDRuleSetpointType.Constant, false)]
         [TestCase("ConstantSetpoint", PIDRule.PIDRuleSetpointType.TimeSeries, true)]
@@ -32,7 +31,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms.Properties
         [TestCase("Bla", PIDRule.PIDRuleSetpointType.TimeSeries, true)]
         [TestCase("Bla", PIDRule.PIDRuleSetpointType.Signal, true)]
         public void GivenAPropertyName_WhenShowingThisPropertyInthePropertyBoxWindow_ThenThisOptionShouldBeReadOnlyOrNotBasedOnTheSetPointModeSetting(
-                string propertyName, PIDRule.PIDRuleSetpointType pidRuleSetpointType, bool expectedBoolean)
+            string propertyName, PIDRule.PIDRuleSetpointType pidRuleSetpointType, bool expectedBoolean)
         {
             // Given
             var pidRuleProperties = new PIDRuleProperties
@@ -46,7 +45,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms.Properties
 
             // Then
             Assert.AreEqual(expectedBoolean, actualBoolean,
-                $"For property \"{propertyName}\" of the PID rule, the readonly behaviour is not correct when the setpoint type is \"{pidRuleSetpointType.ToString()}\"");
+                            $"For property \"{propertyName}\" of the PID rule, the readonly behaviour is not correct when the setpoint type is \"{pidRuleSetpointType.ToString()}\"");
         }
     }
 }

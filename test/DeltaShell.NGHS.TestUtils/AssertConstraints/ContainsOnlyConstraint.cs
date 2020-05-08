@@ -1,14 +1,14 @@
-﻿using NUnit.Framework.Constraints;
-using System;
+﻿using System;
 using System.Collections;
 using System.Linq;
+using NUnit.Framework.Constraints;
 
 namespace DeltaShell.NGHS.TestUtils.AssertConstraints
 {
     /// <summary>
     /// This constraint check whether a collection contains and only contains the expected item.
     /// </summary>
-    /// <seealso cref="Constraint" />
+    /// <seealso cref="Constraint"/>
     public class ContainsOnlyConstraint : Constraint
     {
         private readonly object expected;

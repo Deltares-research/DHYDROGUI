@@ -14,36 +14,36 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests
 
             Assert.AreEqual(
                 new[]
-                    {
-                        FileBasedWindDefinition.FileBasedWindQuantity.VelocityX,
-                        FileBasedWindDefinition.FileBasedWindQuantity.VelocityY,
-                        FileBasedWindDefinition.FileBasedWindQuantity.AirPressure
-                    }, windDefinition.WindFiles.Keys);
+                {
+                    FileBasedWindDefinition.FileBasedWindQuantity.VelocityX,
+                    FileBasedWindDefinition.FileBasedWindQuantity.VelocityY,
+                    FileBasedWindDefinition.FileBasedWindQuantity.AirPressure
+                }, windDefinition.WindFiles.Keys);
 
             windDefinition.Type = WindDefinitionType.WindXY;
 
             Assert.AreEqual(
                 new[]
-                    {
-                        FileBasedWindDefinition.FileBasedWindQuantity.VelocityVector,
-                        FileBasedWindDefinition.FileBasedWindQuantity.AirPressure
-                    }, windDefinition.WindFiles.Keys);
+                {
+                    FileBasedWindDefinition.FileBasedWindQuantity.VelocityVector,
+                    FileBasedWindDefinition.FileBasedWindQuantity.AirPressure
+                }, windDefinition.WindFiles.Keys);
 
             windDefinition.Type = WindDefinitionType.WindXYP;
 
             Assert.AreEqual(
                 new[]
-                    {
-                        FileBasedWindDefinition.FileBasedWindQuantity.VelocityVectorAirPressure
-                    }, windDefinition.WindFiles.Keys);
+                {
+                    FileBasedWindDefinition.FileBasedWindQuantity.VelocityVectorAirPressure
+                }, windDefinition.WindFiles.Keys);
 
             windDefinition.Type = WindDefinitionType.SpiderWebGrid;
 
             Assert.AreEqual(
                 new[]
-                    {
-                        FileBasedWindDefinition.FileBasedWindQuantity.SpiderWeb
-                    }, windDefinition.WindFiles.Keys);
+                {
+                    FileBasedWindDefinition.FileBasedWindQuantity.SpiderWeb
+                }, windDefinition.WindFiles.Keys);
         }
 
         [Test]
@@ -53,13 +53,19 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests
             windDefinition.AddSpiderWeb("cyclone");
             Assert.AreEqual(
                 new[]
-                    {
-                        FileBasedWindDefinition.FileBasedWindQuantity.VelocityX,
-                        FileBasedWindDefinition.FileBasedWindQuantity.VelocityY,
-                        FileBasedWindDefinition.FileBasedWindQuantity.AirPressure,
-                        FileBasedWindDefinition.FileBasedWindQuantity.SpiderWeb
-                    }, windDefinition.WindFiles.Keys);
-            Assert.AreEqual(new[] {null, null, null, "cyclone"},
+                {
+                    FileBasedWindDefinition.FileBasedWindQuantity.VelocityX,
+                    FileBasedWindDefinition.FileBasedWindQuantity.VelocityY,
+                    FileBasedWindDefinition.FileBasedWindQuantity.AirPressure,
+                    FileBasedWindDefinition.FileBasedWindQuantity.SpiderWeb
+                }, windDefinition.WindFiles.Keys);
+            Assert.AreEqual(new[]
+                            {
+                                null,
+                                null,
+                                null,
+                                "cyclone"
+                            },
                             windDefinition.WindFiles.Values.Select(v => v.FilePathHandler.FilePath).ToList());
         }
 

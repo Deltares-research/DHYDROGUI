@@ -24,9 +24,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
             var expectedSpreading = new TSpreading();
 
             // Call
-            var boundaryConditionParameters = new ConstantParameters<TSpreading>(expectedHeight, 
-                                                                                 expectedPeriod, 
-                                                                                 expectedDirection, 
+            var boundaryConditionParameters = new ConstantParameters<TSpreading>(expectedHeight,
+                                                                                 expectedPeriod,
+                                                                                 expectedDirection,
                                                                                  expectedSpreading);
 
             // Assert
@@ -52,9 +52,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
             TSpreading spreading = null;
 
             // Call | Assert
-            void Call() => new ConstantParameters<TSpreading>(height, 
-                                                              period, 
-                                                              direction, 
+            void Call() => new ConstantParameters<TSpreading>(height,
+                                                              period,
+                                                              direction,
                                                               spreading);
 
             var exception = Assert.Throws<ArgumentNullException>(Call);
@@ -70,9 +70,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
             double expectedDirection = random.NextDouble() * 1000.0;
             var expectedSpreading = new TSpreading();
 
-            var boundaryConditionParameters = new ConstantParameters<TSpreading>(expectedHeight, 
-                                                                                 expectedPeriod, 
-                                                                                 expectedDirection, 
+            var boundaryConditionParameters = new ConstantParameters<TSpreading>(expectedHeight,
+                                                                                 expectedPeriod,
+                                                                                 expectedDirection,
                                                                                  expectedSpreading);
 
             // Call | Assert
@@ -90,6 +90,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
                                                                                  random.NextDouble(),
                                                                                  random.NextDouble(),
                                                                                  new TSpreading());
+
             // Call
             void Call() => boundaryConditionParameters.AcceptVisitor(null);
 

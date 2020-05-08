@@ -26,7 +26,7 @@ namespace DeltaShell.NGHS.Common.Tests
         {
             // Call
             var systemEnvironment = new SystemEnvironment();
-            
+
             // Assert
             Assert.That(systemEnvironment, Is.InstanceOf<IEnvironment>());
         }

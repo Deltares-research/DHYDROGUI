@@ -12,7 +12,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         public void WaterFlowFMCultureTest()
         {
             Assert.Null(Resources.Culture);
-            var currentCulture = CultureInfo.CurrentCulture;
+            CultureInfo currentCulture = CultureInfo.CurrentCulture;
             try
             {
                 TryNewCulture(CultureInfo.CurrentCulture);
@@ -29,12 +29,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 TryNewCulture(currentCulture);
                 Assert.NotNull(Resources.Culture);
             }
-        }
-
-        private void TryNewCulture(CultureInfo newCulture)
-        {
-            Resources.Culture = newCulture;
-            Assert.AreEqual(Resources.Culture, newCulture);
         }
 
         [Test]
@@ -100,7 +94,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 Assert.Fail("Retreiving messages threw an exception: {0}", e.Message);
             }
         }
-        private void TryRetreivingMessage(String message)
+
+        private void TryNewCulture(CultureInfo newCulture)
+        {
+            Resources.Culture = newCulture;
+            Assert.AreEqual(Resources.Culture, newCulture);
+        }
+
+        private void TryRetreivingMessage(string message)
         {
             Assert.NotNull(message);
             Assert.IsNotEmpty(message);

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using DelftTools.Functions;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Core;
@@ -27,7 +28,6 @@ using log4net.Core;
 using NetTopologySuite.Extensions.Grids;
 using NSubstitute;
 using NUnit.Framework;
-using Is = NUnit.Framework.Is;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
 {
@@ -37,23 +37,22 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
         [Test]
         [Category(TestCategory.DataAccess)]
         public void ReadAndWriteMdwFile()
-        {            
-            var mdwPath = TestHelper.GetTestFilePath(@"coordinateBasedBoundary\obw.mdw");
+        {
+            string mdwPath = TestHelper.GetTestFilePath(@"coordinateBasedBoundary\obw.mdw");
             const string mdwTargetPath = "obw_compare.mdw";
 
             var mdwFile = new MdwFile();
-            var modelDef = mdwFile.Load(mdwPath);
+            WaveModelDefinition modelDef = mdwFile.Load(mdwPath);
 
-           
             mdwFile.SaveTo(mdwTargetPath, modelDef, true);
- 
-            var target = new MdwFile();
-            var modelDefOut = target.Load(mdwTargetPath);
 
-            foreach (var propDef in modelDef.ModelSchema.PropertyDefinitions.Values)
+            var target = new MdwFile();
+            WaveModelDefinition modelDefOut = target.Load(mdwTargetPath);
+
+            foreach (WaveModelPropertyDefinition propDef in modelDef.ModelSchema.PropertyDefinitions.Values)
             {
-                var valueBefore = modelDef.GetModelProperty(propDef.FileCategoryName, propDef.FilePropertyName).Value;
-                var valueAfter = modelDefOut.GetModelProperty(propDef.FileCategoryName, propDef.FilePropertyName).Value;
+                object valueBefore = modelDef.GetModelProperty(propDef.FileCategoryName, propDef.FilePropertyName).Value;
+                object valueAfter = modelDefOut.GetModelProperty(propDef.FileCategoryName, propDef.FilePropertyName).Value;
                 Assert.AreEqual(valueBefore, valueAfter);
             }
         }
@@ -63,10 +62,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
         public void Load_GridsAreImportedOnDomains()
         {
             // Setup
-            var mdwPath = TestHelper.GetTestFilePath(@"coordinateBasedBoundary\obw.mdw");
+            string mdwPath = TestHelper.GetTestFilePath(@"coordinateBasedBoundary\obw.mdw");
 
             // Call
-            var modelDef = new MdwFile().Load(mdwPath);
+            WaveModelDefinition modelDef = new MdwFile().Load(mdwPath);
 
             // Assert
             Assert.That(modelDef.OuterDomain.Grid.IsEmpty, Is.False);
@@ -76,13 +75,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
         [Category(TestCategory.DataAccess)]
         public void ReadObstacles()
         {
-            var mdwPath = TestHelper.GetTestFilePath(@"wave_spacevarbnd\tst.mdw");
+            string mdwPath = TestHelper.GetTestFilePath(@"wave_spacevarbnd\tst.mdw");
             var mdwFile = new MdwFile();
-            var modelDef = mdwFile.Load(mdwPath);
+            WaveModelDefinition modelDef = mdwFile.Load(mdwPath);
 
-            var obs1 = modelDef.Obstacles[0];
-            var obs2 = modelDef.Obstacles[1];
-            
+            WaveObstacle obs1 = modelDef.Obstacles[0];
+            WaveObstacle obs2 = modelDef.Obstacles[1];
+
             Assert.AreEqual("Obstacle 1", obs1.Name);
             Assert.AreEqual(ObstacleType.Dam, obs1.Type);
             Assert.AreEqual(0, obs1.Height, 1e-05);
@@ -90,7 +89,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             Assert.AreEqual(0.15, obs1.Beta, 1e-05);
             Assert.AreEqual(0, obs1.TransmissionCoefficient, 1e-05);
             Assert.AreEqual(ReflectionType.No, obs1.ReflectionType);
-            
+
             Assert.AreEqual("Obstacle 2", obs2.Name);
             Assert.AreEqual(ObstacleType.Sheet, obs2.Type);
             Assert.AreEqual(0, obs2.Height, 1e-05);
@@ -104,11 +103,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
         [Category(TestCategory.DataAccess)]
         public void ReadObstaclesInvalidFile()
         {
-            var mdwPath = TestHelper.GetTestFilePath(@"wave_spacevarbnd\tstInvalidObtFile.mdw");
+            string mdwPath = TestHelper.GetTestFilePath(@"wave_spacevarbnd\tstInvalidObtFile.mdw");
             var mdwFile = new MdwFile();
 
             const string warningMessage = "Parsing error in file 'tstInvalid.obt'. Can't convert 'ThisInvalidString' to a double. The property 'Beta' has been given the default value '0'.";
-            
+
             WaveModelDefinition modelDef = null;
             LogHelper.ConfigureLogging();
             LogHelper.SetLoggingLevel(Level.Warn);
@@ -116,9 +115,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
                 () => modelDef = mdwFile.Load(mdwPath), warningMessage);
             LogHelper.SetLoggingLevel(Level.Error);
             LogHelper.ResetLogging();
-            
-            var obs1 = modelDef.Obstacles[0];
-            var obs2 = modelDef.Obstacles[1];
+
+            WaveObstacle obs1 = modelDef.Obstacles[0];
+            WaveObstacle obs2 = modelDef.Obstacles[1];
 
             Assert.AreEqual("Obstacle 1", obs1.Name);
             Assert.AreEqual(ObstacleType.Dam, obs1.Type);
@@ -136,16 +135,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             Assert.AreEqual(0.5, obs2.TransmissionCoefficient, 1e-05);
             Assert.AreEqual(ReflectionType.No, obs2.ReflectionType);
         }
-        
+
         [Test]
         [Category(TestCategory.DataAccess)]
         public void ReadTimePoints()
         {
-            var mdwPath = TestHelper.GetTestFilePath(@"wave_timespacevarbnd\tst.mdw");
+            string mdwPath = TestHelper.GetTestFilePath(@"wave_timespacevarbnd\tst.mdw");
             var mdwFile = new MdwFile();
-            var modelDef = mdwFile.Load(mdwPath);
+            WaveModelDefinition modelDef = mdwFile.Load(mdwPath);
 
-            var function = modelDef.TimePointData.InputFields;
+            IFunction function = modelDef.TimePointData.InputFields;
 
             Assert.AreEqual(3, function.Arguments[0].Values.Count);
             Assert.AreEqual(new DateTime(2006, 1, 5), function.Arguments[0].Values[0]);
@@ -159,14 +158,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
         [Category(TestCategory.DataAccess)]
         public void SaveLoadSpectralSpacePerDomain()
         {
-            var mdwPath = TestHelper.GetTestFilePath(@"domainWithSpectralData\te0.mdw");
+            string mdwPath = TestHelper.GetTestFilePath(@"domainWithSpectralData\te0.mdw");
             var mdwFile = new MdwFile();
-            var modelDef = mdwFile.Load(mdwPath);
+            WaveModelDefinition modelDef = mdwFile.Load(mdwPath);
 
-            var targetPath = TestHelper.GetCurrentMethodName() + "output.mdw";
+            string targetPath = TestHelper.GetCurrentMethodName() + "output.mdw";
             mdwFile.SaveTo(targetPath, modelDef, true);
 
-            var savedModelDef = mdwFile.Load(targetPath);
+            WaveModelDefinition savedModelDef = mdwFile.Load(targetPath);
 
             Assert.AreEqual(modelDef.OuterDomain.SpectralDomainData.NFreq, savedModelDef.OuterDomain.SpectralDomainData.NFreq);
             Assert.AreEqual(modelDef.OuterDomain.SpectralDomainData.FreqMax, savedModelDef.OuterDomain.SpectralDomainData.FreqMax, 1e-07);
@@ -174,80 +173,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             Assert.AreEqual(modelDef.OuterDomain.SpectralDomainData.NDir, savedModelDef.OuterDomain.SpectralDomainData.NDir);
             Assert.AreEqual(modelDef.OuterDomain.SpectralDomainData.StartDir, savedModelDef.OuterDomain.SpectralDomainData.StartDir, 1e-07);
             Assert.AreEqual(modelDef.OuterDomain.SpectralDomainData.EndDir, savedModelDef.OuterDomain.SpectralDomainData.EndDir, 1e-07);
-        }
-
-        [TestCase(WaveDirectionalSpaceType.Sector)]
-        [TestCase(WaveDirectionalSpaceType.Circle)]
-        [Category(TestCategory.DataAccess)]
-        public void Load_ThenCorrectSpectralDomainDataIsSet(WaveDirectionalSpaceType directionalSpaceType)
-        {
-            var random = new Random();
-            var expectedDomainData = new SpectralDomainData()
-            {
-                DirectionalSpaceType = directionalSpaceType,
-                NDir = random.Next(),
-                StartDir = GetRandomRoundedValue(random),
-                EndDir = GetRandomRoundedValue(random),
-                NFreq = random.Next(),
-                FreqMin = GetRandomRoundedValue(random),
-                FreqMax = GetRandomRoundedValue(random),
-            };
-
-            // Setup
-            using (var tempDirectory = new TemporaryDirectory())
-            {
-                string filePath = CreateMdwFileWithSpectralDomainData(tempDirectory.Path, expectedDomainData);
-
-                // Call
-                WaveModelDefinition modelDefinition = new MdwFile().Load(filePath);
-
-                // Assert
-                SpectralDomainData spectralData = modelDefinition.OuterDomain.SpectralDomainData;
-                Assert.That(spectralData.DirectionalSpaceType, Is.EqualTo(directionalSpaceType), "Directional space type");
-                Assert.That(spectralData.NDir, Is.EqualTo(expectedDomainData.NDir), "NDir");
-                Assert.That(spectralData.StartDir, Is.EqualTo(expectedDomainData.StartDir).Within(1e-5), "StartDir");
-                Assert.That(spectralData.EndDir, Is.EqualTo(expectedDomainData.EndDir).Within(1e-5), "EndDir");
-                Assert.That(spectralData.FreqMin, Is.EqualTo(expectedDomainData.FreqMin).Within(1e-5), "FreqMin");
-                Assert.That(spectralData.FreqMax, Is.EqualTo(expectedDomainData.FreqMax).Within(1e-5), "FreqMax");
-                Assert.That(spectralData.NFreq, Is.EqualTo(expectedDomainData.NFreq), "NFreq");
-            }
-        }
-
-        private static string CreateMdwFileWithSpectralDomainData(string tempDirPath, SpectralDomainData domainData)
-        {
-            string filePath = Path.Combine(tempDirPath, "file.mdw");
-            string directionalSpaceTypeValue = domainData.DirectionalSpaceType == WaveDirectionalSpaceType.Circle
-                                                   ? "circle"
-                                                   : "sector";
-
-            string[] content =
-            {
-                "[Domain]",
-                $"DirSpace  = {directionalSpaceTypeValue}",
-                $"NDir      = {domainData.NDir}",
-                $"StartDir  = {ToDoubleString(domainData.StartDir)}",
-                $"EndDir    = {ToDoubleString(domainData.EndDir)}",
-                $"FreqMin   = {ToDoubleString(domainData.FreqMin)}",
-                $"FreqMax   = {ToDoubleString(domainData.FreqMax)}",
-                $"NFreq     = {domainData.NFreq}",
-                "[Output]",
-                "[General]"
-            };
-
-            File.WriteAllLines(filePath, content);
-
-            return filePath;
-        }
-
-        private static string ToDoubleString(double value)
-        {
-            return value.ToString(CultureInfo.InvariantCulture);
-        }
-
-        private static double GetRandomRoundedValue(Random random)
-        {
-            const int factor = 10000000;
-            return Math.Floor(random.NextDouble() * factor) / factor;
         }
 
         [Test]
@@ -289,7 +214,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
 
             UniformDataComponent<TimeDependentParameters<PowerDefinedSpreading>> spatiallyVaryingComponent = CreateUniformTimeDependentDataComponent();
             IWaveBoundary boundary = BuildWaveBoundary(spatiallyVaryingComponent);
-            
+
             modelDefinition.BoundaryContainer.Boundaries.Add(boundary);
 
             using (var tempDirectory = new TemporaryDirectory())
@@ -310,155 +235,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
                 string timeSeriesFileNameLine = lines.Single(line => line.Contains(KnownWaveProperties.TimeSeriesFile));
                 string timeSeriesFileNameMentioned = timeSeriesFileNameLine.Split('=').Last().Trim();
                 Assert.AreEqual("output.bcw", timeSeriesFileNameMentioned);
-            }
-        }
-
-        [TestCase(true)]
-        [TestCase(false)]
-        [Category(TestCategory.DataAccess)]
-        public void SaveTo_ForUniformFileBasedConstantBoundary_MdwFileShouldContainCorrectBoundaryCategoryAndFileIsCopied(bool switchTo)
-        {
-            // Setup
-            WaveModelDefinition modelDefinition = CreateWaveModelDefinition();
-
-            using (var tempDirectory = new TemporaryDirectory())
-            {
-                string sourceDir = tempDirectory.CreateDirectory("source");
-                string targetDir = tempDirectory.CreateDirectory("target");
-
-                const string fileName = "file.txt";
-                string sourceFilePath = Path.Combine(sourceDir, fileName);
-                File.WriteAllText(sourceFilePath, sourceFilePath);
-
-                var parameters = new FileBasedParameters(sourceFilePath);
-                var dataComponent = new UniformDataComponent<FileBasedParameters>(parameters);
-                IWaveBoundary boundary = BuildWaveBoundary(dataComponent);
-                modelDefinition.BoundaryContainer.Boundaries.Add(boundary);
-
-                string saveFilePath = Path.Combine(targetDir, "output.mdw");
-
-                // Call
-                new MdwFile().SaveTo(saveFilePath, modelDefinition, switchTo);
-
-                // Assert
-                Assert.That(saveFilePath, Does.Exist);
-                Assert.That(sourceFilePath, Does.Exist);
-                string targetFilePath = Path.Combine(targetDir, fileName);
-                Assert.That(targetFilePath, Does.Exist);
-
-                string[] lines = GetBoundaryLines(saveFilePath);
-                Assert.That(lines, Has.Length.EqualTo(8));
-                AssertPropertyLine(lines[0], KnownWaveProperties.Name, "boundary_name");
-                AssertPropertyLine(lines[1], KnownWaveProperties.Definition, "xy-coordinates");
-                AssertPropertyLine(lines[2], KnownWaveProperties.StartCoordinateX, "0.0000000");
-                AssertPropertyLine(lines[3], KnownWaveProperties.EndCoordinateX, "9.0000000");
-                AssertPropertyLine(lines[4], KnownWaveProperties.StartCoordinateY, "0.0000000");
-                AssertPropertyLine(lines[5], KnownWaveProperties.EndCoordinateY, "9.0000000");
-                AssertPropertyLine(lines[6], KnownWaveProperties.SpectrumSpec, "from file");
-                AssertPropertyLine(lines[7], KnownWaveProperties.Spectrum, fileName);
-
-                Assert.That(parameters.FilePath, Is.EqualTo(switchTo ? targetFilePath : sourceFilePath));
-            }
-        }
-
-        [TestCase(true)]
-        [TestCase(false)]
-        [Category(TestCategory.DataAccess)]
-        public void SaveTo_ForUniformFileBasedConstantBoundary_WithEmptyFilePath_MdwFileShouldContainCorrectBoundaryCategory(bool switchTo)
-        {
-            // Setup
-            WaveModelDefinition modelDefinition = CreateWaveModelDefinition();
-
-            using (var tempDirectory = new TemporaryDirectory())
-            {
-                var parameters = new FileBasedParameters(string.Empty);
-                var dataComponent = new UniformDataComponent<FileBasedParameters>(parameters);
-                IWaveBoundary boundary = BuildWaveBoundary(dataComponent);
-                modelDefinition.BoundaryContainer.Boundaries.Add(boundary);
-
-                string saveFilePath = Path.Combine(Path.Combine(tempDirectory.Path), "output.mdw");
-
-                // Call
-                new MdwFile().SaveTo(saveFilePath, modelDefinition, switchTo);
-
-                // Assert
-                Assert.That(saveFilePath, Does.Exist);
-
-                string[] lines = GetBoundaryLines(saveFilePath);
-                Assert.That(lines, Has.Length.EqualTo(8));
-                AssertPropertyLine(lines[0], KnownWaveProperties.Name, "boundary_name");
-                AssertPropertyLine(lines[1], KnownWaveProperties.Definition, "xy-coordinates");
-                AssertPropertyLine(lines[2], KnownWaveProperties.StartCoordinateX, "0.0000000");
-                AssertPropertyLine(lines[3], KnownWaveProperties.EndCoordinateX, "9.0000000");
-                AssertPropertyLine(lines[4], KnownWaveProperties.StartCoordinateY, "0.0000000");
-                AssertPropertyLine(lines[5], KnownWaveProperties.EndCoordinateY, "9.0000000");
-                AssertPropertyLine(lines[6], KnownWaveProperties.SpectrumSpec, "from file");
-                AssertPropertyLine(lines[7], KnownWaveProperties.Spectrum, string.Empty);
-
-                Assert.That(parameters.FilePath, Is.Empty);
-            }
-        }
-
-        [TestCase(true)]
-        [TestCase(false)]
-        [Category(TestCategory.DataAccess)]
-        public void SaveTo_ForSpatiallyVaryingFileBasedConstantBoundary_MdwFileShouldContainCorrectBoundaryCategoryAndFilesAreCopied(bool switchTo)
-        {
-            // Setup
-            WaveModelDefinition modelDefinition = CreateWaveModelDefinition();
-
-            using (var tempDirectory = new TemporaryDirectory())
-            {
-                string sourceDir = tempDirectory.CreateDirectory("source");
-                string targetDir = tempDirectory.CreateDirectory("target");
-
-                const string fileName1 = "file_1.txt";
-                string sourceFilePath1 = Path.Combine(sourceDir, fileName1);
-                File.WriteAllText(sourceFilePath1, sourceFilePath1);
-
-                const string fileName2 = "file_2.txt";
-                string sourceFilePath2 = Path.Combine(sourceDir, fileName2);
-                File.WriteAllText(sourceFilePath2, sourceFilePath2);
-
-                var dataComponent = new SpatiallyVaryingDataComponent<FileBasedParameters>();
-                IWaveBoundary boundary = BuildWaveBoundary(dataComponent);
-                IEventedList<SupportPoint> supportPoints = boundary.GeometricDefinition.SupportPoints;
-                var parameters1 = new FileBasedParameters(sourceFilePath1);
-                dataComponent.AddParameters(supportPoints[0], parameters1);
-                var parameters2 = new FileBasedParameters(sourceFilePath2);
-                dataComponent.AddParameters(supportPoints[1], parameters2);
-
-                modelDefinition.BoundaryContainer.Boundaries.Add(boundary);
-                string saveFilePath = Path.Combine(targetDir, "output.mdw");
-
-                // Call
-                new MdwFile().SaveTo(saveFilePath, modelDefinition, switchTo);
-
-                // Assert
-                Assert.That(saveFilePath, Does.Exist);
-                Assert.That(sourceFilePath1, Does.Exist);
-                Assert.That(sourceFilePath2, Does.Exist);
-                string targetFilePath1 = Path.Combine(targetDir, fileName1);
-                Assert.That(targetFilePath1, Does.Exist);
-                string targetFilePath2 = Path.Combine(targetDir, fileName2);
-                Assert.That(targetFilePath2, Does.Exist);
-
-                string[] lines = GetBoundaryLines(saveFilePath);
-                Assert.That(lines, Has.Length.EqualTo(11));
-                AssertPropertyLine(lines[0], KnownWaveProperties.Name, "boundary_name");
-                AssertPropertyLine(lines[1], KnownWaveProperties.Definition, "xy-coordinates");
-                AssertPropertyLine(lines[2], KnownWaveProperties.StartCoordinateX, "0.0000000");
-                AssertPropertyLine(lines[3], KnownWaveProperties.EndCoordinateX, "9.0000000");
-                AssertPropertyLine(lines[4], KnownWaveProperties.StartCoordinateY, "0.0000000");
-                AssertPropertyLine(lines[5], KnownWaveProperties.EndCoordinateY, "9.0000000");
-                AssertPropertyLine(lines[6], KnownWaveProperties.SpectrumSpec, "from file");
-                AssertPropertyLine(lines[7], KnownWaveProperties.CondSpecAtDist, "0.0000000");
-                AssertPropertyLine(lines[8], KnownWaveProperties.Spectrum, fileName1);
-                AssertPropertyLine(lines[9], KnownWaveProperties.CondSpecAtDist, "10.0000000");
-                AssertPropertyLine(lines[10], KnownWaveProperties.Spectrum, fileName2);
-
-                Assert.That(parameters1.FilePath, Is.EqualTo(switchTo ? targetFilePath1 : sourceFilePath1));
-                Assert.That(parameters2.FilePath, Is.EqualTo(switchTo ? targetFilePath2 : sourceFilePath2));
             }
         }
 
@@ -502,175 +278,18 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             }
         }
 
-        [TestCase(true)]
-        [TestCase(false)]
-        [Category(TestCategory.DataAccess)]
-        public void SaveTo_ForFromSpectrumFileDefinedBoundaries_MdwFileShouldContainCorrectBoundaryCategory(bool switchTo)
-        {
-            // Setup
-            WaveModelDefinition modelDefinition = CreateWaveModelDefinition();
-            IBoundaryContainer boundaryContainer = modelDefinition.BoundaryContainer;
-            boundaryContainer.DefinitionPerFileUsed = true;
-
-            using (var tempDirectory = new TemporaryDirectory())
-            {
-                string sourceDir = tempDirectory.CreateDirectory("source");
-                string targetDir = tempDirectory.CreateDirectory("target");
-
-                const string fileName = "file.txt";
-                string sourceFilePath = Path.Combine(sourceDir, fileName);
-                File.WriteAllText(sourceFilePath, sourceFilePath);
-
-                boundaryContainer.FilePathForBoundariesPerFile = sourceFilePath;
-                string saveFilePath = Path.Combine(targetDir, "output.mdw");
-
-                // Call
-                new MdwFile().SaveTo(saveFilePath, modelDefinition, switchTo);
-
-                // Assert
-                Assert.That(saveFilePath, Does.Exist);
-                Assert.That(sourceFilePath, Does.Exist);
-                string targetFilePath = Path.Combine(targetDir, fileName);
-                Assert.That(targetFilePath, Does.Exist);
-
-                string[] lines = GetBoundaryLines(saveFilePath);
-                Assert.That(lines, Has.Length.EqualTo(2));
-                AssertPropertyLine(lines[0], KnownWaveProperties.Definition, "fromsp2file");
-                AssertPropertyLine(lines[1], KnownWaveProperties.OverallSpecFile, fileName);
-
-                Assert.That(boundaryContainer.FilePathForBoundariesPerFile,
-                            Is.EqualTo(switchTo ? targetFilePath : sourceFilePath));
-            }
-        }
-
-        [TestCase(true)]
-        [TestCase(false)]
-        [Category(TestCategory.DataAccess)]
-        public void SaveTo_ForFromSpectrumFileDefinedBoundaries_WithEmptyFilePath_MdwFileShouldContainCorrectBoundaryCategory(bool switchTo)
-        {
-            // Setup
-            WaveModelDefinition modelDefinition = CreateWaveModelDefinition();
-            IBoundaryContainer boundaryContainer = modelDefinition.BoundaryContainer;
-            boundaryContainer.DefinitionPerFileUsed = true;
-
-            using (var tempDirectory = new TemporaryDirectory())
-            {
-                boundaryContainer.FilePathForBoundariesPerFile = string.Empty;
-                string saveFilePath = Path.Combine(tempDirectory.Path, "output.mdw");
-
-                // Call
-                new MdwFile().SaveTo(saveFilePath, modelDefinition, switchTo);
-
-                // Assert
-                Assert.That(saveFilePath, Does.Exist);
-
-                string[] lines = GetBoundaryLines(saveFilePath);
-                Assert.That(lines, Has.Length.EqualTo(2));
-                AssertPropertyLine(lines[0], KnownWaveProperties.Definition, "fromsp2file");
-                AssertPropertyLine(lines[1], KnownWaveProperties.OverallSpecFile, string.Empty);
-
-                Assert.That(boundaryContainer.FilePathForBoundariesPerFile, Is.EqualTo(string.Empty));
-            }
-        }
-
-        private static void AssertPropertyLine(string line, string propertyName, string value)
-        {
-            string[] pair = line.Split('=');
-
-            Assert.That(pair[0].Trim(), Is.EqualTo(propertyName));
-            Assert.That(pair[1].Trim(), Is.EqualTo(value));
-        }
-
-        private static string[] GetBoundaryLines(string filePath)
-        {
-            return File.ReadAllLines(filePath)
-                       .SkipWhile(l => !l.Contains($"[{KnownWaveCategories.BoundaryCategory}]"))
-                       .Skip(1)
-                       .TakeWhile(l => !l.Contains("[") && !string.IsNullOrWhiteSpace(l))
-                       .ToArray();
-        }
-
-        private static IWaveBoundary BuildWaveBoundary(ISpatiallyDefinedDataComponent dataComponent)
-        {
-            IWaveBoundaryGeometricDefinition geometricDefinition = CreateGeometricDefinition();
-            var conditionDefinition = new WaveBoundaryConditionDefinition(new PiersonMoskowitzShape(),
-                                                                          BoundaryConditionPeriodType.Peak,
-                                                                          dataComponent);
-
-            var boundary = Substitute.For<IWaveBoundary>();
-            boundary.Name = "boundary_name";
-            boundary.GeometricDefinition.Returns(geometricDefinition);
-            boundary.ConditionDefinition.Returns(conditionDefinition);
-            return boundary;
-        }
-
-        private static WaveModelDefinition CreateWaveModelDefinition()
-        {
-            var modelDefinition = new WaveModelDefinition();
-            CurvilinearGrid grid = CreateCurvilinearGrid(10, 10);
-            modelDefinition.OuterDomain = new WaveDomainData("Outer") {Grid = grid};
-            modelDefinition.BoundaryContainer.UpdateGridBoundary(new GridBoundary(grid));
-            return modelDefinition;
-        }
-
-        private static CurvilinearGrid CreateCurvilinearGrid(int length, int width)
-        {
-            int size = length * width;
-
-            var x = new double[size];
-            var y = new double[size];
-            for (var i = 0; i < size; i++)
-            {
-                x[i] = i;
-                y[i] = i;
-            }
-            var grid = new CurvilinearGrid(length, width, x, y, WaveModel.CoordinateSystemType.Cartesian);
-            return grid;
-        }
-
-        private static UniformDataComponent<ConstantParameters<PowerDefinedSpreading>> CreateUniformConstantDataComponent()
-        {
-            return new UniformDataComponent<ConstantParameters<PowerDefinedSpreading>>(
-                new ConstantParameters<PowerDefinedSpreading>(1, 2, 3, new PowerDefinedSpreading { SpreadingPower = 10 }));
-        }
-
-        private static UniformDataComponent<TimeDependentParameters<PowerDefinedSpreading>> CreateUniformTimeDependentDataComponent()
-        {
-            return new UniformDataComponent<TimeDependentParameters<PowerDefinedSpreading>>(
-                new TimeDependentParameters<PowerDefinedSpreading>(
-                    Substitute.For<IWaveEnergyFunction<PowerDefinedSpreading>>()));
-        }
-
-        private static IWaveBoundaryGeometricDefinition CreateGeometricDefinition()
-        {
-            var geometricDefinition = Substitute.For<IWaveBoundaryGeometricDefinition>();
-
-            geometricDefinition.EndingIndex.Returns(10);
-            geometricDefinition.StartingIndex.Returns(0);
-            geometricDefinition.Length.Returns(10);
-            geometricDefinition.GridSide.Returns(GridSide.East);
-            geometricDefinition.SupportPoints.Returns(new EventedList<SupportPoint>()
-            {
-                new SupportPoint(0, geometricDefinition),
-                new SupportPoint(10, geometricDefinition)
-            });
-
-            return geometricDefinition;
-        }
-
         [Test]
         [Category(TestCategory.DataAccess)]
         public void GivenAMdwFileWithObstacleFile_WhenImportedAndObstaclesRemoved_ThenObstacleFileShouldBeRemovedFromTheModeldefinitionProperties()
         {
-
             var mdwFile = new MdwFile();
-            var importedMdwFilePath = TestHelper.GetTestFilePath(@"wad\wad.mdw");
-            var modelDef = mdwFile.Load(importedMdwFilePath);
-            var targetPath = TestHelper.GetCurrentMethodName() + "output.mdw";
+            string importedMdwFilePath = TestHelper.GetTestFilePath(@"wad\wad.mdw");
+            WaveModelDefinition modelDef = mdwFile.Load(importedMdwFilePath);
+            string targetPath = TestHelper.GetCurrentMethodName() + "output.mdw";
 
             Assert.AreEqual("wad.obt",
-                modelDef.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.ObstacleFile)
-                    .GetValueAsString());
+                            modelDef.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.ObstacleFile)
+                                    .GetValueAsString());
 
             modelDef.Obstacles.Clear();
 
@@ -678,71 +297,66 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             mdwFile.SaveTo(targetPath, modelDef, true);
 
             Assert.AreEqual(string.Empty,
-                modelDef.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.ObstacleFile)
-                    .GetValueAsString());
+                            modelDef.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.ObstacleFile)
+                                    .GetValueAsString());
 
             //Verify what was really written in the file
-            var modelDef2 = mdwFile.Load(targetPath);
+            WaveModelDefinition modelDef2 = mdwFile.Load(targetPath);
 
             Assert.AreEqual(string.Empty,
-                modelDef2.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.ObstacleFile)
-                    .GetValueAsString());
+                            modelDef2.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.ObstacleFile)
+                                     .GetValueAsString());
         }
 
         [Test]
         [Category(TestCategory.DataAccess)]
         public void GivenAMdwFileWithConstantWind_WhenImportedAndChangedToTimeseries_ThenZerosShouldBeWrittenForWindSpeedAndDirectionInTheModelDefinitionProperties()
         {
-
             var mdwFile = new MdwFile();
-            var importedMdwFilePath = TestHelper.GetTestFilePath(@"wad\wad.mdw");
-            var modelDef = mdwFile.Load(importedMdwFilePath);
-            var targetPath = TestHelper.GetCurrentMethodName() + "output.mdw";
+            string importedMdwFilePath = TestHelper.GetTestFilePath(@"wad\wad.mdw");
+            WaveModelDefinition modelDef = mdwFile.Load(importedMdwFilePath);
+            string targetPath = TestHelper.GetCurrentMethodName() + "output.mdw";
 
             Assert.AreEqual("10",
-                modelDef.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.WindSpeed)
-                    .GetValueAsString());
+                            modelDef.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.WindSpeed)
+                                    .GetValueAsString());
 
             Assert.AreEqual("315",
-                modelDef.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.WindDirection)
-                    .GetValueAsString());
+                            modelDef.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.WindDirection)
+                                    .GetValueAsString());
 
             modelDef.TimePointData.WindDataType = InputFieldDataType.TimeVarying;
-            
+
             //Modeldefinition properties updated during save
             mdwFile.SaveTo(targetPath, modelDef, true);
 
             Assert.AreEqual("0",
-                modelDef.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.WindSpeed)
-                    .GetValueAsString());
+                            modelDef.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.WindSpeed)
+                                    .GetValueAsString());
 
             Assert.AreEqual("0",
-                modelDef.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.WindDirection)
-                    .GetValueAsString());
+                            modelDef.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.WindDirection)
+                                    .GetValueAsString());
 
             //Verify what was really written in the file
-            var modelDef2 = mdwFile.Load(targetPath);
+            WaveModelDefinition modelDef2 = mdwFile.Load(targetPath);
 
             Assert.AreEqual("0",
-                modelDef2.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.WindSpeed)
-                    .GetValueAsString());
+                            modelDef2.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.WindSpeed)
+                                     .GetValueAsString());
 
             Assert.AreEqual("0",
-                modelDef2.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.WindDirection)
-                    .GetValueAsString());
+                            modelDef2.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.WindDirection)
+                                     .GetValueAsString());
         }
-        
+
         [Test]
         [Category(TestCategory.Integration)]
         public void GivenAWaveModelWithConstantHydronamics_WhenChangedToTimeseries_ThenZerosShouldBeWrittenForConstantWaterLevelVelocityXAndVelocityYInTheModelDefinitionProperties()
         {
-
             var mdwFile = new MdwFile();
-            var modelDef = new WaveModelDefinition()
-            {
-                OuterDomain = new WaveDomainData("Outer")
-            };
-            var targetPath = TestHelper.GetCurrentMethodName() + "output.mdw";
+            var modelDef = new WaveModelDefinition() {OuterDomain = new WaveDomainData("Outer")};
+            string targetPath = TestHelper.GetCurrentMethodName() + "output.mdw";
 
             modelDef.TimePointData.HydroDataType = InputFieldDataType.Constant;
             modelDef.TimePointData.WaterLevelConstant = 6;
@@ -753,47 +367,47 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             mdwFile.SaveTo(targetPath, modelDef, true);
 
             Assert.AreEqual("6",
-                modelDef.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.WaterLevel)
-                    .GetValueAsString());
+                            modelDef.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.WaterLevel)
+                                    .GetValueAsString());
 
             Assert.AreEqual("6",
-                modelDef.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.WaterVelocityX)
-                    .GetValueAsString());
+                            modelDef.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.WaterVelocityX)
+                                    .GetValueAsString());
 
             Assert.AreEqual("6",
-                modelDef.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.WaterVelocityX)
-                    .GetValueAsString());
+                            modelDef.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.WaterVelocityX)
+                                    .GetValueAsString());
 
             modelDef.TimePointData.HydroDataType = InputFieldDataType.TimeVarying;
 
             mdwFile.SaveTo(targetPath, modelDef, true);
 
             Assert.AreEqual("0",
-                modelDef.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.WaterLevel)
-                    .GetValueAsString());
+                            modelDef.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.WaterLevel)
+                                    .GetValueAsString());
 
             Assert.AreEqual("0",
-                modelDef.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.WaterVelocityX)
-                    .GetValueAsString());
+                            modelDef.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.WaterVelocityX)
+                                    .GetValueAsString());
 
             Assert.AreEqual("0",
-                modelDef.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.WaterVelocityX)
-                    .GetValueAsString());
+                            modelDef.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.WaterVelocityX)
+                                    .GetValueAsString());
 
             //Verify what was really written in the file
-            var modelDef2 = mdwFile.Load(targetPath);
+            WaveModelDefinition modelDef2 = mdwFile.Load(targetPath);
 
             Assert.AreEqual("0",
-                modelDef2.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.WaterLevel)
-                    .GetValueAsString());
+                            modelDef2.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.WaterLevel)
+                                     .GetValueAsString());
 
             Assert.AreEqual("0",
-                modelDef2.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.WaterVelocityX)
-                    .GetValueAsString());
+                            modelDef2.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.WaterVelocityX)
+                                     .GetValueAsString());
 
             Assert.AreEqual("0",
-                modelDef2.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.WaterVelocityX)
-                    .GetValueAsString());
+                            modelDef2.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.WaterVelocityX)
+                                     .GetValueAsString());
         }
 
         [Test]
@@ -801,13 +415,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
         public void GivenAWaveModelWithObservationPoints_WhenImportedAndObservationsPointsRemoved_ThenLocationFileWithObservationPointsShouldBeRemovedFromTheModelDefinitionProperties()
         {
             var mdwFile = new MdwFile();
-            var importedMdwFilePath = TestHelper.GetTestFilePath(@"wad\wad.mdw");
-            var modelDef = mdwFile.Load(importedMdwFilePath);
-            var targetPath = TestHelper.GetCurrentMethodName() + "output.mdw";
+            string importedMdwFilePath = TestHelper.GetTestFilePath(@"wad\wad.mdw");
+            WaveModelDefinition modelDef = mdwFile.Load(importedMdwFilePath);
+            string targetPath = TestHelper.GetCurrentMethodName() + "output.mdw";
 
             Assert.AreEqual("wad.loc",
-                modelDef.GetModelProperty(KnownWaveCategories.OutputCategory, KnownWaveProperties.LocationFile)
-                    .GetValueAsString());
+                            modelDef.GetModelProperty(KnownWaveCategories.OutputCategory, KnownWaveProperties.LocationFile)
+                                    .GetValueAsString());
 
             modelDef.ObservationPoints.Clear();
 
@@ -815,15 +429,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             mdwFile.SaveTo(targetPath, modelDef, true);
 
             Assert.AreEqual(string.Empty,
-                modelDef.GetModelProperty(KnownWaveCategories.OutputCategory, KnownWaveProperties.LocationFile)
-                    .GetValueAsString());
+                            modelDef.GetModelProperty(KnownWaveCategories.OutputCategory, KnownWaveProperties.LocationFile)
+                                    .GetValueAsString());
 
             //Verify what was really written in the file
-            var modelDef2 = mdwFile.Load(targetPath);
+            WaveModelDefinition modelDef2 = mdwFile.Load(targetPath);
 
-            Assert.AreEqual(string.Empty, 
-                modelDef2.GetModelProperty(KnownWaveCategories.OutputCategory, KnownWaveProperties.LocationFile)
-                    .GetValueAsString());
+            Assert.AreEqual(string.Empty,
+                            modelDef2.GetModelProperty(KnownWaveCategories.OutputCategory, KnownWaveProperties.LocationFile)
+                                     .GetValueAsString());
         }
 
         [Test]
@@ -831,9 +445,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
         public void GivenAMdwFileWithMissingBedFrictionCoefAndMaxIter_WhenImportingThisModel_ThenTheCorrectDefaultValuesShouldBeSetBasedOnBedFrictionAndSimMode()
         {
             var mdwFile = new MdwFile();
-            var importedMdwFilePath = TestHelper.GetTestFilePath(@"ModelWithMissingMultipleDefaultValues\Waves.mdw");
+            string importedMdwFilePath = TestHelper.GetTestFilePath(@"ModelWithMissingMultipleDefaultValues\Waves.mdw");
 
-            List<string> expectedMessages= new List<string>();
+            var expectedMessages = new List<string>();
             expectedMessages.Add(
                 "In the MDW file the property BedFricCoef is missing. Based on property BedFriction the default value is set");
             expectedMessages.Add(
@@ -842,31 +456,19 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             IEnumerable<string> messages = expectedMessages;
 
             TestHelper.AssertLogMessagesAreGenerated(() =>
-                {
-                    var modelDefinition = mdwFile.Load(importedMdwFilePath);
-                    var propertyBedFrictionCoef = modelDefinition.GetModelProperty(KnownWaveCategories.ProcessesCategory,
-                        KnownWaveProperties.BedFrictionCoef);
-                    Assert.IsNotNull(propertyBedFrictionCoef);
-                    Assert.AreEqual("0.05", propertyBedFrictionCoef.GetValueAsString());
+                                                     {
+                                                         WaveModelDefinition modelDefinition = mdwFile.Load(importedMdwFilePath);
+                                                         WaveModelProperty propertyBedFrictionCoef = modelDefinition.GetModelProperty(KnownWaveCategories.ProcessesCategory,
+                                                                                                                                      KnownWaveProperties.BedFrictionCoef);
+                                                         Assert.IsNotNull(propertyBedFrictionCoef);
+                                                         Assert.AreEqual("0.05", propertyBedFrictionCoef.GetValueAsString());
 
-                    var propertyMaxIter = modelDefinition.GetModelProperty(KnownWaveCategories.NumericsCategory,
-                        KnownWaveProperties.MaxIter);
-                    Assert.IsNotNull(propertyMaxIter);
-                    Assert.AreEqual("15", propertyMaxIter.GetValueAsString());
-                }
-                ,messages);
-        }
-        private DeltaShellApplication GetConfiguredApplication(string savePath)
-        {
-            var app = new DeltaShellApplication();
-            app.IsProjectCreatedInTemporaryDirectory = true;
-            app.Plugins.Add(new NHibernateDaoApplicationPlugin());
-            app.Plugins.Add(new CommonToolsApplicationPlugin());
-            app.Plugins.Add(new SharpMapGisApplicationPlugin());
-            app.Plugins.Add(new NetworkEditorApplicationPlugin());
-            app.Run();
-            app.SaveProjectAs(Path.Combine(savePath));
-            return app;
+                                                         WaveModelProperty propertyMaxIter = modelDefinition.GetModelProperty(KnownWaveCategories.NumericsCategory,
+                                                                                                                              KnownWaveProperties.MaxIter);
+                                                         Assert.IsNotNull(propertyMaxIter);
+                                                         Assert.AreEqual("15", propertyMaxIter.GetValueAsString());
+                                                     }
+                                                     , messages);
         }
 
         [Test]
@@ -877,10 +479,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             using (var temporaryDirectory = new TemporaryDirectory())
             {
                 const string comFilePath = @"myDir1\myDir2\myComFile_com.nc";
-                var modelDefinition = new WaveModelDefinition
-                {
-                    CommunicationsFilePath = comFilePath
-                };
+                var modelDefinition = new WaveModelDefinition {CommunicationsFilePath = comFilePath};
 
                 // Act
                 var mdwFile = new MdwFile();
@@ -892,7 +491,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
                 string comFileLine = mdwFileLines.Single(line => line.Trim().StartsWith(KnownWaveProperties.COMFile));
 
                 string exportedComFilePath = comFileLine.Split('=')[1].Trim();
-                Assert.That(exportedComFilePath, Is.EqualTo(comFilePath.Replace('\\','/')));
+                Assert.That(exportedComFilePath, Is.EqualTo(comFilePath.Replace('\\', '/')));
             }
         }
 
@@ -908,13 +507,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
                 var mdwFile = new MdwFile();
 
                 // Call
-                WaveModelDefinition result = null; 
+                WaveModelDefinition result = null;
 
                 void Call() => result = mdwFile.Load(legacyFile);
 
                 List<string> logMessages =
                     TestHelper.GetAllRenderedMessages(Call, Level.Warn).ToList();
-
 
                 // Assert
                 WaveModelProperty timeFrameProperty =
@@ -926,7 +524,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
                 var value = (double) timeFrameProperty.Value;
                 Assert.That(value, Is.EqualTo(255.0));
 
-                Assert.That(result.Properties.Any(x => x.PropertyDefinition.FilePropertyName == "TScale"), 
+                Assert.That(result.Properties.Any(x => x.PropertyDefinition.FilePropertyName == "TScale"),
                             Is.False,
                             "Expected no property with the file name TScale");
 
@@ -1194,6 +792,418 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             Assert.That(boundaryContainer.FilePathForBoundariesPerFile, Is.EqualTo(Path.Combine(Path.GetDirectoryName(mdwPath), "OverallSpectrumFile.sp2")));
         }
 
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void Load_WhenOuterGridIsNotImported_ThenWarningMessageIsLogged()
+        {
+            // Setup
+            using (var tempDirectory = new TemporaryDirectory())
+            {
+                string filePath = CreateMinimalMdwFile(tempDirectory.Path);
+
+                // Call
+                void Call() => new MdwFile().Load(filePath);
+
+                // Assert
+                List<string> warningMessages = TestHelper.GetAllRenderedMessages(Call, Level.Warn).ToList();
+                Assert.That(warningMessages, Has.Count.EqualTo(1));
+                Assert.That(warningMessages[0], Is.EqualTo("Boundaries cannot be imported, because there is no grid detected."));
+            }
+        }
+
+        [TestCase(WaveDirectionalSpaceType.Sector)]
+        [TestCase(WaveDirectionalSpaceType.Circle)]
+        [Category(TestCategory.DataAccess)]
+        public void Load_ThenCorrectSpectralDomainDataIsSet(WaveDirectionalSpaceType directionalSpaceType)
+        {
+            var random = new Random();
+            var expectedDomainData = new SpectralDomainData()
+            {
+                DirectionalSpaceType = directionalSpaceType,
+                NDir = random.Next(),
+                StartDir = GetRandomRoundedValue(random),
+                EndDir = GetRandomRoundedValue(random),
+                NFreq = random.Next(),
+                FreqMin = GetRandomRoundedValue(random),
+                FreqMax = GetRandomRoundedValue(random),
+            };
+
+            // Setup
+            using (var tempDirectory = new TemporaryDirectory())
+            {
+                string filePath = CreateMdwFileWithSpectralDomainData(tempDirectory.Path, expectedDomainData);
+
+                // Call
+                WaveModelDefinition modelDefinition = new MdwFile().Load(filePath);
+
+                // Assert
+                SpectralDomainData spectralData = modelDefinition.OuterDomain.SpectralDomainData;
+                Assert.That(spectralData.DirectionalSpaceType, Is.EqualTo(directionalSpaceType), "Directional space type");
+                Assert.That(spectralData.NDir, Is.EqualTo(expectedDomainData.NDir), "NDir");
+                Assert.That(spectralData.StartDir, Is.EqualTo(expectedDomainData.StartDir).Within(1e-5), "StartDir");
+                Assert.That(spectralData.EndDir, Is.EqualTo(expectedDomainData.EndDir).Within(1e-5), "EndDir");
+                Assert.That(spectralData.FreqMin, Is.EqualTo(expectedDomainData.FreqMin).Within(1e-5), "FreqMin");
+                Assert.That(spectralData.FreqMax, Is.EqualTo(expectedDomainData.FreqMax).Within(1e-5), "FreqMax");
+                Assert.That(spectralData.NFreq, Is.EqualTo(expectedDomainData.NFreq), "NFreq");
+            }
+        }
+
+        private static string CreateMdwFileWithSpectralDomainData(string tempDirPath, SpectralDomainData domainData)
+        {
+            string filePath = Path.Combine(tempDirPath, "file.mdw");
+            string directionalSpaceTypeValue = domainData.DirectionalSpaceType == WaveDirectionalSpaceType.Circle
+                                                   ? "circle"
+                                                   : "sector";
+
+            string[] content =
+            {
+                "[Domain]",
+                $"DirSpace  = {directionalSpaceTypeValue}",
+                $"NDir      = {domainData.NDir}",
+                $"StartDir  = {ToDoubleString(domainData.StartDir)}",
+                $"EndDir    = {ToDoubleString(domainData.EndDir)}",
+                $"FreqMin   = {ToDoubleString(domainData.FreqMin)}",
+                $"FreqMax   = {ToDoubleString(domainData.FreqMax)}",
+                $"NFreq     = {domainData.NFreq}",
+                "[Output]",
+                "[General]"
+            };
+
+            File.WriteAllLines(filePath, content);
+
+            return filePath;
+        }
+
+        private static string ToDoubleString(double value)
+        {
+            return value.ToString(CultureInfo.InvariantCulture);
+        }
+
+        private static double GetRandomRoundedValue(Random random)
+        {
+            const int factor = 10000000;
+            return Math.Floor(random.NextDouble() * factor) / factor;
+        }
+
+        [TestCase(true)]
+        [TestCase(false)]
+        [Category(TestCategory.DataAccess)]
+        public void SaveTo_ForUniformFileBasedConstantBoundary_MdwFileShouldContainCorrectBoundaryCategoryAndFileIsCopied(bool switchTo)
+        {
+            // Setup
+            WaveModelDefinition modelDefinition = CreateWaveModelDefinition();
+
+            using (var tempDirectory = new TemporaryDirectory())
+            {
+                string sourceDir = tempDirectory.CreateDirectory("source");
+                string targetDir = tempDirectory.CreateDirectory("target");
+
+                const string fileName = "file.txt";
+                string sourceFilePath = Path.Combine(sourceDir, fileName);
+                File.WriteAllText(sourceFilePath, sourceFilePath);
+
+                var parameters = new FileBasedParameters(sourceFilePath);
+                var dataComponent = new UniformDataComponent<FileBasedParameters>(parameters);
+                IWaveBoundary boundary = BuildWaveBoundary(dataComponent);
+                modelDefinition.BoundaryContainer.Boundaries.Add(boundary);
+
+                string saveFilePath = Path.Combine(targetDir, "output.mdw");
+
+                // Call
+                new MdwFile().SaveTo(saveFilePath, modelDefinition, switchTo);
+
+                // Assert
+                Assert.That(saveFilePath, Does.Exist);
+                Assert.That(sourceFilePath, Does.Exist);
+                string targetFilePath = Path.Combine(targetDir, fileName);
+                Assert.That(targetFilePath, Does.Exist);
+
+                string[] lines = GetBoundaryLines(saveFilePath);
+                Assert.That(lines, Has.Length.EqualTo(8));
+                AssertPropertyLine(lines[0], KnownWaveProperties.Name, "boundary_name");
+                AssertPropertyLine(lines[1], KnownWaveProperties.Definition, "xy-coordinates");
+                AssertPropertyLine(lines[2], KnownWaveProperties.StartCoordinateX, "0.0000000");
+                AssertPropertyLine(lines[3], KnownWaveProperties.EndCoordinateX, "9.0000000");
+                AssertPropertyLine(lines[4], KnownWaveProperties.StartCoordinateY, "0.0000000");
+                AssertPropertyLine(lines[5], KnownWaveProperties.EndCoordinateY, "9.0000000");
+                AssertPropertyLine(lines[6], KnownWaveProperties.SpectrumSpec, "from file");
+                AssertPropertyLine(lines[7], KnownWaveProperties.Spectrum, fileName);
+
+                Assert.That(parameters.FilePath, Is.EqualTo(switchTo ? targetFilePath : sourceFilePath));
+            }
+        }
+
+        [TestCase(true)]
+        [TestCase(false)]
+        [Category(TestCategory.DataAccess)]
+        public void SaveTo_ForUniformFileBasedConstantBoundary_WithEmptyFilePath_MdwFileShouldContainCorrectBoundaryCategory(bool switchTo)
+        {
+            // Setup
+            WaveModelDefinition modelDefinition = CreateWaveModelDefinition();
+
+            using (var tempDirectory = new TemporaryDirectory())
+            {
+                var parameters = new FileBasedParameters(string.Empty);
+                var dataComponent = new UniformDataComponent<FileBasedParameters>(parameters);
+                IWaveBoundary boundary = BuildWaveBoundary(dataComponent);
+                modelDefinition.BoundaryContainer.Boundaries.Add(boundary);
+
+                string saveFilePath = Path.Combine(Path.Combine(tempDirectory.Path), "output.mdw");
+
+                // Call
+                new MdwFile().SaveTo(saveFilePath, modelDefinition, switchTo);
+
+                // Assert
+                Assert.That(saveFilePath, Does.Exist);
+
+                string[] lines = GetBoundaryLines(saveFilePath);
+                Assert.That(lines, Has.Length.EqualTo(8));
+                AssertPropertyLine(lines[0], KnownWaveProperties.Name, "boundary_name");
+                AssertPropertyLine(lines[1], KnownWaveProperties.Definition, "xy-coordinates");
+                AssertPropertyLine(lines[2], KnownWaveProperties.StartCoordinateX, "0.0000000");
+                AssertPropertyLine(lines[3], KnownWaveProperties.EndCoordinateX, "9.0000000");
+                AssertPropertyLine(lines[4], KnownWaveProperties.StartCoordinateY, "0.0000000");
+                AssertPropertyLine(lines[5], KnownWaveProperties.EndCoordinateY, "9.0000000");
+                AssertPropertyLine(lines[6], KnownWaveProperties.SpectrumSpec, "from file");
+                AssertPropertyLine(lines[7], KnownWaveProperties.Spectrum, string.Empty);
+
+                Assert.That(parameters.FilePath, Is.Empty);
+            }
+        }
+
+        [TestCase(true)]
+        [TestCase(false)]
+        [Category(TestCategory.DataAccess)]
+        public void SaveTo_ForSpatiallyVaryingFileBasedConstantBoundary_MdwFileShouldContainCorrectBoundaryCategoryAndFilesAreCopied(bool switchTo)
+        {
+            // Setup
+            WaveModelDefinition modelDefinition = CreateWaveModelDefinition();
+
+            using (var tempDirectory = new TemporaryDirectory())
+            {
+                string sourceDir = tempDirectory.CreateDirectory("source");
+                string targetDir = tempDirectory.CreateDirectory("target");
+
+                const string fileName1 = "file_1.txt";
+                string sourceFilePath1 = Path.Combine(sourceDir, fileName1);
+                File.WriteAllText(sourceFilePath1, sourceFilePath1);
+
+                const string fileName2 = "file_2.txt";
+                string sourceFilePath2 = Path.Combine(sourceDir, fileName2);
+                File.WriteAllText(sourceFilePath2, sourceFilePath2);
+
+                var dataComponent = new SpatiallyVaryingDataComponent<FileBasedParameters>();
+                IWaveBoundary boundary = BuildWaveBoundary(dataComponent);
+                IEventedList<SupportPoint> supportPoints = boundary.GeometricDefinition.SupportPoints;
+                var parameters1 = new FileBasedParameters(sourceFilePath1);
+                dataComponent.AddParameters(supportPoints[0], parameters1);
+                var parameters2 = new FileBasedParameters(sourceFilePath2);
+                dataComponent.AddParameters(supportPoints[1], parameters2);
+
+                modelDefinition.BoundaryContainer.Boundaries.Add(boundary);
+                string saveFilePath = Path.Combine(targetDir, "output.mdw");
+
+                // Call
+                new MdwFile().SaveTo(saveFilePath, modelDefinition, switchTo);
+
+                // Assert
+                Assert.That(saveFilePath, Does.Exist);
+                Assert.That(sourceFilePath1, Does.Exist);
+                Assert.That(sourceFilePath2, Does.Exist);
+                string targetFilePath1 = Path.Combine(targetDir, fileName1);
+                Assert.That(targetFilePath1, Does.Exist);
+                string targetFilePath2 = Path.Combine(targetDir, fileName2);
+                Assert.That(targetFilePath2, Does.Exist);
+
+                string[] lines = GetBoundaryLines(saveFilePath);
+                Assert.That(lines, Has.Length.EqualTo(11));
+                AssertPropertyLine(lines[0], KnownWaveProperties.Name, "boundary_name");
+                AssertPropertyLine(lines[1], KnownWaveProperties.Definition, "xy-coordinates");
+                AssertPropertyLine(lines[2], KnownWaveProperties.StartCoordinateX, "0.0000000");
+                AssertPropertyLine(lines[3], KnownWaveProperties.EndCoordinateX, "9.0000000");
+                AssertPropertyLine(lines[4], KnownWaveProperties.StartCoordinateY, "0.0000000");
+                AssertPropertyLine(lines[5], KnownWaveProperties.EndCoordinateY, "9.0000000");
+                AssertPropertyLine(lines[6], KnownWaveProperties.SpectrumSpec, "from file");
+                AssertPropertyLine(lines[7], KnownWaveProperties.CondSpecAtDist, "0.0000000");
+                AssertPropertyLine(lines[8], KnownWaveProperties.Spectrum, fileName1);
+                AssertPropertyLine(lines[9], KnownWaveProperties.CondSpecAtDist, "10.0000000");
+                AssertPropertyLine(lines[10], KnownWaveProperties.Spectrum, fileName2);
+
+                Assert.That(parameters1.FilePath, Is.EqualTo(switchTo ? targetFilePath1 : sourceFilePath1));
+                Assert.That(parameters2.FilePath, Is.EqualTo(switchTo ? targetFilePath2 : sourceFilePath2));
+            }
+        }
+
+        [TestCase(true)]
+        [TestCase(false)]
+        [Category(TestCategory.DataAccess)]
+        public void SaveTo_ForFromSpectrumFileDefinedBoundaries_MdwFileShouldContainCorrectBoundaryCategory(bool switchTo)
+        {
+            // Setup
+            WaveModelDefinition modelDefinition = CreateWaveModelDefinition();
+            IBoundaryContainer boundaryContainer = modelDefinition.BoundaryContainer;
+            boundaryContainer.DefinitionPerFileUsed = true;
+
+            using (var tempDirectory = new TemporaryDirectory())
+            {
+                string sourceDir = tempDirectory.CreateDirectory("source");
+                string targetDir = tempDirectory.CreateDirectory("target");
+
+                const string fileName = "file.txt";
+                string sourceFilePath = Path.Combine(sourceDir, fileName);
+                File.WriteAllText(sourceFilePath, sourceFilePath);
+
+                boundaryContainer.FilePathForBoundariesPerFile = sourceFilePath;
+                string saveFilePath = Path.Combine(targetDir, "output.mdw");
+
+                // Call
+                new MdwFile().SaveTo(saveFilePath, modelDefinition, switchTo);
+
+                // Assert
+                Assert.That(saveFilePath, Does.Exist);
+                Assert.That(sourceFilePath, Does.Exist);
+                string targetFilePath = Path.Combine(targetDir, fileName);
+                Assert.That(targetFilePath, Does.Exist);
+
+                string[] lines = GetBoundaryLines(saveFilePath);
+                Assert.That(lines, Has.Length.EqualTo(2));
+                AssertPropertyLine(lines[0], KnownWaveProperties.Definition, "fromsp2file");
+                AssertPropertyLine(lines[1], KnownWaveProperties.OverallSpecFile, fileName);
+
+                Assert.That(boundaryContainer.FilePathForBoundariesPerFile,
+                            Is.EqualTo(switchTo ? targetFilePath : sourceFilePath));
+            }
+        }
+
+        [TestCase(true)]
+        [TestCase(false)]
+        [Category(TestCategory.DataAccess)]
+        public void SaveTo_ForFromSpectrumFileDefinedBoundaries_WithEmptyFilePath_MdwFileShouldContainCorrectBoundaryCategory(bool switchTo)
+        {
+            // Setup
+            WaveModelDefinition modelDefinition = CreateWaveModelDefinition();
+            IBoundaryContainer boundaryContainer = modelDefinition.BoundaryContainer;
+            boundaryContainer.DefinitionPerFileUsed = true;
+
+            using (var tempDirectory = new TemporaryDirectory())
+            {
+                boundaryContainer.FilePathForBoundariesPerFile = string.Empty;
+                string saveFilePath = Path.Combine(tempDirectory.Path, "output.mdw");
+
+                // Call
+                new MdwFile().SaveTo(saveFilePath, modelDefinition, switchTo);
+
+                // Assert
+                Assert.That(saveFilePath, Does.Exist);
+
+                string[] lines = GetBoundaryLines(saveFilePath);
+                Assert.That(lines, Has.Length.EqualTo(2));
+                AssertPropertyLine(lines[0], KnownWaveProperties.Definition, "fromsp2file");
+                AssertPropertyLine(lines[1], KnownWaveProperties.OverallSpecFile, string.Empty);
+
+                Assert.That(boundaryContainer.FilePathForBoundariesPerFile, Is.EqualTo(string.Empty));
+            }
+        }
+
+        private static void AssertPropertyLine(string line, string propertyName, string value)
+        {
+            string[] pair = line.Split('=');
+
+            Assert.That(pair[0].Trim(), Is.EqualTo(propertyName));
+            Assert.That(pair[1].Trim(), Is.EqualTo(value));
+        }
+
+        private static string[] GetBoundaryLines(string filePath)
+        {
+            return File.ReadAllLines(filePath)
+                       .SkipWhile(l => !l.Contains($"[{KnownWaveCategories.BoundaryCategory}]"))
+                       .Skip(1)
+                       .TakeWhile(l => !l.Contains("[") && !string.IsNullOrWhiteSpace(l))
+                       .ToArray();
+        }
+
+        private static IWaveBoundary BuildWaveBoundary(ISpatiallyDefinedDataComponent dataComponent)
+        {
+            IWaveBoundaryGeometricDefinition geometricDefinition = CreateGeometricDefinition();
+            var conditionDefinition = new WaveBoundaryConditionDefinition(new PiersonMoskowitzShape(),
+                                                                          BoundaryConditionPeriodType.Peak,
+                                                                          dataComponent);
+
+            var boundary = Substitute.For<IWaveBoundary>();
+            boundary.Name = "boundary_name";
+            boundary.GeometricDefinition.Returns(geometricDefinition);
+            boundary.ConditionDefinition.Returns(conditionDefinition);
+            return boundary;
+        }
+
+        private static WaveModelDefinition CreateWaveModelDefinition()
+        {
+            var modelDefinition = new WaveModelDefinition();
+            CurvilinearGrid grid = CreateCurvilinearGrid(10, 10);
+            modelDefinition.OuterDomain = new WaveDomainData("Outer") {Grid = grid};
+            modelDefinition.BoundaryContainer.UpdateGridBoundary(new GridBoundary(grid));
+            return modelDefinition;
+        }
+
+        private static CurvilinearGrid CreateCurvilinearGrid(int length, int width)
+        {
+            int size = length * width;
+
+            var x = new double[size];
+            var y = new double[size];
+            for (var i = 0; i < size; i++)
+            {
+                x[i] = i;
+                y[i] = i;
+            }
+
+            var grid = new CurvilinearGrid(length, width, x, y, WaveModel.CoordinateSystemType.Cartesian);
+            return grid;
+        }
+
+        private static UniformDataComponent<ConstantParameters<PowerDefinedSpreading>> CreateUniformConstantDataComponent()
+        {
+            return new UniformDataComponent<ConstantParameters<PowerDefinedSpreading>>(
+                new ConstantParameters<PowerDefinedSpreading>(1, 2, 3, new PowerDefinedSpreading {SpreadingPower = 10}));
+        }
+
+        private static UniformDataComponent<TimeDependentParameters<PowerDefinedSpreading>> CreateUniformTimeDependentDataComponent()
+        {
+            return new UniformDataComponent<TimeDependentParameters<PowerDefinedSpreading>>(
+                new TimeDependentParameters<PowerDefinedSpreading>(
+                    Substitute.For<IWaveEnergyFunction<PowerDefinedSpreading>>()));
+        }
+
+        private static IWaveBoundaryGeometricDefinition CreateGeometricDefinition()
+        {
+            var geometricDefinition = Substitute.For<IWaveBoundaryGeometricDefinition>();
+
+            geometricDefinition.EndingIndex.Returns(10);
+            geometricDefinition.StartingIndex.Returns(0);
+            geometricDefinition.Length.Returns(10);
+            geometricDefinition.GridSide.Returns(GridSide.East);
+            geometricDefinition.SupportPoints.Returns(new EventedList<SupportPoint>()
+            {
+                new SupportPoint(0, geometricDefinition),
+                new SupportPoint(10, geometricDefinition)
+            });
+
+            return geometricDefinition;
+        }
+
+        private DeltaShellApplication GetConfiguredApplication(string savePath)
+        {
+            var app = new DeltaShellApplication();
+            app.IsProjectCreatedInTemporaryDirectory = true;
+            app.Plugins.Add(new NHibernateDaoApplicationPlugin());
+            app.Plugins.Add(new CommonToolsApplicationPlugin());
+            app.Plugins.Add(new SharpMapGisApplicationPlugin());
+            app.Plugins.Add(new NetworkEditorApplicationPlugin());
+            app.Run();
+            app.SaveProjectAs(Path.Combine(savePath));
+            return app;
+        }
+
         private static void AssertCorrectConstantParameters(ConstantParameters<PowerDefinedSpreading> supportPointData,
                                                             double height, double period, double direction, double spreading)
         {
@@ -1231,25 +1241,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             Assert.That(supportPoint.GeometricDefinition, Is.SameAs(geometricDefinition));
 
             return supportPoint;
-        }
-
-        [Test]
-        [Category(TestCategory.DataAccess)]
-        public void Load_WhenOuterGridIsNotImported_ThenWarningMessageIsLogged()
-        {
-            // Setup
-            using (var tempDirectory = new TemporaryDirectory())
-            {
-                string filePath = CreateMinimalMdwFile(tempDirectory.Path);
-
-                // Call
-                void Call() => new MdwFile().Load(filePath);
-
-                // Assert
-                List<string> warningMessages = TestHelper.GetAllRenderedMessages(Call, Level.Warn).ToList();
-                Assert.That(warningMessages, Has.Count.EqualTo(1));
-                Assert.That(warningMessages[0], Is.EqualTo("Boundaries cannot be imported, because there is no grid detected."));
-            }
         }
 
         private static string CreateMinimalMdwFile(string tempDirPath)

@@ -29,19 +29,20 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             var supportPoint = new SupportPoint(10.0, Substitute.For<IWaveBoundaryGeometricDefinition>());
             var parameters = new TimeDependentParameters<TSpreading>(waveEnergyFunction);
 
-            var allParameters = new Dictionary<SupportPoint, TimeDependentParameters<TSpreading>> {
-                { supportPoint, parameters }
-            };
+            var allParameters = new Dictionary<SupportPoint, TimeDependentParameters<TSpreading>> {{supportPoint, parameters}};
 
             // Call
             var viewModel = new TimeDependentSpatiallyVaryingParametersViewModel<TSpreading>(
                 Substitute.For<IGenerateSeries>(),
-                parameters, 
+                parameters,
                 allParameters);
 
             // Assert
             Assert.That(viewModel.ObservedParameters, Is.SameAs(parameters));
-            Assert.That(viewModel.TimeDependentParametersFunctions, Is.EquivalentTo(new[] {underlyingFunction}));
+            Assert.That(viewModel.TimeDependentParametersFunctions, Is.EquivalentTo(new[]
+            {
+                underlyingFunction
+            }));
         }
 
         [Test]
@@ -51,10 +52,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             var supportPoint = new SupportPoint(10.0, Substitute.For<IWaveBoundaryGeometricDefinition>());
             var parameters = new TimeDependentParameters<TSpreading>(waveEnergyFunction);
 
-            var allParameters = new Dictionary<SupportPoint, TimeDependentParameters<TSpreading>> {
-
-                { supportPoint, parameters }
-            };
+            var allParameters = new Dictionary<SupportPoint, TimeDependentParameters<TSpreading>> {{supportPoint, parameters}};
 
             void Call() => new TimeDependentSpatiallyVaryingParametersViewModel<TSpreading>(
                 null,
@@ -103,10 +101,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
 
             var otherFunctions = new List<IWaveEnergyFunction<TSpreading>>();
 
-            var allParameters = new Dictionary<SupportPoint, TimeDependentParameters<TSpreading>> {
-
-                { supportPoint, parameters }
-            };
+            var allParameters = new Dictionary<SupportPoint, TimeDependentParameters<TSpreading>> {{supportPoint, parameters}};
 
             for (var i = 0; i < 5; i++)
             {
@@ -120,16 +115,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
 
             var generateSeries = Substitute.For<IGenerateSeries>();
             var viewModel = new TimeDependentSpatiallyVaryingParametersViewModel<TSpreading>(generateSeries,
-                                                                                             parameters, 
+                                                                                             parameters,
                                                                                              allParameters);
 
             var window = Substitute.For<IWin32Window>();
 
             // Call
             viewModel.GenerateTimeSeriesCommand.Execute(window);
-            
+
             // Assert
-            generateSeries.Received(1).Execute(Arg.Is(waveEnergyFunction), 
+            generateSeries.Received(1).Execute(Arg.Is(waveEnergyFunction),
                                                Arg.Is<IEnumerable<IWaveEnergyFunction<TSpreading>>>(x => x.SequenceEqual(otherFunctions)));
         }
     }

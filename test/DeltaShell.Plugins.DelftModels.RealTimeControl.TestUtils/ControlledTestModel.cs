@@ -11,12 +11,12 @@ using GeoAPI.Extensions.Feature;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils
 {
-    [Entity(FireOnCollectionChange=false)]
+    [Entity(FireOnCollectionChange = false)]
     public class ControlledTestModel : TimeDependentModelBase
     {
-        private IList<ExplicitValueConverterLookupItem> explicitValueConverterLookup;
         private readonly EventedList<IFeature> inputFeatures = new EventedList<IFeature>();
         private readonly EventedList<IFeature> outputFeatures = new EventedList<IFeature>();
+        private IList<ExplicitValueConverterLookupItem> explicitValueConverterLookup;
 
         public ControlledTestModel()
         {
@@ -24,28 +24,69 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils
             OutputFeatures.CollectionChanged += OutputFeaturesCollectionChanged;
 
             InputFeatures.AddRange(new[]
-                                   {
-                                       new RtcTestFeature { Name = "input feature 1" },
-                                       new RtcTestFeature { Name = "input feature 2" },
-                                       new RtcTestFeature { Name = "input feature 3" }
-                                   });
+            {
+                new RtcTestFeature {Name = "input feature 1"},
+                new RtcTestFeature {Name = "input feature 2"},
+                new RtcTestFeature {Name = "input feature 3"}
+            });
 
             OutputFeatures.AddRange(new[]
-                                   {
-                                       new RtcTestFeature { Name = "output feature 1" },
-                                       new RtcTestFeature { Name = "output feature 2" },
-                                       new RtcTestFeature { Name = "output feature 3" }
-                                   });
+            {
+                new RtcTestFeature {Name = "output feature 1"},
+                new RtcTestFeature {Name = "output feature 2"},
+                new RtcTestFeature {Name = "output feature 3"}
+            });
         }
 
         public EventedList<IFeature> InputFeatures
         {
-            get { return inputFeatures; }
+            get
+            {
+                return inputFeatures;
+            }
         }
 
         public EventedList<IFeature> OutputFeatures
         {
-            get { return outputFeatures; }
+            get
+            {
+                return outputFeatures;
+            }
+        }
+
+        public override IEnumerable<IFeature> GetChildDataItemLocations(DataItemRole role)
+        {
+            switch (role)
+            {
+                case DataItemRole.Input:
+                {
+                    foreach (IFeature inputFeature in inputFeatures)
+                    {
+                        yield return inputFeature;
+                    }
+
+                    break;
+                }
+                case DataItemRole.Output:
+                {
+                    foreach (IFeature outputFeature in outputFeatures)
+                    {
+                        yield return outputFeature;
+                    }
+
+                    break;
+                }
+            }
+        }
+
+        public override IEnumerable<IDataItem> GetChildDataItems(IFeature location)
+        {
+            return DataItems.Where(di =>
+            {
+                var converter = di.ValueConverter as ControlledTestModelParameterValueConverter;
+
+                return converter != null && Equals(converter.Location, location);
+            });
         }
 
         protected override void OnInitialize()
@@ -74,52 +115,17 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils
             base.OnCleanup();
         }
 
-        public override IEnumerable<IFeature> GetChildDataItemLocations(DataItemRole role)
-        {
-            switch (role)
-            {
-                case DataItemRole.Input:
-                {
-                    foreach (var inputFeature in inputFeatures)
-                    {
-                        yield return inputFeature;
-                    }
-
-                    break;
-                }
-                case DataItemRole.Output:
-                {
-                    foreach (var outputFeature in outputFeatures)
-                    {
-                        yield return outputFeature;
-                    }
-
-                    break;
-                }
-            }
-        }
-
-        public override IEnumerable<IDataItem> GetChildDataItems(IFeature location)
-        {
-            return DataItems.Where(di =>
-            {
-                var converter = di.ValueConverter as ControlledTestModelParameterValueConverter;
-
-                return converter != null && Equals(converter.Location, location);
-            });
-        }
-
         private void OutputFeaturesCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             BubbleCollectionChangedEvent(sender, e);
-            var removedOrAddedItem = e.GetRemovedOrAddedItem();
+            object removedOrAddedItem = e.GetRemovedOrAddedItem();
             switch (e.Action)
             {
                 case NotifyCollectionChangedAction.Add:
-                    AddDataItem(DataItemRole.Output, (IFeature)removedOrAddedItem);
+                    AddDataItem(DataItemRole.Output, (IFeature) removedOrAddedItem);
                     break;
                 case NotifyCollectionChangedAction.Remove:
-                    RemoveDataItem((IFeature)removedOrAddedItem);
+                    RemoveDataItem((IFeature) removedOrAddedItem);
                     break;
             }
         }
@@ -127,14 +133,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils
         private void InputFeaturesCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             BubbleCollectionChangedEvent(sender, e);
-            var removedOrAddedItem = e.GetRemovedOrAddedItem();
+            object removedOrAddedItem = e.GetRemovedOrAddedItem();
             switch (e.Action)
             {
                 case NotifyCollectionChangedAction.Add:
-                    AddDataItem(DataItemRole.Input, (IFeature)removedOrAddedItem);
+                    AddDataItem(DataItemRole.Input, (IFeature) removedOrAddedItem);
                     break;
                 case NotifyCollectionChangedAction.Remove:
-                    RemoveDataItem((IFeature)removedOrAddedItem);
+                    RemoveDataItem((IFeature) removedOrAddedItem);
                     break;
             }
         }
@@ -147,11 +153,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils
         private void AddDataItem(DataItemRole role, IFeature feature)
         {
             DataItems.Add(new DataItem
-                          {
-                              Role = role,
-                              ValueConverter = new ControlledTestModelParameterValueConverter(feature, "Value"),
-                              ValueType = typeof(double)
-                          });
+            {
+                Role = role,
+                ValueConverter = new ControlledTestModelParameterValueConverter(feature, "Value"),
+                ValueType = typeof(double)
+            });
         }
     }
 }

@@ -34,7 +34,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
         {
             // Arrange
             var importer = new FMMapFileImporter();
-            string filePath = Guid.NewGuid().ToString();
+            var filePath = Guid.NewGuid().ToString();
 
             // Act
             var returnedDataItem = importer.ImportItem(filePath) as DataItem;

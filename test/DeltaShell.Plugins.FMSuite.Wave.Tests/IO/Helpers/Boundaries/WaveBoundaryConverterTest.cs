@@ -554,10 +554,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             importDataComponentFactory.CreateUniformConstantComponent<T>(Arg.Is<ParametersBlock>(p => MatchesParameters(p, mdwValues, 0)))
                                       .Returns(uniformDataComponent);
 
-            DelftIniCategory category = GetBoundaryCategory(shapeType, 
-                                                            periodType, 
-                                                            mdwValues, 
-                                                            definition:KnownWaveBoundariesFileConstants.OrientationDefinitionType);
+            DelftIniCategory category = GetBoundaryCategory(shapeType,
+                                                            periodType,
+                                                            mdwValues,
+                                                            definition: KnownWaveBoundariesFileConstants.OrientationDefinitionType);
             category.AddProperty(KnownWaveProperties.Orientation, mdwValues.OrientationType.GetDescription());
             AddParametersToCategory(mdwValues, category, 0);
 
@@ -588,7 +588,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             Assert.That(conditionDefinition.DataComponent, Is.SameAs(uniformDataComponent));
         }
 
-
         [Test]
         public void GivenAClockwiseOrientedBoundary_WhenConvertIsCalled_ThenTheSupportPointDistancesAreInverted()
         {
@@ -608,10 +607,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
                                                                                       p => MatchesSpatiallyVaryingParametersInverted(p, mdwValues)))
                                       .Returns(spatiallyVaryingDataComponent);
 
-            DelftIniCategory category = GetBoundaryCategory(ShapeImportType.Gauss, 
-                                                            PeriodImportExportType.Mean, 
-                                                            mdwValues, 
-                                                            definition:KnownWaveBoundariesFileConstants.OrientationDefinitionType);
+            DelftIniCategory category = GetBoundaryCategory(ShapeImportType.Gauss,
+                                                            PeriodImportExportType.Mean,
+                                                            mdwValues,
+                                                            definition: KnownWaveBoundariesFileConstants.OrientationDefinitionType);
 
             category.AddProperty(KnownWaveProperties.Orientation, mdwValues.OrientationType.GetDescription());
             category.AddProperty(KnownWaveProperties.DistanceDir, DistanceDirType.Clockwise.GetDescription());
@@ -684,7 +683,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             Assert.That(supportPoints[4].Distance, Is.EqualTo(10 - mdwValues.Distances[2]));
         }
 
-
         private static SpreadingImportType GetSpreadingImportType()
         {
             switch (typeof(T))
@@ -751,7 +749,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
 
             return geometricDefinitionFactory;
         }
-
 
         private static bool MatchesCoordinate(Coordinate c, double x, double y) => DoubleEquals(c.X, x) && DoubleEquals(c.Y, y);
 

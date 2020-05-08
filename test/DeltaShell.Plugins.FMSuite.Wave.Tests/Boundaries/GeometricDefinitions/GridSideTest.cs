@@ -11,10 +11,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.GeometricDefinitions
         protected override IDictionary<GridSide, int> ExpectedValueForEnumValues =>
             new Dictionary<GridSide, int>
             {
-                { GridSide.West,  1 },
-                { GridSide.North, 2 },
-                { GridSide.East,  3 },
-                { GridSide.South, 4 },
+                {GridSide.West, 1},
+                {GridSide.North, 2},
+                {GridSide.East, 3},
+                {GridSide.South, 4},
             };
     }
 }

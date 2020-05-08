@@ -100,7 +100,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers.Providers
 
             // Assert
             Assert.That(result, Is.False);
-            
         }
     }
 }

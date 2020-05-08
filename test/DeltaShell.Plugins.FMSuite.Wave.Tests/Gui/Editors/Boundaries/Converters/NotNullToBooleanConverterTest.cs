@@ -21,12 +21,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Converter
             Assert.That(converter, Is.InstanceOf<IValueConverter>());
         }
 
-        private static IEnumerable<TestCaseData> GetConvertData()
-        {
-            yield return new TestCaseData(new object(), true);
-            yield return new TestCaseData(null,         false);
-        }
-
         [Test]
         [TestCaseSource(nameof(GetConvertData))]
         public void Convert_ExpectedValues(object obj, bool expectedValue)
@@ -64,6 +58,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Converter
             // Call | Assert
             void Call() => converter.ConvertBack(true, typeof(object), null, CultureInfo.InvariantCulture);
             Assert.Throws<NotSupportedException>(Call);
+        }
+
+        private static IEnumerable<TestCaseData> GetConvertData()
+        {
+            yield return new TestCaseData(new object(), true);
+            yield return new TestCaseData(null, false);
         }
     }
 }

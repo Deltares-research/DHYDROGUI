@@ -1,6 +1,10 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Controls;
+using DelftTools.Functions;
+using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Shell.Gui.Swf;
@@ -27,32 +31,31 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         [Category(TestCategory.Wpf)]
         public void ShowTreeViewForFMModel()
         {
-            var mduPath = TestHelper.GetTestFilePath(@"data\f04_bottomfriction\c016_2DConveyance_bend\input\bendprof.mdu");
+            string mduPath = TestHelper.GetTestFilePath(@"data\f04_bottomfriction\c016_2DConveyance_bend\input\bendprof.mdu");
             mduPath = TestHelper.CreateLocalCopy(mduPath);
             var model = new WaterFlowFMModel(mduPath);
 
             using (var gui = new DeltaShellGui())
             {
-                var app = gui.Application;
+                IApplication app = gui.Application;
                 app.Plugins.Add(new SharpMapGisApplicationPlugin());
                 app.Plugins.Add(new NetworkEditorApplicationPlugin());
                 gui.Plugins.Add(new ProjectExplorerGuiPlugin());
                 gui.Plugins.Add(new NetworkEditorGuiPlugin());
                 gui.Plugins.Add(new SharpMapGisGuiPlugin());
                 gui.Plugins.Add(new FlowFMGuiPlugin());
-                
+
                 gui.Run();
 
                 Action mainWindowShown = delegate
                 {
-                    var project = app.Project;
+                    Project project = app.Project;
                     project.RootFolder.Add(model);
                 };
 
-                WpfTestHelper.ShowModal((Control)gui.MainWindow, mainWindowShown);
+                WpfTestHelper.ShowModal((Control) gui.MainWindow, mainWindowShown);
             }
         }
-
 
         [Test]
         [Category(TestCategory.Wpf)]
@@ -60,7 +63,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         {
             using (var gui = new DeltaShellGui())
             {
-                var app = gui.Application;
+                IApplication app = gui.Application;
                 app.Plugins.Add(new SharpMapGisApplicationPlugin());
                 app.Plugins.Add(new NetworkEditorApplicationPlugin());
                 gui.Plugins.Add(new ProjectExplorerGuiPlugin());
@@ -74,22 +77,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                 {
                     var model = new WaterFlowFMModel();
 
-                    var project = app.Project;
+                    Project project = app.Project;
                     project.RootFolder.Add(model);
 
                     var modelNodePresenter = new WaterFlowFMModelNodePresenter(null);
-                    var childItems = modelNodePresenter.GetChildNodeObjects(model, null);
+                    IEnumerable childItems = modelNodePresenter.GetChildNodeObjects(model, null);
 
                     gui.Selection = childItems.OfType<FmModelTreeShortcut>().First(s => s.Text == "Numerical Parameters");
                     gui.CommandHandler.OpenViewForSelection();
 
                     Assert.IsNotNull(gui.DocumentViews.ActiveView);
-                    var wpfView = (WpfSettingsView)gui.DocumentViews.ActiveView;
-                    var categoriesOnActiveView = wpfView.SettingsCategories;
+                    var wpfView = (WpfSettingsView) gui.DocumentViews.ActiveView;
+                    ObservableCollection<WpfGuiCategory> categoriesOnActiveView = wpfView.SettingsCategories;
                     Assert.That(categoriesOnActiveView.ElementAt(6).CategoryName, Is.EqualTo("Numerical Parameters"));
                 };
 
-                WpfTestHelper.ShowModal((Control)gui.MainWindow, mainWindowShown);
+                WpfTestHelper.ShowModal((Control) gui.MainWindow, mainWindowShown);
             }
         }
 
@@ -99,7 +102,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         {
             using (var gui = new DeltaShellGui())
             {
-                var app = gui.Application;
+                IApplication app = gui.Application;
                 app.Plugins.Add(new SharpMapGisApplicationPlugin());
                 app.Plugins.Add(new NetworkEditorApplicationPlugin());
                 gui.Plugins.Add(new ProjectExplorerGuiPlugin());
@@ -113,11 +116,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                 {
                     var model = new WaterFlowFMModel();
 
-                    var project = app.Project;
+                    Project project = app.Project;
                     project.RootFolder.Add(model);
 
                     var modelNodePresenter = new WaterFlowFMModelNodePresenter(null);
-                    var childItems = modelNodePresenter.GetChildNodeObjects(model, null);
+                    IEnumerable childItems = modelNodePresenter.GetChildNodeObjects(model, null);
 
                     // open on 'Domain' tab (first tab)
                     gui.Selection = childItems.OfType<FmModelTreeShortcut>().First(s => s.Text == "General");
@@ -126,40 +129,39 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                     // switch to 'Numerical Parameters' tab
                     gui.Selection = childItems.OfType<FmModelTreeShortcut>().First(s => s.Text == "Numerical Parameters");
                     gui.CommandHandler.OpenViewForSelection();
-                   
+
                     // assert the 'Numerical Parameters' tab is in front
                     Assert.IsNotNull(gui.DocumentViews.ActiveView);
-                    var wpfView = (WpfSettingsView)gui.DocumentViews.ActiveView;
-                    var categoriesOnActiveView = wpfView.SettingsCategories;
+                    var wpfView = (WpfSettingsView) gui.DocumentViews.ActiveView;
+                    ObservableCollection<WpfGuiCategory> categoriesOnActiveView = wpfView.SettingsCategories;
                     Assert.That(categoriesOnActiveView.ElementAt(6).CategoryName, Is.EqualTo("Numerical Parameters"));
                 };
 
-                WpfTestHelper.ShowModal((Control)gui.MainWindow, mainWindowShown);
+                WpfTestHelper.ShowModal((Control) gui.MainWindow, mainWindowShown);
             }
         }
-
 
         [Test]
         public void CheckEventLeaksThroughDataItemWrappers()
         {
-            var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
+            string mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
             mduPath = TestHelper.CreateLocalCopy(mduPath);
             var model = new WaterFlowFMModel(mduPath);
-            
-            var outputFunction = model.OutputHisFileStore.Functions.First();
+
+            IFunction outputFunction = model.OutputHisFileStore.Functions.First();
 
             Console.WriteLine("Before:");
             int before = TestReferenceHelper.FindEventSubscriptions(outputFunction, true);
 
             var nodePresenter = new WaterFlowFMModelNodePresenter(null);
-            var outputFolder = nodePresenter.GetChildNodeObjects(model, null).OfType<TreeFolder>().Last();
+            TreeFolder outputFolder = nodePresenter.GetChildNodeObjects(model, null).OfType<TreeFolder>().Last();
 
             // ask first time
             outputFolder.ChildItems.OfType<object>().ToList();
 
             int afterFirstTime = TestReferenceHelper.FindEventSubscriptions(outputFunction, true);
 
-            for (int i = 0; i < 5; i++)
+            for (var i = 0; i < 5; i++)
             {
                 // ask for output items
                 outputFolder.ChildItems.OfType<object>().ToList();
@@ -169,7 +171,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
             // todo: check for multiple models?
 
-            Assert.AreEqual(before + 4, afterFirstTime); // first time increase by one for each event (PropChing, PropChed, CollChing, CollChed)
+            Assert.AreEqual(before + 4, afterFirstTime);     // first time increase by one for each event (PropChing, PropChed, CollChing, CollChed)
             Assert.AreEqual(afterFirstTime, afterManyTimes); // subseqeuent times should not increase
         }
 
@@ -178,14 +180,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         [Category(TestCategory.Integration)]
         public void CheckEventLeaksThroughDataItemAfterModelRun()
         {
-            var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
+            string mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
             mduPath = TestHelper.CreateLocalCopy(mduPath);
             var model = new WaterFlowFMModel(mduPath);
 
-            var outputFunction = model.OutputHisFileStore.Functions.FirstOrDefault();
-            
+            IFunction outputFunction = model.OutputHisFileStore.Functions.FirstOrDefault();
+
             var nodePresenter = new WaterFlowFMModelNodePresenter(null);
-            var outputFolder = nodePresenter.GetChildNodeObjects(model, null).OfType<TreeFolder>().LastOrDefault();
+            TreeFolder outputFolder = nodePresenter.GetChildNodeObjects(model, null).OfType<TreeFolder>().LastOrDefault();
 
             // ask first time before run; dataitems are filled with output functions
             outputFolder.ChildItems.OfType<object>().ToList();
@@ -199,17 +201,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             //dataitems are filled with new output functions
             outputFolder.ChildItems.OfType<object>().ToList();
 
-            var di = outputFolder.ChildItems.OfType<IDataItem>().ToList().FirstOrDefault(d => d.Tag == outputFunction.Name);
+            IDataItem di = outputFolder.ChildItems.OfType<IDataItem>().ToList().FirstOrDefault(d => d.Tag == outputFunction.Name);
             Assert.That(di.Value, Is.Not.EqualTo(outputFunction));
 
-            Assert.That(TestReferenceHelper.FindEventSubscriptions(outputFunction, true), Is.EqualTo(before-4));// check if old events of dataitem are removed.
+            Assert.That(TestReferenceHelper.FindEventSubscriptions(outputFunction, true), Is.EqualTo(before - 4)); // check if old events of dataitem are removed.
 
             //Filestore was closed and re-openen, so we need to retrieve a new output function.
             outputFunction = model.OutputHisFileStore.Functions.FirstOrDefault(f => f.Name == outputFunction.Name);
             Assert.That(di.Value, Is.EqualTo(outputFunction));
 
             Console.WriteLine("After run:");
-            var after = TestReferenceHelper.FindEventSubscriptions(outputFunction, true);
+            int after = TestReferenceHelper.FindEventSubscriptions(outputFunction, true);
 
             Assert.AreEqual(before, after);
         }

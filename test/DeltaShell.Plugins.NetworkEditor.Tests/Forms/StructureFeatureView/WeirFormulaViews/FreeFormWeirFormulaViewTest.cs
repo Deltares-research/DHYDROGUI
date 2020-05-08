@@ -13,10 +13,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView.Weir
         public void ShowWeirView()
         {
             var freeWeirFormula = new FreeFormWeirFormula();
-            var freeWeirFormulaView = new FreeFormWeirFormulaView
-                                          {
-                                              Data = freeWeirFormula
-                                          };
+            var freeWeirFormulaView = new FreeFormWeirFormulaView {Data = freeWeirFormula};
 
             WindowsFormsTestHelper.ShowModal(freeWeirFormulaView);
         }

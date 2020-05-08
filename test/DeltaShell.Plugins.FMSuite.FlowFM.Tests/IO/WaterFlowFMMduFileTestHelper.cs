@@ -36,7 +36,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             {
                 GroupName = groupName,
                 Name = featureName,
-                Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(0, 100), new Coordinate(50, 50), new Coordinate(0, 0) })
+                Geometry = new LineString(new[]
+                {
+                    new Coordinate(0, 0),
+                    new Coordinate(0, 100),
+                    new Coordinate(50, 50),
+                    new Coordinate(0, 0)
+                })
             };
         }
 
@@ -46,7 +52,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             {
                 GroupName = groupName,
                 Name = featureName,
-                Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(0, 100), new Coordinate(50, 50) })
+                Geometry = new LineString(new[]
+                {
+                    new Coordinate(0, 0),
+                    new Coordinate(0, 100),
+                    new Coordinate(50, 50)
+                })
             };
         }
 
@@ -56,7 +67,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             {
                 GroupName = groupName,
                 Name = featureName,
-                Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(0, 100), new Coordinate(50, 50) }),
+                Geometry = new LineString(new[]
+                {
+                    new Coordinate(0, 0),
+                    new Coordinate(0, 100),
+                    new Coordinate(50, 50)
+                }),
                 WeirFormula = new GatedWeirFormula()
             };
         }

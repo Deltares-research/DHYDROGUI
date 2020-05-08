@@ -11,6 +11,34 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
     [TestFixture]
     public class UniqueBoundaryNameProviderTest
     {
+        private static IBoundaryProvider EmptyProvider
+        {
+            get
+            {
+                var emptyProvider = Substitute.For<IBoundaryProvider>();
+                emptyProvider.Boundaries.Returns(new EventedList<IWaveBoundary>());
+
+                return emptyProvider;
+            }
+        }
+
+        private static IBoundaryProvider NoDefaultProvider
+        {
+            get
+            {
+                var providerDefault = Substitute.For<IBoundaryProvider>();
+                var boundariesNoDefault = new EventedList<IWaveBoundary>
+                {
+                    GetBoundaryMockWithName("a1"),
+                    GetBoundaryMockWithName("b2"),
+                    GetBoundaryMockWithName("c3"),
+                };
+
+                providerDefault.Boundaries.Returns(boundariesNoDefault);
+                return providerDefault;
+            }
+        }
+
         [Test]
         public void Constructor_ExpectedValues()
         {
@@ -32,7 +60,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
 
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(Call);
-            Assert.That(exception.ParamName, Is.EqualTo("boundaryProvider"), 
+            Assert.That(exception.ParamName, Is.EqualTo("boundaryProvider"),
                         "Expected a different ParamName:");
         }
 
@@ -52,45 +80,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
 
         private static IEnumerable<TestCaseData> GetUniqueBoundaryNameTestData()
         {
-
             yield return new TestCaseData(EmptyProvider, UniqueBoundaryNameProvider.DefaultBoundaryName);
-            yield return new TestCaseData(NoDefaultProvider,            "Boundary(1)");
-            yield return new TestCaseData(GetProviderWithNElements(5),  "Boundary(5)");
+            yield return new TestCaseData(NoDefaultProvider, "Boundary(1)");
+            yield return new TestCaseData(GetProviderWithNElements(5), "Boundary(5)");
             yield return new TestCaseData(GetProviderWithNElements(12), "Boundary(12)");
             yield return new TestCaseData(GetProviderWithNElements(53), "Boundary(53)");
         }
 
-        private static IBoundaryProvider EmptyProvider
-        {
-            get
-            {
-                var emptyProvider = Substitute.For<IBoundaryProvider>();
-                emptyProvider.Boundaries.Returns(new EventedList<IWaveBoundary>());
-
-                return emptyProvider;
-            }
-        }
-
-        private static IBoundaryProvider NoDefaultProvider
-        {
-            get
-            { 
-                var providerDefault = Substitute.For<IBoundaryProvider>(); 
-                var boundariesNoDefault = new EventedList<IWaveBoundary> 
-                {
-                    GetBoundaryMockWithName("a1"), 
-                    GetBoundaryMockWithName("b2"), 
-                    GetBoundaryMockWithName("c3"),
-                };
-
-                providerDefault.Boundaries.Returns(boundariesNoDefault);
-                return providerDefault;
-            }
-        }
-
         private static IBoundaryProvider GetProviderWithNElements(int nElements)
         {
-            var provider= Substitute.For<IBoundaryProvider>();
+            var provider = Substitute.For<IBoundaryProvider>();
             var boundaries = new EventedList<IWaveBoundary>
             {
                 GetBoundaryMockWithName(UniqueBoundaryNameProvider.DefaultBoundaryName),

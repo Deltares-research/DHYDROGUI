@@ -34,7 +34,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
         }
 
         [Test]
-        [ExpectedException(typeof(Exception),ExpectedMessage = "Item not set")]
+        [ExpectedException(typeof(Exception), ExpectedMessage = "Item not set")]
         public void GivenAnWaterFlowFMFileExporter_WhenExportIsCalledWithANullItem_ThenAnExceptionIsThrown()
         {
             exporter.Export(null, Arg<string>.Is.Anything);
@@ -50,7 +50,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
         [Test]
         public void GivenAWaterFlowFMFileExporterAndAWaterFlowFMModelItemAndAValidPath_WhenExportIsCalled_ThenTheModelIsExportedToTheSpecifiedPath()
         {
-            var path = Path.Combine(Path.GetTempPath(), "FlowFM.mdu");
+            string path = Path.Combine(Path.GetTempPath(), "FlowFM.mdu");
 
             var mocks = new MockRepository();
 
@@ -60,8 +60,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
             var model = mocks.PartialMock<WaterFlowFMModel>();
             model
                 .Expect(n => n.ExportTo(Arg<string>.Is.Equal(path),
-                                        Arg<bool>.Is.Equal(false), 
-                                        Arg<bool>.Is.Equal(true), 
+                                        Arg<bool>.Is.Equal(false),
+                                        Arg<bool>.Is.Equal(true),
                                         Arg<bool>.Is.Equal(true)))
                 .Do(emptyFunc)
                 .Return(true)
@@ -78,8 +78,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
         [Test]
         public void GivenANWaterFlowFMFileExporterAndAWaterFlowFMModelItemAndAPathPointingToADirectory_WhenExportIsCalled_ThenTheModelIsExportedToAPathWithTheModelNameAndMDUExtension()
         {
-            var path = Path.GetTempPath();
-            var expectedPath = Path.Combine(path, "FlowFM.mdu");
+            string path = Path.GetTempPath();
+            string expectedPath = Path.Combine(path, "FlowFM.mdu");
 
             var mocks = new MockRepository();
 
@@ -89,8 +89,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
             var model = mocks.PartialMock<WaterFlowFMModel>();
             model
                 .Expect(n => n.ExportTo(Arg<string>.Is.Equal(expectedPath),
-                                        Arg<bool>.Is.Equal(false), 
-                                        Arg<bool>.Is.Equal(true), 
+                                        Arg<bool>.Is.Equal(false),
+                                        Arg<bool>.Is.Equal(true),
                                         Arg<bool>.Is.Equal(true)))
                 .Do(emptyFunc)
                 .Return(true)
@@ -102,8 +102,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
             Assert.That(exporter.Export(model, path), Is.True);
 
             mocks.VerifyAll();
-            
-
         }
 
         [Test]

@@ -12,11 +12,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
     {
         private readonly Random random = new Random();
 
-        private class DummyConditionSpreading : IBoundaryConditionSpreading 
-        {
-            public void AcceptVisitor(ISpreadingVisitor visitor) {}
-        }
-
         [Test]
         public void FromDouble_UnsupportedSpreading_ThrowsNotSupportedException()
         {
@@ -114,6 +109,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
             void Call() => SpreadingConversion.GetSpreadingDefaultValue<DummyConditionSpreading>();
 
             Assert.Throws<NotSupportedException>(Call);
+        }
+
+        private class DummyConditionSpreading : IBoundaryConditionSpreading
+        {
+            public void AcceptVisitor(ISpreadingVisitor visitor) {}
         }
     }
 }

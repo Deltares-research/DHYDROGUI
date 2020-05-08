@@ -32,10 +32,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.NetworkSideView
         [Test, ExpectedException(ExpectedException = typeof(InvalidOperationException), ExpectedMessage = "Network of added spatial data does not match network of the route.")]
         public void TestAddingCoverageWithDifferentNetwork()
         {
-            var route = new Route { Network = new HydroNetwork() };
+            var route = new Route {Network = new HydroNetwork()};
             var dataController = new NetworkSideViewDataController(route, null, null);
             var networkCoverage = new NetworkCoverage("Coverage", true) {Network = new HydroNetwork()};
-            
+
             dataController.AddRenderedCoverage(networkCoverage);
         }
 
@@ -43,8 +43,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.NetworkSideView
         public void TestAddingCoverageThatIsNotInAllNetworkCoverages()
         {
             var hydroNetwork = new HydroNetwork();
-            var dataController = new NetworkSideViewDataController(new Route { Network = hydroNetwork }, null, null);
-            var networkCoverage = new NetworkCoverage("Coverage", true) { Network = hydroNetwork };
+            var dataController = new NetworkSideViewDataController(new Route {Network = hydroNetwork}, null, null);
+            var networkCoverage = new NetworkCoverage("Coverage", true) {Network = hydroNetwork};
 
             dataController.AddRenderedCoverage(networkCoverage);
         }
@@ -52,7 +52,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.NetworkSideView
         [Test]
         public void SetNetworkToNullShouldNotCrash()
         {
-            var route = new Route { Network = new HydroNetwork() };
+            var route = new Route {Network = new HydroNetwork()};
             using (new NetworkSideViewDataController(route, null, null))
             {
                 route.Network = null;
@@ -64,12 +64,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.NetworkSideView
         {
             var hydroNetwork = new HydroNetwork();
             var networkCoverage = new NetworkCoverage("Coverage", true) {Network = hydroNetwork};
-            var filteredNetworkCoverage = (NetworkCoverage)networkCoverage.Filter();
+            var filteredNetworkCoverage = (NetworkCoverage) networkCoverage.Filter();
 
-            var dataController = new NetworkSideViewDataController(new Route {Network = hydroNetwork}, null, null)
-                                     {
-                                         AllNetworkCoverages = new List<INetworkCoverage> { filteredNetworkCoverage }
-                                     };
+            var dataController = new NetworkSideViewDataController(new Route {Network = hydroNetwork}, null, null) {AllNetworkCoverages = new List<INetworkCoverage> {filteredNetworkCoverage}};
 
             dataController.AddRenderedCoverage(filteredNetworkCoverage);
             Assert.AreEqual(1, dataController.RenderedNetworkCoverages.Count);
@@ -84,23 +81,27 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.NetworkSideView
         {
             var hydroNetwork = new HydroNetwork();
             var branch = new Branch()
-                             {
-                                 Name = "branch",
-                                 Network = hydroNetwork,
-                                 IsLengthCustom = true,
-                                 Length = 100,
-                                 OrderNumber = 1,
-                                 Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(100, 0) })
-                             };
+            {
+                Name = "branch",
+                Network = hydroNetwork,
+                IsLengthCustom = true,
+                Length = 100,
+                OrderNumber = 1,
+                Geometry = new LineString(new[]
+                {
+                    new Coordinate(0, 0),
+                    new Coordinate(100, 0)
+                })
+            };
 
             hydroNetwork.Branches.Add(branch);
             var route = new Route() {Network = hydroNetwork};
             hydroNetwork.Routes.Add(route);
 
             var dataController = new NetworkSideViewDataController(route, null, null);
-            var profileCoverages = dataController.ProfileNetworkCoverages;
-            
-            Assert.IsNotEmpty(profileCoverages.ToList(),"profile coverages exist");
+            IList<INetworkCoverage> profileCoverages = dataController.ProfileNetworkCoverages;
+
+            Assert.IsNotEmpty(profileCoverages.ToList(), "profile coverages exist");
 
             branch.Length = 200;
 
@@ -122,27 +123,29 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.NetworkSideView
                 IsLengthCustom = true,
                 Length = 100,
                 OrderNumber = 1,
-                Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(100, 0) })
+                Geometry = new LineString(new[]
+                {
+                    new Coordinate(0, 0),
+                    new Coordinate(100, 0)
+                })
             };
 
             hydroNetwork.Branches.Add(branch);
-            var route = new Route() { Network = hydroNetwork };
+            var route = new Route() {Network = hydroNetwork};
             hydroNetwork.Routes.Add(route);
 
             var dataController = new NetworkSideViewDataController(route, null, null);
-            var profileCoverages = dataController.ProfileNetworkCoverages;
+            IList<INetworkCoverage> profileCoverages = dataController.ProfileNetworkCoverages;
 
             Assert.IsNotEmpty(profileCoverages.ToList(), "profile coverages exist");
-            
+
             branch.OrderNumber = 2;
 
             Assert.IsNotEmpty(dataController.ProfileNetworkCoverages.ToList(),
                               "profile coverages exist after branch order number change.");
             Assert.IsFalse(dataController.ProfileNetworkCoverages.Equals(profileCoverages),
                            "profile coverages have been recreated after branch order number change");
-            
         }
-
 
         [Test]
         [Category(TestCategory.Integration)]
@@ -156,26 +159,29 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.NetworkSideView
                 IsLengthCustom = true,
                 Length = 100,
                 OrderNumber = 1,
-                Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(100, 0) })
+                Geometry = new LineString(new[]
+                {
+                    new Coordinate(0, 0),
+                    new Coordinate(100, 0)
+                })
             };
 
             hydroNetwork.Branches.Add(branch);
-            var route = new Route() { Network = hydroNetwork };
+            var route = new Route() {Network = hydroNetwork};
             hydroNetwork.Routes.Add(route);
 
             var dataController = new NetworkSideViewDataController(route, null, null);
-            var profileCoverages = dataController.ProfileNetworkCoverages;
+            IList<INetworkCoverage> profileCoverages = dataController.ProfileNetworkCoverages;
 
             Assert.IsNotEmpty(profileCoverages.ToList(), "profile coverages exist");
 
             branch.Name = "other";
 
             Assert.IsNotEmpty(dataController.ProfileNetworkCoverages.ToList(),
-                             "profile coverages exist after branch name change.");
+                              "profile coverages exist after branch name change.");
             Assert.IsTrue(dataController.ProfileNetworkCoverages.Equals(profileCoverages),
-                           "profile coverages have not been recreated after branch name change");
+                          "profile coverages have not been recreated after branch name change");
         }
-
 
         [Test]
         public void UpdateMinMaxFromFunctionValuesShouldNotReturnNaN()
@@ -212,6 +218,5 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.NetworkSideView
             Assert.AreEqual(3.3d, minValue);
             Assert.AreEqual(3.3d, maxValue);
         }
-
     }
 }

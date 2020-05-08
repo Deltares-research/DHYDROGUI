@@ -13,7 +13,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
         {
             // Setup
             const double expectedPeakEnhancementFactor = 5.5;
-            var modelShape = new JonswapShape() { PeakEnhancementFactor = expectedPeakEnhancementFactor };
+            var modelShape = new JonswapShape() {PeakEnhancementFactor = expectedPeakEnhancementFactor};
 
             // Call
             var viewShape = new JonswapViewShape(modelShape);
@@ -42,7 +42,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
         {
             // Setup
             const double expectedPeakEnhancementFactor = 15.5;
-            var modelShape = new JonswapShape() { PeakEnhancementFactor = 0.1 };
+            var modelShape = new JonswapShape() {PeakEnhancementFactor = 0.1};
             var viewShape = new JonswapViewShape(modelShape);
 
             // Call

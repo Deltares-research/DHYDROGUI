@@ -11,11 +11,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
     [TestFixture]
     public class RealTimeControlTimeSeriesXmlReaderTest
     {
+        private const string AssertMessage_NumberOfLoggedMessagesWasExpectedToBeZero = "Number of logged messages was expected to be zero.";
         private RealTimeControlTimeSeriesXmlReader timeSeriesReader;
         private ILogHandler logHandler;
         private readonly string directoryPath = TestHelper.GetTestFilePath(Path.Combine("ImportExport", "TimeSeriesFiles"));
-
-        private const string AssertMessage_NumberOfLoggedMessagesWasExpectedToBeZero = "Number of logged messages was expected to be zero.";
 
         [SetUp]
         public void SetUp()
@@ -37,13 +36,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
             // Given
             const string filePath = "invalid";
             Assert.That(!File.Exists(filePath),
-                $"File path '{filePath}' was expected to not exist.");
+                        $"File path '{filePath}' was expected to not exist.");
 
             Assert.DoesNotThrow(() => timeSeriesReader.Read(filePath, new IControlGroup[0]),
-                "Method throws an unexpected exception when the specified file path does not exist");
+                                "Method throws an unexpected exception when the specified file path does not exist");
 
             Assert.AreEqual(0, logHandler.LogMessagesTable.Count,
-                AssertMessage_NumberOfLoggedMessagesWasExpectedToBeZero);
+                            AssertMessage_NumberOfLoggedMessagesWasExpectedToBeZero);
         }
 
         [Test]
@@ -51,15 +50,15 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
         public void GivenAnExistingFileAndNullIsGivenAsParameterForControlGroups_WhenReading_ThenMethodDoesNotThrowAnException()
         {
             // Given
-            var filePath = Path.Combine(directoryPath, "timeseries_import.xml");
+            string filePath = Path.Combine(directoryPath, "timeseries_import.xml");
             Assert.That(File.Exists(filePath),
-                $"File path '{filePath}' was expected to exist.");
+                        $"File path '{filePath}' was expected to exist.");
 
             Assert.DoesNotThrow(() => timeSeriesReader.Read(filePath, null),
-                "Method throws an unexpected exception when the parameter for control groups is null");
+                                "Method throws an unexpected exception when the parameter for control groups is null");
 
             Assert.AreEqual(0, logHandler.LogMessagesTable.Count,
-                AssertMessage_NumberOfLoggedMessagesWasExpectedToBeZero);
+                            AssertMessage_NumberOfLoggedMessagesWasExpectedToBeZero);
         }
 
         [Test]
@@ -67,14 +66,17 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
         public void GivenAnExistingFileWithValidData_WhenReading_ThenTimeSeriesIsSetOnRule()
         {
             // Given
-            var filePath = Path.Combine(directoryPath, "timeseries_import.xml");
+            string filePath = Path.Combine(directoryPath, "timeseries_import.xml");
             Assert.That(File.Exists(filePath),
-                $"File path '{filePath}' was expected to exist.");
+                        $"File path '{filePath}' was expected to exist.");
 
-            var controlGroup = CreateControlGroupWithATimeConditionAndTimeRule();
+            ControlGroup controlGroup = CreateControlGroupWithATimeConditionAndTimeRule();
 
             // When
-            timeSeriesReader.Read(filePath, new IControlGroup[] {controlGroup});
+            timeSeriesReader.Read(filePath, new IControlGroup[]
+            {
+                controlGroup
+            });
 
             // Then
             AssertTimeSeriesIsSet(controlGroup);
@@ -89,21 +91,21 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
             controlGroup.Rules.Add(timeRule);
 
             Assert.AreEqual(0, timeRule.TimeSeries.GetValues().Count,
-                "Expected was that the number of time series record would be zero before setting the time series on the time rule.");
+                            "Expected was that the number of time series record would be zero before setting the time series on the time rule.");
             Assert.AreEqual(0, timeCondition.TimeSeries.GetValues().Count,
-                "Expected was that the number of time series record would be zero before setting the time series on the time condition.");
+                            "Expected was that the number of time series record would be zero before setting the time series on the time condition.");
             return controlGroup;
         }
 
         private static void AssertTimeSeriesIsSet(ControlGroup controlGroup)
         {
-            var timeRule = controlGroup.Rules.OfType<TimeRule>().Single();
+            TimeRule timeRule = controlGroup.Rules.OfType<TimeRule>().Single();
             Assert.AreEqual(2, timeRule.TimeSeries.GetValues().Count,
-                "Expected was that the count of time series records of the time rule was 2.");
+                            "Expected was that the count of time series records of the time rule was 2.");
 
-            var timeCondition = controlGroup.Conditions.OfType<TimeCondition>().Single();
+            TimeCondition timeCondition = controlGroup.Conditions.OfType<TimeCondition>().Single();
             Assert.AreEqual(3, timeCondition.TimeSeries.GetValues().Count,
-                "Expected was that the count of time series records of the time condition was 3.");
+                            "Expected was that the count of time series records of the time condition was 3.");
         }
     }
 }

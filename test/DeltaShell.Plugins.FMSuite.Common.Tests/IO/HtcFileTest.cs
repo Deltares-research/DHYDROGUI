@@ -16,7 +16,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
         public void GivenNullForHtcFile_WhenReading_ExceptionShouldBeThrown()
         {
             Assert.Throws<ArgumentNullException>(() => { HtcFile.GetCorrespondingGridFilePath(null); },
-                                                     "Heat flux file path is not valid");
+                                                 "Heat flux file path is not valid");
         }
 
         [Test]
@@ -40,7 +40,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                             Is.EqualTo(Path.Combine(htcDir, "meteo.grd")));
             }
         }
-
 
         [Test]
         public void GivenHtcFilePath_WhenReadingAndNoGridFileNameIsFound_ExceptionShouldBeThrown()

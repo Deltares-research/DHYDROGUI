@@ -14,10 +14,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
         [Category(TestCategory.WindowsForms)]
         public void ShowEmpty()
         {
-            var view = new FMWeirView
-            {
-                Data = null
-            };
+            var view = new FMWeirView {Data = null};
             WindowsFormsTestHelper.ShowModal(view);
         }
 
@@ -27,13 +24,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
         {
             var weir = new Weir("TestWeir")
             {
-                Geometry = new LineString(new[] {new Coordinate(0, 0), new Coordinate(1, 1)})
+                Geometry = new LineString(new[]
+                {
+                    new Coordinate(0, 0),
+                    new Coordinate(1, 1)
+                })
             };
 
-            var fmWeirView = new FMWeirView
-            {
-                Data = weir
-            };
+            var fmWeirView = new FMWeirView {Data = weir};
 
             WindowsFormsTestHelper.ShowModal(fmWeirView);
         }
@@ -45,10 +43,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
             var weir = new Weir("TestWeir")
             {
                 CrestWidth = 100,
-                Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(1, 1) })
+                Geometry = new LineString(new[]
+                {
+                    new Coordinate(0, 0),
+                    new Coordinate(1, 1)
+                })
             };
 
-            var fmWeirView = new FMWeirView { Data = weir };
+            var fmWeirView = new FMWeirView {Data = weir};
 
             WindowsFormsTestHelper.ShowModal(fmWeirView);
         }

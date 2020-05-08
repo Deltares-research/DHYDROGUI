@@ -34,9 +34,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
         private const double distance2 = 20;
 
         private const double factor = 3.3;
-        private readonly JonswapShape jonswapShape = new JonswapShape {PeakEnhancementFactor = factor};
 
         private const BoundaryConditionPeriodType periodType = BoundaryConditionPeriodType.Peak;
+        private readonly JonswapShape jonswapShape = new JonswapShape {PeakEnhancementFactor = factor};
 
         private static string SpreadingType
         {
@@ -71,6 +71,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
                 }
 
                 throw new NotSupportedException();
+            }
+        }
+
+        private static IEnumerable<TestCaseData> DifferentShapes
+        {
+            get
+            {
+                yield return new TestCaseData(new JonswapShape {PeakEnhancementFactor = factor}, KnownWaveBoundariesFileConstants.JonswapShape, KnownWaveProperties.PeakEnhancementFactor);
+                yield return new TestCaseData(new GaussShape {GaussianSpread = factor}, KnownWaveBoundariesFileConstants.GaussShape, KnownWaveProperties.GaussianSpreading);
+                yield return new TestCaseData(new PiersonMoskowitzShape(), KnownWaveBoundariesFileConstants.PiersonMoskowitzShape, null);
             }
         }
 
@@ -307,11 +317,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             Assert.That(exception.Message, Is.EqualTo("The type of the specified dataComponent does not correspond with a supported type"));
         }
 
-        private class DummyConditionSpreading : IBoundaryConditionSpreading
-        {
-            public void AcceptVisitor(ISpreadingVisitor visitor) {}
-        }
-
         [Test]
         [TestCaseSource(nameof(DifferentShapes))]
         public void AddNewProperties_ForDifferentShapes_ReturnsCorrectPropertiesForSpecificShape(IBoundaryConditionShape shape, string expectedShapeTypeValue, string expectedExtraProperty)
@@ -363,19 +368,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             Assert.AreEqual(expectedPeriodTypeValue, properties[1].Value);
         }
 
+        private class DummyConditionSpreading : IBoundaryConditionSpreading
+        {
+            public void AcceptVisitor(ISpreadingVisitor visitor) {}
+        }
+
         private static string GetStringValue(double value) => value.ToString("e7", CultureInfo.InvariantCulture);
 
         private static string GetDistanceStringValue(double value) => value.ToString("F7", CultureInfo.InvariantCulture);
-
-        private static IEnumerable<TestCaseData> DifferentShapes
-        {
-            get
-            {
-                yield return new TestCaseData(new JonswapShape {PeakEnhancementFactor = factor}, KnownWaveBoundariesFileConstants.JonswapShape, KnownWaveProperties.PeakEnhancementFactor);
-                yield return new TestCaseData(new GaussShape {GaussianSpread = factor}, KnownWaveBoundariesFileConstants.GaussShape, KnownWaveProperties.GaussianSpreading);
-                yield return new TestCaseData(new PiersonMoskowitzShape(), KnownWaveBoundariesFileConstants.PiersonMoskowitzShape, null);
-            }
-        }
     }
 
     [TestFixture]
@@ -435,7 +435,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             conditionDefinition.When(x => x.AcceptVisitor(Arg.Any<IBoundaryConditionVisitor>()))
                                .Do(x => conditionDefinition.Shape.AcceptVisitor(x.Arg<IShapeVisitor>()));
             shape.When(x => x.AcceptVisitor(Arg.Any<IShapeVisitor>()))
-                 .Do(x => x.Arg<IShapeVisitor>().Visit((GaussShape)null));
+                 .Do(x => x.Arg<IShapeVisitor>().Visit((GaussShape) null));
 
             // Call
             void Call() => MdwBoundaryCategoryConditionsExtender.AddNewProperties(category, conditionDefinition);
@@ -456,7 +456,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             conditionDefinition.When(x => x.AcceptVisitor(Arg.Any<IBoundaryConditionVisitor>()))
                                .Do(x => conditionDefinition.Shape.AcceptVisitor(x.Arg<IShapeVisitor>()));
             shape.When(x => x.AcceptVisitor(Arg.Any<IShapeVisitor>()))
-                 .Do(x => x.Arg<IShapeVisitor>().Visit((JonswapShape)null));
+                 .Do(x => x.Arg<IShapeVisitor>().Visit((JonswapShape) null));
 
             // Call
             void Call() => MdwBoundaryCategoryConditionsExtender.AddNewProperties(category, conditionDefinition);
@@ -477,15 +477,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             conditionDefinition.When(x => x.AcceptVisitor(Arg.Any<IBoundaryConditionVisitor>()))
                                .Do(x => conditionDefinition.Shape.AcceptVisitor(x.Arg<IShapeVisitor>()));
             shape.When(x => x.AcceptVisitor(Arg.Any<IShapeVisitor>()))
-                 .Do(x => x.Arg<IShapeVisitor>().Visit((PiersonMoskowitzShape)null));
-            
+                 .Do(x => x.Arg<IShapeVisitor>().Visit((PiersonMoskowitzShape) null));
+
             // Call
             void Call() => MdwBoundaryCategoryConditionsExtender.AddNewProperties(category, conditionDefinition);
 
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(Call);
             Assert.That(exception.ParamName, Is.EqualTo("piersonMoskowitzShape"));
-
         }
 
         [Test]
@@ -500,7 +499,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             conditionDefinition.When(x => x.AcceptVisitor(Arg.Any<IBoundaryConditionVisitor>()))
                                .Do(x => conditionDefinition.DataComponent.AcceptVisitor(x.Arg<ISpatiallyDefinedDataComponentVisitor>()));
             dataComponent.When(x => x.AcceptVisitor(Arg.Any<ISpatiallyDefinedDataComponentVisitor>()))
-                         .Do(x => x.Arg<ISpatiallyDefinedDataComponentVisitor>().Visit((UniformDataComponent<IForcingTypeDefinedParameters>)null));
+                         .Do(x => x.Arg<ISpatiallyDefinedDataComponentVisitor>().Visit((UniformDataComponent<IForcingTypeDefinedParameters>) null));
 
             // Call
             void Call() => MdwBoundaryCategoryConditionsExtender.AddNewProperties(category, conditionDefinition);
@@ -522,7 +521,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             conditionDefinition.When(x => x.AcceptVisitor(Arg.Any<IBoundaryConditionVisitor>()))
                                .Do(x => conditionDefinition.DataComponent.AcceptVisitor(x.Arg<ISpatiallyDefinedDataComponentVisitor>()));
             dataComponent.When(x => x.AcceptVisitor(Arg.Any<ISpatiallyDefinedDataComponentVisitor>()))
-                         .Do(x => x.Arg<ISpatiallyDefinedDataComponentVisitor>().Visit((SpatiallyVaryingDataComponent<IForcingTypeDefinedParameters>)null));
+                         .Do(x => x.Arg<ISpatiallyDefinedDataComponentVisitor>().Visit((SpatiallyVaryingDataComponent<IForcingTypeDefinedParameters>) null));
 
             // Call
             void Call() => MdwBoundaryCategoryConditionsExtender.AddNewProperties(category, conditionDefinition);
@@ -530,16 +529,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(Call);
             Assert.That(exception.ParamName, Is.EqualTo("spatiallyVaryingDataComponent"));
-        }
-
-        private IEnumerable<ISpatiallyDefinedDataComponent> GetFileBasedDataComponent()
-        {
-            yield return new UniformDataComponent<FileBasedParameters>(new FileBasedParameters(""));
-
-            var dataComponent = new SpatiallyVaryingDataComponent<FileBasedParameters>();
-            dataComponent.AddParameters(new SupportPoint(0, Substitute.For<IWaveBoundaryGeometricDefinition>()),
-                                        new FileBasedParameters(""));
-            yield return dataComponent;
         }
 
         [Test]
@@ -568,11 +557,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             var conditionDefinition = Substitute.For<IWaveBoundaryConditionDefinition>();
             conditionDefinition.PeriodType = BoundaryConditionPeriodType.Mean;
             var data = Substitute.For<IForcingTypeDefinedParameters>();
-           
+
             conditionDefinition.When(x => x.AcceptVisitor(Arg.Any<IBoundaryConditionVisitor>()))
                                .Do(x => data.AcceptVisitor(x.Arg<IForcingTypeDefinedParametersVisitor>()));
             data.When(x => x.AcceptVisitor(Arg.Any<IForcingTypeDefinedParametersVisitor>()))
-                         .Do(x => x.Arg<IForcingTypeDefinedParametersVisitor>().Visit((ConstantParameters<PowerDefinedSpreading>)null));
+                .Do(x => x.Arg<IForcingTypeDefinedParametersVisitor>().Visit((ConstantParameters<PowerDefinedSpreading>) null));
 
             // Call
             void Call() => MdwBoundaryCategoryConditionsExtender.AddNewProperties(category, conditionDefinition);
@@ -594,7 +583,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             conditionDefinition.When(x => x.AcceptVisitor(Arg.Any<IBoundaryConditionVisitor>()))
                                .Do(x => data.AcceptVisitor(x.Arg<IForcingTypeDefinedParametersVisitor>()));
             data.When(x => x.AcceptVisitor(Arg.Any<IForcingTypeDefinedParametersVisitor>()))
-                .Do(x => x.Arg<IForcingTypeDefinedParametersVisitor>().Visit((TimeDependentParameters<PowerDefinedSpreading>)null));
+                .Do(x => x.Arg<IForcingTypeDefinedParametersVisitor>().Visit((TimeDependentParameters<PowerDefinedSpreading>) null));
 
             // Call
             void Call() => MdwBoundaryCategoryConditionsExtender.AddNewProperties(category, conditionDefinition);
@@ -615,7 +604,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             conditionDefinition.When(x => x.AcceptVisitor(Arg.Any<IBoundaryConditionVisitor>()))
                                .Do(x => data.AcceptVisitor(x.Arg<ISpreadingVisitor>()));
             data.When(x => x.AcceptVisitor(Arg.Any<ISpreadingVisitor>()))
-                .Do(x => x.Arg<ISpreadingVisitor>().Visit((DegreesDefinedSpreading)null));
+                .Do(x => x.Arg<ISpreadingVisitor>().Visit((DegreesDefinedSpreading) null));
 
             // Call
             void Call() => MdwBoundaryCategoryConditionsExtender.AddNewProperties(category, conditionDefinition);
@@ -636,7 +625,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             conditionDefinition.When(x => x.AcceptVisitor(Arg.Any<IBoundaryConditionVisitor>()))
                                .Do(x => data.AcceptVisitor(x.Arg<ISpreadingVisitor>()));
             data.When(x => x.AcceptVisitor(Arg.Any<ISpreadingVisitor>()))
-                .Do(x => x.Arg<ISpreadingVisitor>().Visit((PowerDefinedSpreading)null));
+                .Do(x => x.Arg<ISpreadingVisitor>().Visit((PowerDefinedSpreading) null));
 
             // Call
             void Call() => MdwBoundaryCategoryConditionsExtender.AddNewProperties(category, conditionDefinition);
@@ -644,6 +633,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(Call);
             Assert.That(exception.ParamName, Is.EqualTo("powerDefinedSpreading"));
+        }
+
+        private IEnumerable<ISpatiallyDefinedDataComponent> GetFileBasedDataComponent()
+        {
+            yield return new UniformDataComponent<FileBasedParameters>(new FileBasedParameters(""));
+
+            var dataComponent = new SpatiallyVaryingDataComponent<FileBasedParameters>();
+            dataComponent.AddParameters(new SupportPoint(0, Substitute.For<IWaveBoundaryGeometricDefinition>()),
+                                        new FileBasedParameters(""));
+            yield return dataComponent;
         }
     }
 }

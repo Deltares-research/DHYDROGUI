@@ -4,6 +4,7 @@ using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
+using DelftTools.Shell.Core.Dao;
 using DelftTools.TestUtils;
 using DeltaShell.IntegrationTestUtils;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.Model;
@@ -22,20 +23,43 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
         # region SetUp / TearDown
 
         [TestFixtureSetUp]
-        override public void TestFixtureSetUp()
-        {       
+        public override void TestFixtureSetUp()
+        {
             base.TestFixtureSetUp();
 
             var waterQualityModelApplicationPlugin = new WaterQualityModelApplicationPlugin();
             factory.AddPlugin(waterQualityModelApplicationPlugin);
-            foreach (var dataAccessListener in waterQualityModelApplicationPlugin.CreateDataAccessListeners())
+            foreach (IDataAccessListener dataAccessListener in waterQualityModelApplicationPlugin.CreateDataAccessListeners())
             {
                 factory.AddDataAccessListener(dataAccessListener);
             }
+
             factory.AddPlugin(new NetworkEditorApplicationPlugin());
         }
 
         # endregion
+
+        private void SaveAndRetrieveFunctionWithObjectTArgument<T>(T object1, T object2)
+        {
+            var entity = new Function
+            {
+                Arguments = {new Variable<T>()},
+                Components = {new Variable<double>()}
+            };
+
+            entity[object1] = 1.1;
+            entity[object2] = 2.2;
+
+            Function retrievedEntity = SaveAndRetrieveObject(entity);
+
+            Assert.IsNotNull(retrievedEntity);
+            Assert.IsNotNull(retrievedEntity.Arguments);
+            Assert.AreEqual(1, retrievedEntity.Arguments.Count);
+            Assert.IsNotNull(retrievedEntity.Components);
+            Assert.AreEqual(1, retrievedEntity.Components.Count);
+            Assert.AreEqual(entity.Arguments[0].Values, retrievedEntity.Arguments[0].Values);
+            Assert.AreEqual(entity.Components[0].Values, retrievedEntity.Components[0].Values);
+        }
 
         # region Model
 
@@ -43,45 +67,44 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
         public void SaveAndRetrieveWaterQualityModel1DSettings()
         {
             var entity = new WaterQualityModelSettings
-                {
-                    HisStartTime = new DateTime(2010, 1, 1),
-                    HisStopTime = new DateTime(2010, 1, 2),
-                    HisTimeStep = new TimeSpan(1, 1, 1),
-                    MapStartTime = new DateTime(2011, 1, 1),
-                    MapStopTime = new DateTime(2011, 1, 2),
-                    MapTimeStep = new TimeSpan(2, 2, 2),
-                    BalanceStartTime = new DateTime(2012, 1, 1),
-                    BalanceStopTime = new DateTime(2012, 1, 2),
-                    BalanceTimeStep = new TimeSpan(3, 3, 3),
-                    NumericalScheme = NumericalScheme.Scheme1,
-                    NoDispersionIfFlowIsZero = true,
-                    NoDispersionOverOpenBoundaries = true,
-                    UseFirstOrder = false,
-                    UseForesterFilter = true,
-                    UseAnticreepFilter = true,
-                    Balance = true,
-                    LumpProcesses = false,
-                    LumpTransport = false,
-                    LumpLoads = false,
-                    SuppressSpace = false,
-                    SuppressTime = false,
-                    BalanceUnit = BalanceUnit.Gram,
-                    NoBalanceMonitoringPoints = false,
-                    NoBalanceMonitoringAreas = false,
-                    NoBalanceMonitoringModelWide = true,
-                    ProcessesActive = true,
-                    MonitoringOutputLevel = MonitoringOutputLevel.PointsAndAreas,
-                    CorrectForEvaporation = false,
+            {
+                HisStartTime = new DateTime(2010, 1, 1),
+                HisStopTime = new DateTime(2010, 1, 2),
+                HisTimeStep = new TimeSpan(1, 1, 1),
+                MapStartTime = new DateTime(2011, 1, 1),
+                MapStopTime = new DateTime(2011, 1, 2),
+                MapTimeStep = new TimeSpan(2, 2, 2),
+                BalanceStartTime = new DateTime(2012, 1, 1),
+                BalanceStopTime = new DateTime(2012, 1, 2),
+                BalanceTimeStep = new TimeSpan(3, 3, 3),
+                NumericalScheme = NumericalScheme.Scheme1,
+                NoDispersionIfFlowIsZero = true,
+                NoDispersionOverOpenBoundaries = true,
+                UseFirstOrder = false,
+                UseForesterFilter = true,
+                UseAnticreepFilter = true,
+                Balance = true,
+                LumpProcesses = false,
+                LumpTransport = false,
+                LumpLoads = false,
+                SuppressSpace = false,
+                SuppressTime = false,
+                BalanceUnit = BalanceUnit.Gram,
+                NoBalanceMonitoringPoints = false,
+                NoBalanceMonitoringAreas = false,
+                NoBalanceMonitoringModelWide = true,
+                ProcessesActive = true,
+                MonitoringOutputLevel = MonitoringOutputLevel.PointsAndAreas,
+                CorrectForEvaporation = false,
+                ClosureErrorCorrection = true,
+                DryCellThreshold = 0.3d,
+                IterationMaximum = 5,
+                OutputDirectory = @"D:\Temp\output",
+                NrOfThreads = 3,
+                Tolerance = 0.2d,
+            };
 
-                    ClosureErrorCorrection = true,
-                    DryCellThreshold = 0.3d,
-                    IterationMaximum = 5,
-                    OutputDirectory = @"D:\Temp\output",
-                    NrOfThreads = 3,
-                    Tolerance = 0.2d,
-                };
-
-            var retrievedEntity = SaveAndRetrieveObject(entity);
+            WaterQualityModelSettings retrievedEntity = SaveAndRetrieveObject(entity);
 
             Assert.IsNotNull(retrievedEntity);
             Assert.AreEqual(new DateTime(2010, 1, 1), retrievedEntity.HisStartTime);
@@ -125,14 +148,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
         public void SaveAndRetrieveWaterQualityObservationVariableOutputWithObservationVariable()
         {
             var outputVariableTuples = new List<DelftTools.Utils.Tuple<string, string>>
-                                           {
-                                               new DelftTools.Utils.Tuple<string, string>("Substance", "mg/l"),
-                                               new DelftTools.Utils.Tuple<string, string>("Output parameter", ""),
-                                           };
+            {
+                new DelftTools.Utils.Tuple<string, string>("Substance", "mg/l"),
+                new DelftTools.Utils.Tuple<string, string>("Output parameter", ""),
+            };
 
-            var waterQualityObservationVariableOutput = new WaterQualityObservationVariableOutput(outputVariableTuples) { ObservationVariable = new ObservationPoint { Name = "Observation point" } };
+            var waterQualityObservationVariableOutput = new WaterQualityObservationVariableOutput(outputVariableTuples) {ObservationVariable = new ObservationPoint {Name = "Observation point"}};
 
-            var retrievedObject = SaveAndRetrieveObject(waterQualityObservationVariableOutput);
+            WaterQualityObservationVariableOutput retrievedObject = SaveAndRetrieveObject(waterQualityObservationVariableOutput);
 
             Assert.IsNotNull(retrievedObject);
             Assert.IsNotNull(retrievedObject.ObservationVariable);
@@ -147,14 +170,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
         public void SaveAndRetrieveWaterQualityObservationVariableOutputWithoutObservationVariable()
         {
             var outputVariableTuples = new List<DelftTools.Utils.Tuple<string, string>>
-                                           {
-                                               new DelftTools.Utils.Tuple<string, string>("Substance", "mg/l"),
-                                               new DelftTools.Utils.Tuple<string, string>("Output parameter", ""),
-                                           };
+            {
+                new DelftTools.Utils.Tuple<string, string>("Substance", "mg/l"),
+                new DelftTools.Utils.Tuple<string, string>("Output parameter", ""),
+            };
 
-            var waterQualityObservationVariableOutput = new WaterQualityObservationVariableOutput(outputVariableTuples) { Name = "Observation point" };
+            var waterQualityObservationVariableOutput = new WaterQualityObservationVariableOutput(outputVariableTuples) {Name = "Observation point"};
 
-            var retrievedObject = SaveAndRetrieveObject(waterQualityObservationVariableOutput);
+            WaterQualityObservationVariableOutput retrievedObject = SaveAndRetrieveObject(waterQualityObservationVariableOutput);
 
             Assert.IsNotNull(retrievedObject);
             Assert.IsNull(retrievedObject.ObservationVariable);
@@ -167,22 +190,22 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
 
         # endregion
 
-        # region Substance process library 
+        # region Substance process library
 
         [Test]
         public void SaveAndRetrieveWaterQualitySubstance()
         {
             var entity = new WaterQualitySubstance
-                {
-                    Name = "Substance variable name",
-                    Description = "Substance variable description",
-                    Active = true,
-                    InitialValue = 0.03,
-                    ConcentrationUnit = "g/L",
-                    WasteLoadUnit = "g"
-                };
+            {
+                Name = "Substance variable name",
+                Description = "Substance variable description",
+                Active = true,
+                InitialValue = 0.03,
+                ConcentrationUnit = "g/L",
+                WasteLoadUnit = "g"
+            };
 
-            var retrievedEntity = SaveAndRetrieveObject(entity);
+            WaterQualitySubstance retrievedEntity = SaveAndRetrieveObject(entity);
 
             Assert.IsNotNull(retrievedEntity);
             Assert.AreEqual("Substance variable name", retrievedEntity.Name);
@@ -196,21 +219,21 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
         [Test]
         public void SaveAndRetrieveFunctionWithWaterQualitySubstanceArgument()
         {
-            SaveAndRetrieveFunctionWithObjectTArgument(new WaterQualitySubstance { Name = "Substance 1" }, new WaterQualitySubstance { Name = "Substance 2" });
+            SaveAndRetrieveFunctionWithObjectTArgument(new WaterQualitySubstance {Name = "Substance 1"}, new WaterQualitySubstance {Name = "Substance 2"});
         }
 
         [Test]
         public void SaveAndRetrieveWaterQualityParameter()
         {
             var entity = new WaterQualityParameter
-                {
-                    Name = "Parameter name",
-                    Description = "Parameter description",
-                    Unit = "m",
-                    DefaultValue = 2.1
-                };
+            {
+                Name = "Parameter name",
+                Description = "Parameter description",
+                Unit = "m",
+                DefaultValue = 2.1
+            };
 
-            var retrievedEntity = SaveAndRetrieveObject(entity);
+            WaterQualityParameter retrievedEntity = SaveAndRetrieveObject(entity);
 
             Assert.IsNotNull(retrievedEntity);
             Assert.AreEqual("Parameter name", retrievedEntity.Name);
@@ -224,12 +247,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
         public void SaveAndRetrieveWaterQualityProcess()
         {
             var entity = new WaterQualityProcess
-                {
-                    Name = "Process name",
-                    Description = "Process description"
-                };
+            {
+                Name = "Process name",
+                Description = "Process description"
+            };
 
-            var retrievedEntity = SaveAndRetrieveObject(entity);
+            WaterQualityProcess retrievedEntity = SaveAndRetrieveObject(entity);
 
             Assert.IsNotNull(retrievedEntity);
             Assert.AreEqual("Process name", retrievedEntity.Name);
@@ -240,14 +263,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
         public void SaveAndRetrieveWaterQualityOutputParameter()
         {
             var entity = new WaterQualityOutputParameter
-                {
-                    Name = "Output parameter name",
-                    Description = "Output parameter description",
-                    ShowInHis = true,
-                    ShowInMap = true
-                };
+            {
+                Name = "Output parameter name",
+                Description = "Output parameter description",
+                ShowInHis = true,
+                ShowInMap = true
+            };
 
-            var retrievedEntity = SaveAndRetrieveObject(entity);
+            WaterQualityOutputParameter retrievedEntity = SaveAndRetrieveObject(entity);
 
             Assert.IsNotNull(retrievedEntity);
             Assert.AreEqual("Output parameter name", retrievedEntity.Name);
@@ -260,33 +283,33 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
         public void SaveAndRetrieveSubstanceProcessLibrary()
         {
             var entity = new SubstanceProcessLibrary
+            {
+                Name = "Substance process library",
+                Substances =
                 {
-                    Name = "Substance process library",
-                    Substances =
-                        {
-                            new WaterQualitySubstance { Name = "Substance 1" },
-                            new WaterQualitySubstance { Name = "Substance 2" }
-                        },
-                    Processes =
-                        {
-                            new WaterQualityProcess { Name = "Process 1" },
-                            new WaterQualityProcess { Name = "Process 2" }
-                        },
-                    Parameters =
-                        {
-                            new WaterQualityParameter { Name = "Parameter 1" },
-                            new WaterQualityParameter { Name = "Parameter 2" }
-                        },
-                    OutputParameters =
-                        {
-                            new WaterQualityOutputParameter { Name = "Output parameter 1" },
-                            new WaterQualityOutputParameter { Name = "Output parameter 2" }
-                        },
-                    ProcessDllFilePath = "Process dll file path",
-                    ProcessDefinitionFilesPath = "Process definition files path"
-                };
+                    new WaterQualitySubstance {Name = "Substance 1"},
+                    new WaterQualitySubstance {Name = "Substance 2"}
+                },
+                Processes =
+                {
+                    new WaterQualityProcess {Name = "Process 1"},
+                    new WaterQualityProcess {Name = "Process 2"}
+                },
+                Parameters =
+                {
+                    new WaterQualityParameter {Name = "Parameter 1"},
+                    new WaterQualityParameter {Name = "Parameter 2"}
+                },
+                OutputParameters =
+                {
+                    new WaterQualityOutputParameter {Name = "Output parameter 1"},
+                    new WaterQualityOutputParameter {Name = "Output parameter 2"}
+                },
+                ProcessDllFilePath = "Process dll file path",
+                ProcessDefinitionFilesPath = "Process definition files path"
+            };
 
-            var retrievedEntity = SaveAndRetrieveObject(entity);
+            SubstanceProcessLibrary retrievedEntity = SaveAndRetrieveObject(entity);
 
             Assert.IsNotNull(retrievedEntity);
             Assert.AreEqual("Substance process library", retrievedEntity.Name);
@@ -313,9 +336,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
         [Test]
         public void SaveAndRetrieveWaterQualityFunctionFactoryConst()
         {
-            var waterQualityFunctionFactoryConst = WaterQualityFunctionFactory.CreateConst("Name", 10.2, "Component name", "Unit", "Description");
+            IFunction waterQualityFunctionFactoryConst = WaterQualityFunctionFactory.CreateConst("Name", 10.2, "Component name", "Unit", "Description");
 
-            var retrievedObject = SaveAndRetrieveObject(waterQualityFunctionFactoryConst);
+            IFunction retrievedObject = SaveAndRetrieveObject(waterQualityFunctionFactoryConst);
 
             Assert.IsNotNull(retrievedObject);
             Assert.IsTrue(retrievedObject.IsConst());
@@ -329,12 +352,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
         [Test]
         public void SaveAndRetrieveWaterQualityFunctionFactoryTimeSeries()
         {
-            var waterQualityFunctionFactoryTimeSeries = WaterQualityFunctionFactory.CreateTimeSeries("Name", 10.2, "Component name", "Unit", "Description");
+            IFunction waterQualityFunctionFactoryTimeSeries = WaterQualityFunctionFactory.CreateTimeSeries("Name", 10.2, "Component name", "Unit", "Description");
 
             waterQualityFunctionFactoryTimeSeries[new DateTime(2010, 1, 1, 0, 0, 1)] = 10.5;
             waterQualityFunctionFactoryTimeSeries.Arguments[0].InterpolationType = InterpolationType.Linear;
 
-            var retrievedObject = SaveAndRetrieveObject(waterQualityFunctionFactoryTimeSeries);
+            IFunction retrievedObject = SaveAndRetrieveObject(waterQualityFunctionFactoryTimeSeries);
 
             Assert.AreNotEqual(null, retrievedObject);
             Assert.IsTrue(retrievedObject.IsTimeSeries());
@@ -349,27 +372,5 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
         }
 
         # endregion
-
-        private void SaveAndRetrieveFunctionWithObjectTArgument<T>(T object1, T object2)
-        {
-            var entity = new Function
-                {
-                    Arguments = {new Variable<T>()},
-                    Components = {new Variable<double>()}
-                };
-
-            entity[object1] = 1.1;
-            entity[object2] = 2.2;
-
-            var retrievedEntity = SaveAndRetrieveObject(entity);
-
-            Assert.IsNotNull(retrievedEntity);
-            Assert.IsNotNull(retrievedEntity.Arguments);
-            Assert.AreEqual(1, retrievedEntity.Arguments.Count);
-            Assert.IsNotNull(retrievedEntity.Components);
-            Assert.AreEqual(1, retrievedEntity.Components.Count);
-            Assert.AreEqual(entity.Arguments[0].Values, retrievedEntity.Arguments[0].Values);
-            Assert.AreEqual(entity.Components[0].Values, retrievedEntity.Components[0].Values);
-        }
     }
 }

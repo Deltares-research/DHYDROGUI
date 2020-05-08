@@ -124,14 +124,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
             ILineString result = factory.ConstructBoundaryLineGeometry(waveBoundary);
 
             // Assert
-            const int expectedSize = expectedEndingIndex - expectedStartingIndex + 1;
+            const int expectedSize = (expectedEndingIndex - expectedStartingIndex) + 1;
             Assert.That(result.NumPoints, Is.EqualTo(expectedSize));
 
             var coordinateComparer = new Coordinate2DEqualityComparer();
             for (var i = 0; i < expectedSize; i++)
             {
-
-                Assert.That(coordinateComparer.Equals(result.GetCoordinateN(i), 
+                Assert.That(coordinateComparer.Equals(result.GetCoordinateN(i),
                                                       coordinates[i + expectedStartingIndex]));
             }
         }
@@ -208,16 +207,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
             Assert.That(result, Is.Null);
         }
 
-        private static IEnumerable<TestCaseData> GetConstructBoundaryEndPointsTestData()
-        {
-            IPoint CallStart(WaveBoundaryGeometryFactory factory, IWaveBoundary waveBoundary) => 
-                factory.ConstructBoundaryStartPoint(waveBoundary);
-            yield return new TestCaseData(5, 10, 5, (Func<WaveBoundaryGeometryFactory, IWaveBoundary, IPoint>) CallStart);
-            IPoint CallEnd(WaveBoundaryGeometryFactory factory, IWaveBoundary waveBoundary) => 
-                factory.ConstructBoundaryEndPoint(waveBoundary);
-            yield return new TestCaseData(5, 10, 10, (Func<WaveBoundaryGeometryFactory, IWaveBoundary, IPoint>) CallEnd);
-        }
-
         [Test]
         [TestCaseSource(nameof(GetConstructBoundaryEndPointsTestData))]
         public void ConstructBoundaryEndPoint_ValidInput_ReturnsCorrectPoint(int firstIndex, int lastIndex, int indexOfInterest, Func<WaveBoundaryGeometryFactory, IWaveBoundary, IPoint> callFunc)
@@ -234,9 +223,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
 
             var gridSide = random.NextEnumValue<GridSide>();
             double length = random.NextDouble();
-            
-            var geometricDefinition = new WaveBoundaryGeometricDefinition(firstIndex, 
-                                                                          lastIndex, 
+
+            var geometricDefinition = new WaveBoundaryGeometricDefinition(firstIndex,
+                                                                          lastIndex,
                                                                           gridSide,
                                                                           length);
             waveBoundary.GeometricDefinition.Returns(geometricDefinition);
@@ -257,7 +246,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
             Assert.That(result, Is.Not.Null);
 
             var equalityComparer = new Coordinate2DEqualityComparer();
-            Assert.That(equalityComparer.Equals(result.Coordinate, expectedCoordinate), 
+            Assert.That(equalityComparer.Equals(result.Coordinate, expectedCoordinate),
                         "Expected the last points coordinate to be equal to the expected coordinate.");
             gridBoundary.Received(1).GetWorldCoordinateFromBoundaryCoordinate(gridBoundaryCoordinates[indexOfInterest]);
         }
@@ -320,6 +309,19 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
 
             // Assert
             Assert.That(point, Is.Null);
+        }
+
+        private static IEnumerable<TestCaseData> GetConstructBoundaryEndPointsTestData()
+        {
+            IPoint CallStart(WaveBoundaryGeometryFactory factory, IWaveBoundary waveBoundary) =>
+                factory.ConstructBoundaryStartPoint(waveBoundary);
+
+            yield return new TestCaseData(5, 10, 5, (Func<WaveBoundaryGeometryFactory, IWaveBoundary, IPoint>) CallStart);
+
+            IPoint CallEnd(WaveBoundaryGeometryFactory factory, IWaveBoundary waveBoundary) =>
+                factory.ConstructBoundaryEndPoint(waveBoundary);
+
+            yield return new TestCaseData(5, 10, 10, (Func<WaveBoundaryGeometryFactory, IWaveBoundary, IPoint>) CallEnd);
         }
 
         private SupportPoint CreateSupportPoint()

@@ -23,23 +23,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
         private static readonly Random random = new Random();
         private static int RandomValue => random.Next();
 
-        private IEnumerable<TestCaseData> ConstructorArgumentNullCases()
-        {
-            yield return new TestCaseData(null, Substitute.For<IFilesManager>(), "category");
-            yield return new TestCaseData(new DelftIniCategory(""), null, "filesManager");
-        }
-
-        [TestCaseSource(nameof(ConstructorArgumentNullCases))]
-        public void Constructor_ArgumentNull_ThrowsArgumentNullException(DelftIniCategory category, IFilesManager filesManager, string expectedParamName)
-        {
-            // Call
-            void Call() => new SpectrumDataComponentVisitor(category, filesManager);
-
-            // Assert
-            var exception = Assert.Throws<ArgumentNullException>(Call);
-            Assert.That(exception.ParamName, Is.EqualTo(expectedParamName));
-        }
-
         [Test]
         public void Constructor_InitializesInstanceCorrectly()
         {
@@ -156,6 +139,23 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             filesManager.Received(1).Add(filePath1, Arg.Is<Action<string>>(a => MatchesAction(parameters1, a)));
             filesManager.Received(1).Add(filePath2, Arg.Is<Action<string>>(a => MatchesAction(parameters2, a)));
             filesManager.Received(1).Add(filePath3, Arg.Is<Action<string>>(a => MatchesAction(parameters3, a)));
+        }
+
+        private IEnumerable<TestCaseData> ConstructorArgumentNullCases()
+        {
+            yield return new TestCaseData(null, Substitute.For<IFilesManager>(), "category");
+            yield return new TestCaseData(new DelftIniCategory(""), null, "filesManager");
+        }
+
+        [TestCaseSource(nameof(ConstructorArgumentNullCases))]
+        public void Constructor_ArgumentNull_ThrowsArgumentNullException(DelftIniCategory category, IFilesManager filesManager, string expectedParamName)
+        {
+            // Call
+            void Call() => new SpectrumDataComponentVisitor(category, filesManager);
+
+            // Assert
+            var exception = Assert.Throws<ArgumentNullException>(Call);
+            Assert.That(exception.ParamName, Is.EqualTo(expectedParamName));
         }
 
         [TestFixture]

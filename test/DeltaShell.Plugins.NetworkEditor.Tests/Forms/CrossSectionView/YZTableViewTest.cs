@@ -32,12 +32,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CrossSectionView
             view.AllowAddRemove = true;
             view.ReadOnlyYColumn = false;
             view.Data = new EventedList<Coordinate>
-                            {
-                                new Coordinate(0, 10),
-                                new Coordinate(20, 0),
-                                new Coordinate(30, 0),
-                                new Coordinate(40, 10)
-                            };
+            {
+                new Coordinate(0, 10),
+                new Coordinate(20, 0),
+                new Coordinate(30, 0),
+                new Coordinate(40, 10)
+            };
 
             //{
             //    //AllowAddRemove = true,
@@ -57,7 +57,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CrossSectionView
             var view = new YZTableView
             {
                 AllowAddRemove = false,
-                Data = new EventedList<Coordinate> { new Coordinate(0, 10), new Coordinate(10, 10) }
+                Data = new EventedList<Coordinate>
+                {
+                    new Coordinate(0, 10),
+                    new Coordinate(10, 10)
+                }
             };
             WindowsFormsTestHelper.ShowModal(view);
         }
@@ -70,7 +74,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CrossSectionView
             {
                 ReadOnly = true,
                 AllowAddRemove = false,
-                Data = new EventedList<Coordinate> { new Coordinate(0, 10), new Coordinate(10, 10) }
+                Data = new EventedList<Coordinate>
+                {
+                    new Coordinate(0, 10),
+                    new Coordinate(10, 10)
+                }
             };
             WindowsFormsTestHelper.ShowModal(view);
         }
@@ -83,7 +91,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CrossSectionView
             {
                 ReadOnlyYColumn = true,
                 AllowAddRemove = false,
-                Data = new EventedList<Coordinate> { new Coordinate(0, 10), new Coordinate(10, 10) }
+                Data = new EventedList<Coordinate>
+                {
+                    new Coordinate(0, 10),
+                    new Coordinate(10, 10)
+                }
             };
             WindowsFormsTestHelper.ShowModal(view);
         }

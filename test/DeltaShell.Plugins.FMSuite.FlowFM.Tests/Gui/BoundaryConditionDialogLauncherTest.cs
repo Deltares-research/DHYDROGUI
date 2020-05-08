@@ -42,15 +42,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             cmpExtension = cmpFileImporter.FileFilter;
             var qhFileImporter = new QhFileImporter();
             qhExtension = qhFileImporter.FileFilter;
-
         }
 
         [TestCase()]
         [ExpectedException(typeof(ArgumentException))]
         public void GivenFlowBoundaryConditionWhenImportedWithoutOpenFileDialogThenThrowException()
         {
-            FlowBoundaryCondition flowBoundaryCondition = new FlowBoundaryCondition(FlowBoundaryQuantityType.MorphologyBedLevelChangePrescribed, BoundaryConditionDataType.TimeSeries);
-            WaterFlowFMModel wfmodel = new WaterFlowFMModel();
+            var flowBoundaryCondition = new FlowBoundaryCondition(FlowBoundaryQuantityType.MorphologyBedLevelChangePrescribed, BoundaryConditionDataType.TimeSeries);
+            var wfmodel = new WaterFlowFMModel();
 
             BoundaryConditionDialogLauncher.LaunchImporterDialog(null, flowBoundaryCondition, 1, wfmodel.ReferenceTime);
         }
@@ -58,127 +57,270 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         [TestCase()]
         public void GivenNoBoundaryConditionWhenImportedThenThrowException()
         {
-            TestHelper.AssertAtLeastOneLogMessagesContains(()=> BoundaryConditionDialogLauncher.LaunchImporterDialog(new OpenFileDialog(), null, 1, new DateTime()), "Boundary condition is not set");
+            TestHelper.AssertAtLeastOneLogMessagesContains(() => BoundaryConditionDialogLauncher.LaunchImporterDialog(new OpenFileDialog(), null, 1, new DateTime()), "Boundary condition is not set");
         }
 
         [TestCase()]
         public void GivenEmptyDateTimeWhenImportThenThrowException()
         {
-            FlowBoundaryCondition flowBoundaryCondition = new FlowBoundaryCondition(FlowBoundaryQuantityType.MorphologyBedLevelChangePrescribed, BoundaryConditionDataType.TimeSeries);
-            
-            TestHelper.AssertAtLeastOneLogMessagesContains(()=> BoundaryConditionDialogLauncher.LaunchImporterDialog(new OpenFileDialog(), flowBoundaryCondition, 1, null), "Datetime is not set");
+            var flowBoundaryCondition = new FlowBoundaryCondition(FlowBoundaryQuantityType.MorphologyBedLevelChangePrescribed, BoundaryConditionDataType.TimeSeries);
+
+            TestHelper.AssertAtLeastOneLogMessagesContains(() => BoundaryConditionDialogLauncher.LaunchImporterDialog(new OpenFileDialog(), flowBoundaryCondition, 1, null), "Datetime is not set");
         }
 
         [TestCase(FlowBoundaryQuantityType.MorphologyBedLevelPrescribed)]
         [TestCase(FlowBoundaryQuantityType.MorphologyBedLevelChangePrescribed)]
         public void GivenAMorphologyFlowBoundaryQuantityTypeWithTimeSeriesWhenImportDialogIsOpenedThenValidExtentionsArePresent(FlowBoundaryQuantityType flowBoundaryQuantityType)
         {
-            FlowBoundaryCondition flowBoundaryCondition = new FlowBoundaryCondition(flowBoundaryQuantityType, BoundaryConditionDataType.TimeSeries);
-            WaterFlowFMModel wfmodel = new WaterFlowFMModel();
+            var flowBoundaryCondition = new FlowBoundaryCondition(flowBoundaryQuantityType, BoundaryConditionDataType.TimeSeries);
+            var wfmodel = new WaterFlowFMModel();
 
             BoundaryConditionDialogLauncher.LaunchImporterDialog(fileDialogMock, flowBoundaryCondition, 1, wfmodel.ReferenceTime);
 
             fileDialogMock.AssertWasCalled(f => f.Filter = $@"{timExtension}|{morphologyExtension}");
-
         }
 
-        [TestCaseSource(typeof(FlowBoundaryTestData), "TimeSeries")]  
+        [TestCaseSource(typeof(FlowBoundaryTestData), "TimeSeries")]
         public void GivenAFlowBoundaryQuantityTypeWithTimeSeriesWhenImportDialogIsOpenedThenValidExtentionsArePresent(FlowBoundaryQuantityType flowBoundaryQuantityType, BoundaryConditionDataType timeSeries)
         {
-            FlowBoundaryCondition flowBoundaryCondition = new FlowBoundaryCondition(flowBoundaryQuantityType, timeSeries);
-            WaterFlowFMModel wfmodel = new WaterFlowFMModel();
+            var flowBoundaryCondition = new FlowBoundaryCondition(flowBoundaryQuantityType, timeSeries);
+            var wfmodel = new WaterFlowFMModel();
 
             BoundaryConditionDialogLauncher.LaunchImporterDialog(fileDialogMock, flowBoundaryCondition, 1, wfmodel.ReferenceTime);
-            
+
             fileDialogMock.AssertWasCalled(f => f.Filter = $@"{boundaryConditionExtension}|{timExtension}");
         }
 
-        [TestCaseSource(typeof(FlowBoundaryTestData), "Harmonics")]  
-        [TestCaseSource(typeof(FlowBoundaryTestData), "HarmonicsCorrection")]  
-        [TestCaseSource(typeof(FlowBoundaryTestData), "Astronomical")]  
-        [TestCaseSource(typeof(FlowBoundaryTestData), "AstronomicalCorrection")]  
+        [TestCaseSource(typeof(FlowBoundaryTestData), "Harmonics")]
+        [TestCaseSource(typeof(FlowBoundaryTestData), "HarmonicsCorrection")]
+        [TestCaseSource(typeof(FlowBoundaryTestData), "Astronomical")]
+        [TestCaseSource(typeof(FlowBoundaryTestData), "AstronomicalCorrection")]
         public void GivenAFlowBoundaryQuantityTypeWithHarmonicsCorrectionWhenImportDialogIsOpenedThenValidExtentionsArePresent(FlowBoundaryQuantityType flowBoundaryQuantityType, BoundaryConditionDataType harmonicsCorrection)
         {
-            FlowBoundaryCondition flowBoundaryCondition = new FlowBoundaryCondition(flowBoundaryQuantityType, harmonicsCorrection);
-            WaterFlowFMModel wfmodel = new WaterFlowFMModel();
+            var flowBoundaryCondition = new FlowBoundaryCondition(flowBoundaryQuantityType, harmonicsCorrection);
+            var wfmodel = new WaterFlowFMModel();
 
             BoundaryConditionDialogLauncher.LaunchImporterDialog(fileDialogMock, flowBoundaryCondition, 1, wfmodel.ReferenceTime);
-            
+
             fileDialogMock.AssertWasCalled(f => f.Filter = $@"{boundaryConditionExtension}|{cmpExtension}");
         }
-        
+
         [TestCaseSource(typeof(FlowBoundaryTestData), "Qh")]
         public void GivenAFlowBoundaryQuantityTypeWithQhWhenImportDialogIsOpenedThenValidExtentionsArePresent(FlowBoundaryQuantityType flowBoundaryQuantityType, BoundaryConditionDataType Qh)
         {
-            FlowBoundaryCondition flowBoundaryCondition = new FlowBoundaryCondition(flowBoundaryQuantityType, Qh);
-            WaterFlowFMModel wfmodel = new WaterFlowFMModel();
+            var flowBoundaryCondition = new FlowBoundaryCondition(flowBoundaryQuantityType, Qh);
+            var wfmodel = new WaterFlowFMModel();
 
             BoundaryConditionDialogLauncher.LaunchImporterDialog(fileDialogMock, flowBoundaryCondition, 1, wfmodel.ReferenceTime);
 
             fileDialogMock.AssertWasCalled(f => f.Filter = $@"{boundaryConditionExtension}|{qhExtension}");
-                                                                                        
         }
     }
 
-    class FlowBoundaryTestData
+    internal class FlowBoundaryTestData
     {
-        static readonly object[] TimeSeries =
+        private static readonly object[] TimeSeries =
         {
-            new object[] {FlowBoundaryQuantityType.WaterLevel, BoundaryConditionDataType.TimeSeries},
-            new object[] {FlowBoundaryQuantityType.Riemann, BoundaryConditionDataType.TimeSeries},
-            new object[] {FlowBoundaryQuantityType.RiemannVelocity, BoundaryConditionDataType.TimeSeries},
-            new object[] {FlowBoundaryQuantityType.Velocity, BoundaryConditionDataType.TimeSeries},
-            new object[] {FlowBoundaryQuantityType.Neumann, BoundaryConditionDataType.TimeSeries},
-            new object[] {FlowBoundaryQuantityType.Discharge, BoundaryConditionDataType.TimeSeries},
-        
+            new object[]
+            {
+                FlowBoundaryQuantityType.WaterLevel,
+                BoundaryConditionDataType.TimeSeries
+            },
+            new object[]
+            {
+                FlowBoundaryQuantityType.Riemann,
+                BoundaryConditionDataType.TimeSeries
+            },
+            new object[]
+            {
+                FlowBoundaryQuantityType.RiemannVelocity,
+                BoundaryConditionDataType.TimeSeries
+            },
+            new object[]
+            {
+                FlowBoundaryQuantityType.Velocity,
+                BoundaryConditionDataType.TimeSeries
+            },
+            new object[]
+            {
+                FlowBoundaryQuantityType.Neumann,
+                BoundaryConditionDataType.TimeSeries
+            },
+            new object[]
+            {
+                FlowBoundaryQuantityType.Discharge,
+                BoundaryConditionDataType.TimeSeries
+            },
         };
 
-        static object[] Harmonics =
+        private static object[] Harmonics =
         {
-            new object[] {FlowBoundaryQuantityType.WaterLevel, BoundaryConditionDataType.Harmonics},
-            new object[] {FlowBoundaryQuantityType.Riemann, BoundaryConditionDataType.Harmonics},
-            new object[] {FlowBoundaryQuantityType.RiemannVelocity, BoundaryConditionDataType.Harmonics},
-            new object[] {FlowBoundaryQuantityType.Velocity, BoundaryConditionDataType.Harmonics},
-            new object[] {FlowBoundaryQuantityType.Neumann, BoundaryConditionDataType.Harmonics},
-            new object[] {FlowBoundaryQuantityType.Discharge, BoundaryConditionDataType.Harmonics},
-        
+            new object[]
+            {
+                FlowBoundaryQuantityType.WaterLevel,
+                BoundaryConditionDataType.Harmonics
+            },
+            new object[]
+            {
+                FlowBoundaryQuantityType.Riemann,
+                BoundaryConditionDataType.Harmonics
+            },
+            new object[]
+            {
+                FlowBoundaryQuantityType.RiemannVelocity,
+                BoundaryConditionDataType.Harmonics
+            },
+            new object[]
+            {
+                FlowBoundaryQuantityType.Velocity,
+                BoundaryConditionDataType.Harmonics
+            },
+            new object[]
+            {
+                FlowBoundaryQuantityType.Neumann,
+                BoundaryConditionDataType.Harmonics
+            },
+            new object[]
+            {
+                FlowBoundaryQuantityType.Discharge,
+                BoundaryConditionDataType.Harmonics
+            },
         };
 
-        static object[] HarmonicsCorrection =
+        private static object[] HarmonicsCorrection =
         {
-            new object[] {FlowBoundaryQuantityType.WaterLevel, BoundaryConditionDataType.HarmonicCorrection},
-            new object[] {FlowBoundaryQuantityType.Riemann, BoundaryConditionDataType.HarmonicCorrection},
-            new object[] {FlowBoundaryQuantityType.RiemannVelocity, BoundaryConditionDataType.HarmonicCorrection},
-            new object[] {FlowBoundaryQuantityType.Velocity, BoundaryConditionDataType.HarmonicCorrection},
-            new object[] {FlowBoundaryQuantityType.Neumann, BoundaryConditionDataType.HarmonicCorrection},
-            new object[] {FlowBoundaryQuantityType.Discharge, BoundaryConditionDataType.HarmonicCorrection},
+            new object[]
+            {
+                FlowBoundaryQuantityType.WaterLevel,
+                BoundaryConditionDataType.HarmonicCorrection
+            },
+            new object[]
+            {
+                FlowBoundaryQuantityType.Riemann,
+                BoundaryConditionDataType.HarmonicCorrection
+            },
+            new object[]
+            {
+                FlowBoundaryQuantityType.RiemannVelocity,
+                BoundaryConditionDataType.HarmonicCorrection
+            },
+            new object[]
+            {
+                FlowBoundaryQuantityType.Velocity,
+                BoundaryConditionDataType.HarmonicCorrection
+            },
+            new object[]
+            {
+                FlowBoundaryQuantityType.Neumann,
+                BoundaryConditionDataType.HarmonicCorrection
+            },
+            new object[]
+            {
+                FlowBoundaryQuantityType.Discharge,
+                BoundaryConditionDataType.HarmonicCorrection
+            },
         };
-        static object[] Astronomical =
+
+        private static object[] Astronomical =
         {
-            new object[] {FlowBoundaryQuantityType.WaterLevel, BoundaryConditionDataType.AstroComponents},
-            new object[] {FlowBoundaryQuantityType.Riemann, BoundaryConditionDataType.AstroComponents},
-            new object[] {FlowBoundaryQuantityType.RiemannVelocity, BoundaryConditionDataType.AstroComponents},
-            new object[] {FlowBoundaryQuantityType.Velocity, BoundaryConditionDataType.AstroComponents},
-            new object[] {FlowBoundaryQuantityType.Neumann, BoundaryConditionDataType.AstroComponents},
-            new object[] {FlowBoundaryQuantityType.Discharge, BoundaryConditionDataType.AstroComponents},
+            new object[]
+            {
+                FlowBoundaryQuantityType.WaterLevel,
+                BoundaryConditionDataType.AstroComponents
+            },
+            new object[]
+            {
+                FlowBoundaryQuantityType.Riemann,
+                BoundaryConditionDataType.AstroComponents
+            },
+            new object[]
+            {
+                FlowBoundaryQuantityType.RiemannVelocity,
+                BoundaryConditionDataType.AstroComponents
+            },
+            new object[]
+            {
+                FlowBoundaryQuantityType.Velocity,
+                BoundaryConditionDataType.AstroComponents
+            },
+            new object[]
+            {
+                FlowBoundaryQuantityType.Neumann,
+                BoundaryConditionDataType.AstroComponents
+            },
+            new object[]
+            {
+                FlowBoundaryQuantityType.Discharge,
+                BoundaryConditionDataType.AstroComponents
+            },
         };
-        static object[] AstronomicalCorrection =
+
+        private static object[] AstronomicalCorrection =
         {
-            new object[] {FlowBoundaryQuantityType.WaterLevel, BoundaryConditionDataType.AstroCorrection},
-            new object[] {FlowBoundaryQuantityType.Riemann, BoundaryConditionDataType.AstroCorrection},
-            new object[] {FlowBoundaryQuantityType.RiemannVelocity, BoundaryConditionDataType.AstroCorrection},
-            new object[] {FlowBoundaryQuantityType.Velocity, BoundaryConditionDataType.AstroCorrection},
-            new object[] {FlowBoundaryQuantityType.Neumann, BoundaryConditionDataType.AstroCorrection},
-            new object[] {FlowBoundaryQuantityType.Discharge, BoundaryConditionDataType.AstroCorrection},
+            new object[]
+            {
+                FlowBoundaryQuantityType.WaterLevel,
+                BoundaryConditionDataType.AstroCorrection
+            },
+            new object[]
+            {
+                FlowBoundaryQuantityType.Riemann,
+                BoundaryConditionDataType.AstroCorrection
+            },
+            new object[]
+            {
+                FlowBoundaryQuantityType.RiemannVelocity,
+                BoundaryConditionDataType.AstroCorrection
+            },
+            new object[]
+            {
+                FlowBoundaryQuantityType.Velocity,
+                BoundaryConditionDataType.AstroCorrection
+            },
+            new object[]
+            {
+                FlowBoundaryQuantityType.Neumann,
+                BoundaryConditionDataType.AstroCorrection
+            },
+            new object[]
+            {
+                FlowBoundaryQuantityType.Discharge,
+                BoundaryConditionDataType.AstroCorrection
+            },
         };
-        static object[] Qh =
+
+        private static object[] Qh =
         {
-            new object[] {FlowBoundaryQuantityType.WaterLevel, BoundaryConditionDataType.Qh},
-            new object[] {FlowBoundaryQuantityType.Riemann, BoundaryConditionDataType.Qh},
-            new object[] {FlowBoundaryQuantityType.RiemannVelocity, BoundaryConditionDataType.Qh},
-            new object[] {FlowBoundaryQuantityType.Velocity, BoundaryConditionDataType.Qh},
-            new object[] {FlowBoundaryQuantityType.Neumann, BoundaryConditionDataType.Qh},
-            new object[] {FlowBoundaryQuantityType.Discharge, BoundaryConditionDataType.Qh},
+            new object[]
+            {
+                FlowBoundaryQuantityType.WaterLevel,
+                BoundaryConditionDataType.Qh
+            },
+            new object[]
+            {
+                FlowBoundaryQuantityType.Riemann,
+                BoundaryConditionDataType.Qh
+            },
+            new object[]
+            {
+                FlowBoundaryQuantityType.RiemannVelocity,
+                BoundaryConditionDataType.Qh
+            },
+            new object[]
+            {
+                FlowBoundaryQuantityType.Velocity,
+                BoundaryConditionDataType.Qh
+            },
+            new object[]
+            {
+                FlowBoundaryQuantityType.Neumann,
+                BoundaryConditionDataType.Qh
+            },
+            new object[]
+            {
+                FlowBoundaryQuantityType.Discharge,
+                BoundaryConditionDataType.Qh
+            },
         };
     }
 }

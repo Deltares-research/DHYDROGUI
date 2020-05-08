@@ -1,29 +1,32 @@
 ﻿using System;
 using System.Drawing;
+using DelftTools.Hydro;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.NetworkEditor.MapLayers.CustomRenderers;
 using DeltaShell.Plugins.NetworkEditor.MapLayers.Providers;
+using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using SharpMap;
+using SharpMap.Data.Providers;
 using SharpMap.Layers;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.CustomRenderers
 {
     [TestFixture]
-    class EnclosureRendererTest
+    internal class EnclosureRendererTest
     {
         [Test]
         public void EnclosureRendererReturnsFalseWithInvalidGeometryTest()
         {
             var model = new WaterFlowFMModel();
-            var enclosureFeature =
+            GroupableFeature2DPolygon enclosureFeature =
                 FlowFMTestHelper.CreateFeature2DPolygonFromGeometry("Enclosure01",
-                    FlowFMTestHelper.GetInvalidGeometryForEnclosureExample());
+                                                                    FlowFMTestHelper.GetInvalidGeometryForEnclosureExample());
 
             model.Area.Enclosures.Add(enclosureFeature);
 
             var enclosureRenderer = new EnclosureRenderer();
-            var ds = new HydroAreaFeature2DCollection(model.Area).Init(model.Area.Enclosures, "Enclosure", model.Name, model.Area.CoordinateSystem);
+            Feature2DCollection ds = new HydroAreaFeature2DCollection(model.Area).Init(model.Area.Enclosures, "Enclosure", model.Name, model.Area.CoordinateSystem);
             var layer = new VectorLayer()
             {
                 Map = new Map(new Size(20, 20)),
@@ -31,31 +34,31 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.CustomRenderers
             };
             layer.Render();
 
-            var graphics = Graphics.FromImage(layer.Image);
+            Graphics graphics = Graphics.FromImage(layer.Image);
 
             Assert.NotNull(enclosureRenderer);
             Assert.IsFalse(enclosureRenderer.Render(enclosureFeature, graphics, layer));
         }
 
         [Test]
-        [TestCase( 1, 1)]
+        [TestCase(1, 1)]
         [TestCase(5, 5)]
         [TestCase(10, 10)]
         [TestCase(20, 20)]
-        [TestCase(200,200)]
+        [TestCase(200, 200)]
         public void EnclosureRendererReturnsTrueWithValidGeometryRegardlessOfTheMapSize(int mapWidth, int mapHeight)
         {
             var model = new WaterFlowFMModel();
 
-            var originalGeometry = FlowFMTestHelper.GetValidGeometryForEnclosureExample();
-            var enclosureFeature =
+            Polygon originalGeometry = FlowFMTestHelper.GetValidGeometryForEnclosureExample();
+            GroupableFeature2DPolygon enclosureFeature =
                 FlowFMTestHelper.CreateFeature2DPolygonFromGeometry("Enclosure01",
-                    FlowFMTestHelper.GetValidGeometryForEnclosureExample());
+                                                                    FlowFMTestHelper.GetValidGeometryForEnclosureExample());
 
             model.Area.Enclosures.Add(enclosureFeature);
 
             var enclosureRenderer = new EnclosureRenderer();
-            var ds = new HydroAreaFeature2DCollection(model.Area).Init(model.Area.Enclosures, "Enclosure", model.Name, model.Area.CoordinateSystem);
+            Feature2DCollection ds = new HydroAreaFeature2DCollection(model.Area).Init(model.Area.Enclosures, "Enclosure", model.Name, model.Area.CoordinateSystem);
             var layer = new VectorLayer()
             {
                 Map = new Map(new Size(mapWidth, mapHeight)),
@@ -63,7 +66,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.CustomRenderers
             };
             layer.Render();
 
-            var graphics = Graphics.FromImage(layer.Image);
+            Graphics graphics = Graphics.FromImage(layer.Image);
 
             Assert.NotNull(enclosureRenderer);
             Assert.IsTrue(enclosureRenderer.Render(enclosureFeature, graphics, layer));
@@ -74,7 +77,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.CustomRenderers
         {
             var model = new WaterFlowFMModel();
             var enclosureRenderer = new EnclosureRenderer();
-            var ds = new HydroAreaFeature2DCollection(model.Area).Init(model.Area.Enclosures, "Enclosure", model.Name, model.Area.CoordinateSystem);
+            Feature2DCollection ds = new HydroAreaFeature2DCollection(model.Area).Init(model.Area.Enclosures, "Enclosure", model.Name, model.Area.CoordinateSystem);
             var layer = new VectorLayer()
             {
                 Map = new Map(new Size(200, 200)),
@@ -82,7 +85,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.CustomRenderers
             };
             layer.Render();
 
-            var graphics = Graphics.FromImage(layer.Image);
+            Graphics graphics = Graphics.FromImage(layer.Image);
 
             Assert.NotNull(enclosureRenderer);
             Assert.Throws<InvalidOperationException>(() => enclosureRenderer.Render(null, graphics, layer));

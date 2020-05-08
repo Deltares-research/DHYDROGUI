@@ -15,10 +15,10 @@ namespace DelftTools.Hydro.Tests.DataSets
         public void SerializeAndDeserialize()
         {
             FastDataTableTestHelper.TestSerializationIsFastAndCorrect<FastZWDataTable>(8, 30, (t) =>
-                t.AddCrossSectionZWRow(
-                    random.NextDouble(),
-                    random.NextDouble(),
-                    random.NextDouble()));
+                                                                                           t.AddCrossSectionZWRow(
+                                                                                               random.NextDouble(),
+                                                                                               random.NextDouble(),
+                                                                                               random.NextDouble()));
         }
     }
 }

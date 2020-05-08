@@ -29,7 +29,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Enums
 
             // Assert
             Assert.That(result, Is.EqualTo(expectedOutput));
-            
         }
     }
 }

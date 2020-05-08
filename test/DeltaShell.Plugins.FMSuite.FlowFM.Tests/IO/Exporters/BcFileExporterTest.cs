@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Exporters;
@@ -14,7 +15,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
         [SetUp]
         public void Setup()
         {
-            this.exporter = new BcFileExporter();
+            exporter = new BcFileExporter();
         }
 
         [Test]
@@ -26,7 +27,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
         [Test]
         public void GivenAnBcFileExporter_WhenSourceTypesIsCalled_ThenAnEnumerableContainingTheSourceTypesIsReturned()
         {
-            var obtainedValues = exporter.SourceTypes();
+            IEnumerable<Type> obtainedValues = exporter.SourceTypes();
             Assert.That(obtainedValues.Count(), Is.EqualTo(2));
             Assert.That(obtainedValues.Contains(typeof(BoundaryConditionSet)), Is.True);
             Assert.That(obtainedValues.Contains(typeof(IList<BoundaryConditionSet>)));

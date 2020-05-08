@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.Functions;
@@ -24,38 +25,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData
     [Category(TestCategory.Slow)]
     public class BoundaryConditionIntegrationTest
     {
-        private static WaterFlowFMModel CreateWaterFlowFMModel()
-        {
-            var mduPath = TestHelper.GetTestFilePath(@"simpleBox\simplebox.mdu");
-            var localCopy = TestHelper.CreateLocalCopy(mduPath);
-
-            var model = new WaterFlowFMModel(localCopy);
-            model.StopTime = model.StartTime.AddMinutes(2);
-
-            var left = model.Grid.Vertices.Min(v => v.X);
-            var leftVertices = model.Grid.Vertices.Where(v => v.X <= left).ToList();
-            var leftUpperY = leftVertices.Max(v => v.Y);
-            var leftLowerY = leftVertices.Min(v => v.Y);
-
-            var geometry =
-                new LineString(new[] {new Coordinate(left - 1, leftLowerY), new Coordinate(left - 1, leftUpperY)});
-
-            var boundary = new Feature2D {Name = "left", Geometry = geometry};
-
-            model.Boundaries.Add(boundary);
-            return model;
-        }
-
         [Test]
         public void AfterAddBoundaryAllBoundariesAreSavedToBcFile()
         {
-            var model = CreateWaterFlowFMModel();
+            WaterFlowFMModel model = CreateWaterFlowFMModel();
 
             Assert.AreEqual(2, model.Boundaries.Count);
 
-            var boundary = model.Boundaries.Last();
+            Feature2D boundary = model.Boundaries.Last();
             var boundaryCondition = new FlowBoundaryCondition(FlowBoundaryQuantityType.WaterLevel,
-                BoundaryConditionDataType.TimeSeries) {Feature = boundary};
+                                                              BoundaryConditionDataType.TimeSeries) {Feature = boundary};
 
             boundaryCondition.AddPoint(0);
             boundaryCondition.PointData[0][model.StartTime] = 0.5;
@@ -65,7 +44,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData
             boundaryCondition.PointData[1][model.StartTime] = 0.55;
             boundaryCondition.PointData[1][model.StopTime] = 0.65;
 
-            var boundaryConditionSet = model.BoundaryConditionSets.FirstOrDefault(bs => Equals(bs.Feature, boundary));
+            BoundaryConditionSet boundaryConditionSet = model.BoundaryConditionSets.FirstOrDefault(bs => Equals(bs.Feature, boundary));
 
             Assert.IsNotNull(boundaryConditionSet);
 
@@ -85,11 +64,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData
         [Test]
         public void SaveLoadWithOldAndNewBoundaryConditionFormats()
         {
-            var model = CreateWaterFlowFMModel();
+            WaterFlowFMModel model = CreateWaterFlowFMModel();
 
-            var boundary = model.Boundaries.Last();
+            Feature2D boundary = model.Boundaries.Last();
             var boundaryCondition = new FlowBoundaryCondition(FlowBoundaryQuantityType.WaterLevel,
-                BoundaryConditionDataType.TimeSeries) {Feature = boundary};
+                                                              BoundaryConditionDataType.TimeSeries) {Feature = boundary};
 
             boundaryCondition.AddPoint(0);
             boundaryCondition.PointData[0][model.StartTime] = 0.5;
@@ -99,7 +78,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData
             boundaryCondition.PointData[1][model.StartTime] = 0.55;
             boundaryCondition.PointData[1][model.StopTime] = 0.65;
 
-            var boundaryConditionSet = model.BoundaryConditionSets.FirstOrDefault(bs => Equals(bs.Feature, boundary));
+            BoundaryConditionSet boundaryConditionSet = model.BoundaryConditionSets.FirstOrDefault(bs => Equals(bs.Feature, boundary));
 
             Assert.IsNotNull(boundaryConditionSet);
 
@@ -113,12 +92,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData
             Assert.AreEqual(2, importedModel.BoundaryConditions.Count());
             Assert.AreEqual(BoundaryConditionDataType.Harmonics, importedModel.BoundaryConditions.First().DataType);
             Assert.AreEqual(FlowBoundaryQuantityType.WaterLevel,
-                importedModel.BoundaryConditions.OfType<FlowBoundaryCondition>().First().FlowQuantity);
+                            importedModel.BoundaryConditions.OfType<FlowBoundaryCondition>().First().FlowQuantity);
             Assert.AreEqual(1, importedModel.BoundaryConditions.First().DataPointIndices.Count);
             Assert.AreEqual(BoundaryConditionDataType.TimeSeries, importedModel.BoundaryConditions.Last().DataType);
             Assert.AreEqual(2, importedModel.BoundaryConditions.Last().DataPointIndices.Count);
             Assert.AreEqual(FlowBoundaryQuantityType.WaterLevel,
-                importedModel.BoundaryConditions.OfType<FlowBoundaryCondition>().Last().FlowQuantity);
+                            importedModel.BoundaryConditions.OfType<FlowBoundaryCondition>().Last().FlowQuantity);
 
             Directory.Delete("boundaries", true);
         }
@@ -126,11 +105,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData
         [Test]
         public void SaveLoadWithOldAndNewNeumannBoundaryCondition()
         {
-            var model = CreateWaterFlowFMModel();
+            WaterFlowFMModel model = CreateWaterFlowFMModel();
 
-            var boundary = model.Boundaries.Last();
+            Feature2D boundary = model.Boundaries.Last();
             var boundaryCondition = new FlowBoundaryCondition(FlowBoundaryQuantityType.Neumann,
-                BoundaryConditionDataType.TimeSeries) {Feature = boundary};
+                                                              BoundaryConditionDataType.TimeSeries) {Feature = boundary};
 
             boundaryCondition.AddPoint(0);
             boundaryCondition.PointData[0][model.StartTime] = 0.5;
@@ -140,7 +119,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData
             boundaryCondition.PointData[1][model.StartTime] = 0.55;
             boundaryCondition.PointData[1][model.StopTime] = 0.65;
 
-            var boundaryConditionSet = model.BoundaryConditionSets.FirstOrDefault(bs => Equals(bs.Feature, boundary));
+            BoundaryConditionSet boundaryConditionSet = model.BoundaryConditionSets.FirstOrDefault(bs => Equals(bs.Feature, boundary));
 
             Assert.IsNotNull(boundaryConditionSet);
 
@@ -153,12 +132,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData
             Assert.AreEqual(2, importedModel.Boundaries.Count);
             Assert.AreEqual(BoundaryConditionDataType.Harmonics, importedModel.BoundaryConditions.First().DataType);
             Assert.AreEqual(FlowBoundaryQuantityType.WaterLevel,
-                importedModel.BoundaryConditions.OfType<FlowBoundaryCondition>().First().FlowQuantity);
+                            importedModel.BoundaryConditions.OfType<FlowBoundaryCondition>().First().FlowQuantity);
             Assert.AreEqual(1, importedModel.BoundaryConditions.First().DataPointIndices.Count);
             Assert.AreEqual(BoundaryConditionDataType.TimeSeries, importedModel.BoundaryConditions.Last().DataType);
             Assert.AreEqual(2, importedModel.BoundaryConditions.Last().DataPointIndices.Count);
             Assert.AreEqual(FlowBoundaryQuantityType.Neumann,
-                importedModel.BoundaryConditions.OfType<FlowBoundaryCondition>().Last().FlowQuantity);
+                            importedModel.BoundaryConditions.OfType<FlowBoundaryCondition>().Last().FlowQuantity);
 
             Directory.Delete("boundaries", true);
         }
@@ -166,19 +145,27 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData
         [Test]
         public void SaveLoadWithOldAndNewWaterLevelAndVelocity()
         {
-            var model = CreateWaterFlowFMModel();
+            WaterFlowFMModel model = CreateWaterFlowFMModel();
 
-            var boundary = model.Boundaries.Last();
+            Feature2D boundary = model.Boundaries.Last();
 
             var waterLevelBc = new FlowBoundaryCondition(FlowBoundaryQuantityType.WaterLevel,
-                BoundaryConditionDataType.AstroComponents) {Feature = boundary};
+                                                         BoundaryConditionDataType.AstroComponents) {Feature = boundary};
 
             waterLevelBc.AddPoint(0);
-            waterLevelBc.PointData[0]["A0"] = new[] {0.5, 0};
-            waterLevelBc.PointData[0]["M2"] = new[] {0.8, 0};
+            waterLevelBc.PointData[0]["A0"] = new[]
+            {
+                0.5,
+                0
+            };
+            waterLevelBc.PointData[0]["M2"] = new[]
+            {
+                0.8,
+                0
+            };
 
             var velocityLevelBc = new FlowBoundaryCondition(FlowBoundaryQuantityType.NormalVelocity,
-                BoundaryConditionDataType.TimeSeries) {Feature = boundary};
+                                                            BoundaryConditionDataType.TimeSeries) {Feature = boundary};
 
             velocityLevelBc.AddPoint(0);
             velocityLevelBc.PointData[0][model.StartTime] = 1.5;
@@ -188,7 +175,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData
             velocityLevelBc.PointData[1][model.StartTime] = 1.55;
             velocityLevelBc.PointData[1][model.StopTime] = 1.65;
 
-            var boundaryConditionSet = model.BoundaryConditionSets.FirstOrDefault(bs => Equals(bs.Feature, boundary));
+            BoundaryConditionSet boundaryConditionSet = model.BoundaryConditionSets.FirstOrDefault(bs => Equals(bs.Feature, boundary));
 
             Assert.IsNotNull(boundaryConditionSet);
 
@@ -201,17 +188,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData
 
             Assert.AreEqual(2, importedModel.Boundaries.Count);
 
-            var boundaryConditions = importedModel.BoundaryConditions.ToList();
+            List<IBoundaryCondition> boundaryConditions = importedModel.BoundaryConditions.ToList();
             Assert.AreEqual(3, importedModel.BoundaryConditions.Count());
 
             Assert.AreEqual(BoundaryConditionDataType.AstroComponents, boundaryConditions[1].DataType);
             Assert.AreEqual(FlowBoundaryQuantityType.WaterLevel,
-                ((FlowBoundaryCondition) boundaryConditions[1]).FlowQuantity);
+                            ((FlowBoundaryCondition) boundaryConditions[1]).FlowQuantity);
             Assert.AreEqual(1, boundaryConditions[1].DataPointIndices.Count);
 
             Assert.AreEqual(BoundaryConditionDataType.TimeSeries, boundaryConditions[2].DataType);
             Assert.AreEqual(FlowBoundaryQuantityType.NormalVelocity,
-                ((FlowBoundaryCondition) boundaryConditions[2]).FlowQuantity);
+                            ((FlowBoundaryCondition) boundaryConditions[2]).FlowQuantity);
             Assert.AreEqual(2, boundaryConditions[2].DataPointIndices.Count);
 
             Directory.Delete("boundaries", true);
@@ -220,11 +207,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData
         [Test]
         public void RunWithOldAndNewBoundaryConditionFormats()
         {
-            var model = CreateWaterFlowFMModel();
+            WaterFlowFMModel model = CreateWaterFlowFMModel();
 
-            var boundary = model.Boundaries.Last();
+            Feature2D boundary = model.Boundaries.Last();
             var boundaryCondition = new FlowBoundaryCondition(FlowBoundaryQuantityType.WaterLevel,
-                BoundaryConditionDataType.TimeSeries) {Feature = boundary};
+                                                              BoundaryConditionDataType.TimeSeries) {Feature = boundary};
 
             boundaryCondition.AddPoint(0);
             boundaryCondition.PointData[0][model.StartTime] = 1.5;
@@ -234,7 +221,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData
             boundaryCondition.PointData[1][model.StartTime] = 1.55;
             boundaryCondition.PointData[1][model.StopTime] = 0.25;
 
-            var boundaryConditionSet = model.BoundaryConditionSets.FirstOrDefault(bs => Equals(bs.Feature, boundary));
+            BoundaryConditionSet boundaryConditionSet = model.BoundaryConditionSets.FirstOrDefault(bs => Equals(bs.Feature, boundary));
 
             Assert.IsNotNull(boundaryConditionSet);
 
@@ -248,14 +235,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData
         [Test]
         public void AddSedimentBoundary()
         {
-            var model = CreateWaterFlowFMModel();
+            WaterFlowFMModel model = CreateWaterFlowFMModel();
             var sedFrac = new SedimentFraction() {Name = "Frac1"};
             model.SedimentFractions.Add(sedFrac);
             model.ModelDefinition.GetModelProperty(KnownProperties.BedlevType).SetValueAsString("1");
             model.ModelDefinition.GetModelProperty(GuiProperties.UseMorSed).SetValueAsString("1");
             model.ModelDefinition.GetModelProperty(KnownProperties.Conveyance2d).SetValueAsString("0");
 
-            var boundary = model.Boundaries.Last();
+            Feature2D boundary = model.Boundaries.Last();
             var boundaryCondition = new FlowBoundaryCondition(
                 FlowBoundaryQuantityType.SedimentConcentration,
                 BoundaryConditionDataType.TimeSeries)
@@ -273,7 +260,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData
             boundaryCondition.PointData[1][model.StartTime] = 1.55;
             boundaryCondition.PointData[1][model.StopTime] = 0.25;
 
-            var boundaryConditionSet = model.BoundaryConditionSets.FirstOrDefault(bs => Equals(bs.Feature, boundary));
+            BoundaryConditionSet boundaryConditionSet = model.BoundaryConditionSets.FirstOrDefault(bs => Equals(bs.Feature, boundary));
 
             Assert.IsNotNull(boundaryConditionSet);
 
@@ -292,14 +279,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData
             var stopTime = (DateTime) model.ModelDefinition.GetModelProperty(GuiProperties.StopTime).Value;
 
             flowBoundaryCondition.AddPoint(0);
-            var data = flowBoundaryCondition.GetDataAtPoint(0);
+            IFunction data = flowBoundaryCondition.GetDataAtPoint(0);
             FillTimeSeries(data, i => 0.75 * Math.Sin(0.6 * Math.PI * i), startTime, stopTime, 2);
 
             boundaryConditionSet.BoundaryConditions.Add(flowBoundaryCondition);
 
-            var report = model.Validate();
-            Assert.AreEqual(0, report.ErrorCount, string.Format("Model validation failed : {0}", string.Join(Environment.NewLine,report.AllErrors.Where(e => e.Severity == ValidationSeverity.Error).Select(e => e.Message))));
-
+            ValidationReport report = model.Validate();
+            Assert.AreEqual(0, report.ErrorCount, string.Format("Model validation failed : {0}", string.Join(Environment.NewLine, report.AllErrors.Where(e => e.Severity == ValidationSeverity.Error).Select(e => e.Message))));
 
             ActivityRunner.RunActivity(model);
             Assert.AreNotEqual(ActivityStatus.Failed, model.Status);
@@ -311,24 +297,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData
             Assert.AreEqual(0, model.SedimentFractions.Count);
         }
 
-        private static void FillTimeSeries(IFunction function, Func<int, double> mapping, DateTime start, DateTime stop, int steps)
-        {
-            var deltaT = stop - start;
-            var times = Enumerable.Range(0, steps).Select(i => start + new TimeSpan(i * deltaT.Ticks));
-            var values = Enumerable.Range(0, steps).Select(mapping);
-            FunctionHelper.SetValuesRaw(function.Arguments[0], times);
-            FunctionHelper.SetValuesRaw(function.Components[0], values);
-        }
-
         [Test]
         [Category(TestCategory.WorkInProgress)]
         public void AddSedimentBoundaryConditionWithoutHydroBoundaryConditionShouldThrowValidationError()
         {
-            var model = CreateWaterFlowFMModel();
+            WaterFlowFMModel model = CreateWaterFlowFMModel();
             var sedFrac = new SedimentFraction() {Name = "Frac1"};
             model.SedimentFractions.Add(sedFrac);
 
-            var boundary = model.Boundaries.Last();
+            Feature2D boundary = model.Boundaries.Last();
             var boundaryCondition = new FlowBoundaryCondition(
                 FlowBoundaryQuantityType.SedimentConcentration,
                 BoundaryConditionDataType.TimeSeries)
@@ -346,12 +323,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData
             boundaryCondition.PointData[1][model.StartTime] = 1.55;
             boundaryCondition.PointData[1][model.StopTime] = 0.25;
 
-            var boundaryConditionSet = model.BoundaryConditionSets.FirstOrDefault(bs => Equals(bs.Feature, boundary));
+            BoundaryConditionSet boundaryConditionSet = model.BoundaryConditionSets.FirstOrDefault(bs => Equals(bs.Feature, boundary));
             boundaryConditionSet.BoundaryConditions.Add(boundaryCondition);
 
             Assert.IsNotNull(boundaryConditionSet);
 
-            var report = model.Validate();
+            ValidationReport report = model.Validate();
             Assert.AreEqual(1, report.ErrorCount);
             Assert.That(report.AllErrors.First(i => i.Severity == ValidationSeverity.Error).Message, Is.EqualTo(Resources.WaterFlowFMBoundaryConditionValidator_ValidateSedimentConcentrationBoundaryHaveHydroBoundaries_Sediment_concentration_boundary_condition_must_have_a_Hydro_boundary_condition_));
             ActivityRunner.RunActivity(model);
@@ -366,7 +343,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData
             var feature = mocks.DynamicMock<Feature2D>();
             var featureName = "MyFeature";
             var featureGeometry = mocks.StrictMock<IGeometry>();
-            featureGeometry.Expect(g => g.Coordinates).Return(new[] {new Coordinate()}).Repeat.Once();
+            featureGeometry.Expect(g => g.Coordinates).Return(new[]
+            {
+                new Coordinate()
+            }).Repeat.Once();
 
             feature.Expect(f => f.Name).Return(featureName).Repeat.Times(2);
             feature.Expect(f => f.Geometry).Return(featureGeometry).Repeat.Times(2);
@@ -381,10 +361,34 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData
             {
                 SedimentFractions = new EventedList<ISedimentFraction>
                 {
-                    new SedimentFraction { Name = sandName, CurrentSedimentType = new SedimentType{Name = "Sand", Key = "sand"} },
-                    new SedimentFraction { Name = mudName, CurrentSedimentType = new SedimentType{Name = "Mud", Key = "mud"} },
-                    new SedimentFraction { Name = bedloadName, CurrentSedimentType = new SedimentType{Name = "Bed-load", Key = "bedload"} }
+                    new SedimentFraction
+                    {
+                        Name = sandName,
+                        CurrentSedimentType = new SedimentType
+                        {
+                            Name = "Sand",
+                            Key = "sand"
+                        }
+                    },
+                    new SedimentFraction
+                    {
+                        Name = mudName,
+                        CurrentSedimentType = new SedimentType
+                        {
+                            Name = "Mud",
+                            Key = "mud"
+                        }
+                    },
+                    new SedimentFraction
+                    {
+                        Name = bedloadName,
+                        CurrentSedimentType = new SedimentType
+                        {
+                            Name = "Bed-load",
+                            Key = "bedload"
+                        }
                     }
+                }
             };
             var boundaryConditionFactory = new FlowBoundaryConditionFactory {Model = fmModel};
 
@@ -392,7 +396,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData
             var variable = "MorphologyBedLoadTransport";
             var dataType = BoundaryConditionDataType.TimeSeries;
             var quantityType = "Morphology";
-            var boundaryCondition = boundaryConditionFactory.CreateBoundaryCondition(feature, variable, dataType, quantityType);
+            IBoundaryCondition boundaryCondition = boundaryConditionFactory.CreateBoundaryCondition(feature, variable, dataType, quantityType);
             var flowBoundaryCondition = boundaryCondition as FlowBoundaryCondition;
 
             Assert.IsNotNull(flowBoundaryCondition);
@@ -403,6 +407,45 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData
             Assert.AreEqual(1, flowBoundaryCondition.SedimentFractionNames.Count(sf => sf == bedloadName));
 
             mocks.VerifyAll();
+        }
+
+        private static WaterFlowFMModel CreateWaterFlowFMModel()
+        {
+            string mduPath = TestHelper.GetTestFilePath(@"simpleBox\simplebox.mdu");
+            string localCopy = TestHelper.CreateLocalCopy(mduPath);
+
+            var model = new WaterFlowFMModel(localCopy);
+            model.StopTime = model.StartTime.AddMinutes(2);
+
+            double left = model.Grid.Vertices.Min(v => v.X);
+            List<Coordinate> leftVertices = model.Grid.Vertices.Where(v => v.X <= left).ToList();
+            double leftUpperY = leftVertices.Max(v => v.Y);
+            double leftLowerY = leftVertices.Min(v => v.Y);
+
+            var geometry =
+                new LineString(new[]
+                {
+                    new Coordinate(left - 1, leftLowerY),
+                    new Coordinate(left - 1, leftUpperY)
+                });
+
+            var boundary = new Feature2D
+            {
+                Name = "left",
+                Geometry = geometry
+            };
+
+            model.Boundaries.Add(boundary);
+            return model;
+        }
+
+        private static void FillTimeSeries(IFunction function, Func<int, double> mapping, DateTime start, DateTime stop, int steps)
+        {
+            TimeSpan deltaT = stop - start;
+            IEnumerable<DateTime> times = Enumerable.Range(0, steps).Select(i => start + new TimeSpan(i * deltaT.Ticks));
+            IEnumerable<double> values = Enumerable.Range(0, steps).Select(mapping);
+            FunctionHelper.SetValuesRaw(function.Arguments[0], times);
+            FunctionHelper.SetValuesRaw(function.Components[0], values);
         }
     }
 }

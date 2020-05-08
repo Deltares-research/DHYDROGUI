@@ -20,8 +20,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport.Expo
     [TestFixture]
     public class PidRuleSerializerTest
     {
-        private static readonly XNamespace fns = "http://www.wldelft.nl/fews";
-
         private const string iffezheimKi = "[IP]pid rule";
         private const string differentialPart = "[DP]pid rule";
         private const string ruleName = "pid rule";
@@ -37,6 +35,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport.Expo
         private const double ki = 0.2;
         private const double kd = 0;
         private const double constantSetpointValue = 1.23d;
+        private static readonly XNamespace fns = "http://www.wldelft.nl/fews";
 
         private Setting setting;
         private Input input;
@@ -103,30 +102,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport.Expo
             Assert.AreEqual(constantSetpointValue, setpointTimeSeries.TimeSeries[setpointTimeSeries.StartTime]);
         }
 
-        private static string OriginXml()
-        {
-            return "<rule xmlns=\"http://www.wldelft.nl/fews\">" +
-                   "<pid id=\"[PID]" + ruleName + "\">" +
-                   "<mode>PIDVEL</mode>" +
-                   "<settingMin>" + sMin.ToString(CultureInfo.InvariantCulture) + "</settingMin>" +
-                   "<settingMax>" + sMax.ToString(CultureInfo.InvariantCulture) + "</settingMax>" +
-                   "<settingMaxSpeed>" + sMaxSpeed.ToString(CultureInfo.InvariantCulture) + "</settingMaxSpeed>" +
-                   "<kp>" + kp.ToString(CultureInfo.InvariantCulture) + "</kp>" +
-                   "<ki>" + ki.ToString(CultureInfo.InvariantCulture) + "</ki>" +
-                   "<kd>" + kd.ToString(CultureInfo.InvariantCulture) + "</kd>" +
-                   "<input>" +
-                   "<x>" + RtcXmlTag.Input + iffezheimHin1 + "/" + iffezheimHin2 + "</x>" +
-                   "<setpointSeries>[SetPoint]" + ruleName + "</setpointSeries>" +
-                   "</input>" +
-                   "<output>" +
-                   "<y>" + RtcXmlTag.Output + iffezheimSout1 + "/" + iffezheimSout2 + "</y>" +
-                   "<integralPart>" + iffezheimKi + "</integralPart>" +
-                   "<differentialPart>" + differentialPart + "</differentialPart>" +
-                   "</output>" +
-                   "</pid>" +
-                   "</rule>";
-        }
-
         [Test]
         public void CheckReferenceXmlGeneration()
         {
@@ -136,12 +111,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport.Expo
 
             Assert.AreEqual(OriginXmlReference(),
                             serializer.ToXmlReference(fns, "").ToString(SaveOptions.DisableFormatting));
-        }
-
-        private static string OriginXmlReference()
-        {
-            return "<trigger xmlns=\"http://www.wldelft.nl/fews\"><ruleReference>[PID]" + ruleName +
-                   "</ruleReference></trigger>";
         }
 
         [Test]
@@ -181,6 +150,36 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport.Expo
             Assert.AreEqual(1, truncatedTimeSeries.Count);
             Assert.AreEqual(modelStartTime, truncatedTimeSeries[0].TimeSeries.Time.Values.First());
             Assert.AreEqual(modelStopTime, truncatedTimeSeries[0].TimeSeries.Time.Values.Last());
+        }
+
+        private static string OriginXml()
+        {
+            return "<rule xmlns=\"http://www.wldelft.nl/fews\">" +
+                   "<pid id=\"[PID]" + ruleName + "\">" +
+                   "<mode>PIDVEL</mode>" +
+                   "<settingMin>" + sMin.ToString(CultureInfo.InvariantCulture) + "</settingMin>" +
+                   "<settingMax>" + sMax.ToString(CultureInfo.InvariantCulture) + "</settingMax>" +
+                   "<settingMaxSpeed>" + sMaxSpeed.ToString(CultureInfo.InvariantCulture) + "</settingMaxSpeed>" +
+                   "<kp>" + kp.ToString(CultureInfo.InvariantCulture) + "</kp>" +
+                   "<ki>" + ki.ToString(CultureInfo.InvariantCulture) + "</ki>" +
+                   "<kd>" + kd.ToString(CultureInfo.InvariantCulture) + "</kd>" +
+                   "<input>" +
+                   "<x>" + RtcXmlTag.Input + iffezheimHin1 + "/" + iffezheimHin2 + "</x>" +
+                   "<setpointSeries>[SetPoint]" + ruleName + "</setpointSeries>" +
+                   "</input>" +
+                   "<output>" +
+                   "<y>" + RtcXmlTag.Output + iffezheimSout1 + "/" + iffezheimSout2 + "</y>" +
+                   "<integralPart>" + iffezheimKi + "</integralPart>" +
+                   "<differentialPart>" + differentialPart + "</differentialPart>" +
+                   "</output>" +
+                   "</pid>" +
+                   "</rule>";
+        }
+
+        private static string OriginXmlReference()
+        {
+            return "<trigger xmlns=\"http://www.wldelft.nl/fews\"><ruleReference>[PID]" + ruleName +
+                   "</ruleReference></trigger>";
         }
 
         [TestCase(PIDRule.PIDRuleSetpointType.TimeSeries, 1)]

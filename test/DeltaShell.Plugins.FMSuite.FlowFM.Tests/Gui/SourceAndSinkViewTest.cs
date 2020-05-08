@@ -15,14 +15,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
     [TestFixture]
     public class SourceAndSinkViewTest
     {
-        [TestCase(false, HeatFluxModelType.None , false, false)]
+        [TestCase(false, HeatFluxModelType.None, false, false)]
         [TestCase(true, HeatFluxModelType.None, false, false)]
         [TestCase(false, HeatFluxModelType.TransportOnly, false, false)]
         [TestCase(false, HeatFluxModelType.None, true, false)]
         [TestCase(false, HeatFluxModelType.None, false, true)]
         [TestCase(false, HeatFluxModelType.None, false, false)]
-        [TestCase(true,HeatFluxModelType.TransportOnly,true,true)]
-        public void SetVisiblityTest(bool useSalinity, HeatFluxModelType Temperature, bool useMorSed,bool useSecondaryFlow)
+        [TestCase(true, HeatFluxModelType.TransportOnly, true, true)]
+        public void SetVisiblityTest(bool useSalinity, HeatFluxModelType Temperature, bool useMorSed, bool useSecondaryFlow)
         {
             var sourceSink = new SourceAndSink();
 
@@ -35,7 +35,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             sourceSink.TracerNames.Add("Name");
             sourceSink.Feature = new Feature2D {Geometry = new Point(0, 0)};
 
-            var temperatureString = ((int)Temperature).ToString();
+            var temperatureString = ((int) Temperature).ToString();
             var model = new WaterFlowFMModel();
             model.ModelDefinition.GetModelProperty(KnownProperties.UseSalinity).Value = useSalinity;
             model.ModelDefinition.GetModelProperty(KnownProperties.Temperature).SetValueAsString(temperatureString);
@@ -43,11 +43,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             model.ModelDefinition.GetModelProperty(KnownProperties.SecondaryFlow).Value = useSecondaryFlow;
             model.SourcesAndSinks.Add(sourceSink);
 
-            var view = new SourceAndSinkView {Data = sourceSink, Model = model};
+            var view = new SourceAndSinkView
+            {
+                Data = sourceSink,
+                Model = model
+            };
             var visibilitySettings = TypeUtils.CallPrivateMethod<List<bool>>(view, "CalculateComponentVisibilitySettings");
             TypeUtils.CallPrivateMethod(view, "SetVisibility", visibilitySettings);
 
-            var useTemperature = Temperature != HeatFluxModelType.None;
+            bool useTemperature = Temperature != HeatFluxModelType.None;
             var expectedVisiblities = new List<bool>();
             expectedVisiblities.Add(true); // argument
             expectedVisiblities.Add(true);
@@ -59,11 +63,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
             var actualVisibilities = new List<bool>();
 
-            view.FunctionView.TableView.Columns.ForEach(c=>actualVisibilities.Add(c.Visible));
+            view.FunctionView.TableView.Columns.ForEach(c => actualVisibilities.Add(c.Visible));
 
-            var expectedAndActualVisibilities = Enumerable.Zip(expectedVisiblities, actualVisibilities, (e,a) => new {Expected = e,  Actual = a});
+            var expectedAndActualVisibilities = Enumerable.Zip(expectedVisiblities, actualVisibilities, (e, a) => new
+            {
+                Expected = e,
+                Actual = a
+            });
 
-            Assert.IsTrue(expectedAndActualVisibilities.All(v =>v.Actual == v.Expected));
+            Assert.IsTrue(expectedAndActualVisibilities.All(v => v.Actual == v.Expected));
         }
     }
 }

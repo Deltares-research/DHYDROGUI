@@ -69,22 +69,22 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             var exception = Assert.Throws<ArgumentNullException>(Call);
             Assert.That(exception.ParamName, Is.EqualTo("waveBoundaryConditionDefinition"));
         }
-        
+
         [Test]
         public void Visit_ConditionDefinition_ShouldCallNextAcceptVisitorMethods()
         {
             // Setup
             EventedList<IWaveBoundary> boundaries = CreateWaveBoundaryInList();
-            
+
             var shape = Substitute.For<IBoundaryConditionShape>();
             var dataComponent = Substitute.For<ISpatiallyDefinedDataComponent>();
 
             IWaveBoundaryConditionDefinition waveBoundaryCondition = boundaries[0].ConditionDefinition;
             waveBoundaryCondition.Shape = shape;
             waveBoundaryCondition.DataComponent = dataComponent;
-            
+
             boundaries[0].ConditionDefinition.When(x => x.AcceptVisitor(Arg.Any<IBoundaryConditionVisitor>()))
-                    .Do(x => x.Arg<IBoundaryConditionVisitor>().Visit(waveBoundaryCondition));
+                         .Do(x => x.Arg<IBoundaryConditionVisitor>().Visit(waveBoundaryCondition));
 
             // Call
             WaveBoundariesValidator.Validate(boundaries, new DateTime());
@@ -101,7 +101,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             EventedList<IWaveBoundary> boundaries = CreateWaveBoundaryInList();
 
             boundaries[0].ConditionDefinition.When(x => x.AcceptVisitor(Arg.Any<IBoundaryConditionVisitor>()))
-                    .Do(x => x.Arg<IShapeVisitor>().Visit((JonswapShape)null));
+                         .Do(x => x.Arg<IShapeVisitor>().Visit((JonswapShape) null));
 
             // Call
             void Call() => WaveBoundariesValidator.Validate(boundaries, new DateTime());
@@ -112,20 +112,20 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
         }
 
         [Test]
-        [TestCase(0.9,1  )]
+        [TestCase(0.9, 1)]
         [TestCase(1.0, 0)]
         [TestCase(1.1, 0)]
         [TestCase(9.9, 0)]
         [TestCase(10.0, 0)]
         [TestCase(10.1, 1)]
-        public void Visit_JonswapShape_ShouldValidateIfValueIsBetween1And10(double value, double expectedValidationIssuesNr )
+        public void Visit_JonswapShape_ShouldValidateIfValueIsBetween1And10(double value, double expectedValidationIssuesNr)
         {
             // Setup
             EventedList<IWaveBoundary> boundaries = CreateWaveBoundaryInList();
 
-            var shape = new JonswapShape{PeakEnhancementFactor = value};
+            var shape = new JonswapShape {PeakEnhancementFactor = value};
             boundaries[0].ConditionDefinition.When(x => x.AcceptVisitor(Arg.Any<IBoundaryConditionVisitor>()))
-                    .Do(x => x.Arg<IShapeVisitor>().Visit(shape));
+                         .Do(x => x.Arg<IShapeVisitor>().Visit(shape));
 
             // Call
             ValidationReport report = WaveBoundariesValidator.Validate(boundaries, new DateTime());
@@ -140,6 +140,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
                                                 i.Severity == ValidationSeverity.Error &&
                                                 i.Message == Resources.WaveBoundariesValidator_Validate_Peak_Enhancement_Factor_must_be_a_value_within_the_range_1_10_));
             }
+
             Assert.AreEqual(1, report.SubReports.Count());
         }
 
@@ -150,7 +151,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             EventedList<IWaveBoundary> boundaries = CreateWaveBoundaryInList();
 
             boundaries[0].ConditionDefinition.When(x => x.AcceptVisitor(Arg.Any<IBoundaryConditionVisitor>()))
-                    .Do(x => x.Arg<IShapeVisitor>().Visit((GaussShape)null));
+                         .Do(x => x.Arg<IShapeVisitor>().Visit((GaussShape) null));
 
             // Call
             void Call() => WaveBoundariesValidator.Validate(boundaries, new DateTime());
@@ -163,10 +164,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
         public void Visit_GaussShape_ShouldDoNothing()
         {
             EventedList<IWaveBoundary> boundaries = CreateWaveBoundaryInList();
-            
+
             var shape = new GaussShape();
             boundaries[0].ConditionDefinition.When(x => x.AcceptVisitor(Arg.Any<IBoundaryConditionVisitor>()))
-                    .Do(x => x.Arg<IShapeVisitor>().Visit(shape));
+                         .Do(x => x.Arg<IShapeVisitor>().Visit(shape));
 
             // Call
             ValidationReport report = WaveBoundariesValidator.Validate(boundaries, new DateTime());
@@ -184,7 +185,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             EventedList<IWaveBoundary> boundaries = CreateWaveBoundaryInList();
 
             boundaries[0].ConditionDefinition.When(x => x.AcceptVisitor(Arg.Any<IBoundaryConditionVisitor>()))
-                    .Do(x => x.Arg<IShapeVisitor>().Visit((PiersonMoskowitzShape)null));
+                         .Do(x => x.Arg<IShapeVisitor>().Visit((PiersonMoskowitzShape) null));
 
             // Call
             void Call() => WaveBoundariesValidator.Validate(boundaries, new DateTime());
@@ -201,7 +202,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
 
             var shape = new PiersonMoskowitzShape();
             boundaries[0].ConditionDefinition.When(x => x.AcceptVisitor(Arg.Any<IBoundaryConditionVisitor>()))
-                    .Do(x => x.Arg<IShapeVisitor>().Visit(shape));
+                         .Do(x => x.Arg<IShapeVisitor>().Visit(shape));
 
             // Call
             ValidationReport report = WaveBoundariesValidator.Validate(boundaries, new DateTime());
@@ -219,7 +220,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             EventedList<IWaveBoundary> boundaries = CreateWaveBoundaryInList();
 
             boundaries[0].ConditionDefinition.When(x => x.AcceptVisitor(Arg.Any<IBoundaryConditionVisitor>()))
-                    .Do(x => x.Arg<ISpatiallyDefinedDataComponentVisitor>().Visit((UniformDataComponent<IForcingTypeDefinedParameters>)null));
+                         .Do(x => x.Arg<ISpatiallyDefinedDataComponentVisitor>().Visit((UniformDataComponent<IForcingTypeDefinedParameters>) null));
 
             // Call
             void Call() => WaveBoundariesValidator.Validate(boundaries, new DateTime());
@@ -228,7 +229,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             var exception = Assert.Throws<ArgumentNullException>(Call);
             Assert.That(exception.ParamName, Is.EqualTo("uniformDataComponent"));
         }
-        
+
         [Test]
         public void Visit_UniformConstantPowerDataComponent_AcceptVisitorShouldBeCalled()
         {
@@ -255,9 +256,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
         {
             // Setup
             EventedList<IWaveBoundary> boundaries = CreateWaveBoundaryInList();
-            
+
             boundaries[0].ConditionDefinition.When(x => x.AcceptVisitor(Arg.Any<IBoundaryConditionVisitor>()))
-                    .Do(x => x.Arg<ISpatiallyDefinedDataComponentVisitor>().Visit((SpatiallyVaryingDataComponent<IForcingTypeDefinedParameters>)null));
+                         .Do(x => x.Arg<ISpatiallyDefinedDataComponentVisitor>().Visit((SpatiallyVaryingDataComponent<IForcingTypeDefinedParameters>) null));
 
             // Call
             void Call() => WaveBoundariesValidator.Validate(boundaries, new DateTime());
@@ -278,13 +279,17 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
 
             var supportPoint1 = new SupportPoint(0, geometryDefinition);
             var supportPoint2 = new SupportPoint(20, geometryDefinition);
-            geometryDefinition.SupportPoints.Returns(new EventedList<SupportPoint> { supportPoint1, supportPoint2 });
+            geometryDefinition.SupportPoints.Returns(new EventedList<SupportPoint>
+            {
+                supportPoint1,
+                supportPoint2
+            });
 
             var spatiallyVaryingDataComponent = new SpatiallyVaryingDataComponent<ConstantParameters<PowerDefinedSpreading>>();
-            
+
             waveBoundaryCondition.DataComponent = spatiallyVaryingDataComponent;
             waveBoundaryCondition.When(x => x.AcceptVisitor(Arg.Any<IBoundaryConditionVisitor>()))
-                    .Do(x => x.Arg<ISpatiallyDefinedDataComponentVisitor>().Visit(spatiallyVaryingDataComponent));
+                                 .Do(x => x.Arg<ISpatiallyDefinedDataComponentVisitor>().Visit(spatiallyVaryingDataComponent));
 
             // Call
             ValidationReport report = WaveBoundariesValidator.Validate(boundaries, new DateTime());
@@ -294,8 +299,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             IList<ValidationIssue> allIssues = report.GetAllIssuesRecursive();
             Assert.AreEqual(1, allIssues.Count);
             Assert.IsTrue(allIssues.Any(i =>
-                                                i.Severity == ValidationSeverity.Info &&
-                                                i.Message == Resources.WaveBoundariesValidator_Validate_Boundary_condition_contains_unactivated_support_points));
+                                            i.Severity == ValidationSeverity.Info &&
+                                            i.Message == Resources.WaveBoundariesValidator_Validate_Boundary_condition_contains_unactivated_support_points));
             Assert.AreEqual(1, report.SubReports.Count());
         }
 
@@ -307,7 +312,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
 
             IWaveBoundaryGeometricDefinition geometryDefinition = boundaries[0].GeometricDefinition;
             IWaveBoundaryConditionDefinition waveBoundaryCondition = boundaries[0].ConditionDefinition;
-            
+
             var supportPoint1 = new SupportPoint(0, geometryDefinition);
             var constantParameters1 = Substitute.For<IForcingTypeDefinedParameters>();
 
@@ -317,10 +322,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             var spatiallyVaryingDataComponentDataComponent = new SpatiallyVaryingDataComponent<IForcingTypeDefinedParameters>();
             spatiallyVaryingDataComponentDataComponent.AddParameters(supportPoint1, constantParameters1);
             spatiallyVaryingDataComponentDataComponent.AddParameters(supportPoint2, constantParameters2);
-            
+
             waveBoundaryCondition.DataComponent = spatiallyVaryingDataComponentDataComponent;
             waveBoundaryCondition.When(x => x.AcceptVisitor(Arg.Any<IBoundaryConditionVisitor>()))
-                    .Do(x => x.Arg<ISpatiallyDefinedDataComponentVisitor>().Visit(spatiallyVaryingDataComponentDataComponent));
+                                 .Do(x => x.Arg<ISpatiallyDefinedDataComponentVisitor>().Visit(spatiallyVaryingDataComponentDataComponent));
 
             // Call
             WaveBoundariesValidator.Validate(boundaries, new DateTime());
@@ -337,7 +342,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             EventedList<IWaveBoundary> boundaries = CreateWaveBoundaryInList();
 
             boundaries[0].ConditionDefinition.When(x => x.AcceptVisitor(Arg.Any<IBoundaryConditionVisitor>()))
-                    .Do(x => x.Arg<IForcingTypeDefinedParametersVisitor>().Visit((ConstantParameters<PowerDefinedSpreading>)null));
+                         .Do(x => x.Arg<IForcingTypeDefinedParametersVisitor>().Visit((ConstantParameters<PowerDefinedSpreading>) null));
 
             // Call
             void Call() => WaveBoundariesValidator.Validate(boundaries, new DateTime());
@@ -358,7 +363,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
         {
             // Setup
             EventedList<IWaveBoundary> boundaries = CreateWaveBoundaryInList();
-            
+
             var constantParameters = new ConstantParameters<PowerDefinedSpreading>(height, correctPeriod, correctDirection, new PowerDefinedSpreading());
             SetupVisitingConstantParametersPowerSpreading(boundaries, constantParameters);
 
@@ -367,7 +372,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
 
             // Assert
             Assert.AreEqual("Waves Model Boundaries", report.Category);
-            
+
             IList<ValidationIssue> allIssues = report.GetAllIssuesRecursive();
             Assert.AreEqual(expectedValidationIssuesNr, report.GetAllIssuesRecursive().Count);
             if (expectedValidationIssuesNr >= 1)
@@ -376,6 +381,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
                                                 i.Severity == ValidationSeverity.Error &&
                                                 i.Message == Resources.WaveBoundariesValidator_Validate_Parameter_Height_must_be_greater_than_0_and_smaller_or_equal_to_25_));
             }
+
             Assert.AreEqual(1, report.SubReports.Count());
         }
 
@@ -390,7 +396,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
         {
             // Setup
             EventedList<IWaveBoundary> boundaries = CreateWaveBoundaryInList();
-            
+
             var constantParameters = new ConstantParameters<PowerDefinedSpreading>(correctHeight, period, correctDirection, new PowerDefinedSpreading());
             SetupVisitingConstantParametersPowerSpreading(boundaries, constantParameters);
 
@@ -407,9 +413,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
                                                 i.Severity == ValidationSeverity.Error &&
                                                 i.Message == Resources.WaveBoundariesValidator_Validate_Parameter_Period_must_be_a_value_within_the_range_));
             }
+
             Assert.AreEqual(1, report.SubReports.Count());
         }
-        
+
         [Test]
         [TestCase(-360.1, 1)]
         [TestCase(-360.0, 0)]
@@ -421,7 +428,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
         {
             // Setup
             EventedList<IWaveBoundary> boundaries = CreateWaveBoundaryInList();
-            
+
             var constantParameters = new ConstantParameters<PowerDefinedSpreading>(correctHeight, correctPeriod, direction, new PowerDefinedSpreading());
             SetupVisitingConstantParametersPowerSpreading(boundaries, constantParameters);
 
@@ -438,6 +445,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
                                                 i.Severity == ValidationSeverity.Error &&
                                                 i.Message == Resources.WaveBoundariesValidator_Validate_Parameter_Direction_must_be_a_value_within_the_range_360_360_));
             }
+
             Assert.AreEqual(1, report.SubReports.Count());
         }
 
@@ -452,8 +460,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
         {
             // Setup
             EventedList<IWaveBoundary> boundaries = CreateWaveBoundaryInList();
-            
-            var constantParameters = new ConstantParameters<PowerDefinedSpreading>(correctHeight, correctPeriod, correctDirection, new PowerDefinedSpreading {SpreadingPower = spreadingPower });
+
+            var constantParameters = new ConstantParameters<PowerDefinedSpreading>(correctHeight, correctPeriod, correctDirection, new PowerDefinedSpreading {SpreadingPower = spreadingPower});
             SetupVisitingConstantParametersPowerSpreading(boundaries, constantParameters);
 
             // Call
@@ -469,6 +477,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
                                                 i.Severity == ValidationSeverity.Error &&
                                                 i.Message == Resources.WaveBoundariesValidator_Validate_Parameter_Spreading__must_be_a_value_within_the_range_1_800));
             }
+
             Assert.AreEqual(1, report.SubReports.Count());
         }
 
@@ -483,11 +492,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
         {
             // Setup
             EventedList<IWaveBoundary> boundaries = CreateWaveBoundaryInList();
-            
-            var constantParameters = new ConstantParameters<DegreesDefinedSpreading>(correctHeight, correctPeriod, correctDirection, new DegreesDefinedSpreading { DegreesSpreading = degreesSpreading });
-            
+
+            var constantParameters = new ConstantParameters<DegreesDefinedSpreading>(correctHeight, correctPeriod, correctDirection, new DegreesDefinedSpreading {DegreesSpreading = degreesSpreading});
+
             boundaries[0].ConditionDefinition.When(x => x.AcceptVisitor(Arg.Any<IBoundaryConditionVisitor>()))
-                    .Do(x => x.Arg<IForcingTypeDefinedParametersVisitor>().Visit(constantParameters));
+                         .Do(x => x.Arg<IForcingTypeDefinedParametersVisitor>().Visit(constantParameters));
 
             // Call
             ValidationReport report = WaveBoundariesValidator.Validate(boundaries, new DateTime());
@@ -502,6 +511,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
                                                 i.Severity == ValidationSeverity.Error &&
                                                 i.Message == Resources.WaveBoundariesValidator_Validate_Parameter_Spreading_must_be_a_value_within_the_range_2_180));
             }
+
             Assert.AreEqual(1, report.SubReports.Count());
         }
 
@@ -512,7 +522,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             EventedList<IWaveBoundary> boundaries = CreateWaveBoundaryInList();
 
             boundaries[0].ConditionDefinition.When(x => x.AcceptVisitor(Arg.Any<IBoundaryConditionVisitor>()))
-                    .Do(x => x.Arg<IForcingTypeDefinedParametersVisitor>().Visit((TimeDependentParameters<PowerDefinedSpreading>)null));
+                         .Do(x => x.Arg<IForcingTypeDefinedParametersVisitor>().Visit((TimeDependentParameters<PowerDefinedSpreading>) null));
 
             // Call
             void Call() => WaveBoundariesValidator.Validate(boundaries, new DateTime());
@@ -533,7 +543,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
         {
             // Setup
             EventedList<IWaveBoundary> boundaries = CreateWaveBoundaryInList();
-            
+
             IWaveEnergyFunction<PowerDefinedSpreading> waveEnergyFunction = SetupVisitingTimeDependentParametersPowerSpreading(boundaries);
             IVariable<double> heightVariable = CreateVariableForTestDouble(height);
             waveEnergyFunction.HeightComponent.Returns(heightVariable);
@@ -551,9 +561,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
                                                 i.Severity == ValidationSeverity.Error &&
                                                 i.Message == Resources.WaveBoundariesValidator_Validate_Values_in_column_Hs_in_the_time_series_table_must_be_within_expected_range));
             }
+
             Assert.AreEqual(1, report.SubReports.Count());
         }
-        
+
         [Test]
         [TestCase(0.0, 1)]
         [TestCase(0.1, 0)]
@@ -583,9 +594,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
                                                 i.Severity == ValidationSeverity.Error &&
                                                 i.Message == Resources.WaveBoundariesValidator_Validate_Values_in_column_Tp_in_the_time_series_table_must_be_within_expected_range));
             }
+
             Assert.AreEqual(1, report.SubReports.Count());
         }
-        
+
         [Test]
         [TestCase(-360.1, 1)]
         [TestCase(-360, 0)]
@@ -615,6 +627,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
                                                 i.Severity == ValidationSeverity.Error &&
                                                 i.Message == Resources.WaveBoundariesValidator_Validate_Values_in_column_Direction_in_the_time_series_table_must_be_within_expected_range));
             }
+
             Assert.AreEqual(1, report.SubReports.Count());
         }
 
@@ -647,6 +660,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
                                                 i.Severity == ValidationSeverity.Error &&
                                                 i.Message == Resources.WaveBoundariesValidator_Validate_Values_in_column_Spreading_in_the_time_series_table_must_be_a_value_within_the_range_1_800));
             }
+
             Assert.AreEqual(1, report.SubReports.Count());
         }
 
@@ -661,24 +675,24 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
         {
             // Setup
             EventedList<IWaveBoundary> boundaries = CreateWaveBoundaryInList();
-            
+
             var waveEnergyFunction = Substitute.For<IWaveEnergyFunction<DegreesDefinedSpreading>>();
-            
+
             var variableSpreading = Substitute.For<IVariable<double>>();
-            var valuesSpreading = new MultiDimensionalArray<double> { spreading };
+            var valuesSpreading = new MultiDimensionalArray<double> {spreading};
             variableSpreading.Values.Returns(valuesSpreading);
-            
+
             var variableTime = Substitute.For<IVariable<DateTime>>();
-            var valuesTime = new MultiDimensionalArray<DateTime> { new DateTime(2020, 4, 20) };
+            var valuesTime = new MultiDimensionalArray<DateTime> {new DateTime(2020, 4, 20)};
             variableTime.Values.Returns(valuesTime);
-            
+
             waveEnergyFunction.SpreadingComponent.Returns(variableSpreading);
             waveEnergyFunction.TimeArgument.Returns(variableTime);
 
             var timeDependentParameters = new TimeDependentParameters<DegreesDefinedSpreading>(waveEnergyFunction);
-            
+
             boundaries[0].ConditionDefinition.When(x => x.AcceptVisitor(Arg.Any<IBoundaryConditionVisitor>()))
-                                 .Do(x => x.Arg<IForcingTypeDefinedParametersVisitor>().Visit(timeDependentParameters));
+                         .Do(x => x.Arg<IForcingTypeDefinedParametersVisitor>().Visit(timeDependentParameters));
 
             // Call
             ValidationReport report = WaveBoundariesValidator.Validate(boundaries, new DateTime());
@@ -693,6 +707,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
                                                 i.Severity == ValidationSeverity.Error &&
                                                 i.Message == Resources.WaveBoundariesValidator_Validate_Values_in_column_Spreading_in_the_time_series_table_must_be_a_value_within_the_range_2_180));
             }
+
             Assert.AreEqual(1, report.SubReports.Count());
         }
 
@@ -701,12 +716,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
         {
             // Setup
             EventedList<IWaveBoundary> boundaries = CreateWaveBoundaryInList();
-            
+
             var waveEnergyFunction = Substitute.For<IWaveEnergyFunction<PowerDefinedSpreading>>();
             var timeDependentParameters = new TimeDependentParameters<PowerDefinedSpreading>(waveEnergyFunction);
 
             boundaries[0].ConditionDefinition.When(x => x.AcceptVisitor(Arg.Any<IBoundaryConditionVisitor>()))
-                    .Do(x => x.Arg<IForcingTypeDefinedParametersVisitor>().Visit(timeDependentParameters));
+                         .Do(x => x.Arg<IForcingTypeDefinedParametersVisitor>().Visit(timeDependentParameters));
 
             // Call
             ValidationReport report = WaveBoundariesValidator.Validate(boundaries, new DateTime());
@@ -726,24 +741,28 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
         {
             // Setup
             EventedList<IWaveBoundary> boundaries = CreateWaveBoundaryInList();
-            
+
             IWaveEnergyFunction<PowerDefinedSpreading> waveEnergyFunction1 = CreateWaveEnergyFunctionWithOneTimeArgumentPowerSpreading();
 
             var waveEnergyFunction2 = Substitute.For<IWaveEnergyFunction<PowerDefinedSpreading>>();
             var variable2 = Substitute.For<IVariable<DateTime>>();
-            var values2 = new MultiDimensionalArray<DateTime> { new DateTime(2020, 4, 20), new DateTime(2020, 4, 21) };
+            var values2 = new MultiDimensionalArray<DateTime>
+            {
+                new DateTime(2020, 4, 20),
+                new DateTime(2020, 4, 21)
+            };
             variable2.Values.Returns(values2);
             waveEnergyFunction2.TimeArgument.Returns(variable2);
-            
+
             var timeDependentParameters1 = new TimeDependentParameters<PowerDefinedSpreading>(waveEnergyFunction1);
             var timeDependentParameters2 = new TimeDependentParameters<PowerDefinedSpreading>(waveEnergyFunction2);
-            
+
             boundaries[0].ConditionDefinition.When(x => x.AcceptVisitor(Arg.Any<IBoundaryConditionVisitor>()))
-                                 .Do(x =>
-                                 {
-                                     x.Arg<IForcingTypeDefinedParametersVisitor>().Visit(timeDependentParameters1);
-                                     x.Arg<IForcingTypeDefinedParametersVisitor>().Visit(timeDependentParameters2);
-                                 });
+                         .Do(x =>
+                         {
+                             x.Arg<IForcingTypeDefinedParametersVisitor>().Visit(timeDependentParameters1);
+                             x.Arg<IForcingTypeDefinedParametersVisitor>().Visit(timeDependentParameters2);
+                         });
 
             // Call
             ValidationReport report = WaveBoundariesValidator.Validate(boundaries, new DateTime());
@@ -766,9 +785,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
 
             IWaveEnergyFunction<PowerDefinedSpreading> waveEnergyFunction = CreateWaveEnergyFunctionWithOneTimeArgumentPowerSpreading();
             var timeDependentParameters = new TimeDependentParameters<PowerDefinedSpreading>(waveEnergyFunction);
-            
+
             boundaries[0].ConditionDefinition.When(x => x.AcceptVisitor(Arg.Any<IBoundaryConditionVisitor>()))
-                                 .Do(x => x.Arg<IForcingTypeDefinedParametersVisitor>().Visit(timeDependentParameters));
+                         .Do(x => x.Arg<IForcingTypeDefinedParametersVisitor>().Visit(timeDependentParameters));
 
             // Call
             ValidationReport report = WaveBoundariesValidator.Validate(boundaries, new DateTime(2020, 4, 21));
@@ -780,7 +799,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             Assert.IsTrue(allIssues.Any(i =>
                                             i.Severity == ValidationSeverity.Error &&
                                             i.Message == string.Format(
-                                                Resources.WaveBoundariesValidator_Validate_ModelStartTime_Model_start_time_does_not_precede_any_of_Boundary_Condition_time_points_of__0__, 
+                                                Resources.WaveBoundariesValidator_Validate_ModelStartTime_Model_start_time_does_not_precede_any_of_Boundary_Condition_time_points_of__0__,
                                                 boundaries[0].Name)));
             Assert.AreEqual(1, report.SubReports.Count());
         }
@@ -806,13 +825,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             Assert.AreEqual(0, allIssues.Count);
             Assert.AreEqual(1, report.SubReports.Count());
         }
-        
+
         [Test]
         public void Visit_FileBasedParameters_ShouldDoNothing()
         {
             // Setup
             EventedList<IWaveBoundary> boundaries = CreateWaveBoundaryInList();
-            
+
             var fileBasedParameters = new FileBasedParameters("test");
 
             boundaries[0].ConditionDefinition.When(x => x.AcceptVisitor(Arg.Any<IBoundaryConditionVisitor>()))
@@ -850,7 +869,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             EventedList<IWaveBoundary> boundaries = CreateWaveBoundaryInList();
 
             boundaries[0].ConditionDefinition.When(x => x.AcceptVisitor(Arg.Any<IBoundaryConditionVisitor>()))
-                    .Do(x => x.Arg<ISpreadingVisitor>().Visit((DegreesDefinedSpreading)null));
+                         .Do(x => x.Arg<ISpreadingVisitor>().Visit((DegreesDefinedSpreading) null));
 
             // Call
             void Call() => WaveBoundariesValidator.Validate(boundaries, new DateTime());
@@ -867,7 +886,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             EventedList<IWaveBoundary> boundaries = CreateWaveBoundaryInList();
 
             boundaries[0].ConditionDefinition.When(x => x.AcceptVisitor(Arg.Any<IBoundaryConditionVisitor>()))
-                    .Do(x => x.Arg<ISpreadingVisitor>().Visit((PowerDefinedSpreading)null));
+                         .Do(x => x.Arg<ISpreadingVisitor>().Visit((PowerDefinedSpreading) null));
 
             // Call
             void Call() => WaveBoundariesValidator.Validate(boundaries, new DateTime());
@@ -886,7 +905,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             boundaries.Add(boundary2);
 
             var shape = new JonswapShape {PeakEnhancementFactor = 15};
-            
+
             boundaries[0].ConditionDefinition.When(x => x.AcceptVisitor(Arg.Any<IBoundaryConditionVisitor>()))
                          .Do(x => x.Arg<IShapeVisitor>().Visit(shape));
             boundaries[1].ConditionDefinition.When(x => x.AcceptVisitor(Arg.Any<IBoundaryConditionVisitor>()))
@@ -898,7 +917,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             // Assert
             Assert.AreEqual("Waves Model Boundaries", report.Category);
             IList<ValidationIssue> allIssues = report.GetAllIssuesRecursive();
-            Assert.AreEqual(2, allIssues.Count );
+            Assert.AreEqual(2, allIssues.Count);
             Assert.AreEqual(2, report.SubReports.Count());
         }
 
@@ -906,13 +925,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
         public void Validate_SpatiallyVaryingConstantPowerBoundary_ShouldGiveValidationIssuesWithSupportPointNumberText()
         {
             EventedList<IWaveBoundary> boundaries = CreateWaveBoundaryInList();
-            
+
             // Create constant parameters with only wrong values.
-            var constantParameters1 = new ConstantParameters<PowerDefinedSpreading>(-500, -500, -500, new PowerDefinedSpreading { SpreadingPower = -500} );
-            var constantParameters2 = new ConstantParameters<PowerDefinedSpreading>(-500, -500, -500, new PowerDefinedSpreading { SpreadingPower = -500 });
+            var constantParameters1 = new ConstantParameters<PowerDefinedSpreading>(-500, -500, -500, new PowerDefinedSpreading {SpreadingPower = -500});
+            var constantParameters2 = new ConstantParameters<PowerDefinedSpreading>(-500, -500, -500, new PowerDefinedSpreading {SpreadingPower = -500});
 
             IWaveBoundaryGeometricDefinition geometryDefinition = boundaries[0].GeometricDefinition;
-            
+
             var supportPoint1 = new SupportPoint(0, geometryDefinition);
             var supportPoint2 = new SupportPoint(20, geometryDefinition);
 
@@ -944,35 +963,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             ValidateSpatiallyVaryingConstantParametersMessagesContainingSupportPointNumberText(boundaries, spatiallyVaryingDataComponentDataComponent);
         }
 
-        private static void ValidateSpatiallyVaryingConstantParametersMessagesContainingSupportPointNumberText(IEventedList<IWaveBoundary> boundaries, SpatiallyVaryingDataComponent<IForcingTypeDefinedParameters> spatiallyVaryingDataComponentDataComponent)
-        {
-            IWaveBoundaryConditionDefinition waveBoundaryCondition = boundaries[0].ConditionDefinition;
-            waveBoundaryCondition.DataComponent = spatiallyVaryingDataComponentDataComponent;
-            waveBoundaryCondition.When(x => x.AcceptVisitor(Arg.Any<IBoundaryConditionVisitor>()))
-                                 .Do(x => x.Arg<ISpatiallyDefinedDataComponentVisitor>().Visit(spatiallyVaryingDataComponentDataComponent));
-
-            // Call
-            ValidationReport report = WaveBoundariesValidator.Validate(boundaries, new DateTime());
-
-            IList<ValidationIssue> validationIssues = report.GetAllIssuesRecursive();
-            Assert.AreEqual(8, validationIssues.Count);
-            for (int i = 0; i < 4; i++)
-            {
-                Assert.IsTrue(validationIssues[i].Message.StartsWith("Point 1: "));
-            }
-
-            for (int i = 4; i < 8; i++)
-            {
-                Assert.IsTrue(validationIssues[i].Message.StartsWith("Point 2: "));
-            }
-        }
-
         [Test]
         public void Validate_SpatiallyVaryingTimeDependentPowerBoundary_ShouldGiveValidationIssuesWithSupportPointNumberText()
         {
             EventedList<IWaveBoundary> boundaries = CreateWaveBoundaryInList();
             IWaveBoundaryGeometricDefinition geometryDefinition = boundaries[0].GeometricDefinition;
-            
+
             var supportPoint1 = new SupportPoint(0, geometryDefinition);
             var supportPoint2 = new SupportPoint(20, geometryDefinition);
 
@@ -984,7 +980,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             waveEnergyFunction1.DirectionComponent.Returns(variable);
             waveEnergyFunction1.SpreadingComponent.Returns(variable);
             var timeDependentParameters = new TimeDependentParameters<PowerDefinedSpreading>(waveEnergyFunction1);
-            
+
             var spatiallyVaryingDataComponentDataComponent = new SpatiallyVaryingDataComponent<IForcingTypeDefinedParameters>();
             spatiallyVaryingDataComponentDataComponent.AddParameters(supportPoint1, timeDependentParameters);
             spatiallyVaryingDataComponentDataComponent.AddParameters(supportPoint2, timeDependentParameters);
@@ -1017,6 +1013,29 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             ValidateSpatiallyVaryingTimeDependentParametersMessagesContainingSupportPointNumberText(boundaries, spatiallyVaryingDataComponentDataComponent);
         }
 
+        private static void ValidateSpatiallyVaryingConstantParametersMessagesContainingSupportPointNumberText(IEventedList<IWaveBoundary> boundaries, SpatiallyVaryingDataComponent<IForcingTypeDefinedParameters> spatiallyVaryingDataComponentDataComponent)
+        {
+            IWaveBoundaryConditionDefinition waveBoundaryCondition = boundaries[0].ConditionDefinition;
+            waveBoundaryCondition.DataComponent = spatiallyVaryingDataComponentDataComponent;
+            waveBoundaryCondition.When(x => x.AcceptVisitor(Arg.Any<IBoundaryConditionVisitor>()))
+                                 .Do(x => x.Arg<ISpatiallyDefinedDataComponentVisitor>().Visit(spatiallyVaryingDataComponentDataComponent));
+
+            // Call
+            ValidationReport report = WaveBoundariesValidator.Validate(boundaries, new DateTime());
+
+            IList<ValidationIssue> validationIssues = report.GetAllIssuesRecursive();
+            Assert.AreEqual(8, validationIssues.Count);
+            for (var i = 0; i < 4; i++)
+            {
+                Assert.IsTrue(validationIssues[i].Message.StartsWith("Point 1: "));
+            }
+
+            for (var i = 4; i < 8; i++)
+            {
+                Assert.IsTrue(validationIssues[i].Message.StartsWith("Point 2: "));
+            }
+        }
+
         private static void ValidateSpatiallyVaryingTimeDependentParametersMessagesContainingSupportPointNumberText(EventedList<IWaveBoundary> boundaries, SpatiallyVaryingDataComponent<IForcingTypeDefinedParameters> spatiallyVaryingDataComponentDataComponent)
         {
             IWaveBoundaryConditionDefinition waveBoundaryCondition = boundaries[0].ConditionDefinition;
@@ -1025,16 +1044,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
                                  .Do(x => x.Arg<ISpatiallyDefinedDataComponentVisitor>().Visit(spatiallyVaryingDataComponentDataComponent));
 
             // Call
-            ValidationReport report = WaveBoundariesValidator.Validate(boundaries, new DateTime(2000,1,1));
+            ValidationReport report = WaveBoundariesValidator.Validate(boundaries, new DateTime(2000, 1, 1));
 
             IList<ValidationIssue> validationIssues = report.GetAllIssuesRecursive();
             Assert.AreEqual(10, validationIssues.Count);
-            for (int i = 0; i < 5; i++)
+            for (var i = 0; i < 5; i++)
             {
                 Assert.IsTrue(validationIssues[i].Message.StartsWith("Point 1: "));
             }
 
-            for (int i = 5; i < 10; i++)
+            for (var i = 5; i < 10; i++)
             {
                 Assert.IsTrue(validationIssues[i].Message.StartsWith("Point 2: "));
             }
@@ -1051,7 +1070,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
         private static IVariable<double> CreateVariableForTestDouble(double value)
         {
             var variable = Substitute.For<IVariable<double>>();
-            var values = new MultiDimensionalArray<double> { value };
+            var values = new MultiDimensionalArray<double> {value};
             variable.Values.Returns(values);
             return variable;
         }
@@ -1060,7 +1079,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
         {
             IWaveBoundaryConditionDefinition waveBoundaryCondition = boundaries[0].ConditionDefinition;
             waveBoundaryCondition.When(x => x.AcceptVisitor(Arg.Any<IBoundaryConditionVisitor>()))
-                    .Do(x => x.Arg<IForcingTypeDefinedParametersVisitor>().Visit(constantParameters));
+                                 .Do(x => x.Arg<IForcingTypeDefinedParametersVisitor>().Visit(constantParameters));
         }
 
         private static IWaveEnergyFunction<PowerDefinedSpreading> SetupVisitingTimeDependentParametersPowerSpreading(EventedList<IWaveBoundary> boundaries)
@@ -1069,9 +1088,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
 
             IWaveBoundaryConditionDefinition waveBoundaryCondition = boundaries[0].ConditionDefinition;
             var timeDependentParameters = new TimeDependentParameters<PowerDefinedSpreading>(waveEnergyFunction);
-            
+
             waveBoundaryCondition.When(x => x.AcceptVisitor(Arg.Any<IBoundaryConditionVisitor>()))
-                    .Do(x => x.Arg<IForcingTypeDefinedParametersVisitor>().Visit(timeDependentParameters));
+                                 .Do(x => x.Arg<IForcingTypeDefinedParametersVisitor>().Visit(timeDependentParameters));
 
             return waveEnergyFunction;
         }

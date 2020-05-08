@@ -8,16 +8,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.Calculators
     [TestFixture]
     public class Coordinate2DEqualityComparerTest
     {
-        [Test]
-        public void Constructor_ExpectedValues()
-        {
-            // Call
-            var comparer = new Coordinate2DEqualityComparer();
-
-            // Assert
-            Assert.That(comparer, Is.InstanceOf(typeof(IEqualityComparer<Coordinate>)));
-        }
-
         private IEnumerable<TestCaseData> EqualsTestData
         {
             get
@@ -31,6 +21,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.Calculators
                 yield return new TestCaseData(coordinate, new Coordinate(1.0, 0.0), false);
                 yield return new TestCaseData(new Coordinate(1.0, 0.0), new Coordinate(1.0, 0.0), true);
             }
+        }
+
+        [Test]
+        public void Constructor_ExpectedValues()
+        {
+            // Call
+            var comparer = new Coordinate2DEqualityComparer();
+
+            // Assert
+            Assert.That(comparer, Is.InstanceOf(typeof(IEqualityComparer<Coordinate>)));
         }
 
         [Test]

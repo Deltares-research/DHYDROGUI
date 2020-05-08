@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using DelftTools.TestUtils;
 using DelftTools.Utils;
@@ -44,12 +45,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         private Dictionary<WaterQualityBoundary, int[]> boundaryNodeIds;
 
         private IDictionary<string, Func<string>> delwaqDataToFilePathMapping;
-        
+
+        public event EventHandler<EventArgs<string>> DataChanged;
 
         public TestHydroDataStub()
         {
             FilePath = TestHelper.GetTestFilePath("notExistingHydFile.hyd");
-            grid = UnstructuredGridTestHelper.GenerateRegularGrid(2,2,10,10);
+            grid = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 10, 10);
 
             LayerType = LayerType.Sigma;
 
@@ -73,10 +75,16 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             chezyCoefficientsRelativePath = "";
 
             numberOfHydrodynamicLayers = 1;
-            hydrodynamicLayerThicknesses = new[] { 1.0 };
-            
+            hydrodynamicLayerThicknesses = new[]
+            {
+                1.0
+            };
+
             numberOfWaqSegmentLayers = 1;
-            numberOfHydrodynamicLayersPerWaqLayer = new []{ 1 };
+            numberOfHydrodynamicLayersPerWaqLayer = new[]
+            {
+                1
+            };
 
             boundaries = new EventedList<WaterQualityBoundary>();
             boundaryNodeIds = new Dictionary<WaterQualityBoundary, int[]>();
@@ -88,17 +96,23 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         /// Initializes a new instance of the <see cref="TestHydroDataStub"/> class
         /// using values specified in a <see cref="HydFileData"/> object.
         /// </summary>
-        /// <remarks>Note that the following items shall not be copied and remain the stubbed value provided by this class:
+        /// <remarks>
+        /// Note that the following items shall not be copied and remain the stubbed value provided by this class:
         /// <list type="bullet">
-        /// <item><see cref="GetGrid"/></item>
-        /// <item><see cref="GetAttributesRelativeFilePath"/></item>
-        /// <item>Grid related meta data (i.e. exchange counts)</item>
-        /// </list></remarks>
+        ///     <item>
+        ///         <see cref="GetGrid"/>
+        ///     </item>
+        ///     <item>
+        ///         <see cref="GetAttributesRelativeFilePath"/>
+        ///     </item>
+        ///     <item>Grid related meta data (i.e. exchange counts)</item>
+        /// </list>
+        /// </remarks>
         public TestHydroDataStub(HydFileData hydFileData)
         {
             FilePath = hydFileData.Path == null
-                ? TestHelper.GetTestFilePath("dummy.hyd")
-                : hydFileData.Path.FullName;
+                           ? TestHelper.GetTestFilePath("dummy.hyd")
+                           : hydFileData.Path.FullName;
             grid = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 10, 10);
             ModelType = hydFileData.HydroDynamicModelType;
             LayerType = hydFileData.LayerType;
@@ -127,10 +141,20 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             chezyCoefficientsRelativePath = hydFileData.ChezyCoefficientsRelativePath;
 
             numberOfHydrodynamicLayers = hydFileData.NumberOfHydrodynamicLayers == 0 ? 1 : hydFileData.NumberOfHydrodynamicLayers;
-            hydrodynamicLayerThicknesses = hydFileData.HydrodynamicLayerThicknesses.Length == 0 ? new[] { 1.0d } : hydFileData.HydrodynamicLayerThicknesses;
+            hydrodynamicLayerThicknesses = hydFileData.HydrodynamicLayerThicknesses.Length == 0
+                                               ? new[]
+                                               {
+                                                   1.0d
+                                               }
+                                               : hydFileData.HydrodynamicLayerThicknesses;
 
             numberOfWaqSegmentLayers = hydFileData.NumberOfWaqSegmentLayers == 0 ? 1 : hydFileData.NumberOfWaqSegmentLayers;
-            numberOfHydrodynamicLayersPerWaqLayer = hydFileData.NumberOfHydrodynamicLayersPerWaqSegmentLayer.Length == 0 ? new [] {1} : hydFileData.NumberOfHydrodynamicLayersPerWaqSegmentLayer;
+            numberOfHydrodynamicLayersPerWaqLayer = hydFileData.NumberOfHydrodynamicLayersPerWaqSegmentLayer.Length == 0
+                                                        ? new[]
+                                                        {
+                                                            1
+                                                        }
+                                                        : hydFileData.NumberOfHydrodynamicLayersPerWaqSegmentLayer;
 
             boundaries = new EventedList<WaterQualityBoundary>();
             boundaryNodeIds = new Dictionary<WaterQualityBoundary, int[]>();
@@ -138,178 +162,287 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             InitializeDataMapping();
         }
 
-        private void InitializeDataMapping()
-        {
-            delwaqDataToFilePathMapping = new Dictionary<string, Func<string>>
-            {
-                {"salinity", () => SalinityRelativePath },
-                {"temp", () => TemperatureRelativePath },
-                {"tau", () => ShearStressesRelativePath },
-                // TODO: Retrieve this list from WAQ model?
-            };
-        }
-
-        public string FilePath { get; set; }
-
         public HydroDynamicModelType ModelType { get; set; }
         public double Ztop { get; set; }
         public double Zbot { get; set; }
         public bool ThirdCellIsInactive { get; set; }
 
         public Func<string, bool> HasDataForInjection { get; set; }
-        public Func<string,string> GetFilePathForInjection { get; set; }
+        public Func<string, string> GetFilePathForInjection { get; set; }
+
+        public string FilePath { get; set; }
 
         public UnstructuredGrid Grid
         {
-            get { return grid; }
+            get
+            {
+                return grid;
+            }
         }
 
         public DateTime ConversionStartTime
         {
-            get { return startTime; }
+            get
+            {
+                return startTime;
+            }
         }
 
         public DateTime ConversionStopTime
         {
-            get { return stopTime; }
+            get
+            {
+                return stopTime;
+            }
         }
 
         public TimeSpan ConversionTimeStep
         {
-            get { return timeStep; }
+            get
+            {
+                return timeStep;
+            }
         }
 
         public DateTime ConversionReferenceTime
         {
-            get { return referenceTime; }
+            get
+            {
+                return referenceTime;
+            }
         }
 
         public string GridRelativePath
         {
-            get { return gridFilePath; }
+            get
+            {
+                return gridFilePath;
+            }
         }
 
         public string AreasRelativePath
         {
-            get { return areasPath; }
+            get
+            {
+                return areasPath;
+            }
         }
 
         public string VolumesRelativePath
         {
-            get { return volumesPath; }
+            get
+            {
+                return volumesPath;
+            }
         }
 
         public string FlowsRelativePath
         {
-            get { return flowsPath; }
+            get
+            {
+                return flowsPath;
+            }
         }
 
         public string PointersRelativePath
         {
-            get { return pointersPath; }
+            get
+            {
+                return pointersPath;
+            }
         }
 
         public string LengthsRelativePath
         {
-            get { return lengthsPath; }
+            get
+            {
+                return lengthsPath;
+            }
         }
 
         public string SalinityRelativePath
         {
-            get { return salinityPath; }
+            get
+            {
+                return salinityPath;
+            }
         }
 
         public string TemperatureRelativePath
         {
-            get { return temperaturesPath; }
+            get
+            {
+                return temperaturesPath;
+            }
         }
 
         public string VerticalDiffusionRelativePath
         {
-            get { return verticalDiffusionPath; }
+            get
+            {
+                return verticalDiffusionPath;
+            }
         }
 
         public string SurfacesRelativePath
         {
-            get { return surfacesPath; }
+            get
+            {
+                return surfacesPath;
+            }
         }
 
         public string ShearStressesRelativePath
         {
-            get { return shearStressesPath; }
+            get
+            {
+                return shearStressesPath;
+            }
         }
 
         public string AttributesRelativePath
         {
             get
             {
-                var commonPath = System.IO.Path.Combine("IO", "attribute files");
+                string commonPath = Path.Combine("IO", "attribute files");
 
                 if (!string.IsNullOrWhiteSpace(attributesPath))
                 {
                     return attributesPath;
                 }
+
                 return ThirdCellIsInactive
-                    ? System.IO.Path.Combine(commonPath, "TestHydroDataImporterStub_3rdCellInactive.atr")
-                    : System.IO.Path.Combine(commonPath, "TestHydroDataImporterStub_AllActive.atr");
+                           ? Path.Combine(commonPath, "TestHydroDataImporterStub_3rdCellInactive.atr")
+                           : Path.Combine(commonPath, "TestHydroDataImporterStub_AllActive.atr");
             }
         }
 
         public string VelocitiesRelativePath
         {
-            get { return velocitiesRelativePath; }
+            get
+            {
+                return velocitiesRelativePath;
+            }
         }
 
         public string WidthsRelativePath
         {
-            get { return widthsRelativePath; }
+            get
+            {
+                return widthsRelativePath;
+            }
         }
 
         public string ChezyCoefficientsRelativePath
         {
-            get { return chezyCoefficientsRelativePath; }
+            get
+            {
+                return chezyCoefficientsRelativePath;
+            }
         }
 
         public HydroDynamicModelType HydroDynamicModelType
         {
-            get { return ModelType; }
+            get
+            {
+                return ModelType;
+            }
         }
 
         public LayerType LayerType { get; set; }
 
         public double ZTop
         {
-            get { return Ztop; }
+            get
+            {
+                return Ztop;
+            }
         }
 
         public double ZBot
         {
-            get { return Zbot; }
+            get
+            {
+                return Zbot;
+            }
         }
 
         public int NumberOfHorizontalExchanges
         {
-            get { return 8; }
+            get
+            {
+                return 8;
+            }
         }
 
         public int NumberOfVerticalExchanges
         {
-            get { return (numberOfWaqSegmentLayers - 1) * 4; }
+            get
+            {
+                return (numberOfWaqSegmentLayers - 1) * 4;
+            }
         }
 
         public int NumberOfHydrodynamicLayers
         {
-            get { return numberOfHydrodynamicLayers; }
+            get
+            {
+                return numberOfHydrodynamicLayers;
+            }
         }
 
         public int NumberOfDelwaqSegmentsPerHydrodynamicLayer
         {
-            get { return 4; }
+            get
+            {
+                return 4;
+            }
         }
 
         public int NumberOfWaqSegmentLayers
         {
-            get { return numberOfWaqSegmentLayers; }
+            get
+            {
+                return numberOfWaqSegmentLayers;
+            }
+        }
+
+        public double[] HydrodynamicLayerThicknesses
+        {
+            get
+            {
+                return hydrodynamicLayerThicknesses;
+            }
+        }
+
+        public int[] NumberOfHydrodynamicLayersPerWaqSegmentLayer
+        {
+            get
+            {
+                return numberOfHydrodynamicLayersPerWaqLayer;
+            }
+        }
+
+        public long Id
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        public bool IsSegmentFunction(string functionName)
+        {
+            return false;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return base.Equals(obj);
         }
 
         public IEventedList<WaterQualityBoundary> GetBoundaries()
@@ -322,43 +455,22 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             return boundaryNodeIds;
         }
 
-        public double[] HydrodynamicLayerThicknesses
-        {
-            get { return hydrodynamicLayerThicknesses; }
-        }
-
-        public int[] NumberOfHydrodynamicLayersPerWaqSegmentLayer
-        {
-            get { return numberOfHydrodynamicLayersPerWaqLayer; }
-        }
-
         public bool HasDataFor(string functionName)
         {
             if (HasDataForInjection != null)
+            {
                 return HasDataForInjection(functionName);
+            }
 
             return !string.IsNullOrWhiteSpace(GetFilePathForFunctionName(functionName));
-        }
-
-        public bool IsSegmentFunction(string functionName)
-        {
-            return false;
-        }
-
-        private string GetFilePathForFunctionName(string functionName)
-        {
-            var name = functionName.ToLower();
-            if (delwaqDataToFilePathMapping.ContainsKey(name))
-            {
-                return delwaqDataToFilePathMapping[name]();
-            }
-            return null;
         }
 
         public string GetFilePathFor(string functionName)
         {
             if (GetFilePathForInjection != null)
+            {
                 return GetFilePathForInjection(functionName);
+            }
 
             return "";
         }
@@ -373,34 +485,42 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
                        CollectionsAreEqual(HydrodynamicLayerThicknesses, dataStub.HydrodynamicLayerThicknesses) &&
                        CollectionsAreEqual(NumberOfHydrodynamicLayersPerWaqSegmentLayer, dataStub.NumberOfHydrodynamicLayersPerWaqSegmentLayer);
             }
+
             return false;
         }
 
-        public event EventHandler<EventArgs<string>> DataChanged;
-        
-        public override bool Equals(object obj)
+        public void Dispose() {}
+
+        public Type GetEntityType()
         {
-            return base.Equals(obj);
+            throw new NotImplementedException();
         }
 
-        public void Dispose()
+        private void InitializeDataMapping()
         {
+            delwaqDataToFilePathMapping = new Dictionary<string, Func<string>>
+            {
+                {"salinity", () => SalinityRelativePath},
+                {"temp", () => TemperatureRelativePath},
+                {"tau", () => ShearStressesRelativePath},
+                // TODO: Retrieve this list from WAQ model?
+            };
+        }
+
+        private string GetFilePathForFunctionName(string functionName)
+        {
+            string name = functionName.ToLower();
+            if (delwaqDataToFilePathMapping.ContainsKey(name))
+            {
+                return delwaqDataToFilePathMapping[name]();
+            }
+
+            return null;
         }
 
         private static bool CollectionsAreEqual<T>(T[] a, T[] b) where T : IComparable
         {
             return !a.Where((t, i) => t.CompareTo(b[i]) != 0).Any();
-        }
-
-        public long Id
-        {
-            get { throw new NotImplementedException(); }
-            set { throw new NotImplementedException(); }
-        }
-
-        public Type GetEntityType()
-        {
-            throw new NotImplementedException();
         }
     }
 }

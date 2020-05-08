@@ -22,12 +22,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
             {
                 ControlGroups = new EventedList<ControlGroup>
                 {
-                    new ControlGroup() { Name = "ControlGroup1" },
-                    new ControlGroup() { Name = "ControlGroup1" },
-                    new ControlGroup() { Name = "ControlGroup1" },
-                    new ControlGroup() { Name = "ControlGroup4" },
-                    new ControlGroup() { Name = "ControlGroup4" },
-                    new ControlGroup() { Name = "ControlGroup4" }
+                    new ControlGroup() {Name = "ControlGroup1"},
+                    new ControlGroup() {Name = "ControlGroup1"},
+                    new ControlGroup() {Name = "ControlGroup1"},
+                    new ControlGroup() {Name = "ControlGroup4"},
+                    new ControlGroup() {Name = "ControlGroup4"},
+                    new ControlGroup() {Name = "ControlGroup4"}
                 }
             };
 
@@ -36,8 +36,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
 
             // assert results
             TestHelper.AssertAtLeastOneLogMessagesContains(() => { rtcModel.MakeControlGroupNamesUnique(); },
-                string.Format(Resources.RealTimeControlModelExtensions_MakeControlGroupNamesUnique_ControlGroup_names_for_Model__0__were_not_unique__1_Control_Groups_have_been_renamed_such_that_they_are_now_unique_,
-                    rtcModel.Name, Environment.NewLine));
+                                                           string.Format(Resources.RealTimeControlModelExtensions_MakeControlGroupNamesUnique_ControlGroup_names_for_Model__0__were_not_unique__1_Control_Groups_have_been_renamed_such_that_they_are_now_unique_,
+                                                                         rtcModel.Name, Environment.NewLine));
 
             Assert.IsTrue(rtcModel.ControlGroups.Select(cg => cg.Name).HasUniqueValues());
         }
@@ -47,12 +47,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
         {
             //setup
             var rtcModel = new RealTimeControlModel("RTC-Model");
-            var controlGroup1 = new ControlGroup() { Name = "ControlGroup1" };
-            var controlGroup2 = new ControlGroup() { Name = "ControlGroup2" };
-            var controlGroup3 = new ControlGroup() { Name = "ControlGroup3" };
-            var controlGroup4 = new ControlGroup() { Name = "ControlGroup4" };
-            var controlGroup5 = new ControlGroup() { Name = "ControlGroup5" };
-            var controlGroup6 = new ControlGroup() { Name = "ControlGroup6" };
+            var controlGroup1 = new ControlGroup() {Name = "ControlGroup1"};
+            var controlGroup2 = new ControlGroup() {Name = "ControlGroup2"};
+            var controlGroup3 = new ControlGroup() {Name = "ControlGroup3"};
+            var controlGroup4 = new ControlGroup() {Name = "ControlGroup4"};
+            var controlGroup5 = new ControlGroup() {Name = "ControlGroup5"};
+            var controlGroup6 = new ControlGroup() {Name = "ControlGroup6"};
 
             rtcModel.ControlGroups.Add(controlGroup1);
             rtcModel.ControlGroups.Add(controlGroup2);
@@ -66,10 +66,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
 
             // assert results
             Assert.Throws<AssertionException>(() =>
-                TestHelper.AssertAtLeastOneLogMessagesContains(() => { rtcModel.MakeControlGroupNamesUnique(); },
-                    string.Format(Resources.RealTimeControlModelExtensions_MakeControlGroupNamesUnique_ControlGroup_names_for_Model__0__were_not_unique__1_Control_Groups_have_been_renamed_such_that_they_are_now_unique_,
-                    rtcModel.Name, Environment.NewLine)),
-                "Warning message was logged where we did not expect it to be");
+                                                  TestHelper.AssertAtLeastOneLogMessagesContains(() => { rtcModel.MakeControlGroupNamesUnique(); },
+                                                                                                 string.Format(Resources.RealTimeControlModelExtensions_MakeControlGroupNamesUnique_ControlGroup_names_for_Model__0__were_not_unique__1_Control_Groups_have_been_renamed_such_that_they_are_now_unique_,
+                                                                                                               rtcModel.Name, Environment.NewLine)),
+                                              "Warning message was logged where we did not expect it to be");
 
             Assert.AreEqual("ControlGroup1", controlGroup1.Name);
             Assert.AreEqual("ControlGroup2", controlGroup2.Name);
@@ -91,15 +91,15 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
         {
             // setup
             var rtcModel = new RealTimeControlModel();
-            var controlGroup1 = new ControlGroup() { Name = "ControlGroup1" };
+            var controlGroup1 = new ControlGroup() {Name = "ControlGroup1"};
             controlGroup1.Inputs.Add(new Input());
             controlGroup1.Outputs.Add(new Output());
 
-            var controlGroup2 = new ControlGroup() { Name = "ControlGroup2" };
+            var controlGroup2 = new ControlGroup() {Name = "ControlGroup2"};
             controlGroup2.Inputs.Add(new Input());
             controlGroup2.Outputs.Add(new Output());
 
-            var controlGroup3 = new ControlGroup() { Name = "ControlGroup3" };
+            var controlGroup3 = new ControlGroup() {Name = "ControlGroup3"};
             controlGroup3.Inputs.Add(new Input());
             controlGroup3.Outputs.Add(new Output());
 
@@ -107,34 +107,34 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
             rtcModel.ControlGroups.Add(controlGroup2);
             rtcModel.ControlGroups.Add(controlGroup3);
 
-            var controlGroup1DataItem = rtcModel.DataItems.FirstOrDefault(di => ReferenceEquals(di.Value, controlGroup1));
+            IDataItem controlGroup1DataItem = rtcModel.DataItems.FirstOrDefault(di => ReferenceEquals(di.Value, controlGroup1));
             Assert.NotNull(controlGroup1DataItem);
             Assert.AreEqual(2, controlGroup1DataItem.Children.Count);
 
-            var controlGroup2DataItem = rtcModel.DataItems.FirstOrDefault(di => ReferenceEquals(di.Value, controlGroup2));
+            IDataItem controlGroup2DataItem = rtcModel.DataItems.FirstOrDefault(di => ReferenceEquals(di.Value, controlGroup2));
             Assert.NotNull(controlGroup2DataItem);
             Assert.AreEqual(2, controlGroup2DataItem.Children.Count);
 
-            var controlGroup3DataItem = rtcModel.DataItems.FirstOrDefault(di => ReferenceEquals(di.Value, controlGroup3));
+            IDataItem controlGroup3DataItem = rtcModel.DataItems.FirstOrDefault(di => ReferenceEquals(di.Value, controlGroup3));
             Assert.NotNull(controlGroup3DataItem);
             Assert.AreEqual(2, controlGroup3DataItem.Children.Count);
 
-            var controlGroup1InputDataItem = controlGroup1DataItem.Children.FirstOrDefault(di => (di.Role & DataItemRole.Input) == DataItemRole.Input);
+            IDataItem controlGroup1InputDataItem = controlGroup1DataItem.Children.FirstOrDefault(di => (di.Role & DataItemRole.Input) == DataItemRole.Input);
             Assert.NotNull(controlGroup1InputDataItem);
 
-            var controlGroup1OutputDataItem = controlGroup1DataItem.Children.FirstOrDefault(di => (di.Role & DataItemRole.Output) == DataItemRole.Output);
+            IDataItem controlGroup1OutputDataItem = controlGroup1DataItem.Children.FirstOrDefault(di => (di.Role & DataItemRole.Output) == DataItemRole.Output);
             Assert.NotNull(controlGroup1OutputDataItem);
 
-            var controlGroup2InputDataItem = controlGroup2DataItem.Children.FirstOrDefault(di => (di.Role & DataItemRole.Input) == DataItemRole.Input);
+            IDataItem controlGroup2InputDataItem = controlGroup2DataItem.Children.FirstOrDefault(di => (di.Role & DataItemRole.Input) == DataItemRole.Input);
             Assert.NotNull(controlGroup2InputDataItem);
 
-            var controlGroup2OutputDataItem = controlGroup2DataItem.Children.FirstOrDefault(di => (di.Role & DataItemRole.Output) == DataItemRole.Output);
+            IDataItem controlGroup2OutputDataItem = controlGroup2DataItem.Children.FirstOrDefault(di => (di.Role & DataItemRole.Output) == DataItemRole.Output);
             Assert.NotNull(controlGroup2OutputDataItem);
 
-            var controlGroup3InputDataItem = controlGroup3DataItem.Children.FirstOrDefault(di => (di.Role & DataItemRole.Input) == DataItemRole.Input);
+            IDataItem controlGroup3InputDataItem = controlGroup3DataItem.Children.FirstOrDefault(di => (di.Role & DataItemRole.Input) == DataItemRole.Input);
             Assert.NotNull(controlGroup3InputDataItem);
 
-            var controlGroup3OutputDataItem = controlGroup3DataItem.Children.FirstOrDefault(di => (di.Role & DataItemRole.Output) == DataItemRole.Output);
+            IDataItem controlGroup3OutputDataItem = controlGroup3DataItem.Children.FirstOrDefault(di => (di.Role & DataItemRole.Output) == DataItemRole.Output);
             Assert.NotNull(controlGroup3OutputDataItem);
 
             // simulate ChildDataItem names being 'out of sync' on ControlGroups 1 and 3
@@ -184,7 +184,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
         public void TestSyncControlGroupChildDataItemNames_ReturnsForNoChildDataItems()
         {
             var rtcModel = new RealTimeControlModel();
-            var controlGroup = new ControlGroup() { Name = "ControlGroup" };
+            var controlGroup = new ControlGroup() {Name = "ControlGroup"};
             rtcModel.ControlGroups.Add(controlGroup);
             Assert.DoesNotThrow(() => rtcModel.SyncControlGroupChildDataItemNames(controlGroup));
         }
@@ -194,27 +194,27 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
         {
             // setup
             var rtcModel = new RealTimeControlModel();
-            var controlGroup = new ControlGroup() { Name = "ControlGroup" };
+            var controlGroup = new ControlGroup() {Name = "ControlGroup"};
             controlGroup.Inputs.Add(new Input());
             controlGroup.Inputs.Add(new Input());
 
             rtcModel.ControlGroups.Add(controlGroup);
 
-            var controlGroupDataItem = rtcModel.DataItems.FirstOrDefault(di => ReferenceEquals(di.Value, controlGroup));
+            IDataItem controlGroupDataItem = rtcModel.DataItems.FirstOrDefault(di => ReferenceEquals(di.Value, controlGroup));
             Assert.NotNull(controlGroupDataItem);
             Assert.AreEqual(2, controlGroupDataItem.Children.Count);
 
-            var controlGroupInput1DataItem = controlGroupDataItem.Children[0];
+            IDataItem controlGroupInput1DataItem = controlGroupDataItem.Children[0];
             Assert.NotNull(controlGroupInput1DataItem);
 
-            var controlGroupInput2DataItem = controlGroupDataItem.Children[1];
+            IDataItem controlGroupInput2DataItem = controlGroupDataItem.Children[1];
             Assert.NotNull(controlGroupInput2DataItem);
 
             // simulate ChildDataItem names being 'out of sync'
             controlGroupInput1DataItem.Name = controlGroupInput1DataItem.Name.Replace("ControlGroup", "ControlGroup_Renamed");
             controlGroupInput1DataItem.Name = controlGroupInput1DataItem.Name.Replace(RealTimeControlModel.InputPostFix, ".somethingElse");
             controlGroupInput2DataItem.Name = controlGroupInput2DataItem.Name.Replace("ControlGroup", "ControlGroup_Renamed");
-            
+
             // synchronise the ChildDataItemNames
             rtcModel.SyncControlGroupChildDataItemNames(controlGroup);
 
@@ -229,20 +229,20 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
         {
             // setup
             var rtcModel = new RealTimeControlModel();
-            var controlGroup = new ControlGroup() { Name = "ControlGroup" };
+            var controlGroup = new ControlGroup() {Name = "ControlGroup"};
             controlGroup.Outputs.Add(new Output());
             controlGroup.Outputs.Add(new Output());
 
             rtcModel.ControlGroups.Add(controlGroup);
 
-            var controlGroupDataItem = rtcModel.DataItems.FirstOrDefault(di => ReferenceEquals(di.Value, controlGroup));
+            IDataItem controlGroupDataItem = rtcModel.DataItems.FirstOrDefault(di => ReferenceEquals(di.Value, controlGroup));
             Assert.NotNull(controlGroupDataItem);
             Assert.AreEqual(2, controlGroupDataItem.Children.Count);
 
-            var controlGroupOutput1DataItem = controlGroupDataItem.Children[0];
+            IDataItem controlGroupOutput1DataItem = controlGroupDataItem.Children[0];
             Assert.NotNull(controlGroupOutput1DataItem);
 
-            var controlGroupOutput2DataItem = controlGroupDataItem.Children[1];
+            IDataItem controlGroupOutput2DataItem = controlGroupDataItem.Children[1];
             Assert.NotNull(controlGroupOutput2DataItem);
 
             // simulate ChildDataItem names being 'out of sync'
@@ -264,20 +264,20 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
         {
             // setup
             var rtcModel = new RealTimeControlModel();
-            var controlGroup = new ControlGroup() { Name = "ControlGroup" };
+            var controlGroup = new ControlGroup() {Name = "ControlGroup"};
             controlGroup.Inputs.Add(new Input());
             controlGroup.Outputs.Add(new Output());
 
             rtcModel.ControlGroups.Add(controlGroup);
-            
-            var controlGroupDataItem = rtcModel.DataItems.FirstOrDefault(di => ReferenceEquals(di.Value, controlGroup));
+
+            IDataItem controlGroupDataItem = rtcModel.DataItems.FirstOrDefault(di => ReferenceEquals(di.Value, controlGroup));
             Assert.NotNull(controlGroupDataItem);
             Assert.AreEqual(2, controlGroupDataItem.Children.Count);
 
-            var controlGroupInputDataItem = controlGroupDataItem.Children.FirstOrDefault(di => (di.Role & DataItemRole.Input) == DataItemRole.Input);
+            IDataItem controlGroupInputDataItem = controlGroupDataItem.Children.FirstOrDefault(di => (di.Role & DataItemRole.Input) == DataItemRole.Input);
             Assert.NotNull(controlGroupInputDataItem);
 
-            var controlGroupOutputDataItem = controlGroupDataItem.Children.FirstOrDefault(di => (di.Role & DataItemRole.Output) == DataItemRole.Output);
+            IDataItem controlGroupOutputDataItem = controlGroupDataItem.Children.FirstOrDefault(di => (di.Role & DataItemRole.Output) == DataItemRole.Output);
             Assert.NotNull(controlGroupOutputDataItem);
 
             // simulate ChildDataItem names being 'out of sync'
@@ -302,16 +302,16 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
         public void TestControlGroupDataItemChildDataItemNamesAreInSync_ReturnsTrueForNoDataItem()
         {
             var rtcModel = new RealTimeControlModel();
-            Assert.IsTrue((bool)TypeUtils.CallPrivateStaticMethod(typeof(RealTimeControlModelExtensions), "ControlGroupDataItemChildDataItemNamesAreInSync", rtcModel, new ControlGroup()));
+            Assert.IsTrue((bool) TypeUtils.CallPrivateStaticMethod(typeof(RealTimeControlModelExtensions), "ControlGroupDataItemChildDataItemNamesAreInSync", rtcModel, new ControlGroup()));
         }
 
         [Test]
         public void TestControlGroupDataItemChildDataItemNamesAreInSync_ReturnsTrueForNoChildren()
         {
             var rtcModel = new RealTimeControlModel();
-            var controlGroup = new ControlGroup() { Name = "ControlGroup" };
+            var controlGroup = new ControlGroup() {Name = "ControlGroup"};
             rtcModel.ControlGroups.Add(controlGroup);
-            Assert.IsTrue((bool)TypeUtils.CallPrivateStaticMethod(typeof(RealTimeControlModelExtensions), "ControlGroupDataItemChildDataItemNamesAreInSync", rtcModel, controlGroup));
+            Assert.IsTrue((bool) TypeUtils.CallPrivateStaticMethod(typeof(RealTimeControlModelExtensions), "ControlGroupDataItemChildDataItemNamesAreInSync", rtcModel, controlGroup));
         }
 
         [Test]
@@ -319,23 +319,23 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
         {
             // setup
             var rtcModel = new RealTimeControlModel();
-            var controlGroup = new ControlGroup() { Name = "ControlGroup" };
+            var controlGroup = new ControlGroup() {Name = "ControlGroup"};
             controlGroup.Inputs.Add(new Input());
             controlGroup.Inputs.Add(new Input());
 
             rtcModel.ControlGroups.Add(controlGroup);
 
-            var controlGroupDataItem = rtcModel.DataItems.FirstOrDefault(di => ReferenceEquals(di.Value, controlGroup));
+            IDataItem controlGroupDataItem = rtcModel.DataItems.FirstOrDefault(di => ReferenceEquals(di.Value, controlGroup));
             Assert.NotNull(controlGroupDataItem);
             Assert.AreEqual(2, controlGroupDataItem.Children.Count);
 
-            var controlGroupInput1DataItem = controlGroupDataItem.Children[0];
+            IDataItem controlGroupInput1DataItem = controlGroupDataItem.Children[0];
             Assert.NotNull(controlGroupInput1DataItem);
-            
+
             // simulate ChildDataItem names being 'out of sync'
             controlGroupInput1DataItem.Name = controlGroupInput1DataItem.Name.Replace("ControlGroup", "ControlGroup_Renamed");
 
-            Assert.IsFalse((bool)TypeUtils.CallPrivateStaticMethod(typeof(RealTimeControlModelExtensions), "ControlGroupDataItemChildDataItemNamesAreInSync", rtcModel, controlGroup));
+            Assert.IsFalse((bool) TypeUtils.CallPrivateStaticMethod(typeof(RealTimeControlModelExtensions), "ControlGroupDataItemChildDataItemNamesAreInSync", rtcModel, controlGroup));
         }
 
         [Test]
@@ -343,23 +343,23 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
         {
             // setup
             var rtcModel = new RealTimeControlModel();
-            var controlGroup = new ControlGroup() { Name = "ControlGroup" };
+            var controlGroup = new ControlGroup() {Name = "ControlGroup"};
             controlGroup.Outputs.Add(new Output());
             controlGroup.Outputs.Add(new Output());
 
             rtcModel.ControlGroups.Add(controlGroup);
 
-            var controlGroupDataItem = rtcModel.DataItems.FirstOrDefault(di => ReferenceEquals(di.Value, controlGroup));
+            IDataItem controlGroupDataItem = rtcModel.DataItems.FirstOrDefault(di => ReferenceEquals(di.Value, controlGroup));
             Assert.NotNull(controlGroupDataItem);
             Assert.AreEqual(2, controlGroupDataItem.Children.Count);
 
-            var controlGroupOutput1DataItem = controlGroupDataItem.Children[0];
+            IDataItem controlGroupOutput1DataItem = controlGroupDataItem.Children[0];
             Assert.NotNull(controlGroupOutput1DataItem);
 
             // simulate ChildDataItem names being 'out of sync'
             controlGroupOutput1DataItem.Name = controlGroupOutput1DataItem.Name.Replace("ControlGroup", "ControlGroup_Renamed");
 
-            Assert.IsFalse((bool)TypeUtils.CallPrivateStaticMethod(typeof(RealTimeControlModelExtensions), "ControlGroupDataItemChildDataItemNamesAreInSync", rtcModel, controlGroup));
+            Assert.IsFalse((bool) TypeUtils.CallPrivateStaticMethod(typeof(RealTimeControlModelExtensions), "ControlGroupDataItemChildDataItemNamesAreInSync", rtcModel, controlGroup));
         }
 
         [Test]
@@ -367,14 +367,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
         {
             // setup
             var rtcModel = new RealTimeControlModel();
-            var controlGroup = new ControlGroup() { Name = "ControlGroup" };
+            var controlGroup = new ControlGroup() {Name = "ControlGroup"};
             controlGroup.Inputs.Add(new Input());
             controlGroup.Outputs.Add(new Output());
 
             rtcModel.ControlGroups.Add(controlGroup);
 
-            Assert.IsTrue((bool)TypeUtils.CallPrivateStaticMethod(typeof(RealTimeControlModelExtensions), "ControlGroupDataItemChildDataItemNamesAreInSync", rtcModel, controlGroup));
+            Assert.IsTrue((bool) TypeUtils.CallPrivateStaticMethod(typeof(RealTimeControlModelExtensions), "ControlGroupDataItemChildDataItemNamesAreInSync", rtcModel, controlGroup));
         }
-
     }
 }

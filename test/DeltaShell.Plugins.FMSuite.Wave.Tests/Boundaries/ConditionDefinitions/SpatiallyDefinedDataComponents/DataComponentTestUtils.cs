@@ -24,22 +24,22 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
         public static T ConstructParameters<T>() where T : class, IForcingTypeDefinedParameters
         {
             if (typeof(T) == typeof(ConstantParameters<PowerDefinedSpreading>))
-            { 
+            {
                 return GetConstantParameters<PowerDefinedSpreading>() as T;
             }
+
             if (typeof(T) == typeof(ConstantParameters<DegreesDefinedSpreading>))
-            { 
+            {
                 return GetConstantParameters<DegreesDefinedSpreading>() as T;
             }
-            
+
             throw new InvalidOperationException("Type currently not supported.");
         }
 
-        private static ConstantParameters<TSpreading> GetConstantParameters<TSpreading>() 
+        private static ConstantParameters<TSpreading> GetConstantParameters<TSpreading>()
             where TSpreading : class, IBoundaryConditionSpreading, new()
         {
             return new ConstantParameters<TSpreading>(1.0, 2.0, 3.0, new TSpreading());
         }
-        
     }
 }

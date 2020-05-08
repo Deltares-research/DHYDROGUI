@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             IEventedList<WaterQualityObservationPoint> monitorPoints = new EventedList<WaterQualityObservationPoint>();
 
             string path = Path.Combine(TestHelper.GetTestDataDirectory(), "IO", "dry_loads_shp_file", "sfb_testlocationsinput.shp");
-            ObservationPointImporter importer = new ObservationPointImporter();
+            var importer = new ObservationPointImporter();
             importer.ImportItem(path, monitorPoints);
 
             Assert.AreEqual(3, monitorPoints.Count);
@@ -55,7 +55,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             IEventedList<WaterQualityObservationPoint> monitorPoints = new EventedList<WaterQualityObservationPoint>();
 
             string path = Path.Combine(TestHelper.GetTestDataDirectory(), "IO", "shape_files", "observation points", "observationPoints.shp");
-            ObservationPointImporter importer = new ObservationPointImporter();
+            var importer = new ObservationPointImporter();
             importer.ImportItem(path, monitorPoints);
 
             Assert.AreEqual(8, monitorPoints.Count);
@@ -93,7 +93,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             IEventedList<WaterQualityObservationPoint> loads = new EventedList<WaterQualityObservationPoint>();
 
             string path = Path.Combine(TestHelper.GetTestDataDirectory(), "IO", "idontexist.shp");
-            ObservationPointImporter importer = new ObservationPointImporter();
+            var importer = new ObservationPointImporter();
             importer.ImportItem(path, loads);
 
             Assert.AreEqual(0, loads.Count);

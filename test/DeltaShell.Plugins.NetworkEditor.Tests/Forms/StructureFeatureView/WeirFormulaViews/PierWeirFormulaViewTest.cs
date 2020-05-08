@@ -13,10 +13,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView.Weir
         public void ShowWeirView()
         {
             var pierWeirFormula = new PierWeirFormula();
-            var pierWeirFormulaView = new PierWeirFormulaView
-                                          {
-                                              Data = pierWeirFormula
-                                          };
+            var pierWeirFormulaView = new PierWeirFormulaView {Data = pierWeirFormula};
 
             WindowsFormsTestHelper.ShowModal(pierWeirFormulaView);
         }

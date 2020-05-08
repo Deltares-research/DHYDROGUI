@@ -12,26 +12,29 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CompositeStructureView
     [TestFixture]
     public class CompositeStructureViewPresenterTest
     {
-        private ICompositeStructureView view; 
+        private ICompositeStructureView view;
+
         private CompositeStructureViewPresenter presenter;
         // private readonly IGui gui = new MockGui();
 
-        readonly List<IStructure1D> structures = new List<IStructure1D>
-                                              {
-                                                  new Pump("pump1") { OffsetY = 150 },
-                                                  new Weir("Weir1") { CrestLevel = 15 }
-                 
-                                              };
+        private readonly List<IStructure1D> structures = new List<IStructure1D>
+        {
+            new Pump("pump1") {OffsetY = 150},
+            new Weir("Weir1") {CrestLevel = 15}
+        };
         // In progress
 
         [TestFixtureSetUp]
         public void FixtureSetup()
         {
-            presenter = new CompositeStructureViewPresenter();            
+            presenter = new CompositeStructureViewPresenter();
             view = new MockCompositeStructureView(presenter);
             view.Data = CreateBrancheStructureWithPumpAndWeir(structures);
             presenter.View = view;
         }
+
+        [TestFixtureTearDown]
+        public void FixtureTearDown() {}
 
         [Test]
         public void PresenterShouldRespondToGuiSelectedObjectChanges()
@@ -42,15 +45,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CompositeStructureView
 
         [Test]
         public void PresenterShouldChangeGuiSelection()
-        {            
+        {
 //            view.ActivateFormView(structures[0]);
 //            Assert.AreSame(gui.Selection, presenter.View.SelectedStructure);
-        }
-
-        [TestFixtureTearDown]
-        public void FixtureTearDown()
-        {
-
         }
 
         private static ICompositeBranchStructure CreateBrancheStructureWithPumpAndWeir(IEnumerable<IStructure1D> structures)
@@ -64,10 +61,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CompositeStructureView
             network.Nodes.Add(node1);
             network.Nodes.Add(node2);
 
-            var branch1 = new Channel("branch1", node1, node2)
-            {
-                Geometry = GeometryFromWKT.Parse("LINESTRING (0 0, 100 0)")
-            };
+            var branch1 = new Channel("branch1", node1, node2) {Geometry = GeometryFromWKT.Parse("LINESTRING (0 0, 100 0)")};
 
             network.Branches.Add(branch1);
 
@@ -75,10 +69,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CompositeStructureView
 
             NetworkHelper.AddBranchFeatureToBranch(compositeBranchStructure, network.Branches[0], 50);
 
-            foreach (var structure in structures)
+            foreach (IStructure1D structure in structures)
             {
                 HydroNetworkHelper.AddStructureToComposite(compositeBranchStructure, structure);
-            }           
+            }
 
             return compositeBranchStructure;
         }

@@ -4,6 +4,7 @@ using System.Linq;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
+using DelftTools.Utils.Validation;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Exporters;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using NUnit.Framework;
@@ -13,6 +14,9 @@ namespace DeltaShell.Dimr.Tests
     [TestFixture]
     public class DimrApiTests
     {
+        private string dimrConfig;
+        private static readonly string tmpDir = Path.Combine(Path.GetTempPath(), Path.GetFileNameWithoutExtension(Path.GetRandomFileName()));
+
         [SetUp]
         public void SetUp()
         {
@@ -25,22 +29,11 @@ namespace DeltaShell.Dimr.Tests
             FileUtils.DeleteIfExists(dimrConfig);
         }
 
-        private string dimrConfig;
-        private static readonly string tmpDir = Path.Combine(Path.GetTempPath(), Path.GetFileNameWithoutExtension(Path.GetRandomFileName()));
-
-        static DimrApiTests()
-        {
-            Directory.CreateDirectory(tmpDir);
-        }
-
         [Test]
         public void TestDimrApi()
         {
             var dimrRefDate = new DateTime(1981, 8, 31, 0, 0, 0);
-            using (var api = new DimrApi
-            {
-                DimrRefDate = dimrRefDate
-            })
+            using (var api = new DimrApi {DimrRefDate = dimrRefDate})
             {
                 Assert.AreEqual(dimrRefDate, api.StartTime);
                 Assert.AreEqual(dimrRefDate, api.StopTime);
@@ -67,8 +60,8 @@ namespace DeltaShell.Dimr.Tests
         [Category(TestCategory.Slow)]
         public void TestInitializeUpdateFinishAndGetValues()
         {
-            var mduPath = TestHelper.GetTestFilePath(@"structures_all_types\har.mdu");
-            var localCopy = TestHelper.CreateLocalCopy(mduPath);
+            string mduPath = TestHelper.GetTestFilePath(@"structures_all_types\har.mdu");
+            string localCopy = TestHelper.CreateLocalCopy(mduPath);
 
             using (var model = new WaterFlowFMModel(localCopy))
             {
@@ -83,19 +76,19 @@ namespace DeltaShell.Dimr.Tests
                 }).ToList();
 
                 var exporter = new WaterFlowFMFileExporter();
-                var exporterPath = model.GetExporterPath(Path.Combine(tmpDir, model.DirectoryName));
+                string exporterPath = model.GetExporterPath(Path.Combine(tmpDir, model.DirectoryName));
                 exporter.Export(model, exporterPath);
                 DimrRunner.GenerateDimrXML(model, tmpDir);
 
                 using (var dimrApi = new DimrApi())
                 {
                     dimrApi.KernelDirs = model.KernelDirectoryLocation;
-                    var report = model.Validate();
+                    ValidationReport report = model.Validate();
                     Assert.AreEqual(0, report.ErrorCount, "Errors found during model validation");
                     dimrApi.Initialize(dimrConfig);
                     TestHelper.AssertAtLeastOneLogMessagesContains(dimrApi.ProcessMessages, "Run");
                     dimrApi.Update(dimrApi.TimeStep.TotalSeconds);
-                    var waterLevels = dimrApi.GetValues(model.Name + "/s0");
+                    Array waterLevels = dimrApi.GetValues(model.Name + "/s0");
                     Assert.AreEqual(0.0, (double) waterLevels.GetValue(0), 0.1);
                     dimrApi.SetValues(model.Name + "/s0", null);
                     waterLevels = dimrApi.GetValues(model.Name + "/s0");
@@ -164,6 +157,11 @@ namespace DeltaShell.Dimr.Tests
                     Assert.Fail("Expected no exception, but got: " + ex.Message);
                 }
             }
+        }
+
+        static DimrApiTests()
+        {
+            Directory.CreateDirectory(tmpDir);
         }
     }
 }

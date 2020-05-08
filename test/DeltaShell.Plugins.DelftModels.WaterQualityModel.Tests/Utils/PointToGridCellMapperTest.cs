@@ -1,5 +1,6 @@
 ﻿using System;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Utils;
+using NetTopologySuite.Extensions.Grids;
 using NUnit.Framework;
 using SharpMapTestUtils;
 
@@ -12,7 +13,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Utils
         public void GetCellIndexWithoutGridSetThrowsInvalidOperationException()
         {
             // setup
-            var relativeThicknesses = new[] { 1.0 };
+            var relativeThicknesses = new[]
+            {
+                1.0
+            };
             var mapper = new PointToGridCellMapper();
             mapper.SetSigmaLayers(relativeThicknesses);
 
@@ -28,8 +32,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Utils
         public void GetCellIndexWithoutLayersSetThrowsInvalidOperationException()
         {
             // setup
-            var grid = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 10, 10);
-            var mapper = new PointToGridCellMapper { Grid = grid };
+            UnstructuredGrid grid = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 10, 10);
+            var mapper = new PointToGridCellMapper {Grid = grid};
 
             // call
             TestDelegate call = () => mapper.GetWaqSegmentIndex(4.5, 17.8, 0.5);
@@ -40,13 +44,18 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Utils
         }
 
         [Test]
-        public void GetCellIndexForLocationOutsideGridThrowsArgumentException([Values(0.0 - double.Epsilon, 20.0 + double.Epsilon)] double x,
-                                                                              [Values(0.0 - double.Epsilon, 20.0 + double.Epsilon)] double y)
+        public void GetCellIndexForLocationOutsideGridThrowsArgumentException([Values(0.0 - double.Epsilon, 20.0 + double.Epsilon)]
+                                                                              double x,
+                                                                              [Values(0.0 - double.Epsilon, 20.0 + double.Epsilon)]
+                                                                              double y)
         {
             // setup
-            var grid = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 10, 10);
-            var relativeThicknesses = new[] { 1.0 };
-            var mapper = new PointToGridCellMapper { Grid = grid };
+            UnstructuredGrid grid = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 10, 10);
+            var relativeThicknesses = new[]
+            {
+                1.0
+            };
+            var mapper = new PointToGridCellMapper {Grid = grid};
             mapper.SetSigmaLayers(relativeThicknesses);
 
             // call
@@ -55,7 +64,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Utils
 
             // assert
             var exception = Assert.Throws<ArgumentException>(call);
-            var expectedMessage = string.Format("Point ({0}, {1}, {2}) is not within grid or has ambiguous location (on a grid edge or grid vertex).", x, y, height);
+            string expectedMessage = string.Format("Point ({0}, {1}, {2}) is not within grid or has ambiguous location (on a grid edge or grid vertex).", x, y, height);
             Assert.AreEqual(expectedMessage, exception.Message);
         }
 
@@ -68,7 +77,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Utils
         {
             // setup
             var relativeThicknesses = new double[nrOfLayers];
-            for (int i = 0; i < nrOfLayers; i++)
+            for (var i = 0; i < nrOfLayers; i++)
             {
                 relativeThicknesses[i] = relativeThickness;
             }
@@ -80,9 +89,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Utils
 
             // assert
             var exception = Assert.Throws<ArgumentException>(call);
-            var expectedMessage = string.Format("Sigma layers should add up to ~1.0, but was adding up to {0}.",
-                relativeThickness * nrOfLayers);
-            expectedMessage += Environment.NewLine + String.Format("Parameter name: {0}", exception.ParamName);
+            string expectedMessage = string.Format("Sigma layers should add up to ~1.0, but was adding up to {0}.",
+                                                   relativeThickness * nrOfLayers);
+            expectedMessage += Environment.NewLine + string.Format("Parameter name: {0}", exception.ParamName);
             Assert.AreEqual(expectedMessage, exception.Message);
         }
 
@@ -94,7 +103,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Utils
         {
             // setup
             var relativeThicknesses = new double[nrOfLayers];
-            for (int i = 0; i < nrOfLayers; i++)
+            for (var i = 0; i < nrOfLayers; i++)
             {
                 relativeThicknesses[i] = relativeThickness;
             }
@@ -117,7 +126,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Utils
         {
             // setup
             var relativeThicknesses = new double[nrOfLayers];
-            for (int i = 0; i < nrOfLayers; i++)
+            for (var i = 0; i < nrOfLayers; i++)
             {
                 relativeThicknesses[i] = relativeThickness;
             }
@@ -129,9 +138,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Utils
 
             // assert
             var exception = Assert.Throws<ArgumentException>(call);
-            var expectedMessage = string.Format("Z layers should add up to ~1.0, but was adding up to {0}.",
-                relativeThickness * nrOfLayers);
-            expectedMessage += Environment.NewLine + String.Format("Parameter name: {0}", exception.ParamName);
+            string expectedMessage = string.Format("Z layers should add up to ~1.0, but was adding up to {0}.",
+                                                   relativeThickness * nrOfLayers);
+            expectedMessage += Environment.NewLine + string.Format("Parameter name: {0}", exception.ParamName);
             Assert.AreEqual(expectedMessage, exception.Message);
         }
 
@@ -143,7 +152,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Utils
         {
             // setup
             var relativeThicknesses = new double[nrOfLayers];
-            for (int i = 0; i < nrOfLayers; i++)
+            for (var i = 0; i < nrOfLayers; i++)
             {
                 relativeThicknesses[i] = relativeThickness;
             }
@@ -165,9 +174,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Utils
         public void GetCellIndexForSigmaModelWithInvalidZThrowsArgumentOutOfRangeException(double height)
         {
             // setup
-            var grid = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 10, 10);
-            var relativeThicknesses = new[] { 1.0 };
-            var mapper = new PointToGridCellMapper { Grid = grid };
+            UnstructuredGrid grid = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 10, 10);
+            var relativeThicknesses = new[]
+            {
+                1.0
+            };
+            var mapper = new PointToGridCellMapper {Grid = grid};
             mapper.SetSigmaLayers(relativeThicknesses);
 
             // call
@@ -175,7 +187,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Utils
 
             // assert
             var exception = Assert.Throws<ArgumentOutOfRangeException>(call);
-            var expectedMessage = string.Format("Height of point must be in range [0, 1] for sigma models, but was {0}.", height);
+            string expectedMessage = string.Format("Height of point must be in range [0, 1] for sigma models, but was {0}.", height);
             expectedMessage += Environment.NewLine + "Parameter name: z";
             Assert.AreEqual(expectedMessage, exception.Message);
         }
@@ -188,9 +200,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Utils
         public void GetCellIndexForZLayerModelWithInvalidZThrowsArgumentOutOfRangeException(double height)
         {
             // setup
-            var grid = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 10, 10);
-            var relativeThicknesses = new[] { 1.0 };
-            var mapper = new PointToGridCellMapper { Grid = grid };
+            UnstructuredGrid grid = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 10, 10);
+            var relativeThicknesses = new[]
+            {
+                1.0
+            };
+            var mapper = new PointToGridCellMapper {Grid = grid};
             mapper.SetZLayers(relativeThicknesses, 1.0, 7.7);
 
             // call
@@ -198,11 +213,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Utils
 
             // assert
             var exception = Assert.Throws<ArgumentOutOfRangeException>(call);
-            var expectedMessage = string.Format("Height of point must be in range [1, 7.7] for Z-layer models, but was {0}.", height);
+            string expectedMessage = string.Format("Height of point must be in range [1, 7.7] for Z-layer models, but was {0}.", height);
             expectedMessage += Environment.NewLine + "Parameter name: z";
             Assert.AreEqual(expectedMessage, exception.Message);
         }
-        
+
         [Test]
         [TestCase(0.0)]
         [TestCase(0.33)]
@@ -219,13 +234,16 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Utils
             // |    |    |
             // O----O----O
 
-            var grid = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 10, 10);
-            var relativeThicknesses = new[] { 1.0 };
-            var mapper = new PointToGridCellMapper { Grid = grid };
+            UnstructuredGrid grid = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 10, 10);
+            var relativeThicknesses = new[]
+            {
+                1.0
+            };
+            var mapper = new PointToGridCellMapper {Grid = grid};
             mapper.SetSigmaLayers(relativeThicknesses);
 
             // call
-            var index = mapper.GetWaqSegmentIndex(4.5, 17.8, height);
+            int index = mapper.GetWaqSegmentIndex(4.5, 17.8, height);
 
             // assert
             Assert.AreEqual(3, index);
@@ -248,13 +266,16 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Utils
             // |    |    |
             // O----O----O
 
-            var grid = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 10, 10);
-            var relativeThicknesses = new[] { 1.0 };
-            var mapper = new PointToGridCellMapper { Grid = grid };
+            UnstructuredGrid grid = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 10, 10);
+            var relativeThicknesses = new[]
+            {
+                1.0
+            };
+            var mapper = new PointToGridCellMapper {Grid = grid};
             mapper.SetSigmaLayers(relativeThicknesses);
 
             // call
-            var index = mapper.GetWaqSegmentIndex(x, y, 0.5);
+            int index = mapper.GetWaqSegmentIndex(x, y, 0.5);
 
             // assert
             Assert.AreEqual(expectedIndex, index);
@@ -283,13 +304,18 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Utils
             // O----O----O
             // 3 Layers, each 1/3 of the height.
 
-            var grid = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 10, 10);
-            var relativeThicknesses = new[] { 0.3333, 0.3333, 0.3333 };
-            var mapper = new PointToGridCellMapper { Grid = grid };
+            UnstructuredGrid grid = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 10, 10);
+            var relativeThicknesses = new[]
+            {
+                0.3333,
+                0.3333,
+                0.3333
+            };
+            var mapper = new PointToGridCellMapper {Grid = grid};
             mapper.SetSigmaLayers(relativeThicknesses);
 
             // call
-            var index = mapper.GetWaqSegmentIndex(4.5, 17.8, height);
+            int index = mapper.GetWaqSegmentIndex(4.5, 17.8, height);
 
             // assert
             Assert.AreEqual(expectedIndex, index);
@@ -312,13 +338,18 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Utils
             // O----O----O
             // 3 Layers, each 1/3 of the height.
 
-            var grid = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 10, 10);
-            var relativeThicknesses = new[] { 0.3333, 0.3333, 0.3333 };
-            var mapper = new PointToGridCellMapper { Grid = grid };
+            UnstructuredGrid grid = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 10, 10);
+            var relativeThicknesses = new[]
+            {
+                0.3333,
+                0.3333,
+                0.3333
+            };
+            var mapper = new PointToGridCellMapper {Grid = grid};
             mapper.SetSigmaLayers(relativeThicknesses);
 
             // call
-            var index = mapper.GetWaqSegmentIndex(x, y, z);
+            int index = mapper.GetWaqSegmentIndex(x, y, z);
 
             // assert
             Assert.AreEqual(expectedIndex, index);
@@ -340,13 +371,16 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Utils
             // |    |    |
             // O----O----O
 
-            var grid = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 10, 10);
-            var relativeThicknesses = new[] { 1.0 };
-            var mapper = new PointToGridCellMapper { Grid = grid };
+            UnstructuredGrid grid = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 10, 10);
+            var relativeThicknesses = new[]
+            {
+                1.0
+            };
+            var mapper = new PointToGridCellMapper {Grid = grid};
             mapper.SetZLayers(relativeThicknesses, 1.0, 7.7);
 
             // call
-            var index = mapper.GetWaqSegmentIndex(4.5, 17.8, height);
+            int index = mapper.GetWaqSegmentIndex(4.5, 17.8, height);
 
             // assert
             Assert.AreEqual(3, index);
@@ -369,13 +403,16 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Utils
             // |    |    |
             // O----O----O
 
-            var grid = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 10, 10);
-            var relativeThicknesses = new[] { 1.0 };
-            var mapper = new PointToGridCellMapper { Grid = grid };
+            UnstructuredGrid grid = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 10, 10);
+            var relativeThicknesses = new[]
+            {
+                1.0
+            };
+            var mapper = new PointToGridCellMapper {Grid = grid};
             mapper.SetZLayers(relativeThicknesses, 1.0, 7.7);
 
             // call
-            var index = mapper.GetWaqSegmentIndex(x, y, 5.7);
+            int index = mapper.GetWaqSegmentIndex(x, y, 5.7);
 
             // assert
             Assert.AreEqual(expectedIndex, index);
@@ -384,11 +421,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Utils
         [Test]
         [TestCase(1.0, 3)]
         [TestCase(1.7, 3)]
-        [TestCase(1.0 + (0.3333) * (7.7 - 1.0) - 1e-6, 3)]
-        [TestCase(1.0 + (0.3333) * (7.7 - 1.0) + 1e-6, 7)]
+        [TestCase((1.0 + (0.3333 * (7.7 - 1.0))) - 1e-6, 3)]
+        [TestCase(1.0 + (0.3333 * (7.7 - 1.0)) + 1e-6, 7)]
         [TestCase(4.1, 7)]
-        [TestCase(1.0 + (0.6666) * (7.7 - 1.0) - 1e-6, 7)]
-        [TestCase(1.0 + (0.6666) * (7.7 - 1.0) + 1e-6, 11)]
+        [TestCase((1.0 + (0.6666 * (7.7 - 1.0))) - 1e-6, 7)]
+        [TestCase(1.0 + (0.6666 * (7.7 - 1.0)) + 1e-6, 11)]
         [TestCase(6.8, 11)]
         [TestCase(7.7, 11)]
         public void GetCellIndexFor3DZLayerModelForVariousZTest(double height, int expectedIndex)
@@ -404,13 +441,18 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Utils
             // O----O----O
             // 3 Layers, each 1/3 of the height.
 
-            var grid = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 10, 10);
-            var relativeThicknesses = new[] { 0.3333, 0.3333, 0.3333 };
-            var mapper = new PointToGridCellMapper { Grid = grid };
+            UnstructuredGrid grid = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 10, 10);
+            var relativeThicknesses = new[]
+            {
+                0.3333,
+                0.3333,
+                0.3333
+            };
+            var mapper = new PointToGridCellMapper {Grid = grid};
             mapper.SetZLayers(relativeThicknesses, 1.0, 7.7);
 
             // call
-            var index = mapper.GetWaqSegmentIndex(4.5, 17.8, height);
+            int index = mapper.GetWaqSegmentIndex(4.5, 17.8, height);
 
             // assert
             Assert.AreEqual(expectedIndex, index);
@@ -433,13 +475,18 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Utils
             // O----O----O
             // 3 Layers, each 1/3 of the height.
 
-            var grid = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 10, 10);
-            var relativeThicknesses = new[] { 0.3333, 0.3333, 0.3333 };
-            var mapper = new PointToGridCellMapper { Grid = grid };
+            UnstructuredGrid grid = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 10, 10);
+            var relativeThicknesses = new[]
+            {
+                0.3333,
+                0.3333,
+                0.3333
+            };
+            var mapper = new PointToGridCellMapper {Grid = grid};
             mapper.SetZLayers(relativeThicknesses, 1.0, 7.7);
 
             // call
-            var index = mapper.GetWaqSegmentIndex(x, y, z);
+            int index = mapper.GetWaqSegmentIndex(x, y, z);
 
             // assert
             Assert.AreEqual(expectedIndex, index);

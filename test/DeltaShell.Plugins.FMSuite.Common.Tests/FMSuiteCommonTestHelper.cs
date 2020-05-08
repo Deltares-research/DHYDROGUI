@@ -1,5 +1,4 @@
-﻿using System;
-using GeoAPI.Geometries;
+﻿using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Geometries;
 
@@ -11,7 +10,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests
 
         public static string GetExpectedEnclosurePolFileContent(string featureName)
         {
-            return String.Concat(featureName, expectedEnclosurePolFileContent);
+            return string.Concat(featureName, expectedEnclosurePolFileContent);
         }
 
         public static Polygon GetValidGeometryForEnclosureExample()
@@ -35,8 +34,10 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests
                                        /    \
                      (10.0, 10.0)     O------O (20.0, 10.0)
                 */
-                new Coordinate(10.0, 10.0), new Coordinate(20.0, 20.0),
-                new Coordinate(10.0, 20.0), new Coordinate(20.0, 10.0),
+                new Coordinate(10.0, 10.0),
+                new Coordinate(20.0, 20.0),
+                new Coordinate(10.0, 20.0),
+                new Coordinate(20.0, 10.0),
                 new Coordinate(10.0, 10.0)
             }));
         }
@@ -54,9 +55,12 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests
                                 |               \
                      (10.0, 10.0) O----------------O (22.0, 10.0)
                 */
-                new Coordinate(10.0, 10.0), new Coordinate(22.0, 10.0),
-                new Coordinate(20.0, 15.0), new Coordinate(20.0, 20.0),
-                new Coordinate(12.0, 20.0), new Coordinate(10.0, 15.0),
+                new Coordinate(10.0, 10.0),
+                new Coordinate(22.0, 10.0),
+                new Coordinate(20.0, 15.0),
+                new Coordinate(20.0, 20.0),
+                new Coordinate(12.0, 20.0),
+                new Coordinate(10.0, 15.0),
                 new Coordinate(10.0, 10.0)
             });
         }

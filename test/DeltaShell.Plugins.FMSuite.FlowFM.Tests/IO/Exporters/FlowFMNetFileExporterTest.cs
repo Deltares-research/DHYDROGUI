@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.TestUtils;
@@ -43,80 +44,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
                            "FlowFMNetFileExporter should not be able to export UnstructuredGridCoverages other than the bathymetry coverage of the model.");
         }
 
-        [TestCase(typeof(UnstructuredGrid))]
-        [TestCase(typeof(ImportedFMNetFile))]
-        public void GivenAFlowFMNetFileExporterAndFmModel_WhenCanExportFor_ThenReturnsTrueForTheseTypes(Type type)
-        {
-            // Given
-            var fmModel = new WaterFlowFMModel();
-            exporter.GetModelForGrid = g => fmModel;
-
-            // When, Then
-            Assert.IsTrue(exporter.CanExportFor(Activator.CreateInstance(type)),
-                          $"FlowFMNetFileExporter should be able to export for data type <{type}>.");
-        }
-
-        [TestCase("simplebox_hex7_map.nc", "mesh2d_node_z")] // UGrid
-        [TestCase("boundcond_test_map.nc", "NetNode_z")] // Non-UGrid
-        [Category(TestCategory.DataAccess)]
-        [Category(TestCategory.Slow)]
-        public void TestExportNetFileWritesZValuesAtNodes(string netFile, string zValueVariableName)
-        {
-            const string testDir = "TestExport";
-            if (Directory.Exists(testDir)) Directory.Delete(testDir, true);
-
-            // get running DeltaShell application
-            using (var app = new DeltaShellApplication())
-            {
-                app.Plugins.Add(new FlowFMApplicationPlugin());
-                app.Run();
-
-                // create FM Model
-                var fmModel = new WaterFlowFMModel();
-                app.Project.RootFolder.Add(fmModel);
-
-                app.SaveProjectAs(Path.Combine(testDir, "TestExport.dsproj")); // save to initialize file repository..
-                fmModel.ExportTo(Path.Combine(testDir, "TestModel.mdu"));
-
-                var importer = app.FileImporters.OfType<FlowFMNetFileImporter>().FirstOrDefault();
-                Assert.IsNotNull(importer);
-
-                var testDataFilePath = TestHelper.GetTestFilePath(@"output_mapfiles");
-                var zmDfmZipFileName = "zm_dfm_map.zip";
-                var zmDfmZipFilePath = Path.Combine(testDataFilePath, zmDfmZipFileName);
-
-                TestHelper.PerformActionInTemporaryDirectory(tempDir =>
-                {
-                    FileUtils.CopyDirectory(testDataFilePath, tempDir);
-                    ZipFileUtils.Extract(zmDfmZipFilePath, tempDir);
-
-                    var mapFilePath = Path.Combine(tempDir, netFile);
-
-                    // import netfile into Unstructured Grid
-                    importer.ImportItem(mapFilePath, fmModel.Grid);
-
-                    exporter.GetModelForGrid = g => fmModel;
-                    var outputFilePath = Path.Combine(testDir, "outputNetFile.nc");
-
-                    // exporting UnstructuredGrid should be successful
-                    Assert.IsTrue(exporter.Export(fmModel.Grid, outputFilePath));
-
-                    using (var ncFile = new NetCdfFileWrapper(outputFilePath))
-                    {
-                        // exported grid should contain zValue variable
-                        Assert.NotNull(ncFile.GetValues1D<double>(zValueVariableName));
-                    }
-                });
-            }
-        }
-
         [Test]
         [Category(TestCategory.DataAccess)]
         [Category(TestCategory.Slow)]
         public void TestExportNetFileWriteZValuesAtCellCenters()
         {
             const string testDir = "TestExport";
-            if (Directory.Exists(testDir)) Directory.Delete(testDir, true);
+            if (Directory.Exists(testDir))
+            {
+                Directory.Delete(testDir, true);
+            }
 
             // get running DeltaShell application
             using (var app = new DeltaShellApplication())
@@ -128,23 +65,23 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
                 var fmModel = new WaterFlowFMModel();
 
                 // set bed level location to faces
-                var cellsValue = ((int)UnstructuredGridFileHelper.BedLevelLocation.Faces).ToString();
+                var cellsValue = ((int) UnstructuredGridFileHelper.BedLevelLocation.Faces).ToString();
                 fmModel.ModelDefinition.GetModelProperty(KnownProperties.BedlevType).SetValueAsString(cellsValue);
-                
+
                 app.Project.RootFolder.Add(fmModel);
 
                 app.SaveProjectAs(Path.Combine(testDir, "TestExport.dsproj")); // save to initialize file repository..
                 fmModel.ExportTo(Path.Combine(testDir, "TestModel.mdu"));
 
-                var importer = app.FileImporters.OfType<FlowFMNetFileImporter>().FirstOrDefault();
+                FlowFMNetFileImporter importer = app.FileImporters.OfType<FlowFMNetFileImporter>().FirstOrDefault();
                 Assert.IsNotNull(importer);
-                var path = TestHelper.GetTestFilePath(Path.Combine("ugrid", "Custom_Ugrid.nc"));
+                string path = TestHelper.GetTestFilePath(Path.Combine("ugrid", "Custom_Ugrid.nc"));
 
                 // import netfile into Unstructured Grid
                 importer.ImportItem(path, fmModel.Grid);
 
                 exporter.GetModelForGrid = g => fmModel;
-                var outputFilePath = Path.Combine(testDir, "outputNetFile.nc");
+                string outputFilePath = Path.Combine(testDir, "outputNetFile.nc");
 
                 // exporting UnstructuredGrid should be successful
                 Assert.IsTrue(exporter.Export(fmModel.Grid, outputFilePath));
@@ -163,7 +100,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
         {
             var nonExistingFilePath = "NonExistingFile.nc";
             var netFile = new ImportedFMNetFile(nonExistingFilePath);
-            var result = exporter.Export(netFile, nonExistingFilePath);
+            bool result = exporter.Export(netFile, nonExistingFilePath);
 
             Assert.IsTrue(result);
         }
@@ -172,9 +109,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
         [Category(TestCategory.DataAccess)]
         public void GivenImportedFMNetFileWhenExportingWithDifferentPathThenCreateFileCopyAndReturnTrue()
         {
-            var testDataFilePath = TestHelper.GetTestFilePath(@"output_mapfiles");
+            string testDataFilePath = TestHelper.GetTestFilePath(@"output_mapfiles");
             var zmDfmZipFileName = "zm_dfm_map.zip";
-            var zmDfmZipFilePath = Path.Combine(testDataFilePath, zmDfmZipFileName);
+            string zmDfmZipFilePath = Path.Combine(testDataFilePath, zmDfmZipFileName);
 
             TestHelper.PerformActionInTemporaryDirectory(tempDir =>
             {
@@ -182,11 +119,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
                 ZipFileUtils.Extract(zmDfmZipFilePath, tempDir);
 
                 var simpleBoxMapFileName = "simplebox_hex7_map.nc";
-                var mapFilePath = Path.Combine(tempDir, simpleBoxMapFileName);
-                var dummyFilePath = Path.Combine(testDataFilePath, "dummy.nc");
+                string mapFilePath = Path.Combine(tempDir, simpleBoxMapFileName);
+                string dummyFilePath = Path.Combine(testDataFilePath, "dummy.nc");
 
                 var netFile = new ImportedFMNetFile(mapFilePath);
-                var result = exporter.Export(netFile, dummyFilePath);
+                bool result = exporter.Export(netFile, dummyFilePath);
                 Assert.IsTrue(result);
 
                 CheckIfFileExistsAndDeleteTheFile(dummyFilePath);
@@ -198,7 +135,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
         public void GivenImportedFMNetFileWhenExportingWithUnstructuredGridWithEmptyGridThenReturnFalse()
         {
             var unstructuredGrid = new UnstructuredGrid();
-            var result = exporter.Export(unstructuredGrid, "NonExistingFile.nc");
+            bool result = exporter.Export(unstructuredGrid, "NonExistingFile.nc");
 
             Assert.IsFalse(result);
         }
@@ -209,8 +146,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
         public void GivenWaterFlowFMModelWithNonEmptyGridWhenExportingThenWriteNetFileAndReturnTrue()
         {
             const string testDir = "TestExport";
-            if (Directory.Exists(testDir)) Directory.Delete(testDir, true);
-            var dummyFilePath = TestHelper.GetTestFilePath(Path.Combine("output_mapfiles", "dummy.nc"));
+            if (Directory.Exists(testDir))
+            {
+                Directory.Delete(testDir, true);
+            }
+
+            string dummyFilePath = TestHelper.GetTestFilePath(Path.Combine("output_mapfiles", "dummy.nc"));
 
             using (var app = new DeltaShellApplication())
             {
@@ -225,31 +166,102 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
                 fmModel.ModelDefinition.GetModelProperty(KnownProperties.BedlevType).SetValueAsString(cellsValue);
 
                 app.Project.RootFolder.Add(fmModel);
-                
+
                 app.SaveProjectAs(Path.Combine(testDir, "TestExport.dsproj")); // save to initialize file repository..
                 fmModel.ExportTo(Path.Combine(testDir, "TestModel.mdu"));
 
-                var importer = app.FileImporters.OfType<FlowFMNetFileImporter>().FirstOrDefault();
+                FlowFMNetFileImporter importer = app.FileImporters.OfType<FlowFMNetFileImporter>().FirstOrDefault();
                 Assert.IsNotNull(importer);
-                var path = TestHelper.GetTestFilePath(Path.Combine("ugrid", "Custom_Ugrid.nc"));
+                string path = TestHelper.GetTestFilePath(Path.Combine("ugrid", "Custom_Ugrid.nc"));
 
                 // import netfile into Unstructured Grid
                 importer.ImportItem(path, fmModel.Grid);
-                
-                var result = exporter.Export(fmModel.Grid, dummyFilePath);
+
+                bool result = exporter.Export(fmModel.Grid, dummyFilePath);
                 Assert.IsTrue(result);
             }
+
             CheckIfFileExistsAndDeleteTheFile(dummyFilePath);
         }
 
         [Test]
         public void GivenImportedFMNetFileWhenGettingSourceTypesThenReturnDefaultValues()
         {
-            var sourceTypes = exporter.SourceTypes().AsList();
+            IList<Type> sourceTypes = exporter.SourceTypes().AsList();
             Assert.That(sourceTypes.Count, Is.EqualTo(3));
             Assert.That(sourceTypes.Contains(typeof(UnstructuredGrid)));
             Assert.That(sourceTypes.Contains(typeof(ImportedFMNetFile)));
             Assert.That(sourceTypes.Contains(typeof(UnstructuredGridCoverage)));
+        }
+
+        [TestCase(typeof(UnstructuredGrid))]
+        [TestCase(typeof(ImportedFMNetFile))]
+        public void GivenAFlowFMNetFileExporterAndFmModel_WhenCanExportFor_ThenReturnsTrueForTheseTypes(Type type)
+        {
+            // Given
+            var fmModel = new WaterFlowFMModel();
+            exporter.GetModelForGrid = g => fmModel;
+
+            // When, Then
+            Assert.IsTrue(exporter.CanExportFor(Activator.CreateInstance(type)),
+                          $"FlowFMNetFileExporter should be able to export for data type <{type}>.");
+        }
+
+        [TestCase("simplebox_hex7_map.nc", "mesh2d_node_z")] // UGrid
+        [TestCase("boundcond_test_map.nc", "NetNode_z")]     // Non-UGrid
+        [Category(TestCategory.DataAccess)]
+        [Category(TestCategory.Slow)]
+        public void TestExportNetFileWritesZValuesAtNodes(string netFile, string zValueVariableName)
+        {
+            const string testDir = "TestExport";
+            if (Directory.Exists(testDir))
+            {
+                Directory.Delete(testDir, true);
+            }
+
+            // get running DeltaShell application
+            using (var app = new DeltaShellApplication())
+            {
+                app.Plugins.Add(new FlowFMApplicationPlugin());
+                app.Run();
+
+                // create FM Model
+                var fmModel = new WaterFlowFMModel();
+                app.Project.RootFolder.Add(fmModel);
+
+                app.SaveProjectAs(Path.Combine(testDir, "TestExport.dsproj")); // save to initialize file repository..
+                fmModel.ExportTo(Path.Combine(testDir, "TestModel.mdu"));
+
+                FlowFMNetFileImporter importer = app.FileImporters.OfType<FlowFMNetFileImporter>().FirstOrDefault();
+                Assert.IsNotNull(importer);
+
+                string testDataFilePath = TestHelper.GetTestFilePath(@"output_mapfiles");
+                var zmDfmZipFileName = "zm_dfm_map.zip";
+                string zmDfmZipFilePath = Path.Combine(testDataFilePath, zmDfmZipFileName);
+
+                TestHelper.PerformActionInTemporaryDirectory(tempDir =>
+                {
+                    FileUtils.CopyDirectory(testDataFilePath, tempDir);
+                    ZipFileUtils.Extract(zmDfmZipFilePath, tempDir);
+
+                    string mapFilePath = Path.Combine(tempDir, netFile);
+
+                    // import netfile into Unstructured Grid
+                    importer.ImportItem(mapFilePath, fmModel.Grid);
+
+                    exporter.GetModelForGrid = g => fmModel;
+                    string outputFilePath = Path.Combine(testDir, "outputNetFile.nc");
+
+                    // exporting UnstructuredGrid should be successful
+                    Assert.IsTrue(exporter.Export(fmModel.Grid, outputFilePath));
+
+                    using (var ncFile = new NetCdfFileWrapper(outputFilePath))
+                    {
+                        // exported grid should contain zValue variable
+                        Assert.NotNull(ncFile.GetValues1D<double>(zValueVariableName));
+                    }
+                });
+            }
         }
 
         private static void CheckIfFileExistsAndDeleteTheFile(string dummyFilePath)

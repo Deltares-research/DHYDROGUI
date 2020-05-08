@@ -40,10 +40,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             IDataItem dataItem = fmModel.GetDataItemByItemString(itemString);
 
             // Then
-            string messageDifferentFeatureInDataItem =
+            var messageDifferentFeatureInDataItem =
                 "The retrieved dataItem is not correct, since the features are not the same";
 
-            string messageDifferentParameterInDataItem =
+            var messageDifferentParameterInDataItem =
                 "The retrieved dataItem is not correct, since the parameters are not the same";
 
             Assert.AreEqual(gate, ((ParameterValueConverter) dataItem.ValueConverter).Location,
@@ -74,7 +74,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             void Call() => fmModel.GetDataItemByItemString(itemString);
 
             // Then
-            ArgumentException ex =
+            var ex =
                 Assert.Throws<ArgumentException>(Call);
             Assert.AreEqual($"{itemString} should contain a category, feature name and a parameter name.", ex.Message,
                             "The exception message is different than expected");
@@ -85,7 +85,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
         {
             // Given
             var fmModel = new WaterFlowFMModel();
-
 
             // When
             const string featureName = "NotExisting";
@@ -101,7 +100,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             void Call() => fmModel.GetDataItemByItemString(itemString);
 
             // Then
-            ArgumentException ex =
+            var ex =
                 Assert.Throws<ArgumentException>(Call);
             Assert.AreEqual($"feature {featureName} in {itemString} cannot be found in the FM model.", ex.Message,
                             "The exception message is different than expected");
@@ -133,10 +132,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             void Call() => fmModel.GetDataItemByItemString(itemString);
 
             // Then
-            ArgumentException ex =
+            var ex =
                 Assert.Throws<ArgumentException>(Call);
             Assert.AreEqual($"parameter name {parameterName} in {KnownFeatureCategories.Gates}/{gate.Name}/{parameterName} cannot be found in the FM model.",
-                ex.Message, "The exception message is different than expected");
+                            ex.Message, "The exception message is different than expected");
         }
 
         [Test]
@@ -152,7 +151,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
                 model.PrepareForIntegratedModelRun();
 
                 string expectedPath = Path.Combine(explicitWorkingDirectory,
-                                                   Path.ChangeExtension(model.Name, 
+                                                   Path.ChangeExtension(model.Name,
                                                                         FileConstants.CachingFileExtension));
 
                 // Assert

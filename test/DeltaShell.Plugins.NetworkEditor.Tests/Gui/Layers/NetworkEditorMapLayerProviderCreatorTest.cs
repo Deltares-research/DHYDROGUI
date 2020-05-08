@@ -28,7 +28,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Layers
             Assert.That(providers.Length, Is.EqualTo(14));
 
             IEnumerable<Type> providerTypes = providers.Select(p => p.GetType());
-            Assert.That(providerTypes, Is.EqualTo(new []
+            Assert.That(providerTypes, Is.EqualTo(new[]
             {
                 typeof(HydroAreaLayerProvider),
                 typeof(HydroRegionLayerProvider),
@@ -52,11 +52,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Layers
         public void GivenNetworkEditorMapLayerProvider_WhenCreatingLayersRecursively_ThenExpectedLayersAreCreated()
         {
             // Arrange
-            string hydroAreaName = Guid.NewGuid().ToString();
-            var hydroArea = new HydroArea
-            {
-                Name = hydroAreaName
-            };
+            var hydroAreaName = Guid.NewGuid().ToString();
+            var hydroArea = new HydroArea {Name = hydroAreaName};
 
             IMapLayerProvider mapLayerProvider = NetworkEditorMapLayerProviderCreator.CreateMapLayerProvider();
 

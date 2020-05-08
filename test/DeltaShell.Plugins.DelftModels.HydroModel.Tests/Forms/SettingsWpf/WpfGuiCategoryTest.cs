@@ -151,10 +151,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.SettingsWpf
         {
             // Setup
             IDisposable customControl = Substitute.For<IDisposable, FrameworkElement>();
-            var category = new WpfGuiCategory("category_name", new List<FieldUIDescription>())
-            {
-                CustomControl = (FrameworkElement) customControl
-            };
+            var category = new WpfGuiCategory("category_name", new List<FieldUIDescription>()) {CustomControl = (FrameworkElement) customControl};
 
             // Call
             category.Dispose();

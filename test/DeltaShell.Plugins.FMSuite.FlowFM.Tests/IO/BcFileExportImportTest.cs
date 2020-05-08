@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.Functions;
@@ -29,32 +30,35 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         {
             var model = new WaterFlowFMModel(TestHelper.GetTestFilePath(@"harlingen/har.mdu"));
 
-            var salinityBoundaryConditions =
+            List<FlowBoundaryCondition> salinityBoundaryConditions =
                 model.BoundaryConditionSets.SelectMany(bcs => bcs.BoundaryConditions.OfType<FlowBoundaryCondition>())
                      .Where(fbc => fbc.FlowQuantity == FlowBoundaryQuantityType.Salinity)
                      .ToList();
 
-            var salinityConditionCount = salinityBoundaryConditions.Count;
-            var salinityDataPointCount = salinityBoundaryConditions.Sum(bc => bc.DataPointIndices.Count);
-            var salinityArgumentValues =
+            int salinityConditionCount = salinityBoundaryConditions.Count;
+            int salinityDataPointCount = salinityBoundaryConditions.Sum(bc => bc.DataPointIndices.Count);
+            List<DateTime> salinityArgumentValues =
                 salinityBoundaryConditions.SelectMany(bc => bc.PointData)
                                           .SelectMany(f => f.Arguments[0].Values.OfType<DateTime>()).ToList();
-            var salinityComponentValues =
+            List<double> salinityComponentValues =
                 salinityBoundaryConditions.SelectMany(bc => bc.PointData)
                                           .SelectMany(f => f.Components[0].Values.OfType<double>()).ToList();
 
-
             var exporter = new BcFileExporter
+            {
+                ExcludedQuantities = new[]
                 {
-                    ExcludedQuantities = new[] {FlowBoundaryQuantityType.WaterLevel, FlowBoundaryQuantityType.Discharge},
-                    WriteMode = BcFile.WriteMode.SingleFile
-                };
+                    FlowBoundaryQuantityType.WaterLevel,
+                    FlowBoundaryQuantityType.Discharge
+                },
+                WriteMode = BcFile.WriteMode.SingleFile
+            };
             exporter.Export(model.BoundaryConditionSets, "har_sal.bc");
 
-            foreach (var boundaryConditionSet in model.BoundaryConditionSets)
+            foreach (BoundaryConditionSet boundaryConditionSet in model.BoundaryConditionSets)
             {
                 foreach (
-                    var boundaryCondition in boundaryConditionSet.BoundaryConditions.OfType<FlowBoundaryCondition>())
+                    FlowBoundaryCondition boundaryCondition in boundaryConditionSet.BoundaryConditions.OfType<FlowBoundaryCondition>())
                 {
                     if (boundaryCondition.FlowQuantity == FlowBoundaryQuantityType.Salinity)
                     {
@@ -63,10 +67,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 }
             }
 
-            var importer = new BcFileImporter {DeleteDataBeforeImport = false, FilePaths = new[] {"har_sal.bc"}};
+            var importer = new BcFileImporter
+            {
+                DeleteDataBeforeImport = false,
+                FilePaths = new[]
+                {
+                    "har_sal.bc"
+                }
+            };
             importer.ImportItem(null, model.BoundaryConditionSets);
 
-            var importedSalinityBoundaryConditions =
+            List<FlowBoundaryCondition> importedSalinityBoundaryConditions =
                 model.BoundaryConditionSets.SelectMany(bcs => bcs.BoundaryConditions.OfType<FlowBoundaryCondition>())
                      .Where(fbc => fbc.FlowQuantity == FlowBoundaryQuantityType.Salinity)
                      .ToList();
@@ -76,14 +87,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             Assert.AreEqual(salinityDataPointCount,
                             importedSalinityBoundaryConditions.Sum(bc => bc.DataPointIndices.Count));
 
-            var importedSalinityArgumentValues =
+            List<DateTime> importedSalinityArgumentValues =
                 importedSalinityBoundaryConditions.SelectMany(bc => bc.PointData)
                                                   .SelectMany(f => f.Arguments[0].Values.OfType<DateTime>())
                                                   .ToList();
 
             Assert.IsTrue(salinityArgumentValues.SequenceEqual(importedSalinityArgumentValues));
 
-            var importedSalinityComponentValues =
+            List<double> importedSalinityComponentValues =
                 importedSalinityBoundaryConditions.SelectMany(bc => bc.PointData)
                                                   .SelectMany(f => f.Components[0].Values.OfType<double>())
                                                   .ToList();
@@ -96,35 +107,38 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         {
             var model = new WaterFlowFMModel(TestHelper.GetTestFilePath(@"harlingen/har.mdu"));
 
-            var waterLevelBoundaryConditions =
+            List<FlowBoundaryCondition> waterLevelBoundaryConditions =
                 model.BoundaryConditionSets.SelectMany(bcs => bcs.BoundaryConditions.OfType<FlowBoundaryCondition>())
                      .Where(fbc => fbc.FlowQuantity == FlowBoundaryQuantityType.WaterLevel)
                      .ToList();
 
-            var waterLevelBoundaryNames =
+            IEnumerable<string> waterLevelBoundaryNames =
                 waterLevelBoundaryConditions.Select(bc => bc.Feature).Distinct().Select(f => f.Name);
 
-            var waterLevelConditionCount = waterLevelBoundaryConditions.Count;
-            var waterLevelDataPointCount = waterLevelBoundaryConditions.Sum(bc => bc.DataPointIndices.Count);
-            var waterLevelArgumentValues =
+            int waterLevelConditionCount = waterLevelBoundaryConditions.Count;
+            int waterLevelDataPointCount = waterLevelBoundaryConditions.Sum(bc => bc.DataPointIndices.Count);
+            List<DateTime> waterLevelArgumentValues =
                 waterLevelBoundaryConditions.SelectMany(bc => bc.PointData)
                                             .SelectMany(f => f.Arguments[0].Values.OfType<DateTime>()).ToList();
-            var waterLevelComponentValues =
+            List<double> waterLevelComponentValues =
                 waterLevelBoundaryConditions.SelectMany(bc => bc.PointData)
                                             .SelectMany(f => f.Components[0].Values.OfType<double>()).ToList();
 
-
             var exporter = new BcFileExporter
+            {
+                ExcludedQuantities = new[]
                 {
-                    ExcludedQuantities = new[] {FlowBoundaryQuantityType.Salinity, FlowBoundaryQuantityType.Discharge},
-                    WriteMode = BcFile.WriteMode.FilePerFeature
-                };
+                    FlowBoundaryQuantityType.Salinity,
+                    FlowBoundaryQuantityType.Discharge
+                },
+                WriteMode = BcFile.WriteMode.FilePerFeature
+            };
             exporter.Export(model.BoundaryConditionSets, "harwaterlevel.bc");
 
-            foreach (var boundaryConditionSet in model.BoundaryConditionSets)
+            foreach (BoundaryConditionSet boundaryConditionSet in model.BoundaryConditionSets)
             {
                 foreach (
-                    var boundaryCondition in boundaryConditionSet.BoundaryConditions.OfType<FlowBoundaryCondition>())
+                    FlowBoundaryCondition boundaryCondition in boundaryConditionSet.BoundaryConditions.OfType<FlowBoundaryCondition>())
                 {
                     if (boundaryCondition.FlowQuantity == FlowBoundaryQuantityType.WaterLevel)
                     {
@@ -133,17 +147,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 }
             }
 
-            var filePaths = waterLevelBoundaryNames.Select(n => "harwaterlevel_" + n + ".bc").ToArray();
+            string[] filePaths = waterLevelBoundaryNames.Select(n => "harwaterlevel_" + n + ".bc").ToArray();
 
-            foreach (var filePath in filePaths)
+            foreach (string filePath in filePaths)
             {
                 Assert.IsTrue(File.Exists(filePath));
             }
 
-            var importer = new BcFileImporter {DeleteDataBeforeImport = false, FilePaths = filePaths};
+            var importer = new BcFileImporter
+            {
+                DeleteDataBeforeImport = false,
+                FilePaths = filePaths
+            };
             importer.ImportItem(null, model.BoundaryConditionSets);
 
-            var importedWaterLevelBoundaryConditions =
+            List<FlowBoundaryCondition> importedWaterLevelBoundaryConditions =
                 model.BoundaryConditionSets.SelectMany(bcs => bcs.BoundaryConditions.OfType<FlowBoundaryCondition>())
                      .Where(fbc => fbc.FlowQuantity == FlowBoundaryQuantityType.WaterLevel)
                      .ToList();
@@ -153,14 +171,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             Assert.AreEqual(waterLevelDataPointCount,
                             importedWaterLevelBoundaryConditions.Sum(bc => bc.DataPointIndices.Count));
 
-            var importedSalinityArgumentValues =
+            List<DateTime> importedSalinityArgumentValues =
                 importedWaterLevelBoundaryConditions.SelectMany(bc => bc.PointData)
                                                     .SelectMany(f => f.Arguments[0].Values.OfType<DateTime>())
                                                     .ToList();
 
             Assert.IsTrue(waterLevelArgumentValues.SequenceEqual(importedSalinityArgumentValues));
 
-            var importedSalinityComponentValues =
+            List<double> importedSalinityComponentValues =
                 importedWaterLevelBoundaryConditions.SelectMany(bc => bc.PointData)
                                                     .SelectMany(f => f.Components[0].Values.OfType<double>())
                                                     .ToList();
@@ -173,34 +191,36 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         {
             var model = new WaterFlowFMModel(TestHelper.GetTestFilePath(@"harlingen/har.mdu"));
 
-            var salinityBoundaryConditions =
+            List<FlowBoundaryCondition> salinityBoundaryConditions =
                 model.BoundaryConditionSets.SelectMany(bcs => bcs.BoundaryConditions.OfType<FlowBoundaryCondition>())
                      .Where(fbc => fbc.FlowQuantity == FlowBoundaryQuantityType.Salinity)
                      .ToList();
 
-            var salinityConditionCount = salinityBoundaryConditions.Count;
-            var salinityDataPointCount = salinityBoundaryConditions.Sum(bc => bc.DataPointIndices.Count);
-            var salinityArgumentValues =
+            int salinityConditionCount = salinityBoundaryConditions.Count;
+            int salinityDataPointCount = salinityBoundaryConditions.Sum(bc => bc.DataPointIndices.Count);
+            List<DateTime> salinityArgumentValues =
                 salinityBoundaryConditions.SelectMany(bc => bc.PointData)
                                           .SelectMany(f => f.Arguments[0].Values.OfType<DateTime>()).ToList();
-            var salinityComponentValues =
+            List<double> salinityComponentValues =
                 salinityBoundaryConditions.SelectMany(bc => bc.PointData)
                                           .SelectMany(f => f.Components[0].Values.OfType<double>()).ToList();
 
-
             var exporter = new BcFileExporter
             {
-                ExcludedQuantities = new[] { FlowBoundaryQuantityType.Discharge },
+                ExcludedQuantities = new[]
+                {
+                    FlowBoundaryQuantityType.Discharge
+                },
                 WriteMode = BcFile.WriteMode.FilePerProcess
             };
             exporter.Export(model.BoundaryConditionSets, "har.bc");
 
             Assert.IsTrue(File.Exists("har_salinity.bc"));
 
-            foreach (var boundaryConditionSet in model.BoundaryConditionSets)
+            foreach (BoundaryConditionSet boundaryConditionSet in model.BoundaryConditionSets)
             {
                 foreach (
-                    var boundaryCondition in boundaryConditionSet.BoundaryConditions.OfType<FlowBoundaryCondition>())
+                    FlowBoundaryCondition boundaryCondition in boundaryConditionSet.BoundaryConditions.OfType<FlowBoundaryCondition>())
                 {
                     if (boundaryCondition.FlowQuantity == FlowBoundaryQuantityType.Salinity)
                     {
@@ -209,10 +229,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 }
             }
 
-            var importer = new BcFileImporter { DeleteDataBeforeImport = false, FilePaths = new[] { "har_salinity.bc" } };
+            var importer = new BcFileImporter
+            {
+                DeleteDataBeforeImport = false,
+                FilePaths = new[]
+                {
+                    "har_salinity.bc"
+                }
+            };
             importer.ImportItem(null, model.BoundaryConditionSets);
 
-            var importedSalinityBoundaryConditions =
+            List<FlowBoundaryCondition> importedSalinityBoundaryConditions =
                 model.BoundaryConditionSets.SelectMany(bcs => bcs.BoundaryConditions.OfType<FlowBoundaryCondition>())
                      .Where(fbc => fbc.FlowQuantity == FlowBoundaryQuantityType.Salinity)
                      .ToList();
@@ -222,14 +249,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             Assert.AreEqual(salinityDataPointCount,
                             importedSalinityBoundaryConditions.Sum(bc => bc.DataPointIndices.Count));
 
-            var importedSalinityArgumentValues =
+            List<DateTime> importedSalinityArgumentValues =
                 importedSalinityBoundaryConditions.SelectMany(bc => bc.PointData)
                                                   .SelectMany(f => f.Arguments[0].Values.OfType<DateTime>())
                                                   .ToList();
 
             Assert.IsTrue(salinityArgumentValues.SequenceEqual(importedSalinityArgumentValues));
 
-            var importedSalinityComponentValues =
+            List<double> importedSalinityComponentValues =
                 importedSalinityBoundaryConditions.SelectMany(bc => bc.PointData)
                                                   .SelectMany(f => f.Components[0].Values.OfType<double>())
                                                   .ToList();
@@ -242,12 +269,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         {
             var model = new WaterFlowFMModel(TestHelper.GetTestFilePath(@"simplebox/simplebox.mdu"));
 
-            var harmonicBoundaryCondition =
+            IBoundaryCondition harmonicBoundaryCondition =
                 model.BoundaryConditions.First(bc => bc.DataType == BoundaryConditionDataType.Harmonics);
 
-            var dataIndices = harmonicBoundaryCondition.DataPointIndices.ToList();
+            List<int> dataIndices = harmonicBoundaryCondition.DataPointIndices.ToList();
 
-            foreach (var dataIndex in dataIndices)
+            foreach (int dataIndex in dataIndices)
             {
                 harmonicBoundaryCondition.RemovePoint(dataIndex);
             }
@@ -256,23 +283,45 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
             harmonicBoundaryCondition.AddPoint(0);
 
-            var frequencies = new[] {0.0, 6.5, 23.5};
-            var amplitudes = new[] {1.25, 0.12, 0.4};
-            var phases = new[] {0.0, 132, 230};
-            var ampcorrections = new[] {0.0, 1.1, 0.99};
-            var phasecorrections = new[] {0.0, 10.4, 20};
+            var frequencies = new[]
+            {
+                0.0,
+                6.5,
+                23.5
+            };
+            var amplitudes = new[]
+            {
+                1.25,
+                0.12,
+                0.4
+            };
+            double[] phases = new[]
+            {
+                0.0,
+                132,
+                230
+            };
+            var ampcorrections = new[]
+            {
+                0.0,
+                1.1,
+                0.99
+            };
+            double[] phasecorrections = new[]
+            {
+                0.0,
+                10.4,
+                20
+            };
 
-            var data = harmonicBoundaryCondition.PointData[0];
+            IFunction data = harmonicBoundaryCondition.PointData[0];
             FunctionHelper.SetValuesRaw<double>(data.Arguments[0], frequencies);
             FunctionHelper.SetValuesRaw<double>(data.Components[0], amplitudes);
             FunctionHelper.SetValuesRaw<double>(data.Components[1], phases);
             FunctionHelper.SetValuesRaw<double>(data.Components[2], ampcorrections);
             FunctionHelper.SetValuesRaw<double>(data.Components[3], phasecorrections);
 
-            var exporter = new BcFileExporter
-            {
-                WriteMode = BcFile.WriteMode.SingleFile
-            };
+            var exporter = new BcFileExporter {WriteMode = BcFile.WriteMode.SingleFile};
             exporter.Export(model.BoundaryConditionSets, "simplebox.bc");
 
             Assert.IsTrue(File.Exists("simplebox.bc"));
@@ -283,12 +332,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var importer = new BcFileImporter
             {
                 DeleteDataBeforeImport = false,
-
-                FilePaths = new[] {"simplebox.bc", "simplebox_corr.bc"}
+                FilePaths = new[]
+                {
+                    "simplebox.bc",
+                    "simplebox_corr.bc"
+                }
             };
             importer.ImportItem(null, model.BoundaryConditionSets);
 
-            var correctionBc =
+            IBoundaryCondition correctionBc =
                 model.BoundaryConditions.FirstOrDefault(
                     bc => bc.DataType == BoundaryConditionDataType.HarmonicCorrection);
 
@@ -308,66 +360,69 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         public void ExportImportSedimentConcentrationToSingleFile()
         {
             //Note, for the moment we assume these type of sediments are compatible with waterflowfm.
-            var testFilePath = TestHelper.GetTestFilePath(@"simplebox/simplebox.mdu");
+            string testFilePath = TestHelper.GetTestFilePath(@"simplebox/simplebox.mdu");
             testFilePath = TestHelper.CreateLocalCopy(testFilePath);
             var model = new WaterFlowFMModel(testFilePath);
             model.Name = "newname";
 
             model.ModelDefinition.UseMorphologySediment = true;
-            var sedFrac = new SedimentFraction() { Name = "frac1" };
+            var sedFrac = new SedimentFraction() {Name = "frac1"};
             model.SedimentFractions.Add(sedFrac);
 
             var boundary = new Feature2D
             {
                 Name = "bound",
-                Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(0, 100) })
+                Geometry = new LineString(new[]
+                {
+                    new Coordinate(0, 0),
+                    new Coordinate(0, 100)
+                })
             };
             model.Boundaries.Add(boundary);
 
             var fbcFactory = new FlowBoundaryConditionFactory();
             fbcFactory.Model = model;
-            var bCond = fbcFactory.CreateBoundaryCondition(boundary,
-                sedFrac.Name,
-                BoundaryConditionDataType.TimeSeries,
-                FlowBoundaryQuantityType.SedimentConcentration.GetDescription());
+            IBoundaryCondition bCond = fbcFactory.CreateBoundaryCondition(boundary,
+                                                                          sedFrac.Name,
+                                                                          BoundaryConditionDataType.TimeSeries,
+                                                                          FlowBoundaryQuantityType.SedimentConcentration.GetDescription());
 
             model.BoundaryConditionSets[0].BoundaryConditions.Add(bCond);
 
             bCond.AddPoint(0);
-            var dataAtZero = bCond.GetDataAtPoint(0);
-            dataAtZero[new DateTime(2000, 1, 1)] = new[] { 36.0 };
-
-            var exporter = new BcFileExporter
+            IFunction dataAtZero = bCond.GetDataAtPoint(0);
+            dataAtZero[new DateTime(2000, 1, 1)] = new[]
             {
-                WriteMode = BcFile.WriteMode.SingleFile
+                36.0
             };
+
+            var exporter = new BcFileExporter {WriteMode = BcFile.WriteMode.SingleFile};
             exporter.Export(model.BoundaryConditionSets, "sedimentConcentration.bc");
 
             Assert.IsTrue(File.Exists("sedimentConcentration.bc"));
 
-            var fileText = File.ReadAllText("sedimentConcentration.bc");
-            Assert.That(fileText, Is.StringContaining(ExtForceQuantNames.ConcentrationAtBound+"frac1").And.StringContaining("L1_0001").And.StringContaining(BcFile.BlockKey).And.StringContaining(BcFile.BlockKey).And.StringContaining(BcFile.QuantityKey));
+            string fileText = File.ReadAllText("sedimentConcentration.bc");
+            Assert.That(fileText, Is.StringContaining(ExtForceQuantNames.ConcentrationAtBound + "frac1").And.StringContaining("L1_0001").And.StringContaining(BcFile.BlockKey).And.StringContaining(BcFile.BlockKey).And.StringContaining(BcFile.QuantityKey));
             //Import
             var importer = new BcFileImporter
             {
                 DeleteDataBeforeImport = false,
-
-                FilePaths = new[] { "sedimentConcentration.bc" }
+                FilePaths = new[]
+                {
+                    "sedimentConcentration.bc"
+                }
             };
             importer.ImportItem(null, model.BoundaryConditionSets);
 
-            var scBoundCond =
+            IBoundaryCondition scBoundCond =
                 model.BoundaryConditions.FirstOrDefault(
                     bc => bc.DataType == BoundaryConditionDataType.TimeSeries);
 
             Assert.IsNotNull(scBoundCond);
             Assert.IsTrue(scBoundCond.DataPointIndices.Contains(0));
 
-            var data = scBoundCond.GetDataAtPoint(0);
+            IFunction data = scBoundCond.GetDataAtPoint(0);
             Assert.That(data.GetValues<double>().First(), Is.EqualTo(36.0).Within(0.01));
         }
-
-
-
     }
 }

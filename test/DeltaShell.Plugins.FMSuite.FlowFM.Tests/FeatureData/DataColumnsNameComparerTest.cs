@@ -7,14 +7,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData
     public class DataColumnsNameComparerTest
     {
         [Test]
-        public void GivenTwoDataColumnsWithTheSameNames_WhenCheckingTheNames_ThenTrueShouldBeReturned ()
+        public void GivenTwoDataColumnsWithTheSameNames_WhenCheckingTheNames_ThenTrueShouldBeReturned()
         {
             var comparer = new DataColumnsNameComparer();
 
             var dataColumn1 = new DataColumn<double>("Crest Level");
             var dataColumn2 = new DataColumn<double>("Crest Level");
 
-            var answer = comparer.Equals(dataColumn1, dataColumn2);
+            bool answer = comparer.Equals(dataColumn1, dataColumn2);
 
             Assert.IsTrue(answer);
         }
@@ -27,7 +27,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData
             var dataColumn1 = new DataColumn<double>("Crest Level");
             var dataColumn2 = new DataColumn<double>("CrestLevel");
 
-            var answer = comparer.Equals(dataColumn1, dataColumn2);
+            bool answer = comparer.Equals(dataColumn1, dataColumn2);
 
             Assert.IsFalse(answer);
         }

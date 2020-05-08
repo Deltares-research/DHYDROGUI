@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Helpers;
@@ -26,7 +27,7 @@ namespace DelftTools.Hydro.Tests
     public class HydroNetworkTest
     {
         private static readonly MockRepository mocks = new MockRepository();
-        private static readonly ILog log = LogManager.GetLogger(typeof (HydroNetworkTest));
+        private static readonly ILog log = LogManager.GetLogger(typeof(HydroNetworkTest));
 
         [TestFixtureSetUp]
         public void TestFixtureSetUp()
@@ -69,31 +70,35 @@ namespace DelftTools.Hydro.Tests
         {
             Console.WriteLine("TrackChanges: " + DataTableObserver.TrackChanges);
 
-            TestHelper.AssertIsFasterThan(2500,() =>
-                                                     {
-                                                         const int count = 10000;
-                                                         var network = new HydroNetwork();
-                                                         for (int i = 0; i < count; i++)
-                                                         {
-                                                             var from = new HydroNode();
-                                                             var to = new HydroNode();
+            TestHelper.AssertIsFasterThan(2500, () =>
+            {
+                const int count = 10000;
+                var network = new HydroNetwork();
+                for (var i = 0; i < count; i++)
+                {
+                    var from = new HydroNode();
+                    var to = new HydroNode();
 
-                                                             network.Nodes.Add(from);
-                                                             network.Nodes.Add(to);
+                    network.Nodes.Add(from);
+                    network.Nodes.Add(to);
 
-                                                             var channel = new Channel {Source = from, Target = to};
-                                                             HydroNetworkHelper.AddCrossSectionDefinitionToBranch(channel,
-                                                                                                    new CrossSectionDefinitionXYZ(),
-                                                                                                    0);
-                                                         }
+                    var channel = new Channel
+                    {
+                        Source = from,
+                        Target = to
+                    };
+                    HydroNetworkHelper.AddCrossSectionDefinitionToBranch(channel,
+                                                                         new CrossSectionDefinitionXYZ(),
+                                                                         0);
+                }
 
-                                                         int crossSectionCount = 0;
-                                                         foreach (var crossSection in network.CrossSections)
-                                                         {
-                                                             // access all CrossSections should be also fast
-                                                             crossSectionCount++;
-                                                         }
-                                                     });
+                var crossSectionCount = 0;
+                foreach (ICrossSection crossSection in network.CrossSections)
+                {
+                    // access all CrossSections should be also fast
+                    crossSectionCount++;
+                }
+            });
         }
 
         [Test]
@@ -101,33 +106,37 @@ namespace DelftTools.Hydro.Tests
         public void AddManyBranchesWithSimpleBranchFeature()
         {
             const int count = 10000;
-            int weirCount = 0;
+            var weirCount = 0;
 
             Action action = delegate // TODO: what are we testing here? Test only add.
-                                {
-                                    var network = new HydroNetwork();
-                                    for (int i = 0; i < count; i++)
-                                    {
-                                        var from = new HydroNode();
-                                        var to = new HydroNode();
+            {
+                var network = new HydroNetwork();
+                for (var i = 0; i < count; i++)
+                {
+                    var from = new HydroNode();
+                    var to = new HydroNode();
 
-                                        network.Nodes.Add(from);
-                                        network.Nodes.Add(to);
+                    network.Nodes.Add(from);
+                    network.Nodes.Add(to);
 
-                                        var channel = new Channel {Source = from, Target = to};
+                    var channel = new Channel
+                    {
+                        Source = from,
+                        Target = to
+                    };
 
-                                        var compositeBranchStructure = new CompositeBranchStructure();
-                                        NetworkHelper.AddBranchFeatureToBranch(compositeBranchStructure, channel, 0);
-                                        HydroNetworkHelper.AddStructureToComposite(compositeBranchStructure, new Weir());
+                    var compositeBranchStructure = new CompositeBranchStructure();
+                    NetworkHelper.AddBranchFeatureToBranch(compositeBranchStructure, channel, 0);
+                    HydroNetworkHelper.AddStructureToComposite(compositeBranchStructure, new Weir());
 
-                                        network.Branches.Add(channel);
-                                    }
+                    network.Branches.Add(channel);
+                }
 
-                                    foreach (IWeir weir in network.Weirs) // access all Weirs should be also fast
-                                    {
-                                        weirCount++;
-                                    }
-                                };
+                foreach (IWeir weir in network.Weirs) // access all Weirs should be also fast
+                {
+                    weirCount++;
+                }
+            };
 
             TestHelper.AssertIsFasterThan(2750, string.Format("Added {0} branches with {1} weirs", count, weirCount), action);
         }
@@ -138,8 +147,8 @@ namespace DelftTools.Hydro.Tests
             var crossSection = new CrossSectionDefinitionXYZ();
             var branch = new Channel(new HydroNode("from"), new HydroNode("To"));
 
-            int count = 0;
-            ((INotifyCollectionChange)branch).CollectionChanged += delegate { count++; };
+            var count = 0;
+            ((INotifyCollectionChange) branch).CollectionChanged += delegate { count++; };
 
             HydroNetworkHelper.AddCrossSectionDefinitionToBranch(branch, crossSection, 0.0);
             Assert.AreEqual(1, count);
@@ -156,7 +165,7 @@ namespace DelftTools.Hydro.Tests
             branch.BranchFeatures[0].Branch = branch;
 
             var count = 0;
-            ((INotifyPropertyChange)branch).PropertyChanged += delegate { count++; };
+            ((INotifyPropertyChange) branch).PropertyChanged += delegate { count++; };
 
             branch.Name = "new name";
             branch.BranchFeatures[0].Branch = branch;
@@ -166,35 +175,34 @@ namespace DelftTools.Hydro.Tests
         [Test]
         public void CloneRewiresProxyDefinitions()
         {
-            var network = HydroNetworkHelper.GetSnakeHydroNetwork(1);
+            IHydroNetwork network = HydroNetworkHelper.GetSnakeHydroNetwork(1);
             var sharedDefinition = new CrossSectionDefinitionYZ();
-            
+
             network.SharedCrossSectionDefinitions.Add(sharedDefinition);
             var crossSectionDefinitionProxy = new CrossSectionDefinitionProxy(sharedDefinition);
             HydroNetworkHelper.AddCrossSectionDefinitionToBranch(network.Branches.First(),
                                                                  crossSectionDefinitionProxy, 10.0);
-            
+
             var clonedNetwork = (HydroNetwork) network.Clone();
-            Assert.AreEqual(1,clonedNetwork.SharedCrossSectionDefinitions.Count);
+            Assert.AreEqual(1, clonedNetwork.SharedCrossSectionDefinitions.Count);
             //check the proxy got rewired
-            var crossSectionClone = clonedNetwork.CrossSections.First();
-            var clonedProxyDefinition = (CrossSectionDefinitionProxy)crossSectionClone.Definition;
-            Assert.AreEqual(clonedProxyDefinition.InnerDefinition,clonedNetwork.SharedCrossSectionDefinitions.First());
+            ICrossSection crossSectionClone = clonedNetwork.CrossSections.First();
+            var clonedProxyDefinition = (CrossSectionDefinitionProxy) crossSectionClone.Definition;
+            Assert.AreEqual(clonedProxyDefinition.InnerDefinition, clonedNetwork.SharedCrossSectionDefinitions.First());
         }
 
-        
         [Test]
         [Category(TestCategory.Integration)]
         public void CloneHydroNetworkWithProxyDefinitions()
         {
-            var network = HydroNetworkHelper.GetSnakeHydroNetwork(1);
+            IHydroNetwork network = HydroNetworkHelper.GetSnakeHydroNetwork(1);
             var sharedDefinition = new CrossSectionDefinitionYZ();
             network.SharedCrossSectionDefinitions.Add(sharedDefinition);
             HydroNetworkHelper.AddCrossSectionDefinitionToBranch(network.Channels.First(),
                                                                  new CrossSectionDefinitionProxy(sharedDefinition),
                                                                  10.0d);
 
-            var clone = (HydroNetwork)network.Clone();
+            var clone = (HydroNetwork) network.Clone();
             TestReferenceHelper.AssertStringRepresentationOfGraphIsEqual(network, clone);
         }
 
@@ -202,12 +210,12 @@ namespace DelftTools.Hydro.Tests
         [Category(TestCategory.Integration)]
         public void CloneHydroNetworkWithData()
         {
-            var network = HydroNetworkHelper.GetSnakeHydroNetwork(1);
+            IHydroNetwork network = HydroNetworkHelper.GetSnakeHydroNetwork(1);
 
             ReflectionTestHelper.FillObjectListPropertiesWithRandomInstances(network);
 
-            var clone = (HydroNetwork)network.Clone();
-            
+            var clone = (HydroNetwork) network.Clone();
+
             TestReferenceHelper.AssertStringRepresentationOfGraphIsEqual(network, clone);
         }
 
@@ -215,22 +223,22 @@ namespace DelftTools.Hydro.Tests
         [Category(TestCategory.Integration)]
         public void CloneHydroNetworkWithRoutes()
         {
-            var network = HydroNetworkHelper.GetSnakeHydroNetwork(1);
+            IHydroNetwork network = HydroNetworkHelper.GetSnakeHydroNetwork(1);
 
             var route = new Route();
             var routeName = "RouteToBeCloned";
             route.Name = routeName;
             network.Routes.Add(route);
 
-            var clone = (HydroNetwork)network.Clone();
+            var clone = (HydroNetwork) network.Clone();
 
-            var lingeringReferences = TestReferenceHelper.SearchObjectInObjectGraph(route.Network, clone);
+            List<string> lingeringReferences = TestReferenceHelper.SearchObjectInObjectGraph(route.Network, clone);
             lingeringReferences.ForEach(Console.WriteLine);
             Assert.AreEqual(0, lingeringReferences.Count);
-            
+
             Assert.AreEqual(1, clone.Routes.Count);
-            
-            var clonedRoute = clone.Routes[0];
+
+            Route clonedRoute = clone.Routes[0];
             Assert.AreEqual(clone, clonedRoute.Network);
             Assert.AreEqual(routeName, clonedRoute.Name);
         }
@@ -244,14 +252,18 @@ namespace DelftTools.Hydro.Tests
             var to = new HydroNode();
             network.Nodes.Add(from);
             network.Nodes.Add(to);
-            var channel = new Channel {Source = from, Target = to};
+            var channel = new Channel
+            {
+                Source = from,
+                Target = to
+            };
             network.Branches.Add(channel);
             network.CrossSectionSectionTypes.Add(new CrossSectionSectionType {Name = "JemigdePemig"});
-            var crossSectionSectionTypesCount = network.CrossSectionSectionTypes.Count;
+            int crossSectionSectionTypesCount = network.CrossSectionSectionTypes.Count;
             // The default CrossSectionSectionType and JDP
             Assert.AreEqual(2, crossSectionSectionTypesCount);
             var clonedHydroNetwork = (IHydroNetwork) network.Clone();
-            clonedHydroNetwork.GetType().Should().Be.EqualTo(typeof (HydroNetwork));
+            clonedHydroNetwork.GetType().Should().Be.EqualTo(typeof(HydroNetwork));
 
             clonedHydroNetwork.Branches.Count.Should().Be.EqualTo(1);
             clonedHydroNetwork.Nodes.Count.Should().Be.EqualTo(2);
@@ -265,15 +277,23 @@ namespace DelftTools.Hydro.Tests
         {
             var from = new HydroNode();
             var to = new HydroNode();
-            var channel = new Channel {Source = from, Target = to};
+            var channel = new Channel
+            {
+                Source = from,
+                Target = to
+            };
             var network = new HydroNetwork
+            {
+                Branches = {channel},
+                Nodes =
                 {
-                    Branches = {channel},
-                    Nodes = {from, to},
-                    CrossSectionSectionTypes = {new CrossSectionSectionType {Name = "newType"}}
-                };
+                    from,
+                    to
+                },
+                CrossSectionSectionTypes = {new CrossSectionSectionType {Name = "newType"}}
+            };
 
-            var clonedNetwork = TypeUtils.DeepClone(network);
+            HydroNetwork clonedNetwork = TypeUtils.DeepClone(network);
 
             clonedNetwork.GetType().Should().Be.EqualTo(typeof(HydroNetwork));
 
@@ -282,35 +302,43 @@ namespace DelftTools.Hydro.Tests
             clonedNetwork.CrossSectionSectionTypes.Count.Should().Be.EqualTo(network.CrossSectionSectionTypes.Count);
             Assert.AreEqual("newType", clonedNetwork.CrossSectionSectionTypes.Last().Name);
         }
-        
+
         [Test]
         [Category(TestCategory.Integration)]
         public void CloneHydroNetworkWithCrossSectionSectionTypes()
         {
             var network = new HydroNetwork();
-            var crossSectionSectionType = new CrossSectionSectionType{Name = "Jan"};
+            var crossSectionSectionType = new CrossSectionSectionType {Name = "Jan"};
             network.CrossSectionSectionTypes.Add(crossSectionSectionType);
-            crossSectionSectionType.Id = 666;//debug easy by idd
+            crossSectionSectionType.Id = 666; //debug easy by idd
             var from = new HydroNode();
             var to = new HydroNode();
             network.Nodes.Add(from);
             network.Nodes.Add(to);
-            var channel = new Channel { Source = from, Target = to };
+            var channel = new Channel
+            {
+                Source = from,
+                Target = to
+            };
             network.Branches.Add(channel);
             var crossSectionXYZ = new CrossSectionDefinitionXYZ
             {
-                Geometry = new LineString(new[] { new Coordinate(0, 0, 0), new Coordinate(10, 0, 0) })
+                Geometry = new LineString(new[]
+                {
+                    new Coordinate(0, 0, 0),
+                    new Coordinate(10, 0, 0)
+                })
             };
 
-            crossSectionXYZ.Sections.Add(new CrossSectionSection { SectionType = crossSectionSectionType });
+            crossSectionXYZ.Sections.Add(new CrossSectionSection {SectionType = crossSectionSectionType});
 
             HydroNetworkHelper.AddCrossSectionDefinitionToBranch(channel, crossSectionXYZ, 0);
 
-            var clonedHydroNetwork = (IHydroNetwork)network.Clone();
+            var clonedHydroNetwork = (IHydroNetwork) network.Clone();
             clonedHydroNetwork.CrossSections.Should().Have.Count.EqualTo(1);
-            var cloneCrossSection = clonedHydroNetwork.CrossSections.FirstOrDefault();
-            var clonedType = clonedHydroNetwork.CrossSectionSectionTypes.FirstOrDefault(t => t.Name == "Jan");
-            
+            ICrossSection cloneCrossSection = clonedHydroNetwork.CrossSections.FirstOrDefault();
+            CrossSectionSectionType clonedType = clonedHydroNetwork.CrossSectionSectionTypes.FirstOrDefault(t => t.Name == "Jan");
+
             //the type should be cloned
             Assert.AreNotEqual(clonedType, crossSectionSectionType);
             //the crosssection reference should be updated to use the cloned type
@@ -326,9 +354,9 @@ namespace DelftTools.Hydro.Tests
             //issue 5410 openda memory problems
             var weakReference = new WeakReference(null);
             HydroNetwork network = GetNetwork();
-            for (int i = 0; i < 10; i++)
+            for (var i = 0; i < 10; i++)
             {
-                weakReference.Target = network.Clone();//create clones that get out of scope
+                weakReference.Target = network.Clone(); //create clones that get out of scope
             }
 
             GC.Collect();
@@ -336,30 +364,7 @@ namespace DelftTools.Hydro.Tests
             //test it was collected
             Assert.IsNull(weakReference.Target);
         }
-        
-        private HydroNetwork GetNetwork()
-        {
-            var network = new HydroNetwork();
-            var crossSectionSectionType = new CrossSectionSectionType { Name = "Jan" };
-            network.CrossSectionSectionTypes.Add(crossSectionSectionType);
-            crossSectionSectionType.Id = 666;//debug easy by idd
-            var from = new HydroNode();
-            var to = new HydroNode();
-            network.Nodes.Add(from);
-            network.Nodes.Add(to);
-            var channel = new Channel { Source = from, Target = to };
-            network.Branches.Add(channel);
-            var crossSectionXYZ = new CrossSectionDefinitionXYZ
-                                      {
-                                          Geometry = new LineString(new[] { new Coordinate(0, 0, 0), new Coordinate(10, 0, 0) })
-                                      };
 
-            crossSectionXYZ.Sections.Add(new CrossSectionSection { SectionType = crossSectionSectionType });
-
-            HydroNetworkHelper.AddCrossSectionDefinitionToBranch(channel, crossSectionXYZ, 0);
-            return network;
-        }
-        
         [Test]
         [Category(TestCategory.Integration)]
         public void CloneHydroNetworkWithCrossSection()
@@ -369,13 +374,21 @@ namespace DelftTools.Hydro.Tests
             var to = new HydroNode();
             network.Nodes.Add(from);
             network.Nodes.Add(to);
-            var channel = new Channel {Source = from, Target = to};
+            var channel = new Channel
+            {
+                Source = from,
+                Target = to
+            };
             network.Branches.Add(channel);
             var crossSectionXYZ = new CrossSectionDefinitionXYZ
-                                      {
-                                          Geometry = new LineString(new[] {new Coordinate(0, 0, 0), new Coordinate(10, 0, 0)})
-                                      };
-            
+            {
+                Geometry = new LineString(new[]
+                {
+                    new Coordinate(0, 0, 0),
+                    new Coordinate(10, 0, 0)
+                })
+            };
+
             HydroNetworkHelper.AddCrossSectionDefinitionToBranch(channel, crossSectionXYZ, 0);
 
             var clonedHydroNetwork = (IHydroNetwork) network.Clone();
@@ -391,7 +404,11 @@ namespace DelftTools.Hydro.Tests
             var to = new HydroNode();
             network.Nodes.Add(from);
             network.Nodes.Add(to);
-            var channel = new Channel {Source = from, Target = to};
+            var channel = new Channel
+            {
+                Source = from,
+                Target = to
+            };
             network.Branches.Add(channel);
             var compositeBranchStructure = new CompositeBranchStructure();
             NetworkHelper.AddBranchFeatureToBranch(compositeBranchStructure, channel, 0);
@@ -401,7 +418,11 @@ namespace DelftTools.Hydro.Tests
 
             var crossSectionXYZ = new CrossSectionDefinitionXYZ
             {
-                Geometry = new LineString(new[] { new Coordinate(0, 0, 0), new Coordinate(10, 0, 0) })
+                Geometry = new LineString(new[]
+                {
+                    new Coordinate(0, 0, 0),
+                    new Coordinate(10, 0, 0)
+                })
             };
             HydroNetworkHelper.AddCrossSectionDefinitionToBranch(channel, crossSectionXYZ, 0);
 
@@ -413,7 +434,7 @@ namespace DelftTools.Hydro.Tests
             clonedHydroNetwork.Gates.Should().Have.Count.EqualTo(1);
             clonedHydroNetwork.Pumps.First().Should().Not.Be.SameInstanceAs(network.Pumps.First());
         }
-        
+
         [Test]
         [Category(TestCategory.Integration)]
         public void AutoCloneHydroNetworkWithVariousBranchFeatures()
@@ -423,7 +444,11 @@ namespace DelftTools.Hydro.Tests
             var to = new HydroNode();
             network.Nodes.Add(from);
             network.Nodes.Add(to);
-            var channel = new Channel { Source = from, Target = to };
+            var channel = new Channel
+            {
+                Source = from,
+                Target = to
+            };
             network.Branches.Add(channel);
             var compositeBranchStructure = new CompositeBranchStructure();
             NetworkHelper.AddBranchFeatureToBranch(compositeBranchStructure, channel, 0);
@@ -433,13 +458,17 @@ namespace DelftTools.Hydro.Tests
 
             var crossSectionXYZ = new CrossSectionDefinitionXYZ
             {
-                Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(10, 0) })
+                Geometry = new LineString(new[]
+                {
+                    new Coordinate(0, 0),
+                    new Coordinate(10, 0)
+                })
             };
             HydroNetworkHelper.AddCrossSectionDefinitionToBranch(channel, crossSectionXYZ, 0);
 
-            var clonedHydroNetwork = TypeUtils.DeepClone(network);
+            HydroNetwork clonedHydroNetwork = TypeUtils.DeepClone(network);
 
-            var hits = TestReferenceHelper.SearchObjectInObjectGraph(clonedHydroNetwork, network);
+            List<string> hits = TestReferenceHelper.SearchObjectInObjectGraph(clonedHydroNetwork, network);
             hits.ForEach(Console.WriteLine);
             Assert.AreEqual(0, hits.Count);
 
@@ -467,19 +496,28 @@ namespace DelftTools.Hydro.Tests
             var to = new HydroNode();
             network.Nodes.Add(from);
             network.Nodes.Add(to);
-            var channel = new Channel { Source = from, Target = to };
+            var channel = new Channel
+            {
+                Source = from,
+                Target = to
+            };
             network.Branches.Add(channel);
 
-            var clonedNetwork = (IHydroNetwork)network.Clone();
+            var clonedNetwork = (IHydroNetwork) network.Clone();
 
             var from2 = new HydroNode("from2");
             var to2 = new HydroNode("to2");
             clonedNetwork.Nodes.Add(from2);
             clonedNetwork.Nodes.Add(to2);
-            var channel2 = new Channel {Name = "channel2", Source = from2, Target = to2 };
+            var channel2 = new Channel
+            {
+                Name = "channel2",
+                Source = from2,
+                Target = to2
+            };
             clonedNetwork.Branches.Add(channel2);
 
-            Assert.AreEqual(1,network.Branches.Count);
+            Assert.AreEqual(1, network.Branches.Count);
             Assert.AreEqual(2, clonedNetwork.Branches.Count);
         }
 
@@ -488,8 +526,12 @@ namespace DelftTools.Hydro.Tests
         {
             //TODO: expand the asserts..
             var network = new HydroNetwork();
-            var allItems = network.GetAllItemsRecursive().ToArray();
-            Assert.AreEqual(new object[] { network, network.CrossSectionSectionTypes[0] }, allItems);
+            object[] allItems = network.GetAllItemsRecursive().ToArray();
+            Assert.AreEqual(new object[]
+            {
+                network,
+                network.CrossSectionSectionTypes[0]
+            }, allItems);
         }
 
         [Test]
@@ -500,21 +542,51 @@ namespace DelftTools.Hydro.Tests
             var network = new HydroNetwork();
             var crossSectionZW = new CrossSectionDefinitionZW();
             var crossSectionSectionType = new CrossSectionSectionType();
-            
-            crossSectionZW.Sections.Add(new CrossSectionSection { SectionType = crossSectionSectionType });
-            HydroNetworkHelper.AddCrossSectionDefinitionToBranch(channel,crossSectionZW,0.0);
-            
+
+            crossSectionZW.Sections.Add(new CrossSectionSection {SectionType = crossSectionSectionType});
+            HydroNetworkHelper.AddCrossSectionDefinitionToBranch(channel, crossSectionZW, 0.0);
+
             network.CrossSectionSectionTypes.Add(crossSectionSectionType);
             network.Branches.Add(channel);
 
-            
             //action! remove the sectiontype
             network.CrossSectionSectionTypes.Remove(crossSectionSectionType);
 
             //still have 2. one plus a 'default'?
-            Assert.AreEqual(2,network.CrossSectionSectionTypes.Count);
+            Assert.AreEqual(2, network.CrossSectionSectionTypes.Count);
 
             Assert.IsTrue(network.CrossSectionSectionTypes.Contains(crossSectionSectionType));
         }
-   }
+
+        private HydroNetwork GetNetwork()
+        {
+            var network = new HydroNetwork();
+            var crossSectionSectionType = new CrossSectionSectionType {Name = "Jan"};
+            network.CrossSectionSectionTypes.Add(crossSectionSectionType);
+            crossSectionSectionType.Id = 666; //debug easy by idd
+            var from = new HydroNode();
+            var to = new HydroNode();
+            network.Nodes.Add(from);
+            network.Nodes.Add(to);
+            var channel = new Channel
+            {
+                Source = from,
+                Target = to
+            };
+            network.Branches.Add(channel);
+            var crossSectionXYZ = new CrossSectionDefinitionXYZ
+            {
+                Geometry = new LineString(new[]
+                {
+                    new Coordinate(0, 0, 0),
+                    new Coordinate(10, 0, 0)
+                })
+            };
+
+            crossSectionXYZ.Sections.Add(new CrossSectionSection {SectionType = crossSectionSectionType});
+
+            HydroNetworkHelper.AddCrossSectionDefinitionToBranch(channel, crossSectionXYZ, 0);
+            return network;
+        }
+    }
 }

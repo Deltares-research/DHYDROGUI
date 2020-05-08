@@ -29,24 +29,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Mediators
             // Call
             var mediator = new WaveBoundaryConditionEditorMediator(supportPointEditorViewModel,
                                                                    parametersSettingsViewModel,
-                                                                   refreshViewModel, 
+                                                                   refreshViewModel,
                                                                    refreshGeometryView);
 
             // Assert
             Assert.That(mediator, Is.InstanceOf<IAnnounceDataComponentChanged>());
-        }
-
-        private static IEnumerable<TestCaseData> GetConstructorNullArgumentTestData()
-        {
-            var supportPointEditorViewModel = Substitute.For<IRefreshIsEnabledOnDataComponentChanged>();
-            var parametersSettingsViewModel = Substitute.For<IRefreshDataComponentViewModel>();
-            var refreshViewModel = Substitute.For<IRefreshViewModel>();
-            var refreshGeometryView = Substitute.For<IRefreshGeometryView>();
-
-            yield return new TestCaseData(null, parametersSettingsViewModel, refreshViewModel, refreshGeometryView, "dataComponentIsEnabledDependentViewModel");
-            yield return new TestCaseData(supportPointEditorViewModel, null, refreshViewModel, refreshGeometryView, "dataComponentViewModelDependentViewModel");
-            yield return new TestCaseData(supportPointEditorViewModel, parametersSettingsViewModel, null, refreshGeometryView, "refreshViewModel");
-            yield return new TestCaseData(supportPointEditorViewModel, parametersSettingsViewModel, refreshViewModel, null, "refreshGeometryView");
         }
 
         [Test]
@@ -83,6 +70,19 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Mediators
                 refreshViewModel.RefreshViewModel();
                 refreshGeometryView.RefreshGeometryView();
             });
+        }
+
+        private static IEnumerable<TestCaseData> GetConstructorNullArgumentTestData()
+        {
+            var supportPointEditorViewModel = Substitute.For<IRefreshIsEnabledOnDataComponentChanged>();
+            var parametersSettingsViewModel = Substitute.For<IRefreshDataComponentViewModel>();
+            var refreshViewModel = Substitute.For<IRefreshViewModel>();
+            var refreshGeometryView = Substitute.For<IRefreshGeometryView>();
+
+            yield return new TestCaseData(null, parametersSettingsViewModel, refreshViewModel, refreshGeometryView, "dataComponentIsEnabledDependentViewModel");
+            yield return new TestCaseData(supportPointEditorViewModel, null, refreshViewModel, refreshGeometryView, "dataComponentViewModelDependentViewModel");
+            yield return new TestCaseData(supportPointEditorViewModel, parametersSettingsViewModel, null, refreshGeometryView, "refreshViewModel");
+            yield return new TestCaseData(supportPointEditorViewModel, parametersSettingsViewModel, refreshViewModel, null, "refreshGeometryView");
         }
     }
 }

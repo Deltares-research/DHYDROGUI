@@ -21,16 +21,16 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Forms.ProjectEx
             var guiStub = mocks.Stub<GuiPlugin>();
 
             var model = new WaterQualityModel();
-            
+
             var modelNodePresenter = new WaterQualityModelNodePresenter(guiStub);
 
-            var childnodes = modelNodePresenter.GetChildNodeObjects(model, null).GetEnumerator();
+            IEnumerator childnodes = modelNodePresenter.GetChildNodeObjects(model, null).GetEnumerator();
             Assert.IsTrue(childnodes.MoveNext(), "Expect at least 1 item to exist.");
-            var inputFolder = (TreeFolder)childnodes.Current;
+            var inputFolder = (TreeFolder) childnodes.Current;
             Assert.AreEqual("Input", inputFolder.Text);
 
             // call
-            var inputFolderChildren = inputFolder.ChildItems.GetEnumerator();
+            IEnumerator inputFolderChildren = inputFolder.ChildItems.GetEnumerator();
 
             // assert
             AssertNextNodeIsModelDataItem(inputFolderChildren, model, WaterQualityModel.InputFileCommandLineDataItemMetaData.Tag);
@@ -52,8 +52,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Forms.ProjectEx
         private void AssertNextNodeIsModelDataItemInWrapper(IEnumerator inputFolderChildren, WaterQualityModel model, string dataItemTag)
         {
             Assert.IsTrue(inputFolderChildren.MoveNext(), "Expected a child node.");
-            var expectedDataItemMatch = model.GetDataItemByTag(dataItemTag);
-            var currentDataItem = (IDataItem)inputFolderChildren.Current;
+            IDataItem expectedDataItemMatch = model.GetDataItemByTag(dataItemTag);
+            var currentDataItem = (IDataItem) inputFolderChildren.Current;
             Assert.AreEqual(expectedDataItemMatch.Name, currentDataItem.Name);
             Assert.AreEqual(typeof(WaterQualityFunctionDataWrapper), currentDataItem.ValueType);
             Assert.AreEqual(expectedDataItemMatch.Role, currentDataItem.Role);
@@ -65,7 +65,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Forms.ProjectEx
         {
             Assert.IsTrue(inputFolderChildren.MoveNext(), "Expected a child node.");
             Assert.IsInstanceOf<IDataItem>(inputFolderChildren.Current);
-            Assert.AreSame(modelData, ((IDataItem)inputFolderChildren.Current).Value);
+            Assert.AreSame(modelData, ((IDataItem) inputFolderChildren.Current).Value);
         }
 
         private static void AssertNextNodeIsModelDataItem(IEnumerator inputFolderChildren, WaterQualityModel model, string dataItemTag)

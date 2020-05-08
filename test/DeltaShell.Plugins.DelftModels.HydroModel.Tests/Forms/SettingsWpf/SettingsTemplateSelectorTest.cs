@@ -9,12 +9,12 @@ using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.SettingsWpf
 {
-    [TestFixture, RequiresSTA, Category(TestCategory.Wpf)]
+    [TestFixture]
+    [RequiresSTA]
+    [Category(TestCategory.Wpf)]
     public class SettingsTemplateSelectorTest
     {
         private readonly WpfSettingsView settingsView = new WpfSettingsView();
-
-        private enum TestEnum {}
 
         [Test]
         public void SelectTemplate_NotGivingWpfElement_DoesNotCrash()
@@ -72,10 +72,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.SettingsWpf
         [TestCase(typeof(TestEnum), "ComboBoxTemplate")]
         public void Test_SelectTemplate_GivenWpfGuiProperty_ReturnsTemplate(Type propertyType, string expectedTemplateKey)
         {
-            var item = new WpfGuiProperty(new FieldUIDescription((o) => propertyType.IsValueType ? Activator.CreateInstance(propertyType) : null, (o, o1) => { })
-            {
-                ValueType = propertyType
-            });
+            var item = new WpfGuiProperty(new FieldUIDescription((o) => propertyType.IsValueType ? Activator.CreateInstance(propertyType) : null, (o, o1) => {}) {ValueType = propertyType});
 
             VerifyCall(item, expectedTemplateKey);
         }
@@ -83,10 +80,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.SettingsWpf
         [Test]
         public void SelectTemplate_GivenWpfGuiProperty_WithUnMappedType_DoesNotThrow()
         {
-            var item = new WpfGuiProperty(new FieldUIDescription(null, null)
-            {
-                ValueType = null
-            });
+            var item = new WpfGuiProperty(new FieldUIDescription(null, null) {ValueType = null});
 
             DataTemplate selectedTemplate = null;
             var frameworkElement = new WpfSettingsView();
@@ -95,6 +89,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.SettingsWpf
             Assert.DoesNotThrow(() => selectedTemplate = selector.SelectTemplate(item, frameworkElement));
             Assert.That(selectedTemplate, Is.Null);
         }
+
+        private enum TestEnum {}
 
         [TestCase("yyyy-mm-dd", "DateTemplate")]
         [TestCase("[yyyy-mm-dd]", "DateTemplate")]

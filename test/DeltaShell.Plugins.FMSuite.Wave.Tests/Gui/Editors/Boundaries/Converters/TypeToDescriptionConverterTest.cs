@@ -23,7 +23,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Converter
             object result = converter.Convert(inputType, typeof(string), null, CultureInfo.InvariantCulture);
 
             // Then
-            Assert.That(result, Is.EqualTo(expectedResult), 
+            Assert.That(result, Is.EqualTo(expectedResult),
                         "Expected a different Description to be returned:");
         }
 
@@ -71,7 +71,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Converter
         public void ConvertBack_ThrowsNotSupportedException()
         {
             // Call | Assert
-            void Call() => (new TypeToDescriptionConverter()).ConvertBack(typeof(GaussViewShape), typeof(string), null, CultureInfo.InvariantCulture);
+            void Call() => new TypeToDescriptionConverter().ConvertBack(typeof(GaussViewShape), typeof(string), null, CultureInfo.InvariantCulture);
             Assert.Throws<NotSupportedException>(Call);
         }
     }

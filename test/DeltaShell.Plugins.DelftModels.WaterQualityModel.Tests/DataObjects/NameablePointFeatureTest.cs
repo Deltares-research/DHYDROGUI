@@ -25,7 +25,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.DataObjects
             Assert.IsInstanceOf<INotifyPropertyChange>(pointFeature);
 
             Assert.IsInstanceOf<IPoint>(pointFeature.Geometry);
-            var pointGeometry = (IPoint)pointFeature.Geometry;
+            var pointGeometry = (IPoint) pointFeature.Geometry;
             Assert.AreEqual(0, pointFeature.X);
             Assert.AreEqual(pointFeature.X, pointGeometry.X);
             Assert.AreEqual(0, pointFeature.Y);
@@ -64,7 +64,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.DataObjects
             pointFeature.X = 1.1;
 
             // assert
-            var envelope = pointFeature.Geometry.EnvelopeInternal;
+            Envelope envelope = pointFeature.Geometry.EnvelopeInternal;
             Assert.AreEqual(1.1, envelope.MinX);
             Assert.AreEqual(1.1, envelope.MaxX);
             Assert.AreEqual(0.0, envelope.MinY);
@@ -88,14 +88,20 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.DataObjects
             var pointFeature = new SimpleNameablePointFeature();
             var changingCount = 0;
             var changedCount = 0;
-            var geometryPropertyName = nameof(NameablePointFeature.Geometry);
-            ((INotifyPropertyChange)pointFeature).PropertyChanging += (sender, args) =>
+            string geometryPropertyName = nameof(NameablePointFeature.Geometry);
+            ((INotifyPropertyChange) pointFeature).PropertyChanging += (sender, args) =>
             {
-                if (args.PropertyName == geometryPropertyName) changingCount++;
+                if (args.PropertyName == geometryPropertyName)
+                {
+                    changingCount++;
+                }
             };
-            ((INotifyPropertyChange)pointFeature).PropertyChanged += (sender, args) =>
+            ((INotifyPropertyChange) pointFeature).PropertyChanged += (sender, args) =>
             {
-                if (args.PropertyName == geometryPropertyName) changedCount++;
+                if (args.PropertyName == geometryPropertyName)
+                {
+                    changedCount++;
+                }
             };
 
             // call & assert
@@ -111,10 +117,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.DataObjects
             Assert.AreEqual(3, changingCount);
             Assert.AreEqual(3, changedCount);
         }
-        
-        private class SimpleNameablePointFeature : NameablePointFeature 
-        {
-            
-        }
+
+        private class SimpleNameablePointFeature : NameablePointFeature {}
     }
 }

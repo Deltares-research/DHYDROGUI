@@ -54,8 +54,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
         public void Constructor_BoundaryProviderNull_ThrowsArgumentNullException()
         {
             // Call
-            void Call() => new BoundarySupportPointMapFeatureProvider(null, 
-                                                                      coordinateSystem, 
+            void Call() => new BoundarySupportPointMapFeatureProvider(null,
+                                                                      coordinateSystem,
                                                                       waveBoundaryGeometryFactory);
 
             // Assert
@@ -144,12 +144,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
             }
         }
 
-        private IEnumerable<Action<IBoundaryProvider>> RemoveBoundaryCalls()
-        {
-            yield return bc => bc.Boundaries.Clear();
-            yield return bc => bc.Boundaries.RemoveAt(0);
-        }
-
         [Test]
         [Category(TestCategory.Integration)]
         public void GivenABoundarySupportPointMapFeatureProvider_WhenABoundaryIsAddedToTheBoundaryContainerAndNewSupportPointIsAdded_ThenFeaturesChangedIsCalled()
@@ -210,6 +204,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
                 void Call() => featureProvider.Features = features;
                 Assert.Throws<NotSupportedException>(Call);
             }
+        }
+
+        private IEnumerable<Action<IBoundaryProvider>> RemoveBoundaryCalls()
+        {
+            yield return bc => bc.Boundaries.Clear();
+            yield return bc => bc.Boundaries.RemoveAt(0);
         }
 
         private static IWaveBoundary CreateBoundary()

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Windows.Forms;
 using DelftTools.Controls;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.FMSuite.Common.Gui.NodePresenters;
@@ -35,7 +34,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.NodePresenters
 
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(Call);
-            Assert.That(exception.ParamName, Is.EqualTo("getBoundaryContainerFunc"), 
+            Assert.That(exception.ParamName, Is.EqualTo("getBoundaryContainerFunc"),
                         "Expected a different ParamName:");
         }
 
@@ -88,7 +87,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.NodePresenters
             var boundaryContainer = Substitute.For<IBoundaryContainer>();
             IBoundaryContainer GetBoundaryContainer(IWaveBoundary _) => boundaryContainer;
 
-            var boundaries = new EventedList<IWaveBoundary> { boundary };
+            var boundaries = new EventedList<IWaveBoundary> {boundary};
             boundaryContainer.Boundaries.Returns(boundaries);
 
             const string boundaryName = "BoundaryName";
@@ -137,9 +136,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.NodePresenters
 
             // Assert
             Assert.That(result, Is.Not.Null);
-            Assert.That(result.Count, Is.EqualTo(1), 
+            Assert.That(result.Count, Is.EqualTo(1),
                         "Expected the number of elements in the Menu to be different:");
-
 
             IMenuItem menuItem = result[0];
 

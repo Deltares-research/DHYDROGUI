@@ -14,6 +14,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers.Providers
     [TestFixture]
     public class ObstacleLayerSubProviderTest : Feature2DLayerSubProviderTestFixture
     {
+        protected override Func<IWaveLayerFactory, ILayerSubProvider> ConstructorCall { get; } =
+            (factory) => new ObstacleLayerSubProvider(factory);
+
+        protected override IWaveModel Model { get; } = GetConfiguredModel();
+        protected override IEnumerable<Feature2D> RelevantFeature => Model.Obstacles;
+
         private static IWaveModel GetConfiguredModel()
         {
             var model = Substitute.For<IWaveModel>();
@@ -24,13 +30,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers.Providers
             return model;
         }
 
-        protected override Func<IWaveLayerFactory, ILayerSubProvider> ConstructorCall { get; } = 
-            (factory) => new ObstacleLayerSubProvider(factory);
-
         protected override ILayer ExpectedCall(IWaveLayerFactory FactoryMock) =>
             FactoryMock.CreateObstacleLayer(Model);
-
-        protected override IWaveModel Model { get; } = GetConfiguredModel();
-        protected override IEnumerable<Feature2D> RelevantFeature => Model.Obstacles;
     }
 }

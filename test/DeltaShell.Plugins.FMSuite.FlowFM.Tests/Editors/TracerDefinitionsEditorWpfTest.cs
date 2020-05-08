@@ -8,12 +8,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Editors
     [TestFixture]
     public class TracerDefinitionsEditorWpfTest
     {
-        [Test, Category(TestCategory.Wpf)]
+        [Test]
+        [Category(TestCategory.Wpf)]
         public void ShowTracerDefinitionsEditorWpfWithData()
         {
             var editor = new TracerDefinitionsEditorWpf
             {
-                Tracers = new EventedList<string>{"abc", "def"}
+                Tracers = new EventedList<string>
+                {
+                    "abc",
+                    "def"
+                }
             };
 
             WpfTestHelper.ShowModal(editor);

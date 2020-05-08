@@ -6,7 +6,6 @@ using NUnit.Framework;
 
 namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
 {
-
     [TestFixture]
     public class WeirViewTest
     {
@@ -14,10 +13,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
         [Category(TestCategory.WindowsForms)]
         public void ShowEmpty()
         {
-            var view = new WeirView
-                           {
-                               Data = null
-                           };
+            var view = new WeirView {Data = null};
             WindowsFormsTestHelper.ShowModal(view);
         }
 
@@ -27,10 +23,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
         {
             var weir = new Weir("TestWeir");
 
-            var weirView = new WeirView
-                               {
-                                   Data = weir
-                               };
+            var weirView = new WeirView {Data = weir};
 
             WindowsFormsTestHelper.ShowModal(weirView);
         }
@@ -41,10 +34,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
         {
             var weir = new Weir("TestWeir");
             weir.WeirFormula = new GatedWeirFormula {GateOpening = 5};
-            var weirView = new WeirView
-            {
-                Data = weir
-            };
+            var weirView = new WeirView {Data = weir};
 
             WindowsFormsTestHelper.ShowModal(weirView);
         }
@@ -54,10 +44,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
         public void ShowWeirViewWithDetailedCrestDefinition()
         {
             var weir = new Weir("TestWeir") {WeirFormula = new RiverWeirFormula()};
-            var weirView = new WeirView
-            {
-                Data = weir
-            };
+            var weirView = new WeirView {Data = weir};
 
             WindowsFormsTestHelper.ShowModal(weirView);
         }
@@ -67,27 +54,23 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
         public void ShowRiverWeirViewShouldNotChangeValues()
         {
             var weir = new Weir("TestWeir")
-                           {
-                               WeirFormula =
-                                   new RiverWeirFormula
-                                       {
-                                           CorrectionCoefficientNeg = 0.15,
-                                           CorrectionCoefficientPos = 0.29,
-                                           SubmergeLimitNeg = 0.77,
-                                           SubmergeLimitPos = 0.44
-                                       }
-                           };
-            var weirView = new WeirView
             {
-                Data = weir
+                WeirFormula =
+                    new RiverWeirFormula
+                    {
+                        CorrectionCoefficientNeg = 0.15,
+                        CorrectionCoefficientPos = 0.29,
+                        SubmergeLimitNeg = 0.77,
+                        SubmergeLimitPos = 0.44
+                    }
             };
+            var weirView = new WeirView {Data = weir};
 
             WindowsFormsTestHelper.ShowModal(weirView);
-            Assert.AreEqual(0.15, ((RiverWeirFormula)weir.WeirFormula).CorrectionCoefficientNeg);
-            Assert.AreEqual(0.29, ((RiverWeirFormula)weir.WeirFormula).CorrectionCoefficientPos);
-            Assert.AreEqual(0.77, ((RiverWeirFormula)weir.WeirFormula).SubmergeLimitNeg);
-            Assert.AreEqual(0.44, ((RiverWeirFormula)weir.WeirFormula).SubmergeLimitPos);
+            Assert.AreEqual(0.15, ((RiverWeirFormula) weir.WeirFormula).CorrectionCoefficientNeg);
+            Assert.AreEqual(0.29, ((RiverWeirFormula) weir.WeirFormula).CorrectionCoefficientPos);
+            Assert.AreEqual(0.77, ((RiverWeirFormula) weir.WeirFormula).SubmergeLimitNeg);
+            Assert.AreEqual(0.44, ((RiverWeirFormula) weir.WeirFormula).SubmergeLimitPos);
         }
-        
     }
 }

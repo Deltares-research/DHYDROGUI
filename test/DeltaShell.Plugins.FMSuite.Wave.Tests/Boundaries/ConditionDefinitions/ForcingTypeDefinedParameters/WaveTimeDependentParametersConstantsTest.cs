@@ -9,22 +9,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
     [TestFixture]
     public class WaveTimeDependentParametersConstantsTest
     {
-        private static IEnumerable<TestCaseData> GetConstructUnitTestData()
-        {
-            yield return new TestCaseData((Func<Unit>) WaveTimeDependentParametersConstants.ConstructMeterUnit, 
-                                           WaveTimeDependentParametersConstants.MeterUnitName, 
-                                           WaveTimeDependentParametersConstants.MeterUnitSymbol);
-            yield return new TestCaseData((Func<Unit>) WaveTimeDependentParametersConstants.ConstructSecondUnit, 
-                                           WaveTimeDependentParametersConstants.SecondUnitName, 
-                                           WaveTimeDependentParametersConstants.SecondUnitSymbol);
-            yield return new TestCaseData((Func<Unit>) WaveTimeDependentParametersConstants.ConstructDegreesUnit, 
-                                           WaveTimeDependentParametersConstants.DegreesUnitName, 
-                                           WaveTimeDependentParametersConstants.DegreesUnitSymbol);
-            yield return new TestCaseData((Func<Unit>) WaveTimeDependentParametersConstants.ConstructPowerUnit, 
-                                           WaveTimeDependentParametersConstants.PowerUnitName, 
-                                           WaveTimeDependentParametersConstants.PowerUnitSymbol);
-        }
-
         [Test]
         [TestCaseSource(nameof(GetConstructUnitTestData))]
         public void ConstructUnit_ExpectedResults(Func<Unit> constructFunc, string expectedName, string expectedSymbol)
@@ -67,7 +51,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
             Assert.That(WaveTimeDependentParametersConstants.DirectionVariableName, Is.EqualTo("Dir"));
         }
 
-
         [Test]
         public void SpreadingVariableName_ExpectedResults()
         {
@@ -80,12 +63,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
             Assert.That(WaveTimeDependentParametersConstants.MinuteUnitName, Is.EqualTo("minutes"));
         }
 
-
         [Test]
         public void MeterUnitName_ExpectedResults()
         {
             Assert.That(WaveTimeDependentParametersConstants.MeterUnitName, Is.EqualTo("meter"));
-        } 
+        }
 
         [Test]
         public void MeterUnitSymbol_ExpectedResults()
@@ -132,8 +114,24 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
         [Test]
         public void NonEquidistantTimeFunctionAttributeName_ExpectedResults()
         {
-            Assert.That(WaveTimeDependentParametersConstants.NonEquidistantTimeFunctionAttributeName, 
+            Assert.That(WaveTimeDependentParametersConstants.NonEquidistantTimeFunctionAttributeName,
                         Is.EqualTo("non-equidistant"));
+        }
+
+        private static IEnumerable<TestCaseData> GetConstructUnitTestData()
+        {
+            yield return new TestCaseData((Func<Unit>) WaveTimeDependentParametersConstants.ConstructMeterUnit,
+                                          WaveTimeDependentParametersConstants.MeterUnitName,
+                                          WaveTimeDependentParametersConstants.MeterUnitSymbol);
+            yield return new TestCaseData((Func<Unit>) WaveTimeDependentParametersConstants.ConstructSecondUnit,
+                                          WaveTimeDependentParametersConstants.SecondUnitName,
+                                          WaveTimeDependentParametersConstants.SecondUnitSymbol);
+            yield return new TestCaseData((Func<Unit>) WaveTimeDependentParametersConstants.ConstructDegreesUnit,
+                                          WaveTimeDependentParametersConstants.DegreesUnitName,
+                                          WaveTimeDependentParametersConstants.DegreesUnitSymbol);
+            yield return new TestCaseData((Func<Unit>) WaveTimeDependentParametersConstants.ConstructPowerUnit,
+                                          WaveTimeDependentParametersConstants.PowerUnitName,
+                                          WaveTimeDependentParametersConstants.PowerUnitSymbol);
         }
     }
 }

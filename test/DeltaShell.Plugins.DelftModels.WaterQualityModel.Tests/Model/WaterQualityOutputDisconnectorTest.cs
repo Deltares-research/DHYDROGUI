@@ -127,7 +127,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Model
 
             Assert.That(coverageDataItem, Is.Not.Null);
 
-            var coverage = (UnstructuredGridCellCoverage)coverageDataItem.Value;
+            var coverage = (UnstructuredGridCellCoverage) coverageDataItem.Value;
             Assert.That(coverage.GetValues().Count, Is.EqualTo(numberOfCells));
             Assert.That(coverage.GetValues<double>().All(v => Math.Abs(v - noDataValue) < 10e-6), Is.True);
         }
@@ -207,7 +207,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Model
             featureCoverage.Arguments.Add(new Variable<IFeature>("Feature argument"));
             featureCoverage.Components.Add(new Variable<int>("Test component"));
             featureCoverage[new Feature()] = 2;
-            featureCoverage.Filters = new List<IVariableFilter> { new ComponentFilter(featureCoverage.Components[0]) };
+            featureCoverage.Filters = new List<IVariableFilter> {new ComponentFilter(featureCoverage.Components[0])};
             return featureCoverage;
         }
 
@@ -221,7 +221,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Model
                 });
 
             // Add a time-value pair to the first time series
-            var sub1 = waterQualityObservationVariableOutput.TimeSeriesList.ElementAt(0);
+            TimeSeries sub1 = waterQualityObservationVariableOutput.TimeSeriesList.ElementAt(0);
             sub1.Arguments[0].AddValues(new[]
             {
                 DateTime.Now
@@ -232,7 +232,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Model
             });
 
             // Add a time-value pair to the second time series
-            var sub2 = waterQualityObservationVariableOutput.TimeSeriesList.ElementAt(1);
+            TimeSeries sub2 = waterQualityObservationVariableOutput.TimeSeriesList.ElementAt(1);
             sub2.Arguments[0].AddValues(new[]
             {
                 DateTime.Now

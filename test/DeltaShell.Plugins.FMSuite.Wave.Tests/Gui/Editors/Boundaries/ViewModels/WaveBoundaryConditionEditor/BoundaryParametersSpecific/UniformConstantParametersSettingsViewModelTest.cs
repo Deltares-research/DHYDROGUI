@@ -9,7 +9,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
     [TestFixture]
     [TestFixture(typeof(PowerDefinedSpreading))]
     [TestFixture(typeof(DegreesDefinedSpreading))]
-    public class UniformConstantParametersSettingsViewModelTest<TSpreading> where TSpreading: class, IBoundaryConditionSpreading, new()
+    public class UniformConstantParametersSettingsViewModelTest<TSpreading> where TSpreading : class, IBoundaryConditionSpreading, new()
     {
         private readonly Random random = new Random();
 
@@ -29,13 +29,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
 
             // Assert
             Assert.That(viewModel, Is.InstanceOf<ConstantParametersSettingsViewModel>());
-            Assert.That(viewModel.ActiveParametersViewModel, Is.Not.Null, 
+            Assert.That(viewModel.ActiveParametersViewModel, Is.Not.Null,
                         "Expected the ActiveParametersViewModel to not be null:");
             Assert.That(viewModel.ActiveParametersViewModel.Height, Is.EqualTo(expectedHeight));
             Assert.That(viewModel.ActiveParametersViewModel.Period, Is.EqualTo(expectedPeriod));
             Assert.That(viewModel.ActiveParametersViewModel.Direction, Is.EqualTo(expectedDirection));
 
-            Assert.That(viewModel.GroupBoxTitle, Is.EqualTo("Uniform Constant Parameters"), 
+            Assert.That(viewModel.GroupBoxTitle, Is.EqualTo("Uniform Constant Parameters"),
                         "Expected the GroupBoxTitle to be different:");
         }
 

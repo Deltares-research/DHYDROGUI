@@ -9,9 +9,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files.Helpers
     [TestFixture]
     public class MorphologyFileBackwardsCompatibilityConfigurationValuesTest : IDelftIniBackwardsCompatibilityConfigurationValuesTestFixture
     {
-        protected override IDelftIniBackwardsCompatibilityConfigurationValues GetConfigurationValues() =>
-            new MorphologyFileBackwardsCompatibilityConfigurationValues();
-
         protected override IEnumerable<string> ObsoleteProperties => new HashSet<string>
         {
             "neubcmud",
@@ -27,5 +24,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files.Helpers
 
         protected override IEnumerable<KeyValuePair<string, string>> LegacyCategoryMapping =>
             new Dictionary<string, string>();
+
+        protected override IDelftIniBackwardsCompatibilityConfigurationValues GetConfigurationValues() =>
+            new MorphologyFileBackwardsCompatibilityConfigurationValues();
     }
 }

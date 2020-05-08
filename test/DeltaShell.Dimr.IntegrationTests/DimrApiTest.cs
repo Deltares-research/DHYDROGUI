@@ -11,16 +11,11 @@ namespace DeltaShell.Dimr.IntegrationTests
         private readonly string dimrConfig = Path.Combine(tmpDir, "dimr.xml");
         private static readonly string tmpDir = Path.Combine(Path.GetTempPath(), Path.GetFileNameWithoutExtension(Path.GetRandomFileName()));
 
-        static DimrApiTest()
-        {
-            Directory.CreateDirectory(tmpDir);
-        }
-
         [Test]
         [Category(TestCategory.Jira)] // See issue D3DFMIQ-816
         public void GivenDimrApiWhenFinalizeThenNoExceptionThrown()
         {
-            using (var dimrApi = DimrApiFactory.CreateNew())
+            using (IDimrApi dimrApi = DimrApiFactory.CreateNew())
             {
                 try
                 {
@@ -39,7 +34,7 @@ namespace DeltaShell.Dimr.IntegrationTests
         [Test]
         public void GivenDimrApiWhenInitializeThenNoExceptionThrown()
         {
-            using (var dimrApi = DimrApiFactory.CreateNew())
+            using (IDimrApi dimrApi = DimrApiFactory.CreateNew())
             {
                 try
                 {
@@ -56,7 +51,7 @@ namespace DeltaShell.Dimr.IntegrationTests
         [Test]
         public void GivenDimrApiWhenSetLoggerThenNoExceptionThrown()
         {
-            using (var dimrApi = DimrApiFactory.CreateNew())
+            using (IDimrApi dimrApi = DimrApiFactory.CreateNew())
             {
                 try
                 {
@@ -73,7 +68,7 @@ namespace DeltaShell.Dimr.IntegrationTests
         [Category(TestCategory.Jira)] // See issue D3DFMIQ-816
         public void GivenDimrApiWhenUpdateThenNoExceptionThrown()
         {
-            using (var dimrApi = DimrApiFactory.CreateNew())
+            using (IDimrApi dimrApi = DimrApiFactory.CreateNew())
             {
                 try
                 {
@@ -86,6 +81,11 @@ namespace DeltaShell.Dimr.IntegrationTests
                     Assert.Fail("Expected no exception, but got: " + ex.Message);
                 }
             }
+        }
+
+        static DimrApiTest()
+        {
+            Directory.CreateDirectory(tmpDir);
         }
     }
 }

@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Linq;
-using System.Windows.Controls;
+using System.Windows.Forms;
 using DelftTools.Controls;
+using DelftTools.Functions;
 using DelftTools.Shell.Core;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Generic;
@@ -22,31 +23,13 @@ using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
+using Control = System.Windows.Controls.Control;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 {
     [TestFixture]
     public class BoundaryConditionEditorTest
     {
-        private static FlowBoundaryCondition CreateBoundaryCondition(FlowBoundaryQuantityType quantity,
-                                                                     BoundaryConditionDataType dataType =
-                                                                         BoundaryConditionDataType.TimeSeries)
-        {
-            var feature = new Feature2D
-                {
-                    Geometry = new LineString(new []
-                        {
-                            new Coordinate(0, 0), new Coordinate(50, 10),
-                            new Coordinate(100, 0), new Coordinate(150, -10)
-                        }),
-                    Name = "TestFeature"
-                };
-
-            var boundaryData = new FlowBoundaryCondition(quantity, dataType) {Feature = feature};
-
-            return boundaryData;
-        }
-
         [Test]
         [Category(TestCategory.WindowsForms)]
         public void ShowNew()
@@ -61,7 +44,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             using (var editor = new BoundaryConditionEditor())
             {
                 // Assert
-                Assert.That(editor, Is.InstanceOf<System.Windows.Forms.UserControl>());
+                Assert.That(editor, Is.InstanceOf<UserControl>());
                 Assert.That(editor, Is.InstanceOf<ICompositeView>());
                 Assert.That(editor, Is.InstanceOf<IReusableView>());
                 Assert.That(editor, Is.InstanceOf<ISuspendibleView>());
@@ -81,14 +64,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         [Ignore] // not supported for now
         public void ShowWithTimeSeriesDataAndZLayers()
         {
-            var bc = CreateBoundaryCondition(FlowBoundaryQuantityType.Velocity);
+            FlowBoundaryCondition bc = CreateBoundaryCondition(FlowBoundaryQuantityType.Velocity);
 
             bc.AddPoint(0);
             bc.PointDepthLayerDefinitions[0] = new VerticalProfileDefinition(VerticalProfileType.ZFromBed, 2.5, 1.25);
-            var data = bc.GetDataAtPoint(0);
+            IFunction data = bc.GetDataAtPoint(0);
 
-            data[new DateTime(2001, 1, 1)] = new[] {5.0, 5.1};
-            data[new DateTime(2001, 1, 2)] = new[] {8.0, 8.1};
+            data[new DateTime(2001, 1, 1)] = new[]
+            {
+                5.0,
+                5.1
+            };
+            data[new DateTime(2001, 1, 2)] = new[]
+            {
+                8.0,
+                8.1
+            };
 
             bc.AddPoint(3);
             data = bc.GetDataAtPoint(3);
@@ -96,18 +87,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             data[new DateTime(2001, 1, 2)] = 9.0;
 
             var view = new BoundaryConditionEditor
-                {
-                    ShowSupportPointNames = true,
-                    BoundaryConditionFactory = new FlowBoundaryConditionFactory(),
-                    BoundaryConditionPropertiesControl = new FlowBoundaryConditionPropertiesControl(),
-                    Controller = new FlowBoundaryConditionEditorController(),
-                    Data =
-                        new BoundaryConditionSet
-                            {
-                                Feature = bc.Feature,
-                                BoundaryConditions = new EventedList<IBoundaryCondition> {bc}
-                            }
-                };
+            {
+                ShowSupportPointNames = true,
+                BoundaryConditionFactory = new FlowBoundaryConditionFactory(),
+                BoundaryConditionPropertiesControl = new FlowBoundaryConditionPropertiesControl(),
+                Controller = new FlowBoundaryConditionEditorController(),
+                Data =
+                    new BoundaryConditionSet
+                    {
+                        Feature = bc.Feature,
+                        BoundaryConditions = new EventedList<IBoundaryCondition> {bc}
+                    }
+            };
 
             WindowsFormsTestHelper.ShowModal(view);
         }
@@ -116,14 +107,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         [Category(TestCategory.WindowsForms)]
         public void ShowWithSalinityTimeSeriesDataAndSigmaLayers()
         {
-            var bc = CreateBoundaryCondition(FlowBoundaryQuantityType.Salinity);
+            FlowBoundaryCondition bc = CreateBoundaryCondition(FlowBoundaryQuantityType.Salinity);
 
             bc.AddPoint(0);
             bc.PointDepthLayerDefinitions[0] = new VerticalProfileDefinition(VerticalProfileType.PercentageFromBed, 0);
-            var data = bc.GetDataAtPoint(0);
+            IFunction data = bc.GetDataAtPoint(0);
 
-            data[new DateTime(2001, 1, 1)] = new[] { 50.0 };
-            data[new DateTime(2001, 1, 2)] = new[] { 80.0 };
+            data[new DateTime(2001, 1, 1)] = new[]
+            {
+                50.0
+            };
+            data[new DateTime(2001, 1, 2)] = new[]
+            {
+                80.0
+            };
 
             bc.AddPoint(3);
             data = bc.GetDataAtPoint(3);
@@ -140,7 +137,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                     new BoundaryConditionSet
                     {
                         Feature = bc.Feature,
-                        BoundaryConditions = new EventedList<IBoundaryCondition> { bc }
+                        BoundaryConditions = new EventedList<IBoundaryCondition> {bc}
                     }
             };
 
@@ -151,10 +148,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         [Category(TestCategory.WindowsForms)]
         public void ShowWithTimeSeriesData()
         {
-            var bc = CreateBoundaryCondition(FlowBoundaryQuantityType.WaterLevel);
+            FlowBoundaryCondition bc = CreateBoundaryCondition(FlowBoundaryQuantityType.WaterLevel);
 
             bc.AddPoint(0);
-            var data = bc.GetDataAtPoint(0);
+            IFunction data = bc.GetDataAtPoint(0);
             data[new DateTime(2001, 1, 1)] = 5.0;
             data[new DateTime(2001, 1, 2)] = 8.0;
 
@@ -164,18 +161,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             data[new DateTime(2001, 1, 2)] = 9.0;
 
             var view = new BoundaryConditionEditor
-                {
-                    ShowSupportPointNames = true,
-                    BoundaryConditionFactory = new FlowBoundaryConditionFactory(),
-                    BoundaryConditionPropertiesControl = new FlowBoundaryConditionPropertiesControl(),
-                    Controller = new FlowBoundaryConditionEditorController(),
-                    Data =
-                        new BoundaryConditionSet
-                            {
-                                Feature = bc.Feature,
-                                BoundaryConditions = new EventedList<IBoundaryCondition> {bc}
-                            }
-                };
+            {
+                ShowSupportPointNames = true,
+                BoundaryConditionFactory = new FlowBoundaryConditionFactory(),
+                BoundaryConditionPropertiesControl = new FlowBoundaryConditionPropertiesControl(),
+                Controller = new FlowBoundaryConditionEditorController(),
+                Data =
+                    new BoundaryConditionSet
+                    {
+                        Feature = bc.Feature,
+                        BoundaryConditions = new EventedList<IBoundaryCondition> {bc}
+                    }
+            };
 
             WindowsFormsTestHelper.ShowModal(view);
         }
@@ -184,10 +181,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         [Category(TestCategory.WindowsForms)]
         public void ShowWithTimeSeriesAndAstroData()
         {
-            var bc1 = CreateBoundaryCondition(FlowBoundaryQuantityType.WaterLevel);
+            FlowBoundaryCondition bc1 = CreateBoundaryCondition(FlowBoundaryQuantityType.WaterLevel);
 
             bc1.AddPoint(0);
-            var data = bc1.GetDataAtPoint(0);
+            IFunction data = bc1.GetDataAtPoint(0);
             data[new DateTime(2000, 1, 1)] = 5.0;
             data[new DateTime(2000, 1, 15)] = 8.0;
 
@@ -198,38 +195,58 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
             var bc2 = new FlowBoundaryCondition(FlowBoundaryQuantityType.WaterLevel,
                                                 BoundaryConditionDataType.AstroComponents) {Feature = bc1.Feature};
-            
+
             bc2.AddPoint(0);
-            var data2 = bc2.GetDataAtPoint(0);
-            data2["M1"] = new[] { 0.5, 0 };
-            data2["M2"] = new[] { 0.5, 200 };
+            IFunction data2 = bc2.GetDataAtPoint(0);
+            data2["M1"] = new[]
+            {
+                0.5,
+                0
+            };
+            data2["M2"] = new[]
+            {
+                0.5,
+                200
+            };
 
             bc2.AddPoint(2);
             data2 = bc2.GetDataAtPoint(2);
-            data2["M1"] = new[] { 0.2, 200 };
-            data2["M2"] = new[] { 0.8, 0 };
+            data2["M1"] = new[]
+            {
+                0.2,
+                200
+            };
+            data2["M2"] = new[]
+            {
+                0.8,
+                0
+            };
 
             var view = new BoundaryConditionEditor
+            {
+                ShowSupportPointNames = true,
+                BoundaryConditionFactory = new FlowBoundaryConditionFactory(),
+                BoundaryConditionPropertiesControl = new FlowBoundaryConditionPropertiesControl(),
+                Controller = new FlowBoundaryConditionEditorController
                 {
-                    ShowSupportPointNames = true,
-                    BoundaryConditionFactory = new FlowBoundaryConditionFactory(),
-                    BoundaryConditionPropertiesControl = new FlowBoundaryConditionPropertiesControl(),
-                    Controller = new FlowBoundaryConditionEditorController
+                    Model =
+                        new WaterFlowFMModel
                         {
-                            Model =
-                                new WaterFlowFMModel
-                                    {
-                                        StartTime = new DateTime(2000, 1, 1),
-                                        StopTime = new DateTime(2000, 1, 10),
-                                    }
-                        },
-                    Data =
-                        new BoundaryConditionSet
-                            {
-                                Feature = bc1.Feature,
-                                BoundaryConditions = new EventedList<IBoundaryCondition> {bc1, bc2}
-                            }
-                };
+                            StartTime = new DateTime(2000, 1, 1),
+                            StopTime = new DateTime(2000, 1, 10),
+                        }
+                },
+                Data =
+                    new BoundaryConditionSet
+                    {
+                        Feature = bc1.Feature,
+                        BoundaryConditions = new EventedList<IBoundaryCondition>
+                        {
+                            bc1,
+                            bc2
+                        }
+                    }
+            };
 
             WindowsFormsTestHelper.ShowModal(view);
         }
@@ -238,59 +255,33 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         [Category(TestCategory.WindowsForms)]
         public void ShowWithAstroData()
         {
-            var bc = CreateBoundaryCondition(FlowBoundaryQuantityType.NormalVelocity, BoundaryConditionDataType.AstroComponents);
+            FlowBoundaryCondition bc = CreateBoundaryCondition(FlowBoundaryQuantityType.NormalVelocity, BoundaryConditionDataType.AstroComponents);
             bc.AddPoint(0);
-            var data = bc.GetDataAtPoint(0);
+            IFunction data = bc.GetDataAtPoint(0);
 
-            data["M1"] = new[] {0.5, 0};
-            data["M2"] = new[] {0.5, 200};
+            data["M1"] = new[]
+            {
+                0.5,
+                0
+            };
+            data["M2"] = new[]
+            {
+                0.5,
+                200
+            };
 
             bc.AddPoint(2);
             data = bc.GetDataAtPoint(2);
-            data["M1"] = new[] {0.2, 200};
-            data["M2"] = new[] {0.8, 0};
-
-            var view = new BoundaryConditionEditor
-                {
-                    ShowSupportPointNames = true,
-                    BoundaryConditionFactory = new FlowBoundaryConditionFactory(),
-                    BoundaryConditionPropertiesControl = new FlowBoundaryConditionPropertiesControl(),
-                    Controller =
-                        new FlowBoundaryConditionEditorController
-                            {
-                                Model =
-                                    new WaterFlowFMModel
-                                        {
-                                            StartTime = new DateTime(2000, 1, 1),
-                                            StopTime = new DateTime(2000, 1, 10),
-                                        }
-                            },
-                    Data =
-                        new BoundaryConditionSet
-                            {
-                                Feature = bc.Feature,
-                                BoundaryConditions = new EventedList<IBoundaryCondition> { bc }
-                            },
-                };
-
-            WindowsFormsTestHelper.ShowModal(view);
-        }
-
-        [Test]
-        [Category(TestCategory.WindowsForms)]
-        public void ShowWithAstroCorrectionData()
-        {
-            var bc = CreateBoundaryCondition(FlowBoundaryQuantityType.WaterLevel, BoundaryConditionDataType.AstroCorrection);
-            bc.AddPoint(0);
-            var data = bc.GetDataAtPoint(0);
-
-            data["M1"] = new[] {0.5, 1, 0, 0};
-            data["M2"] = new[] {0.5, 1.25, 200, -30};
-
-            bc.AddPoint(2);
-            data = bc.GetDataAtPoint(2);
-            data["M1"] = new[] {0.2, 0.75, 200, 30};
-            data["M2"] = new[] {0.8, 1.11, 0, 0};
+            data["M1"] = new[]
+            {
+                0.2,
+                200
+            };
+            data["M2"] = new[]
+            {
+                0.8,
+                0
+            };
 
             var view = new BoundaryConditionEditor
             {
@@ -311,7 +302,73 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                     new BoundaryConditionSet
                     {
                         Feature = bc.Feature,
-                        BoundaryConditions = new EventedList<IBoundaryCondition> { bc }
+                        BoundaryConditions = new EventedList<IBoundaryCondition> {bc}
+                    },
+            };
+
+            WindowsFormsTestHelper.ShowModal(view);
+        }
+
+        [Test]
+        [Category(TestCategory.WindowsForms)]
+        public void ShowWithAstroCorrectionData()
+        {
+            FlowBoundaryCondition bc = CreateBoundaryCondition(FlowBoundaryQuantityType.WaterLevel, BoundaryConditionDataType.AstroCorrection);
+            bc.AddPoint(0);
+            IFunction data = bc.GetDataAtPoint(0);
+
+            data["M1"] = new[]
+            {
+                0.5,
+                1,
+                0,
+                0
+            };
+            data["M2"] = new[]
+            {
+                0.5,
+                1.25,
+                200,
+                -30
+            };
+
+            bc.AddPoint(2);
+            data = bc.GetDataAtPoint(2);
+            data["M1"] = new[]
+            {
+                0.2,
+                0.75,
+                200,
+                30
+            };
+            data["M2"] = new[]
+            {
+                0.8,
+                1.11,
+                0,
+                0
+            };
+
+            var view = new BoundaryConditionEditor
+            {
+                ShowSupportPointNames = true,
+                BoundaryConditionFactory = new FlowBoundaryConditionFactory(),
+                BoundaryConditionPropertiesControl = new FlowBoundaryConditionPropertiesControl(),
+                Controller =
+                    new FlowBoundaryConditionEditorController
+                    {
+                        Model =
+                            new WaterFlowFMModel
+                            {
+                                StartTime = new DateTime(2000, 1, 1),
+                                StopTime = new DateTime(2000, 1, 10),
+                            }
+                    },
+                Data =
+                    new BoundaryConditionSet
+                    {
+                        Feature = bc.Feature,
+                        BoundaryConditions = new EventedList<IBoundaryCondition> {bc}
                     },
             };
 
@@ -322,22 +379,38 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         [Category(TestCategory.WindowsForms)]
         public void ShowWithAstroDataAndSalinity()
         {
-            var waterBc = CreateBoundaryCondition(FlowBoundaryQuantityType.WaterLevel,
-                                                  BoundaryConditionDataType.AstroComponents);
+            FlowBoundaryCondition waterBc = CreateBoundaryCondition(FlowBoundaryQuantityType.WaterLevel,
+                                                                    BoundaryConditionDataType.AstroComponents);
 
             waterBc.AddPoint(0);
-            var data = waterBc.GetDataAtPoint(0);
+            IFunction data = waterBc.GetDataAtPoint(0);
 
-            data["M1"] = new[] {0.5, 100};
-            data["M2"] = new[] {0.5, 0};
-            
+            data["M1"] = new[]
+            {
+                0.5,
+                100
+            };
+            data["M2"] = new[]
+            {
+                0.5,
+                0
+            };
+
             waterBc.AddPoint(2);
             data = waterBc.GetDataAtPoint(2);
 
-            data["M1"] = new[] {0.8, 200};
-            data["M2"] = new[] {0.2, 0};
+            data["M1"] = new[]
+            {
+                0.8,
+                200
+            };
+            data["M2"] = new[]
+            {
+                0.2,
+                0
+            };
 
-            var saltBc = CreateBoundaryCondition(FlowBoundaryQuantityType.Salinity);
+            FlowBoundaryCondition saltBc = CreateBoundaryCondition(FlowBoundaryQuantityType.Salinity);
 
             saltBc.AddPoint(0);
             data = saltBc.GetDataAtPoint(0);
@@ -350,26 +423,30 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             data[new DateTime(2000, 1, 10)] = 1.0;
 
             var view = new BoundaryConditionEditor
+            {
+                ShowSupportPointNames = true,
+                BoundaryConditionFactory = new FlowBoundaryConditionFactory(),
+                BoundaryConditionPropertiesControl = new FlowBoundaryConditionPropertiesControl(),
+                Controller = new FlowBoundaryConditionEditorController
                 {
-                    ShowSupportPointNames = true,
-                    BoundaryConditionFactory = new FlowBoundaryConditionFactory(),
-                    BoundaryConditionPropertiesControl = new FlowBoundaryConditionPropertiesControl(),
-                    Controller = new FlowBoundaryConditionEditorController
+                    Model =
+                        new WaterFlowFMModel
                         {
-                            Model =
-                                new WaterFlowFMModel
-                                    {
-                                        StartTime = new DateTime(2000, 1, 1),
-                                        StopTime = new DateTime(2000, 1, 10),
-                                    }
-                        },
-                    Data =
-                        new BoundaryConditionSet
-                            {
-                                Feature = waterBc.Feature,
-                                BoundaryConditions = new EventedList<IBoundaryCondition> {waterBc, saltBc}
-                            }
-                };
+                            StartTime = new DateTime(2000, 1, 1),
+                            StopTime = new DateTime(2000, 1, 10),
+                        }
+                },
+                Data =
+                    new BoundaryConditionSet
+                    {
+                        Feature = waterBc.Feature,
+                        BoundaryConditions = new EventedList<IBoundaryCondition>
+                        {
+                            waterBc,
+                            saltBc
+                        }
+                    }
+            };
 
             ((FlowBoundaryConditionEditorController) view.Controller).Model.ModelDefinition.GetModelProperty(KnownProperties.UseSalinity).Value = true;
 
@@ -380,38 +457,50 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         [Category(TestCategory.WindowsForms)]
         public void ShowWithAstroVectorVelocitiesAndLayers()
         {
-            var vectorBc = CreateBoundaryCondition(FlowBoundaryQuantityType.VelocityVector,
-                                                   BoundaryConditionDataType.AstroComponents);
+            FlowBoundaryCondition vectorBc = CreateBoundaryCondition(FlowBoundaryQuantityType.VelocityVector,
+                                                                     BoundaryConditionDataType.AstroComponents);
 
             vectorBc.AddPoint(0);
 
-            var data = vectorBc.GetDataAtPoint(0);
+            IFunction data = vectorBc.GetDataAtPoint(0);
             Assert.AreEqual(4, data.Components.Count);
 
-            data["M1"] = new[] {0.1, 100, 0.2, 200};
-            data["M2"] = new[] {0.3, 300, 0.4, 400};
+            data["M1"] = new[]
+            {
+                0.1,
+                100,
+                0.2,
+                200
+            };
+            data["M2"] = new[]
+            {
+                0.3,
+                300,
+                0.4,
+                400
+            };
 
             var view = new BoundaryConditionEditor
+            {
+                ShowSupportPointNames = true,
+                BoundaryConditionFactory = new FlowBoundaryConditionFactory(),
+                BoundaryConditionPropertiesControl = new FlowBoundaryConditionPropertiesControl(),
+                Controller = new FlowBoundaryConditionEditorController()
                 {
-                    ShowSupportPointNames = true,
-                    BoundaryConditionFactory = new FlowBoundaryConditionFactory(),
-                    BoundaryConditionPropertiesControl = new FlowBoundaryConditionPropertiesControl(),
-                    Controller = new FlowBoundaryConditionEditorController()
+                    Model =
+                        new WaterFlowFMModel
                         {
-                            Model =
-                                new WaterFlowFMModel
-                                    {
-                                        StartTime = new DateTime(2000, 1, 1),
-                                        StopTime = new DateTime(2000, 1, 10),
-                                    }
-                        },
-                    Data =
-                        new BoundaryConditionSet
-                            {
-                                Feature = vectorBc.Feature,
-                                BoundaryConditions = new EventedList<IBoundaryCondition> {vectorBc}
-                            },
-                };
+                            StartTime = new DateTime(2000, 1, 1),
+                            StopTime = new DateTime(2000, 1, 10),
+                        }
+                },
+                Data =
+                    new BoundaryConditionSet
+                    {
+                        Feature = vectorBc.Feature,
+                        BoundaryConditions = new EventedList<IBoundaryCondition> {vectorBc}
+                    },
+            };
 
             WindowsFormsTestHelper.ShowModal(view);
         }
@@ -420,17 +509,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         [Category(TestCategory.WindowsForms)]
         public void ShowWithQhDataType()
         {
-            var waterLeveBc = CreateBoundaryCondition(FlowBoundaryQuantityType.WaterLevel, BoundaryConditionDataType.Qh);
+            FlowBoundaryCondition waterLeveBc = CreateBoundaryCondition(FlowBoundaryQuantityType.WaterLevel, BoundaryConditionDataType.Qh);
 
             waterLeveBc.AddPoint(0);
 
-            var data = waterLeveBc.GetDataAtPoint(0);
-            
+            IFunction data = waterLeveBc.GetDataAtPoint(0);
+
             data[0.0] = 0.0;
             data[1.0] = 1000.0;
             data[2.0] = 4000.0;
             data[3.0] = 9000.0;
-            
+
             var view = new BoundaryConditionEditor
             {
                 ShowSupportPointNames = true,
@@ -449,7 +538,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                     new BoundaryConditionSet
                     {
                         Feature = waterLeveBc.Feature,
-                        BoundaryConditions = new EventedList<IBoundaryCondition> { waterLeveBc }
+                        BoundaryConditions = new EventedList<IBoundaryCondition> {waterLeveBc}
                     },
             };
 
@@ -524,8 +613,29 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                     Assert.IsInstanceOf<BoundaryConditionEditor>(gui.DocumentViews.ActiveView);
                 };
 
-                WpfTestHelper.ShowModal((Control)gui.MainWindow, mainWindowShown);
+                WpfTestHelper.ShowModal((Control) gui.MainWindow, mainWindowShown);
             }
+        }
+
+        private static FlowBoundaryCondition CreateBoundaryCondition(FlowBoundaryQuantityType quantity,
+                                                                     BoundaryConditionDataType dataType =
+                                                                         BoundaryConditionDataType.TimeSeries)
+        {
+            var feature = new Feature2D
+            {
+                Geometry = new LineString(new[]
+                {
+                    new Coordinate(0, 0),
+                    new Coordinate(50, 10),
+                    new Coordinate(100, 0),
+                    new Coordinate(150, -10)
+                }),
+                Name = "TestFeature"
+            };
+
+            var boundaryData = new FlowBoundaryCondition(quantity, dataType) {Feature = feature};
+
+            return boundaryData;
         }
     }
 }

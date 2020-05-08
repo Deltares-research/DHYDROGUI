@@ -14,17 +14,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Providers
         [ExpectedException(typeof(ArgumentException), ExpectedMessage = "Type 'System.Int32' is not a IFeature.")]
         public void ThrowExceptionWithImpossibleFeatureType()
         {
-            var channelFeatureCollection = new HydroNetworkFeatureCollection
-                                              {
-                                                  
-                                                  FeatureType = typeof(int)
-                                              };
-            
+            var channelFeatureCollection = new HydroNetworkFeatureCollection {FeatureType = typeof(int)};
         }
 
-
         /// <summary>
-        /// Test the featurecollections for all network types. featurecollections are used as DataSource for layers 
+        /// Test the featurecollections for all network types. featurecollections are used as DataSource for layers
         /// in the maptool.
         /// </summary>
         [Test]
@@ -39,13 +33,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Providers
             network.Branches[0].BranchFeatures.Add(new Bridge());
             network.Branches[0].BranchFeatures.Add(new Gate());
 
-            var channelFeatureCollection = GetHydroNetworkFeatureCollection<Channel>(network);
-            var hydroNodeFeatureCollection = GetHydroNetworkFeatureCollection<HydroNode>(network);
-            var pumpFeatureCollection = GetHydroNetworkFeatureCollection<Pump>(network);
-            var weirFeatureCollection = GetHydroNetworkFeatureCollection<Weir>(network);
-            var bridgeFeatureCollection = GetHydroNetworkFeatureCollection<Bridge>(network);
-            var gateFeatureCollection = GetHydroNetworkFeatureCollection<Gate>(network);
-            
+            HydroNetworkFeatureCollection channelFeatureCollection = GetHydroNetworkFeatureCollection<Channel>(network);
+            HydroNetworkFeatureCollection hydroNodeFeatureCollection = GetHydroNetworkFeatureCollection<HydroNode>(network);
+            HydroNetworkFeatureCollection pumpFeatureCollection = GetHydroNetworkFeatureCollection<Pump>(network);
+            HydroNetworkFeatureCollection weirFeatureCollection = GetHydroNetworkFeatureCollection<Weir>(network);
+            HydroNetworkFeatureCollection bridgeFeatureCollection = GetHydroNetworkFeatureCollection<Bridge>(network);
+            HydroNetworkFeatureCollection gateFeatureCollection = GetHydroNetworkFeatureCollection<Gate>(network);
+
             Assert.AreEqual(1, channelFeatureCollection.Features.Count);
             Assert.AreEqual(1, hydroNodeFeatureCollection.Features.Count);
 
@@ -55,13 +49,22 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Providers
             Assert.AreEqual(1, gateFeatureCollection.Features.Count);
         }
 
+        private HydroNetworkFeatureCollection GetHydroNetworkFeatureCollection<T>(IHydroNetwork network)
+        {
+            return new HydroNetworkFeatureCollection
+            {
+                Network = network,
+                FeatureType = typeof(T)
+            };
+        }
+
         #region Add to HydroNetworkFeatureCollection
 
         [Test]
         public void GivenHydroNodeHydroNetworkFeatureCollection_WhenAddingHydroNodeToFeatureCollection_ThenTheHydroNodeIsAddedToTheNetwork()
         {
             var network = new HydroNetwork();
-            var hydroNodeFeatureCollection = GetHydroNetworkFeatureCollection<HydroNode>(network);
+            HydroNetworkFeatureCollection hydroNodeFeatureCollection = GetHydroNetworkFeatureCollection<HydroNode>(network);
 
             Assert.That(network.Nodes.Count, Is.EqualTo(0));
             hydroNodeFeatureCollection.Features.Add(new HydroNode());
@@ -72,7 +75,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Providers
         public void GivenChannelHydroNetworkFeatureCollection_WhenAddingChannelToFeatureCollection_ThenTheChannelIsAddedToTheNetwork()
         {
             var network = new HydroNetwork();
-            var hydroNodeFeatureCollection = GetHydroNetworkFeatureCollection<Channel>(network);
+            HydroNetworkFeatureCollection hydroNodeFeatureCollection = GetHydroNetworkFeatureCollection<Channel>(network);
 
             Assert.That(network.Branches.Count, Is.EqualTo(0));
             hydroNodeFeatureCollection.Features.Add(new Channel());
@@ -84,11 +87,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Providers
         {
             var network = new HydroNetwork();
             network.Branches.Add(new Channel());
-            var pump = new Pump
-            {
-                Branch = network.Branches[0]
-            };
-            var hydroNodeFeatureCollection = GetHydroNetworkFeatureCollection<Pump>(network);
+            var pump = new Pump {Branch = network.Branches[0]};
+            HydroNetworkFeatureCollection hydroNodeFeatureCollection = GetHydroNetworkFeatureCollection<Pump>(network);
 
             Assert.That(network.Pumps.Count(), Is.EqualTo(0));
             hydroNodeFeatureCollection.Features.Add(pump);
@@ -104,7 +104,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Providers
         {
             var network = new HydroNetwork();
             network.Nodes.Add(new HydroNode());
-            var hydroNodeFeatureCollection = GetHydroNetworkFeatureCollection<HydroNode>(network);
+            HydroNetworkFeatureCollection hydroNodeFeatureCollection = GetHydroNetworkFeatureCollection<HydroNode>(network);
 
             Assert.That(network.Nodes.Count, Is.EqualTo(1));
             hydroNodeFeatureCollection.Features.RemoveAt(0);
@@ -116,7 +116,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Providers
         {
             var network = new HydroNetwork();
             network.Branches.Add(new Channel());
-            var hydroNodeFeatureCollection = GetHydroNetworkFeatureCollection<Channel>(network);
+            HydroNetworkFeatureCollection hydroNodeFeatureCollection = GetHydroNetworkFeatureCollection<Channel>(network);
 
             Assert.That(network.Branches.Count, Is.EqualTo(1));
             hydroNodeFeatureCollection.Features.RemoveAt(0);
@@ -130,7 +130,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Providers
             network.Branches.Add(new Channel());
             network.Branches[0].BranchFeatures.Add(new Pump());
 
-            var hydroNodeFeatureCollection = GetHydroNetworkFeatureCollection<Pump>(network);
+            HydroNetworkFeatureCollection hydroNodeFeatureCollection = GetHydroNetworkFeatureCollection<Pump>(network);
 
             Assert.That(network.Pumps.Count(), Is.EqualTo(1));
             hydroNodeFeatureCollection.Features.RemoveAt(0);
@@ -146,7 +146,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Providers
         {
             var network = new HydroNetwork();
             network.Nodes.Add(new HydroNode("OriginalNode"));
-            var hydroNodeFeatureCollection = GetHydroNetworkFeatureCollection<HydroNode>(network);
+            HydroNetworkFeatureCollection hydroNodeFeatureCollection = GetHydroNetworkFeatureCollection<HydroNode>(network);
 
             Assert.That(network.Nodes.Count, Is.EqualTo(1));
             hydroNodeFeatureCollection.Features.Insert(0, new HydroNode("InsertedNode"));
@@ -160,7 +160,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Providers
         {
             var network = new HydroNetwork();
             network.Branches.Add(new Channel("OriginalChannel", new HydroNode(), new HydroNode(), 2));
-            var hydroNodeFeatureCollection = GetHydroNetworkFeatureCollection<Channel>(network);
+            HydroNetworkFeatureCollection hydroNodeFeatureCollection = GetHydroNetworkFeatureCollection<Channel>(network);
 
             Assert.That(network.Branches.Count, Is.EqualTo(1));
             hydroNodeFeatureCollection.Features.Insert(0, new Channel("InsertedChannel", new HydroNode(), new HydroNode(), 2));
@@ -176,7 +176,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Providers
             var network = new HydroNetwork();
             network.Branches.Add(new Channel());
             network.Branches[0].BranchFeatures.Add(new Pump());
-            var hydroNodeFeatureCollection = GetHydroNetworkFeatureCollection<Pump>(network);
+            HydroNetworkFeatureCollection hydroNodeFeatureCollection = GetHydroNetworkFeatureCollection<Pump>(network);
 
             Assert.That(network.Pumps.Count, Is.EqualTo(1));
             hydroNodeFeatureCollection.Features.Insert(0, new Pump());
@@ -191,7 +191,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Providers
         {
             var network = new HydroNetwork();
             network.Nodes.Add(new HydroNode("OriginalNode"));
-            var hydroNodeFeatureCollection = GetHydroNetworkFeatureCollection<HydroNode>(network);
+            HydroNetworkFeatureCollection hydroNodeFeatureCollection = GetHydroNetworkFeatureCollection<HydroNode>(network);
 
             Assert.That(network.Nodes.Count, Is.EqualTo(1));
             hydroNodeFeatureCollection.Features[0] = new HydroNode("ReplacingNode");
@@ -204,7 +204,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Providers
         {
             var network = new HydroNetwork();
             network.Branches.Add(new Channel("OriginalChannel", new HydroNode(), new HydroNode()));
-            var hydroNodeFeatureCollection = GetHydroNetworkFeatureCollection<Channel>(network);
+            HydroNetworkFeatureCollection hydroNodeFeatureCollection = GetHydroNetworkFeatureCollection<Channel>(network);
 
             Assert.That(network.Branches.Count, Is.EqualTo(1));
             hydroNodeFeatureCollection.Features[0] = new Channel("ReplacingChannel", new HydroNode(), new HydroNode());
@@ -219,14 +219,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Providers
             var network = new HydroNetwork();
             network.Branches.Add(new Channel());
             network.Branches[0].BranchFeatures.Add(new Pump("OriginalPump"));
-            var hydroNodeFeatureCollection = GetHydroNetworkFeatureCollection<Pump>(network);
+            HydroNetworkFeatureCollection hydroNodeFeatureCollection = GetHydroNetworkFeatureCollection<Pump>(network);
 
             Assert.That(network.Pumps.Count, Is.EqualTo(1));
             hydroNodeFeatureCollection.Features[0] = new Pump("ReplacingPump");
         }
 
         #endregion
-
 
         #region Clear HydroNetworkFeatureCollection
 
@@ -236,7 +235,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Providers
             var network = new HydroNetwork();
             network.Nodes.Add(new HydroNode("Node1"));
             network.Nodes.Add(new HydroNode("Node2"));
-            var hydroNodeFeatureCollection = GetHydroNetworkFeatureCollection<HydroNode>(network);
+            HydroNetworkFeatureCollection hydroNodeFeatureCollection = GetHydroNetworkFeatureCollection<HydroNode>(network);
 
             Assert.That(network.Nodes.Count, Is.EqualTo(2));
             hydroNodeFeatureCollection.Features.Clear();
@@ -249,7 +248,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Providers
             var network = new HydroNetwork();
             network.Branches.Add(new Channel());
             network.Branches.Add(new Channel());
-            var hydroNodeFeatureCollection = GetHydroNetworkFeatureCollection<Channel>(network);
+            HydroNetworkFeatureCollection hydroNodeFeatureCollection = GetHydroNetworkFeatureCollection<Channel>(network);
 
             Assert.That(network.Branches.Count, Is.EqualTo(2));
             hydroNodeFeatureCollection.Features.Clear();
@@ -263,7 +262,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Providers
             network.Branches.Add(new Channel());
             network.Branches[0].BranchFeatures.Add(new Pump());
             network.Branches[0].BranchFeatures.Add(new Pump());
-            var hydroNodeFeatureCollection = GetHydroNetworkFeatureCollection<Pump>(network);
+            HydroNetworkFeatureCollection hydroNodeFeatureCollection = GetHydroNetworkFeatureCollection<Pump>(network);
 
             Assert.That(network.Pumps.Count, Is.EqualTo(2));
             hydroNodeFeatureCollection.Features.Clear();
@@ -271,14 +270,5 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Providers
         }
 
         #endregion
-
-        private HydroNetworkFeatureCollection GetHydroNetworkFeatureCollection<T>(IHydroNetwork network)
-        {
-            return new HydroNetworkFeatureCollection
-            {
-                Network = network,
-                FeatureType = typeof(T)
-            };
-        }
     }
 }

@@ -13,7 +13,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
     [TestFixture(typeof(ConstantParameters<DegreesDefinedSpreading>))]
     public class SpatiallyVaryingDataComponentTest<T> where T : class, IForcingTypeDefinedParameters
     {
-
         [Test]
         public void Constructor_ConstantParameters_ExpectedResults()
         {
@@ -134,7 +133,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
             dataComponent.ReplaceSupportPoint(oldSupportPoint, newSupportPoint);
 
             // Assert
-            Assert.That(!dataComponent.Data.ContainsKey(oldSupportPoint), 
+            Assert.That(!dataComponent.Data.ContainsKey(oldSupportPoint),
                         "Expected the old support point to be removed.");
             Assert.That(dataComponent.Data.ContainsKey(newSupportPoint),
                         "Expected the new support point to be added.");
@@ -215,7 +214,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
         {
             // Setup
             var dataComponent = new SpatiallyVaryingDataComponent<T>();
-            
+
             // Call
             void Call() => dataComponent.AcceptVisitor(null);
 

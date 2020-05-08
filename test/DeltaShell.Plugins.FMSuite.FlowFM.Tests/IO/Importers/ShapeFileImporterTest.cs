@@ -125,7 +125,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
         /// GIVEN a ShapeFileImporter
         /// WHEN OnImportItem is called with a null path
         /// THEN null is returned
-        ///  AND an error is logged
+        /// AND an error is logged
         /// </summary>
         [Test]
         public void GivenAShapeFileImporter_WhenOnImportItemIsCalledWithANullPath_ThenNullIsReturnedAndAnErrorIsLogged()
@@ -148,7 +148,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
         /// GIVEN a ShapeFileImporter
         /// WHEN OnImportItem is called with a valid path and a null target
         /// THEN null is returned
-        ///  AND an error is logged
+        /// AND an error is logged
         /// </summary>
         [Test]
         public void GivenAShapeFileImporter_WhenOnImportItemIsCalledWithAValidPathAndANullTarget_ThenNullIsReturnedAndAnErrorIsLogged()
@@ -171,8 +171,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
 
         /// <summary>
         /// GIVEN a ShapeFileImporter
-        ///   AND a valid path
-        ///   AND a valid target
+        /// AND a valid path
+        /// AND a valid target
         /// WHEN OnImportItem is called
         /// THEN the features corresponding with the file at path are added to the target
         /// </summary>
@@ -188,23 +188,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             featureMock1.Replay();
             featureMock2.Replay();
 
-            var featureList = new List<IFeature>() { featureMock1, featureMock2 };
+            var featureList = new List<IFeature>()
+            {
+                featureMock1,
+                featureMock2
+            };
 
             var readMock = MockRepository.GenerateStrictMock<Func<string, ILog, IEnumerable<IFeature>>>();
             readMock.Expect(f => f.Invoke(Arg<string>.Matches(s => s.Equals(validPath)),
-                                                Arg<ILog>.Is.Anything))
+                                          Arg<ILog>.Is.Anything))
                     .Return(featureList)
                     .Repeat.Once();
 
             readMock.Replay();
             ICoordinateTransformation transformation = GetTransformationMock();
 
-            var importer = new ShapeFileImporter<ILineString, Feature2D>(readMock, ShapeFileImporterFactory.AfterFeatureCreateActions.TryAddName)
-            {
-                CoordinateTransformation = transformation
-            };
+            var importer = new ShapeFileImporter<ILineString, Feature2D>(readMock, ShapeFileImporterFactory.AfterFeatureCreateActions.TryAddName) {CoordinateTransformation = transformation};
 
-            var feature2DMock = GetFeature2DMock();
+            Feature2D feature2DMock = GetFeature2DMock();
             feature2DMock.Replay();
 
             var target = new List<Feature2D>() {feature2DMock};

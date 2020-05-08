@@ -33,25 +33,25 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
         [Test]
         [TestCase("00:00:01", timeStepUnitEnumStringType.second)] // second
         [TestCase("00:01:00", timeStepUnitEnumStringType.minute)] // minute
-        [TestCase("01:00:00", timeStepUnitEnumStringType.hour)] // hour
-        [TestCase("1.00:00:00", timeStepUnitEnumStringType.day)] // day
+        [TestCase("01:00:00", timeStepUnitEnumStringType.hour)]   // hour
+        [TestCase("1.00:00:00", timeStepUnitEnumStringType.day)]  // day
         [TestCase("7.00:00:00", timeStepUnitEnumStringType.week)] // week
         public void GivenAUserDefinedRuntimeXmlElement_WhenSetRunTimeSettingsIsCalled_ThenCorrectDataIsSetOnModel(string expectedTimeSpanString, timeStepUnitEnumStringType timeStepUnit)
         {
             // Given
-            var startDate = DateTime.Today;
-            var runTimeSettingsElement = CreateRunTimeSettings(timeStepUnit, startDate);
+            DateTime startDate = DateTime.Today;
+            UserDefinedRuntimeXML runTimeSettingsElement = CreateRunTimeSettings(timeStepUnit, startDate);
 
             // When
             runtimeConfigSetter.SetRunTimeSettings(rtcModel, runTimeSettingsElement);
 
             // Then
             Assert.AreEqual(startDate, rtcModel.StartTime,
-                AssertMessage_StartTimeOfModelIsIncorrectlySet);
+                            AssertMessage_StartTimeOfModelIsIncorrectlySet);
             Assert.AreEqual(expectedTimeSpanString, rtcModel.TimeStep.ToString(),
-                AssertMessage_TimeStepOfModelIsIncorrectlySet);
+                            AssertMessage_TimeStepOfModelIsIncorrectlySet);
             Assert.AreEqual(startDate.AddDays(1), rtcModel.StopTime,
-                AssertMessage_StopTimeOfModelIsIncorrectlySet);
+                            AssertMessage_StopTimeOfModelIsIncorrectlySet);
         }
 
         [Test]
@@ -60,14 +60,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
         public void GivenModeXmlElement_WhenSetSimulationModeSettingsIsCalled_ThenCorrectDataIsSetOnModel(bool limitedMemory)
         {
             // Given
-            var simulationModeSettingsElement = CreateSimulationModeSettings(limitedMemory);
+            ModeXML simulationModeSettingsElement = CreateSimulationModeSettings(limitedMemory);
 
             // When
             runtimeConfigSetter.SetSimulationModeSettings(rtcModel, simulationModeSettingsElement);
 
             // Then
             Assert.AreEqual(limitedMemory, rtcModel.LimitMemory,
-                $"Option 'limit memory' was expected to be {limitedMemory.ToString()}.");
+                            $"Option 'limit memory' was expected to be {limitedMemory.ToString()}.");
         }
 
         [TestCase(-1, false)]
@@ -75,19 +75,19 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
         [TestCase(7200, true)]
         public void GivenAUserDefinedStateExportXmlElementWithAValidTimeStep_WhenSetRestartSettingsIsCalled_ThenCorrectDataIsSetOnModel(int restartTimeStep, bool expectedWriteRestart)
         {
-            var restartStartDate = DateTime.Today.AddYears(1);
-            var restartEndDate = restartStartDate.AddHours(12);
+            DateTime restartStartDate = DateTime.Today.AddYears(1);
+            DateTime restartEndDate = restartStartDate.AddHours(12);
 
             AssertNotDefaultModelValues(restartStartDate, restartEndDate, restartTimeStep);
 
-            var restartSettingsElement = CreateRestartSettings(restartTimeStep, restartStartDate, restartEndDate);
+            UserDefinedStateExportXML restartSettingsElement = CreateRestartSettings(restartTimeStep, restartStartDate, restartEndDate);
 
             // When
             runtimeConfigSetter.SetRestartSettings(rtcModel, restartSettingsElement);
 
             // Then
             Assert.AreEqual(expectedWriteRestart, rtcModel.WriteRestart,
-                $"Option 'write restart' was expected to be {expectedWriteRestart.ToString()}.");
+                            $"Option 'write restart' was expected to be {expectedWriteRestart.ToString()}.");
 
             if (expectedWriteRestart)
             {
@@ -126,13 +126,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
 
         private ModeXML CreateSimulationModeSettings(bool limitedMemory)
         {
-            var mode = new ModeXML
-            {
-                Item = new ModeSimulationXML
-                {
-                    limitedMemory = limitedMemory
-                }
-            };
+            var mode = new ModeXML {Item = new ModeSimulationXML {limitedMemory = limitedMemory}};
 
             return mode;
         }
@@ -160,31 +154,31 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
         private void AssertNotDefaultModelValues(DateTime restartStartDate, DateTime restartEndDate, int restartTimeStep)
         {
             Assert.AreNotEqual(restartStartDate, rtcModel.StartTime,
-                AssertMessage_StartTimeOfModelIsIncorrectlySet);
+                               AssertMessage_StartTimeOfModelIsIncorrectlySet);
             Assert.AreNotEqual(restartEndDate, rtcModel.StopTime,
-                AssertMessage_StopTimeOfModelIsIncorrectlySet);
+                               AssertMessage_StopTimeOfModelIsIncorrectlySet);
             Assert.AreNotEqual(restartTimeStep, rtcModel.SaveStateTimeStep.TotalSeconds,
-                AssertMessage_TimeStepOfModelIsIncorrectlySet);
+                               AssertMessage_TimeStepOfModelIsIncorrectlySet);
         }
 
         private void AssertDefaultValuesAreSet()
         {
             Assert.AreEqual(rtcModel.StopTime, rtcModel.SaveStateStartTime,
-                AssertMessage_StartTimeOfModelIsIncorrectlySet);
+                            AssertMessage_StartTimeOfModelIsIncorrectlySet);
             Assert.AreEqual(rtcModel.StopTime, rtcModel.SaveStateStopTime,
-                AssertMessage_StopTimeOfModelIsIncorrectlySet);
-            Assert.AreEqual(rtcModel.TimeStep, rtcModel.SaveStateTimeStep, 
-                AssertMessage_TimeStepOfModelIsIncorrectlySet);
+                            AssertMessage_StopTimeOfModelIsIncorrectlySet);
+            Assert.AreEqual(rtcModel.TimeStep, rtcModel.SaveStateTimeStep,
+                            AssertMessage_TimeStepOfModelIsIncorrectlySet);
         }
 
         private void AssertReadValuesAreSet(DateTime restartStartDate, DateTime restartEndDate, int restartTimeStep)
         {
             Assert.AreEqual(restartStartDate, rtcModel.SaveStateStartTime,
-                AssertMessage_StartTimeOfModelIsIncorrectlySet);
+                            AssertMessage_StartTimeOfModelIsIncorrectlySet);
             Assert.AreEqual(restartEndDate, rtcModel.SaveStateStopTime,
-                AssertMessage_StopTimeOfModelIsIncorrectlySet);
+                            AssertMessage_StopTimeOfModelIsIncorrectlySet);
             Assert.AreEqual(restartTimeStep, rtcModel.SaveStateTimeStep.TotalSeconds,
-                AssertMessage_TimeStepOfModelIsIncorrectlySet);
+                            AssertMessage_TimeStepOfModelIsIncorrectlySet);
         }
     }
 }

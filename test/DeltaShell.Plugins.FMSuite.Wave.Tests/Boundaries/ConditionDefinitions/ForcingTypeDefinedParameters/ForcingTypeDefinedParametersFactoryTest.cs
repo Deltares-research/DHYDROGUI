@@ -21,6 +21,20 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
             Assert.That(factory, Is.InstanceOf<IForcingTypeDefinedParametersFactory>());
         }
 
+        [Test]
+        public void ConstructDefaultFileBasedParameters_ExpectedValues()
+        {
+            // Setup
+            var factory = new ForcingTypeDefinedParametersFactory();
+
+            // Call
+            FileBasedParameters parameters =
+                factory.ConstructDefaultFileBasedParameters();
+
+            // Assert
+            Assert.That(parameters.FilePath, Is.Empty);
+        }
+
         [TestFixture]
         [TestFixture(typeof(DegreesDefinedSpreading))]
         [TestFixture(typeof(PowerDefinedSpreading))]
@@ -198,20 +212,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
                 Assert.That(result.WaveEnergyFunction.SpreadingComponent.Unit.Name, Is.EqualTo(expectedUnit.Name));
                 Assert.That(result.WaveEnergyFunction.SpreadingComponent.Unit.Symbol, Is.EqualTo(expectedUnit.Symbol));
             }
-        }
-
-        [Test]
-        public void ConstructDefaultFileBasedParameters_ExpectedValues()
-        {
-            // Setup
-            var factory = new ForcingTypeDefinedParametersFactory();
-
-            // Call
-            FileBasedParameters parameters =
-                factory.ConstructDefaultFileBasedParameters();
-
-            // Assert
-            Assert.That(parameters.FilePath, Is.Empty);
         }
     }
 }

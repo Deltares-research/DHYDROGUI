@@ -23,10 +23,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Forms.PropertyG
 
             var unstructuredGridCellCoverage = new UnstructuredGridCellCoverage(new UnstructuredGrid(), false);
 
-            WindowsFormsTestHelper.ShowModal(new DeltaShell.Gui.Forms.PropertyGrid.PropertyGrid(guiMock)
-            {
-                Data = new DynamicPropertyBag(new WaterQualityModelUnstructuredGridCellCoverageProperties { Data = unstructuredGridCellCoverage })
-            });
-        } 
+            WindowsFormsTestHelper.ShowModal(new DeltaShell.Gui.Forms.PropertyGrid.PropertyGrid(guiMock) {Data = new DynamicPropertyBag(new WaterQualityModelUnstructuredGridCellCoverageProperties {Data = unstructuredGridCellCoverage})});
+        }
     }
 }

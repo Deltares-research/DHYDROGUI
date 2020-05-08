@@ -27,7 +27,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
 
             // Call
             void Call() => shape.AcceptVisitor(null);
-            
+
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(Call);
             Assert.That(exception.ParamName, Is.EqualTo("visitor"));
@@ -38,7 +38,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
         {
             // Setup
             var shape = new GaussShape();
-            IShapeVisitor visitor = Substitute.For<IShapeVisitor>();
+            var visitor = Substitute.For<IShapeVisitor>();
 
             // Call
             shape.AcceptVisitor(visitor);

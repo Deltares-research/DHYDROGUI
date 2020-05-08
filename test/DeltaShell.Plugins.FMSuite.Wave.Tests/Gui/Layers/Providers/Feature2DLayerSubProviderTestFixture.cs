@@ -13,14 +13,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers.Providers
         protected abstract IWaveModel Model { get; }
         protected abstract IEnumerable<Feature2D> RelevantFeature { get; }
 
-        protected override object GetValidSourceData() => RelevantFeature;
-
-        protected override object GetValidParentData() => Model;
-
-        protected override object GetInvalidSourceData() => Substitute.For<IEventedList<Feature2D>>();
-
-        protected override object GetInvalidParentData() => Model;
-
         [Test]
         public void GenerateChildLayerObjects_ReturnsEmptyEnumerable()
         {
@@ -34,5 +26,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers.Providers
             Assert.That(result, Is.Not.Null);
             Assert.That(result, Is.Empty);
         }
+
+        protected override object GetValidSourceData() => RelevantFeature;
+
+        protected override object GetValidParentData() => Model;
+
+        protected override object GetInvalidSourceData() => Substitute.For<IEventedList<Feature2D>>();
+
+        protected override object GetInvalidParentData() => Model;
     }
 }

@@ -1,11 +1,12 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using DeltaShell.Plugins.FMSuite.FlowFM.Sediment;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 {
     [TestFixture]
-    class WaterFlowFMModelSedimentFractionsTest
+    internal class WaterFlowFMModelSedimentFractionsTest
     {
         [Test]
         public void TestGetAllSpatiallyVaryingPropertyNamesShouldNotBeNull()
@@ -14,7 +15,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
              are hardcoded (for now). If this would fail means we are no longer hardcoding them
              but retrieving them from a file or so. */
             var fraction = new SedimentFraction();
-            var spatiallyVaryingPropNames = fraction.GetAllSpatiallyVaryingPropertyNames();
+            List<string> spatiallyVaryingPropNames = fraction.GetAllSpatiallyVaryingPropertyNames();
             Assert.NotNull(spatiallyVaryingPropNames);
             Assert.IsNotEmpty(spatiallyVaryingPropNames);
         }
@@ -24,7 +25,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         {
             var fraction = new SedimentFraction();
             //The first supported formula by each Sediment type should be the one added.
-            foreach (var sedType in fraction.AvailableSedimentTypes)
+            foreach (ISedimentType sedType in fraction.AvailableSedimentTypes)
             {
                 fraction.CurrentSedimentType = sedType;
                 Assert.AreEqual(fraction.CurrentSedimentType, sedType);
@@ -32,7 +33,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 Assert.NotNull(fraction.SupportedFormulaTypes);
                 Assert.IsTrue(fraction.SupportedFormulaTypes.Contains(fraction.CurrentFormulaType));
 
-                var newFormula = fraction.SupportedFormulaTypes.FirstOrDefault(sf => sf != fraction.CurrentFormulaType);
+                ISedimentFormulaType newFormula = fraction.SupportedFormulaTypes.FirstOrDefault(sf => sf != fraction.CurrentFormulaType);
                 fraction.CurrentFormulaType = newFormula;
                 if (newFormula == null)
                 {
@@ -40,6 +41,5 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 }
             }
         }
-
     }
 }

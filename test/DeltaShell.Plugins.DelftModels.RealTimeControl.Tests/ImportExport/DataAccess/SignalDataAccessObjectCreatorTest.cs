@@ -1,6 +1,6 @@
-﻿using DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.DataAccess;
+﻿using System;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.DataAccess;
 using NUnit.Framework;
-using System;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport.DataAccess
 {

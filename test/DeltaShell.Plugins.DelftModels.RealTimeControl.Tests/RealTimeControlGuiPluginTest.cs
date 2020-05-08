@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
@@ -10,6 +11,7 @@ using DeltaShell.Plugins.DelftModels.RTCShapes.Shapes;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using NUnit.Framework;
 using Rhino.Mocks;
+using Rhino.Mocks.Interfaces;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
 {
@@ -25,11 +27,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
         {
             var gui = mocks.DynamicMock<IGui>();
             var documentViews = mocks.DynamicMock<IViewList>();
-            using(var clipboardMock= new ClipboardMock())
+            using (var clipboardMock = new ClipboardMock())
             using (var mapView = new MapView())
             {
                 clipboardMock.GetData_Returns_SetData();
-                
+
                 var activityRunner = mocks.DynamicMock<IActivityRunner>();
                 var application = mocks.DynamicMock<IApplication>();
                 var project = new Project();
@@ -42,14 +44,17 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                 Expect.Call(application.Project).Return(project).Repeat.Any();
 
                 application.ProjectClosing += null;
-                var projectClosingRaiser = LastCall.IgnoreArguments().GetEventRaiser();
+                IEventRaiser projectClosingRaiser = LastCall.IgnoreArguments().GetEventRaiser();
 
                 mocks.ReplayAll();
 
                 var pluginGui = new RealTimeControlGuiPlugin {Gui = gui};
                 pluginGui.Activate();
 
-                RealTimeControlModelCopyPasteHelper.SetRtcObjectsToClipBoard(new ShapeBase[] {new RuleShape()});
+                RealTimeControlModelCopyPasteHelper.SetRtcObjectsToClipBoard(new ShapeBase[]
+                {
+                    new RuleShape()
+                });
                 Assert.IsTrue(RealTimeControlModelCopyPasteHelper.IsClipBoardRtcObjectSet());
 
                 projectClosingRaiser.Raise(project);
@@ -61,9 +66,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
         public void TestGetObjectProperties()
         {
             var guiPlugin = new RealTimeControlGuiPlugin();
-            var propertyInfos = guiPlugin.GetPropertyInfos().ToList();
+            List<PropertyInfo> propertyInfos = guiPlugin.GetPropertyInfos().ToList();
 
-            var propertyInfo = propertyInfos.First(pi => pi.ObjectType == typeof(StandardCondition));
+            PropertyInfo propertyInfo = propertyInfos.First(pi => pi.ObjectType == typeof(StandardCondition));
             Assert.AreEqual(typeof(StandardConditionProperties), propertyInfo.PropertyType);
 
             propertyInfo = propertyInfos.First(pi => pi.ObjectType == typeof(LookupSignal));

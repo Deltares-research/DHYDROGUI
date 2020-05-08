@@ -10,7 +10,8 @@ namespace DeltaShell.NGHS.IO.TestUtils
     public static class NotifyPropertyChangedTestHelper
     {
         /// <summary>
-        /// Asserts the number of times <see cref="INotifyPropertyChanged.PropertyChanged"/> is fired when the specified <paramref name="action"/> is performed.
+        /// Asserts the number of times <see cref="INotifyPropertyChanged.PropertyChanged"/> is fired when the specified
+        /// <paramref name="action"/> is performed.
         /// </summary>
         /// <param name="npc">The notify property changed object.</param>
         /// <param name="action">The action to perform.</param>

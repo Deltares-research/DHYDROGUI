@@ -1,4 +1,5 @@
-﻿using DelftTools.Shell.Core.Workflow;
+﻿using System;
+using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils.Collections.Generic;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.ActivityShapes
@@ -12,7 +13,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.ActivityShapes
         /// <returns>A basic, non-runnable activity for testing purposes.</returns>
         public static IActivity CreateSimpleActivity(string name = "Simple activity")
         {
-            return new SimpleActivity{ Name = name };
+            return new SimpleActivity {Name = name};
         }
 
         /// <summary>
@@ -22,41 +23,41 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.ActivityShapes
         /// <returns>A basic, non-runnable composite activity for testing purposes</returns>
         public static ICompositeActivity CreateSimpleCompositeActivity(string name = "Simple composite activity")
         {
-            return new SimpleCompositeActivity { Name = name };
+            return new SimpleCompositeActivity {Name = name};
         }
 
         #region Nested Type: SimpleActivity
 
         private class SimpleActivity : Activity
         {
+            public override string ToString()
+            {
+                return Name;
+            }
+
             protected override void OnInitialize()
             {
-                throw new System.NotImplementedException();
+                throw new NotImplementedException();
             }
 
             protected override void OnExecute()
             {
-                throw new System.NotImplementedException();
+                throw new NotImplementedException();
             }
 
             protected override void OnCancel()
             {
-                throw new System.NotImplementedException();
+                throw new NotImplementedException();
             }
 
             protected override void OnCleanUp()
             {
-                throw new System.NotImplementedException();
+                throw new NotImplementedException();
             }
 
             protected override void OnFinish()
             {
-                throw new System.NotImplementedException();
-            }
-
-            public override string ToString()
-            {
-                return Name;
+                throw new NotImplementedException();
             }
         }
 
@@ -69,48 +70,60 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.ActivityShapes
             private IEventedList<IActivity> activities = new EventedList<IActivity>();
             private ICompositeActivity currentWorkflow;
 
-            protected override void OnInitialize()
-            {
-                throw new System.NotImplementedException();
-            }
-
-            protected override void OnExecute()
-            {
-                throw new System.NotImplementedException();
-            }
-
-            protected override void OnCancel()
-            {
-                throw new System.NotImplementedException();
-            }
-
-            protected override void OnCleanUp()
-            {
-                throw new System.NotImplementedException();
-            }
-
-            protected override void OnFinish()
-            {
-                throw new System.NotImplementedException();
-            }
-
             public IEventedList<IActivity> Activities
             {
-                get { return activities; }
-                set { activities = value; }
+                get
+                {
+                    return activities;
+                }
+                set
+                {
+                    activities = value;
+                }
             }
 
             public bool ReadOnly { get; set; }
 
             public ICompositeActivity CurrentWorkflow
             {
-                get { return currentWorkflow; }
-                set { currentWorkflow = value; }
+                get
+                {
+                    return currentWorkflow;
+                }
+                set
+                {
+                    currentWorkflow = value;
+                }
             }
 
             public override string ToString()
             {
                 return Name;
+            }
+
+            protected override void OnInitialize()
+            {
+                throw new NotImplementedException();
+            }
+
+            protected override void OnExecute()
+            {
+                throw new NotImplementedException();
+            }
+
+            protected override void OnCancel()
+            {
+                throw new NotImplementedException();
+            }
+
+            protected override void OnCleanUp()
+            {
+                throw new NotImplementedException();
+            }
+
+            protected override void OnFinish()
+            {
+                throw new NotImplementedException();
             }
         }
 

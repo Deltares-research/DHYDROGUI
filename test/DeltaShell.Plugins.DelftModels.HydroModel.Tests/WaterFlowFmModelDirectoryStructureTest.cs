@@ -15,6 +15,7 @@ using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
+using DelftTools.Utils.Validation;
 using DeltaShell.Core;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.CommonTools;
@@ -64,6 +65,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         private const string SnappedDirName = "snapped";
         private const string DflowfmDirName = "dflowfm";
 
+        private const string NoordzeeModelProjectDirName = "NoordzeeModel";
+        private const string TrachytopesModelProjectDirName = "TrachytopesModel";
+
+        private const string customOutputFolder = "we/must/go/deeper/output";
+
         private static string projectDirName;
         private static string projectFileName;
         private static string modelDirName;
@@ -89,9 +95,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         private static string exportDimrFilePath;
 
         private static string mduFileName;
-
-        private const string NoordzeeModelProjectDirName = "NoordzeeModel";
-        private const string TrachytopesModelProjectDirName = "TrachytopesModel";
 
         private static List<string> filtersCommonInput;
         private static List<string> filtersInputWithTrachytopes;
@@ -152,12 +155,29 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 ".ldb"
             };
 
-            var fourierFileFilters = new[] {".fou", ".cld", ".cll"};
+            var fourierFileFilters = new[]
+            {
+                ".fou",
+                ".cld",
+                ".cll"
+            };
 
-            filtersInputWithTrachytopes = filtersCommonInput.Union(fourierFileFilters).Union(new List<string> {".arl", ".ttd"}).ToList();
-            filtersInputWithMorphology = filtersCommonInput.Union(fourierFileFilters).Union(new List<string> {".mor", ".sed"}).ToList();
-            filtersInputWithWind = filtersCommonInput.Union(fourierFileFilters).Union(new List<string> {".grd", ".apwxwy"}).ToList();
-            
+            filtersInputWithTrachytopes = filtersCommonInput.Union(fourierFileFilters).Union(new List<string>
+            {
+                ".arl",
+                ".ttd"
+            }).ToList();
+            filtersInputWithMorphology = filtersCommonInput.Union(fourierFileFilters).Union(new List<string>
+            {
+                ".mor",
+                ".sed"
+            }).ToList();
+            filtersInputWithWind = filtersCommonInput.Union(fourierFileFilters).Union(new List<string>
+            {
+                ".grd",
+                ".apwxwy"
+            }).ToList();
+
             filtersOutputFM_NewModel = new List<string>
             {
                 "_numlimdt.xyz",
@@ -219,7 +239,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 CopyFourierAndCalibrationFilesToTemp();
                 CopyTrachytopeFilesToTemp();
 
-                using (var app = GetConfiguredApplication())
+                using (DeltaShellApplication app = GetConfiguredApplication())
                 {
                     using (var model = new WaterFlowFMModel())
                     {
@@ -245,7 +265,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                         AssertProjectFileAndFolderExist();
                         AssertModelDirectoryExists();
                         AssertInputDirectoryExists();
-                        AssertFilesExtensionsExistInDirectory(filtersInputWithTrachytopes, inputDirPath);           
+                        AssertFilesExtensionsExistInDirectory(filtersInputWithTrachytopes, inputDirPath);
                     }
                 }
             }
@@ -265,7 +285,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             {
                 CopyFourierAndCalibrationFilesToTemp();
 
-                using (var app = GetConfiguredApplication())
+                using (DeltaShellApplication app = GetConfiguredApplication())
                 {
                     using (var model = new WaterFlowFMModel())
                     {
@@ -314,7 +334,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 CopyFourierAndCalibrationFilesToTemp();
                 CopyWindFilesToTemp();
 
-                using (var app = GetConfiguredApplication())
+                using (DeltaShellApplication app = GetConfiguredApplication())
                 {
                     using (var model = new WaterFlowFMModel())
                     {
@@ -362,7 +382,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 CopyFourierAndCalibrationFilesToTemp();
                 CopyTrachytopeFilesToTemp();
 
-                using (var app = GetConfiguredApplication())
+                using (DeltaShellApplication app = GetConfiguredApplication())
                 {
                     using (var model = new WaterFlowFMModel())
                     {
@@ -390,10 +410,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                         var workDirInfo = new DirectoryInfo(model.WorkingDirectoryPath);
                         Assert.That(workDirInfo.Exists, "The working directory does not exist.");
 
-                        var retrievedTempFolderPathFromWorkingDirectory = workDirInfo.Parent?.Parent?.FullName;
+                        string retrievedTempFolderPathFromWorkingDirectory = workDirInfo.Parent?.Parent?.FullName;
                         Assert.NotNull(retrievedTempFolderPathFromWorkingDirectory, "Retrieved temp folder path is null");
 
-                        var tempFolderPathFullName = Path.GetTempPath();
+                        string tempFolderPathFullName = Path.GetTempPath();
                         Assert.That(retrievedTempFolderPathFromWorkingDirectory, Is.SamePath(tempFolderPathFullName), "The working directory is not created in Temp");
 
                         AssertWorkingOutputDirectoryWithSubFoldersExists(model.WorkingOutputDirectoryPath);
@@ -416,7 +436,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             {
                 CopyFourierAndCalibrationFilesToTemp();
 
-                using (var app = GetConfiguredApplication())
+                using (DeltaShellApplication app = GetConfiguredApplication())
                 {
                     using (var model = new WaterFlowFMModel())
                     {
@@ -446,10 +466,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                         var workDirInfo = new DirectoryInfo(model.WorkingDirectoryPath);
                         Assert.That(workDirInfo.Exists, "The working directory does not exist.");
 
-                        var retrievedTempFolderPathFromWorkingDirectory = workDirInfo.Parent?.Parent?.FullName;
+                        string retrievedTempFolderPathFromWorkingDirectory = workDirInfo.Parent?.Parent?.FullName;
                         Assert.NotNull(retrievedTempFolderPathFromWorkingDirectory, "Retrieved temp folder path is null");
 
-                        var tempFolderPathFullName = Path.GetTempPath();
+                        string tempFolderPathFullName = Path.GetTempPath();
                         Assert.That(retrievedTempFolderPathFromWorkingDirectory, Is.SamePath(tempFolderPathFullName), "The working directory is not created in Temp");
 
                         AssertWorkingOutputDirectoryWithSubFoldersExists(model.WorkingOutputDirectoryPath);
@@ -474,7 +494,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 CopyFourierAndCalibrationFilesToTemp();
                 CopyWindFilesToTemp();
 
-                using (var app = GetConfiguredApplication())
+                using (DeltaShellApplication app = GetConfiguredApplication())
                 {
                     using (var model = new WaterFlowFMModel())
                     {
@@ -502,10 +522,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                         var workDirInfo = new DirectoryInfo(model.WorkingDirectoryPath);
                         Assert.That(workDirInfo.Exists, "The working directory does not exist.");
 
-                        var retrievedTempFolderPathFromWorkingDirectory = workDirInfo.Parent?.Parent?.FullName;
+                        string retrievedTempFolderPathFromWorkingDirectory = workDirInfo.Parent?.Parent?.FullName;
                         Assert.NotNull(retrievedTempFolderPathFromWorkingDirectory, "Retrieved temp folder path is null");
 
-                        var tempFolderPathFullName = Path.GetTempPath();
+                        string tempFolderPathFullName = Path.GetTempPath();
                         Assert.That(retrievedTempFolderPathFromWorkingDirectory, Is.SamePath(tempFolderPathFullName), "The working directory is not created in Temp");
 
                         AssertWorkingOutputDirectoryWithSubFoldersExists(model.WorkingOutputDirectoryPath);
@@ -529,7 +549,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 CopyFourierAndCalibrationFilesToTemp();
                 CopyWindFilesToTemp();
 
-                using (var app = GetConfiguredApplication())
+                using (DeltaShellApplication app = GetConfiguredApplication())
                 {
                     using (var model = new WaterFlowFMModel())
                     {
@@ -552,11 +572,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
                         ValidateAndRunModel(model, app);
 
-                        var workingDirectoryPath = model.WorkingDirectoryPath;
-                        var workingOutputDirectoryPath = model.WorkingOutputDirectoryPath;
+                        string workingDirectoryPath = model.WorkingDirectoryPath;
+                        string workingOutputDirectoryPath = model.WorkingOutputDirectoryPath;
 
-                        var outputWorkingDirStructure =
-                            GetDirectoryStructure(workingOutputDirectoryPath, ".", doChecksum: true);
+                        Dictionary<string, Tuple<Tuple<string, string>[], string[]>> outputWorkingDirStructure =
+                            GetDirectoryStructure(workingOutputDirectoryPath, ".", true);
 
                         AssertWorkingDirectoryWithOutputExists(workingDirectoryPath, workingOutputDirectoryPath);
 
@@ -566,9 +586,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
                         app.CloseProject();
 
-                        var outputPersistentDirStructure = GetDirectoryStructure(outputDirPath, ".", doChecksum: true);
+                        Dictionary<string, Tuple<Tuple<string, string>[], string[]>> outputPersistentDirStructure = GetDirectoryStructure(outputDirPath, ".", true);
                         AssertEqualDirectoryStructure(".", ref outputWorkingDirStructure,
-                            ref outputPersistentDirStructure, true);
+                                                      ref outputPersistentDirStructure, true);
                     }
                 }
             }
@@ -591,7 +611,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 CopyFourierAndCalibrationFilesToTemp();
                 CopyTrachytopeFilesToTemp();
 
-                using (var app = GetConfiguredApplication())
+                using (DeltaShellApplication app = GetConfiguredApplication())
                 {
                     using (var model = new WaterFlowFMModel())
                     {
@@ -623,13 +643,16 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
                         Assert.IsTrue(File.Exists(exportDimrFilePath));
                         var expectedFileCount = 1;
-                        var actualFileCount = Directory.GetFiles(exportDimrDirPath, $"*{expectedExtension}").Length;
+                        int actualFileCount = Directory.GetFiles(exportDimrDirPath, $"*{expectedExtension}").Length;
                         Assert.AreEqual(expectedFileCount, actualFileCount,
-                            Message_WrongNumberOfFilesOrFolders(expectedFileCount, "folders", expectedExtension,
-                                actualFileCount, exportDimrDirPath));
+                                        Message_WrongNumberOfFilesOrFolders(expectedFileCount, "folders", expectedExtension,
+                                                                            actualFileCount, exportDimrDirPath));
                         AssertDflowfmDirectoryExists();
-                        AssertFilesExtensionsExistInDirectory(filtersInputWithTrachytopes.Except(new[] { ".meta" }),
-                            dflowfmDirPath);
+                        AssertFilesExtensionsExistInDirectory(filtersInputWithTrachytopes.Except(new[]
+                                                              {
+                                                                  ".meta"
+                                                              }),
+                                                              dflowfmDirPath);
                     }
                 }
             }
@@ -651,7 +674,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             {
                 CopyFourierAndCalibrationFilesToTemp();
 
-                using (var app = GetConfiguredApplication())
+                using (DeltaShellApplication app = GetConfiguredApplication())
                 {
                     using (var model = new WaterFlowFMModel())
                     {
@@ -685,13 +708,16 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
                         Assert.IsTrue(File.Exists(exportDimrFilePath));
                         const int expectedFileCount = 1;
-                        var actualFileCount = Directory.GetFiles(exportDimrDirPath, $"*{expectedExtension}").Length;
+                        int actualFileCount = Directory.GetFiles(exportDimrDirPath, $"*{expectedExtension}").Length;
                         Assert.AreEqual(expectedFileCount, actualFileCount,
-                            Message_WrongNumberOfFilesOrFolders(expectedFileCount, "folders", expectedExtension,
-                                actualFileCount, exportDimrDirPath));
+                                        Message_WrongNumberOfFilesOrFolders(expectedFileCount, "folders", expectedExtension,
+                                                                            actualFileCount, exportDimrDirPath));
                         AssertDflowfmDirectoryExists();
-                        AssertFilesExtensionsExistInDirectory(filtersInputWithMorphology.Except(new[] { ".meta" }),
-                            dflowfmDirPath);
+                        AssertFilesExtensionsExistInDirectory(filtersInputWithMorphology.Except(new[]
+                                                              {
+                                                                  ".meta"
+                                                              }),
+                                                              dflowfmDirPath);
                     }
                 }
             }
@@ -714,7 +740,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 CopyFourierAndCalibrationFilesToTemp();
                 CopyWindFilesToTemp();
 
-                using (var app = GetConfiguredApplication())
+                using (DeltaShellApplication app = GetConfiguredApplication())
                 {
                     using (var model = new WaterFlowFMModel())
                     {
@@ -744,13 +770,16 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
                         Assert.IsTrue(File.Exists(exportDimrFilePath));
                         var expectedFileCount = 1;
-                        var actualFileCount = Directory.GetFiles(exportDimrDirPath, $"*{expectedExtension}").Length;
+                        int actualFileCount = Directory.GetFiles(exportDimrDirPath, $"*{expectedExtension}").Length;
                         Assert.AreEqual(expectedFileCount, actualFileCount,
-                            Message_WrongNumberOfFilesOrFolders(expectedFileCount, "folders", expectedExtension,
-                                actualFileCount, exportDimrDirPath));
+                                        Message_WrongNumberOfFilesOrFolders(expectedFileCount, "folders", expectedExtension,
+                                                                            actualFileCount, exportDimrDirPath));
                         AssertDflowfmDirectoryExists();
-                        AssertFilesExtensionsExistInDirectory(filtersInputWithWind.Except(new[] { ".meta" }),
-                            dflowfmDirPath);
+                        AssertFilesExtensionsExistInDirectory(filtersInputWithWind.Except(new[]
+                                                              {
+                                                                  ".meta"
+                                                              }),
+                                                              dflowfmDirPath);
 
                         app.CloseProject();
                     }
@@ -774,7 +803,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 CopyFourierAndCalibrationFilesToTemp();
                 CopyTrachytopeFilesToTemp();
 
-                using (var app = GetConfiguredApplication())
+                using (DeltaShellApplication app = GetConfiguredApplication())
                 {
                     using (var model = new WaterFlowFMModel())
                     {
@@ -821,61 +850,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             }
         }
 
-        [TestCase(TrachytopesModelProjectDirName)]
-        [TestCase("TestModel")]
-        //[TestCase(NoordzeeModelProjectDirName)] JIRA issue: D3DFMIQ-627 | original files too big, need to be replaced before uncommenting
-        //5.1 & 5.2
-        public void GivenAnFMModelWithInputAndOutput_WhenOpeningTheProject_ThenDirectoryStructureShouldBeMigratedToNewVersion(
-            string projectFolder)
-        {
-            List<string> filtersInput;
-            if (projectFolder == TrachytopesModelProjectDirName) filtersInput = filtersInputWithTrachytopes;
-            if (projectFolder == NoordzeeModelProjectDirName) filtersInput = filtersInputWithWind;
-            else filtersInput = filtersCommonInput;
-
-            FileUtils.CreateDirectoryIfNotExists(destinationDirPath);
-
-            try
-            {
-                CopyProjectToDestinationDir(projectFolder);
-
-                using (var app = GetConfiguredApplication())
-                {
-                    app.OpenProject(projectFilePath);
-
-                    app.CloseProject();
-
-                    AssertProjectFileAndFolderExist();
-                    AssertModelDirectoryExists();
-                    AssertInputDirectoryExists();
-                    AssertOutputDirectoryExists();
-                    AssertFilesExtensionsExistInDirectory(filtersInput, inputDirPath);
-                    var directoriesInOutputFolder = Directory.GetDirectories(outputDirPath);
-                    Assert.AreEqual(2, directoriesInOutputFolder.Length,
-                        $"The number of folders in '{OutputDirName}' is not as expected. There should be a waq output folder and a snapped folder.");
-                    AssertFilesExtensionsExistInDirectory(filtersOutputWAQ, outputWAQDirPath);
-                    AssertFilesExtensionsExistInDirectory(filtersOutputFM_OldModel, outputDirPath);
-                    Assert.IsTrue(Directory.Exists(snappedDirPath));
-
-                    app.OpenProject(projectFilePath);
-
-                    var model = (WaterFlowFMModel) app.GetAllModelsInProject().FirstOrDefault();
-
-                    Assert.NotNull(model);
-
-                    app.RunActivity(model);
-
-                    Assert.AreEqual(ActivityStatus.Cleaned, model.Status);
-
-                    app.CloseProject();
-                }
-            }
-            finally
-            {
-                FileUtils.DeleteIfExists(destinationDirPath);
-            }
-        }
-
         [Test]
         // 7
         public void GivenAnFMModelWithTrachytopesAfterARun_WhenSavingItAndRenamingItAndSavingItAgain_OnlyFolderNameOfModelIsChangedAndTheMDUFileName()
@@ -887,7 +861,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 CopyFourierAndCalibrationFilesToTemp();
                 CopyTrachytopeFilesToTemp();
 
-                using (var app = GetConfiguredApplication())
+                using (DeltaShellApplication app = GetConfiguredApplication())
                 {
                     using (var model = new WaterFlowFMModel())
                     {
@@ -909,20 +883,20 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                         app.SaveProjectAs(projectFilePath);
 
                         model.ValidateBeforeRun = true;
-                        var report = model.Validate();
+                        ValidationReport report = model.Validate();
                         Assert.AreEqual(0, report.AllErrors.Count(),
-                            "There are errors in the model after importing the MDU file");
+                                        "There are errors in the model after importing the MDU file");
                         app.RunActivity(model);
                         Assert.AreEqual(ActivityStatus.Cleaned, model.Status);
 
                         app.SaveProject();
 
-                        var projectFolderBeforeRename =
+                        Dictionary<string, Tuple<Tuple<string, string>[], string[]>> projectFolderBeforeRename =
                             GetDirectoryStructure(
-                                Path.Combine(projectFilePath, modelDirPath), 
+                                Path.Combine(projectFilePath, modelDirPath),
                                 ".",
                                 false,
-                                ".mdu", 
+                                ".mdu",
                                 ".cache");
 
                         //Rename
@@ -935,21 +909,21 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                         AssertProjectFileAndFolderExist();
 
                         //MDU file name check
-                        var newModelDirPath = Path.Combine(projectDirPath, "FlowFM2");
+                        string newModelDirPath = Path.Combine(projectDirPath, "FlowFM2");
                         Assert.IsTrue(Directory.Exists(newModelDirPath),
-                            Message_MissingFileOrFolderName("folder", "FlowFM2", projectDirName));
+                                      Message_MissingFileOrFolderName("folder", "FlowFM2", projectDirName));
                         Assert.IsFalse(Directory.Exists(modelDirPath),
-                            Message_MissingFileOrFolderName("folder", "FlowFM2", projectDirName));
-                        var newInputDirPath = Path.Combine(newModelDirPath, InputDirName);
-                        var newMduFileNameWithoutExtension =
+                                       Message_MissingFileOrFolderName("folder", "FlowFM2", projectDirName));
+                        string newInputDirPath = Path.Combine(newModelDirPath, InputDirName);
+                        string newMduFileNameWithoutExtension =
                             Path.GetFileNameWithoutExtension(Directory.GetFiles(newInputDirPath, $"*{".mdu"}")[0]);
                         Assert.AreEqual("FlowFM2", newMduFileNameWithoutExtension);
 
-                        var projectFolderAfterRename =
-                            GetDirectoryStructure(Path.Combine(projectFilePath, newModelDirPath), 
+                        Dictionary<string, Tuple<Tuple<string, string>[], string[]>> projectFolderAfterRename =
+                            GetDirectoryStructure(Path.Combine(projectFilePath, newModelDirPath),
                                                   ".",
                                                   false,
-                                                  ".mdu", 
+                                                  ".mdu",
                                                   ".cache");
                         AssertEqualDirectoryStructure(".", ref projectFolderBeforeRename, ref projectFolderAfterRename);
                     }
@@ -972,7 +946,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 CopyFourierAndCalibrationFilesToTemp();
                 CopyTrachytopeFilesToTemp();
 
-                using (var app = GetConfiguredApplication())
+                using (DeltaShellApplication app = GetConfiguredApplication())
                 {
                     using (var model = new WaterFlowFMModel())
                     {
@@ -985,7 +959,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
                     SimulateUserAddingReferencesInMduFile();
 
-
                     using (var model = new WaterFlowFMModel(tempMduFilePath))
                     {
                         AdjustSettingsOutputParameters(model);
@@ -995,9 +968,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                         app.SaveProjectAs(projectFilePath);
 
                         model.ValidateBeforeRun = true;
-                        var report = model.Validate();
+                        ValidationReport report = model.Validate();
                         Assert.AreEqual(0, report.AllErrors.Count(),
-                            "There are errors in the model after importing the MDU file");
+                                        "There are errors in the model after importing the MDU file");
                         app.RunActivity(model);
                         Assert.AreEqual(ActivityStatus.Cleaned, model.Status);
 
@@ -1007,27 +980,27 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                         AssertModelDirectoryExists();
                         AssertInputDirectoryExists();
 
-                        var projectDirStructureBeforeSaveAs =
-                            GetDirectoryStructure(projectDirPath, ".", doChecksum: true);
+                        Dictionary<string, Tuple<Tuple<string, string>[], string[]>> projectDirStructureBeforeSaveAs =
+                            GetDirectoryStructure(projectDirPath, ".", true);
 
-                        var newSaveAsDestinationDirPath = Path.Combine(Path.GetTempPath(),
-                            Path.GetFileNameWithoutExtension(Path.GetRandomFileName()));
-                        var newSaveAsProjectFilePath = Path.Combine(newSaveAsDestinationDirPath, projectFileName);
+                        string newSaveAsDestinationDirPath = Path.Combine(Path.GetTempPath(),
+                                                                          Path.GetFileNameWithoutExtension(Path.GetRandomFileName()));
+                        string newSaveAsProjectFilePath = Path.Combine(newSaveAsDestinationDirPath, projectFileName);
 
                         app.SaveProjectAs(newSaveAsProjectFilePath);
 
                         app.CloseProject();
-                        var projectDirStructureAfterSaveAs =
-                            GetDirectoryStructure(projectDirPath, ".", doChecksum: true);
-                        var newDirStructureAfterSaveAs = GetDirectoryStructure(
+                        Dictionary<string, Tuple<Tuple<string, string>[], string[]>> projectDirStructureAfterSaveAs =
+                            GetDirectoryStructure(projectDirPath, ".", true);
+                        Dictionary<string, Tuple<Tuple<string, string>[], string[]>> newDirStructureAfterSaveAs = GetDirectoryStructure(
                             Path.Combine(newSaveAsDestinationDirPath, ProjectName + ProjectDirExtension), ".",
-                            doChecksum: true);
+                            true);
 
                         // Since we asserted that everything is correct before we started, if the structure is the same, it should still be correct after.
                         AssertEqualDirectoryStructure(".", ref projectDirStructureBeforeSaveAs,
-                            ref projectDirStructureAfterSaveAs, true);
+                                                      ref projectDirStructureAfterSaveAs, true);
                         AssertEqualDirectoryStructure(".", ref projectDirStructureAfterSaveAs,
-                            ref newDirStructureAfterSaveAs, true);
+                                                      ref newDirStructureAfterSaveAs, true);
                     }
                 }
             }
@@ -1046,28 +1019,28 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             {
                 CopyProjectToDestinationDir("IntegratedModel");
 
-                using (var app = GetConfiguredHydroApplication())
+                using (DeltaShellApplication app = GetConfiguredHydroApplication())
                 {
                     app.OpenProject(projectFilePath);
                     // Execute SaveAs() manually (migrating through GUI does this already).
-                    app.SaveProjectAs(projectFilePath); 
+                    app.SaveProjectAs(projectFilePath);
 
-                    var integratedModel = app.GetAllModelsInProject().FirstOrDefault(m => m is IHydroModel);
+                    IModel integratedModel = app.GetAllModelsInProject().FirstOrDefault(m => m is IHydroModel);
                     Assert.NotNull(integratedModel, "Expected: one integrated model (hydromodel) in the project.");
-                    var fmModel = (WaterFlowFMModel)app.GetAllModelsInProject().FirstOrDefault(m => m is WaterFlowFMModel);
+                    var fmModel = (WaterFlowFMModel) app.GetAllModelsInProject().FirstOrDefault(m => m is WaterFlowFMModel);
                     Assert.NotNull(fmModel, "Expected: one waterflow fm model in the project.");
 
                     app.RunActivity(integratedModel);
 
                     // Get directory structure of output in working directory before saving
-                    var outputWorkingDirectoryPath = Path.Combine(integratedModel.ExplicitWorkingDirectory,
-                        DflowfmDirName, OutputDirName);
-                    var outputWorkingDirStructure = GetDirectoryStructure(outputWorkingDirectoryPath, ".", doChecksum: true);
+                    string outputWorkingDirectoryPath = Path.Combine(integratedModel.ExplicitWorkingDirectory,
+                                                                     DflowfmDirName, OutputDirName);
+                    Dictionary<string, Tuple<Tuple<string, string>[], string[]>> outputWorkingDirStructure = GetDirectoryStructure(outputWorkingDirectoryPath, ".", true);
 
                     Assert.IsTrue(Directory.Exists(outputWorkingDirectoryPath),
-                        $"Expected: path '{outputWorkingDirectoryPath}' should exist.");
+                                  $"Expected: path '{outputWorkingDirectoryPath}' should exist.");
                     Assert.IsTrue(Directory.GetFileSystemEntries(outputWorkingDirectoryPath).Any(),
-                        $"Expected: Directory '{outputWorkingDirectoryPath}' should not be empty.");
+                                  $"Expected: Directory '{outputWorkingDirectoryPath}' should not be empty.");
 
                     AssertCorrectOutputIsLinked(outputWorkingDirectoryPath, fmModel);
 
@@ -1083,11 +1056,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                     AssertOutputDirectoryExists();
 
                     // Get directory structure of output in persistent directory after saving
-                    var outputPersistentDirStructure = GetDirectoryStructure(outputDirPath, ".", doChecksum: true);
+                    Dictionary<string, Tuple<Tuple<string, string>[], string[]>> outputPersistentDirStructure = GetDirectoryStructure(outputDirPath, ".", true);
 
                     // Assert that same directory structure is maintained after saving
                     AssertEqualDirectoryStructure(".", ref outputWorkingDirStructure,
-                        ref outputPersistentDirStructure, true);
+                                                  ref outputPersistentDirStructure, true);
                 }
             }
             finally
@@ -1095,10 +1068,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 FileUtils.DeleteIfExists(destinationDirPath);
             }
         }
-        
+
         /// <summary>
         /// GIVEN an exported WaterFlowFMModel
-        ///   AND a project
+        /// AND a project
         /// WHEN the exported model is imported in to the project
         /// THEN a new model is created in the project folder
         /// AND the input files are copied into this project folder
@@ -1109,60 +1082,60 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         public void GivenAnExportedWaterFlowFMModelAndAProject_WhenTheExportedModelIsImportedInToTheProject_ThenANewModelIsCreatedInTheProjectWithTheCorrectStructure()
         {
             CreateTestDirectories();
-            var exportPath = Path.Combine(destinationDirPath, "exportPath");
+            string exportPath = Path.Combine(destinationDirPath, "exportPath");
             FileUtils.CreateDirectoryIfNotExists(exportPath);
 
-            var newSavePath = Path.Combine(destinationDirPath, "newSaveLocation");
+            string newSavePath = Path.Combine(destinationDirPath, "newSaveLocation");
             FileUtils.CreateDirectoryIfNotExists(newSavePath);
 
             try
             {
                 CopyProjectToDestinationDir("TestModel");
 
-                using (var app = GetConfiguredApplication())
+                using (DeltaShellApplication app = GetConfiguredApplication())
                 {
                     // Given
-                    CreateExportedFmModel(app, exportPath, out var fmModel);
-                    var exportFilePath = Path.Combine(exportPath,
-                                                      Path.GetFileName(fmModel.MduFilePath));
+                    CreateExportedFmModel(app, exportPath, out WaterFlowFMModel fmModel);
+                    string exportFilePath = Path.Combine(exportPath,
+                                                         Path.GetFileName(fmModel.MduFilePath));
 
-                    var preImportExportDirStructure = GetDirectoryStructure(exportPath, ".", doChecksum: true);
+                    Dictionary<string, Tuple<Tuple<string, string>[], string[]>> preImportExportDirStructure = GetDirectoryStructure(exportPath, ".", true);
 
-                    var originalInputFolder = Path.Combine(projectDirPath, fmModel.Name, "input");
-                    var originalInputDirStructure = GetDirectoryStructure(originalInputFolder, ".");
+                    string originalInputFolder = Path.Combine(projectDirPath, fmModel.Name, "input");
+                    Dictionary<string, Tuple<Tuple<string, string>[], string[]>> originalInputDirStructure = GetDirectoryStructure(originalInputFolder, ".");
 
                     // When
                     app.CreateNewProject();
-                    var relevantImporter = app.FileImporters
-                                              .FirstOrDefault(importer => importer is WaterFlowFMFileImporter);
+                    IFileImporter relevantImporter = app.FileImporters
+                                                        .FirstOrDefault(importer => importer is WaterFlowFMFileImporter);
 
                     var importedModel = relevantImporter.ImportItem(exportFilePath) as WaterFlowFMModel;
                     Assert.That(importedModel, Is.Not.Null,
                                 "Expected the imported model to exist.");
                     AddModelToProject(importedModel, app);
 
-                    var newSaveFilePath = Path.Combine(newSavePath, "Project1.dsproj");
+                    string newSaveFilePath = Path.Combine(newSavePath, "Project1.dsproj");
                     app.SaveProjectAs(newSaveFilePath);
 
                     // Then
                     // The import location does not change.
-                    var postImportExportDirStructure = GetDirectoryStructure(exportPath, ".", doChecksum: true);
+                    Dictionary<string, Tuple<Tuple<string, string>[], string[]>> postImportExportDirStructure = GetDirectoryStructure(exportPath, ".", true);
                     AssertEqualDirectoryStructure(".",
                                                   ref preImportExportDirStructure,
                                                   ref postImportExportDirStructure,
                                                   true);
 
                     // a new model is created in the project folder
-                    var newDsProjData = Path.Combine(newSavePath, "Project1.dsproj_data");
-                    var projectDirSubFolders =
+                    string newDsProjData = Path.Combine(newSavePath, "Project1.dsproj_data");
+                    List<string> projectDirSubFolders =
                         Directory.EnumerateDirectories(newDsProjData).ToList();
 
                     Assert.That(projectDirSubFolders.Count, Is.EqualTo(2),
                                 $"Expected two folders in {newDsProjData}: '{ModelName}' and '{ModelName + StateFilesDirectoryPostfix}'.");
 
-                    var modelPath = Path.Combine(newDsProjData, fmModel.Name);
+                    string modelPath = Path.Combine(newDsProjData, fmModel.Name);
                     Assert.That(projectDirSubFolders.First(), Is.EqualTo(modelPath),
-                        "Expected a different model folder name.");
+                                "Expected a different model folder name.");
 
                     AssertInputImportedModelIsCorrect(modelPath,
                                                       originalInputDirStructure);
@@ -1181,83 +1154,80 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
         /// <summary>
         /// GIVEN an exported WaterFlowFMModel
-        ///   AND an Integrated Model
+        /// AND an Integrated Model
         /// WHEN the exported model is imported in to the Integrated Model
         /// THEN a new model is created in the integrated model
-        ///  AND the input files are copied into this project folder
-        ///  AND no output files are copied
-        ///  AND the import location does not change
+        /// AND the input files are copied into this project folder
+        /// AND no output files are copied
+        /// AND the import location does not change
         /// </summary>
         [Test]
         public void GivenAnExportedWaterFlowFMModelAndAnIntegratedModel_WhenTheExportedModelIsImportedInToTheIntegratedModel_ThenANewModelIsCreatedInTheIntegratedModelWithTheCorrectStructure()
         {
             CreateTestDirectories();
-            var exportPath = Path.Combine(destinationDirPath, "exportPath");
+            string exportPath = Path.Combine(destinationDirPath, "exportPath");
             FileUtils.CreateDirectoryIfNotExists(exportPath);
 
-            var newSavePath = Path.Combine(destinationDirPath, "newSaveLocation");
+            string newSavePath = Path.Combine(destinationDirPath, "newSaveLocation");
             FileUtils.CreateDirectoryIfNotExists(newSavePath);
 
             try
             {
                 CopyProjectToDestinationDir("TestModel");
 
-                using (var app = GetConfiguredApplication())
+                using (DeltaShellApplication app = GetConfiguredApplication())
                 {
                     // Given
-                    CreateExportedFmModel(app, exportPath, out var fmModel);
-                    var exportFilePath = Path.Combine(exportPath,
-                                                      Path.GetFileName(fmModel.MduFilePath));
+                    CreateExportedFmModel(app, exportPath, out WaterFlowFMModel fmModel);
+                    string exportFilePath = Path.Combine(exportPath,
+                                                         Path.GetFileName(fmModel.MduFilePath));
 
-                    var preImportExportDirStructure = GetDirectoryStructure(exportPath, ".", doChecksum: true);
+                    Dictionary<string, Tuple<Tuple<string, string>[], string[]>> preImportExportDirStructure = GetDirectoryStructure(exportPath, ".", true);
 
-                    var originalInputFolder = Path.Combine(projectDirPath, fmModel.Name, "input");
-                    var originalInputDirStructure = GetDirectoryStructure(originalInputFolder,
-                                                                          ".",
-                                                                          ignoreFileExtension: "meta"); // The restart.meta file is ignored, as it should not be present in the HydroModel.
+                    string originalInputFolder = Path.Combine(projectDirPath, fmModel.Name, "input");
+                    Dictionary<string, Tuple<Tuple<string, string>[], string[]>> originalInputDirStructure = GetDirectoryStructure(originalInputFolder,
+                                                                                                                                   ".",
+                                                                                                                                   ignoreFileExtension: "meta"); // The restart.meta file is ignored, as it should not be present in the HydroModel.
 
                     // When
                     app.CreateNewProject();
-                    var newIntegratedModel = new HydroModel()
-                    {
-                        Name = "Blastoise"
-                    };
+                    var newIntegratedModel = new HydroModel() {Name = "Blastoise"};
 
                     AddModelToProject(newIntegratedModel, app);
 
-                    var relevantImporter = app.FileImporters
-                                              .FirstOrDefault(importer => importer is WaterFlowFMFileImporter);
+                    IFileImporter relevantImporter = app.FileImporters
+                                                        .FirstOrDefault(importer => importer is WaterFlowFMFileImporter);
 
                     relevantImporter.ImportItem(exportFilePath, newIntegratedModel);
 
-                    var newSaveFilePath = Path.Combine(newSavePath, "Project1.dsproj");
+                    string newSaveFilePath = Path.Combine(newSavePath, "Project1.dsproj");
                     app.SaveProjectAs(newSaveFilePath);
 
                     // Then
                     // A new model is created in the integrated model
-                    var integratedModelActivities = newIntegratedModel.Activities.ToList();
+                    List<IActivity> integratedModelActivities = newIntegratedModel.Activities.ToList();
                     Assert.That(integratedModelActivities.Count, Is.EqualTo(1), "Expected the integrated model to contain a single activity.");
                     Assert.That(integratedModelActivities.First().Name, Is.EqualTo(fmModel.Name), "Expected the imported model name to be equal to the exported model name.");
 
                     // The import location does not change.
-                    var postImportExportDirStructure = GetDirectoryStructure(exportPath, ".", doChecksum: true);
+                    Dictionary<string, Tuple<Tuple<string, string>[], string[]>> postImportExportDirStructure = GetDirectoryStructure(exportPath, ".", true);
                     AssertEqualDirectoryStructure(".",
                                                   ref preImportExportDirStructure,
                                                   ref postImportExportDirStructure,
                                                   true);
 
                     // a new model is created in the project folder
-                    var newDsProjData = Path.Combine(newSavePath, "Project1.dsproj_data");
-                    var fmModelPath = Path.Combine(newDsProjData, fmModel.Name);
-                    var hydroModelPath = Path.Combine(newDsProjData, newIntegratedModel.Name);
+                    string newDsProjData = Path.Combine(newSavePath, "Project1.dsproj_data");
+                    string fmModelPath = Path.Combine(newDsProjData, fmModel.Name);
+                    string hydroModelPath = Path.Combine(newDsProjData, newIntegratedModel.Name);
 
                     Assert.That(Directory.Exists(newDsProjData), "Expected the dsproj_data folder to exist.");
                     Assert.That(Directory.Exists(fmModelPath), "Expected the D-FlowFM model folder to exist.");
                     Assert.That(Directory.Exists(hydroModelPath), "Expected the Integrated Model folder to exist.");
 
-                    foreach (var subDirectory in Directory.EnumerateDirectories(newDsProjData))
+                    foreach (string subDirectory in Directory.EnumerateDirectories(newDsProjData))
                     {
-                        var dirName = new DirectoryInfo(subDirectory).Name;
+                        string dirName = new DirectoryInfo(subDirectory).Name;
                         Assert.That(dirName.StartsWith(fmModel.Name) ||
                                     dirName.StartsWith(newIntegratedModel.Name),
                                     "Expected only folders corresponding with the model names.");
@@ -1281,75 +1251,12 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         }
 
         /// <summary>
-        /// GIVEN a migrated model with output
-        ///   AND a project
-        /// WHEN this model is imported into this project
-        /// THEN the input files are copied correctly
-        ///  AND the output is handled correctly
-        ///  AND the import location does not change
-        /// </summary>
-        [TestCase("")]
-        [TestCase("../output")]
-        public void GivenAMigratedModelWithOutput_WhenThisModelIsImported_ThenTheInputAndOutputAreHandledCorrectly(string outputDirValue)
-        {
-            CreateTestDirectories();
-
-            try
-            {
-                CopyProjectToDestinationDir("TestModel");
-
-                using (var app = GetConfiguredApplication())
-                {
-                    // Given
-                    var modelDirImport = Path.Combine(destinationDirPath, "Project1.dsproj_data", "FlowFM1");
-                    var importInputFiles = Directory.EnumerateFiles(modelDirImport).ToList();
-
-                    var mduPath = Path.Combine(modelDirImport, "input", "FlowFM1.mdu");
-
-                    MigrateModel(app, projectFilePath);
-                    UpdateOutputDirInMDUTo(mduPath, outputDirValue);
-
-                    var preImportDirStructure = GetDirectoryStructure(destinationDirPath,
-                                                                      ".",
-                                                                      doChecksum: true);
-
-                    // When
-                    var dsprojSave = Path.Combine(tempDirPath, "Project1.dsproj");
-                    var importedModel = ImportModelIntoProject(app, mduPath, dsprojSave);
-
-                    // Then
-                    var postImportDirStructure = GetDirectoryStructure(destinationDirPath,
-                                                                       ".",
-                                                                       doChecksum: true);
-                    AssertEqualDirectoryStructure(".",
-                                                  ref preImportDirStructure,
-                                                  ref postImportDirStructure,
-                                                  true);
-
-                    var modelDirSave = Path.Combine(dsprojSave + "_data", importedModel.Name);
-                    Assert.That(Directory.Exists(modelDirSave), Is.True, "Expected a model directory, but found none.");
-                    var inputDirSave = Path.Combine(modelDirSave, "input");
-                    Assert.That(Directory.Exists(inputDirSave), Is.True, "Expected an input directory, but found none.");
-
-                    var saveInputFiles = Directory.EnumerateFiles(inputDirSave);
-                    AssertThatInputFilesAreEqual(importInputFiles, saveInputFiles);
-
-                    AssertThatOutputExists(modelDirImport, "output", modelDirSave, importedModel);
-                }
-            }
-            finally
-            {
-                DeleteTestDirectories();
-            }
-        }
-
-        /// <summary>
         /// GIVEN an old style model with output without an OutputDir set
-        ///   AND a project
+        /// AND a project
         /// WHEN this model is imported into this project
         /// THEN the input files are copied correctly
-        ///  AND the output is handled correctly
-        ///  AND the import location does not change
+        /// AND the output is handled correctly
+        /// AND the import location does not change
         /// </summary>
         [Test]
         public void GivenAnOldModelWithOutputAndWithoutOutputDirSet_WhenThisModelIsImported_ThenTheInputAndOutputAreHandledCorrectly()
@@ -1360,37 +1267,37 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             {
                 CopyProjectToDestinationDir("TestModel");
 
-                using (var app = GetConfiguredApplication())
+                using (DeltaShellApplication app = GetConfiguredApplication())
                 {
                     // Given
-                    var modelDirImport = Path.Combine(destinationDirPath, "Project1.dsproj_data", "FlowFM1");
-                    var importInputFiles = Directory.EnumerateFiles(modelDirImport).ToList();
+                    string modelDirImport = Path.Combine(destinationDirPath, "Project1.dsproj_data", "FlowFM1");
+                    List<string> importInputFiles = Directory.EnumerateFiles(modelDirImport).ToList();
 
-                    var mduPath = Path.Combine(modelDirImport, "FlowFM1.mdu");
+                    string mduPath = Path.Combine(modelDirImport, "FlowFM1.mdu");
 
-                    var preImportDirStructure = GetDirectoryStructure(destinationDirPath,
-                                                                      ".",
-                                                                      doChecksum: true);
+                    Dictionary<string, Tuple<Tuple<string, string>[], string[]>> preImportDirStructure = GetDirectoryStructure(destinationDirPath,
+                                                                                                                               ".",
+                                                                                                                               true);
 
                     // When
-                    var dsprojSave = Path.Combine(tempDirPath, "Project1.dsproj");
-                    var importedModel = ImportModelIntoProject(app, mduPath, dsprojSave);
+                    string dsprojSave = Path.Combine(tempDirPath, "Project1.dsproj");
+                    WaterFlowFMModel importedModel = ImportModelIntoProject(app, mduPath, dsprojSave);
 
                     // Then
-                    var postImportDirStructure = GetDirectoryStructure(destinationDirPath,
-                                                                       ".",
-                                                                       doChecksum: true);
+                    Dictionary<string, Tuple<Tuple<string, string>[], string[]>> postImportDirStructure = GetDirectoryStructure(destinationDirPath,
+                                                                                                                                ".",
+                                                                                                                                true);
                     AssertEqualDirectoryStructure(".",
                                                   ref preImportDirStructure,
                                                   ref postImportDirStructure,
                                                   true);
 
-                    var modelDirSave = Path.Combine(dsprojSave + "_data", importedModel.Name);
+                    string modelDirSave = Path.Combine(dsprojSave + "_data", importedModel.Name);
                     Assert.That(Directory.Exists(modelDirSave), Is.True, "Expected a model directory, but found none.");
-                    var inputDirSave = Path.Combine(modelDirSave, "input");
+                    string inputDirSave = Path.Combine(modelDirSave, "input");
                     Assert.That(Directory.Exists(inputDirSave), Is.True, "Expected an input directory, but found none.");
 
-                    var saveInputFiles = Directory.EnumerateFiles(inputDirSave);
+                    IEnumerable<string> saveInputFiles = Directory.EnumerateFiles(inputDirSave);
                     AssertThatInputFilesAreEqual(importInputFiles, saveInputFiles);
 
                     AssertThatOutputNotExists(modelDirSave, importedModel);
@@ -1404,11 +1311,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
         /// <summary>
         /// GIVEN an old style model with output and with an OutputDir set
-        ///   AND a project
+        /// AND a project
         /// WHEN this model is imported into this project
         /// THEN the input files are copied correctly
-        ///  AND the output is handled correctly
-        ///  AND the import location does not change
+        /// AND the output is handled correctly
+        /// AND the import location does not change
         /// </summary>
         [Test]
         public void GivenAnOldModelWithOutputAndWithOutputDirSet_WhenThisModelIsImported_ThenTheInputAndOutputAreHandledCorrectly()
@@ -1419,40 +1326,40 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             {
                 CopyProjectToDestinationDir("TestModel");
 
-                using (var app = GetConfiguredApplication())
+                using (DeltaShellApplication app = GetConfiguredApplication())
                 {
                     // Given
-                    var modelDirImport = Path.Combine(destinationDirPath, "Project1.dsproj_data", "FlowFM1");
-                    var importInputFiles = Directory.EnumerateFiles(modelDirImport).ToList();
+                    string modelDirImport = Path.Combine(destinationDirPath, "Project1.dsproj_data", "FlowFM1");
+                    List<string> importInputFiles = Directory.EnumerateFiles(modelDirImport).ToList();
 
                     const string importOutputFolder = "DFM_OUTPUT_FlowFM1";
 
-                    var mduPath = Path.Combine(modelDirImport, "FlowFM1.mdu");
+                    string mduPath = Path.Combine(modelDirImport, "FlowFM1.mdu");
                     UpdateOutputDirInMDUTo(mduPath, importOutputFolder);
 
-                    var preImportDirStructure = GetDirectoryStructure(destinationDirPath,
-                                                                      ".",
-                                                                      doChecksum: true);
+                    Dictionary<string, Tuple<Tuple<string, string>[], string[]>> preImportDirStructure = GetDirectoryStructure(destinationDirPath,
+                                                                                                                               ".",
+                                                                                                                               true);
 
                     // When
-                    var dsprojSave = Path.Combine(tempDirPath, "Project1.dsproj");
-                    var importedModel = ImportModelIntoProject(app, mduPath, dsprojSave);
+                    string dsprojSave = Path.Combine(tempDirPath, "Project1.dsproj");
+                    WaterFlowFMModel importedModel = ImportModelIntoProject(app, mduPath, dsprojSave);
 
                     // Then
-                    var postImportDirStructure = GetDirectoryStructure(destinationDirPath,
-                                                                       ".",
-                                                                       doChecksum: true);
+                    Dictionary<string, Tuple<Tuple<string, string>[], string[]>> postImportDirStructure = GetDirectoryStructure(destinationDirPath,
+                                                                                                                                ".",
+                                                                                                                                true);
                     AssertEqualDirectoryStructure(".",
                                                   ref preImportDirStructure,
                                                   ref postImportDirStructure,
                                                   true);
 
-                    var modelDirSave = Path.Combine(dsprojSave + "_data", importedModel.Name);
+                    string modelDirSave = Path.Combine(dsprojSave + "_data", importedModel.Name);
                     Assert.That(Directory.Exists(modelDirSave), Is.True, "Expected a model directory, but found none.");
-                    var inputDirSave = Path.Combine(modelDirSave, "input");
+                    string inputDirSave = Path.Combine(modelDirSave, "input");
                     Assert.That(Directory.Exists(inputDirSave), Is.True, "Expected an input directory, but found none.");
 
-                    var saveInputFiles = Directory.EnumerateFiles(inputDirSave);
+                    IEnumerable<string> saveInputFiles = Directory.EnumerateFiles(inputDirSave);
                     AssertThatInputFilesAreEqual(importInputFiles, saveInputFiles);
 
                     AssertThatOutputExists(modelDirImport, importOutputFolder, modelDirSave, importedModel);
@@ -1466,11 +1373,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
         /// <summary>
         /// GIVEN a migrated model with output at a custom location and without an OutputDir set
-        ///   AND a project
+        /// AND a project
         /// WHEN this model is imported into this project
         /// THEN the input files are copied correctly
-        ///  AND the output is handled correctly
-        ///  AND the import location does not change
+        /// AND the output is handled correctly
+        /// AND the import location does not change
         /// </summary>
         [Test]
         public void GivenAMigratedModelWithOutputAtACustomLocationAndWithoutOutputDirValueSet_WhenThisModelIsImported_ThenTheInputAndOutputAreHandledCorrectly()
@@ -1481,40 +1388,40 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             {
                 CopyProjectToDestinationDir("TestModel");
 
-                using (var app = GetConfiguredApplication())
+                using (DeltaShellApplication app = GetConfiguredApplication())
                 {
                     // Given
-                    var modelDirImport = Path.Combine(destinationDirPath, "Project1.dsproj_data", "FlowFM1");
-                    var importInputFiles = Directory.EnumerateFiles(modelDirImport).ToList();
+                    string modelDirImport = Path.Combine(destinationDirPath, "Project1.dsproj_data", "FlowFM1");
+                    List<string> importInputFiles = Directory.EnumerateFiles(modelDirImport).ToList();
 
-                    var mduPath = Path.Combine(modelDirImport, "input", "FlowFM1.mdu");
+                    string mduPath = Path.Combine(modelDirImport, "input", "FlowFM1.mdu");
 
                     MigrateModel(app, projectFilePath);
                     MoveOutputDirToCustomLocation(modelDirImport);
 
-                    var preImportDirStructure = GetDirectoryStructure(destinationDirPath,
-                                                                      ".",
-                                                                      doChecksum: true);
+                    Dictionary<string, Tuple<Tuple<string, string>[], string[]>> preImportDirStructure = GetDirectoryStructure(destinationDirPath,
+                                                                                                                               ".",
+                                                                                                                               true);
 
                     // When
-                    var dsprojSave = Path.Combine(tempDirPath, "Project1.dsproj");
-                    var importedModel = ImportModelIntoProject(app, mduPath, dsprojSave);
+                    string dsprojSave = Path.Combine(tempDirPath, "Project1.dsproj");
+                    WaterFlowFMModel importedModel = ImportModelIntoProject(app, mduPath, dsprojSave);
 
                     // Then
-                    var postImportDirStructure = GetDirectoryStructure(destinationDirPath,
-                                                                       ".",
-                                                                       doChecksum: true);
+                    Dictionary<string, Tuple<Tuple<string, string>[], string[]>> postImportDirStructure = GetDirectoryStructure(destinationDirPath,
+                                                                                                                                ".",
+                                                                                                                                true);
                     AssertEqualDirectoryStructure(".",
                                                   ref preImportDirStructure,
                                                   ref postImportDirStructure,
                                                   true);
 
-                    var modelDirSave = Path.Combine(dsprojSave + "_data", importedModel.Name);
+                    string modelDirSave = Path.Combine(dsprojSave + "_data", importedModel.Name);
                     Assert.That(Directory.Exists(modelDirSave), Is.True, "Expected a model directory, but found none.");
-                    var inputDirSave = Path.Combine(modelDirSave, "input");
+                    string inputDirSave = Path.Combine(modelDirSave, "input");
                     Assert.That(Directory.Exists(inputDirSave), Is.True, "Expected an input directory, but found none.");
 
-                    var saveInputFiles = Directory.EnumerateFiles(inputDirSave);
+                    IEnumerable<string> saveInputFiles = Directory.EnumerateFiles(inputDirSave);
                     AssertThatInputFilesAreEqual(importInputFiles, saveInputFiles);
 
                     AssertThatOutputNotExists(modelDirSave, importedModel);
@@ -1526,15 +1433,13 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             }
         }
 
-        private const string customOutputFolder = "we/must/go/deeper/output";
-
         /// <summary>
         /// GIVEN a migrated model with output at a custom location and with an OutputDir set
-        ///   AND a project
+        /// AND a project
         /// WHEN this model is imported into this project
         /// THEN the input files are copied correctly
-        ///  AND the output is handled correctly
-        ///  AND the import location does not change
+        /// AND the output is handled correctly
+        /// AND the import location does not change
         /// </summary>
         [Test]
         public void GivenAMigratedModelWithOutputAtACustomLocationAndWithOutputDirValueSet_WhenThisModelIsImported_ThenTheInputAndOutputAreHandledCorrectly()
@@ -1545,41 +1450,41 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             {
                 CopyProjectToDestinationDir("TestModel");
 
-                using (var app = GetConfiguredApplication())
+                using (DeltaShellApplication app = GetConfiguredApplication())
                 {
                     // Given
-                    var modelDirImport = Path.Combine(destinationDirPath, "Project1.dsproj_data", "FlowFM1");
-                    var importInputFiles = Directory.EnumerateFiles(modelDirImport).ToList();
+                    string modelDirImport = Path.Combine(destinationDirPath, "Project1.dsproj_data", "FlowFM1");
+                    List<string> importInputFiles = Directory.EnumerateFiles(modelDirImport).ToList();
 
-                    var mduPath = Path.Combine(modelDirImport, "input", "FlowFM1.mdu");
+                    string mduPath = Path.Combine(modelDirImport, "input", "FlowFM1.mdu");
 
                     MigrateModel(app, projectFilePath);
                     UpdateOutputDirInMDUTo(mduPath, "../" + customOutputFolder);
                     MoveOutputDirToCustomLocation(modelDirImport);
 
-                    var preImportDirStructure = GetDirectoryStructure(destinationDirPath,
-                                                                      ".",
-                                                                      doChecksum: true);
+                    Dictionary<string, Tuple<Tuple<string, string>[], string[]>> preImportDirStructure = GetDirectoryStructure(destinationDirPath,
+                                                                                                                               ".",
+                                                                                                                               true);
 
                     // When
-                    var dsprojSave = Path.Combine(tempDirPath, "Project1.dsproj");
-                    var importedModel = ImportModelIntoProject(app, mduPath, dsprojSave);
+                    string dsprojSave = Path.Combine(tempDirPath, "Project1.dsproj");
+                    WaterFlowFMModel importedModel = ImportModelIntoProject(app, mduPath, dsprojSave);
 
                     // Then
-                    var postImportDirStructure = GetDirectoryStructure(destinationDirPath,
-                                                                       ".",
-                                                                       doChecksum: true);
+                    Dictionary<string, Tuple<Tuple<string, string>[], string[]>> postImportDirStructure = GetDirectoryStructure(destinationDirPath,
+                                                                                                                                ".",
+                                                                                                                                true);
                     AssertEqualDirectoryStructure(".",
                                                   ref preImportDirStructure,
                                                   ref postImportDirStructure,
                                                   true);
 
-                    var modelDirSave = Path.Combine(dsprojSave + "_data", importedModel.Name);
+                    string modelDirSave = Path.Combine(dsprojSave + "_data", importedModel.Name);
                     Assert.That(Directory.Exists(modelDirSave), Is.True, "Expected a model directory, but found none.");
-                    var inputDirSave = Path.Combine(modelDirSave, "input");
+                    string inputDirSave = Path.Combine(modelDirSave, "input");
                     Assert.That(Directory.Exists(inputDirSave), Is.True, "Expected an input directory, but found none.");
 
-                    var saveInputFiles = Directory.EnumerateFiles(inputDirSave);
+                    IEnumerable<string> saveInputFiles = Directory.EnumerateFiles(inputDirSave);
                     AssertThatInputFilesAreEqual(importInputFiles, saveInputFiles);
 
                     AssertThatOutputExists(modelDirImport, customOutputFolder, modelDirSave, importedModel);
@@ -1593,11 +1498,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
         /// <summary>
         /// GIVEN a migrated model with output and an OutputDir set
-        ///   AND an Integrated Model
+        /// AND an Integrated Model
         /// WHEN this model is imported into this Integrated Model
         /// THEN the input files are copied correctly
-        ///  AND the model is added to the integrated model
-        ///  AND the output of the imported model is empty
+        /// AND the model is added to the integrated model
+        /// AND the output of the imported model is empty
         /// </summary>
         [Test]
         public void GivenAMigratedModelWithOutputAndAnOutputDirSet_WhenThisModelIsImportedIntoAnIntegratedModel_ThenTheInputFilesAreHandledCorrectlyAndTheModelIsAddedToTheIntegratedModelAndTheOutputOfTheImportedModelIsEmpty()
@@ -1608,46 +1513,46 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             {
                 CopyProjectToDestinationDir("TestModel");
 
-                using (var app = GetConfiguredApplication())
+                using (DeltaShellApplication app = GetConfiguredApplication())
                 {
                     // Given
-                    var modelDirImport = Path.Combine(destinationDirPath, "Project1.dsproj_data", "FlowFM1");
+                    string modelDirImport = Path.Combine(destinationDirPath, "Project1.dsproj_data", "FlowFM1");
                     // Restart.Meta is not imported.
-                    var importInputFiles = Directory.EnumerateFiles(modelDirImport).Where(p => !p.EndsWith("restart.meta")).ToList();
+                    List<string> importInputFiles = Directory.EnumerateFiles(modelDirImport).Where(p => !p.EndsWith("restart.meta")).ToList();
 
-                    var mduPath = Path.Combine(modelDirImport, "input", "FlowFM1.mdu");
+                    string mduPath = Path.Combine(modelDirImport, "input", "FlowFM1.mdu");
 
                     MigrateModel(app, projectFilePath);
 
-                    var preImportDirStructure = GetDirectoryStructure(destinationDirPath,
-                                                                      ".",
-                                                                      doChecksum: true);
+                    Dictionary<string, Tuple<Tuple<string, string>[], string[]>> preImportDirStructure = GetDirectoryStructure(destinationDirPath,
+                                                                                                                               ".",
+                                                                                                                               true);
 
                     // When
-                    var dsprojSave = Path.Combine(tempDirPath, "Project1.dsproj");
-                    var integratedModel = ImportModelIntoIntegratedModel(app, mduPath, dsprojSave);
+                    string dsprojSave = Path.Combine(tempDirPath, "Project1.dsproj");
+                    HydroModel integratedModel = ImportModelIntoIntegratedModel(app, mduPath, dsprojSave);
 
                     // Then
 
-                    var integratedModelActivities = integratedModel.Activities.ToList();
+                    List<IActivity> integratedModelActivities = integratedModel.Activities.ToList();
                     Assert.That(integratedModelActivities.Count, Is.EqualTo(1), "Expected the integrated model to contain a single activity.");
                     var importedModel = integratedModelActivities.First() as WaterFlowFMModel;
                     Assert.That(importedModel, Is.Not.Null, "Expected the imported model to be a WaterFlowFMModel.");
 
-                    var postImportDirStructure = GetDirectoryStructure(destinationDirPath,
-                                                                       ".",
-                                                                       doChecksum: true);
+                    Dictionary<string, Tuple<Tuple<string, string>[], string[]>> postImportDirStructure = GetDirectoryStructure(destinationDirPath,
+                                                                                                                                ".",
+                                                                                                                                true);
                     AssertEqualDirectoryStructure(".",
                                                   ref preImportDirStructure,
                                                   ref postImportDirStructure,
                                                   true);
 
-                    var modelDirSave = Path.Combine(dsprojSave + "_data", importedModel.Name);
+                    string modelDirSave = Path.Combine(dsprojSave + "_data", importedModel.Name);
                     Assert.That(Directory.Exists(modelDirSave), Is.True, "Expected a model directory, but found none.");
-                    var inputDirSave = Path.Combine(modelDirSave, "input");
+                    string inputDirSave = Path.Combine(modelDirSave, "input");
                     Assert.That(Directory.Exists(inputDirSave), Is.True, "Expected an input directory, but found none.");
 
-                    var saveInputFiles = Directory.EnumerateFiles(inputDirSave);
+                    IEnumerable<string> saveInputFiles = Directory.EnumerateFiles(inputDirSave);
                     AssertThatInputFilesAreEqual(importInputFiles, saveInputFiles);
 
                     AssertThatOutputNotExists(modelDirSave, importedModel);
@@ -1659,9 +1564,137 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             }
         }
 
+        [TestCase(TrachytopesModelProjectDirName)]
+        [TestCase("TestModel")]
+        //[TestCase(NoordzeeModelProjectDirName)] JIRA issue: D3DFMIQ-627 | original files too big, need to be replaced before uncommenting
+        //5.1 & 5.2
+        public void GivenAnFMModelWithInputAndOutput_WhenOpeningTheProject_ThenDirectoryStructureShouldBeMigratedToNewVersion(
+            string projectFolder)
+        {
+            List<string> filtersInput;
+            if (projectFolder == TrachytopesModelProjectDirName)
+            {
+                filtersInput = filtersInputWithTrachytopes;
+            }
+
+            if (projectFolder == NoordzeeModelProjectDirName)
+            {
+                filtersInput = filtersInputWithWind;
+            }
+            else
+            {
+                filtersInput = filtersCommonInput;
+            }
+
+            FileUtils.CreateDirectoryIfNotExists(destinationDirPath);
+
+            try
+            {
+                CopyProjectToDestinationDir(projectFolder);
+
+                using (DeltaShellApplication app = GetConfiguredApplication())
+                {
+                    app.OpenProject(projectFilePath);
+
+                    app.CloseProject();
+
+                    AssertProjectFileAndFolderExist();
+                    AssertModelDirectoryExists();
+                    AssertInputDirectoryExists();
+                    AssertOutputDirectoryExists();
+                    AssertFilesExtensionsExistInDirectory(filtersInput, inputDirPath);
+                    string[] directoriesInOutputFolder = Directory.GetDirectories(outputDirPath);
+                    Assert.AreEqual(2, directoriesInOutputFolder.Length,
+                                    $"The number of folders in '{OutputDirName}' is not as expected. There should be a waq output folder and a snapped folder.");
+                    AssertFilesExtensionsExistInDirectory(filtersOutputWAQ, outputWAQDirPath);
+                    AssertFilesExtensionsExistInDirectory(filtersOutputFM_OldModel, outputDirPath);
+                    Assert.IsTrue(Directory.Exists(snappedDirPath));
+
+                    app.OpenProject(projectFilePath);
+
+                    var model = (WaterFlowFMModel) app.GetAllModelsInProject().FirstOrDefault();
+
+                    Assert.NotNull(model);
+
+                    app.RunActivity(model);
+
+                    Assert.AreEqual(ActivityStatus.Cleaned, model.Status);
+
+                    app.CloseProject();
+                }
+            }
+            finally
+            {
+                FileUtils.DeleteIfExists(destinationDirPath);
+            }
+        }
+
+        /// <summary>
+        /// GIVEN a migrated model with output
+        /// AND a project
+        /// WHEN this model is imported into this project
+        /// THEN the input files are copied correctly
+        /// AND the output is handled correctly
+        /// AND the import location does not change
+        /// </summary>
+        [TestCase("")]
+        [TestCase("../output")]
+        public void GivenAMigratedModelWithOutput_WhenThisModelIsImported_ThenTheInputAndOutputAreHandledCorrectly(string outputDirValue)
+        {
+            CreateTestDirectories();
+
+            try
+            {
+                CopyProjectToDestinationDir("TestModel");
+
+                using (DeltaShellApplication app = GetConfiguredApplication())
+                {
+                    // Given
+                    string modelDirImport = Path.Combine(destinationDirPath, "Project1.dsproj_data", "FlowFM1");
+                    List<string> importInputFiles = Directory.EnumerateFiles(modelDirImport).ToList();
+
+                    string mduPath = Path.Combine(modelDirImport, "input", "FlowFM1.mdu");
+
+                    MigrateModel(app, projectFilePath);
+                    UpdateOutputDirInMDUTo(mduPath, outputDirValue);
+
+                    Dictionary<string, Tuple<Tuple<string, string>[], string[]>> preImportDirStructure = GetDirectoryStructure(destinationDirPath,
+                                                                                                                               ".",
+                                                                                                                               true);
+
+                    // When
+                    string dsprojSave = Path.Combine(tempDirPath, "Project1.dsproj");
+                    WaterFlowFMModel importedModel = ImportModelIntoProject(app, mduPath, dsprojSave);
+
+                    // Then
+                    Dictionary<string, Tuple<Tuple<string, string>[], string[]>> postImportDirStructure = GetDirectoryStructure(destinationDirPath,
+                                                                                                                                ".",
+                                                                                                                                true);
+                    AssertEqualDirectoryStructure(".",
+                                                  ref preImportDirStructure,
+                                                  ref postImportDirStructure,
+                                                  true);
+
+                    string modelDirSave = Path.Combine(dsprojSave + "_data", importedModel.Name);
+                    Assert.That(Directory.Exists(modelDirSave), Is.True, "Expected a model directory, but found none.");
+                    string inputDirSave = Path.Combine(modelDirSave, "input");
+                    Assert.That(Directory.Exists(inputDirSave), Is.True, "Expected an input directory, but found none.");
+
+                    IEnumerable<string> saveInputFiles = Directory.EnumerateFiles(inputDirSave);
+                    AssertThatInputFilesAreEqual(importInputFiles, saveInputFiles);
+
+                    AssertThatOutputExists(modelDirImport, "output", modelDirSave, importedModel);
+                }
+            }
+            finally
+            {
+                DeleteTestDirectories();
+            }
+        }
+
         private static void MigrateModel(IApplication app, string dsProjPath)
         {
-            var hasOpened = app.OpenProject(dsProjPath);
+            bool hasOpened = app.OpenProject(dsProjPath);
             Assert.That(hasOpened, Is.True,
                         $"Could not open project at {dsProjPath}");
 
@@ -1673,17 +1706,21 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         {
             // The OutputDir is already empty.
             if (string.IsNullOrEmpty(newOutputDirPath))
+            {
                 return;
+            }
 
-            var mduData = File.ReadAllLines(mduPath);
+            string[] mduData = File.ReadAllLines(mduPath);
             var regex = new Regex(@"OutputDir\s*=\s*");
 
             for (var i = 0; i < mduData.Length; i++)
             {
-                var line = mduData[i];
+                string line = mduData[i];
 
                 if (!regex.IsMatch(line))
+                {
                     continue;
+                }
 
                 mduData[i] = regex.Replace(line, $"OutputDir = {newOutputDirPath}");
                 break;
@@ -1703,8 +1740,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         private static WaterFlowFMModel ImportModelIntoProject(IApplication app, string mduPath, string DsprojSave)
         {
             app.CreateNewProject();
-            var relevantImporter = app.FileImporters
-                                      .FirstOrDefault(importer => importer is WaterFlowFMFileImporter);
+            IFileImporter relevantImporter = app.FileImporters
+                                                .FirstOrDefault(importer => importer is WaterFlowFMFileImporter);
 
             var importedModel = relevantImporter.ImportItem(mduPath) as WaterFlowFMModel;
             Assert.That(importedModel, Is.Not.Null,
@@ -1719,15 +1756,12 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         {
             // When
             app.CreateNewProject();
-            var newIntegratedModel = new HydroModel()
-            {
-                Name = "Blastoise"
-            };
+            var newIntegratedModel = new HydroModel() {Name = "Blastoise"};
 
             AddModelToProject(newIntegratedModel, app);
 
-            var relevantImporter = app.FileImporters
-                                      .FirstOrDefault(importer => importer is WaterFlowFMFileImporter);
+            IFileImporter relevantImporter = app.FileImporters
+                                                .FirstOrDefault(importer => importer is WaterFlowFMFileImporter);
 
             relevantImporter.ImportItem(mduPath, newIntegratedModel);
 
@@ -1735,12 +1769,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             return newIntegratedModel;
         }
 
-
         private static void AssertThatInputFilesAreEqual(IEnumerable<string> importInputFiles,
                                                          IEnumerable<string> saveInputFiles)
         {
-            var importFiles = importInputFiles.Select(Path.GetFileName).ToList();
-            var saveFiles = saveInputFiles.Select(Path.GetFileName).ToList();
+            List<string> importFiles = importInputFiles.Select(Path.GetFileName).ToList();
+            List<string> saveFiles = saveInputFiles.Select(Path.GetFileName).ToList();
 
             Assert.That(saveFiles.Count, Is.EqualTo(importFiles.Count), "Expected the number of saved input files to be equal to the original number of input files.");
 
@@ -1758,11 +1791,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                                                    string modelDirSave,
                                                    WaterFlowFMModel importedModel)
         {
-            var importOutputPath = Path.Combine(modelDirImport, relativeImportOutputPath);
-            var importOutputDirStructure = GetDirectoryStructure(importOutputPath, ".");
+            string importOutputPath = Path.Combine(modelDirImport, relativeImportOutputPath);
+            Dictionary<string, Tuple<Tuple<string, string>[], string[]>> importOutputDirStructure = GetDirectoryStructure(importOutputPath, ".");
 
-            var saveOutputPath = Path.Combine(modelDirSave, "output");
-            var saveOutputDirStructure = GetDirectoryStructure(saveOutputPath, ".");
+            string saveOutputPath = Path.Combine(modelDirSave, "output");
+            Dictionary<string, Tuple<Tuple<string, string>[], string[]>> saveOutputDirStructure = GetDirectoryStructure(saveOutputPath, ".");
 
             AssertEqualDirectoryStructure(".", ref saveOutputDirStructure, ref importOutputDirStructure);
 
@@ -1774,7 +1807,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         private static void AssertThatOutputNotExists(string modelDirSave,
                                                       WaterFlowFMModel importedModel)
         {
-            var outputPath = Path.Combine(modelDirSave, "output");
+            string outputPath = Path.Combine(modelDirSave, "output");
             Assert.That(Directory.Exists(outputPath), Is.False, "Did not expect an output directory.");
 
             Assert.That(importedModel.OutputHisFileStore, Is.Null, "Expected no OutputHisFileStore with no output");
@@ -1782,11 +1815,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             Assert.That(importedModel.OutputClassMapFileStore, Is.Null, "Expected no OutputClassFileStore with no output");
         }
 
-        private static void CreateExportedFmModel(IApplication app, 
-                                                  string exportPath, 
+        private static void CreateExportedFmModel(IApplication app,
+                                                  string exportPath,
                                                   out WaterFlowFMModel fmModel)
         {
-            var hasOpened = app.OpenProject(projectFilePath);
+            bool hasOpened = app.OpenProject(projectFilePath);
             Assert.That(hasOpened, Is.True,
                         $"Could not open project at {projectFilePath}");
 
@@ -1795,14 +1828,14 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             Assert.That(fmModel, Is.Not.Null,
                         "Expected the FlowFM Model to be not null.");
 
-            var exportFilePath = Path.Combine(exportPath,
-                                              Path.GetFileName(fmModel.MduFilePath));
-            var relevantExporter = app.FileExporters
-                                      .FirstOrDefault(exporter => exporter is WaterFlowFMFileExporter);
+            string exportFilePath = Path.Combine(exportPath,
+                                                 Path.GetFileName(fmModel.MduFilePath));
+            IFileExporter relevantExporter = app.FileExporters
+                                                .FirstOrDefault(exporter => exporter is WaterFlowFMFileExporter);
             Assert.That(relevantExporter, Is.Not.Null,
                         "Expected the app to contain a WaterFlowFMMileExporter.");
 
-            var hasExported = relevantExporter.Export(fmModel, exportFilePath);
+            bool hasExported = relevantExporter.Export(fmModel, exportFilePath);
             Assert.That(hasExported, Is.True,
                         "Expected the export to succeed.");
 
@@ -1812,26 +1845,26 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         private static void AssertInputImportedModelIsCorrect(string fmModelPath,
                                                               Dictionary<string, Tuple<Tuple<string, string>[], string[]>> originalInputDirStructure)
         {
-            var modelDirSubFolders = Directory.EnumerateDirectories(fmModelPath).ToList();
+            List<string> modelDirSubFolders = Directory.EnumerateDirectories(fmModelPath).ToList();
 
             Assert.That(modelDirSubFolders.Count, Is.EqualTo(1),
                         $"Expected only one folder in {fmModelPath}.");
 
-            var inputDirPath = Path.Combine(fmModelPath, "input");
+            string inputDirPath = Path.Combine(fmModelPath, "input");
             Assert.That(modelDirSubFolders.First(), Is.EqualTo(inputDirPath),
                         "Expected only an input folder in the model folder.");
 
-            var modelDirFiles = Directory.EnumerateFiles(fmModelPath);
+            IEnumerable<string> modelDirFiles = Directory.EnumerateFiles(fmModelPath);
             Assert.That(modelDirFiles.Any(), Is.False, $"Expected no files in {fmModelPath}");
 
             // the input files are copied into this project folder
-            var newInputDirStructure = GetDirectoryStructure(inputDirPath, ".");
+            Dictionary<string, Tuple<Tuple<string, string>[], string[]>> newInputDirStructure = GetDirectoryStructure(inputDirPath, ".");
 
             AssertEqualDirectoryStructure(".",
                                           ref originalInputDirStructure,
                                           ref newInputDirStructure);
         }
-        
+
         private static void AssertCorrectOutputIsLinked(string outputDirectoryPath, WaterFlowFMModel fmModel)
         {
             Assert.AreEqual(Path.Combine(outputDirectoryPath, "FlowFM1_map.nc"), fmModel.OutputMapFileStore.Path);
@@ -1868,7 +1901,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 UserSettings = applicationSettingsMock,
                 IsProjectCreatedInTemporaryDirectory = true
             };
-            
+
             AddPluginsToApplication(app);
             app.Plugins.Add(new HydroModelApplicationPlugin());
             app.Run();
@@ -1900,8 +1933,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
         private static void CopyTestDataFileToTemp(string fileName)
         {
-            var sourceFilePath = Path.Combine(testDataDirPath, fileName);
-            var targetFilePath = Path.Combine(tempDirPath, fileName);
+            string sourceFilePath = Path.Combine(testDataDirPath, fileName);
+            string targetFilePath = Path.Combine(tempDirPath, fileName);
             FileUtils.CopyFile(sourceFilePath, targetFilePath);
             Assert.IsTrue(File.Exists(targetFilePath));
         }
@@ -1927,18 +1960,18 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
         private static void CopyProjectToDestinationDir(string folderName)
         {
-            var sourceFilePath = Path.Combine(testDataDirPath, folderName);
+            string sourceFilePath = Path.Combine(testDataDirPath, folderName);
 
             var sourceDirectory = new DirectoryInfo(sourceFilePath);
 
             sourceDirectory.GetFiles().ForEach(f =>
             {
-                var targetFilePath = Path.Combine(destinationDirPath, f.Name);
+                string targetFilePath = Path.Combine(destinationDirPath, f.Name);
                 FileUtils.CopyFile(f.FullName, targetFilePath);
             });
             sourceDirectory.GetDirectories().ForEach(d =>
             {
-                var targetDirPath = Path.Combine(destinationDirPath, d.Name);
+                string targetDirPath = Path.Combine(destinationDirPath, d.Name);
                 FileUtils.CopyDirectory(d.FullName, targetDirPath);
             });
         }
@@ -1951,7 +1984,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 CoordinateSystem = coordinateSystemFactory.CreateFromEPSG(3857) // WGS 84 / Pseudo-Mercator
             };
 
-            var numberOfCoordinates = width * length;
+            int numberOfCoordinates = width * length;
             for (var n = 0; n < length; n++)
             {
                 for (var m = 0; m < width; m++)
@@ -1962,7 +1995,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
             for (var i = 0; i < numberOfCoordinates; i++)
             {
-                if ((i + 1) % width != 0) grid.Edges.Add(new Edge(i, i + 1));
+                if ((i + 1) % width != 0)
+                {
+                    grid.Edges.Add(new Edge(i, i + 1));
+                }
             }
 
             for (var i = 0; i < numberOfCoordinates - width; i++)
@@ -1979,7 +2015,12 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             {
                 GroupName = "Boundaries",
                 Name = "LandBoundary",
-                Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(0, 100), new Coordinate(50, 50) })
+                Geometry = new LineString(new[]
+                {
+                    new Coordinate(0, 0),
+                    new Coordinate(0, 100),
+                    new Coordinate(50, 50)
+                })
             };
         }
 
@@ -2068,7 +2109,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         {
             model.ModelDefinition.GetModelProperty(KnownProperties.UseSalinity).Value = true;
             model.ModelDefinition.GetModelProperty(KnownProperties.Temperature)
-                .SetValueAsString(((int)HeatFluxModelType.TransportOnly).ToString());
+                 .SetValueAsString(((int) HeatFluxModelType.TransportOnly).ToString());
         }
 
         private void AddFlowBoundaryConditionToModel(WaterFlowFMModel model)
@@ -2077,21 +2118,26 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             {
                 Name = "Boundary1",
                 Geometry =
-                    new LineString(new[] { new Coordinate(0, 0), new Coordinate(1, 0) })
+                    new LineString(new[]
+                    {
+                        new Coordinate(0, 0),
+                        new Coordinate(1, 0)
+                    })
             };
 
             var flowBoundaryCondition = new FlowBoundaryCondition(FlowBoundaryQuantityType.Discharge,
-                BoundaryConditionDataType.TimeSeries)
-            {
-                Feature = feature
-            };
+                                                                  BoundaryConditionDataType.TimeSeries) {Feature = feature};
 
             flowBoundaryCondition.AddPoint(0);
-            flowBoundaryCondition.PointData[0].Arguments[0].SetValues(new[] { model.StartTime, model.StopTime });
+            flowBoundaryCondition.PointData[0].Arguments[0].SetValues(new[]
+            {
+                model.StartTime,
+                model.StopTime
+            });
             flowBoundaryCondition.PointData[0][model.StartTime] = 0.5;
             flowBoundaryCondition.PointData[0][model.StopTime] = 0.6;
 
-            var set = new BoundaryConditionSet { Feature = feature };
+            var set = new BoundaryConditionSet {Feature = feature};
             set.BoundaryConditions.Add(flowBoundaryCondition);
             model.BoundaryConditionSets.Add(set);
         }
@@ -2099,18 +2145,19 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         private void AddTracer(WaterFlowFMModel model)
         {
             var tracer = "Tracer1";
-            model.TracerDefinitions.AddRange(new List<string> { tracer });
+            model.TracerDefinitions.AddRange(new List<string> {tracer});
 
             var boundary = new Feature2D
             {
                 Name = "TracerBoundary1",
                 Geometry =
-                    new LineString(new[] { new Coordinate(0, 0), new Coordinate(1, 0) })
+                    new LineString(new[]
+                    {
+                        new Coordinate(0, 0),
+                        new Coordinate(1, 0)
+                    })
             };
-            var set01 = new BoundaryConditionSet
-            {
-                Feature = boundary
-            };
+            var set01 = new BoundaryConditionSet {Feature = boundary};
             model.BoundaryConditionSets.Add(set01);
 
             set01.BoundaryConditions.Add(
@@ -2124,7 +2171,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         private static void EnableMorphology(WaterFlowFMModel model)
         {
             model.ModelDefinition.GetModelProperty(GuiProperties.UseMorSed).Value = true;
-            var cellsValue = ((int)UnstructuredGridFileHelper.BedLevelLocation.Faces).ToString();
+            var cellsValue = ((int) UnstructuredGridFileHelper.BedLevelLocation.Faces).ToString();
             model.ModelDefinition.GetModelProperty(KnownProperties.BedlevType).SetValueAsString(cellsValue);
         }
 
@@ -2133,7 +2180,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             var feature = new Feature2D
             {
                 Name = "Boundary2",
-                Geometry = new LineString(new[] { new Coordinate(1, 0), new Coordinate(0, 1) })
+                Geometry = new LineString(new[]
+                {
+                    new Coordinate(1, 0),
+                    new Coordinate(0, 1)
+                })
             };
 
             var morphologyBoundaryCondition = new FlowBoundaryCondition(
@@ -2141,26 +2192,31 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 BoundaryConditionDataType.TimeSeries)
             {
                 Feature = feature,
-                SedimentFractionNames = new List<string> { "SedimentFraction1" }
+                SedimentFractionNames = new List<string> {"SedimentFraction1"}
             };
 
             morphologyBoundaryCondition.AddPoint(0);
-            morphologyBoundaryCondition.PointData[0].Arguments[0].SetValues(new[] { model.StartTime, model.StopTime });
+            morphologyBoundaryCondition.PointData[0].Arguments[0].SetValues(new[]
+            {
+                model.StartTime,
+                model.StopTime
+            });
             morphologyBoundaryCondition.PointData[0][model.StartTime] = 0.5;
             morphologyBoundaryCondition.PointData[0][model.StopTime] = 0.6;
 
             var flowBoundaryCondition = new FlowBoundaryCondition(FlowBoundaryQuantityType.WaterLevel,
-                BoundaryConditionDataType.TimeSeries)
-            {
-                Feature = feature
-            };
+                                                                  BoundaryConditionDataType.TimeSeries) {Feature = feature};
 
             flowBoundaryCondition.AddPoint(0);
-            flowBoundaryCondition.PointData[0].Arguments[0].SetValues(new[] { model.StartTime, model.StopTime });
+            flowBoundaryCondition.PointData[0].Arguments[0].SetValues(new[]
+            {
+                model.StartTime,
+                model.StopTime
+            });
             flowBoundaryCondition.PointData[0][model.StartTime] = 0.5;
             flowBoundaryCondition.PointData[0][model.StopTime] = 0.6;
 
-            var set = new BoundaryConditionSet { Feature = feature };
+            var set = new BoundaryConditionSet {Feature = feature};
             set.BoundaryConditions.Add(flowBoundaryCondition);
             set.BoundaryConditions.Add(morphologyBoundaryCondition);
 
@@ -2170,20 +2226,20 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         private void AddSedimentFraction(WaterFlowFMModel model)
         {
             model.SedimentFractions = new EventedList<ISedimentFraction>();
-            model.SedimentFractions.Add(new SedimentFraction { Name = "SedimentFraction2" });
+            model.SedimentFractions.Add(new SedimentFraction {Name = "SedimentFraction2"});
         }
 
         private static void AddWindToModel(WaterFlowFMModel model)
         {
-            var windFilePath = Path.Combine(tempDirPath, WindFileName);
-            var gridFilePath = Path.Combine(tempDirPath, GridFileName);
+            string windFilePath = Path.Combine(tempDirPath, WindFileName);
+            string gridFilePath = Path.Combine(tempDirPath, GridFileName);
             var windField = GriddedWindField.CreateCurviField(windFilePath, gridFilePath);
             model.ModelDefinition.WindFields.Add(windField);
         }
 
         private void SimulateUserAddingReferencesInMduFile()
         {
-            using (var sw = File.AppendText(tempMduFilePath))
+            using (StreamWriter sw = File.AppendText(tempMduFilePath))
             {
                 sw.WriteLine("FouFile           = fourier.fou");
                 sw.WriteLine("");
@@ -2216,13 +2272,13 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         private void UpdateBedLevel(WaterFlowFMModel model)
         {
             TypeUtils.CallPrivateMethod(model, "UpdateBathymetryCoverage",
-                UnstructuredGridFileHelper.BedLevelLocation.NodesMinLev);
+                                        UnstructuredGridFileHelper.BedLevelLocation.NodesMinLev);
         }
 
         private static void ValidateAndRunModel(WaterFlowFMModel model, DeltaShellApplication app)
         {
             model.ValidateBeforeRun = true;
-            var report = model.Validate();
+            ValidationReport report = model.Validate();
             Assert.AreEqual(0, report.AllErrors.Count(), "There are errors in the model after importing the MDU file");
             app.RunActivity(model);
             Assert.AreEqual(ActivityStatus.Cleaned, model.Status);
@@ -2230,7 +2286,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
         private static void AddModelToProject(IHydroModel model, IApplication app)
         {
-            var project = app.Project;
+            Project project = app.Project;
             project.RootFolder.Add(model);
         }
 
@@ -2238,34 +2294,34 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         {
             var dirInfo = new DirectoryInfo(dirPath);
             expectedExtensions.ForEach(ext =>
-                Assert.IsTrue(dirInfo.GetFiles($"*{ext}").Any(),
-                    Message_MissingFileOrFolderExtension("file", ext, dirInfo.Name)));
+                                           Assert.IsTrue(dirInfo.GetFiles($"*{ext}").Any(),
+                                                         Message_MissingFileOrFolderExtension("file", ext, dirInfo.Name)));
         }
 
         private void AssertProjectFileAndFolderExist()
         {
-            var subDirectories = Directory.GetDirectories(destinationDirPath);
+            string[] subDirectories = Directory.GetDirectories(destinationDirPath);
             Assert.NotNull(subDirectories);
             Assert.AreEqual(1, subDirectories.Length,
-                "There should only be one folder: the project (.dsproj_data) folder.");
+                            "There should only be one folder: the project (.dsproj_data) folder.");
 
-            var subFiles = Directory.GetFiles(destinationDirPath);
+            string[] subFiles = Directory.GetFiles(destinationDirPath);
             Assert.NotNull(subFiles);
             Assert.AreEqual(1, subFiles.Length, "There should only be one file: the project (.dsproj) file.");
 
             var expectedCount = 1;
 
             // Get all files/folders with the project extension
-            var actualFileCount = Directory.GetFiles(destinationDirPath, $"*{ProjectFileExtension}").Length;
-            var actualFolderCount = Directory.GetDirectories(destinationDirPath, $"*{ProjectDirExtension}").Length;
+            int actualFileCount = Directory.GetFiles(destinationDirPath, $"*{ProjectFileExtension}").Length;
+            int actualFolderCount = Directory.GetDirectories(destinationDirPath, $"*{ProjectDirExtension}").Length;
 
             Assert.AreEqual(expectedCount, actualFileCount,
-                Message_WrongNumberOfFilesOrFolders(expectedCount, "files", ProjectFileExtension, actualFileCount,
-                    "Temp"));
+                            Message_WrongNumberOfFilesOrFolders(expectedCount, "files", ProjectFileExtension, actualFileCount,
+                                                                "Temp"));
 
             Assert.AreEqual(expectedCount, actualFolderCount,
-                Message_WrongNumberOfFilesOrFolders(expectedCount, "folders", ProjectDirExtension, actualFolderCount,
-                    "Temp"));
+                            Message_WrongNumberOfFilesOrFolders(expectedCount, "folders", ProjectDirExtension, actualFolderCount,
+                                                                "Temp"));
         }
 
         private void AssertModelDirectoryExists()
@@ -2291,29 +2347,29 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         private void AssertDirectoryExists(string dirPath)
         {
             var dirInfo = new DirectoryInfo(dirPath);
-            var parentName = dirInfo.Parent.Name;
+            string parentName = dirInfo.Parent.Name;
 
             Assert.IsTrue(dirInfo.Exists,
-                Message_MissingFileOrFolderName("folder", dirInfo.Name, parentName));
+                          Message_MissingFileOrFolderName("folder", dirInfo.Name, parentName));
         }
 
         private void AssertWorkingOutputDirectoryWithSubFoldersExists(string workingOutputDirPath)
         {
-            var workingOutputFMDirPath = workingOutputDirPath;
-            var workingOutputWAQDirPath = Path.Combine(workingOutputDirPath, outputWAQDirName);
-            var workingSnappedDirPath = Path.Combine(workingOutputDirPath, SnappedDirName);
-            
+            string workingOutputFMDirPath = workingOutputDirPath;
+            string workingOutputWAQDirPath = Path.Combine(workingOutputDirPath, outputWAQDirName);
+            string workingSnappedDirPath = Path.Combine(workingOutputDirPath, SnappedDirName);
+
             AssertDirectoryExists(workingOutputFMDirPath);
             AssertDirectoryExists(workingOutputWAQDirPath);
             AssertDirectoryExists(workingSnappedDirPath);
-            
+
             AssertFilesExtensionsExistInDirectory(filtersOutputFM_NewModel, workingOutputFMDirPath);
             AssertFilesExtensionsExistInDirectory(filtersOutputWAQ, workingOutputWAQDirPath);
             AssertFilesExtensionsExistInDirectory(filtersSnapped, workingSnappedDirPath);
         }
 
         private static string Message_WrongNumberOfFilesOrFolders(int expectedCount, string type,
-            string extension, int actualCount, string parentDirName)
+                                                                  string extension, int actualCount, string parentDirName)
         {
             return $"We expected {expectedCount} {type} with extension '{extension}', " +
                    $"but there were {actualCount} in directory '{parentDirName}'.";
@@ -2375,7 +2431,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
                 files[i] = Path.GetFileName(files[i]);
                 if (!ignoreFileExtension.Any(fileExtension => files[i].Contains(fileExtension)))
+                {
                     filesList.Add(new Tuple<string, string>(files[i], checksum));
+                }
             }
 
             Tuple<string, string>[] filesAndChecksums = filesList.ToArray();
@@ -2392,65 +2450,70 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             // Add to structure
             structure.Add(relativePath, new Tuple<Tuple<string, string>[], string[]>(filesAndChecksums, subdirs));
 
-            foreach (var s in subdirs)
+            foreach (string s in subdirs)
             {
                 GetDirectoryStructure(basePath, s, ref structure, doChecksum, ignoreFileExtension);
             }
         }
 
         private static void AssertEqualDirectoryStructure(string curDir,
-            ref Dictionary<string, Tuple<Tuple<string, string>[], string[]>> sourceDirStructure,
-            ref Dictionary<string, Tuple<Tuple<string, string>[], string[]>> targetDirStructure,
-            bool doCompareChecksums = false)
+                                                          ref Dictionary<string, Tuple<Tuple<string, string>[], string[]>> sourceDirStructure,
+                                                          ref Dictionary<string, Tuple<Tuple<string, string>[], string[]>> targetDirStructure,
+                                                          bool doCompareChecksums = false)
         {
-            var sourceDirFilesAndChecksums = sourceDirStructure[curDir].Item1;
-            var sourceDirSubDirectories = sourceDirStructure[curDir].Item2;
+            Tuple<string, string>[] sourceDirFilesAndChecksums = sourceDirStructure[curDir].Item1;
+            string[] sourceDirSubDirectories = sourceDirStructure[curDir].Item2;
 
-            var targetDirFilesAndChecksums = targetDirStructure[curDir].Item1;
-            var targetDirSubDirectories = targetDirStructure[curDir].Item2;
-
+            Tuple<string, string>[] targetDirFilesAndChecksums = targetDirStructure[curDir].Item1;
+            string[] targetDirSubDirectories = targetDirStructure[curDir].Item2;
 
             //First check if the number of files/directories are the same
             Assert.AreEqual(sourceDirFilesAndChecksums.Length, targetDirFilesAndChecksums.Length,
-                $"The number of files in source and target {curDir} do not correspond.");
+                            $"The number of files in source and target {curDir} do not correspond.");
             Assert.AreEqual(sourceDirSubDirectories.Length, targetDirSubDirectories.Length,
-                $"The number of subfolders in source and target {curDir} do not correspond.");
+                            $"The number of subfolders in source and target {curDir} do not correspond.");
 
             //If the number of files are correct, then check the names of them.
             for (var i = 0; i < targetDirFilesAndChecksums.Length; i++)
             {
                 // Compare strings: source > target -> source is missing a file, else target missing a file.
-                var assertMsgNotEqualName =
+                string assertMsgNotEqualName =
                     string.Compare(sourceDirFilesAndChecksums[i].Item1, targetDirFilesAndChecksums[i].Item1,
-                        StringComparison.InvariantCultureIgnoreCase) > 0
+                                   StringComparison.InvariantCultureIgnoreCase) > 0
                         ? $"File {targetDirFilesAndChecksums[i].Item1} does not exist in source {curDir}."
                         : $"File {sourceDirFilesAndChecksums[i].Item1} does not exist in target {curDir}.";
                 Assert.AreEqual(sourceDirFilesAndChecksums[i].Item1, targetDirFilesAndChecksums[i].Item1,
-                    assertMsgNotEqualName);
+                                assertMsgNotEqualName);
 
-                if (!doCompareChecksums) continue;
-                var assertMsgNotEqualContent =
+                if (!doCompareChecksums)
+                {
+                    continue;
+                }
+
+                string assertMsgNotEqualContent =
                     $"Checksum of file {sourceDirFilesAndChecksums[i].Item1} does not match checksum of file {targetDirFilesAndChecksums[i].Item1} in {curDir}";
 
                 // time is written in mdu
                 if (sourceDirFilesAndChecksums[i].Item1 != ModelName + ".mdu")
+                {
                     Assert.That(sourceDirFilesAndChecksums[i].Item2, Is.EqualTo(targetDirFilesAndChecksums[i].Item2),
-                        assertMsgNotEqualContent);
+                                assertMsgNotEqualContent);
+                }
             }
 
             // If the number of directories are correct, then check the names of them.
             for (var i = 0; i < sourceDirSubDirectories.Length; i++)
             {
-                var assertMsg =
+                string assertMsg =
                     string.Compare(sourceDirSubDirectories[i], targetDirSubDirectories[i],
-                        StringComparison.InvariantCultureIgnoreCase) > 0
+                                   StringComparison.InvariantCultureIgnoreCase) > 0
                         ? $"Folder {targetDirSubDirectories[i]} does not exist in source {curDir}."
                         : $"Folder {sourceDirSubDirectories[i]} does not exist in target {curDir}.";
                 Assert.AreEqual(sourceDirSubDirectories[i], targetDirSubDirectories[i], assertMsg);
             }
 
             // Continue the process for the subfolders.
-            foreach (var s in sourceDirSubDirectories)
+            foreach (string s in sourceDirSubDirectories)
             {
                 AssertEqualDirectoryStructure(s, ref sourceDirStructure, ref targetDirStructure, doCompareChecksums);
             }
@@ -2459,27 +2522,27 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         private static void AssertOutputDirectoryIsEmpty()
         {
             Assert.True(FileUtils.IsDirectoryEmpty(outputDirPath),
-                $"Expected: Output folder '{outputDirPath}' should be empty.");
+                        $"Expected: Output folder '{outputDirPath}' should be empty.");
         }
 
         private static void AssertWorkingDirectoryWithOutputExists(string workingDirectoryPath, string workingOutputDirectoryPath)
         {
             Assert.IsTrue(Directory.Exists(workingDirectoryPath),
-                $"The working directory '{workingDirectoryPath}' does not exist.");
+                          $"The working directory '{workingDirectoryPath}' does not exist.");
             Assert.IsTrue(Directory.Exists(workingOutputDirectoryPath),
-                $"The output folder '{workingOutputDirectoryPath}' in the working directory does not exist.");
+                          $"The output folder '{workingOutputDirectoryPath}' in the working directory does not exist.");
             Assert.IsTrue(Directory.GetFileSystemEntries(workingOutputDirectoryPath).Any(),
-                $"There should have been output in the output folder '{workingOutputDirectoryPath}' in the working directory.");
+                          $"There should have been output in the output folder '{workingOutputDirectoryPath}' in the working directory.");
         }
 
         private static void AssertWorkingDirectoryIsCleaned(string workingDirectoryPath, string workingOutputDirectoryPath)
         {
             Assert.IsTrue(Directory.Exists(workingDirectoryPath),
-                $"The working directory '{workingDirectoryPath}' should not have been removed after saving.");
+                          $"The working directory '{workingDirectoryPath}' should not have been removed after saving.");
             Assert.IsFalse(Directory.Exists(workingOutputDirectoryPath),
-                $"The output directory '{workingOutputDirectoryPath}' should have been deleted after saving.");
+                           $"The output directory '{workingOutputDirectoryPath}' should have been deleted after saving.");
             Assert.IsFalse(Directory.GetFileSystemEntries(workingDirectoryPath).Any(),
-                $"The working directory '{workingDirectoryPath}' should have been empty after saving.");
+                           $"The working directory '{workingDirectoryPath}' should have been empty after saving.");
         }
     }
 }

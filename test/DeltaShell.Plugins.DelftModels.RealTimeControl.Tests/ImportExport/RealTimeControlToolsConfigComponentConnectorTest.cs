@@ -15,13 +15,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
     [TestFixture]
     public class RealTimeControlToolsConfigComponentConnectorTest
     {
+        private const string controlGroupName = "control_group_name";
+        private const string outputName = "output_name";
+        private const string componentName = "component_name";
         private readonly Random random = new Random();
 
         private RealTimeControlToolsConfigComponentConnector toolsConfigComponentConnector;
-        private const string controlGroupName = "control_group_name";
-        private const string outputName = "output_name";
         private static readonly string inputName = $"{RtcXmlTag.Input}input_name";
-        private const string componentName = "component_name";
 
         [SetUp]
         public void SetUp()
@@ -302,7 +302,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
             Assert.That(controlGroup.MathematicalExpressions, Collection.OnlyContains(expression));
             Assert.That(controlGroup.Conditions, Collection.OnlyContains(condition));
             Assert.That(controlGroup.Signals, Collection.OnlyContains(signal));
-            Assert.That(controlGroup.Rules, Is.EquivalentTo(new[] { rule1, rule2 }));
+            Assert.That(controlGroup.Rules, Is.EquivalentTo(new[]
+            {
+                rule1,
+                rule2
+            }));
             Assert.That(controlGroup.Outputs, Collection.OnlyContains(output));
         }
 

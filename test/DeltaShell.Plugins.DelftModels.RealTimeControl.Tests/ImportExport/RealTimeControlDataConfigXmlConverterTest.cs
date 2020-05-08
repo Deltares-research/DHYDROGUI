@@ -12,11 +12,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
     [TestFixture]
     public class RealTimeControlDataConfigXmlConverterTest
     {
-        private RealTimeControlDataConfigXmlConverter dataConfigConverter;
-        private ILogHandler logHandler;
         private const string InputId = RtcXmlTag.Input + "parameter/quantity";
         private const string OutputId = RtcXmlTag.Output + "parameter/quantity";
         private const string ControlGroupName = "control_group_name";
+        private RealTimeControlDataConfigXmlConverter dataConfigConverter;
+        private ILogHandler logHandler;
 
         [SetUp]
         public void SetUp()
@@ -30,6 +30,20 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
         {
             logHandler = null;
             dataConfigConverter = null;
+        }
+
+        [Test]
+        public void GivenParameterIsNull_WhenCreateConnectionPointsFromXmlElementsIsCalled_ThenNothingHappensAndMethodReturn()
+        {
+            IEnumerable<ConnectionPoint> connectionPoints = null;
+
+            // Given, When
+            Assert.DoesNotThrow(
+                () => connectionPoints = dataConfigConverter.CreateConnectionPointsFromXmlElements(null),
+                "Method throws an unexpected exception when parameter 'elements' is null.");
+
+            // Then
+            AssertNotNullAndEmpty(connectionPoints);
         }
 
         [TestCase(InputId, typeof(Input))]
@@ -82,20 +96,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
             // When
             IEnumerable<ConnectionPoint> connectionPoints =
                 dataConfigConverter.CreateConnectionPointsFromXmlElements(timeSeriesElements);
-
-            // Then
-            AssertNotNullAndEmpty(connectionPoints);
-        }
-
-        [Test]
-        public void GivenParameterIsNull_WhenCreateConnectionPointsFromXmlElementsIsCalled_ThenNothingHappensAndMethodReturn()
-        {
-            IEnumerable<ConnectionPoint> connectionPoints = null;
-
-            // Given, When
-            Assert.DoesNotThrow(
-                () => connectionPoints = dataConfigConverter.CreateConnectionPointsFromXmlElements(null),
-                "Method throws an unexpected exception when parameter 'elements' is null.");
 
             // Then
             AssertNotNullAndEmpty(connectionPoints);

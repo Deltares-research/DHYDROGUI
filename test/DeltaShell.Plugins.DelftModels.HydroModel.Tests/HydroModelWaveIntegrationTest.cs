@@ -111,8 +111,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 using (var fmModel = new WaterFlowFMModel())
                 using (var waveModel = new WaveModel())
                 {
-                    string initialFmModelName = Guid.NewGuid().ToString();
-                    string finalFmModelName = Guid.NewGuid().ToString();
+                    var initialFmModelName = Guid.NewGuid().ToString();
+                    var finalFmModelName = Guid.NewGuid().ToString();
 
                     fmModel.Name = initialFmModelName;
                     waveModel.ModelDefinition.CommunicationsFilePath = Guid.NewGuid().ToString();

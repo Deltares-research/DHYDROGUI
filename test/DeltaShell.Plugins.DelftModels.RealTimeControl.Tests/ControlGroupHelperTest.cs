@@ -19,10 +19,22 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
         public void OutputForInputTest()
         {
             var rule = new PIDRule("testRule");
-            var input = new Input { ParameterName = "InParam", Feature = new RtcTestFeature() };
-            var output = new Output { ParameterName = "OutParam", Feature = new RtcTestFeature() };
-            var controlGroup = new ControlGroup { Name = "testControlGroup" };
-            var condition = new StandardCondition { Name = "testCondition", Input = input };
+            var input = new Input
+            {
+                ParameterName = "InParam",
+                Feature = new RtcTestFeature()
+            };
+            var output = new Output
+            {
+                ParameterName = "OutParam",
+                Feature = new RtcTestFeature()
+            };
+            var controlGroup = new ControlGroup {Name = "testControlGroup"};
+            var condition = new StandardCondition
+            {
+                Name = "testCondition",
+                Input = input
+            };
             rule.Outputs.Add(output);
             condition.Input = input;
             condition.FalseOutputs.Add(rule);
@@ -31,7 +43,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
 
             controlGroup.Inputs.Add(input);
             controlGroup.Outputs.Add(output);
-            var inputs = ControlGroupHelper.InputItemsForOutput(controlGroup, output);
+            IEnumerable<Input> inputs = ControlGroupHelper.InputItemsForOutput(controlGroup, output);
             Assert.AreEqual(1, inputs.Count());
             Assert.AreEqual(input, inputs.FirstOrDefault());
         }
@@ -90,61 +102,29 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
             CollectionAssert.AreEquivalent(expectedResult, result);
         }
 
-        private static ControlGroup CreateControlGroupWith(params RtcBaseObject[] objects)
-        {
-            var controlGroup = new ControlGroup();
-
-            foreach (RtcBaseObject obj in objects)
-            {
-                switch (obj)
-                {
-                    case ConditionBase condition:
-                        controlGroup.Conditions.Add(condition);
-                        break;
-                    case Output output:
-                        controlGroup.Outputs.Add(output);
-                        break;
-                    case Input input:
-                        controlGroup.Inputs.Add(input);
-                        break;
-                    case MathematicalExpression expression:
-                        controlGroup.MathematicalExpressions.Add(expression);
-                        break;
-                    case RuleBase rule:
-                        controlGroup.Rules.Add(rule);
-                        break;
-                    case SignalBase signalBase:
-                        controlGroup.Signals.Add(signalBase);
-                        break;
-                }
-            }
-
-            return controlGroup;
-        }
-
         /// <summary>
         /// Tests InputItemsForOutput which gives the input items that determine an output item
         /// </summary>
         [Test]
         public void OutputForInputTestDemo()
         {
-            var controlGroup = RealTimeControlTestHelper.CreateGroup2Rules();
+            ControlGroup controlGroup = RealTimeControlTestHelper.CreateGroup2Rules();
             controlGroup.Inputs[0].ParameterName = "parameter0";
-            controlGroup.Inputs[0].Feature = new RtcTestFeature { Name = "location0" };
+            controlGroup.Inputs[0].Feature = new RtcTestFeature {Name = "location0"};
 
             controlGroup.Inputs[1].ParameterName = "parameter1";
-            controlGroup.Inputs[1].Feature = new RtcTestFeature { Name = "location1" };
+            controlGroup.Inputs[1].Feature = new RtcTestFeature {Name = "location1"};
 
             controlGroup.Inputs[2].ParameterName = "parameter2";
-            controlGroup.Inputs[2].Feature = new RtcTestFeature { Name = "location2" };
-            
-            var outputIfTrue = controlGroup.Outputs[0];
-            var inputs = ControlGroupHelper.InputItemsForOutput(controlGroup, outputIfTrue);
+            controlGroup.Inputs[2].Feature = new RtcTestFeature {Name = "location2"};
+
+            Output outputIfTrue = controlGroup.Outputs[0];
+            IEnumerable<Input> inputs = ControlGroupHelper.InputItemsForOutput(controlGroup, outputIfTrue);
             Assert.AreEqual(2, inputs.Count());
             Assert.IsNotNull(inputs.Where(i => i.Name.Contains("location0")).FirstOrDefault());
             Assert.IsNotNull(inputs.Where(i => i.Name.Contains("location1")).FirstOrDefault());
 
-            var outputIfFalse = controlGroup.Outputs[1];
+            Output outputIfFalse = controlGroup.Outputs[1];
             inputs = ControlGroupHelper.InputItemsForOutput(controlGroup, outputIfFalse);
             Assert.AreEqual(2, inputs.Count());
             Assert.IsNotNull(inputs.Where(i => i.Name.Contains("location1")).FirstOrDefault());
@@ -158,12 +138,24 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
         public void OutputForInputTestMultipleConditions()
         {
             var rule = new HydraulicRule();
-            var input = new Input { ParameterName = "InParam", Feature = new RtcTestFeature { Name = "In" } };
-            var output = new Output { ParameterName = "OutParam", Feature = new RtcTestFeature { Name = "Out" } };
-            var controlGroup = new ControlGroup { Name = "testControlGroup" };
-            var condition1 = new StandardCondition { Name = "Condition1", Input = input };
-            var condition2 = new StandardCondition { Name = "Condition1" };
-            var condition3 = new StandardCondition { Name = "Condition1" };
+            var input = new Input
+            {
+                ParameterName = "InParam",
+                Feature = new RtcTestFeature {Name = "In"}
+            };
+            var output = new Output
+            {
+                ParameterName = "OutParam",
+                Feature = new RtcTestFeature {Name = "Out"}
+            };
+            var controlGroup = new ControlGroup {Name = "testControlGroup"};
+            var condition1 = new StandardCondition
+            {
+                Name = "Condition1",
+                Input = input
+            };
+            var condition2 = new StandardCondition {Name = "Condition1"};
+            var condition3 = new StandardCondition {Name = "Condition1"};
 
             rule.Outputs.Add(output);
             condition1.Input = input;
@@ -177,7 +169,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
 
             controlGroup.Inputs.Add(input);
             controlGroup.Outputs.Add(output);
-            var inputs = ControlGroupHelper.InputItemsForOutput(controlGroup, output);
+            IEnumerable<Input> inputs = ControlGroupHelper.InputItemsForOutput(controlGroup, output);
             Assert.AreEqual(1, inputs.Count());
             Assert.AreEqual(input, inputs.FirstOrDefault());
         }
@@ -185,17 +177,17 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
         [Test]
         public void InputItemsForOutputWithConditionWithoutInput()
         {
-            var controlGroup = RealTimeControlTestHelper.CreateGroup2Rules();
+            ControlGroup controlGroup = RealTimeControlTestHelper.CreateGroup2Rules();
             controlGroup.Inputs[0].ParameterName = "parameter0";
-            controlGroup.Inputs[0].Feature = new RtcTestFeature { Name = "location0" };
+            controlGroup.Inputs[0].Feature = new RtcTestFeature {Name = "location0"};
 
             controlGroup.Inputs[2].ParameterName = "parameter2";
-            controlGroup.Inputs[2].Feature = new RtcTestFeature { Name = "location2" };
+            controlGroup.Inputs[2].Feature = new RtcTestFeature {Name = "location2"};
 
             controlGroup.Conditions[0].Input = null; //time condition has no input...
 
-            var outputIfTrue = controlGroup.Outputs[0];
-            var inputs = ControlGroupHelper.InputItemsForOutput(controlGroup, outputIfTrue);
+            Output outputIfTrue = controlGroup.Outputs[0];
+            IEnumerable<Input> inputs = ControlGroupHelper.InputItemsForOutput(controlGroup, outputIfTrue);
 
             Assert.AreEqual(1, inputs.Count());
         }
@@ -204,12 +196,32 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
         public void InputItemsForOutputWithTwoConditionsToOneRelation()
         {
             var rule = new HydraulicRule();
-            var input = new Input { ParameterName = "InParam", Feature = new RtcTestFeature() };
-            var output = new Output { ParameterName = "OutParam", Feature = new RtcTestFeature() };
-            var controlGroup = new ControlGroup { Name = "testControlGroup" };
-            var condition1 = new StandardCondition { Name = "Condition1", Input = input };
-            var condition2 = new StandardCondition { Name = "Condition2", Input = input };
-            var condition3 = new StandardCondition { Name = "Condition3", Input = input };
+            var input = new Input
+            {
+                ParameterName = "InParam",
+                Feature = new RtcTestFeature()
+            };
+            var output = new Output
+            {
+                ParameterName = "OutParam",
+                Feature = new RtcTestFeature()
+            };
+            var controlGroup = new ControlGroup {Name = "testControlGroup"};
+            var condition1 = new StandardCondition
+            {
+                Name = "Condition1",
+                Input = input
+            };
+            var condition2 = new StandardCondition
+            {
+                Name = "Condition2",
+                Input = input
+            };
+            var condition3 = new StandardCondition
+            {
+                Name = "Condition3",
+                Input = input
+            };
 
             rule.Outputs.Add(output);
             condition1.Input = input;
@@ -229,7 +241,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
 
             controlGroup.Inputs.Add(input);
             controlGroup.Outputs.Add(output);
-            var inputs = ControlGroupHelper.InputItemsForOutput(controlGroup, output);
+            IEnumerable<Input> inputs = ControlGroupHelper.InputItemsForOutput(controlGroup, output);
             Assert.AreEqual(1, inputs.Count());
             Assert.AreEqual(input, inputs.FirstOrDefault());
         }
@@ -240,8 +252,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
         {
             ControlGroup group = RealTimeControlModelHelper.CreateGroupPidRule(true);
             IList<RtcBaseObject> startTriggers = ControlGroupHelper.RetrieveTriggerObjects(group).ToList();
-            
-            Assert.AreSame(group.Conditions.Single(),startTriggers.Single());
+
+            Assert.AreSame(group.Conditions.Single(), startTriggers.Single());
         }
 
         [Test]
@@ -253,7 +265,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
             var ruleOutput = new Output();
             var ruleOutput2 = new Output();
             var ruleOutput3 = new Output();
-            
+
             controlGroup.Inputs.Add(ruleInput);
             controlGroup.Outputs.Add(ruleOutput);
             controlGroup.Outputs.Add(ruleOutput2);
@@ -265,7 +277,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
             controlGroup.Rules.Add(pidRule);
             controlGroup.Rules.Add(pidRule2);
             controlGroup.Rules.Add(pidRule3);
-            
+
             pidRule.Inputs.Add(ruleInput);
             pidRule.Outputs.Add(ruleOutput);
             pidRule.Inputs.Add(ruleInput);
@@ -286,7 +298,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
 
             IList<RtcBaseObject> startTriggers = ControlGroupHelper.RetrieveTriggerObjects(controlGroup).ToList();
 
-            Assert.AreSame(condition1,startTriggers.Single());
+            Assert.AreSame(condition1, startTriggers.Single());
         }
 
         [Test]
@@ -295,10 +307,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
         {
             var controlGroup = new ControlGroup();
 
-            var c1 = new StandardCondition { Name = "C1" };
-            var c2 = new StandardCondition { Name = "C2" };
-            var r1 = new HydraulicRule { Name = "R1" };
-            var r2 = new HydraulicRule { Name = "R1" };
+            var c1 = new StandardCondition {Name = "C1"};
+            var c2 = new StandardCondition {Name = "C2"};
+            var r1 = new HydraulicRule {Name = "R1"};
+            var r2 = new HydraulicRule {Name = "R1"};
             var o1 = new Output();
             var o2 = new Output();
 
@@ -325,13 +337,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
         [Category(TestCategory.Integration)]
         public void RetrieveTriggerObjects_For1MathematicalExpressionBeforeRule()
         {
-            var controlGroup = new ControlGroup { Name = "Control group" };
-            
+            var controlGroup = new ControlGroup {Name = "Control group"};
+
             var inputMathematicalExpression = new Input();
             var mathematicalExpression = new MathematicalExpression();
             mathematicalExpression.Inputs.Add(inputMathematicalExpression);
             controlGroup.MathematicalExpressions.Add(mathematicalExpression);
-            
+
             var ruleOutput = new Output();
             controlGroup.Inputs.Add(inputMathematicalExpression);
             controlGroup.Outputs.Add(ruleOutput);
@@ -339,8 +351,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
             var pidRule = new PIDRule();
             controlGroup.Rules.Add(pidRule);
             pidRule.Inputs.Add(mathematicalExpression);
-            pidRule.Outputs.Add(ruleOutput); 
-            
+            pidRule.Outputs.Add(ruleOutput);
+
             IList<RtcBaseObject> startTriggers = ControlGroupHelper.RetrieveTriggerObjects(controlGroup).ToList();
 
             Assert.AreSame(mathematicalExpression, startTriggers.Single());
@@ -350,7 +362,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
         [Category(TestCategory.Integration)]
         public void RetrieveTriggerObjects_For2DifferentMathematicalExpressionsBefore2Rules()
         {
-            var controlGroup = new ControlGroup { Name = "Control group" };
+            var controlGroup = new ControlGroup {Name = "Control group"};
 
             var inputMathematicalExpression = new Input();
             var mathematicalExpression = new MathematicalExpression();
@@ -389,7 +401,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
         [Category(TestCategory.Integration)]
         public void RetrieveTriggerObjects_For2MathematicalExpressionsBeforeRule()
         {
-            var controlGroup = new ControlGroup { Name = "Control group" };
+            var controlGroup = new ControlGroup {Name = "Control group"};
 
             var inputMathematicalExpression = new Input();
             var mathematicalExpression = new MathematicalExpression();
@@ -430,6 +442,38 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
             Assert.AreEqual(2, startTriggers.Count);
             Assert.IsTrue(startTriggers.Contains(mathematicalExpression));
             Assert.IsTrue(startTriggers.Contains(group.Conditions.Single()));
+        }
+
+        private static ControlGroup CreateControlGroupWith(params RtcBaseObject[] objects)
+        {
+            var controlGroup = new ControlGroup();
+
+            foreach (RtcBaseObject obj in objects)
+            {
+                switch (obj)
+                {
+                    case ConditionBase condition:
+                        controlGroup.Conditions.Add(condition);
+                        break;
+                    case Output output:
+                        controlGroup.Outputs.Add(output);
+                        break;
+                    case Input input:
+                        controlGroup.Inputs.Add(input);
+                        break;
+                    case MathematicalExpression expression:
+                        controlGroup.MathematicalExpressions.Add(expression);
+                        break;
+                    case RuleBase rule:
+                        controlGroup.Rules.Add(rule);
+                        break;
+                    case SignalBase signalBase:
+                        controlGroup.Signals.Add(signalBase);
+                        break;
+                }
+            }
+
+            return controlGroup;
         }
     }
 }

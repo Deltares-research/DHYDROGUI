@@ -7,6 +7,7 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Core;
 using DelftTools.TestUtils;
+using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
 using DeltaShell.Gui;
 using DeltaShell.Plugins.CommonTools;
@@ -23,6 +24,7 @@ using DeltaShell.Plugins.NetworkEditor.Gui;
 using DeltaShell.Plugins.ProjectExplorer;
 using DeltaShell.Plugins.SharpMapGis;
 using DeltaShell.Plugins.SharpMapGis.Gui;
+using GeoAPI.Extensions.Feature;
 using NUnit.Framework;
 using Rhino.Mocks;
 using FmResources = DeltaShell.Plugins.FMSuite.FlowFM.Properties.Resources;
@@ -30,7 +32,7 @@ using FmResources = DeltaShell.Plugins.FMSuite.FlowFM.Properties.Resources;
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 {
     [TestFixture]
-    public class PliFileImporterExporterTest 
+    public class PliFileImporterExporterTest
     {
         [Test]
         public void Constructor_ExpectedValues()
@@ -42,39 +44,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             Assert.That(importer.FileFilter, Is.EqualTo("Feature polyline files (*.pli)|*.pli|polyline-z files (*.pliz)|*.pliz"));
             Assert.That(BitmapsAreEqual(importer.Image, FmResources.TextDocument));
 
-            Type[] expectedSourceTypes = 
+            Type[] expectedSourceTypes =
             {
                 typeof(FixedWeir),
                 typeof(IList<FixedWeir>)
             };
             Assert.That(importer.SourceTypes(), Is.EqualTo(expectedSourceTypes));
 
-            Type[] expectedSupportedItemTypes = 
+            Type[] expectedSupportedItemTypes =
             {
                 typeof(IList<FixedWeir>)
             };
             Assert.That(importer.SupportedItemTypes, Is.EqualTo(expectedSupportedItemTypes));
-        }
-
-        private static bool BitmapsAreEqual(Bitmap bitmap1, Bitmap bitmap2)
-        {
-            if (bitmap1 == null || bitmap2 == null)
-                return false;
-            if (Equals(bitmap1, bitmap2))
-                return true;
-            if (!bitmap1.Size.Equals(bitmap2.Size) || !bitmap1.PixelFormat.Equals(bitmap2.PixelFormat))
-                return false;
-
-            for (var x = 0; x < bitmap1.Width; x++)
-            {
-                for (var y = 0; y < bitmap1.Height; y++)
-                {
-                    if (!bitmap1.GetPixel(x, y).Equals(bitmap2.GetPixel(x, y)))
-                        return false;
-                }
-            }
-
-            return true;
         }
 
         [Test]
@@ -87,8 +68,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var importer = new PliFileImporterExporter<FixedWeir, FixedWeir>();
 
             IList<FixedWeir> resultList = new List<FixedWeir>();
-            
-            TestHelper.AssertIsFasterThan(8500, () => importer.ImportItem(path, resultList), rankHddAccess: false, warmUp: true);
+
+            TestHelper.AssertIsFasterThan(8500, () => importer.ImportItem(path, resultList), false, true);
             Assert.AreEqual(19459, resultList.Count);
         }
 
@@ -98,7 +79,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         {
             using (var gui = new DeltaShellGui())
             {
-                var app = gui.Application;
+                IApplication app = gui.Application;
                 app.Plugins.Add(new SharpMapGisApplicationPlugin());
                 app.Plugins.Add(new NetworkEditorApplicationPlugin());
                 app.Plugins.Add(new FlowFMApplicationPlugin());
@@ -130,7 +111,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 TestHelper.AssertIsFasterThan(
                     25000,
                     () => importer.ImportItem(TestHelper.GetTestFilePath("structures\\testBas2FM_fxw.pliz"),
-                                              model.Area.FixedWeirs), rankHddAccess: false, warmUp: true);
+                                              model.Area.FixedWeirs), false, true);
                 Assert.AreEqual(19459, model.Area.FixedWeirs.Count);
             }
         }
@@ -151,11 +132,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             importer.GetEditableObject = null;
 
             // When
-            List<Pump2D> pumps =
+            var pumps =
                 (List<Pump2D>) importer.ImportItem(TestHelper.GetTestFilePath("structures_all_types\\pump01.pli"));
 
             // Then
-            var counter = pumps.Count;
+            int counter = pumps.Count;
             Assert.AreEqual(1, counter, $"{counter} pumps created instead of 1");
 
             Pump2D pump = pumps[0];
@@ -171,21 +152,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [Test]
         public void GivenAPliFileImporterExporter_WhenImporting_ThenTheNameShouldBeCorrect()
         {
-            var importer = new PliFileImporterExporter<Pump2D, Pump2D>
-            {
-                Mode = Feature2DImportExportMode.Import
-            };
-            Assert.AreEqual("Features from .pli(z) file", ((IFileImporter)importer).Name, "Name of the pli file importer for pumps is not correct");
+            var importer = new PliFileImporterExporter<Pump2D, Pump2D> {Mode = Feature2DImportExportMode.Import};
+            Assert.AreEqual("Features from .pli(z) file", ((IFileImporter) importer).Name, "Name of the pli file importer for pumps is not correct");
         }
 
         [Test]
         public void GivenAPliFileImporterExporter_WhenExporting_ThenTheNameShouldBeCorrect()
         {
-            var exporter = new PliFileImporterExporter<Pump2D, Pump2D>
-            {
-                Mode = Feature2DImportExportMode.Export
-            };
-            Assert.AreEqual("Features to .pli file", ((IFileExporter)exporter).Name, "Name of the pli file exporter for pumps is not correct");
+            var exporter = new PliFileImporterExporter<Pump2D, Pump2D> {Mode = Feature2DImportExportMode.Export};
+            Assert.AreEqual("Features to .pli file", ((IFileExporter) exporter).Name, "Name of the pli file exporter for pumps is not correct");
         }
 
         [Test]
@@ -193,9 +168,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [Category(TestCategory.DataAccess)]
         public void GivenFmModel_WhenLoadingPlizFileAndWritingIt_ThenFileContentsAreTheSame()
         {
-            var filePath = TestHelper.CreateLocalCopy(TestHelper.GetTestFilePath("HydroAreaCollection/TwoFixedWeirs_fxw.pliz"));
-            var testDir = Path.GetDirectoryName(filePath);
-            var exportToFilePath = Path.Combine(testDir, "ExportedFixedWeirs_fxw.pliz");
+            string filePath = TestHelper.CreateLocalCopy(TestHelper.GetTestFilePath("HydroAreaCollection/TwoFixedWeirs_fxw.pliz"));
+            string testDir = Path.GetDirectoryName(filePath);
+            string exportToFilePath = Path.Combine(testDir, "ExportedFixedWeirs_fxw.pliz");
             try
             {
                 var fmModel = new WaterFlowFMModel();
@@ -234,14 +209,45 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             afterImportAction.VerifyAllExpectations();
         }
 
+        private static bool BitmapsAreEqual(Bitmap bitmap1, Bitmap bitmap2)
+        {
+            if (bitmap1 == null || bitmap2 == null)
+            {
+                return false;
+            }
+
+            if (Equals(bitmap1, bitmap2))
+            {
+                return true;
+            }
+
+            if (!bitmap1.Size.Equals(bitmap2.Size) || !bitmap1.PixelFormat.Equals(bitmap2.PixelFormat))
+            {
+                return false;
+            }
+
+            for (var x = 0; x < bitmap1.Width; x++)
+            {
+                for (var y = 0; y < bitmap1.Height; y++)
+                {
+                    if (!bitmap1.GetPixel(x, y).Equals(bitmap2.GetPixel(x, y)))
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            return true;
+        }
+
         private static void CheckImportedFixedWeirs(WaterFlowFMModel fmModel)
         {
-            var fixedWeirs = fmModel.Area.FixedWeirs;
+            IEventedList<FixedWeir> fixedWeirs = fmModel.Area.FixedWeirs;
             Assert.That(fixedWeirs.Count, Is.EqualTo(2));
 
             // Check first weir's properties
-            var firstWeir = fixedWeirs[0];
-            var attributes = firstWeir.Attributes;
+            FixedWeir firstWeir = fixedWeirs[0];
+            IFeatureAttributeCollection attributes = firstWeir.Attributes;
             attributes.CheckDoubleValuesForColumn("Column3", 1.2, 6.4);
             attributes.CheckDoubleValuesForColumn("Column4", 3.5, 3.0);
             attributes.CheckDoubleValuesForColumn("Column5", 3.2, 3.3);
@@ -252,7 +258,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             attributes.CheckStringValuesForColumn("WeirType", "V", "V");
 
             // Check second weir's properties
-            var secondWeir = fixedWeirs[1];
+            FixedWeir secondWeir = fixedWeirs[1];
             attributes = secondWeir.Attributes;
             attributes.CheckDoubleValuesForColumn("Column3", 1.7, 6.1);
             attributes.CheckDoubleValuesForColumn("Column4", 4.5, 4.0);

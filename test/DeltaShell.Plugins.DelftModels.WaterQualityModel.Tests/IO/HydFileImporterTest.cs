@@ -1,12 +1,15 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects;
+using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.SubstanceProcessLibrary;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.IO;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.ObservationAreas;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Utils;
 using DeltaShell.Plugins.SharpMapGis.SpatialOperations;
+using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Grids;
@@ -24,7 +27,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         public void GetTimesForNonexistentFileTest()
         {
             // Setup
-            var filePath = TestHelper.GetTestFilePath("file does not exist");
+            string filePath = TestHelper.GetTestFilePath("file does not exist");
 
             using (var model = new WaterQualityModel())
             {
@@ -39,14 +42,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         [Category(TestCategory.DataAccess)]
         public void ImportHydFileOnTargetTest()
         {
-            var squareHydPath = TestHelper.GetTestFilePath(@"IO\square\square.hyd");
+            string squareHydPath = TestHelper.GetTestFilePath(@"IO\square\square.hyd");
 
             using (var model = new WaterQualityModel())
             {
-                var oldGrid = model.Grid;
+                UnstructuredGrid oldGrid = model.Grid;
 
                 var importer = new HydFileImporter();
-                var importedItem = importer.ImportItem(squareHydPath, model);
+                object importedItem = importer.ImportItem(squareHydPath, model);
 
                 Assert.AreSame(importedItem, model); // check that no new model was created by the importer
                 Assert.IsInstanceOf<HydFileData>(model.HydroData);
@@ -59,12 +62,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         [Category(TestCategory.DataAccess)]
         public void ImportHydFileNewModelTest()
         {
-            var squareHydPath = TestHelper.GetTestFilePath(@"IO\square\square.hyd");
+            string squareHydPath = TestHelper.GetTestFilePath(@"IO\square\square.hyd");
 
             Func<string> getWorkingDirectoryPathFunc = () => Path.Combine(Path.GetTempPath(), "test");
             var importer = new HydFileImporter(getWorkingDirectoryPathFunc);
 
-            var importedItem = importer.ImportItem(squareHydPath);
+            object importedItem = importer.ImportItem(squareHydPath);
 
             Assert.IsNotNull(importedItem);
             Assert.IsInstanceOf<WaterQualityModel>(importedItem);
@@ -81,11 +84,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         [Category(TestCategory.DataAccess)]
         public void ImportGridTest()
         {
-            var squareHydPath = TestHelper.GetTestFilePath(@"IO\square\square.hyd");
+            string squareHydPath = TestHelper.GetTestFilePath(@"IO\square\square.hyd");
 
             using (var model = new WaterQualityModel())
             {
-                var oldGrid = model.Grid;
+                UnstructuredGrid oldGrid = model.Grid;
 
                 new HydFileImporter().ImportItem(squareHydPath, model);
 
@@ -99,7 +102,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         [Category(TestCategory.DataAccess)]
         public void ImportTimesTest()
         {
-            var squareHydPath = TestHelper.GetTestFilePath(@"IO\square\square.hyd");
+            string squareHydPath = TestHelper.GetTestFilePath(@"IO\square\square.hyd");
 
             using (var model = new WaterQualityModel())
             {
@@ -134,11 +137,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         [Category(TestCategory.Slow)]
         public void ImportBathymetryTest()
         {
-            var hydPath = TestHelper.GetTestFilePath(@"IO\real\uni3d.hyd");
+            string hydPath = TestHelper.GetTestFilePath(@"IO\real\uni3d.hyd");
 
             using (var model = new WaterQualityModel())
             {
-                var oldBathymetry = model.Bathymetry;
+                UnstructuredGridVertexCoverage oldBathymetry = model.Bathymetry;
 
                 new HydFileImporter().ImportItem(hydPath, model);
 
@@ -154,7 +157,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         [Category(TestCategory.Slow)]
         public void ImportBoundariesTest()
         {
-            var hydPath = TestHelper.GetTestFilePath(@"IO\real\uni3d.hyd");
+            string hydPath = TestHelper.GetTestFilePath(@"IO\real\uni3d.hyd");
 
             using (var model = new WaterQualityModel())
             {
@@ -168,18 +171,30 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
 
                 var expectedBoundaries = new[]
                 {
-                    "sea_002.pli", "sacra_001.pli", "sanjoa_001.pli",
-                    "yolo_001.pli", "CC.pli", "tracy.pli"
+                    "sea_002.pli",
+                    "sacra_001.pli",
+                    "sanjoa_001.pli",
+                    "yolo_001.pli",
+                    "CC.pli",
+                    "tracy.pli"
                 };
                 CollectionAssert.AreEqual(expectedBoundaries, model.Boundaries.Select(b => b.Name).ToArray());
 
                 Assert.IsNotNull(model.BoundaryNodeIds);
                 Assert.AreEqual(model.Boundaries.Count, model.BoundaryNodeIds.Count);
 
-                var expectedNumberOfBoundaryNodeIds = new[] { 105, 4, 3, 24, 1, 1 };
+                var expectedNumberOfBoundaryNodeIds = new[]
+                {
+                    105,
+                    4,
+                    3,
+                    24,
+                    1,
+                    1
+                };
                 for (var i = 0; i < model.Boundaries.Count; i++)
                 {
-                    var ids = model.BoundaryNodeIds[model.Boundaries[i]];
+                    int[] ids = model.BoundaryNodeIds[model.Boundaries[i]];
                     Assert.AreEqual(expectedNumberOfBoundaryNodeIds[i], ids.Length);
                 }
             }
@@ -190,7 +205,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         [Category(TestCategory.Slow)]
         public void ImportBulkDataTest()
         {
-            var hydPath = TestHelper.GetTestFilePath(@"IO\real\uni3d.hyd");
+            string hydPath = TestHelper.GetTestFilePath(@"IO\real\uni3d.hyd");
 
             using (var model = new WaterQualityModel())
             {
@@ -214,7 +229,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         [Category(TestCategory.Slow)]
         public void ImportMetaDataTest()
         {
-            var hydPath = TestHelper.GetTestFilePath(@"IO\real\uni3d.hyd");
+            string hydPath = TestHelper.GetTestFilePath(@"IO\real\uni3d.hyd");
 
             using (var model = new WaterQualityModel())
             {
@@ -230,9 +245,27 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
                 Assert.AreEqual(63814, model.NumberOfDelwaqSegmentsPerHydrodynamicLayer);
                 Assert.AreEqual(7, model.NumberOfWaqSegmentLayers);
                 Assert.AreEqual(7, model.HydrodynamicLayerThicknesses.Length);
-                CollectionAssert.AreEqual(new[] { 0.142857, 0.142857, 0.142857, 0.142857, 0.142857, 0.142857, 0.142857 }, model.HydrodynamicLayerThicknesses);
+                CollectionAssert.AreEqual(new[]
+                {
+                    0.142857,
+                    0.142857,
+                    0.142857,
+                    0.142857,
+                    0.142857,
+                    0.142857,
+                    0.142857
+                }, model.HydrodynamicLayerThicknesses);
                 Assert.AreEqual(7, model.NumberOfHydrodynamicLayersPerWaqLayer.Length);
-                CollectionAssert.AreEqual(new[] { 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0 }, model.NumberOfHydrodynamicLayersPerWaqLayer);
+                CollectionAssert.AreEqual(new[]
+                {
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0
+                }, model.NumberOfHydrodynamicLayersPerWaqLayer);
             }
         }
 
@@ -241,15 +274,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         public void PerformImportOfRealisticModelInTheOrderOfSeconds()
         {
             // Setup
-            var hydPath = TestHelper.GetTestFilePath(@"IO\real\uni3d.hyd");
+            string hydPath = TestHelper.GetTestFilePath(@"IO\real\uni3d.hyd");
 
             using (var model = new WaterQualityModel())
             {
                 // Call & Assert
-                TestHelper.AssertIsFasterThan(5000, () =>
-                {
-                    new HydFileImporter().ImportItem(hydPath, model);
-                }, rankHddAccess: false, warmUp: true);
+                TestHelper.AssertIsFasterThan(5000, () => { new HydFileImporter().ImportItem(hydPath, model); }, false, true);
             }
         }
 
@@ -258,8 +288,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         public void ImportFromSquareModelAndThenFromRealModelShouldNotUpdateAllData()
         {
             // Setup
-            var commonFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), "IO");
-            var hydPath = Path.Combine(commonFilePath, "square", "square.hyd");
+            string commonFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), "IO");
+            string hydPath = Path.Combine(commonFilePath, "square", "square.hyd");
 
             using (var model = new WaterQualityModel())
             {
@@ -268,55 +298,40 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
 
                 const HydroDynamicModelType expectedModelType = HydroDynamicModelType.Unstructured;
                 Assert.AreEqual(expectedModelType, model.ModelType,
-                    "Test precondition: Checking that the model type between two imports does not change.");
+                                "Test precondition: Checking that the model type between two imports does not change.");
 
                 const double observationHeight = 1.1;
                 model.ObservationPoints.AddRange(new[]
                 {
-                    new WaterQualityObservationPoint
-                    {
-                        Z = observationHeight
-                    },
-                    new WaterQualityObservationPoint
-                    {
-                        Z = observationHeight
-                    },
-                    new WaterQualityObservationPoint
-                    {
-                        Z = observationHeight
-                    }
+                    new WaterQualityObservationPoint {Z = observationHeight},
+                    new WaterQualityObservationPoint {Z = observationHeight},
+                    new WaterQualityObservationPoint {Z = observationHeight}
                 });
                 const double loadHeight = 2.2;
                 model.Loads.AddRange(new[]
                 {
-                    new WaterQualityLoad
-                    {
-                        Z = loadHeight
-                    },
-                    new WaterQualityLoad
-                    {
-                        Z = loadHeight
-                    },
+                    new WaterQualityLoad {Z = loadHeight},
+                    new WaterQualityLoad {Z = loadHeight},
                 });
 
                 new SubFileImporter().Import(model.SubstanceProcessLibrary,
-                    Path.Combine(commonFilePath, "03d_Tewor2003.sub"));
+                                             Path.Combine(commonFilePath, "03d_Tewor2003.sub"));
                 Assert.AreEqual(5, model.InitialConditions.Count,
-                    "Precondition: read sub-file ");
-                var oldSubstances = model.SubstanceProcessLibrary.Substances.ToArray();
-                var oldProcesses = model.SubstanceProcessLibrary.Processes.ToArray();
-                var oldParameters = model.SubstanceProcessLibrary.Parameters.ToArray();
-                var oldOutputParameters = model.SubstanceProcessLibrary.OutputParameters.ToArray();
-                var oldInactiveSubstances = model.SubstanceProcessLibrary.InActiveSubstances.ToArray();
+                                "Precondition: read sub-file ");
+                WaterQualitySubstance[] oldSubstances = model.SubstanceProcessLibrary.Substances.ToArray();
+                WaterQualityProcess[] oldProcesses = model.SubstanceProcessLibrary.Processes.ToArray();
+                WaterQualityParameter[] oldParameters = model.SubstanceProcessLibrary.Parameters.ToArray();
+                WaterQualityOutputParameter[] oldOutputParameters = model.SubstanceProcessLibrary.OutputParameters.ToArray();
+                WaterQualitySubstance[] oldInactiveSubstances = model.SubstanceProcessLibrary.InActiveSubstances.ToArray();
 
                 const double constantDefaultValue = 9d;
                 ChangeFirstInitialConditionToGridCoverage(model, constantDefaultValue);
 
-                var oldStartTime = model.StartTime;
-                var oldTimeStep = model.TimeStep;
-                var oldStopTime = model.StopTime;
-                var oldGrid = model.Grid;
-                var oldBoundaries = model.Boundaries.Select(b => b.Name).ToArray();
+                DateTime oldStartTime = model.StartTime;
+                TimeSpan oldTimeStep = model.TimeStep;
+                DateTime oldStopTime = model.StopTime;
+                UnstructuredGrid oldGrid = model.Grid;
+                string[] oldBoundaries = model.Boundaries.Select(b => b.Name).ToArray();
 
                 // Call, 2nd import:
                 hydPath = Path.Combine(commonFilePath, "real", "uni3d.hyd");
@@ -324,7 +339,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
                 new HydFileImporter().ImportItem(hydPath, model);
 
                 Assert.AreEqual(expectedModelType, model.ModelType,
-                    "Test precondition: Checking that the model type between two imports does not change.");
+                                "Test precondition: Checking that the model type between two imports does not change.");
 
                 // Assert
                 // Properties that should be updated:
@@ -333,18 +348,18 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
                 //Assert.AreEqual(new DateTime(2015,2,5, 12,14,22), hydroDataImporter.GetTimeStamp()); // TODO: Hoe kan een Timestamp te verklaren zijn op een IHydroData interface..?
                 Assert.AreNotSame(oldGrid, model.Grid);
                 Assert.AreSame(model.Grid, ((UnstructuredGridCellCoverage) model.InitialConditions[0]).Grid);
-                foreach (var oldBoundary in oldBoundaries)
+                foreach (string oldBoundary in oldBoundaries)
                 {
                     CollectionAssert.DoesNotContain(model.Boundaries.Select(b => b.Name), oldBoundary,
-                        "There are not boundaries shared between these two hyd-files; Therefore the old ones should not be kept.");
+                                                    "There are not boundaries shared between these two hyd-files; Therefore the old ones should not be kept.");
                 }
 
-                foreach (var observationPoint in model.ObservationPoints)
+                foreach (WaterQualityObservationPoint observationPoint in model.ObservationPoints)
                 {
                     Assert.AreEqual(observationHeight, observationPoint.Z);
                 }
 
-                foreach (var load in model.Loads)
+                foreach (WaterQualityLoad load in model.Loads)
                 {
                     Assert.AreEqual(loadHeight, load.Z);
                 }
@@ -370,7 +385,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         public void ImportWithVerticalDiffusionSetsModelUseAdditionalHydrodynamicVerticalDiffusionTrue()
         {
             // Setup
-            var hydPath = TestHelper.GetTestFilePath(@"IO\real\uni3d.hyd");
+            string hydPath = TestHelper.GetTestFilePath(@"IO\real\uni3d.hyd");
 
             using (var model = new WaterQualityModel())
             {
@@ -390,7 +405,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         public void ImportWithoutVerticalDiffusionSetsModelUseAdditionalHydrodynamicVerticalDiffusionFalse()
         {
             // Setup
-            var hydPath = TestHelper.GetTestFilePath(@"IO\FMHyd2D\waqtest.hyd");
+            string hydPath = TestHelper.GetTestFilePath(@"IO\FMHyd2D\waqtest.hyd");
 
             using (var model = new WaterQualityModel())
             {
@@ -410,8 +425,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         public void Import_ChangeVerticalDiffusion_Import_ShouldNotChange()
         {
             // Setup
-            var commonFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), "IO");
-            var hydPath = Path.Combine(commonFilePath, "real", "uni3d.hyd");
+            string commonFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), "IO");
+            string hydPath = Path.Combine(commonFilePath, "real", "uni3d.hyd");
 
             // 1st import:
             using (var model = new WaterQualityModel())
@@ -436,7 +451,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         public void Import_ImportAgainWithoutVerticalDiffusion_ShouldNotChange()
         {
             // Setup
-            var hydPath = TestHelper.GetTestFilePath(@"IO\real\uni3d.hyd");
+            string hydPath = TestHelper.GetTestFilePath(@"IO\real\uni3d.hyd");
             hydPath = TestHelper.CreateLocalCopy(hydPath);
 
             using (var model = new WaterQualityModel())
@@ -448,7 +463,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
                 Assert.IsTrue(model.UseAdditionalHydrodynamicVerticalDiffusion);
 
                 // 2nd import:
-                var newHydPath = TestHelper.GetTestFilePath(@"IO\square\square.hyd");
+                string newHydPath = TestHelper.GetTestFilePath(@"IO\square\square.hyd");
                 newHydPath = TestHelper.CreateLocalCopy(newHydPath);
                 new HydFileImporter().ImportItem(newHydPath, model);
 
@@ -473,7 +488,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
                 model.TimeStep = timeStep;
 
                 // Import item with value set to true:
-                var hydPath = TestHelper.GetTestFilePath(@"IO\real\uni3d.hyd");
+                string hydPath = TestHelper.GetTestFilePath(@"IO\real\uni3d.hyd");
                 var importedItem = (WaterQualityModel) new HydFileImporter {SkipImportTimers = true}.ImportItem(hydPath, model);
                 Assert.IsNotNull(importedItem);
 
@@ -499,8 +514,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
                 model.TimeStep = timeStep;
 
                 // Import item with value set to true:
-                var hydPath = TestHelper.GetTestFilePath(@"IO\real\uni3d.hyd");
-                var importedItem = (WaterQualityModel)new HydFileImporter { SkipImportTimers = false }.ImportItem(hydPath, model);
+                string hydPath = TestHelper.GetTestFilePath(@"IO\real\uni3d.hyd");
+                var importedItem = (WaterQualityModel) new HydFileImporter {SkipImportTimers = false}.ImportItem(hydPath, model);
                 Assert.IsNotNull(importedItem);
 
                 // The timers should have been overriden with the ones from the hydFile.
@@ -513,9 +528,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         [Test]
         public void Import_WAQ_Model_OverExistingModel_Overwrites_Timers()
         {
-            var testFilePath = TestHelper.GetTestFilePath(@"ValidWaqModels\FM\FlowFM.hyd");
+            string testFilePath = TestHelper.GetTestFilePath(@"ValidWaqModels\FM\FlowFM.hyd");
 
-            using (var waqModel = new WaterQualityModel { Name = "Model 1" })
+            using (var waqModel = new WaterQualityModel {Name = "Model 1"})
             using (var secondModel = new WaterQualityModel())
             {
                 // Import the second model on top of waqmodel.
@@ -531,42 +546,42 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
                 Assert.AreEqual(waqModel.TimeStep, secondModel.TimeStep);
             }
         }
-      
+
         // TODO TOOLS-21848: Create test to verify some boundaries with data are retained, but have their ID's updated
 
         private static void AssertFirstInitialConditionHasSetValueSpatialOperation(WaterQualityModel model, double defaultValueForCoverage)
         {
             var coverage = (UnstructuredGridCellCoverage) model.InitialConditions[0];
-            var dataItem = model.AllDataItems.FirstOrDefault(
+            IDataItem dataItem = model.AllDataItems.FirstOrDefault(
                 di => Equals(di.Value, coverage));
 
             Assert.IsNotNull(dataItem, "dataitem should exist.");
             Assert.IsNotNull(dataItem.ValueConverter, "data item should have value converter.");
             Assert.IsInstanceOf<SpatialOperationSetValueConverter>(dataItem.ValueConverter,
-                "ValueConverter should be a SpatialOperationSetValueConverter.");
+                                                                   "ValueConverter should be a SpatialOperationSetValueConverter.");
 
             var vc = (SpatialOperationSetValueConverter) dataItem.ValueConverter;
 
             Assert.AreEqual(1, vc.SpatialOperationSet.Operations.Count,
-                "One spatial operation should be applied by syncing.");
+                            "One spatial operation should be applied by syncing.");
             Assert.IsInstanceOf<SetValueOperation>(vc.SpatialOperationSet.Operations[0],
-                "Applied spatial operation should be a set-value operation.");
-            var operation = (SetValueOperation)vc.SpatialOperationSet.Operations[0];
+                                                   "Applied spatial operation should be a set-value operation.");
+            var operation = (SetValueOperation) vc.SpatialOperationSet.Operations[0];
             Assert.AreEqual(defaultValueForCoverage, operation.Value,
-                "Applied set-value operation should be the default value of the original function.");
+                            "Applied set-value operation should be the default value of the original function.");
 
             Assert.AreEqual(1, operation.Mask.Provider.GetFeatureCount(),
-                "One polygon feature expected.");
+                            "One polygon feature expected.");
 
-            var firstFeature = operation.Mask.Provider.GetFeature(0);
+            IFeature firstFeature = operation.Mask.Provider.GetFeature(0);
             Assert.IsInstanceOf<IPolygon>(firstFeature.Geometry);
 
-            var polygonMaskGeometry = (IPolygon)firstFeature.Geometry;
+            var polygonMaskGeometry = (IPolygon) firstFeature.Geometry;
             Assert.AreEqual(5, polygonMaskGeometry.NumPoints,
-                "Expected square loop, which needs 5 points to close.");
+                            "Expected square loop, which needs 5 points to close.");
 
-            var extend = coverage.Grid.GetExtents();
-            var expectedCoordinates = new []
+            Envelope extend = coverage.Grid.GetExtents();
+            var expectedCoordinates = new[]
             {
                 new Coordinate(extend.MinX, extend.MinY),
                 new Coordinate(extend.MaxX, extend.MinY),
@@ -574,7 +589,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
                 new Coordinate(extend.MinX, extend.MaxY),
                 new Coordinate(extend.MinX, extend.MinY) // To close the loop of the mask!
             };
-            var coordinates = polygonMaskGeometry.Coordinates;
+            Coordinate[] coordinates = polygonMaskGeometry.Coordinates;
 
             CollectionAssert.AreEqual(expectedCoordinates, coordinates);
         }
@@ -585,9 +600,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
 
             // This call triggers WaterQualityModelSyncExtensions to create a spatial operation.
             FunctionTypeCreator.ReplaceFunctionUsingCreator(model.InitialConditions,
-                model.InitialConditions[0],
-                FunctionTypeCreatorFactory.CreateUnstructuredGridCoverageCreator(),
-                model);
+                                                            model.InitialConditions[0],
+                                                            FunctionTypeCreatorFactory.CreateUnstructuredGridCoverageCreator(),
+                                                            model);
 
             // Checking that everything indeed is in the expected state:
             AssertFirstInitialConditionHasSetValueSpatialOperation(model, defaultValueForCoverage);

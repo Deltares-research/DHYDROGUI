@@ -25,8 +25,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.GeometricDefinitions
         }
 
         [Test]
-        [TestCase(true,  false, "x")]
-        [TestCase(false, true,  "y")]
+        [TestCase(true, false, "x")]
+        [TestCase(false, true, "y")]
         public void Constructor_CallingNegativeX_ThrowsArgumentOutOfRangeException(bool IsNegativeX, bool IsNegativeY, string expectedParamName)
         {
             // Setup 
@@ -57,7 +57,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.GeometricDefinitions
             // Assert
             Assert.That(resultX, Is.EqualTo(expectedX));
             Assert.That(resultY, Is.EqualTo(expectedY));
-            
         }
     }
 }

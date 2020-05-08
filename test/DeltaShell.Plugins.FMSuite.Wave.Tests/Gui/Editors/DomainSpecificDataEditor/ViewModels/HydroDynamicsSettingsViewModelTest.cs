@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using DelftTools.TestUtils;
 using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.DomainSpecificDataEditor.ViewModels;
 using NUnit.Framework;

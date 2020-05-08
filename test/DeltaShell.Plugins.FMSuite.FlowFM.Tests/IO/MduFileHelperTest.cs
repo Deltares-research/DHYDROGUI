@@ -31,9 +31,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         {
             mocks.VerifyAll();
         }
-        
+
         #region UpdateFeatures
-        
+
         [Test]
         [TestCase("")]
         [TestCase(null)]
@@ -69,7 +69,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         #endregion
 
         #region GetUniqueFilePathsForWindows
-        
+
         [Test]
         [TestCase("MyGroupName", FileConstants.ObsPointFileExtension, "mygroupname", "MYGROUPNAME", "MyGroupName")]
         [TestCase("MyGroupName", ".xyn", "mygroupname", "MYGROUPNAME", "MyGroupName")]
@@ -77,19 +77,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [TestCase("myDir/MyGroupName", ".xyn", "myDir/mygroupname", "mydir/MYGROUPNAME", "MYDIR/MyGroupName")]
         public void GivenAnExistingFileAndFeaturesWithTheSameGroupName_WhenGettingUniqueFilePaths_ThenReturnExistingFileName(string existingGroupName, string extension, params string[] featureGroupNames)
         {
-            var mduFilePath = string.Concat(Path.GetTempFileName(), ".mdu");
-            var mduDir = Path.GetDirectoryName(mduFilePath);
-            var existingFilePath = Path.Combine(mduDir, existingGroupName + extension);
+            string mduFilePath = string.Concat(Path.GetTempFileName(), ".mdu");
+            string mduDir = Path.GetDirectoryName(mduFilePath);
+            string existingFilePath = Path.Combine(mduDir, existingGroupName + extension);
 
             // create file with name
             Directory.CreateDirectory(Path.GetDirectoryName(existingFilePath));
-            var fileStream = File.Create(existingFilePath);
+            FileStream fileStream = File.Create(existingFilePath);
             fileStream.Close();
 
-            var name1 = featureGroupNames[0] + extension;
-            var name2 = featureGroupNames[1] + extension;
-            var name3 = featureGroupNames[2] + extension;
-            var features = SetupFeatures(name1, name2, name3);
+            string name1 = featureGroupNames[0] + extension;
+            string name2 = featureGroupNames[1] + extension;
+            string name3 = featureGroupNames[2] + extension;
+            List<IGroupableFeature> features = SetupFeatures(name1, name2, name3);
 
             string[] uniqueGroupNames = null;
             TestHelper.AssertAtLeastOneLogMessagesContains(() => uniqueGroupNames = MduFileHelper.GetUniqueFilePathsForWindows(mduFilePath, features, FileConstants.ObsPointFileExtension), "already exists in the project folder. Features in group");
@@ -105,7 +105,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
             File.Delete(existingFilePath);
         }
-        
+
         [Test]
         [TestCase("mygroupname", "MYGROUPNAME", "MyGroupName")]
         [TestCase("mygroupname", "MyGroupName", "MYGROUPNAME")]
@@ -121,8 +121,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [TestCase(@"MYDIR\mygroupname", @"MyDir/MYGROUPNAME", @"mydir/MyGroupName")]
         public void GivenFeaturesWithSameGroupName_WhenGettingUniqueFilePaths_ThenReturnOneFilePath(string firstName, string secondName, string thirdName)
         {
-            var mduFilePath = string.Concat(Path.GetTempFileName(), ".mdu");
-            var features = SetupFeatures(firstName, secondName, thirdName);
+            string mduFilePath = string.Concat(Path.GetTempFileName(), ".mdu");
+            List<IGroupableFeature> features = SetupFeatures(firstName, secondName, thirdName);
 
             string[] uniqueGroupNames = null;
             TestHelper.AssertAtLeastOneLogMessagesContains(() => uniqueGroupNames = MduFileHelper.GetUniqueFilePathsForWindows(mduFilePath, features, FileConstants.ObsPointFileExtension), "Features with group name");
@@ -140,10 +140,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [Test]
         public void GivenFeaturesWithDifferentGroupName_WhenGettingUniqueFilePaths_ThenReturnDifferentPaths()
         {
-            var mduFilePath = string.Concat(Path.GetTempFileName(), ".mdu");
-            var features = SetupFeatures("name1", "name2", "name3");
+            string mduFilePath = string.Concat(Path.GetTempFileName(), ".mdu");
+            List<IGroupableFeature> features = SetupFeatures("name1", "name2", "name3");
 
-            var uniqueGroupNames = MduFileHelper.GetUniqueFilePathsForWindows(mduFilePath, features, FileConstants.ObsPointFileExtension);
+            string[] uniqueGroupNames = MduFileHelper.GetUniqueFilePathsForWindows(mduFilePath, features, FileConstants.ObsPointFileExtension);
 
             // Check results
             Assert.That(uniqueGroupNames.Length, Is.EqualTo(3));
@@ -160,10 +160,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [Test]
         public void GivenFeaturesWhereSomeHaveTheSameGroupName_WhenGettingUniqueFilePaths_ThenReturnTheAppropriateAmountOfFilePaths()
         {
-            var mduFilePath = string.Concat(Path.GetTempFileName(), ".mdu");
-            var features = SetupFeatures("name1", "name2", "name1");
+            string mduFilePath = string.Concat(Path.GetTempFileName(), ".mdu");
+            List<IGroupableFeature> features = SetupFeatures("name1", "name2", "name1");
 
-            var uniqueGroupNames = MduFileHelper.GetUniqueFilePathsForWindows(mduFilePath, features, FileConstants.ObsPointFileExtension);
+            string[] uniqueGroupNames = MduFileHelper.GetUniqueFilePathsForWindows(mduFilePath, features, FileConstants.ObsPointFileExtension);
 
             // Check results
             Assert.That(uniqueGroupNames.Length, Is.EqualTo(2));
@@ -176,15 +176,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         private const string MyCustomExtension = "_something.lala";
+
         [TestCase("name1" + FileConstants.FixedWeirPliFileExtension, "name2" + FileConstants.FixedWeirPliFileExtension, "name3" + FileConstants.FixedWeirPliFileExtension)]
         [TestCase("name1", "name2", "name3")]
         [TestCase("name1" + FileConstants.FixedWeirPliFileExtension, "name2", "name3" + FileConstants.FixedWeirPliFileExtension)]
         [TestCase("name1" + MyCustomExtension, "name2" + MyCustomExtension, "name3" + MyCustomExtension)]
         public void GivenFeatureWithAlternativeExtensionInGroupName_WhenGettingUniqueFilePaths_ThenGroupNameDoesNotChange(string featureName1, string featureName2, string featureName3)
         {
-            var mduFilePath = string.Concat(Path.GetTempFileName(), ".mdu");
-            var features = SetupFeatures(featureName1, featureName2, featureName3);
-            var uniqueGroupNames = MduFileHelper.GetUniqueFilePathsForWindows(mduFilePath, features, FileConstants.FixedWeirPliFileExtension, FileConstants.FixedWeirPliFileExtension, MyCustomExtension);
+            string mduFilePath = string.Concat(Path.GetTempFileName(), ".mdu");
+            List<IGroupableFeature> features = SetupFeatures(featureName1, featureName2, featureName3);
+            string[] uniqueGroupNames = MduFileHelper.GetUniqueFilePathsForWindows(mduFilePath, features, FileConstants.FixedWeirPliFileExtension, FileConstants.FixedWeirPliFileExtension, MyCustomExtension);
 
             // Check results
             Assert.That(uniqueGroupNames.Length, Is.EqualTo(3));
@@ -220,15 +221,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
                 // When
                 void TestAction() => MduFileHelper.CopyFilesToMduFolderIfNeeded(
-                    new[] { sourceFilePath },
+                    new[]
+                    {
+                        sourceFilePath
+                    },
                     mduFilePath,
                     modelDefinition,
                     propertyKey);
 
                 // Then
-                var renderedInfoMessages = TestHelper.GetAllRenderedMessages(TestAction, Level.Info);
-                var expectedMessage = string.Format(Resources.MduFile_CopyFilesToProjectFolderIfNeeded_CopiedFileFrom_0_to_1_BecauseTheFileExistedOutsideOfTheProjectFolder,
-                                                    sourceFilePath, targetFilePath, modelDefinition.ModelName);
+                IEnumerable<string> renderedInfoMessages = TestHelper.GetAllRenderedMessages(TestAction, Level.Info);
+                string expectedMessage = string.Format(Resources.MduFile_CopyFilesToProjectFolderIfNeeded_CopiedFileFrom_0_to_1_BecauseTheFileExistedOutsideOfTheProjectFolder,
+                                                       sourceFilePath, targetFilePath, modelDefinition.ModelName);
                 Assert.That(renderedInfoMessages.Contains(expectedMessage));
                 Assert.That(File.Exists(sourceFilePath),
                             "When importing an mdu, original referenced files should not be deleted.");
@@ -263,15 +267,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
                 // When
                 void TestAction() => MduFileHelper.CopyFilesToMduFolderIfNeeded(
-                    new[] { sourceFilePath },
+                    new[]
+                    {
+                        sourceFilePath
+                    },
                     mduFilePath,
                     modelDefinition,
                     propertyKey);
 
                 // Then
-                var renderedLogMessages = TestHelper.GetAllRenderedMessages(TestAction, Level.Info);
-                var expectedMessage = string.Format(Resources.MduFile_CopyFilesToProjectFolderIfNeeded_CopyingFileOverwritesFileThatAtNewLocation,
-                                                    sourceFilePath, targetFilePath);
+                IEnumerable<string> renderedLogMessages = TestHelper.GetAllRenderedMessages(TestAction, Level.Info);
+                string expectedMessage = string.Format(Resources.MduFile_CopyFilesToProjectFolderIfNeeded_CopyingFileOverwritesFileThatAtNewLocation,
+                                                       sourceFilePath, targetFilePath);
                 Assert.That(renderedLogMessages.Contains(expectedMessage));
                 Assert.That(File.Exists(sourceFilePath),
                             "When importing an mdu, original referenced files should not be deleted.");
@@ -315,24 +322,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             mocks.ReplayAll();
 
             // Get unique file paths and check for logging message
-            return new List<IGroupableFeature>() {feature1, feature2, feature3};
+            return new List<IGroupableFeature>()
+            {
+                feature1,
+                feature2,
+                feature3
+            };
         }
 
         private static void UpdateFeaturesAndCheckResult(string initialGroupName, bool initialIsDefaultGroupValue, string expectedUpdatedGroupName, bool expectedIsDefaultGroupValue, string extension)
         {
-            var features = new List<GroupableFeature2DPoint>()
-            {
-                WaterFlowFMMduFileTestHelper.GetNewGroupableFeature2DPoint(initialGroupName, "MyName", initialIsDefaultGroupValue)
-            };
+            var features = new List<GroupableFeature2DPoint>() {WaterFlowFMMduFileTestHelper.GetNewGroupableFeature2DPoint(initialGroupName, "MyName", initialIsDefaultGroupValue)};
             MduFileHelper.UpdateFeatures(features, extension, defaultGroupName);
 
             Assert.That(features.Count, Is.EqualTo(1));
-            var updatedFeature = features.FirstOrDefault();
+            GroupableFeature2DPoint updatedFeature = features.FirstOrDefault();
             Assert.That(updatedFeature.GroupName, Is.EqualTo(expectedUpdatedGroupName));
             Assert.That(updatedFeature.IsDefaultGroup, Is.EqualTo(expectedIsDefaultGroupValue));
         }
 
         #endregion
-        
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using DelftTools.Functions;
 using DelftTools.Hydro;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.Model;
 using NUnit.Framework;
@@ -14,21 +15,21 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.DataObjects.Mod
         public void TestCreateWaterQualityObservationVariableOutputWithObservationVariable()
         {
             var waterQualityObservationVariableOutput = new WaterQualityObservationVariableOutput(new List<DelftTools.Utils.Tuple<string, string>>
-                {
-                    new DelftTools.Utils.Tuple<string, string>("Substance", "mg/l"),
-                    new DelftTools.Utils.Tuple<string, string>("Output parameter", "")
-                }) { ObservationVariable = new ObservationPoint { Name = "O1" } };
+            {
+                new DelftTools.Utils.Tuple<string, string>("Substance", "mg/l"),
+                new DelftTools.Utils.Tuple<string, string>("Output parameter", "")
+            }) {ObservationVariable = new ObservationPoint {Name = "O1"}};
 
             Assert.AreEqual("O1", waterQualityObservationVariableOutput.Name);
             Assert.AreEqual("O1", waterQualityObservationVariableOutput.ToString());
             Assert.AreEqual(2, waterQualityObservationVariableOutput.TimeSeriesList.Count());
 
-            var timeSeries1 = waterQualityObservationVariableOutput.TimeSeriesList.ElementAt(0);
+            TimeSeries timeSeries1 = waterQualityObservationVariableOutput.TimeSeriesList.ElementAt(0);
             Assert.AreEqual("Substance", timeSeries1.Name);
             Assert.AreEqual(1, timeSeries1.Components.Count);
             Assert.AreEqual("mg/l", timeSeries1.Components[0].Unit.Name);
 
-            var timeSeries2 = waterQualityObservationVariableOutput.TimeSeriesList.ElementAt(1);
+            TimeSeries timeSeries2 = waterQualityObservationVariableOutput.TimeSeriesList.ElementAt(1);
             Assert.AreEqual("Output parameter", timeSeries2.Name);
             Assert.AreEqual(1, timeSeries2.Components.Count);
             Assert.AreEqual("", timeSeries2.Components[0].Unit.Name);
@@ -38,21 +39,21 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.DataObjects.Mod
         public void TestCreateWaterQualityObservationVariableOutputWithoutObservationVariable()
         {
             var waterQualityObservationVariableOutput = new WaterQualityObservationVariableOutput(new List<DelftTools.Utils.Tuple<string, string>>
-                {
-                    new DelftTools.Utils.Tuple<string, string>("Substance", "mg/l"),
-                    new DelftTools.Utils.Tuple<string, string>("Output parameter", "")
-                }) { Name = "O1" };
+            {
+                new DelftTools.Utils.Tuple<string, string>("Substance", "mg/l"),
+                new DelftTools.Utils.Tuple<string, string>("Output parameter", "")
+            }) {Name = "O1"};
 
             Assert.AreEqual("O1", waterQualityObservationVariableOutput.Name);
             Assert.AreEqual("O1", waterQualityObservationVariableOutput.ToString());
             Assert.AreEqual(2, waterQualityObservationVariableOutput.TimeSeriesList.Count());
 
-            var timeSeries1 = waterQualityObservationVariableOutput.TimeSeriesList.ElementAt(0);
+            TimeSeries timeSeries1 = waterQualityObservationVariableOutput.TimeSeriesList.ElementAt(0);
             Assert.AreEqual("Substance", timeSeries1.Name);
             Assert.AreEqual(1, timeSeries1.Components.Count);
             Assert.AreEqual("mg/l", timeSeries1.Components[0].Unit.Name);
 
-            var timeSeries2 = waterQualityObservationVariableOutput.TimeSeriesList.ElementAt(1);
+            TimeSeries timeSeries2 = waterQualityObservationVariableOutput.TimeSeriesList.ElementAt(1);
             Assert.AreEqual("Output parameter", timeSeries2.Name);
             Assert.AreEqual(1, timeSeries2.Components.Count);
             Assert.AreEqual("", timeSeries2.Components[0].Unit.Name);
@@ -75,7 +76,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.DataObjects.Mod
 
             Assert.AreEqual(1, waterQualityObservationVariableOutput.TimeSeriesList.Count());
 
-            var timeSeries = waterQualityObservationVariableOutput.TimeSeriesList.ElementAt(0);
+            TimeSeries timeSeries = waterQualityObservationVariableOutput.TimeSeriesList.ElementAt(0);
             Assert.AreEqual("Substance 1", timeSeries.Name);
             Assert.AreEqual(1, timeSeries.Components.Count);
             Assert.AreEqual("mg/l", timeSeries.Components[0].Unit.Name);
@@ -124,7 +125,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.DataObjects.Mod
         [Test]
         public void TestRemoveTimeSeries()
         {
-            var waterQualityObservationVariableOutput = new WaterQualityObservationVariableOutput(new List<DelftTools.Utils.Tuple<string, string>> { new DelftTools.Utils.Tuple<string, string>("Substance", "mg/l") }); 
+            var waterQualityObservationVariableOutput = new WaterQualityObservationVariableOutput(new List<DelftTools.Utils.Tuple<string, string>> {new DelftTools.Utils.Tuple<string, string>("Substance", "mg/l")});
 
             // Remove a non existing time series => no exception should be thrown
             waterQualityObservationVariableOutput.RemoveTimeSeries("Test");
@@ -141,10 +142,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.DataObjects.Mod
         public void TestCloneWaterQualityObservationVariableOutputWithObservationVariable()
         {
             var waterQualityObservationVariableOutput = new WaterQualityObservationVariableOutput(new List<DelftTools.Utils.Tuple<string, string>>
-                {
-                    new DelftTools.Utils.Tuple<string, string>("Substance", "mg/l"),
-                    new DelftTools.Utils.Tuple<string, string>("Output parameter", "")
-                }) { ObservationVariable = new ObservationPoint { Name = "O1" } };
+            {
+                new DelftTools.Utils.Tuple<string, string>("Substance", "mg/l"),
+                new DelftTools.Utils.Tuple<string, string>("Output parameter", "")
+            }) {ObservationVariable = new ObservationPoint {Name = "O1"}};
 
             var clone = waterQualityObservationVariableOutput.Clone() as WaterQualityObservationVariableOutput;
 
@@ -161,10 +162,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.DataObjects.Mod
         public void TestCloneWaterQualityObservationVariableOutputWithoutObservationVariable()
         {
             var waterQualityObservationVariableOutput = new WaterQualityObservationVariableOutput(new List<DelftTools.Utils.Tuple<string, string>>
-                {
-                    new DelftTools.Utils.Tuple<string, string>("Substance", "mg/l"),
-                    new DelftTools.Utils.Tuple<string, string>("Output parameter", "")
-                }) { Name = "O1" };
+            {
+                new DelftTools.Utils.Tuple<string, string>("Substance", "mg/l"),
+                new DelftTools.Utils.Tuple<string, string>("Output parameter", "")
+            }) {Name = "O1"};
 
             var clone = waterQualityObservationVariableOutput.Clone() as WaterQualityObservationVariableOutput;
 

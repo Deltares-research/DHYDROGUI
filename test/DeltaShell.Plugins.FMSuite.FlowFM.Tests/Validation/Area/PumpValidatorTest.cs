@@ -21,15 +21,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
             var pump = new Pump2D
             {
                 Name = "myPump",
-                Geometry = new LineString(new[] { new Coordinate(1, 1), new Coordinate(2, 2) })
+                Geometry = new LineString(new[]
+                {
+                    new Coordinate(1, 1),
+                    new Coordinate(2, 2)
+                })
             };
-            var pumps = new List<Pump2D> { pump };
+            var pumps = new List<Pump2D> {pump};
 
             // When
-            var validationIssues = pumps.Validate(envelope, DateTime.Now, DateTime.Now);
+            IEnumerable<ValidationIssue> validationIssues = pumps.Validate(envelope, DateTime.Now, DateTime.Now);
 
             // Then
-            var validationWarnings =
+            ValidationIssue[] validationWarnings =
                 validationIssues.Where(issue => issue.Severity == ValidationSeverity.Warning).ToArray();
             Assert.That(validationWarnings.Length, Is.EqualTo(0));
         }
@@ -43,19 +47,23 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
             {
                 Name = "myPump",
                 // Pump geometry is far outside of grid extent
-                Geometry = new LineString(new[] { new Coordinate(10, 10), new Coordinate(20, 20) })
+                Geometry = new LineString(new[]
+                {
+                    new Coordinate(10, 10),
+                    new Coordinate(20, 20)
+                })
             };
-            var pumps = new List<Pump2D> { pump };
+            var pumps = new List<Pump2D> {pump};
 
             // When
-            var validationIssues = pumps.Validate(envelope, DateTime.Now, DateTime.Now);
+            IEnumerable<ValidationIssue> validationIssues = pumps.Validate(envelope, DateTime.Now, DateTime.Now);
 
             // Then
-            var validationWarnings =
+            ValidationIssue[] validationWarnings =
                 validationIssues.Where(issue => issue.Severity == ValidationSeverity.Warning).ToArray();
             Assert.That(validationWarnings.Length, Is.EqualTo(1));
 
-            var expectedMessage = $"pump '{pump.Name}' not within grid extent";
+            string expectedMessage = $"pump '{pump.Name}' not within grid extent";
             Assert.That(validationWarnings[0].Message, Is.EqualTo(expectedMessage));
         }
 
@@ -67,20 +75,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
             var pump = new Pump2D
             {
                 Name = "myPump",
-                Geometry = new LineString(new[] { new Coordinate(1, 1), new Coordinate(2, 2) }),
+                Geometry = new LineString(new[]
+                {
+                    new Coordinate(1, 1),
+                    new Coordinate(2, 2)
+                }),
                 Capacity = -2.0
             };
-            var pumps = new List<Pump2D> { pump };
+            var pumps = new List<Pump2D> {pump};
 
             // When
-            var validationIssues = pumps.Validate(envelope, DateTime.Now, DateTime.Now);
+            IEnumerable<ValidationIssue> validationIssues = pumps.Validate(envelope, DateTime.Now, DateTime.Now);
 
             // Then
-            var validationWarnings =
+            ValidationIssue[] validationWarnings =
                 validationIssues.Where(issue => issue.Severity == ValidationSeverity.Error).ToArray();
             Assert.That(validationWarnings.Length, Is.EqualTo(1));
 
-            var expectedMessage =
+            string expectedMessage =
                 $"pump '{pump.Name}': Capacity must be greater than or equal to 0.";
             Assert.That(validationWarnings[0].Message, Is.EqualTo(expectedMessage));
         }
@@ -93,22 +105,26 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
             var pump = new Pump2D
             {
                 Name = "myPump",
-                Geometry = new LineString(new[] { new Coordinate(1, 1), new Coordinate(2, 2) }),
+                Geometry = new LineString(new[]
+                {
+                    new Coordinate(1, 1),
+                    new Coordinate(2, 2)
+                }),
                 ControlDirection = PumpControlDirection.SuctionSideControl,
                 StartSuction = 1.0,
                 StopSuction = 2.0
             };
-            var pumps = new List<Pump2D> { pump };
+            var pumps = new List<Pump2D> {pump};
 
             // When
-            var validationIssues = pumps.Validate(envelope, DateTime.Now, DateTime.Now);
+            IEnumerable<ValidationIssue> validationIssues = pumps.Validate(envelope, DateTime.Now, DateTime.Now);
 
             // Then
-            var validationWarnings =
+            ValidationIssue[] validationWarnings =
                 validationIssues.Where(issue => issue.Severity == ValidationSeverity.Error).ToArray();
             Assert.That(validationWarnings.Length, Is.EqualTo(1));
 
-            var expectedMessage =
+            string expectedMessage =
                 $"pump '{pump.Name}': Suction start level must be greater than or equal to suction stop level.";
             Assert.That(validationWarnings[0].Message, Is.EqualTo(expectedMessage));
         }

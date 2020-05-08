@@ -43,7 +43,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
         public void GivenExistingDataAndToolsConfigFilesWithValidData_WhenReading_ThenListOfControlGroupsIsReturnedWithCorrectAmountOfRtcComponents()
         {
             // When
-            var controlGroups = dataAndToolsConfigReader.Read(validDataConfigFilePath, validToolsConfigFilePath, timeSpan);
+            IList<IControlGroup> controlGroups = dataAndToolsConfigReader.Read(validDataConfigFilePath, validToolsConfigFilePath, timeSpan);
 
             // Then
             Assert.NotNull(controlGroups, "List of controlgroups is not expected to be NULL after reading from file.");
@@ -63,11 +63,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
             Assert.That(!File.Exists(invalidDataConfigFilePath), $"Path '{invalidDataConfigFilePath}' was expected to not exist.");
 
             // When
-            var controlGroups = dataAndToolsConfigReader.Read(invalidDataConfigFilePath, validToolsConfigFilePath, timeSpan);
+            IList<IControlGroup> controlGroups = dataAndToolsConfigReader.Read(invalidDataConfigFilePath, validToolsConfigFilePath, timeSpan);
 
             // Then
             Assert.IsTrue(logHandler.LogMessagesTable.AllMessages.Any(m => m.Contains(invalidDataConfigFilePath)),
-                AssertMessage_CollectedLogMessagesDidNotContainExpectedMessage);
+                          AssertMessage_CollectedLogMessagesDidNotContainExpectedMessage);
             AssertNotNullAndEmpty(controlGroups);
         }
 
@@ -80,11 +80,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
             Assert.That(!File.Exists(invalidToolsConfigFilePath), $"Path '{invalidToolsConfigFilePath}' was expected to not exist.");
 
             // When
-            var controlGroups = dataAndToolsConfigReader.Read(validDataConfigFilePath, invalidToolsConfigFilePath, timeSpan);
+            IList<IControlGroup> controlGroups = dataAndToolsConfigReader.Read(validDataConfigFilePath, invalidToolsConfigFilePath, timeSpan);
 
             // Then
             Assert.IsTrue(logHandler.LogMessagesTable.AllMessages.Any(m => m.Contains(invalidToolsConfigFilePath)),
-                AssertMessage_CollectedLogMessagesDidNotContainExpectedMessage);
+                          AssertMessage_CollectedLogMessagesDidNotContainExpectedMessage);
             AssertNotNullAndEmpty(controlGroups);
         }
 
@@ -93,17 +93,17 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
         public void GivenExistingDataAndToolsConfigFilesWithValidDataWithoutControlGroups_WhenReading_ThenEmptyListOfControlGroupIsReturnedAndExpectedErrorsAreLogged()
         {
             // Given
-            var toolsConfigFilePath = Path.Combine(DirectoryPath, "rtcToolsConfig_NoControlGroups.xml");
+            string toolsConfigFilePath = Path.Combine(DirectoryPath, "rtcToolsConfig_NoControlGroups.xml");
             Assert.That(File.Exists(toolsConfigFilePath), $"Path '{toolsConfigFilePath}' was expected to exist.");
 
-            var expectedMessage = string.Format(Resources.RealTimeControlDataConfigXmlReader_Read_Could_not_read_control_groups_from_file___0___, toolsConfigFilePath);
+            string expectedMessage = string.Format(Resources.RealTimeControlDataConfigXmlReader_Read_Could_not_read_control_groups_from_file___0___, toolsConfigFilePath);
 
             // When
-            var controlGroups = dataAndToolsConfigReader.Read(validDataConfigFilePath, toolsConfigFilePath, timeSpan);
+            IList<IControlGroup> controlGroups = dataAndToolsConfigReader.Read(validDataConfigFilePath, toolsConfigFilePath, timeSpan);
 
             // Then
             Assert.IsTrue(logHandler.LogMessagesTable.AllMessages.Contains(expectedMessage),
-                AssertMessage_CollectedLogMessagesDidNotContainExpectedMessage);
+                          AssertMessage_CollectedLogMessagesDidNotContainExpectedMessage);
             AssertNotNullAndEmpty(controlGroups);
         }
 

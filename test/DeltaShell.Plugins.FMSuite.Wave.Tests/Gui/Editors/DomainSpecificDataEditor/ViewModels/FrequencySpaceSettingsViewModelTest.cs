@@ -1,5 +1,4 @@
-﻿using DelftTools.TestUtils;
-using DeltaShell.NGHS.IO.TestUtils;
+﻿using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.DomainSpecificDataEditor.ViewModels;
 using NUnit.Framework;
 
@@ -32,6 +31,34 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.DomainSpecificDataEd
             Assert.That(resultedValue, Is.EqualTo(value));
         }
 
+        [Test]
+        public void GetStartFrequency_ReturnsCorrectValue()
+        {
+            // Setup
+            const double value = 7;
+            domainData.FreqMin = value;
+
+            // Call
+            double resultedValue = viewModel.StartFrequency;
+
+            // Assert
+            Assert.That(resultedValue, Is.EqualTo(value));
+        }
+
+        [Test]
+        public void GetEndFrequency_ReturnsCorrectValue()
+        {
+            // Setup
+            const double value = 7;
+            domainData.FreqMax = value;
+
+            // Call
+            double resultedValue = viewModel.EndFrequency;
+
+            // Assert
+            Assert.That(resultedValue, Is.EqualTo(value));
+        }
+
         [TestCase(7, 0)]
         [TestCase(5, 1)]
         public void SetNrOfFrequencies_SetsCorrectPropertyValueOnModel(int setValue, int expectedPropertyChangedCount)
@@ -47,20 +74,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.DomainSpecificDataEd
             Assert.That(domainData.NFreq, Is.EqualTo(setValue));
         }
 
-        [Test]
-        public void GetStartFrequency_ReturnsCorrectValue()
-        {
-            // Setup
-            const double value = 7;
-            domainData.FreqMin = value;
-
-            // Call
-            double resultedValue = viewModel.StartFrequency;
-
-            // Assert
-            Assert.That(resultedValue, Is.EqualTo(value));
-        }
-
         [TestCase(7.5, 0)]
         [TestCase(5.5, 1)]
         public void SetStartFrequency_SetsCorrectPropertyValueOnModel(double setValue, int expectedPropertyChangedCount)
@@ -74,20 +87,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.DomainSpecificDataEd
             // Assert
             viewModel.AssertPropertyChangedFired(Call, expectedPropertyChangedCount, nameof(viewModel.StartFrequency));
             Assert.That(domainData.FreqMin, Is.EqualTo(setValue));
-        }
-
-        [Test]
-        public void GetEndFrequency_ReturnsCorrectValue()
-        {
-            // Setup
-            const double value = 7;
-            domainData.FreqMax = value;
-
-            // Call
-            double resultedValue = viewModel.EndFrequency;
-
-            // Assert
-            Assert.That(resultedValue, Is.EqualTo(value));
         }
 
         [TestCase(7.5, 0)]

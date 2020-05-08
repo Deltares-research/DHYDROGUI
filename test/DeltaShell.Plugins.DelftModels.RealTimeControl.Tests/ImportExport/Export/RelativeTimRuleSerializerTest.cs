@@ -14,12 +14,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport.Expo
     [TestFixture]
     public class RelativeTimRuleSerializerTest
     {
-        private static readonly XNamespace fns = "http://www.wldelft.nl/fews";
-
         private const string name = "Relative time rule";
-        private Output output;
         private const string outputParameterName = "output parameter";
         private const string outputName = "output name";
+        private static readonly XNamespace fns = "http://www.wldelft.nl/fews";
+        private Output output;
 
         private Function tableFunction;
 
@@ -326,12 +325,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport.Expo
             }
         }
 
-        #region TestHelpers        
+        #region TestHelpers
 
         /// <summary>
-        /// Assert the that control table element <paramref name="element" /> has the expected arg
-        /// value <paramref name="expectedAcfVal" /> and expected component value
-        /// <paramref name="expectedCompVal" />.
+        /// Assert the that control table element <paramref name="element"/> has the expected arg
+        /// value <paramref name="expectedAcfVal"/> and expected component value
+        /// <paramref name="expectedCompVal"/>.
         /// </summary>
         /// <param name="element"> The element to be checked. </param>
         /// <param name="expectedArgVal"> The expected argument value. </param>

@@ -15,19 +15,18 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport.Expo
     [TestFixture]
     public class IntervalRuleSerializerTest
     {
-        private static readonly XNamespace fns = "http://www.wldelft.nl/fews";
-
         private const string ruleName = "INTERVAL RULE";
         private const string parameterName = "parameter name";
         private const string inputFeatureName = "element name";
-        private Setting setting;
-        private Input input;
-        private Output output;
         private const double settingBelow = 0.0;
         private const double settingAbove = 1.0;
         private const double settingMaxSpeed = 0.1;
         private const double deadbandAroundSetpoint = 0.4;
         private const string outputFeatureName = "output";
+        private static readonly XNamespace fns = "http://www.wldelft.nl/fews";
+        private Setting setting;
+        private Input input;
+        private Output output;
 
         [SetUp]
         public void SetUp()
@@ -74,28 +73,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport.Expo
 
             //Validate
             Assert.IsTrue(intervalRule.Validate().IsValid);
-        }
-
-        [TestCase(IntervalRule.IntervalRuleIntervalType.Fixed, 1.23)]
-        [TestCase(IntervalRule.IntervalRuleIntervalType.Variable, 5.0)]
-        public void GivenAnIntervalRuleWithAFixedOrVariableSetPoint_WhenCallingTheTimeSeries_ThenTheseShouldBeGenerated(
-            IntervalRule.IntervalRuleIntervalType intervalRuleIntervalType, double expectedValue)
-        {
-            IntervalRule intervalRule = CreateIntervalRule();
-            intervalRule.IntervalType = intervalRuleIntervalType;
-
-            DateTime start = DateTime.Now;
-            DateTime stop = start.Add(new TimeSpan(3, 0, 0));
-            var step = new TimeSpan(1, 0, 0);
-
-            var serializer = new IntervalRuleSerializer(intervalRule);
-
-            IXmlTimeSeries constantValueTimeSeries =
-                serializer.XmlImportTimeSeries("prefix", start, stop, step).FirstOrDefault();
-            Assert.IsNotNull(constantValueTimeSeries);
-            Assert.AreEqual(2, constantValueTimeSeries.TimeSeries.Time.Values.Count);
-            Assert.AreEqual(expectedValue, constantValueTimeSeries.TimeSeries[constantValueTimeSeries.StartTime]);
-            Assert.AreEqual(expectedValue, constantValueTimeSeries.TimeSeries[constantValueTimeSeries.EndTime]);
         }
 
         [Test]
@@ -153,6 +130,28 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport.Expo
 
             Assert.AreEqual(OriginXmlIntervalTypeVariableDeadbandTypeRelative(),
                             serializer.ToXml(fns, "").Single().ToString(SaveOptions.DisableFormatting));
+        }
+
+        [TestCase(IntervalRule.IntervalRuleIntervalType.Fixed, 1.23)]
+        [TestCase(IntervalRule.IntervalRuleIntervalType.Variable, 5.0)]
+        public void GivenAnIntervalRuleWithAFixedOrVariableSetPoint_WhenCallingTheTimeSeries_ThenTheseShouldBeGenerated(
+            IntervalRule.IntervalRuleIntervalType intervalRuleIntervalType, double expectedValue)
+        {
+            IntervalRule intervalRule = CreateIntervalRule();
+            intervalRule.IntervalType = intervalRuleIntervalType;
+
+            DateTime start = DateTime.Now;
+            DateTime stop = start.Add(new TimeSpan(3, 0, 0));
+            var step = new TimeSpan(1, 0, 0);
+
+            var serializer = new IntervalRuleSerializer(intervalRule);
+
+            IXmlTimeSeries constantValueTimeSeries =
+                serializer.XmlImportTimeSeries("prefix", start, stop, step).FirstOrDefault();
+            Assert.IsNotNull(constantValueTimeSeries);
+            Assert.AreEqual(2, constantValueTimeSeries.TimeSeries.Time.Values.Count);
+            Assert.AreEqual(expectedValue, constantValueTimeSeries.TimeSeries[constantValueTimeSeries.StartTime]);
+            Assert.AreEqual(expectedValue, constantValueTimeSeries.TimeSeries[constantValueTimeSeries.EndTime]);
         }
 
         private static string OriginXmlIntervalTypeFixedDeadbandTypeAbsolute()

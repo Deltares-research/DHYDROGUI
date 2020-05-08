@@ -635,7 +635,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             mediator.Received(1).AnnounceSelectedSupportPointDataChanged(supportPoint);
         }
 
-
         [Test]
         public void AddDefaultParameters_SupportPointNotSelected_OnlyAnnounceSupportPointsDataChanged()
         {

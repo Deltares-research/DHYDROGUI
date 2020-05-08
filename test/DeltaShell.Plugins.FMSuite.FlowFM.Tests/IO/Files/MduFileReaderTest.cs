@@ -171,22 +171,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files
             ReadWithAssert(fileContent, definition =>
             {
                 WaterFlowFMProperty property = definition.GetModelProperty("DryPointsFile");
-                AssertPropertyValues(property, "geometry", new List<string> { "myPoints1_dry.pol", "myPoints2_dry.pol" }, 
+                AssertPropertyValues(property, "geometry", new List<string>
+                                     {
+                                         "myPoints1_dry.pol",
+                                         "myPoints2_dry.pol"
+                                     },
                                      "Dry points file *.xyz (third column dummy z values), or dry areas polygon file *.pol (third column 1/-1: inside/outside)");
             });
-        }
-
-        private IEnumerable<string> GetMultiValuedPropertiesFileContents()
-        {
-            yield return "[Geometry]"
-                         + Environment.NewLine
-                         + "DryPointsFile = myPoints1_dry.pol myPoints2_dry.pol # Dry points files";
-
-            yield return "[Geometry]"
-                         + Environment.NewLine
-                         + @"DryPointsFile = myPoints1_dry.pol \"
-                         + Environment.NewLine
-                         + "myPoints2_dry.pol # Dry points files";
         }
 
         [Test]
@@ -233,13 +224,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files
             });
         }
 
-        private static void AssertPropertyValues(WaterFlowFMProperty property, string categoryName, object propertyValue, string propertyComment)
-        {
-            Assert.That(property.PropertyDefinition.FileCategoryName, Is.EqualTo(categoryName));
-            Assert.That(property.Value, Is.EqualTo(propertyValue));
-            Assert.That(property.PropertyDefinition.Description, Is.EqualTo(propertyComment));
-        }
-
         [Test]
         public void Read_HdamPropertyInFile_ThenPropertyIsNotAddedToModelDefinition()
         {
@@ -267,10 +251,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files
 
                 WaterFlowFMProperty property = definition.GetModelProperty("GridEnclosureFile");
                 Assert.That(property.PropertyDefinition.FileCategoryName, Is.EqualTo("geometry"));
-                Assert.That(property.Value, Is.EqualTo(new List<string>
-                {
-                    "enclosures_enc.pol"
-                }));
+                Assert.That(property.Value, Is.EqualTo(new List<string> {"enclosures_enc.pol"}));
                 Assert.That(property.PropertyDefinition.Description, Is.EqualTo("Enclosure polygon file *.pol (third column 1/-1: inside/outside)"));
             });
         }
@@ -289,25 +270,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files
             });
         }
 
-        private static void ReadWithAssert(string fileContent, Action<WaterFlowFMModelDefinition> assertAction)
-        {
-            // Setup
-            var definition = new WaterFlowFMModelDefinition();
-            var stream = new MemoryStream(Encoding.ASCII.GetBytes(fileContent));
-
-            // Call
-            MduFileReader.Read(stream, string.Empty, definition);
-
-            // Assert
-            assertAction(definition);
-        }
-
         [Test]
         public void Read_BadFormatForMduCategory_ThrowsFormatException()
         {
             // Setup
             const string tempFilePath = @"C:/myPath";
-            string fileContent = "[]" 
+            string fileContent = "[]"
                                  + Environment.NewLine
                                  + "Program = D-Flow FM # Program name";
 
@@ -348,6 +316,39 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files
                                      + Environment.NewLine
                                      + "- An unsupported option for *Turbulence model* has been detected and the default value will be used.";
             TestHelper.AssertLogMessageIsGenerated(Call, expectedMessage);
+        }
+
+        private IEnumerable<string> GetMultiValuedPropertiesFileContents()
+        {
+            yield return "[Geometry]"
+                         + Environment.NewLine
+                         + "DryPointsFile = myPoints1_dry.pol myPoints2_dry.pol # Dry points files";
+
+            yield return "[Geometry]"
+                         + Environment.NewLine
+                         + @"DryPointsFile = myPoints1_dry.pol \"
+                         + Environment.NewLine
+                         + "myPoints2_dry.pol # Dry points files";
+        }
+
+        private static void AssertPropertyValues(WaterFlowFMProperty property, string categoryName, object propertyValue, string propertyComment)
+        {
+            Assert.That(property.PropertyDefinition.FileCategoryName, Is.EqualTo(categoryName));
+            Assert.That(property.Value, Is.EqualTo(propertyValue));
+            Assert.That(property.PropertyDefinition.Description, Is.EqualTo(propertyComment));
+        }
+
+        private static void ReadWithAssert(string fileContent, Action<WaterFlowFMModelDefinition> assertAction)
+        {
+            // Setup
+            var definition = new WaterFlowFMModelDefinition();
+            var stream = new MemoryStream(Encoding.ASCII.GetBytes(fileContent));
+
+            // Call
+            MduFileReader.Read(stream, string.Empty, definition);
+
+            // Assert
+            assertAction(definition);
         }
     }
 }

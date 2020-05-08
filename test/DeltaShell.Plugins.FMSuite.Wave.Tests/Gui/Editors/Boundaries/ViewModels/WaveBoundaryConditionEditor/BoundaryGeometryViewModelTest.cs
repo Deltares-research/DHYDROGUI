@@ -18,18 +18,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
     [TestFixture]
     public class BoundaryGeometryViewModelTest
     {
-        private static SupportPointDataComponentViewModel GetDefaultDataComponentViewModel()
-        {
-            var conditionDefinition = Substitute.For<IWaveBoundaryConditionDefinition>();
-            conditionDefinition.DataComponent = 
-                new SpatiallyVaryingDataComponent<ConstantParameters<PowerDefinedSpreading>>();
-            var mediator = Substitute.For<IAnnounceSupportPointDataChanged>();
-
-            return new SupportPointDataComponentViewModel(conditionDefinition,
-                                                          Substitute.For<IForcingTypeDefinedParametersFactory>(),
-                                                          mediator);
-        }
-
         [Test]
         public void Constructor_SetsCorrectValues()
         {
@@ -47,7 +35,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             var configurator = Substitute.For<IGeometryPreviewMapConfigurator>();
 
             SupportPointDataComponentViewModel dataComponentViewModel = GetDefaultDataComponentViewModel();
-
 
             // Call
             var viewModel = new BoundaryGeometryViewModel(boundary,
@@ -104,6 +91,18 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(Call);
             Assert.That(exception.ParamName, Is.EqualTo("supportPointDataComponentViewModel"));
+        }
+
+        private static SupportPointDataComponentViewModel GetDefaultDataComponentViewModel()
+        {
+            var conditionDefinition = Substitute.For<IWaveBoundaryConditionDefinition>();
+            conditionDefinition.DataComponent =
+                new SpatiallyVaryingDataComponent<ConstantParameters<PowerDefinedSpreading>>();
+            var mediator = Substitute.For<IAnnounceSupportPointDataChanged>();
+
+            return new SupportPointDataComponentViewModel(conditionDefinition,
+                                                          Substitute.For<IForcingTypeDefinedParametersFactory>(),
+                                                          mediator);
         }
     }
 }

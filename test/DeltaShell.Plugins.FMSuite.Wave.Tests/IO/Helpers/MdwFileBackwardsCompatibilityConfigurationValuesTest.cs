@@ -9,10 +9,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers
     [TestFixture]
     public class MdwFileBackwardsCompatibilityConfigurationValuesTest : IDelftIniBackwardsCompatibilityConfigurationValuesTestFixture
     {
-        protected override IDelftIniBackwardsCompatibilityConfigurationValues GetConfigurationValues() =>
-            new MdwFileBackwardsCompatibilityConfigurationValues();
-
-        protected override IEnumerable<string> ObsoleteProperties { get; } = 
+        protected override IEnumerable<string> ObsoleteProperties { get; } =
             new HashSet<string>();
 
         protected override IEnumerable<KeyValuePair<string, string>> LegacyPropertyMapping { get; } =
@@ -20,5 +17,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers
 
         protected override IEnumerable<KeyValuePair<string, string>> LegacyCategoryMapping { get; } =
             new Dictionary<string, string>();
+
+        protected override IDelftIniBackwardsCompatibilityConfigurationValues GetConfigurationValues() =>
+            new MdwFileBackwardsCompatibilityConfigurationValues();
     }
 }

@@ -1,9 +1,13 @@
 ﻿using System.Linq;
+using DelftTools.Shell.Core;
+using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
 using DeltaShell.Gui;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.Data.NHibernate;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils;
+using DeltaShell.Plugins.DelftModels.RTCShapes.Shapes;
 using DeltaShell.Plugins.NetworkEditor;
 using DeltaShell.Plugins.ProjectExplorer;
 using DeltaShell.Plugins.SharpMapGis;
@@ -20,12 +24,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
         public void SaveAndLoadModelResultsInValidModel()
         {
             // next line is a hack to force loading of RTCShapes.dll
-            var shape = new RTCShapes.Shapes.InputItemShape();
+            var shape = new InputItemShape();
 
             var path = "SaveAndLoad.dsproj";
             using (var gui = new DeltaShellGui())
             {
-                var application = gui.Application;
+                IApplication application = gui.Application;
                 application.Plugins.Add(new NHibernateDaoApplicationPlugin());
                 application.Plugins.Add(new CommonToolsApplicationPlugin());
                 application.Plugins.Add(new SharpMapGisApplicationPlugin());
@@ -34,7 +38,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                 gui.Plugins.Add(new ProjectExplorerGuiPlugin());
                 gui.Run();
 
-                var project = application.Project;
+                Project project = application.Project;
 
                 project.RootFolder.Add(RealTimeControlTestHelper.GenerateTestModel(false));
 
@@ -44,11 +48,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                 application.OpenProject(path);
                 project = application.Project;
 
-                var model = project.RootFolder.Models.First();
+                IModel model = project.RootFolder.Models.First();
 
                 var retrievedModel = (RealTimeControlModel) model;
-                var retrievedControlGroup = retrievedModel.ControlGroups.First();
-                var resultControlGroup =
+                ControlGroup retrievedControlGroup = retrievedModel.ControlGroups.First();
+                ControlGroup resultControlGroup =
                     RealTimeControlTestHelper.GenerateTestModel(false).ControlGroups.First();
 
                 Assert.AreEqual(RealTimeControlTestHelper.GenerateTestModel(false).Name, retrievedModel.Name);

@@ -21,8 +21,8 @@ namespace DeltaShell.Plugins.DelftModels.RTCShapes.Tests
         [Test]
         public void ChangingPropertyChangeableObjectInTagChangesTextOfShape()
         {
-            var testObject = new NameableObject { Name = "test1" };
-            var shape = new InputItemShape { Tag = testObject };
+            var testObject = new NameableObject {Name = "test1"};
+            var shape = new InputItemShape {Tag = testObject};
             Assert.AreEqual(testObject.Name, shape.Title);
             testObject.Name = "test2";
             Assert.AreEqual(testObject.Name, shape.Title);
@@ -31,12 +31,15 @@ namespace DeltaShell.Plugins.DelftModels.RTCShapes.Tests
 
     public class NameableObject : INameable, INotifyPropertyChanged
     {
-        public event PropertyChangedEventHandler PropertyChanged;
-        
         private string name;
+        public event PropertyChangedEventHandler PropertyChanged;
+
         public string Name
         {
-            get { return name; }
+            get
+            {
+                return name;
+            }
             set
             {
                 name = value;
@@ -46,7 +49,7 @@ namespace DeltaShell.Plugins.DelftModels.RTCShapes.Tests
 
         private void OnPropertyChanged(string nm)
         {
-            var handler = PropertyChanged;
+            PropertyChangedEventHandler handler = PropertyChanged;
             if (handler != null)
             {
                 handler(this, new PropertyChangedEventArgs(nm));

@@ -12,16 +12,17 @@ using DelftTools.TestUtils;
 using DeltaShell.Gui;
 using DeltaShell.Plugins.FMSuite.Wave.Gui;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters;
+using DeltaShell.Plugins.FMSuite.Wave.IO;
 using DeltaShell.Plugins.FMSuite.Wave.IO.Importers;
 using DeltaShell.Plugins.SharpMapGis.Gui;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using NUnit.Framework;
 using Rhino.Mocks;
 using SharpMap;
+using SharpMap.Api.Layers;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
 {
-
     [TestFixture]
     public class WaveGuiPluginTest
     {
@@ -52,7 +53,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
                     SetStaticField<WaveGuiPlugin>(waveGuiPlugin, "getActiveMapViewFunc", myGetActiveMapViewFunc);
 
                     var waveModel = new WaveModel();
-                    
+
                     app.Expect(a => a.ActivityRunner).Return(runner).Repeat.Any();
 
                     var waveBoundaryFileImporter = new WaveBoundaryFileImporter();
@@ -61,7 +62,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
                     var waveModelFileImporter = new WaveModelFileImporter();
                     var modelFileImportActivity = mocks.Stub<FileImportActivity>(waveModelFileImporter, waveModel.OuterDomain);
 
-                    var waveGridFileImporter = new WaveGridFileImporter(waveGuiPlugin.Name, () => new[] { waveModel });
+                    var waveGridFileImporter = new WaveGridFileImporter(waveGuiPlugin.Name, () => new[]
+                    {
+                        waveModel
+                    });
                     var gridFileImportActivity = mocks.Stub<FileImportActivity>(waveGridFileImporter, waveModel.OuterDomain);
 
                     mocks.ReplayAll();
@@ -88,31 +92,17 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
             }
         }
 
-        private void SetStaticField<T>(object obj, string fieldName, object value)
-        {
-            var fieldInfo = typeof(T).GetField(fieldName, BindingFlags.Instance
-                                                          | BindingFlags.NonPublic | BindingFlags.Static
-                                                          | BindingFlags.Public | BindingFlags.FlattenHierarchy);
-
-            if (fieldInfo == null)
-            {
-                throw new ArgumentOutOfRangeException("fieldName");
-            }
-
-            fieldInfo.SetValue(obj, value);
-        }
-
         [Test]
         [Category(TestCategory.Integration)]
         [Category(TestCategory.Slow)]
         public void DoubleClickingOutputItemProjectShouldEnableMapLayer()
         {
-            var mdwPath = TestHelper.CreateLocalCopy(TestHelper.GetTestFilePath(@"outputMapView\Waves.mdw"));
+            string mdwPath = TestHelper.CreateLocalCopy(TestHelper.GetTestFilePath(@"outputMapView\Waves.mdw"));
 
             using (var gui = new DeltaShellGui())
             {
                 var guiPlugin = new WaveGuiPlugin();
-                gui.Plugins.Add(new SharpMapGisGuiPlugin());               
+                gui.Plugins.Add(new SharpMapGisGuiPlugin());
                 gui.Plugins.Add(guiPlugin);
 
                 gui.Run();
@@ -146,23 +136,37 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
             }
         }
 
+        private void SetStaticField<T>(object obj, string fieldName, object value)
+        {
+            FieldInfo fieldInfo = typeof(T).GetField(fieldName, BindingFlags.Instance
+                                                                | BindingFlags.NonPublic | BindingFlags.Static
+                                                                | BindingFlags.Public | BindingFlags.FlattenHierarchy);
+
+            if (fieldInfo == null)
+            {
+                throw new ArgumentOutOfRangeException("fieldName");
+            }
+
+            fieldInfo.SetValue(obj, value);
+        }
+
         private static void DoubleClickOutputItemAndAssertLayerIsOn(WaveModel model, IGui gui, GuiPlugin guiPlugin, string itemName)
         {
-            var wavmFileFunctionStoreNodePresenter = new WavmFileFunctionStoreNodePresenter(){GuiPlugin = guiPlugin};
-            var wavmFileFunctionStore = model.WavmFunctionStores.FirstOrDefault();
+            var wavmFileFunctionStoreNodePresenter = new WavmFileFunctionStoreNodePresenter() {GuiPlugin = guiPlugin};
+            WavmFileFunctionStore wavmFileFunctionStore = model.WavmFunctionStores.FirstOrDefault();
             Assert.NotNull(wavmFileFunctionStore);
 
-            var outputItem =
+            IDataItem outputItem =
                 wavmFileFunctionStoreNodePresenter.GetChildNodeObjects(wavmFileFunctionStore, null)
-                    .OfType<IDataItem>().FirstOrDefault(di => di.Name == itemName);
+                                                  .OfType<IDataItem>().FirstOrDefault(di => di.Name == itemName);
             Assert.NotNull(outputItem);
-                        
+
             //double click
             gui.Selection = outputItem;
             gui.CommandHandler.OpenViewForSelection(typeof(ProjectItemMapView));
             Assert.AreEqual(1, gui.DocumentViews.Count);
 
-            var activeMapView = WaveGuiPlugin.ActiveMapView;
+            MapView activeMapView = WaveGuiPlugin.ActiveMapView;
             Assert.NotNull(activeMapView);
 
             var visibleLayerNames = new List<string>
@@ -178,12 +182,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
                 itemName
             };
 
-            var allLayers = activeMapView.Map.GetAllLayers(false);
+            IEnumerable<ILayer> allLayers = activeMapView.Map.GetAllLayers(false);
 
-            var coverageLayer = allLayers.FirstOrDefault(l => l.Name == itemName);
+            ILayer coverageLayer = allLayers.FirstOrDefault(l => l.Name == itemName);
             Assert.IsNotNull(coverageLayer);
 
-            var otherLayers = allLayers.Where(l => !visibleLayerNames.Contains(l.Name));
+            IEnumerable<ILayer> otherLayers = allLayers.Where(l => !visibleLayerNames.Contains(l.Name));
             Assert.NotNull(otherLayers);
 
             Assert.IsTrue(coverageLayer.Visible);

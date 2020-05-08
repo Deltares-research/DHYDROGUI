@@ -33,11 +33,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
     {
         private DeltaShellApplication app;
 
-        private static string GetBendProfPath()
-        {
-            return TestHelper.GetTestFilePath(@"data\f04_bottomfriction\c016_2DConveyance_bend\input\bendprof.mdu");
-        }
-
         [SetUp]
         public void SetUp()
         {
@@ -936,24 +931,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             }
         }
 
-        private WaterFlowFMModel CreatedModelWithOutputInProject()
-        {
-            var model = new WaterFlowFMModel();
-
-            app.Project.RootFolder.Add(model);
-
-            model.Grid = UnstructuredGridTestHelper.GenerateRegularGrid(3, 3, 2, 2);
-            model.ReloadGrid(true, true);
-
-            Assert.AreEqual(0, model.Validate().AllErrors.Count(),
-                            "Precondition violated: there are errors in the model.");
-            app.RunActivity(model);
-            Assert.AreEqual(ActivityStatus.Cleaned, model.Status,
-                            "Precondition violated: model run failed.");
-
-            return model;
-        }
-
         [Test]
         [TestCase(@"c01_trench_VanRijn1993\test.mdu")]
         [TestCase(@"c02_trench_EH\test.mdu")]
@@ -1016,6 +993,29 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             WaterFlowFMModel loadedModel = app.Project.RootFolder.Models.OfType<WaterFlowFMModel>().FirstOrDefault();
 
             Assert.IsNotNull(loadedModel);
+        }
+
+        private static string GetBendProfPath()
+        {
+            return TestHelper.GetTestFilePath(@"data\f04_bottomfriction\c016_2DConveyance_bend\input\bendprof.mdu");
+        }
+
+        private WaterFlowFMModel CreatedModelWithOutputInProject()
+        {
+            var model = new WaterFlowFMModel();
+
+            app.Project.RootFolder.Add(model);
+
+            model.Grid = UnstructuredGridTestHelper.GenerateRegularGrid(3, 3, 2, 2);
+            model.ReloadGrid(true, true);
+
+            Assert.AreEqual(0, model.Validate().AllErrors.Count(),
+                            "Precondition violated: there are errors in the model.");
+            app.RunActivity(model);
+            Assert.AreEqual(ActivityStatus.Cleaned, model.Status,
+                            "Precondition violated: model run failed.");
+
+            return model;
         }
     }
 }

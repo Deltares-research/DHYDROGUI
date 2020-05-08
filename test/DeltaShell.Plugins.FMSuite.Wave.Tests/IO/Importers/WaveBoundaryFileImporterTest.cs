@@ -69,7 +69,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Importers
         [Test]
         public void TargetDataDirectory()
         {
-            string targetDataDirectory = "dir";
+            var targetDataDirectory = "dir";
             importer = new WaveBoundaryFileImporter {TargetDataDirectory = targetDataDirectory};
             Assert.AreEqual(targetDataDirectory, importer.TargetDataDirectory);
         }
@@ -87,7 +87,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Importers
         public void ProgressChangedTest()
         {
             importer = new WaveBoundaryFileImporter();
-            bool succes = false;
+            var succes = false;
             importer.ProgressChanged = (name, current, total) => { succes = true; };
             importer.ProgressChanged("Importing boundary file...", 1, 2);
             Assert.IsTrue(succes);

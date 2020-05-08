@@ -59,7 +59,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             var referenceDateTimeProvider = Substitute.For<IReferenceDateTimeProvider>();
 
             var generateSeries = new GenerateSeries(dialogHelper, referenceDateTimeProvider);
-            
+
             // Call | Assert
             void Call() => generateSeries.Execute<TSpreading>(null);
             var exception = Assert.Throws<ArgumentNullException>(Call);
@@ -97,13 +97,50 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             }
         }
 
+        [Test]
+        [TestCaseSource(nameof(GetExecuteGenerateTimeSeriesData))]
+        public void Execute_GeneratesTimeSeries(IWaveEnergyFunction<TSpreading> selectedFunction,
+                                                IWaveEnergyFunction<TSpreading>[] otherFunctions,
+                                                WaveSupportPointMode mode,
+                                                Action<IWaveEnergyFunction<TSpreading>, IEnumerable<IWaveEnergyFunction<TSpreading>>> assertAction)
+        {
+            // Setup
+            using (var timeSeriesDialog = new TimeSeriesGeneratorDialog() {ApplyOnAccept = false})
+            {
+                var referenceTimeProvider = Substitute.For<IReferenceDateTimeProvider>();
+
+                timeSeriesDialog.SetData(null,
+                                         DateTime.Today,
+                                         DateTime.Today + TimeSpan.FromDays(1),
+                                         TimeSpan.FromHours(1));
+
+                timeSeriesDialog.DialogResult = DialogResult.OK;
+
+                var dialogHelper = Substitute.For<IGenerateSeriesDialogHelper>();
+                dialogHelper.GetTimeSeriesGeneratorResponse(Arg.Any<DateTime>(),
+                                                            Arg.Any<DateTime>(),
+                                                            Arg.Any<TimeSpan>())
+                            .Returns(timeSeriesDialog);
+                dialogHelper.GetSupportPointSelectionMode()
+                            .Returns(mode);
+
+                var generateSeries = new GenerateSeries(dialogHelper, referenceTimeProvider);
+
+                // Call
+                generateSeries.Execute(selectedFunction, otherFunctions);
+
+                // Assert
+                assertAction.Invoke(selectedFunction, otherFunctions);
+            }
+        }
+
         private static void VerifyNotCalled(IWaveEnergyFunction<TSpreading> functionMock)
         {
-                IVariable<DateTime> _0 = functionMock.DidNotReceiveWithAnyArgs().TimeArgument;
-                IVariable<double> _1 = functionMock.DidNotReceiveWithAnyArgs().SpreadingComponent;
-                IVariable<double> _2 = functionMock.DidNotReceiveWithAnyArgs().PeriodComponent;
-                IVariable<double> _3 = functionMock.DidNotReceiveWithAnyArgs().DirectionComponent;
-                IVariable<double> _4 = functionMock.DidNotReceiveWithAnyArgs().HeightComponent;
+            IVariable<DateTime> _0 = functionMock.DidNotReceiveWithAnyArgs().TimeArgument;
+            IVariable<double> _1 = functionMock.DidNotReceiveWithAnyArgs().SpreadingComponent;
+            IVariable<double> _2 = functionMock.DidNotReceiveWithAnyArgs().PeriodComponent;
+            IVariable<double> _3 = functionMock.DidNotReceiveWithAnyArgs().DirectionComponent;
+            IVariable<double> _4 = functionMock.DidNotReceiveWithAnyArgs().HeightComponent;
         }
 
         private static void OnlySelectedCalledWithoutOthers(IWaveEnergyFunction<TSpreading> selectedFunction, IEnumerable<IWaveEnergyFunction<TSpreading>> others)
@@ -136,26 +173,26 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
                 VerifyNotCalled(waveEnergyFunction);
         }
 
-
         private static IEnumerable<TestCaseData> GetExecuteGenerateTimeSeriesData()
         {
-            yield return new TestCaseData(new WaveEnergyFunction<TSpreading>(), 
-                                          null, 
-                                          WaveSupportPointMode.SelectedActiveSupportPoint, 
-                                          (Action<IWaveEnergyFunction<TSpreading>, IEnumerable<IWaveEnergyFunction<TSpreading>>>)OnlySelectedCalledWithoutOthers);
+            yield return new TestCaseData(new WaveEnergyFunction<TSpreading>(),
+                                          null,
+                                          WaveSupportPointMode.SelectedActiveSupportPoint,
+                                          (Action<IWaveEnergyFunction<TSpreading>, IEnumerable<IWaveEnergyFunction<TSpreading>>>) OnlySelectedCalledWithoutOthers);
 
             IWaveEnergyFunction<TSpreading>[] GetOtherFunctionsNotCalled() =>
-            new [] {
-                Substitute.For<IWaveEnergyFunction<TSpreading>>(),
-                Substitute.For<IWaveEnergyFunction<TSpreading>>(),
-                Substitute.For<IWaveEnergyFunction<TSpreading>>(),
-                Substitute.For<IWaveEnergyFunction<TSpreading>>(),
-            };
+                new[]
+                {
+                    Substitute.For<IWaveEnergyFunction<TSpreading>>(),
+                    Substitute.For<IWaveEnergyFunction<TSpreading>>(),
+                    Substitute.For<IWaveEnergyFunction<TSpreading>>(),
+                    Substitute.For<IWaveEnergyFunction<TSpreading>>(),
+                };
 
-            yield return new TestCaseData(new WaveEnergyFunction<TSpreading>(), 
-                                          GetOtherFunctionsNotCalled(), 
-                                          WaveSupportPointMode.SelectedActiveSupportPoint, 
-                                          (Action<IWaveEnergyFunction<TSpreading>, IEnumerable<IWaveEnergyFunction<TSpreading>>>)OnlySelectedCalled);
+            yield return new TestCaseData(new WaveEnergyFunction<TSpreading>(),
+                                          GetOtherFunctionsNotCalled(),
+                                          WaveSupportPointMode.SelectedActiveSupportPoint,
+                                          (Action<IWaveEnergyFunction<TSpreading>, IEnumerable<IWaveEnergyFunction<TSpreading>>>) OnlySelectedCalled);
 
             IWaveEnergyFunction<TSpreading>[] othersCalled =
             {
@@ -165,53 +202,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
                 new WaveEnergyFunction<TSpreading>(),
             };
 
-            yield return new TestCaseData(new WaveEnergyFunction<TSpreading>(), 
-                                          othersCalled, 
-                                          WaveSupportPointMode.AllActiveSupportPoints, 
-                                          (Action<IWaveEnergyFunction<TSpreading>, IEnumerable<IWaveEnergyFunction<TSpreading>>>)AllCalled);
+            yield return new TestCaseData(new WaveEnergyFunction<TSpreading>(),
+                                          othersCalled,
+                                          WaveSupportPointMode.AllActiveSupportPoints,
+                                          (Action<IWaveEnergyFunction<TSpreading>, IEnumerable<IWaveEnergyFunction<TSpreading>>>) AllCalled);
 
-            yield return new TestCaseData(Substitute.For<IWaveEnergyFunction<TSpreading>>(), 
-                                          GetOtherFunctionsNotCalled(), 
-                                          WaveSupportPointMode.NoSupportPoints, 
-                                          (Action<IWaveEnergyFunction<TSpreading>, IEnumerable<IWaveEnergyFunction<TSpreading>>>)NoCalled);
-        }
-
-        [Test]
-        [TestCaseSource(nameof(GetExecuteGenerateTimeSeriesData))]
-        public void Execute_GeneratesTimeSeries(IWaveEnergyFunction<TSpreading> selectedFunction, 
-                                                IWaveEnergyFunction<TSpreading>[] otherFunctions, 
-                                                WaveSupportPointMode mode, 
-                                                Action<IWaveEnergyFunction<TSpreading>, IEnumerable<IWaveEnergyFunction<TSpreading>>> assertAction)
-        {
-            // Setup
-            using (var timeSeriesDialog = new TimeSeriesGeneratorDialog() { ApplyOnAccept = false})
-            {
-                var referenceTimeProvider = Substitute.For<IReferenceDateTimeProvider>();
-
-                timeSeriesDialog.SetData(null, 
-                                         DateTime.Today, 
-                                         DateTime.Today + TimeSpan.FromDays(1), 
-                                         TimeSpan.FromHours(1));
-
-                timeSeriesDialog.DialogResult = DialogResult.OK;
-
-                var dialogHelper = Substitute.For<IGenerateSeriesDialogHelper>();
-                dialogHelper.GetTimeSeriesGeneratorResponse(Arg.Any<DateTime>(),
-                                                            Arg.Any<DateTime>(),
-                                                            Arg.Any<TimeSpan>())
-                            .Returns(timeSeriesDialog);
-                dialogHelper.GetSupportPointSelectionMode()
-                            .Returns(mode);
-
-                var generateSeries = new GenerateSeries(dialogHelper, referenceTimeProvider);
-
-
-                // Call
-                generateSeries.Execute(selectedFunction, otherFunctions);
-
-                // Assert
-                assertAction.Invoke(selectedFunction, otherFunctions);
-            }
+            yield return new TestCaseData(Substitute.For<IWaveEnergyFunction<TSpreading>>(),
+                                          GetOtherFunctionsNotCalled(),
+                                          WaveSupportPointMode.NoSupportPoints,
+                                          (Action<IWaveEnergyFunction<TSpreading>, IEnumerable<IWaveEnergyFunction<TSpreading>>>) NoCalled);
         }
     }
 }

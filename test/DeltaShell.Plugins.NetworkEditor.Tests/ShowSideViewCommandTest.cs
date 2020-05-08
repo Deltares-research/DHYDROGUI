@@ -31,11 +31,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
         public void GivenShowSideViewCommand_WhenExecutingTheCommand_ThenViewOpenedForCorrectData()
         {
             // Given
-            var snakeHydroNetwork = HydroNetworkHelper.GetSnakeHydroNetwork(1);
-            var route = RouteHelper.CreateRoute(new NetworkLocation(snakeHydroNetwork.Branches[0], 0),
-                new NetworkLocation(snakeHydroNetwork.Branches[0], 10));
+            IHydroNetwork snakeHydroNetwork = HydroNetworkHelper.GetSnakeHydroNetwork(1);
+            Route route = RouteHelper.CreateRoute(new NetworkLocation(snakeHydroNetwork.Branches[0], 0),
+                                                  new NetworkLocation(snakeHydroNetwork.Branches[0], 10));
 
-            var networkCoverageGroupLayer = new NetworkCoverageGroupLayer { Coverage = route };
+            var networkCoverageGroupLayer = new NetworkCoverageGroupLayer {Coverage = route};
 
             var documentViews = mocks.StrictMock<IViewList>();
             var guiCommandHandler = mocks.StrictMock<IGuiCommandHandler>();
@@ -57,10 +57,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
                 documentViews.Expect(dv => dv.ActiveView).Return(mapView);
                 mocks.ReplayAll();
 
-                var command = new ShowSideViewCommand
-                {
-                    Gui = pluginGui.Gui
-                };
+                var command = new ShowSideViewCommand {Gui = pluginGui.Gui};
 
                 mapView.MapControl.Tools.Add(hydroNetworkEditorMapTool);
 
@@ -89,19 +86,24 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
                 var guiCommandHandler = mocks.DynamicMock<IGuiCommandHandler>();
 
                 //create a route
-                var snakeHydroNetwork = HydroNetworkHelper.GetSnakeHydroNetwork(1);
-                var route = RouteHelper.CreateRoute(
+                IHydroNetwork snakeHydroNetwork = HydroNetworkHelper.GetSnakeHydroNetwork(1);
+                Route route = RouteHelper.CreateRoute(
                     new NetworkLocation(snakeHydroNetwork.Branches[0], 0),
                     new NetworkLocation(snakeHydroNetwork.Branches[0], 10));
-                var networkCoverageGroupLayer = new NetworkCoverageGroupLayer { Coverage = route };
+                var networkCoverageGroupLayer = new NetworkCoverageGroupLayer {Coverage = route};
 
-                var testModelWithHydroNetwork = new TestModelWithHydroNetwork
+                var testModelWithHydroNetwork = new TestModelWithHydroNetwork {HydroNetwork = (HydroNetwork) route.Network};
+
+                var addedCoverage = new NetworkCoverage
                 {
-                    HydroNetwork = (HydroNetwork) route.Network
+                    Network = route.Network,
+                    Name = "addedCoverage"
                 };
-
-                var addedCoverage = new NetworkCoverage { Network = route.Network, Name = "addedCoverage" };
-                var coverageInMapView = new NetworkCoverage { Network = route.Network, Name = "coverageInMapView" };
+                var coverageInMapView = new NetworkCoverage
+                {
+                    Network = route.Network,
+                    Name = "coverageInMapView"
+                };
                 //setup expectations
                 Expect.Call(hydroNetworkEditorMapTool.ActiveNetworkCoverageGroupLayer).Return(networkCoverageGroupLayer);
                 Expect.Call(documentViews.ActiveView).Return(mapView);
@@ -116,30 +118,36 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
                 //Expect.Call(() => sideViewDataBuilder.GetSideViewData(route, testModelWithHydroNetwork.WaterLevel, new[] { addedCoverage,coverageInMapView }, new[] { coverageInMapView }));
                 sideViewDataBuilder.GetSideViewDataFunction =
                     (theRoute, waterLevel, allCoverages, allFeatureCoverages, renderedCoverages) =>
+                    {
+                        Assert.AreEqual(route, theRoute);
+                        Assert.AreEqual(testModelWithHydroNetwork.WaterLevel, waterLevel);
+                        Assert.AreEqual(new[]
                         {
-                            Assert.AreEqual(route, theRoute);
-                            Assert.AreEqual(testModelWithHydroNetwork.WaterLevel, waterLevel);
-                            Assert.AreEqual(new[] { addedCoverage, coverageInMapView }, allCoverages.ToArray());
-                            Assert.AreEqual(new[] { coverageInMapView }, renderedCoverages.ToArray());
-                            //just return a dummy for now
-                            return null;
-                        };
+                            addedCoverage,
+                            coverageInMapView
+                        }, allCoverages.ToArray());
+                        Assert.AreEqual(new[]
+                        {
+                            coverageInMapView
+                        }, renderedCoverages.ToArray());
+                        //just return a dummy for now
+                        return null;
+                    };
 
                 //get in on..
                 mocks.ReplayAll();
                 var command = new ShowSideViewCommand
-                    {
-                        Gui = pluginGui.Gui,
-                        //SideViewDataBuilder = sideViewDataBuilder
-                    };
-
+                {
+                    Gui = pluginGui.Gui,
+                    //SideViewDataBuilder = sideViewDataBuilder
+                };
 
                 mapView.MapControl.Tools.Add(hydroNetworkEditorMapTool);
                 project.RootFolder.Add(testModelWithHydroNetwork);
 
                 //add a group layer
 
-                var coverageGroupLayer = new NetworkCoverageGroupLayer { NetworkCoverage = coverageInMapView };
+                var coverageGroupLayer = new NetworkCoverageGroupLayer {NetworkCoverage = coverageInMapView};
                 mapView.Map.Layers.Add(coverageGroupLayer);
 
                 //this one should be added to allcoverages of the sideviewdata.
@@ -156,6 +164,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
 
     //need this hand-rolled te check calls to sideviewdatabuilder ...can't get rhino to the arguments correctly.
     public delegate TResult Func5<T1, T2, T3, T4, T5, TResult>(T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5);
+
     public class MockSideViewDataBuilder
     {
         //public NetworkSideViewData GetSideViewData(INetworkCoverage route, ICoverage waterLevel, IEnumerable<INetworkCoverage> allCoverages, IEnumerable<INetworkCoverage> renderedCoverages)
@@ -165,11 +174,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
 
         public
             Func5
-                <INetworkCoverage, ICoverage, IEnumerable<INetworkCoverage>, IEnumerable<IFeatureCoverage>, IEnumerable<INetworkCoverage>,
-                    NetworkSideViewDataController> GetSideViewDataFunction;
+            <INetworkCoverage, ICoverage, IEnumerable<INetworkCoverage>, IEnumerable<IFeatureCoverage>, IEnumerable<INetworkCoverage>,
+                NetworkSideViewDataController> GetSideViewDataFunction;
 
-        public NetworkSideViewDataController GetSideViewData(INetworkCoverage route, ICoverage waterLevel, IEnumerable<INetworkCoverage> allNetworkCoverages, 
-            IEnumerable<IFeatureCoverage> allFeatureCoverages, IEnumerable<INetworkCoverage> renderedCoverages)
+        public NetworkSideViewDataController GetSideViewData(INetworkCoverage route, ICoverage waterLevel, IEnumerable<INetworkCoverage> allNetworkCoverages,
+                                                             IEnumerable<IFeatureCoverage> allFeatureCoverages, IEnumerable<INetworkCoverage> renderedCoverages)
         {
             return GetSideViewDataFunction(route, waterLevel, allNetworkCoverages, allFeatureCoverages, renderedCoverages);
         }

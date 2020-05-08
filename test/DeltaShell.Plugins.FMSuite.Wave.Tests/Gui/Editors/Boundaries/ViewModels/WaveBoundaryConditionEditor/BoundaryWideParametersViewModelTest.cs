@@ -44,7 +44,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             // Call
             var viewModel = new BoundaryWideParametersViewModel(boundaryCondition,
                                                                 shapeFactory,
-                                                                dataComponentFactory, 
+                                                                dataComponentFactory,
                                                                 dataComponentConverter);
 
             // Assert
@@ -59,19 +59,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             Assert.That(viewModel.IsVisible, Is.True);
         }
 
-        public IEnumerable<TestCaseData> GetConstructorNullData()
-        {
-            var boundaryCondition = Substitute.For<IWaveBoundaryConditionDefinition>();
-            var shapeFactory = Substitute.For<IViewShapeFactory>();
-            var dataComponentFactory = Substitute.For<IViewDataComponentFactory>();
-            var dataComponentConverter = Substitute.For<IViewEnumFromDataComponentQuerier>();
-
-            yield return new TestCaseData(null, shapeFactory, dataComponentFactory, dataComponentConverter, "observedBoundaryCondition");
-            yield return new TestCaseData(boundaryCondition, null, dataComponentFactory, dataComponentConverter, "shapeFactory");
-            yield return new TestCaseData(boundaryCondition, shapeFactory, null, dataComponentConverter, "dataComponentFactory");
-            yield return new TestCaseData(boundaryCondition, shapeFactory, dataComponentFactory, null, "viewEnumFromDataComponentQuerier");
-        }
-
         [Test]
         [TestCaseSource(nameof(GetConstructorNullData))]
         public void Constructor_ParameterNull_ThrowsArgumentNullException(IWaveBoundaryConditionDefinition boundaryCondition,
@@ -83,7 +70,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             // Call | Assert
             void Call() => new BoundaryWideParametersViewModel(boundaryCondition,
                                                                shapeFactory,
-                                                               dataComponentFactory, 
+                                                               dataComponentFactory,
                                                                viewEnumFromDataComponentConverter);
 
             var exception = Assert.Throws<ArgumentNullException>(Call);
@@ -101,7 +88,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
 
             var viewModel = new BoundaryWideParametersViewModel(boundaryCondition,
                                                                 shapeFactory,
-                                                                dataComponentFactory, 
+                                                                dataComponentFactory,
                                                                 dataComponentConverter);
 
             // Call
@@ -421,6 +408,19 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             Assert.That(testConfig.ViewModel.IsVisible, Is.EqualTo(isVisible));
         }
 
+        public IEnumerable<TestCaseData> GetConstructorNullData()
+        {
+            var boundaryCondition = Substitute.For<IWaveBoundaryConditionDefinition>();
+            var shapeFactory = Substitute.For<IViewShapeFactory>();
+            var dataComponentFactory = Substitute.For<IViewDataComponentFactory>();
+            var dataComponentConverter = Substitute.For<IViewEnumFromDataComponentQuerier>();
+
+            yield return new TestCaseData(null, shapeFactory, dataComponentFactory, dataComponentConverter, "observedBoundaryCondition");
+            yield return new TestCaseData(boundaryCondition, null, dataComponentFactory, dataComponentConverter, "shapeFactory");
+            yield return new TestCaseData(boundaryCondition, shapeFactory, null, dataComponentConverter, "dataComponentFactory");
+            yield return new TestCaseData(boundaryCondition, shapeFactory, dataComponentFactory, null, "viewEnumFromDataComponentQuerier");
+        }
+
         /// <summary>
         /// Helper class to ease setup and verification of <see cref="BoundaryWideParametersViewModel"/>.
         /// </summary>
@@ -508,7 +508,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
 
                 ViewModel = new BoundaryWideParametersViewModel(BoundaryCondition,
                                                                 ShapeFactory,
-                                                                DataComponentFactory, 
+                                                                DataComponentFactory,
                                                                 ViewEnumFromDataComponentConverter);
                 ViewModel.SetMediator(AnnounceDataComponentChanged);
                 ViewModel.PropertyChanged += OnPropertyChanged;

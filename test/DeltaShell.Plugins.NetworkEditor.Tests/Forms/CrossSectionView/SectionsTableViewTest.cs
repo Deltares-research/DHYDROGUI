@@ -12,34 +12,32 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CrossSectionView
     public class SectionsTableViewTest
     {
         public EventedList<CrossSectionSectionType> TempSectionTypesList { get; set; }
-        
+
         [Test]
         [NUnit.Framework.Category(TestCategory.WindowsForms)]
         public void Show()
         {
             var view = new SectionsTableView
-                           {
-                               Data =
-                                   new SectionsBindingList(new List<CrossSectionSection>
-                                                                            {
-                                                                                new CrossSectionSection
-                                                                                    {
-                                                                                        MinY = 0,
-                                                                                        MaxY = 50,
-                                                                                        SectionType =
-                                                                                            new CrossSectionSectionType()
-                                                                                                {Name = "section 1"}
-                                                                                    },
-                                                                                    new CrossSectionSection
-                                                                                    {
-                                                                                        MinY = 50,
-                                                                                        MaxY = 500,
-                                                                                        SectionType =
-                                                                                            new CrossSectionSectionType()
-                                                                                                {Name = "section 2"}
-                                                                                    }
-                                                                            })
-                           };
+            {
+                Data =
+                    new SectionsBindingList(new List<CrossSectionSection>
+                    {
+                        new CrossSectionSection
+                        {
+                            MinY = 0,
+                            MaxY = 50,
+                            SectionType =
+                                new CrossSectionSectionType() {Name = "section 1"}
+                        },
+                        new CrossSectionSection
+                        {
+                            MinY = 50,
+                            MaxY = 500,
+                            SectionType =
+                                new CrossSectionSectionType() {Name = "section 2"}
+                        }
+                    })
+            };
             WindowsFormsTestHelper.ShowModal(view);
         }
 
@@ -48,18 +46,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CrossSectionView
         public void CheckPropertyChangedAfterRenamingSectionType()
         {
             var sectionType = new CrossSectionSectionType {Name = "aap"};
-            var sectionList = new EventedList<CrossSectionSectionType>(new List<CrossSectionSectionType> { sectionType }); 
-            
-            var view = new SectionsTableView
-            {
-                SectionTypeList = sectionList
-            };
-            
-            int callCount = 0;
-            ((INotifyPropertyChanged)(view.SectionTypeList)).PropertyChanged += (s, e) =>
-            {
-                callCount++;
-            };
+            var sectionList = new EventedList<CrossSectionSectionType>(new List<CrossSectionSectionType> {sectionType});
+
+            var view = new SectionsTableView {SectionTypeList = sectionList};
+
+            var callCount = 0;
+            ((INotifyPropertyChanged) view.SectionTypeList).PropertyChanged += (s, e) => { callCount++; };
 
             sectionType.Name = "noot";
             Assert.AreEqual(1, callCount);
@@ -70,25 +62,26 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CrossSectionView
         public void ShowWithVariousSectionTypes()
         {
             TempSectionTypesList = FillSectionTypesList();
-            
+
             var view = new SectionsTableView
-                           {
-                               SectionTypeList = TempSectionTypesList,
-                               Data =
-                                   new SectionsBindingList(new List<CrossSectionSection>
-                                                                            {
-                                                                                new CrossSectionSection
-                                                                                    {
-                                                                                        MinY = 0,
-                                                                                        MaxY = 100,
-                                                                                        SectionType =
-                                                                                            new CrossSectionSectionType()
-                                                                                                {Name = "section 2"}
-                                                                                    }
-                                                                            })};
-            
+            {
+                SectionTypeList = TempSectionTypesList,
+                Data =
+                    new SectionsBindingList(new List<CrossSectionSection>
+                    {
+                        new CrossSectionSection
+                        {
+                            MinY = 0,
+                            MaxY = 100,
+                            SectionType =
+                                new CrossSectionSectionType() {Name = "section 2"}
+                        }
+                    })
+            };
+
             WindowsFormsTestHelper.ShowModal(view);
         }
+
         /*
         [Test]
         public void ViewMakesRoughnessSectionsValid()
@@ -119,12 +112,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CrossSectionView
         private EventedList<CrossSectionSectionType> FillSectionTypesList()
         {
             return new EventedList<CrossSectionSectionType>()
-                                       {
-                                           new CrossSectionSectionType(){Name = "section 1"},
-                                           new CrossSectionSectionType(){Name = "section 2"},
-                                           new CrossSectionSectionType(){Name = "section 3"},
-                                           new CrossSectionSectionType(){Name = "section 4"}
-                                       };
+            {
+                new CrossSectionSectionType() {Name = "section 1"},
+                new CrossSectionSectionType() {Name = "section 2"},
+                new CrossSectionSectionType() {Name = "section 3"},
+                new CrossSectionSectionType() {Name = "section 4"}
+            };
         }
     }
 }

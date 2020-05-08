@@ -6,7 +6,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
 {
     [TestFixture]
     [Category(TestCategory.WindowsForms)]
-    class LoadsWizardPageTest
+    internal class LoadsWizardPageTest
     {
         [Test]
         public void BoundaryWizardConstructorSetCorrectValues()
@@ -33,4 +33,3 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         }
     }
 }
-

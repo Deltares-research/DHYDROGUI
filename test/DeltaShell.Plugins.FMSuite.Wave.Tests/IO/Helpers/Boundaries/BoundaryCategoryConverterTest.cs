@@ -14,9 +14,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
     [TestFixture]
     public class BoundaryCategoryConverterTest
     {
-        private readonly Random random = new Random();
-
         private const double doublePrecision = 1E-7;
+        private readonly Random random = new Random();
         private double RandomDouble => Math.Round(random.NextDouble(), 8);
         private int RandomInt => random.Next(100);
 
@@ -88,9 +87,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             category.AddProperty(KnownWaveProperties.EndCoordinateX, ToString(endX));
             category.AddProperty(KnownWaveProperties.EndCoordinateY, ToString(endY));
             category.AddProperty(KnownWaveProperties.SpectrumSpec, SpectrumImportExportType.Parametrized.GetDescription());
-            AddToCategory(category, shapeImportData); 
-            AddToCategory(category, periodImportExportData); 
-            AddToCategory(category, spreadingImportData); 
+            AddToCategory(category, shapeImportData);
+            AddToCategory(category, periodImportExportData);
+            AddToCategory(category, spreadingImportData);
             category.AddProperty(KnownWaveProperties.PeakEnhancementFactor, ToString(peakEnhancementFactor));
             category.AddProperty(KnownWaveProperties.GaussianSpreading, ToString(gaussianSpread));
             category.AddProperty(KnownWaveProperties.CondSpecAtDist, ToString(distance1));
@@ -151,13 +150,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             double gaussianSpread = RandomDouble;
 
             category.AddProperty(KnownWaveProperties.Name, name);
-            category.AddProperty(KnownWaveProperties.Definition, KnownWaveBoundariesFileConstants.OrientationDefinitionType); 
+            category.AddProperty(KnownWaveProperties.Definition, KnownWaveBoundariesFileConstants.OrientationDefinitionType);
             AddToCategory(category, orientationTypeData);
             AddToCategory(category, distanceDirType);
             category.AddProperty(KnownWaveProperties.SpectrumSpec, SpectrumImportExportType.Parametrized.GetDescription());
-            AddToCategory(category, shapeImportData); 
-            AddToCategory(category, periodImportExportData); 
-            AddToCategory(category, spreadingImportData); 
+            AddToCategory(category, shapeImportData);
+            AddToCategory(category, periodImportExportData);
+            AddToCategory(category, spreadingImportData);
             category.AddProperty(KnownWaveProperties.PeakEnhancementFactor, ToString(peakEnhancementFactor));
             category.AddProperty(KnownWaveProperties.GaussianSpreading, ToString(gaussianSpread));
             category.AddProperty(KnownWaveProperties.CondSpecAtDist, ToString(distance1));
@@ -190,12 +189,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             Assert.That(result.DirectionalSpreadings, Is.EqualTo(Doubles(spreading1, spreading2)).Within(doublePrecision));
         }
 
-
         [Test]
         [TestCaseSource(nameof(GetFromFileCoordinatesTestCases))]
-        public void Convert_FromFileImportType_Coordinates_ReturnsCorrectResult(string shapeTypeStr, 
-                                                                    string periodTypeStr, 
-                                                                    string spreadingTypeStr)
+        public void Convert_FromFileImportType_Coordinates_ReturnsCorrectResult(string shapeTypeStr,
+                                                                                string periodTypeStr,
+                                                                                string spreadingTypeStr)
         {
             // Setup
             var category = new DelftIniCategory(KnownWaveCategories.BoundaryCategory);
@@ -253,11 +251,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
 
         [Test]
         [TestCaseSource(nameof(GetFromFileOrientedTestCases))]
-        public void Convert_FromFileImportType_Oriented_ReturnsCorrectResult(string shapeTypeStr, 
-                                                                    string periodTypeStr, 
-                                                                    string spreadingTypeStr,
-                                                                    CategoryTestKeyValue<BoundaryOrientationType> orientationTypeData,
-                                                                    CategoryTestKeyValue<DistanceDirType> distanceDirType)
+        public void Convert_FromFileImportType_Oriented_ReturnsCorrectResult(string shapeTypeStr,
+                                                                             string periodTypeStr,
+                                                                             string spreadingTypeStr,
+                                                                             CategoryTestKeyValue<BoundaryOrientationType> orientationTypeData,
+                                                                             CategoryTestKeyValue<DistanceDirType> distanceDirType)
         {
             // Setup
             var category = new DelftIniCategory(KnownWaveCategories.BoundaryCategory);
@@ -373,17 +371,17 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
         }
 
         private static IEnumerable<TestCaseData> GetParameterizedCoordinatesTestCases() =>
-            from shapeTypeCase in ShapeTypeTestCases() 
-            from periodTypeCase in PeriodTypeTestCases() 
-            from spreadingTypeCase in SpreadingTypeTestCases() 
+            from shapeTypeCase in ShapeTypeTestCases()
+            from periodTypeCase in PeriodTypeTestCases()
+            from spreadingTypeCase in SpreadingTypeTestCases()
             select new TestCaseData(shapeTypeCase,
                                     periodTypeCase,
                                     spreadingTypeCase);
 
         private static IEnumerable<TestCaseData> GetParameterizedOrientedTestCases() =>
-            from shapeTypeCase in ShapeTypeTestCases() 
-            from periodTypeCase in PeriodTypeTestCases() 
-            from spreadingTypeCase in SpreadingTypeTestCases() 
+            from shapeTypeCase in ShapeTypeTestCases()
+            from periodTypeCase in PeriodTypeTestCases()
+            from spreadingTypeCase in SpreadingTypeTestCases()
             from orientationTypeCase in OrientationTypeTestCases()
             from distanceDirTypeCase in DistanceDirTypeTestCases()
             select new TestCaseData(shapeTypeCase,
@@ -415,33 +413,33 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
         private static IEnumerable<CategoryTestKeyValue<ShapeImportType>> ShapeTypeTestCases()
         {
             yield return new CategoryTestKeyValue<ShapeImportType>(KnownWaveProperties.ShapeType,
-                                                                   "gauss", 
+                                                                   "gauss",
                                                                    ShapeImportType.Gauss);
             yield return new CategoryTestKeyValue<ShapeImportType>(KnownWaveProperties.ShapeType,
-                                                                   "jonswap", 
+                                                                   "jonswap",
                                                                    ShapeImportType.Jonswap);
             yield return new CategoryTestKeyValue<ShapeImportType>(KnownWaveProperties.ShapeType,
-                                                                   "pierson-moskowitz", 
+                                                                   "pierson-moskowitz",
                                                                    ShapeImportType.PiersonMoskowitz);
         }
 
         private static IEnumerable<CategoryTestKeyValue<PeriodImportExportType>> PeriodTypeTestCases()
         {
-            yield return new CategoryTestKeyValue<PeriodImportExportType>(KnownWaveProperties.PeriodType, 
-                                                                          "mean", 
+            yield return new CategoryTestKeyValue<PeriodImportExportType>(KnownWaveProperties.PeriodType,
+                                                                          "mean",
                                                                           PeriodImportExportType.Mean);
-            yield return new CategoryTestKeyValue<PeriodImportExportType>(KnownWaveProperties.PeriodType, 
-                                                                          "peak", 
+            yield return new CategoryTestKeyValue<PeriodImportExportType>(KnownWaveProperties.PeriodType,
+                                                                          "peak",
                                                                           PeriodImportExportType.Peak);
         }
 
         private static IEnumerable<CategoryTestKeyValue<SpreadingImportType>> SpreadingTypeTestCases()
         {
-            yield return new CategoryTestKeyValue<SpreadingImportType>(KnownWaveProperties.DirectionalSpreadingType, 
-                                                                       "degrees", 
+            yield return new CategoryTestKeyValue<SpreadingImportType>(KnownWaveProperties.DirectionalSpreadingType,
+                                                                       "degrees",
                                                                        SpreadingImportType.Degrees);
-            yield return new CategoryTestKeyValue<SpreadingImportType>(KnownWaveProperties.DirectionalSpreadingType, 
-                                                                       "power", 
+            yield return new CategoryTestKeyValue<SpreadingImportType>(KnownWaveProperties.DirectionalSpreadingType,
+                                                                       "power",
                                                                        SpreadingImportType.Power);
         }
 
@@ -475,12 +473,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
 
         private static IEnumerable<CategoryTestKeyValue<DistanceDirType>> DistanceDirTypeTestCases()
         {
-            yield return new CategoryTestKeyValue<DistanceDirType>(KnownWaveProperties.DistanceDir, 
-                KnownWaveBoundariesFileConstants.CounterClockwiseDistanceDirType,
-                DistanceDirType.CounterClockwise);
-            yield return new CategoryTestKeyValue<DistanceDirType>(KnownWaveProperties.DistanceDir, 
-                KnownWaveBoundariesFileConstants.ClockwiseDistanceDirType,
-                DistanceDirType.Clockwise);
+            yield return new CategoryTestKeyValue<DistanceDirType>(KnownWaveProperties.DistanceDir,
+                                                                   KnownWaveBoundariesFileConstants.CounterClockwiseDistanceDirType,
+                                                                   DistanceDirType.CounterClockwise);
+            yield return new CategoryTestKeyValue<DistanceDirType>(KnownWaveProperties.DistanceDir,
+                                                                   KnownWaveBoundariesFileConstants.ClockwiseDistanceDirType,
+                                                                   DistanceDirType.Clockwise);
         }
 
         private static void AssertRoundedValue(double actual, double expected)

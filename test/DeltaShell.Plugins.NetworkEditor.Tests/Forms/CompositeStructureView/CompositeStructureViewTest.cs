@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 using DelftTools.Hydro;
+using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
@@ -37,42 +38,52 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CompositeStructureView
             mocks.ReplayAll();
 
             LogHelper.ConfigureLogging();
-            var network = CompositeStructureViewTestHelper.CreateDummyNetwork();
+            HydroNetwork network = CompositeStructureViewTestHelper.CreateDummyNetwork();
             var compositeBranchStructure = new CompositeBranchStructure();
-            var pump = new Pump("pump1") {OffsetY = 1000,StopDelivery = 18,StartDelivery = 12,StopSuction = 12,StartSuction = 15};
-            var weir = new Weir("weri1"){CrestLevel = 15,CrestWidth = 50};
+            var pump = new Pump("pump1")
+            {
+                OffsetY = 1000,
+                StopDelivery = 18,
+                StartDelivery = 12,
+                StopSuction = 12,
+                StartSuction = 15
+            };
+            var weir = new Weir("weri1")
+            {
+                CrestLevel = 15,
+                CrestWidth = 50
+            };
             NetworkHelper.AddBranchFeatureToBranch(compositeBranchStructure, network.Branches[0], 50);
-
 
             HydroNetworkHelper.AddStructureToComposite(compositeBranchStructure, pump);
             HydroNetworkHelper.AddStructureToComposite(compositeBranchStructure, weir);
             var presenter = new CompositeStructureViewPresenter
+            {
+                CreateView = o =>
                 {
-                    CreateView = o =>
-                        {
-                            var plugin = new NetworkEditorGuiPlugin();
-                            var viewList = new ViewList(dockingManager, ViewLocation.Document);
-                            var viewResolver = new ViewResolver(viewList, plugin.GetViewInfoObjects());
+                    var plugin = new NetworkEditorGuiPlugin();
+                    var viewList = new ViewList(dockingManager, ViewLocation.Document);
+                    var viewResolver = new ViewResolver(viewList, plugin.GetViewInfoObjects());
 
-                            return viewResolver.CreateViewForData(o, info => info.CompositeViewType == typeof(NetworkEditor.Gui.Forms.CompositeStructureView.CompositeStructureView));
-                        },
-                    SelectionContainer = new SimpleSelectionContainer {Logging = true}
-                };
-            var view =  new NetworkEditor.Gui.Forms.CompositeStructureView.CompositeStructureView
-                            {
-                                Presenter = presenter,
-                                Data = compositeBranchStructure
-                            };
+                    return viewResolver.CreateViewForData(o, info => info.CompositeViewType == typeof(NetworkEditor.Gui.Forms.CompositeStructureView.CompositeStructureView));
+                },
+                SelectionContainer = new SimpleSelectionContainer {Logging = true}
+            };
+            var view = new NetworkEditor.Gui.Forms.CompositeStructureView.CompositeStructureView
+            {
+                Presenter = presenter,
+                Data = compositeBranchStructure
+            };
 
             WindowsFormsTestHelper.ShowModal(view);
         }
-       
+
         [Test]
         [Category(TestCategory.WindowsForms)]
         public void ShowBridge()
         {
-            var network = CompositeStructureViewTestHelper.CreateDummyNetwork();
-            var bridge = CompositeStructureViewTestHelper.GetBridge();
+            HydroNetwork network = CompositeStructureViewTestHelper.CreateDummyNetwork();
+            Bridge bridge = CompositeStructureViewTestHelper.GetBridge();
 
             CompositeStructureViewTestHelper.ShowStructureAtFirstBranch(bridge, network);
         }
@@ -81,8 +92,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CompositeStructureView
         [Category(TestCategory.WindowsForms)]
         public void ShowCulvert()
         {
-            var network = CompositeStructureViewTestHelper.CreateDummyNetwork();
-            
+            HydroNetwork network = CompositeStructureViewTestHelper.CreateDummyNetwork();
+
             var culvert = new Culvert("culvert");
             //bridge.OffsetY = 100;
             CompositeStructureViewTestHelper.ShowStructureAtFirstBranch(culvert, network);
@@ -92,18 +103,15 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CompositeStructureView
         [Category(TestCategory.WindowsForms)]
         public void ShowTabulatedGatedCulvertWithEmptyGeometryShouldNotThrow_TOOLS10076()
         {
-            var network = CompositeStructureViewTestHelper.CreateDummyNetwork();
+            HydroNetwork network = CompositeStructureViewTestHelper.CreateDummyNetwork();
 
             var culvert = new Culvert("culvert")
-                {
-                    GeometryType = CulvertGeometryType.Tabulated,
-                    IsGated = true,
-                };
+            {
+                GeometryType = CulvertGeometryType.Tabulated,
+                IsGated = true,
+            };
 
-            Action<Form> action = delegate
-                {
-                    culvert.Name = "Banaan";
-                };
+            Action<Form> action = delegate { culvert.Name = "Banaan"; };
 
             CompositeStructureViewTestHelper.ShowStructureAtFirstBranch(culvert, network, action);
         }
@@ -112,34 +120,43 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CompositeStructureView
         [Category(TestCategory.WindowsForms)]
         public void ShowBridgeWithDisabledStructesNearby()
         {
-            var network = CompositeStructureViewTestHelper.CreateDummyNetwork();
-            
-            var bridge = CompositeStructureViewTestHelper.GetBridge();
+            HydroNetwork network = CompositeStructureViewTestHelper.CreateDummyNetwork();
+
+            Bridge bridge = CompositeStructureViewTestHelper.GetBridge();
             bridge.Length = 10;
 
-            CompositeBranchStructure compositeBranchStructure = CompositeStructureViewTestHelper.AddCompositeBranchStructureForStructureAtLocation(bridge,new NetworkLocation(network.Branches[0],50));
+            CompositeBranchStructure compositeBranchStructure = CompositeStructureViewTestHelper.AddCompositeBranchStructureForStructureAtLocation(bridge, new NetworkLocation(network.Branches[0], 50));
 
-            var otherBridge = CompositeStructureViewTestHelper.GetBridge();
+            Bridge otherBridge = CompositeStructureViewTestHelper.GetBridge();
             otherBridge.Length = 10;
 
             CompositeStructureViewTestHelper.AddCompositeBranchStructureForStructureAtLocation(otherBridge, new NetworkLocation(network.Branches[0], 70));
 
-            var pump = new Pump("pump1") {OffsetY = 1000,StopDelivery = 18,StartDelivery = 12,StopSuction = 12,StartSuction = 15};
+            var pump = new Pump("pump1")
+            {
+                OffsetY = 1000,
+                StopDelivery = 18,
+                StartDelivery = 12,
+                StopSuction = 12,
+                StartSuction = 15
+            };
             CompositeStructureViewTestHelper.AddCompositeBranchStructureForStructureAtLocation(pump, new NetworkLocation(network.Branches[0], 40));
 
-            var weir = new Weir("weri1") { CrestLevel = 15, CrestWidth = 50 };
+            var weir = new Weir("weri1")
+            {
+                CrestLevel = 15,
+                CrestWidth = 50
+            };
             CompositeStructureViewTestHelper.AddCompositeBranchStructureForStructureAtLocation(weir, new NetworkLocation(network.Branches[0], 30));
             CompositeStructureViewTestHelper.ShowStructure(compositeBranchStructure);
         }
-
 
         [Test]
         [Category(TestCategory.WindowsForms)]
         public void ShowBridgeWithoutCrossSection()
         {
-            var network = CompositeStructureViewTestHelper.CreateDummyNetwork(false);
+            HydroNetwork network = CompositeStructureViewTestHelper.CreateDummyNetwork(false);
             Bridge bridge = CompositeStructureViewTestHelper.GetBridge();
-            
 
             CompositeStructureViewTestHelper.ShowStructureAtFirstBranch(bridge, network);
         }
@@ -149,13 +166,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CompositeStructureView
         public void ShowSimpleWeir()
         {
             LogHelper.ConfigureLogging();
-            var network = CompositeStructureViewTestHelper.CreateDummyNetwork();
+            HydroNetwork network = CompositeStructureViewTestHelper.CreateDummyNetwork();
             var weir = new Weir("simpleWeir")
-                           {
-                               CrestLevel = 3,
-                               CrestWidth = 50,
-                               WeirFormula = new SimpleWeirFormula()
-                           };
+            {
+                CrestLevel = 3,
+                CrestWidth = 50,
+                WeirFormula = new SimpleWeirFormula()
+            };
             CompositeStructureViewTestHelper.ShowStructureAtFirstBranch(weir, network);
         }
 
@@ -164,14 +181,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CompositeStructureView
         public void ShowGatedWeir()
         {
             LogHelper.ConfigureLogging();
-            var network = CompositeStructureViewTestHelper.CreateDummyNetwork();
+            HydroNetwork network = CompositeStructureViewTestHelper.CreateDummyNetwork();
             var weir = new Weir("gatedWeir")
-                           {
-                               CrestLevel = 3,
-                               CrestWidth = 50,
-                               WeirFormula = new GatedWeirFormula {GateOpening = 1.3}
-                           };
-            CompositeStructureViewTestHelper.ShowStructureAtFirstBranch(weir,network);
+            {
+                CrestLevel = 3,
+                CrestWidth = 50,
+                WeirFormula = new GatedWeirFormula {GateOpening = 1.3}
+            };
+            CompositeStructureViewTestHelper.ShowStructureAtFirstBranch(weir, network);
         }
 
         [Test]
@@ -183,36 +200,47 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CompositeStructureView
             mocks.ReplayAll();
 
             LogHelper.ConfigureLogging();
-            var network = CompositeStructureViewTestHelper.CreateDummyNetwork();
-            var fisrtCrossection = network.CrossSections.First();
+            HydroNetwork network = CompositeStructureViewTestHelper.CreateDummyNetwork();
+            ICrossSection fisrtCrossection = network.CrossSections.First();
             network.Branches[0].BranchFeatures.Remove(fisrtCrossection);
             var compositeBranchStructure = new CompositeBranchStructure();
-            var pump = new Pump("pump1") {OffsetY = 150,StopDelivery = 18,StartDelivery = 12,StopSuction = 12,StartSuction = 15};
-            var weir = new Weir("weri1"){CrestLevel = 15,CrestWidth = 50};
+            var pump = new Pump("pump1")
+            {
+                OffsetY = 150,
+                StopDelivery = 18,
+                StartDelivery = 12,
+                StopSuction = 12,
+                StartSuction = 15
+            };
+            var weir = new Weir("weri1")
+            {
+                CrestLevel = 15,
+                CrestWidth = 50
+            };
             NetworkHelper.AddBranchFeatureToBranch(compositeBranchStructure, network.Branches[0], 50);
 
             HydroNetworkHelper.AddStructureToComposite(compositeBranchStructure, pump);
             HydroNetworkHelper.AddStructureToComposite(compositeBranchStructure, weir);
             var presenter = new CompositeStructureViewPresenter
-                                {
-                                    CreateView = o =>
-                                    {
-                                        var plugin = new NetworkEditorGuiPlugin();
-                                        var viewList = new ViewList(dockingManager, ViewLocation.Document);
-                                        var viewResolver = new ViewResolver(viewList, plugin.GetViewInfoObjects());
-                                        return viewResolver.CreateViewForData(o, info => info.CompositeViewType == typeof(NetworkEditor.Gui.Forms.CompositeStructureView.CompositeStructureView));
-                                    },
-                                    SelectionContainer = new SimpleSelectionContainer {Logging = true}
-                                };
-            var view =  new NetworkEditor.Gui.Forms.CompositeStructureView.CompositeStructureView
-                            {
-                                Presenter = presenter,
-                                Data = compositeBranchStructure
-                            };
+            {
+                CreateView = o =>
+                {
+                    var plugin = new NetworkEditorGuiPlugin();
+                    var viewList = new ViewList(dockingManager, ViewLocation.Document);
+                    var viewResolver = new ViewResolver(viewList, plugin.GetViewInfoObjects());
+                    return viewResolver.CreateViewForData(o, info => info.CompositeViewType == typeof(NetworkEditor.Gui.Forms.CompositeStructureView.CompositeStructureView));
+                },
+                SelectionContainer = new SimpleSelectionContainer {Logging = true}
+            };
+            var view = new NetworkEditor.Gui.Forms.CompositeStructureView.CompositeStructureView
+            {
+                Presenter = presenter,
+                Data = compositeBranchStructure
+            };
 
             WindowsFormsTestHelper.ShowModal(view);
-            
         }
+
         [Test]
         [Category(TestCategory.WindowsForms)]
         public void ChildViewsAreStructureViews()
@@ -222,31 +250,41 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CompositeStructureView
             mocks.ReplayAll();
 
             LogHelper.ConfigureLogging();
-            var network = CompositeStructureViewTestHelper.CreateDummyNetwork();
+            HydroNetwork network = CompositeStructureViewTestHelper.CreateDummyNetwork();
             var compositeBranchStructure = new CompositeBranchStructure();
-            var pump = new Pump("pump1") { OffsetY = 1000, StopDelivery = 18, StartDelivery = 12, StopSuction = 12, StartSuction = 15 };
-            var weir = new Weir("weri1") { CrestLevel = 15, CrestWidth = 50 };
+            var pump = new Pump("pump1")
+            {
+                OffsetY = 1000,
+                StopDelivery = 18,
+                StartDelivery = 12,
+                StopSuction = 12,
+                StartSuction = 15
+            };
+            var weir = new Weir("weri1")
+            {
+                CrestLevel = 15,
+                CrestWidth = 50
+            };
             NetworkHelper.AddBranchFeatureToBranch(compositeBranchStructure, network.Branches[0], 50);
-
 
             HydroNetworkHelper.AddStructureToComposite(compositeBranchStructure, pump);
             HydroNetworkHelper.AddStructureToComposite(compositeBranchStructure, weir);
             var presenter = new CompositeStructureViewPresenter
+            {
+                CreateView = o =>
                 {
-                    CreateView = o =>
-                        {
-                            var plugin = new NetworkEditorGuiPlugin();
-                            var viewList = new ViewList(dockingManager, ViewLocation.Document);
-                            var viewResolver = new ViewResolver(viewList, plugin.GetViewInfoObjects());
-                            return viewResolver.CreateViewForData(o, info => info.CompositeViewType == typeof(NetworkEditor.Gui.Forms.CompositeStructureView.CompositeStructureView));
-                        },
-                    SelectionContainer = new SimpleSelectionContainer {Logging = true}
-                };
+                    var plugin = new NetworkEditorGuiPlugin();
+                    var viewList = new ViewList(dockingManager, ViewLocation.Document);
+                    var viewResolver = new ViewResolver(viewList, plugin.GetViewInfoObjects());
+                    return viewResolver.CreateViewForData(o, info => info.CompositeViewType == typeof(NetworkEditor.Gui.Forms.CompositeStructureView.CompositeStructureView));
+                },
+                SelectionContainer = new SimpleSelectionContainer {Logging = true}
+            };
             var view = new NetworkEditor.Gui.Forms.CompositeStructureView.CompositeStructureView
-                {
-                    Presenter = presenter,
-                    Data = compositeBranchStructure
-                };
+            {
+                Presenter = presenter,
+                Data = compositeBranchStructure
+            };
             presenter.SetModelIntoView();
             WindowsFormsTestHelper.Show(view);
 
@@ -255,17 +293,23 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CompositeStructureView
 
             WindowsFormsTestHelper.CloseAll();
         }
-        [Test]        
+
+        [Test]
         public void ShowCompositeStructureViewWithoutCrossSection()
         {
-            var network = CompositeStructureViewTestHelper.CreateDummyNetwork(false);
-            
+            HydroNetwork network = CompositeStructureViewTestHelper.CreateDummyNetwork(false);
+
             var compositeBranchStructure = new CompositeBranchStructure();
-            var pump = new Pump("pump1"){OffsetY = 150,StopDelivery = 15,StartDelivery = 10};
-            var weir = new Weir("Weir1"){CrestLevel = 15};
+            var pump = new Pump("pump1")
+            {
+                OffsetY = 150,
+                StopDelivery = 15,
+                StartDelivery = 10
+            };
+            var weir = new Weir("Weir1") {CrestLevel = 15};
 
             NetworkHelper.AddBranchFeatureToBranch(compositeBranchStructure, network.Branches[0], 50);
-            
+
             HydroNetworkHelper.AddStructureToComposite(compositeBranchStructure, pump);
             HydroNetworkHelper.AddStructureToComposite(compositeBranchStructure, weir);
 
@@ -283,76 +327,74 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CompositeStructureView
             // setup event
             gui.SelectionChanged += null;
             LastCall.IgnoreArguments().Repeat.Any();
-            
+
             // construct everything
             var compositeStructureViewPresenter = new CompositeStructureViewPresenter
+            {
+                CreateView = o =>
                 {
-                    CreateView = o =>
-                    {
-                        var plugin = new NetworkEditorGuiPlugin();
-                        var viewList = new ViewList(dockingManager, ViewLocation.Document);
-                        var viewResolver = new ViewResolver(viewList, plugin.GetViewInfoObjects());
-                        return viewResolver.CreateViewForData(o, info => info.CompositeViewType == typeof(NetworkEditor.Gui.Forms.CompositeStructureView.CompositeStructureView));
-                    }
-                };
-            gui.SelectionChanged += delegate
-                                        {
-                                            compositeStructureViewPresenter.SelectObjectInViews((IStructure1D) gui.Selection);
-                                        };
-            
+                    var plugin = new NetworkEditorGuiPlugin();
+                    var viewList = new ViewList(dockingManager, ViewLocation.Document);
+                    var viewResolver = new ViewResolver(viewList, plugin.GetViewInfoObjects());
+                    return viewResolver.CreateViewForData(o, info => info.CompositeViewType == typeof(NetworkEditor.Gui.Forms.CompositeStructureView.CompositeStructureView));
+                }
+            };
+            gui.SelectionChanged += delegate { compositeStructureViewPresenter.SelectObjectInViews((IStructure1D) gui.Selection); };
+
             mocks.ReplayAll();
 
             var compositeStructureView = new NetworkEditor.Gui.Forms.CompositeStructureView.CompositeStructureView
-                                             {
-                                                 Presenter = compositeStructureViewPresenter,
-                                                 Data = compositeBranchStructure
-                                             };
+            {
+                Presenter = compositeStructureViewPresenter,
+                Data = compositeBranchStructure
+            };
             compositeStructureViewPresenter.View = compositeStructureView;
-            
+
             WindowsFormsTestHelper.ShowModal(compositeStructureView);
         }
-        
+
         [Test]
         [Category(TestCategory.WindowsForms)]
         public void AddWeirWhileShowingComposite()
         {
             LogHelper.ConfigureLogging();
-            var network = CompositeStructureViewTestHelper.CreateDummyNetwork();
+            HydroNetwork network = CompositeStructureViewTestHelper.CreateDummyNetwork();
             var weir = new Weir("gatedWeir")
             {
                 CrestLevel = 3,
                 CrestWidth = 50,
-                WeirFormula = new GatedWeirFormula { GateOpening = 1.3 }
+                WeirFormula = new GatedWeirFormula {GateOpening = 1.3}
             };
             Action<Form> onShown = (form) =>
-                                       {
-                                           //set network in editing state just like in the app
-                                           network.BeginEdit("go!");
-                                           var composite = weir.ParentStructure;
-                                           var weir2 = new Weir();
-                                           HydroNetworkHelper.AddStructureToComposite(composite, weir2);
-                                           network.EndEdit();
-                                       };
-            CompositeStructureViewTestHelper.ShowStructureAtFirstBranch(weir, network,onShown);
+            {
+                //set network in editing state just like in the app
+                network.BeginEdit("go!");
+                ICompositeBranchStructure composite = weir.ParentStructure;
+                var weir2 = new Weir();
+                HydroNetworkHelper.AddStructureToComposite(composite, weir2);
+                network.EndEdit();
+            };
+            CompositeStructureViewTestHelper.ShowStructureAtFirstBranch(weir, network, onShown);
         }
 
         [Test]
         public void UpdateMinMaxForBranchFeaturesShouldNotReturnNaN()
         {
             // test shaky configuration
-            var minValue = double.NaN;
-            var maxValue = double.NaN;
+            double minValue = double.NaN;
+            double maxValue = double.NaN;
 
             var weir = new Weir();
             var pump = new Pump();
             var bridge = new Bridge();
             var culvert = new Culvert();
-            var crossSection =
+            ICrossSection crossSection =
                 CrossSectionHelper.CreateNewCrossSectionXYZ(new List<Coordinate>(
-                new[]{
-                    new Coordinate(-1.11d, -1.11d, -1.11d),
-                    new Coordinate(3.33d, 3.33d, 3.33d)
-                }));
+                                                                new[]
+                                                                {
+                                                                    new Coordinate(-1.11d, -1.11d, -1.11d),
+                                                                    new Coordinate(3.33d, 3.33d, 3.33d)
+                                                                }));
 
             weir.CrestLevel = double.NaN;
             pump.StartDelivery = double.NaN;
@@ -362,10 +404,34 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CompositeStructureView
 
             CompositeStructureViewHelper.UpdateMinMaxForBranchFeatures(new IBranchFeature[]
             {
-                new CompositeBranchStructure { Structures = new EventedList<IStructure1D>(new [] {weir}) }, 
-                new CompositeBranchStructure { Structures = new EventedList<IStructure1D>(new [] {pump}) },
-                new CompositeBranchStructure { Structures = new EventedList<IStructure1D>(new [] {bridge}) },
-                new CompositeBranchStructure { Structures = new EventedList<IStructure1D>(new [] {culvert}) },
+                new CompositeBranchStructure
+                {
+                    Structures = new EventedList<IStructure1D>(new[]
+                    {
+                        weir
+                    })
+                },
+                new CompositeBranchStructure
+                {
+                    Structures = new EventedList<IStructure1D>(new[]
+                    {
+                        pump
+                    })
+                },
+                new CompositeBranchStructure
+                {
+                    Structures = new EventedList<IStructure1D>(new[]
+                    {
+                        bridge
+                    })
+                },
+                new CompositeBranchStructure
+                {
+                    Structures = new EventedList<IStructure1D>(new[]
+                    {
+                        culvert
+                    })
+                },
                 crossSection
             }, ref minValue, ref maxValue);
 
@@ -379,10 +445,34 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CompositeStructureView
 
             CompositeStructureViewHelper.UpdateMinMaxForBranchFeatures(new IBranchFeature[]
             {
-                new CompositeBranchStructure { Structures = new EventedList<IStructure1D>(new [] {weir}) }, 
-                new CompositeBranchStructure { Structures = new EventedList<IStructure1D>(new [] {pump}) },
-                new CompositeBranchStructure { Structures = new EventedList<IStructure1D>(new [] {bridge}) },
-                new CompositeBranchStructure { Structures = new EventedList<IStructure1D>(new [] {culvert}) },
+                new CompositeBranchStructure
+                {
+                    Structures = new EventedList<IStructure1D>(new[]
+                    {
+                        weir
+                    })
+                },
+                new CompositeBranchStructure
+                {
+                    Structures = new EventedList<IStructure1D>(new[]
+                    {
+                        pump
+                    })
+                },
+                new CompositeBranchStructure
+                {
+                    Structures = new EventedList<IStructure1D>(new[]
+                    {
+                        bridge
+                    })
+                },
+                new CompositeBranchStructure
+                {
+                    Structures = new EventedList<IStructure1D>(new[]
+                    {
+                        culvert
+                    })
+                },
                 crossSection
             }, ref minValue, ref maxValue);
 

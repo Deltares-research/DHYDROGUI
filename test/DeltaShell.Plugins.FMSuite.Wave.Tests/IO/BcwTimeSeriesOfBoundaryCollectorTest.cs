@@ -27,7 +27,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             var waveEnergyFunction = Substitute.For<IWaveEnergyFunction<TSpreading>>();
             var underlyingFunction = Substitute.For<IFunction>();
             waveEnergyFunction.UnderlyingFunction.Returns(underlyingFunction);
-            
+
             var dataComponent = new UniformDataComponent<TimeDependentParameters<TSpreading>>(
                 new TimeDependentParameters<TSpreading>(waveEnergyFunction));
 
@@ -60,7 +60,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             var supportPoint2 = new SupportPoint(22, geometryDefinition);
             var timeDependentParameters2 = new TimeDependentParameters<TSpreading>(
                 waveEnergyFunction2);
-            
+
             var dataComponent = new SpatiallyVaryingDataComponent<TimeDependentParameters<TSpreading>>();
             dataComponent.AddParameters(supportPoint1, timeDependentParameters1);
             dataComponent.AddParameters(supportPoint2, timeDependentParameters2);
@@ -144,7 +144,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             // Setup
             var dataComponent = Substitute.For<ISpatiallyDefinedDataComponent>();
             dataComponent.When(x => x.AcceptVisitor(Arg.Any<ISpatiallyDefinedDataComponentVisitor>()))
-                         .Do(x => x.Arg<ISpatiallyDefinedDataComponentVisitor>().Visit((UniformDataComponent<IForcingTypeDefinedParameters>)null));
+                         .Do(x => x.Arg<ISpatiallyDefinedDataComponentVisitor>().Visit((UniformDataComponent<IForcingTypeDefinedParameters>) null));
 
             // Call
             void Call() => BcwTimeSeriesOfBoundaryCollector.Collect(dataComponent);
@@ -160,7 +160,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             // Setup
             var dataComponent = Substitute.For<ISpatiallyDefinedDataComponent>();
             dataComponent.When(x => x.AcceptVisitor(Arg.Any<ISpatiallyDefinedDataComponentVisitor>()))
-                         .Do(x => x.Arg<ISpatiallyDefinedDataComponentVisitor>().Visit((SpatiallyVaryingDataComponent<IForcingTypeDefinedParameters>)null));
+                         .Do(x => x.Arg<ISpatiallyDefinedDataComponentVisitor>().Visit((SpatiallyVaryingDataComponent<IForcingTypeDefinedParameters>) null));
 
             // Call
             void Call() => BcwTimeSeriesOfBoundaryCollector.Collect(dataComponent);
@@ -176,7 +176,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             // Setup
             var dataComponent = Substitute.For<ISpatiallyDefinedDataComponent>();
             dataComponent.When(x => x.AcceptVisitor(Arg.Any<ISpatiallyDefinedDataComponentVisitor>()))
-                         .Do(x => x.Arg<IForcingTypeDefinedParametersVisitor>().Visit((TimeDependentParameters<PowerDefinedSpreading>)null));
+                         .Do(x => x.Arg<IForcingTypeDefinedParametersVisitor>().Visit((TimeDependentParameters<PowerDefinedSpreading>) null));
 
             // Call
             void Call() => BcwTimeSeriesOfBoundaryCollector.Collect(dataComponent);

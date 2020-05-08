@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using DelftTools.Utils.Collections.Generic;
 using DeltaShell.NGHS.TestUtils;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
 using NUnit.Framework;
@@ -13,6 +14,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.GeometricDefinitions
     {
         private readonly Random random = new Random();
 
+        private static IEnumerable<TestCaseData> EnumValues =>
+            Enum.GetValues(typeof(GridSide))
+                .Cast<GridSide>()
+                .Select(x => new TestCaseData(x));
+
         [Test]
         public void Constructor_ExpectedValues()
         {
@@ -23,16 +29,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.GeometricDefinitions
             double length = random.NextDouble();
 
             // Call
-            var geometricDefinition = 
-                new WaveBoundaryGeometricDefinition(startingIndex, 
-                                                    endingIndex, 
+            var geometricDefinition =
+                new WaveBoundaryGeometricDefinition(startingIndex,
+                                                    endingIndex,
                                                     gridSide,
                                                     length);
 
             // Assert
             Assert.That(geometricDefinition, Is.InstanceOf<IWaveBoundaryGeometricDefinition>());
 
-            Assert.That(geometricDefinition.StartingIndex, Is.EqualTo(startingIndex), 
+            Assert.That(geometricDefinition.StartingIndex, Is.EqualTo(startingIndex),
                         "Expected a different StartingIndex.");
             Assert.That(geometricDefinition.EndingIndex, Is.EqualTo(endingIndex),
                         "Expected a different EndingIndex.");
@@ -41,12 +47,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.GeometricDefinitions
             Assert.That(geometricDefinition.Length, Is.EqualTo(length),
                         "Expected a different Length.");
 
-            var supportPoints = geometricDefinition.SupportPoints;
+            IEventedList<SupportPoint> supportPoints = geometricDefinition.SupportPoints;
             Assert.That(supportPoints, Is.Not.Null,
                         "Expected that SupportPoints was not null.");
             Assert.That(supportPoints, Has.Count.EqualTo(2),
                         "Expected that the SupportsPoints holds two instances.");
-            Assert.That(supportPoints[0].Distance, Is.EqualTo(0), 
+            Assert.That(supportPoints[0].Distance, Is.EqualTo(0),
                         "Expected that first SupportPoint has a Distance of 0");
             Assert.That(supportPoints[1].Distance, Is.EqualTo(length),
                         $"Expected that second SupportPoint is equal to the Length {length}.");
@@ -62,8 +68,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.GeometricDefinitions
             double length = random.NextDouble();
 
             // Call
-            void Call() => new WaveBoundaryGeometricDefinition(startingIndex, 
-                                                               endingIndex, 
+            void Call() => new WaveBoundaryGeometricDefinition(startingIndex,
+                                                               endingIndex,
                                                                gridSide,
                                                                length);
 
@@ -82,14 +88,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.GeometricDefinitions
             double length = random.NextDouble();
 
             // Call
-            void Call() => new WaveBoundaryGeometricDefinition(startingIndex, 
-                                                               endingIndex, 
+            void Call() => new WaveBoundaryGeometricDefinition(startingIndex,
+                                                               endingIndex,
                                                                gridSide,
                                                                length);
 
             // Assert
             var exception = Assert.Throws<ArgumentException>(Call);
-            Assert.That(exception.Message, 
+            Assert.That(exception.Message,
                         Is.EqualTo($"StartingIndex: '{startingIndex}' should be larger or equal to zero."));
         }
 
@@ -103,13 +109,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.GeometricDefinitions
             double length = random.NextDouble();
 
             // Call
-            void Call() => new WaveBoundaryGeometricDefinition(startingIndex, 
-                                                               endingIndex, 
+            void Call() => new WaveBoundaryGeometricDefinition(startingIndex,
+                                                               endingIndex,
                                                                gridSide,
                                                                length);
 
             var exception = Assert.Throws<ArgumentException>(Call);
-            Assert.That(exception.Message, 
+            Assert.That(exception.Message,
                         Is.EqualTo($"StartingIndex: '{startingIndex}' should be smaller than EndingIndex: {endingIndex}."));
         }
 
@@ -123,27 +129,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.GeometricDefinitions
             double length = random.NextDouble();
 
             // Call
-            void Call() => new WaveBoundaryGeometricDefinition(startingIndex, 
-                                                               endingIndex, 
-                                                               gridSide,
-                                                               length);
-
-            // Assert
-            var exception = Assert.Throws<ArgumentException>(Call);
-            Assert.That(exception.Message, 
-                        Is.EqualTo($"StartingIndex: '{startingIndex}' should be smaller than EndingIndex: {endingIndex}."));
-        }
-
-        [TestCase(0)]
-        [TestCase(-1)]
-        public void Constructor_InvalidLengthValue_ThrowsArgumentException(int factor)
-        {
-            // Setup
-            int startingIndex = random.Next(int.MaxValue - 1);
-            int endingIndex = random.Next(startingIndex, int.MaxValue);
-            var gridSide = random.NextEnumValue<GridSide>();
-            double length = factor * random.NextDouble();
-
             void Call() => new WaveBoundaryGeometricDefinition(startingIndex,
                                                                endingIndex,
                                                                gridSide,
@@ -151,7 +136,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.GeometricDefinitions
 
             // Assert
             var exception = Assert.Throws<ArgumentException>(Call);
-            Assert.That(exception.Message, Is.EqualTo($"Length: '{length}' should be larger than zero."));
+            Assert.That(exception.Message,
+                        Is.EqualTo($"StartingIndex: '{startingIndex}' should be smaller than EndingIndex: {endingIndex}."));
         }
 
         [Test]
@@ -185,9 +171,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.GeometricDefinitions
             var gridSide = random.NextEnumValue<GridSide>();
             double length = random.NextDouble();
 
-            var geometricDefinition = new WaveBoundaryGeometricDefinition(startingIndex, 
-                                                                          endingIndex, 
-                                                                          gridSide, 
+            var geometricDefinition = new WaveBoundaryGeometricDefinition(startingIndex,
+                                                                          endingIndex,
+                                                                          gridSide,
                                                                           length);
 
             // Call
@@ -195,7 +181,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.GeometricDefinitions
 
             // Assert
             var exception = Assert.Throws<ArgumentException>(Call);
-            Assert.That(exception.Message, 
+            Assert.That(exception.Message,
                         Is.EqualTo($"StartingIndex should be smaller than EndingIndex."));
         }
 
@@ -213,7 +199,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.GeometricDefinitions
 
             // Assert
             var exception = Assert.Throws<ArgumentException>(Call);
-            Assert.That(exception.Message, 
+            Assert.That(exception.Message,
                         Is.EqualTo($"StartingIndex should be greater or equal to zero."));
         }
 
@@ -227,7 +213,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.GeometricDefinitions
             var gridSide = random.NextEnumValue<GridSide>();
             double length = random.NextDouble();
 
-            var geometricDefinition = 
+            var geometricDefinition =
                 new WaveBoundaryGeometricDefinition(0, 5, gridSide, length);
 
             // Call
@@ -241,7 +227,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.GeometricDefinitions
         [Test]
         [TestCase(5, 10, 5)]
         [TestCase(5, 10, 2)]
-        public void EndingIndex_SetValueSmallerOrEqualToStartingIndex_ThrowsArgumentException(int startingIndex, 
+        public void EndingIndex_SetValueSmallerOrEqualToStartingIndex_ThrowsArgumentException(int startingIndex,
                                                                                               int endingIndex,
                                                                                               int nextEndingIndex)
         {
@@ -249,8 +235,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.GeometricDefinitions
             var gridSide = random.NextEnumValue<GridSide>();
             double length = random.NextDouble();
 
-            var geometricDefinition = new WaveBoundaryGeometricDefinition(startingIndex, 
-                                                                          endingIndex, 
+            var geometricDefinition = new WaveBoundaryGeometricDefinition(startingIndex,
+                                                                          endingIndex,
                                                                           gridSide,
                                                                           length);
 
@@ -259,7 +245,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.GeometricDefinitions
 
             // Assert
             var exception = Assert.Throws<ArgumentException>(Call);
-            Assert.That(exception.Message, 
+            Assert.That(exception.Message,
                         Is.EqualTo($"EndingIndex should be greater than StartingIndex."));
         }
 
@@ -270,10 +256,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.GeometricDefinitions
             double length = random.NextDouble();
 
             // Setup
-            var geometricDefinition = 
-                new WaveBoundaryGeometricDefinition(0, 
-                                                    5, 
-                                                    GridSide.East, 
+            var geometricDefinition =
+                new WaveBoundaryGeometricDefinition(0,
+                                                    5,
+                                                    GridSide.East,
                                                     length);
 
             // Call
@@ -283,11 +269,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.GeometricDefinitions
             Assert.That(geometricDefinition.GridSide, Is.EqualTo(gridSide),
                         "Expected a different GridSide:");
         }
-
-        private static IEnumerable<TestCaseData> EnumValues =>
-            Enum.GetValues(typeof(GridSide))
-                .Cast<GridSide>()
-                .Select(x => new TestCaseData(x));
 
         [Test]
         public void GridSide_SetInvalidEnum_ThrowsInvalidEnumArgumentException()
@@ -302,12 +283,33 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.GeometricDefinitions
                                                                           endingIndex,
                                                                           gridSide,
                                                                           length);
+
             // Call
             void Call() => geometricDefinition.GridSide = (GridSide) int.MaxValue;
 
             // Assert
             var exception = Assert.Throws<InvalidEnumArgumentException>(Call);
             Assert.That(exception.Message, Is.EqualTo($"Value '{int.MaxValue}' is not a defined GridSide enum."));
+        }
+
+        [TestCase(0)]
+        [TestCase(-1)]
+        public void Constructor_InvalidLengthValue_ThrowsArgumentException(int factor)
+        {
+            // Setup
+            int startingIndex = random.Next(int.MaxValue - 1);
+            int endingIndex = random.Next(startingIndex, int.MaxValue);
+            var gridSide = random.NextEnumValue<GridSide>();
+            double length = factor * random.NextDouble();
+
+            void Call() => new WaveBoundaryGeometricDefinition(startingIndex,
+                                                               endingIndex,
+                                                               gridSide,
+                                                               length);
+
+            // Assert
+            var exception = Assert.Throws<ArgumentException>(Call);
+            Assert.That(exception.Message, Is.EqualTo($"Length: '{length}' should be larger than zero."));
         }
     }
 }

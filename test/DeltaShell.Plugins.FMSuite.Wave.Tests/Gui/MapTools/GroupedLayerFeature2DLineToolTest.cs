@@ -17,9 +17,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.MapTools
             var icon = new Bitmap(10, 10);
 
             // Call
-            var lineTool = new GroupedLayerFeature2DLineTool(groupLayer, 
-                                                             childVectoryLayer, 
-                                                             name, 
+            var lineTool = new GroupedLayerFeature2DLineTool(groupLayer,
+                                                             childVectoryLayer,
+                                                             name,
                                                              icon);
 
             // Assert

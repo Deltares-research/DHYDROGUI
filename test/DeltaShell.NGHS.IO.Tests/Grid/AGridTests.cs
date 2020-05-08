@@ -13,10 +13,9 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
     [TestFixture]
     public class AGridTests
     {
+        private const string DUMMY_TEST_FILE = @"ugrid\Dummy.nc";
         private AGrid<IGridApi> grid;
         private MockRepository mocks;
-
-        private const string DUMMY_TEST_FILE = @"ugrid\Dummy.nc";
 
         [SetUp]
         public void SetUp()
@@ -38,11 +37,11 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
             var gridApi = mocks.DynamicMock<IGridApi>();
             gridApi.Expect(a => a.GetConvention())
-                .Return(GridApiDataSet.DataSetConventions.CONV_UGRID)
-                .Repeat.Once();
+                   .Return(GridApiDataSet.DataSetConventions.CONV_UGRID)
+                   .Repeat.Once();
             gridApi.Expect(a => a.GetVersion())
-                .Return(0.0)
-                .Repeat.Once();
+                   .Return(0.0)
+                   .Repeat.Once();
             grid.Expect(g => g.GridApi).Return(gridApi).Repeat.Times(3);
             grid.Expect(g => g.IsValid()).CallOriginalMethod(OriginalCallOptions.NoExpectation);
             mocks.ReplayAll();
@@ -51,11 +50,11 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
             mocks.BackToRecordAll();
             gridApi.Expect(a => a.GetConvention())
-                .Return(GridApiDataSet.DataSetConventions.CONV_UGRID)
-                .Repeat.Once();
+                   .Return(GridApiDataSet.DataSetConventions.CONV_UGRID)
+                   .Repeat.Once();
             gridApi.Expect(a => a.GetVersion())
-                .Return(GridApiDataSet.GridConstants.UG_CONV_MIN_VERSION)
-                .Repeat.Once();
+                   .Return(GridApiDataSet.GridConstants.UG_CONV_MIN_VERSION)
+                   .Repeat.Once();
             grid.Expect(g => g.GridApi).Return(gridApi).Repeat.Times(3);
             grid.Expect(g => g.IsValid()).CallOriginalMethod(OriginalCallOptions.NoExpectation);
             mocks.ReplayAll();
@@ -112,7 +111,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         [Test]
         public void InitializeAndGetCoordinateSystemTest()
         {
-            int coordinateSystemCode = 3819;
+            var coordinateSystemCode = 3819;
             var gridApi = mocks.DynamicMock<IGridApi>();
 
             // grid
@@ -120,12 +119,12 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             grid.Expect(g => g.IsInitialized()).Return(true).Repeat.Once();
             grid.Expect(g => g.GridApi).Return(gridApi).Repeat.Times(3);
             ((AGrid<IGridApi>) grid).Expect(g => g.CoordinateSystem)
-                .CallOriginalMethod(OriginalCallOptions.NoExpectation)
-                .PropertyBehavior();
+                                    .CallOriginalMethod(OriginalCallOptions.NoExpectation)
+                                    .PropertyBehavior();
 
             // gridApi
             gridApi.Expect(a => a.Open(Arg<string>.Is.Anything, Arg<GridApiDataSet.NetcdfOpenMode>.Is.Anything)).Return(GridApiDataSet.GridConstants.NOERR)
-                .Repeat.Once();
+                   .Repeat.Once();
             gridApi.Expect(a => a.GetCoordinateSystemCode(out coordinateSystemCode)).OutRef(coordinateSystemCode).Return(GridApiDataSet.GridConstants.NOERR).Repeat.Once();
             TypeUtils.SetField(grid, "disposed", true);
 
@@ -133,7 +132,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
             grid.Initialize();
             Assert.AreEqual(3819, ((AGrid<IGridApi>) grid).CoordinateSystem.AuthorityCode);
-            Assert.IsFalse((bool)TypeUtils.GetField(grid, "disposed"));
+            Assert.IsFalse((bool) TypeUtils.GetField(grid, "disposed"));
 
             mocks.VerifyAll();
         }
@@ -155,7 +154,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
             // gridApi
             gridApi.Expect(a => a.Open(Arg<string>.Is.Anything, Arg<GridApiDataSet.NetcdfOpenMode>.Is.Anything)).Return(GridApiDataSet.GridConstants.NOERR)
-                .Repeat.Once();
+                   .Repeat.Once();
             gridApi.Expect(a => a.GetCoordinateSystemCode(out coordinateSystemCode)).OutRef(coordinateSystemCode).Return(GridApiDataSet.GridConstants.NOERR).Repeat.Once().Throw(new Exception());
             TypeUtils.SetField(grid, "disposed", true);
 
@@ -163,7 +162,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
             grid.Initialize();
             Assert.IsNull(grid.CoordinateSystem);
-            Assert.IsTrue((bool)TypeUtils.GetField(grid, "disposed"));
+            Assert.IsTrue((bool) TypeUtils.GetField(grid, "disposed"));
 
             mocks.VerifyAll();
         }
@@ -242,7 +241,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             mocks.ReplayAll();
             Assert.IsFalse(grid.IsInitialized()); // gridapi = null
             Assert.IsFalse(grid.IsInitialized()); // gridapi != null, but not initialized
-            Assert.IsTrue(grid.IsInitialized()); // gridapi != null, initialized
+            Assert.IsTrue(grid.IsInitialized());  // gridapi != null, initialized
 
             mocks.VerifyAll();
         }
@@ -252,7 +251,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         {
             // Given
             var ugrid = new UGrid("myFile");
-            
+
             // When
             ugrid.Dispose();
 

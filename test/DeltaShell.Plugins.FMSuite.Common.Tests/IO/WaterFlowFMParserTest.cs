@@ -41,24 +41,48 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             Assert.AreEqual(0, list.Count);
 
             #region FromString
+
             // Can deal with space separated:
             list = FMParser.FromString<IList<string>>("alpha beta gamma delta epsilon");
             Assert.AreEqual(5, list.Count);
-            Assert.AreEqual(new[] {"alpha", "beta", "gamma", "delta", "epsilon"}, list);
+            Assert.AreEqual(new[]
+            {
+                "alpha",
+                "beta",
+                "gamma",
+                "delta",
+                "epsilon"
+            }, list);
 
             // Can deal with tab separated:
             list = FMParser.FromString<IList<string>>("alpha\tbeta\tgamma\tdelta\tepsilon");
             Assert.AreEqual(5, list.Count);
-            Assert.AreEqual(new[] { "alpha", "beta", "gamma", "delta", "epsilon" }, list);
+            Assert.AreEqual(new[]
+            {
+                "alpha",
+                "beta",
+                "gamma",
+                "delta",
+                "epsilon"
+            }, list);
+
             #endregion
 
             #region ToString
+
             // Can deal with space separated:
-            var stringList = new List<string>(new[] {"alpha", "beta", "gamma", "delta", "epsilon"});
+            var stringList = new List<string>(new[]
+            {
+                "alpha",
+                "beta",
+                "gamma",
+                "delta",
+                "epsilon"
+            });
             var newList = FMParser.ToString(stringList, typeof(IList<string>));
             Assert.AreEqual("alpha beta gamma delta epsilon", newList);
-            #endregion
 
+            #endregion
         }
 
         [Test]
@@ -70,30 +94,60 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             // Can deal with ints:
             list = FMParser.FromString<IList<double>>("1");
             Assert.AreEqual(1, list.Count);
-            Assert.AreEqual(new[]{1.0}, list);
+            Assert.AreEqual(new[]
+            {
+                1.0
+            }, list);
 
             // Always read as Culture Invariant:
             list = FMParser.FromString<IList<double>>("1.000");
             Assert.AreEqual(1, list.Count);
-            Assert.AreEqual(new[] { 1.0 }, list);
+            Assert.AreEqual(new[]
+            {
+                1.0
+            }, list);
             list = FMParser.FromString<IList<double>>("1,000");
             Assert.AreEqual(1, list.Count);
-            Assert.AreEqual(new[] { 1000.0 }, list);
+            Assert.AreEqual(new[]
+            {
+                1000.0
+            }, list);
 
             // Can deal with space separated:
             list = FMParser.FromString<IList<double>>("1.0 2 3.2 4 5.4");
             Assert.AreEqual(5, list.Count);
-            Assert.AreEqual(new[]{1.0, 2.0, 3.2, 4.0, 5.4}, list);
+            Assert.AreEqual(new[]
+            {
+                1.0,
+                2.0,
+                3.2,
+                4.0,
+                5.4
+            }, list);
 
             // Can deal with tab separated:
             list = FMParser.FromString<IList<double>>("1.0\t2\t3.2\t4\t5.4");
             Assert.AreEqual(5, list.Count);
-            Assert.AreEqual(new[] { 1.0, 2.0, 3.2, 4.0, 5.4 }, list);
+            Assert.AreEqual(new[]
+            {
+                1.0,
+                2.0,
+                3.2,
+                4.0,
+                5.4
+            }, list);
 
             // Can deal with tab and space separated combined:
             list = FMParser.FromString<IList<double>>("1.0\t2 3.2\t4 5.4");
             Assert.AreEqual(5, list.Count);
-            Assert.AreEqual(new[] { 1.0, 2.0, 3.2, 4.0, 5.4 }, list);
+            Assert.AreEqual(new[]
+            {
+                1.0,
+                2.0,
+                3.2,
+                4.0,
+                5.4
+            }, list);
 
             Assert.Throws<ArgumentNullException>(() => FMParser.FromString<IList<double>>(null));
         }
@@ -103,18 +157,22 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
         public void ToStringTestInNlCulture()
         {
             Assert.AreEqual("1.2", FMParser.ToString(1.2, typeof(double)));
-            Assert.AreEqual("1.2 3.4", FMParser.ToString(new List<double>(new[]{1.2, 3.4}), typeof(IList<double>)));
+            Assert.AreEqual("1.2 3.4", FMParser.ToString(new List<double>(new[]
+            {
+                1.2,
+                3.4
+            }), typeof(IList<double>)));
         }
 
         [Test]
         public void ToStringForSteerable()
         {
             var steerable = new Steerable
-                {
-                    ConstantValue = 1.2,
-                    TimeSeriesFilename = "weir01_crest_level.tim",
-                    Mode = SteerableMode.ConstantValue
-                };
+            {
+                ConstantValue = 1.2,
+                TimeSeriesFilename = "weir01_crest_level.tim",
+                Mode = SteerableMode.ConstantValue
+            };
             Assert.AreEqual("1.2", FMParser.ToString(steerable, typeof(Steerable)));
 
             steerable.Mode = SteerableMode.TimeSeries;
@@ -130,7 +188,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
         public void FromStringTest()
         {
             var captionField = "Test:1|2|3|4";
-            var dataType = FMParser.GetClrType("TestVar", "T|e|s|t", ref captionField, null, 0);
+            Type dataType = FMParser.GetClrType("TestVar", "T|e|s|t", ref captionField, null, 0);
 
             Assert.Throws<FormatException>(() => FMParser.FromString("1", dataType));
             Assert.AreEqual(dataType.GetEnumValues().GetValue(1), FMParser.FromString("e", dataType));
@@ -150,7 +208,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
         public void GivenAnInputBooleanString_WhenFromStringIsCalled_ThenTheCorrectValueIsReturned(string inputString, bool expectedOutput)
         {
             // When
-            bool result = (bool) FMParser.FromString(inputString, typeof(bool));
+            var result = (bool) FMParser.FromString(inputString, typeof(bool));
 
             // Then
             Assert.That(result, Is.EqualTo(expectedOutput));

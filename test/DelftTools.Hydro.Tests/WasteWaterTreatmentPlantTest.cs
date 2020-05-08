@@ -10,10 +10,15 @@ namespace DelftTools.Hydro.Tests
         [Test]
         public void Clone()
         {
-            var wwtp = new WasteWaterTreatmentPlant {Geometry = new Point(15, 15), Name = "aa", Basin = new DrainageBasin()};
-            wwtp.Attributes.Add("Milage",15);
+            var wwtp = new WasteWaterTreatmentPlant
+            {
+                Geometry = new Point(15, 15),
+                Name = "aa",
+                Basin = new DrainageBasin()
+            };
+            wwtp.Attributes.Add("Milage", 15);
 
-            var clone = wwtp.Clone();
+            object clone = wwtp.Clone();
 
             ReflectionTestHelper.AssertPublicPropertiesAreEqual(wwtp, clone);
         }

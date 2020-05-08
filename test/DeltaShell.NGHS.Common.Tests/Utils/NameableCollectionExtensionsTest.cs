@@ -95,7 +95,11 @@ namespace DeltaShell.NGHS.Common.Tests.Utils
             IEnumerable<INameable> result = nameables.GetAllByName(name);
 
             // Assert
-            CollectionAssert.AreEqual(result, new[]{first, second});
+            CollectionAssert.AreEqual(result, new[]
+            {
+                first,
+                second
+            });
         }
 
         [Test]

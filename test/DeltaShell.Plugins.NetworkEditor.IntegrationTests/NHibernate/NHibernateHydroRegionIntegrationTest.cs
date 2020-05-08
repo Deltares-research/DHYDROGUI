@@ -17,24 +17,35 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
         public void SaveLoadRegionWithLinks()
         {
             var catchment = new Catchment();
-            var wwtp = new WasteWaterTreatmentPlant { Geometry = new Point(55, 33) };
-            var basin = new DrainageBasin {Catchments = {catchment}, WasteWaterTreatmentPlants = {wwtp}};
+            var wwtp = new WasteWaterTreatmentPlant {Geometry = new Point(55, 33)};
+            var basin = new DrainageBasin
+            {
+                Catchments = {catchment},
+                WasteWaterTreatmentPlants = {wwtp}
+            };
 
             var path = "wwtp.dsproj";
 
-            var network = HydroNetworkHelper.GetSnakeHydroNetwork(2);
+            IHydroNetwork network = HydroNetworkHelper.GetSnakeHydroNetwork(2);
 
             var lateralSource = new LateralSource();
             NetworkHelper.AddBranchFeatureToBranch(lateralSource, network.Branches.First(), 30);
-            var boundary = network.HydroNodes.First();
+            IHydroNode boundary = network.HydroNodes.First();
 
-            var region = new HydroRegion {SubRegions = {network, basin}};
+            var region = new HydroRegion
+            {
+                SubRegions =
+                {
+                    network,
+                    basin
+                }
+            };
 
             catchment.LinkTo(boundary);
             catchment.LinkTo(wwtp);
             wwtp.LinkTo(lateralSource);
 
-            var retrievedRegion = SaveLoadObject(region, path);
+            HydroRegion retrievedRegion = SaveLoadObject(region, path);
             var retrievedNetwork = retrievedRegion.SubRegions.First() as HydroNetwork;
             var retrievedBasin = retrievedRegion.SubRegions.Last() as DrainageBasin;
 
@@ -46,7 +57,6 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
             Assert.AreEqual(2, retrievedBasin.WasteWaterTreatmentPlants.First().Links.Count);
             Assert.AreEqual(1, retrievedNetwork.HydroNodes.First().Links.Count);
             Assert.AreEqual(1, retrievedNetwork.LateralSources.First().Links.Count);
-            
         }
     }
 }

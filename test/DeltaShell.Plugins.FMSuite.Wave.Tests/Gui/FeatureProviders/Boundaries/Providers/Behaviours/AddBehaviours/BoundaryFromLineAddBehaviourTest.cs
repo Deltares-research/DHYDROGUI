@@ -1,4 +1,5 @@
-﻿using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
+﻿using System;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factories;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Providers.Behaviours.AddBehaviours;
 using GeoAPI.Geometries;
@@ -18,7 +19,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
             var factory = Substitute.For<IWaveBoundaryFactory>();
 
             // Call
-            var addBehaviour = new BoundaryFromLineAddBehaviour(provider, 
+            var addBehaviour = new BoundaryFromLineAddBehaviour(provider,
                                                                 factory);
 
             // Assert
@@ -28,20 +29,20 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
         [Test]
         public void Constructor_BoundaryProviderNull_ThrowsArgumentNullException()
         {
-            void Call() => new BoundaryFromLineAddBehaviour(null, 
+            void Call() => new BoundaryFromLineAddBehaviour(null,
                                                             Substitute.For<IWaveBoundaryFactory>());
 
-            var exception = Assert.Throws<System.ArgumentNullException>(Call);
+            var exception = Assert.Throws<ArgumentNullException>(Call);
             Assert.That(exception.ParamName, Is.EqualTo("boundaryProvider"));
         }
 
         [Test]
         public void Constructor_WaveBoundaryFactoryNull_ThrowsArgumentNullException()
         {
-            void Call() => new BoundaryFromLineAddBehaviour(Substitute.For<IBoundaryProvider>(), 
+            void Call() => new BoundaryFromLineAddBehaviour(Substitute.For<IBoundaryProvider>(),
                                                             null);
 
-            var exception = Assert.Throws<System.ArgumentNullException>(Call);
+            var exception = Assert.Throws<ArgumentNullException>(Call);
             Assert.That(exception.ParamName, Is.EqualTo("waveBoundaryFactory"));
         }
 
@@ -51,7 +52,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
             // Setup
             var boundaryProvider = Substitute.For<IBoundaryProvider>();
             var waveBoundaryFactory = Substitute.For<IWaveBoundaryFactory>();
-            var addBehaviour = new BoundaryFromLineAddBehaviour(boundaryProvider, 
+            var addBehaviour = new BoundaryFromLineAddBehaviour(boundaryProvider,
                                                                 waveBoundaryFactory);
 
             IGeometry geometry = null;
@@ -71,7 +72,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
             // Setup
             var boundaryProvider = Substitute.For<IBoundaryProvider>();
             var waveBoundaryFactory = Substitute.For<IWaveBoundaryFactory>();
-            var addBehaviour = new BoundaryFromLineAddBehaviour(boundaryProvider, 
+            var addBehaviour = new BoundaryFromLineAddBehaviour(boundaryProvider,
                                                                 waveBoundaryFactory);
 
             var geometry = Substitute.For<ILineString>();
@@ -94,7 +95,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
             // Setup
             var boundaryProvider = Substitute.For<IBoundaryProvider>();
             var waveBoundaryFactory = Substitute.For<IWaveBoundaryFactory>();
-            var addBehaviour = new BoundaryFromLineAddBehaviour(boundaryProvider, 
+            var addBehaviour = new BoundaryFromLineAddBehaviour(boundaryProvider,
                                                                 waveBoundaryFactory);
 
             var geometry = Substitute.For<ILineString>();

@@ -30,13 +30,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Factories
             Assert.That(result.ObservedShape, Is.SameAs(inputShape));
         }
 
-        private static IEnumerable<TestCaseData> GetConstructFromShapeValidData()
-        {
-            yield return new TestCaseData(new GaussShape(),            typeof(GaussViewShape));
-            yield return new TestCaseData(new JonswapShape(),          typeof(JonswapViewShape));
-            yield return new TestCaseData(new PiersonMoskowitzShape(), typeof(PiersonMoskowitzViewShape));
-        }
-
         [Test]
         [TestCaseSource(nameof(GetConstructFromShapeInvalidData))]
         public void ConstructFromShape_InvalidInput_ReturnsNull(IBoundaryConditionShape invalidInput)
@@ -52,17 +45,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Factories
             Assert.That(result, Is.Null);
         }
 
-        private static IEnumerable<TestCaseData> GetConstructFromShapeInvalidData()
-        {
-            yield return new TestCaseData(null);
-            yield return new TestCaseData(Substitute.For<IBoundaryConditionShape>());
-        }
-
         [Test]
         [TestCase(ViewShapeType.Gauss, typeof(GaussViewShape), typeof(GaussShape))]
-        [TestCase(ViewShapeType.Jonswap, typeof(JonswapViewShape),typeof(JonswapShape))]
-        [TestCase(ViewShapeType.PiersonMoskowitz, typeof(PiersonMoskowitzViewShape),typeof(PiersonMoskowitzShape))]
-        public void ConstructFromType_ReturnsExpectedResult(ViewShapeType inputType, 
+        [TestCase(ViewShapeType.Jonswap, typeof(JonswapViewShape), typeof(JonswapShape))]
+        [TestCase(ViewShapeType.PiersonMoskowitz, typeof(PiersonMoskowitzViewShape), typeof(PiersonMoskowitzShape))]
+        public void ConstructFromType_ReturnsExpectedResult(ViewShapeType inputType,
                                                             Type expectedViewType,
                                                             Type expectedObservedShapeType)
         {
@@ -115,7 +102,19 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Factories
             };
 
             Assert.That(shapeTypes, Is.EquivalentTo(expectedTypes));
-            
+        }
+
+        private static IEnumerable<TestCaseData> GetConstructFromShapeValidData()
+        {
+            yield return new TestCaseData(new GaussShape(), typeof(GaussViewShape));
+            yield return new TestCaseData(new JonswapShape(), typeof(JonswapViewShape));
+            yield return new TestCaseData(new PiersonMoskowitzShape(), typeof(PiersonMoskowitzViewShape));
+        }
+
+        private static IEnumerable<TestCaseData> GetConstructFromShapeInvalidData()
+        {
+            yield return new TestCaseData(null);
+            yield return new TestCaseData(Substitute.For<IBoundaryConditionShape>());
         }
     }
 }

@@ -1,4 +1,8 @@
-﻿using DelftTools.Functions;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using DelftTools.Functions;
 using DelftTools.Functions.Filters;
 using DelftTools.Functions.Generic;
 using DelftTools.TestUtils;
@@ -10,11 +14,6 @@ using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Grids;
 using NUnit.Framework;
 using Rhino.Mocks;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using Is = NUnit.Framework.Is;
 
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
 {
@@ -36,13 +35,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         [Test]
         public void CopyTo_IsSuccessfulWhenCopyingToNonExistantDirectory()
         {
-            var mapFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), "FunctionStores", "deltashell.map");
+            string mapFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), "FunctionStores", "deltashell.map");
             var store = new LazyMapFileFunctionStore {Path = mapFilePath};
 
-            var directoryPath = Path.Combine(TestHelper.GetTestDataDirectory(), "DirectoryDoesNotExist");
+            string directoryPath = Path.Combine(TestHelper.GetTestDataDirectory(), "DirectoryDoesNotExist");
             FileUtils.DeleteIfExists(directoryPath);
 
-            var filePath = Path.Combine(directoryPath, "deltashell.map");
+            string filePath = Path.Combine(directoryPath, "deltashell.map");
             store.CopyTo(filePath);
         }
 
@@ -52,11 +51,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             var dtVariable = new Variable<DateTime>();
 
             var store = new LazyMapFileFunctionStore {Path = mapFilePath};
-            var times = store.GetVariableValues<DateTime>(dtVariable);
+            IMultiDimensionalArray<DateTime> times = store.GetVariableValues<DateTime>(dtVariable);
 
             Assert.AreEqual(25, times.Count);
-            var startTime = firstTimeStep;
-            var endTime = lastTimeStep;
+            DateTime startTime = firstTimeStep;
+            DateTime endTime = lastTimeStep;
 
             Assert.IsTrue(times[0].CompareTo(startTime) == 0);
             Assert.IsTrue(times[24].CompareTo(endTime) == 0);
@@ -71,7 +70,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             var store = new LazyMapFileFunctionStore {Path = mapFilePath};
             var timeFilter = new VariableValueFilter<DateTime>
             {
-                Values = new[] {timeStep7}
+                Values = new[]
+                {
+                    timeStep7
+                }
             };
 
             var component = new Variable<double>("Salinity");
@@ -81,13 +83,16 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             funtion.Arguments.Add(new Variable<int>("cell_index"));
             funtion.Components.Add(component);
 
-            var values = store.GetVariableValues(component, timeFilter);
+            IMultiDimensionalArray values = store.GetVariableValues(component, timeFilter);
 
             Assert.AreEqual(2, values.Count);
             Assert.AreEqual(19.767536163330078, values[0]);
             Assert.AreEqual(27.733558654785156, values[1]);
 
-            timeFilter.Values = new[] {lastTimeStep};
+            timeFilter.Values = new[]
+            {
+                lastTimeStep
+            };
             values = store.GetVariableValues(component, timeFilter);
 
             Assert.AreEqual(2, values.Count);
@@ -102,7 +107,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         public void ReadTimeSeriesValuesFromStore()
         {
             var store = new LazyMapFileFunctionStore {Path = mapFilePath};
-            var segmentFilter = new VariableValueFilter<int> {Values = new[] {1}};
+            var segmentFilter = new VariableValueFilter<int>
+            {
+                Values = new[]
+                {
+                    1
+                }
+            };
 
             var timeFilter = new VariableValueFilter<DateTime>
             {
@@ -120,10 +131,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             funtion.Arguments.Add(new Variable<int>("cell_index"));
             funtion.Components.Add(component);
 
-            var values = store.GetVariableValues<double>(component, segmentFilter);
+            IMultiDimensionalArray<double> values = store.GetVariableValues<double>(component, segmentFilter);
 
-            Assert.AreEqual(30.0, values[0]); // first timestep
-            Assert.AreEqual(27.733558654785156, values[6]); // timestep 7
+            Assert.AreEqual(30.0, values[0]);                   // first timestep
+            Assert.AreEqual(27.733558654785156, values[6]);     // timestep 7
             Assert.AreEqual(14.770989418029785, values.Last()); // last timestep
         }
 
@@ -145,13 +156,16 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
 
             var timeFilter = new VariableValueFilter<DateTime>
             {
-                Values = new[] {timeStep7}
+                Values = new[]
+                {
+                    timeStep7
+                }
             };
 
             var component = new Variable<double>("Salinity");
 
             //When
-            var values = store.GetVariableValues(component, timeFilter);
+            IMultiDimensionalArray values = store.GetVariableValues(component, timeFilter);
 
             //Then
             Assert.AreEqual(0, values.Count);
@@ -186,7 +200,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
 
             var timeFilter = new VariableValueFilter<DateTime>
             {
-                Values = new[] {timeStep7, timeStep7}
+                Values = new[]
+                {
+                    timeStep7,
+                    timeStep7
+                }
             };
 
             var component = new Variable<int>("Salinity");
@@ -196,7 +214,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             function.Components.Add(component);
 
             //When
-            var values = store.GetVariableValues(component, timeFilter);
+            IMultiDimensionalArray values = store.GetVariableValues(component, timeFilter);
 
             //Then NotImplementedException
         }
@@ -210,7 +228,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
 
             var timeFilter = new VariableValueFilter<DateTime>
             {
-                Values = new[] {timeStep7}
+                Values = new[]
+                {
+                    timeStep7
+                }
             };
 
             var component = new Variable<double>("");
@@ -221,7 +242,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             function.Components.Add(component);
 
             //When
-            var values = store.GetVariableValues(component, timeFilter);
+            IMultiDimensionalArray values = store.GetVariableValues(component, timeFilter);
 
             //Then
             Assert.AreEqual(0, values.Count);
@@ -236,7 +257,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
 
             var timeFilter = new VariableValueFilter<DateTime>
             {
-                Values = new[] {timeStep7}
+                Values = new[]
+                {
+                    timeStep7
+                }
             };
 
             var component = new Variable<double>("Salinity");
@@ -244,10 +268,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
 
             function.Arguments.Add(new Variable<DateTime>("datetime"));
             function.Components.Add(component);
-            
+
             //When
-            var values = store.GetVariableValues(component, timeFilter);
-            
+            IMultiDimensionalArray values = store.GetVariableValues(component, timeFilter);
+
             //Then
             Assert.AreEqual(0, values.Count);
         }

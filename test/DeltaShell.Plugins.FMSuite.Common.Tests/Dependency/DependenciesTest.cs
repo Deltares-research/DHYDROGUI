@@ -13,47 +13,47 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.Dependency
         public void CompileAllDependencies()
         {
             var properties = new List<ModelProperty>
+            {
+                new TestModelProperty(new TestModelPropertyDefinition
                 {
-                    new TestModelProperty(new TestModelPropertyDefinition
-                        {
-                            FilePropertyName = "A",
-                            EnabledDependencies = "B",
-                            DataType = typeof(bool)
-                        }, "0"),
-                    new TestModelProperty(new TestModelPropertyDefinition
-                        {
-                            FilePropertyName = "B",
-                            EnabledDependencies = "A",
-                            DataType = typeof(bool)
-                        }, "1"),
-                    new TestModelProperty(new TestModelPropertyDefinition
-                        {
-                            FilePropertyName = "C",
-                            EnabledDependencies = "double < 1.0",
-                            DataType = typeof(bool)
-                        }, "0"),
-                    new TestModelProperty(new TestModelPropertyDefinition
-                        {
-                            FilePropertyName = "double",
-                            DataType = typeof(double),
-                            EnabledDependencies = "int = 3"
-                        }, "1.2"),
-                    new TestModelProperty(new TestModelPropertyDefinition
-                        {
-                            FilePropertyName = "int",
-                            DataType = typeof(int),
-                            EnabledDependencies = ""
-                        }, "2")
-                };
+                    FilePropertyName = "A",
+                    EnabledDependencies = "B",
+                    DataType = typeof(bool)
+                }, "0"),
+                new TestModelProperty(new TestModelPropertyDefinition
+                {
+                    FilePropertyName = "B",
+                    EnabledDependencies = "A",
+                    DataType = typeof(bool)
+                }, "1"),
+                new TestModelProperty(new TestModelPropertyDefinition
+                {
+                    FilePropertyName = "C",
+                    EnabledDependencies = "double < 1.0",
+                    DataType = typeof(bool)
+                }, "0"),
+                new TestModelProperty(new TestModelPropertyDefinition
+                {
+                    FilePropertyName = "double",
+                    DataType = typeof(double),
+                    EnabledDependencies = "int = 3"
+                }, "1.2"),
+                new TestModelProperty(new TestModelPropertyDefinition
+                {
+                    FilePropertyName = "int",
+                    DataType = typeof(int),
+                    EnabledDependencies = ""
+                }, "2")
+            };
 
             // Expect no compilation messages:
             TestHelper.AssertLogMessagesCount(() => Dependencies.CompileEnabledDependencies(properties), 0);
 
-            var propertyA = properties[0];
-            var propertyB = properties[1];
-            var propertyC = properties[2];
-            var propertyDouble = properties[3];
-            var propertyint = properties[4];
+            ModelProperty propertyA = properties[0];
+            ModelProperty propertyB = properties[1];
+            ModelProperty propertyC = properties[2];
+            ModelProperty propertyDouble = properties[3];
+            ModelProperty propertyint = properties[4];
 
             // No cyclic IsEnabled checking:
             Assert.IsTrue(propertyA.IsEnabled(properties));
@@ -73,28 +73,28 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.Dependency
         public void DependenciesShouldHandleCompilationErrorsAndUseDefaults()
         {
             var properties = new List<ModelProperty>
+            {
+                new TestModelProperty(new TestModelPropertyDefinition
                 {
-                    new TestModelProperty(new TestModelPropertyDefinition
-                        {
-                            FilePropertyName = "A",
-                            EnabledDependencies = "string > 1", // This should not compile
-                            DataType = typeof (string)
-                        }, "1"),
-                    new TestModelProperty(new TestModelPropertyDefinition
-                        {
-                            FilePropertyName = "string",
-                            DataType = typeof (string)
-                        }, "1.2"),
-                };
+                    FilePropertyName = "A",
+                    EnabledDependencies = "string > 1", // This should not compile
+                    DataType = typeof(string)
+                }, "1"),
+                new TestModelProperty(new TestModelPropertyDefinition
+                {
+                    FilePropertyName = "string",
+                    DataType = typeof(string)
+                }, "1.2"),
+            };
 
             TestHelper.AssertLogMessageIsGenerated(() => Dependencies.CompileEnabledDependencies(properties),
-                "Cannot read dependencies for property 'A'; Reason: Model property 'string' should be have 'double' or 'integer' data type.", 1);
+                                                   "Cannot read dependencies for property 'A'; Reason: Model property 'string' should be have 'double' or 'integer' data type.", 1);
 
-            var propertyA = properties[0];
-            var propertyString = properties[1];
+            ModelProperty propertyA = properties[0];
+            ModelProperty propertyString = properties[1];
 
             Assert.IsTrue(propertyA.IsEnabled(properties),
-                "Use default isEnabled method");
+                          "Use default isEnabled method");
             Assert.IsTrue(propertyString.IsEnabled(properties));
         }
     }

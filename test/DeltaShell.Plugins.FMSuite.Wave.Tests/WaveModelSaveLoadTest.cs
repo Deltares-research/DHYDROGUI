@@ -1,19 +1,20 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.Shell.Core.Workflow;
+using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
 using DelftTools.TestUtils.TestReferenceHelper;
 using DelftTools.Utils.IO;
+using DelftTools.Utils.Validation;
 using DeltaShell.Core;
 using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.Data.NHibernate;
+using DeltaShell.Plugins.FMSuite.Wave.IO;
 using DeltaShell.Plugins.NetworkEditor;
 using DeltaShell.Plugins.SharpMapGis;
-using GeoAPI.Geometries;
-using NetTopologySuite.Extensions.Features;
-using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using SharpMap.Extensions.CoordinateSystems;
 
@@ -24,15 +25,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
     [Category(TestCategory.Slow)]
     public class WaveModelSaveLoadTest
     {
-        private static void LoadRequiredPlugins(DeltaShellApplication app)
-        {
-            app.Plugins.Add(new NHibernateDaoApplicationPlugin());
-            app.Plugins.Add(new CommonToolsApplicationPlugin());
-            app.Plugins.Add(new SharpMapGisApplicationPlugin());
-            app.Plugins.Add(new NetworkEditorApplicationPlugin());
-            app.Plugins.Add(new WaveApplicationPlugin());
-        }
-
         [Test]
         public void SaveLoadEmptyWaveModel()
         {
@@ -81,7 +73,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
                 app.CloseProject();
                 app.OpenProject(path);
 
-                var retrievedModel = (WaveModel)app.Project.RootFolder.Items[0];
+                var retrievedModel = (WaveModel) app.Project.RootFolder.Items[0];
 
                 Assert.IsNotNull(retrievedModel);
                 Assert.IsNotNull(retrievedModel.CoordinateSystem);
@@ -100,7 +92,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
                 var path = "mdw.dsproj";
                 app.SaveProjectAs(path); // save to initialize file repository..
 
-                var mdwFilePath = TestHelper.GetTestFilePath(@"wave_timespacevarbnd/tst.mdw");
+                string mdwFilePath = TestHelper.GetTestFilePath(@"wave_timespacevarbnd/tst.mdw");
 
                 var model = new WaveModel(mdwFilePath);
                 app.Project.RootFolder.Add(model);
@@ -130,7 +122,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
                 var path = "mdw.dsproj";
                 app.SaveProjectAs(path);
 
-                var mdwFilePath = TestHelper.GetTestFilePath(@"coordinateBasedBoundary/obw.mdw");
+                string mdwFilePath = TestHelper.GetTestFilePath(@"coordinateBasedBoundary/obw.mdw");
 
                 var model = new WaveModel(mdwFilePath);
                 app.Project.RootFolder.Add(model);
@@ -158,10 +150,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
 
                 Assert.AreEqual(subscriptionsBefore, subscriptionsAfterRetrieved, "event leak");
                 Assert.LessOrEqual(subscriptionsAfter, subscriptionsBefore, "event leak");
-
             }
         }
-        
+
         [Test]
         public void SaveLoadWaveModelPersistsCoupledStartTime()
         {
@@ -178,16 +169,19 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
                 app.Project.RootFolder.Add(model);
 
                 //Set parameter to desired value.
-                var newStartTime = DateTime.Today;
+                DateTime newStartTime = DateTime.Today;
                 if (model.StartTime == newStartTime)
+                {
                     newStartTime = newStartTime.AddDays(1);
+                }
+
                 model.StartTime = newStartTime;
                 app.SaveProjectAs(path);
 
                 app.CloseProject();
                 app.OpenProject(path);
 
-                var retrievedModel = (WaveModel)app.Project.RootFolder.Items[0];
+                var retrievedModel = (WaveModel) app.Project.RootFolder.Items[0];
                 //Check persistance
                 Assert.IsNotNull(retrievedModel);
                 Assert.AreEqual(newStartTime, retrievedModel.StartTime);
@@ -210,16 +204,19 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
                 app.Project.RootFolder.Add(model);
 
                 //Set parameter to desired value.
-                var newStopTime = DateTime.Today;
+                DateTime newStopTime = DateTime.Today;
                 if (model.StopTime == newStopTime)
+                {
                     newStopTime = newStopTime.AddDays(1);
+                }
+
                 model.StopTime = newStopTime;
                 app.SaveProjectAs(path);
 
                 app.CloseProject();
                 app.OpenProject(path);
 
-                var retrievedModel = (WaveModel)app.Project.RootFolder.Items[0];
+                var retrievedModel = (WaveModel) app.Project.RootFolder.Items[0];
                 //Check persistance
                 Assert.IsNotNull(retrievedModel);
                 Assert.AreEqual(newStopTime, retrievedModel.StopTime);
@@ -242,16 +239,19 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
                 app.Project.RootFolder.Add(model);
 
                 //Set parameter to desired value.
-                var newTimeStep = TimeSpan.FromHours(1);
+                TimeSpan newTimeStep = TimeSpan.FromHours(1);
                 if (model.TimeStep == newTimeStep)
+                {
                     newTimeStep = newTimeStep.Add(TimeSpan.FromHours(1));
+                }
+
                 model.TimeStep = newTimeStep;
                 app.SaveProjectAs(path);
 
                 app.CloseProject();
                 app.OpenProject(path);
 
-                var retrievedModel = (WaveModel)app.Project.RootFolder.Items[0];
+                var retrievedModel = (WaveModel) app.Project.RootFolder.Items[0];
                 //Check persistance
                 Assert.IsNotNull(retrievedModel);
                 Assert.AreEqual(newTimeStep, retrievedModel.TimeStep);
@@ -266,23 +266,21 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
                 LoadRequiredPlugins(app);
                 app.Run();
 
-                string path = "mdw_grid.dsproj";
-                string secondPath = "target_mdw_grid.dsproj";
+                var path = "mdw_grid.dsproj";
+                var secondPath = "target_mdw_grid.dsproj";
                 app.SaveProjectAs(path); // save to initialize file repository..
 
-                var mdwFilePath = TestHelper.GetTestFilePath(@"wave_timespacevarbnd/tst.mdw");
+                string mdwFilePath = TestHelper.GetTestFilePath(@"wave_timespacevarbnd/tst.mdw");
                 var model = new WaveModel(mdwFilePath);
 
                 app.Project.RootFolder.Add(model);
 
-
                 // after this call, we should go into PFBIR.Initialize(..) to get filebased items form project ???
                 app.SaveProjectAs(path);
 
-
                 app.SaveProjectAs(secondPath);
 
-                var targetDir = Path.Combine(secondPath + "_data", model.Name);
+                string targetDir = Path.Combine(secondPath + "_data", model.Name);
                 Assert.IsTrue(File.Exists(Path.Combine(targetDir, model.Name + ".mdw")));
             }
         }
@@ -295,13 +293,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
                 LoadRequiredPlugins(app);
                 app.Run();
 
-                string projPath = "modelSaveLoadDomainsTest.dsproj";
+                var projPath = "modelSaveLoadDomainsTest.dsproj";
                 app.SaveProjectAs(projPath); // save to initialize file repository..
 
-                var model = new WaveModel { Name = "domainSaveLoadTest" };
+                var model = new WaveModel {Name = "domainSaveLoadTest"};
                 app.Project.RootFolder.Add(model);
-
-              
 
                 var inner = new WaveDomainData("inner");
                 model.AddSubDomain(model.OuterDomain, inner);
@@ -343,7 +339,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
                 app.OpenProject(projPath);
                 var loadedModel = app.Project.RootFolder.Items[0] as WaveModel;
 
-                var bathymetries = loadedModel.DataItems.Where(d => d.Name == loadedModel.OuterDomain.Bathymetry.Name);
+                IEnumerable<IDataItem> bathymetries = loadedModel.DataItems.Where(d => d.Name == loadedModel.OuterDomain.Bathymetry.Name);
                 Assert.AreEqual(1, bathymetries.Count()); // TOOLS-22877: with every save the bathymetry was added as a duplicate
                 Assert.AreEqual(loadedModel.OuterDomain.Bathymetry, loadedModel.DataItems.FirstOrDefault(d => d.Name == loadedModel.OuterDomain.Bathymetry.Name).Value);
             }
@@ -381,22 +377,21 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         [Test]
         public void WaveOutputSaveLoadTest()
         {
-            using (var app = new DeltaShellApplication() { IsProjectCreatedInTemporaryDirectory = true })
+            using (var app = new DeltaShellApplication() {IsProjectCreatedInTemporaryDirectory = true})
             {
                 LoadRequiredPlugins(app);
                 app.Run();
 
-
                 const string projPath = "outputSaveLoadTest.dsproj";
-                
-                var path = TestHelper.GetTestFilePath(@"obw\obw.mdw");
-                var localPath = TestHelper.CreateLocalCopy(path);
 
-                var model = new WaveModel(localPath) { Name = "outputSaveLoadTest" };
+                string path = TestHelper.GetTestFilePath(@"obw\obw.mdw");
+                string localPath = TestHelper.CreateLocalCopy(path);
+
+                var model = new WaveModel(localPath) {Name = "outputSaveLoadTest"};
 
                 app.Project.RootFolder.Add(model);
 
-                var report = model.Validate();
+                ValidationReport report = model.Validate();
 
                 ActivityRunner.RunActivity(model);
 
@@ -406,7 +401,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
                 app.OpenProject(projPath);
                 var loadedModel = app.Project.RootFolder.Items[0] as WaveModel;
 
-                var functionStore = loadedModel.WavmFunctionStores.FirstOrDefault();
+                WavmFileFunctionStore functionStore = loadedModel.WavmFunctionStores.FirstOrDefault();
 
                 Assert.IsNotNull(functionStore);
 
@@ -414,5 +409,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
             }
         }
 
+        private static void LoadRequiredPlugins(DeltaShellApplication app)
+        {
+            app.Plugins.Add(new NHibernateDaoApplicationPlugin());
+            app.Plugins.Add(new CommonToolsApplicationPlugin());
+            app.Plugins.Add(new SharpMapGisApplicationPlugin());
+            app.Plugins.Add(new NetworkEditorApplicationPlugin());
+            app.Plugins.Add(new WaveApplicationPlugin());
+        }
     }
 }

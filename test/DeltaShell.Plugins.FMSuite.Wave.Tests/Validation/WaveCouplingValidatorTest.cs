@@ -136,6 +136,65 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             Assert.That(waveValidationShortcut.TabName, Is.EqualTo("General"));
         }
 
+        [Test]
+        public void GivenWaveModelNotCoupledToFlowModelAndWriteComFileIsTrue_WhenValidatingCoupling_ThenValidationErrorIsReturned()
+        {
+            // Given
+            var waveModel = new WaveModel();
+
+            waveModel.ModelDefinition.GetModelProperty(KnownWaveCategories.OutputCategory, KnownWaveProperties.WriteCOM).Value = true;
+
+            // When
+            ValidationReport validationReport = WaveCouplingValidator.Validate(waveModel);
+
+            // Then
+            ContainsCouplingValidationErrorWithMessage(validationReport, "Stand-alone wave model cannot write COM-file");
+        }
+
+        [Test]
+        public void Validate_WaveModelWithNonExistingCommunicationFile_ThenValidationErrorIsReturned()
+        {
+            // Arrange
+            const string nonExistingFilePath = "C:/NonExistingDirectory/NonExistingFile_com.nc";
+
+            using (var waveModel = new WaveModel())
+            {
+                waveModel.ModelDefinition.CommunicationsFilePath = nonExistingFilePath;
+
+                // Act
+                ValidationReport validationReport = WaveCouplingValidator.Validate(waveModel);
+
+                // Assert
+                string expectedErrorMessage = $"Communications file '{nonExistingFilePath}' does not exist.";
+                ContainsCouplingValidationErrorWithMessage(validationReport, expectedErrorMessage);
+            }
+        }
+
+        [Test]
+        public void Validate_WaveModelWithExistingRelativeCommunicationFilePath_ThenNoValidationErrorIsReturned()
+        {
+            // Arrange
+            using (var temporaryDirectory = new TemporaryDirectory())
+            using (var waveModel = new WaveModel())
+            {
+                string mdwFilePath = Path.Combine(temporaryDirectory.Path, "WaveModelDirectory", "myModel.mdw");
+                waveModel.ModelSaveTo(mdwFilePath, true);
+
+                string communicationFilePath = Path.Combine(temporaryDirectory.Path, "myComFile_com.nc");
+                FileStream fileStream = File.Create(communicationFilePath);
+                fileStream.Close();
+
+                waveModel.ModelDefinition.CommunicationsFilePath = "../myComFile_com.nc";
+
+                // Act
+                ValidationReport validationReport = WaveCouplingValidator.Validate(waveModel);
+
+                // Assert
+                IEnumerable<ValidationIssue> validationErrors = validationReport.AllErrors.Where(issue => issue.Message.StartsWith("Communications file '"));
+                Assert.IsEmpty(validationErrors);
+            }
+        }
+
         [TestCase(false, "anyPath")]
         [TestCase(true, "")]
         [TestCase(true, null)]
@@ -157,40 +216,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             ContainsCouplingValidationErrorWithMessage(validationReport, "Coupled wave model must use COM-file");
         }
 
-        [Test]
-        public void GivenWaveModelNotCoupledToFlowModelAndWriteComFileIsTrue_WhenValidatingCoupling_ThenValidationErrorIsReturned()
-        {
-            // Given
-            var waveModel = new WaveModel();
-            
-            waveModel.ModelDefinition.GetModelProperty(KnownWaveCategories.OutputCategory, KnownWaveProperties.WriteCOM).Value = true;
-
-            // When
-            ValidationReport validationReport = WaveCouplingValidator.Validate(waveModel);
-
-            // Then
-            ContainsCouplingValidationErrorWithMessage(validationReport, "Stand-alone wave model cannot write COM-file");
-        }
-
-        [Test]
-        public void Validate_WaveModelWithNonExistingCommunicationFile_ThenValidationErrorIsReturned()
-        {
-            // Arrange
-            const string nonExistingFilePath = "C:/NonExistingDirectory/NonExistingFile_com.nc";
-
-            using (var waveModel = new WaveModel())
-            {
-                waveModel.ModelDefinition.CommunicationsFilePath = nonExistingFilePath;
-                
-                // Act
-                ValidationReport validationReport = WaveCouplingValidator.Validate(waveModel);
-
-                // Assert
-                string expectedErrorMessage = $"Communications file '{nonExistingFilePath}' does not exist.";
-                ContainsCouplingValidationErrorWithMessage(validationReport, expectedErrorMessage);
-            }
-        }
-
         [TestCase("")]
         [TestCase(null)]
         public void Validate_WaveModelWithNullOrEmptyCommunicationFilePath_ThenNoValidationErrorIsReturned(string communicationFilePath)
@@ -199,31 +224,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             using (var waveModel = new WaveModel())
             {
                 waveModel.ModelDefinition.CommunicationsFilePath = communicationFilePath;
-               
-                // Act
-                ValidationReport validationReport = WaveCouplingValidator.Validate(waveModel);
-
-                // Assert
-                IEnumerable<ValidationIssue> validationErrors = validationReport.AllErrors.Where(issue => issue.Message.StartsWith("Communications file '"));
-                Assert.IsEmpty(validationErrors);
-            }
-        }
-
-        [Test]
-        public void Validate_WaveModelWithExistingRelativeCommunicationFilePath_ThenNoValidationErrorIsReturned()
-        {
-            // Arrange
-            using (var temporaryDirectory = new TemporaryDirectory())
-            using (var waveModel = new WaveModel())
-            {
-                string mdwFilePath = Path.Combine(temporaryDirectory.Path, "WaveModelDirectory", "myModel.mdw");
-                waveModel.ModelSaveTo(mdwFilePath, true);
-
-                string communicationFilePath = Path.Combine(temporaryDirectory.Path, "myComFile_com.nc");
-                FileStream fileStream = File.Create(communicationFilePath);
-                fileStream.Close();
-
-                waveModel.ModelDefinition.CommunicationsFilePath = "../myComFile_com.nc";
 
                 // Act
                 ValidationReport validationReport = WaveCouplingValidator.Validate(waveModel);

@@ -14,7 +14,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
     [TestFixture]
     [TestFixture(typeof(PowerDefinedSpreading))]
     [TestFixture(typeof(DegreesDefinedSpreading))]
-    public class UniformTimeDependentParametersSettingsViewModelTest<TSpreading> where TSpreading: class, IBoundaryConditionSpreading, new()
+    public class UniformTimeDependentParametersSettingsViewModelTest<TSpreading> where TSpreading : class, IBoundaryConditionSpreading, new()
     {
         [Test]
         public void Constructor_ExpectedValues()
@@ -32,12 +32,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
 
             // Assert
             Assert.That(viewModel, Is.InstanceOf<TimeDependentParametersSettingsViewModel>());
-            Assert.That(viewModel.ActiveParametersViewModel, Is.Not.Null, 
+            Assert.That(viewModel.ActiveParametersViewModel, Is.Not.Null,
                         "Expected the ActiveParametersViewModel to not be null:");
             Assert.That(viewModel.ActiveParametersViewModel.TimeDependentParametersFunctions.Count(), Is.EqualTo(1));
             Assert.That(viewModel.ActiveParametersViewModel.TimeDependentParametersFunctions.First, Is.SameAs(underlyingFunction));
 
-            Assert.That(viewModel.GroupBoxTitle, Is.EqualTo("Uniform Time Dependent Parameters"), 
+            Assert.That(viewModel.GroupBoxTitle, Is.EqualTo("Uniform Time Dependent Parameters"),
                         "Expected the GroupBoxTitle to be different:");
         }
 
@@ -66,6 +66,5 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             var exception = Assert.Throws<ArgumentNullException>(Call);
             Assert.That(exception.ParamName, Is.EqualTo("generateSeries"));
         }
-        
     }
 }

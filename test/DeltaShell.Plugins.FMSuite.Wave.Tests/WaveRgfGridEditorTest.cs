@@ -14,18 +14,18 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         [Ignore("Not for build server (requires user input)")]
         public void OpenStructuredGrid()
         {
-            var mdwPath = TestHelper.GetTestFilePath(@"wave_timespacevarbnd/tst.mdw");
+            string mdwPath = TestHelper.GetTestFilePath(@"wave_timespacevarbnd/tst.mdw");
             Assert.IsTrue(File.Exists(mdwPath));
 
             var waveModel = new WaveModel(mdwPath);
 
-            var modelDirectoryName = Path.GetDirectoryName(mdwPath);
+            string modelDirectoryName = Path.GetDirectoryName(mdwPath);
 
-            var grids =
+            string[] grids =
                 WaveDomainHelper.GetAllDomains(waveModel.OuterDomain)
                                 .Select(d => Path.Combine(modelDirectoryName, d.GridFileName))
                                 .ToArray();
-            var emptyFlags = grids.Select(p => !File.Exists(p)).ToArray();
+            bool[] emptyFlags = grids.Select(p => !File.Exists(p)).ToArray();
             RgfGridEditor.OpenGrids(grids, emptyFlags);
         }
 
@@ -34,8 +34,18 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         [Ignore("Not for build server (requires user input)")]
         public void OpenMultipleEmptyGrids()
         {
-            var grids = new[] {"grid1.grd", "grid2.grd", "grid3.grd"};
-            var empty = new[] {true,true,true};
+            var grids = new[]
+            {
+                "grid1.grd",
+                "grid2.grd",
+                "grid3.grd"
+            };
+            var empty = new[]
+            {
+                true,
+                true,
+                true
+            };
             RgfGridEditor.OpenGrids(grids, empty);
         }
     }

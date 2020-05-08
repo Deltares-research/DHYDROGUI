@@ -51,24 +51,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Factories
             Assert.That(exception.ParamName, Is.EqualTo("referenceDateTimeProvider"));
         }
 
-        private static IEnumerable<TestCaseData> GetConstructParametersSettingsViewModelData()
-        {
-            yield return new TestCaseData(new UniformDataComponent<ConstantParameters<PowerDefinedSpreading>>(new ConstantParameters<PowerDefinedSpreading>(0.0, 0.0, 0.0, new PowerDefinedSpreading())), typeof(UniformConstantParametersSettingsViewModel<PowerDefinedSpreading>));
-            yield return new TestCaseData(new UniformDataComponent<ConstantParameters<DegreesDefinedSpreading>>(new ConstantParameters<DegreesDefinedSpreading>(0.0, 0.0, 0.0, new DegreesDefinedSpreading())), typeof(UniformConstantParametersSettingsViewModel<DegreesDefinedSpreading>));
-            yield return new TestCaseData(new SpatiallyVaryingDataComponent<ConstantParameters<PowerDefinedSpreading>>(), typeof(SpatiallyVariantConstantParametersSettingsViewModel<PowerDefinedSpreading>));
-            yield return new TestCaseData(new SpatiallyVaryingDataComponent<ConstantParameters<DegreesDefinedSpreading>>(), typeof(SpatiallyVariantConstantParametersSettingsViewModel<DegreesDefinedSpreading>));
-
-            var powerDefinedFunction = Substitute.For<IWaveEnergyFunction<PowerDefinedSpreading>>();
-            var degreesDefinedFunction = Substitute.For<IWaveEnergyFunction<DegreesDefinedSpreading>>();
-            yield return new TestCaseData(new UniformDataComponent<TimeDependentParameters<PowerDefinedSpreading>>(new TimeDependentParameters<PowerDefinedSpreading>(powerDefinedFunction)), typeof(UniformTimeDependentParametersSettingsViewModel<PowerDefinedSpreading>));
-            yield return new TestCaseData(new UniformDataComponent<TimeDependentParameters<DegreesDefinedSpreading>>(new TimeDependentParameters<DegreesDefinedSpreading>(degreesDefinedFunction)), typeof(UniformTimeDependentParametersSettingsViewModel<DegreesDefinedSpreading>));
-            yield return new TestCaseData(new SpatiallyVaryingDataComponent<TimeDependentParameters<PowerDefinedSpreading>>(), typeof(SpatiallyVariantTimeDependentParametersSettingsViewModel<PowerDefinedSpreading>));
-            yield return new TestCaseData(new SpatiallyVaryingDataComponent<TimeDependentParameters<DegreesDefinedSpreading>>(), typeof(SpatiallyVariantTimeDependentParametersSettingsViewModel<DegreesDefinedSpreading>));
-           
-            yield return new TestCaseData(new UniformDataComponent<FileBasedParameters>(new FileBasedParameters("path")), typeof(UniformFileBasedParametersSettingsViewModel));
-            yield return new TestCaseData(new SpatiallyVaryingDataComponent<FileBasedParameters>(), typeof(SpatiallyVariantFileBasedParametersSettingsViewModel));
-        }
-
         [Test]
         [TestCaseSource(nameof(GetConstructParametersSettingsViewModelData))]
         public void ConstructParametersSettingsViewModel_ExpectedResults(ISpatiallyDefinedDataComponent dataComponent,
@@ -101,12 +83,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Factories
             Assert.That(exception.ParamName, Is.EqualTo("dataComponent"));
         }
 
-        private class DummyDataComponent : ISpatiallyDefinedDataComponent {
-            public void AcceptVisitor(ISpatiallyDefinedDataComponentVisitor boundaryConditionVisitor)
-            {
-            }
-        }
-
         [Test]
         public void ConstructParametersSettingsViewModel_UnsupportedType_ThrowsNotSupportedException()
         {
@@ -133,8 +109,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Factories
             var factory = new ViewDataComponentFactory(modelDataComponentFactory, referenceDateProvider);
 
             // Call
-            ISpatiallyDefinedDataComponent dataComponent = 
-                factory.ConstructBoundaryConditionDataComponent(ForcingViewType.Constant, 
+            ISpatiallyDefinedDataComponent dataComponent =
+                factory.ConstructBoundaryConditionDataComponent(ForcingViewType.Constant,
                                                                 SpatialDefinitionViewType.Uniform,
                                                                 DirectionalSpreadingViewType.Power);
 
@@ -159,8 +135,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Factories
             var factory = new ViewDataComponentFactory(modelDataComponentFactory, referenceDateProvider);
 
             // Call
-            ISpatiallyDefinedDataComponent dataComponent = 
-                factory.ConstructBoundaryConditionDataComponent(ForcingViewType.TimeSeries, 
+            ISpatiallyDefinedDataComponent dataComponent =
+                factory.ConstructBoundaryConditionDataComponent(ForcingViewType.TimeSeries,
                                                                 SpatialDefinitionViewType.Uniform,
                                                                 DirectionalSpreadingViewType.Power);
 
@@ -184,8 +160,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Factories
             var factory = new ViewDataComponentFactory(modelDataComponentFactory, referenceDateProvider);
 
             // Call
-            ISpatiallyDefinedDataComponent dataComponent = 
-                factory.ConstructBoundaryConditionDataComponent(ForcingViewType.Constant, 
+            ISpatiallyDefinedDataComponent dataComponent =
+                factory.ConstructBoundaryConditionDataComponent(ForcingViewType.Constant,
                                                                 SpatialDefinitionViewType.Uniform,
                                                                 DirectionalSpreadingViewType.Degrees);
 
@@ -209,8 +185,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Factories
             var factory = new ViewDataComponentFactory(modelDataComponentFactory, referenceDateProvider);
 
             // Call
-            ISpatiallyDefinedDataComponent dataComponent = 
-                factory.ConstructBoundaryConditionDataComponent(ForcingViewType.TimeSeries, 
+            ISpatiallyDefinedDataComponent dataComponent =
+                factory.ConstructBoundaryConditionDataComponent(ForcingViewType.TimeSeries,
                                                                 SpatialDefinitionViewType.Uniform,
                                                                 DirectionalSpreadingViewType.Degrees);
 
@@ -236,8 +212,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Factories
             var factory = new ViewDataComponentFactory(modelDataComponentFactory, referenceDateProvider);
 
             // Call
-            ISpatiallyDefinedDataComponent dataComponent = 
-                factory.ConstructBoundaryConditionDataComponent(ForcingViewType.FileBased, 
+            ISpatiallyDefinedDataComponent dataComponent =
+                factory.ConstructBoundaryConditionDataComponent(ForcingViewType.FileBased,
                                                                 SpatialDefinitionViewType.Uniform,
                                                                 directionalSpreading);
 
@@ -261,8 +237,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Factories
             var factory = new ViewDataComponentFactory(modelDataComponentFactory, referenceDateProvider);
 
             // Call
-            ISpatiallyDefinedDataComponent dataComponent = 
-                factory.ConstructBoundaryConditionDataComponent(ForcingViewType.Constant, 
+            ISpatiallyDefinedDataComponent dataComponent =
+                factory.ConstructBoundaryConditionDataComponent(ForcingViewType.Constant,
                                                                 SpatialDefinitionViewType.SpatiallyVarying,
                                                                 DirectionalSpreadingViewType.Degrees);
 
@@ -286,8 +262,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Factories
             var factory = new ViewDataComponentFactory(modelDataComponentFactory, referenceDateProvider);
 
             // Call
-            ISpatiallyDefinedDataComponent dataComponent = 
-                factory.ConstructBoundaryConditionDataComponent(ForcingViewType.TimeSeries, 
+            ISpatiallyDefinedDataComponent dataComponent =
+                factory.ConstructBoundaryConditionDataComponent(ForcingViewType.TimeSeries,
                                                                 SpatialDefinitionViewType.SpatiallyVarying,
                                                                 DirectionalSpreadingViewType.Degrees);
 
@@ -311,8 +287,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Factories
             var factory = new ViewDataComponentFactory(modelDataComponentFactory, referenceDateProvider);
 
             // Call
-            ISpatiallyDefinedDataComponent dataComponent = 
-                factory.ConstructBoundaryConditionDataComponent(ForcingViewType.Constant, 
+            ISpatiallyDefinedDataComponent dataComponent =
+                factory.ConstructBoundaryConditionDataComponent(ForcingViewType.Constant,
                                                                 SpatialDefinitionViewType.SpatiallyVarying,
                                                                 DirectionalSpreadingViewType.Power);
 
@@ -336,8 +312,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Factories
             var factory = new ViewDataComponentFactory(modelDataComponentFactory, referenceDateProvider);
 
             // Call
-            ISpatiallyDefinedDataComponent dataComponent = 
-                factory.ConstructBoundaryConditionDataComponent(ForcingViewType.TimeSeries, 
+            ISpatiallyDefinedDataComponent dataComponent =
+                factory.ConstructBoundaryConditionDataComponent(ForcingViewType.TimeSeries,
                                                                 SpatialDefinitionViewType.SpatiallyVarying,
                                                                 DirectionalSpreadingViewType.Power);
 
@@ -363,8 +339,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Factories
             var factory = new ViewDataComponentFactory(modelDataComponentFactory, referenceDateProvider);
 
             // Call
-            ISpatiallyDefinedDataComponent dataComponent = 
-                factory.ConstructBoundaryConditionDataComponent(ForcingViewType.FileBased, 
+            ISpatiallyDefinedDataComponent dataComponent =
+                factory.ConstructBoundaryConditionDataComponent(ForcingViewType.FileBased,
                                                                 SpatialDefinitionViewType.SpatiallyVarying,
                                                                 directionalSpreading);
 
@@ -398,36 +374,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Factories
             Assert.That(Call, Throws.InstanceOf<NotSupportedException>());
         }
 
-
-        private static IEnumerable<TestCaseData> ConvertBoundaryConditionDataComponentSpreadingTypeSameTypeData()
-        {
-            yield return new TestCaseData(new UniformDataComponent<ConstantParameters<PowerDefinedSpreading>>(new ConstantParameters<PowerDefinedSpreading>(0, 0, 0, new PowerDefinedSpreading())), 
-                                          DirectionalSpreadingViewType.Power);
-            yield return new TestCaseData(new UniformDataComponent<ConstantParameters<DegreesDefinedSpreading>>(new ConstantParameters<DegreesDefinedSpreading>(0, 0, 0, new DegreesDefinedSpreading())), 
-                                          DirectionalSpreadingViewType.Degrees);
-            yield return new TestCaseData(new SpatiallyVaryingDataComponent<ConstantParameters<PowerDefinedSpreading>>(), 
-                                          DirectionalSpreadingViewType.Power);
-            yield return new TestCaseData(new SpatiallyVaryingDataComponent<ConstantParameters<DegreesDefinedSpreading>>(), 
-                                          DirectionalSpreadingViewType.Degrees);
-
-            var powerDefinedFunction = Substitute.For<IWaveEnergyFunction<PowerDefinedSpreading>>();
-            yield return new TestCaseData(new UniformDataComponent<TimeDependentParameters<PowerDefinedSpreading>>(new TimeDependentParameters<PowerDefinedSpreading>(powerDefinedFunction)), 
-                                          DirectionalSpreadingViewType.Power);
-
-            var degreesDefinedFunction = Substitute.For<IWaveEnergyFunction<DegreesDefinedSpreading>>();
-            yield return new TestCaseData(new UniformDataComponent<TimeDependentParameters<DegreesDefinedSpreading>>(new TimeDependentParameters<DegreesDefinedSpreading>(degreesDefinedFunction)), 
-                                          DirectionalSpreadingViewType.Degrees);
-            yield return new TestCaseData(new SpatiallyVaryingDataComponent<TimeDependentParameters<PowerDefinedSpreading>>(), 
-                                          DirectionalSpreadingViewType.Power);
-            yield return new TestCaseData(new SpatiallyVaryingDataComponent<TimeDependentParameters<DegreesDefinedSpreading>>(), 
-                                          DirectionalSpreadingViewType.Degrees);
-
-            yield return new TestCaseData(new UniformDataComponent<FileBasedParameters>(new FileBasedParameters("path")), 
-                                          DirectionalSpreadingViewType.Power);
-            yield return new TestCaseData(new SpatiallyVaryingDataComponent<FileBasedParameters>(), 
-                                          DirectionalSpreadingViewType.Power);
-        }
-
         [Test]
         [TestCaseSource(nameof(ConvertBoundaryConditionDataComponentSpreadingTypeSameTypeData))]
         public void ConvertBoundaryConditionDataComponentSpreadingType_NewSpreadingTypeEqualsDataComponentType_ReturnsDataComponent(ISpatiallyDefinedDataComponent dataComponent,
@@ -439,90 +385,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Factories
             var factory = new ViewDataComponentFactory(modelDataComponentFactory, referenceDateProvider);
 
             // Call
-            ISpatiallyDefinedDataComponent result = 
+            ISpatiallyDefinedDataComponent result =
                 factory.ConvertBoundaryConditionDataComponentSpreadingType(dataComponent, spreadingType);
 
             // Assert
             Assert.That(result, Is.SameAs(dataComponent));
-        }
-
-        private static IEnumerable<TestCaseData> ConvertBoundaryConditionDataComponentSpreadingTypeDifferentTypeData()
-        {
-            var uniformConstantDataDegrees =
-                new UniformDataComponent<ConstantParameters<DegreesDefinedSpreading>>(
-                    new ConstantParameters<DegreesDefinedSpreading>(0, 0, 0, new DegreesDefinedSpreading()));
-            var uniformConstantDataPower =
-                    new UniformDataComponent<ConstantParameters<PowerDefinedSpreading>>(
-                        new ConstantParameters<PowerDefinedSpreading>(0, 0, 0, new PowerDefinedSpreading()));
-
-            var spatVariantConstantDegrees = new SpatiallyVaryingDataComponent<ConstantParameters<DegreesDefinedSpreading>>();
-            var spatVariantConstantPower = new SpatiallyVaryingDataComponent<ConstantParameters<PowerDefinedSpreading>>();
-
-            ISpatiallyDefinedDataComponent FuncDegreeToPowerUniform(ISpatiallyDefinedDataComponentFactory fact) => 
-                fact.ConvertDataComponentSpreading<PowerDefinedSpreading, DegreesDefinedSpreading>(uniformConstantDataPower);
-            yield return new TestCaseData(uniformConstantDataPower,
-                                          uniformConstantDataDegrees,
-                                          DirectionalSpreadingViewType.Degrees,
-                                          (Func<ISpatiallyDefinedDataComponentFactory, ISpatiallyDefinedDataComponent>) FuncDegreeToPowerUniform);
-
-            ISpatiallyDefinedDataComponent FuncPowerToDegreeUniform(ISpatiallyDefinedDataComponentFactory fact) => 
-                fact.ConvertDataComponentSpreading<DegreesDefinedSpreading, PowerDefinedSpreading>(uniformConstantDataDegrees);
-            yield return new TestCaseData(uniformConstantDataDegrees,
-                                          uniformConstantDataPower,
-                                          DirectionalSpreadingViewType.Power,
-                                          (Func<ISpatiallyDefinedDataComponentFactory, ISpatiallyDefinedDataComponent>) FuncPowerToDegreeUniform);
-
-            ISpatiallyDefinedDataComponent FuncDegreeToPowerSpat(ISpatiallyDefinedDataComponentFactory fact) => 
-                fact.ConvertDataComponentSpreading<PowerDefinedSpreading, DegreesDefinedSpreading>(spatVariantConstantPower);
-            yield return new TestCaseData(spatVariantConstantPower,
-                                          spatVariantConstantDegrees,
-                                          DirectionalSpreadingViewType.Degrees,
-                                          (Func<ISpatiallyDefinedDataComponentFactory, ISpatiallyDefinedDataComponent>) FuncDegreeToPowerSpat);
-
-            ISpatiallyDefinedDataComponent FuncPowerToDegreeSpat(ISpatiallyDefinedDataComponentFactory fact) => 
-                fact.ConvertDataComponentSpreading<DegreesDefinedSpreading, PowerDefinedSpreading>(spatVariantConstantDegrees);
-            yield return new TestCaseData(spatVariantConstantDegrees,
-                                          spatVariantConstantPower,
-                                          DirectionalSpreadingViewType.Power,
-                                          (Func<ISpatiallyDefinedDataComponentFactory, ISpatiallyDefinedDataComponent>) FuncPowerToDegreeSpat);
-
-            var uniformTimeDependentDataDegrees =
-                new UniformDataComponent<TimeDependentParameters<DegreesDefinedSpreading>>(
-                    new TimeDependentParameters<DegreesDefinedSpreading>(Substitute.For<IWaveEnergyFunction<DegreesDefinedSpreading>>()));
-            var uniformTimeDependentDataPower =
-                    new UniformDataComponent<TimeDependentParameters<PowerDefinedSpreading>>(
-                        new TimeDependentParameters<PowerDefinedSpreading>(Substitute.For<IWaveEnergyFunction<PowerDefinedSpreading>>()));
-
-            var spatVariantTimeDependentDegrees = new SpatiallyVaryingDataComponent<TimeDependentParameters<DegreesDefinedSpreading>>();
-            var spatVariantTimeDependentPower = new SpatiallyVaryingDataComponent<TimeDependentParameters<PowerDefinedSpreading>>();
-
-            ISpatiallyDefinedDataComponent FuncDegreeToPowerUniformTimeDependent(ISpatiallyDefinedDataComponentFactory fact) => 
-                fact.ConvertDataComponentSpreading<PowerDefinedSpreading, DegreesDefinedSpreading>(uniformTimeDependentDataPower);
-            yield return new TestCaseData(uniformTimeDependentDataPower,
-                                          uniformTimeDependentDataDegrees,
-                                          DirectionalSpreadingViewType.Degrees,
-                                          (Func<ISpatiallyDefinedDataComponentFactory, ISpatiallyDefinedDataComponent>) FuncDegreeToPowerUniformTimeDependent);
-
-            ISpatiallyDefinedDataComponent FuncPowerToDegreeUniformTimeDependent(ISpatiallyDefinedDataComponentFactory fact) => 
-                fact.ConvertDataComponentSpreading<DegreesDefinedSpreading, PowerDefinedSpreading>(uniformTimeDependentDataDegrees);
-            yield return new TestCaseData(uniformTimeDependentDataDegrees,
-                                          uniformTimeDependentDataPower,
-                                          DirectionalSpreadingViewType.Power,
-                                          (Func<ISpatiallyDefinedDataComponentFactory, ISpatiallyDefinedDataComponent>) FuncPowerToDegreeUniformTimeDependent);
-
-            ISpatiallyDefinedDataComponent FuncDegreeToPowerSpatTimeDependent(ISpatiallyDefinedDataComponentFactory fact) => 
-                fact.ConvertDataComponentSpreading<PowerDefinedSpreading, DegreesDefinedSpreading>(spatVariantTimeDependentPower);
-            yield return new TestCaseData(spatVariantTimeDependentPower,
-                                          spatVariantTimeDependentDegrees,
-                                          DirectionalSpreadingViewType.Degrees,
-                                          (Func<ISpatiallyDefinedDataComponentFactory, ISpatiallyDefinedDataComponent>) FuncDegreeToPowerSpatTimeDependent);
-
-            ISpatiallyDefinedDataComponent FuncPowerToDegreeSpatTimeDependent(ISpatiallyDefinedDataComponentFactory fact) => 
-                fact.ConvertDataComponentSpreading<DegreesDefinedSpreading, PowerDefinedSpreading>(spatVariantTimeDependentDegrees);
-            yield return new TestCaseData(spatVariantTimeDependentDegrees,
-                                          spatVariantTimeDependentPower,
-                                          DirectionalSpreadingViewType.Power,
-                                          (Func<ISpatiallyDefinedDataComponentFactory, ISpatiallyDefinedDataComponent>) FuncPowerToDegreeSpatTimeDependent);
         }
 
         [Test]
@@ -540,7 +407,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Factories
             convertDataComponentSpreadingCall(modelDataComponentFactory).Returns(outputDataComponent);
 
             // Call
-            ISpatiallyDefinedDataComponent result = 
+            ISpatiallyDefinedDataComponent result =
                 factory.ConvertBoundaryConditionDataComponentSpreadingType(inputDataComponent, spreadingType);
 
             // Assert
@@ -558,8 +425,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Factories
             var factory = new ViewDataComponentFactory(modelDataComponentFactory, referenceDateProvider);
 
             // Call | Assert
-            void Call() => factory.ConvertBoundaryConditionDataComponentSpreadingType(new DummyDataComponent(), 
+            void Call() => factory.ConvertBoundaryConditionDataComponentSpreadingType(new DummyDataComponent(),
                                                                                       DirectionalSpreadingViewType.Degrees);
+
             Assert.Throws<NotSupportedException>(Call);
         }
 
@@ -576,6 +444,145 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Factories
             void Call() => factory.ConvertBoundaryConditionDataComponentSpreadingType(null, DirectionalSpreadingViewType.Degrees);
             var exception = Assert.Throws<ArgumentNullException>(Call);
             Assert.That(exception.ParamName, Is.EqualTo("currentDataComponent"));
+        }
+
+        private static IEnumerable<TestCaseData> GetConstructParametersSettingsViewModelData()
+        {
+            yield return new TestCaseData(new UniformDataComponent<ConstantParameters<PowerDefinedSpreading>>(new ConstantParameters<PowerDefinedSpreading>(0.0, 0.0, 0.0, new PowerDefinedSpreading())), typeof(UniformConstantParametersSettingsViewModel<PowerDefinedSpreading>));
+            yield return new TestCaseData(new UniformDataComponent<ConstantParameters<DegreesDefinedSpreading>>(new ConstantParameters<DegreesDefinedSpreading>(0.0, 0.0, 0.0, new DegreesDefinedSpreading())), typeof(UniformConstantParametersSettingsViewModel<DegreesDefinedSpreading>));
+            yield return new TestCaseData(new SpatiallyVaryingDataComponent<ConstantParameters<PowerDefinedSpreading>>(), typeof(SpatiallyVariantConstantParametersSettingsViewModel<PowerDefinedSpreading>));
+            yield return new TestCaseData(new SpatiallyVaryingDataComponent<ConstantParameters<DegreesDefinedSpreading>>(), typeof(SpatiallyVariantConstantParametersSettingsViewModel<DegreesDefinedSpreading>));
+
+            var powerDefinedFunction = Substitute.For<IWaveEnergyFunction<PowerDefinedSpreading>>();
+            var degreesDefinedFunction = Substitute.For<IWaveEnergyFunction<DegreesDefinedSpreading>>();
+            yield return new TestCaseData(new UniformDataComponent<TimeDependentParameters<PowerDefinedSpreading>>(new TimeDependentParameters<PowerDefinedSpreading>(powerDefinedFunction)), typeof(UniformTimeDependentParametersSettingsViewModel<PowerDefinedSpreading>));
+            yield return new TestCaseData(new UniformDataComponent<TimeDependentParameters<DegreesDefinedSpreading>>(new TimeDependentParameters<DegreesDefinedSpreading>(degreesDefinedFunction)), typeof(UniformTimeDependentParametersSettingsViewModel<DegreesDefinedSpreading>));
+            yield return new TestCaseData(new SpatiallyVaryingDataComponent<TimeDependentParameters<PowerDefinedSpreading>>(), typeof(SpatiallyVariantTimeDependentParametersSettingsViewModel<PowerDefinedSpreading>));
+            yield return new TestCaseData(new SpatiallyVaryingDataComponent<TimeDependentParameters<DegreesDefinedSpreading>>(), typeof(SpatiallyVariantTimeDependentParametersSettingsViewModel<DegreesDefinedSpreading>));
+
+            yield return new TestCaseData(new UniformDataComponent<FileBasedParameters>(new FileBasedParameters("path")), typeof(UniformFileBasedParametersSettingsViewModel));
+            yield return new TestCaseData(new SpatiallyVaryingDataComponent<FileBasedParameters>(), typeof(SpatiallyVariantFileBasedParametersSettingsViewModel));
+        }
+
+        private class DummyDataComponent : ISpatiallyDefinedDataComponent
+        {
+            public void AcceptVisitor(ISpatiallyDefinedDataComponentVisitor boundaryConditionVisitor) {}
+        }
+
+        private static IEnumerable<TestCaseData> ConvertBoundaryConditionDataComponentSpreadingTypeSameTypeData()
+        {
+            yield return new TestCaseData(new UniformDataComponent<ConstantParameters<PowerDefinedSpreading>>(new ConstantParameters<PowerDefinedSpreading>(0, 0, 0, new PowerDefinedSpreading())),
+                                          DirectionalSpreadingViewType.Power);
+            yield return new TestCaseData(new UniformDataComponent<ConstantParameters<DegreesDefinedSpreading>>(new ConstantParameters<DegreesDefinedSpreading>(0, 0, 0, new DegreesDefinedSpreading())),
+                                          DirectionalSpreadingViewType.Degrees);
+            yield return new TestCaseData(new SpatiallyVaryingDataComponent<ConstantParameters<PowerDefinedSpreading>>(),
+                                          DirectionalSpreadingViewType.Power);
+            yield return new TestCaseData(new SpatiallyVaryingDataComponent<ConstantParameters<DegreesDefinedSpreading>>(),
+                                          DirectionalSpreadingViewType.Degrees);
+
+            var powerDefinedFunction = Substitute.For<IWaveEnergyFunction<PowerDefinedSpreading>>();
+            yield return new TestCaseData(new UniformDataComponent<TimeDependentParameters<PowerDefinedSpreading>>(new TimeDependentParameters<PowerDefinedSpreading>(powerDefinedFunction)),
+                                          DirectionalSpreadingViewType.Power);
+
+            var degreesDefinedFunction = Substitute.For<IWaveEnergyFunction<DegreesDefinedSpreading>>();
+            yield return new TestCaseData(new UniformDataComponent<TimeDependentParameters<DegreesDefinedSpreading>>(new TimeDependentParameters<DegreesDefinedSpreading>(degreesDefinedFunction)),
+                                          DirectionalSpreadingViewType.Degrees);
+            yield return new TestCaseData(new SpatiallyVaryingDataComponent<TimeDependentParameters<PowerDefinedSpreading>>(),
+                                          DirectionalSpreadingViewType.Power);
+            yield return new TestCaseData(new SpatiallyVaryingDataComponent<TimeDependentParameters<DegreesDefinedSpreading>>(),
+                                          DirectionalSpreadingViewType.Degrees);
+
+            yield return new TestCaseData(new UniformDataComponent<FileBasedParameters>(new FileBasedParameters("path")),
+                                          DirectionalSpreadingViewType.Power);
+            yield return new TestCaseData(new SpatiallyVaryingDataComponent<FileBasedParameters>(),
+                                          DirectionalSpreadingViewType.Power);
+        }
+
+        private static IEnumerable<TestCaseData> ConvertBoundaryConditionDataComponentSpreadingTypeDifferentTypeData()
+        {
+            var uniformConstantDataDegrees =
+                new UniformDataComponent<ConstantParameters<DegreesDefinedSpreading>>(
+                    new ConstantParameters<DegreesDefinedSpreading>(0, 0, 0, new DegreesDefinedSpreading()));
+            var uniformConstantDataPower =
+                new UniformDataComponent<ConstantParameters<PowerDefinedSpreading>>(
+                    new ConstantParameters<PowerDefinedSpreading>(0, 0, 0, new PowerDefinedSpreading()));
+
+            var spatVariantConstantDegrees = new SpatiallyVaryingDataComponent<ConstantParameters<DegreesDefinedSpreading>>();
+            var spatVariantConstantPower = new SpatiallyVaryingDataComponent<ConstantParameters<PowerDefinedSpreading>>();
+
+            ISpatiallyDefinedDataComponent FuncDegreeToPowerUniform(ISpatiallyDefinedDataComponentFactory fact) =>
+                fact.ConvertDataComponentSpreading<PowerDefinedSpreading, DegreesDefinedSpreading>(uniformConstantDataPower);
+
+            yield return new TestCaseData(uniformConstantDataPower,
+                                          uniformConstantDataDegrees,
+                                          DirectionalSpreadingViewType.Degrees,
+                                          (Func<ISpatiallyDefinedDataComponentFactory, ISpatiallyDefinedDataComponent>) FuncDegreeToPowerUniform);
+
+            ISpatiallyDefinedDataComponent FuncPowerToDegreeUniform(ISpatiallyDefinedDataComponentFactory fact) =>
+                fact.ConvertDataComponentSpreading<DegreesDefinedSpreading, PowerDefinedSpreading>(uniformConstantDataDegrees);
+
+            yield return new TestCaseData(uniformConstantDataDegrees,
+                                          uniformConstantDataPower,
+                                          DirectionalSpreadingViewType.Power,
+                                          (Func<ISpatiallyDefinedDataComponentFactory, ISpatiallyDefinedDataComponent>) FuncPowerToDegreeUniform);
+
+            ISpatiallyDefinedDataComponent FuncDegreeToPowerSpat(ISpatiallyDefinedDataComponentFactory fact) =>
+                fact.ConvertDataComponentSpreading<PowerDefinedSpreading, DegreesDefinedSpreading>(spatVariantConstantPower);
+
+            yield return new TestCaseData(spatVariantConstantPower,
+                                          spatVariantConstantDegrees,
+                                          DirectionalSpreadingViewType.Degrees,
+                                          (Func<ISpatiallyDefinedDataComponentFactory, ISpatiallyDefinedDataComponent>) FuncDegreeToPowerSpat);
+
+            ISpatiallyDefinedDataComponent FuncPowerToDegreeSpat(ISpatiallyDefinedDataComponentFactory fact) =>
+                fact.ConvertDataComponentSpreading<DegreesDefinedSpreading, PowerDefinedSpreading>(spatVariantConstantDegrees);
+
+            yield return new TestCaseData(spatVariantConstantDegrees,
+                                          spatVariantConstantPower,
+                                          DirectionalSpreadingViewType.Power,
+                                          (Func<ISpatiallyDefinedDataComponentFactory, ISpatiallyDefinedDataComponent>) FuncPowerToDegreeSpat);
+
+            var uniformTimeDependentDataDegrees =
+                new UniformDataComponent<TimeDependentParameters<DegreesDefinedSpreading>>(
+                    new TimeDependentParameters<DegreesDefinedSpreading>(Substitute.For<IWaveEnergyFunction<DegreesDefinedSpreading>>()));
+            var uniformTimeDependentDataPower =
+                new UniformDataComponent<TimeDependentParameters<PowerDefinedSpreading>>(
+                    new TimeDependentParameters<PowerDefinedSpreading>(Substitute.For<IWaveEnergyFunction<PowerDefinedSpreading>>()));
+
+            var spatVariantTimeDependentDegrees = new SpatiallyVaryingDataComponent<TimeDependentParameters<DegreesDefinedSpreading>>();
+            var spatVariantTimeDependentPower = new SpatiallyVaryingDataComponent<TimeDependentParameters<PowerDefinedSpreading>>();
+
+            ISpatiallyDefinedDataComponent FuncDegreeToPowerUniformTimeDependent(ISpatiallyDefinedDataComponentFactory fact) =>
+                fact.ConvertDataComponentSpreading<PowerDefinedSpreading, DegreesDefinedSpreading>(uniformTimeDependentDataPower);
+
+            yield return new TestCaseData(uniformTimeDependentDataPower,
+                                          uniformTimeDependentDataDegrees,
+                                          DirectionalSpreadingViewType.Degrees,
+                                          (Func<ISpatiallyDefinedDataComponentFactory, ISpatiallyDefinedDataComponent>) FuncDegreeToPowerUniformTimeDependent);
+
+            ISpatiallyDefinedDataComponent FuncPowerToDegreeUniformTimeDependent(ISpatiallyDefinedDataComponentFactory fact) =>
+                fact.ConvertDataComponentSpreading<DegreesDefinedSpreading, PowerDefinedSpreading>(uniformTimeDependentDataDegrees);
+
+            yield return new TestCaseData(uniformTimeDependentDataDegrees,
+                                          uniformTimeDependentDataPower,
+                                          DirectionalSpreadingViewType.Power,
+                                          (Func<ISpatiallyDefinedDataComponentFactory, ISpatiallyDefinedDataComponent>) FuncPowerToDegreeUniformTimeDependent);
+
+            ISpatiallyDefinedDataComponent FuncDegreeToPowerSpatTimeDependent(ISpatiallyDefinedDataComponentFactory fact) =>
+                fact.ConvertDataComponentSpreading<PowerDefinedSpreading, DegreesDefinedSpreading>(spatVariantTimeDependentPower);
+
+            yield return new TestCaseData(spatVariantTimeDependentPower,
+                                          spatVariantTimeDependentDegrees,
+                                          DirectionalSpreadingViewType.Degrees,
+                                          (Func<ISpatiallyDefinedDataComponentFactory, ISpatiallyDefinedDataComponent>) FuncDegreeToPowerSpatTimeDependent);
+
+            ISpatiallyDefinedDataComponent FuncPowerToDegreeSpatTimeDependent(ISpatiallyDefinedDataComponentFactory fact) =>
+                fact.ConvertDataComponentSpreading<DegreesDefinedSpreading, PowerDefinedSpreading>(spatVariantTimeDependentDegrees);
+
+            yield return new TestCaseData(spatVariantTimeDependentDegrees,
+                                          spatVariantTimeDependentPower,
+                                          DirectionalSpreadingViewType.Power,
+                                          (Func<ISpatiallyDefinedDataComponentFactory, ISpatiallyDefinedDataComponent>) FuncPowerToDegreeSpatTimeDependent);
         }
     }
 }

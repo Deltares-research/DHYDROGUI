@@ -14,17 +14,17 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Common.IO
         [Category(TestCategory.DataAccess)]
         public void WriteDepthFileTest()
         {
-            int sizeM = 236;
-            int sizeN = 121;
-            var depthFilePath = TestHelper.GetTestFilePath(@"wave_timespacevarbnd\outer.dep");
-            var values = Delft3DDepthFileReader.Read(depthFilePath, sizeN, sizeM).ToArray();
-            Assert.AreEqual(sizeM*sizeN, values.Length);
+            var sizeM = 236;
+            var sizeN = 121;
+            string depthFilePath = TestHelper.GetTestFilePath(@"wave_timespacevarbnd\outer.dep");
+            double[] values = Delft3DDepthFileReader.Read(depthFilePath, sizeN, sizeM).ToArray();
+            Assert.AreEqual(sizeM * sizeN, values.Length);
 
             var targetFile = "test.dep";
             Delft3DDepthFileWriter.Write(values, sizeN, sizeM, targetFile);
 
-            var original = File.ReadAllLines(depthFilePath);
-            var written = File.ReadAllLines(targetFile);
+            string[] original = File.ReadAllLines(depthFilePath);
+            string[] written = File.ReadAllLines(targetFile);
             Assert.AreEqual(original, written);
         }
     }

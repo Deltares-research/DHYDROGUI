@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -14,6 +13,7 @@ using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections;
+using DeltaShell.Plugins.Data.NHibernate.DelftTools.Shell.Core.Dao;
 using DeltaShell.Plugins.NetworkEditor.Gui.Helpers;
 using DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
@@ -26,6 +26,7 @@ using NetTopologySuite.Geometries;
 using NetTopologySuite.IO;
 using NUnit.Framework;
 using SharpMap;
+using SharpMap.Api;
 using SharpMap.Api.Enums;
 using SharpMap.Converters.WellKnownText;
 using SharpMap.Layers;
@@ -45,22 +46,37 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
         public void SaveLoadHydroNetworkWithSharedDefinitions()
         {
             var network = new HydroNetwork();
-            var node1 = new HydroNode("Node1") { Geometry = new Point(0, 0), LongName = "LongName" };
-            var node2 = new HydroNode("Node2") { Geometry = new Point(10, 0) };
+            var node1 = new HydroNode("Node1")
+            {
+                Geometry = new Point(0, 0),
+                LongName = "LongName"
+            };
+            var node2 = new HydroNode("Node2") {Geometry = new Point(10, 0)};
             var channel1 = new Channel(node1, node2)
             {
-                Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(10, 0) }),
+                Geometry = new LineString(new[]
+                {
+                    new Coordinate(0, 0),
+                    new Coordinate(10, 0)
+                }),
                 LongName = "Channel"
             };
-            network.Nodes.AddRange(new[] {node1, node2});
-            network.Branches.AddRange(new[] {channel1});
+            network.Nodes.AddRange(new[]
+            {
+                node1,
+                node2
+            });
+            network.Branches.AddRange(new[]
+            {
+                channel1
+            });
 
             var definitionName = "test";
             var def = new CrossSectionDefinitionZW(definitionName);
 
             network.SharedCrossSectionDefinitions.Add(def);
 
-            var retrievedNetwork = SaveLoadObject(network, TestHelper.GetCurrentMethodName() + ".dsproj");
+            HydroNetwork retrievedNetwork = SaveLoadObject(network, TestHelper.GetCurrentMethodName() + ".dsproj");
 
             Assert.AreEqual(1, retrievedNetwork.SharedCrossSectionDefinitions.Count);
             Assert.AreEqual(definitionName, retrievedNetwork.SharedCrossSectionDefinitions[0].Name);
@@ -70,15 +86,30 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
         public void SaveLoadHydroNetworkWithDefaultDefinition()
         {
             var network = new HydroNetwork();
-            var node1 = new HydroNode("Node1") { Geometry = new Point(0, 0), LongName = "LongName" };
-            var node2 = new HydroNode("Node2") { Geometry = new Point(10, 0) };
+            var node1 = new HydroNode("Node1")
+            {
+                Geometry = new Point(0, 0),
+                LongName = "LongName"
+            };
+            var node2 = new HydroNode("Node2") {Geometry = new Point(10, 0)};
             var channel1 = new Channel(node1, node2)
             {
-                Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(10, 0) }),
+                Geometry = new LineString(new[]
+                {
+                    new Coordinate(0, 0),
+                    new Coordinate(10, 0)
+                }),
                 LongName = "Channel"
             };
-            network.Nodes.AddRange(new[] { node1, node2 });
-            network.Branches.AddRange(new[] { channel1 });
+            network.Nodes.AddRange(new[]
+            {
+                node1,
+                node2
+            });
+            network.Branches.AddRange(new[]
+            {
+                channel1
+            });
 
             var definitionName = "test";
             var def = new CrossSectionDefinitionZW(definitionName);
@@ -86,7 +117,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
             network.SharedCrossSectionDefinitions.Add(def);
             network.DefaultCrossSectionDefinition = def;
 
-            var retrievedNetwork = SaveLoadObject(network, TestHelper.GetCurrentMethodName() + ".dsproj");
+            HydroNetwork retrievedNetwork = SaveLoadObject(network, TestHelper.GetCurrentMethodName() + ".dsproj");
 
             Assert.AreEqual(1, retrievedNetwork.SharedCrossSectionDefinitions.Count);
             Assert.AreEqual(definitionName, retrievedNetwork.SharedCrossSectionDefinitions[0].Name);
@@ -102,23 +133,38 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
             var project = new Project();
 
             var network = new HydroNetwork();
-            var node1 = new HydroNode("Node1") { Geometry = new Point(0, 0), LongName = "LongName" };
-            var node2 = new HydroNode("Node2") { Geometry = new Point(10, 0) };
+            var node1 = new HydroNode("Node1")
+            {
+                Geometry = new Point(0, 0),
+                LongName = "LongName"
+            };
+            var node2 = new HydroNode("Node2") {Geometry = new Point(10, 0)};
             var channel1 = new Channel(node1, node2)
             {
-                Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(10, 0) }),
+                Geometry = new LineString(new[]
+                {
+                    new Coordinate(0, 0),
+                    new Coordinate(10, 0)
+                }),
                 LongName = "Channel"
             };
             var crossSection = new CrossSection(new CrossSectionDefinitionStandard())
-                                   {
-                                       Network = network,
-                                       Branch = channel1,
-                                       Geometry = new Point(5, 0),
-                                       Chainage = 5.0,
-                                   };
+            {
+                Network = network,
+                Branch = channel1,
+                Geometry = new Point(5, 0),
+                Chainage = 5.0,
+            };
             channel1.BranchFeatures.Add(crossSection);
-            network.Nodes.AddRange(new[] { node1, node2 });
-            network.Branches.AddRange(new[] { channel1 });
+            network.Nodes.AddRange(new[]
+            {
+                node1,
+                node2
+            });
+            network.Branches.AddRange(new[]
+            {
+                channel1
+            });
 
             var dataItem = new DataItem(network);
             project.RootFolder.Add(dataItem);
@@ -128,7 +174,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
         [Test]
         public void SaveLoadHydroNetworkWithRoutes()
         {
-            var network = CreateDummyHydroNetwork();
+            IHydroNetwork network = CreateDummyHydroNetwork();
 
             var routeName = "NewRoute";
 
@@ -136,19 +182,19 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
             network.Routes.Add(route);
 
             route.Locations.AddValues(new[]
-                                          {
-                                              new NetworkLocation(network.Branches[0], 0),
-                                              new NetworkLocation(network.Branches[1], 5)
-                                          });
+            {
+                new NetworkLocation(network.Branches[0], 0),
+                new NetworkLocation(network.Branches[1], 5)
+            });
 
-            var routeLength = RouteHelper.GetRouteLength(route);
-            
+            double routeLength = RouteHelper.GetRouteLength(route);
+
             Assert.AreEqual(105, routeLength);
 
-            var retrievedNetwork = SaveLoadObject(network, TestHelper.GetCurrentMethodName() + ".dsproj");
+            IHydroNetwork retrievedNetwork = SaveLoadObject(network, TestHelper.GetCurrentMethodName() + ".dsproj");
 
             Assert.AreEqual(1, retrievedNetwork.Routes.Count);
-            var retrievedRoute = retrievedNetwork.Routes[0];
+            Route retrievedRoute = retrievedNetwork.Routes[0];
             Assert.AreEqual(routeName, retrievedRoute.Name);
             Assert.AreEqual(routeLength, RouteHelper.GetRouteLength(retrievedRoute));
         }
@@ -158,37 +204,74 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
         {
             //node 1 --(b1)--> node2 <--(b2)- node 3 <--(b3)- node 4
             var network = new HydroNetwork();
-            var node1 = new HydroNode("Node1") { Geometry = new Point(0, 0),LongName = "LongName"};
-            var node2 = new HydroNode("Node2") { Geometry = new Point(10, 0) };
-            var node3 = new HydroNode("Node3") { Geometry = new Point(20, 0) };
-            var node4 = new HydroNode("Node4") { Geometry = new Point(30, 0) };
-            var channel1 = new Channel(node1, node2) { Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(10, 0) }), LongName = "Channel" };
-            var channel2 = new Channel(node3, node2) { Geometry = new LineString(new[] { new Coordinate(20, 0), new Coordinate(10, 0) }) };
-            var channel3 = new Channel(node4, node3) { Geometry = new LineString(new[] { new Coordinate(20, 0), new Coordinate(10, 0) }) };
+            var node1 = new HydroNode("Node1")
+            {
+                Geometry = new Point(0, 0),
+                LongName = "LongName"
+            };
+            var node2 = new HydroNode("Node2") {Geometry = new Point(10, 0)};
+            var node3 = new HydroNode("Node3") {Geometry = new Point(20, 0)};
+            var node4 = new HydroNode("Node4") {Geometry = new Point(30, 0)};
+            var channel1 = new Channel(node1, node2)
+            {
+                Geometry = new LineString(new[]
+                {
+                    new Coordinate(0, 0),
+                    new Coordinate(10, 0)
+                }),
+                LongName = "Channel"
+            };
+            var channel2 = new Channel(node3, node2)
+            {
+                Geometry = new LineString(new[]
+                {
+                    new Coordinate(20, 0),
+                    new Coordinate(10, 0)
+                })
+            };
+            var channel3 = new Channel(node4, node3)
+            {
+                Geometry = new LineString(new[]
+                {
+                    new Coordinate(20, 0),
+                    new Coordinate(10, 0)
+                })
+            };
 
             network.CoordinateSystem = Map.CoordinateSystemFactory.CreateFromEPSG(3857);
-            network.Nodes.AddRange(new[] { node1, node2, node3, node4 });
-            network.Branches.AddRange(new[] { channel1, channel2, channel3 });
+            network.Nodes.AddRange(new[]
+            {
+                node1,
+                node2,
+                node3,
+                node4
+            });
+            network.Branches.AddRange(new[]
+            {
+                channel1,
+                channel2,
+                channel3
+            });
 
             Assert.IsFalse(node1.IsConnectedToMultipleBranches);
             Assert.IsTrue(node2.IsConnectedToMultipleBranches);
             Assert.IsTrue(node3.IsConnectedToMultipleBranches);
             Assert.IsFalse(node4.IsConnectedToMultipleBranches);
-            
-            var retrievedNetwork = SaveLoadObject(network, TestHelper.GetCurrentMethodName() + ".dsproj");
+
+            HydroNetwork retrievedNetwork = SaveLoadObject(network, TestHelper.GetCurrentMethodName() + ".dsproj");
 
             Assert.AreEqual(4, retrievedNetwork.Nodes.Count);
             Assert.AreEqual(3, retrievedNetwork.Branches.Count);
 
-            var retrievedNode1 = retrievedNetwork.HydroNodes.First();
-            var retrievedNode2 = retrievedNetwork.Nodes[1];
-            var retrievedNode3 = retrievedNetwork.Nodes[2];
-            var retrievedNode4 = retrievedNetwork.Nodes[3];
-            var retrievedBranch1 = retrievedNetwork.Channels.First();
-            var retrievedBranch2 = retrievedNetwork.Branches[1];
+            IHydroNode retrievedNode1 = retrievedNetwork.HydroNodes.First();
+            INode retrievedNode2 = retrievedNetwork.Nodes[1];
+            INode retrievedNode3 = retrievedNetwork.Nodes[2];
+            INode retrievedNode4 = retrievedNetwork.Nodes[3];
+            IChannel retrievedBranch1 = retrievedNetwork.Channels.First();
+            IBranch retrievedBranch2 = retrievedNetwork.Branches[1];
 
             // Check nodes
-            Assert.AreEqual("LongName",retrievedNode1.LongName);
+            Assert.AreEqual("LongName", retrievedNode1.LongName);
 
             // Check boundary stuff
             Assert.IsFalse(retrievedNode1.IsConnectedToMultipleBranches);
@@ -200,7 +283,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
             Assert.AreEqual(retrievedBranch1.Source, retrievedNode1);
             Assert.AreEqual(retrievedBranch1.Target, retrievedNode2);
             Assert.AreEqual(retrievedBranch1, retrievedNode1.OutgoingBranches[0]);
-            Assert.AreEqual("Channel",retrievedBranch1.LongName);
+            Assert.AreEqual("Channel", retrievedBranch1.LongName);
             Assert.AreEqual(retrievedBranch1, retrievedNode2.IncomingBranches[0]);
             Assert.AreEqual(retrievedBranch2, retrievedNode2.IncomingBranches[1]);
 
@@ -208,70 +291,36 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
             Assert.AreEqual(3857, retrievedNetwork.CoordinateSystem.AuthorityCode);
         }
 
-        private static IHydroNetwork CreateDummyHydroNetwork()
-        {
-            // create network
-            var network = new HydroNetwork();
-
-            var node1 = new HydroNode("node1");
-            var node2 = new HydroNode("node2");
-            var node3 = new HydroNode("node3");
-
-            network.Nodes.Add(node1);
-            network.Nodes.Add(node2);
-            network.Nodes.Add(node3);
-
-            var branch1 = new Channel("branch1", node1, node2)
-            {
-                Geometry = GeometryFromWKT.Parse("LINESTRING (0 0, 100 0)")
-            };
-            var branch2 = new Channel("branch2", node2, node3)
-            {
-                Geometry = GeometryFromWKT.Parse("LINESTRING (100 0, 300 0)")
-            };
-
-            node1.Geometry = new Point(0, 0);
-            node2.Geometry = new Point(100, 0);
-            node3.Geometry = new Point(300, 0);
-
-            network.Branches.Add(branch1);
-            network.Branches.Add(branch2);
-            return network;
-        }
-
         [Test]
         public void SaveGeneratedMapLayerInfo()
         {
             var layerInfo = new GeneratedMapLayerInfo
-                                {
-                                    Name = "Test",
-                                    Visible = true,
-                                    AutoUpdateThemeOnDataSourceChanged = false,
-                                    MaxVisible = 1000,
-                                    MinVisible = 1,
-                                    RenderOrder = 2,
-                                    Selectable = true,
-                                    ShowInLegend = false,
-                                    ShowAttributeTable = true,
-                                    ShowLabels = false,
-                                    LabelColumn = "labels",
-                                    LabelStyle = new LabelStyle{HorizontalAlignment = HorizontalAlignmentEnum.Right},
-                                    LabelShowInTreeView = true,
-                                    Theme = new CategorialTheme("abc", new VectorStyle()),
-                                    VectorStyle = new VectorStyle
-                                                      {
-                                                          Shape = ShapeType.Ellipse
-                                                      }
-                                };
+            {
+                Name = "Test",
+                Visible = true,
+                AutoUpdateThemeOnDataSourceChanged = false,
+                MaxVisible = 1000,
+                MinVisible = 1,
+                RenderOrder = 2,
+                Selectable = true,
+                ShowInLegend = false,
+                ShowAttributeTable = true,
+                ShowLabels = false,
+                LabelColumn = "labels",
+                LabelStyle = new LabelStyle {HorizontalAlignment = HorizontalAlignmentEnum.Right},
+                LabelShowInTreeView = true,
+                Theme = new CategorialTheme("abc", new VectorStyle()),
+                VectorStyle = new VectorStyle {Shape = ShapeType.Ellipse}
+            };
 
             layerInfo.Theme.ThemeItems.AddRange(new[]
-                                                    {
-                                                        new CategorialThemeItem("a", new VectorStyle {Shape = ShapeType.Diamond}, null),
-                                                        new CategorialThemeItem("b", new VectorStyle {Shape = ShapeType.Rectangle}, null),
-                                                        new CategorialThemeItem("c", new VectorStyle {Shape = ShapeType.Triangle}, null),
-                                                    });
+            {
+                new CategorialThemeItem("a", new VectorStyle {Shape = ShapeType.Diamond}, null),
+                new CategorialThemeItem("b", new VectorStyle {Shape = ShapeType.Rectangle}, null),
+                new CategorialThemeItem("c", new VectorStyle {Shape = ShapeType.Triangle}, null),
+            });
 
-            var savedLayerInfo = SaveAndRetrieveObject(layerInfo);
+            GeneratedMapLayerInfo savedLayerInfo = SaveAndRetrieveObject(layerInfo);
 
             Assert.AreEqual("Test", savedLayerInfo.Name);
             Assert.AreEqual(true, savedLayerInfo.Visible);
@@ -288,12 +337,12 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
             Assert.AreEqual(true, savedLayerInfo.LabelShowInTreeView);
             Assert.AreEqual(ShapeType.Ellipse, savedLayerInfo.VectorStyle.Shape);
 
-            var savedTheme = savedLayerInfo.Theme;
+            ITheme savedTheme = savedLayerInfo.Theme;
             Assert.AreEqual("abc", savedTheme.AttributeName);
             Assert.AreEqual(3, savedTheme.ThemeItems.Count);
-            Assert.AreEqual(ShapeType.Diamond, ((VectorStyle)savedTheme.ThemeItems[0].Style).Shape);
-            Assert.AreEqual(ShapeType.Rectangle, ((VectorStyle)savedTheme.ThemeItems[1].Style).Shape);
-            Assert.AreEqual(ShapeType.Triangle, ((VectorStyle)savedTheme.ThemeItems[2].Style).Shape);
+            Assert.AreEqual(ShapeType.Diamond, ((VectorStyle) savedTheme.ThemeItems[0].Style).Shape);
+            Assert.AreEqual(ShapeType.Rectangle, ((VectorStyle) savedTheme.ThemeItems[1].Style).Shape);
+            Assert.AreEqual(ShapeType.Triangle, ((VectorStyle) savedTheme.ThemeItems[2].Style).Shape);
         }
 
 /*
@@ -333,7 +382,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
             // add pump
             var pump = new Pump
             {
-                OffsetY =  33,
+                OffsetY = 33,
                 Chainage = 22,
                 Geometry = new Point(5, 0),
                 DirectionIsPositive = true,
@@ -344,10 +393,9 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
                 ControlDirection = PumpControlDirection.SuctionAndDeliverySideControl,
                 LongName = "LongName",
                 Name = "Name"
-
             };
             IPump retrievedPump = SaveLoadStructure(pump, TestHelper.GetCurrentMethodName() + ".dsproj");
-            Assert.AreEqual(pump.OffsetY,retrievedPump.OffsetY);
+            Assert.AreEqual(pump.OffsetY, retrievedPump.OffsetY);
             Assert.AreEqual(pump.Chainage, retrievedPump.Chainage);
             Assert.AreEqual(pump.DirectionIsPositive, retrievedPump.DirectionIsPositive);
             Assert.AreEqual(pump.StartDelivery, retrievedPump.StartDelivery);
@@ -391,17 +439,20 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
                 GroundLayerThickness = 1.25
             };
 
-            culvert.TabulatedCrossSectionDefinition.SetWithHfswData(new[] { new HeightFlowStorageWidth(3, 2, 1) });
+            culvert.TabulatedCrossSectionDefinition.SetWithHfswData(new[]
+            {
+                new HeightFlowStorageWidth(3, 2, 1)
+            });
 
             culvert.GateOpeningLossCoefficientFunction[4.0] = 2.5;
 
-            var retrievedCulvert = SaveLoadStructure(culvert, TestHelper.GetCurrentMethodName() + ".dsproj");
+            Culvert retrievedCulvert = SaveLoadStructure(culvert, TestHelper.GetCurrentMethodName() + ".dsproj");
             Assert.AreEqual(culvert.Chainage, retrievedCulvert.Chainage);
-            Assert.AreEqual(culvert.Geometry , retrievedCulvert.Geometry);
+            Assert.AreEqual(culvert.Geometry, retrievedCulvert.Geometry);
             Assert.AreEqual(culvert.Width, retrievedCulvert.Width);
             Assert.AreEqual(culvert.Height, retrievedCulvert.Height);
             Assert.AreEqual(culvert.CulvertType, retrievedCulvert.CulvertType);
-            Assert.AreEqual(culvert.SiphonOnLevel ,retrievedCulvert.SiphonOnLevel);
+            Assert.AreEqual(culvert.SiphonOnLevel, retrievedCulvert.SiphonOnLevel);
             Assert.AreEqual(culvert.SiphonOffLevel, retrievedCulvert.SiphonOffLevel);
             Assert.AreEqual(culvert.IsGated, retrievedCulvert.IsGated);
             Assert.AreEqual(culvert.GateInitialOpening, retrievedCulvert.GateInitialOpening);
@@ -424,11 +475,11 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
             //check the cross-section
             Assert.AreEqual(1, retrievedCulvert.TabulatedCrossSectionDefinition.ZWDataTable.Count);
             Assert.AreEqual(culvert.TabulatedCrossSectionDefinition.ZWDataTable[0].Z, retrievedCulvert.TabulatedCrossSectionDefinition.ZWDataTable[0].Z);
-            
+
             Assert.AreEqual(culvert.TabulatedCrossSectionDefinition.ZWDataTable[0].Width, retrievedCulvert.TabulatedCrossSectionDefinition.ZWDataTable[0].Width);
-        
+
             //check the gateopening function
-            Assert.AreEqual(1,retrievedCulvert.GateOpeningLossCoefficientFunction.Arguments[0].Values.Count);
+            Assert.AreEqual(1, retrievedCulvert.GateOpeningLossCoefficientFunction.Arguments[0].Values.Count);
             Assert.AreEqual(2.5, retrievedCulvert.GateOpeningLossCoefficientFunction[4.0]);
         }
 
@@ -443,7 +494,10 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
             bridge.OffsetY = 22.0;
             bridge.BridgeType = BridgeType.Tabulated;
             //also store some tabulated data
-            bridge.TabulatedCrossSectionDefinition.SetWithHfswData(new[] { new HeightFlowStorageWidth(50, 10, 10) });
+            bridge.TabulatedCrossSectionDefinition.SetWithHfswData(new[]
+            {
+                new HeightFlowStorageWidth(50, 10, 10)
+            });
             //friction and length
             bridge.FrictionType = BridgeFrictionType.StricklerKn;
             bridge.Friction = 0.01;
@@ -463,7 +517,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
             bridge.ShapeFactor = 0.567;
 
             //setup repo.
-            var retrievedBridge = SaveLoadStructure(bridge, TestHelper.GetCurrentMethodName() + ".dsproj");
+            Bridge retrievedBridge = SaveLoadStructure(bridge, TestHelper.GetCurrentMethodName() + ".dsproj");
 
             //assert
             Assert.AreEqual(bridge.Name, retrievedBridge.Name);
@@ -493,26 +547,30 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
             Assert.AreEqual(bridge.PillarWidth, retrievedBridge.PillarWidth);
             Assert.AreEqual(bridge.ShapeFactor, retrievedBridge.ShapeFactor);
         }
-        
+
         [Test]
         public void SaveMoveSaveLoadCulvert()
         {
             //demonstrates issue 4120..had a problem with cascade from comp. branch. structure. 
-            var path = TestHelper.GetCurrentMethodName()+".dsproj";
-            using (var repository = factory.CreateNew())
+            string path = TestHelper.GetCurrentMethodName() + ".dsproj";
+            using (NHibernateProjectRepository repository = factory.CreateNew())
             {
                 repository.Create(path);
-                
-                var project = repository.GetProject();
-                
+
+                Project project = repository.GetProject();
+
                 //create a network with a culvert
-                var hydroNetwork = HydroNetworkHelper.GetSnakeHydroNetwork(new Point(0,0),new Point(20,0));
-                var branch1 = hydroNetwork.Branches[0];
+                IHydroNetwork hydroNetwork = HydroNetworkHelper.GetSnakeHydroNetwork(new Point(0, 0), new Point(20, 0));
+                IBranch branch1 = hydroNetwork.Branches[0];
 
                 var culvert = Culvert.CreateDefault();
                 //branch1.BranchFeatures.Add(culvert);
 
-                var compositeBranchStructure = new CompositeBranchStructure { Network = hydroNetwork, Geometry = new Point(5, 0) };
+                var compositeBranchStructure = new CompositeBranchStructure
+                {
+                    Network = hydroNetwork,
+                    Geometry = new Point(5, 0)
+                };
                 NetworkHelper.AddBranchFeatureToBranch(compositeBranchStructure, branch1, compositeBranchStructure.Chainage);
                 HydroNetworkHelper.AddStructureToComposite(compositeBranchStructure, culvert);
 
@@ -521,9 +579,9 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
                 repository.SaveOrUpdate(project);
 
                 //move it using a structure editor
-                var mapControl = new MapControl { Map = { Size = new Size(1000, 1000) } }; // enable coordinate conversions, default size is 100x100
-                var structureEditor = new StructureInteractor<Culvert>(new VectorLayer { Map = mapControl.Map }, culvert,
-                                                           new VectorStyle { Symbol = new Bitmap(16, 16) }, null);
+                var mapControl = new MapControl {Map = {Size = new Size(1000, 1000)}}; // enable coordinate conversions, default size is 100x100
+                var structureEditor = new StructureInteractor<Culvert>(new VectorLayer {Map = mapControl.Map}, culvert,
+                                                                       new VectorStyle {Symbol = new Bitmap(16, 16)}, null);
                 const double deltaX = 5;
                 const double deltaY = 0;
 
@@ -532,17 +590,16 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
 
                 // result are not yet stored..so stop and commit
                 structureEditor.Stop();
-                
-                
+
                 repository.SaveOrUpdate(project);
             }
 
             //relead culvert
-            using (var repository = factory.CreateNew())
+            using (NHibernateProjectRepository repository = factory.CreateNew())
             {
                 repository.Open(path);
-                var culvert = repository.GetProject().GetAllItemsRecursive().OfType<Culvert>().FirstOrDefault();
-                
+                Culvert culvert = repository.GetProject().GetAllItemsRecursive().OfType<Culvert>().FirstOrDefault();
+
                 Assert.IsNotNull(culvert);
             }
         }
@@ -551,21 +608,25 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
         public void MoveCulvertToOtherBranch()
         {
             //demonstrates issue 4237..
-            var path = TestHelper.GetCurrentMethodName() + ".dsproj";
-            using (var repository = factory.CreateNew())
+            string path = TestHelper.GetCurrentMethodName() + ".dsproj";
+            using (NHibernateProjectRepository repository = factory.CreateNew())
             {
                 repository.Create(path);
 
-                var project = repository.GetProject();
+                Project project = repository.GetProject();
 
                 //create a L-shaped network with a culvert 
-                var hydroNetwork = HydroNetworkHelper.GetSnakeHydroNetwork(new Point(0, 0), new Point(20, 0),new Point(20,20));
-                var branch1 = hydroNetwork.Branches[0];
+                IHydroNetwork hydroNetwork = HydroNetworkHelper.GetSnakeHydroNetwork(new Point(0, 0), new Point(20, 0), new Point(20, 20));
+                IBranch branch1 = hydroNetwork.Branches[0];
 
                 var culvert = Culvert.CreateDefault();
                 //branch1.BranchFeatures.Add(culvert);
 
-                var compositeBranchStructure = new CompositeBranchStructure { Network = hydroNetwork, Geometry = new Point(5, 0) };
+                var compositeBranchStructure = new CompositeBranchStructure
+                {
+                    Network = hydroNetwork,
+                    Geometry = new Point(5, 0)
+                };
                 NetworkHelper.AddBranchFeatureToBranch(compositeBranchStructure, branch1, compositeBranchStructure.Chainage);
                 HydroNetworkHelper.AddStructureToComposite(compositeBranchStructure, culvert);
 
@@ -574,9 +635,9 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
                 repository.SaveOrUpdate(project);
 
                 //move it using a structure editor
-                var mapControl = new MapControl { Map = { Size = new Size(1000, 1000) } }; // enable coordinate conversions, default size is 100x100
-                var structureEditor = new StructureInteractor<Culvert>(new VectorLayer { Map = mapControl.Map }, culvert,
-                                                           new VectorStyle { Symbol = new Bitmap(16, 16) }, null);
+                var mapControl = new MapControl {Map = {Size = new Size(1000, 1000)}}; // enable coordinate conversions, default size is 100x100
+                var structureEditor = new StructureInteractor<Culvert>(new VectorLayer {Map = mapControl.Map}, culvert,
+                                                                       new VectorStyle {Symbol = new Bitmap(16, 16)}, null);
 
                 //move the culvert to the other branch
                 const double deltaX = 15;
@@ -589,10 +650,10 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
             }
 
             //relead culvert
-            using (var repository = factory.CreateNew())
+            using (NHibernateProjectRepository repository = factory.CreateNew())
             {
                 repository.Open(path);
-                var culvert = repository.GetProject().GetAllItemsRecursive().OfType<Culvert>().FirstOrDefault();
+                Culvert culvert = repository.GetProject().GetAllItemsRecursive().OfType<Culvert>().FirstOrDefault();
 
                 Assert.IsNotNull(culvert);
             }
@@ -602,17 +663,17 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
         public void MoveCulvertToOtherBranch2Issue4237()
         {
             //demonstrates issue 4237..
-            var path = TestHelper.GetCurrentMethodName() + ".dsproj";
-            using (var repository = factory.CreateNew())
+            string path = TestHelper.GetCurrentMethodName() + ".dsproj";
+            using (NHibernateProjectRepository repository = factory.CreateNew())
             {
                 repository.Create(path);
 
-                var project = repository.GetProject();
+                Project project = repository.GetProject();
 
                 //create a L-shaped network with a culvert 
-                var hydroNetwork = HydroNetworkHelper.GetSnakeHydroNetwork(new Point(0, 0), new Point(20, 0), new Point(20, 20));
-                var branch1 = hydroNetwork.Branches[0];
-                var branch2 = hydroNetwork.Branches[1];
+                IHydroNetwork hydroNetwork = HydroNetworkHelper.GetSnakeHydroNetwork(new Point(0, 0), new Point(20, 0), new Point(20, 20));
+                IBranch branch1 = hydroNetwork.Branches[0];
+                IBranch branch2 = hydroNetwork.Branches[1];
 
                 var culvert = Culvert.CreateDefault();
                 branch1.BranchFeatures.Add(culvert);
@@ -630,10 +691,10 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
             }
 
             //relead culvert
-            using (var repository = factory.CreateNew())
+            using (NHibernateProjectRepository repository = factory.CreateNew())
             {
                 repository.Open(path);
-                var culvert = repository.GetProject().GetAllItemsRecursive().OfType<Culvert>().FirstOrDefault();
+                Culvert culvert = repository.GetProject().GetAllItemsRecursive().OfType<Culvert>().FirstOrDefault();
 
                 Assert.IsNotNull(culvert);
             }
@@ -643,15 +704,15 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
         public void SaveLoadWeir()
         {
             var weir = new Weir
-                           {
-                               Geometry = new Point(5, 0), 
-                               OffsetY = 150, 
-                               CrestWidth = 75, 
-                               CrestLevel = -3,
-                               CrestShape = CrestShape.Triangular
-                           };
-            var retrievedWeir = SaveLoadStructure(weir,TestHelper.GetCurrentMethodName()+".dsproj");
-            
+            {
+                Geometry = new Point(5, 0),
+                OffsetY = 150,
+                CrestWidth = 75,
+                CrestLevel = -3,
+                CrestShape = CrestShape.Triangular
+            };
+            Weir retrievedWeir = SaveLoadStructure(weir, TestHelper.GetCurrentMethodName() + ".dsproj");
+
             Assert.AreEqual(150, retrievedWeir.OffsetY);
             Assert.AreEqual(75, retrievedWeir.CrestWidth);
             Assert.AreEqual(-3, retrievedWeir.CrestLevel);
@@ -662,13 +723,13 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
         public void SaveLoadGate()
         {
             var gate = new Gate()
-                {
-                    Geometry = new Point(5, 0),
-                    OffsetY = 150,
-                    OpeningWidth = 75,
-                    SillLevel = -3,
-                };
-            var retrievedGate = SaveLoadStructure(gate, TestHelper.GetCurrentMethodName() + ".dsproj");
+            {
+                Geometry = new Point(5, 0),
+                OffsetY = 150,
+                OpeningWidth = 75,
+                SillLevel = -3,
+            };
+            Gate retrievedGate = SaveLoadStructure(gate, TestHelper.GetCurrentMethodName() + ".dsproj");
 
             Assert.AreEqual(150, retrievedGate.OffsetY);
             Assert.AreEqual(75, retrievedGate.OpeningWidth);
@@ -682,34 +743,33 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
             {
                 Name = "Source1",
                 Chainage = 50,
-                Geometry = new Point(0,0)
+                Geometry = new Point(0, 0)
             };
-            var retrievedLateralSource = SaveLoadBranchFeature(lateralSource,TestHelper.GetCurrentMethodName());
+            LateralSource retrievedLateralSource = SaveLoadBranchFeature(lateralSource, TestHelper.GetCurrentMethodName());
 
             Assert.AreEqual(lateralSource.Name, retrievedLateralSource.Name);
             Assert.AreEqual(lateralSource.Chainage, retrievedLateralSource.Chainage);
-            
         }
-        
+
         [Test]
         public void SaveLoadLateralSourceGeometry()
         {
-            var path = TestHelper.GetCurrentMethodName() + ".dsproj";
-            using (var repository = factory.CreateNew())
+            string path = TestHelper.GetCurrentMethodName() + ".dsproj";
+            using (NHibernateProjectRepository repository = factory.CreateNew())
             {
                 repository.Create(path);
 
-                var project = repository.GetProject();
-                var network = HydroNetworkHelper.GetSnakeHydroNetwork(1);
+                Project project = repository.GetProject();
+                IHydroNetwork network = HydroNetworkHelper.GetSnakeHydroNetwork(1);
                 project.RootFolder.Add(network);
 
                 var lateral = new LateralSource
-                                         {
-                                             Name = "Source1",
-                                             Chainage = 50,
-                                             Geometry = new Point(0, 0)
-                                         };
-                var branch0 = network.Branches[0];
+                {
+                    Name = "Source1",
+                    Chainage = 50,
+                    Geometry = new Point(0, 0)
+                };
+                IBranch branch0 = network.Branches[0];
                 branch0.BranchFeatures.Add(lateral);
                 lateral.Branch = branch0;
 
@@ -717,35 +777,35 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
                 repository.Close();
             }
 
-            using (var repository = factory.CreateNew())
+            using (NHibernateProjectRepository repository = factory.CreateNew())
             {
                 repository.Open(path);
 
-                var project = repository.GetProject();
-                var network = (HydroNetwork)project.RootFolder.DataItems.First(di => di.Value is HydroNetwork).Value;
-                var lateral = network.LateralSources.First();
+                Project project = repository.GetProject();
+                var network = (HydroNetwork) project.RootFolder.DataItems.First(di => di.Value is HydroNetwork).Value;
+                ILateralSource lateral = network.LateralSources.First();
                 lateral.Geometry = GeometryHelper.SetCoordinate(lateral.Geometry, 0, new Coordinate(50, 0));
 
                 repository.SaveOrUpdate(project);
             }
 
-            using (var repository = factory.CreateNew())
+            using (NHibernateProjectRepository repository = factory.CreateNew())
             {
                 repository.Open(path);
 
-                var project = repository.GetProject();
-                var network = (HydroNetwork)project.RootFolder.DataItems.First(di => di.Value is HydroNetwork).Value;
-                var lateral = network.LateralSources.First();
+                Project project = repository.GetProject();
+                var network = (HydroNetwork) project.RootFolder.DataItems.First(di => di.Value is HydroNetwork).Value;
+                ILateralSource lateral = network.LateralSources.First();
 
-                Assert.AreEqual(new Point(50,0), lateral.Geometry);
+                Assert.AreEqual(new Point(50, 0), lateral.Geometry);
             }
         }
 
         [Test]
         public void SaveLoadDiffuseLateralSource()
         {
-            var hydroNetwork = HydroNetworkHelper.GetSnakeHydroNetwork(new Point(0, 0), new Point(200, 0), new Point(200, 200));
-            var branch1 = hydroNetwork.Branches[0];
+            IHydroNetwork hydroNetwork = HydroNetworkHelper.GetSnakeHydroNetwork(new Point(0, 0), new Point(200, 0), new Point(200, 200));
+            IBranch branch1 = hydroNetwork.Branches[0];
 
             var lateralSource = new LateralSource
             {
@@ -755,8 +815,8 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
             branch1.BranchFeatures.Add(lateralSource);
             lateralSource.Branch = branch1;
             HydroRegionEditorHelper.UpdateBranchFeatureGeometry(lateralSource, 40);
-            
-            var retrievedLateralSource = SaveLoadBranchFeature(lateralSource, TestHelper.GetCurrentMethodName());
+
+            LateralSource retrievedLateralSource = SaveLoadBranchFeature(lateralSource, TestHelper.GetCurrentMethodName());
 
             Assert.AreEqual(lateralSource.Name, retrievedLateralSource.Name);
             Assert.AreEqual(lateralSource.Chainage, retrievedLateralSource.Chainage);
@@ -781,7 +841,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
                 Chainage = 50,
                 Geometry = new Point(0, 0)
             };
-            var retrievedRetention = SaveLoadBranchFeature(retention, TestHelper.GetCurrentMethodName());
+            Retention retrievedRetention = SaveLoadBranchFeature(retention, TestHelper.GetCurrentMethodName());
 
             Assert.AreEqual(retention.BedLevel, retrievedRetention.BedLevel);
             Assert.AreEqual(retention.LevelBL, retrievedRetention.LevelBL);
@@ -805,7 +865,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
                 Chainage = 50,
                 Geometry = new Point(0, 0)
             };
-            var retrievedObservationPoint = SaveLoadBranchFeature(observationPoint, TestHelper.GetCurrentMethodName());
+            ObservationPoint retrievedObservationPoint = SaveLoadBranchFeature(observationPoint, TestHelper.GetCurrentMethodName());
 
             Assert.AreEqual(observationPoint.LongName, retrievedObservationPoint.LongName);
             Assert.AreEqual(observationPoint.Name, retrievedObservationPoint.Name);
@@ -817,27 +877,34 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
         {
             var network = new HydroNetwork();
 
-            INode fromNode = new HydroNode { Name = "From", Network = network, Geometry = new Point(1000, 1000) };
-            INode toNode = new HydroNode { Name = "To", Network = network, Geometry = new Point(1000, 1500) };
+            INode fromNode = new HydroNode
+            {
+                Name = "From",
+                Network = network,
+                Geometry = new Point(1000, 1000)
+            };
+            INode toNode = new HydroNode
+            {
+                Name = "To",
+                Network = network,
+                Geometry = new Point(1000, 1500)
+            };
             network.Nodes.Add(fromNode);
             network.Nodes.Add(toNode);
 
-            var branch = CreateChannel(fromNode, toNode);
+            IChannel branch = CreateChannel(fromNode, toNode);
             network.Branches.Add(branch);
 
-            var crossSection = CrossSectionHelper.CreateNewCrossSectionXYZ(new List<Coordinate>
-                                                            {
-                                                                new Coordinate(1.0, 1.0, 0.0),
-                                                                new Coordinate(2.0, 1.0, 0.1),
-                                                                new Coordinate(3.0, 1.0, 0.1),
-                                                                new Coordinate(4.0, 1.0, 0.1)
-                                                            });
-            branch.BranchFeatures.Add(crossSection);
-            int callCount = 0;
-            ((INotifyCollectionChange) network.Branches[0]).CollectionChanged += delegate
+            ICrossSection crossSection = CrossSectionHelper.CreateNewCrossSectionXYZ(new List<Coordinate>
             {
-                callCount++;
-            };
+                new Coordinate(1.0, 1.0, 0.0),
+                new Coordinate(2.0, 1.0, 0.1),
+                new Coordinate(3.0, 1.0, 0.1),
+                new Coordinate(4.0, 1.0, 0.1)
+            });
+            branch.BranchFeatures.Add(crossSection);
+            var callCount = 0;
+            ((INotifyCollectionChange) network.Branches[0]).CollectionChanged += delegate { callCount++; };
             network.Branches[0].BranchFeatures.RemoveAt(0);
             Assert.AreEqual(1, callCount);
             //readd the branch
@@ -847,25 +914,21 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
             var project = new Project();
             project.RootFolder.Add(new DataItem(network));
 
-
             string path = TestHelper.GetCurrentMethodName() + ".dsproj";
             ProjectRepository.Create(path);
             ProjectRepository.SaveOrUpdate(project);
             ProjectRepository.Close();
 
             //reopen
-            var retrievedProject = ProjectRepository.Open(path);
-            var retrievedNetwork = (IHydroNetwork)retrievedProject.RootFolder.DataItems.FirstOrDefault().Value;
+            Project retrievedProject = ProjectRepository.Open(path);
+            var retrievedNetwork = (IHydroNetwork) retrievedProject.RootFolder.DataItems.FirstOrDefault().Value;
 
             //remove a crossSection and get Notified at the network level.
             callCount = 0;
             IBranch retrievedBranch = retrievedNetwork.Branches[0];
-            (retrievedBranch.BranchFeatures).CollectionChanged += delegate
-            {
-                callCount++;
-            };
+            retrievedBranch.BranchFeatures.CollectionChanged += delegate { callCount++; };
             //crossSections is just a filtered view of branchfeatures.
-            ((IList)retrievedBranch.BranchFeatures).RemoveAt(0);
+            ((IList) retrievedBranch.BranchFeatures).RemoveAt(0);
 
             Assert.AreEqual(0, retrievedBranch.BranchFeatures.Count);
             Assert.AreEqual(1, callCount);
@@ -876,21 +939,31 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
         {
             var network = new HydroNetwork();
 
-            INode fromNode = new HydroNode { Name = "From", Network = network, Geometry = new Point(1000, 1000) };
-            INode toNode = new HydroNode { Name = "To", Network = network, Geometry = new Point(1000, 1500) };
+            INode fromNode = new HydroNode
+            {
+                Name = "From",
+                Network = network,
+                Geometry = new Point(1000, 1000)
+            };
+            INode toNode = new HydroNode
+            {
+                Name = "To",
+                Network = network,
+                Geometry = new Point(1000, 1500)
+            };
             network.Nodes.Add(fromNode);
             network.Nodes.Add(toNode);
 
-            var branch = CreateChannel(fromNode, toNode);
+            IChannel branch = CreateChannel(fromNode, toNode);
             network.Branches.Add(branch);
 
-            var crossSection = CrossSectionHelper.CreateNewCrossSectionXYZ(new List<Coordinate>
-                                                            {
-                                                                new Coordinate(1.0, 1.0, 0.0),
-                                                                new Coordinate(2.0, 1.0, 0.1),
-                                                                new Coordinate(3.0, 1.0, 0.1),
-                                                                new Coordinate(4.0, 1.0, 0.1)
-                                                            });
+            ICrossSection crossSection = CrossSectionHelper.CreateNewCrossSectionXYZ(new List<Coordinate>
+            {
+                new Coordinate(1.0, 1.0, 0.0),
+                new Coordinate(2.0, 1.0, 0.1),
+                new Coordinate(3.0, 1.0, 0.1),
+                new Coordinate(4.0, 1.0, 0.1)
+            });
             branch.BranchFeatures.Add(crossSection);
 
             network.Name = "NetworkWithAllSubItems";
@@ -902,10 +975,10 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
             ProjectRepository.SaveOrUpdate(project);
             ProjectRepository.Close();
 
-            var retrievedProject = ProjectRepository.Open(path);
+            Project retrievedProject = ProjectRepository.Open(path);
 
             Assert.AreEqual(1, retrievedProject.RootFolder.DataItems.Count());
-            var network2 = (IHydroNetwork)retrievedProject.RootFolder.DataItems.FirstOrDefault().Value;
+            var network2 = (IHydroNetwork) retrievedProject.RootFolder.DataItems.FirstOrDefault().Value;
             Assert.AreEqual(network.Name, network2.Name);
 
             Assert.AreEqual(2, network2.Nodes.Count);
@@ -919,33 +992,43 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
             //create a network
             var network = new HydroNetwork();
 
-            INode fromNode = new HydroNode { Name = "From", Network = network, Geometry = new Point(1000, 1000) };
-            INode toNode = new HydroNode { Name = "To", Network = network, Geometry = new Point(1000, 1500) };
+            INode fromNode = new HydroNode
+            {
+                Name = "From",
+                Network = network,
+                Geometry = new Point(1000, 1000)
+            };
+            INode toNode = new HydroNode
+            {
+                Name = "To",
+                Network = network,
+                Geometry = new Point(1000, 1500)
+            };
             network.Nodes.Add(fromNode);
             network.Nodes.Add(toNode);
 
-            var branch = CreateChannel(fromNode, toNode);
+            IChannel branch = CreateChannel(fromNode, toNode);
             network.Branches.Add(branch);
             var networkLocation = new NetworkLocation(branch, 10);
 
             networkLocation.Geometry = new WKTReader().Read("LINESTRING(20 20,20 30,30 30,30 20,40 20)");
 
             branch.BranchFeatures.Add(networkLocation);
-            var crossSection = CrossSectionHelper.CreateNewCrossSectionXYZ(new List<Coordinate>
-                                                            {
-                                                                new Coordinate(1.0, 1.0, 0.0),
-                                                                new Coordinate(2.0, 1.0, 0.1),
-                                                                new Coordinate(3.0, 1.0, 0.1),
-                                                                new Coordinate(4.0, 1.0, 0.1)
-                                                            });
+            ICrossSection crossSection = CrossSectionHelper.CreateNewCrossSectionXYZ(new List<Coordinate>
+            {
+                new Coordinate(1.0, 1.0, 0.0),
+                new Coordinate(2.0, 1.0, 0.1),
+                new Coordinate(3.0, 1.0, 0.1),
+                new Coordinate(4.0, 1.0, 0.1)
+            });
 
             //register to collectionchanged of network
-            int callCount = 0;
-            ((INotifyCollectionChange)(network)).CollectionChanged +=
+            var callCount = 0;
+            ((INotifyCollectionChange) network).CollectionChanged +=
                 delegate(object sender, NotifyCollectionChangedEventArgs e)
                 {
                     callCount++;
-                    Debug.WriteLine(String.Format("{0} sent a {1} for {2}", sender, e.Action, e.GetRemovedOrAddedItem()));
+                    Debug.WriteLine(string.Format("{0} sent a {1} for {2}", sender, e.Action, e.GetRemovedOrAddedItem()));
                 };
             //add a cross section results in only one call!
             branch.BranchFeatures.Add(crossSection);
@@ -955,7 +1038,6 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
             Assert.AreEqual(2, callCount);
             branch.BranchFeatures.Add(crossSection);
             Assert.AreEqual(3, callCount);
-
 
             //save it to a project.
             var project = new Project();
@@ -970,7 +1052,6 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
             Assert.AreEqual(3, callCount);
             branch.BranchFeatures.Remove(crossSection);
             Assert.AreEqual(4, callCount);
-
         }
 
         [Test]
@@ -978,10 +1059,10 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
         {
             //save it to a project.
             var project = new Project();
-            var network = CreateDummyHydroNetwork();
+            IHydroNetwork network = CreateDummyHydroNetwork();
             project.RootFolder.Add(new DataItem(network));
 
-            var firstChannel = network.Channels.First();
+            IChannel firstChannel = network.Channels.First();
             var orderNumber = 22;
             firstChannel.OrderNumber = orderNumber;
 
@@ -991,19 +1072,49 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
             ProjectRepository.SaveOrUpdate(project);
             ProjectRepository.Close();
 
-            var retrievedProject = ProjectRepository.Open(path);
-            var retrievedNetwork = (IHydroNetwork)retrievedProject.RootFolder.DataItems.FirstOrDefault().Value;
-            var firstChannelOfRetrievedNetwork = retrievedNetwork.Channels.First();
+            Project retrievedProject = ProjectRepository.Open(path);
+            var retrievedNetwork = (IHydroNetwork) retrievedProject.RootFolder.DataItems.FirstOrDefault().Value;
+            IChannel firstChannelOfRetrievedNetwork = retrievedNetwork.Channels.First();
 
             Assert.AreEqual(orderNumber, firstChannelOfRetrievedNetwork.OrderNumber);
         }
-        
+
+        private static IHydroNetwork CreateDummyHydroNetwork()
+        {
+            // create network
+            var network = new HydroNetwork();
+
+            var node1 = new HydroNode("node1");
+            var node2 = new HydroNode("node2");
+            var node3 = new HydroNode("node3");
+
+            network.Nodes.Add(node1);
+            network.Nodes.Add(node2);
+            network.Nodes.Add(node3);
+
+            var branch1 = new Channel("branch1", node1, node2) {Geometry = GeometryFromWKT.Parse("LINESTRING (0 0, 100 0)")};
+            var branch2 = new Channel("branch2", node2, node3) {Geometry = GeometryFromWKT.Parse("LINESTRING (100 0, 300 0)")};
+
+            node1.Geometry = new Point(0, 0);
+            node2.Geometry = new Point(100, 0);
+            node3.Geometry = new Point(300, 0);
+
+            network.Branches.Add(branch1);
+            network.Branches.Add(branch2);
+            return network;
+        }
+
         private T SaveLoadStructure<T>(T structure, string path) where T : IStructure1D
         {
-            var compositeStructure = new CompositeBranchStructure { Geometry = new Point(5, 0), Chainage = 5, Structures = { structure } };
+            var compositeStructure = new CompositeBranchStructure
+            {
+                Geometry = new Point(5, 0),
+                Chainage = 5,
+                Structures = {structure}
+            };
 
-            var retrievedCompositeStructure = SaveLoadBranchFeature(compositeStructure, path);
-            return (T)retrievedCompositeStructure.Structures[0];
+            CompositeBranchStructure retrievedCompositeStructure = SaveLoadBranchFeature(compositeStructure, path);
+            return (T) retrievedCompositeStructure.Structures[0];
         }
     }
 }

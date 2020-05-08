@@ -1,4 +1,5 @@
-﻿using System.Data;
+﻿using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Collections;
@@ -18,8 +19,8 @@ namespace DelftTools.Hydro.Tests
             var network2 = mocks.StrictMock<IHydroNetwork>();
             var connection = mocks.StrictMock<IDbConnection>();
 
-            var compositeStructureList1 = Enumerable.Range(1, 100).Select(i => new CompositeBranchStructure("Test", 0)).ToList();
-            var compositeStructureList2 = Enumerable.Range(1, 50).Select(i => new CompositeBranchStructure("Test 2", 0)).ToList();
+            List<CompositeBranchStructure> compositeStructureList1 = Enumerable.Range(1, 100).Select(i => new CompositeBranchStructure("Test", 0)).ToList();
+            List<CompositeBranchStructure> compositeStructureList2 = Enumerable.Range(1, 50).Select(i => new CompositeBranchStructure("Test 2", 0)).ToList();
 
             network1.Expect(n => n.BranchFeatures).Return(compositeStructureList1).Repeat.Any();
             network2.Expect(n => n.BranchFeatures).Return(compositeStructureList2).Repeat.Any();
@@ -35,7 +36,7 @@ namespace DelftTools.Hydro.Tests
             legacyLoader.OnAfterInitialize(network2, connection);
 
             legacyLoader.OnAfterProjectMigrated(null);
-            
+
             Assert.IsTrue(compositeStructureList1.Select(c => c.Name).HasUniqueValues(), "Composite structures are not unique");
             Assert.IsTrue(compositeStructureList2.Select(c => c.Name).HasUniqueValues(), "Composite structures are not unique");
 

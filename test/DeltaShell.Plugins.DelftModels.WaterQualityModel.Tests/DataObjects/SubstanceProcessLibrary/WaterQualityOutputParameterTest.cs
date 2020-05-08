@@ -10,13 +10,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.DataObjects.Sub
         public void TestClone()
         {
             var waterQualityOutputParameter = new WaterQualityOutputParameter
-                {
-                    Id = 2,
-                    Name = "Name",
-                    Description = "Description",
-                    ShowInHis = true,
-                    ShowInMap = true
-                };
+            {
+                Id = 2,
+                Name = "Name",
+                Description = "Description",
+                ShowInHis = true,
+                ShowInMap = true
+            };
 
             var waterQualityOutputParameterClone = waterQualityOutputParameter.Clone() as WaterQualityOutputParameter;
 

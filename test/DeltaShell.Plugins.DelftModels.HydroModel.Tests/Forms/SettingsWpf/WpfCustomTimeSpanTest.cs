@@ -5,7 +5,7 @@ using NUnit.Framework;
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.SettingsWpf
 {
     [TestFixture]
-    public class WpfCustomTimeSpanTest:WpfCustomTimeSpan
+    public class WpfCustomTimeSpanTest : WpfCustomTimeSpan
     {
         [Test]
         public void Test_CreateWpfCustomTimeSpan()
@@ -26,13 +26,13 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.SettingsWpf
         {
             var control = new WpfCustomTimeSpan();
             Assert.IsNotNull(control);
-            
+
             //Expected:
             var expectedResult = new TimeSpan(0);
 
             //Ensure the value is converted as expected
             TimeSpan? convertedValue = null;
-            Assert.DoesNotThrow( () => convertedValue = base.ConvertTextToValue(text));
+            Assert.DoesNotThrow(() => convertedValue = base.ConvertTextToValue(text));
             Assert.IsNotNull(convertedValue);
             Assert.AreEqual(expectedResult, convertedValue);
         }
@@ -71,7 +71,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.SettingsWpf
             Assert.IsNotNull(control);
 
             //Input:
-            this.Value = new TimeSpan(dd, hh, mm, ss, fff);
+            Value = new TimeSpan(dd, hh, mm, ss, fff);
 
             //Ensure the value is converted as expected
             var convertedValue = string.Empty;
@@ -87,7 +87,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.SettingsWpf
             Assert.IsNotNull(control);
 
             //Input:
-            this.Value = null;
+            Value = null;
 
             //Expected Value:
             var expectedValue = string.Empty;
@@ -97,6 +97,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.SettingsWpf
             Assert.DoesNotThrow(() => convertedValue = base.ConvertValueToText());
             Assert.AreEqual(expectedValue, convertedValue);
         }
+
         #endregion
     }
 }

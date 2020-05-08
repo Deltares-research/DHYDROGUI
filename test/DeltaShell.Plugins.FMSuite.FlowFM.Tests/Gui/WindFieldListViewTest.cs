@@ -10,19 +10,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 {
     public class WindFieldListViewTest
     {
-        private static TableViewTimeSeriesGeneratorTool TableViewTimeSeriesGeneratorTool
-        {
-            get
-            {
-                return new TableViewTimeSeriesGeneratorTool
-                {
-                    GetStartTime = () => DateTime.Now,
-                    GetStopTime = () => DateTime.Now.AddHours(1),
-                    GetTimeStep = () => new TimeSpan(0, 10, 0)
-                };
-            }
-        }
-
         [Test]
         [Category(TestCategory.WindowsForms)]
         public void ShowEmptyShouldNotThrowException()
@@ -52,5 +39,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             WindowsFormsTestHelper.ShowModal(view);
         }
 
+        private static TableViewTimeSeriesGeneratorTool TableViewTimeSeriesGeneratorTool
+        {
+            get
+            {
+                return new TableViewTimeSeriesGeneratorTool
+                {
+                    GetStartTime = () => DateTime.Now,
+                    GetStopTime = () => DateTime.Now.AddHours(1),
+                    GetTimeStep = () => new TimeSpan(0, 10, 0)
+                };
+            }
+        }
     }
 }

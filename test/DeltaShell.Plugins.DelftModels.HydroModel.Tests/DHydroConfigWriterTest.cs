@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -31,7 +32,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         {
             var model = new HydroModel();
             var configWriter = new DHydroConfigWriter();
-            bool exportFailed = true;
+            var exportFailed = true;
             try
             {
                 configWriter.CreateConfigDocument(model);
@@ -40,9 +41,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             catch
             {
                 Assert.That(exportFailed, Is.True);
-            }         
+            }
         }
-
 
         [Test]
         public void WriteDocumentWithComponents()
@@ -52,7 +52,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             hydroModel.Activities.Add(new WaveModel());
             hydroModel.Activities.Add(new RealTimeControlModel());
             hydroModel.CurrentWorkflow = hydroModel.Workflows.First();
-            var xmlDocument = new DHydroConfigWriter().CreateConfigDocument(hydroModel);
+            XDocument xmlDocument = new DHydroConfigWriter().CreateConfigDocument(hydroModel);
             var stringWriter = new StringWriter(new StringBuilder());
             xmlDocument.Save(stringWriter);
             var resultString = stringWriter.ToString();
@@ -63,8 +63,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         [Test]
         public void WriteDocumentWithCouplings()
         {
-            var hydroModel = BuildCoupledDemoModel();
-            var xmlDocument = new DHydroConfigWriter().CreateConfigDocument(hydroModel);
+            HydroModel hydroModel = BuildCoupledDemoModel();
+            XDocument xmlDocument = new DHydroConfigWriter().CreateConfigDocument(hydroModel);
             var stringWriter = new StringWriter(new StringBuilder());
             xmlDocument.Save(stringWriter);
             var resultString = stringWriter.ToString();
@@ -75,11 +75,12 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         [Test]
         public void WriteDocument_RTC_FM_HasLoggerElement()
         {
-            var hydroModel = BuildCoupledDemoModel();
+            HydroModel hydroModel = BuildCoupledDemoModel();
             CheckCouplerXml(hydroModel);
         }
 
         #region PrivateHelperMethods
+
         private static HydroModel BuildCoupledDemoModel()
         {
             var hydroModel = new HydroModel();
@@ -92,11 +93,19 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
             var pump = new Pump2D("pomp")
             {
-                Geometry = new LineString(new[] { new Coordinate(-50, -100), new Coordinate(50, -100) })
+                Geometry = new LineString(new[]
+                {
+                    new Coordinate(-50, -100),
+                    new Coordinate(50, -100)
+                })
             };
             var gate = new Weir2D("poort")
             {
-                Geometry = new LineString(new[] { new Coordinate(-50, 100), new Coordinate(50, 100) })
+                Geometry = new LineString(new[]
+                {
+                    new Coordinate(-50, 100),
+                    new Coordinate(50, 100)
+                })
             };
             var obserVationPoint = new GroupableFeature2DPoint
             {
@@ -110,12 +119,12 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
             realTimeControlModel.ControlGroups.Add(RealTimeControlModelHelper.CreateStandardControlGroup("InvertorRule"));
 
-            var waterDepth = waterFlowFMModel.GetChildDataItems(obserVationPoint).ElementAt(1);
-            var pumpCapacity = waterFlowFMModel.GetChildDataItems(pump).First();
+            IDataItem waterDepth = waterFlowFMModel.GetChildDataItems(obserVationPoint).ElementAt(1);
+            IDataItem pumpCapacity = waterFlowFMModel.GetChildDataItems(pump).First();
 
-            var controlGroupDataItem = realTimeControlModel.DataItems.First(di => di.Value is ControlGroup);
-            var rtcInput = controlGroupDataItem.Children.First(di => di.Role == DataItemRole.Input);
-            var rtcOutput = controlGroupDataItem.Children.First(di => di.Role == DataItemRole.Output);
+            IDataItem controlGroupDataItem = realTimeControlModel.DataItems.First(di => di.Value is ControlGroup);
+            IDataItem rtcInput = controlGroupDataItem.Children.First(di => di.Role == DataItemRole.Input);
+            IDataItem rtcOutput = controlGroupDataItem.Children.First(di => di.Role == DataItemRole.Output);
 
             rtcInput.LinkTo(waterDepth);
             pumpCapacity.LinkTo(rtcOutput);
@@ -134,34 +143,38 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
         private static void CheckCouplerXml(HydroModel hydroModel)
         {
-            var xml = new DHydroConfigWriter().CreateConfigDocument(hydroModel);
-            var couplers = xml.Descendants().Where(p => p.Name.LocalName == "coupler" && p.HasElements).ToList();
+            XDocument xml = new DHydroConfigWriter().CreateConfigDocument(hydroModel);
+            List<XElement> couplers = xml.Descendants().Where(p => p.Name.LocalName == "coupler" && p.HasElements).ToList();
 
             Assert.IsTrue(couplers.Any());
-            foreach (var coupler in couplers)
+            foreach (XElement coupler in couplers)
             {
-                var couplerName = coupler.Attributes().FirstOrDefault(attr => attr.Name.LocalName == "name");
+                XAttribute couplerName = coupler.Attributes().FirstOrDefault(attr => attr.Name.LocalName == "name");
                 Assert.IsNotNull(couplerName);
                 Assert.IsNotNull(couplerName.Value);
 
-                var logger = coupler.Descendants().SingleOrDefault(c => c.Name.LocalName == "logger");
+                XElement logger = coupler.Descendants().SingleOrDefault(c => c.Name.LocalName == "logger");
                 Assert.IsNotNull(logger);
                 Assert.IsTrue(logger.HasElements);
 
-                var outputFileElement = logger.Descendants().SingleOrDefault(l => l.Name.LocalName == "outputFile");
+                XElement outputFileElement = logger.Descendants().SingleOrDefault(l => l.Name.LocalName == "outputFile");
                 Assert.IsNotNull(outputFileElement);
 
-                var couplerNameWithExtension = string.Concat(couplerName.Value, ".nc");
+                string couplerNameWithExtension = string.Concat(couplerName.Value, ".nc");
                 Assert.AreEqual(couplerNameWithExtension, outputFileElement.Value);
             }
+
             ValidateXml(xml);
         }
 
         private static void ValidateXml(XDocument xmlDocument, bool expectedToFail = false, Action<string> assertFailMessage = null)
         {
             if (assertFailMessage == null)
+            {
                 assertFailMessage = (s) => Assert.Fail("Couldn't validate dimr xml!!" + Environment.NewLine + s);
-            XmlReaderSettings settings = new XmlReaderSettings();
+            }
+
+            var settings = new XmlReaderSettings();
             settings.ValidationType = ValidationType.Schema;
             settings.ValidationFlags |= XmlSchemaValidationFlags.ProcessInlineSchema;
             settings.ValidationFlags |= XmlSchemaValidationFlags.ProcessSchemaLocation;
@@ -171,7 +184,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 new ValidationEventHandler(
                     (s, e) =>
                     {
-                        if (!expectedToFail) assertFailMessage(e.Message);
+                        if (!expectedToFail)
+                        {
+                            assertFailMessage(e.Message);
+                        }
                     });
             try
             {
@@ -181,9 +197,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 using (var xmlReader = XmlReader.Create("mytest.xml", settings))
                 {
                     // Parse the file. 
-                    while (xmlReader.Read())
-                    {
-                    }
+                    while (xmlReader.Read()) {}
                 }
             }
             finally
@@ -191,9 +205,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 FileUtils.DeleteIfExists("mytest.xml");
             }
         }
-        
+
         #endregion
-
     }
-
 }

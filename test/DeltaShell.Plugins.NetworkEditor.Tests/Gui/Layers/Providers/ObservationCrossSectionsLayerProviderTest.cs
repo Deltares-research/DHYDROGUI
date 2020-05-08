@@ -32,7 +32,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Layers.Providers
             hydroArea.ObservationCrossSections.Add(new ObservationCrossSection2D());
 
             return hydroArea;
-
         }
 
         protected override IEventedList<ObservationCrossSection2D> GetStructureCollection(HydroArea hydroArea)

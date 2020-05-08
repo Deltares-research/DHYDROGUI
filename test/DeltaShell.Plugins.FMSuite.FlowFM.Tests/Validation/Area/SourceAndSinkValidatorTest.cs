@@ -26,19 +26,23 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
                 // Thin dam geometry is far outside of grid extent
                 Feature = new Feature2D
                 {
-                    Geometry = new LineString(new[] { new Coordinate(10, 10), new Coordinate(20, 20) })
+                    Geometry = new LineString(new[]
+                    {
+                        new Coordinate(10, 10),
+                        new Coordinate(20, 20)
+                    })
                 }
             };
 
             // When
-            var sourceAndSinks = new List<SourceAndSink> { sourceAndSink };
-            var validationIssues = sourceAndSinks.Validate(envelope, new DateTime(), new DateTime());
+            var sourceAndSinks = new List<SourceAndSink> {sourceAndSink};
+            IEnumerable<ValidationIssue> validationIssues = sourceAndSinks.Validate(envelope, new DateTime(), new DateTime());
 
             // Then
-            var validationWarnings = validationIssues.Where(issue => issue.Severity == ValidationSeverity.Warning).ToArray();
+            ValidationIssue[] validationWarnings = validationIssues.Where(issue => issue.Severity == ValidationSeverity.Warning).ToArray();
             Assert.That(validationWarnings.Length, Is.EqualTo(1));
 
-            var expectedMessage =
+            string expectedMessage =
                 string.Format(Resources.SourceAndSinkValidator_Validate_source_sink___0___not_within_grid_extent, sourceAndSink.Name);
             Assert.That(validationWarnings[0].Message, Is.EqualTo(expectedMessage));
         }
@@ -52,21 +56,60 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
                 Name = "mySourceAndSink",
                 Feature = new Feature2D
                 {
-                    Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(1, 1) })
+                    Geometry = new LineString(new[]
+                    {
+                        new Coordinate(0, 0),
+                        new Coordinate(1, 1)
+                    })
                 }
             };
 
             // When
-            var sourceAndSinks = new List<SourceAndSink>{sourceAndSink};
-            var validationIssues = sourceAndSinks.Validate(null, new DateTime(), new DateTime());
+            var sourceAndSinks = new List<SourceAndSink> {sourceAndSink};
+            IEnumerable<ValidationIssue> validationIssues = sourceAndSinks.Validate(null, new DateTime(), new DateTime());
 
             // Then
-            var validationErrors = validationIssues.Where(issue => issue.Severity == ValidationSeverity.Error).ToArray();
+            ValidationIssue[] validationErrors = validationIssues.Where(issue => issue.Severity == ValidationSeverity.Error).ToArray();
             Assert.That(validationErrors.Length, Is.EqualTo(1));
 
-            var expectedMessage =
+            string expectedMessage =
                 string.Format(Resources.SourceAndSinkValidator_Validate_source_sink___0____discharge_time_series_does_not_contain_any_values_, sourceAndSink.Name);
             Assert.That(validationErrors[0].Message, Is.EqualTo(expectedMessage));
+        }
+
+        [Test]
+        public void GivenSourceAndSinkWithCorrectFunctionTimeArgumentValues_WhenValidating_ThenNoValidationErrorsAreReturned()
+        {
+            // Given
+            DateTime dateTimeNow = DateTime.Now;
+            DateTime startTime = dateTimeNow.AddDays(2);
+            DateTime stopTime = dateTimeNow.AddDays(5);
+
+            var sourceAndSink = new SourceAndSink
+            {
+                Name = "mySourceAndSink",
+                Feature = new Feature2D
+                {
+                    Geometry = new LineString(new[]
+                    {
+                        new Coordinate(0, 0),
+                        new Coordinate(1, 1)
+                    })
+                }
+            };
+            sourceAndSink.Function.Arguments[0].SetValues(new List<DateTime>
+            {
+                dateTimeNow,
+                dateTimeNow.AddDays(6)
+            });
+
+            // When
+            var sourceAndSinks = new List<SourceAndSink> {sourceAndSink};
+            IEnumerable<ValidationIssue> validationIssues = sourceAndSinks.Validate(null, startTime, stopTime);
+
+            // Then
+            ValidationIssue[] validationErrors = validationIssues.Where(issue => issue.Severity == ValidationSeverity.Error).ToArray();
+            Assert.IsEmpty(validationErrors);
         }
 
         [TestCase(0, 1, TestName = "SourceSinkIntervalBeforeModelInterval")]
@@ -78,59 +121,40 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
             (int addedDaysToStartTime, int addedDaysToStopTime)
         {
             // Given
-            var dateTimeNow = DateTime.Now;
+            DateTime dateTimeNow = DateTime.Now;
 
-            var startTime = dateTimeNow.AddDays(2);
-            var stopTime = dateTimeNow.AddDays(5);
-            
+            DateTime startTime = dateTimeNow.AddDays(2);
+            DateTime stopTime = dateTimeNow.AddDays(5);
+
             var sourceAndSink = new SourceAndSink
             {
                 Name = "mySourceAndSink",
                 Feature = new Feature2D
                 {
-                    Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(1, 1) })
+                    Geometry = new LineString(new[]
+                    {
+                        new Coordinate(0, 0),
+                        new Coordinate(1, 1)
+                    })
                 }
             };
-            sourceAndSink.Function.Arguments[0].SetValues(new List<DateTime> { dateTimeNow.AddDays(addedDaysToStartTime), dateTimeNow.AddDays(addedDaysToStopTime) });
+            sourceAndSink.Function.Arguments[0].SetValues(new List<DateTime>
+            {
+                dateTimeNow.AddDays(addedDaysToStartTime),
+                dateTimeNow.AddDays(addedDaysToStopTime)
+            });
 
             // When
-            var sourceAndSinks = new List<SourceAndSink> { sourceAndSink };
-            var validationIssues = sourceAndSinks.Validate(null, startTime, stopTime);
+            var sourceAndSinks = new List<SourceAndSink> {sourceAndSink};
+            IEnumerable<ValidationIssue> validationIssues = sourceAndSinks.Validate(null, startTime, stopTime);
 
             // Then
-            var validationErrors = validationIssues.Where(issue => issue.Severity == ValidationSeverity.Error).ToArray();
+            ValidationIssue[] validationErrors = validationIssues.Where(issue => issue.Severity == ValidationSeverity.Error).ToArray();
             Assert.That(validationErrors.Length, Is.EqualTo(1));
 
-            var expectedMessage =
+            string expectedMessage =
                 string.Format(Resources.SourceAndSinkValidator_Validate_source_sink___0____discharge_time_series_does_not_span_the_model_run_interval_, sourceAndSink.Name);
             Assert.That(validationErrors[0].Message, Is.EqualTo(expectedMessage));
-        }
-
-        [Test]
-        public void GivenSourceAndSinkWithCorrectFunctionTimeArgumentValues_WhenValidating_ThenNoValidationErrorsAreReturned()
-        {
-            // Given
-            var dateTimeNow = DateTime.Now;
-            var startTime = dateTimeNow.AddDays(2);
-            var stopTime = dateTimeNow.AddDays(5);
-
-            var sourceAndSink = new SourceAndSink
-            {
-                Name = "mySourceAndSink",
-                Feature = new Feature2D
-                {
-                    Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(1, 1) })
-                }
-            };
-            sourceAndSink.Function.Arguments[0].SetValues(new List<DateTime> { dateTimeNow, dateTimeNow.AddDays(6) });
-
-            // When
-            var sourceAndSinks = new List<SourceAndSink> { sourceAndSink };
-            var validationIssues = sourceAndSinks.Validate(null, startTime, stopTime);
-
-            // Then
-            var validationErrors = validationIssues.Where(issue => issue.Severity == ValidationSeverity.Error).ToArray();
-            Assert.IsEmpty(validationErrors);
         }
     }
 }

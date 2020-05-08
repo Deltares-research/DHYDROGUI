@@ -13,19 +13,19 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Common.IO
         [Category(TestCategory.DataAccess)]
         public void WriteGridFileTest()
         {
-            var gridFilePath = TestHelper.GetTestFilePath(@"wave_timespacevarbnd\outer.grd");
+            string gridFilePath = TestHelper.GetTestFilePath(@"wave_timespacevarbnd\outer.grd");
             var targetPath = "testwriter.grd";
 
-            var grid = Delft3DGridFileReader.Read(gridFilePath);
+            CurvilinearGrid grid = Delft3DGridFileReader.Read(gridFilePath);
             Delft3DGridFileWriter.Write(grid, targetPath);
-            var reReadGrid = Delft3DGridFileReader.Read(targetPath);
+            CurvilinearGrid reReadGrid = Delft3DGridFileReader.Read(targetPath);
 
             Assert.AreEqual(grid.Size1, reReadGrid.Size1);
             Assert.AreEqual(grid.Size2, reReadGrid.Size2);
             Assert.AreEqual(grid.Attributes[CurvilinearGrid.CoordinateSystemKey],
                             reReadGrid.Attributes[CurvilinearGrid.CoordinateSystemKey]);
-            
-            for (int i = 0; i < grid.X.Values.Count; ++i)
+
+            for (var i = 0; i < grid.X.Values.Count; ++i)
             {
                 Assert.AreEqual(grid.X.Values[i], reReadGrid.X.Values[i]);
                 Assert.AreEqual(grid.Y.Values[i], reReadGrid.Y.Values[i]);

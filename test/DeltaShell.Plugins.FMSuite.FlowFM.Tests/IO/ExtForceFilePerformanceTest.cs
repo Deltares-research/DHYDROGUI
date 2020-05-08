@@ -15,9 +15,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         public void ReadExtForcingsShouldBeFast()
         {
             var def = new WaterFlowFMModelDefinition();
-            var testDataPath = TestHelper.GetTestFilePath(@"dcsm");
+            string testDataPath = TestHelper.GetTestFilePath(@"dcsm");
             var externalForcingZipFileName = "dcsm.zip";
-            var externalForcingZipFilePath = Path.Combine(testDataPath, externalForcingZipFileName);
+            string externalForcingZipFilePath = Path.Combine(testDataPath, externalForcingZipFileName);
 
             TestHelper.PerformActionInTemporaryDirectory(tempDir =>
             {
@@ -27,8 +27,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 var externalForcingFileName = "dcsmv6.ext";
                 var mduFileName = "dcsmv6.mdu";
 
-                var externalForcingFile = Path.Combine(tempDir, externalForcingFileName);
-                var extSubFilesReferenceFilePath = Path.Combine(tempDir, mduFileName);
+                string externalForcingFile = Path.Combine(tempDir, externalForcingFileName);
+                string extSubFilesReferenceFilePath = Path.Combine(tempDir, mduFileName);
 
                 var extForceFile = new ExtForceFile();
                 TestHelper.AssertIsFasterThan(30000, () => extForceFile.Read(externalForcingFile, def, extSubFilesReferenceFilePath));

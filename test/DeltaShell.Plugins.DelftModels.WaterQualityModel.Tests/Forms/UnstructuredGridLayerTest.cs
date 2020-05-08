@@ -2,6 +2,7 @@
 using System.Windows.Forms;
 using DelftTools.TestUtils;
 using DeltaShell.Plugins.SharpMapGis.ImportExport;
+using NetTopologySuite.Extensions.Grids;
 using NUnit.Framework;
 using SharpMap;
 using SharpMap.Layers;
@@ -22,22 +23,31 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Forms
         [Test]
         public void ShowWaqGeomGeneratedGridLayer()
         {
-            var filePath = TestHelper.GetTestFilePath(@"IO\real\uni3d_flowgeom.nc");
-            var grid = NetFileImporter.ImportModelGrid(filePath);
+            string filePath = TestHelper.GetTestFilePath(@"IO\real\uni3d_flowgeom.nc");
+            UnstructuredGrid grid = NetFileImporter.ImportModelGrid(filePath);
 
             var gridLayer = new UnstructuredGridLayer
-                {
-                    Grid = grid, 
-                    Renderer = new GridEdgeRenderer(Color.Blue)
-                        {
-                            GridEdgeRenderMode = GridEdgeRenderMode.EdgesWithBlockedFlowLinks
-                        }
-                };
+            {
+                Grid = grid,
+                Renderer = new GridEdgeRenderer(Color.Blue) {GridEdgeRenderMode = GridEdgeRenderMode.EdgesWithBlockedFlowLinks}
+            };
 
-            var map = new Map { Layers = { gridLayer }, Size = new Size { Width = 800, Height = 800 } };
+            var map = new Map
+            {
+                Layers = {gridLayer},
+                Size = new Size
+                {
+                    Width = 800,
+                    Height = 800
+                }
+            };
             map.ZoomToExtents();
 
-            var mapControl = new MapControl { Map = map, Dock = DockStyle.Fill };
+            var mapControl = new MapControl
+            {
+                Map = map,
+                Dock = DockStyle.Fill
+            };
 
             WindowsFormsTestHelper.ShowModal(mapControl);
         }

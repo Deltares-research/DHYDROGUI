@@ -1,6 +1,7 @@
 ﻿using System;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
 using GeoAPI.Geometries;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries
@@ -40,7 +41,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries
             var coordinate = new Coordinate(0, 0);
             var coordinate1 = new Coordinate(0, 0);
 
-            var waveBoundaryMock = NSubstitute.Substitute.For<IWaveBoundary>();
+            var waveBoundaryMock = Substitute.For<IWaveBoundary>();
             var sut = new CachedBoundary(coordinate, coordinate1, waveBoundaryMock);
 
             Assert.IsNotNull(sut);
@@ -50,4 +51,3 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries
         }
     }
 }
-

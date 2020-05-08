@@ -9,6 +9,26 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
     public class NetCdfFileConventionCheckerTest
     {
         [Category(TestCategory.DataAccess)]
+        [Test]
+        public void HasSupportedConvention_WhenFileDoesNotExist_ThenThrowsFileNotFoundException()
+        {
+            // Set-up
+            const string filePath = "no_exist";
+
+            // Pre-condition
+            Assert.That(!File.Exists(filePath));
+
+            // Action
+            void TestAction()
+            {
+                NetCdfFileConventionChecker.HasSupportedConvention(filePath);
+            }
+
+            // Then
+            Assert.That(TestAction, Throws.TypeOf<FileNotFoundException>());
+        }
+
+        [Category(TestCategory.DataAccess)]
         [TestCase("CF1.5_UGRID0.9.nc", false)]
         [TestCase("CF1.5_UGRID1.0.nc", false)]
         [TestCase("CF1.5_UGRID1.1.nc", false)]
@@ -35,26 +55,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
 
             // Assert
             Assert.That(result, Is.EqualTo(expectedResult));
-        }
-
-        [Category(TestCategory.DataAccess)]
-        [Test]
-        public void HasSupportedConvention_WhenFileDoesNotExist_ThenThrowsFileNotFoundException()
-        {
-            // Set-up
-            const string filePath = "no_exist";
-
-            // Pre-condition
-            Assert.That(!File.Exists(filePath));
-
-            // Action
-            void TestAction()
-            {
-                NetCdfFileConventionChecker.HasSupportedConvention(filePath);
-            }
-
-            // Then
-            Assert.That(TestAction, Throws.TypeOf<FileNotFoundException>());
         }
     }
 }

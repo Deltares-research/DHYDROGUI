@@ -10,6 +10,7 @@ using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.IO.DelftIniObjects;
 using DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures;
+using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
 using DeltaShell.Plugins.FMSuite.Common.Tests.IO;
 using NUnit.Framework;
 
@@ -20,126 +21,34 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
     {
         /// <summary>
         /// GIVEN a structures file
-        ///   AND a structures ini file describing a simple weir with an empty crest width
+        /// AND a structures ini file describing a simple weir with an empty crest width
         /// WHEN this structure is read
         /// THEN no exceptions are thrown
-        ///  AND the weir crest width is NaN
+        /// AND the weir crest width is NaN
         /// </summary>
-        [TestCase(true),  Category(TestCategory.DataAccess)]
-        [TestCase(false), Category(TestCategory.DataAccess)]
+        [TestCase(true)]
+        [Category(TestCategory.DataAccess)]
+        [TestCase(false)]
+        [Category(TestCategory.DataAccess)]
         public void GivenAStructuresIniFileDescribingASimpleWeirWithAnEmptyCrestWidth_WhenThisStructureIsRead_ThenNoExceptionsAreThrownAndTheWeirCrestWidthIsNaN(bool hasExplicitField)
         {
             // Given
             // - structures file
-            var structuresFile = GetStructuresFile();
+            StructuresFile structuresFile = GetStructuresFile();
 
             TestHelper.PerformActionInTemporaryDirectory(tempDir =>
             {
                 const string structureName = "weir-d";
-                var fileIniPath = Path.Combine(tempDir, "structures.ini");
+                string fileIniPath = Path.Combine(tempDir, "structures.ini");
 
                 WritePliFileSingleStructure(tempDir, structureName);
 
-                var structureCategory = GetBaseStructureCategory(structureName, "weir");
+                DelftIniCategory structureCategory = GetBaseStructureCategory(structureName, "weir");
                 SetSimpleWeirRequiredProperties(structureCategory);
 
                 if (hasExplicitField)
+                {
                     structureCategory.AddProperty(KnownStructureProperties.CrestWidth, " ", "#");
-
-                WriteStructuresIniFile(structureCategory, tempDir);
-
-                // When | Then
-                // - Read structures file
-                IList<IStructure> structures = null;
-                Assert.DoesNotThrow(() =>
-                {
-                    structures = structuresFile.Read(fileIniPath);
-                });
-
-                AssertThatOnlyOneStructureExistsWithin(structures);
-
-                var weirStructure = structures[0];
-                AssertThatStructureIsCorrect(weirStructure, typeof(SimpleWeirFormula));
-            });
-        }
-
-        /// <summary>
-        /// GIVEN a structures file
-        ///   AND a structures ini file describing a gated weir with an empty crest width
-        /// WHEN this structure is read
-        /// THEN no exceptions are thrown
-        ///  AND the weir crest width is NaN
-        /// </summary>
-        [TestCase(true),  Category(TestCategory.DataAccess)]
-        [TestCase(false), Category(TestCategory.DataAccess)]
-        public void GivenAStructuresFileAndAStructuresIniFileDescribingAGatedWeirWithAnEmptyCrestWidth_WhenThisStructureIsRead_ThenNoExceptionsAreThrownAndTheWeirCrestWidthIsNaN(bool hasExplicitField)
-        {
-            // Given
-            // - structures file
-            var structuresFile = GetStructuresFile();
-
-            TestHelper.PerformActionInTemporaryDirectory(tempDir =>
-            {
-                const string structureName = "open-the-gate-a-little";
-                var fileIniPath = Path.Combine(tempDir, "structures.ini");
-
-                WritePliFileSingleStructure(tempDir, structureName);
-
-                var structureCategory = GetBaseStructureCategory(structureName, "gate");
-                SetSimpleGateRequiredProperties(structureCategory);
-
-                if (hasExplicitField)
-                    structureCategory.AddProperty(KnownStructureProperties.CrestWidth, " ", "#");
-
-                WriteStructuresIniFile(structureCategory, tempDir);
-
-                // When | Then
-                // - Read structures file
-                IList<IStructure> structures = null;
-                Assert.DoesNotThrow(() =>
-                {
-                    structures = structuresFile.Read(fileIniPath);
-                });
-
-                AssertThatOnlyOneStructureExistsWithin(structures);
-
-                var weirStructure = structures[0];
-                AssertThatStructureIsCorrect(weirStructure, typeof(GatedWeirFormula));
-            });
-        }
-
-        /// <summary>
-        /// GIVEN a structures file
-        ///   AND a structures ini file describing a general structure with empty fields
-        /// WHEN this structure is read
-        /// THEN no exceptions are thrown
-        ///  AND the empty fields contain NaN
-        /// </summary>
-        [TestCase(true),  Category(TestCategory.DataAccess)]
-        [TestCase(false), Category(TestCategory.DataAccess)]
-        public void GivenAStructuresFileAndAStructuresIniFileDescribingAGeneralStructureWithEmptyFields_WhenThisStructureIsRead_ThenNoExceptionsAreThrownAndTheEmptyFieldsContainNaN(bool hasExplicitFields)
-        {
-            // Given
-            // - structures file
-            var structuresFile = GetStructuresFile();
-
-            TestHelper.PerformActionInTemporaryDirectory(tempDir =>
-            {
-                const string structureName = "general-structure-sir";
-                var fileIniPath = Path.Combine(tempDir, "structures.ini");
-
-                WritePliFileSingleStructure(tempDir, structureName);
-
-                var structureCategory = GetBaseStructureCategory(structureName, "generalstructure");
-                SetGeneralStructureRequiredProperties(structureCategory);
-
-                if (hasExplicitFields)
-                {
-                    structureCategory.AddProperty(GetName(KnownGeneralStructureProperties.Upstream2Width),    " ", "#");
-                    structureCategory.AddProperty(GetName(KnownGeneralStructureProperties.Upstream1Width),  " ", "#");
-                    structureCategory.AddProperty(GetName(KnownGeneralStructureProperties.CrestWidth),    " ", "#");
-                    structureCategory.AddProperty(GetName(KnownGeneralStructureProperties.Downstream1Width), " ", "#");
-                    structureCategory.AddProperty(GetName(KnownGeneralStructureProperties.Downstream2Width),   " ", "#");
                 }
 
                 WriteStructuresIniFile(structureCategory, tempDir);
@@ -147,14 +56,107 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 // When | Then
                 // - Read structures file
                 IList<IStructure> structures = null;
-                Assert.DoesNotThrow(() =>
-                {
-                    structures = structuresFile.Read(fileIniPath);
-                });
+                Assert.DoesNotThrow(() => { structures = structuresFile.Read(fileIniPath); });
 
                 AssertThatOnlyOneStructureExistsWithin(structures);
 
-                var weirStructure = structures[0];
+                IStructure weirStructure = structures[0];
+                AssertThatStructureIsCorrect(weirStructure, typeof(SimpleWeirFormula));
+            });
+        }
+
+        /// <summary>
+        /// GIVEN a structures file
+        /// AND a structures ini file describing a gated weir with an empty crest width
+        /// WHEN this structure is read
+        /// THEN no exceptions are thrown
+        /// AND the weir crest width is NaN
+        /// </summary>
+        [TestCase(true)]
+        [Category(TestCategory.DataAccess)]
+        [TestCase(false)]
+        [Category(TestCategory.DataAccess)]
+        public void GivenAStructuresFileAndAStructuresIniFileDescribingAGatedWeirWithAnEmptyCrestWidth_WhenThisStructureIsRead_ThenNoExceptionsAreThrownAndTheWeirCrestWidthIsNaN(bool hasExplicitField)
+        {
+            // Given
+            // - structures file
+            StructuresFile structuresFile = GetStructuresFile();
+
+            TestHelper.PerformActionInTemporaryDirectory(tempDir =>
+            {
+                const string structureName = "open-the-gate-a-little";
+                string fileIniPath = Path.Combine(tempDir, "structures.ini");
+
+                WritePliFileSingleStructure(tempDir, structureName);
+
+                DelftIniCategory structureCategory = GetBaseStructureCategory(structureName, "gate");
+                SetSimpleGateRequiredProperties(structureCategory);
+
+                if (hasExplicitField)
+                {
+                    structureCategory.AddProperty(KnownStructureProperties.CrestWidth, " ", "#");
+                }
+
+                WriteStructuresIniFile(structureCategory, tempDir);
+
+                // When | Then
+                // - Read structures file
+                IList<IStructure> structures = null;
+                Assert.DoesNotThrow(() => { structures = structuresFile.Read(fileIniPath); });
+
+                AssertThatOnlyOneStructureExistsWithin(structures);
+
+                IStructure weirStructure = structures[0];
+                AssertThatStructureIsCorrect(weirStructure, typeof(GatedWeirFormula));
+            });
+        }
+
+        /// <summary>
+        /// GIVEN a structures file
+        /// AND a structures ini file describing a general structure with empty fields
+        /// WHEN this structure is read
+        /// THEN no exceptions are thrown
+        /// AND the empty fields contain NaN
+        /// </summary>
+        [TestCase(true)]
+        [Category(TestCategory.DataAccess)]
+        [TestCase(false)]
+        [Category(TestCategory.DataAccess)]
+        public void GivenAStructuresFileAndAStructuresIniFileDescribingAGeneralStructureWithEmptyFields_WhenThisStructureIsRead_ThenNoExceptionsAreThrownAndTheEmptyFieldsContainNaN(bool hasExplicitFields)
+        {
+            // Given
+            // - structures file
+            StructuresFile structuresFile = GetStructuresFile();
+
+            TestHelper.PerformActionInTemporaryDirectory(tempDir =>
+            {
+                const string structureName = "general-structure-sir";
+                string fileIniPath = Path.Combine(tempDir, "structures.ini");
+
+                WritePliFileSingleStructure(tempDir, structureName);
+
+                DelftIniCategory structureCategory = GetBaseStructureCategory(structureName, "generalstructure");
+                SetGeneralStructureRequiredProperties(structureCategory);
+
+                if (hasExplicitFields)
+                {
+                    structureCategory.AddProperty(GetName(KnownGeneralStructureProperties.Upstream2Width), " ", "#");
+                    structureCategory.AddProperty(GetName(KnownGeneralStructureProperties.Upstream1Width), " ", "#");
+                    structureCategory.AddProperty(GetName(KnownGeneralStructureProperties.CrestWidth), " ", "#");
+                    structureCategory.AddProperty(GetName(KnownGeneralStructureProperties.Downstream1Width), " ", "#");
+                    structureCategory.AddProperty(GetName(KnownGeneralStructureProperties.Downstream2Width), " ", "#");
+                }
+
+                WriteStructuresIniFile(structureCategory, tempDir);
+
+                // When | Then
+                // - Read structures file
+                IList<IStructure> structures = null;
+                Assert.DoesNotThrow(() => { structures = structuresFile.Read(fileIniPath); });
+
+                AssertThatOnlyOneStructureExistsWithin(structures);
+
+                IStructure weirStructure = structures[0];
                 AssertThatStructureIsCorrect(weirStructure, typeof(GeneralStructureWeirFormula));
                 var generalStructureFormula = ((Weir2D) weirStructure).WeirFormula as GeneralStructureWeirFormula;
                 AssertThatAdditionalGeneralStructureIsCorrect(generalStructureFormula);
@@ -162,6 +164,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         #region TestHelpers
+
         private static string GetName(KnownGeneralStructureProperties prop)
         {
             return prop.GetDescription();
@@ -173,7 +176,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         /// <returns> A new StructuresFile with the a default schema.</returns>
         private static StructuresFile GetStructuresFile()
         {
-            var schema = new StructureSchemaCsvFile().ReadStructureSchema(
+            StructureSchema<ModelPropertyDefinition> schema = new StructureSchemaCsvFile().ReadStructureSchema(
                 StructureSchemaCsvFileTest.ApplicationStructuresSchemaCsvFilePath);
 
             var structuresFile = new StructuresFile()
@@ -192,10 +195,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         /// <remarks> The newly created file is always called structures.ini </remarks>
         private static void WriteStructuresIniFile(DelftIniCategory structureCategory, string tempDir)
         {
-            var categories = new List<DelftIniCategory>() { structureCategory };
+            var categories = new List<DelftIniCategory>() {structureCategory};
 
-            var fileIniPath = Path.Combine(tempDir, "structures.ini");
-            (new DelftIniWriter()).WriteDelftIniFile(categories, fileIniPath);
+            string fileIniPath = Path.Combine(tempDir, "structures.ini");
+            new DelftIniWriter().WriteDelftIniFile(categories, fileIniPath);
         }
 
         /// <summary>
@@ -212,8 +215,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 "10.0E+001  80.0E+001",
                 "10.0E+002  80.0E+002",
             };
-            var PliFileContents = string.Join("\n", pliFileLines);
-            var filePliPath = Path.Combine(tempDir, $"{structureName}.pli");
+            string PliFileContents = string.Join("\n", pliFileLines);
+            string filePliPath = Path.Combine(tempDir, $"{structureName}.pli");
 
             File.WriteAllText(filePliPath, PliFileContents);
         }
@@ -241,33 +244,33 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
         private static void SetSimpleGateRequiredProperties(DelftIniCategory structureCategory)
         {
-            structureCategory.AddProperty(KnownStructureProperties.CrestLevel,      "0.0", "#");
+            structureCategory.AddProperty(KnownStructureProperties.CrestLevel, "0.0", "#");
             structureCategory.AddProperty(KnownStructureProperties.GateLowerEdgeLevel, "0.0", "#");
-            structureCategory.AddProperty(KnownStructureProperties.GateOpeningWidth,   "0.0", "#");
-            structureCategory.AddProperty(KnownStructureProperties.GateHeight,     "0.0", "#");
+            structureCategory.AddProperty(KnownStructureProperties.GateOpeningWidth, "0.0", "#");
+            structureCategory.AddProperty(KnownStructureProperties.GateHeight, "0.0", "#");
             structureCategory.AddProperty(KnownStructureProperties.GateOpeningHorizontalDirection, "symmetric", "#");
         }
 
         private static void SetGeneralStructureRequiredProperties(DelftIniCategory structureCategory)
         {
-            structureCategory.AddProperty(GetName(KnownGeneralStructureProperties.Upstream2Level),   "0.0", "#");
-            structureCategory.AddProperty(GetName(KnownGeneralStructureProperties.Upstream1Level),  "0.0", "#");
-            structureCategory.AddProperty(GetName(KnownGeneralStructureProperties.CrestLevel),    "0.0", "#");
+            structureCategory.AddProperty(GetName(KnownGeneralStructureProperties.Upstream2Level), "0.0", "#");
+            structureCategory.AddProperty(GetName(KnownGeneralStructureProperties.Upstream1Level), "0.0", "#");
+            structureCategory.AddProperty(GetName(KnownGeneralStructureProperties.CrestLevel), "0.0", "#");
             structureCategory.AddProperty(GetName(KnownGeneralStructureProperties.Downstream1Level), "0.0", "#");
-            structureCategory.AddProperty(GetName(KnownGeneralStructureProperties.Downstream2Level),  "0.0", "#");
+            structureCategory.AddProperty(GetName(KnownGeneralStructureProperties.Downstream2Level), "0.0", "#");
 
-            structureCategory.AddProperty(GetName(KnownGeneralStructureProperties.GateLowerEdgeLevel),     "0.0", "#");
+            structureCategory.AddProperty(GetName(KnownGeneralStructureProperties.GateLowerEdgeLevel), "0.0", "#");
 
             structureCategory.AddProperty(GetName(KnownGeneralStructureProperties.PositiveContractionCoefficientFreeGate), "1.0", "#");
-            structureCategory.AddProperty(GetName(KnownGeneralStructureProperties.PositiveDrownGateFlowCoefficient),       "1.0", "#");
-            structureCategory.AddProperty(GetName(KnownGeneralStructureProperties.PositiveDrownWeirFlowCoefficient),       "1.0", "#");
-            structureCategory.AddProperty(GetName(KnownGeneralStructureProperties.PositiveFreeGateFlowCoefficient),        "1.0", "#");
-            structureCategory.AddProperty(GetName(KnownGeneralStructureProperties.PositiveFreeWeirFlowCoefficient),        "1.0", "#");
+            structureCategory.AddProperty(GetName(KnownGeneralStructureProperties.PositiveDrownGateFlowCoefficient), "1.0", "#");
+            structureCategory.AddProperty(GetName(KnownGeneralStructureProperties.PositiveDrownWeirFlowCoefficient), "1.0", "#");
+            structureCategory.AddProperty(GetName(KnownGeneralStructureProperties.PositiveFreeGateFlowCoefficient), "1.0", "#");
+            structureCategory.AddProperty(GetName(KnownGeneralStructureProperties.PositiveFreeWeirFlowCoefficient), "1.0", "#");
             structureCategory.AddProperty(GetName(KnownGeneralStructureProperties.NegativeContractionCoefficientFreeGate), "1.0", "#");
-            structureCategory.AddProperty(GetName(KnownGeneralStructureProperties.NegativeDrownGateFlowCoefficient),       "1.0", "#");
-            structureCategory.AddProperty(GetName(KnownGeneralStructureProperties.NegativeFreeGateFlowCoefficient),        "1.0", "#");
-            structureCategory.AddProperty(GetName(KnownGeneralStructureProperties.NegativeDrownWeirFlowCoefficient),       "1.0", "#");
-            structureCategory.AddProperty(GetName(KnownGeneralStructureProperties.NegativeFreeWeirFlowCoefficient),        "1.0", "#");
+            structureCategory.AddProperty(GetName(KnownGeneralStructureProperties.NegativeDrownGateFlowCoefficient), "1.0", "#");
+            structureCategory.AddProperty(GetName(KnownGeneralStructureProperties.NegativeFreeGateFlowCoefficient), "1.0", "#");
+            structureCategory.AddProperty(GetName(KnownGeneralStructureProperties.NegativeDrownWeirFlowCoefficient), "1.0", "#");
+            structureCategory.AddProperty(GetName(KnownGeneralStructureProperties.NegativeFreeWeirFlowCoefficient), "1.0", "#");
 
             structureCategory.AddProperty(GetName(KnownGeneralStructureProperties.ExtraResistance), "0.0", "#");
             structureCategory.AddProperty(GetName(KnownGeneralStructureProperties.GateHeight), "0.0", "#");
@@ -279,7 +282,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         private static void AssertThatStructureIsCorrect(IStructure structure, Type expectedWeirFormulaType)
         {
             Assert.That(structure, Is.TypeOf(typeof(Weir2D)), "Expected read structure to be of a different type:");
-            var weirdStructure = (Weir2D)structure;
+            var weirdStructure = (Weir2D) structure;
 
             Assert.That(weirdStructure.WeirFormula, Is.Not.Null, "Expected weir formula to not be null.");
             Assert.That(weirdStructure.WeirFormula, Is.TypeOf(expectedWeirFormulaType),
@@ -291,18 +294,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         {
             Assert.That(structures, Is.Not.Null, "Expected the list of read structures to not be null.");
             Assert.That(structures.Count, Is.EqualTo(1), "Expected a different number of read structures:");
-            var weirStructure = structures[0];
+            IStructure weirStructure = structures[0];
             Assert.That(weirStructure, Is.Not.Null, "Expected read structure to not be null.");
         }
 
         private static void AssertThatAdditionalGeneralStructureIsCorrect(GeneralStructureWeirFormula formula)
         {
             Assert.That(formula.WidthRightSideOfStructure, Is.NaN, "Expected general structure's Downstream 2 width to be Empty:");
-            Assert.That(formula.WidthStructureRightSide,   Is.NaN, "Expected general structure's Downstream 1 width to be Empty:");
+            Assert.That(formula.WidthStructureRightSide, Is.NaN, "Expected general structure's Downstream 1 width to be Empty:");
 
             Assert.That(formula.WidthLeftSideOfStructure, Is.NaN, "Expected general structure's Upstream 1 width to be Empty:");
-            Assert.That(formula.WidthStructureLeftSide,   Is.NaN, "Expected general structure's Upstream 2 width to be Empty:");
+            Assert.That(formula.WidthStructureLeftSide, Is.NaN, "Expected general structure's Upstream 2 width to be Empty:");
         }
+
         #endregion
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows;
+using DelftTools.Shell.Core;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Editing;
 using DeltaShell.Gui;
@@ -31,7 +32,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         public void SetUp()
         {
             gui = new DeltaShellGui();
-            var app = gui.Application;
+            IApplication app = gui.Application;
 
             app.Plugins.Add(new CommonToolsApplicationPlugin());
             app.Plugins.Add(new SharpMapGisApplicationPlugin());
@@ -49,13 +50,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
 
             gui.Run();
 
-            var project = app.Project;
+            Project project = app.Project;
 
             // add data
             model = new WaveModel();
             project.RootFolder.Add(model);
 
-            mainWindow = (Window)gui.MainWindow;
+            mainWindow = (Window) gui.MainWindow;
 
             // wait until gui starts
             mainWindowShown = () =>
@@ -83,27 +84,26 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         public void AddOrDeleteOuterDomainShouldNotDisconnectObjectTest()
         {
             onMainWindowShown = () =>
-                {
-                    var domain = model.OuterDomain;
-                    var newDomain = new WaveDomainData("addedDomain");
+            {
+                IWaveDomainData domain = model.OuterDomain;
+                var newDomain = new WaveDomainData("addedDomain");
 
-                    model.BeginEdit(new DefaultEditAction("begin"));
-                    model.OuterDomain = newDomain;
-                    model.AddSubDomain(newDomain, domain);
-                    model.EndEdit();
+                model.BeginEdit(new DefaultEditAction("begin"));
+                model.OuterDomain = newDomain;
+                model.AddSubDomain(newDomain, domain);
+                model.EndEdit();
 
-                    domain.SpectralDomainData.NDir = 10;
+                domain.SpectralDomainData.NDir = 10;
 
-                    model.BeginEdit("Delete outer domain ...");
-                    var newOuterDomain = model.OuterDomain.SubDomains[0];
-                    model.OuterDomain.SubDomains.Clear();// disconnect
-                    newOuterDomain.SuperDomain = null;
-                    model.OuterDomain = newOuterDomain;
-                    model.EndEdit();
-                   
-                    model.OuterDomain.SpectralDomainData.NDir = 20;
+                model.BeginEdit("Delete outer domain ...");
+                IWaveDomainData newOuterDomain = model.OuterDomain.SubDomains[0];
+                model.OuterDomain.SubDomains.Clear(); // disconnect
+                newOuterDomain.SuperDomain = null;
+                model.OuterDomain = newOuterDomain;
+                model.EndEdit();
 
-                };
+                model.OuterDomain.SpectralDomainData.NDir = 20;
+            };
 
             WpfTestHelper.ShowModal(mainWindow, mainWindowShown);
         }

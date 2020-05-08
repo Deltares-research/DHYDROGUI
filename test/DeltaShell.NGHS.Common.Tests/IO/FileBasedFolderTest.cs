@@ -15,25 +15,6 @@ namespace DeltaShell.NGHS.Common.Tests.IO
     [Category(TestCategory.DataAccess)]
     public class FileBasedFolderTest
     {
-        [TestCase("")]
-        [TestCase(null)]
-        public void CopyTo_WhenArgumentNullOrEmpty_ThenMethodReturns(string destinationPathArg)
-        {
-            using (var tempDirectory = new TemporaryDirectory())
-            {
-                string originalPath = tempDirectory.Path;
-
-                // Setup
-                var fileBasedFolder = new FileBasedFolder(originalPath);
-
-                // Call
-                fileBasedFolder.CopyTo(destinationPathArg);
-
-                // Assert
-                Assert.That(fileBasedFolder.Path, Is.EqualTo(originalPath), "When folder cannot be moved, path should never be switched.");
-            }
-        }
-
         [Test]
         public void CopyTo_WhenSourceFolderIsSubfolderOfTheDestinationFolder_ThenInvalidOperationExceptionIsThrown()
         {
@@ -128,6 +109,282 @@ namespace DeltaShell.NGHS.Common.Tests.IO
                 {
                     Directory.SetCurrentDirectory(previousCurrentDirectory);
                 }
+            }
+        }
+
+        [Test]
+        public void SwitchTo_ThenPathIsSwitchedToNewPath()
+        {
+            // Setup
+            var fileBasedFolder = new FileBasedFolder();
+            const string path = "folder_path";
+
+            // Call
+            fileBasedFolder.SwitchTo(path);
+
+            // Assert
+            Assert.That(fileBasedFolder.Path, Is.EqualTo(path),
+                        "After switching, the path should be set to the new path.");
+        }
+
+        [Test]
+        public void Delete_ThenFolderIsDeleted()
+        {
+            using (var tempDirectory = new TemporaryDirectory())
+            {
+                // Setup
+                string folderPath = Path.Combine(tempDirectory.Path, "folder");
+
+                Directory.CreateDirectory(folderPath);
+
+                var fileBasedFolder = new FileBasedFolder(folderPath);
+
+                // Precondition
+                Assert.That(Directory.Exists(folderPath),
+                            "This test is unreliable when the folder path does not exist.");
+
+                // Call
+                fileBasedFolder.Delete();
+
+                // Assert
+                Assert.That(!Directory.Exists(folderPath),
+                            "After deleting, the folder should be deleted.");
+            }
+        }
+
+        [Test]
+        public void SetPath_ThenOnPropertyChangedIsFiredOnce()
+        {
+            // Setup
+            var fileBasedFolder = new FileBasedFolder();
+
+            // Call
+            void Call() => fileBasedFolder.Path = "folder_path";
+
+            // Assert
+            TestHelper.AssertPropertyChangedIsFired(fileBasedFolder, 1, Call);
+        }
+
+        [Test]
+        public void SetPath_WhenValueIsARelativePathThatRefersToTheSamePath_ThenOnPropertyChangedIsNotFired()
+        {
+            // Setup
+            string previousCurrentDirectory = Directory.GetCurrentDirectory();
+
+            using (var tempDirectory = new TemporaryDirectory())
+            {
+                string currentDirectory = Path.Combine(tempDirectory.Path, "this", "is");
+                string relativePath = Path.Combine("a", "folder");
+                string fullPath = Path.Combine(currentDirectory, relativePath);
+
+                Directory.CreateDirectory(currentDirectory);
+                Directory.SetCurrentDirectory(currentDirectory);
+
+                try
+                {
+                    var fileBasedFolder = new FileBasedFolder {Path = fullPath};
+
+                    // Call
+                    void Call() => fileBasedFolder.Path = relativePath;
+
+                    // Assert
+                    TestHelper.AssertPropertyChangedIsFired(fileBasedFolder, 0, Call);
+                }
+                finally
+                {
+                    Directory.SetCurrentDirectory(previousCurrentDirectory);
+                }
+            }
+        }
+
+        [Test]
+        public void SetPath_WhenValueIsEmpty_ThenArgumentExceptionIsThrown()
+        {
+            // Call
+            void Call() => new FileBasedFolder().Path = string.Empty;
+
+            // Assert
+            Assert.That(Call, Throws.ArgumentException);
+        }
+
+        [Test]
+        public void SetPath_WhenPathIsTooLong_ThenPathTooLongExceptionExceptionIsThrown()
+        {
+            // Setup
+            var path = new StringBuilder().Append('p', 248).ToString();
+
+            // Call
+            void Call() => new FileBasedFolder().Path = path;
+
+            // Assert
+            Assert.That(Call, Throws.TypeOf<PathTooLongException>());
+        }
+
+        [Test]
+        public void Exists_WhenFolderExists_ThenTrueIsReturned()
+        {
+            using (var tempDirectory = new TemporaryDirectory())
+            {
+                // Setup
+                string folderPath = tempDirectory.Path;
+                var fileBasedFolder = new FileBasedFolder {Path = folderPath};
+
+                // Precondition
+                Assert.That(Directory.Exists(folderPath),
+                            "This test is unreliable when the folder path does not exist.");
+
+                // Call
+                bool result = fileBasedFolder.Exists;
+
+                // Assert
+                Assert.That(result, Is.True,
+                            $"When folder exists, the property {fileBasedFolder.Exists} should return true;");
+            }
+        }
+
+        [Test]
+        public void Exists_WhenFolderDoesNotExist_ThenFalseIsReturned()
+        {
+            // Setup
+            var fileBasedFolder = new FileBasedFolder();
+
+            // Precondition
+            Assert.That(!Directory.Exists(fileBasedFolder.Path),
+                        "This test is unreliable when the folder path does exist.");
+
+            // Call
+            bool result = fileBasedFolder.Exists;
+
+            // Assert
+            Assert.That(result, Is.False,
+                        $"When folder does not exist, the property {fileBasedFolder.Exists} should return false;");
+        }
+
+        [Test]
+        public void ContainsFile_WhenPathDoesNotExist_ThenFalseIsReturnedAndFilePathIsEmpty()
+        {
+            // Setup
+            var fileBasedFolder = new FileBasedFolder {Path = "folder_path"};
+            const string fileName = "file_name";
+
+            // Call
+            bool result = fileBasedFolder.ContainsFile(fileName, out string filePath);
+
+            // Assert
+            Assert.That(result, Is.False,
+                        "When folder path does not exist, false should be returned.");
+            Assert.That(filePath, Is.EqualTo(string.Empty),
+                        "When folder path does not exist, an empty path should be returned.");
+        }
+
+        [Test]
+        public void ContainsFile_WhenFileExistsInFolder_ThenTrueIsReturnedAndFilePathIsCorrect()
+        {
+            using (var tempDirectory = new TemporaryDirectory())
+            {
+                // Setup
+                string folderPath = tempDirectory.Path;
+                var fileBasedFolder = new FileBasedFolder {Path = folderPath};
+                const string fileName = "file_name";
+                string expectedFilePath = Path.Combine(folderPath, fileName);
+
+                File.WriteAllText(expectedFilePath, "");
+
+                // Precondition
+                Assert.That(File.Exists(expectedFilePath),
+                            "This test is unreliable when the file does not exist.");
+
+                // Call
+                bool result = fileBasedFolder.ContainsFile(fileName, out string resultedFilePath);
+
+                // Assert
+                Assert.That(result, Is.True,
+                            "When file exists, true should be returned.");
+                Assert.That(resultedFilePath, Is.EqualTo(expectedFilePath),
+                            "When file exists, the correct path should be returned.");
+            }
+        }
+
+        [Test]
+        public void ContainsFile_WhenFileDoesNotExistInFolder_ThenFalseIsReturnedAndFilePathIsEmpty()
+        {
+            using (var tempDirectory = new TemporaryDirectory())
+            {
+                // Setup
+                string folderPath = tempDirectory.Path;
+                var fileBasedFolder = new FileBasedFolder(folderPath);
+                File.WriteAllText(Path.Combine(folderPath, "irrelevant_file"), string.Empty);
+
+                // Call
+                bool result = fileBasedFolder.ContainsFile("file_name", out string resultedFilePath);
+
+                // Assert
+                Assert.That(result, Is.False,
+                            "When file does not exist, false should be returned.");
+                Assert.That(resultedFilePath, Is.EqualTo(string.Empty),
+                            "When file does not exist, an empty path should be returned.");
+            }
+        }
+
+        [Test]
+        public void Paths_Get_ReturnsPath()
+        {
+            // Setup
+            const string folderPath = "folder_path";
+            var fileBasedFolder = new FileBasedFolder(folderPath);
+
+            // Call
+            string[] paths = fileBasedFolder.Paths.ToArray();
+
+            // Assert
+            Assert.That(paths.Single(), Is.EqualTo(folderPath),
+                        "The path should be returned.");
+        }
+
+        [Test]
+        public void IsOpen_Get_ReturnsFalse()
+        {
+            // Setup
+            var fileBasedFolder = new FileBasedFolder();
+
+            // Call
+            bool result = fileBasedFolder.IsOpen;
+
+            // Assert
+            Assert.That(result, Is.False,
+                        $"{nameof(fileBasedFolder.IsOpen)} should be false.");
+        }
+
+        [Test]
+        public void IsFileCritical_Get_ReturnsFalse()
+        {
+            // Setup
+            var fileBasedFolder = new FileBasedFolder();
+
+            // Call
+            bool result = fileBasedFolder.IsFileCritical;
+
+            // Assert
+            Assert.That(result, Is.False,
+                        $"{nameof(fileBasedFolder.IsFileCritical)} should be false.");
+        }
+
+        [TestCase("")]
+        [TestCase(null)]
+        public void CopyTo_WhenArgumentNullOrEmpty_ThenMethodReturns(string destinationPathArg)
+        {
+            using (var tempDirectory = new TemporaryDirectory())
+            {
+                string originalPath = tempDirectory.Path;
+
+                // Setup
+                var fileBasedFolder = new FileBasedFolder(originalPath);
+
+                // Call
+                fileBasedFolder.CopyTo(destinationPathArg);
+
+                // Assert
+                Assert.That(fileBasedFolder.Path, Is.EqualTo(originalPath), "When folder cannot be moved, path should never be switched.");
             }
         }
 
@@ -422,59 +679,6 @@ namespace DeltaShell.NGHS.Common.Tests.IO
             }
         }
 
-        [Test]
-        public void SwitchTo_ThenPathIsSwitchedToNewPath()
-        {
-            // Setup
-            var fileBasedFolder = new FileBasedFolder();
-            const string path = "folder_path";
-
-            // Call
-            fileBasedFolder.SwitchTo(path);
-
-            // Assert
-            Assert.That(fileBasedFolder.Path, Is.EqualTo(path),
-                        "After switching, the path should be set to the new path.");
-        }
-
-        [Test]
-        public void Delete_ThenFolderIsDeleted()
-        {
-            using (var tempDirectory = new TemporaryDirectory())
-            {
-                // Setup
-                string folderPath = Path.Combine(tempDirectory.Path, "folder");
-
-                Directory.CreateDirectory(folderPath);
-
-                var fileBasedFolder = new FileBasedFolder(folderPath);
-
-                // Precondition
-                Assert.That(Directory.Exists(folderPath), 
-                            "This test is unreliable when the folder path does not exist.");
-
-                // Call
-                fileBasedFolder.Delete();
-
-                // Assert
-                Assert.That(!Directory.Exists(folderPath),
-                            "After deleting, the folder should be deleted.");
-            }
-        }
-
-        [Test]
-        public void SetPath_ThenOnPropertyChangedIsFiredOnce()
-        {
-            // Setup
-            var fileBasedFolder = new FileBasedFolder();
-
-            // Call
-            void Call() => fileBasedFolder.Path = "folder_path";
-
-            // Assert
-            TestHelper.AssertPropertyChangedIsFired(fileBasedFolder, 1, Call);
-        }
-
         [TestCase("c:\\folder\\path")]
         [TestCase("c:/folder\\path")]
         [TestCase("c:\\folder/path")]
@@ -490,38 +694,6 @@ namespace DeltaShell.NGHS.Common.Tests.IO
 
             // Assert
             TestHelper.AssertPropertyChangedIsFired(fileBasedFolder, 0, Call);
-        }
-
-        [Test]
-        public void SetPath_WhenValueIsARelativePathThatRefersToTheSamePath_ThenOnPropertyChangedIsNotFired()
-        {
-            // Setup
-            string previousCurrentDirectory = Directory.GetCurrentDirectory();
-
-            using (var tempDirectory = new TemporaryDirectory())
-            {
-                string currentDirectory = Path.Combine(tempDirectory.Path, "this", "is");
-                string relativePath = Path.Combine("a", "folder");
-                string fullPath = Path.Combine(currentDirectory, relativePath);
-
-                Directory.CreateDirectory(currentDirectory);
-                Directory.SetCurrentDirectory(currentDirectory);
-
-                try
-                {
-                    var fileBasedFolder = new FileBasedFolder {Path = fullPath};
-
-                    // Call
-                    void Call() => fileBasedFolder.Path = relativePath;
-
-                    // Assert
-                    TestHelper.AssertPropertyChangedIsFired(fileBasedFolder, 0, Call);
-                }
-                finally
-                {
-                    Directory.SetCurrentDirectory(previousCurrentDirectory);
-                }
-            }
         }
 
         [TestCase(null, null)]
@@ -570,29 +742,6 @@ namespace DeltaShell.NGHS.Common.Tests.IO
                         $"{nameof(fileBasedFolder.Path)} should be set correctly.");
         }
 
-        [Test]
-        public void SetPath_WhenValueIsEmpty_ThenArgumentExceptionIsThrown()
-        {
-            // Call
-            void Call() => new FileBasedFolder().Path = string.Empty;
-
-            // Assert
-            Assert.That(Call, Throws.ArgumentException);
-        }
-
-        [Test]
-        public void SetPath_WhenPathIsTooLong_ThenPathTooLongExceptionExceptionIsThrown()
-        {
-            // Setup
-            string path = new StringBuilder().Append('p', 248).ToString();
-
-            // Call
-            void Call() => new FileBasedFolder().Path = path;
-
-            // Assert
-            Assert.That(Call, Throws.TypeOf<PathTooLongException>());
-        }
-
         [TestCase("")]
         [TestCase(null)]
         public void ContainsFile_WhenFileNameArgNull_ThenFalseIsReturnedAndFilePathIsEmpty(string fileNameArg)
@@ -616,155 +765,6 @@ namespace DeltaShell.NGHS.Common.Tests.IO
                 Assert.That(filePath, Is.EqualTo(string.Empty),
                             "When argument is null, an empty path should be returned.");
             }
-        }
-
-        [Test]
-        public void Exists_WhenFolderExists_ThenTrueIsReturned()
-        {
-            using (var tempDirectory = new TemporaryDirectory())
-            {
-                // Setup
-                string folderPath = tempDirectory.Path;
-                var fileBasedFolder = new FileBasedFolder {Path = folderPath};
-
-                // Precondition
-                Assert.That(Directory.Exists(folderPath),
-                            "This test is unreliable when the folder path does not exist.");
-
-                // Call
-                bool result = fileBasedFolder.Exists;
-
-                // Assert
-                Assert.That(result, Is.True,
-                            $"When folder exists, the property {fileBasedFolder.Exists} should return true;");
-            }
-        }
-
-        [Test]
-        public void Exists_WhenFolderDoesNotExist_ThenFalseIsReturned()
-        {
-            // Setup
-            var fileBasedFolder = new FileBasedFolder();
-
-            // Precondition
-            Assert.That(!Directory.Exists(fileBasedFolder.Path),
-                        "This test is unreliable when the folder path does exist.");
-
-            // Call
-            bool result = fileBasedFolder.Exists;
-
-            // Assert
-            Assert.That(result, Is.False,
-                        $"When folder does not exist, the property {fileBasedFolder.Exists} should return false;");
-        }
-
-        [Test]
-        public void ContainsFile_WhenPathDoesNotExist_ThenFalseIsReturnedAndFilePathIsEmpty()
-        {
-            // Setup
-            var fileBasedFolder = new FileBasedFolder {Path = "folder_path"};
-            const string fileName = "file_name";
-
-            // Call
-            bool result = fileBasedFolder.ContainsFile(fileName, out string filePath);
-
-            // Assert
-            Assert.That(result, Is.False,
-                        "When folder path does not exist, false should be returned.");
-            Assert.That(filePath, Is.EqualTo(string.Empty),
-                        "When folder path does not exist, an empty path should be returned.");
-        }
-
-        [Test]
-        public void ContainsFile_WhenFileExistsInFolder_ThenTrueIsReturnedAndFilePathIsCorrect()
-        {
-            using (var tempDirectory = new TemporaryDirectory())
-            {
-                // Setup
-                string folderPath = tempDirectory.Path;
-                var fileBasedFolder = new FileBasedFolder {Path = folderPath};
-                const string fileName = "file_name";
-                string expectedFilePath = Path.Combine(folderPath, fileName);
-
-                File.WriteAllText(expectedFilePath, "");
-
-                // Precondition
-                Assert.That(File.Exists(expectedFilePath),
-                            "This test is unreliable when the file does not exist.");
-
-                // Call
-                bool result = fileBasedFolder.ContainsFile(fileName, out string resultedFilePath);
-
-                // Assert
-                Assert.That(result, Is.True,
-                            "When file exists, true should be returned.");
-                Assert.That(resultedFilePath, Is.EqualTo(expectedFilePath),
-                            "When file exists, the correct path should be returned.");
-            }
-        }
-
-        [Test]
-        public void ContainsFile_WhenFileDoesNotExistInFolder_ThenFalseIsReturnedAndFilePathIsEmpty()
-        {
-            using (var tempDirectory = new TemporaryDirectory())
-            {
-                // Setup
-                string folderPath = tempDirectory.Path;
-                var fileBasedFolder = new FileBasedFolder(folderPath);
-                File.WriteAllText(Path.Combine(folderPath, "irrelevant_file"), string.Empty);
-
-                // Call
-                bool result = fileBasedFolder.ContainsFile("file_name", out string resultedFilePath);
-
-                // Assert
-                Assert.That(result, Is.False,
-                            "When file does not exist, false should be returned.");
-                Assert.That(resultedFilePath, Is.EqualTo(string.Empty),
-                            "When file does not exist, an empty path should be returned.");
-            }
-        }
-
-        [Test]
-        public void Paths_Get_ReturnsPath()
-        {
-            // Setup
-            const string folderPath = "folder_path";
-            var fileBasedFolder = new FileBasedFolder(folderPath);
-
-            // Call
-            string[] paths = fileBasedFolder.Paths.ToArray();
-
-            // Assert
-            Assert.That(paths.Single(), Is.EqualTo(folderPath),
-                        "The path should be returned.");
-        }
-
-        [Test]
-        public void IsOpen_Get_ReturnsFalse()
-        {
-            // Setup
-            var fileBasedFolder = new FileBasedFolder();
-
-            // Call
-            bool result = fileBasedFolder.IsOpen;
-
-            // Assert
-            Assert.That(result, Is.False,
-                        $"{nameof(fileBasedFolder.IsOpen)} should be false.");
-        }
-
-        [Test]
-        public void IsFileCritical_Get_ReturnsFalse()
-        {
-            // Setup
-            var fileBasedFolder = new FileBasedFolder();
-
-            // Call
-            bool result = fileBasedFolder.IsFileCritical;
-
-            // Assert
-            Assert.That(result, Is.False,
-                        $"{nameof(fileBasedFolder.IsFileCritical)} should be false.");
         }
 
         private static IEnumerable<char> InvalidChars()

@@ -27,8 +27,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
             var nameProvider = Substitute.For<IUniqueBoundaryNameProvider>();
 
             // Call
-            var factory = new WaveBoundaryFactory(calculatorProvider, 
-                                                  factoryHelper, 
+            var factory = new WaveBoundaryFactory(calculatorProvider,
+                                                  factoryHelper,
                                                   nameProvider);
 
             // Assert

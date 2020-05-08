@@ -36,26 +36,47 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
                          (0.0, 0.0) O----------------O (12.0, 0.0)
                     */
 
-                    new LineString(new [] {new Coordinate(0.0, 0.0), new Coordinate(12.0, 0.0) }),
-                    new LineString(new [] {new Coordinate(12.0, 0.0), new Coordinate(10.0, 5.0) }),
-                    new LineString(new [] {new Coordinate(10.0, 5.0), new Coordinate(10.0, 10.0) }),
-                    new LineString(new [] {new Coordinate(10.0, 10.0), new Coordinate(2.0, 10.0) }),
-                    new LineString(new [] {new Coordinate(2.0, 10.0), new Coordinate(0.0, 5.0) }),
-                    new LineString(new [] {new Coordinate(0.0, 5.0), new Coordinate(0.0, 0.0) }),
+                    new LineString(new[]
+                    {
+                        new Coordinate(0.0, 0.0),
+                        new Coordinate(12.0, 0.0)
+                    }),
+                    new LineString(new[]
+                    {
+                        new Coordinate(12.0, 0.0),
+                        new Coordinate(10.0, 5.0)
+                    }),
+                    new LineString(new[]
+                    {
+                        new Coordinate(10.0, 5.0),
+                        new Coordinate(10.0, 10.0)
+                    }),
+                    new LineString(new[]
+                    {
+                        new Coordinate(10.0, 10.0),
+                        new Coordinate(2.0, 10.0)
+                    }),
+                    new LineString(new[]
+                    {
+                        new Coordinate(2.0, 10.0),
+                        new Coordinate(0.0, 5.0)
+                    }),
+                    new LineString(new[]
+                    {
+                        new Coordinate(0.0, 5.0),
+                        new Coordinate(0.0, 0.0)
+                    }),
                 })
             };
 
             area.Enclosures.Add(enclosureFeature);
-            
+
             using (var mapView = new MapView())
             {
-                ILayer layer = MapLayerProviderHelper.CreateLayersRecursive(area.Enclosures, area, new List<IMapLayerProvider> { NetworkEditorMapLayerProviderCreator.CreateMapLayerProvider() });
+                ILayer layer = MapLayerProviderHelper.CreateLayersRecursive(area.Enclosures, area, new List<IMapLayerProvider> {NetworkEditorMapLayerProviderCreator.CreateMapLayerProvider()});
                 mapView.Map.Layers.Add(layer);
 
-                WindowsFormsTestHelper.ShowModal(mapView, delegate
-                {
-                    mapView.Map.ZoomToExtents();
-                });
+                WindowsFormsTestHelper.ShowModal(mapView, delegate { mapView.Map.ZoomToExtents(); });
             }
         }
 
@@ -74,20 +95,21 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
                 StopSuction = 0.0,
                 DirectionIsPositive = true,
                 Name = "pump2D01",
-                Geometry = new LineString(new[] { new Coordinate(0.0, 0.0), new Coordinate(12.0, 0.0) })
+                Geometry = new LineString(new[]
+                {
+                    new Coordinate(0.0, 0.0),
+                    new Coordinate(12.0, 0.0)
+                })
             };
 
             area.Pumps.Add(pump2DFeature);
 
             using (var mapView = new MapView())
             {
-                ILayer layer = MapLayerProviderHelper.CreateLayersRecursive(area.Pumps, area, new List<IMapLayerProvider> { NetworkEditorMapLayerProviderCreator.CreateMapLayerProvider() });
+                ILayer layer = MapLayerProviderHelper.CreateLayersRecursive(area.Pumps, area, new List<IMapLayerProvider> {NetworkEditorMapLayerProviderCreator.CreateMapLayerProvider()});
                 mapView.Map.Layers.Add(layer);
 
-                WindowsFormsTestHelper.ShowModal(mapView, delegate
-                {
-                    mapView.Map.ZoomToExtents();
-                });
+                WindowsFormsTestHelper.ShowModal(mapView, delegate { mapView.Map.ZoomToExtents(); });
             }
         }
 
@@ -100,20 +122,21 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
             var gate2DFeature = new Weir2D
             {
                 Name = "Gate2D01",
-                Geometry = new LineString(new[] { new Coordinate(0.0, 0.0), new Coordinate(12.0, 0.0) })
+                Geometry = new LineString(new[]
+                {
+                    new Coordinate(0.0, 0.0),
+                    new Coordinate(12.0, 0.0)
+                })
             };
 
             area.Weirs.Add(gate2DFeature);
 
             using (var mapView = new MapView())
             {
-                ILayer layer = MapLayerProviderHelper.CreateLayersRecursive(area.Weirs, area, new List<IMapLayerProvider> { NetworkEditorMapLayerProviderCreator.CreateMapLayerProvider() });
+                ILayer layer = MapLayerProviderHelper.CreateLayersRecursive(area.Weirs, area, new List<IMapLayerProvider> {NetworkEditorMapLayerProviderCreator.CreateMapLayerProvider()});
                 mapView.Map.Layers.Add(layer);
 
-                WindowsFormsTestHelper.ShowModal(mapView, delegate
-                {
-                    mapView.Map.ZoomToExtents();
-                });
+                WindowsFormsTestHelper.ShowModal(mapView, delegate { mapView.Map.ZoomToExtents(); });
             }
         }
 
@@ -126,20 +149,21 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
             var weir2DFeature = new Weir2D
             {
                 Name = "weir2D01",
-                Geometry = new LineString(new[] { new Coordinate(0.0, 0.0), new Coordinate(12.0, 0.0) })
+                Geometry = new LineString(new[]
+                {
+                    new Coordinate(0.0, 0.0),
+                    new Coordinate(12.0, 0.0)
+                })
             };
 
             area.Weirs.Add(weir2DFeature);
 
             using (var mapView = new MapView())
             {
-                ILayer layer = MapLayerProviderHelper.CreateLayersRecursive(area.Weirs, area, new List<IMapLayerProvider> { NetworkEditorMapLayerProviderCreator.CreateMapLayerProvider() });
+                ILayer layer = MapLayerProviderHelper.CreateLayersRecursive(area.Weirs, area, new List<IMapLayerProvider> {NetworkEditorMapLayerProviderCreator.CreateMapLayerProvider()});
                 mapView.Map.Layers.Add(layer);
 
-                WindowsFormsTestHelper.ShowModal(mapView, delegate
-                {
-                    mapView.Map.ZoomToExtents();
-                });
+                WindowsFormsTestHelper.ShowModal(mapView, delegate { mapView.Map.ZoomToExtents(); });
             }
         }
     }

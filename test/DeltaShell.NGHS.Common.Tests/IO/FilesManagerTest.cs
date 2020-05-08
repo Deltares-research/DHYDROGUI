@@ -44,14 +44,6 @@ namespace DeltaShell.NGHS.Common.Tests.IO
             Assert.That(exception.ParamName, Is.EqualTo("filePath"));
         }
 
-        private IEnumerable<TestCaseData> CopyToArgumentNullCases()
-        {
-            yield return new TestCaseData(null, Substitute.For<ILogHandler>(), false, "targetPath");
-            yield return new TestCaseData(null, Substitute.For<ILogHandler>(), true, "targetPath");
-            yield return new TestCaseData("some_value", null, false, "logHandler");
-            yield return new TestCaseData("some_value", null, true, "logHandler");
-        }
-
         [Test]
         [TestCaseSource(nameof(CopyToArgumentNullCases))]
         public void CopyTo_ArgumentNull_ThrowsArgumentNullException(string targetPath, ILogHandler logHandler, bool switchTo,
@@ -233,6 +225,14 @@ namespace DeltaShell.NGHS.Common.Tests.IO
             }
         }
 
+        private IEnumerable<TestCaseData> CopyToArgumentNullCases()
+        {
+            yield return new TestCaseData(null, Substitute.For<ILogHandler>(), false, "targetPath");
+            yield return new TestCaseData(null, Substitute.For<ILogHandler>(), true, "targetPath");
+            yield return new TestCaseData("some_value", null, false, "logHandler");
+            yield return new TestCaseData("some_value", null, true, "logHandler");
+        }
+
         [TestCase(true)]
         [TestCase(false)]
         [Category(TestCategory.Integration)]
@@ -269,10 +269,6 @@ namespace DeltaShell.NGHS.Common.Tests.IO
         {
             public readonly Action<string> Action;
 
-            public int TimesInvoked { get; private set; }
-
-            public IList<string> InvokeParameters { get; } = new List<string>();
-
             public SwitchToActionHelper()
             {
                 Action = s =>
@@ -281,6 +277,10 @@ namespace DeltaShell.NGHS.Common.Tests.IO
                     TimesInvoked++;
                 };
             }
+
+            public int TimesInvoked { get; private set; }
+
+            public IList<string> InvokeParameters { get; } = new List<string>();
         }
     }
 }

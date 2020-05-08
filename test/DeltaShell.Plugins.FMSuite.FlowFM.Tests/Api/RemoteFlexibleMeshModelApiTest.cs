@@ -51,12 +51,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
             }
         }
 
-        private static IEnumerable<Func<string, string>> GetDiagnosticsFilePaths()
-        {
-            yield return directoryPath => Path.Combine(directoryPath, "subFolder", "myFile.dia");
-            yield return directoryPath => Path.Combine(directoryPath, "myFile.dia");
-        }
-
         [Test]
         public void Initialize_WithoutDiagnosticsFile_ThrowsException_ThenThrowsFileNotFoundException()
         {
@@ -128,8 +122,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                 var thrownException = Assert.Throws<InvalidOperationException>(Call);
                 string expectedExceptionMessage = $"No errors were reported in the diagnostics file {diaFilePath}";
                 Assert.That(thrownException.Message, Is.EqualTo(expectedExceptionMessage));
-                
             }
+        }
+
+        private static IEnumerable<Func<string, string>> GetDiagnosticsFilePaths()
+        {
+            yield return directoryPath => Path.Combine(directoryPath, "subFolder", "myFile.dia");
+            yield return directoryPath => Path.Combine(directoryPath, "myFile.dia");
         }
     }
 }

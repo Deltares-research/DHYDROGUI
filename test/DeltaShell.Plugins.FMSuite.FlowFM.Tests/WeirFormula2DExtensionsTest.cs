@@ -15,7 +15,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var formula = new SimpleWeirFormula();
 
             // When
-            var obtainedName = formula.GetName2D();
+            string obtainedName = formula.GetName2D();
 
             Assert.That(obtainedName, Is.EqualTo("Simple weir"));
         }
@@ -27,7 +27,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var formula = new GatedWeirFormula();
 
             // When
-            var obtainedName = formula.GetName2D();
+            string obtainedName = formula.GetName2D();
 
             Assert.That(obtainedName, Is.EqualTo("Simple gate"));
         }
@@ -39,7 +39,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var formula = new GeneralStructureWeirFormula();
 
             // When
-            var obtainedName = formula.GetName2D();
+            string obtainedName = formula.GetName2D();
 
             Assert.That(obtainedName, Is.EqualTo("General structure"));
         }

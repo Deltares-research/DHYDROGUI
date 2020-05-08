@@ -1,4 +1,8 @@
-﻿using DelftTools.TestUtils;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using DelftTools.TestUtils;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.SubstanceProcessLibrary;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.IO;
@@ -6,9 +10,6 @@ using DeltaShell.Plugins.DelftModels.WaterQualityModel.Model;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.ObservationAreas;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO;
 using NUnit.Framework;
-using System;
-using System.IO;
-using System.Linq;
 
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Model
 {
@@ -24,28 +25,41 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Model
             Assert.AreEqual(notSupportedException.Message, "Can not create initialization settings : no hydro dynamica specified.");
         }
 
-        [Test, Category(TestCategory.Integration)]
+        [Test]
+        [Category(TestCategory.Integration)]
         public void BuildSettingsForModelWithHydFile()
         {
-            var commonPath = TestHelper.GetTestDataDirectory();
+            string commonPath = TestHelper.GetTestDataDirectory();
 
             var hydFileData = new HydFileData
+            {
+                AttributesRelativePath = Path.Combine("IO", "attribute files", "allActive_4x4.atr"),
+                AreasRelativePath = "AreasRelativePath",
+                VolumesRelativePath = "VolumesRelativePath",
+                PointersRelativePath = "PointersRelativePath",
+                FlowsRelativePath = "FlowsRelativePath",
+                LengthsRelativePath = "LengthsRelativePath",
+                SurfacesRelativePath = "SurfacesRelativePath",
+                VerticalDiffusionRelativePath = "VerticalDiffusionRelativePath",
+                GridRelativePath = "GridFilePath",
+                BoundariesRelativePath = "",
+                NumberOfHydrodynamicLayers = 4,
+                HydrodynamicLayerThicknesses = new[]
                 {
-                    AttributesRelativePath = Path.Combine("IO", "attribute files", "allActive_4x4.atr"),
-                    AreasRelativePath = "AreasRelativePath",
-                    VolumesRelativePath = "VolumesRelativePath",
-                    PointersRelativePath = "PointersRelativePath",
-                    FlowsRelativePath = "FlowsRelativePath",
-                    LengthsRelativePath = "LengthsRelativePath",
-                    SurfacesRelativePath = "SurfacesRelativePath",
-                    VerticalDiffusionRelativePath = "VerticalDiffusionRelativePath",
-                    GridRelativePath = "GridFilePath",
-                    BoundariesRelativePath = "",
-                    NumberOfHydrodynamicLayers = 4,
-                    HydrodynamicLayerThicknesses = new []{0.25, 0.25, 0.25, 0.25 },
-                    NumberOfWaqSegmentLayers = 4,
-                    NumberOfHydrodynamicLayersPerWaqSegmentLayer = new []{1, 1, 1, 1},
-                };
+                    0.25,
+                    0.25,
+                    0.25,
+                    0.25
+                },
+                NumberOfWaqSegmentLayers = 4,
+                NumberOfHydrodynamicLayersPerWaqSegmentLayer = new[]
+                {
+                    1,
+                    1,
+                    1,
+                    1
+                },
+            };
 
             var hydroData = new TestHydroDataStub(hydFileData)
             {
@@ -55,20 +69,30 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Model
             };
 
             var model = new WaterQualityModel
-                {
-                    StartTime = DateTime.Now,
-                    StopTime = DateTime.Now.AddDays(2),
-                    TimeStep = new TimeSpan(0,1,0,0),
-                    UseRestart = true,
-                };
+            {
+                StartTime = DateTime.Now,
+                StopTime = DateTime.Now.AddDays(2),
+                TimeStep = new TimeSpan(0, 1, 0, 0),
+                UseRestart = true,
+            };
 
             model.ImportHydroData(hydroData);
 
             model.SubstanceProcessLibrary.Substances.AddRange(new[]
+            {
+                new WaterQualitySubstance
                 {
-                    new WaterQualitySubstance { Name = "B", ConcentrationUnit = "b/c", Active = false },
-                    new WaterQualitySubstance { Name = "A", ConcentrationUnit = "a/c", Active = true }
-                });
+                    Name = "B",
+                    ConcentrationUnit = "b/c",
+                    Active = false
+                },
+                new WaterQualitySubstance
+                {
+                    Name = "A",
+                    ConcentrationUnit = "a/c",
+                    Active = true
+                }
+            });
             model.Loads.AddRange(new[]
             {
                 new WaterQualityLoad
@@ -100,20 +124,26 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Model
                 },
             });
             model.LoadsDataManager.CreateNewDataTable("A", "b", "c", "d"); // required to output aliases
-            model.ObservationAreas.SetValuesAsLabels(new[]{WaterQualityObservationAreaCoverage.NoDataLabel, "One","Two","Two"});
+            model.ObservationAreas.SetValuesAsLabels(new[]
+            {
+                WaterQualityObservationAreaCoverage.NoDataLabel,
+                "One",
+                "Two",
+                "Two"
+            });
             model.ObservationPoints.AddRange(new[]
             {
                 new WaterQualityObservationPoint()
                 {
                     Name = "obspoint1",
                     ObservationPointType = ObservationPointType.SinglePoint,
-                    X=1.1,
-                    Y=2.2,
-                    Z=(model.ZBot + model.ZTop) / 2.0,
-                }, 
+                    X = 1.1,
+                    Y = 2.2,
+                    Z = (model.ZBot + model.ZTop) / 2.0,
+                },
                 new WaterQualityObservationPoint()
                 {
-                    Name="obspoint2",
+                    Name = "obspoint2",
                     ObservationPointType = ObservationPointType.Average,
                     X = 9.8,
                     Y = 4.6,
@@ -128,7 +158,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Model
             });
 
             // call
-            var settings = WaqInitializationSettingsBuilder.BuildWaqInitializationSettings(model);
+            WaqInitializationSettings settings = WaqInitializationSettingsBuilder.BuildWaqInitializationSettings(model);
 
             // assert
             Assert.AreEqual(Path.Combine(commonPath, hydroData.AttributesRelativePath), settings.AttributesFile);
@@ -140,7 +170,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Model
             Assert.AreEqual(Path.Combine(commonPath, hydFileData.SurfacesRelativePath), settings.SurfacesFile);
             Assert.AreEqual(Path.Combine(commonPath, hydFileData.VerticalDiffusionRelativePath), settings.VerticalDiffusionFile);
             Assert.AreEqual(Path.Combine(commonPath, hydFileData.GridRelativePath), settings.GridFile);
-            
+
             Assert.AreEqual(hydroData.NumberOfWaqSegmentLayers, settings.NumberOfLayers);
             Assert.AreEqual(hydroData.NumberOfDelwaqSegmentsPerHydrodynamicLayer, settings.SegmentsPerLayer);
             Assert.AreEqual(hydroData.NumberOfHorizontalExchanges, settings.HorizontalExchanges);
@@ -151,18 +181,18 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Model
             Assert.AreSame(model.BoundaryDataManager, settings.BoundaryDataManager);
             Assert.AreSame(model.LoadsDataManager, settings.LoadsDataManager);
             Assert.AreEqual(model.Loads.Count, settings.LoadAndIds.Count);
-            for (int i = 0; i < model.Loads.Count; i++)
+            for (var i = 0; i < model.Loads.Count; i++)
             {
-                var load = model.Loads[i];
+                WaterQualityLoad load = model.Loads[i];
                 Assert.IsTrue(settings.LoadAndIds.Keys.Contains(load));
                 Assert.AreEqual(model.GetSegmentIndexForLocation(load.Geometry.Coordinate), settings.LoadAndIds[load]);
             }
 
-            int expectedObservationPoints = 2; // Two observation areas
-            for (int i = 0; i < model.ObservationPoints.Count; i++)
+            var expectedObservationPoints = 2; // Two observation areas
+            for (var i = 0; i < model.ObservationPoints.Count; i++)
             {
-                var observationPoint = model.ObservationPoints[i];
-                
+                WaterQualityObservationPoint observationPoint = model.ObservationPoints[i];
+
                 switch (observationPoint.ObservationPointType)
                 {
                     case ObservationPointType.SinglePoint:
@@ -172,49 +202,78 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Model
 
                         expectedObservationPoints++;
                     }
-                    break;
+                        break;
                     case ObservationPointType.Average:
                     {
                         Assert.IsTrue(settings.OutputLocations.ContainsKey(observationPoint.Name));
                         Assert.AreEqual(model.NumberOfWaqSegmentLayers, settings.OutputLocations[observationPoint.Name].Count);
-                        var expectedIDs = Enumerable.Range(0, model.NumberOfWaqSegmentLayers)
-                                .Select(layerNr => 1 + layerNr * model.NumberOfDelwaqSegmentsPerHydrodynamicLayer);
+                        IEnumerable<int> expectedIDs = Enumerable.Range(0, model.NumberOfWaqSegmentLayers)
+                                                                 .Select(layerNr => 1 + (layerNr * model.NumberOfDelwaqSegmentsPerHydrodynamicLayer));
                         CollectionAssert.AreEquivalent(expectedIDs, settings.OutputLocations[observationPoint.Name]);
 
                         expectedObservationPoints++;
                     }
-                    break;
+                        break;
                     case ObservationPointType.OneOnEachLayer:
                     {
-                        var expectedIDs = Enumerable.Range(0, model.NumberOfWaqSegmentLayers)
-                            .Select(layerNr => 4 + layerNr * model.NumberOfDelwaqSegmentsPerHydrodynamicLayer).ToArray();
-                        for (int l = 0; l < model.NumberOfWaqSegmentLayers; l++)
+                        int[] expectedIDs = Enumerable.Range(0, model.NumberOfWaqSegmentLayers)
+                                                      .Select(layerNr => 4 + (layerNr * model.NumberOfDelwaqSegmentsPerHydrodynamicLayer)).ToArray();
+                        for (var l = 0; l < model.NumberOfWaqSegmentLayers; l++)
                         {
-                            string obsName = string.Format("{0}_L{1}", observationPoint.Name, l+1);
+                            string obsName = string.Format("{0}_L{1}", observationPoint.Name, l + 1);
                             CollectionAssert.Contains(settings.OutputLocations.Keys, obsName,
-                                "Couldn't find " + obsName);
+                                                      "Couldn't find " + obsName);
                             Assert.AreEqual(expectedIDs[l], settings.OutputLocations[obsName][0]);
                         }
 
                         expectedObservationPoints += model.NumberOfWaqSegmentLayers;
                     }
-                    break;
+                        break;
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
             }
 
             Assert.AreEqual(expectedObservationPoints, settings.OutputLocations.Count);
-            CollectionAssert.AreEqual(new[] { 2, 6, 10, 14 }, settings.OutputLocations["one"], "Observation Area 'One' should be defined for all layers.");
-            CollectionAssert.AreEqual(new[] { 3, 4, 7, 8, 11, 12, 15, 16 }, settings.OutputLocations["two"], "Observation Area 'Two' should be defined for all layers.");
+            CollectionAssert.AreEqual(new[]
+            {
+                2,
+                6,
+                10,
+                14
+            }, settings.OutputLocations["one"], "Observation Area 'One' should be defined for all layers.");
+            CollectionAssert.AreEqual(new[]
+            {
+                3,
+                4,
+                7,
+                8,
+                11,
+                12,
+                15,
+                16
+            }, settings.OutputLocations["two"], "Observation Area 'Two' should be defined for all layers.");
 
             Assert.IsTrue(settings.LoadsAliases.ContainsKey("measurePoint 1"));
             Assert.IsTrue(settings.LoadsAliases.ContainsKey("measurePoint 2"));
             Assert.IsTrue(settings.LoadsAliases.ContainsKey("measurePoint 3"));
 
-            CollectionAssert.AreEquivalent(new[] { "load 1", "load 3" }, settings.LoadsAliases["measurePoint 1"]);
-            CollectionAssert.AreEquivalent(new[] { "load 1", "load 2" }, settings.LoadsAliases["measurePoint 2"]);
-            CollectionAssert.AreEquivalent(new[] { "load 1", "load 2", "load 3" }, settings.LoadsAliases["measurePoint 3"]);
+            CollectionAssert.AreEquivalent(new[]
+            {
+                "load 1",
+                "load 3"
+            }, settings.LoadsAliases["measurePoint 1"]);
+            CollectionAssert.AreEquivalent(new[]
+            {
+                "load 1",
+                "load 2"
+            }, settings.LoadsAliases["measurePoint 2"]);
+            CollectionAssert.AreEquivalent(new[]
+            {
+                "load 1",
+                "load 2",
+                "load 3"
+            }, settings.LoadsAliases["measurePoint 3"]);
         }
 
         [Test]
@@ -232,9 +291,21 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Model
                 GridRelativePath = "GridRelativePath",
                 BoundariesRelativePath = "",
                 NumberOfHydrodynamicLayers = 4,
-                HydrodynamicLayerThicknesses = new[] { 0.25, 0.25, 0.25, 0.25 },
+                HydrodynamicLayerThicknesses = new[]
+                {
+                    0.25,
+                    0.25,
+                    0.25,
+                    0.25
+                },
                 NumberOfWaqSegmentLayers = 4,
-                NumberOfHydrodynamicLayersPerWaqSegmentLayer = new[] { 1, 1, 1, 1 },
+                NumberOfHydrodynamicLayersPerWaqSegmentLayer = new[]
+                {
+                    1,
+                    1,
+                    1,
+                    1
+                },
             };
 
             var hydroData = new TestHydroDataStub(hydFileData)
@@ -256,10 +327,18 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Model
             model.ImportHydroData(hydroData);
 
             model.SubstanceProcessLibrary.Substances.AddRange(new[]
+            {
+                new WaterQualitySubstance
                 {
-                    new WaterQualitySubstance { Name = "B", Active = false },
-                    new WaterQualitySubstance { Name = "A", Active = true }
-                });
+                    Name = "B",
+                    Active = false
+                },
+                new WaterQualitySubstance
+                {
+                    Name = "A",
+                    Active = true
+                }
+            });
             model.Loads.AddRange(new[]
             {
                 new WaterQualityLoad
@@ -273,7 +352,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Model
             });
             model.LoadsDataManager.CreateNewDataTable("myloads", "A", "b.usefor", "use");
 
-            var settings = WaqInitializationSettingsBuilder.BuildWaqInitializationSettings(model);
+            WaqInitializationSettings settings = WaqInitializationSettingsBuilder.BuildWaqInitializationSettings(model);
 
             Assert.IsTrue(settings.LoadsAliases.ContainsKey("load 1"));
             Assert.AreEqual(1, settings.LoadsAliases["load 1"].Count);

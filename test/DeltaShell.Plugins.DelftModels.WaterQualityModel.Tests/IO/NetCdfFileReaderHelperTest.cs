@@ -40,22 +40,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             Assert.That(times, Is.Empty, "Empty enumerable of Date Times should be returned.");
         }
 
-        [TestCase(null)]
-        [TestCase("")]
-        public void GetDateTimes_WithTimeVariableNullOrEmpty_ThenThrowsArgumentException(string timeVariableNameArgument)
-        {
-            // Set-up
-            string testFilePath = TestHelper.GetTestFilePath(@"IO\deltashell_his.nc");
-            NetCdfFile netCdfFile = NetCdfFile.OpenExisting(testFilePath);
-
-            // Call
-            void Call() => NetCdfFileReaderHelper.GetDateTimes(netCdfFile, timeVariableNameArgument);
-
-            // Assert
-            var exception = Assert.Throws<ArgumentException>(Call);
-            Assert.That(exception.Message, Is.EqualTo("Argument 'timeVariableName' cannot be null or empty."));
-        }
-
         [Test]
         [Category(TestCategory.DataAccess)]
         public void GetDateTimes_FromValidHistoryFile_ThenCorrectDateTimesAreReturned()
@@ -70,6 +54,38 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             // Assert
             Assert.That(times, Is.EqualTo(GetExpectedDateTimes()),
                         "Parsed date times from file were not as expected.");
+        }
+
+        [Test]
+        public void DoWithNetCdfFile_WhenFileDoesNotExist_ThenFileNotFoundExceptionIsThrown()
+        {
+            // Set-up
+            const string filePath = "no_exist";
+
+            // Pre-condition
+            Assert.That(!File.Exists(filePath));
+
+            // Action
+            void TestAction() => NetCdfFileReaderHelper.DoWithNetCdfFile(filePath, file => "");
+
+            // Assert
+            Assert.That(TestAction, Throws.TypeOf<FileNotFoundException>());
+        }
+
+        [TestCase(null)]
+        [TestCase("")]
+        public void GetDateTimes_WithTimeVariableNullOrEmpty_ThenThrowsArgumentException(string timeVariableNameArgument)
+        {
+            // Set-up
+            string testFilePath = TestHelper.GetTestFilePath(@"IO\deltashell_his.nc");
+            NetCdfFile netCdfFile = NetCdfFile.OpenExisting(testFilePath);
+
+            // Call
+            void Call() => NetCdfFileReaderHelper.GetDateTimes(netCdfFile, timeVariableNameArgument);
+
+            // Assert
+            var exception = Assert.Throws<ArgumentException>(Call);
+            Assert.That(exception.Message, Is.EqualTo("Argument 'timeVariableName' cannot be null or empty."));
         }
 
         [Category(TestCategory.DataAccess)]
@@ -87,22 +103,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
 
             // Assert
             Assert.That(result, Is.EqualTo(expected));
-        }
-
-        [Test]
-        public void DoWithNetCdfFile_WhenFileDoesNotExist_ThenFileNotFoundExceptionIsThrown()
-        {
-            // Set-up
-            const string filePath = "no_exist";
-
-            // Pre-condition
-            Assert.That(!File.Exists(filePath));
-
-            // Action
-            void TestAction() => NetCdfFileReaderHelper.DoWithNetCdfFile(filePath, file => "");
-
-            // Assert
-            Assert.That(TestAction, Throws.TypeOf<FileNotFoundException>());
         }
 
         private static IEnumerable<DateTime> GetExpectedDateTimes()

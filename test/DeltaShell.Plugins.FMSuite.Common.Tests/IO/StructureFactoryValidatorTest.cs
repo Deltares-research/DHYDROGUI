@@ -36,8 +36,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             structure.AddProperty("id", typeof(string), "Test");
             structure.AddProperty("type", typeof(string), "weir");
 
-            Assert.AreEqual("Structure 'Test' has conflicting types: 'pump' and 'weir' are stated.", 
-                StructureFactoryValidator.Validate(structure));
+            Assert.AreEqual("Structure 'Test' has conflicting types: 'pump' and 'weir' are stated.",
+                            StructureFactoryValidator.Validate(structure));
         }
 
         [Test]
@@ -48,7 +48,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             structure.AddProperty("type", typeof(string), "test");
 
             Assert.AreEqual("Structure 'Test' has unsupported type (test) specified.",
-                StructureFactoryValidator.Validate(structure));
+                            StructureFactoryValidator.Validate(structure));
         }
 
         [Test]

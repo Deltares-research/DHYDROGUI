@@ -1,4 +1,5 @@
 ﻿using DelftTools.Hydro;
+using DelftTools.Shell.Core;
 using DelftTools.TestUtils;
 using DeltaShell.Gui;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms;
@@ -29,7 +30,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms
             LogHelper.ResetLogging();
         }
 
-
         ///<summary>
         ///Show cross section view with some default data
         ///</summary>
@@ -40,11 +40,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms
         {
             using (var gui = new DeltaShellGui())
             {
-                var app = gui.Application;
+                IApplication app = gui.Application;
                 app.UserSettings["autosaveWindowLayout"] = false;
                 var networkEditorPlugin = new NetworkEditorApplicationPlugin();
                 app.Plugins.Add(networkEditorPlugin);
-            
+
                 gui.Run();
 
                 IDiscretization defaultDiscretization = null;
@@ -56,20 +56,20 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms
                 app.Project.RootFolder.Add(network);
 
                 var calculationGridWizard = new ComputationalGridDialog
-                    {
-                        HydroNetworks = { network },
-                        UpdateDiscretization = defaultDiscretization,
-                        MinimumCellLength = CGWMinimumCellLength,
-                        GridAtStructure = CGWGridAtStructure,
-                        StructureDistance = CGWStructureDistance,
-                        GridAtCrossSection = CGWGridAtCrossSection,
-                        UseFixedLength = CGWUseFixedLength,
-                        FixedLength = CGWFixedLength,
+                {
+                    HydroNetworks = {network},
+                    UpdateDiscretization = defaultDiscretization,
+                    MinimumCellLength = CGWMinimumCellLength,
+                    GridAtStructure = CGWGridAtStructure,
+                    StructureDistance = CGWStructureDistance,
+                    GridAtCrossSection = CGWGridAtCrossSection,
+                    UseFixedLength = CGWUseFixedLength,
+                    FixedLength = CGWFixedLength,
 
-                        // Don't use opacity during testing 
-                        // see https://stackoverflow.com/questions/31835378/the-system-cannot-find-message-text-for-message-number-0x1-in-the-message-file
-                        UseOpacity = false 
-                    };
+                    // Don't use opacity during testing 
+                    // see https://stackoverflow.com/questions/31835378/the-system-cannot-find-message-text-for-message-number-0x1-in-the-message-file
+                    UseOpacity = false
+                };
 
                 WindowsFormsTestHelper.ShowModal(calculationGridWizard);
             }

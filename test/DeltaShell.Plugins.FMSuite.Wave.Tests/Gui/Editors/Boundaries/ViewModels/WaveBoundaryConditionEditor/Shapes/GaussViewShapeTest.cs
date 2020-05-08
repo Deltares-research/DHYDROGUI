@@ -20,9 +20,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
 
             // Assert
             Assert.That(viewShape, Is.InstanceOf<IViewShape>());
-            Assert.That(viewShape.GaussianSpread, Is.EqualTo(expectedGaussianValue), 
+            Assert.That(viewShape.GaussianSpread, Is.EqualTo(expectedGaussianValue),
                         "Expected a different GaussianSpread:");
-            Assert.That(viewShape.ObservedShape, Is.SameAs(modelShape), 
+            Assert.That(viewShape.ObservedShape, Is.SameAs(modelShape),
                         "Expected a different ObservedShape:");
         }
 
@@ -49,9 +49,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             viewShape.GaussianSpread = expectedGaussianValue;
 
             // Assert
-            Assert.That(modelShape.GaussianSpread, Is.EqualTo(expectedGaussianValue), 
+            Assert.That(modelShape.GaussianSpread, Is.EqualTo(expectedGaussianValue),
                         "Expected a different GaussianSpread:");
         }
-        
     }
 }

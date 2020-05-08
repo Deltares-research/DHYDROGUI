@@ -47,5 +47,4 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
             visitor.Received(1).Visit(shape);
         }
     }
-
 }

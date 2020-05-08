@@ -17,17 +17,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers.Providers
         protected override Func<IWaveLayerFactory, ILayerSubProvider> ConstructorCall { get; } =
             (factory) => new WaveDomainDataLayerSubProvider(factory);
 
-        protected override object GetValidSourceData() => domainData;
-
-        protected override object GetValidParentData() => null;
-
-        protected override object GetInvalidSourceData() => new object();
-
-        protected override object GetInvalidParentData() => null;
-
-        protected override ILayer ExpectedCall(IWaveLayerFactory FactoryMock) =>
-            FactoryMock.CreateWaveDomainDataLayer(domainData);
-
         [Test]
         public void GenerateChildLayerObjects_AnyDataNotDomainData_ReturnsEmptyEnumerable()
         {
@@ -66,5 +55,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers.Providers
 
             Assert.That(result, Is.EquivalentTo(expectedResults));
         }
+
+        protected override object GetValidSourceData() => domainData;
+
+        protected override object GetValidParentData() => null;
+
+        protected override object GetInvalidSourceData() => new object();
+
+        protected override object GetInvalidParentData() => null;
+
+        protected override ILayer ExpectedCall(IWaveLayerFactory FactoryMock) =>
+            FactoryMock.CreateWaveDomainDataLayer(domainData);
     }
 }

@@ -1,5 +1,7 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
@@ -23,8 +25,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             using (var gui = new DeltaShellGui())
             {
                 gui.Plugins.Add(new FlowFMGuiPlugin());
-                
-                var app = gui.Application;
+
+                IApplication app = gui.Application;
                 app.Plugins.Add(new FlowFMApplicationPlugin());
                 app.Run();
 
@@ -32,7 +34,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
                 app.Project.RootFolder.Add(waterFlowFmModel);
                 var importHandler = new GuiImportHandler(gui);
 
-                var restartImportHandlers = importHandler.GetImporters(waterFlowFmModel.RestartInput);
+                IList<IFileImporter> restartImportHandlers = importHandler.GetImporters(waterFlowFmModel.RestartInput);
                 Assert.IsTrue(restartImportHandlers.OfType<FMRstFileImporter>().Any());
             }
         }
@@ -47,22 +49,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             {
                 gui.Plugins.Add(new FlowFMGuiPlugin());
 
-                var app = gui.Application;
+                IApplication app = gui.Application;
                 app.Plugins.Add(new FlowFMApplicationPlugin());
                 app.Run();
-                
+
                 var integratedModel = new CompositeModel(); // hydromodel is a composite model
                 var waterFlowFmModel = new WaterFlowFMModel();
                 integratedModel.Activities.Add(waterFlowFmModel);
-                
+
                 app.Project.RootFolder.Add(integratedModel);
                 var importHandler = new GuiImportHandler(gui);
-                
-                var restartImportHandlers = importHandler.GetImporters(waterFlowFmModel.RestartInput);
+
+                IList<IFileImporter> restartImportHandlers = importHandler.GetImporters(waterFlowFmModel.RestartInput);
                 Assert.IsTrue(restartImportHandlers.OfType<FMRstFileImporter>().Any());
             }
         }
-        
+
         //test if restart file is copied
         [Test]
         [Category(TestCategory.Integration)]
@@ -72,26 +74,26 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             using (var gui = new DeltaShellGui())
             {
                 gui.Plugins.Add(new FlowFMGuiPlugin());
-                
-                var app = gui.Application;
+
+                IApplication app = gui.Application;
                 app.Plugins.Add(new FlowFMApplicationPlugin());
-                
+
                 gui.Run();
-            
-                var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
-                
+
+                string mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
+
                 var waterFlowFmModel = new WaterFlowFMModel(TestHelper.CreateLocalCopy(mduPath));
                 app.Project.RootFolder.Add(waterFlowFmModel);
-                
+
                 var importHandler = new GuiImportHandler(gui);
-                
-                var restartImportHandlersRst = importHandler.GetImporters(waterFlowFmModel.RestartInput).OfType<FMRstFileImporter>().FirstOrDefault();
+
+                FMRstFileImporter restartImportHandlersRst = importHandler.GetImporters(waterFlowFmModel.RestartInput).OfType<FMRstFileImporter>().FirstOrDefault();
                 Assert.IsNotNull(restartImportHandlersRst);
                 const string harRstNc = "har_20080119_120000_rst.nc";
-                const string harlingenDfmOutputHarHarRstNc = @"harlingen/output/" +harRstNc;
-                var directoryName = Path.GetDirectoryName(waterFlowFmModel.MduFilePath);
+                const string harlingenDfmOutputHarHarRstNc = @"harlingen/output/" + harRstNc;
+                string directoryName = Path.GetDirectoryName(waterFlowFmModel.MduFilePath);
                 Assert.IsNotNullOrEmpty(directoryName);
-                
+
                 restartImportHandlersRst.ImportItem(TestHelper.GetTestFilePath(harlingenDfmOutputHarHarRstNc), waterFlowFmModel.RestartInput);
                 //Assert.IsTrue(File.Exists(Path.Combine(directoryName, @"../state_*.zip")));
                 Assert.IsTrue(Directory.EnumerateFiles(Path.Combine(directoryName, @"../../"), "state_*.zip").Any());
@@ -99,11 +101,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
                 if (files.Length > 0)
                 {
                     //file exist
-                    foreach (var zipfile in files)
+                    foreach (string zipfile in files)
                     {
                         ZipFileUtils.Extract(zipfile, Path.Combine(directoryName, @"../"));
                     }
                 }
+
                 Assert.IsTrue(Directory.EnumerateFiles(Path.Combine(directoryName, @"../"), harRstNc).Any());
             }
         }

@@ -28,15 +28,15 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
         protected T SaveLoadBranchFeature<T>(T branchFeature, string projectPath) where T : BranchFeature
         {
             // construct a simple network
-            var network = HydroNetworkHelper.GetSnakeHydroNetwork(1);
-            
+            IHydroNetwork network = HydroNetworkHelper.GetSnakeHydroNetwork(1);
+
             IChannel channel = network.Channels.First();
             channel.BranchFeatures.Add(branchFeature);
             branchFeature.Branch = channel;
             if (branchFeature is ICompositeBranchStructure)
             {
                 var comp = branchFeature as ICompositeBranchStructure;
-                foreach (var structure in comp.Structures)
+                foreach (IStructure1D structure in comp.Structures)
                 {
                     if (!channel.BranchFeatures.Contains(structure))
                     {
@@ -46,13 +46,14 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
                 }
             }
 
-            var retrievedNetwork = SaveLoadObject(network, projectPath);
+            IHydroNetwork retrievedNetwork = SaveLoadObject(network, projectPath);
 
-            var retrievedObject = (T)Enumerable.First(retrievedNetwork.Channels).BranchFeatures.FirstOrDefault();
+            var retrievedObject = (T) Enumerable.First(retrievedNetwork.Channels).BranchFeatures.FirstOrDefault();
             if (retrievedObject == null)
             {
                 Assert.Fail("Object not found. ");
             }
+
             return retrievedObject;
         }
 
@@ -79,22 +80,19 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
             ProjectRepository = factory.CreateNew();
             ProjectRepository.Open(path);
 
-            var project2 = ProjectRepository.GetProject();
-            return (T)((DataItem)project2.RootFolder.Items[0]).Value;
+            Project project2 = ProjectRepository.GetProject();
+            return (T) ((DataItem) project2.RootFolder.Items[0]).Value;
         }
 
         protected static IChannel CreateChannel(INode fromNode, INode toNode)
         {
             var vertices = new List<Coordinate>
-                               {
-                                   new Coordinate(1000, 1000), 
-                                   new Coordinate(1000, 1500)
-                               };
+            {
+                new Coordinate(1000, 1000),
+                new Coordinate(1000, 1500)
+            };
 
-            return new Channel(fromNode, toNode)
-                       {
-                           Geometry = new LineString(vertices.ToArray())
-                       };
+            return new Channel(fromNode, toNode) {Geometry = new LineString(vertices.ToArray())};
         }
     }
 }

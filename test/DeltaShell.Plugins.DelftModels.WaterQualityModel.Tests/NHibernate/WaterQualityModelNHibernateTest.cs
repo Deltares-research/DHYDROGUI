@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.Shell.Core;
+using DelftTools.Shell.Core.Dao;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
@@ -24,6 +25,7 @@ using DeltaShell.Plugins.SharpMapGis;
 using DeltaShell.Plugins.SharpMapGis.SpatialOperations;
 using DeltaShell.Plugins.Toolbox;
 using NetTopologySuite.Extensions.Coverages;
+using NetTopologySuite.Extensions.Grids;
 using NUnit.Framework;
 using Rhino.Mocks;
 using SharpMap.Extensions.CoordinateSystems;
@@ -35,6 +37,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
     [Category(TestCategory.DataAccess)]
     public class WaterQualityModelNHibernateTest : NHibernateIntegrationTestBase
     {
+        private const string LOADTYPE = "Sewer";
+        private const string LOADNAME = "Load 1";
+        private const double LOAD_X = 0.1d;
+        private const double LOAD_Y = 0.2d;
+        private const double LOAD_Z = 0.3d;
+
         #region SetUp / TearDown
 
         public override void TestFixtureSetUp()
@@ -43,7 +51,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
 
             var waterQualityModelApplicationPlugin = new WaterQualityModelApplicationPlugin();
             factory.AddPlugin(waterQualityModelApplicationPlugin);
-            foreach (var dataAccessListener in waterQualityModelApplicationPlugin.CreateDataAccessListeners())
+            foreach (IDataAccessListener dataAccessListener in waterQualityModelApplicationPlugin.CreateDataAccessListeners())
             {
                 factory.AddDataAccessListener(dataAccessListener);
             }
@@ -62,15 +70,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
         public void SaveAndRetrieveDataTable()
         {
             // setup
-            var folderPath = TestHelper.GetCurrentMethodName();
+            string folderPath = TestHelper.GetCurrentMethodName();
             FileUtils.DeleteIfExists(folderPath);
             Directory.CreateDirectory(folderPath);
 
-            var dataFilePath = Path.Combine(folderPath, "A.tbl");
+            string dataFilePath = Path.Combine(folderPath, "A.tbl");
             const string datafileContents = "datafile";
             File.WriteAllText(dataFilePath, datafileContents);
 
-            var useforFilePath = Path.Combine(folderPath, "A.usefors");
+            string useforFilePath = Path.Combine(folderPath, "A.usefors");
             const string useforFileContents = "usefors";
             File.WriteAllText(useforFilePath, useforFileContents);
 
@@ -91,25 +99,25 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
                 };
 
                 // call
-                var retrievedEntity = SaveAndRetrieveObject(entity);
+                DataTable retrievedEntity = SaveAndRetrieveObject(entity);
 
                 // assert
                 Assert.AreEqual("A", retrievedEntity.Name);
                 Assert.IsFalse(retrievedEntity.IsEnabled);
 
-                var retrievedDataFileOnDisk = retrievedEntity.DataFile;
+                TextDocumentFromFile retrievedDataFileOnDisk = retrievedEntity.DataFile;
                 Assert.IsFalse(retrievedDataFileOnDisk.ReadOnly);
                 Assert.IsTrue(retrievedDataFileOnDisk.IsOpen);
                 Assert.AreEqual(dataFilePath, retrievedDataFileOnDisk.Path);
                 Assert.AreEqual(datafileContents, retrievedDataFileOnDisk.Content);
 
-                var retrievedSubstanceFileOnDisk = retrievedEntity.SubstanceUseforFile;
+                TextDocumentFromFile retrievedSubstanceFileOnDisk = retrievedEntity.SubstanceUseforFile;
                 Assert.IsFalse(retrievedSubstanceFileOnDisk.ReadOnly);
                 Assert.IsTrue(retrievedSubstanceFileOnDisk.IsOpen);
                 Assert.AreEqual(useforFilePath, retrievedSubstanceFileOnDisk.Path);
                 Assert.AreEqual(useforFileContents, retrievedSubstanceFileOnDisk.Content);
-            } 
-            finally 
+            }
+            finally
             {
                 FileUtils.DeleteIfExists(folderPath);
             }
@@ -119,24 +127,46 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
         public void SaveAndRetrieveWaterQualityObservationAreaCoverage()
         {
             // setup
-            var grid = UnstructuredGridTestHelper.GenerateRegularGrid(5, 5, 1, 1);
+            UnstructuredGrid grid = UnstructuredGridTestHelper.GenerateRegularGrid(5, 5, 1, 1);
             var entity = new WaterQualityObservationAreaCoverage(grid);
-            foreach (var i in Enumerable.Range(0, grid.Cells.Count-5))
+            foreach (int i in Enumerable.Range(0, grid.Cells.Count - 5))
             {
                 entity[i] = i % 3;
             }
 
             string noDataLabel = WaterQualityObservationAreaCoverage.NoDataLabel;
-            var expectedLabels = new[] { 
-                "zero", "one", "two", "zero", "one",
-                "two", "zero", "one", "two", "zero",
-                "one", "two", "zero", "one", "two",
-                "zero", "one", "two", "zero", "one",
-                "two", "zero", noDataLabel, noDataLabel, noDataLabel};
+            string[] expectedLabels = new[]
+            {
+                "zero",
+                "one",
+                "two",
+                "zero",
+                "one",
+                "two",
+                "zero",
+                "one",
+                "two",
+                "zero",
+                "one",
+                "two",
+                "zero",
+                "one",
+                "two",
+                "zero",
+                "one",
+                "two",
+                "zero",
+                "one",
+                "two",
+                "zero",
+                noDataLabel,
+                noDataLabel,
+                noDataLabel
+            };
             entity.SetValuesAsLabels(expectedLabels);
-            
+
             // call
-            var retrievedEntity = SaveAndRetrieveObject(entity);
+            WaterQualityObservationAreaCoverage retrievedEntity = SaveAndRetrieveObject(entity);
 
             // assert
             Assert.IsNotNull(retrievedEntity.Grid);
@@ -153,31 +183,35 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
             Assert.AreEqual(expectedLabels.Length, retrievedLabels.Count);
             CollectionAssert.AreEquivalent(expectedLabels, retrievedLabels);
         }
-        
+
         [Test]
         [Category(TestCategory.Slow)]
         public void SaveAndRetrieveDataTableManager()
         {
             // setup
-            var folderPath = TestHelper.GetCurrentMethodName();
+            string folderPath = TestHelper.GetCurrentMethodName();
             FileUtils.DeleteIfExists(folderPath);
             Directory.CreateDirectory(folderPath);
 
             try
             {
-                var entity = new DataTableManager { Name = "<name>", FolderPath = folderPath };
+                var entity = new DataTableManager
+                {
+                    Name = "<name>",
+                    FolderPath = folderPath
+                };
                 entity.CreateNewDataTable("A", "datatablecontents A", "A.usefors", "useforscontents A");
                 entity.CreateNewDataTable("B", "datatablecontents B", "B.usefors", "useforscontents B");
                 entity.DataTables.First().IsEnabled = false;
 
                 // call
-                var retrievedEntity = SaveAndRetrieveObject(entity);
+                DataTableManager retrievedEntity = SaveAndRetrieveObject(entity);
 
                 // assert
                 Assert.AreEqual(folderPath, retrievedEntity.FolderPath);
                 Assert.AreEqual("<name>", retrievedEntity.Name);
 
-                var dataTables = retrievedEntity.DataTables.ToArray();
+                DataTable[] dataTables = retrievedEntity.DataTables.ToArray();
                 Assert.AreEqual(2, dataTables.Length);
 
                 Assert.AreEqual("A", dataTables[0].Name);
@@ -203,12 +237,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
                 FileUtils.DeleteIfExists(folderPath);
             }
         }
-        
+
         [Test]
         public void SaveAndRetrieveHydFileData()
         {
             // setup
-            var filePath = Path.Combine(TestHelper.GetTestDataDirectory(), "IO", "real", "uni3d.hyd");
+            string filePath = Path.Combine(TestHelper.GetTestDataDirectory(), "IO", "real", "uni3d.hyd");
             using (var entity = new HydFileData
             {
                 Path = new FileInfo(filePath),
@@ -216,7 +250,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
             })
             {
                 // call
-                using (var retrievedEntity = SaveAndRetrieveObject(entity))
+                using (HydFileData retrievedEntity = SaveAndRetrieveObject(entity))
                 {
                     // assert
                     Assert.AreEqual(filePath, retrievedEntity.Path.FullName);
@@ -240,9 +274,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
                 Z = double.NaN, // test special case!
                 ObservationPointType = type
             };
-            
+
             // call
-            var retrievedEntity = SaveAndRetrieveObject(entity);
+            WaterQualityObservationPoint retrievedEntity = SaveAndRetrieveObject(entity);
 
             // assert
             Assert.AreEqual(type, retrievedEntity.ObservationPointType);
@@ -257,9 +291,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
         [Category(TestCategory.Slow)]
         public void SaveAndLoadWaterQualityLoad()
         {
-            var entity = CreateLoad();
+            WaterQualityLoad entity = CreateLoad();
 
-            var retrievedEntity = SaveAndRetrieveObject(entity);
+            WaterQualityLoad retrievedEntity = SaveAndRetrieveObject(entity);
             Assert.IsNotNull(retrievedEntity);
             Assert.IsNotNull(retrievedEntity.Geometry);
             Assert.AreEqual(LOAD_X, retrievedEntity.X);
@@ -268,19 +302,19 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
             Assert.AreEqual(LOADNAME, retrievedEntity.Name);
             Assert.AreEqual(LOADTYPE, retrievedEntity.LoadType);
         }
-       
+
         [Test]
         [Category(TestCategory.DataAccess)]
         [Category(TestCategory.Slow)]
         public void SaveAndRetrieveFunctionFromHydroDynamics()
         {
             // setup
-            var filePath = Path.Combine(TestHelper.GetTestDataDirectory(), "IO", "real", "uni3d.sal");
-            var entity = WaterQualityFunctionFactory.CreateFunctionFromHydroDynamics("Name", 1.2, "Component name", "Unit name", "My Description");
+            string filePath = Path.Combine(TestHelper.GetTestDataDirectory(), "IO", "real", "uni3d.sal");
+            FunctionFromHydroDynamics entity = WaterQualityFunctionFactory.CreateFunctionFromHydroDynamics("Name", 1.2, "Component name", "Unit name", "My Description");
             entity.FilePath = filePath;
 
             // call
-            var retrievedEntity = SaveAndRetrieveObject(entity);
+            FunctionFromHydroDynamics retrievedEntity = SaveAndRetrieveObject(entity);
 
             // assert
             Assert.AreEqual("Name", retrievedEntity.Name);
@@ -292,12 +326,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
             Assert.AreEqual(filePath, retrievedEntity.FilePath);
             Assert.AreEqual("My Description", retrievedEntity.Attributes[WaterQualityFunctionFactory.DESCRIPTION_ATTRIBUTE]);
         }
-        
+
         [Test]
         public void SaveAndRetrieveStandaloneWaterQualityModelWithoutHydFile()
         {
             // setup
-            var commonFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), "IO");
+            string commonFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), "IO");
 
             var entity = new WaterQualityModel
             {
@@ -308,7 +342,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
             };
 
             TypeUtils.SetPrivatePropertyValue(entity, nameof(WaterQualityModel.LayerType),
-                LayerType.ZLayer);
+                                              LayerType.ZLayer);
 
             Assert.IsTrue(entity.Grid.IsEmpty);
             Assert.IsNull(entity.HydroData);
@@ -324,7 +358,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
 
             entity.ObservationPoints.AddRange(new[]
             {
-                new WaterQualityObservationPoint { Name = "obs1" }
+                new WaterQualityObservationPoint {Name = "obs1"}
             });
 
             new SubFileImporter().Import(entity.SubstanceProcessLibrary, Path.Combine(commonFilePath, "03d_Tewor2003.sub"));
@@ -332,7 +366,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
 
             entity.Loads.Add(CreateLoad());
 
-            var explicitWorkingDirectory = Path.Combine(Directory.GetCurrentDirectory(), "Test", "Bla");
+            string explicitWorkingDirectory = Path.Combine(Directory.GetCurrentDirectory(), "Test", "Bla");
             FileUtils.DeleteIfExists(explicitWorkingDirectory);
             try
             {
@@ -349,7 +383,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
                 entity.ModelSettings.WriteIterationReport = true;
 
                 // call
-                var retrievedEntity = SaveAndRetrieveObject(entity);
+                WaterQualityModel retrievedEntity = SaveAndRetrieveObject(entity);
 
                 // assert
                 Assert.IsNotNull(retrievedEntity);
@@ -391,7 +425,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
                 Assert.AreEqual(1, retrievedEntity.Loads.Count);
                 Assert.AreEqual(retrievedEntity.Loads[0].LoadType, LOADTYPE);
 
-                var dataTables = retrievedEntity.BoundaryDataManager.DataTables.ToArray();
+                DataTable[] dataTables = retrievedEntity.BoundaryDataManager.DataTables.ToArray();
                 Assert.AreEqual(1, dataTables.Length);
                 Assert.AreEqual("A", dataTables[0].Name);
                 Assert.IsTrue(dataTables[0].DataFile.IsOpen);
@@ -399,7 +433,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
                 Assert.IsTrue(dataTables[0].SubstanceUseforFile.IsOpen);
                 Assert.AreEqual("bla", dataTables[0].SubstanceUseforFile.Content);
 
-                var loadsTables = retrievedEntity.LoadsDataManager.DataTables.ToArray();
+                DataTable[] loadsTables = retrievedEntity.LoadsDataManager.DataTables.ToArray();
                 Assert.AreEqual(1, loadsTables.Length);
                 Assert.AreEqual("B", loadsTables[0].Name);
                 Assert.IsTrue(loadsTables[0].DataFile.IsOpen);
@@ -427,8 +461,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
         [Category(TestCategory.Slow)]
         public void SaveAndRetrieveStandAloneWaterQualityModelWithHydFileImported()
         {
-            var filePath = TestHelper.GetTestFilePath(@"IO\real\uni3d.hyd");
-            using (var app = new DeltaShellApplication{ IsProjectCreatedInTemporaryDirectory = true })
+            string filePath = TestHelper.GetTestFilePath(@"IO\real\uni3d.hyd");
+            using (var app = new DeltaShellApplication {IsProjectCreatedInTemporaryDirectory = true})
             {
                 var waqAppPlugin = new WaterQualityModelApplicationPlugin();
                 app.Plugins.Add(new CommonToolsApplicationPlugin());
@@ -445,9 +479,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
 
                 app.Project.RootFolder.Add(importedWaq);
 
-                var middleHeight = (importedWaq.ZTop + importedWaq.ZBot) / 2;
-                importedWaq.ObservationPoints.Add(new WaterQualityObservationPoint { Z = middleHeight });
-                importedWaq.Loads.Add(new WaterQualityLoad { Z = middleHeight });
+                double middleHeight = (importedWaq.ZTop + importedWaq.ZBot) / 2;
+                importedWaq.ObservationPoints.Add(new WaterQualityObservationPoint {Z = middleHeight});
+                importedWaq.Loads.Add(new WaterQualityLoad {Z = middleHeight});
 
                 var startTime = new DateTime(2015, 3, 24, 11, 15, 0);
                 var timeStep = new TimeSpan(0, 0, 10);
@@ -463,13 +497,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
                 importedWaq.ObservationAreas.SetValuesAsLabels(Enumerable.Repeat("Model wide", importedWaq.Grid.Cells.Count));
 
                 // call
-                var savePath = Path.GetRandomFileName();
+                string savePath = Path.GetRandomFileName();
                 app.SaveProjectAs(savePath);
 
                 app.CloseProject();
 
                 app.OpenProject(savePath);
-                var openedWaq = app.Project.RootFolder.Models.OfType<WaterQualityModel>().FirstOrDefault();
+                WaterQualityModel openedWaq = app.Project.RootFolder.Models.OfType<WaterQualityModel>().FirstOrDefault();
                 Assert.IsNotNull(openedWaq);
 
                 // assert
@@ -517,8 +551,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
         public void SaveAndRetrieveStandAloneWaterQualityModelWithHydFileImportedAndSpatialProcessCoefficient()
         {
             // setup
-            var commonFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), "IO");
-            var filePath = Path.Combine(commonFilePath, "real", "uni3d.hyd");
+            string commonFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), "IO");
+            string filePath = Path.Combine(commonFilePath, "real", "uni3d.hyd");
 
             using (var entity = new WaterQualityModel())
             {
@@ -526,38 +560,20 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
 
                 new SubFileImporter().Import(entity.SubstanceProcessLibrary, Path.Combine(commonFilePath, "03d_Tewor2003.sub"));
 
-                var creator = FunctionTypeCreatorFactory.CreateUnstructuredGridCoverageCreator();
+                IFunctionTypeCreator creator = FunctionTypeCreatorFactory.CreateUnstructuredGridCoverageCreator();
                 FunctionTypeCreator.ReplaceFunctionUsingCreator(entity.ProcessCoefficients, entity.ProcessCoefficients.First(), creator, entity);
 
                 // call
-                using (var retrievedEntity = SaveAndRetrieveObject(entity))
+                using (WaterQualityModel retrievedEntity = SaveAndRetrieveObject(entity))
                 {
                     // assert
                     var processCoefficientsSet = (DataItemSet) retrievedEntity.GetDataItemByTag("ProcessCoefficientsTag");
-                    var dataItem = processCoefficientsSet.DataItems.First();
-                    var unproxiedDataItem = TypeUtils.Unproxy(dataItem);
+                    IDataItem dataItem = processCoefficientsSet.DataItems.First();
+                    IDataItem unproxiedDataItem = TypeUtils.Unproxy(dataItem);
                     Assert.IsInstanceOf<CoverageSpatialOperationValueConverter>(unproxiedDataItem.ValueConverter);
                     Assert.IsInstanceOf<UnstructuredGridCellCoverage>(unproxiedDataItem.ValueConverter.OriginalValue);
                 }
             }
-        }
-        
-        private const string LOADTYPE = "Sewer";
-        private const string LOADNAME = "Load 1";
-        private const double LOAD_X = 0.1d;
-        private const double LOAD_Y = 0.2d;
-        private const double LOAD_Z = 0.3d;
-
-        private static WaterQualityLoad CreateLoad()
-        {
-            var entity = new WaterQualityLoad
-            {
-                LoadType = LOADTYPE, 
-                Name = LOADNAME, 
-                X = LOAD_X, Y = LOAD_Y, Z = LOAD_Z
-            };
-
-            return entity;
         }
 
         [Test]
@@ -576,11 +592,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
             app.Expect(a => a.GetAllModelsInProject()).Return(waqModels);
             mocks.ReplayAll();
 
-            var waqAppPlugin = new WaterQualityModelApplicationPlugin { Application = app };
+            var waqAppPlugin = new WaterQualityModelApplicationPlugin {Application = app};
 
-            var commonFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), "IO");
+            string commonFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), "IO");
 
-            var filePath = Path.Combine(commonFilePath, "real", "uni3d.hyd");
+            string filePath = Path.Combine(commonFilePath, "real", "uni3d.hyd");
 
             using (var entity = new WaterQualityModel())
             {
@@ -590,7 +606,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
                 Assert.IsTrue(entity.InitialConditions.Count >= nrOfCoverages);
 
                 // make x coverages instead of constant functions
-                for (int i = 0; i < nrOfCoverages; i++)
+                for (var i = 0; i < nrOfCoverages; i++)
                 {
                     FunctionTypeCreator.ReplaceFunctionUsingCreator(
                         entity.InitialConditions, entity.InitialConditions[i],
@@ -602,14 +618,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
 
                 // save and retrieve
                 // call
-                var project = SaveAndRetrieveObjectCore(entity);
+                Project project = SaveAndRetrieveObjectCore(entity);
                 using (var retrievedEntity = RetrievePersistedObjectFromProject<WaterQualityModel>(project))
                 {
                     waqModels.Add(retrievedEntity);
                     app.Raise(a => a.ProjectOpened += null, project);
 
                     // perform spatial operations just like WaterQualityModelApplicationPlugin
-                    foreach (var spatialOperationValueConverter in retrievedEntity.AllDataItems.Select(di => di.ValueConverter).OfType<CoverageSpatialOperationValueConverter>())
+                    foreach (CoverageSpatialOperationValueConverter spatialOperationValueConverter in retrievedEntity.AllDataItems.Select(di => di.ValueConverter).OfType<CoverageSpatialOperationValueConverter>())
                     {
                         spatialOperationValueConverter.SpatialOperationSet.Execute();
                     }
@@ -628,7 +644,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
             const string alias = "my milkshake brings all the boys to the yard";
             entity.LocationAliases = alias;
 
-            var retrieved = SaveAndRetrieveObject(entity);
+            WaterQualityBoundary retrieved = SaveAndRetrieveObject(entity);
 
             Assert.AreEqual(alias, retrieved.LocationAliases);
         }
@@ -643,7 +659,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
                 OperationType = PointwiseOperationType.OverwriteWhereMissing,
             };
 
-            var retrieved = SaveAndRetrieveObject(entity);
+            SetLabelOperation retrieved = SaveAndRetrieveObject(entity);
 
             Assert.AreEqual(entity.Label, retrieved.Label);
             Assert.AreEqual(entity.Name, retrieved.Name);
@@ -662,7 +678,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
                 CoordinateSystem = new OgrCoordinateSystemFactory().CreateFromEPSG(2500),
             };
 
-            var retrieved = SaveAndRetrieveObject(entity);
+            OverwriteLabelOperation retrieved = SaveAndRetrieveObject(entity);
 
             Assert.AreEqual(entity.Label, retrieved.Label);
             Assert.AreEqual(entity.Name, retrieved.Name);
@@ -671,19 +687,33 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
             Assert.AreEqual(entity.CoordinateSystem, retrieved.CoordinateSystem);
         }
 
+        private static WaterQualityLoad CreateLoad()
+        {
+            var entity = new WaterQualityLoad
+            {
+                LoadType = LOADTYPE,
+                Name = LOADNAME,
+                X = LOAD_X,
+                Y = LOAD_Y,
+                Z = LOAD_Z
+            };
+
+            return entity;
+        }
+
         private static void AssertModelCoverages(WaterQualityModel model, int nrOfCoverages)
         {
             Assert.IsTrue(model.Grid.Cells.Count > 0);
 
-            for (int i = 0; i < nrOfCoverages; i++)
+            for (var i = 0; i < nrOfCoverages; i++)
             {
                 Assert.IsNotNull(model.InitialConditions[i]);
 
-                var dataItem = model.AllDataItems.First(
+                IDataItem dataItem = model.AllDataItems.First(
                     di => Equals(di.Value, model.InitialConditions[i]));
                 Assert.IsTrue(dataItem.ValueConverter is CoverageSpatialOperationValueConverter);
 
-                Assert.IsTrue(((UnstructuredGridCoverage)model.InitialConditions[i]).Grid.Cells.Count > 0);
+                Assert.IsTrue(((UnstructuredGridCoverage) model.InitialConditions[i]).Grid.Cells.Count > 0);
             }
         }
     }

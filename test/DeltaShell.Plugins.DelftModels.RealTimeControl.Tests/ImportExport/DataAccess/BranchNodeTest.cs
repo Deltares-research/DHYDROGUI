@@ -1,52 +1,14 @@
-﻿using DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.DataAccess;
+﻿using System.Collections.Generic;
+using System.Linq;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.DataAccess;
 using NSubstitute;
 using NUnit.Framework;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport.DataAccess
 {
     [TestFixture]
     public class BranchNodeTest
     {
-        [TestCase(Operator.Add)]
-        [TestCase(Operator.Subtract)]
-        [TestCase(Operator.Multiply)]
-        [TestCase(Operator.Divide)]
-        [TestCase(Operator.Min)]
-        [TestCase(Operator.Max)]
-        public void Constructor_InitializesInstanceCorrectly(Operator @operator)
-        {
-            // Call
-            var branchNode = new BranchNode(@operator);
-
-            // Assert
-            Assert.That(branchNode.OperatorValue, Is.EqualTo(@operator));
-            Assert.That(branchNode.FirstNodeReference, Is.Not.Null);
-            Assert.That(branchNode.SecondNodeReference, Is.Not.Null);
-        }
-
-        [TestCase(Operator.Add)]
-        [TestCase(Operator.Subtract)]
-        [TestCase(Operator.Multiply)]
-        [TestCase(Operator.Divide)]
-        [TestCase(Operator.Min)]
-        [TestCase(Operator.Max)]
-        public void Constructor_WithYName_InitializesInstanceCorrectly(Operator @operator)
-        {
-            // Setup
-            const string yName = "y_name";
-
-            // Call
-            var branchNode = new BranchNode(@operator, yName);
-
-            // Assert
-            Assert.That(branchNode.OperatorValue, Is.EqualTo(@operator));
-            Assert.That(branchNode.YName, Is.EqualTo(yName));
-            Assert.That(branchNode.FirstNodeReference, Is.Not.Null);
-            Assert.That(branchNode.SecondNodeReference, Is.Not.Null);
-        }
-
         [Test]
         public void SetFirstNode_SetsCorrectly()
         {
@@ -111,6 +73,44 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport.Data
 
             // Assert
             Assert.That(result, Is.SameAs(expressionNode));
+        }
+
+        [TestCase(Operator.Add)]
+        [TestCase(Operator.Subtract)]
+        [TestCase(Operator.Multiply)]
+        [TestCase(Operator.Divide)]
+        [TestCase(Operator.Min)]
+        [TestCase(Operator.Max)]
+        public void Constructor_InitializesInstanceCorrectly(Operator @operator)
+        {
+            // Call
+            var branchNode = new BranchNode(@operator);
+
+            // Assert
+            Assert.That(branchNode.OperatorValue, Is.EqualTo(@operator));
+            Assert.That(branchNode.FirstNodeReference, Is.Not.Null);
+            Assert.That(branchNode.SecondNodeReference, Is.Not.Null);
+        }
+
+        [TestCase(Operator.Add)]
+        [TestCase(Operator.Subtract)]
+        [TestCase(Operator.Multiply)]
+        [TestCase(Operator.Divide)]
+        [TestCase(Operator.Min)]
+        [TestCase(Operator.Max)]
+        public void Constructor_WithYName_InitializesInstanceCorrectly(Operator @operator)
+        {
+            // Setup
+            const string yName = "y_name";
+
+            // Call
+            var branchNode = new BranchNode(@operator, yName);
+
+            // Assert
+            Assert.That(branchNode.OperatorValue, Is.EqualTo(@operator));
+            Assert.That(branchNode.YName, Is.EqualTo(yName));
+            Assert.That(branchNode.FirstNodeReference, Is.Not.Null);
+            Assert.That(branchNode.SecondNodeReference, Is.Not.Null);
         }
 
         [TestCaseSource(nameof(GetChildNodesTestCases))]
@@ -180,7 +180,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport.Data
             };
 
             // Call
-            string result = branchNode.ToString();
+            var result = branchNode.ToString();
 
             // Assert
             string expected = branchNode.GetExpression();

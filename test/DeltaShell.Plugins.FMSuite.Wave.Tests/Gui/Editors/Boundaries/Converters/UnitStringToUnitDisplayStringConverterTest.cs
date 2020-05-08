@@ -1,5 +1,4 @@
-﻿using System;
-using System.Globalization;
+﻿using System.Globalization;
 using System.Windows;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Converters;
 using NUnit.Framework;
@@ -10,10 +9,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Converter
     public class UnitStringToUnitDisplayStringConverterTest
     {
         [Test]
-        [TestCase("m",  "[m]")]
+        [TestCase("m", "[m]")]
         [TestCase("Kg", "[Kg]")]
-        [TestCase("-",  "[-]")]
-        [TestCase("",   "[]")]
+        [TestCase("-", "[-]")]
+        [TestCase("", "[]")]
         public void GivenAUnitStringToUnitDisplayStringConverter_WhenConvertIsCalledWithAString_ThenTheCorrectValueIsReturned(string inputString, string expectedOutput)
         {
             // Given
@@ -54,13 +53,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Converter
         }
 
         [Test]
-        [TestCase("[m]",  "m")]
+        [TestCase("[m]", "m")]
         [TestCase("[Kg]", "Kg")]
-        [TestCase("[-]",  "-")]
-        [TestCase("[]",   "")]
+        [TestCase("[-]", "-")]
+        [TestCase("[]", "")]
         public void GivenAUnitStringToUnitDisplayStringConverter_WhenConvertBackIsCalledWithAString_ThenTheCorrectValueIsReturned(string inputString, string expectedOutput)
         {
-            
             // Given
             var converter = new UnitStringToUnitDisplayStringConverter();
 

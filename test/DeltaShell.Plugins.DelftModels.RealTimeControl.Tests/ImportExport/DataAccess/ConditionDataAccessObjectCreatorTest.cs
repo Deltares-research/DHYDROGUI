@@ -15,6 +15,17 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport.Data
     {
         private readonly Random random = new Random();
 
+        [Test]
+        public void Create_StandardTriggerXmlNull_ThrowsArgumentNullException()
+        {
+            // Call
+            void Call() => ConditionDataAccessObjectCreator.Create(null);
+
+            // Assert
+            var exception = Assert.Throws<ArgumentNullException>(Call);
+            Assert.That(exception.ParamName, Is.EqualTo("standardTriggerXml"));
+        }
+
         [TestCaseSource(nameof(GetCreateTestCases))]
         public void Create_ReturnCorrectResult(StandardTriggerXML standardTriggerXml,
                                                ConditionDataAccessObject expectedResult)
@@ -25,17 +36,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport.Data
             // Assert
             Assert.That(result, Is.EqualTo(expectedResult).Using(new ConditionDataAccessObjectComparer()),
                         "Expected the results to be equal to the expected results:");
-        }
-
-        [Test]
-        public void Create_StandardTriggerXmlNull_ThrowsArgumentNullException()
-        {
-            // Call
-            void Call() => ConditionDataAccessObjectCreator.Create(null);
-
-            // Assert
-            var exception = Assert.Throws<ArgumentNullException>(Call);
-            Assert.That(exception.ParamName, Is.EqualTo("standardTriggerXml"));
         }
 
         private IEnumerable<TestCaseData> GetCreateTestCases()
@@ -270,7 +270,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport.Data
             };
 
             StandardTriggerXML standardTriggerXml = CreateDirectionalConditionXml(id, operation,
-                                                                                  reference, inputRef, 
+                                                                                  reference, inputRef,
                                                                                   trueOutputs, falseOutputs);
 
             string[] trueOutputRefs =

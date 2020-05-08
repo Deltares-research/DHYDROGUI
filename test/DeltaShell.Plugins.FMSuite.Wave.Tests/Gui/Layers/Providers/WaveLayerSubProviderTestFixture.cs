@@ -10,20 +10,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers.Providers
     [TestFixture]
     public abstract class WaveLayerSubProviderTestFixture
     {
-        protected ILayerSubProvider ConstructSubProvider()
-        {
-            return ConstructSubProvider(FactoryMock);
-        }
-
-        private ILayerSubProvider ConstructSubProvider(IWaveLayerFactory factory)
-        {
-            return ConstructorCall.Invoke(factory);
-        }
-
-        protected abstract Func<IWaveLayerFactory, ILayerSubProvider> ConstructorCall { get; }
-
         protected IWaveLayerFactory FactoryMock;
         protected ILayer LayerMock;
+
+        protected abstract Func<IWaveLayerFactory, ILayerSubProvider> ConstructorCall { get; }
 
         [SetUp]
         public void SetUp()
@@ -46,12 +36,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers.Providers
             var exception = Assert.Throws<ArgumentNullException>(() => ConstructSubProvider(null));
             Assert.That(exception.ParamName, Is.EqualTo("factory"));
         }
-
-        protected abstract object GetValidSourceData();
-        protected abstract object GetValidParentData();
-
-        protected abstract object GetInvalidSourceData();
-        protected abstract object GetInvalidParentData();
 
         [Test]
         public void CanCreateLayerFor_InvalidData_ReturnsFalse()
@@ -78,8 +62,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers.Providers
             // Assert
             Assert.That(result, Is.True);
         }
-
-        protected abstract ILayer ExpectedCall(IWaveLayerFactory FactoryMock);
 
         [Test]
         public void CreateLayer_ValidData_ReturnsExpectedResults()
@@ -109,5 +91,23 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers.Providers
             Assert.That(result, Is.Null);
             ExpectedCall(FactoryMock.DidNotReceiveWithAnyArgs());
         }
+
+        protected ILayerSubProvider ConstructSubProvider()
+        {
+            return ConstructSubProvider(FactoryMock);
+        }
+
+        private ILayerSubProvider ConstructSubProvider(IWaveLayerFactory factory)
+        {
+            return ConstructorCall.Invoke(factory);
+        }
+
+        protected abstract object GetValidSourceData();
+        protected abstract object GetValidParentData();
+
+        protected abstract object GetInvalidSourceData();
+        protected abstract object GetInvalidParentData();
+
+        protected abstract ILayer ExpectedCall(IWaveLayerFactory FactoryMock);
     }
 }

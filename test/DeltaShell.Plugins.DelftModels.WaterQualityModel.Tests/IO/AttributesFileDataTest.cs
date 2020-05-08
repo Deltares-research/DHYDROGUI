@@ -40,7 +40,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             // assert
             Assert.Throws<ArgumentOutOfRangeException>(call);
         }
-        
+
         [Test]
         [TestCase(true)]
         [TestCase(false)]

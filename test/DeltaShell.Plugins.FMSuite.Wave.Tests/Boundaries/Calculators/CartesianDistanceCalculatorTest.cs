@@ -9,6 +9,24 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.Calculators
     [TestFixture]
     public class CartesianDistanceCalculatorTest
     {
+        private static IEnumerable<TestCaseData> SquaredTestData => new[]
+        {
+            new TestCaseData(new Coordinate(0.0, 0.0), new Coordinate(0.0, 0.0), 0.0),
+            new TestCaseData(new Coordinate(5.0, 0.0), new Coordinate(0.0, 0.0), 25.0),
+            new TestCaseData(new Coordinate(0.0, 4.0), new Coordinate(0.0, 0.0), 16.0),
+            new TestCaseData(new Coordinate(0.0, 0.0), new Coordinate(3.0, 0.0), 9.0),
+            new TestCaseData(new Coordinate(0.0, 0.0), new Coordinate(0.0, 2.0), 4.0),
+            new TestCaseData(new Coordinate(-5.0, 0.0), new Coordinate(0.0, 0.0), 25.0),
+            new TestCaseData(new Coordinate(0.0, -4.0), new Coordinate(0.0, 0.0), 16.0),
+            new TestCaseData(new Coordinate(0.0, 0.0), new Coordinate(-3.0, 0.0), 9.0),
+            new TestCaseData(new Coordinate(0.0, 0.0), new Coordinate(0.0, -2.0), 4.0),
+            new TestCaseData(new Coordinate(5.0, 4.0), new Coordinate(0.0, 0.0), 41.0),
+            new TestCaseData(new Coordinate(0.0, 0.0), new Coordinate(10.0, 10.0), 200.0),
+            new TestCaseData(new Coordinate(3.0, 2.0), new Coordinate(5.0, 5.0), 13.0),
+            new TestCaseData(new Coordinate(-3.0, -2.0), new Coordinate(5.0, 5.0), 113.0),
+            new TestCaseData(new Coordinate(3.0, 2.0), new Coordinate(-5.0, -5.0), 113.0),
+        };
+
         [Test]
         public void Constructor_ExpectedValues()
         {
@@ -109,23 +127,5 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.Calculators
             var exception = Assert.Throws<ArgumentNullException>(Call);
             Assert.That(exception, Has.Property("ParamName").EqualTo("coordinateB"));
         }
-
-        private static IEnumerable<TestCaseData> SquaredTestData => new[]
-        {
-            new TestCaseData(new Coordinate(0.0, 0.0), new Coordinate(0.0, 0.0), 0.0),
-            new TestCaseData(new Coordinate(5.0, 0.0), new Coordinate(0.0, 0.0), 25.0),
-            new TestCaseData(new Coordinate(0.0, 4.0), new Coordinate(0.0, 0.0), 16.0),
-            new TestCaseData(new Coordinate(0.0, 0.0), new Coordinate(3.0, 0.0), 9.0),
-            new TestCaseData(new Coordinate(0.0, 0.0), new Coordinate(0.0, 2.0), 4.0),
-            new TestCaseData(new Coordinate(-5.0, 0.0), new Coordinate(0.0, 0.0), 25.0),
-            new TestCaseData(new Coordinate(0.0, -4.0), new Coordinate(0.0, 0.0), 16.0),
-            new TestCaseData(new Coordinate(0.0, 0.0), new Coordinate(-3.0, 0.0), 9.0),
-            new TestCaseData(new Coordinate(0.0, 0.0), new Coordinate(0.0, -2.0), 4.0),
-            new TestCaseData(new Coordinate(5.0, 4.0), new Coordinate(0.0, 0.0), 41.0),
-            new TestCaseData(new Coordinate(0.0, 0.0), new Coordinate(10.0, 10.0), 200.0),
-            new TestCaseData(new Coordinate(3.0, 2.0), new Coordinate(5.0, 5.0), 13.0),
-            new TestCaseData(new Coordinate(-3.0, -2.0), new Coordinate(5.0, 5.0), 113.0),
-            new TestCaseData(new Coordinate(3.0, 2.0), new Coordinate(-5.0, -5.0), 113.0),
-        };
     }
 }

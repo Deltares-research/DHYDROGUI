@@ -19,17 +19,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers.Providers
         protected override Func<IWaveLayerFactory, ILayerSubProvider> ConstructorCall { get; } =
             factory => new WaveModelLayerSubProvider(factory);
 
-        protected override object GetValidSourceData() => waveModel;
-
-        protected override object GetValidParentData() => null;
-
-        protected override object GetInvalidSourceData() => new object();
-
-        protected override object GetInvalidParentData() => null;
-
-        protected override ILayer ExpectedCall(IWaveLayerFactory FactoryMock) =>
-            FactoryMock.CreateModelGroupLayer(waveModel);
-
         [Test]
         public void GenerateChildLayerObjects_NotModelAsData_ReturnsEmptyEnumerable()
         {
@@ -66,5 +55,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers.Providers
 
             Assert.That(result.Count(x => x is BoundaryMapFeaturesContainer), Is.EqualTo(1));
         }
+
+        protected override object GetValidSourceData() => waveModel;
+
+        protected override object GetValidParentData() => null;
+
+        protected override object GetInvalidSourceData() => new object();
+
+        protected override object GetInvalidParentData() => null;
+
+        protected override ILayer ExpectedCall(IWaveLayerFactory FactoryMock) =>
+            FactoryMock.CreateModelGroupLayer(waveModel);
     }
 }

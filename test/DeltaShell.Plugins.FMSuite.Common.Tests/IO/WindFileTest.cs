@@ -14,15 +14,15 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
         [TestCase(@"windFiles\myWindFile2.apwxwy", "wind2.grd")]
         public void GivenApwxwyFile_WhenReading_GridFileNameIsReturned(string relativeTestFilePath, string expectedGridFileName)
         {
-            var testFilePath = GetFullTestFilePath(relativeTestFilePath);
-            var apwxwyDir = Path.GetDirectoryName(testFilePath);
+            string testFilePath = GetFullTestFilePath(relativeTestFilePath);
+            string apwxwyDir = Path.GetDirectoryName(testFilePath);
             Assert.IsNotNull(apwxwyDir);
 
             try
             {
-                var gridFilePath = WindFile.GetCorrespondingGridFilePath(testFilePath);
-                Assert.That(gridFilePath, 
-                    Is.EqualTo(Path.Combine(apwxwyDir, expectedGridFileName)));
+                string gridFilePath = WindFile.GetCorrespondingGridFilePath(testFilePath);
+                Assert.That(gridFilePath,
+                            Is.EqualTo(Path.Combine(apwxwyDir, expectedGridFileName)));
             }
             finally
             {
@@ -34,11 +34,11 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
         [TestCase("NonExistingFilePath.apwxwy")]
         public void GivenApwxwyFilePath_WhenReadingAndNoGridFileIsFound_NullShouldBeReturned(string relativeTestFilePath)
         {
-            var testFilePath = GetFullTestFilePath(relativeTestFilePath);
+            string testFilePath = GetFullTestFilePath(relativeTestFilePath);
 
             try
             {
-                var gridFilePath = WindFile.GetCorrespondingGridFilePath(testFilePath);
+                string gridFilePath = WindFile.GetCorrespondingGridFilePath(testFilePath);
                 Assert.IsNull(gridFilePath);
             }
             finally
@@ -51,14 +51,18 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
         [TestCase("")]
         public void GivenEmptyFilePath_WhenGettingCorrespondingGridFilePath_NullShouldBeReturned(string nonsenseValueForFilePath)
         {
-            var gridFilePath = WindFile.GetCorrespondingGridFilePath(nonsenseValueForFilePath);
+            string gridFilePath = WindFile.GetCorrespondingGridFilePath(nonsenseValueForFilePath);
             Assert.IsNull(gridFilePath);
         }
 
         private static string GetFullTestFilePath(string relativeTestFilePath)
         {
-            if (relativeTestFilePath == null) return null;
-            var fullFilePath = TestHelper.GetTestFilePath(relativeTestFilePath);
+            if (relativeTestFilePath == null)
+            {
+                return null;
+            }
+
+            string fullFilePath = TestHelper.GetTestFilePath(relativeTestFilePath);
             return TestHelper.CreateLocalCopy(fullFilePath);
         }
     }

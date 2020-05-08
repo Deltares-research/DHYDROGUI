@@ -96,7 +96,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.Calculators
                 {
                     grid.X.Values[i, j] = i;
                     grid.Y.Values[i, j] = j;
-
                 }
             }
 
@@ -108,7 +107,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.Calculators
             IEnumerable<GridBoundaryCoordinate> result = calculator.SnapCoordinateToGridBoundaryCoordinate(coordinateRef);
 
             // Assert
-            var expectedResult = new List<GridBoundaryCoordinate>() { new GridBoundaryCoordinate(GridSide.East, 2) };
+            var expectedResult = new List<GridBoundaryCoordinate>() {new GridBoundaryCoordinate(GridSide.East, 2)};
 
             Assert.That(result, Is.EquivalentTo(expectedResult));
         }
@@ -127,7 +126,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.Calculators
                 {
                     grid.X.Values[i, j] = i;
                     grid.Y.Values[i, j] = j;
-
                 }
             }
 
@@ -148,8 +146,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.Calculators
             Assert.That(result, Is.EquivalentTo(expectedResult));
         }
 
-
-
         [Test]
         public void GivenABoundarySnappingCalculator_WhenSnapCoordinateToGridBoundaryIsCalledWithAToleranceAndASourcePointOutsideOfTheTolerance_ThenAnEmptyCoordinateSetIsReturned()
         {
@@ -164,7 +160,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.Calculators
                 {
                     grid.X.Values[i, j] = i;
                     grid.Y.Values[i, j] = j;
-
                 }
             }
 
@@ -204,26 +199,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.Calculators
             Assert.That(result, Is.EquivalentTo(expectedResult));
         }
 
-        [TestCaseSource(nameof(CoordinateFromDistanceTestData))]
-        public void CalculateCoordinateFromSupportPoint_CorrectResultIsReturned(SupportPoint supportPoint,
-                                                                                Coordinate expectedCoordinate)
-        {
-            // Setup
-            const int x = 10;
-            const int y = 10;
-
-            GridBoundary gridBoundary = GridBoundaryTestHelper.GetGridBoundaryWithMockedGrid(x, y, out IDiscreteGridPointCoverage grid);
-
-            var calculator = new BoundarySnappingCalculator(gridBoundary);
-
-            // Call
-            Coordinate result = calculator.CalculateCoordinateFromSupportPoint(supportPoint);
-
-            // Assert
-            Assert.That(result.Equals2D(expectedCoordinate, 1E-15), $"Expected: {expectedCoordinate} \n" +
-                                                                    $"But was:  {result}.");
-        }
-
         [Test]
         public void CalculateCoordinateFromSupportPoint_SupportPointNull_ThrowsArgumentNullException()
         {
@@ -259,7 +234,44 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.Calculators
             Assert.That(value, Is.EqualTo(Math.Abs(indexA - indexB)));
         }
 
-        [TestCase(2, -1, "indexB" )]
+        [Test]
+        public void CalculateDistanceBetweenBoundaryIndices_UndefinedGridSide_ThrowsInvalidEnumArgumentException()
+        {
+            // Setup
+            var gridBoundary = Substitute.For<IGridBoundary>();
+            var calculator = new BoundarySnappingCalculator(gridBoundary);
+
+            // Call
+            void Call() => calculator.CalculateDistanceBetweenBoundaryIndices(random.Next(),
+                                                                              random.Next(),
+                                                                              0);
+
+            // Assert
+            var exception = Assert.Throws<InvalidEnumArgumentException>(Call);
+            Assert.That(exception.Message, Is.EqualTo("gridSide"));
+        }
+
+        [TestCaseSource(nameof(CoordinateFromDistanceTestData))]
+        public void CalculateCoordinateFromSupportPoint_CorrectResultIsReturned(SupportPoint supportPoint,
+                                                                                Coordinate expectedCoordinate)
+        {
+            // Setup
+            const int x = 10;
+            const int y = 10;
+
+            GridBoundary gridBoundary = GridBoundaryTestHelper.GetGridBoundaryWithMockedGrid(x, y, out IDiscreteGridPointCoverage grid);
+
+            var calculator = new BoundarySnappingCalculator(gridBoundary);
+
+            // Call
+            Coordinate result = calculator.CalculateCoordinateFromSupportPoint(supportPoint);
+
+            // Assert
+            Assert.That(result.Equals2D(expectedCoordinate, 1E-15), $"Expected: {expectedCoordinate} \n" +
+                                                                    $"But was:  {result}.");
+        }
+
+        [TestCase(2, -1, "indexB")]
         [TestCase(2, 5, "indexB")]
         [TestCase(-1, 2, "indexA")]
         [TestCase(5, 2, "indexA")]
@@ -282,26 +294,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.Calculators
             Assert.That(exception.ParamName, Is.EqualTo(paramName));
         }
 
-        [Test]
-        public void CalculateDistanceBetweenBoundaryIndices_UndefinedGridSide_ThrowsInvalidEnumArgumentException()
-        {
-            // Setup
-            var gridBoundary = Substitute.For<IGridBoundary>();
-            var calculator = new BoundarySnappingCalculator(gridBoundary);
-
-            // Call
-            void Call() => calculator.CalculateDistanceBetweenBoundaryIndices(random.Next(),
-                                                                              random.Next(),
-                                                                              0);
-
-            // Assert
-            var exception = Assert.Throws<InvalidEnumArgumentException>(Call);
-            Assert.That(exception.Message, Is.EqualTo("gridSide"));
-        }
-
         /// <remarks>
         /// Assumes grid of 10x10;
-        /// </remarks>>
+        /// </remarks>
+        /// >
         private IEnumerable<TestCaseData> CoordinateFromDistanceTestData()
         {
             const int maxIndex = 9;

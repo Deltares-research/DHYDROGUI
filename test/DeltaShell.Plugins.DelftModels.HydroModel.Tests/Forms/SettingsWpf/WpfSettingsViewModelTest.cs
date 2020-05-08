@@ -30,7 +30,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.SettingsWpf
             // Setup
             using (var viewModel = new WpfSettingsViewModel())
             {
-
                 var wpfGuiCategoryVisible = new WpfGuiCategory("cat", null);
                 var wpfGuiCategoryHidden = new WpfGuiCategory("cat2", null)
                 {
@@ -58,19 +57,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.SettingsWpf
             // Given
             var category = new WpfGuiCategory("category", new[]
             {
-                new FieldUIDescription(null, (o, v) => {})
-                {
-                    ValueType = typeof(object)
-                }
+                new FieldUIDescription(null, (o, v) => {}) {ValueType = typeof(object)}
             });
-            var categories = new ObservableCollection<WpfGuiCategory>
-            {
-                category
-            };
-            using (var viewModel = new WpfSettingsViewModel
-            {
-                SettingsCategories = categories
-            })
+            var categories = new ObservableCollection<WpfGuiCategory> {category};
+            using (var viewModel = new WpfSettingsViewModel {SettingsCategories = categories})
             {
                 var isCollectionChanged = false;
                 viewModel.SettingsCategories.CollectionChanged += (sender, args) => isCollectionChanged = true;
@@ -90,31 +80,19 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.SettingsWpf
                 CollectionAssert.IsEmpty(viewModel.SettingsCategories);
             }
         }
-        
+
         [Test]
         public void GivenViewModelWithCategories_WhenSettingNewGuiCategoriesAndOldSettingsRaisePropertyChangedEvent_ThenNothingHappens()
         {
             // Given
             var oldCategory = new WpfGuiCategory("oldCategory", new[]
             {
-                new FieldUIDescription(null, (o, v) => {})
-                {
-                    ValueType = typeof(object)
-                }
+                new FieldUIDescription(null, (o, v) => {}) {ValueType = typeof(object)}
             });
-            using (var viewModel = new WpfSettingsViewModel
-            {
-                SettingsCategories = new ObservableCollection<WpfGuiCategory>
-                {
-                    oldCategory
-                }
-            })
+            using (var viewModel = new WpfSettingsViewModel {SettingsCategories = new ObservableCollection<WpfGuiCategory> {oldCategory}})
             {
                 var newCategory = new WpfGuiCategory("newCategory", null);
-                var newCategories = new ObservableCollection<WpfGuiCategory>
-                {
-                    newCategory
-                };
+                var newCategories = new ObservableCollection<WpfGuiCategory> {newCategory};
                 viewModel.SettingsCategories = newCategories;
 
                 var isCollectionChanged = false;
@@ -139,12 +117,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.SettingsWpf
             // Given
             var category = new WpfGuiCategory("category", new[]
             {
-                new FieldUIDescription(null, (o, v) => {})
-                {
-                    ValueType = typeof(object)
-                }
+                new FieldUIDescription(null, (o, v) => {}) {ValueType = typeof(object)}
             });
-            IEnumerable<WpfGuiCategory> categories = new []
+            IEnumerable<WpfGuiCategory> categories = new[]
             {
                 category
             };

@@ -15,68 +15,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.GeometricDefinitions
     [TestFixture]
     public class WaveBoundaryGeometricDefinitionFactoryHelperTest
     {
-        [Test]
-        [TestCaseSource(nameof(TestCaseDataSmallerThanTwoDistinctCoordinates))]
-        public void GetSnappedEndPoints_CoordinatesContainsLessThanTwoDistinctCoordinates_ThrowsArgumentException(
-            IEnumerable<Coordinate> coordinates)
-        {
-            // Given
-            var calculator = Substitute.For<IBoundarySnappingCalculator>();
-
-            // When
-            void Call() => WaveBoundaryGeometricDefinitionFactoryHelper.GetSnappedEndPoints(calculator, coordinates);
-
-            // Then
-            var exception = Assert.Throws<ArgumentException>(
-                Call, $"Expected {nameof(WaveBoundaryFactoryHelper.GetSnappedEndPoints)} to throw an {nameof(ArgumentException)}");
-            Assert.That(exception.Message, Is.EqualTo("There should be two or more distinct coordinates in coordinates."),
-                        "Expected a different message:");
-        }
-
-        [Test]
-        [TestCaseSource(nameof(TestCaseDataGetSnappedEndpoints))]
-        public void GetSnappedEndPoints_ReturnsCorrectResult(IEnumerable<Coordinate> coordinates)
-        {
-            // Given
-            var coordinateComparer = new Coordinate2DEqualityComparer();
-
-            Coordinate[] coordinatesArray = coordinates.ToArray();
-
-            var calculator = Substitute.For<IBoundarySnappingCalculator>();
-
-            var firstGridCoordinates = new[]
-            {
-                new GridBoundaryCoordinate(GridSide.East, 0),
-                new GridBoundaryCoordinate(GridSide.North, 10)
-            };
-
-            var lastGridCoordinates = new[]
-            {
-                new GridBoundaryCoordinate(GridSide.East, 10),
-                new GridBoundaryCoordinate(GridSide.South, 0),
-            };
-
-            calculator.SnapCoordinateToGridBoundaryCoordinate(coordinatesArray.First())
-                      .Returns(firstGridCoordinates);
-            calculator.SnapCoordinateToGridBoundaryCoordinate(coordinatesArray.Last())
-                      .Returns(lastGridCoordinates);
-
-            // When
-            IEnumerable<GridBoundaryCoordinate>
-                result = WaveBoundaryGeometricDefinitionFactoryHelper.GetSnappedEndPoints(calculator, coordinatesArray);
-
-            // Then
-            calculator.Received(1).SnapCoordinateToGridBoundaryCoordinate(coordinatesArray.First());
-            calculator.Received(1).SnapCoordinateToGridBoundaryCoordinate(coordinatesArray.Last());
-            calculator.DidNotReceive().SnapCoordinateToGridBoundaryCoordinate(
-                Arg.Is<Coordinate>(x => !coordinateComparer.Equals(x, coordinatesArray.First()) &&
-                                        !coordinateComparer.Equals(x, coordinatesArray.Last())));
-
-            IEnumerable<GridBoundaryCoordinate> expectedResult = lastGridCoordinates.Concat(firstGridCoordinates);
-            Assert.That(result, Is.EquivalentTo(expectedResult),
-                        $"Expected the result of {nameof(IWaveBoundaryFactoryHelper.GetSnappedEndPoints)} to be different:");
-        }
-
         private static IEnumerable<TestCaseData> TestCaseDataGetSnappedEndpoints
         {
             get
@@ -184,21 +122,71 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.GeometricDefinitions
             }
         }
 
-        private static IEnumerable<TestCaseData> GetGeometricDefinitionFromOrientationData()
+        [Test]
+        [TestCaseSource(nameof(TestCaseDataSmallerThanTwoDistinctCoordinates))]
+        public void GetSnappedEndPoints_CoordinatesContainsLessThanTwoDistinctCoordinates_ThrowsArgumentException(
+            IEnumerable<Coordinate> coordinates)
         {
-                yield return new TestCaseData(BoundaryOrientationType.East, Vector2D.Create(1.0, 0.0));
-                yield return new TestCaseData(BoundaryOrientationType.NorthEast, Vector2D.Create(1.0, 1.0));
-                yield return new TestCaseData(BoundaryOrientationType.North, Vector2D.Create(0.0, 1.0));
-                yield return new TestCaseData(BoundaryOrientationType.NorthWest, Vector2D.Create(-1.0, 1.0));
-                yield return new TestCaseData(BoundaryOrientationType.West, Vector2D.Create(-1.0, 0.0));
-                yield return new TestCaseData(BoundaryOrientationType.SouthWest, Vector2D.Create(-1.0, -1.0));
-                yield return new TestCaseData(BoundaryOrientationType.South, Vector2D.Create(0.0, -1.0));
-                yield return new TestCaseData(BoundaryOrientationType.SouthEast, Vector2D.Create(1.0, -1.0));
+            // Given
+            var calculator = Substitute.For<IBoundarySnappingCalculator>();
+
+            // When
+            void Call() => WaveBoundaryGeometricDefinitionFactoryHelper.GetSnappedEndPoints(calculator, coordinates);
+
+            // Then
+            var exception = Assert.Throws<ArgumentException>(
+                Call, $"Expected {nameof(WaveBoundaryFactoryHelper.GetSnappedEndPoints)} to throw an {nameof(ArgumentException)}");
+            Assert.That(exception.Message, Is.EqualTo("There should be two or more distinct coordinates in coordinates."),
+                        "Expected a different message:");
+        }
+
+        [Test]
+        [TestCaseSource(nameof(TestCaseDataGetSnappedEndpoints))]
+        public void GetSnappedEndPoints_ReturnsCorrectResult(IEnumerable<Coordinate> coordinates)
+        {
+            // Given
+            var coordinateComparer = new Coordinate2DEqualityComparer();
+
+            Coordinate[] coordinatesArray = coordinates.ToArray();
+
+            var calculator = Substitute.For<IBoundarySnappingCalculator>();
+
+            var firstGridCoordinates = new[]
+            {
+                new GridBoundaryCoordinate(GridSide.East, 0),
+                new GridBoundaryCoordinate(GridSide.North, 10)
+            };
+
+            var lastGridCoordinates = new[]
+            {
+                new GridBoundaryCoordinate(GridSide.East, 10),
+                new GridBoundaryCoordinate(GridSide.South, 0),
+            };
+
+            calculator.SnapCoordinateToGridBoundaryCoordinate(coordinatesArray.First())
+                      .Returns(firstGridCoordinates);
+            calculator.SnapCoordinateToGridBoundaryCoordinate(coordinatesArray.Last())
+                      .Returns(lastGridCoordinates);
+
+            // When
+            IEnumerable<GridBoundaryCoordinate>
+                result = WaveBoundaryGeometricDefinitionFactoryHelper.GetSnappedEndPoints(calculator, coordinatesArray);
+
+            // Then
+            calculator.Received(1).SnapCoordinateToGridBoundaryCoordinate(coordinatesArray.First());
+            calculator.Received(1).SnapCoordinateToGridBoundaryCoordinate(coordinatesArray.Last());
+            calculator.DidNotReceive().SnapCoordinateToGridBoundaryCoordinate(
+                Arg.Is<Coordinate>(x => !coordinateComparer.Equals(x, coordinatesArray.First()) &&
+                                        !coordinateComparer.Equals(x, coordinatesArray.Last())));
+
+            IEnumerable<GridBoundaryCoordinate> expectedResult = lastGridCoordinates.Concat(firstGridCoordinates);
+            Assert.That(result, Is.EquivalentTo(expectedResult),
+                        $"Expected the result of {nameof(IWaveBoundaryFactoryHelper.GetSnappedEndPoints)} to be different:");
         }
 
         [Test]
         [TestCaseSource(nameof(GetGeometricDefinitionFromOrientationData))]
-        public void GetGeometricDefinition_Orientation(BoundaryOrientationType orientation, 
+        public void GetGeometricDefinition_Orientation(BoundaryOrientationType orientation,
                                                        Vector2D normal)
         {
             // Setup
@@ -217,7 +205,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.GeometricDefinitions
                 endCoord
             });
 
-            calculator.GridBoundary.GetSideAlignedWithNormal(Arg.Is<Vector2D>(n => Math.Abs(n.X - normal.X) < 0.0001 && 
+            calculator.GridBoundary.GetSideAlignedWithNormal(Arg.Is<Vector2D>(n => Math.Abs(n.X - normal.X) < 0.0001 &&
                                                                                    Math.Abs(n.Y - normal.Y) < 0.0001))
                       .Returns(expectedSide);
 
@@ -234,6 +222,18 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.GeometricDefinitions
             Assert.That(geometricDefinition.EndingIndex, Is.EqualTo(endIndex));
             Assert.That(geometricDefinition.GridSide, Is.EqualTo(expectedSide));
             Assert.That(geometricDefinition.Length, Is.EqualTo(expectedLength));
+        }
+
+        private static IEnumerable<TestCaseData> GetGeometricDefinitionFromOrientationData()
+        {
+            yield return new TestCaseData(BoundaryOrientationType.East, Vector2D.Create(1.0, 0.0));
+            yield return new TestCaseData(BoundaryOrientationType.NorthEast, Vector2D.Create(1.0, 1.0));
+            yield return new TestCaseData(BoundaryOrientationType.North, Vector2D.Create(0.0, 1.0));
+            yield return new TestCaseData(BoundaryOrientationType.NorthWest, Vector2D.Create(-1.0, 1.0));
+            yield return new TestCaseData(BoundaryOrientationType.West, Vector2D.Create(-1.0, 0.0));
+            yield return new TestCaseData(BoundaryOrientationType.SouthWest, Vector2D.Create(-1.0, -1.0));
+            yield return new TestCaseData(BoundaryOrientationType.South, Vector2D.Create(0.0, -1.0));
+            yield return new TestCaseData(BoundaryOrientationType.SouthEast, Vector2D.Create(1.0, -1.0));
         }
     }
 }

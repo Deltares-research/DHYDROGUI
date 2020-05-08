@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using DelftTools.Controls;
 using DelftTools.Functions;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
@@ -31,9 +32,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         [Test]
         public void OpenedMonitoringOutputViewsAreClosedAfterRemovingMonitoringOutput()
         {
-            using (var gui = CreateDeltaShellGuiWithMonitoringOutputView())
+            using (DeltaShellGui gui = CreateDeltaShellGuiWithMonitoringOutputView())
             {
-                var waterQualityModel1D = gui.Application.Project.RootFolder.Items.OfType<WaterQualityModel>().First();
+                WaterQualityModel waterQualityModel1D = gui.Application.Project.RootFolder.Items.OfType<WaterQualityModel>().First();
 
                 // Remove the monitoring output data item
                 waterQualityModel1D.MonitoringOutputDataItemSet.DataItems.Clear();
@@ -46,9 +47,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         [Test]
         public void OpenedMonitoringOutputViewsAreClosedAfterRemovingMonitoringOutputDataItemSet()
         {
-            using (var gui = CreateDeltaShellGuiWithMonitoringOutputView())
+            using (DeltaShellGui gui = CreateDeltaShellGuiWithMonitoringOutputView())
             {
-                var waterQualityModel1D = gui.Application.Project.RootFolder.Items.OfType<WaterQualityModel>().First();
+                WaterQualityModel waterQualityModel1D = gui.Application.Project.RootFolder.Items.OfType<WaterQualityModel>().First();
 
                 // Remove the monitoring output data item set
                 waterQualityModel1D.DataItems.Remove(waterQualityModel1D.MonitoringOutputDataItemSet);
@@ -62,7 +63,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         [Category(TestCategory.Slow)]
         public void OpenedMonitoringOutputViewsAreClosedAfterRemovingModel()
         {
-            using (var gui = CreateDeltaShellGuiWithMonitoringOutputView())
+            using (DeltaShellGui gui = CreateDeltaShellGuiWithMonitoringOutputView())
             {
                 // Remove the model
                 gui.Application.Project.RootFolder.Items.Clear();
@@ -76,7 +77,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         [Category(TestCategory.Slow)]
         public void OpenedMonitoringOutputViewsAreClosedAfterClosingProject()
         {
-            using (var gui = CreateDeltaShellGuiWithMonitoringOutputView())
+            using (DeltaShellGui gui = CreateDeltaShellGuiWithMonitoringOutputView())
             {
                 // Close the current project by creating a new one
                 gui.Application.CreateNewProject();
@@ -85,7 +86,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
                 Assert.AreEqual(0, gui.DocumentViews.Count);
             }
         }
-        
+
         [Test]
         public void SubstanceProcessLibraryViewTextsAreUpdatedAfterSubFileImport()
         {
@@ -133,26 +134,30 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             mocks.ReplayAll();
 
             var substanceProcessLibraryView = new SubstanceProcessLibraryView
-                {
-                    Text = "Test",
-                    Data = substanceProcessLibrary
-                };
+            {
+                Text = "Test",
+                Data = substanceProcessLibrary
+            };
 
             documentViews.Add(substanceProcessLibraryView);
 
             Assert.AreEqual("Test", substanceProcessLibraryView.Text);
 
             // Create a plugin gui
-            using (new SharpMapGisGuiPlugin() { Gui = gui})
+            using (new SharpMapGisGuiPlugin() {Gui = gui})
             using (var waterQualityModel1DPluginGui = new WaterQualityModelGuiPlugin {Gui = gui})
             {
-
                 // Fake an import activity finished changed event
                 TypeUtils.CallPrivateMethod(waterQualityModel1DPluginGui, "ActivityRunnerOnActivityCompleted",
-                    new object[] {null, new ActivityEventArgs(fileImportActivity)});
+                                            new object[]
+                                            {
+                                                null,
+                                                new ActivityEventArgs(fileImportActivity)
+                                            });
 
                 Assert.AreEqual("Water quality model:Substance process library", substanceProcessLibraryView.Text);
             }
+
             mocks.VerifyAll();
         }
 
@@ -169,24 +174,31 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             gui.Run();
 
             // Create a WaterQualityModel1D with dummy WaterQualityObservationVariableOutput and add it to the project root folder
-            var waterQualityModel1D = new WaterQualityModel { ModelSettings = { MonitoringOutputLevel = MonitoringOutputLevel.Points } };
-            var observationVariableOutput = new WaterQualityObservationVariableOutput(new List<DelftTools.Utils.Tuple<string, string>> { new DelftTools.Utils.Tuple<string, string>("Substance 1", ""), new DelftTools.Utils.Tuple<string, string>("Substance 2", "") });
+            var waterQualityModel1D = new WaterQualityModel {ModelSettings = {MonitoringOutputLevel = MonitoringOutputLevel.Points}};
+            var observationVariableOutput = new WaterQualityObservationVariableOutput(new List<DelftTools.Utils.Tuple<string, string>>
+            {
+                new DelftTools.Utils.Tuple<string, string>("Substance 1", ""),
+                new DelftTools.Utils.Tuple<string, string>("Substance 2", "")
+            });
 
             waterQualityModel1D.MonitoringOutputDataItemSet.DataItems.Add(new DataItem(observationVariableOutput));
             gui.Application.Project.RootFolder.Add(waterQualityModel1D);
 
             // Create a dummy MultipleFunctionView and add it to the document views
-            var functions = new List<IFunction>(new[] { observationVariableOutput.TimeSeriesList.First() }).AsEnumerable();
-            var viewInfo = waterQualityModel1DGuiPlugin.GetViewInfoObjects().FirstOrDefault(vi => vi.DataType == typeof(WaterQualityObservationVariableOutput));
-            
+            IEnumerable<IFunction> functions = new List<IFunction>(new[]
+            {
+                observationVariableOutput.TimeSeriesList.First()
+            }).AsEnumerable();
+            ViewInfo viewInfo = waterQualityModel1DGuiPlugin.GetViewInfoObjects().FirstOrDefault(vi => vi.DataType == typeof(WaterQualityObservationVariableOutput));
+
             viewInfo.GetViewData = d => functions;
-                
+
             var multipleFunctionView = new MultipleFunctionView
-                {
-                    Data = functions, 
-                    Text = "Multiple function view",
-                    ViewInfo = viewInfo
-                };
+            {
+                Data = functions,
+                Text = "Multiple function view",
+                ViewInfo = viewInfo
+            };
 
             gui.DocumentViews.Add(multipleFunctionView);
 

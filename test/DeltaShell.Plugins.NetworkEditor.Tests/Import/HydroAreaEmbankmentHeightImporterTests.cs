@@ -7,7 +7,7 @@ using NUnit.Framework;
 namespace DeltaShell.Plugins.NetworkEditor.Tests.Import
 {
     [TestFixture]
-    class HydroAreaEmbankmentHeightImporterTests
+    internal class HydroAreaEmbankmentHeightImporterTests
     {
         private string _embankmentsPath;
         private string _embankmentHeightsPath;
@@ -22,13 +22,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Import
         }
 
         [Test]
-        [ExpectedException(typeof (InvalidOperationException))]
+        [ExpectedException(typeof(InvalidOperationException))]
         public void TestImportItem_NoPath()
         {
             var heightImporter = new HydroAreaEmbankmentHeightImporter();
             heightImporter.ImportItem("");
         }
-        
+
         [Test]
         [ExpectedException(typeof(InvalidOperationException))]
         public void TestImportItem_NoTarget()
@@ -44,7 +44,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Import
             var heightImporter = new HydroAreaEmbankmentHeightImporter();
             heightImporter.ImportItem(_embankmentHeightsPath, new object());
         }
-        
+
         [Test]
         [Category(TestCategory.DataAccess)]
         [Category(TestCategory.Slow)]
@@ -53,7 +53,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Import
             var embankmentImporter = new HydroAreaEmbankmentImporter();
             embankmentImporter.ImportItem(_embankmentsPath, _hydroArea);
 
-            Assert.That((_hydroArea.Embankments[0].Geometry.Coordinates[0].Z).Equals(0));
+            Assert.That(_hydroArea.Embankments[0].Geometry.Coordinates[0].Z.Equals(0));
 
             var heightImporter = new HydroAreaEmbankmentHeightImporter();
             heightImporter.ImportItem(_embankmentHeightsPath, _hydroArea);

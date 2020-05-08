@@ -1,6 +1,7 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using DelftTools.Hydro;
+using DelftTools.Utils.Collections.Generic;
+using DelftTools.Utils.Validation;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using DeltaShell.Plugins.FMSuite.FlowFM.Validation;
@@ -14,23 +15,23 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
     {
         private WaterFlowFMModel flowFmModel;
         private GroupableFeature2DPolygon validEnclosureFeature;
-        
+
         [SetUp]
         public void Setup()
         {
             flowFmModel = new WaterFlowFMModel();
             flowFmModel.Grid = UnstructuredGridTestHelper.GenerateRegularGrid(10, 10, 10, 10);
             validEnclosureFeature = FlowFMTestHelper.CreateFeature2DPolygonFromGeometry(
-                                    "Enclosure01", 
-                                    FlowFMTestHelper.GetValidGeometryForEnclosureExample());
+                "Enclosure01",
+                FlowFMTestHelper.GetValidGeometryForEnclosureExample());
             flowFmModel.Area.Enclosures.Add(validEnclosureFeature);
         }
 
         [Test]
         public void EnclosureValidationIsIncludedInWaterFlowFmValidationTest()
         {
-            var report = flowFmModel.Validate();
-            var enclosureSubReport = report.SubReports.FirstOrDefault(sr => sr.Category.Equals("Enclosure"));
+            ValidationReport report = flowFmModel.Validate();
+            ValidationReport enclosureSubReport = report.SubReports.FirstOrDefault(sr => sr.Category.Equals("Enclosure"));
             Assert.NotNull(enclosureSubReport);
             Assert.AreEqual(0, enclosureSubReport.Issues.Count());
         }
@@ -38,21 +39,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
         [Test]
         public void OnlyOneEnclosurePerModelValidationTest()
         {
-            var validationReport = WaterFlowFMEnclosureValidator.Validate(flowFmModel);
+            ValidationReport validationReport = WaterFlowFMEnclosureValidator.Validate(flowFmModel);
             Assert.AreEqual(0, validationReport.ErrorCount);
 
-            var enclosures = flowFmModel.Area.Enclosures;
+            IEventedList<GroupableFeature2DPolygon> enclosures = flowFmModel.Area.Enclosures;
             enclosures.Add(FlowFMTestHelper.CreateFeature2DPolygonFromGeometry(
-                            "Enclosure02", 
-                            FlowFMTestHelper.GetValidGeometryForEnclosureExample()));
+                               "Enclosure02",
+                               FlowFMTestHelper.GetValidGeometryForEnclosureExample()));
             validationReport = WaterFlowFMEnclosureValidator.Validate(flowFmModel);
             Assert.AreEqual(1, validationReport.ErrorCount);
 
-            var errorFound = validationReport.AllErrors.FirstOrDefault( e => e.Subject.Equals(flowFmModel.Area.Enclosures));
+            ValidationIssue errorFound = validationReport.AllErrors.FirstOrDefault(e => e.Subject.Equals(flowFmModel.Area.Enclosures));
             Assert.NotNull(errorFound);
 
-            var enclosuresNames = String.Join(", ", enclosures.Select(e => e.Name));
-            var expectedErrorMessage = string.Format(
+            string enclosuresNames = string.Join(", ", enclosures.Select(e => e.Name));
+            string expectedErrorMessage = string.Format(
                 Resources
                     .WaterFlowFMEnclosureValidator_Validate_Only_one_enclosure_per_model_is_allowed__Enclosures_in_model___0_,
                 enclosuresNames);
@@ -64,7 +65,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
         [Test]
         public void ValidEnclosurePolygonPassesValidationTest()
         {
-            var validationReport = WaterFlowFMEnclosureValidator.Validate(flowFmModel);
+            ValidationReport validationReport = WaterFlowFMEnclosureValidator.Validate(flowFmModel);
             Assert.AreEqual(0, validationReport.ErrorCount);
             Assert.AreEqual(1, flowFmModel.Area.Enclosures.Count);
 
@@ -78,24 +79,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
         [Test]
         public void InvalidEnclosureGeometryTypeFailsValidationTest()
         {
-            var enclosures = flowFmModel.Area.Enclosures;
+            IEventedList<GroupableFeature2DPolygon> enclosures = flowFmModel.Area.Enclosures;
             //Remove valid enclosures from setup
             enclosures.Clear();
             Assert.AreEqual(0, flowFmModel.Area.Enclosures.Count);
             Assert.IsFalse(flowFmModel.Grid.IsEmpty);
 
             var featureName = "Enclosure02";
-            var invalidEnclosureFeature = FlowFMTestHelper.CreateFeature2DPolygonFromGeometry(
-                            featureName, FlowFMTestHelper.GetJustLinearRing());
+            GroupableFeature2DPolygon invalidEnclosureFeature = FlowFMTestHelper.CreateFeature2DPolygonFromGeometry(
+                featureName, FlowFMTestHelper.GetJustLinearRing());
             enclosures.Add(invalidEnclosureFeature);
 
-            var validationReport = WaterFlowFMEnclosureValidator.Validate(flowFmModel);
+            ValidationReport validationReport = WaterFlowFMEnclosureValidator.Validate(flowFmModel);
             Assert.AreEqual(1, validationReport.ErrorCount);
 
-            var errorFound = validationReport.AllErrors.FirstOrDefault(e => e.Subject.Equals(invalidEnclosureFeature));
+            ValidationIssue errorFound = validationReport.AllErrors.FirstOrDefault(e => e.Subject.Equals(invalidEnclosureFeature));
             Assert.NotNull(errorFound);
 
-            var expectedErrorMessage = string.Format(
+            string expectedErrorMessage = string.Format(
                 Resources.WaterFlowFMEnclosureValidator_Validate_GeometryNotValid,
                 featureName);
 
@@ -106,25 +107,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
         [Test]
         public void InvalidEnclosurePolygonFailsValidationTest()
         {
-            var enclosures = flowFmModel.Area.Enclosures;
+            IEventedList<GroupableFeature2DPolygon> enclosures = flowFmModel.Area.Enclosures;
             //Remove valid enclosures from setup
             enclosures.Clear();
             Assert.AreEqual(0, flowFmModel.Area.Enclosures.Count);
             Assert.IsFalse(flowFmModel.Grid.IsEmpty);
 
             var featureName = "Enclosure02";
-            var invalidEnclosureFeature = FlowFMTestHelper.CreateFeature2DPolygonFromGeometry(
-                            featureName,
-                            FlowFMTestHelper.GetInvalidGeometryForEnclosureExample());
+            GroupableFeature2DPolygon invalidEnclosureFeature = FlowFMTestHelper.CreateFeature2DPolygonFromGeometry(
+                featureName,
+                FlowFMTestHelper.GetInvalidGeometryForEnclosureExample());
             enclosures.Add(invalidEnclosureFeature);
 
-            var validationReport = WaterFlowFMEnclosureValidator.Validate(flowFmModel);
+            ValidationReport validationReport = WaterFlowFMEnclosureValidator.Validate(flowFmModel);
             Assert.AreEqual(1, validationReport.ErrorCount);
 
-            var errorFound = validationReport.AllErrors.FirstOrDefault(e => e.Subject.Equals(invalidEnclosureFeature));
+            ValidationIssue errorFound = validationReport.AllErrors.FirstOrDefault(e => e.Subject.Equals(invalidEnclosureFeature));
             Assert.NotNull(errorFound);
 
-            var expectedErrorMessage = string.Format(
+            string expectedErrorMessage = string.Format(
                 Resources.WaterFlowFMEnclosureValidator_Validate_Drawn_polygon_not__0__not_valid,
                 featureName);
 

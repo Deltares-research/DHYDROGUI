@@ -1,6 +1,6 @@
-﻿using DeltaShell.NGHS.TestUtils;
+﻿using System.Collections.Generic;
+using DeltaShell.NGHS.TestUtils;
 using DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries;
-using System.Collections.Generic;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
 {

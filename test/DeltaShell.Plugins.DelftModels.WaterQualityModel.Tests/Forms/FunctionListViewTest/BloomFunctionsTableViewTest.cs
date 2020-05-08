@@ -12,7 +12,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Forms.FunctionL
         [Category(TestCategory.WindowsForms)]
         public void OpenTableViewTest()
         {
-            var functionListView = new BloomFunctionsTableView { Data = BloomInfoTest.CreateFunctionList(), BloomInfo = BloomInfoTest.CreateBloomInfo(), };
+            var functionListView = new BloomFunctionsTableView
+            {
+                Data = BloomInfoTest.CreateFunctionList(),
+                BloomInfo = BloomInfoTest.CreateBloomInfo(),
+            };
 
             WindowsFormsTestHelper.ShowModal(functionListView);
         }

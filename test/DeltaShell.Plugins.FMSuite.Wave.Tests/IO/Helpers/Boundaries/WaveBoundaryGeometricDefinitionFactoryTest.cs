@@ -135,7 +135,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             var factory = new WaveBoundaryGeometricDefinitionFactory(calculatorProvider);
 
             // Call
-            IWaveBoundaryGeometricDefinition result = 
+            IWaveBoundaryGeometricDefinition result =
                 factory.ConstructWaveBoundaryGeometricDefinition(BoundaryOrientationType.East);
 
             // Assert
@@ -149,7 +149,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             const BoundaryOrientationType orientation = BoundaryOrientationType.North;
 
             var calculator = Substitute.For<IBoundarySnappingCalculator>();
-            calculator.GridBoundary.GetSideAlignedWithNormal(Arg.Is<Vector2D>(n => Math.Abs(n.X) < 0.005 && 
+            calculator.GridBoundary.GetSideAlignedWithNormal(Arg.Is<Vector2D>(n => Math.Abs(n.X) < 0.005 &&
                                                                                    Math.Abs(n.Y - 1) < 0.005))
                       .Returns(GridSide.North);
             calculator.GridBoundary[GridSide.North].Returns(new[]
@@ -184,7 +184,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             var inputCoordinate = new Coordinate(10.0, 10.0);
 
             var calculatorProvider = Substitute.For<IBoundarySnappingCalculatorProvider>();
-            
+
             calculatorProvider.GetBoundarySnappingCalculator().ReturnsForAnyArgs((IBoundarySnappingCalculator) null);
             var factory = new WaveBoundaryGeometricDefinitionFactory(calculatorProvider);
 
@@ -193,15 +193,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
 
             // Assert
             Assert.That(result, Is.False);
-        }
-
-        private static IEnumerable<TestCaseData> GetHasInvertedOrderingCoordinatesTestData()
-        {
-            var coord1 = new Coordinate( 5.0, 20.0);
-            var coord2 = new Coordinate(25.0, 20.0);
-
-            yield return new TestCaseData(coord1, coord1, false);
-            yield return new TestCaseData(coord1, coord2, true);
         }
 
         [Test]
@@ -219,7 +210,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
                       .Returns(currentCoordinate);
 
             var calculatorProvider = Substitute.For<IBoundarySnappingCalculatorProvider>();
-            
+
             calculatorProvider.GetBoundarySnappingCalculator().ReturnsForAnyArgs(calculator);
             var factory = new WaveBoundaryGeometricDefinitionFactory(calculatorProvider);
 
@@ -229,16 +220,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             // Assert
             Assert.That(result, Is.EqualTo(expectedResult));
         }
-
-        private static IEnumerable<TestCaseData> GetHasInvertedOrderingCoordinatesParamNullTestData()
-        {
-            var coord = new Coordinate( 5.0, 20.0);
-            var geometricDefinition = Substitute.For<IWaveBoundaryGeometricDefinition>();
-
-            yield return new TestCaseData(geometricDefinition, null, "startCoordinate");
-            yield return new TestCaseData(null, coord, "geometricDefinition");
-        }
-
 
         [Test]
         [TestCaseSource(nameof(GetHasInvertedOrderingCoordinatesParamNullTestData))]
@@ -255,6 +236,24 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
 
             var exception = Assert.Throws<ArgumentNullException>(Call);
             Assert.That(exception.ParamName, Is.EqualTo(expectedParamName));
+        }
+
+        private static IEnumerable<TestCaseData> GetHasInvertedOrderingCoordinatesTestData()
+        {
+            var coord1 = new Coordinate(5.0, 20.0);
+            var coord2 = new Coordinate(25.0, 20.0);
+
+            yield return new TestCaseData(coord1, coord1, false);
+            yield return new TestCaseData(coord1, coord2, true);
+        }
+
+        private static IEnumerable<TestCaseData> GetHasInvertedOrderingCoordinatesParamNullTestData()
+        {
+            var coord = new Coordinate(5.0, 20.0);
+            var geometricDefinition = Substitute.For<IWaveBoundaryGeometricDefinition>();
+
+            yield return new TestCaseData(geometricDefinition, null, "startCoordinate");
+            yield return new TestCaseData(null, coord, "geometricDefinition");
         }
     }
 }

@@ -15,7 +15,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
     [TestFixture]
     public class InputSelectionDialogTest
     {
-        [Test, Category(TestCategory.WindowsForms)]
+        [Test]
+        [Category(TestCategory.WindowsForms)]
         public void ShowWithData()
         {
             var mocks = new MockRepository();
@@ -44,29 +45,41 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
             var feature1 = new MockFeature {Name = "Feature1"};
             var feature2 = new MockFeature {Name = "Feature2"};
 
-            var dataItemsFeature1 = new List<IDataItem> {dataItem1, dataItem2};
-            var dataItemsFeature2 = new List<IDataItem> {dataItem3, dataItem4};
+            var dataItemsFeature1 = new List<IDataItem>
+            {
+                dataItem1,
+                dataItem2
+            };
+            var dataItemsFeature2 = new List<IDataItem>
+            {
+                dataItem3,
+                dataItem4
+            };
             var dialog = new InputSelectionDialog
-                             {
-                                 Features = new List<IFeature>{feature1, feature2},
-                                 GetDataItemsForFeature = (f) =>
-                                     {
-                                         if (f == feature1)
-                                         {
-                                             return dataItemsFeature1;
-                                         }
+            {
+                Features = new List<IFeature>
+                {
+                    feature1,
+                    feature2
+                },
+                GetDataItemsForFeature = (f) =>
+                {
+                    if (f == feature1)
+                    {
+                        return dataItemsFeature1;
+                    }
 
-                                         if (f == feature2)
-                                         {
-                                             return dataItemsFeature2;
-                                         }
+                    if (f == feature2)
+                    {
+                        return dataItemsFeature2;
+                    }
 
-                                         return null;
-                                     }
-                             };
+                    return null;
+                }
+            };
 
             WindowsFormsTestHelper.ShowModal(dialog);
-        } 
+        }
 
         private class MockFeature : IFeature, INameable
         {
@@ -75,12 +88,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
             public IGeometry Geometry { get; set; }
 
             public IFeatureAttributeCollection Attributes { get; set; }
-            
+
             public string Name { get; set; }
 
             public Type GetEntityType()
             {
-                return typeof (MockFeature);
+                return typeof(MockFeature);
             }
 
             public object Clone()

@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using DelftTools.Functions;
 using DelftTools.Functions.Generic;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections;
+using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
@@ -16,20 +18,28 @@ using NUnit.Framework;
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData
 {
     [TestFixture]
-    class SourceAndSinkTest
+    internal class SourceAndSinkTest
     {
         [Test]
         public void IsPointSourceTest()
         {
             var sourceAndSink = new SourceAndSink()
             {
-                Feature = new Feature2D() {Name = "test", Geometry = new Point(new Coordinate(0, 0))}
+                Feature = new Feature2D()
+                {
+                    Name = "test",
+                    Geometry = new Point(new Coordinate(0, 0))
+                }
             };
 
             Assert.NotNull(sourceAndSink);
             Assert.IsTrue(sourceAndSink.IsPointSource);
 
-            sourceAndSink.Feature.Geometry = new LineString(new[] {new Coordinate(0, 0), new Coordinate(1, 1)});
+            sourceAndSink.Feature.Geometry = new LineString(new[]
+            {
+                new Coordinate(0, 0),
+                new Coordinate(1, 1)
+            });
             Assert.IsFalse(sourceAndSink.IsPointSource);
         }
 
@@ -50,14 +60,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData
         {
             var sourceAndSink = new SourceAndSink()
             {
-                Feature = new Feature2D() {Name = "test", Geometry = new Point(new Coordinate(0, 0))}
+                Feature = new Feature2D()
+                {
+                    Name = "test",
+                    Geometry = new Point(new Coordinate(0, 0))
+                }
             };
             Assert.NotNull(sourceAndSink);
 
             /* It should always be the opposit of isPointSource */
             Assert.AreEqual(!sourceAndSink.IsPointSource, sourceAndSink.CanIncludeMomentum);
 
-            sourceAndSink.Feature.Geometry = new LineString(new[] {new Coordinate(0, 0), new Coordinate(1, 1)});
+            sourceAndSink.Feature.Geometry = new LineString(new[]
+            {
+                new Coordinate(0, 0),
+                new Coordinate(1, 1)
+            });
             Assert.AreEqual(!sourceAndSink.IsPointSource, sourceAndSink.CanIncludeMomentum);
         }
 
@@ -67,7 +85,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData
             /* Mainly test the name is correctly replaced. */
             var sourceAndSink = new SourceAndSink();
             sourceAndSink.Feature = new Feature2D() {Name = "test"};
-            int changedProps = 0;
+            var changedProps = 0;
             ((INotifyPropertyChange) sourceAndSink.Feature).PropertyChanged += (s, e) => { changedProps++; };
 
             var newName = "New name";
@@ -81,8 +99,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData
         public void
             GivenAModelWithSourcesAndSinks_WhenAddingTracersAndSedimentsFractionsToModel_ThenTheyShouldBeAddedToComponents()
         {
-            var fractionList = CreateSedimentFractionList();
-            var tracerList = CreateBoundaryConditionList();
+            List<SedimentFraction> fractionList = CreateSedimentFractionList();
+            List<FlowBoundaryCondition> tracerList = CreateBoundaryConditionList();
 
             var sourceSink = new SourceAndSink();
             var boundarySet = new BoundaryConditionSet();
@@ -93,13 +111,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData
                 BoundaryConditionSets = {boundarySet}
             };
 
-            var initialComponentsCount = sourceSink.Function.Components.Count;
+            int initialComponentsCount = sourceSink.Function.Components.Count;
 
             model.SedimentFractions.AddRange(fractionList);
             boundarySet.BoundaryConditions.AddRange(tracerList);
 
-            var finalComponents = sourceSink.Function.Components;
-            var finalComponentsCount = sourceSink.Function.Components.Count;
+            IEventedList<IVariable> finalComponents = sourceSink.Function.Components;
+            int finalComponentsCount = sourceSink.Function.Components.Count;
 
             Assert.AreEqual(fractionList.Count + tracerList.Count, finalComponentsCount - initialComponentsCount);
             fractionList.ForEach(sf => Assert.That(finalComponents.Select(c => c.Name).Contains(sf.Name)));
@@ -110,16 +128,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData
         public void
             GivenAModelWithSourcesAndSinks_WhenRemovingTracersAndSedimentsFractionsToModel_ThenTheyShouldBeRemovedFromComponents()
         {
-            var fractionList = CreateSedimentFractionList();
-            var tracerList = CreateBoundaryConditionList();
+            List<SedimentFraction> fractionList = CreateSedimentFractionList();
+            List<FlowBoundaryCondition> tracerList = CreateBoundaryConditionList();
 
             var sourceSink = new SourceAndSink();
             var boundarySet = new BoundaryConditionSet();
 
             var model = new WaterFlowFMModel
             {
-                SourcesAndSinks = { sourceSink },
-                BoundaryConditionSets = { boundarySet }
+                SourcesAndSinks = {sourceSink},
+                BoundaryConditionSets = {boundarySet}
             };
 
             model.SedimentFractions.AddRange(fractionList);
@@ -140,34 +158,34 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData
         public void
             GivenAModelWithSourcesAndSinks_WhenAddingANewSourceAndSink_ThenTheirFunctionDataShouldBeSynced()
         {
-            var fractionList = CreateSedimentFractionList();
-            var tracerList = CreateBoundaryConditionList();
+            List<SedimentFraction> fractionList = CreateSedimentFractionList();
+            List<FlowBoundaryCondition> tracerList = CreateBoundaryConditionList();
 
             var firstSourceSink = new SourceAndSink();
             var boundarySet = new BoundaryConditionSet();
 
             var model = new WaterFlowFMModel
             {
-                SourcesAndSinks = { firstSourceSink },
-                BoundaryConditionSets = { boundarySet }
+                SourcesAndSinks = {firstSourceSink},
+                BoundaryConditionSets = {boundarySet}
             };
 
             model.SedimentFractions.AddRange(fractionList);
             boundarySet.BoundaryConditions.AddRange(tracerList);
 
-            var componentsFirst = firstSourceSink.Function.Components;
-            var componentsfFirstCount = firstSourceSink.Function.Components.Count;
+            IEventedList<IVariable> componentsFirst = firstSourceSink.Function.Components;
+            int componentsfFirstCount = firstSourceSink.Function.Components.Count;
 
             var newSourceSink = new SourceAndSink();
             model.SourcesAndSinks.Add(newSourceSink);
 
-            var componentsNew = newSourceSink.Function.Components;
-            var componentsNewCount = newSourceSink.Function.Components.Count;
+            IEventedList<IVariable> componentsNew = newSourceSink.Function.Components;
+            int componentsNewCount = newSourceSink.Function.Components.Count;
 
             Assert.AreEqual(
                 componentsfFirstCount, componentsNewCount);
             Assert.AreEqual(
-                componentsFirst.Select(c => c.Name), 
+                componentsFirst.Select(c => c.Name),
                 componentsNew.Select(c => c.Name));
         }
 
@@ -176,7 +194,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData
         {
             // 1. Set up test model
             var sourceAndSink = new SourceAndSink();
-            var acceptedDifference = new TimeSpan(0,0,5);
+            var acceptedDifference = new TimeSpan(0, 0, 5);
             DateTime defaultDateTime = DateTime.Today;
 
             // 2. Verify expectations
@@ -189,7 +207,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData
             TimeSpan defValue = defaultArgument.DefaultValue.ToUniversalTime() - defaultDateTime.ToUniversalTime();
             Assert.That(
                 defValue,
-                Is.LessThan(acceptedDifference), 
+                Is.LessThan(acceptedDifference),
                 $"The default time for source and sink ({defaultArgument.DefaultValue}) does not match the expectations ({defaultDateTime}).");
         }
 
@@ -224,6 +242,5 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData
                 new SedimentFraction {Name = "Fraction_3"}
             };
         }
-
     }
 }

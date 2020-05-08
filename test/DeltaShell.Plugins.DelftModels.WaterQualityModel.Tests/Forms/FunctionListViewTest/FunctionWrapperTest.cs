@@ -23,8 +23,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Forms.FunctionL
             var functionPropertyChangedCount = 0;
             var functionWrapperPropertyChangedCount = 0;
 
-            ((INotifyPropertyChange)function).PropertyChanged += delegate { functionPropertyChangedCount++; };
-            ((INotifyPropertyChange)functionWrapper).PropertyChanged += delegate { functionWrapperPropertyChangedCount++; };
+            ((INotifyPropertyChange) function).PropertyChanged += delegate { functionPropertyChangedCount++; };
+            ((INotifyPropertyChange) functionWrapper).PropertyChanged += delegate { functionWrapperPropertyChangedCount++; };
 
             function.Name = "New name to trigger changed event";
 
@@ -39,15 +39,19 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Forms.FunctionL
             var mocks = new MockRepository();
             var dataOwnerStub = mocks.Stub<IEditableObject>();
 
-            var constantCreator = FunctionTypeCreatorFactory.CreateConstantCreator();
-            var timeseriesCreator = FunctionTypeCreatorFactory.CreateTimeseriesCreator();
+            IFunctionTypeCreator constantCreator = FunctionTypeCreatorFactory.CreateConstantCreator();
+            IFunctionTypeCreator timeseriesCreator = FunctionTypeCreatorFactory.CreateTimeseriesCreator();
 
             const int firstDefault = 10;
-            var constFunc = WaterQualityFunctionFactory.CreateConst("aFunction", firstDefault, "x", "meter", "a");
-            var functionList = new EventedList<IFunction> { constFunc };
+            IFunction constFunc = WaterQualityFunctionFactory.CreateConst("aFunction", firstDefault, "x", "meter", "a");
+            var functionList = new EventedList<IFunction> {constFunc};
 
             var functionWrapper = new FunctionWrapper(constFunc, functionList, dataOwnerStub,
-                new[] {constantCreator, timeseriesCreator});
+                                                      new[]
+                                                      {
+                                                          constantCreator,
+                                                          timeseriesCreator
+                                                      });
 
             Assert.AreEqual(firstDefault, functionWrapper.DefaultValue);
             Assert.IsTrue(constFunc.IsConst());

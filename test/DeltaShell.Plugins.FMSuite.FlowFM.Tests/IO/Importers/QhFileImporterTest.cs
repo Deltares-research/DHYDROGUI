@@ -20,8 +20,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
         [Test]
         public void GivenQhFileImporterWhenBoundaryConditionHasCorrectQuantityThenValidateTrue()
         {
-            FlowBoundaryCondition flowBoundaryCondition = new FlowBoundaryCondition(FlowBoundaryQuantityType.WaterLevel, BoundaryConditionDataType.Qh);
-            var result = importer.CanImportOnBoundaryCondition(flowBoundaryCondition);
+            var flowBoundaryCondition = new FlowBoundaryCondition(FlowBoundaryQuantityType.WaterLevel, BoundaryConditionDataType.Qh);
+            bool result = importer.CanImportOnBoundaryCondition(flowBoundaryCondition);
 
             Assert.IsTrue(result, "The flowboundary quantity type is incorrect");
         }
@@ -29,11 +29,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
         [Test]
         public void GivenQhFileImporterWhenBoundaryConditionHasInCorrectDataTypeThenValidateFalse()
         {
-            FlowBoundaryCondition flowBoundaryCondition = new FlowBoundaryCondition(FlowBoundaryQuantityType.WaterLevel, BoundaryConditionDataType.Empty);
-            var result = importer.CanImportOnBoundaryCondition(flowBoundaryCondition);
+            var flowBoundaryCondition = new FlowBoundaryCondition(FlowBoundaryQuantityType.WaterLevel, BoundaryConditionDataType.Empty);
+            bool result = importer.CanImportOnBoundaryCondition(flowBoundaryCondition);
 
             Assert.IsFalse(result);
         }
-
     }
 }

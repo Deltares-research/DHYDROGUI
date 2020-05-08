@@ -46,6 +46,7 @@ using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
+using SharpMap.Api.Layers;
 using SharpMap.Layers;
 using SharpMap.SpatialOperations;
 using SharpMap.UI.Tools;
@@ -56,19 +57,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
     [TestFixture]
     public class WaterFlowFMModelGuiIntegrationTest
     {
-
         [Test]
         [Category(TestCategory.Wpf)]
         public void GivenWaterFlowFmModel_WhenRunningModel_ThenShouldNotCrashWithOldOutputOpen()
         {
-            var mduPath = TestHelper.GetTestFilePath(@"data\f04_bottomfriction\c016_2DConveyance_bend\input\bendprof.mdu");
+            string mduPath = TestHelper.GetTestFilePath(@"data\f04_bottomfriction\c016_2DConveyance_bend\input\bendprof.mdu");
             mduPath = TestHelper.CreateLocalCopy(mduPath);
 
             var model = new WaterFlowFMModel(mduPath);
 
             using (var gui = new DeltaShellGui())
             {
-                var app = gui.Application;
+                IApplication app = gui.Application;
                 app.Plugins.Add(new SharpMapGisApplicationPlugin());
                 app.Plugins.Add(new NetworkEditorApplicationPlugin());
                 gui.Plugins.Add(new ProjectExplorerGuiPlugin());
@@ -80,14 +80,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
                 Action mainWindowShown = delegate
                 {
-                    var project = app.Project;
+                    Project project = app.Project;
                     project.RootFolder.Add(model);
 
                     ActivityRunner.RunActivity(model);
                     Assert.AreEqual(ActivityStatus.Cleaned, model.Status);
 
                     // open standalone editor for his feature coverage
-                    gui.CommandHandler.OpenView(model.OutputHisFileStore.Functions.First(), typeof (CoverageView));
+                    gui.CommandHandler.OpenView(model.OutputHisFileStore.Functions.First(), typeof(CoverageView));
 
                     Assert.AreEqual(1, gui.DocumentViews.Count);
                     model.ShowModelRunConsole = true;
@@ -96,7 +96,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                         Name = "newobj",
                         Geometry = new LineString(new[]
                         {
-                            new Coordinate(100, 100), new Coordinate(150, 100)
+                            new Coordinate(100, 100),
+                            new Coordinate(150, 100)
                         })
                     });
 
@@ -113,12 +114,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         [Category(TestCategory.Wpf)]
         public void GivenWaterFlowFmModel_WhenImportedInRootFolder_ThenShouldBeReplaced()
         {
-            var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
+            string mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
             mduPath = TestHelper.CreateLocalCopy(mduPath);
 
             using (var gui = new DeltaShellGui())
             {
-                var app = gui.Application;
+                IApplication app = gui.Application;
                 app.Plugins.Add(new SharpMapGisApplicationPlugin());
                 app.Plugins.Add(new FlowFMApplicationPlugin());
                 gui.Plugins.Add(new ProjectExplorerGuiPlugin());
@@ -130,16 +131,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                 Action mainWindowShown = delegate
                 {
                     // Add water flow model to project
-                    var project = app.Project;
+                    Project project = app.Project;
                     project.RootFolder.Add(new WaterFlowFMModel());
 
                     // Check model name
-                    var targetModel = project.RootFolder.Models.OfType<WaterFlowFMModel>().FirstOrDefault();
+                    WaterFlowFMModel targetModel = project.RootFolder.Models.OfType<WaterFlowFMModel>().FirstOrDefault();
                     Assert.IsNotNull(targetModel);
                     Assert.That(targetModel.Name, Is.StringContaining("FlowFM"));
 
                     // Import new water flow model
-                    var importer = app.FileImporters.OfType<WaterFlowFMFileImporter>().FirstOrDefault();
+                    WaterFlowFMFileImporter importer = app.FileImporters.OfType<WaterFlowFMFileImporter>().FirstOrDefault();
                     Assert.IsNotNull(importer);
                     importer.ImportItem(mduPath, targetModel);
 
@@ -148,7 +149,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                     Assert.IsNotNull(targetModel);
                     Assert.That(targetModel.Name, Is.StringContaining("har"));
                 };
-                WpfTestHelper.ShowModal((Control)gui.MainWindow, mainWindowShown);
+                WpfTestHelper.ShowModal((Control) gui.MainWindow, mainWindowShown);
             }
         }
 
@@ -156,12 +157,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         [Category(TestCategory.Wpf)]
         public void GivenWaterFlowFmModel_WhenImportedInFolder_ThenShouldBeReplaced()
         {
-            var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
+            string mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
             mduPath = TestHelper.CreateLocalCopy(mduPath);
 
             using (var gui = new DeltaShellGui())
             {
-                var app = gui.Application;
+                IApplication app = gui.Application;
                 app.Plugins.Add(new SharpMapGisApplicationPlugin());
                 app.Plugins.Add(new FlowFMApplicationPlugin());
                 gui.Plugins.Add(new ProjectExplorerGuiPlugin());
@@ -173,23 +174,23 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                 Action mainWindowShown = delegate
                 {
                     // Add new folder to project
-                    var project = app.Project;
+                    Project project = app.Project;
                     project.RootFolder.Add(new Folder("Test Folder"));
 
                     // Check folder name
-                    var testFolder = project.RootFolder.Folders.FirstOrDefault();
+                    Folder testFolder = project.RootFolder.Folders.FirstOrDefault();
                     Assert.IsNotNull(testFolder);
                     Assert.That(testFolder.Name, Is.StringContaining("Test Folder"));
 
                     // Add new water flow model to the new folder and check its name
                     testFolder.Add(new WaterFlowFMModel());
-                    var targetModel =
+                    WaterFlowFMModel targetModel =
                         testFolder.Models.OfType<WaterFlowFMModel>().FirstOrDefault();
                     Assert.IsNotNull(targetModel);
                     Assert.That(targetModel.Name, Is.StringContaining("FlowFM"));
 
                     // Import new water flow model
-                    var importer = app.FileImporters.OfType<WaterFlowFMFileImporter>().FirstOrDefault();
+                    WaterFlowFMFileImporter importer = app.FileImporters.OfType<WaterFlowFMFileImporter>().FirstOrDefault();
                     Assert.IsNotNull(importer);
                     importer.ImportItem(mduPath, targetModel);
 
@@ -198,10 +199,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                     Assert.IsNotNull(targetModel);
                     Assert.That(targetModel.Name, Is.StringContaining("har"));
                 };
-                WpfTestHelper.ShowModal((Control)gui.MainWindow, mainWindowShown);
+                WpfTestHelper.ShowModal((Control) gui.MainWindow, mainWindowShown);
             }
         }
-
 
         /// <summary>
         /// Test if the view of the heat flux model changes after you change
@@ -215,7 +215,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
             using (var gui = new DeltaShellGui())
             {
-                var app = gui.Application;
+                IApplication app = gui.Application;
                 app.Plugins.Add(new SharpMapGisApplicationPlugin());
                 app.Plugins.Add(new NetworkEditorApplicationPlugin());
                 gui.Plugins.Add(new ProjectExplorerGuiPlugin());
@@ -227,7 +227,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
                 Action mainWindowShown = delegate
                 {
-                    var project = app.Project;
+                    Project project = app.Project;
                     project.RootFolder.Add(model);
 
                     // set the heat flux model to excess temperature
@@ -252,14 +252,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         [Category(TestCategory.Wpf)]
         public void GivenWaterFlowFmModel_WhenDoubleClickingOnMap_ThenOutputCoverageShouldEnableLayerInCentralMap()
         {
-            var mduPath = TestHelper.GetTestFilePath(@"data\f04_bottomfriction\c016_2DConveyance_bend\input\bendprof.mdu");
+            string mduPath = TestHelper.GetTestFilePath(@"data\f04_bottomfriction\c016_2DConveyance_bend\input\bendprof.mdu");
             mduPath = TestHelper.CreateLocalCopy(mduPath);
 
             var model = new WaterFlowFMModel(mduPath);
 
             using (var gui = new DeltaShellGui())
             {
-                var app = gui.Application;
+                IApplication app = gui.Application;
                 app.Plugins.Add(new SharpMapGisApplicationPlugin());
                 app.Plugins.Add(new NetworkEditorApplicationPlugin());
                 gui.Plugins.Add(new ProjectExplorerGuiPlugin());
@@ -271,7 +271,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
                 Action mainWindowShown = delegate
                 {
-                    var project = app.Project;
+                    Project project = app.Project;
                     project.RootFolder.Add(model);
 
                     ActivityRunner.RunActivity(model);
@@ -285,7 +285,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                     Assert.AreEqual(0, gui.DocumentViews.Count);
 
                     // open central map view
-                    gui.CommandHandler.OpenView(model, typeof (ProjectItemMapView));
+                    gui.CommandHandler.OpenView(model, typeof(ProjectItemMapView));
 
                     // try with already open view:
                     DoubleClickOutputItemAndAssertLayerIsOn(model, gui, "s1");
@@ -298,7 +298,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         [Category(TestCategory.Wpf)]
         public void GivenWaterFlowFmModel_WhenDoubleClickingOnHis_ThenOutputCoverageShouldEnableLayerInCentralMap()
         {
-            var mduPath =
+            string mduPath =
                 TestHelper.GetTestFilePath(@"data\f04_bottomfriction\c016_2DConveyance_bend\input\bendprof.mdu");
             mduPath = TestHelper.CreateLocalCopy(mduPath);
 
@@ -306,7 +306,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             model.ExplicitWorkingDirectory = model.WorkingDirectoryPath;
             using (var gui = new DeltaShellGui())
             {
-                var app = gui.Application;
+                IApplication app = gui.Application;
                 app.Plugins.Add(new SharpMapGisApplicationPlugin());
                 app.Plugins.Add(new NetworkEditorApplicationPlugin());
                 gui.Plugins.Add(new CommonToolsGuiPlugin());
@@ -319,12 +319,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
                 Action mainWindowShown = delegate
                 {
-                    var project = app.Project;
+                    Project project = app.Project;
                     project.RootFolder.Add(model);
 
                     ActivityRunner.RunActivity(model);
                     Assert.AreEqual(ActivityStatus.Cleaned, model.Status);
-                    
+
                     // try from scratch:
                     DoubleClickOutputItemAndAssertLayerIsOn(model, gui, "cross_section_discharge");
 
@@ -338,7 +338,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                     // try with already open view:
                     DoubleClickOutputItemAndAssertLayerIsOn(model, gui, "cross_section_discharge");
                 };
-                WpfTestHelper.ShowModal((Control)gui.MainWindow, mainWindowShown);
+                WpfTestHelper.ShowModal((Control) gui.MainWindow, mainWindowShown);
             }
         }
 
@@ -347,7 +347,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         [Category(TestCategory.Slow)]
         public void GivenWaterFlowFmModel_WhenShowSnapped_ThenFeatureLayersInMap()
         {
-            var mduPath =
+            string mduPath =
                 TestHelper.GetTestFilePath(@"harlingen\har.mdu");
             mduPath = TestHelper.CreateLocalCopy(mduPath);
 
@@ -355,7 +355,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
             using (var gui = new DeltaShellGui())
             {
-                var app = gui.Application;
+                IApplication app = gui.Application;
                 app.Plugins.Add(new SharpMapGisApplicationPlugin());
                 app.Plugins.Add(new NetworkEditorApplicationPlugin());
                 gui.Plugins.Add(new ProjectExplorerGuiPlugin());
@@ -367,14 +367,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
                 Action mainWindowShown = delegate
                 {
-                    var project = app.Project;
+                    Project project = app.Project;
                     project.RootFolder.Add(model);
 
                     // open central map view
-                    gui.CommandHandler.OpenView(model, typeof (ProjectItemMapView));
+                    gui.CommandHandler.OpenView(model, typeof(ProjectItemMapView));
 
-                    var gridSnappedFeatureGroupLayer = ((ProjectItemMapView) gui.DocumentViews.ActiveView).MapView.Map.GetAllLayers(true)
-                        .First(l => l.Name == "Estimated Grid-snapped features");
+                    ILayer gridSnappedFeatureGroupLayer = ((ProjectItemMapView) gui.DocumentViews.ActiveView).MapView.Map.GetAllLayers(true)
+                                                                                                             .First(l => l.Name == "Estimated Grid-snapped features");
 
                     gridSnappedFeatureGroupLayer.Visible = true;
 
@@ -389,16 +389,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         [Category(TestCategory.VerySlow)]
         public void GivenWaterFlowFmModel_WhenRunning_ThenShouldGiveVectorVelocityLayer()
         {
-            var mduPath =
+            string mduPath =
                 TestHelper.GetTestFilePath(@"harlingen\har.mdu");
             mduPath = TestHelper.CreateLocalCopy(mduPath);
 
-            var model = new WaterFlowFMModel(mduPath) { ShowModelRunConsole = true };
+            var model = new WaterFlowFMModel(mduPath) {ShowModelRunConsole = true};
             ActivityRunner.RunActivity(model);
 
             using (var gui = new DeltaShellGui())
             {
-                var app = gui.Application;
+                IApplication app = gui.Application;
                 app.Plugins.Add(new SharpMapGisApplicationPlugin());
                 app.Plugins.Add(new NetworkEditorApplicationPlugin());
                 gui.Plugins.Add(new ProjectExplorerGuiPlugin());
@@ -410,22 +410,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
                 Action mainWindowShown = delegate
                 {
-                    var project = app.Project;
+                    Project project = app.Project;
                     project.RootFolder.Add(model);
 
                     // open central map view
                     gui.CommandHandler.OpenView(model, typeof(ProjectItemMapView));
 
-                    var layers = ((ProjectItemMapView)gui.DocumentViews.ActiveView).MapView.Map.GetAllLayers(true);
-                    int i = 2;
-                    var velocityLayer =
+                    IEnumerable<ILayer> layers = ((ProjectItemMapView) gui.DocumentViews.ActiveView).MapView.Map.GetAllLayers(true);
+                    var i = 2;
+                    ILayer velocityLayer =
                         layers.FirstOrDefault(
                             l => l.Name == "velocity (ucx + ucy)" && l is UnstructuredGridCellVectorCoverageLayer);
                     Assert.NotNull(velocityLayer);
                 };
 
-                WpfTestHelper.ShowModal((Control)gui.MainWindow, mainWindowShown);
-
+                WpfTestHelper.ShowModal((Control) gui.MainWindow, mainWindowShown);
             }
         }
 
@@ -436,7 +435,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         {
             using (var gui = new DeltaShellGui())
             {
-                var app = gui.Application;
+                IApplication app = gui.Application;
                 app.Plugins.Add(new SharpMapGisApplicationPlugin());
                 app.Plugins.Add(new NetworkEditorApplicationPlugin());
                 gui.Plugins.Add(new ProjectExplorerGuiPlugin());
@@ -454,17 +453,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                         var netCdfZipFileName = "FlowFM.zip";
                         var uGridZipFileName = "FlowFM_Ugrid.zip";
 
-                        var modelFolder = TestHelper.GetTestFilePath(modelFolderName);
-                        var netCdfFilePath = Path.Combine(tempDir, netCdfZipFileName);
-                        var uGridFilePath = Path.Combine(modelFolder, uGridZipFileName);
+                        string modelFolder = TestHelper.GetTestFilePath(modelFolderName);
+                        string netCdfFilePath = Path.Combine(tempDir, netCdfZipFileName);
+                        string uGridFilePath = Path.Combine(modelFolder, uGridZipFileName);
 
                         FileUtils.CopyDirectory(modelFolder, tempDir, uGridFilePath);
                         ZipFileUtils.Extract(netCdfFilePath, tempDir);
 
-                        var timer = StartTimer();
+                        Stopwatch timer = StartTimer();
 
                         var mduFileName = "FlowFM.mdu";
-                        var model = ImportModelFromTemporaryDirectory(tempDir, mduFileName);
+                        WaterFlowFMModel model = ImportModelFromTemporaryDirectory(tempDir, mduFileName);
 
                         StopTimer(timer);
 
@@ -486,7 +485,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         {
             using (var gui = new DeltaShellGui())
             {
-                var app = gui.Application;
+                IApplication app = gui.Application;
                 app.Plugins.Add(new SharpMapGisApplicationPlugin());
                 app.Plugins.Add(new NetworkEditorApplicationPlugin());
                 gui.Plugins.Add(new ProjectExplorerGuiPlugin());
@@ -504,17 +503,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                         var uGridZipFileName = "FlowFM_Ugrid.zip";
                         var netCdfZipFileName = "FlowFM.zip";
 
-                        var modelFolder = TestHelper.GetTestFilePath(modelFolderName);
-                        var netCdfFilePath = Path.Combine(tempDir, netCdfZipFileName);
-                        var uGridFilePath = Path.Combine(modelFolder, uGridZipFileName);
+                        string modelFolder = TestHelper.GetTestFilePath(modelFolderName);
+                        string netCdfFilePath = Path.Combine(tempDir, netCdfZipFileName);
+                        string uGridFilePath = Path.Combine(modelFolder, uGridZipFileName);
 
                         FileUtils.CopyDirectory(modelFolder, tempDir, netCdfFilePath);
                         ZipFileUtils.Extract(uGridFilePath, tempDir);
 
-                        var timer = StartTimer();
+                        Stopwatch timer = StartTimer();
 
                         var mduFileName = "FlowFMUgrid.mdu";
-                        var model = ImportModelFromTemporaryDirectory(tempDir, mduFileName);
+                        WaterFlowFMModel model = ImportModelFromTemporaryDirectory(tempDir, mduFileName);
 
                         StopTimer(timer);
 
@@ -525,7 +524,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                     });
                 };
 
-                WpfTestHelper.ShowModal((Control)gui.MainWindow, mainWindowShown);
+                WpfTestHelper.ShowModal((Control) gui.MainWindow, mainWindowShown);
             }
         }
 
@@ -540,7 +539,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         {
             using (var gui = new DeltaShellGui())
             {
-                var app = gui.Application;
+                IApplication app = gui.Application;
 
                 app.Plugins.Add(new NHibernateDaoApplicationPlugin());
                 app.Plugins.Add(new CommonToolsApplicationPlugin());
@@ -555,19 +554,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                 gui.Plugins.Add(new NetworkEditorGuiPlugin());
                 gui.Plugins.Add(new ProjectExplorerGuiPlugin());
                 gui.Run();
-                var testFilePath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
+                string testFilePath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
                 testFilePath = TestHelper.CreateLocalCopy(testFilePath);
 
                 var model = new WaterFlowFMModel(testFilePath);
 
                 gui.Application.Project.RootFolder.Add(model);
 
-                Assert.IsTrue(gui.DocumentViewsResolver.OpenViewForData(model, typeof (ProjectItemMapView)));
+                Assert.IsTrue(gui.DocumentViewsResolver.OpenViewForData(model, typeof(ProjectItemMapView)));
                 var mapView = gui.DocumentViews.ActiveView as ProjectItemMapView;
                 mapView.SetSpatialOperationLayer(mapView.MapView.GetLayerForData(model.Bathymetry), true);
                 sharpMapGisGuiPlugin.FocusSpatialOperationView();
 
-                var valueConverter = SpatialOperationValueConverterFactory.GetOrCreateSpatialOperationValueConverter(
+                SpatialOperationSetValueConverter valueConverter = SpatialOperationValueConverterFactory.GetOrCreateSpatialOperationValueConverter(
                     model.GetDataItemByValue(model.Bathymetry));
 
                 Assert.IsNotNull(valueConverter.SpatialOperationSet);
@@ -575,8 +574,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                 var sampleSet = new SpatialOperationSet();
                 valueConverter.SpatialOperationSet.AddOperation(sampleSet);
 
-                var samplesPath = TestHelper.GetTestFilePath(@"harlingen_model_3d\har_V3.xyz");
-                var importSamples = new ImportSamplesOperation(false) {FilePath = samplesPath, Name = "Test import"};
+                string samplesPath = TestHelper.GetTestFilePath(@"harlingen_model_3d\har_V3.xyz");
+                var importSamples = new ImportSamplesOperation(false)
+                {
+                    FilePath = samplesPath,
+                    Name = "Test import"
+                };
                 Assert.IsNotNull(sampleSet.AddOperation(importSamples));
 
                 var interpolate = new InterpolateOperation
@@ -590,22 +593,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                 valueConverter.SpatialOperationSet.Execute();
                 Action onShown = delegate
                 {
-
                     interpolate.OperationType = PointwiseOperationType.Overwrite;
                     var layer = (SpatialOperationSetLayer) mapView.SpatialOperationLayer;
                     valueConverter.SpatialOperationSet.Execute();
 
-                    var beforeRefreshThreadCount = Process.GetCurrentProcess().Threads.Count;
+                    int beforeRefreshThreadCount = Process.GetCurrentProcess().Threads.Count;
                     TestHelper.AssertIsFasterThan(4000, layer.ShowOutputOnly);
                     Thread.Sleep(3000);
                     Assert.AreEqual(beforeRefreshThreadCount, Process.GetCurrentProcess().Threads.Count);
-
                 };
 
                 WpfTestHelper.ShowModal((Control) gui.MainWindow, onShown);
             }
         }
-        
+
         [Test]
         [Category(TestCategory.Performance)]
         [Category(TestCategory.Slow)]
@@ -614,7 +615,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             using (var gui = new DeltaShellGui())
             {
                 //setup env
-                var app = gui.Application;
+                IApplication app = gui.Application;
 
                 app.Plugins.Add(new CommonToolsApplicationPlugin());
                 app.Plugins.Add(new NetworkEditorApplicationPlugin());
@@ -628,26 +629,26 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                 gui.Run();
 
                 //create and add a HydroRegion with a HydroArea with DryPoints
-                var project = app.Project;
+                Project project = app.Project;
                 var area = new HydroArea();
                 var hydroRegion = new HydroRegion
                 {
                     Name = "Hydro region",
-                    SubRegions = { area }
+                    SubRegions = {area}
                 };
                 var dataItem = new DataItem(hydroRegion);
                 project.RootFolder.Add(hydroRegion);
 
-                WpfTestHelper.ShowModal((Control)gui.MainWindow, () =>
+                WpfTestHelper.ShowModal((Control) gui.MainWindow, () =>
                 {
                     //load needed views
                     gui.CommandHandler.OpenView(dataItem, typeof(ProjectItemMapView));
-                    var projectItemMapView = gui.DocumentViews.OfType<ProjectItemMapView>().FirstOrDefault();
+                    ProjectItemMapView projectItemMapView = gui.DocumentViews.OfType<ProjectItemMapView>().FirstOrDefault();
                     Assert.NotNull(projectItemMapView);
 
                     //importing harlingen point ~ 28800 points... this took over 15 min to load
-                    var fmtestPath = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(WaterFlowFMModelTest).Assembly);
-                    var xyzPath = Path.Combine(fmtestPath, @"harlingen_model_3d\har_V3.xyz");
+                    string fmtestPath = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(WaterFlowFMModelTest).Assembly);
+                    string xyzPath = Path.Combine(fmtestPath, @"harlingen_model_3d\har_V3.xyz");
                     var selection = new DataItem(area.DryPoints);
 
                     gui.Selection = selection;
@@ -655,7 +656,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                     //start the import and check the speed (TOOLS-21888)
                     TestHelper.AssertIsFasterThan(20000, () =>
                     {
-                        gui.CommandHandler.ImportFilesToGuiSelection(new[] { xyzPath });
+                        gui.CommandHandler.ImportFilesToGuiSelection(new[]
+                        {
+                            xyzPath
+                        });
                         while (gui.Application.ActivityRunner.IsRunning)
                         {
                             Application.DoEvents();
@@ -674,7 +678,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                 });
             }
         }
-
 
         [Test]
         [Category(TestCategory.Wpf)]
@@ -710,64 +713,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
             // 3. Run and verify test
             AssertMultipleFunctionViewClosedAsExpected(fileLocation, testAction);
-        }
-
-        private static void AssertMultipleFunctionViewClosedAsExpected(string filePath, Action<IApplication> applicationAction)
-        {
-            using (var dsProjLocation = new TemporaryDirectory())
-            {
-                // 1. Load test data
-                string fileLocation = TestHelper.GetTestFilePath(filePath);
-                string tempFileLocation = dsProjLocation.CopyTestDataFileAndDirectoryToTempDirectory(fileLocation);
-
-                // 2. Prepare Test Project
-                using (var gui = new DeltaShellGui())
-                {
-                    IApplication app = gui.Application;
-                    // Load app plugins
-                    RunConfiguredFmSuiteGui(gui);
-
-                    bool projectOpened = app.OpenProject(tempFileLocation);
-                    
-                    // 3. Verify initial expectations
-                    Assert.That(projectOpened, Is.True, "It was not possible to open the project");
-                    Project project = app.Project;
-                    Assert.That(project, Is.Not.Null);
-                    
-                    // 3.1. Verify data loaded correctly.
-                    WaterFlowFMModel fmModel = project.RootFolder.Models.OfType<WaterFlowFMModel>().FirstOrDefault();
-                    Assert.That(fmModel, Is.Not.Null, "Not found FM Model");
-
-                    FileBasedFeatureCoverage dataItem = fmModel.OutputHisFileStore.Functions
-                                                               .OfType<FileBasedFeatureCoverage>()
-                                                               .FirstOrDefault();
-                    Assert.That(dataItem, Is.Not.Null, "No output coverage was found.");
-                    // 3.1. We need the function to also include the feature name as it would be done if DS would create the
-                    // MultipleFunctionView.
-                    string dataItemName = dataItem.Name + ' ' + dataItem.Features.OfType<INameable>().FirstOrDefault()?.Name;
-                    dataItem.Name = dataItemName;
-                    
-                    // 4. Do test action
-                    Action mainWindowShown = () =>
-                    {
-                        Assert.That(gui.DocumentViews.Any(), Is.False);
-                        
-                        // 4.1. Create and add new MultipleFunctionView
-                        var functionView = new MultipleFunctionView { Functions = new List<IFunction> { dataItem } };
-                        gui.DocumentViews.Add(functionView);
-                        Assert.That(gui.DocumentViews.OfType<MultipleFunctionView>().Count(), Is.EqualTo(1), "No MultipleFunction view was generated.");
-
-                        // 5. Do action
-                        applicationAction(app);
-
-                        // 6. Verify final expectations
-                        Assert.That(gui.DocumentViews.OfType<MultipleFunctionView>().Any(), Is.False, "Not all views were closed correctly.");
-
-                    };
-                    WpfTestHelper.ShowModal(gui.MainWindow as Control, mainWindowShown);
-                    gui.Dispose();
-                }
-            }
         }
 
         [Test]
@@ -876,7 +821,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         public void GivenWaterFlowFMModelWithEmptyBoundarySet_WhenOpeningBoundaryConditionsEditor_ThenEditorCorrectlyConfigured()
         {
             // Given
-            using(var gui = new DeltaShellGui())
+            using (var gui = new DeltaShellGui())
             using (var model = new WaterFlowFMModel())
             {
                 var boundaryConditionSet = new BoundaryConditionSet
@@ -929,7 +874,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                     Feature = new Feature2D
                     {
                         Name = "Feature",
-                        Geometry = new LineString(new []
+                        Geometry = new LineString(new[]
                         {
                             new Coordinate(0, 0),
                             new Coordinate(1, 0),
@@ -937,9 +882,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                         })
                     }
                 };
-                var boundaryConditions = new []
+                var boundaryConditions = new[]
                 {
-                    new FlowBoundaryCondition(FlowBoundaryQuantityType.Salinity, BoundaryConditionDataType.TimeSeries), 
+                    new FlowBoundaryCondition(FlowBoundaryQuantityType.Salinity, BoundaryConditionDataType.TimeSeries),
                     new FlowBoundaryCondition(FlowBoundaryQuantityType.Temperature, BoundaryConditionDataType.TimeSeries)
                 };
                 boundaryConditionSet.BoundaryConditions.AddRange(boundaryConditions);
@@ -958,7 +903,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                     // Then
                     Assert.That(activeView, Is.TypeOf<BoundaryConditionEditor>(), $"Associated view with a {typeof(BoundaryConditionSet)} must be of type {typeof(BoundaryConditionEditor)}");
 
-                    var editor = (BoundaryConditionEditor)activeView;
+                    var editor = (BoundaryConditionEditor) activeView;
                     Assert.That(editor.SelectedCategory, Is.EqualTo("Salinity"), "First initialization with a non-empty set must select the first boundary condition in the set");
                     Assert.That(editor.Data, Is.SameAs(boundaryConditionSet), "Data on the editor must have the same reference for which it was opened for");
 
@@ -999,12 +944,69 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                     // Then
                     Assert.That(activeView, Is.TypeOf<BoundaryConditionEditor>(), $"Associated view with a {typeof(BoundaryConditionSet)} must be of type {typeof(BoundaryConditionEditor)}");
 
-                    var editor = (BoundaryConditionEditor)activeView;
+                    var editor = (BoundaryConditionEditor) activeView;
                     Assert.That(editor.SelectedCategory, Is.EqualTo("Salinity"), "Second initialization of the editor with a non-empty set must select the same category as was selected by the first initialization");
                     Assert.That(editor.Data, Is.SameAs(boundaryConditionSetTwo), "Data on the editor must have the same reference for which it was opened for");
                 };
 
                 WpfTestHelper.ShowModal(gui.MainWindow as Control, mainWindowShown);
+            }
+        }
+
+        private static void AssertMultipleFunctionViewClosedAsExpected(string filePath, Action<IApplication> applicationAction)
+        {
+            using (var dsProjLocation = new TemporaryDirectory())
+            {
+                // 1. Load test data
+                string fileLocation = TestHelper.GetTestFilePath(filePath);
+                string tempFileLocation = dsProjLocation.CopyTestDataFileAndDirectoryToTempDirectory(fileLocation);
+
+                // 2. Prepare Test Project
+                using (var gui = new DeltaShellGui())
+                {
+                    IApplication app = gui.Application;
+                    // Load app plugins
+                    RunConfiguredFmSuiteGui(gui);
+
+                    bool projectOpened = app.OpenProject(tempFileLocation);
+
+                    // 3. Verify initial expectations
+                    Assert.That(projectOpened, Is.True, "It was not possible to open the project");
+                    Project project = app.Project;
+                    Assert.That(project, Is.Not.Null);
+
+                    // 3.1. Verify data loaded correctly.
+                    WaterFlowFMModel fmModel = project.RootFolder.Models.OfType<WaterFlowFMModel>().FirstOrDefault();
+                    Assert.That(fmModel, Is.Not.Null, "Not found FM Model");
+
+                    FileBasedFeatureCoverage dataItem = fmModel.OutputHisFileStore.Functions
+                                                               .OfType<FileBasedFeatureCoverage>()
+                                                               .FirstOrDefault();
+                    Assert.That(dataItem, Is.Not.Null, "No output coverage was found.");
+                    // 3.1. We need the function to also include the feature name as it would be done if DS would create the
+                    // MultipleFunctionView.
+                    string dataItemName = dataItem.Name + ' ' + dataItem.Features.OfType<INameable>().FirstOrDefault()?.Name;
+                    dataItem.Name = dataItemName;
+
+                    // 4. Do test action
+                    Action mainWindowShown = () =>
+                    {
+                        Assert.That(gui.DocumentViews.Any(), Is.False);
+
+                        // 4.1. Create and add new MultipleFunctionView
+                        var functionView = new MultipleFunctionView {Functions = new List<IFunction> {dataItem}};
+                        gui.DocumentViews.Add(functionView);
+                        Assert.That(gui.DocumentViews.OfType<MultipleFunctionView>().Count(), Is.EqualTo(1), "No MultipleFunction view was generated.");
+
+                        // 5. Do action
+                        applicationAction(app);
+
+                        // 6. Verify final expectations
+                        Assert.That(gui.DocumentViews.OfType<MultipleFunctionView>().Any(), Is.False, "Not all views were closed correctly.");
+                    };
+                    WpfTestHelper.ShowModal(gui.MainWindow as Control, mainWindowShown);
+                    gui.Dispose();
+                }
             }
         }
 
@@ -1044,7 +1046,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
         private static WaterFlowFMModel ImportModelFromTemporaryDirectory(string tempDir, string mduFileName)
         {
-            var mduPath = Path.Combine(tempDir, mduFileName);
+            string mduPath = Path.Combine(tempDir, mduFileName);
             var model = new WaterFlowFMModel(mduPath);
             return model;
         }
@@ -1054,9 +1056,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             // retrieve the data object for the output waterlevel through the node 
             // presenter (to make sure we use the path double clicking would follow):
             var nodePresenter = new WaterFlowFMModelNodePresenter(null);
-            var childItems = nodePresenter.GetChildNodeObjects(model, null).OfType<TreeFolder>();
-            var outputFolder = childItems.Last();
-            var outputItemNode =
+            IEnumerable<TreeFolder> childItems = nodePresenter.GetChildNodeObjects(model, null).OfType<TreeFolder>();
+            TreeFolder outputFolder = childItems.Last();
+            object outputItemNode =
                 outputFolder.ChildItems.OfType<object>().First(i => i.ToString().Contains(itemName));
 
             // mimic double click:
@@ -1064,10 +1066,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             gui.CommandHandler.OpenViewForSelection(typeof(ProjectItemMapView));
 
             Assert.AreEqual(1, gui.DocumentViews.Count);
-            var activeMapView = FlowFMGuiPlugin.ActiveMapView;
+            MapView activeMapView = FlowFMGuiPlugin.ActiveMapView;
             Assert.IsNotNull(activeMapView, "fm active map view");
 
-            var coverageLayer = activeMapView.Map.GetAllLayers(false).FirstOrDefault(l => l.Name.Contains(itemName));
+            ILayer coverageLayer = activeMapView.Map.GetAllLayers(false).FirstOrDefault(l => l.Name.Contains(itemName));
 
             Assert.IsNotNull(coverageLayer, "coverage layer not found");
             Assert.IsTrue(coverageLayer.Visible, "not visible");
@@ -1100,7 +1102,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                 new BoundaryConditionSet
                 {
                     Feature = new Feature2D
-                    { 
+                    {
                         Name = "Second Set",
                         Geometry = new LineString(new[]
                         {
@@ -1166,6 +1168,5 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         }
 
         #endregion
-
     }
 }

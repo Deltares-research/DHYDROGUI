@@ -40,37 +40,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.NodePresenters
             var node = Substitute.For<ITreeNode>();
             var guiMock = Substitute.For<GuiPlugin>();
             const string name = @"ControlGroupTestName";
-            var controlGroup = new ControlGroup { Name = name };
+            var controlGroup = new ControlGroup {Name = name};
             var controlGroupNodePresenter = new ControlGroupNodePresenter(guiMock);
 
             // Act
-            var results = controlGroupNodePresenter.GetChildNodeObjects(controlGroup, node);
+            IEnumerable results = controlGroupNodePresenter.GetChildNodeObjects(controlGroup, node);
 
             // Assert
             Assert.IsNotNull(results);
-        }
-
-        private static IEnumerable<TestCaseData> GetChildNodeObjectsData()
-        {
-            void AddInput(ControlGroup c, object input) => c.Inputs.Add((Input)input);
-            yield return new TestCaseData(new Input(), (Action<ControlGroup, object>)AddInput);
-
-            void AddOutput(ControlGroup c, object output) => c.Outputs.Add((Output)output);
-            yield return new TestCaseData(new Output(), (Action<ControlGroup, object>)AddOutput);
-
-            void AddCondition(ControlGroup c, object condition) => c.Conditions.Add((ConditionBase)condition);
-            yield return new TestCaseData(new StandardCondition(), (Action<ControlGroup, object>)AddCondition);
-
-            void AddRule(ControlGroup c, object rule) => c.Rules.Add((RuleBase)rule);
-            yield return new TestCaseData(new PIDRule(), (Action<ControlGroup, object>)AddRule);
-
-            void AddSignal(ControlGroup c, object signal) => c.Signals.Add((SignalBase)signal);
-            yield return new TestCaseData(new LookupSignal(), (Action<ControlGroup, object>)AddSignal);
-
-            void AddMathematicalExpression(ControlGroup c, object mathematicalExpression) =>
-                c.MathematicalExpressions.Add((MathematicalExpression)mathematicalExpression);
-            yield return new TestCaseData(new MathematicalExpression(),
-                                          (Action<ControlGroup, object>)AddMathematicalExpression);
         }
 
         [Test]
@@ -81,7 +58,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.NodePresenters
             var guiMock = Substitute.For<GuiPlugin>();
 
             const string name = @"ControlGroupTestName";
-            var controlGroup = new ControlGroup { Name = name };
+            var controlGroup = new ControlGroup {Name = name};
 
             addElement.Invoke(controlGroup, element);
 
@@ -92,7 +69,34 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.NodePresenters
             IEnumerable result = controlGroupNodePresenter.GetChildNodeObjects(controlGroup, node);
 
             // Assert
-            Assert.That(result, Is.EqualTo(new[] { element }));
+            Assert.That(result, Is.EqualTo(new[]
+            {
+                element
+            }));
+        }
+
+        private static IEnumerable<TestCaseData> GetChildNodeObjectsData()
+        {
+            void AddInput(ControlGroup c, object input) => c.Inputs.Add((Input) input);
+            yield return new TestCaseData(new Input(), (Action<ControlGroup, object>) AddInput);
+
+            void AddOutput(ControlGroup c, object output) => c.Outputs.Add((Output) output);
+            yield return new TestCaseData(new Output(), (Action<ControlGroup, object>) AddOutput);
+
+            void AddCondition(ControlGroup c, object condition) => c.Conditions.Add((ConditionBase) condition);
+            yield return new TestCaseData(new StandardCondition(), (Action<ControlGroup, object>) AddCondition);
+
+            void AddRule(ControlGroup c, object rule) => c.Rules.Add((RuleBase) rule);
+            yield return new TestCaseData(new PIDRule(), (Action<ControlGroup, object>) AddRule);
+
+            void AddSignal(ControlGroup c, object signal) => c.Signals.Add((SignalBase) signal);
+            yield return new TestCaseData(new LookupSignal(), (Action<ControlGroup, object>) AddSignal);
+
+            void AddMathematicalExpression(ControlGroup c, object mathematicalExpression) =>
+                c.MathematicalExpressions.Add((MathematicalExpression) mathematicalExpression);
+
+            yield return new TestCaseData(new MathematicalExpression(),
+                                          (Action<ControlGroup, object>) AddMathematicalExpression);
         }
     }
 }

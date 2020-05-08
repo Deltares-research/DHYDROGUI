@@ -8,10 +8,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms.Properties
     [TestFixture]
     public class IntervalRulePropertiesTest
     {
-        [Test, Category(TestCategory.WindowsForms)]
+        [Test]
+        [Category(TestCategory.WindowsForms)]
         public void ShowProperties()
         {
-            WindowsFormsTestHelper.ShowPropertyGridForObject(new IntervalRuleProperties { Data = new IntervalRule() });
+            WindowsFormsTestHelper.ShowPropertyGridForObject(new IntervalRuleProperties {Data = new IntervalRule()});
         }
 
         [TestCase("ConstantSetpoint", IntervalRule.IntervalRuleIntervalType.Fixed, false)]
@@ -36,8 +37,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms.Properties
         [TestCase("Bla", IntervalRule.IntervalRuleIntervalType.Variable, true)]
         [TestCase("Bla", IntervalRule.IntervalRuleIntervalType.Signal, true)]
         public void GivenAPropertyName_WhenShowingThisPropertyInthePropertyBoxWindow_ThenThisOptionShouldBeReadOnlyOrNotBasedOnTheIntervalTypeSetting(
-                string propertyName, IntervalRule.IntervalRuleIntervalType intervalRuleSetpointType,
-                bool expectedBoolean)
+            string propertyName, IntervalRule.IntervalRuleIntervalType intervalRuleSetpointType,
+            bool expectedBoolean)
         {
             // Given
             var intervalRuleProperties = new IntervalRuleProperties
@@ -51,7 +52,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms.Properties
 
             // Then
             Assert.AreEqual(expectedBoolean, actualBoolean,
-                $"For property \"{propertyName}\" of the interval rule, the readonly behaviour is not correct when the setpoint type is \"{intervalRuleSetpointType.ToString()}\"");
+                            $"For property \"{propertyName}\" of the interval rule, the readonly behaviour is not correct when the setpoint type is \"{intervalRuleSetpointType.ToString()}\"");
         }
     }
 }

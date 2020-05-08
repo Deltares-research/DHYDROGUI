@@ -76,7 +76,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Layers.Providers
         {
             // Arrange
             var provider = new HydroAreaLayerProvider();
-            
+
             // Act
             object[] childLayerObjects = provider.GenerateChildLayerObjects(new HydroArea()).ToArray();
 

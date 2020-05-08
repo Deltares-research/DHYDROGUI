@@ -9,6 +9,7 @@ using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
 using DelftTools.Utils;
 using DeltaShell.IntegrationTestUtils;
+using DeltaShell.Plugins.Data.NHibernate.DelftTools.Shell.Core.Dao;
 using DeltaShell.Plugins.NetworkEditor;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Networks;
@@ -20,7 +21,7 @@ namespace DeltaShell.Plugins.NGHS.IntegrationTests
     [TestFixture]
     [Category(TestCategory.DataAccess)]
     [Category(TestCategory.Slow)]
-    class HydroNetworkNHibernateTest : NHibernateIntegrationTestBase
+    internal class HydroNetworkNHibernateTest : NHibernateIntegrationTestBase
     {
         public override void TestFixtureSetUp()
         {
@@ -36,9 +37,9 @@ namespace DeltaShell.Plugins.NGHS.IntegrationTests
             string path = TestHelper.GetCurrentMethodName() + ".dsproj";
             var dateTime = new DateTime(2000, 1, 1, 0, 0, 0);
             // create network
-            var network = NHibernateTestsHelper.CreateDummyNetwork();
+            INetwork network = NHibernateTestsHelper.CreateDummyNetwork();
             var crossSectionDefinition = new CrossSectionDefinitionYZ("Cross Section");
-            var cs = HydroNetworkHelper.AddCrossSectionDefinitionToBranch(network.Branches[0], crossSectionDefinition, 0);
+            ICrossSection cs = HydroNetworkHelper.AddCrossSectionDefinitionToBranch(network.Branches[0], crossSectionDefinition, 0);
 
             //IFeatureCoverage featureCoverage = new FeatureCoverage(); { HydroNetwork = network };
             var featureCoverage = new FeatureCoverage("Test");
@@ -51,7 +52,7 @@ namespace DeltaShell.Plugins.NGHS.IntegrationTests
             featureCoverage[dateTime, cs] = 17.0;
 
             //save 
-            using (var projectRepository = factory.CreateNew())
+            using (NHibernateProjectRepository projectRepository = factory.CreateNew())
             {
                 projectRepository.Create(path);
 
@@ -62,18 +63,18 @@ namespace DeltaShell.Plugins.NGHS.IntegrationTests
                 projectRepository.SaveOrUpdate(project);
             }
 
-            using (var projectRepository = factory.CreateNew())
+            using (NHibernateProjectRepository projectRepository = factory.CreateNew())
             {
                 //reload
-                var retrievedProject = projectRepository.Open(path);
-                var retrievedNetwork = retrievedProject.GetAllItemsRecursive().OfType<INetwork>().FirstOrDefault();
-                var retrievedFeatureCoverage = retrievedProject.GetAllItemsRecursive().OfType<IFeatureCoverage>().FirstOrDefault();
-                var retrievedCrossSection = retrievedNetwork.Branches[0].BranchFeatures[0];
+                Project retrievedProject = projectRepository.Open(path);
+                INetwork retrievedNetwork = retrievedProject.GetAllItemsRecursive().OfType<INetwork>().FirstOrDefault();
+                IFeatureCoverage retrievedFeatureCoverage = retrievedProject.GetAllItemsRecursive().OfType<IFeatureCoverage>().FirstOrDefault();
+                IBranchFeature retrievedCrossSection = retrievedNetwork.Branches[0].BranchFeatures[0];
 
                 //compare
                 Assert.AreEqual(retrievedCrossSection, retrievedFeatureCoverage.FeatureVariable.Values[0]);
                 Assert.AreEqual(featureCoverage.Components[0].Values.Count, retrievedFeatureCoverage.Components[0].Values.Count);
-                Assert.AreEqual((double)retrievedFeatureCoverage[dateTime, retrievedCrossSection], 17.0, 1.0e-6);
+                Assert.AreEqual((double) retrievedFeatureCoverage[dateTime, retrievedCrossSection], 17.0, 1.0e-6);
             }
         }
 
@@ -83,9 +84,9 @@ namespace DeltaShell.Plugins.NGHS.IntegrationTests
             string path = TestHelper.GetCurrentMethodName() + ".dsproj";
 
             // create network
-            var network = NHibernateTestsHelper.CreateDummyNetwork();
+            INetwork network = NHibernateTestsHelper.CreateDummyNetwork();
             var crossSectionDefinition = CrossSectionDefinitionYZ.CreateDefault();
-            var cs = HydroNetworkHelper.AddCrossSectionDefinitionToBranch(network.Branches[0], crossSectionDefinition, 0);
+            ICrossSection cs = HydroNetworkHelper.AddCrossSectionDefinitionToBranch(network.Branches[0], crossSectionDefinition, 0);
 
             //IFeatureCoverage featureCoverage = new FeatureCoverage(); { HydroNetwork = network };
             var featureCoverage = new FeatureCoverage("Test");
@@ -96,7 +97,7 @@ namespace DeltaShell.Plugins.NGHS.IntegrationTests
             featureCoverage[cs] = 17.0;
 
             //save 
-            using (var projectRepository = factory.CreateNew())
+            using (NHibernateProjectRepository projectRepository = factory.CreateNew())
             {
                 projectRepository.Create(path);
 
@@ -113,11 +114,11 @@ namespace DeltaShell.Plugins.NGHS.IntegrationTests
                 projectRepository.SaveOrUpdate(project);
             }
 
-            using (var projectRepository = factory.CreateNew())
+            using (NHibernateProjectRepository projectRepository = factory.CreateNew())
             {
                 //reload
-                var retrievedProject = projectRepository.Open(path);
-                var retrievedNetwork = retrievedProject.GetAllItemsRecursive().OfType<INetwork>().FirstOrDefault();
+                Project retrievedProject = projectRepository.Open(path);
+                INetwork retrievedNetwork = retrievedProject.GetAllItemsRecursive().OfType<INetwork>().FirstOrDefault();
                 //var retrievedFeatureCoverage = retrievedProject.GetAllItemsRecursive().OfType<IFeatureCoverage>().FirstOrDefault();
 
                 //check the crossection was really removed from the coverage

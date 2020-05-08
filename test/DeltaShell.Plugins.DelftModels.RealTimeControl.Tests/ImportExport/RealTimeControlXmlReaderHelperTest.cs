@@ -25,51 +25,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
             logHandler = null;
         }
 
-        [TestCase("[TimeCondition]control_group_name/time_condition_name", "time_condition_name")]
-        [TestCase("[TimeRule]control_group_name/time_rule_name", "time_rule_name")]
-        [TestCase("control_group_name/time_rule_name", "time_rule_name")]
-        [TestCase("[Input]parameter_name/quantity", null)]
-        [TestCase("", "")]
-        public void GivenAnIdFromAnRtcXmlElement_WhenGetRuleOrConditionNameFromElementIdIsCalled_ThenExpectedStringIsReturned(string id, string expectedString)
-        {
-            // When
-            var resultedString = RealTimeControlXmlReaderHelper.GetComponentNameFromElementId(id);
-
-            // Then
-            Assert.AreEqual(expectedString, resultedString);
-        }
-
-        [TestCase("[TimeCondition]control_group_name/time_condition_name", "control_group_name")]
-        [TestCase("[TimeRule]control_group_name/time_rule_name", "control_group_name")]
-        [TestCase("control_group_name/time_rule_name", "control_group_name")]
-        [TestCase("[tag]control_group_name/other_name", "control_group_name")]
-        [TestCase("", "")]
-        public void GivenAnIdFromAnRtcXmlElement_WhenGetControlGroupNameFromElementIdIsCalled_ThenExpectedStringIsReturned(string id, string expectedString)
-        {
-            // When
-            var resultedString = RealTimeControlXmlReaderHelper.GetControlGroupNameFromElementId(id);
-
-            // Then
-            Assert.AreEqual(expectedString, resultedString);
-        }
-
-        [TestCase("[TimeRule]control_group_name/time_rule_name")]
-        [TestCase("[SomeTag]control_group_name/some_name")]
-        [TestCase("[]control_group_name/some_name")]
-        [TestCase("control_group_name/some_name")]
-        public void GivenAnIdFromAnRtcXmlElement_WhenGetControlGroupByElementIdIsCalled_ThenExpectedControlGroupIsReturned(string id)
-        {
-            // Given
-            var expectedControlGroup = new ControlGroup {Name = "control_group_name"};
-            var controlgroups = new List<IControlGroup> {expectedControlGroup};
-
-            // When
-            var resultedControlGroup = controlgroups.GetControlGroupByElementId(id, null);
-
-            // Then
-            Assert.AreEqual(expectedControlGroup, resultedControlGroup);
-        }
-
         [Test]
         public void GivenAnIdFromAnRtcXmlElementAndControlGroupsIsNull_WhenGetControlGroupByElementIdIsCalled_ThenNullIsReturned()
         {
@@ -77,7 +32,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
             const string id = "[TimeRule]control_group_name/time_rule_name";
 
             // When
-            var controlGroup = ((IList<IControlGroup>) null).GetControlGroupByElementId(id, null);
+            IControlGroup controlGroup = ((IList<IControlGroup>) null).GetControlGroupByElementId(id, null);
 
             // Then
             Assert.IsNull(controlGroup);
@@ -88,13 +43,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
         {
             // Given
             const string missingControlGroupName = "not_existing_control_group_name";
-            var id = $"[TimeRule]{missingControlGroupName}/time_rule_name";
+            string id = $"[TimeRule]{missingControlGroupName}/time_rule_name";
 
-            var expectedMessage = string.Format(Resources.RealTimeControlXmlReaderHelper_GetControlGroupByElementId_Could_not_find_the_controlgroup___0___that_is_referenced_in_id___1____The_group_needs_to_be_referenced_in_file___2___, 
-                missingControlGroupName, id, RealTimeControlXMLFiles.XmlTools);
+            string expectedMessage = string.Format(Resources.RealTimeControlXmlReaderHelper_GetControlGroupByElementId_Could_not_find_the_controlgroup___0___that_is_referenced_in_id___1____The_group_needs_to_be_referenced_in_file___2___,
+                                                   missingControlGroupName, id, RealTimeControlXMLFiles.XmlTools);
 
             // When
-            var resultedControlGroup = new List<IControlGroup>().GetControlGroupByElementId(id, logHandler);
+            IControlGroup resultedControlGroup = new List<IControlGroup>().GetControlGroupByElementId(id, logHandler);
 
             // Then
             Assert.AreEqual(null, resultedControlGroup);
@@ -151,7 +106,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
             // Given
             const string missingConnectionPointName = "not_existing_connection_point_name";
 
-            var expectedMessage = string.Format(
+            string expectedMessage = string.Format(
                 Resources.RealTimeControlXmlReaderHelper_GetConnectionPointByName_Could_not_find_the_input_output___0____The_input_output_needs_to_be_referenced_in_file___1___,
                 missingConnectionPointName,
                 RealTimeControlXMLFiles.XmlData);
@@ -161,8 +116,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
 
             // Then
             Assert.IsNull(resultedControlGroup);
-            Assert.IsTrue(logHandler.LogMessagesTable.AllMessages.Contains(expectedMessage), 
-                "The collected log messages did not contain the expected message.");
+            Assert.IsTrue(logHandler.LogMessagesTable.AllMessages.Contains(expectedMessage),
+                          "The collected log messages did not contain the expected message.");
         }
 
         [Test]
@@ -174,15 +129,19 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
             const string relativeTimeRuleId = "[RelativeTimeRule]control_group_name/relative_time_rule_name";
             const string relativeTimeRuleName = "relative_time_rule_name";
 
-            var expectedTimeRule = new TimeRule { Name = timeRuleName};
+            var expectedTimeRule = new TimeRule {Name = timeRuleName};
             var expectedRelativeTimeRule = new RelativeTimeRule {Name = relativeTimeRuleName};
 
             var controlGroup = new ControlGroup();
-            controlGroup.Rules.AddRange(new List<RuleBase> {expectedTimeRule, expectedRelativeTimeRule});
+            controlGroup.Rules.AddRange(new List<RuleBase>
+            {
+                expectedTimeRule,
+                expectedRelativeTimeRule
+            });
 
             // When
-            var resultedRule1 = controlGroup.GetRuleByElementId(timeRuleId, null);
-            var resultedRule2 = controlGroup.GetRuleByElementId(relativeTimeRuleId, null);
+            RuleBase resultedRule1 = controlGroup.GetRuleByElementId(timeRuleId, null);
+            RuleBase resultedRule2 = controlGroup.GetRuleByElementId(relativeTimeRuleId, null);
 
             // Then
             Assert.AreEqual(expectedTimeRule, resultedRule1);
@@ -202,11 +161,15 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
             var expectedRelativeTimeRule = new RelativeTimeRule {Name = relativeTimeRuleName};
 
             var controlGroup = new ControlGroup();
-            controlGroup.Rules.AddRange(new List<RuleBase> {expectedTimeRule, expectedRelativeTimeRule});
+            controlGroup.Rules.AddRange(new List<RuleBase>
+            {
+                expectedTimeRule,
+                expectedRelativeTimeRule
+            });
 
             // When
-            var resultedRule1 = controlGroup.GetRuleByElementId<TimeRule>(timeRuleId, null);
-            var resultedRule2 = controlGroup.GetRuleByElementId<RelativeTimeRule>(relativeTimeRuleId, null);
+            RuleBase resultedRule1 = controlGroup.GetRuleByElementId<TimeRule>(timeRuleId, null);
+            RuleBase resultedRule2 = controlGroup.GetRuleByElementId<RelativeTimeRule>(relativeTimeRuleId, null);
 
             // Then
             Assert.AreEqual(expectedTimeRule, resultedRule1);
@@ -225,17 +188,17 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
             var controlGroup = new ControlGroup();
             controlGroup.Rules.Add(expectedTimeRule);
 
-            var expectedMessage = string.Format(
+            string expectedMessage = string.Format(
                 Resources.RealTimeControlXmlReaderHelper_GetRuleByElementIdInControlGroup_Could_not_find_the_rule___0___that_is_referenced_in_id___1___The_rule_needs_to_be_referenced_in_file___2___,
                 timeRuleName, timeRuleId, RealTimeControlXMLFiles.XmlData);
 
             // When
-            var rule = controlGroup.GetRuleByElementId<RelativeTimeRule>(timeRuleId, logHandler);
+            RuleBase rule = controlGroup.GetRuleByElementId<RelativeTimeRule>(timeRuleId, logHandler);
 
             // Then
             Assert.IsNull(rule);
-            Assert.IsTrue(logHandler.LogMessagesTable.AllMessages.Any(m => m.Contains(expectedMessage)), 
-                "The collected log messages did not contain the expected message.");
+            Assert.IsTrue(logHandler.LogMessagesTable.AllMessages.Any(m => m.Contains(expectedMessage)),
+                          "The collected log messages did not contain the expected message.");
         }
 
         [Test]
@@ -245,7 +208,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
             const string timeRuleId = "[TimeRule]control_group_name/time_rule_name";
 
             // When
-            var rule = ((IControlGroup) null).GetRuleByElementId<RelativeTimeRule>(timeRuleId, null);
+            RuleBase rule = ((IControlGroup) null).GetRuleByElementId<RelativeTimeRule>(timeRuleId, null);
 
             // Then
             Assert.IsNull(rule);
@@ -258,7 +221,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
             const string id = "[TimeRule]control_group_name/time_rule_name";
 
             // When
-            var rule = ((ControlGroup) null).GetRuleByElementId(id, null);
+            RuleBase rule = ((ControlGroup) null).GetRuleByElementId(id, null);
 
             // Then
             Assert.IsNull(rule);
@@ -269,7 +232,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
         {
             // Given
             const string missingRuleName = "not_existing_rule_name";
-            var id = $"[TimeRule]control_group_name/{missingRuleName}";
+            string id = $"[TimeRule]control_group_name/{missingRuleName}";
 
             var controlGroup = new ControlGroup();
             controlGroup.Rules.AddRange(new List<RuleBase>
@@ -278,16 +241,16 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
                 new TimeRule {Name = "some_other_name"}
             });
 
-            var expectedMessage = string.Format(Resources.RealTimeControlXmlReaderHelper_GetRuleByElementIdInControlGroup_Could_not_find_the_rule___0___that_is_referenced_in_id___1___The_rule_needs_to_be_referenced_in_file___2___, 
-                missingRuleName, id, RealTimeControlXMLFiles.XmlData);
+            string expectedMessage = string.Format(Resources.RealTimeControlXmlReaderHelper_GetRuleByElementIdInControlGroup_Could_not_find_the_rule___0___that_is_referenced_in_id___1___The_rule_needs_to_be_referenced_in_file___2___,
+                                                   missingRuleName, id, RealTimeControlXMLFiles.XmlData);
 
             // When
-            var resultedRule = controlGroup.GetRuleByElementId(id, logHandler);
+            RuleBase resultedRule = controlGroup.GetRuleByElementId(id, logHandler);
 
             // Then
             Assert.AreEqual(null, resultedRule);
-            Assert.IsTrue(logHandler.LogMessagesTable.AllMessages.Contains(expectedMessage), 
-                "The collected log messages did not contain the expected message.");
+            Assert.IsTrue(logHandler.LogMessagesTable.AllMessages.Contains(expectedMessage),
+                          "The collected log messages did not contain the expected message.");
         }
 
         [Test]
@@ -303,7 +266,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
             var expectedStandardCondition = new StandardCondition {Name = standardConditionName};
 
             var controlGroup = new ControlGroup();
-            controlGroup.Conditions.AddRange(new List<ConditionBase>{expectedTimeCondition, expectedStandardCondition});
+            controlGroup.Conditions.AddRange(new List<ConditionBase>
+            {
+                expectedTimeCondition,
+                expectedStandardCondition
+            });
 
             // When
             var resultedCondition1 = controlGroup.GetConditionByElementId<TimeCondition>(timeConditionId, null);
@@ -333,10 +300,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
         {
             // Given
             const string missingConditionName = "not_existing_condition_name";
-            var id = $"[TimeCondition]control_group_name/{missingConditionName}";
+            string id = $"[TimeCondition]control_group_name/{missingConditionName}";
             var controlGroup = new ControlGroup();
 
-            var expectedMessage = string.Format(
+            string expectedMessage = string.Format(
                 Resources
                     .RealTimeControlXmlReaderHelper_GetConditionByElementIdInControlGroup_Could_not_find_the_condition___0____The_condition_needs_to_be_referenced_in_file___1___,
                 missingConditionName, RealTimeControlXMLFiles.XmlData);
@@ -346,21 +313,21 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
 
             // Then
             Assert.AreEqual(null, resultedCondition);
-            Assert.IsTrue(logHandler.LogMessagesTable.AllMessages.Contains(expectedMessage), 
-                "The collected log messages did not contain the expected message.");
+            Assert.IsTrue(logHandler.LogMessagesTable.AllMessages.Contains(expectedMessage),
+                          "The collected log messages did not contain the expected message.");
         }
 
         [Test]
         public void GivenAnIdWithTagsInIt_WhenGetTagFromElementIsCalled_ThenTheCorrectTagIsReturned()
         {
-            var tagsOfInterest = RtcXmlTag.ConnectionPointTags.Concat(RtcXmlTag.ComponentTags);
-            foreach (var tag in tagsOfInterest)
+            IEnumerable<string> tagsOfInterest = RtcXmlTag.ConnectionPointTags.Concat(RtcXmlTag.ComponentTags);
+            foreach (string tag in tagsOfInterest)
             {
                 // Given
-                var id = $"[Status]{tag}[Delayed]";
+                string id = $"[Status]{tag}[Delayed]";
 
                 // When
-                var resultedTag = RealTimeControlXmlReaderHelper.GetTagFromElementId(id);
+                string resultedTag = RealTimeControlXmlReaderHelper.GetTagFromElementId(id);
 
                 // Then
                 Assert.AreEqual(tag, resultedTag);
@@ -374,7 +341,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
             const string id = "[Status][Delayed]";
 
             // When
-            var resultedTag = RealTimeControlXmlReaderHelper.GetTagFromElementId(id);
+            string resultedTag = RealTimeControlXmlReaderHelper.GetTagFromElementId(id);
 
             // Then
             Assert.AreEqual(null, resultedTag);
@@ -386,17 +353,62 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
             // Given
             const string signalId = "[LookupSignal]control_group_name/signal_name";
             const string signalName = "signal_name";
-            
-            var expectedSignal = new LookupSignal() { Name = signalName };
-            
+
+            var expectedSignal = new LookupSignal() {Name = signalName};
+
             var controlGroup = new ControlGroup();
-            controlGroup.Signals.AddRange(new List<SignalBase> { expectedSignal });
+            controlGroup.Signals.AddRange(new List<SignalBase> {expectedSignal});
 
             // When
-            var resultedSignal = controlGroup.GetSignalByElementId<LookupSignal>(signalId, null);
-            
+            SignalBase resultedSignal = controlGroup.GetSignalByElementId<LookupSignal>(signalId, null);
+
             // Then
             Assert.AreEqual(expectedSignal, resultedSignal);
+        }
+
+        [TestCase("[TimeCondition]control_group_name/time_condition_name", "time_condition_name")]
+        [TestCase("[TimeRule]control_group_name/time_rule_name", "time_rule_name")]
+        [TestCase("control_group_name/time_rule_name", "time_rule_name")]
+        [TestCase("[Input]parameter_name/quantity", null)]
+        [TestCase("", "")]
+        public void GivenAnIdFromAnRtcXmlElement_WhenGetRuleOrConditionNameFromElementIdIsCalled_ThenExpectedStringIsReturned(string id, string expectedString)
+        {
+            // When
+            string resultedString = RealTimeControlXmlReaderHelper.GetComponentNameFromElementId(id);
+
+            // Then
+            Assert.AreEqual(expectedString, resultedString);
+        }
+
+        [TestCase("[TimeCondition]control_group_name/time_condition_name", "control_group_name")]
+        [TestCase("[TimeRule]control_group_name/time_rule_name", "control_group_name")]
+        [TestCase("control_group_name/time_rule_name", "control_group_name")]
+        [TestCase("[tag]control_group_name/other_name", "control_group_name")]
+        [TestCase("", "")]
+        public void GivenAnIdFromAnRtcXmlElement_WhenGetControlGroupNameFromElementIdIsCalled_ThenExpectedStringIsReturned(string id, string expectedString)
+        {
+            // When
+            string resultedString = RealTimeControlXmlReaderHelper.GetControlGroupNameFromElementId(id);
+
+            // Then
+            Assert.AreEqual(expectedString, resultedString);
+        }
+
+        [TestCase("[TimeRule]control_group_name/time_rule_name")]
+        [TestCase("[SomeTag]control_group_name/some_name")]
+        [TestCase("[]control_group_name/some_name")]
+        [TestCase("control_group_name/some_name")]
+        public void GivenAnIdFromAnRtcXmlElement_WhenGetControlGroupByElementIdIsCalled_ThenExpectedControlGroupIsReturned(string id)
+        {
+            // Given
+            var expectedControlGroup = new ControlGroup {Name = "control_group_name"};
+            var controlgroups = new List<IControlGroup> {expectedControlGroup};
+
+            // When
+            IControlGroup resultedControlGroup = controlgroups.GetControlGroupByElementId(id, null);
+
+            // Then
+            Assert.AreEqual(expectedControlGroup, resultedControlGroup);
         }
     }
 }

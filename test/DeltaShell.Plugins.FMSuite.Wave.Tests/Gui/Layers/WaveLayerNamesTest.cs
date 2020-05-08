@@ -22,7 +22,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers
         {
             // Call
             void Call() => WaveLayerNames.GetDomainLayerName(null);
-            
+
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(Call);
             Assert.That(exception, Has.Property("ParamName").EqualTo("domainName"));
@@ -43,7 +43,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers
         {
             // Call
             void Call() => WaveLayerNames.GetOutputLayerName(null);
-            
+
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(Call);
             Assert.That(exception, Has.Property("ParamName").EqualTo("domainName"));

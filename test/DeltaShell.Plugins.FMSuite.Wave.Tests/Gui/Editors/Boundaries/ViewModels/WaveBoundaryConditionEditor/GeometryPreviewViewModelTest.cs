@@ -1,4 +1,5 @@
-﻿using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
+﻿using System;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.ForcingTypeDefinedParameters;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories;
@@ -14,17 +15,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
     [TestFixture]
     public class GeometryPreviewViewModelTest
     {
-        private static SupportPointDataComponentViewModel GetViewModel()
-        {
-            var conditionDefinition = Substitute.For<IWaveBoundaryConditionDefinition>();
-            var parametersFactory = Substitute.For<IForcingTypeDefinedParametersFactory>();
-            var announceChanged = Substitute.For<IAnnounceSupportPointDataChanged>();
-
-            return new SupportPointDataComponentViewModel(conditionDefinition,
-                                                          parametersFactory,
-                                                          announceChanged);
-        }
-
         [Test]
         public void Constructor_ExpectedResults()
         {
@@ -41,7 +31,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
                 Assert.That(viewModel.Map, Is.Not.Null);
 
                 configurator.Received(1).ConfigureMap(Arg.Is<IMap>(x => x == viewModel.Map),
-                                                      Arg.Is<IBoundaryProvider>(x => (x.Boundaries.Contains(waveBoundary) && x.Boundaries.Count == 1)),
+                                                      Arg.Is<IBoundaryProvider>(x => x.Boundaries.Contains(waveBoundary) && x.Boundaries.Count == 1),
                                                       Arg.Is<SupportPointDataComponentViewModel>(x => x == supportPointDataComponentViewModel),
                                                       Arg.Is<IRefreshGeometryView>(x => x == viewModel));
             }
@@ -55,7 +45,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
 
             void Call() => new GeometryPreviewViewModel(null, supportPointDataComponentViewModel, configurator);
 
-            var exception = Assert.Throws<System.ArgumentNullException>(Call);
+            var exception = Assert.Throws<ArgumentNullException>(Call);
             Assert.That(exception.ParamName, Is.EqualTo("waveBoundary"));
         }
 
@@ -67,7 +57,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
 
             void Call() => new GeometryPreviewViewModel(waveBoundary, null, configurator);
 
-            var exception = Assert.Throws<System.ArgumentNullException>(Call);
+            var exception = Assert.Throws<ArgumentNullException>(Call);
             Assert.That(exception.ParamName, Is.EqualTo("supportPointDataComponentViewModel"));
         }
 
@@ -78,8 +68,19 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             SupportPointDataComponentViewModel supportPointDataComponentViewModel = GetViewModel();
             void Call() => new GeometryPreviewViewModel(waveBoundary, supportPointDataComponentViewModel, null);
 
-            var exception = Assert.Throws<System.ArgumentNullException>(Call);
+            var exception = Assert.Throws<ArgumentNullException>(Call);
             Assert.That(exception.ParamName, Is.EqualTo("configurator"));
+        }
+
+        private static SupportPointDataComponentViewModel GetViewModel()
+        {
+            var conditionDefinition = Substitute.For<IWaveBoundaryConditionDefinition>();
+            var parametersFactory = Substitute.For<IForcingTypeDefinedParametersFactory>();
+            var announceChanged = Substitute.For<IAnnounceSupportPointDataChanged>();
+
+            return new SupportPointDataComponentViewModel(conditionDefinition,
+                                                          parametersFactory,
+                                                          announceChanged);
         }
     }
 }

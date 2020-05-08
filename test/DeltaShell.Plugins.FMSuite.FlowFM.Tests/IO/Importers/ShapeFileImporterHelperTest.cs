@@ -39,7 +39,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
 
                 // When
                 IList<IFeature> result = ShapeFileImporterHelper.Read<ILineString>(shapeFilePath, null).ToList();
-                
+
                 // Then
                 Assert.That(result, Is.Not.Null, "Expected the Read result not to be null.");
                 Assert.That(result.Count, Is.EqualTo(1), "Expected a different number of IFeatures to be read.");
@@ -108,57 +108,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
                 Assert.That(result, Is.Not.Null, "Expected the Read result not to be null.");
                 Assert.That(result.Count, Is.EqualTo(0), "Expected a different number of IFeatures to be read.");
             }
-        }
-
-        /// <summary>
-        /// GIVEN a ShapeFile reader with a shape type
-        /// WHEN IsShapeTypeValid with the corresponding Geometry type is called
-        /// THEN true is returned
-        /// </summary>
-        [TestCase(ShapeType.Point,      typeof(IPoint),      true)]
-        [TestCase(ShapeType.Point,      typeof(ILineString), false)]
-        [TestCase(ShapeType.Point,      typeof(IPolygon),    false)]
-        [TestCase(ShapeType.PolyLine,   typeof(IPoint),      false)]
-        [TestCase(ShapeType.PolyLine,   typeof(ILineString), true)]
-        [TestCase(ShapeType.PolyLine,   typeof(IPolygon),    false)]
-        [TestCase(ShapeType.PolyLineZ,  typeof(IPoint),      false)]
-        [TestCase(ShapeType.PolyLineZ,  typeof(ILineString), true)]
-        [TestCase(ShapeType.PolyLineZ,  typeof(IPolygon),    false)]
-        [TestCase(ShapeType.Polygon,    typeof(IPoint),      false)]
-        [TestCase(ShapeType.Polygon,    typeof(ILineString), false)]
-        [TestCase(ShapeType.Polygon,    typeof(IPolygon),    true)]
-        [TestCase(ShapeType.MultiPatch, typeof(IPoint),      false)]
-        [TestCase(ShapeType.MultiPatch, typeof(ILineString), false)]
-        [TestCase(ShapeType.MultiPatch, typeof(IPolygon),    false)]
-
-        public void GivenAShapeFileReaderWithAShapeType_WhenIsShapeTypeValidWithTheCorrespondingGeometryTypeIsCalled_ThenTrueIsReturned(ShapeType shapeType,
-                                                                                                                                        Type genericType, 
-                                                                                                                                        bool expectedVal)
-        {
-            // Given
-            var shapeFile = MockRepository.GenerateMock<ShapeFile>();
-            shapeFile.Expect(e => e.ShapeType)
-                     .Return(shapeType)
-                     .Repeat.Once();
-            
-            shapeFile.Replay();
-
-            // When
-            var result = (bool) TypeUtils.CallStaticGenericMethod(typeof(ShapeFileImporterHelperTest),
-                                                                  nameof(IsShapeTypeValidWrapper), 
-                                                                  genericType, 
-                                                                  shapeFile);
-
-            // Then
-            shapeFile.VerifyAllExpectations();
-            Assert.That(result, Is.EqualTo(expectedVal), 
-                        $"Expected a different result for IsShapeTypeValid<{genericType}> with {shapeType}.");
-        }
-
-        // Ensure our type reflection only relies on functions internal to our class.
-        public static bool IsShapeTypeValidWrapper<T>(ShapeFile shapeFile) where T : IGeometry
-        {
-            return ShapeFileImporterHelper.IsShapeTypeValid<T>(shapeFile);
         }
 
         /// <summary>
@@ -278,7 +227,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             Assert.That(result, Is.EqualTo(geometryMock));
         }
 
-
         /// <summary>
         /// GIVEN an IFeature
         /// WHEN ConvertGeometry is called with an incorrect type
@@ -309,6 +257,56 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             geometryMock.VerifyAllExpectations();
 
             Assert.That(result, Is.Null);
+        }
+
+        /// <summary>
+        /// GIVEN a ShapeFile reader with a shape type
+        /// WHEN IsShapeTypeValid with the corresponding Geometry type is called
+        /// THEN true is returned
+        /// </summary>
+        [TestCase(ShapeType.Point, typeof(IPoint), true)]
+        [TestCase(ShapeType.Point, typeof(ILineString), false)]
+        [TestCase(ShapeType.Point, typeof(IPolygon), false)]
+        [TestCase(ShapeType.PolyLine, typeof(IPoint), false)]
+        [TestCase(ShapeType.PolyLine, typeof(ILineString), true)]
+        [TestCase(ShapeType.PolyLine, typeof(IPolygon), false)]
+        [TestCase(ShapeType.PolyLineZ, typeof(IPoint), false)]
+        [TestCase(ShapeType.PolyLineZ, typeof(ILineString), true)]
+        [TestCase(ShapeType.PolyLineZ, typeof(IPolygon), false)]
+        [TestCase(ShapeType.Polygon, typeof(IPoint), false)]
+        [TestCase(ShapeType.Polygon, typeof(ILineString), false)]
+        [TestCase(ShapeType.Polygon, typeof(IPolygon), true)]
+        [TestCase(ShapeType.MultiPatch, typeof(IPoint), false)]
+        [TestCase(ShapeType.MultiPatch, typeof(ILineString), false)]
+        [TestCase(ShapeType.MultiPatch, typeof(IPolygon), false)]
+        public void GivenAShapeFileReaderWithAShapeType_WhenIsShapeTypeValidWithTheCorrespondingGeometryTypeIsCalled_ThenTrueIsReturned(ShapeType shapeType,
+                                                                                                                                        Type genericType,
+                                                                                                                                        bool expectedVal)
+        {
+            // Given
+            var shapeFile = MockRepository.GenerateMock<ShapeFile>();
+            shapeFile.Expect(e => e.ShapeType)
+                     .Return(shapeType)
+                     .Repeat.Once();
+
+            shapeFile.Replay();
+
+            // When
+            var result = (bool) TypeUtils.CallStaticGenericMethod(typeof(ShapeFileImporterHelperTest),
+                                                                  nameof(IsShapeTypeValidWrapper),
+                                                                  genericType,
+                                                                  shapeFile);
+
+            // Then
+            shapeFile.VerifyAllExpectations();
+            Assert.That(result, Is.EqualTo(expectedVal),
+                        $"Expected a different result for IsShapeTypeValid<{genericType}> with {shapeType}.");
+        }
+
+        // Ensure our type reflection only relies on functions internal to our class.
+        public static bool IsShapeTypeValidWrapper<T>(ShapeFile shapeFile) where T : IGeometry
+        {
+            return ShapeFileImporterHelper.IsShapeTypeValid<T>(shapeFile);
         }
     }
 }

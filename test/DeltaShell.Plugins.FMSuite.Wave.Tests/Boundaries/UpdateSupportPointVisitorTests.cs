@@ -5,7 +5,6 @@ using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.ForcingTyp
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.SpatiallyDefinedDataComponents;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spreading;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
-using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels.WaveBoundaryConditionEditor.BoundaryParameterSpecific;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -18,7 +17,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries
         public void Constructor_ThrowsArgumentNullException_WhenNullParameterProvided()
         {
             void Call() => new SnapBoundariesToNewGrid.UpdateSupportPointVisitor(null);
-            
+
             Assert.Throws<ArgumentNullException>(Call);
         }
 
@@ -36,15 +35,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries
         public void Visit_UniformDataComponent_DoesNothing()
         {
             var toUpdate = new Dictionary<SupportPoint, SupportPoint>();
-            toUpdate.Add(new SupportPoint(10, Substitute.For<IWaveBoundaryGeometricDefinition>()), 
-                new SupportPoint(20, Substitute.For<IWaveBoundaryGeometricDefinition>()));
+            toUpdate.Add(new SupportPoint(10, Substitute.For<IWaveBoundaryGeometricDefinition>()),
+                         new SupportPoint(20, Substitute.For<IWaveBoundaryGeometricDefinition>()));
 
             var result = new SnapBoundariesToNewGrid.UpdateSupportPointVisitor(toUpdate);
 
             var bla = new UniformDataComponent<ConstantParameters<PowerDefinedSpreading>>(new ConstantParameters<PowerDefinedSpreading>(0.0, 0.0, 0.0, new PowerDefinedSpreading()));
 
             result.Visit(bla);
-            
+
             // what to Assert.
         }
 
@@ -62,7 +61,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries
 
             var result = new SnapBoundariesToNewGrid.UpdateSupportPointVisitor(toUpdate);
 
-            
             result.Visit(toVisit);
 
             // what to Assert.
@@ -75,7 +73,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries
         public void Visit_SpatiallyVaryingDataComponent_SupportPointRemoved()
         {
             var supportPointToReplace = new SupportPoint(10, Substitute.For<IWaveBoundaryGeometricDefinition>());
-            
+
             var toVisit = new SpatiallyVaryingDataComponent<FileBasedParameters>();
             toVisit.AddParameters(supportPointToReplace, new FileBasedParameters("mock"));
 
@@ -83,7 +81,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries
             toUpdate.Add(supportPointToReplace, null);
 
             var result = new SnapBoundariesToNewGrid.UpdateSupportPointVisitor(toUpdate);
-
 
             result.Visit(toVisit);
 
@@ -106,7 +103,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries
 
             var result = new SnapBoundariesToNewGrid.UpdateSupportPointVisitor(toUpdate);
 
-
             result.Visit(toVisit);
 
             // what to Assert.
@@ -114,6 +110,5 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries
             Assert.IsFalse(toVisit.Data.ContainsKey(replacedWithSupportPoint));
             Assert.AreEqual(1, toVisit.Data.Count);
         }
-
     }
 }

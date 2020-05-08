@@ -31,7 +31,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.GeometricDefinitions
         public void Constructor_InvalidGridSide_ThrowsInvalidEnumArgumentException()
         {
             // Call
-            void Call() => new GridBoundaryCoordinate((GridSide)0, random.Next());
+            void Call() => new GridBoundaryCoordinate((GridSide) 0, random.Next());
 
             // Assert
             Assert.Throws<InvalidEnumArgumentException>(Call);
@@ -90,13 +90,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.GeometricDefinitions
             int expectedIndex1 = random.Next(int.MaxValue - 1);
 
             var gridBoundaryCoordinate1 = new GridBoundaryCoordinate(expectedSide1,
-                                                                    expectedIndex1);
+                                                                     expectedIndex1);
 
             var expectedSide2 = random.NextEnumValue<GridSide>();
             int expectedIndex2 = expectedIndex1 + 1;
 
             var gridBoundaryCoordinate2 = new GridBoundaryCoordinate(expectedSide2,
-                                                                    expectedIndex2);
+                                                                     expectedIndex2);
 
             // Call
             bool result1 = gridBoundaryCoordinate1.Equals(gridBoundaryCoordinate2);
@@ -115,7 +115,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.GeometricDefinitions
             int expectedIndex1 = random.Next();
 
             var gridBoundaryCoordinate1 = new GridBoundaryCoordinate(expectedSide1,
-                                                                    expectedIndex1);
+                                                                     expectedIndex1);
 
             GridSide expectedSide2;
 
@@ -124,11 +124,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.GeometricDefinitions
                 expectedSide2 = random.NextEnumValue<GridSide>();
             } while (expectedSide2 == expectedSide1);
 
-
             int expectedIndex2 = random.Next();
 
             var gridBoundaryCoordinate2 = new GridBoundaryCoordinate(expectedSide2,
-                                                                    expectedIndex2);
+                                                                     expectedIndex2);
 
             // Call
             bool result1 = gridBoundaryCoordinate1.Equals(gridBoundaryCoordinate2);
@@ -147,10 +146,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.GeometricDefinitions
             int expectedIndex = random.Next();
 
             var gridBoundaryCoordinate1 = new GridBoundaryCoordinate(expectedSide,
-                                                                    expectedIndex);
+                                                                     expectedIndex);
 
             var gridBoundaryCoordinate2 = new GridBoundaryCoordinate(expectedSide,
-                                                                    expectedIndex);
+                                                                     expectedIndex);
 
             // Call
             bool result1 = gridBoundaryCoordinate1.Equals(gridBoundaryCoordinate2);
@@ -169,10 +168,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.GeometricDefinitions
             int expectedIndex = random.Next();
 
             var gridBoundaryCoordinate1 = new GridBoundaryCoordinate(expectedSide,
-                                                                    expectedIndex);
+                                                                     expectedIndex);
 
             var gridBoundaryCoordinate2 = new GridBoundaryCoordinate(expectedSide,
-                                                                    expectedIndex);
+                                                                     expectedIndex);
 
             // Call
             int result1 = gridBoundaryCoordinate1.GetHashCode();

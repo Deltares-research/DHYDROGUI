@@ -11,13 +11,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
         [Test]
         public void AllowNegativeFlowIsReadOnlyForSiphons()
         {
-            Assert.IsTrue(new CulvertProperties
-                {
-                    Data = new Culvert
-                        {
-                            CulvertType = CulvertType.Siphon
-                    }
-                }.DynamicReadOnlyValidationMethod(nameof(Culvert.AllowNegativeFlow))); // When the culvert is a siphon the AllowNegativeFlow property is readonly
+            Assert.IsTrue(new CulvertProperties {Data = new Culvert {CulvertType = CulvertType.Siphon}}.DynamicReadOnlyValidationMethod(nameof(Culvert.AllowNegativeFlow))); // When the culvert is a siphon the AllowNegativeFlow property is readonly
         }
     }
 }

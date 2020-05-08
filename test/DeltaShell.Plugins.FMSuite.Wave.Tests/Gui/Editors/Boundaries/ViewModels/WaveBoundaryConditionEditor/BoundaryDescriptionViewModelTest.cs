@@ -15,29 +15,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
     [TestFixture]
     public class BoundaryDescriptionViewModelTest
     {
-        private static IWaveBoundary GetConfiguredWaveBoundary(string name)
-        {
-            var boundary = Substitute.For<IWaveBoundary>();
-            boundary.Name = name;
-
-            var dataComponent = Substitute.For<ISpatiallyDefinedDataComponent>();
-            boundary.ConditionDefinition.DataComponent = dataComponent;
-
-            return boundary;
-        }
-
-        private static IViewEnumFromDataComponentQuerier GetConfiguredConverter(ISpatiallyDefinedDataComponent dataComponent,
-                                                                              ForcingViewType forcingType, 
-                                                                              SpatialDefinitionViewType spatialDefinition)
-        {
-            var converter = Substitute.For<IViewEnumFromDataComponentQuerier>();
-
-            converter.GetForcingType(dataComponent).Returns(forcingType);
-            converter.GetSpatialDefinition(dataComponent).Returns(spatialDefinition);
-
-            return converter;
-        }
-
         [Test]
         public void Constructor_ExpectedValues()
         {
@@ -49,32 +26,21 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             IWaveBoundary boundary = GetConfiguredWaveBoundary(expectedName);
 
             var factory = Substitute.For<IViewDataComponentFactory>();
-            IViewEnumFromDataComponentQuerier converter = 
+            IViewEnumFromDataComponentQuerier converter =
                 GetConfiguredConverter(boundary.ConditionDefinition.DataComponent,
-                                     expectedForcingType, 
-                                     expectedSpatialDefinition);
+                                       expectedForcingType,
+                                       expectedSpatialDefinition);
 
             // Call
             var viewModel = new BoundaryDescriptionViewModel(boundary, factory, converter);
 
             // Assert
-            Assert.That(viewModel.Name, Is.EqualTo(expectedName), 
+            Assert.That(viewModel.Name, Is.EqualTo(expectedName),
                         "Expected a different name:");
             Assert.That(viewModel.SpatialDefinition, Is.EqualTo(expectedSpatialDefinition),
-                "Expected a different SpatialDefinition:");
+                        "Expected a different SpatialDefinition:");
             Assert.That(viewModel.ForcingType, Is.EqualTo(expectedForcingType),
                         "Expected a different ForcingType");
-        }
-
-        private static IEnumerable<TestCaseData> GetConstructorNullParameterData()
-        {
-            var boundary = Substitute.For<IWaveBoundary>();
-            var factory = Substitute.For<IViewDataComponentFactory>();
-            var converter = Substitute.For<IViewEnumFromDataComponentQuerier>();
-
-            yield return new TestCaseData(null, factory, converter, "observedBoundary");
-            yield return new TestCaseData(boundary, null, converter, "dataComponentFactory");
-            yield return new TestCaseData(boundary, factory, null, "viewEnumFromDataComponentQuerier");
         }
 
         [Test]
@@ -115,12 +81,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
         {
             // Setup
             const string expectedName = "aBoundaryName";
-            
+
             IWaveBoundary boundary = GetConfiguredWaveBoundary("someOtherName");
             var factory = Substitute.For<IViewDataComponentFactory>();
             IViewEnumFromDataComponentQuerier converter = GetConfiguredConverter(boundary.ConditionDefinition.DataComponent,
-                                                                     ForcingViewType.Constant,
-                                                                     SpatialDefinitionViewType.SpatiallyVarying);
+                                                                                 ForcingViewType.Constant,
+                                                                                 SpatialDefinitionViewType.SpatiallyVarying);
 
             var viewModel = new BoundaryDescriptionViewModel(boundary, factory, converter);
             var observer = new NotifyPropertyChangedTestObserver();
@@ -141,12 +107,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
         {
             // Setup
             const string expectedName = "aBoundaryName";
-            
+
             IWaveBoundary boundary = GetConfiguredWaveBoundary(expectedName);
             var factory = Substitute.For<IViewDataComponentFactory>();
             IViewEnumFromDataComponentQuerier converter = GetConfiguredConverter(boundary.ConditionDefinition.DataComponent,
-                                                                     ForcingViewType.Constant,
-                                                                     SpatialDefinitionViewType.SpatiallyVarying);
+                                                                                 ForcingViewType.Constant,
+                                                                                 SpatialDefinitionViewType.SpatiallyVarying);
 
             var viewModel = new BoundaryDescriptionViewModel(boundary, factory, converter);
             var observer = new NotifyPropertyChangedTestObserver();
@@ -170,8 +136,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
 
             var factory = Substitute.For<IViewDataComponentFactory>();
             IViewEnumFromDataComponentQuerier converter = GetConfiguredConverter(boundary.ConditionDefinition.DataComponent,
-                                                                     ForcingViewType.Constant,
-                                                                     SpatialDefinitionViewType.SpatiallyVarying);
+                                                                                 ForcingViewType.Constant,
+                                                                                 SpatialDefinitionViewType.SpatiallyVarying);
 
             const DirectionalSpreadingViewType spreadingType = DirectionalSpreadingViewType.Degrees;
             converter.GetDirectionalSpreadingViewType(boundary.ConditionDefinition.DataComponent)
@@ -190,7 +156,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
 
             var observer = new NotifyPropertyChangedTestObserver();
             viewModel.PropertyChanged += observer.OnPropertyChanged;
-
 
             boundary.ConditionDefinition.ClearReceivedCalls();
             // Call
@@ -213,13 +178,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
 
             var factory = Substitute.For<IViewDataComponentFactory>();
             IViewEnumFromDataComponentQuerier converter = GetConfiguredConverter(boundary.ConditionDefinition.DataComponent,
-                                                                     ForcingViewType.Constant,
-                                                                     SpatialDefinitionViewType.SpatiallyVarying);
+                                                                                 ForcingViewType.Constant,
+                                                                                 SpatialDefinitionViewType.SpatiallyVarying);
             var announceDataComponentChanged = Substitute.For<IAnnounceDataComponentChanged>();
 
             var viewModel = new BoundaryDescriptionViewModel(boundary, factory, converter);
             viewModel.SetMediator(announceDataComponentChanged);
-            
+
             var observer = new NotifyPropertyChangedTestObserver();
             viewModel.PropertyChanged += observer.OnPropertyChanged;
 
@@ -238,8 +203,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             IWaveBoundary boundary = GetConfiguredWaveBoundary("someName");
             var factory = Substitute.For<IViewDataComponentFactory>();
             IViewEnumFromDataComponentQuerier converter = GetConfiguredConverter(boundary.ConditionDefinition.DataComponent,
-                                                                     ForcingViewType.Constant,
-                                                                     SpatialDefinitionViewType.SpatiallyVarying);
+                                                                                 ForcingViewType.Constant,
+                                                                                 SpatialDefinitionViewType.SpatiallyVarying);
 
             const DirectionalSpreadingViewType spreadingType = DirectionalSpreadingViewType.Degrees;
             converter.GetDirectionalSpreadingViewType(boundary.ConditionDefinition.DataComponent)
@@ -255,10 +220,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
 
             var viewModel = new BoundaryDescriptionViewModel(boundary, factory, converter);
             viewModel.SetMediator(announceDataComponentChanged);
-            
+
             var observer = new NotifyPropertyChangedTestObserver();
             viewModel.PropertyChanged += observer.OnPropertyChanged;
-
 
             boundary.ConditionDefinition.ClearReceivedCalls();
             // Call
@@ -280,14 +244,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             IWaveBoundary boundary = GetConfiguredWaveBoundary("someName");
             var factory = Substitute.For<IViewDataComponentFactory>();
             IViewEnumFromDataComponentQuerier converter = GetConfiguredConverter(boundary.ConditionDefinition.DataComponent,
-                                                                     ForcingViewType.Constant,
-                                                                     SpatialDefinitionViewType.SpatiallyVarying);
+                                                                                 ForcingViewType.Constant,
+                                                                                 SpatialDefinitionViewType.SpatiallyVarying);
 
             var announceDataComponentChanged = Substitute.For<IAnnounceDataComponentChanged>();
 
             var viewModel = new BoundaryDescriptionViewModel(boundary, factory, converter);
             viewModel.SetMediator(announceDataComponentChanged);
-            
+
             var observer = new NotifyPropertyChangedTestObserver();
             viewModel.PropertyChanged += observer.OnPropertyChanged;
 
@@ -297,6 +261,40 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             // Assert
             Assert.That(observer.NCalls, Is.EqualTo(0));
             announceDataComponentChanged.DidNotReceive().AnnounceDataComponentChanged();
+        }
+
+        private static IWaveBoundary GetConfiguredWaveBoundary(string name)
+        {
+            var boundary = Substitute.For<IWaveBoundary>();
+            boundary.Name = name;
+
+            var dataComponent = Substitute.For<ISpatiallyDefinedDataComponent>();
+            boundary.ConditionDefinition.DataComponent = dataComponent;
+
+            return boundary;
+        }
+
+        private static IViewEnumFromDataComponentQuerier GetConfiguredConverter(ISpatiallyDefinedDataComponent dataComponent,
+                                                                                ForcingViewType forcingType,
+                                                                                SpatialDefinitionViewType spatialDefinition)
+        {
+            var converter = Substitute.For<IViewEnumFromDataComponentQuerier>();
+
+            converter.GetForcingType(dataComponent).Returns(forcingType);
+            converter.GetSpatialDefinition(dataComponent).Returns(spatialDefinition);
+
+            return converter;
+        }
+
+        private static IEnumerable<TestCaseData> GetConstructorNullParameterData()
+        {
+            var boundary = Substitute.For<IWaveBoundary>();
+            var factory = Substitute.For<IViewDataComponentFactory>();
+            var converter = Substitute.For<IViewEnumFromDataComponentQuerier>();
+
+            yield return new TestCaseData(null, factory, converter, "observedBoundary");
+            yield return new TestCaseData(boundary, null, converter, "dataComponentFactory");
+            yield return new TestCaseData(boundary, factory, null, "viewEnumFromDataComponentQuerier");
         }
     }
 }

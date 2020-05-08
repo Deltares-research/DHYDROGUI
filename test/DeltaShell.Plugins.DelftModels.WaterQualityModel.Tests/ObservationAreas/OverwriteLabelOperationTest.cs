@@ -1,4 +1,5 @@
 ﻿using DeltaShell.Plugins.DelftModels.WaterQualityModel.ObservationAreas;
+using NetTopologySuite.Extensions.Grids;
 using NUnit.Framework;
 using SharpMap.Data.Providers;
 using SharpMap.SpatialOperations;
@@ -14,12 +15,26 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.ObservationArea
         [SetUp]
         public void SetUp()
         {
-            var grid = UnstructuredGridTestHelper.GenerateRegularGrid(3, 3, 1, 1);
+            UnstructuredGrid grid = UnstructuredGridTestHelper.GenerateRegularGrid(3, 3, 1, 1);
 
             var coverage = new WaterQualityObservationAreaCoverage(grid);
-            coverage.SetValuesAsLabels(new[] { "na", "na", "na", "na", "na", "na", "na", "na", "na" });
+            coverage.SetValuesAsLabels(new[]
+            {
+                "na",
+                "na",
+                "na",
+                "na",
+                "na",
+                "na",
+                "na",
+                "na",
+                "na"
+            });
             coverage.Components[0].NoDataValue = -999.0;
-            var coverageFeatureProvider = new FeatureCollection(new[] { coverage }, typeof(WaterQualityObservationAreaCoverage));
+            var coverageFeatureProvider = new FeatureCollection(new[]
+            {
+                coverage
+            }, typeof(WaterQualityObservationAreaCoverage));
             featureCollection = coverageFeatureProvider;
         }
 
@@ -37,9 +52,20 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.ObservationArea
 
             operation.Execute();
 
-            var coverage = (WaterQualityObservationAreaCoverage)operation.Output.Provider.Features[0];
+            var coverage = (WaterQualityObservationAreaCoverage) operation.Output.Provider.Features[0];
 
-            CollectionAssert.AreEquivalent(new[] { "na", "na", "na", "na", "na", "na", "na", "na", "batman" }, coverage.GetValuesAsLabels());
+            CollectionAssert.AreEquivalent(new[]
+            {
+                "na",
+                "na",
+                "na",
+                "na",
+                "na",
+                "na",
+                "na",
+                "na",
+                "batman"
+            }, coverage.GetValuesAsLabels());
         }
     }
 }

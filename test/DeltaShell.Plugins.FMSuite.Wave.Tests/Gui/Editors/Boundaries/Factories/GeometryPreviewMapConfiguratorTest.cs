@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
@@ -30,7 +31,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Factories
             var coordinateSystem = Substitute.For<ICoordinateSystem>();
 
             // Call
-            var configurator = new GeometryPreviewMapConfigurator(geometryFactory, 
+            var configurator = new GeometryPreviewMapConfigurator(geometryFactory,
                                                                   layerFactory,
                                                                   coordinateSystem);
 
@@ -44,11 +45,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Factories
             var layerFactory = Substitute.For<IWaveLayerFactory>();
             var coordinateSystem = Substitute.For<ICoordinateSystem>();
 
-            void Call() => new GeometryPreviewMapConfigurator(null, 
+            void Call() => new GeometryPreviewMapConfigurator(null,
                                                               layerFactory,
                                                               coordinateSystem);
 
-            var exception = Assert.Throws<System.ArgumentNullException>(Call);
+            var exception = Assert.Throws<ArgumentNullException>(Call);
             Assert.That(exception.ParamName, Is.EqualTo("geometryFactory"));
         }
 
@@ -58,23 +59,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Factories
             var geometryFactory = Substitute.For<IWaveBoundaryGeometryFactory>();
             var coordinateSystem = Substitute.For<ICoordinateSystem>();
 
-            void Call() => new GeometryPreviewMapConfigurator(geometryFactory, 
+            void Call() => new GeometryPreviewMapConfigurator(geometryFactory,
                                                               null,
                                                               coordinateSystem);
 
-            var exception = Assert.Throws<System.ArgumentNullException>(Call);
+            var exception = Assert.Throws<ArgumentNullException>(Call);
             Assert.That(exception.ParamName, Is.EqualTo("layerFactory"));
-        }
-
-        private static SupportPointDataComponentViewModel GetViewModel()
-        {
-            var conditionDefinition = Substitute.For<IWaveBoundaryConditionDefinition>();
-            var parametersFactory = Substitute.For<IForcingTypeDefinedParametersFactory>();
-            var announceChanged = Substitute.For<IAnnounceSupportPointDataChanged>();
-
-            return new SupportPointDataComponentViewModel(conditionDefinition,
-                                                          parametersFactory,
-                                                          announceChanged);
         }
 
         [Test]
@@ -113,7 +103,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Factories
             layerFactory.CreateSelectedSupportPointLayer(Arg.Is<IFeatureProvider>(x => x != null))
                         .Returns(selectedSupportPointsLayer);
 
-            var configurator = new GeometryPreviewMapConfigurator(geometryFactory, 
+            var configurator = new GeometryPreviewMapConfigurator(geometryFactory,
                                                                   layerFactory,
                                                                   coordinateSystem);
 
@@ -145,22 +135,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Factories
             map.Received(1).ZoomToExtents();
         }
 
-        private static IEnumerable<TestCaseData> GetParamNullData()
-        {
-            var map = Substitute.For<IMap>();
-            var boundaryProvider = Substitute.For<IBoundaryProvider>();
-            SupportPointDataComponentViewModel viewModel = GetViewModel();
-            var refreshGeometryView = Substitute.For<IRefreshGeometryView>();
-
-            yield return new TestCaseData(null, boundaryProvider, viewModel, refreshGeometryView, "map");
-            yield return new TestCaseData(map, null, viewModel, refreshGeometryView, "boundaryProvider");
-            yield return new TestCaseData(map, boundaryProvider, null, refreshGeometryView, "supportPointDataComponentViewModel");
-            yield return new TestCaseData(map, boundaryProvider, viewModel, null, "refreshGeometryView");
-        }
-
         [Test]
         [TestCaseSource(nameof(GetParamNullData))]
-        public void ConfigureMap_ParameterNull_ThrowsArgumentNullException(IMap map, 
+        public void ConfigureMap_ParameterNull_ThrowsArgumentNullException(IMap map,
                                                                            IBoundaryProvider boundaryProvider,
                                                                            SupportPointDataComponentViewModel viewModel,
                                                                            IRefreshGeometryView geometryView,
@@ -171,24 +148,24 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Factories
             var layerFactory = Substitute.For<IWaveLayerFactory>();
             var coordinateSystem = Substitute.For<ICoordinateSystem>();
 
-            var configurator = new GeometryPreviewMapConfigurator(geometryFactory, 
+            var configurator = new GeometryPreviewMapConfigurator(geometryFactory,
                                                                   layerFactory,
                                                                   coordinateSystem);
 
             // Call | Assert
             void Call() => configurator.ConfigureMap(map, boundaryProvider, viewModel, geometryView);
 
-            var exception = Assert.Throws<System.ArgumentNullException>(Call);
+            var exception = Assert.Throws<ArgumentNullException>(Call);
             Assert.That(exception.ParamName, Is.EqualTo(expectedParamName));
         }
 
         /// <summary>
         /// GIVEN a GeometryPreviewMapConfigurator
-        ///   AND a map
-        ///   AND a BoundaryProvider
-        ///   AND a RefreshGeometryView
+        /// AND a map
+        /// AND a BoundaryProvider
+        /// AND a RefreshGeometryView
         /// WHEN the map is configured by the configurator
-        ///  AND a support point is added to the boundary
+        /// AND a support point is added to the boundary
         /// THEN the refresh geometry view is called
         /// </summary>
         [Test]
@@ -224,6 +201,30 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Factories
 
             // Then
             refreshGeometryView.Received(1).RefreshGeometryView();
+        }
+
+        private static SupportPointDataComponentViewModel GetViewModel()
+        {
+            var conditionDefinition = Substitute.For<IWaveBoundaryConditionDefinition>();
+            var parametersFactory = Substitute.For<IForcingTypeDefinedParametersFactory>();
+            var announceChanged = Substitute.For<IAnnounceSupportPointDataChanged>();
+
+            return new SupportPointDataComponentViewModel(conditionDefinition,
+                                                          parametersFactory,
+                                                          announceChanged);
+        }
+
+        private static IEnumerable<TestCaseData> GetParamNullData()
+        {
+            var map = Substitute.For<IMap>();
+            var boundaryProvider = Substitute.For<IBoundaryProvider>();
+            SupportPointDataComponentViewModel viewModel = GetViewModel();
+            var refreshGeometryView = Substitute.For<IRefreshGeometryView>();
+
+            yield return new TestCaseData(null, boundaryProvider, viewModel, refreshGeometryView, "map");
+            yield return new TestCaseData(map, null, viewModel, refreshGeometryView, "boundaryProvider");
+            yield return new TestCaseData(map, boundaryProvider, null, refreshGeometryView, "supportPointDataComponentViewModel");
+            yield return new TestCaseData(map, boundaryProvider, viewModel, null, "refreshGeometryView");
         }
     }
 }

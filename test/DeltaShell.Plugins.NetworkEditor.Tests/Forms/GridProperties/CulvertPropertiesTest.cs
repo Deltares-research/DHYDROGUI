@@ -12,7 +12,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.GridProperties
         [Category(TestCategory.WindowsForms)]
         public void ShowProperties()
         {
-            WindowsFormsTestHelper.ShowPropertyGridForObject(new CulvertProperties { Data = new Culvert() });
+            WindowsFormsTestHelper.ShowPropertyGridForObject(new CulvertProperties {Data = new Culvert()});
         }
     }
 }

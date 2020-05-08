@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.TestUtils;
@@ -16,7 +17,6 @@ using Rhino.Mocks;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
 {
-
     [TestFixture]
     public class GeometryZipExporterTest
     {
@@ -25,41 +25,46 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
         [SetUp]
         public void Setup()
         {
-            this.exporter = new GeometryZipExporter();
+            exporter = new GeometryZipExporter();
         }
 
         // TODO: Why are these here and shouldn't they be data access?
         [Test]
         public void TestWriteZValuesToNetFile()
         {
-            var netFilePath = TestHelper.GetTestFilePath(@"harlingen\FilesUsingOldFormat\fm_003_net.nc");
+            string netFilePath = TestHelper.GetTestFilePath(@"harlingen\FilesUsingOldFormat\fm_003_net.nc");
             netFilePath = TestHelper.CreateLocalCopySingleFile(netFilePath);
 
-            using (var gridApi = GridApiFactory.CreateNew())
+            using (IUGridApi gridApi = GridApiFactory.CreateNew())
             {
                 GridApiDataSet.DataSetConventions convention;
                 gridApi.GetConvention(netFilePath, out convention);
                 Assert.AreEqual(convention, GridApiDataSet.DataSetConventions.CONV_OTHER);
             }
-            var grid = NetFileImporter.ImportGrid(netFilePath);
 
-            var currentZValues = grid.Vertices.Select(v => v.Z);
-            var newZValues = currentZValues.Select(z => { z = 123.456; return z; }).ToArray();
+            UnstructuredGrid grid = NetFileImporter.ImportGrid(netFilePath);
+
+            IEnumerable<double> currentZValues = grid.Vertices.Select(v => v.Z);
+            double[] newZValues = currentZValues.Select(z =>
+            {
+                z = 123.456;
+                return z;
+            }).ToArray();
 
             NetFile.WriteZValues(netFilePath, newZValues);
 
-            var adjustedGrid = NetFileImporter.ImportGrid(netFilePath);
-            var zValues = adjustedGrid.Vertices.Select(v => v.Z);
+            UnstructuredGrid adjustedGrid = NetFileImporter.ImportGrid(netFilePath);
+            IEnumerable<double> zValues = adjustedGrid.Vertices.Select(v => v.Z);
             Assert.That(zValues.All(z => Math.Abs(z - 123.456) < 0.0001), Is.True);
         }
 
         [Test]
         public void TestWriteZValuesAtNodesToNetFile_UGrid()
         {
-            var netFilePath = TestHelper.GetTestFilePath(@"ugrid\Custom_Ugrid.nc");
+            string netFilePath = TestHelper.GetTestFilePath(@"ugrid\Custom_Ugrid.nc");
             netFilePath = TestHelper.CreateLocalCopySingleFile(netFilePath);
 
-            using (var gridApi = GridApiFactory.CreateNew())
+            using (IUGridApi gridApi = GridApiFactory.CreateNew())
             {
                 GridApiDataSet.DataSetConventions convention;
                 gridApi.GetConvention(netFilePath, out convention);
@@ -72,11 +77,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
             {
                 grid = uGridAdaptor.GetUnstructuredGridFromUGridMeshId(1);
             }
+
             Assert.NotNull(grid);
 
             // generate new z values
-            var currentZValues = grid.Vertices.Select(v => v.Z);
-            var newZValues = currentZValues.Select(z => { z = 123.456; return z; }).ToArray();
+            IEnumerable<double> currentZValues = grid.Vertices.Select(v => v.Z);
+            double[] newZValues = currentZValues.Select(z =>
+            {
+                z = 123.456;
+                return z;
+            }).ToArray();
 
             // write new coordinates to netfile
             using (var uGrid = new UGrid(netFilePath, GridApiDataSet.NetcdfOpenMode.nf90_write))
@@ -90,20 +100,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
             {
                 adjustedGrid = uGridAdaptor.GetUnstructuredGridFromUGridMeshId(1);
             }
+
             Assert.NotNull(adjustedGrid);
 
             // compare z values
-            var zValues = adjustedGrid.Vertices.Select(v => v.Z);
+            IEnumerable<double> zValues = adjustedGrid.Vertices.Select(v => v.Z);
             Assert.That(zValues.All(z => Math.Abs(z - 123.456) < 0.0001), Is.True);
         }
 
         [Test]
         public void TestWriteZValuesAtCellCentersToNetFile_UGrid()
         {
-            var netFilePath = TestHelper.GetTestFilePath(@"ugrid\Custom_Ugrid.nc");
+            string netFilePath = TestHelper.GetTestFilePath(@"ugrid\Custom_Ugrid.nc");
             netFilePath = TestHelper.CreateLocalCopySingleFile(netFilePath);
 
-            using (var gridApi = GridApiFactory.CreateNew())
+            using (IUGridApi gridApi = GridApiFactory.CreateNew())
             {
                 GridApiDataSet.DataSetConventions convention;
                 gridApi.GetConvention(netFilePath, out convention);
@@ -116,10 +127,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
             {
                 grid = uGridAdaptor.GetUnstructuredGridFromUGridMeshId(1);
             }
+
             Assert.NotNull(grid);
 
             // generate new z values
-            var newZValues = Enumerable.Repeat(123.456, grid.Cells.Count).ToArray();
+            double[] newZValues = Enumerable.Repeat(123.456, grid.Cells.Count).ToArray();
 
             // write new coordinates to netfile
             using (var uGrid = new UGrid(netFilePath, GridApiDataSet.NetcdfOpenMode.nf90_write))
@@ -130,7 +142,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
             using (var ncFile = new NetCdfFileWrapper(netFilePath))
             {
                 // exported grid should contain zValue variable
-                var zValues = ncFile.GetValues1D<double>("mesh2d_face_z");
+                IList<double> zValues = ncFile.GetValues1D<double>("mesh2d_face_z");
                 Assert.NotNull(zValues);
                 Assert.That(zValues.All(z => Math.Abs(z - 123.456) < 0.0001), Is.True);
             }
@@ -153,12 +165,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
         [Test]
         public void GivenAGeometryZipExporter_WhenSourceTypesIsCalled_ThenAnEnumerableContainingTheSourceTypesIsReturned()
         {
-            var obtainedVals = exporter.SourceTypes();
+            IEnumerable<Type> obtainedVals = exporter.SourceTypes();
             Assert.That(obtainedVals.Count(), Is.EqualTo(2));
             Assert.That(obtainedVals.Contains(typeof(UnstructuredGrid)));
             Assert.That(obtainedVals.Contains(typeof(UnstructuredGridCoverage)));
         }
-
 
         [Test]
         public void GivenAGeometryZipExporter_WhenFileFilterPropertyIsCalled_ThenFileFilterIsReturned()
@@ -199,7 +210,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
             Assert.That(exporter.Export(null, Arg<string>.Is.Anything), Is.False);
         }
 
-
         [Test]
         public void GivenAGeometryZipExporterAndAnUnstructuredEmptyGrid_WhenExportIsCalled_ThenFalseIsReturned()
         {
@@ -210,12 +220,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
             mocks.ReplayAll();
             Assert.That(exporter.Export(unstructuredGridMock, Arg<string>.Is.Anything), Is.False);
 
-            var expectedLogMessage = Resources.ExportGrid_Cannot_export_in_this_format_if_the_grid_is_not_correct;
+            string expectedLogMessage = Resources.ExportGrid_Cannot_export_in_this_format_if_the_grid_is_not_correct;
             TestHelper.AssertAtLeastOneLogMessagesContains(() => exporter.Export(unstructuredGridMock, Arg<string>.Is.Anything), expectedLogMessage);
 
             mocks.VerifyAll();
         }
-
 
         [Test]
         public void GivenAGeometryZipExporterAndAValidEmptyModelWithAnEmptyGrid_WhenExportIsCalled_ThenFalseIsReturnedAndAWarningIsLogged()
@@ -225,14 +234,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
             gridMock.Expect(n => n.IsEmpty).Return(true).Repeat.Any();
 
             mocks.ReplayAll();
-            
+
             Assert.That(exporter.Export(gridMock, Arg<string>.Is.Anything), Is.False);
-            var expectedLogMessage = Resources.ExportGrid_Cannot_export_in_this_format_if_the_grid_is_not_correct;
+            string expectedLogMessage = Resources.ExportGrid_Cannot_export_in_this_format_if_the_grid_is_not_correct;
             TestHelper.AssertAtLeastOneLogMessagesContains(() => exporter.Export(gridMock, Arg<string>.Is.Anything), expectedLogMessage);
 
             mocks.VerifyAll();
         }
-
 
         [Test]
         [Category(TestCategory.Integration)]
@@ -242,30 +250,30 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
         {
             // Given
             // Create temporary folder
-            var tempFolderPath = FileUtils.CreateTempDirectory();
-            var inputPath  = Path.Combine(tempFolderPath, "input");
-            var outputFolderPath = Path.Combine(tempFolderPath, "output");
-            FileUtils.CreateDirectoryIfNotExists(inputPath,  deleteIfExists:true);
-            FileUtils.CreateDirectoryIfNotExists(outputFolderPath, deleteIfExists:true);
+            string tempFolderPath = FileUtils.CreateTempDirectory();
+            string inputPath = Path.Combine(tempFolderPath, "input");
+            string outputFolderPath = Path.Combine(tempFolderPath, "output");
+            FileUtils.CreateDirectoryIfNotExists(inputPath, true);
+            FileUtils.CreateDirectoryIfNotExists(outputFolderPath, true);
 
             try
             {
-                var testBaseFolder = TestHelper.GetTestFilePath(@"ReloadGrid");
-                var mduFilePath = Path.Combine(testBaseFolder, "mdufile_projected_assigned.mdu");
-                var destFilePath = Path.Combine(inputPath, Path.GetFileName(mduFilePath));
+                string testBaseFolder = TestHelper.GetTestFilePath(@"ReloadGrid");
+                string mduFilePath = Path.Combine(testBaseFolder, "mdufile_projected_assigned.mdu");
+                string destFilePath = Path.Combine(inputPath, Path.GetFileName(mduFilePath));
                 File.Copy(mduFilePath, destFilePath, true);
                 mduFilePath = destFilePath;
 
                 var ncFileName = "netfile_projected_assigned.nc";
-                var ncGeomFileName = $"{Path.GetFileNameWithoutExtension(ncFileName)}geom.nc";
-                var ncFilePath = Path.Combine(testBaseFolder, ncFileName);
+                string ncGeomFileName = $"{Path.GetFileNameWithoutExtension(ncFileName)}geom.nc";
+                string ncFilePath = Path.Combine(testBaseFolder, ncFileName);
                 destFilePath = Path.Combine(inputPath, Path.GetFileName(ncFilePath));
                 File.Copy(ncFilePath, destFilePath, true);
 
                 var model = new WaterFlowFMModel(mduFilePath);
 
                 // Construct Path
-                var outputFilePath = Path.Combine(outputFolderPath, "output.zip");
+                string outputFilePath = Path.Combine(outputFolderPath, "output.zip");
 
                 // configure exporter
                 exporter.GetModelForGrid = x => model;
@@ -274,12 +282,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
                 Assert.That(exporter.Export(model.Grid, outputFilePath), Is.True);
 
                 // Assert output exists
-                var nFilesInOutput = Directory.GetFiles(outputFolderPath).Length;
+                int nFilesInOutput = Directory.GetFiles(outputFolderPath).Length;
                 Assert.That(nFilesInOutput, Is.EqualTo(1));
                 Assert.That(File.Exists(outputFilePath), Is.True);
 
                 // Assert output is correct
-                var filesInExportedZip = ZipFileUtils.GetFilePathsInZip(outputFilePath, null);
+                IList<string> filesInExportedZip = ZipFileUtils.GetFilePathsInZip(outputFilePath, null);
                 Assert.That(filesInExportedZip.Count, Is.EqualTo(2));
                 Assert.That(filesInExportedZip.Contains(ncFileName));
                 Assert.That(filesInExportedZip.Contains(ncGeomFileName));
@@ -287,7 +295,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
                 // Assert that exported file is equal to input file.
                 ZipFileUtils.Extract(outputFilePath, outputFolderPath);
 
-                var inputFileChecksum = FileUtils.GetChecksum(ncFilePath);
+                string inputFileChecksum = FileUtils.GetChecksum(ncFilePath);
                 Assert.That(FileUtils.VerifyChecksum(Path.Combine(outputFolderPath, ncFileName), inputFileChecksum));
             }
             finally
@@ -295,7 +303,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
                 FileUtils.DeleteIfExists(tempFolderPath);
             }
         }
-
 
         [Test]
         [Category(TestCategory.Integration)]
@@ -305,35 +312,35 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
         {
             // Given
             // Create temporary folder
-            var tempFolderPath = FileUtils.CreateTempDirectory();
-            var inputPath  = Path.Combine(tempFolderPath, "input");
-            var outputFolderPath = Path.Combine(tempFolderPath, "output");
-            FileUtils.CreateDirectoryIfNotExists(inputPath,  deleteIfExists:true);
-            FileUtils.CreateDirectoryIfNotExists(outputFolderPath, deleteIfExists:true);
+            string tempFolderPath = FileUtils.CreateTempDirectory();
+            string inputPath = Path.Combine(tempFolderPath, "input");
+            string outputFolderPath = Path.Combine(tempFolderPath, "output");
+            FileUtils.CreateDirectoryIfNotExists(inputPath, true);
+            FileUtils.CreateDirectoryIfNotExists(outputFolderPath, true);
 
             try
             {
                 // Copy test data
-                var testBaseFolder = TestHelper.GetTestFilePath(@"ReloadGrid");
-                var mduFilePath = Path.Combine(testBaseFolder, "mdufile_projected_assigned.mdu");
-                var destFilePath = Path.Combine(inputPath, Path.GetFileName(mduFilePath));
+                string testBaseFolder = TestHelper.GetTestFilePath(@"ReloadGrid");
+                string mduFilePath = Path.Combine(testBaseFolder, "mdufile_projected_assigned.mdu");
+                string destFilePath = Path.Combine(inputPath, Path.GetFileName(mduFilePath));
                 File.Copy(mduFilePath, destFilePath, true);
                 mduFilePath = destFilePath;
 
                 var ncFileName = "netfile_projected_assigned.nc";
-                var ncGeomFileName = $"{Path.GetFileNameWithoutExtension(ncFileName)}geom.nc";
-                var ncFilePath = Path.Combine(testBaseFolder, ncFileName);
+                string ncGeomFileName = $"{Path.GetFileNameWithoutExtension(ncFileName)}geom.nc";
+                string ncFilePath = Path.Combine(testBaseFolder, ncFileName);
                 destFilePath = Path.Combine(inputPath, Path.GetFileName(ncFilePath));
                 File.Copy(ncFilePath, destFilePath, true);
 
                 // add garbage output files
-                using (var tempWriter = File.CreateText(Path.Combine(outputFolderPath, ncFileName)))
+                using (StreamWriter tempWriter = File.CreateText(Path.Combine(outputFolderPath, ncFileName)))
                 {
                     tempWriter.Write("this is definitely a test.");
                     tempWriter.Flush();
                 }
 
-                using (var tempWriter = File.CreateText(Path.Combine(outputFolderPath, $"{Path.GetFileNameWithoutExtension(ncFileName)}(2).nc")))
+                using (StreamWriter tempWriter = File.CreateText(Path.Combine(outputFolderPath, $"{Path.GetFileNameWithoutExtension(ncFileName)}(2).nc")))
                 {
                     tempWriter.Write("Also this.");
                     tempWriter.Flush();
@@ -342,7 +349,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
                 var model = new WaterFlowFMModel(mduFilePath);
 
                 // Construct Path
-                var outputFilePath = Path.Combine(outputFolderPath, "output.zip");
+                string outputFilePath = Path.Combine(outputFolderPath, "output.zip");
 
                 // configure exporter
                 exporter.GetModelForGrid = x => model;
@@ -351,14 +358,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
                 Assert.That(exporter.Export(model.Grid, outputFilePath), Is.True);
 
                 // Assert output exists
-                var nFilesInOutput = Directory.GetFiles(outputFolderPath).Length;
+                int nFilesInOutput = Directory.GetFiles(outputFolderPath).Length;
                 Assert.That(nFilesInOutput, Is.EqualTo(3));
                 Assert.That(File.Exists(outputFilePath), Is.True);
 
                 // Assert output is correct
-                var outputNcFileName = $"{Path.GetFileNameWithoutExtension(ncFileName)}(3).nc";
+                string outputNcFileName = $"{Path.GetFileNameWithoutExtension(ncFileName)}(3).nc";
 
-                var filesInExportedZip = ZipFileUtils.GetFilePathsInZip(outputFilePath, null);
+                IList<string> filesInExportedZip = ZipFileUtils.GetFilePathsInZip(outputFilePath, null);
                 Assert.That(filesInExportedZip.Count, Is.EqualTo(2));
                 Assert.That(filesInExportedZip.Contains(outputNcFileName));
                 Assert.That(filesInExportedZip.Contains(ncGeomFileName));
@@ -366,8 +373,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
                 // Assert that exported file is equal to input file.
                 ZipFileUtils.Extract(outputFilePath, outputFolderPath);
 
-                var outputUnzippedFilePath = Path.Combine(outputFolderPath, outputNcFileName);
-                var inputFileChecksum = FileUtils.GetChecksum(ncFilePath);
+                string outputUnzippedFilePath = Path.Combine(outputFolderPath, outputNcFileName);
+                string inputFileChecksum = FileUtils.GetChecksum(ncFilePath);
                 Assert.That(FileUtils.VerifyChecksum(outputUnzippedFilePath, inputFileChecksum));
             }
             finally
@@ -375,7 +382,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
                 FileUtils.DeleteIfExists(tempFolderPath);
             }
         }
-
 
         [Test]
         [ExpectedException(typeof(NotImplementedException))]
@@ -389,6 +395,5 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
 
             exporter.Export(gridMock, Arg<string>.Is.Anything);
         }
-
     }
 }

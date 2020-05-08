@@ -64,17 +64,6 @@ namespace DeltaShell.NGHS.Common.Tests.Layers
             correctProvider.Received(1).CreateLayer(sourceData, parentData);
         }
 
-        private ILayerSubProvider CreateCorrectSubProviderForData(object sourceData, object parentData, out ILayer layer)
-        {
-            var correctProvider = Substitute.For<ILayerSubProvider>();
-            correctProvider.CanCreateLayerFor(sourceData, parentData).Returns(true);
-
-            layer = Substitute.For<ILayer>();
-            correctProvider.CreateLayer(sourceData, parentData).Returns(layer);
-
-            return correctProvider;
-        }
-
         [Test]
         [TestCaseSource(nameof(GetSubProviders))]
         public void CanCreateLayerFor_NoValidSubProvider_ReturnsFalse(IList<ILayerSubProvider> subProviders)
@@ -99,7 +88,7 @@ namespace DeltaShell.NGHS.Common.Tests.Layers
             // Arrange
             var layerSubProvider1 = Substitute.For<ILayerSubProvider>();
             layerSubProvider1.CanCreateLayerFor(Arg.Any<object>(), Arg.Any<object>())
-                            .Returns(true);
+                             .Returns(true);
 
             var layerSubProvider2 = Substitute.For<ILayerSubProvider>();
             layerSubProvider2.CanCreateLayerFor(Arg.Any<object>(), Arg.Any<object>())
@@ -128,7 +117,7 @@ namespace DeltaShell.NGHS.Common.Tests.Layers
 
             var layerSubProvider1 = Substitute.For<ILayerSubProvider>();
             var childLayerObject1 = new object();
-            object[] childLayerObjects1 = 
+            object[] childLayerObjects1 =
             {
                 childLayerObject1
             };
@@ -142,7 +131,7 @@ namespace DeltaShell.NGHS.Common.Tests.Layers
             };
             layerSubProvider2.GenerateChildLayerObjects(data).Returns(childLayerObjects2);
 
-            ILayerSubProvider[] layerSubProviders = 
+            ILayerSubProvider[] layerSubProviders =
             {
                 layerSubProvider1,
                 layerSubProvider2
@@ -174,6 +163,17 @@ namespace DeltaShell.NGHS.Common.Tests.Layers
             Assert.That(exception.ParamName, Is.EqualTo("layerSubProviders"));
         }
 
+        private ILayerSubProvider CreateCorrectSubProviderForData(object sourceData, object parentData, out ILayer layer)
+        {
+            var correctProvider = Substitute.For<ILayerSubProvider>();
+            correctProvider.CanCreateLayerFor(sourceData, parentData).Returns(true);
+
+            layer = Substitute.For<ILayer>();
+            correctProvider.CreateLayer(sourceData, parentData).Returns(layer);
+
+            return correctProvider;
+        }
+
         private static MapLayerProvider GetMapLayerProviderWithSubProviders(IList<ILayerSubProvider> subProviders)
         {
             var mapLayerProvider = new MapLayerProvider();
@@ -190,7 +190,7 @@ namespace DeltaShell.NGHS.Common.Tests.Layers
             var prov3 = Substitute.For<ILayerSubProvider>();
 
             yield return new TestCaseData(new List<ILayerSubProvider>());
-            yield return new TestCaseData(new List<ILayerSubProvider> { prov0 });
+            yield return new TestCaseData(new List<ILayerSubProvider> {prov0});
             yield return new TestCaseData(new List<ILayerSubProvider>
             {
                 prov0,

@@ -6,6 +6,7 @@ using DelftTools.Shell.Gui;
 using DelftTools.TestUtils;
 using DeltaShell.Plugins.NetworkEditor.Gui.Layers;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
+using GeoAPI.Extensions.CoordinateSystems;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Features;
 using NUnit.Framework;
@@ -41,6 +42,50 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Tools
             mapView.MapControl.Tools.Add(pointTool);
 
             Action<Form> formAction = f =>
+            {
+                var args = new MouseEventArgs(MouseButtons.Left, 0, 0, 0, 0);
+                var coord = new Coordinate(10, 10);
+
+                pointTool.OnMouseDown(coord, args);
+                pointTool.OnMouseMove(coord, args);
+                pointTool.OnMouseUp(coord, args);
+
+                Assert.AreEqual(1, layer.DataSource.Features.Count);
+                Assert.AreEqual(10, layer.DataSource.Features.OfType<Feature2DPoint>().First().Geometry.Coordinate.X);
+
+                Assert.AreEqual(1, area.ObservationPoints.Count);
+                Assert.AreEqual(10, area.ObservationPoints.First().Geometry.Coordinate.X);
+            };
+            WindowsFormsTestHelper.ShowModal(mapView, formAction);
+        }
+
+        [Test]
+        [Category(TestCategory.WindowsForms)]
+        public void AddFeatureWithMapCoordinateSystemActive()
+        {
+            ICoordinateSystemFactory oldFactory = Map.CoordinateSystemFactory;
+            Map.CoordinateSystemFactory = new OgrCoordinateSystemFactory();
+
+            try
+            {
+                var area = new HydroArea();
+                var map = new Map();
+                ILayer layer = MapLayerProviderHelper.CreateLayersRecursive(area, null, new[]
+                {
+                    NetworkEditorMapLayerProviderCreator.CreateMapLayerProvider()
+                });
+                layer.DataSource = new Feature2DCollection().Init(area.ObservationPoints, "ObservationPoint", "MyModelName",
+                                                                  area.CoordinateSystem);
+                map.Layers.Add(layer);
+                map.CoordinateSystem = new OgrCoordinateSystemFactory().CreateFromEPSG(4326); //wgs84
+                //area.CoordinateSystem = new OgrCoordinateSystemFactory().CreateFromEPSG(4326); //wgs84
+
+                var mapView = new MapView {Map = map};
+                var pointTool = new Feature2DPointTool("", "", null);
+                pointTool.LayerFilter = l => l.Name == HydroAreaLayerNames.ObservationPointsPluralName;
+                mapView.MapControl.Tools.Add(pointTool);
+
+                Action<Form> formAction = f =>
                 {
                     var args = new MouseEventArgs(MouseButtons.Left, 0, 0, 0, 0);
                     var coord = new Coordinate(10, 10);
@@ -54,65 +99,19 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Tools
 
                     Assert.AreEqual(1, area.ObservationPoints.Count);
                     Assert.AreEqual(10, area.ObservationPoints.First().Geometry.Coordinate.X);
+
+                    map.CoordinateSystem = new OgrCoordinateSystemFactory().CreateFromEPSG(3857); //web mercator
+
+                    pointTool.OnMouseDown(coord, args);
+                    pointTool.OnMouseMove(coord, args);
+                    pointTool.OnMouseUp(coord, args);
+
+                    Assert.AreEqual(2, layer.DataSource.Features.Count);
+                    Assert.AreEqual(10, ((Feature2DPoint) layer.DataSource.Features[1]).Geometry.Coordinate.X);
+
+                    Assert.AreEqual(2, area.ObservationPoints.Count);
+                    Assert.AreEqual(10, area.ObservationPoints[1].Geometry.Coordinate.X);
                 };
-            WindowsFormsTestHelper.ShowModal(mapView, formAction);
-        }
-
-        
-        [Test]
-        [Category(TestCategory.WindowsForms)]
-        public void AddFeatureWithMapCoordinateSystemActive()
-        {
-            var oldFactory = Map.CoordinateSystemFactory;
-            Map.CoordinateSystemFactory = new OgrCoordinateSystemFactory();
-
-            try
-            {
-                
-                var area = new HydroArea();
-                var map = new Map();
-                ILayer layer = MapLayerProviderHelper.CreateLayersRecursive(area, null, new[]
-                {
-                    NetworkEditorMapLayerProviderCreator.CreateMapLayerProvider()
-                });
-                layer.DataSource = new Feature2DCollection().Init(area.ObservationPoints, "ObservationPoint", "MyModelName",
-                                                              area.CoordinateSystem);
-                map.Layers.Add(layer);
-                map.CoordinateSystem = new OgrCoordinateSystemFactory().CreateFromEPSG(4326); //wgs84
-                //area.CoordinateSystem = new OgrCoordinateSystemFactory().CreateFromEPSG(4326); //wgs84
-
-                var mapView = new MapView {Map = map};
-                var pointTool = new Feature2DPointTool("", "", null);
-                pointTool.LayerFilter = l => l.Name == HydroAreaLayerNames.ObservationPointsPluralName;
-                mapView.MapControl.Tools.Add(pointTool);
-
-                Action<Form> formAction = f =>
-                    {
-                        var args = new MouseEventArgs(MouseButtons.Left, 0, 0, 0, 0);
-                        var coord = new Coordinate(10, 10);
-
-                        pointTool.OnMouseDown(coord, args);
-                        pointTool.OnMouseMove(coord, args);
-                        pointTool.OnMouseUp(coord, args);
-
-                        Assert.AreEqual(1, layer.DataSource.Features.Count);
-                        Assert.AreEqual(10, layer.DataSource.Features.OfType<Feature2DPoint>().First().Geometry.Coordinate.X);
-
-                        Assert.AreEqual(1, area.ObservationPoints.Count);
-                        Assert.AreEqual(10, area.ObservationPoints.First().Geometry.Coordinate.X);
-
-                        map.CoordinateSystem = new OgrCoordinateSystemFactory().CreateFromEPSG(3857); //web mercator
-
-                        pointTool.OnMouseDown(coord, args);
-                        pointTool.OnMouseMove(coord, args);
-                        pointTool.OnMouseUp(coord, args);
-
-                        Assert.AreEqual(2, layer.DataSource.Features.Count);
-                        Assert.AreEqual(10, ((Feature2DPoint) layer.DataSource.Features[1]).Geometry.Coordinate.X);
-
-                        Assert.AreEqual(2, area.ObservationPoints.Count);
-                        Assert.AreEqual(10, area.ObservationPoints[1].Geometry.Coordinate.X);
-                    };
                 WindowsFormsTestHelper.ShowModal(mapView, formAction);
             }
             finally
@@ -125,12 +124,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Tools
         [Category(TestCategory.WindowsForms)]
         public void AddFeatureWithAreaCoordinateSystemActive()
         {
-            var oldFactory = Map.CoordinateSystemFactory;
+            ICoordinateSystemFactory oldFactory = Map.CoordinateSystemFactory;
             Map.CoordinateSystemFactory = new OgrCoordinateSystemFactory();
 
             try
             {
-
                 var area = new HydroArea();
                 var map = new Map();
                 ILayer layer = MapLayerProviderHelper.CreateLayersRecursive(area, null, new[]
@@ -138,11 +136,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Tools
                     NetworkEditorMapLayerProviderCreator.CreateMapLayerProvider()
                 });
                 layer.DataSource = new Feature2DCollection().Init(area.ObservationPoints, "ObservationPoint", "MyModelName",
-                                                              area.CoordinateSystem);
+                                                                  area.CoordinateSystem);
                 map.Layers.Add(layer);
                 area.CoordinateSystem = new OgrCoordinateSystemFactory().CreateFromEPSG(4326); //wgs84
 
-                var mapView = new MapView { Map = map };
+                var mapView = new MapView {Map = map};
                 var pointTool = new Feature2DPointTool("", "", null);
                 pointTool.LayerFilter = l => l.Name == HydroAreaLayerNames.ObservationPointsPluralName;
                 mapView.MapControl.Tools.Add(pointTool);
@@ -169,7 +167,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Tools
                     pointTool.OnMouseUp(coord, args);
 
                     Assert.AreEqual(2, layer.DataSource.Features.Count);
-                    Assert.AreEqual(10, ((Feature2DPoint)layer.DataSource.Features[1]).Geometry.Coordinate.X);
+                    Assert.AreEqual(10, ((Feature2DPoint) layer.DataSource.Features[1]).Geometry.Coordinate.X);
 
                     Assert.AreEqual(2, area.ObservationPoints.Count);
                     Assert.AreEqual(10, area.ObservationPoints[1].Geometry.Coordinate.X);
@@ -181,11 +179,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Tools
                 Map.CoordinateSystemFactory = oldFactory;
             }
         }
+
         [Test]
         [Category(TestCategory.WindowsForms)]
         public void AddFeatureWithDifferentCoordinateSystemsActive()
         {
-            var oldFactory = Map.CoordinateSystemFactory;
+            ICoordinateSystemFactory oldFactory = Map.CoordinateSystemFactory;
             Map.CoordinateSystemFactory = new OgrCoordinateSystemFactory();
 
             try
@@ -197,11 +196,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Tools
                     NetworkEditorMapLayerProviderCreator.CreateMapLayerProvider()
                 });
                 layer.DataSource = new Feature2DCollection().Init(area.ObservationPoints, "ObservationPoint", "MyModelName",
-                                                              area.CoordinateSystem);
+                                                                  area.CoordinateSystem);
                 map.Layers.Add(layer);
                 area.CoordinateSystem = new OgrCoordinateSystemFactory().CreateFromEPSG(28992); //Rd new
 
-                var mapView = new MapView { Map = map };
+                var mapView = new MapView {Map = map};
                 var pointTool = new Feature2DPointTool("", "", null);
                 pointTool.LayerFilter = l => l.Name == HydroAreaLayerNames.ObservationPointsPluralName;
                 mapView.MapControl.Tools.Add(pointTool);
@@ -229,10 +228,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Tools
                     pointTool.OnMouseUp(coord, args);
 
                     Assert.AreEqual(2, layer.DataSource.Features.Count);
-                    Assert.AreEqual(-587778.500, ((Feature2DPoint)layer.DataSource.Features[1]).Geometry.Coordinate.X, 0.001);
+                    Assert.AreEqual(-587778.500, ((Feature2DPoint) layer.DataSource.Features[1]).Geometry.Coordinate.X, 0.001);
 
                     Assert.AreEqual(2, area.ObservationPoints.Count);
-                    Assert.AreEqual(-587778.500, area.ObservationPoints[1].Geometry.Coordinate.X,0.001);
+                    Assert.AreEqual(-587778.500, area.ObservationPoints[1].Geometry.Coordinate.X, 0.001);
                 };
                 WindowsFormsTestHelper.ShowModal(mapView, formAction);
             }
@@ -241,6 +240,5 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Tools
                 Map.CoordinateSystemFactory = oldFactory;
             }
         }
-
     }
 }

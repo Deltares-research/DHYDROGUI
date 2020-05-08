@@ -22,7 +22,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
             Assert.That(argumentNullException.ParamName, Is.EqualTo("expressionObjects"),
                         "Expected a different ParamName:");
         }
-        
+
         [Test]
         public void Assemble_ControlGroupNameNull_ThrowsArgumentNullException()
         {
@@ -33,6 +33,24 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
             var argumentNullException = Assert.Throws<ArgumentNullException>(Call);
             Assert.That(argumentNullException.ParamName, Is.EqualTo("controlGroupName"),
                         "Expected a different ParamName:");
+        }
+
+        [Test]
+        [TestCaseSource(nameof(GetAssembleExpectedResultsData))]
+        public void Assemble_ExpectedResults(string groupName,
+                                             ExpressionObject[] expressionObjects,
+                                             ExpressionTree[] expectedResults)
+        {
+            // Setup
+            var comparer = new ExpressionTreeEqualityComparer();
+
+            // Call
+            IList<ExpressionTree> results =
+                ExpressionTreeAssembler.Assemble(expressionObjects, groupName).ToList();
+
+            // Assert
+            Assert.That(results, Is.EquivalentTo(expectedResults).Using(comparer),
+                        "Expected the results to be equal to the expected results:");
         }
 
         private class ExpressionTreeEqualityComparer : IEqualityComparer<ExpressionTree>
@@ -96,18 +114,18 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
             return Tuple.Create(expressionObjects, expressionTrees);
         }
 
-        private static Tuple<ExpressionObject, BranchNode> ConstructBranchNodeItems(string id, 
-                                                                              string groupName, 
-                                                                              Operator opp,
-                                                                              string yValue)
+        private static Tuple<ExpressionObject, BranchNode> ConstructBranchNodeItems(string id,
+                                                                                    string groupName,
+                                                                                    Operator opp,
+                                                                                    string yValue)
         {
             string param1 = $"{id}_Param1";
             string param2 = $"{id}_Param2";
 
             var expressionObject = new ExpressionObject(id,
-                                                        opp, 
-                                                        new ParameterLeafReference(param1), 
-                                                        new ParameterLeafReference(param2), 
+                                                        opp,
+                                                        new ParameterLeafReference(param1),
+                                                        new ParameterLeafReference(param2),
                                                         yValue);
 
             var branchNode = new BranchNode(opp, id)
@@ -128,14 +146,20 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
         {
             string id = $"[{groupName}]twoLeavesOneBranch_{postFix}";
             const Operator opp = Operator.Add;
-            
+
             Tuple<ExpressionObject, BranchNode> results = ConstructBranchNodeItems(id, groupName, opp, id);
 
-            var rootBranch = results.Item2;
+            BranchNode rootBranch = results.Item2;
             var expectedResult = new ExpressionTree(rootBranch, groupName, id,
                                                     new MathematicalExpression {Name = rootBranch.YName});
 
-            return Tuple.Create(new[] {results.Item1}, new[] {expectedResult});
+            return Tuple.Create(new[]
+            {
+                results.Item1
+            }, new[]
+            {
+                expectedResult
+            });
         }
 
         private static TestCaseData GetTwoLeavesOneTree()
@@ -148,7 +172,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
         private static TestCaseData GetTwoLeavesTwoTree()
         {
             const string groupName = "groupName";
-            Tuple<ExpressionObject[], ExpressionTree[]> data = 
+            Tuple<ExpressionObject[], ExpressionTree[]> data =
                 CombineData(GetTwoLeavesData(groupName, "1"), GetTwoLeavesData(groupName, "2"));
 
             return new TestCaseData(groupName, data.Item1, data.Item2);
@@ -158,7 +182,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
         {
             string idBottom = $"[{groupName}]oneLeafOneBranch_{postFix}";
             const Operator opp = Operator.Add;
-            
+
             Tuple<ExpressionObject, BranchNode> results = ConstructBranchNodeItems(idBottom, groupName, opp, idBottom);
 
             string idTop = $"[{groupName}]parentBranch{postFix}";
@@ -171,14 +195,21 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
             };
 
             var rootBranchObject = new ExpressionObject(idTop,
-                                                        Operator.Multiply, 
-                                                        new ExpressionReference(idBottom), 
-                                                        new ParameterLeafReference(parentLeafParam), 
+                                                        Operator.Multiply,
+                                                        new ExpressionReference(idBottom),
+                                                        new ParameterLeafReference(parentLeafParam),
                                                         idTop);
             var expectedResult = new ExpressionTree(rootBranch, groupName, idTop,
                                                     new MathematicalExpression {Name = rootBranch.YName});
 
-            return Tuple.Create(new[] {results.Item1, rootBranchObject}, new[] {expectedResult});
+            return Tuple.Create(new[]
+            {
+                results.Item1,
+                rootBranchObject
+            }, new[]
+            {
+                expectedResult
+            });
         }
 
         private static TestCaseData GetOneLeafOneTree()
@@ -191,7 +222,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
         private static TestCaseData GetOneLeafTwoTree()
         {
             const string groupName = "groupName";
-            Tuple<ExpressionObject[], ExpressionTree[]> data = 
+            Tuple<ExpressionObject[], ExpressionTree[]> data =
                 CombineData(GetOneLeafData(groupName, "1"), GetOneLeafData(groupName, "2"));
 
             return new TestCaseData(groupName, data.Item1, data.Item2);
@@ -201,7 +232,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
         {
             string idBottom1 = $"[{groupName}]twoLeavesOneBranch1_{postFix}";
             const Operator opp = Operator.Add;
-            
+
             Tuple<ExpressionObject, BranchNode> results1 = ConstructBranchNodeItems(idBottom1, groupName, opp, idBottom1);
 
             string idBottom2 = $"[{groupName}]twoLeavesOneBranch2_{postFix}";
@@ -214,15 +245,23 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
                 SecondNode = results2.Item2,
             };
 
-            var rootBranchObject = new ExpressionObject(idTop, 
-                                                        Operator.Multiply, 
-                                                        new ExpressionReference(idBottom1), 
-                                                        new ExpressionReference(idBottom2), 
+            var rootBranchObject = new ExpressionObject(idTop,
+                                                        Operator.Multiply,
+                                                        new ExpressionReference(idBottom1),
+                                                        new ExpressionReference(idBottom2),
                                                         idTop);
             var expectedResult = new ExpressionTree(rootBranch, groupName, idTop,
                                                     new MathematicalExpression {Name = rootBranch.YName});
 
-            return Tuple.Create(new[] {results1.Item1, rootBranchObject, results2.Item1}, new[] {expectedResult});
+            return Tuple.Create(new[]
+            {
+                results1.Item1,
+                rootBranchObject,
+                results2.Item1
+            }, new[]
+            {
+                expectedResult
+            });
         }
 
         private static TestCaseData GetTwoBranchOneTree()
@@ -235,11 +274,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
         private static TestCaseData GetTwoBranchTwoTree()
         {
             const string groupName = "groupName";
-            Tuple<ExpressionObject[], ExpressionTree[]> data = 
+            Tuple<ExpressionObject[], ExpressionTree[]> data =
                 CombineData(GetTwoBranchData(groupName, "1"), GetTwoBranchData(groupName, "2"));
 
             return new TestCaseData(groupName, data.Item1, data.Item2);
         }
+
         private static TestCaseData GetTwoLeavesOneTreeWithReferences()
         {
             const string groupName = "groupName";
@@ -247,7 +287,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
 
             string idBottom1 = $"[{groupName}]twoLeavesOneBranch1_{postFix}";
             string idBottom2 = $"[{groupName}]twoLeavesOneBranch2_{postFix}";
-            
+
             const Operator opp = Operator.Add;
 
             string idTop = $"[{groupName}]ParentBranch_{postFix}";
@@ -258,14 +298,20 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
             };
 
             var rootBranchObject = new ExpressionObject(idTop,
-                                                        opp, 
-                                                        new ExpressionReference(idBottom1), 
-                                                        new ExpressionReference(idBottom2), 
+                                                        opp,
+                                                        new ExpressionReference(idBottom1),
+                                                        new ExpressionReference(idBottom2),
                                                         idTop);
             var expectedResult = new ExpressionTree(rootBranch, groupName, idTop,
                                                     new MathematicalExpression {Name = rootBranch.YName});
 
-            return new TestCaseData(groupName, new[] {rootBranchObject}, new[] {expectedResult});
+            return new TestCaseData(groupName, new[]
+            {
+                rootBranchObject
+            }, new[]
+            {
+                expectedResult
+            });
         }
 
         private static IEnumerable<TestCaseData> GetAssembleExpectedResultsData()
@@ -279,24 +325,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
             yield return GetTwoLeavesTwoTree();
 
             yield return GetTwoLeavesOneTreeWithReferences();
-        }
-
-        [Test]
-        [TestCaseSource(nameof(GetAssembleExpectedResultsData))]
-        public void Assemble_ExpectedResults(string groupName, 
-                                             ExpressionObject[] expressionObjects,
-                                             ExpressionTree[] expectedResults)
-        {
-            // Setup
-            var comparer = new ExpressionTreeEqualityComparer();
-
-            // Call
-            IList<ExpressionTree> results = 
-                ExpressionTreeAssembler.Assemble(expressionObjects, groupName).ToList();
-
-            // Assert
-            Assert.That(results, Is.EquivalentTo(expectedResults).Using(comparer), 
-                        "Expected the results to be equal to the expected results:");
         }
     }
 }

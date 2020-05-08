@@ -25,7 +25,7 @@ namespace DeltaShell.NGHS.TestUtils
                 throw new ArgumentException($"'{typeof(TEnum).Name}' is not an enum.");
             }
 
-            var enumValues = (TEnum[])Enum.GetValues(typeof(TEnum));
+            var enumValues = (TEnum[]) Enum.GetValues(typeof(TEnum));
             return enumValues[random.Next(enumValues.Length)];
         }
 
@@ -57,7 +57,7 @@ namespace DeltaShell.NGHS.TestUtils
             int hour = random.Next(24);
             int minute = random.Next(60);
             int second = random.Next(60);
-            
+
             return new DateTime(year, month, day, hour, minute, second, DateTimeKind.Utc);
         }
     }

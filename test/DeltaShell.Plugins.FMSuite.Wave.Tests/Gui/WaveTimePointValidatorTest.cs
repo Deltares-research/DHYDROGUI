@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using DelftTools.Utils.Validation;
 using DeltaShell.Plugins.FMSuite.Wave.Validation;
 using NUnit.Framework;
 
@@ -20,7 +21,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
         [Test]
         public void GivenWaveModelWithNoTimePointsDefinedAndNotCoupledToFlow_WhenValidating_ThenValidationErrorIsGiven()
         {
-            var validationReport = WaveTimePointValidator.Validate(waveModel);
+            ValidationReport validationReport = WaveTimePointValidator.Validate(waveModel);
 
             Assert.That(validationReport, Is.Not.Null);
             Assert.That(validationReport.ErrorCount, Is.EqualTo(1));
@@ -32,7 +33,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
         {
             waveModel.IsCoupledToFlow = true;
 
-            var validationReport = WaveTimePointValidator.Validate(waveModel);
+            ValidationReport validationReport = WaveTimePointValidator.Validate(waveModel);
 
             Assert.That(validationReport, Is.Not.Null);
             Assert.That(validationReport.ErrorCount, Is.EqualTo(0), "A validation error(s) is given");
@@ -43,11 +44,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
         {
             var timePoint = new DateTime(2000, 01, 01);
             var timePoints = new List<DateTime> {timePoint};
-            var timePointData = waveModel.TimePointData;
+            WaveInputFieldData timePointData = waveModel.TimePointData;
             timePointData.InputFields.Arguments[0].AddValues(timePoints);
             Assert.That(timePointData.TimePoints, Is.Not.Empty);
 
-            var validationReport = WaveTimePointValidator.Validate(waveModel);
+            ValidationReport validationReport = WaveTimePointValidator.Validate(waveModel);
 
             Assert.That(validationReport, Is.Not.Null);
             Assert.That(validationReport.ErrorCount, Is.EqualTo(1));
@@ -59,19 +60,19 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
         {
             SetupModelWithTimePoints(1);
 
-            var validationReport = WaveTimePointValidator.Validate(waveModel);
+            ValidationReport validationReport = WaveTimePointValidator.Validate(waveModel);
 
             Assert.That(validationReport, Is.Not.Null);
             Assert.That(validationReport.ErrorCount, Is.EqualTo(0));
         }
-        
+
         #region Helper methods
-        
+
         private void SetupModelWithTimePoints(int yearsToAdd)
         {
-            var timePoint = waveModel.ModelDefinition.ModelReferenceDateTime.AddYears(yearsToAdd);
-            var timePoints = new List<DateTime> { timePoint };
-            var timePointsData = waveModel.TimePointData;
+            DateTime timePoint = waveModel.ModelDefinition.ModelReferenceDateTime.AddYears(yearsToAdd);
+            var timePoints = new List<DateTime> {timePoint};
+            WaveInputFieldData timePointsData = waveModel.TimePointData;
             timePointsData.InputFields.Arguments[0].AddValues(timePoints);
 
             Assert.That(timePointsData.TimePoints, Is.Not.Empty);

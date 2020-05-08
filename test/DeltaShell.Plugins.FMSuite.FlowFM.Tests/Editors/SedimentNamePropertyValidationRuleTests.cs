@@ -12,7 +12,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Editors
         {
             var validator = new SedimentNamePropertyValidationRule();
             var validName = "Sediment_001";
-            Assert.IsTrue(validator.Validate(validName,CultureInfo.InvariantCulture).IsValid);
+            Assert.IsTrue(validator.Validate(validName, CultureInfo.InvariantCulture).IsValid);
             var invalidName = "Sediment#001";
             Assert.IsFalse(validator.Validate(invalidName, CultureInfo.InvariantCulture).IsValid);
         }

@@ -30,7 +30,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.SettingsWpf
             var subCategory = new WpfGuiSubCategory("dummySubCateogry", fieldUiDescriptions);
             Assert.IsNotNull(subCategory);
             Assert.IsNotNull(subCategory.Properties);
-            Assert.IsTrue(subCategory.Properties.Any( p => p.Label.Equals(fieldUiDescription.Label)));
+            Assert.IsTrue(subCategory.Properties.Any(p => p.Label.Equals(fieldUiDescription.Label)));
         }
     }
 }

@@ -6,7 +6,6 @@ using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factories;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Features;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Providers;
-using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Providers.Behaviours;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Providers.Behaviours.AddBehaviours;
 using GeoAPI.Extensions.CoordinateSystems;
 using GeoAPI.Extensions.Feature;
@@ -32,7 +31,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
             // Call
             using (var featureProvider = new BoundaryLineMapFeatureProvider(boundaryProvider,
                                                                             coordinateSystem,
-                                                                            geometryFactory, 
+                                                                            geometryFactory,
                                                                             addBehaviour))
             {
                 // Assert
@@ -52,9 +51,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
             var addBehaviour = Substitute.For<IAddBehaviour>();
 
             // Call
-            void Call() => new BoundaryLineMapFeatureProvider(null, 
-                                                              coordinateSystem, 
-                                                              geometryFactory, 
+            void Call() => new BoundaryLineMapFeatureProvider(null,
+                                                              coordinateSystem,
+                                                              geometryFactory,
                                                               addBehaviour);
 
             // Assert
@@ -71,8 +70,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
             var coordinateSystem = Substitute.For<ICoordinateSystem>();
 
             // Call
-            void Call() => new BoundaryLineMapFeatureProvider(boundaryProvider, 
-                                                              coordinateSystem, 
+            void Call() => new BoundaryLineMapFeatureProvider(boundaryProvider,
+                                                              coordinateSystem,
                                                               geometryFactory,
                                                               null);
 
@@ -90,9 +89,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
             var addBehaviour = Substitute.For<IAddBehaviour>();
 
             // Call
-            void Call() => new BoundaryLineMapFeatureProvider(boundaryProvider, 
+            void Call() => new BoundaryLineMapFeatureProvider(boundaryProvider,
                                                               coordinateSystem,
-                                                              null, 
+                                                              null,
                                                               addBehaviour);
 
             // Assert
@@ -109,9 +108,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
             var coordinateSystem = Substitute.For<ICoordinateSystem>();
             var addBehaviour = Substitute.For<IAddBehaviour>();
 
-            using (var featureProvider = new BoundaryLineMapFeatureProvider(boundaryProvider, 
+            using (var featureProvider = new BoundaryLineMapFeatureProvider(boundaryProvider,
                                                                             coordinateSystem,
-                                                                            geometryFactory, 
+                                                                            geometryFactory,
                                                                             addBehaviour))
             {
                 var geometry = Substitute.For<IGeometry>();
@@ -144,17 +143,18 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
             geometryFactory.ConstructBoundaryLineGeometry(boundary).Returns(geometry);
 
             var nCalls = 0;
+
             void ObserveFeatures(object sender, EventArgs e)
             {
                 nCalls += 1;
             }
 
-            var addBehaviour = new BoundaryFromLineAddBehaviour(boundaryProvider, 
+            var addBehaviour = new BoundaryFromLineAddBehaviour(boundaryProvider,
                                                                 waveBoundaryFactory);
 
             using (var featureProvider = new BoundaryLineMapFeatureProvider(boundaryProvider,
                                                                             coordinateSystem,
-                                                                            geometryFactory, 
+                                                                            geometryFactory,
                                                                             addBehaviour))
             {
                 featureProvider.FeaturesChanged += ObserveFeatures;
@@ -186,7 +186,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
 
             using (var featureProvider = new BoundaryLineMapFeatureProvider(boundaryProvider,
                                                                             coordinateSystem,
-                                                                            geometryFactory, 
+                                                                            geometryFactory,
                                                                             addBehaviour))
             {
                 void Call() => featureProvider.Add(feature);
@@ -207,7 +207,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
 
             using (var featureProvider = new BoundaryLineMapFeatureProvider(boundaryProvider,
                                                                             coordinateSystem,
-                                                                            geometryFactory, 
+                                                                            geometryFactory,
                                                                             addBehaviour))
             {
                 void Call() => featureProvider.Features = features;

@@ -17,7 +17,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             var timeStep1 = new DateTime(2010, 12, 1, 1, 0, 0);
             var timeStep2 = new DateTime(2010, 12, 1, 2, 0, 0);
 
-            hisFileData.OutputVariables = new [] { "Substance 1", "Output parameter 1" };
+            hisFileData.OutputVariables = new[]
+            {
+                "Substance 1",
+                "Output parameter 1"
+            };
             hisFileData.AddValueForTimeStep(timeStep1, 10.0);
             hisFileData.AddValueForTimeStep(timeStep1, 10.5);
             hisFileData.AddValueForTimeStep(timeStep2, 5.5);
@@ -30,8 +34,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             Assert.AreEqual(timeStep1, hisFileData.TimeSteps.ElementAt(0));
             Assert.AreEqual(timeStep2, hisFileData.TimeSteps.ElementAt(1));
 
-            var timeStep1Values = hisFileData.GetValuesForTimeStep(timeStep1);
-            var timeStep2Values = hisFileData.GetValuesForTimeStep(timeStep2);
+            List<double> timeStep1Values = hisFileData.GetValuesForTimeStep(timeStep1);
+            List<double> timeStep2Values = hisFileData.GetValuesForTimeStep(timeStep2);
             Assert.AreEqual(2, timeStep1Values.Count);
             Assert.AreEqual(10.0, timeStep1Values[0]);
             Assert.AreEqual(10.5, timeStep1Values[1]);
@@ -63,14 +67,17 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             // 1. Set up test data.
             var hisFileData = new DelwaqHisFileData("Observation point")
             {
-                OutputVariables = new []{"dummyValue"}
+                OutputVariables = new[]
+                {
+                    "dummyValue"
+                }
             };
             const string outputKey = "dummyKey";
             IEnumerable<double> resultValues = Enumerable.Empty<double>();
 
             // 2. Verify initial conditions
             Assert.That(hisFileData.OutputVariables, Is.Not.Null);
-            
+
             // 3. Run test
             resultValues = hisFileData.GetValuesForKey(outputKey);
 
@@ -92,7 +99,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             var lastTimeStep = new DateTime(2010, 12, 1, 2, 0, 0);
 
             var hisFileData = new DelwaqHisFileData("Observation point");
-            hisFileData.OutputVariables = new[] { outputKey, "Output parameter 1" };
+            hisFileData.OutputVariables = new[]
+            {
+                outputKey,
+                "Output parameter 1"
+            };
             hisFileData.AddValueForTimeStep(firstTimeStep, outputValues[0]);
             hisFileData.AddValueForTimeStep(firstTimeStep, 10.5);
             hisFileData.AddValueForTimeStep(lastTimeStep, outputValues[1]);

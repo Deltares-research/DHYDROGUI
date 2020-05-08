@@ -11,7 +11,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms.Properties
         [Test, Category(TestCategory.WindowsForms)]
         public void ShowProperties()
         {
-            WindowsFormsTestHelper.ShowPropertyGridForObject(new FactorRuleProperties { Data = new FactorRule() });
+            WindowsFormsTestHelper.ShowPropertyGridForObject(new FactorRuleProperties {Data = new FactorRule()});
         }
     }
 }

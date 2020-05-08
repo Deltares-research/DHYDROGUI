@@ -11,9 +11,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Enums
         protected override IDictionary<ViewShapeType, int> ExpectedValueForEnumValues { get; } =
             new Dictionary<ViewShapeType, int>
             {
-                { ViewShapeType.Gauss,            1 },
-                { ViewShapeType.Jonswap,          2 },
-                { ViewShapeType.PiersonMoskowitz, 3 },
+                {ViewShapeType.Gauss, 1},
+                {ViewShapeType.Jonswap, 2},
+                {ViewShapeType.PiersonMoskowitz, 3},
             };
     }
 }

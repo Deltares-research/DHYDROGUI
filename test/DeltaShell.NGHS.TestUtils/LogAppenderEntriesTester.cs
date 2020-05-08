@@ -12,9 +12,10 @@ namespace DeltaShell.NGHS.TestUtils
     {
         private readonly MemoryAppender appender;
         private readonly Logger logger;
+
         public LogAppenderEntriesTester(Type classType)
         {
-            logger = (Logger)LogManager.GetLogger(classType).Logger;
+            logger = (Logger) LogManager.GetLogger(classType).Logger;
             appender = new MemoryAppender();
             BasicConfigurator.Configure(appender);
         }
@@ -26,6 +27,7 @@ namespace DeltaShell.NGHS.TestUtils
                 return appender.GetEvents().Select(loggingEvent => loggingEvent.RenderedMessage).ToList();
             }
         }
+
         public void Dispose()
         {
             logger.RemoveAppender(appender);

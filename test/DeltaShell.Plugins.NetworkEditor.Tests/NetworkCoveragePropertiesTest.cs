@@ -15,7 +15,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
             networkCoverage.Locations.AllowSetExtrapolationType = true;
             networkCoverage.Locations.AllowSetInterpolationType = false;
 
-            var properties = new NetworkCoverageProperties { Data = networkCoverage };
+            var properties = new NetworkCoverageProperties {Data = networkCoverage};
 
             //set them to a default value
             networkCoverage.Locations.InterpolationType = InterpolationType.Constant;

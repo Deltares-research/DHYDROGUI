@@ -2,6 +2,7 @@
 using System.Linq;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Helpers;
+using DelftTools.TestUtils;
 using DelftTools.Utils;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
@@ -31,7 +32,7 @@ namespace DelftTools.Hydro.Tests
         {
             var innerDefinition = CrossSectionDefinitionZW.CreateDefault();
             var proxyDefinition = new CrossSectionDefinitionProxy(innerDefinition);
-            var clone = (CrossSectionDefinitionProxy)proxyDefinition.Clone();
+            var clone = (CrossSectionDefinitionProxy) proxyDefinition.Clone();
             Assert.AreEqual(innerDefinition, clone.InnerDefinition);
         }
 
@@ -41,7 +42,7 @@ namespace DelftTools.Hydro.Tests
             var innerDefinition = CrossSectionDefinitionZW.CreateDefault();
             var proxyDefinition = new CrossSectionDefinitionProxy(innerDefinition);
             proxyDefinition.LevelShift = 33.0;
-            var clone = (CrossSectionDefinitionProxy)proxyDefinition.Clone();
+            var clone = (CrossSectionDefinitionProxy) proxyDefinition.Clone();
             Assert.AreEqual(proxyDefinition.LevelShift, clone.LevelShift);
         }
 
@@ -51,36 +52,37 @@ namespace DelftTools.Hydro.Tests
             var innerDefinition = CrossSectionDefinitionZW.CreateDefault();
             var proxyDefinition = new CrossSectionDefinitionProxy(innerDefinition);
             Assert.IsTrue(proxyDefinition.CanHaveSummerDike);
-            proxyDefinition.InnerDefinition = CrossSectionDefinitionYZ.CreateDefault(); 
+            proxyDefinition.InnerDefinition = CrossSectionDefinitionYZ.CreateDefault();
             Assert.IsFalse(proxyDefinition.CanHaveSummerDike);
         }
+
         [Test]
         public void ChangeOfInnerDefinitionFiresDataChanged()
         {
             //functionality is needed because datachanged is used to invalidate the geometry of the cs.
-            int callCount = 0;
+            var callCount = 0;
             var innerDefinition = CrossSectionDefinitionZW.CreateDefault();
             var proxyDefinition = new CrossSectionDefinitionProxy(innerDefinition);
-            ((INotifyPropertyChange)proxyDefinition).PropertyChanged += (s, e) => { callCount++; };
+            ((INotifyPropertyChange) proxyDefinition).PropertyChanged += (s, e) => { callCount++; };
             proxyDefinition.InnerDefinition = CrossSectionDefinitionYZ.CreateDefault();
-            Assert.AreEqual(1,callCount);
+            Assert.AreEqual(1, callCount);
         }
 
         [Test]
         public void ChangeOfInnerDefinitionThalwegUpdatesGeometryOfCrossSection()
         {
-            var network = HydroNetworkHelper.GetSnakeHydroNetwork(new Point(0, 0), new Point(100, 0));
+            IHydroNetwork network = HydroNetworkHelper.GetSnakeHydroNetwork(new Point(0, 0), new Point(100, 0));
 
             var innerDefinition = CrossSectionDefinitionZW.CreateDefault();
             var proxyDefinition = new CrossSectionDefinitionProxy(innerDefinition);
 
-            var cs = HydroNetworkHelper.AddCrossSectionDefinitionToBranch(network.Branches.First(), proxyDefinition, 15);
+            ICrossSection cs = HydroNetworkHelper.AddCrossSectionDefinitionToBranch(network.Branches.First(), proxyDefinition, 15);
 
-            var geometryBefore = cs.Geometry;
+            IGeometry geometryBefore = cs.Geometry;
 
             innerDefinition.Thalweg += 1;
 
-            var geometryAfter = cs.Geometry;
+            IGeometry geometryAfter = cs.Geometry;
 
             Console.WriteLine((object) geometryBefore);
             Console.WriteLine((object) geometryAfter);
@@ -89,28 +91,28 @@ namespace DelftTools.Hydro.Tests
         }
 
         [Test]
-        [Category(DelftTools.TestUtils.TestCategory.WorkInProgress)] // crashes from time to time
+        [Category(TestCategory.WorkInProgress)] // crashes from time to time
         public void ChangeOfInnerDefinitionProfileUpdatesGeometryOfCrossSection()
         {
-            var network = HydroNetworkHelper.GetSnakeHydroNetwork(1);
+            IHydroNetwork network = HydroNetworkHelper.GetSnakeHydroNetwork(1);
 
             var innerDefinition = CrossSectionDefinitionZW.CreateDefault();
             var proxyDefinition = new CrossSectionDefinitionProxy(innerDefinition);
 
-            var cs = HydroNetworkHelper.AddCrossSectionDefinitionToBranch(network.Branches.First(), proxyDefinition, 15);
+            ICrossSection cs = HydroNetworkHelper.AddCrossSectionDefinitionToBranch(network.Branches.First(), proxyDefinition, 15);
 
-            var geometryBefore = cs.Geometry;
+            IGeometry geometryBefore = cs.Geometry;
 
             innerDefinition.ZWDataTable.AddCrossSectionZWRow(-5, 200, 50);
 
-            var geometryAfter = cs.Geometry;
+            IGeometry geometryAfter = cs.Geometry;
 
             Assert.AreNotEqual(geometryBefore, geometryAfter);
         }
 
         private static void AssertLevelShiftsWork(ICrossSectionDefinition innerDefinition)
         {
-            Assert.IsTrue(innerDefinition.Profile.Count()>0);
+            Assert.IsTrue(innerDefinition.Profile.Count() > 0);
 
             var proxyDefinition = new CrossSectionDefinitionProxy(innerDefinition);
             CheckWithShift(innerDefinition, proxyDefinition, 3.3);
@@ -120,7 +122,7 @@ namespace DelftTools.Hydro.Tests
         private static void CheckWithShift(ICrossSectionDefinition innerDefinition, CrossSectionDefinitionProxy proxyDefinition, double levelShift)
         {
             proxyDefinition.LevelShift = levelShift;
-            Assert.AreEqual(innerDefinition.Profile.Select(c => new Coordinate(c.X, c.Y + levelShift)).ToList(),proxyDefinition.Profile.ToList());
+            Assert.AreEqual(innerDefinition.Profile.Select(c => new Coordinate(c.X, c.Y + levelShift)).ToList(), proxyDefinition.Profile.ToList());
             Assert.AreEqual(innerDefinition.FlowProfile.Select(c => new Coordinate(c.X, c.Y + levelShift)).ToList(), proxyDefinition.FlowProfile.ToList());
         }
     }

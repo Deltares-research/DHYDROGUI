@@ -13,6 +13,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries
     {
         private readonly Random random = new Random(37);
 
+        private static IEnumerable<TestCaseData> InvalidNames
+        {
+            get
+            {
+                yield return new TestCaseData("");
+                yield return new TestCaseData(null);
+            }
+        }
+
         [Test]
         public void Constructor_ExpectedValues()
         {
@@ -38,16 +47,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries
                         "Expected a different ConditionDefinition:");
         }
 
-
-        private static IEnumerable<TestCaseData> InvalidNames
-        {
-            get
-            {
-                yield return new TestCaseData("");
-                yield return new TestCaseData(null);
-            }
-        }
-
         [Test]
         [TestCaseSource(nameof(InvalidNames))]
         public void Constructor_InvalidName_ThrowsArgumentNullException(string invalidName)
@@ -58,7 +57,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries
 
             // Call
             void Call() => new WaveBoundary(invalidName, geometricDefinition, conditionDefinition);
-            
+
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(Call);
 
@@ -75,7 +74,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries
 
             // Call
             void Call() => new WaveBoundary(boundaryName, null, conditionDefinition);
-            
+
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(Call);
 
@@ -92,7 +91,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries
 
             // Call
             void Call() => new WaveBoundary(boundaryName, geometricDefinition, null);
-            
+
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(Call);
 

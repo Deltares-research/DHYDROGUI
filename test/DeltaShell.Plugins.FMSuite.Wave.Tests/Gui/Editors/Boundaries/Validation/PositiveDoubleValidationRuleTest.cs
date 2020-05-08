@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Controls;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Validation;
 using NUnit.Framework;
@@ -21,7 +18,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Validatio
             // Setup
             var validationRule = new PositiveDoubleValidationRule();
             double value = random.NextDouble();
-            string stringValue = value.ToString(cultureInfo);
+            var stringValue = value.ToString(cultureInfo);
 
             // Call
             ValidationResult result = validationRule.Validate(stringValue, cultureInfo);
@@ -37,7 +34,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Validatio
             // Setup
             var validationRule = new PositiveDoubleValidationRule();
             double value = -1 * random.NextDouble();
-            string stringValue = value.ToString(cultureInfo);
+            var stringValue = value.ToString(cultureInfo);
 
             // Call
             ValidationResult result = validationRule.Validate(stringValue, cultureInfo);

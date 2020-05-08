@@ -37,18 +37,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
             Assert.That(exception.ParamName, Is.EqualTo("parametersFactory"));
         }
 
-
-        private class DummyParameters : ISpatiallyDefinedDataComponent {
-            public void AcceptVisitor(ISpatiallyDefinedDataComponentVisitor visitor) {}
-        }
-
         [Test]
         public void ConstructDefaultDataComponent_NotValidType_ThrowsNotSupportedException()
         {
             // Setup
             var parameterFactory = Substitute.For<IForcingTypeDefinedParametersFactory>();
             var componentFactory = new SpatiallyDefinedDataComponentFactory(parameterFactory);
-            
+
             // Call
             void Call() => componentFactory.ConstructDefaultDataComponent<DummyParameters>();
 
@@ -62,7 +57,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
             // Setup
             var parameterFactory = Substitute.For<IForcingTypeDefinedParametersFactory>();
             var componentFactory = new SpatiallyDefinedDataComponentFactory(parameterFactory);
-            
+
             // Call
             void Call() => componentFactory.ConstructDefaultDataComponent<DummyParameters>();
 
@@ -76,7 +71,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
             // Setup
             var parameterFactory = Substitute.For<IForcingTypeDefinedParametersFactory>();
             var componentFactory = new SpatiallyDefinedDataComponentFactory(parameterFactory);
-            
+
             // Call
             var component = new SpatiallyVaryingDataComponent<ConstantParameters<PowerDefinedSpreading>>();
             void Call() => componentFactory.ConvertDataComponentSpreading<PowerDefinedSpreading, PowerDefinedSpreading>(component);
@@ -91,7 +86,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
             // Setup
             var parameterFactory = Substitute.For<IForcingTypeDefinedParametersFactory>();
             var componentFactory = new SpatiallyDefinedDataComponentFactory(parameterFactory);
-            
+
             var parametersDegrees = new ConstantParameters<DegreesDefinedSpreading>(0, 0, 0, new DegreesDefinedSpreading());
             var component = new UniformDataComponent<ConstantParameters<DegreesDefinedSpreading>>(parametersDegrees);
 
@@ -100,7 +95,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
                             .Returns(parametersPower);
 
             // Call
-            ISpatiallyDefinedDataComponent result = 
+            ISpatiallyDefinedDataComponent result =
                 componentFactory.ConvertDataComponentSpreading<DegreesDefinedSpreading, PowerDefinedSpreading>(component);
 
             // Assert
@@ -121,7 +116,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
             var componentFactory = new SpatiallyDefinedDataComponentFactory(parameterFactory);
 
             var component = new SpatiallyVaryingDataComponent<ConstantParameters<PowerDefinedSpreading>>();
-            
+
             var supportPoints = new List<SupportPoint>();
             var parametersDegrees = new Dictionary<SupportPoint, ConstantParameters<DegreesDefinedSpreading>>();
 
@@ -142,12 +137,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
             }
 
             // Call
-            ISpatiallyDefinedDataComponent result = 
+            ISpatiallyDefinedDataComponent result =
                 componentFactory.ConvertDataComponentSpreading<PowerDefinedSpreading, DegreesDefinedSpreading>(component);
 
             // Assert
             Assert.That(result, Is.InstanceOf<SpatiallyVaryingDataComponent<ConstantParameters<DegreesDefinedSpreading>>>());
-            var componentDegrees = (SpatiallyVaryingDataComponent<ConstantParameters<DegreesDefinedSpreading>>)result;
+            var componentDegrees = (SpatiallyVaryingDataComponent<ConstantParameters<DegreesDefinedSpreading>>) result;
 
             Assert.That(componentDegrees.Data.Keys.Count(), Is.EqualTo(supportPoints.Count));
             foreach (SupportPoint supportPoint in supportPoints)
@@ -163,7 +158,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
             // Setup
             var parameterFactory = Substitute.For<IForcingTypeDefinedParametersFactory>();
             var componentFactory = new SpatiallyDefinedDataComponentFactory(parameterFactory);
-            
+
             var parametersDegrees = new TimeDependentParameters<DegreesDefinedSpreading>(Substitute.For<IWaveEnergyFunction<DegreesDefinedSpreading>>());
             var component = new UniformDataComponent<TimeDependentParameters<DegreesDefinedSpreading>>(parametersDegrees);
 
@@ -172,7 +167,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
                             .Returns(parametersPower);
 
             // Call
-            ISpatiallyDefinedDataComponent result = 
+            ISpatiallyDefinedDataComponent result =
                 componentFactory.ConvertDataComponentSpreading<DegreesDefinedSpreading, PowerDefinedSpreading>(component);
 
             // Assert
@@ -193,7 +188,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
             var componentFactory = new SpatiallyDefinedDataComponentFactory(parameterFactory);
 
             var component = new SpatiallyVaryingDataComponent<TimeDependentParameters<PowerDefinedSpreading>>();
-            
+
             var supportPoints = new List<SupportPoint>();
             var parametersDegrees = new Dictionary<SupportPoint, TimeDependentParameters<DegreesDefinedSpreading>>();
 
@@ -214,12 +209,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
             }
 
             // Call
-            ISpatiallyDefinedDataComponent result = 
+            ISpatiallyDefinedDataComponent result =
                 componentFactory.ConvertDataComponentSpreading<PowerDefinedSpreading, DegreesDefinedSpreading>(component);
 
             // Assert
             Assert.That(result, Is.InstanceOf<SpatiallyVaryingDataComponent<TimeDependentParameters<DegreesDefinedSpreading>>>());
-            var componentDegrees = (SpatiallyVaryingDataComponent<TimeDependentParameters<DegreesDefinedSpreading>>)result;
+            var componentDegrees = (SpatiallyVaryingDataComponent<TimeDependentParameters<DegreesDefinedSpreading>>) result;
 
             Assert.That(componentDegrees.Data.Keys.Count(), Is.EqualTo(supportPoints.Count));
 
@@ -230,19 +225,23 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.ConditionDefinitions.
             }
         }
 
-
         [Test]
         public void ConvertDataComponentSpreading_UnsupportedDataComponent_ThrowsNotSupportedException()
         {
             // Setup
             var parameterFactory = Substitute.For<IForcingTypeDefinedParametersFactory>();
             var componentFactory = new SpatiallyDefinedDataComponentFactory(parameterFactory);
-            
+
             // Call
             void Call() => componentFactory.ConvertDataComponentSpreading<PowerDefinedSpreading, DegreesDefinedSpreading>(new DummyParameters());
 
             // Assert
             Assert.Throws<NotSupportedException>(Call);
+        }
+
+        private class DummyParameters : ISpatiallyDefinedDataComponent
+        {
+            public void AcceptVisitor(ISpatiallyDefinedDataComponentVisitor visitor) {}
         }
     }
 }

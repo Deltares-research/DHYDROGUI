@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -7,6 +8,7 @@ using System.Windows.Forms;
 using DelftTools.Controls;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
+using DelftTools.Shell.Core;
 using DelftTools.Shell.Gui;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections;
@@ -42,17 +44,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         [Category(TestCategory.WindowsForms)]
         public void ShowLayersForFmModel()
         {
-            var mduPath =
+            string mduPath =
                 TestHelper.GetTestFilePath(@"data\f04_bottomfriction\c016_2DConveyance_bend\input\bendprof.mdu");
             mduPath = TestHelper.CreateLocalCopy(mduPath);
             ShowModelLayers(new WaterFlowFMModel(mduPath));
         }
-        
+
         [Test]
         [Category(TestCategory.WindowsForms)]
         public void ShowLayersForIvoorkust()
         {
-            var mduPath =
+            string mduPath =
                 TestHelper.GetTestFilePath(@"mdu_ivoorkust\ivk.mdu");
             mduPath = TestHelper.CreateLocalCopy(mduPath);
             ShowModelLayers(new WaterFlowFMModel(mduPath));
@@ -62,20 +64,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         [Category(TestCategory.WindowsForms)]
         public void ShowLayersAdjustedModel()
         {
-            var mduPath =
+            string mduPath =
                 TestHelper.GetTestFilePath(@"data\f04_bottomfriction\c016_2DConveyance_bend\input\bendprof.mdu");
             mduPath = TestHelper.CreateLocalCopy(mduPath);
             var model = new WaterFlowFMModel(mduPath);
 
             model.Area.DredgingLocations.Add(new GroupableFeature2D
             {
-                    Geometry = new Polygon(new LinearRing(new[]
-                        {
-                            new Coordinate(-135, -105), new Coordinate(-85, -100), 
-                            new Coordinate(-75, -205), new Coordinate(-125, -200),  
-                            new Coordinate(-135, -105)
-                        }))
-                });
+                Geometry = new Polygon(new LinearRing(new[]
+                {
+                    new Coordinate(-135, -105),
+                    new Coordinate(-85, -100),
+                    new Coordinate(-75, -205),
+                    new Coordinate(-125, -200),
+                    new Coordinate(-135, -105)
+                }))
+            });
 
             ShowModelLayers(model);
         }
@@ -84,7 +88,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         [Category(TestCategory.Wpf)]
         public void CheckLayerIsSetCorrectlyWhenOpeningFmItems()
         {
-            var mduPath = TestHelper.GetTestFilePath(@"roughness\bendprof.mdu");
+            string mduPath = TestHelper.GetTestFilePath(@"roughness\bendprof.mdu");
             mduPath = TestHelper.CreateLocalCopy(mduPath);
             var model = new WaterFlowFMModel(mduPath);
 
@@ -92,38 +96,42 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             {
                 var fmGuiPlugin = new FlowFMGuiPlugin();
 
-                var app = gui.Application;
+                IApplication app = gui.Application;
                 app.Plugins.Add(new SharpMapGisApplicationPlugin());
                 app.Plugins.Add(new NetworkEditorApplicationPlugin());
                 gui.Plugins.Add(new ProjectExplorerGuiPlugin());
                 gui.Plugins.Add(new NetworkEditorGuiPlugin());
                 gui.Plugins.Add(new SharpMapGisGuiPlugin());
                 gui.Plugins.Add(fmGuiPlugin);
-                
+
                 gui.Run();
 
                 Action mainWindowShown = delegate
                 {
-                    var project = app.Project;
+                    Project project = app.Project;
                     project.RootFolder.Add(model);
 
                     var modelNodePresenter = new WaterFlowFMModelNodePresenter(fmGuiPlugin);
-                    var shortcut = modelNodePresenter.GetChildNodeObjects(model, null);
-                    var fmModelTreeShortCut = shortcut.OfType<FmModelTreeShortcut>().First(s => s.Text == "General");
+                    IEnumerable shortcut = modelNodePresenter.GetChildNodeObjects(model, null);
+                    FmModelTreeShortcut fmModelTreeShortCut = shortcut.OfType<FmModelTreeShortcut>().First(s => s.Text == "General");
                     gui.CommandHandler.OpenView(fmModelTreeShortCut);
-                    var activeView = gui.DocumentViews.ActiveView;
+                    IView activeView = gui.DocumentViews.ActiveView;
 
-                    var providers = new IMapLayerProvider[] { new FlowFMMapLayerProvider(), new SharpMapLayerProvider() };
+                    var providers = new IMapLayerProvider[]
+                    {
+                        new FlowFMMapLayerProvider(),
+                        new SharpMapLayerProvider()
+                    };
 
-                    var layer = (IGroupLayer)MapLayerProviderHelper.CreateLayersRecursive(fmModelTreeShortCut.FlowFmModel, null, providers);
+                    var layer = (IGroupLayer) MapLayerProviderHelper.CreateLayersRecursive(fmModelTreeShortCut.FlowFmModel, null, providers);
 
                     Assert.IsInstanceOf<IView>(activeView);
-                    Assert.IsNotNull((layer.Layers));
-                    Assert.IsNotNull((layer.Layers.Any()));
+                    Assert.IsNotNull(layer.Layers);
+                    Assert.IsNotNull(layer.Layers.Any());
                     Assert.That(layer.ShowInLegend, Is.EqualTo(true));
                 };
 
-                WpfTestHelper.ShowModal((Control)gui.MainWindow, mainWindowShown);
+                WpfTestHelper.ShowModal((Control) gui.MainWindow, mainWindowShown);
             }
         }
 
@@ -135,7 +143,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
             using (var gui = new DeltaShellGui())
             {
-                var app = gui.Application;
+                IApplication app = gui.Application;
                 app.Plugins.Add(new SharpMapGisApplicationPlugin());
                 app.Plugins.Add(new NetworkEditorApplicationPlugin());
                 gui.Plugins.Add(new ProjectExplorerGuiPlugin());
@@ -147,14 +155,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
                 gui.Run();
 
-                var project = app.Project;
+                Project project = app.Project;
                 project.RootFolder.Add(model);
 
                 //Create a new layer
-                var result = networkEditorGuiPlugin.MapLayerProvider.CanCreateLayerFor(model.Area.BridgePillars, model.Area);
+                bool result = networkEditorGuiPlugin.MapLayerProvider.CanCreateLayerFor(model.Area.BridgePillars, model.Area);
                 Assert.IsTrue(result);
                 Assert.IsNotNull(model.Area);
-                var layer = networkEditorGuiPlugin.MapLayerProvider.CreateLayer(model.Area.BridgePillars, model.Area);
+                ILayer layer = networkEditorGuiPlugin.MapLayerProvider.CreateLayer(model.Area.BridgePillars, model.Area);
 
                 Assert.IsNotNull(layer); //assert it got injected 
                 Assert.AreEqual(typeof(BridgePillar), layer.DataSource.FeatureType);
@@ -170,7 +178,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             var fmClassMapFileFunctionStore = new FMClassMapFileFunctionStore(string.Empty);
 
             // When
-            var layer = mapLayerProvider.CreateLayer(fmClassMapFileFunctionStore, null);
+            ILayer layer = mapLayerProvider.CreateLayer(fmClassMapFileFunctionStore, null);
 
             // Then
             Assert.IsNotNull(layer);
@@ -187,7 +195,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             var fmClassMapFileFunctionStore = new FMClassMapFileFunctionStore(string.Empty);
 
             // When
-            var result = mapLayerProvider.CanCreateLayerFor(fmClassMapFileFunctionStore, null);
+            bool result = mapLayerProvider.CanCreateLayerFor(fmClassMapFileFunctionStore, null);
 
             // Then
             Assert.IsTrue(result);
@@ -198,24 +206,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         public void GivenAFlowFmMapLayerProviderAndAModelWithAClassMapFileFunctionStore_WhenChildLayerObjectsIsCalled_ThenTheFunctionStoreIsReturned()
         {
             // Given
-            var testDirectoryPath = TestHelper.GetTestFilePath("output_classmapfiles");
-            var outputDirectoryPath = Path.Combine(testDirectoryPath, "output");
-            var filePath = Path.Combine(outputDirectoryPath, "FlowFM_clm.nc");
+            string testDirectoryPath = TestHelper.GetTestFilePath("output_classmapfiles");
+            string outputDirectoryPath = Path.Combine(testDirectoryPath, "output");
+            string filePath = Path.Combine(outputDirectoryPath, "FlowFM_clm.nc");
             Assert.IsTrue(File.Exists(filePath));
 
             var model = new WaterFlowFMModel();
             model.ConnectOutput(outputDirectoryPath);
-            var outputClassMapFileStore = model.OutputClassMapFileStore;
+            FMClassMapFileFunctionStore outputClassMapFileStore = model.OutputClassMapFileStore;
             Assert.NotNull(outputClassMapFileStore);
             Assert.AreEqual(filePath, outputClassMapFileStore.Path);
 
             var mapLayerProvider = new FlowFMMapLayerProvider();
 
             // When
-            var childLayerObjects = mapLayerProvider.ChildLayerObjects(model).ToArray();
+            object[] childLayerObjects = mapLayerProvider.ChildLayerObjects(model).ToArray();
 
             // Then
-            var classMapFileFunctionStoreLayer = childLayerObjects.OfType<FMClassMapFileFunctionStore>().SingleOrDefault();
+            FMClassMapFileFunctionStore classMapFileFunctionStoreLayer = childLayerObjects.OfType<FMClassMapFileFunctionStore>().SingleOrDefault();
             Assert.IsNotNull(classMapFileFunctionStoreLayer);
             Assert.AreSame(classMapFileFunctionStoreLayer, outputClassMapFileStore);
         }
@@ -225,9 +233,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         public void GivenAFlowFmMapLayerProviderAndAClassMapFileFunctionStore_WhenChildLayerObjectsIsCalled_ThenTheFunctionsAndGridAreReturned()
         {
             // Given
-            var testDirectoryPath = TestHelper.GetTestFilePath("output_classmapfiles");
-            var outputDirectoryPath = Path.Combine(testDirectoryPath, "output");
-            var filePath = Path.Combine(outputDirectoryPath, "FlowFM_clm.nc");
+            string testDirectoryPath = TestHelper.GetTestFilePath("output_classmapfiles");
+            string outputDirectoryPath = Path.Combine(testDirectoryPath, "output");
+            string filePath = Path.Combine(outputDirectoryPath, "FlowFM_clm.nc");
             Assert.IsTrue(File.Exists(filePath));
 
             var classMapFileStore = new FMClassMapFileFunctionStore(filePath);
@@ -237,10 +245,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             var mapLayerProvider = new FlowFMMapLayerProvider();
 
             // When
-            var childLayerObjects = mapLayerProvider.ChildLayerObjects(classMapFileStore).ToArray();
+            object[] childLayerObjects = mapLayerProvider.ChildLayerObjects(classMapFileStore).ToArray();
 
             // Then
-            Assert.IsTrue(classMapFileStore.Functions.All(f=> childLayerObjects.Contains(f)));
+            Assert.IsTrue(classMapFileStore.Functions.All(f => childLayerObjects.Contains(f)));
             Assert.IsTrue(childLayerObjects.Contains(classMapFileStore.Grid));
         }
 
@@ -254,7 +262,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             {
                 var fmGuiPlugin = new FlowFMGuiPlugin();
 
-                var app = gui.Application;
+                IApplication app = gui.Application;
                 app.Plugins.Add(new SharpMapGisApplicationPlugin());
                 app.Plugins.Add(new NetworkEditorApplicationPlugin());
                 gui.Plugins.Add(new ProjectExplorerGuiPlugin());
@@ -264,27 +272,27 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
                 gui.Run();
 
-                var project = app.Project;
+                Project project = app.Project;
                 project.RootFolder.Add(model);
 
                 var featureName = "Enclosure01";
-                var enclosureFeature = FlowFMTestHelper.CreateFeature2DPolygonFromGeometry(
-                                        featureName,
-                                        FlowFMTestHelper.GetInvalidGeometryForEnclosureExample());
+                GroupableFeature2DPolygon enclosureFeature = FlowFMTestHelper.CreateFeature2DPolygonFromGeometry(
+                    featureName,
+                    FlowFMTestHelper.GetInvalidGeometryForEnclosureExample());
 
                 model.Area.Enclosures.Add(enclosureFeature);
 
                 /* Make sure the method works first */
-                var layerProvider = fmGuiPlugin.MapLayerProvider;
-                var areaChildren = layerProvider.ChildLayerObjects(model).OfType<HydroArea>();
+                IMapLayerProvider layerProvider = fmGuiPlugin.MapLayerProvider;
+                IEnumerable<HydroArea> areaChildren = layerProvider.ChildLayerObjects(model).OfType<HydroArea>();
                 IEnumerable<HydroArea> hydroAreas = areaChildren as HydroArea[] ?? areaChildren.ToArray();
-                var listOfHydroAreas = hydroAreas.ToList();
+                List<HydroArea> listOfHydroAreas = hydroAreas.ToList();
                 Assert.AreEqual(1, listOfHydroAreas.Count);
-                
+
                 /* Now check there are log messages instantiating the enum to list. */
                 TestHelper.AssertAtLeastOneLogMessagesContains(
                     () => areaChildren.ToList(),
-                    String.Format(Resources.WaterFlowFMEnclosureValidator_Validate_Drawn_polygon_not__0__not_valid, featureName));
+                    string.Format(Resources.WaterFlowFMEnclosureValidator_Validate_Drawn_polygon_not__0__not_valid, featureName));
             }
         }
 
@@ -294,14 +302,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         {
             //Given
             var mapLayerProvider = new FlowFMMapLayerProvider();
-            var boundaryConditionSets = new EventedList<BoundaryConditionSet>()
-            {
-                new BoundaryConditionSet()
-            };
+            var boundaryConditionSets = new EventedList<BoundaryConditionSet>() {new BoundaryConditionSet()};
             var waterFlowFmModel = new WaterFlowFMModel();
 
             //When
-            var layer = mapLayerProvider.CreateLayer(boundaryConditionSets, waterFlowFmModel);
+            ILayer layer = mapLayerProvider.CreateLayer(boundaryConditionSets, waterFlowFmModel);
 
             //Then
             Assert.That(layer.Name, Is.EqualTo("Boundary Conditions"));
@@ -319,26 +324,41 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             TypeUtils.SetPrivatePropertyValue(waterFlowFmModel, "Pipes", sourceAndSinks);
 
             //When
-            var layer = mapLayerProvider.CreateLayer(sourceAndSinks, waterFlowFmModel);
+            ILayer layer = mapLayerProvider.CreateLayer(sourceAndSinks, waterFlowFmModel);
 
             //Then
             Assert.That(layer.Name, Is.EqualTo("Sources and Sinks"));
             Assert.That(layer.ShowInLegend, Is.EqualTo(false));
         }
 
-
         private static void ShowModelLayers(WaterFlowFMModel model)
         {
-            var providers = new IMapLayerProvider[] { new FlowFMMapLayerProvider(), new SharpMapLayerProvider() };
+            var providers = new IMapLayerProvider[]
+            {
+                new FlowFMMapLayerProvider(),
+                new SharpMapLayerProvider()
+            };
 
             var layer = (IGroupLayer) MapLayerProviderHelper.CreateLayersRecursive(model, null, providers);
 
             layer.Layers.ForEach(l => l.Visible = true);
 
-            var map = new Map {Layers = {layer}, Size = new Size {Width = 800, Height = 800}};
+            var map = new Map
+            {
+                Layers = {layer},
+                Size = new Size
+                {
+                    Width = 800,
+                    Height = 800
+                }
+            };
             map.ZoomToExtents();
 
-            var mapControl = new MapControl {Map = map, Dock = DockStyle.Fill};
+            var mapControl = new MapControl
+            {
+                Map = map,
+                Dock = DockStyle.Fill
+            };
 
             WindowsFormsTestHelper.ShowModal(mapControl);
         }

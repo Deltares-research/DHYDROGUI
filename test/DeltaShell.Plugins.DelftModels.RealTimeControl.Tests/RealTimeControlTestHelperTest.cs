@@ -17,21 +17,21 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
             left.Inputs.Add(new Input {SetPoint = "Input"});
             var right = new ControlGroup();
             right.Inputs.Add(new Input());
-            right.Inputs.Add(new Input { SetPoint = "Input" });
+            right.Inputs.Add(new Input {SetPoint = "Input"});
             Assert.IsTrue(RealTimeControlTestHelper.CompareEqualityOfControlGroups(left, right));
         }
 
         [Test]
         public void Compare2Identical()
         {
-            var left = RealTimeControlModelHelper.CreateGroupPidRule(true);
+            ControlGroup left = RealTimeControlModelHelper.CreateGroupPidRule(true);
             Assert.IsTrue(RealTimeControlTestHelper.CompareEqualityOfControlGroups(left, left));
         }
 
         [Test]
         public void CreateGroup2RulesTest()
         {
-            var controlGroup = RealTimeControlTestHelper.CreateGroup2Rules();
+            ControlGroup controlGroup = RealTimeControlTestHelper.CreateGroup2Rules();
             Assert.AreEqual(3, controlGroup.Inputs.Count());
             Assert.AreEqual(1, controlGroup.Conditions.Count);
             Assert.AreEqual(2, controlGroup.Rules.Count);

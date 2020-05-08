@@ -1,7 +1,7 @@
-﻿using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
-using NUnit.Framework;
-using System;
+﻿using System;
+using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
 using NSubstitute;
+using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.GeometricDefinitions
 {

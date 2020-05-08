@@ -42,7 +42,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers
             ILayer layer = factory.CreateModelGroupLayer(waveModel);
 
             // Assert
-            Assert.That(layer, Is.InstanceOf<ModelGroupLayer>(), 
+            Assert.That(layer, Is.InstanceOf<ModelGroupLayer>(),
                         $"Expected the result to be an instance of {nameof(ModelGroupLayer)}");
 
             var modelGroupLayer = (ModelGroupLayer) layer;
@@ -194,8 +194,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers
         [Test]
         [TestCase(true, "domainName", "domainName")]
         [TestCase(false, "domainName", "Output (domainName)")]
-        public void CreateOutputLayer_ValidDomainName_ReturnsCorrectResults(bool overrideLayerName, 
-                                                                            string domainName, 
+        public void CreateOutputLayer_ValidDomainName_ReturnsCorrectResults(bool overrideLayerName,
+                                                                            string domainName,
                                                                             string expectedName)
         {
             // Setup
@@ -232,8 +232,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers
             // Setup
             const string gridName = "gridName";
 
-            IList<double> xCoordinates = new List<double> { 0.0 };
-            IList<double> yCoordinates = new List<double> { 0.0 };
+            IList<double> xCoordinates = new List<double> {0.0};
+            IList<double> yCoordinates = new List<double> {0.0};
 
             var coordinateSystem = Substitute.For<ICoordinateSystem>();
             var grid = new CurvilinearGrid(1, 1,
@@ -260,8 +260,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers
         {
             // Setup
             const string gridName = "gridName";
-            IList<double> xCoordinates = new List<double> { 0.0 };
-            IList<double> yCoordinates = new List<double> { 0.0 };
+            IList<double> xCoordinates = new List<double> {0.0};
+            IList<double> yCoordinates = new List<double> {0.0};
 
             var grid = new DiscreteGridPointCoverage(1, 1, xCoordinates, yCoordinates) {Name = gridName};
 
@@ -278,7 +278,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers
             Assert.That(layer.Name, Is.EqualTo(gridName),
                         "Expected the layer to have a different name.");
         }
-
 
         [Test]
         public void CreateGridLayer_DiscreteGridNull_ThrowsArgumentNullException()
@@ -407,7 +406,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers
             Assert.That(exception.ParamName, Is.EqualTo("featureProvider"));
         }
 
-
         [Test]
         public void CreateBoundaryEndPointsLayer_ValidParameters_ExpectedResults()
         {
@@ -533,11 +531,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers
             Assert.That(exception.ParamName, Is.EqualTo("featureProvider"));
         }
 
-
         private static void AssertCorrectPointBoundaryLayer(ILayer layer,
-                                                       IFeatureProvider featureProvider,
-                                                       string expectedLayerName,
-                                                       Color expectedColor)
+                                                            IFeatureProvider featureProvider,
+                                                            string expectedLayerName,
+                                                            Color expectedColor)
         {
             Assert.That(layer.Name, Is.EqualTo(expectedLayerName));
             Assert.That(layer, Is.InstanceOf(typeof(VectorLayer)),
@@ -548,7 +545,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers
                         Is.SameAs(featureProvider));
             Assert.That(layer.Selectable, Is.False);
 
-            var vectorLayer = (VectorLayer)layer;
+            var vectorLayer = (VectorLayer) layer;
             Assert.That(vectorLayer.Style.GeometryType, Is.EqualTo(typeof(IPoint)));
 
             var solidBrush = vectorLayer.Style.Fill as SolidBrush;

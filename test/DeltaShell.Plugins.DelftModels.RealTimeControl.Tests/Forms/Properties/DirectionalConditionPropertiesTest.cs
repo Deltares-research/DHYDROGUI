@@ -8,10 +8,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms.Properties
     [TestFixture]
     public class DirectionalConditionPropertiesTest
     {
-        [Test, Category(TestCategory.WindowsForms)]
+        [Test]
+        [Category(TestCategory.WindowsForms)]
         public void ShowProperties()
         {
-            WindowsFormsTestHelper.ShowPropertyGridForObject(new DirectionalConditionProperties { Data = new DirectionalCondition() });
+            WindowsFormsTestHelper.ShowPropertyGridForObject(new DirectionalConditionProperties {Data = new DirectionalCondition()});
         }
     }
 }

@@ -27,12 +27,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
     [TestFixture]
     public class MdwBoundaryCategoriesCreatorTest
     {
-        private static readonly Random random = new Random();
-
         private const double factor = 3.3;
-        private readonly JonswapShape jonswapShape = new JonswapShape {PeakEnhancementFactor = factor};
 
         private const BoundaryConditionPeriodType periodType = BoundaryConditionPeriodType.Peak;
+        private static readonly Random random = new Random();
+        private readonly JonswapShape jonswapShape = new JonswapShape {PeakEnhancementFactor = factor};
 
         [Test]
         public void CreateCategories_ShouldCreateACompleteCategoryForOneBoundary()
@@ -102,25 +101,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
 
             CheckCreatedCategory(category1.Properties.ToList(), boundary1Name, boundary1Coordinate1, boundary1Coordinate2);
             CheckCreatedCategory(category2.Properties.ToList(), boundary2Name, boundary2Coordinate1, boundary2Coordinate2);
-        }
-
-        private IEnumerable<TestCaseData> ConstructorArgumentNullCases()
-        {
-            yield return new TestCaseData(null, Substitute.For<IFilesManager>(), "boundaryContainer");
-            yield return new TestCaseData(Substitute.For<IBoundaryContainer>(), null, "filesManager");
-        }
-
-        [TestCaseSource(nameof(ConstructorArgumentNullCases))]
-        public void CreateCategories_ArgumentNull_ThrowsArgumentNullException(IBoundaryContainer boundaryContainer,
-                                                                              IFilesManager filesManager,
-                                                                              string expectedParamName)
-        {
-            // Act
-            void Call() => MdwBoundaryCategoriesCreator.CreateCategories(boundaryContainer, filesManager).ToList();
-
-            // Assert
-            var exception = Assert.Throws<ArgumentNullException>(Call);
-            Assert.That(exception.ParamName, Is.EqualTo(expectedParamName));
         }
 
         [Test]
@@ -270,6 +250,25 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             AssertProperty(properties[1], KnownWaveProperties.OverallSpecFile, " ");
 
             filesManager.DidNotReceiveWithAnyArgs().Add(null, null);
+        }
+
+        private IEnumerable<TestCaseData> ConstructorArgumentNullCases()
+        {
+            yield return new TestCaseData(null, Substitute.For<IFilesManager>(), "boundaryContainer");
+            yield return new TestCaseData(Substitute.For<IBoundaryContainer>(), null, "filesManager");
+        }
+
+        [TestCaseSource(nameof(ConstructorArgumentNullCases))]
+        public void CreateCategories_ArgumentNull_ThrowsArgumentNullException(IBoundaryContainer boundaryContainer,
+                                                                              IFilesManager filesManager,
+                                                                              string expectedParamName)
+        {
+            // Act
+            void Call() => MdwBoundaryCategoriesCreator.CreateCategories(boundaryContainer, filesManager).ToList();
+
+            // Assert
+            var exception = Assert.Throws<ArgumentNullException>(Call);
+            Assert.That(exception.ParamName, Is.EqualTo(expectedParamName));
         }
 
         private static List<FileBasedParameters> GetFileBasedParameters(IWaveBoundary boundary)

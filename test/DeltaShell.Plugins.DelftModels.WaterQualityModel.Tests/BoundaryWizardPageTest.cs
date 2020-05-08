@@ -6,7 +6,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
 {
     [TestFixture]
     [Category(TestCategory.WindowsForms)]
-    class BoundaryWizardPageTest
+    internal class BoundaryWizardPageTest
     {
         [Test]
         public void BoundaryWizardConstructorSetCorrectValues()
@@ -18,7 +18,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
                 Assert.AreEqual(wizard.WelcomeMessage, "This wizard will import a Boundary File.");
                 Assert.AreEqual(wizard.FinishedPageMessage, "Press Finish to import your boundary data file.");
             }
-
         }
 
         [Test]

@@ -10,11 +10,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport.Expo
     [TestFixture]
     public class InputSerializerTest
     {
-        private static readonly XNamespace fns = "http://www.wldelft.nl/fews";
-
         private const string featureName = "InputName";
         private const string name = "ParameterName";
         private const string setPoint = "Test";
+        private static readonly XNamespace fns = "http://www.wldelft.nl/fews";
 
         private Input input;
 
