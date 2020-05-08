@@ -23,53 +23,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
                 Map.CoordinateSystemFactory = new OgrCoordinateSystemFactory();
         }
 
-        //test is available on model in root
-        [Test]
-        [Category("Quarantine")]
-        public void FMRstFileImporterWorksOnModel()
-        {
-            using (var gui = new DeltaShellGui())
-            {
-                gui.Plugins.Add(new FlowFMGuiPlugin());
-                
-                var app = gui.Application;
-                app.Plugins.Add(new FlowFMApplicationPlugin());
-                app.Run();
-
-                var waterFlowFmModel = new WaterFlowFMModel();
-                app.Project.RootFolder.Add(waterFlowFmModel);
-                var importHandler = new GuiImportHandler(gui);
-
-                var restartImportHandlers = importHandler.GetImporters(waterFlowFmModel.RestartInput);
-                Assert.IsTrue(restartImportHandlers.OfType<FMRstFileImporter>().Any());
-            }
-        }
-
-        //test if available on model in integrated model
-        [Test]
-        [Category("Quarantine")]
-        public void FMRstFileImporterWorksOnModelInIntegratedModel()
-        {
-            using (var gui = new DeltaShellGui())
-            {
-                gui.Plugins.Add(new FlowFMGuiPlugin());
-
-                var app = gui.Application;
-                app.Plugins.Add(new FlowFMApplicationPlugin());
-                app.Run();
-                
-                var integratedModel = new CompositeModel(); // hydromodel is a composite model
-                var waterFlowFmModel = new WaterFlowFMModel();
-                integratedModel.Activities.Add(waterFlowFmModel);
-                
-                app.Project.RootFolder.Add(integratedModel);
-                var importHandler = new GuiImportHandler(gui);
-                
-                var restartImportHandlers = importHandler.GetImporters(waterFlowFmModel.RestartInput);
-                Assert.IsTrue(restartImportHandlers.OfType<FMRstFileImporter>().Any());
-            }
-        }
-        
         //test if restart file is copied
         [Test]
         public void FMRstFileImporterCopiedRestartFile()

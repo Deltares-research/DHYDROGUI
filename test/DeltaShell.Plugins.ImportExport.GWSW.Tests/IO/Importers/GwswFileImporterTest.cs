@@ -889,7 +889,6 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
         }
 
         [Test]
-        [Category("Quarantine")]
         public void TestImportSewerConnectionFromFileAssignsNodesWhenTheyExist()
         {
             var filePath = GetFileAndCreateLocalCopy(@"gwswFiles\Verbinding.csv");
