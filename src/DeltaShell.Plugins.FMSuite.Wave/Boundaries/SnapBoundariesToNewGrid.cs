@@ -1,12 +1,11 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Guards;
-using DeltaShell.Plugins.FMSuite.Wave.Boundaries.Calculators;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.ForcingTypeDefinedParameters;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.SpatiallyDefinedDataComponents;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
 using DeltaShell.Plugins.FMSuite.Wave.IO;
+using DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries;
 using DeltaShell.Plugins.FMSuite.Wave.Properties;
 using GeoAPI.Geometries;
 using log4net;
@@ -25,30 +24,27 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries
         /// Restores the boundaries if possible.
         /// </summary>
         /// <param name="cachedBoundaries">The cached boundaries.</param>
-        /// <param name="snappingCalculator">The snapping calculator.</param>
+        /// <param name="geometricDefinitionFactory">The geometric definition factory.</param>
         /// <returns>
         /// The <see cref="IEnumerable{IWaveBoundary}"/> containing the successfully
         /// restored <see cref="IWaveBoundary"/>.
         /// </returns>
         /// <exception cref="System.ArgumentNullException">
-        /// Thrown when <paramref name="cachedBoundaries"/> is <c>null</c>.
+        /// Thrown when <paramref name="cachedBoundaries"/> or <paramref name="geometricDefinitionFactory"/> is <c>null</c>.
         /// </exception>
         internal static IEnumerable<IWaveBoundary> RestoreBoundariesIfPossible(IEnumerable<CachedBoundary> cachedBoundaries, 
-                                                                               IBoundarySnappingCalculator snappingCalculator)
+                                                                               IWaveBoundaryGeometricDefinitionFactory geometricDefinitionFactory)
         {
             Ensure.NotNull(cachedBoundaries, nameof(cachedBoundaries));
-
-            if (snappingCalculator == null)
-            {
-                yield break;
-            }
+            Ensure.NotNull(geometricDefinitionFactory, nameof(geometricDefinitionFactory));
 
             foreach (CachedBoundary cachedBoundary in cachedBoundaries)
             {
-                IWaveBoundary res = HandleBoundary(cachedBoundary, snappingCalculator);
-                if (res != null)
+                IWaveBoundary updatedBoundary = HandleBoundary(cachedBoundary, 
+                                                               geometricDefinitionFactory);
+                if (updatedBoundary != null)
                 {
-                    yield return res;
+                    yield return updatedBoundary;
                 }
             }
         }
@@ -80,25 +76,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries
             }
         }
 
-        private static IWaveBoundary HandleBoundary(CachedBoundary boundary, IBoundarySnappingCalculator snappingCalculator)
+        private static IWaveBoundary HandleBoundary(CachedBoundary boundary, 
+                                                    IWaveBoundaryGeometricDefinitionFactory geometricDefinitionFactory)
         {
-            var endpoints = new List<Coordinate>()
-            {
-                boundary.StartingPointWorldCoordinate,
-                boundary.EndingPointWorldCoordinate
-            };
-
-            List<GridBoundaryCoordinate> reSappedBoundaryCoordinates = WaveBoundaryGeometricDefinitionFactoryHelper.GetSnappedEndPoints(snappingCalculator, endpoints).ToList();
-
-            if (reSappedBoundaryCoordinates.Count < 2)
-            {
-                log.WarnFormat(Resources.SnapBoundariesToNewGrid_HandleBoundary_Boundary__0__could_not_snap_to_the_new_grid__begin_and_or_end_point_problematic___Please_inspect_your_boundaries_, 
-                               boundary.WaveBoundary.Name);
-                return null;
-            }
-
-            //Create a new boundary and add this to the boundaryContainer
-            IWaveBoundaryGeometricDefinition newGeometricDefinition = WaveBoundaryGeometricDefinitionFactoryHelper.GetGeometricDefinition(reSappedBoundaryCoordinates, snappingCalculator);
+            IWaveBoundaryGeometricDefinition newGeometricDefinition = 
+                geometricDefinitionFactory.ConstructWaveBoundaryGeometricDefinition(boundary.StartingPointWorldCoordinate, 
+                                                                                    boundary.EndingPointWorldCoordinate);
+            
             if (newGeometricDefinition == null)
             {
                 log.WarnFormat(Resources.SnapBoundariesToNewGrid_HandleBoundary_Boundary__0__could_not_snap_to_the_new_grid__Please_inspect_your_boundaries_, 
@@ -106,17 +90,19 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries
                 return null;
             }
 
-            var waveBoundary = new WaveBoundary(boundary.WaveBoundary.Name, newGeometricDefinition, boundary.WaveBoundary.ConditionDefinition);
+            var waveBoundary = new WaveBoundary(boundary.WaveBoundary.Name, 
+                                                newGeometricDefinition, 
+                                                boundary.WaveBoundary.ConditionDefinition);
 
             // skip the first and last points, these are always the begin and endpoint and will be added during construction of the WaveBoundary
             IEventedList<SupportPoint> oldSupportPoints = boundary.WaveBoundary.GeometricDefinition.SupportPoints;
-            var dict = new Dictionary<SupportPoint, SupportPoint>();
+            var toUpdateDict = new Dictionary<SupportPoint, SupportPoint>();
 
             SupportPoint firstPoint = FirstPoint(oldSupportPoints);
             SupportPoint lastPoint = LastPoint(oldSupportPoints);
 
-            dict.Add(firstPoint, FirstPoint(newGeometricDefinition.SupportPoints));
-            dict.Add(lastPoint, LastPoint(newGeometricDefinition.SupportPoints));
+            toUpdateDict.Add(firstPoint, FirstPoint(newGeometricDefinition.SupportPoints));
+            toUpdateDict.Add(lastPoint, LastPoint(newGeometricDefinition.SupportPoints));
             
             foreach (SupportPoint supportPoint in oldSupportPoints)
             {
@@ -128,18 +114,18 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries
                 if (supportPoint.Distance <= newGeometricDefinition.Length)
                 {
                     var newSup = new SupportPoint(supportPoint.Distance, newGeometricDefinition);
-                    dict.Add(supportPoint, newSup);
+                    toUpdateDict.Add(supportPoint, newSup);
                     waveBoundary.GeometricDefinition.SupportPoints.Add(newSup);
                 }
                 else
                 {
                     log.WarnFormat(Resources.SnapBoundariesToNewGrid_HandleBoundary_Support_point_at_distance__0__does_no_longer_fit_on_the_snapped_Boundary__1___Removed__Please_inspect_your_support_points, 
                                    supportPoint.Distance, boundary.WaveBoundary.Name);
-                    dict.Add(supportPoint, null);
+                    toUpdateDict.Add(supportPoint, null);
                 }
             }
 
-            UpdateSupportPointsInDataComponent(waveBoundary.ConditionDefinition.DataComponent, dict);
+            UpdateSupportPointsInDataComponent(waveBoundary.ConditionDefinition.DataComponent, toUpdateDict);
 
             return waveBoundary;
         }
