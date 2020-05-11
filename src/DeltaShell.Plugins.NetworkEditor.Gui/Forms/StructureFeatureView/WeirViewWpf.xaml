@@ -67,7 +67,7 @@
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" SharedSizeGroup="A"/>
                             <ColumnDefinition Width="100" SharedSizeGroup="B" />
-                            <ColumnDefinition Width="30"  SharedSizeGroup="C"/>
+                            <ColumnDefinition Width="40"  SharedSizeGroup="C"/>
                             <ColumnDefinition Width="110"  SharedSizeGroup="D"/>
                         </Grid.ColumnDefinitions>
 
@@ -85,7 +85,7 @@
                         <Label Grid.Row="1" Grid.Column="2" Content="m" Visibility="{Binding SimpleWeirPropertiesVisibility}"/>
                         <Label Grid.Row="2" Grid.Column="0" Content="Crest level" Visibility="{Binding SimpleWeirPropertiesVisibility}" />
                         <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Weir.CrestLevel}" Visibility="{Binding SimpleWeirPropertiesVisibility}" IsEnabled="{Binding IsCrestLevelConstantTime}"/>
-                        <Label Grid.Row="2" Grid.Column="2" Content="m" Visibility="{Binding SimpleWeirPropertiesVisibility}"/>
+                        <Label Grid.Row="2" Grid.Column="2" Content="m AD" Visibility="{Binding SimpleWeirPropertiesVisibility}"/>
 
                         <CheckBox Grid.Row="3" Grid.Column="0"  Margin="5" Content="Use velocity height" VerticalAlignment="Center" IsChecked="{Binding UseVelocityHeight}" Visibility="{Binding SimpleWeirPropertiesVisibility}"/>
 
