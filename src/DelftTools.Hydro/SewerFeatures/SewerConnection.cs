@@ -561,7 +561,7 @@ namespace DelftTools.Hydro.SewerFeatures
                 BranchFeatures.ForEach(bf =>
                 {
                     bf.Geometry = GetBranchFeatureGeometry();
-                    bf.Chainage = Length / 2;
+                    bf.Chainage = this.IsInternalConnection() ? 0 : Length / 2;
                 });
         }
 

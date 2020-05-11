@@ -5,6 +5,7 @@ using DelftTools.Functions;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Helpers;
+using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DeltaShell.Sobek.Readers.Readers;
@@ -176,7 +177,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Builders
                         continue;
                     }
                     var branch = channels[location.BranchID];
-                    var offset = location.Offset;
+                    var offset = branch is ISewerConnection sewerConnection && sewerConnection.IsInternalConnection() ? 0  : location.Offset;
 
                     if (offset > branch.Length)
                     {

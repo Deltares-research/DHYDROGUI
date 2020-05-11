@@ -19,7 +19,7 @@ namespace DelftTools.Hydro
         {
             structure.Branch = sewerConnection;
             structure.Network = sewerConnection.Network;
-            structure.Chainage = 0.5;
+            structure.Chainage = sewerConnection.IsInternalConnection() ? 0 : 0.5;
 
             if (sewerConnection.Geometry != null && sewerConnection.Geometry.Coordinates.Any())
             {
