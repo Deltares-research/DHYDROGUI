@@ -1,6 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
+﻿using System.Linq;
+using Deltares.UGrid.Api;
 using DeltaShell.NGHS.IO.Helpers;
 using GeoAPI.Extensions.Coverages;
 using ProtoBuf;
@@ -8,10 +7,8 @@ using ProtoBuf;
 namespace DeltaShell.NGHS.IO.Grid.GridGeomApi
 {
     [ProtoContract(AsReferenceDefault = true)]
-    public class Mesh1DGeometry
+    public sealed class Mesh1DGeometry : DisposableMeshObject
     {
-        private readonly List<GCHandle> objectGarbageCollectHandles = new List<GCHandle>();
-
         public Mesh1DGeometry(IDiscretization discretization)
         {
             var discretisationPoints = discretization.Locations.AllValues.ToList();
@@ -70,63 +67,18 @@ namespace DeltaShell.NGHS.IO.Grid.GridGeomApi
 
         public Mesh1DGeometryNative GetNative()
         {
-            if (!IsMemoryPinned)
-            {
-                PinMemory();
-            }
-
-            var dictionary = objectGarbageCollectHandles.ToDictionary(h => h.Target, h => h);
             return new Mesh1DGeometryNative
             {
-                meshXCoords = dictionary[meshXCoords].AddrOfPinnedObject(),
-                meshYCoords = dictionary[meshYCoords].AddrOfPinnedObject(),
-                branchOffset = dictionary[branchOffset].AddrOfPinnedObject(),
-                branchLength = dictionary[branchLength].AddrOfPinnedObject(),
-                branchIds = dictionary[branchIds].AddrOfPinnedObject(),
-                sourcenodeid = dictionary[sourcenodeid].AddrOfPinnedObject(),
-                targetnodeid = dictionary[targetnodeid].AddrOfPinnedObject(),
+                meshXCoords = GetPinnedObjectPointer(meshXCoords),
+                meshYCoords = GetPinnedObjectPointer(meshYCoords),
+                branchOffset = GetPinnedObjectPointer(branchOffset),
+                branchLength = GetPinnedObjectPointer(branchLength),
+                branchIds = GetPinnedObjectPointer(branchIds),
+                sourcenodeid = GetPinnedObjectPointer(sourcenodeid),
+                targetnodeid = GetPinnedObjectPointer(targetnodeid),
                 nBranches = nBranches,
                 nMeshPoints = nMeshPoints
             };
-        }
-
-        public bool IsMemoryPinned
-        {
-            get { return objectGarbageCollectHandles.Count > 0; }
-        }
-
-        private void PinMemory()
-        {
-            meshXCoords = GetArray(meshXCoords);
-            meshYCoords = GetArray(meshYCoords);
-            branchOffset = GetArray(branchOffset);
-            branchLength = GetArray(branchLength);
-            branchIds = GetArray(branchIds);
-            sourcenodeid = GetArray(sourcenodeid);
-            targetnodeid = GetArray(targetnodeid);
-            
-            objectGarbageCollectHandles.Add(GCHandle.Alloc(meshXCoords, GCHandleType.Pinned));
-            objectGarbageCollectHandles.Add(GCHandle.Alloc(meshYCoords, GCHandleType.Pinned));
-            objectGarbageCollectHandles.Add(GCHandle.Alloc(branchOffset, GCHandleType.Pinned));
-            objectGarbageCollectHandles.Add(GCHandle.Alloc(branchLength, GCHandleType.Pinned));
-            objectGarbageCollectHandles.Add(GCHandle.Alloc(branchIds, GCHandleType.Pinned));
-            objectGarbageCollectHandles.Add(GCHandle.Alloc(sourcenodeid, GCHandleType.Pinned));
-            objectGarbageCollectHandles.Add(GCHandle.Alloc(targetnodeid, GCHandleType.Pinned));
-        }
-
-        public void UnPinMemory()
-        {
-            foreach (var garbageCollectHandle in objectGarbageCollectHandles)
-            {
-                garbageCollectHandle.Free();
-            }
-            
-            objectGarbageCollectHandles.Clear();
-        }
-
-        private static T[] GetArray<T>(T[] array)
-        {
-            return array ?? new T[0];
         }
     }
 }

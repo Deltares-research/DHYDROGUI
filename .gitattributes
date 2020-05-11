@@ -700,6 +700,8 @@ src/DeltaShell.NGHS.IO/Grid/DeltaresUGrid/HydroUGridExtensions.cs -text
 src/DeltaShell.NGHS.IO/Grid/DeltaresUGrid/RemoteUGridApi.cs -text
 src/DeltaShell.NGHS.IO/Grid/DeltaresUGrid/UGridConstants.cs -text
 src/DeltaShell.NGHS.IO/Grid/GridGeomApi/DisposableMeshGeometryGridGeom.cs -text
+src/DeltaShell.NGHS.IO/Grid/GridGeomApi/Generate1D2DLinksHelper.cs -text
+src/DeltaShell.NGHS.IO/Grid/GridGeomApi/GeometriesData.cs -text
 src/DeltaShell.NGHS.IO/Grid/GridGeomApi/GridGeomApi.cs -text
 src/DeltaShell.NGHS.IO/Grid/GridGeomApi/GridGeomWrapper.cs -text
 src/DeltaShell.NGHS.IO/Grid/GridGeomApi/LinkInformation.cs -text

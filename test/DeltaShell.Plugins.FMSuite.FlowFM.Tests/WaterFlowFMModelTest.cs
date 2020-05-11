@@ -1224,7 +1224,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             var area = new Polygon(new LinearRing(areaCoordinates.ToArray()));
 
-            model.Links.AddRange(MapTool1D2DLinksHelper.Generate1D2DLinks(model, area, linkType).ToList());
+            model.Links.AddRange(MapTool1D2DLinksHelper.Generate1D2DLinks(area, linkType, model.Grid, model.Area.Gullies, model.NetworkDiscretization).ToList());
 
             ///this will generate 2 links:
             // +-----------------------------------------+-----------------------------------------+
@@ -1395,7 +1395,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             var area = new Polygon(new LinearRing(areaCoordinates.ToArray()));
 
-            model.Links.AddRange(MapTool1D2DLinksHelper.Generate1D2DLinks(model, area, linkType).ToList());
+            model.Links.AddRange(MapTool1D2DLinksHelper.Generate1D2DLinks(area, linkType, model.Grid, model.Area.Gullies, model.NetworkDiscretization).ToList());
             
             Assert.IsNotEmpty(model.Links);
             Assert.That(model.Links.Count, Is.EqualTo(24));//no links at start and end points 26-2 = 24

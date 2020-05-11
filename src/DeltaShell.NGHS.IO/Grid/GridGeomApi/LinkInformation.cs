@@ -1,4 +1,5 @@
-﻿using ProtoBuf;
+﻿using Deltares.UGrid.Api;
+using ProtoBuf;
 
 namespace DeltaShell.NGHS.IO.Grid.GridGeomApi
 {
@@ -6,9 +7,9 @@ namespace DeltaShell.NGHS.IO.Grid.GridGeomApi
     public class LinkInformation
     {
         [ProtoMember(1)]
-        public int[] fromIndices;
+        public int[] FromIndices;
 
         [ProtoMember(2)]
-        public int[] toIndices;
+        public int[] ToIndices;
     }
 }

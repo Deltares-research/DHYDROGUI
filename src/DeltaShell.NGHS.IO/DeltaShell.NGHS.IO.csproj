@@ -269,6 +269,8 @@
     <Compile Include="FunctionStores\ReadOnlyMapHisFileFunctionStore.cs" />
     <Compile Include="Grid\DeltaresUGrid\UGridConstants.cs" />
     <Compile Include="Grid\GridGeomApi\DisposableMeshGeometryGridGeom.cs" />
+    <Compile Include="Grid\GridGeomApi\Generate1D2DLinksHelper.cs" />
+    <Compile Include="Grid\GridGeomApi\GeometriesData.cs" />
     <Compile Include="Grid\GridGeomApi\GridGeomApi.cs" />
     <Compile Include="Grid\GridGeomApi\GridGeomWrapper.cs" />
     <Compile Include="Grid\GridGeomApi\Mesh1DGeometry.cs" />

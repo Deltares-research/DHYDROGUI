@@ -145,7 +145,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
             {
                 try
                 {
-                    var generated1D2DLinks = MapTool1D2DLinksHelper.Generate1D2DLinks(fmModel, selectedArea, LinkType);
+                    var generated1D2DLinks = MapTool1D2DLinksHelper.Generate1D2DLinks(selectedArea, LinkType, fmModel.Grid, fmModel.Area.Gullies, fmModel.NetworkDiscretization);
                     fmModel.Links.AddRange(generated1D2DLinks.Except(fmModel.Links));
                 }
                 catch (Exception e)

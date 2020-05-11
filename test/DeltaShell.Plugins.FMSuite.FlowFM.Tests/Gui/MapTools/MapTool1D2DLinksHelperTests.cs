@@ -2,7 +2,10 @@
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.SewerFeatures;
+using DelftTools.Hydro.Structures;
 using DelftTools.TestUtils;
+using DelftTools.Utils.Collections.Generic;
+using DeltaShell.NGHS.IO.Grid.GridGeomApi;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Coverages;
@@ -20,7 +23,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.MapTools
         public void Get_1DPointsMask_HWA()
         {
             var discretisation = GetTestDiscretization();
-            var filter1DPoints = MapTool1D2DLinksHelper.GetMesh1DFilter(discretisation, LinkType.GullySewer);
+            var filter1DPoints = Generate1D2DLinksHelper.GetMesh1DFilter(discretisation, LinkType.GullySewer);
 
             Assert.AreEqual(2, filter1DPoints.Count(p => p));
 
@@ -48,7 +51,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.MapTools
 
             var area = new Polygon(new LinearRing(areaCoordinates.ToArray()));
             
-            var links = MapTool1D2DLinksHelper.Generate1D2DLinks(model, area, linkType).ToList();
+            var links = MapTool1D2DLinksHelper.Generate1D2DLinks(area, linkType, model.Grid, model.Area.Gullies, model.NetworkDiscretization).ToList();
 
             Assert.AreEqual(1, links.Count);
 
@@ -82,7 +85,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.MapTools
             areaCoordinates.Add(new Coordinate(29, -1));
 
             var area = new Polygon(new LinearRing(areaCoordinates.ToArray()));
-            var links = MapTool1D2DLinksHelper.Generate1D2DLinks(model, area, linkType).ToList();
+            var links = MapTool1D2DLinksHelper.Generate1D2DLinks(area, linkType, model.Grid, model.Area.Gullies, model.NetworkDiscretization).ToList();
 
             Assert.AreEqual(1, links.Count);
 
@@ -111,7 +114,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.MapTools
             areaCoordinates.Add(new Coordinate(-1, -10));
 
             var area = new Polygon(new LinearRing(areaCoordinates.ToArray()));
-            var links = MapTool1D2DLinksHelper.Generate1D2DLinks(model, area, linkType).ToList();
+            var links = MapTool1D2DLinksHelper.Generate1D2DLinks(area, linkType, model.Grid, model.Area.Gullies, model.NetworkDiscretization).ToList();
 
             Assert.AreEqual(1, links.Count);
 
@@ -144,7 +147,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.MapTools
             areaCoordinates.Add(new Coordinate(-1, -10));
 
             var area = new Polygon(new LinearRing(areaCoordinates.ToArray()));
-            var links = MapTool1D2DLinksHelper.Generate1D2DLinks(model, area, linkType).ToList();
+            var links = MapTool1D2DLinksHelper.Generate1D2DLinks(area, linkType, model.Grid, model.Area.Gullies, model.NetworkDiscretization).ToList();
 
             Assert.AreEqual(2, links.Count);
 
@@ -159,8 +162,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.MapTools
         {
             var network = new HydroNetwork();
 
-            var manhole1 = new Manhole("manhole1") {Geometry = new Point(0, 0)};
-            var manhole2 = new Manhole("manhole2") {Geometry = new Point(100, 0)};
+            var manhole1 = new Manhole("manhole1")
+            {
+                Compartments = new EventedList<ICompartment> { new Compartment()},
+                Geometry = new Point(0, 0)
+            };
+            var manhole2 = new Manhole("manhole2")
+            {
+                Compartments = new EventedList<ICompartment> { new Compartment() },
+                Geometry = new Point(100, 0)
+            };
             var pipeDWA = new Pipe
             {
                 Name = "pipeDWA",
@@ -178,8 +189,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.MapTools
             network.Nodes.Add(manhole2);
             network.Branches.Add(pipeDWA);
 
-            var manhole3 = new Manhole("manhole3") {Geometry = new Point(0, 10)};
-            var manhole4 = new Manhole("manhole4") {Geometry = new Point(100, 10)};
+            var manhole3 = new Manhole("manhole3")
+            {
+                Compartments = new EventedList<ICompartment> { new Compartment() },
+                Geometry = new Point(0, 10)
+            };
+            var manhole4 = new Manhole("manhole4")
+            {
+                Compartments = new EventedList<ICompartment> { new Compartment() },
+                Geometry = new Point(100, 10)
+            };
             var pipeHWA = new Pipe
             {
                 Name = "pipeHWA",
