@@ -1,4 +1,5 @@
-﻿using DelftTools.Hydro.Structures;
+﻿using System.ComponentModel;
+using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Aop;
 using GeoAPI.Extensions.Feature;
 
@@ -28,6 +29,7 @@ namespace DelftTools.Hydro.SewerFeatures
         }
 
         [FeatureAttribute]
+        [DisplayName("Surface water level")]
         public double SurfaceWaterLevel { get; set; }
 
         public void TakeConnectionsOverFrom(ICompartment compartment)
@@ -39,6 +41,16 @@ namespace DelftTools.Hydro.SewerFeatures
             }
 
         }
+
+        #region GUI
+        // Hide these properties in the Outlets MDE
+        public override CompartmentShape Shape { get => base.Shape; set => base.Shape = value; }
+        public override double ManholeWidth { get => base.ManholeWidth; set => base.ManholeWidth = value; }
+        public override double FloodableArea { get => base.FloodableArea; set => base.FloodableArea = value; }
+        public override double ManholeLength { get => base.ManholeLength; set => base.ManholeLength = value; }
+        public override double SurfaceLevel { get => base.SurfaceLevel; set => base.SurfaceLevel = value; }
+        public override double BottomLevel { get => base.BottomLevel; set => base.BottomLevel = value; }
+        #endregion
 
     }
 }

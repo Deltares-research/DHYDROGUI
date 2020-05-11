@@ -66,43 +66,43 @@ namespace DelftTools.Hydro.SewerFeatures
         /// </summary>
         [FeatureAttribute(Order = 2)]
         [DisplayName("Shape")]
-        public CompartmentShape Shape { get; set; }
+        public virtual CompartmentShape Shape { get; set; }
 
         /// <summary>
         /// Length of manhole (m).
         /// </summary>
         [FeatureAttribute(Order = 3)]
         [DisplayName("Length")]
-        public double ManholeLength { get; set; }
+        public virtual double ManholeLength { get; set; }
 
         /// <summary>
         /// Width of manhole (m).
         /// </summary>
         [FeatureAttribute(Order = 4)]
         [DisplayName("Width")]
-        public double ManholeWidth { get; set; }
+        public virtual double ManholeWidth { get; set; }
 
         /// <summary>
         /// The area at surface level that this manhole can flood (m2).
         /// </summary>
         [FeatureAttribute(Order = 5)]
         [DisplayName("Floodable area")]
-        public double FloodableArea { get; set; }
+        public virtual double FloodableArea { get; set; }
 
         /// <summary>
         /// The bottom level of the manhole compared to Dutch NAP (m).
         /// </summary>
         [FeatureAttribute(Order = 6)]
         [DisplayName("Bottom level")]
-        public double BottomLevel { get; set; }
+        public virtual double BottomLevel { get; set; }
 
         /// <summary>
         /// The surface level of the manhole compared to Dutch NAP (m).
         /// </summary>
         [FeatureAttribute(Order = 7)]
         [DisplayName("Surface level")]
-        public double SurfaceLevel { get; set; }
-        
+        public virtual double SurfaceLevel { get; set; }
+
         /// <summary>
         /// Returns the name of the Compartment object.
         /// </summary>
