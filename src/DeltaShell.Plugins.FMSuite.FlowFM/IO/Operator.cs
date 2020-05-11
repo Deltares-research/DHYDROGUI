@@ -11,6 +11,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         [Description("Overwr. missing")]
         ApplyOnly,
         Add,
-        Multiply,
+        Multiply
     }
 }

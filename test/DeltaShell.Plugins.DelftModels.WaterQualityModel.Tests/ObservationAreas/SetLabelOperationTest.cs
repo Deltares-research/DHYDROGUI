@@ -44,7 +44,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.ObservationArea
             var operation = new SetLabelOperation()
             {
                 Label = "party",
-                OperationType = PointwiseOperationType.Overwrite,
+                OperationType = PointwiseOperationType.Overwrite
             };
 
             operation.SetInputData(SpatialOperation.MaskInputName, mask);

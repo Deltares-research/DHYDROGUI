@@ -265,7 +265,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var mduFileWriteConfig = new MduFileWriteConfig
             {
                 WriteExtForcings = false,
-                WriteFeatures = false,
+                WriteFeatures = false
             };
 
             mduFileOutA.Write(mduFilePathOutA,
@@ -882,20 +882,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 new[]
                 {
                     new Coordinate(0, 0),
-                    new Coordinate(1, 0),
+                    new Coordinate(1, 0)
                 });
 
             model.Boundaries.Add(new Feature2D
             {
                 Name = "polygon",
-                Geometry = geometry,
+                Geometry = geometry
             });
 
             var condition = new FlowBoundaryCondition(FlowBoundaryQuantityType.Tracer,
                                                       BoundaryConditionDataType.TimeSeries)
             {
                 Feature = model.Boundaries[0],
-                TracerName = "feest",
+                TracerName = "feest"
             };
             condition.AddPoint(0);
             condition.AddPoint(1);

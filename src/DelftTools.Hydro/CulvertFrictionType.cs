@@ -35,7 +35,7 @@ namespace DelftTools.Hydro
         StricklerKs = 3,
 
         [Description("White colebrook")]
-        WhiteColebrook = 4,
+        WhiteColebrook = 4
     }
 
     public enum CulvertType

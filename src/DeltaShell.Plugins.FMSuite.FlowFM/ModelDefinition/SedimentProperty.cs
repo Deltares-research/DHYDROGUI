@@ -102,7 +102,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             {
                 {typeof(bool), "SedimentPropertyBoolTemplate"},
                 {typeof(int), "SedimentPropertyIntegerTemplate"},
-                {typeof(double), "SedimentPropertyDoubleTemplate"},
+                {typeof(double), "SedimentPropertyDoubleTemplate"}
             };
     }
 

@@ -113,7 +113,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.RgfGrid
                 {
                     X = 10,
                     Y = 10
-                },
+                }
             };
 
             var polygons = new List<IPolygon> {new Polygon(new LinearRing(pointList))};
@@ -177,7 +177,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.RgfGrid
                 {
                     X = 110,
                     Y = 10
-                },
+                }
             };
             var polygons = new List<IPolygon> {new Polygon(new LinearRing(pointList))};
             string gridPath = TestHelper.GetTestFilePath(@"grid_generation\existing_grid.nc");

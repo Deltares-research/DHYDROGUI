@@ -68,7 +68,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.SettingsWpf
         {
             First = 1,
             Second = 2,
-            Third = 3,
+            Third = 3
         }
     }
 }

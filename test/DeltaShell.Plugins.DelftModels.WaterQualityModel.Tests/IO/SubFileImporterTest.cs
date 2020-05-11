@@ -261,7 +261,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             CollectionAssert.AreEqual(new[]
             {
                 true,
-                true,
+                true
             }, waterQualitySubstances.Select(s => s.Active));
 
             CollectionAssert.AreEqual(new[]

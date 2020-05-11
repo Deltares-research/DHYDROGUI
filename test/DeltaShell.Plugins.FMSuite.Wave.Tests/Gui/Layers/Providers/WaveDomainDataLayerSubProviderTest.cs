@@ -50,7 +50,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers.Providers
             var expectedResults = new List<object>
             {
                 domainData.Grid,
-                domainData.Bathymetry,
+                domainData.Bathymetry
             };
 
             Assert.That(result, Is.EquivalentTo(expectedResults));

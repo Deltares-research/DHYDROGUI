@@ -37,7 +37,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
                 {
                     ParameterName = InputParameterName,
                     Feature = new RtcTestFeature {Name = InputName}
-                },
+                }
             };
         }
 

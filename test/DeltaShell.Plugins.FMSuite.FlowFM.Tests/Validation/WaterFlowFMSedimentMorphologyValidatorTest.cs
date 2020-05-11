@@ -226,12 +226,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
                     new SedimentFraction
                     {
                         Name = "Sand",
-                        CurrentSedimentType = SedimentFractionHelper.GetSedimentationTypes().FirstOrDefault(st => st.Name == "Sand"),
+                        CurrentSedimentType = SedimentFractionHelper.GetSedimentationTypes().FirstOrDefault(st => st.Name == "Sand")
                     },
                     new SedimentFraction
                     {
                         Name = "Mud",
-                        CurrentSedimentType = SedimentFractionHelper.GetSedimentationTypes().FirstOrDefault(st => st.Name == "Mud"),
+                        CurrentSedimentType = SedimentFractionHelper.GetSedimentationTypes().FirstOrDefault(st => st.Name == "Mud")
                     }
                 }
             };

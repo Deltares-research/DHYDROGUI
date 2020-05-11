@@ -47,7 +47,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers
                 CoordinateSystem = CoordinateSystem,
                 Dirty = true,
                 Enabled = Enabled,
-                FilePath = FilePath,
+                FilePath = FilePath
             };
 
             var interpolateOperation = new InterpolateOperation
@@ -253,7 +253,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers
             ExtForceFileItem extForceFileItem = existingExtForceFileItem ?? new ExtForceFileItem(quantityName)
             {
                 FileName = GetPliFileName(boundaryCondition),
-                FileType = ExtForceQuantNames.FileTypes.PolyTim,
+                FileType = ExtForceQuantNames.FileTypes.PolyTim
             };
 
             AddSuffixInCaseOfDuplicateFile(extForceFileItem);
@@ -300,7 +300,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers
             ExtForceFileItem extForceFileItem = existingExtForceFileItem ?? new ExtForceFileItem(quantityName)
             {
                 FileName = GetPliFileName(sourceAndSink),
-                FileType = ExtForceQuantNames.FileTypes.PolyTim,
+                FileType = ExtForceQuantNames.FileTypes.PolyTim
             };
 
             AddSuffixInCaseOfDuplicateFile(extForceFileItem);
@@ -456,7 +456,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers
 
             var sourceAndSink = new SourceAndSink
             {
-                Feature = feature2D,
+                Feature = feature2D
             };
             object area;
             extForceFileItem.ModelData.TryGetValue(ExtForceFile.AreaKey, out area);
@@ -489,7 +489,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers
                 FileName =
                     $"{extForceFileQuantityName}_{operation.Name.Replace(" ", "_").Replace("\t", "_")}{FileConstants.PolylineFileExtension}",
                 FileType = ExtForceQuantNames.FileTypes.InsidePolygon,
-                Method = GetSpatialOperationMethod(operation),
+                Method = GetSpatialOperationMethod(operation)
             };
 
             AddSuffixInCaseOfDuplicateFile(extForceFileItem);
@@ -590,7 +590,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers
                 FileType = ExtForceQuantNames.FileTypes.Triangulation,
                 Method = GetSpatialOperationMethod(operation),
                 Enabled = operation.Enabled,
-                Operand = ExtForceQuantNames.OperatorToStringMapping[Operator.Overwrite],
+                Operand = ExtForceQuantNames.OperatorToStringMapping[Operator.Overwrite]
             };
             forceFileItem.ModelData[ExtForceFile.AveragingTypeKey] = (int) GridCellAveragingMethod.ClosestPoint;
             forceFileItem.ModelData[ExtForceFile.RelSearchCellSizeKey] = 1.0;

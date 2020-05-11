@@ -13,7 +13,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Enums
             {
                 {ViewShapeType.Gauss, 1},
                 {ViewShapeType.Jonswap, 2},
-                {ViewShapeType.PiersonMoskowitz, 3},
+                {ViewShapeType.PiersonMoskowitz, 3}
             };
     }
 }

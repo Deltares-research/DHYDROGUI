@@ -200,7 +200,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
                 {featureNameGeneralStructures, null},
                 {featureNameWeirgens, null},
                 {featureNameGategens, null},
-                {featureNamePumps, null},
+                {featureNamePumps, null}
             };
 
         // Mapping dictionary used to relate under which name are Features stored in the Coverages.
@@ -212,7 +212,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
                 {featureNameGeneralStructures, null},
                 {featureNameWeirgens, null},
                 {featureNameGategens, null},
-                {featureNamePumps, null},
+                {featureNamePumps, null}
             };
 
         private readonly IList<KeyValuePair<string, string>> generalStuctures = new List<KeyValuePair<string, string>>()

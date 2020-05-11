@@ -178,7 +178,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters
             var item = new ClonableToolStripMenuItem
             {
                 Text = "Settings",
-                Tag = model,
+                Tag = model
             };
             item.Click += OnSettingsClicked;
             return item;

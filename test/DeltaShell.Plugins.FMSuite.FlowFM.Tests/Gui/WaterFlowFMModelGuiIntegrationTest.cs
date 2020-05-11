@@ -1158,7 +1158,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             };
             boundaryConditionSetWithMatchingBoundaryCondition.BoundaryConditions.AddRange(new[]
             {
-                new FlowBoundaryCondition(FlowBoundaryQuantityType.Salinity, BoundaryConditionDataType.TimeSeries),
+                new FlowBoundaryCondition(FlowBoundaryQuantityType.Salinity, BoundaryConditionDataType.TimeSeries)
             });
             yield return new TestCaseData(new List<BoundaryConditionSet>
             {

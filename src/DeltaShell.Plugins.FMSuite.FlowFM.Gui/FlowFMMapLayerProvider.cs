@@ -214,7 +214,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                         Style = snappedFeatures.SnappedLayerStyle,
                         DataSource = snappedFeatures,
                         Selectable = false,
-                        NameIsReadOnly = true,
+                        NameIsReadOnly = true
                     };
                     groupLayer.Layers.Add(layer);
                     snappedFeatures.Layer = layer;

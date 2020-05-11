@@ -61,7 +61,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories
             {
                 typeof(GaussViewShape),
                 typeof(JonswapViewShape),
-                typeof(PiersonMoskowitzViewShape),
+                typeof(PiersonMoskowitzViewShape)
             };
         }
 

@@ -297,7 +297,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             {
                 SubstancesMapping = new Dictionary<string, string> {{salinityName, $"mesh2d_{salinityName}"}},
                 NumberOfTimeSteps = 7,
-                NumberOfSegments = 16,
+                NumberOfSegments = 16
             };
             return metaData;
         }

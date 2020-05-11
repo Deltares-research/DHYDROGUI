@@ -11,6 +11,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.ObservationAreas
         Average = 1,
 
         [Description("Point at each layer")]
-        OneOnEachLayer = 2,
+        OneOnEachLayer = 2
     }
 }

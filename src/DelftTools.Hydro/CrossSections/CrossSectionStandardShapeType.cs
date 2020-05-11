@@ -20,6 +20,6 @@
         Trapezium,
 
         Egg,   // not in use -> only closed branches
-        Round, //not in use -> only closed branches
+        Round //not in use -> only closed branches
     }
 }

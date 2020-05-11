@@ -80,12 +80,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
 
             var firstGridCoordinates = new[]
             {
-                new GridBoundaryCoordinate(gridSide, startIndex),
+                new GridBoundaryCoordinate(gridSide, startIndex)
             };
 
             var lastGridCoordinates = new[]
             {
-                new GridBoundaryCoordinate(gridSide, endIndex),
+                new GridBoundaryCoordinate(gridSide, endIndex)
             };
 
             var calculator = Substitute.For<IBoundarySnappingCalculator>();
@@ -155,7 +155,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             calculator.GridBoundary[GridSide.North].Returns(new[]
             {
                 new GridBoundaryCoordinate(GridSide.North, 0),
-                new GridBoundaryCoordinate(GridSide.North, 1),
+                new GridBoundaryCoordinate(GridSide.North, 1)
             });
 
             const double length = 5.0;

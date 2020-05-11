@@ -108,7 +108,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CompositeStructureView
             var culvert = new Culvert("culvert")
             {
                 GeometryType = CulvertGeometryType.Tabulated,
-                IsGated = true,
+                IsGated = true
             };
 
             Action<Form> action = delegate { culvert.Name = "Banaan"; };

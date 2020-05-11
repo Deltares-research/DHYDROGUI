@@ -948,7 +948,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
 
             var symbolShapeFeature = new FixedRectangleShapeFeature(chart, offset, minY, length, 6, true, false)
             {
-                NormalStyle = renderStyle,
+                NormalStyle = renderStyle
             };
 
             shapeModifyTool.AddShape(symbolShapeFeature);

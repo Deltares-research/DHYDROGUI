@@ -52,7 +52,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
             // all not rendered coverages can be added
             var dropDownMenuItem = new ToolStripMenuItem
             {
-                Text = "Select Spatial Data",
+                Text = "Select Spatial Data"
             };
             dropDownMenuItem.DropDown.Closing += DropDown_Closing;
 

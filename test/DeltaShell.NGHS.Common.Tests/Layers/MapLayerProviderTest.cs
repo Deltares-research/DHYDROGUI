@@ -194,19 +194,19 @@ namespace DeltaShell.NGHS.Common.Tests.Layers
             yield return new TestCaseData(new List<ILayerSubProvider>
             {
                 prov0,
-                prov1,
+                prov1
             });
             yield return new TestCaseData(new List<ILayerSubProvider>
             {
                 prov0,
                 prov1,
-                prov2,
+                prov2
             });
             yield return new TestCaseData(new List<ILayerSubProvider>
             {
                 prov0,
                 prov1,
-                prov3,
+                prov3
             });
         }
 

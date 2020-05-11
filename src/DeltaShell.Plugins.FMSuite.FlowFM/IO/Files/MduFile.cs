@@ -61,7 +61,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             KnownProperties.LandBoundaryFile,
             KnownProperties.DryPointsFile,
             KnownProperties.RestartFile,
-            KnownProperties.StructuresFile,
+            KnownProperties.StructuresFile
         };
 
         private static readonly Dictionary<string, string> MduFilePropertyDescriptionDictionary =
@@ -75,7 +75,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                 {KnownProperties.BridgePillarFile, "PillarFile"},
                 {KnownProperties.StructuresFile, "StructureFile"},
                 {KnownProperties.ObsFile, "ObsFile"},
-                {KnownProperties.ObsCrsFile, "CrsFile"},
+                {KnownProperties.ObsCrsFile, "CrsFile"}
             };
 
         private int propertyKeyAlignmentLength;

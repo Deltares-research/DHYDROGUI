@@ -178,7 +178,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             Tuple<SupportPoint, ParametersBlock>[] dataPerSupportPoint =
             {
                 new Tuple<SupportPoint, ParametersBlock>(supportPoint1, parametersBlock1),
-                new Tuple<SupportPoint, ParametersBlock>(supportPoint2, parametersBlock2),
+                new Tuple<SupportPoint, ParametersBlock>(supportPoint2, parametersBlock2)
             };
 
             var factory = new ImportBoundaryConditionDataComponentFactory(parametersFactory);
@@ -224,7 +224,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             Tuple<SupportPoint, IWaveEnergyFunction<T>>[] dataPerSupportPoint =
             {
                 new Tuple<SupportPoint, IWaveEnergyFunction<T>>(supportPoint1, waveEnergyFunction1),
-                new Tuple<SupportPoint, IWaveEnergyFunction<T>>(supportPoint2, waveEnergyFunction2),
+                new Tuple<SupportPoint, IWaveEnergyFunction<T>>(supportPoint2, waveEnergyFunction2)
             };
 
             var factory = new ImportBoundaryConditionDataComponentFactory(parametersFactory);
@@ -269,7 +269,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             Tuple<SupportPoint, string>[] dataPerSupportPoint =
             {
                 new Tuple<SupportPoint, string>(supportPoint1, filePath1),
-                new Tuple<SupportPoint, string>(supportPoint2, filePath2),
+                new Tuple<SupportPoint, string>(supportPoint2, filePath2)
             };
 
             var factory = new ImportBoundaryConditionDataComponentFactory(parametersFactory);

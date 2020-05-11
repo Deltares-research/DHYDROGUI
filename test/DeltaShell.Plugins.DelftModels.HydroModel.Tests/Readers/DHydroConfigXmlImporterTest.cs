@@ -144,7 +144,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
                 canImportRootLevelImporter1,
                 canImportRootLevelImporter2,
                 cannotImportRootLevelImporter1,
-                cannotImportRootLevelImporter2,
+                cannotImportRootLevelImporter2
             };
 
             var importer = new DHydroConfigXmlImporter(() => importers);
@@ -265,7 +265,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
                 canImportImporter1,
                 canImportImporter2,
                 cannotImportImporter1,
-                cannotImportImporter2,
+                cannotImportImporter2
             };
 
             var importer = new DHydroConfigXmlImporter(() => importers);

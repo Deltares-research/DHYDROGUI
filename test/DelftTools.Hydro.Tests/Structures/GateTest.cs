@@ -33,7 +33,7 @@ namespace DelftTools.Hydro.Tests.Structures
                 OffsetY = 175,
                 OpeningWidth = 75,
                 LowerEdgeLevel = -3,
-                SillWidth = 78,
+                SillWidth = 78
             };
             var clonedGate = (IGate) gate.Clone();
 

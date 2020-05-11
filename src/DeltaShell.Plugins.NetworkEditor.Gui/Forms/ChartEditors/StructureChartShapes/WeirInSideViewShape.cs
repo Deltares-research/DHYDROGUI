@@ -54,7 +54,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
 
                 gatedWeirShape.WaterStyle = new VectorStyle
                 {
-                    Fill = new SolidBrush(Color.LightCyan),
+                    Fill = new SolidBrush(Color.LightCyan)
                 };
                 return gatedWeirShape;
             }

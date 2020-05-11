@@ -109,7 +109,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
                 {
                     id = elementId,
                     OpenMIExchangeItem = new OpenMIExchangeItemXML {elementId = isEmpty ? null : "not_empty"}
-                },
+                }
             };
             return timeSeriesElements;
         }

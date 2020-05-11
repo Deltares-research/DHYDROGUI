@@ -68,7 +68,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 "_his.nc",
                 "_map.nc",
                 "_clm.nc",
-                "_numlimdth.xyz",
+                "_numlimdth.xyz"
             };
 
             var filtersOutputWAQ = new List<string>

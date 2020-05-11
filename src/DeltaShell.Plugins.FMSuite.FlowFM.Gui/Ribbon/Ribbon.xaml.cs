@@ -51,7 +51,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Ribbon
                 Title = "Reverse line(s)",
                 Text = "Reverses the selected poly-line features.",
                 DisableReason = "Required to have exclusively 2D/3D oriented polyline features selected.",
-                MaxWidth = 250,
+                MaxWidth = 250
             };
         }
 

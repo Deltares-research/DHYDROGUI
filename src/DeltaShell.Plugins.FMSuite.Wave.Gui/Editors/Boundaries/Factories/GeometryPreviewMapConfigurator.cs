@@ -88,7 +88,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories
                 supportPointsLayer,
                 startPointsLayer,
                 endPointsLayer,
-                lineLayer,
+                lineLayer
             });
 
             startPointsLayer.RenderOrder = 1;

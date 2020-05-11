@@ -173,7 +173,7 @@ namespace DelftTools.Hydro
             {
                 Name = Name,
                 Geometry = Geometry != null ? (IGeometry) Geometry.Clone() : null,
-                Attributes = Attributes != null ? (IFeatureAttributeCollection) Attributes.Clone() : null,
+                Attributes = Attributes != null ? (IFeatureAttributeCollection) Attributes.Clone() : null
             };
 
             foreach (WasteWaterTreatmentPlant plant in WasteWaterTreatmentPlants)

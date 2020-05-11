@@ -33,7 +33,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.SettingsWpf
                 var wpfGuiCategoryVisible = new WpfGuiCategory("cat", null);
                 var wpfGuiCategoryHidden = new WpfGuiCategory("cat2", null)
                 {
-                    CategoryVisibility = () => false,
+                    CategoryVisibility = () => false
                 };
 
                 // Call

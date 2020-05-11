@@ -107,7 +107,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             var modelGroupNameLookUp = new Dictionary<ModelGroup, string>
             {
                 {ModelGroup.Empty, DelftTools.Shell.Core.Properties.Resources.HydroModelApplicationPlugin_GetModelInfos_Empty_Integrated_Model},
-                {ModelGroup.FMWaveRtcModels, DelftTools.Shell.Core.Properties.Resources.HydroModelApplicationPlugin_GetModelInfos__2D_3D_Integrated_Model},
+                {ModelGroup.FMWaveRtcModels, DelftTools.Shell.Core.Properties.Resources.HydroModelApplicationPlugin_GetModelInfos__2D_3D_Integrated_Model}
             };
 
             foreach (ModelGroup modelGroup in Enum.GetValues(typeof(ModelGroup)))

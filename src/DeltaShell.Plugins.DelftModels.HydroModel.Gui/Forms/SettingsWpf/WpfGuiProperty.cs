@@ -266,7 +266,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
                         {
                             v = wrapperValue;                                               //Overwrite value with new one.
                             Value = ValueCollection.Select(vc => vc.WrapperValue).ToList(); //Trigger update.
-                        },
+                        }
                     }).ToList();
             }
 

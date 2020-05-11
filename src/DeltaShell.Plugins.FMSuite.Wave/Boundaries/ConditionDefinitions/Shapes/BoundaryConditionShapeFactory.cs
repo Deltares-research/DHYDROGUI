@@ -11,7 +11,7 @@
         {
             return new GaussShape()
             {
-                GaussianSpread = 0.1,
+                GaussianSpread = 0.1
             };
         }
 
@@ -19,7 +19,7 @@
         {
             return new JonswapShape()
             {
-                PeakEnhancementFactor = 3.3,
+                PeakEnhancementFactor = 3.3
             };
         }
 

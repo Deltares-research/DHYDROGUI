@@ -127,7 +127,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
                 Model = Model,
                 BoundaryConditionSet = (BoundaryConditionSet) Editor.Data,
                 BoundaryCondition = boundaryCondition,
-                SupportPointIndex = Editor.SelectedSupportPointIndex,
+                SupportPointIndex = Editor.SelectedSupportPointIndex
             };
 
             Editor.SelectedSupportPointChanged += view.OnSupportPointChanged;

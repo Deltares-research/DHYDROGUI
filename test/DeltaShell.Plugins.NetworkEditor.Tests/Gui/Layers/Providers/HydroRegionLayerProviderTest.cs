@@ -71,7 +71,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Layers.Providers
             {
                 Substitute.For<IRegion>(),
                 Substitute.For<IRegion>(),
-                Substitute.For<IRegion>(),
+                Substitute.For<IRegion>()
             };
 
             // Call

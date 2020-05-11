@@ -240,7 +240,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers
                                            xCoordinates, yCoordinates,
                                            string.Empty)
             {
-                Name = gridName,
+                Name = gridName
             };
 
             var factory = new WaveLayerFactory();

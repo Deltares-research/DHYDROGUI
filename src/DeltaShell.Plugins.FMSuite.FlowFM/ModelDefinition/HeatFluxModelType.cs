@@ -5,6 +5,6 @@
         None = 0,
         TransportOnly = 1,
         ExcessTemperature = 3,
-        Composite = 5,
+        Composite = 5
     }
 }

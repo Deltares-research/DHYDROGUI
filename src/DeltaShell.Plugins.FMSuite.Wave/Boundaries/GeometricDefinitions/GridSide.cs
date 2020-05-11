@@ -12,6 +12,6 @@
         West = 1,
         North = 2,
         East = 3,
-        South = 4,
+        South = 4
     }
 }

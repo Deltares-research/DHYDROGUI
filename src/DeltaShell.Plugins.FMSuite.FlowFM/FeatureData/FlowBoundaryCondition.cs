@@ -93,7 +93,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
 
         [Category("Tracer")]
         [Description("Tracer")]
-        Tracer,
+        Tracer
     }
 
     [Entity]

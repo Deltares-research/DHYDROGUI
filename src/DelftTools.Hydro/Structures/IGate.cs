@@ -14,7 +14,7 @@ namespace DelftTools.Hydro.Structures
         FromLeft,
 
         [Description("From right")]
-        FromRight,
+        FromRight
     }
 
     public interface IGate : IStructure1D

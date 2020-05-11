@@ -138,7 +138,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
                 mocks.ReplayAll();
                 var command = new ShowSideViewCommand
                 {
-                    Gui = pluginGui.Gui,
+                    Gui = pluginGui.Gui
                     //SideViewDataBuilder = sideViewDataBuilder
                 };
 

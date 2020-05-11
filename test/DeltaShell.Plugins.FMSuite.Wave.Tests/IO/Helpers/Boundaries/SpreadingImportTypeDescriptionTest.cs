@@ -12,7 +12,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             new Dictionary<SpreadingImportType, string>
             {
                 {SpreadingImportType.Degrees, KnownWaveBoundariesFileConstants.DegreesDefinedSpreading},
-                {SpreadingImportType.Power, KnownWaveBoundariesFileConstants.PowerDefinedSpreading},
+                {SpreadingImportType.Power, KnownWaveBoundariesFileConstants.PowerDefinedSpreading}
             };
     }
 }

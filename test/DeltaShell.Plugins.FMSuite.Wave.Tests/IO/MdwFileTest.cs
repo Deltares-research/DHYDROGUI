@@ -825,7 +825,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
                 EndDir = GetRandomRoundedValue(random),
                 NFreq = random.Next(),
                 FreqMin = GetRandomRoundedValue(random),
-                FreqMax = GetRandomRoundedValue(random),
+                FreqMax = GetRandomRoundedValue(random)
             };
 
             // Setup

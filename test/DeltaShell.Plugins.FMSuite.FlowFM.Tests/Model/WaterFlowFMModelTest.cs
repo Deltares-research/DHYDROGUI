@@ -653,7 +653,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             var flowBoundaryCondition = new FlowBoundaryCondition(FlowBoundaryQuantityType.Discharge,
                                                                   BoundaryConditionDataType.TimeSeries)
             {
-                Feature = feature,
+                Feature = feature
             };
 
             flowBoundaryCondition.AddPoint(0);
@@ -1297,7 +1297,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
                 new Coordinate(10, 10),
                 new Coordinate(10, 0),
                 new Coordinate(0, 0),
-                new Coordinate(0, 100),
+                new Coordinate(0, 100)
             });
 
             allData = fmModel.FixedWeirsProperties;

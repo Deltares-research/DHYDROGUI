@@ -8,6 +8,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Enums
         Uniform = 1,
 
         [Description("Spatially Varying")]
-        SpatiallyVarying = 2,
+        SpatiallyVarying = 2
     }
 }

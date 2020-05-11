@@ -142,7 +142,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
                 {KnownProperties.RefDate.ToLower(), OnTimePropertyChanged},
                 {KnownProperties.Temperature.ToLower(), OnTemperaturePropertyChanged},
                 {GuiProperties.UseMorSed.ToLower(), OnMorphologySedimentPropertyChanged},
-                {GuiProperties.WriteSnappedFeatures.ToLower(), OnWriteSnappedFeaturesPropertyChanged},
+                {GuiProperties.WriteSnappedFeatures.ToLower(), OnWriteSnappedFeaturesPropertyChanged}
             };
 
             SetDefaultGuiTimeProperties();
@@ -524,7 +524,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
                     newOperation.SetInputData(AddSamplesOperation.SamplesInputName,
                                               new PointCloudFeatureProvider
                                               {
-                                                  PointCloud = coverage.ToPointCloud(0, true),
+                                                  PointCloud = coverage.ToPointCloud(0, true)
                                               });
 
                     if (SpatialOperations.ContainsKey(dataItem.Name))

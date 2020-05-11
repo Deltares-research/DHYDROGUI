@@ -27,7 +27,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Editors
             var fmModel = new WaterFlowFMModel();
             var fmViewWPF = new WpfSettingsView()
             {
-                Data = fmModel,
+                Data = fmModel
             };
 
             var wpfSettingsViewModel = (WpfSettingsViewModel) fmViewWPF.DataContext;
@@ -46,7 +46,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Editors
             var fmModel = new WaterFlowFMModel();
             var fmViewWpf = new WpfSettingsView
             {
-                Data = fmModel,
+                Data = fmModel
             };
             var wpfSettingsViewModel = (WpfSettingsViewModel) fmViewWpf.DataContext;
 
@@ -92,7 +92,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Editors
                 ValueType = typeof(string),
                 IsReadOnly = false,
                 HasMaxValue = false,
-                HasMinValue = false,
+                HasMinValue = false
             };
 
             Assert.IsTrue(depthlayers.IsVisible(fmModel));
@@ -118,7 +118,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Editors
             var fmModel = new WaterFlowFMModel();
             var fmViewWPF = new WpfSettingsView()
             {
-                Data = fmModel,
+                Data = fmModel
             };
 
             var wpfSettingsViewModel = (WpfSettingsViewModel) fmViewWPF.DataContext;
@@ -139,7 +139,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Editors
             var fmModel = new WaterFlowFMModel();
             var fmViewWPF = new WpfSettingsView()
             {
-                Data = fmModel,
+                Data = fmModel
             };
 
             var wpfSettingsViewModel = (WpfSettingsViewModel) fmViewWPF.DataContext;

@@ -13,6 +13,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries
         CounterClockwise,
 
         [Description(KnownWaveBoundariesFileConstants.ClockwiseDistanceDirType)]
-        Clockwise,
+        Clockwise
     }
 }

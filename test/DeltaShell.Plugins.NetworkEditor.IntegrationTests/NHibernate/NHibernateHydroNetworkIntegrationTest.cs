@@ -153,7 +153,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
                 Network = network,
                 Branch = channel1,
                 Geometry = new Point(5, 0),
-                Chainage = 5.0,
+                Chainage = 5.0
             };
             channel1.BranchFeatures.Add(crossSection);
             network.Nodes.AddRange(new[]
@@ -317,7 +317,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
             {
                 new CategorialThemeItem("a", new VectorStyle {Shape = ShapeType.Diamond}, null),
                 new CategorialThemeItem("b", new VectorStyle {Shape = ShapeType.Rectangle}, null),
-                new CategorialThemeItem("c", new VectorStyle {Shape = ShapeType.Triangle}, null),
+                new CategorialThemeItem("c", new VectorStyle {Shape = ShapeType.Triangle}, null)
             });
 
             GeneratedMapLayerInfo savedLayerInfo = SaveAndRetrieveObject(layerInfo);
@@ -727,7 +727,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
                 Geometry = new Point(5, 0),
                 OffsetY = 150,
                 OpeningWidth = 75,
-                SillLevel = -3,
+                SillLevel = -3
             };
             Gate retrievedGate = SaveLoadStructure(gate, TestHelper.GetCurrentMethodName() + ".dsproj");
 
@@ -810,7 +810,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
             var lateralSource = new LateralSource
             {
                 Name = "Source1",
-                Chainage = 10,
+                Chainage = 10
             };
             branch1.BranchFeatures.Add(lateralSource);
             lateralSource.Branch = branch1;

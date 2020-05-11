@@ -63,7 +63,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
                             ThemeItems =
                             {
                                 CreateEnumCategorialThemeItem(ConnectionType.Input, Resources.input),
-                                CreateEnumCategorialThemeItem(ConnectionType.Output, Resources.output),
+                                CreateEnumCategorialThemeItem(ConnectionType.Output, Resources.output)
                             }
                         }
                     },

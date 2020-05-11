@@ -22,7 +22,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.SettingsWpf
         {
             var dummyField = new FieldUIDescription(null, null)
             {
-                Label = "dummyName",
+                Label = "dummyName"
             };
 
             var property = new WpfGuiProperty(dummyField);
@@ -37,7 +37,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.SettingsWpf
             var dummyField = new FieldUIDescription((o) => integerValue, (o, o1) => integerValue = (int) o1)
             {
                 Label = "dummyName",
-                ValueType = typeof(int),
+                ValueType = typeof(int)
             };
 
             var prop = new WpfGuiProperty(dummyField) {GetModel = () => true};
@@ -58,7 +58,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.SettingsWpf
             var dummyField = new FieldUIDescription((o) => doubleList, (o, o1) => doubleList = o1 as List<double>)
             {
                 Label = "dummyName",
-                ValueType = typeof(IList<double>),
+                ValueType = typeof(IList<double>)
             };
 
             var prop = new WpfGuiProperty(dummyField);
@@ -80,7 +80,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.SettingsWpf
             var dummyField = new FieldUIDescription((o) => timeSpanInput, (o, o1) => timeSpanInput = (TimeSpan) o1)
             {
                 Label = "dummyName",
-                ValueType = typeof(TimeSpan),
+                ValueType = typeof(TimeSpan)
             };
 
             var prop = new WpfGuiProperty(dummyField);

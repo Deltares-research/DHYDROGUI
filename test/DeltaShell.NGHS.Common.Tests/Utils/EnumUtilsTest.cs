@@ -53,7 +53,7 @@ namespace DeltaShell.NGHS.Common.Tests.Utils
             B,
 
             [System.ComponentModel.Description("third_value")]
-            C,
+            C
         }
     }
 }

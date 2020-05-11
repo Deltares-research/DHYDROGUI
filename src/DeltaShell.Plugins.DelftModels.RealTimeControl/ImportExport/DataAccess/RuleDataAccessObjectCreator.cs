@@ -244,7 +244,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.DataAccess
 
             var rule = new HydraulicRule
             {
-                Name = ruleName,
+                Name = ruleName
             };
 
             if (records != null)

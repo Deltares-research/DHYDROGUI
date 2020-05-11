@@ -664,7 +664,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
 
             DelftIniCategory[] categories =
             {
-                GetSpatiallyVaryingConstantCategory(ShapeImportType.Gauss, PeriodImportExportType.Mean, mdwValues),
+                GetSpatiallyVaryingConstantCategory(ShapeImportType.Gauss, PeriodImportExportType.Mean, mdwValues)
             };
 
             var converter = new WaveBoundaryConverter(importDataComponentFactory, geometricDefinitionFactory);
@@ -962,7 +962,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
                 {
                     "boundary_name", new List<IFunction>
                     {
-                        CreateTimeSeriesFunction(bcwValues, 0),
+                        CreateTimeSeriesFunction(bcwValues, 0)
                     }
                 }
             };
@@ -975,7 +975,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
                     {
                         CreateTimeSeriesFunction(bcwValues, 0),
                         CreateTimeSeriesFunction(bcwValues, 1),
-                        CreateTimeSeriesFunction(bcwValues, 2),
+                        CreateTimeSeriesFunction(bcwValues, 2)
                     }
                 }
             };
@@ -1056,7 +1056,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
                 {
                     RandomDouble,
                     RandomDouble,
-                    RandomDouble,
+                    RandomDouble
                 };
             }
         }

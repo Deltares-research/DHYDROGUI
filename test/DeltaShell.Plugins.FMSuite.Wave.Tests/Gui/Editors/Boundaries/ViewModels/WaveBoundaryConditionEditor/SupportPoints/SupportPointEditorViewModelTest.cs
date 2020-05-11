@@ -47,7 +47,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             geometricDefinition.SupportPoints.Returns(new EventedList<SupportPoint>()
             {
                 new SupportPoint(0, geometricDefinition),
-                new SupportPoint(maxDistance, geometricDefinition),
+                new SupportPoint(maxDistance, geometricDefinition)
             });
 
             conditionDefinition = Substitute.For<IWaveBoundaryConditionDefinition>();
@@ -250,7 +250,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             geometricDefinition.SupportPoints.Returns(new EventedList<SupportPoint>
             {
                 new SupportPoint(1, geometricDefinition),
-                new SupportPoint(2, geometricDefinition),
+                new SupportPoint(2, geometricDefinition)
             });
             viewModel = new SupportPointEditorViewModel(geometricDefinition,
                                                         supportPointDataComponentViewModel);
@@ -276,7 +276,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
                 random.NextDouble(),
                 random.NextDouble(),
                 random.NextDouble(),
-                random.NextDouble(),
+                random.NextDouble()
             };
 
             // Calls

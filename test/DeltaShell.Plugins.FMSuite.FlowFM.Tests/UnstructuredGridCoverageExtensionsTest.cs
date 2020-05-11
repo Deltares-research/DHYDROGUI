@@ -192,7 +192,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 new Coordinate(0, 0),
                 new Coordinate(0, 10),
                 new Coordinate(10, 10),
-                new Coordinate(10, 0),
+                new Coordinate(10, 0)
             };
 
             edges = new[,]
@@ -216,7 +216,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 {
                     1,
                     3
-                },
+                }
             };
 
             cellIndices = new[,]
@@ -230,7 +230,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                     1,
                     3,
                     4
-                },
+                }
             };
             return vertices;
         }

@@ -48,7 +48,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.DataAccess
 
             var signal = new LookupSignal
             {
-                Name = signalName,
+                Name = signalName
             };
 
             if (records != null)

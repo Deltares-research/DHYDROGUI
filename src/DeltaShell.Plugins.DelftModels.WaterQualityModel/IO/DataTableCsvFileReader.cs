@@ -109,7 +109,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
                     {new CsvRequiredField("time", typeof(DateTime)), new CsvColumnInfo(0, new DateTimeFormatInfo {FullDateTimePattern = "yyyy-MM-dd HH:mm:ss"})},
                     {new CsvRequiredField(LocationHeaderName, typeof(string)), new CsvColumnInfo(1, CultureInfo.InvariantCulture)},
                     {new CsvRequiredField("substance", typeof(string)), new CsvColumnInfo(2, CultureInfo.InvariantCulture)},
-                    {new CsvRequiredField("value", typeof(string)), new CsvColumnInfo(3, CultureInfo.InvariantCulture)},
+                    {new CsvRequiredField("value", typeof(string)), new CsvColumnInfo(3, CultureInfo.InvariantCulture)}
                 }
             };
 

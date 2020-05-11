@@ -145,7 +145,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                             new Coordinate(140.0, 8.0, 1.0),
                             new Coordinate(180.0, 4.0, 2.0),
                             new Coordinate(260.0, 0.0, 3.0)
-                        }),
+                        })
                 };
 
                 /* Set data model */
@@ -336,7 +336,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                                                       BoundaryConditionDataType.TimeSeries)
                             {
                                 Feature = boundary,
-                                Name = flowBoundaryConditionName,
+                                Name = flowBoundaryConditionName
                             };
 
                         var morphologyBoundaryCondition = new FlowBoundaryCondition(FlowBoundaryQuantityType.WaterLevel,

@@ -646,7 +646,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                     ExcludedQuantities = excludedQuantities,
                     OverwriteExistingData = true,
                     CanCreateNewBoundaryCondition = true,
-                    LocationFilter = feature,
+                    LocationFilter = feature
                 };
             }
             else
@@ -656,7 +656,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                     ExcludedQuantities = excludedQuantities,
                     OverwriteExistingData = true,
                     CanCreateNewBoundaryCondition = true,
-                    LocationFilter = feature,
+                    LocationFilter = feature
                 };
             }
 

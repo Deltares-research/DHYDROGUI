@@ -18,7 +18,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
                 {BoundaryOrientationType.West, KnownWaveBoundariesFileConstants.WestBoundaryOrientationType},
                 {BoundaryOrientationType.SouthWest, KnownWaveBoundariesFileConstants.SouthWestBoundaryOrientationType},
                 {BoundaryOrientationType.South, KnownWaveBoundariesFileConstants.SouthBoundaryOrientationType},
-                {BoundaryOrientationType.SouthEast, KnownWaveBoundariesFileConstants.SouthEastBoundaryOrientationType},
+                {BoundaryOrientationType.SouthEast, KnownWaveBoundariesFileConstants.SouthEastBoundaryOrientationType}
             };
     }
 }

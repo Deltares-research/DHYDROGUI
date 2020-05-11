@@ -140,7 +140,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.Calculators
             var expectedResult = new List<GridBoundaryCoordinate>()
             {
                 new GridBoundaryCoordinate(GridSide.East, 4),
-                new GridBoundaryCoordinate(GridSide.North, 0),
+                new GridBoundaryCoordinate(GridSide.North, 0)
             };
 
             Assert.That(result, Is.EquivalentTo(expectedResult));
@@ -193,7 +193,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.Calculators
             var expectedResult = new List<GridBoundaryCoordinate>()
             {
                 new GridBoundaryCoordinate(GridSide.East, 4),
-                new GridBoundaryCoordinate(GridSide.North, 0),
+                new GridBoundaryCoordinate(GridSide.North, 0)
             };
 
             Assert.That(result, Is.EquivalentTo(expectedResult));

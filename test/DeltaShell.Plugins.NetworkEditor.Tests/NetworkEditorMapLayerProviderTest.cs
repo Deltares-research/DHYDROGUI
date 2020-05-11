@@ -65,7 +65,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
                     {
                         new Coordinate(0.0, 5.0),
                         new Coordinate(0.0, 0.0)
-                    }),
+                    })
                 })
             };
 

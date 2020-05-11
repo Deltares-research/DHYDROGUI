@@ -27,7 +27,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.GeometricDefinitions
                 new TestCaseData(new GridCoordinate(0, int.MaxValue), new GridCoordinate(0, int.MaxValue), true),
                 new TestCaseData(new GridCoordinate(int.MaxValue, int.MaxValue), new GridCoordinate(int.MaxValue, int.MaxValue), true),
                 new TestCaseData(new GridCoordinate(int.MaxValue, int.MaxValue), new GridCoordinate(2, 2), false),
-                new TestCaseData(new GridCoordinate(int.MaxValue, int.MaxValue), new GridCoordinate(1, 2), false),
+                new TestCaseData(new GridCoordinate(int.MaxValue, int.MaxValue), new GridCoordinate(1, 2), false)
             };
 
         [Test]

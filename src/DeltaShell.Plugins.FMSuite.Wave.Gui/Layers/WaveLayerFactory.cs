@@ -34,7 +34,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
             return new ModelGroupLayer
             {
                 Name = waveModel.Name,
-                Model = waveModel,
+                Model = waveModel
             };
         }
 
@@ -80,7 +80,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
                 DataSource = new Feature2DCollection().Init(waveModel.ObservationPoints,
                                                             "ObservationPoints",
                                                             waveModelName,
-                                                            waveModel.CoordinateSystem),
+                                                            waveModel.CoordinateSystem)
             };
         }
 
@@ -114,7 +114,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
 
             return new GroupLayer(layerName)
             {
-                LayersReadOnly = true,
+                LayersReadOnly = true
             };
         }
 
@@ -134,7 +134,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
 
             var groupLayer = new GroupLayer(WaveLayerNames.BoundaryLayerName)
             {
-                LayersReadOnly = false,
+                LayersReadOnly = false
             };
 
             groupLayer.Layers.AddRange(CreateBoundaryLayers(featuresProviderContainer));
@@ -157,7 +157,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
                 Style = new VectorStyle
                 {
                     Fill = new SolidBrush(DeltaresColor.LightBlue),
-                    GeometryType = typeof(IPoint),
+                    GeometryType = typeof(IPoint)
                 }
             };
         }
@@ -177,7 +177,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
                 {
                     Line = new Pen(DeltaresColor.Blue, 3f),
                     GeometryType = typeof(ILineString)
-                },
+                }
             };
         }
 
@@ -188,7 +188,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
             var style = new VectorStyle
             {
                 Fill = new SolidBrush(Color.LightGreen),
-                GeometryType = typeof(IPoint),
+                GeometryType = typeof(IPoint)
             };
 
             return CreateReadOnlyLayer(WaveLayerNames.BoundaryStartPointsLayerName, featureProvider, style);
@@ -201,7 +201,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
             var style = new VectorStyle
             {
                 Fill = new SolidBrush(Color.LightCoral),
-                GeometryType = typeof(IPoint),
+                GeometryType = typeof(IPoint)
             };
 
             return CreateReadOnlyLayer(WaveLayerNames.BoundaryEndPointsLayerName, featureProvider, style);
@@ -216,7 +216,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
                 Fill = new SolidBrush(Color.LightGray),
                 Outline = new Pen(Color.DimGray),
                 GeometryType = typeof(IPoint),
-                ShapeSize = 26,
+                ShapeSize = 26
             };
 
             return CreateReadOnlyLayer(WaveLayerNames.InactiveSupportPointsLayerName, featureProvider, style);
@@ -230,7 +230,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
             {
                 Fill = new SolidBrush(Color.Gold),
                 GeometryType = typeof(IPoint),
-                ShapeSize = 26,
+                ShapeSize = 26
             };
 
             return CreateReadOnlyLayer(WaveLayerNames.ActiveSupportPointsLayerName, featureProvider, style);
@@ -245,7 +245,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Layers
                 Fill = new SolidBrush(Color.PaleVioletRed),
                 GeometryType = typeof(IPoint),
                 ShapeSize = 32,
-                EnableOutline = false,
+                EnableOutline = false
             };
 
             return CreateReadOnlyLayer(WaveLayerNames.SelectedSupportPointLayerName, featureProvider, style);

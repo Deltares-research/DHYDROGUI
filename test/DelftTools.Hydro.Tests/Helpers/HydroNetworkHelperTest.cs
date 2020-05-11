@@ -1784,7 +1784,7 @@ namespace DelftTools.Hydro.Tests.Helpers
                 Geometry = new LineString(new[]
                 {
                     new Coordinate(0, 0),
-                    new Coordinate(1262.0, 0),
+                    new Coordinate(1262.0, 0)
                 })
             };
             var node1 = new HydroNode
@@ -2515,7 +2515,7 @@ namespace DelftTools.Hydro.Tests.Helpers
                 Geometry = new LineString(new[]
                 {
                     new Coordinate(0, 0),
-                    new Coordinate(0, 100),
+                    new Coordinate(0, 100)
                 })
             };
 
@@ -2579,7 +2579,7 @@ namespace DelftTools.Hydro.Tests.Helpers
                 {
                     new Coordinate(chainage, 0),
                     new Coordinate(chainage + 1, 0)
-                }),
+                })
             };
             HydroNetworkHelper.AddCrossSectionDefinitionToBranch(branch, crossSection, chainage);
         }

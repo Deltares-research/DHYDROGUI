@@ -458,7 +458,7 @@ namespace DelftTools.Hydro.CrossSections
                 {
                     MinY = crossSectionSection.MinY,
                     MaxY = crossSectionSection.MaxY,
-                    SectionType = crossSectionSection.SectionType,
+                    SectionType = crossSectionSection.SectionType
                 });
             }
         }

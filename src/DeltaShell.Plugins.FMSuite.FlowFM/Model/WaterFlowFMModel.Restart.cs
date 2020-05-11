@@ -384,7 +384,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                 return new Dictionary<string, string>
                 {
                     {"NrOfVertices", Grid.Vertices.Count.ToString(CultureInfo.InvariantCulture)},
-                    {"NrOfEdges", Grid.Edges.Count.ToString(CultureInfo.InvariantCulture)},
+                    {"NrOfEdges", Grid.Edges.Count.ToString(CultureInfo.InvariantCulture)}
                     // todo
                 };
             }

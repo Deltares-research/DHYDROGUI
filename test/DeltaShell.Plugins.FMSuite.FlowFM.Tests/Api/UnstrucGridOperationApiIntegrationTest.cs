@@ -316,7 +316,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                 var geometries = new List<IGeometry>
                 {
                     sourceGeometry,
-                    sourceGeometry2,
+                    sourceGeometry2
                 };
 
                 const string featureType = UnstrucGridOperationApi.SourceSink;

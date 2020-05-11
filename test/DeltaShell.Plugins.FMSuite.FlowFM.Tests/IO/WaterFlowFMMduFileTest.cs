@@ -187,7 +187,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 area.ObservationPoints.AddRange(
                     new[]
                     {
-                        WaterFlowFMMduFileTestHelper.GetNewGroupableFeature2DPoint(string.Empty, "Feature1"), /*Default group expected*/
+                        WaterFlowFMMduFileTestHelper.GetNewGroupableFeature2DPoint(string.Empty, "Feature1") /*Default group expected*/
                     }
                 );
                 GroupableFeature2DPoint defaultFeature = area.ObservationPoints.FirstOrDefault(o => o.Name == "Feature1");

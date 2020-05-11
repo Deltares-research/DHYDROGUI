@@ -121,7 +121,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
             var importSamplesOperation = new ImportSamplesSpatialOperationExtension
             {
-                FilePath = samplePath,
+                FilePath = samplePath
             };
 
             // When

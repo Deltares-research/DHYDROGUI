@@ -29,7 +29,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                 FMStructuresValidator.Validate(model),
                 ValidateRestartInput(model),
                 WaterFlowFMEmbankmentValidator.Validate(model),
-                WaterFlowFMEnclosureValidator.Validate(model),
+                WaterFlowFMEnclosureValidator.Validate(model)
             };
 
             IEnumerable<ValidationReport> subReports = model.UseMorSed

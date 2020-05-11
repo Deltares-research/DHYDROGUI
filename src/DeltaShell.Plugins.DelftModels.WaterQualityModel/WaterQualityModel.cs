@@ -752,7 +752,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
             var bathymetry = new UnstructuredGridVertexCoverage(grid, false)
             {
                 Name = "Bed Level",
-                IsEditable = false,
+                IsEditable = false
             };
             bathymetry.Components[0].NoDataValue = -999.0;
             bathymetry.Components[0].DefaultValue = bathymetry.Components[0].NoDataValue;

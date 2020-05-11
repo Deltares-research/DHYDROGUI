@@ -86,7 +86,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
             {
                 Substitute.For<IWaveBoundary>(),
                 Substitute.For<IWaveBoundary>(),
-                Substitute.For<IWaveBoundary>(),
+                Substitute.For<IWaveBoundary>()
             };
 
             boundaryProvider.Boundaries.Returns(boundaries);

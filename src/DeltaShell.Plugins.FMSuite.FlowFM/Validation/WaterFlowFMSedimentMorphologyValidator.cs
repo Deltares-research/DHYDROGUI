@@ -73,7 +73,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
             var validationShortcut = new FmValidationShortcut
             {
                 FlowFmModel = model,
-                TabName = tabName,
+                TabName = tabName
             };
             issues.Add(new ValidationIssue(
                            tabName,

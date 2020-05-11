@@ -477,7 +477,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
                     ConversionStartTime = waqModel.StartTime.AddYears(10),
                     ConversionStopTime = waqModel.StopTime.AddYears(10),
                     ConversionTimeStep = waqModel.TimeStep.Add(new TimeSpan(1000)),
-                    Boundaries = new EventedList<WaterQualityBoundary>(),
+                    Boundaries = new EventedList<WaterQualityBoundary>()
                 };
 
                 Assert.AreNotEqual(waqModel.StartTime, fileData.ConversionStartTime);
@@ -1357,19 +1357,19 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
                 case "Salinity":
                     hydroData = new TestHydroDataStub(new HydFileData()
                     {
-                        SalinityRelativePath = dataFile,
+                        SalinityRelativePath = dataFile
                     });
                     break;
                 case "Tau":
                     hydroData = new TestHydroDataStub(new HydFileData()
                     {
-                        ShearStressesRelativePath = dataFile,
+                        ShearStressesRelativePath = dataFile
                     });
                     break;
                 case "Temp":
                     hydroData = new TestHydroDataStub(new HydFileData()
                     {
-                        TemperatureRelativePath = dataFile,
+                        TemperatureRelativePath = dataFile
                     });
                     break;
                 default:

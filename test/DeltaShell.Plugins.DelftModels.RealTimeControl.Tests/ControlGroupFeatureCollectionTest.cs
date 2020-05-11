@@ -81,7 +81,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
             Assert.AreEqual(new LineString(new[]
                             {
                                 new Coordinate(0, 0),
-                                new Coordinate(10, 10),
+                                new Coordinate(10, 10)
                             }), ((IFeature) collection.Features[0]).Geometry);
         }
     }

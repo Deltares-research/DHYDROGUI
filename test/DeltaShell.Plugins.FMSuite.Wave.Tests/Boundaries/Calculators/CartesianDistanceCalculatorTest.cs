@@ -24,7 +24,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.Calculators
             new TestCaseData(new Coordinate(0.0, 0.0), new Coordinate(10.0, 10.0), 200.0),
             new TestCaseData(new Coordinate(3.0, 2.0), new Coordinate(5.0, 5.0), 13.0),
             new TestCaseData(new Coordinate(-3.0, -2.0), new Coordinate(5.0, 5.0), 113.0),
-            new TestCaseData(new Coordinate(3.0, 2.0), new Coordinate(-5.0, -5.0), 113.0),
+            new TestCaseData(new Coordinate(3.0, 2.0), new Coordinate(-5.0, -5.0), 113.0)
         };
 
         [Test]

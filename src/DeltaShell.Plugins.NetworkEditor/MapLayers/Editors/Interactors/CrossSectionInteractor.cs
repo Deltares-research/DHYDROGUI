@@ -115,7 +115,7 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors
                             {
                                 MinY = 0d,
                                 MaxY = Math.Abs(crossSection.Definition.Width) / 2,
-                                SectionType = crossSectionSectionType,
+                                SectionType = crossSectionSectionType
                             });
                     }
                 }

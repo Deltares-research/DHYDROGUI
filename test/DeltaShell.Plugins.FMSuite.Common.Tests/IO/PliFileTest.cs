@@ -131,7 +131,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                     {
                         new Coordinate(-54321, 12345),
                         new Coordinate(-43215, 23451),
-                        new Coordinate(-32154, 34512),
+                        new Coordinate(-32154, 34512)
                     }),
                 Attributes = new DictionaryFeatureAttributeCollection()
             };

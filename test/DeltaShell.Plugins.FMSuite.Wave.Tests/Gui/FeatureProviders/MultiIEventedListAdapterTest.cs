@@ -87,7 +87,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders
             var list = new EventedList<Tuple<object>>
             {
                 object1,
-                object2,
+                object2
             };
 
             Tuple<Tuple<object>, IEventedList<Tuple<object>>> ObtainObservedValueFunc(object val)
@@ -171,7 +171,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders
             var newItems = new List<IWaveBoundary>
             {
                 newObservedObject1,
-                newObservedObject2,
+                newObservedObject2
             };
 
             // Precondition
@@ -1369,7 +1369,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders
             var list = new EventedList<IWaveBoundary>
             {
                 object1,
-                object2,
+                object2
             };
 
             return list;

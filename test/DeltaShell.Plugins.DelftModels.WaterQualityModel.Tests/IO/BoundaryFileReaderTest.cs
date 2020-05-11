@@ -77,7 +77,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
                     new Coordinate(629865.45841468, 4273373.01908793),
                     new Coordinate(629751.48224218, 4273342.11616655),
                     new Coordinate(629970.36795947, 4273375.18785627),
-                    new Coordinate(629865.45841468, 4273373.01908793),
+                    new Coordinate(629865.45841468, 4273373.01908793)
                 },
                 new[]
                 {
@@ -86,7 +86,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
                     new Coordinate(649687.29369493, 4182553.93225919),
                     new Coordinate(649711.71641119, 4182564.05982326),
                     new Coordinate(649665.52921436, 4182544.28489453),
-                    new Coordinate(649687.29369493, 4182553.93225919),
+                    new Coordinate(649687.29369493, 4182553.93225919)
                 },
                 null,
                 new[]

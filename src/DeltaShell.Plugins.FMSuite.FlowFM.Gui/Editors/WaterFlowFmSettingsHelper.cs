@@ -76,7 +76,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
                     Label = EditDepthLayersHelper.Label,
                     ValueType = typeof(string),
                     HasMaxValue = false,
-                    HasMinValue = false,
+                    HasMinValue = false
                 });
 
                 depthlayers.CustomCommand.TextBoxEnabled = false;
@@ -94,7 +94,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
                     Label = SetCoordinateSystemButton.Label,
                     ValueType = typeof(string),
                     HasMaxValue = false,
-                    HasMinValue = false,
+                    HasMinValue = false
                 });
 
                 coordSys.CustomCommand.TextBoxEnabled = false;
@@ -115,7 +115,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
                     Label = EditCoverageLayersHelper.Label,
                     ValueType = typeof(string),
                     HasMaxValue = false,
-                    HasMinValue = false,
+                    HasMinValue = false
                 });
                 coverageLayers.CustomCommand.TextBoxEnabled = false;
                 coverageLayers.CustomCommand.ButtonFunction = (o) => EditCoverageLayersHelper.ButtonAction(o);

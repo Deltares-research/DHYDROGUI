@@ -13,6 +13,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
         SimpleGate,
 
         [Description("General structure")]
-        GeneralStructure,
+        GeneralStructure
     }
 }

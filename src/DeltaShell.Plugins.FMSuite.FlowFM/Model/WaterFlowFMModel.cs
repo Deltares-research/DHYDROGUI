@@ -872,7 +872,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                     newOperation.SetInputData(AddSamplesOperation.SamplesInputName,
                                               new PointCloudFeatureProvider
                                               {
-                                                  PointCloud = coverage.ToPointCloud(0, true),
+                                                  PointCloud = coverage.ToPointCloud(0, true)
                                               });
 
                     spatialOperationsLookupTable.Add(dataItem.Name, new[]

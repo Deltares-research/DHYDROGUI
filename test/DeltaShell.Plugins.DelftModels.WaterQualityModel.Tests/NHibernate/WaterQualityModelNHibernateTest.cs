@@ -656,7 +656,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
             {
                 Label = "zee",
                 Name = "Set operation",
-                OperationType = PointwiseOperationType.OverwriteWhereMissing,
+                OperationType = PointwiseOperationType.OverwriteWhereMissing
             };
 
             SetLabelOperation retrieved = SaveAndRetrieveObject(entity);
@@ -675,7 +675,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
                 Name = "Set operation",
                 X = 5,
                 Y = 7,
-                CoordinateSystem = new OgrCoordinateSystemFactory().CreateFromEPSG(2500),
+                CoordinateSystem = new OgrCoordinateSystemFactory().CreateFromEPSG(2500)
             };
 
             OverwriteLabelOperation retrieved = SaveAndRetrieveObject(entity);

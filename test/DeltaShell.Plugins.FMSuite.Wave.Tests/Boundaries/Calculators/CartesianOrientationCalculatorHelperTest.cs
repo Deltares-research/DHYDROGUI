@@ -199,28 +199,28 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.Calculators
                 pointLowerLeft,
                 pointLowerRight,
                 pointUpperRight,
-                pointUpperLeft,
+                pointUpperLeft
             }, true);
             yield return new TestCaseData(new[]
             {
                 pointUpperLeft,
                 pointLowerLeft,
                 pointLowerRight,
-                pointUpperRight,
+                pointUpperRight
             }, true);
             yield return new TestCaseData(new[]
             {
                 pointUpperRight,
                 pointUpperLeft,
                 pointLowerLeft,
-                pointLowerRight,
+                pointLowerRight
             }, true);
             yield return new TestCaseData(new[]
             {
                 pointLowerRight,
                 pointUpperRight,
                 pointUpperLeft,
-                pointLowerLeft,
+                pointLowerLeft
             }, true);
             // Clockwise
             yield return new TestCaseData(new[]
@@ -228,28 +228,28 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.Calculators
                 pointLowerLeft,
                 pointUpperLeft,
                 pointUpperRight,
-                pointLowerRight,
+                pointLowerRight
             }, false);
             yield return new TestCaseData(new[]
             {
                 pointLowerRight,
                 pointLowerLeft,
                 pointUpperLeft,
-                pointUpperRight,
+                pointUpperRight
             }, false);
             yield return new TestCaseData(new[]
             {
                 pointUpperRight,
                 pointLowerRight,
                 pointLowerLeft,
-                pointUpperLeft,
+                pointUpperLeft
             }, false);
             yield return new TestCaseData(new[]
             {
                 pointUpperLeft,
                 pointUpperRight,
                 pointLowerRight,
-                pointLowerLeft,
+                pointLowerLeft
             }, false);
         }
 

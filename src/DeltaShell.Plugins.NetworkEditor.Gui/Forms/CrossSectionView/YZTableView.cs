@@ -169,7 +169,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
             bindingList = new ThreadsafeBindingList<SimplifiedCoordinate>(SynchronizationContext.Current, data)
             {
                 AllowNew = AllowAddRemove,
-                AllowRemove = AllowAddRemove,
+                AllowRemove = AllowAddRemove
             };
 
             tableViewYZ.AutoGenerateColumns = false;

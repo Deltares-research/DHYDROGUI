@@ -18,6 +18,6 @@
         /// <summary>
         /// The no support points
         /// </summary>
-        NoSupportPoints,
+        NoSupportPoints
     }
 }

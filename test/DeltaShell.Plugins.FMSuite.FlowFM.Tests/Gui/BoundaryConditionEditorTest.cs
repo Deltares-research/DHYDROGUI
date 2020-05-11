@@ -233,7 +233,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                         new WaterFlowFMModel
                         {
                             StartTime = new DateTime(2000, 1, 1),
-                            StopTime = new DateTime(2000, 1, 10),
+                            StopTime = new DateTime(2000, 1, 10)
                         }
                 },
                 Data =
@@ -295,7 +295,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                             new WaterFlowFMModel
                             {
                                 StartTime = new DateTime(2000, 1, 1),
-                                StopTime = new DateTime(2000, 1, 10),
+                                StopTime = new DateTime(2000, 1, 10)
                             }
                     },
                 Data =
@@ -303,7 +303,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                     {
                         Feature = bc.Feature,
                         BoundaryConditions = new EventedList<IBoundaryCondition> {bc}
-                    },
+                    }
             };
 
             WindowsFormsTestHelper.ShowModal(view);
@@ -361,7 +361,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                             new WaterFlowFMModel
                             {
                                 StartTime = new DateTime(2000, 1, 1),
-                                StopTime = new DateTime(2000, 1, 10),
+                                StopTime = new DateTime(2000, 1, 10)
                             }
                     },
                 Data =
@@ -369,7 +369,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                     {
                         Feature = bc.Feature,
                         BoundaryConditions = new EventedList<IBoundaryCondition> {bc}
-                    },
+                    }
             };
 
             WindowsFormsTestHelper.ShowModal(view);
@@ -433,7 +433,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                         new WaterFlowFMModel
                         {
                             StartTime = new DateTime(2000, 1, 1),
-                            StopTime = new DateTime(2000, 1, 10),
+                            StopTime = new DateTime(2000, 1, 10)
                         }
                 },
                 Data =
@@ -491,7 +491,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                         new WaterFlowFMModel
                         {
                             StartTime = new DateTime(2000, 1, 1),
-                            StopTime = new DateTime(2000, 1, 10),
+                            StopTime = new DateTime(2000, 1, 10)
                         }
                 },
                 Data =
@@ -499,7 +499,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                     {
                         Feature = vectorBc.Feature,
                         BoundaryConditions = new EventedList<IBoundaryCondition> {vectorBc}
-                    },
+                    }
             };
 
             WindowsFormsTestHelper.ShowModal(view);
@@ -531,7 +531,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                         new WaterFlowFMModel
                         {
                             StartTime = new DateTime(2000, 1, 1),
-                            StopTime = new DateTime(2000, 1, 10),
+                            StopTime = new DateTime(2000, 1, 10)
                         }
                 },
                 Data =
@@ -539,7 +539,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                     {
                         Feature = waterLeveBc.Feature,
                         BoundaryConditions = new EventedList<IBoundaryCondition> {waterLeveBc}
-                    },
+                    }
             };
 
             WindowsFormsTestHelper.ShowModal(view);

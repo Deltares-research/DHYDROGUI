@@ -23,7 +23,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Layers.Providers
                 {
                     Name = hydroRegion.Name,
                     Region = hydroRegion,
-                    LayersReadOnly = true,
+                    LayersReadOnly = true
                 }
                 : null;
 

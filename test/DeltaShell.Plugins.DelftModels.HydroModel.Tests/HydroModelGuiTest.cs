@@ -39,7 +39,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             var validateItem = new ClonableToolStripMenuItem
             {
                 Text = Resources.HydroModelGuiPlugin_GetContextMenu_Validate___,
-                Tag = beforeTag,
+                Tag = beforeTag
             };
 
             HydroModelGuiPlugin plugin = GetConfiguredPlugin(validateItem);

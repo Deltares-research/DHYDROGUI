@@ -93,7 +93,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.GeometricDefinitions
                 GridSide.East,
                 GridSide.North,
                 GridSide.West,
-                GridSide.South,
+                GridSide.South
             };
 
             // Call

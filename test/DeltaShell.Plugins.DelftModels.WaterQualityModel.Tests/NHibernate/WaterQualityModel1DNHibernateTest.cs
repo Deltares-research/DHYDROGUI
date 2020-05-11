@@ -101,7 +101,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
                 IterationMaximum = 5,
                 OutputDirectory = @"D:\Temp\output",
                 NrOfThreads = 3,
-                Tolerance = 0.2d,
+                Tolerance = 0.2d
             };
 
             WaterQualityModelSettings retrievedEntity = SaveAndRetrieveObject(entity);
@@ -150,7 +150,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
             var outputVariableTuples = new List<DelftTools.Utils.Tuple<string, string>>
             {
                 new DelftTools.Utils.Tuple<string, string>("Substance", "mg/l"),
-                new DelftTools.Utils.Tuple<string, string>("Output parameter", ""),
+                new DelftTools.Utils.Tuple<string, string>("Output parameter", "")
             };
 
             var waterQualityObservationVariableOutput = new WaterQualityObservationVariableOutput(outputVariableTuples) {ObservationVariable = new ObservationPoint {Name = "Observation point"}};
@@ -172,7 +172,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
             var outputVariableTuples = new List<DelftTools.Utils.Tuple<string, string>>
             {
                 new DelftTools.Utils.Tuple<string, string>("Substance", "mg/l"),
-                new DelftTools.Utils.Tuple<string, string>("Output parameter", ""),
+                new DelftTools.Utils.Tuple<string, string>("Output parameter", "")
             };
 
             var waterQualityObservationVariableOutput = new WaterQualityObservationVariableOutput(outputVariableTuples) {Name = "Observation point"};

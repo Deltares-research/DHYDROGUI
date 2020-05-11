@@ -61,7 +61,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
                         MinValue = lineFields[2],
                         MaxValue = lineFields[3],
                         ValueType = GetProcessValueType(lineFields[4]),
-                        Dependency = lineFields[5],
+                        Dependency = lineFields[5]
                     });
                 }
             }

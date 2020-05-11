@@ -90,7 +90,7 @@ namespace DelftTools.Hydro.Tests
         {
             var crossSection = new TestCrossSectionDefinition("Test", 0)
             {
-                Thalweg = 3.0,
+                Thalweg = 3.0
             };
             var type = new CrossSectionSectionType();
             crossSection.AddSection(type, 20);

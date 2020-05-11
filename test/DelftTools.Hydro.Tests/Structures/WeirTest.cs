@@ -54,7 +54,7 @@ namespace DelftTools.Hydro.Tests.Structures
                 OffsetY = 175,
                 CrestWidth = 75,
                 CrestLevel = -3,
-                AllowNegativeFlow = true,
+                AllowNegativeFlow = true
             };
             var clonedWeir = (IWeir) weir.Clone();
 
@@ -80,7 +80,7 @@ namespace DelftTools.Hydro.Tests.Structures
                 Name = "Source Weir",
                 AllowNegativeFlow = true,
                 WeirFormula = new GatedWeirFormula(),
-                UseCrestLevelTimeSeries = true,
+                UseCrestLevelTimeSeries = true
             };
             sourceWeir.CrestLevelTimeSeries[new DateTime(2013, 1, 2, 3, 4, 5, 6)] = 7.8;
             IWeir targetWeir = new Weir("Target Weir", false)
@@ -92,7 +92,7 @@ namespace DelftTools.Hydro.Tests.Structures
                 Name = "Target Weir",
                 AllowNegativeFlow = false,
                 WeirFormula = new FreeFormWeirFormula(),
-                UseCrestLevelTimeSeries = false,
+                UseCrestLevelTimeSeries = false
             };
             targetWeir.CopyFrom(sourceWeir);
 
@@ -238,7 +238,7 @@ namespace DelftTools.Hydro.Tests.Structures
                 Geometry = new LineString(new[]
                 {
                     new Coordinate(0, 0),
-                    new Coordinate(4, 3),
+                    new Coordinate(4, 3)
                 })
             };
 

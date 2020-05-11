@@ -8,6 +8,6 @@
     {
         Peak = 1,
 
-        Mean = 2,
+        Mean = 2
     }
 }

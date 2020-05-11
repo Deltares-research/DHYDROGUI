@@ -4,6 +4,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors.ModelFeatureCoordinateDa
     {
         XValue,
         YValue,
-        ZValue,
+        ZValue
     }
 }

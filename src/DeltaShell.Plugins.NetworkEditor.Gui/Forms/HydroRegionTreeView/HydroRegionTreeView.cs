@@ -54,7 +54,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
             TreeView = new TreeView
             {
                 AllowDrop = true,
-                Dock = DockStyle.Fill,
+                Dock = DockStyle.Fill
             };
 
             AddNodePresenters(guiPlugin);
@@ -402,7 +402,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
             {
                 Branch = channel,
                 Title =
-                    "Insert new default cross section into channel.",
+                    "Insert new default cross section into channel."
             };
             formPasteCrossSection.textBoxShift.Enabled = true;
             formPasteCrossSection.textBoxShift.Visible = true;

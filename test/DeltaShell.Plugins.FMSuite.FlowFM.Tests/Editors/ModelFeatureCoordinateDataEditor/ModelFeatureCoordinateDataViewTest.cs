@@ -21,7 +21,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Editors.ModelFeatureCoordinate
                 {
                     new Coordinate(0, 0),
                     new Coordinate(10, 0),
-                    new Coordinate(10, 10),
+                    new Coordinate(10, 10)
                 })
             };
             var data = new ModelFeatureCoordinateData<FixedWeir>

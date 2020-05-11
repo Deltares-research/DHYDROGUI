@@ -43,7 +43,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 {FlowBoundaryQuantityType.MorphologyBedLevelPrescribed, "bLvP"},
                 {FlowBoundaryQuantityType.MorphologyBedLevelChangePrescribed, "bLvCP"},
                 {FlowBoundaryQuantityType.MorphologyBedLoadTransport, "bLT"},
-                {FlowBoundaryQuantityType.Tracer, "tr"},
+                {FlowBoundaryQuantityType.Tracer, "tr"}
             };
 
         private static readonly Pen OutlinePen = new Pen(Color.LightCyan, 3f);

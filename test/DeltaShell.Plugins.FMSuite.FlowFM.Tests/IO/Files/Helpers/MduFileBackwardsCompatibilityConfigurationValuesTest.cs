@@ -24,7 +24,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files.Helpers
         protected override IEnumerable<KeyValuePair<string, string>> LegacyCategoryMapping =>
             new Dictionary<string, string>
             {
-                {"model", "General"},
+                {"model", "General"}
             };
 
         protected override IDelftIniBackwardsCompatibilityConfigurationValues GetConfigurationValues() =>

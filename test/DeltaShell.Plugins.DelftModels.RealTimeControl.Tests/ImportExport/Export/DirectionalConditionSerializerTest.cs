@@ -38,7 +38,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport.Expo
                 {
                     ParameterName = inputParameterName,
                     Feature = new RtcTestFeature {Name = inputName}
-                },
+                }
             };
         }
 

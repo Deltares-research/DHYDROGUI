@@ -25,7 +25,7 @@ namespace DeltaShell.NGHS.IO.Tests
             {
                 new TestActivity {Name = "SubModel1"},
                 new TestActivity {Name = "SubModel2"},
-                new TestActivity {Name = "SubModel3"},
+                new TestActivity {Name = "SubModel3"}
             });
 
             DoInTemperaryDirectory((string testDir) =>

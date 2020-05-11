@@ -192,7 +192,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
             var outputRegexInfos = new[]
             {
                 new SubFilePropertyRegexInfo("output", "Name", RegularExpression.Characters),
-                new SubFilePropertyRegexInfo("description", "Description", RegularExpression.ExtendedCharacters),
+                new SubFilePropertyRegexInfo("description", "Description", RegularExpression.ExtendedCharacters)
             };
 
             string outputParameterPattern = SubFileHelper.GetRegexPattern(outputRegexInfos, @"\s*\n") +

@@ -127,7 +127,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                         Name = name,
                         Geometry = LineStringCreator.CreateLineString(points)
                     };
-                },
+                }
             };
 
             yield return new PlizFileImporterExporter<FixedWeir, FixedWeir>
@@ -356,7 +356,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             {
                 WindFileImporter = false,
                 GetModelForSourceAndSink = GetModelForSourceAndSink,
-                GetModelForHeatFluxModel = GetModelForHeatFluxModel,
+                GetModelForHeatFluxModel = GetModelForHeatFluxModel
             };
             yield return new TimFileImporter
             {
@@ -487,7 +487,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     }
 
                     MduFile.CleanBridgePillarAttributes(bridgePillars);
-                },
+                }
             };
             yield return new PliFileImporterExporter<ThinDam2D, ThinDam2D> {Mode = Feature2DImportExportMode.Export};
             yield return

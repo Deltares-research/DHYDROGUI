@@ -14,7 +14,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.GeometricDefinitions
                 {GridSide.West, 1},
                 {GridSide.North, 2},
                 {GridSide.East, 3},
-                {GridSide.South, 4},
+                {GridSide.South, 4}
             };
     }
 }

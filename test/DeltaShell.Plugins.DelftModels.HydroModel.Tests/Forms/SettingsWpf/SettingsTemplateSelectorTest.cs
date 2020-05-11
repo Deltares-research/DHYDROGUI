@@ -38,7 +38,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.SettingsWpf
         {
             var item = new WpfGuiCategory("dummyCategory", null)
             {
-                CustomControl = new UserControl(),
+                CustomControl = new UserControl()
             };
             VerifyCall(item, "TabCustomContentTemplate");
         }
@@ -55,7 +55,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.SettingsWpf
         {
             var item = new WpfGuiSubCategory("dummySubCategory", null)
             {
-                CustomControl = new UserControl(),
+                CustomControl = new UserControl()
             };
             VerifyCall(item, "SubCategoryCustomTemplate");
         }

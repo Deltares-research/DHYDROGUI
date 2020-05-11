@@ -45,7 +45,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.ObservationArea
             {
                 Label = "batman",
                 X = 2.5,
-                Y = 2.5,
+                Y = 2.5
             };
 
             operation.SetInputData(SpatialOperation.MainInputName, featureCollection);

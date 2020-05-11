@@ -581,7 +581,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
                     InitializeCoverage(sedCoverage, secondDimensionName, netCdfVariableName, unitSymbol,
                                        timeDependentVariable.ReferenceDate, new[]
                                        {
-                                           new Tuple<string, string>(SedIndexAttributeName, index.ToString()),
+                                           new Tuple<string, string>(SedIndexAttributeName, index.ToString())
                                        });
                 }
 

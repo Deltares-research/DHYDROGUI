@@ -296,7 +296,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                         new Coordinate(140.0, 8.0, 1.0),
                         new Coordinate(180.0, 4.0, 2.0),
                         new Coordinate(260.0, 0.0, 3.0)
-                    }),
+                    })
             };
             hydroArea.BridgePillars.Add(pillar);
 
@@ -329,7 +329,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                         new Coordinate(40.0, 80.0, 10.0),
                         new Coordinate(80.0, 40.0, 20.0),
                         new Coordinate(160.0, 0.0, 30.0)
-                    }),
+                    })
             };
             var modelFeatureCoordinateDatas = new List<ModelFeatureCoordinateData<BridgePillar>>();
 
@@ -417,7 +417,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                         new Coordinate(40.0, 80.0, 10.0),
                         new Coordinate(80.0, 40.0, 20.0),
                         new Coordinate(160.0, 0.0, 30.0)
-                    }),
+                    })
             };
 
             var listofDataModel = new List<ModelFeatureCoordinateData<BridgePillar>>();

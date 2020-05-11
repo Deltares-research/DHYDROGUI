@@ -360,7 +360,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms
             AddExtraStructure(new ExtraResistance
             {
                 Network = HydroNetwork,
-                Geometry = new Point(5, 0),
+                Geometry = new Point(5, 0)
             });
             AddExtraStructure(new Pump
             {

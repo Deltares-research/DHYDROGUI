@@ -10,7 +10,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
             Weir = new Weir2D("Weir 1")
             {
                 CrestWidth = 100,
-                WeirFormula = new SimpleWeirFormula(),
+                WeirFormula = new SimpleWeirFormula()
             },
             SelectedWeirType = SelectableWeirFormulaType.SimpleWeir
         };
@@ -21,7 +21,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
             {
                 CrestWidth = 100,
                 CrestLevel = 20,
-                WeirFormula = new GeneralStructureWeirFormula(),
+                WeirFormula = new GeneralStructureWeirFormula()
             },
             SelectedWeirType = SelectableWeirFormulaType.GeneralStructure
         };

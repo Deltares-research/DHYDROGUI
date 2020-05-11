@@ -12,7 +12,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             new Dictionary<SpectrumImportExportType, string>
             {
                 {SpectrumImportExportType.Parametrized, KnownWaveBoundariesFileConstants.ParametrizedSpectrumType},
-                {SpectrumImportExportType.FromFile, KnownWaveBoundariesFileConstants.FromFileSpectrumType},
+                {SpectrumImportExportType.FromFile, KnownWaveBoundariesFileConstants.FromFileSpectrumType}
             };
     }
 }

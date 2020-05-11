@@ -12,7 +12,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             new Dictionary<PeriodImportExportType, int>
             {
                 {PeriodImportExportType.Mean, 0},
-                {PeriodImportExportType.Peak, 1},
+                {PeriodImportExportType.Peak, 1}
             };
     }
 }

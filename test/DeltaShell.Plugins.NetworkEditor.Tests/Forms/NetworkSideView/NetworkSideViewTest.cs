@@ -517,7 +517,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.NetworkSideView
             {
                 Dock = DockStyle.Fill,
                 Data = viewData.NetworkRoute,
-                DataController = viewData,
+                DataController = viewData
             };
 
             WindowsFormsTestHelper.Show(sideView);

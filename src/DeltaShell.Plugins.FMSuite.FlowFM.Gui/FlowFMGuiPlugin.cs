@@ -488,12 +488,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
 
             yield return new ViewInfo<GriddedWindField, GriddedWindView>
             {
-                AdditionalDataCheck = t => FlowModels.FirstOrDefault(m => m.WindFields.Contains(t)) != null,
+                AdditionalDataCheck = t => FlowModels.FirstOrDefault(m => m.WindFields.Contains(t)) != null
             };
 
             yield return new ViewInfo<SpiderWebWindField, GriddedWindView>
             {
-                AdditionalDataCheck = t => FlowModels.FirstOrDefault(m => m.WindFields.Contains(t)) != null,
+                AdditionalDataCheck = t => FlowModels.FirstOrDefault(m => m.WindFields.Contains(t)) != null
             };
 
             // Importers and exporters

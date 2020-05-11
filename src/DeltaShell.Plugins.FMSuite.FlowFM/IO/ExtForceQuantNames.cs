@@ -105,7 +105,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 {WindQuantity.VelocityY, WindY},
                 {WindQuantity.VelocityVector, WindXY},
                 {WindQuantity.AirPressure, AtmosphericPressure},
-                {WindQuantity.VelocityVectorAirPressure, PressureWindXWindY},
+                {WindQuantity.VelocityVectorAirPressure, PressureWindXWindY}
             };
 
         // Boundary condition quantities

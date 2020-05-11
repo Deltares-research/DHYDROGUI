@@ -319,7 +319,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
             var model = new WaterFlowFMModel
             {
                 SourcesAndSinks = {sourceAndSink},
-                BoundaryConditionSets = {boundarySet},
+                BoundaryConditionSets = {boundarySet}
             };
 
             model.SedimentFractions.AddRange(fractionList);

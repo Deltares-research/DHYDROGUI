@@ -12,6 +12,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Enums
         Power = 1,
 
         [Description("Degrees")]
-        Degrees = 2,
+        Degrees = 2
     }
 }

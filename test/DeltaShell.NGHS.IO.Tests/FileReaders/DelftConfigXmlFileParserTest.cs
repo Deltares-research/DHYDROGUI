@@ -84,7 +84,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
                 "abcsourcename",
                 "logger",
                 "dimrwithextrainfo.xml",
-                "Attribute",
+                "Attribute"
             });
 
             // When

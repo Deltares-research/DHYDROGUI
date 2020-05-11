@@ -16,7 +16,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
             {
                 Name = "test",
                 InterpolationOptionsTime = InterpolationType.Linear,
-                Periodicity = ExtrapolationType.Constant,
+                Periodicity = ExtrapolationType.Constant
                 //TimeSeries = new TimeSeries()
             };
             var timeSeries = new TimeSeries();

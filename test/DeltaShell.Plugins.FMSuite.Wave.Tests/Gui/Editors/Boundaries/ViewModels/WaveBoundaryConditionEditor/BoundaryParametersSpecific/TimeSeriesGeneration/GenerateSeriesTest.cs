@@ -186,7 +186,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
                     Substitute.For<IWaveEnergyFunction<TSpreading>>(),
                     Substitute.For<IWaveEnergyFunction<TSpreading>>(),
                     Substitute.For<IWaveEnergyFunction<TSpreading>>(),
-                    Substitute.For<IWaveEnergyFunction<TSpreading>>(),
+                    Substitute.For<IWaveEnergyFunction<TSpreading>>()
                 };
 
             yield return new TestCaseData(new WaveEnergyFunction<TSpreading>(),
@@ -199,7 +199,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
                 new WaveEnergyFunction<TSpreading>(),
                 new WaveEnergyFunction<TSpreading>(),
                 new WaveEnergyFunction<TSpreading>(),
-                new WaveEnergyFunction<TSpreading>(),
+                new WaveEnergyFunction<TSpreading>()
             };
 
             yield return new TestCaseData(new WaveEnergyFunction<TSpreading>(),

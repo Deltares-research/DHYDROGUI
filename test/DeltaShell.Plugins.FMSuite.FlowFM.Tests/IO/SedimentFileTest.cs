@@ -546,9 +546,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                                 X = fmModel.Grid.Cells[2].CenterX,
                                 Y = fmModel.Grid.Cells[2].CenterY,
                                 Value = 31
-                            },
-                        },
-                    },
+                            }
+                        }
+                    }
                 });
                 ISpatialOperation sp = valueConverter.SpatialOperationSet.AddOperation(samples);
                 valueConverter.SpatialOperationSet.Execute();
@@ -644,9 +644,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                                 X = fmModel.Grid.Cells[2].CenterX,
                                 Y = fmModel.Grid.Cells[2].CenterY,
                                 Value = 31
-                            },
-                        },
-                    },
+                            }
+                        }
+                    }
                 });
                 valueConverter.SpatialOperationSet.AddOperation(samples);
                 valueConverter.SpatialOperationSet.Execute();

@@ -223,7 +223,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui
                     {
                         FunctionListViewExtraActions(Gui.SelectedModel as WaterQualityModel, v);
                     }
-                },
+                }
             };
 
             yield return new
@@ -242,7 +242,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui
                         {
                             v.DataOwner = Gui.SelectedModel as WaterQualityModel;
                         }
-                    },
+                    }
                 };
 
             yield return new ViewInfo<WaterQualityFunctionWrapper, IFunction, FunctionView>
@@ -251,7 +251,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui
                 AdditionalDataCheck = o => o.Function.IsTimeSeries(),
                 GetViewData = o => o.Function,
                 GetViewName = (v, o) => o.Name,
-                Image = Properties.Resources.TimeSeries,
+                Image = Properties.Resources.TimeSeries
             };
             yield return new ViewInfo<WaterQualityFunctionWrapper, ICoverage, CoverageTableView>
             {
@@ -298,7 +298,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui
                     {
                         v.WaterQualityModel = Gui.SelectedModel as WaterQualityModel;
                     }
-                },
+                }
             };
 
             yield return new ViewInfo<BoundaryDataTableImporter, BoundaryDataWizard>

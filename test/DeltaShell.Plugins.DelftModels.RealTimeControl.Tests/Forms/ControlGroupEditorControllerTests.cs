@@ -205,7 +205,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
             var input = new Input
             {
                 ParameterName = "InParam",
-                Feature = new RtcTestFeature {Name = "In"},
+                Feature = new RtcTestFeature {Name = "In"}
             };
             condition.Input = input;
             controlGroup.Conditions.Add(condition);

@@ -40,7 +40,7 @@ namespace DeltaShell.NGHS.Common.Tests.Utils
                 expectedObj,
                 GetNameable("unique_2"),
                 GetNameable(name),
-                GetNameable("unique_3"),
+                GetNameable("unique_3")
             };
 
             // Call
@@ -88,7 +88,7 @@ namespace DeltaShell.NGHS.Common.Tests.Utils
                 first,
                 GetNameable("unique_2"),
                 second,
-                GetNameable("unique_3"),
+                GetNameable("unique_3")
             };
 
             // Call

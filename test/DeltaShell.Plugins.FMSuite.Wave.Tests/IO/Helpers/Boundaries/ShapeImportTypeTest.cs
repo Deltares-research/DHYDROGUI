@@ -13,7 +13,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             {
                 {ShapeImportType.Gauss, 0},
                 {ShapeImportType.Jonswap, 1},
-                {ShapeImportType.PiersonMoskowitz, 2},
+                {ShapeImportType.PiersonMoskowitz, 2}
             };
     }
 }

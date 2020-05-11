@@ -41,7 +41,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         {
             var model = new WaterFlowFMModel(mduFilePath, progressChanged)
             {
-                ImportProgressChanged = null,
+                ImportProgressChanged = null
             };
             model.ClearOutputDirAndWaqDirProperty();
 

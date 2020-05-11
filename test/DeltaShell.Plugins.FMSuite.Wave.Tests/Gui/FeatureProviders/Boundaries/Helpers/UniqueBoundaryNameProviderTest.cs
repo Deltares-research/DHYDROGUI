@@ -31,7 +31,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
                 {
                     GetBoundaryMockWithName("a1"),
                     GetBoundaryMockWithName("b2"),
-                    GetBoundaryMockWithName("c3"),
+                    GetBoundaryMockWithName("c3")
                 };
 
                 providerDefault.Boundaries.Returns(boundariesNoDefault);
@@ -92,7 +92,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
             var provider = Substitute.For<IBoundaryProvider>();
             var boundaries = new EventedList<IWaveBoundary>
             {
-                GetBoundaryMockWithName(UniqueBoundaryNameProvider.DefaultBoundaryName),
+                GetBoundaryMockWithName(UniqueBoundaryNameProvider.DefaultBoundaryName)
             };
 
             const string template = UniqueBoundaryNameProvider.DefaultBoundaryName + "({0})";

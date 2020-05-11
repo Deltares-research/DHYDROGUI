@@ -728,7 +728,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                                 FilePropertyName = mdwProperty.Name,
                                 Category = definedCategory.Name,
                                 // default value as string should always be an empty string and not null.
-                                DefaultValueAsString = string.Empty,
+                                DefaultValueAsString = string.Empty
                             };
 
                     modelDefinition.SetModelProperty(category.Name, propName,

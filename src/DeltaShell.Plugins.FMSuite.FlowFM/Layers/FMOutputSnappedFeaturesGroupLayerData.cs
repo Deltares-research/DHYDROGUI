@@ -26,7 +26,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Layers
             {"Embankments", "_emb"},
             {"Dry areas", "_dryarea"},
             {"Enclosures", "_enc"},
-            {"Sources", "_src"},
+            {"Sources", "_src"}
         };
 
         private readonly string modelOutputSnappedFeaturesPath;

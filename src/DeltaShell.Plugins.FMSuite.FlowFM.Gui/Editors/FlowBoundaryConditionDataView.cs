@@ -50,7 +50,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
 
         private readonly OpenFileDialog FileDialog = new OpenFileDialog()
         {
-            AddExtension = true,
+            AddExtension = true
         };
 
         private readonly SaveFileDialog SaveFileDialog = new SaveFileDialog()
@@ -957,7 +957,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
                 StartTime = ModelStartTime,
                 StopTime = ModelStopTime,
                 TimeStep = ModelTimeStep,
-                CoordinateSystem = ModelCoordinateSystem,
+                CoordinateSystem = ModelCoordinateSystem
             };
             if (importDialog.ShowModal() != DelftDialogResult.OK)
             {

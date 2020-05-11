@@ -234,28 +234,28 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             {
                 AdditionalDataCheck = o => o != null && o.Branch != null,
                 CompositeViewType = typeof(CompositeStructureView),
-                GetCompositeViewData = o => o.ParentStructure,
+                GetCompositeViewData = o => o.ParentStructure
             };
             yield return new ViewInfo<IWeir, WeirView>
             {
                 AdditionalDataCheck = o => o != null && o.Branch != null,
                 CompositeViewType = typeof(CompositeStructureView),
-                GetCompositeViewData = o => o.ParentStructure,
+                GetCompositeViewData = o => o.ParentStructure
             };
             yield return new ViewInfo<IBridge, BridgeView>
             {
                 CompositeViewType = typeof(CompositeStructureView),
-                GetCompositeViewData = o => o.ParentStructure,
+                GetCompositeViewData = o => o.ParentStructure
             };
             yield return new ViewInfo<ICulvert, CulvertViewWpf>
             {
                 CompositeViewType = typeof(CompositeStructureView),
-                GetCompositeViewData = o => o.ParentStructure,
+                GetCompositeViewData = o => o.ParentStructure
             };
             yield return new ViewInfo<IExtraResistance, ExtraResistanceView>
             {
                 CompositeViewType = typeof(CompositeStructureView),
-                GetCompositeViewData = o => o.ParentStructure,
+                GetCompositeViewData = o => o.ParentStructure
             };
             yield return new ViewInfo<ICompositeBranchStructure, CompositeStructureView>
             {
@@ -352,7 +352,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 Description = "Map (spatial data)",
                 AdditionalDataCheck = route => Gui.Application.DataItemService.GetDataItemByValue(Gui.Application.Project, route.Network) != null,
                 CompositeViewType = typeof(ProjectItemMapView),
-                GetCompositeViewData = route => Gui.Application.DataItemService.GetDataItemByValue(Gui.Application.Project, route.Network),
+                GetCompositeViewData = route => Gui.Application.DataItemService.GetDataItemByValue(Gui.Application.Project, route.Network)
             };
 
             yield return CreateAreaStructureCollectionViewInfo<Pump2D>(HydroAreaLayerNames.PumpsPluralName);
@@ -597,7 +597,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             {
                 Name = AddGroupToolStripMenuKey,
                 Text = Properties.Resources.NetworkEditorGuiPlugin_GetViewInfoForHydroAreaFeatureCollection_Add_group,
-                Enabled = Gui.CommandHandler.CanImportOn(eventedList),
+                Enabled = Gui.CommandHandler.CanImportOn(eventedList)
             };
             addAreaItemsGroup.Click += (s, e) => { Gui.CommandHandler.ImportOn(eventedList); };
             stripItemCollection.Add(addAreaItemsGroup);
@@ -620,7 +620,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 {
                     var groupMenuItem = new ToolStripMenuItem
                     {
-                        Text = groupName,
+                        Text = groupName
                     };
 
                     groupMenuItem.Click += (s, e) => eventedList.RemoveGroup(groupName);

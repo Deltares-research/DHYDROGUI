@@ -16,7 +16,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.Enums
             {
                 {ForcingViewType.Constant, 1},
                 {ForcingViewType.TimeSeries, 2},
-                {ForcingViewType.FileBased, 3},
+                {ForcingViewType.FileBased, 3}
             };
     }
 }

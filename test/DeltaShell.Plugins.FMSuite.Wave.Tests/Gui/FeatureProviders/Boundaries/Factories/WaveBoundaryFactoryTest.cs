@@ -121,13 +121,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
             var coordinates = new Coordinate[]
             {
                 new Coordinate(0.0, 0.0),
-                new Coordinate(0.0, 20.0),
+                new Coordinate(0.0, 20.0)
             };
 
             var snappedCoordinates = new List<GridBoundaryCoordinate>
             {
                 new GridBoundaryCoordinate(gridSide, 0),
-                new GridBoundaryCoordinate(gridSide, 5),
+                new GridBoundaryCoordinate(gridSide, 5)
             };
 
             var geometricDefinition = Substitute.For<IWaveBoundaryGeometricDefinition>();
@@ -172,13 +172,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders.Boundaries.
             var coordinates = new Coordinate[]
             {
                 new Coordinate(0.0, 0.0),
-                new Coordinate(0.0, 20.0),
+                new Coordinate(0.0, 20.0)
             };
 
             var snappedCoordinates = new List<GridBoundaryCoordinate>
             {
                 new GridBoundaryCoordinate(gridSide, 0),
-                new GridBoundaryCoordinate(gridSide, 5),
+                new GridBoundaryCoordinate(gridSide, 5)
             };
 
             IWaveBoundaryGeometricDefinition geometricDefinition = null;

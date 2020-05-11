@@ -57,7 +57,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions
                 {GridSide.East, orderedSides[worldEastIndex]},
                 {GridSide.North, orderedSides[(worldEastIndex + 1) % 4]},
                 {GridSide.West, orderedSides[(worldEastIndex + 2) % 4]},
-                {GridSide.South, orderedSides[(worldEastIndex + 3) % 4]},
+                {GridSide.South, orderedSides[(worldEastIndex + 3) % 4]}
             };
         }
 
@@ -120,7 +120,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions
                     coordinatesGridEast.ToList(),
                     coordinatesGridNorth.ToList(),
                     coordinatesGridWest.ToList(),
-                    coordinatesGridSouth.ToList(),
+                    coordinatesGridSouth.ToList()
                 };
             }
             else
@@ -130,7 +130,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions
                     coordinatesGridEast.Reverse().ToList(),
                     coordinatesGridSouth.Reverse().ToList(),
                     coordinatesGridWest.Reverse().ToList(),
-                    coordinatesGridNorth.Reverse().ToList(),
+                    coordinatesGridNorth.Reverse().ToList()
                 };
             }
 

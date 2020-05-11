@@ -74,7 +74,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             //Import
             var importer = new BcmFileImporter
             {
-                DeleteDataBeforeImport = true,
+                DeleteDataBeforeImport = true
             };
 
             var model = new WaterFlowFMModel();
@@ -112,7 +112,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             //Import
             var importer = new BcmFileImporter
             {
-                DeleteDataBeforeImport = true,
+                DeleteDataBeforeImport = true
             };
 
             var model = new WaterFlowFMModel();
@@ -200,7 +200,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             //Import
             var importer = new BcmFileImporter
             {
-                DeleteDataBeforeImport = true,
+                DeleteDataBeforeImport = true
             };
 
             var myobject = new object();

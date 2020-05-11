@@ -257,7 +257,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
         {
             var pidRule = new PIDRule
             {
-                PidRuleSetpointType = setPointType,
+                PidRuleSetpointType = setPointType
             };
 
             if (hasEmptyTimeSeries)

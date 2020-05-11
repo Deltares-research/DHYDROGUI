@@ -69,7 +69,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
                             WidthStructureLeftSide = double.NaN,
                             WidthStructureRightSide = double.NaN,
                             WidthLeftSideOfStructure = double.NaN,
-                            WidthRightSideOfStructure = double.NaN,
+                            WidthRightSideOfStructure = double.NaN
                         };
                         data.WeirFormula = generalStructureWeirFormula;
                         break;

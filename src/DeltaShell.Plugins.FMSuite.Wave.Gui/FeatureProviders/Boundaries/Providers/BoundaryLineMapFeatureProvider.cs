@@ -98,7 +98,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Provid
             new BoundaryLineFeature()
             {
                 ObservedWaveBoundary = waveBoundary,
-                Geometry = waveBoundaryGeometryFactory.ConstructBoundaryLineGeometry(waveBoundary),
+                Geometry = waveBoundaryGeometryFactory.ConstructBoundaryLineGeometry(waveBoundary)
             };
 
         private void SubscribeToEventing()

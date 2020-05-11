@@ -196,7 +196,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
 
             var flowBoundaryCondition = new FlowBoundaryCondition(FlowBoundaryQuantityType.WaterLevel, BoundaryConditionDataType.TimeSeries)
             {
-                Feature = boundary,
+                Feature = boundary
             };
             AddPointDataToBoundaryCondition(flowBoundaryCondition, model);
 

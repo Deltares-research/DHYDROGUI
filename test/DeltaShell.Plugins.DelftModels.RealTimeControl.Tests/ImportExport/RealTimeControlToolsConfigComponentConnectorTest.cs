@@ -332,7 +332,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
             var rootNode = Substitute.For<IBranchNode>();
             rootNode.GetChildNodes().Returns(new List<IExpressionNode>
             {
-                new ParameterLeafNode(inputName),
+                new ParameterLeafNode(inputName)
             });
 
             var expressionTree = new ExpressionTree(rootNode, "", expressionId, expression);

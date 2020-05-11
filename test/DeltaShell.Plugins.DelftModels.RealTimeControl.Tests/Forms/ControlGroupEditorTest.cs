@@ -58,7 +58,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
                     Min = 0,
                     Max = 0,
                     MaxSpeed = 0
-                },
+                }
             };
             var input = new Input
             {

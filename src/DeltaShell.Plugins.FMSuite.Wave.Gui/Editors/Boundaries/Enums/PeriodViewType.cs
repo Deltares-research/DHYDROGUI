@@ -12,6 +12,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Enums
         Peak = 1,
 
         [Description("Mean")]
-        Mean = 2,
+        Mean = 2
     }
 }

@@ -25,7 +25,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.GeometricDefinitions
                 var minimalSetCoordinates = new List<Coordinate>
                 {
                     firstCoord,
-                    lastCoord,
+                    lastCoord
                 };
 
                 yield return new TestCaseData(minimalSetCoordinates);
@@ -37,7 +37,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.GeometricDefinitions
                     new Coordinate(2.0, 0.0),
                     new Coordinate(3.0, 0.0),
                     new Coordinate(4.0, 0.0),
-                    lastCoord,
+                    lastCoord
                 };
 
                 yield return new TestCaseData(extraSetCoordinates);
@@ -69,7 +69,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.GeometricDefinitions
                     new Coordinate(0.0, 0.0),
                     new Coordinate(0.0, 5.0),
                     lastCoord,
-                    new Coordinate(0.0, 5.0),
+                    new Coordinate(0.0, 5.0)
                 };
 
                 yield return new TestCaseData(nonDistinctSetCoordinates3);
@@ -87,7 +87,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.GeometricDefinitions
                     new Coordinate(4.0, 0.0),
                     new Coordinate(4.0, 0.0),
                     lastCoord,
-                    lastCoord,
+                    lastCoord
                 };
 
                 yield return new TestCaseData(extraSetCoordinatesNonDistinct);
@@ -117,7 +117,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.GeometricDefinitions
                     new List<Coordinate>
                     {
                         new Coordinate(5.0, 5.0),
-                        new Coordinate(5.0, 5.0),
+                        new Coordinate(5.0, 5.0)
                     });
             }
         }
@@ -160,7 +160,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.GeometricDefinitions
             var lastGridCoordinates = new[]
             {
                 new GridBoundaryCoordinate(GridSide.East, 10),
-                new GridBoundaryCoordinate(GridSide.South, 0),
+                new GridBoundaryCoordinate(GridSide.South, 0)
             };
 
             calculator.SnapCoordinateToGridBoundaryCoordinate(coordinatesArray.First())

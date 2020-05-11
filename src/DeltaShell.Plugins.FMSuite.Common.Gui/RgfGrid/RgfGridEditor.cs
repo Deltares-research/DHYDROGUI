@@ -27,7 +27,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.RgfGrid
         private enum GridType
         {
             FM,
-            GRD,
+            GRD
         }
 
         public const string MfeAppProcessName = "mfe_app";
@@ -190,7 +190,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.RgfGrid
                 {
                     var config = new RgfConfig()
                     {
-                        AdditionalGeometryPaths = copiedAdditionalPaths.Select(Path.GetFileName).ToList(),
+                        AdditionalGeometryPaths = copiedAdditionalPaths.Select(Path.GetFileName).ToList()
                     };
 
                     config.AddGridFileNames(new Tuple<string, string>(copies[0].FileName,

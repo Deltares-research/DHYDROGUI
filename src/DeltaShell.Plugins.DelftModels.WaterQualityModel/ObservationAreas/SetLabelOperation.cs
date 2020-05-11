@@ -14,7 +14,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.ObservationAreas
         Overwrite = 0,
 
         [Description("Overwrite where missing")]
-        OverwriteWhereMissing = 1,
+        OverwriteWhereMissing = 1
     }
 
     public class SetLabelOperation : SpatialOperation

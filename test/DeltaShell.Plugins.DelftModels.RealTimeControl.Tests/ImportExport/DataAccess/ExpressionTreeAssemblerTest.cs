@@ -131,7 +131,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
             var branchNode = new BranchNode(opp, id)
             {
                 FirstNode = new ParameterLeafNode(param1),
-                SecondNode = new ParameterLeafNode(param2),
+                SecondNode = new ParameterLeafNode(param2)
             };
 
             return Tuple.Create(expressionObject, branchNode);
@@ -242,7 +242,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
             var rootBranch = new BranchNode(Operator.Multiply, idTop)
             {
                 FirstNode = results1.Item2,
-                SecondNode = results2.Item2,
+                SecondNode = results2.Item2
             };
 
             var rootBranchObject = new ExpressionObject(idTop,
@@ -294,7 +294,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
             var rootBranch = new BranchNode(opp, idTop)
             {
                 FirstNode = new ParameterLeafNode(idBottom1),
-                SecondNode = new ParameterLeafNode(idBottom2),
+                SecondNode = new ParameterLeafNode(idBottom2)
             };
 
             var rootBranchObject = new ExpressionObject(idTop,

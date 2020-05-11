@@ -148,7 +148,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.RgfGrid
             // Given
             var config = new RgfConfig()
             {
-                AdditionalGeometryPaths = null,
+                AdditionalGeometryPaths = null
             };
 
             // When
@@ -172,7 +172,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.RgfGrid
             // Given
             var config = new RgfConfig()
             {
-                GridFileNames = null,
+                GridFileNames = null
             };
 
             // When

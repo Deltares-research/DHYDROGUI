@@ -12,7 +12,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             new Dictionary<DistanceDirType, int>
             {
                 {DistanceDirType.CounterClockwise, 0},
-                {DistanceDirType.Clockwise, 1},
+                {DistanceDirType.Clockwise, 1}
             };
     }
 }

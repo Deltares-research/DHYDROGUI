@@ -156,7 +156,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui
                     Style = new VectorStyle
                     {
                         Line = new Pen(Color.DarkBlue, 3f),
-                        GeometryType = typeof(ILineString),
+                        GeometryType = typeof(ILineString)
                     },
                     NameIsReadOnly = true
                 };
@@ -171,7 +171,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui
                     Style = new VectorStyle
                     {
                         GeometryType = typeof(IPoint),
-                        Symbol = Resources.weight,
+                        Symbol = Resources.weight
                     },
                     FeatureEditor = new WaterQualityFeatureEditor(),
                     NameIsReadOnly = true
@@ -190,7 +190,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui
                     Style = new VectorStyle
                     {
                         GeometryType = typeof(IPoint),
-                        Symbol = Resources.Observation,
+                        Symbol = Resources.Observation
                     },
                     NameIsReadOnly = true
                 };

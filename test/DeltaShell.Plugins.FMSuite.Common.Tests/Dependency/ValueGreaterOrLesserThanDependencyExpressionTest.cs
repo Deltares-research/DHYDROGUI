@@ -78,7 +78,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.Dependency
                 {
                     FilePropertyName = "string",
                     DataType = typeof(string)
-                }, "1.2"),
+                }, "1.2")
             };
             ModelProperty propertyToBeComppiled = properties[0];
             ModelProperty propertyB = properties[1];
@@ -165,7 +165,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.Dependency
                 {
                     FilePropertyName = "string",
                     DataType = typeof(string)
-                }, "1.2"),
+                }, "1.2")
             };
             ModelProperty propertyToBeComppiled = properties[0];
             ModelProperty propertyB = properties[1];
@@ -252,7 +252,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.Dependency
                 {
                     FilePropertyName = "string",
                     DataType = typeof(string)
-                }, "1.2"),
+                }, "1.2")
             };
             ModelProperty propertyToBeComppiled = properties[0];
             ModelProperty propertyB = properties[1];
@@ -339,7 +339,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.Dependency
                 {
                     FilePropertyName = "string",
                     DataType = typeof(string)
-                }, "1.2"),
+                }, "1.2")
             };
             ModelProperty propertyToBeComppiled = properties[0];
             ModelProperty propertyB = properties[1];

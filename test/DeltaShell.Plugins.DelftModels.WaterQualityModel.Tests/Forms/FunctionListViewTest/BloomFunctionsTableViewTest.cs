@@ -15,7 +15,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Forms.FunctionL
             var functionListView = new BloomFunctionsTableView
             {
                 Data = BloomInfoTest.CreateFunctionList(),
-                BloomInfo = BloomInfoTest.CreateBloomInfo(),
+                BloomInfo = BloomInfoTest.CreateBloomInfo()
             };
 
             WindowsFormsTestHelper.ShowModal(functionListView);

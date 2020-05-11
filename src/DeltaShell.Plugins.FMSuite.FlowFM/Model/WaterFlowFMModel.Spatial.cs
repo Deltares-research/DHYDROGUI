@@ -426,7 +426,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             InitialSalinity = new CoverageDepthLayersList(s => CreateUnstructuredGridCellCoverage(s, Grid))
             {
                 Name = WaterFlowFMModelDefinition.InitialSalinityDataItemName,
-                VerticalProfile = new VerticalProfileDefinition(VerticalProfileType.Uniform),
+                VerticalProfile = new VerticalProfileDefinition(VerticalProfileType.Uniform)
             };
             InitialSalinity.Coverages.CollectionChanged += SpatialDataLayersChanged;
             InitialTracers = new EventedList<UnstructuredGridCellCoverage>();

@@ -28,7 +28,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Validation
             {
                 ConstructCurrentWorkflowReport(model),
                 ConstructModelStructureReport(model),
-                ConstructModelGridReport(model),
+                ConstructModelGridReport(model)
             };
 
             var hydroModelSpecificReports = new ValidationReport(Resources.HydroModelValidator_Validate_HydroModel_Specific, hydroModelReports);

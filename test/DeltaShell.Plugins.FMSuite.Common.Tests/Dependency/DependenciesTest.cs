@@ -84,7 +84,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.Dependency
                 {
                     FilePropertyName = "string",
                     DataType = typeof(string)
-                }, "1.2"),
+                }, "1.2")
             };
 
             TestHelper.AssertLogMessageIsGenerated(() => Dependencies.CompileEnabledDependencies(properties),

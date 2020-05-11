@@ -21,6 +21,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Enums
         /// <summary>
         /// The Pierson-Moskowitz shape corresponding with <see cref="PiersonMoskowitzViewShape"/>.
         /// </summary>
-        PiersonMoskowitz = 3,
+        PiersonMoskowitz = 3
     }
 }

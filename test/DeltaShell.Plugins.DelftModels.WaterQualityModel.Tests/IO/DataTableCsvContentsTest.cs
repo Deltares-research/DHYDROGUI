@@ -65,7 +65,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             var locationB = new LocationData {Name = "B"};
             locationB.TimeDependentSubstanceData[new DateTime(2015, 3, 25, 10, 33, 0)] = new Dictionary<string, string>
             {
-                {"Not_in_SubstancesInFile", "1.1"},
+                {"Not_in_SubstancesInFile", "1.1"}
             };
             dataTableFileContents.DataRows.Add(locationB);
 
@@ -174,7 +174,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             var locationB = new LocationData {Name = "B"};
             locationB.TimeDependentSubstanceData[new DateTime(2015, 3, 25, 10, 33, 0)] = new Dictionary<string, string>
             {
-                {"haha", "1.1"},
+                {"haha", "1.1"}
             };
             dataTableFileContents.DataRows.Add(locationB);
 
@@ -196,19 +196,19 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             var dataTableFileContents = new DataTableCsvContents()
             {
                 UseforIncludeFolderPath = "lala",
-                Name = "first",
+                Name = "first"
             };
 
             var locationData = new LocationData()
             {
-                Name = "loc 1",
+                Name = "loc 1"
             };
 
             // add one timeslot
             locationData.TimeDependentSubstanceData.Add(new DateTime(1999, 12, 16, 0, 0, 0),
                                                         new Dictionary<string, string>()
                                                         {
-                                                            {"NH4", "10"},
+                                                            {"NH4", "10"}
                                                         });
             dataTableFileContents.DataRows.Add(locationData);
 
