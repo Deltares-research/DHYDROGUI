@@ -11,7 +11,7 @@ namespace DeltaShell.NGHS.Common.Gui
     {
         public static readonly DependencyProperty CoordinateSystemProperty = DependencyProperty.Register(
             "CoordinateSystem", typeof(ICoordinateSystem), typeof(CoordinateSystemPicker),
-            new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, PropertyChangedCallback));
+            new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, CoordinateSystemPropertyChangedCallback));
 
         private bool internalCrsUpdate;
 
@@ -37,19 +37,18 @@ namespace DeltaShell.NGHS.Common.Gui
             CoordinateSystemButton.IsChecked = false;
         }
 
-        private static void PropertyChangedCallback(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs e)
+        private static void CoordinateSystemPropertyChangedCallback(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs e)
         {
             if (!(dependencyObject is CoordinateSystemPicker control)) return;
             var viewModel = control.ViewModel;
 
-            if (e.Property == CoordinateSystemProperty)
-            {
-                control.internalCrsUpdate = true;
-                viewModel.SelectedCoordinateSystem = e.NewValue as ICoordinateSystem;
-                control.internalCrsUpdate = false;
+            if (e.Property != CoordinateSystemProperty) return;
 
-                control.CoordinateSystemListView.ScrollIntoView(control.CoordinateSystemListView.SelectedItem);
-            }
+            control.internalCrsUpdate = true;
+            viewModel.SelectedCoordinateSystem = e.NewValue as ICoordinateSystem;
+            control.internalCrsUpdate = false;
+
+            control.CoordinateSystemListView.ScrollIntoView(control.CoordinateSystemListView.SelectedItem);
         }
     }
 }

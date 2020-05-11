@@ -34,7 +34,7 @@ namespace DeltaShell.NGHS.Common.Gui
             {
                 selectedCoordinateSystem = value;
                 OnPropertyChanged();
-                UpdateCoordinateSystemAction(value);
+                UpdateCoordinateSystemAction?.Invoke(value);
             }
         }
 
