@@ -1157,7 +1157,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
             var crossSectionSection = crossSectionDef.Sections[0];
             Assert.AreEqual(0, crossSectionSection.MinY);
             Assert.AreEqual(30, crossSectionSection.MaxY);
-            CheckRoughnessInCoverage(model, crossSection, crossSectionSection, RoughnessType.StricklerKs, 33.0);
+            CheckRoughnessInCoverage(model, crossSection, crossSectionSection, RoughnessType.Strickler, 33.0);
             Assert.AreEqual("Main", crossSectionSection.SectionType.Name);
 
             crossSectionSection = crossSectionDef.Sections[1];

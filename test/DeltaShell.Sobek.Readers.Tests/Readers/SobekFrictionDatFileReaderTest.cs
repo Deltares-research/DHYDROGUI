@@ -186,7 +186,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
             Assert.AreEqual("Friction1", sobekCrossSectionFriction.Name);
             Assert.AreEqual("CsDef", sobekCrossSectionFriction.CrossSectionID);
             Assert.AreEqual(2, sobekCrossSectionFriction.Segments.Count);
-            Assert.AreEqual(RoughnessType.DeBosAndBijkerk, sobekCrossSectionFriction.Segments.FirstOrDefault().FrictionType);
+            Assert.AreEqual(RoughnessType.DeBosBijkerk, sobekCrossSectionFriction.Segments.FirstOrDefault().FrictionType);
         }
 
         [Test]

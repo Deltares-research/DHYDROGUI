@@ -84,7 +84,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 cfd.Channel.Name.Equals("Channel3", StringComparison.InvariantCultureIgnoreCase));
             cfd3.SpecificationType = ChannelFrictionSpecificationType.ConstantChannelFrictionDefinition;
             cfd3.ConstantChannelFrictionDefinition.Value = 3;
-            cfd3.ConstantChannelFrictionDefinition.Type = RoughnessType.DeBosAndBijkerk;
+            cfd3.ConstantChannelFrictionDefinition.Type = RoughnessType.DeBosBijkerk;
 
             ChannelFrictionDefinition cfd4 = channelFrictionDefinitions.First(cfd =>
                 cfd.Channel.Name.Equals("Channel4", StringComparison.InvariantCultureIgnoreCase));
@@ -119,7 +119,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 cfd.Channel.Name.Equals("Channel8", StringComparison.InvariantCultureIgnoreCase));
             cfd8.SpecificationType = ChannelFrictionSpecificationType.SpatialChannelFrictionDefinition;
             cfd8.SpatialChannelFrictionDefinition.FunctionType = RoughnessFunction.FunctionOfH;
-            cfd8.SpatialChannelFrictionDefinition.Type = RoughnessType.StricklerKn;
+            cfd8.SpatialChannelFrictionDefinition.Type = RoughnessType.StricklerNikuradse;
             cfd8.SpatialChannelFrictionDefinition.Function.Arguments[0].SetValues(new double[] {1});
             cfd8.SpatialChannelFrictionDefinition.Function.Arguments[1].SetValues(new double[] {2, 3, 4, 5, 6});
             cfd8.SpatialChannelFrictionDefinition.Function.Components[0].SetValues(new double[] {7, 8, 9, 10, 11});
@@ -128,7 +128,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 cfd.Channel.Name.Equals("Channel9", StringComparison.InvariantCultureIgnoreCase));
             cfd9.SpecificationType = ChannelFrictionSpecificationType.SpatialChannelFrictionDefinition;
             cfd9.SpatialChannelFrictionDefinition.FunctionType = RoughnessFunction.FunctionOfQ;
-            cfd9.SpatialChannelFrictionDefinition.Type = RoughnessType.StricklerKs;
+            cfd9.SpatialChannelFrictionDefinition.Type = RoughnessType.Strickler;
             cfd9.SpatialChannelFrictionDefinition.Function.Arguments[0].SetValues(new double[] {1, 2, 3, 4, 5});
             cfd9.SpatialChannelFrictionDefinition.Function.Arguments[1].SetValues(new double[] {6});
             cfd9.SpatialChannelFrictionDefinition.Function.Components[0].SetValues(new double[] {7, 8, 9, 10, 11});

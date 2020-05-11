@@ -12,13 +12,13 @@ namespace DelftTools.Hydro
         [Description("Manning")]
         Manning = 1,
         [Description("Strickler kn")]
-        StricklerKn = 2,
+        StricklerNikuradse = 2,
         [Description("Strickler ks")]
-        StricklerKs = 3,
+        Strickler = 3,
         [Description("White & Colebrook")]
         WhiteColebrook = 4,
         [Description("Bos & Bijkerk")]
-        DeBosAndBijkerk = 7,
+        DeBosBijkerk = 7,
         [Description("Wall Law Nikuradse")]
         WallLawNikuradse = 8 
     }

@@ -16,13 +16,13 @@ namespace DelftTools.Hydro
                     return Friction.Chezy;
                 case RoughnessType.Manning:
                     return Friction.Manning;
-                case RoughnessType.StricklerKn:
+                case RoughnessType.StricklerNikuradse:
                     return Friction.StricklerNikuradse;
-                case RoughnessType.StricklerKs:
+                case RoughnessType.Strickler:
                     return Friction.Strickler;
                 case RoughnessType.WhiteColebrook:
                     return Friction.WhiteColebrook;
-                case RoughnessType.DeBosAndBijkerk:
+                case RoughnessType.DeBosBijkerk:
                     return Friction.DeBosBijkerk;
                 case RoughnessType.WallLawNikuradse:
                     return Friction.WallLawNikuradse;
@@ -39,13 +39,13 @@ namespace DelftTools.Hydro
                 case Friction.Manning:
                     return RoughnessType.Manning;
                 case Friction.StricklerNikuradse:
-                    return RoughnessType.StricklerKn;
+                    return RoughnessType.StricklerNikuradse;
                 case Friction.Strickler:
-                    return RoughnessType.StricklerKs;
+                    return RoughnessType.Strickler;
                 case Friction.WhiteColebrook:
                     return RoughnessType.WhiteColebrook;
                 case Friction.DeBosBijkerk:
-                    return RoughnessType.DeBosAndBijkerk;
+                    return RoughnessType.DeBosBijkerk;
                 default:
                     return RoughnessType.Chezy;//throw new InvalidOperationException();
             }

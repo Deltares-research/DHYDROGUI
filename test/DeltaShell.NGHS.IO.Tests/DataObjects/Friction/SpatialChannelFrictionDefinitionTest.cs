@@ -83,7 +83,7 @@ namespace DeltaShell.NGHS.IO.Tests.DataObjects.Friction
             };
 
             // Call
-            spatialChannelFrictionDefinition.Type = RoughnessType.DeBosAndBijkerk;
+            spatialChannelFrictionDefinition.Type = RoughnessType.DeBosBijkerk;
 
             // Assert
             Assert.AreEqual(1, counter);

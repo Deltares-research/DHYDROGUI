@@ -12,10 +12,10 @@ namespace DelftTools.Hydro
             {
                 {RoughnessType.Chezy, 45},
                 {RoughnessType.Manning, 0.03},
-                {RoughnessType.StricklerKn, 0.2},
-                {RoughnessType.StricklerKs, 33},
+                {RoughnessType.StricklerNikuradse, 0.2},
+                {RoughnessType.Strickler, 33},
                 {RoughnessType.WhiteColebrook, 0.2},
-                {RoughnessType.DeBosAndBijkerk, 33.8},
+                {RoughnessType.DeBosBijkerk, 33.8},
                 {RoughnessType.WallLawNikuradse, 0.2}
             };
 
@@ -24,9 +24,9 @@ namespace DelftTools.Hydro
         {
             {RoughnessType.Chezy, "m^1/2*s^-1"},
             {RoughnessType.Manning, "s*m^-1/3"},
-            {RoughnessType.StricklerKn, "m"},
-            {RoughnessType.StricklerKs, "m^1/3*s^-1"},
-            {RoughnessType.DeBosAndBijkerk, "s^-1"},
+            {RoughnessType.StricklerNikuradse, "m"},
+            {RoughnessType.Strickler, "m^1/3*s^-1"},
+            {RoughnessType.DeBosBijkerk, "s^-1"},
             {RoughnessType.WhiteColebrook, "m"},
             {RoughnessType.WallLawNikuradse, "m"}
         };
@@ -73,9 +73,9 @@ namespace DelftTools.Hydro
                 case CulvertFrictionType.Manning:
                     return RoughnessType.Manning;
                 case CulvertFrictionType.StricklerKn:
-                    return RoughnessType.StricklerKn;
+                    return RoughnessType.StricklerNikuradse;
                 case CulvertFrictionType.StricklerKs:
-                    return RoughnessType.StricklerKs;
+                    return RoughnessType.Strickler;
                 case CulvertFrictionType.WhiteColebrook:
                     return RoughnessType.WhiteColebrook;
                 default:
@@ -92,9 +92,9 @@ namespace DelftTools.Hydro
                 case BridgeFrictionType.Manning:
                     return RoughnessType.Manning;
                 case BridgeFrictionType.StricklerKn:
-                    return RoughnessType.StricklerKn;
+                    return RoughnessType.StricklerNikuradse;
                 case BridgeFrictionType.StricklerKs:
-                    return RoughnessType.StricklerKs;
+                    return RoughnessType.Strickler;
                 case BridgeFrictionType.WhiteColebrook:
                     return RoughnessType.WhiteColebrook;
                 default:
