@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using DelftTools.Hydro.Roughness;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Reflection;
 
@@ -28,6 +29,38 @@ namespace DelftTools.Hydro
                 default:
                     throw new InvalidOperationException($"{roughnessTypeString} is not a valid Roughness Type.");
 
+            }
+        }
+
+        public static RoughnessFunction ConvertStringToRoughnessFunction(string roughnessFunctionString)
+        {
+            switch (roughnessFunctionString.ToLower())
+            {
+                case "constant":
+                    return RoughnessFunction.Constant;
+                case "absdischarge":
+                case "functionofq":
+                    return RoughnessFunction.FunctionOfQ;
+                case "waterlevel":
+                case "functionofh":
+                    return RoughnessFunction.FunctionOfH;
+                default:
+                    throw new InvalidOperationException($"{roughnessFunctionString} is not a valid Roughness Function.");
+            }
+        }
+
+        public static string ConvertRoughnessFunctionToString(RoughnessFunction roughnessFunction)
+        {
+            switch (roughnessFunction)
+            {
+                case RoughnessFunction.Constant:
+                    return "constant";
+                case RoughnessFunction.FunctionOfQ:
+                    return "absDischarge";
+                case RoughnessFunction.FunctionOfH:
+                    return "waterLevel";
+                default:
+                    throw new InvalidOperationException($"{roughnessFunction} is not a valid Roughness Function.");
             }
         }
         

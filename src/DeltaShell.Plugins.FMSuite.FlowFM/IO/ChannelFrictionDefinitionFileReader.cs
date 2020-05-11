@@ -86,8 +86,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     throw new FileReadingException(string.Format(Resources.ChannelFrictionDefinitionFileReader_ReadFile_Branch___0___where_the_roughness_should_be_put_on_is_not_available_in_the_model1, filePath));
 
                 var functionTypeString = channelFrictionDefinitionCategory.ReadProperty<string>(RoughnessDataRegion.FunctionType.Key);
-                if (Enum.TryParse(functionTypeString, true, out RoughnessFunction functionType) == false)
-                    throw new FileReadingException(string.Format(Resources.ChannelFrictionDefinitionFileReader_ReadFile_Could_not_read_content_section__0__properly__1__is_not_a_valid_function_type, filePath, functionTypeString));
+                RoughnessFunction functionType = RoughnessHelper.ConvertStringToRoughnessFunction(functionTypeString);
 
                 var roughnessTypeString = channelFrictionDefinitionCategory.ReadProperty<string>(RoughnessDataRegion.RoughnessType.Key);
                 RoughnessType roughnessType = RoughnessHelper.ConvertStringToRoughnessType(roughnessTypeString);

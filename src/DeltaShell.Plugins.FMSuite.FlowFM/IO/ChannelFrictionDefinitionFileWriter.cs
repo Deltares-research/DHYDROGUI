@@ -21,7 +21,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
     /// </summary>
     public static class ChannelFrictionDefinitionFileWriter
     {
-        private const string CONSTANT_FUNCTION_TYPE = "Constant";
+        private const string CONSTANT_FUNCTION_TYPE = "constant";
 
         /// <summary>
         /// Conditionally writes a collection of ChannelFrictionDefinitions to the given filename.
@@ -98,7 +98,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 RoughnessDataRegion.RoughnessType.Description);
 
             var functionType = spatialDefinition.FunctionType;
-            category.AddProperty(RoughnessDataRegion.FunctionType.Key, functionType.ToString(),
+            category.AddProperty(RoughnessDataRegion.FunctionType.Key, RoughnessHelper.ConvertRoughnessFunctionToString(functionType),
                 RoughnessDataRegion.FunctionType.Description);
 
             switch (functionType)

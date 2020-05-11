@@ -17,7 +17,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
     public class ChannelFrictionDefinitionFileWriterTest
     {
         [Test]
-        public void GivenCollectionOFChannelFrictionDefinitions_WhenWritingToFile_ThenIsSameAsExpectedFile()
+        public void GivenCollectionOfChannelFrictionDefinitions_WhenWritingToFile_ThenIsSameAsExpectedFile()
         {
             var expectedFile = TestHelper.GetTestFilePath(@"IO\ChannelFrictionDefinitions_expected.ini");
             var tempFolder = FileUtils.CreateTempDirectory();
