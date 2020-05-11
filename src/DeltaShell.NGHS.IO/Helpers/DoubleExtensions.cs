@@ -18,7 +18,7 @@ namespace DeltaShell.NGHS.IO.Helpers
         /// <returns>Truncated double</returns>
         internal static double TruncateByDigits(this double number, int digits = DefaultNumberOfDigits)
         {
-            var truncationNumber = 1 ^ digits;
+            var truncationNumber = Math.Pow(10, digits);
             return Math.Floor(number * truncationNumber) / truncationNumber;
         }
     }
