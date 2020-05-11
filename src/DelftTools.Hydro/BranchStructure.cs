@@ -48,7 +48,7 @@ namespace DelftTools.Hydro
         [NoNotifyPropertyChange] // this is handled in the base class (BranchFeature)
         public override double Chainage
         {
-            get => ParentStructure != null ? ParentStructure.Chainage : base.Chainage;
+            get => ParentStructure?.Chainage ?? base.Chainage;
             set
             {
                 if (ParentStructure != null && Math.Abs(ParentStructure.Chainage - value) >= double.Epsilon)

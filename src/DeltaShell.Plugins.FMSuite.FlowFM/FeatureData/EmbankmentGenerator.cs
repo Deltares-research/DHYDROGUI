@@ -379,10 +379,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
             var branchesMutableCopy = new List<Channel>(branches);
             foreach (Channel branch in branches)
             {
-                int targetCount = (branch.Target.IncomingBranches == null ? 0 : branch.Target.IncomingBranches.Count) +
-                                  (branch.Target.OutgoingBranches == null ? 0 : branch.Target.OutgoingBranches.Count);
-                int sourceCount = (branch.Source.IncomingBranches == null ? 0 : branch.Source.IncomingBranches.Count) +
-                                  (branch.Source.OutgoingBranches == null ? 0 : branch.Source.OutgoingBranches.Count);
+                int targetCount = (branch.Target.IncomingBranches?.Count ?? 0) +
+                                  (branch.Target.OutgoingBranches?.Count ?? 0);
+                int sourceCount = (branch.Source.IncomingBranches?.Count ?? 0) +
+                                  (branch.Source.OutgoingBranches?.Count ?? 0);
                 if (targetCount > 2 || sourceCount > 2)
                 {
                     continue; // TODO: allow this situation

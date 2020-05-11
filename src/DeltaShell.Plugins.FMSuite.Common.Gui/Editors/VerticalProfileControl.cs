@@ -162,9 +162,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Editors
         {
             get
             {
-                return profileTypeComboBox.SelectedItem == null
-                           ? VerticalProfileType.Uniform
-                           : (VerticalProfileType) profileTypeComboBox.SelectedItem;
+                return (VerticalProfileType?) profileTypeComboBox.SelectedItem ?? VerticalProfileType.Uniform;
             }
         }
 

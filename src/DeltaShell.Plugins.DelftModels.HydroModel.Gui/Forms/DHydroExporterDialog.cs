@@ -101,7 +101,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms
         {
             get
             {
-                return Gui == null ? null : Gui.Application.FileExporters.OfType<DHydroConfigXmlExporter>().FirstOrDefault();
+                return Gui?.Application.FileExporters.OfType<DHydroConfigXmlExporter>().FirstOrDefault();
             }
         }
 

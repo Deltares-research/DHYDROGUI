@@ -35,7 +35,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Commands
 
         public bool CanExecute(object parameter)
         {
-            return canExecute == null ? true : canExecute(parameter);
+            return canExecute?.Invoke(parameter) ?? true;
         }
 
         public event EventHandler CanExecuteChanged

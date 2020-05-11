@@ -142,7 +142,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Export
         public bool CanExportFor(object item)
         {
             var dHydroActivity = item as IDimrModel;
-            return dHydroActivity != null ? dHydroActivity.IsMasterTimeStep : GetDimrModelsFromItem(item).Any();
+            return dHydroActivity?.IsMasterTimeStep ?? GetDimrModelsFromItem(item).Any();
         }
 
         private void UnInitialize()

@@ -414,9 +414,9 @@ namespace DeltaShell.NGHS.IO.Grid
 
             file.AddAttribute(pcs, new NetCdfAttribute("longitude_of_prime_meridian", 0.0));
 
-            double semiMajorAxis = coordinateSystem != null ? coordinateSystem.GetSemiMajor() : 6378137.0;
-            double semiMinorAxis = coordinateSystem != null ? coordinateSystem.GetSemiMinor() : 6356752.314245;
-            double inverseFlattening = coordinateSystem != null ? coordinateSystem.GetInverseFlattening() : 298.257223563;
+            double semiMajorAxis = coordinateSystem?.GetSemiMajor() ?? 6378137.0;
+            double semiMinorAxis = coordinateSystem?.GetSemiMinor() ?? 6356752.314245;
+            double inverseFlattening = coordinateSystem?.GetInverseFlattening() ?? 298.257223563;
 
             file.AddAttribute(pcs, new NetCdfAttribute("semi_major_axis", semiMajorAxis));
             file.AddAttribute(pcs, new NetCdfAttribute("semi_minor_axis", semiMinorAxis));

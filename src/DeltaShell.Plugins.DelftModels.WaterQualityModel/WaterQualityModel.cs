@@ -1122,9 +1122,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
             {
                 IDataItem inputFileDataItem = GetDataItemByTag(InputFileCommandLineDataItemMetaData.Tag);
 
-                return inputFileDataItem != null
-                           ? inputFileDataItem.Value as TextDocument
-                           : null;
+                return inputFileDataItem?.Value as TextDocument;
             }
         }
 
@@ -1137,9 +1135,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
             {
                 IDataItem inputFileDataItem = GetDataItemByTag(InputFileHybridDataItemMetaData.Tag);
 
-                return inputFileDataItem != null
-                           ? inputFileDataItem.Value as TextDocument
-                           : null;
+                return inputFileDataItem?.Value as TextDocument;
             }
         }
 

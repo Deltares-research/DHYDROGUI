@@ -48,8 +48,8 @@ namespace DelftTools.Hydro
             {
                 Source = Source,
                 Target = Target,
-                Attributes = Attributes != null ? (IFeatureAttributeCollection) Attributes.Clone() : null,
-                Geometry = Geometry != null ? (IGeometry) Geometry.Clone() : null
+                Attributes = (IFeatureAttributeCollection) Attributes?.Clone(),
+                Geometry = (IGeometry) Geometry?.Clone()
             };
         }
 

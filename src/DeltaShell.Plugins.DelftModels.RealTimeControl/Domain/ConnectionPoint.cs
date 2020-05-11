@@ -83,7 +83,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
         {
             get
             {
-                return Feature != null ? Feature.Geometry : null;
+                return Feature?.Geometry;
             }
             set
             {
@@ -98,7 +98,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
         {
             get
             {
-                return Feature != null ? Feature.Attributes : null;
+                return Feature?.Attributes;
             }
             set
             {

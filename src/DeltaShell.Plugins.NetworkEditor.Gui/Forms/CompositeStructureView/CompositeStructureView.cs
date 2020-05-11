@@ -232,7 +232,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
 
                 foreach (IStructure1D structure in structures)
                 {
-                    IView view = createView != null ? createView(structure) : null;
+                    IView view = createView?.Invoke(structure);
                     if (view == null)
                     {
                         continue;

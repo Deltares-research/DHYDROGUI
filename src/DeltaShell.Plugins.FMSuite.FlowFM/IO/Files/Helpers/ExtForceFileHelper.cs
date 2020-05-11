@@ -756,7 +756,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers
         private static bool useProperty(WaterFlowFMModelDefinition modelDefinition, string useProperty)
         {
             WaterFlowFMProperty enable = modelDefinition.GetModelProperty(useProperty);
-            return enable != null ? (bool) enable.Value : true; // default to True
+            return (bool?) enable?.Value ?? true; // default to True
         }
 
         private static bool TryDetermineForcingType(IFeature feature2D, string filePath,

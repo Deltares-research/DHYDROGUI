@@ -13,7 +13,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return !(value is double) ? value : ((double) value).ToString();
+            return (value as double?)?.ToString() ?? value;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

@@ -172,8 +172,8 @@ namespace DelftTools.Hydro
             var clone = new DrainageBasin
             {
                 Name = Name,
-                Geometry = Geometry != null ? (IGeometry) Geometry.Clone() : null,
-                Attributes = Attributes != null ? (IFeatureAttributeCollection) Attributes.Clone() : null
+                Geometry = (IGeometry) Geometry?.Clone(),
+                Attributes = (IFeatureAttributeCollection) Attributes?.Clone()
             };
 
             foreach (WasteWaterTreatmentPlant plant in WasteWaterTreatmentPlants)

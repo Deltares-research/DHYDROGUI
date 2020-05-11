@@ -20,7 +20,7 @@ namespace DeltaShell.NGHS.IO.Grid
             get
             {
                 var ugridApi = api as IUGridApi;
-                return ugridApi != null ? ugridApi.zCoordinateFillValue : double.NaN;
+                return ugridApi?.zCoordinateFillValue ?? double.NaN;
             }
             set
             {

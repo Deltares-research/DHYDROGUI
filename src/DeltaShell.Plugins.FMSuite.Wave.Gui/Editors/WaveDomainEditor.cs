@@ -61,7 +61,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors
                 }
 
                 data = value as WaveDomainData;
-                waveMeteoPanel.Data = data != null ? data.MeteoData : null;
+                waveMeteoPanel.Data = data?.MeteoData;
                 waveMeteoPanel.ImportFileIntoModelDirectory = s => ImportIntoModelDirectory(s);
                 if (data != null)
                 {

@@ -24,9 +24,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors
 
             Style = style;
 
-            g.BackColor = style.Fill is SolidBrush
-                              ? ((SolidBrush) style.Fill).Color
-                              : Color.Transparent;
+            g.BackColor = (style.Fill as SolidBrush)?.Color ?? Color.Transparent;
 
             g.PenColor = style.Line.Color;
             g.PenWidth = (int) style.Line.Width;

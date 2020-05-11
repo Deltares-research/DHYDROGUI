@@ -49,9 +49,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
 
         public object ImportItem(string path, object target = null)
         {
-            WaterFlowFMModel model = GetFMModelForRestartState == null
-                                         ? null
-                                         : GetFMModelForRestartState(target as FileBasedRestartState);
+            WaterFlowFMModel model = GetFMModelForRestartState?.Invoke(target as FileBasedRestartState);
 
             if (model != null)
             {

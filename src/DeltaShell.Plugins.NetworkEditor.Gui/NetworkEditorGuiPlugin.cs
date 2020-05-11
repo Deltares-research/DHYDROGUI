@@ -557,7 +557,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 GetViewData = o =>
                 {
                     ProjectItemMapView centralMap = Gui.DocumentViews.OfType<ProjectItemMapView>().FirstOrDefault(v => v.MapView.GetLayerForData(o) != null);
-                    return centralMap == null ? null : centralMap.MapView.GetLayerForData(o);
+                    return centralMap?.MapView.GetLayerForData(o);
                 },
                 CompositeViewType = typeof(ProjectItemMapView),
                 GetCompositeViewData = o => Gui.Application.ModelService.GetModelsByData(Gui.Application.Project, o).FirstOrDefault(),

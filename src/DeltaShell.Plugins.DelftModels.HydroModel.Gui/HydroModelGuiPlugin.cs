@@ -151,7 +151,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui
                     v.OnMergeValidate = (destination, source) =>
                     {
                         var destinationModel = destination as IModelMerge;
-                        return destinationModel == null ? null : destinationModel.ValidateMerge(source as IModelMerge);
+                        return destinationModel?.ValidateMerge(source as IModelMerge);
                     };
                     v.OnMerge = (destination, source) =>
                     {

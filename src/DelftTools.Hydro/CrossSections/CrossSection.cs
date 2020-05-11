@@ -149,7 +149,7 @@ namespace DelftTools.Hydro.CrossSections
              * however, is being copied aswell and this should not happen.
              * After some discussion with Hidde we found out that the fastest and 'safest'
              * way is to store the name before the template and set it again after the cloning.*/
-            string name = Definition != null ? Definition.Name : null;
+            string name = Definition?.Name;
             Definition = (ICrossSectionDefinition) ((ICrossSection) source).Definition.Clone();
             if (name != null)
             {

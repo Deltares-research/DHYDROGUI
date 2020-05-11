@@ -17,7 +17,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView.NodePre
 
         public override void UpdateNode(ITreeNode parentNode, ITreeNode node, Catchment nodeData)
         {
-            node.Image = nodeData.CatchmentType != null ? nodeData.CatchmentType.Icon : null;
+            node.Image = nodeData.CatchmentType?.Icon;
             UpdateNodeText(nodeData, node);
         }
 

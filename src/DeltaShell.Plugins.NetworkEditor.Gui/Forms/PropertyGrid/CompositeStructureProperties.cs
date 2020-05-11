@@ -78,7 +78,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         {
             get
             {
-                return data.ParentStructure != null ? data.ParentStructure.Chainage : data.Chainage;
+                return data.ParentStructure?.Chainage ?? data.Chainage;
             }
             set
             {
