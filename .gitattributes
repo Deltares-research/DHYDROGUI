@@ -3187,6 +3187,7 @@ test/DelftTools.Hydro.Tests/LateralSourceTest.cs -text
 test/DelftTools.Hydro.Tests/NameableFeatureComparerTest.cs -text
 test/DelftTools.Hydro.Tests/PipeTest.cs -text
 test/DelftTools.Hydro.Tests/Properties/AssemblyInfo.cs -text
+test/DelftTools.Hydro.Tests/RoughnessHelperTest.cs -text
 test/DelftTools.Hydro.Tests/RunoffBoundaryTest.cs -text
 test/DelftTools.Hydro.Tests/SewerFeatures/CompartmentTest.cs -text
 test/DelftTools.Hydro.Tests/SewerFeatures/ManholeTest.cs -text

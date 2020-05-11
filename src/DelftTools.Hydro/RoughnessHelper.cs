@@ -7,6 +7,30 @@ namespace DelftTools.Hydro
 {
     public static class RoughnessHelper
     {
+        public static RoughnessType ConvertStringToRoughnessType(string roughnessTypeString)
+        {
+            switch (roughnessTypeString.ToLower())
+            {
+                case "chezy":
+                    return RoughnessType.Chezy;
+                case "manning":
+                    return RoughnessType.Manning;
+                case "stricklernikuradse":
+                    return RoughnessType.StricklerNikuradse;
+                case "strickler":
+                    return RoughnessType.Strickler;
+                case "whitecolebrook":
+                    return RoughnessType.WhiteColebrook;
+                case "debosbijkerk":
+                    return RoughnessType.DeBosBijkerk;
+                case "walllawnikuradse":
+                    return RoughnessType.WallLawNikuradse;
+                default:
+                    throw new InvalidOperationException($"{roughnessTypeString} is not a valid Roughness Type.");
+
+            }
+        }
+        
         private static readonly Dictionary<RoughnessType, double> RoughnessDefaultValueMapping =
             new Dictionary <RoughnessType, double>
             {
