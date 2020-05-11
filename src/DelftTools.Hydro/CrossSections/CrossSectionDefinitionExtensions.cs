@@ -27,7 +27,7 @@ namespace DelftTools.Hydro.CrossSections
             return clone;
         }
         
-        public static double FlowWidth(this CrossSectionDefinition crossSectionDefinition)
+        public static double FlowWidth(this ICrossSectionDefinition crossSectionDefinition)
         {
             IEnumerable<Coordinate> coordinates = crossSectionDefinition.FlowProfile.ToList();
             return !coordinates.Any() ? 0.0 : coordinates.Max(c => c.X) - coordinates.Min(c => c.X);

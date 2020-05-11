@@ -72,8 +72,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                 return;
             }
 
-            ClearUnusedCrossSectionSectionTypes();
-
             // network.cr: contains locations of the several cross sections
             var locationsPath = GetFilePath(SobekFileNames.SobekNetworkLocationsFileName);
             IList<SobekBranchLocation> locations = new SobekCrossSectionsReader().Read(locationsPath).ToList();
@@ -208,6 +206,8 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                         crossSectionUsage[sobekCrossSectionMapping.DefinitionId].Add(crossSection);
                     }
                 }
+
+                ClearUnusedCrossSectionSectionTypes();//but why???
             }
             finally
             {
@@ -220,6 +220,21 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
 
         private void SetPipeProperties(IPipe pipe, ICrossSectionDefinition definition, SobekCrossSectionMapping sobekCrossSectionMapping)
         {
+            if (!definition.Sections.Any())
+            {
+                var sewerCrossSectionType = HydroNetwork.CrossSectionSectionTypes.FirstOrDefault(csst => csst.Name.Equals(RoughnessDataSet.SewerSectionTypeName));
+                if (sewerCrossSectionType == null) return;
+                if (definition.IsProxy)
+                {
+                    ((CrossSectionDefinitionProxy)definition).InnerDefinition.AddSection(sewerCrossSectionType, ((CrossSectionDefinitionProxy)definition).InnerDefinition.FlowWidth());
+                }
+                else
+                {
+                    definition.AddSection(sewerCrossSectionType, definition.FlowWidth());
+                }
+                
+            }
+
             pipe.CrossSection = new CrossSection(definition);
             pipe.LevelSource = sobekCrossSectionMapping.RefLevel2;
             pipe.LevelTarget = sobekCrossSectionMapping.RefLevel1;
