@@ -24,7 +24,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.Calculators
         /// <returns>
         /// A new <see cref="Coordinate"/> containing the world coordinate x and y values.
         /// </returns>
-        /// <exception cref="System.ArgumentNullException">
+        /// <exception cref="ArgumentNullException">
         /// Thrown when <paramref name="grid"/> is <c>null</c>.
         /// </exception>
         internal static Coordinate GetCoordinateAt(this IDiscreteGridPointCoverage grid, int x, int y)
@@ -42,7 +42,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.Calculators
         /// <returns>
         /// A new <see cref="Coordinate"/> containing the world coordinate x and y values.
         /// </returns>
-        /// <exception cref="System.ArgumentNullException">
+        /// <exception cref="ArgumentNullException">
         /// Thrown when <paramref name="grid"/> or <paramref name="coordinate"/> is <c>null</c>.
         /// </exception>
         internal static Coordinate GetCoordinateAt(this IDiscreteGridPointCoverage grid, GridCoordinate coordinate)
@@ -58,10 +58,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.Calculators
         /// <returns>
         /// <c>true</c> if the polygon vertices are ordered counter-clockwise; otherwise, <c>false</c>.
         /// </returns>
-        /// <exception cref="System.ArgumentNullException">
+        /// <exception cref="ArgumentNullException">
         /// Thrown
         /// </exception>
-        /// <exception cref="System.InvalidOperationException">
+        /// <exception cref="InvalidOperationException">
         /// Thrown when the number of <paramref name="polygonVertices"/> is smaller than three.
         /// </exception>
         internal static bool IsCounterClockwisePolygon(params Coordinate[] polygonVertices)
@@ -73,6 +73,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.Calculators
                 throw new InvalidOperationException("Cannot calculate the ordering of line segment or point");
             }
 
+            // Assuming standard cartesian coordinates, we calculate the area
+            // of the polygon defined by the polygonVertices. The sign of the
+            // calculated value is determined by the traversal order. If the
+            // vertices are ordered counter-clockwise then the summation will be
+            // negative and if the ordering is clockwise, then the sign will be
+            // negative. We leverage this fact to determine the ordering of the
+            // polygonVertices.
             var sum = 0.0;
 
             for (var i = 1; i <= polygonVertices.Length; i++)
@@ -87,14 +94,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.Calculators
         }
 
         /// <summary>
-        /// Gets the normalised normal associated with the line segment defined
-        /// by <paramref name="coordinate0"/> and <paramref name="coordinate1"/>.
+        /// Gets the normalised normal associated with the vector defined
+        /// by <paramref name="coordinate1"/> minus <paramref name="coordinate0"/>
+        /// by rotating 90 degrees clockwise.
         /// </summary>
-        /// <param name="coordinate0">The coordinate0.</param>
-        /// <param name="coordinate1">The coordinate1.</param>
+        /// <param name="coordinate0">The first coordinate.</param>
+        /// <param name="coordinate1">The second coordinate.</param>
         /// <returns>
-        /// The normal associated with the line segment defined by
-        /// <paramref name="coordinate0"/> and <paramref name="coordinate1"/>.
+        /// The normal associated with the vector defined by
+        /// <paramref name="coordinate1"/> minus <paramref name="coordinate0"/>.
         /// </returns>
         internal static Vector2D GetNormal(Coordinate coordinate0,
                                            Coordinate coordinate1) =>
@@ -102,39 +110,44 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.Calculators
                             coordinate0.X - coordinate1.X).Normalize();
 
         /// <summary>
-        /// Gets the closest aligned value with the specified normal in the
-        /// provided <paramref name="valueNormalPairs"/> relative to the
-        /// <paramref name="referenceNormal"/>.
+        /// Gets the value associated with the vector in the
+        /// provided <paramref name="valueVectorPairs"/> closest aligned to the
+        /// <paramref name="referenceVector"/>.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="valueNormalPairs">The value normal pairs.</param>
-        /// <param name="referenceNormal">The reference normal.</param>
+        /// <typeparam name="T">The value type.</typeparam>
+        /// <param name="valueVectorPairs">The value-vector pairs.</param>
+        /// <param name="referenceVector">The reference vector.</param>
         /// <param name="defaultValue">The default value.</param>
         /// <returns>
-        /// The <typeparamref name="T"/> value in <paramref name="valueNormalPairs"/> of
-        /// which the normal aligns most with the provided <paramref name="referenceNormal"/>.
-        /// If <paramref name="valueNormalPairs"/> is empty, then <paramref name="defaultValue"/>
+        /// The <typeparamref name="T"/> value in <paramref name="valueVectorPairs"/> of
+        /// which the vector aligns most with the provided <paramref name="referenceVector"/>.
+        /// If <paramref name="valueVectorPairs"/> is empty, then <paramref name="defaultValue"/>
         /// is returned.
         /// </returns>
-        /// <exception cref=".ArgumentNullException">
-        /// Thrown when <paramref name="valueNormalPairs"/> or <paramref name="referenceNormal"/>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when <paramref name="valueVectorPairs"/> or <paramref name="referenceVector"/>
         /// is <c>null</c>.
         /// </exception>
-        internal static T GetClosestAlignedValueWithNormal<T>(IEnumerable<Tuple<T, Vector2D>> valueNormalPairs,
-                                                              Vector2D referenceNormal,
+        internal static T GetValueClosestAlignedWithVector<T>(IEnumerable<Tuple<T, Vector2D>> valueVectorPairs, 
+                                                              Vector2D referenceVector, 
                                                               T defaultValue)
         {
-            Ensure.NotNull(valueNormalPairs, nameof(valueNormalPairs));
-            Ensure.NotNull(referenceNormal, nameof(referenceNormal));
+            Ensure.NotNull(valueVectorPairs, nameof(valueVectorPairs));
+            Ensure.NotNull(referenceVector, nameof(referenceVector));
 
-            Vector2D referenceNormalized = referenceNormal.Normalize();
+            // The dot product between two normalized vectors is equal to cos theta
+            // where theta is the angle between the vectors. Any dot product will
+            // thus lie between -1 and 1, where the highest value will correspond with
+            // the smallest angle between the referenceVector and the normal associated with
+            // the value. We leverage this to find the result value.
+            Vector2D referenceNormalized = referenceVector.Normalize();
 
             double largestDotProduct = -1.0;
             T result = defaultValue;
 
-            foreach ((T value, Vector2D normal) in valueNormalPairs)
+            foreach ((T value, Vector2D vector) in valueVectorPairs)
             {
-                double dotProduct = normal.Normalize()
+                double dotProduct = vector.Normalize()
                                           .Dot(referenceNormalized);
 
                 if (largestDotProduct >= dotProduct)

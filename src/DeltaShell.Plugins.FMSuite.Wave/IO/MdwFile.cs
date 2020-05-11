@@ -228,7 +228,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             modelDefinition.TimePointData =
                 CreateTimePointData(mdwCategories, modelDefinition.ModelReferenceDateTime, out times);
 
-            ReadWaveBoundaries(modelDefinition, mdwCategories, mdwDir);
+            ReadWaveBoundaries(modelDefinition, mdwCategories, mdwDir, logHandler);
 
             modelDefinition.Obstacles.AddRange(
                 CreateObstacleData(
@@ -639,7 +639,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
 
         private static void ReadWaveBoundaries(WaveModelDefinition modelDefinition,
                                                IList<DelftIniCategory> mdwCategories,
-                                               string mdwDirPath)
+                                               string mdwDirPath,
+                                               ILogHandler logHandler)
         {
             IBoundaryContainer boundaryContainer = modelDefinition.BoundaryContainer;
             CurvilinearGrid grid = modelDefinition.OuterDomain.Grid;
@@ -662,7 +663,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             {
                 var boundariesConverter = new WaveBoundaryConverter(new ImportBoundaryConditionDataComponentFactory(new ForcingTypeDefinedParametersFactory()),
                                                                     new WaveBoundaryGeometricDefinitionFactory(boundaryContainer));
-                IEnumerable<IWaveBoundary> waveBoundaries = boundariesConverter.Convert(boundaryCategories, timeSeriesData, mdwDirPath);
+                IEnumerable<IWaveBoundary> waveBoundaries = boundariesConverter.Convert(boundaryCategories, timeSeriesData, mdwDirPath, logHandler);
                 boundaryContainer.Boundaries.AddRange(waveBoundaries);
             }
         }

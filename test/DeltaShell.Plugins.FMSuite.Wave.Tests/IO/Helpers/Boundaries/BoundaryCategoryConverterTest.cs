@@ -191,9 +191,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
 
         [Test]
         [TestCaseSource(nameof(GetFromFileCoordinatesTestCases))]
-        public void Convert_FromFileImportType_Coordinates_ReturnsCorrectResult(string shapeTypeStr,
-                                                                                string periodTypeStr,
-                                                                                string spreadingTypeStr)
+        public void Convert_FromFileImportTypeCoordinates_ReturnsCorrectResult(string shapeTypeStr,
+                                                                               string periodTypeStr,
+                                                                               string spreadingTypeStr)
         {
             // Setup
             var category = new DelftIniCategory(KnownWaveCategories.BoundaryCategory);
@@ -251,11 +251,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
 
         [Test]
         [TestCaseSource(nameof(GetFromFileOrientedTestCases))]
-        public void Convert_FromFileImportType_Oriented_ReturnsCorrectResult(string shapeTypeStr,
-                                                                             string periodTypeStr,
-                                                                             string spreadingTypeStr,
-                                                                             CategoryTestKeyValue<BoundaryOrientationType> orientationTypeData,
-                                                                             CategoryTestKeyValue<DistanceDirType> distanceDirType)
+        public void Convert_FromFileImportTypeOriented_ReturnsCorrectResult(string shapeTypeStr,
+                                                                            string periodTypeStr,
+                                                                            string spreadingTypeStr,
+                                                                            CategoryTestKeyValue<BoundaryOrientationType> orientationTypeData,
+                                                                            CategoryTestKeyValue<DistanceDirType> distanceDirType)
         {
             // Setup
             var category = new DelftIniCategory(KnownWaveCategories.BoundaryCategory);

@@ -137,7 +137,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries.GeometricDefinitions
         public void GetWorldCoordinateFromBoundaryCoordinate_BoundaryCoordinateValid_ReturnsCorrespondingWorldCoordinate()
         {
             // Setup
-            var gridCoordinate = new GridCoordinate(5, 4);
             const int expectedX = 6;
             const int expectedY = 5;
 

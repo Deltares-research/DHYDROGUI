@@ -82,7 +82,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions
             IEnumerable<Tuple<GridSide, Vector2D>> normals =
                 sides.Select(side => new Tuple<GridSide, Vector2D>(side, GetNormalFromSide(boundaries[side])));
 
-            return CartesianOrientationCalculatorHelper.GetClosestAlignedValueWithNormal(normals, referenceNormal, GridSide.East);
+            return CartesianOrientationCalculatorHelper.GetValueClosestAlignedWithVector(normals, referenceNormal, GridSide.East);
         }
 
         private IReadOnlyList<GridCoordinate>[] GetOrderedSides()
@@ -144,7 +144,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions
                           .Select(x => new Tuple<int, Vector2D>(x, GetNormalFromSide(sideCoordinates[x])));
 
             var referenceEast = Vector2D.Create(1.0, 0.0);
-            return CartesianOrientationCalculatorHelper.GetClosestAlignedValueWithNormal(normals, referenceEast, 0);
+            return CartesianOrientationCalculatorHelper.GetValueClosestAlignedWithVector(normals, referenceEast, 0);
         }
 
         private Vector2D GetNormalFromSide(IEnumerable<GridCoordinate> coordinates) =>

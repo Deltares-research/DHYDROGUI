@@ -4,6 +4,7 @@ using System.Linq;
 using DelftTools.Utils;
 using DelftTools.Utils.Guards;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
+using DeltaShell.Plugins.FMSuite.Wave.IO.Helpers.Boundaries;
 using GeoAPI.Extensions.Coverages;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries
@@ -81,7 +82,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries
             model.BoundaryContainer.Boundaries.Clear();
             model.BoundaryContainer.UpdateGridBoundary(CreateGridBoundary(outerDomainGrid));
 
-            IEnumerable<IWaveBoundary> reSnappedBoundaries = SnapBoundariesToNewGrid.RestoreBoundariesIfPossible(cache, model.BoundaryContainer.GetBoundarySnappingCalculator());
+            var factory = new WaveBoundaryGeometricDefinitionFactory(model.BoundaryContainer);
+            IEnumerable<IWaveBoundary> reSnappedBoundaries = SnapBoundariesToNewGrid.RestoreBoundariesIfPossible(cache, factory);
 
             foreach (IWaveBoundary bound in reSnappedBoundaries)
             {

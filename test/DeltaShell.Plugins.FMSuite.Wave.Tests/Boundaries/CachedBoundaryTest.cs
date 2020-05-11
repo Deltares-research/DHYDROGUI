@@ -7,7 +7,7 @@ using NUnit.Framework;
 namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries
 {
     [TestFixture]
-    public class CachedBoundaryTests
+    public class CachedBoundaryTest
     {
         [Test]
         public void WhenNewInstance_ConstructorThrowsArgumentNullException_WithNullCoordinateParameter()
@@ -21,6 +21,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries
         public void WhenNewInstance_ConstructorThrowsArgumentNullException_WithNullCoordinateSecondParameter()
         {
             var coordinate = new Coordinate(0, 0);
+
             void Call() => new CachedBoundary(coordinate, null, null);
 
             Assert.Throws<ArgumentNullException>(Call);
@@ -30,6 +31,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Boundaries
         public void WhenNewInstance_ConstructorThrowsArgumentNullException_WithNullWaveBoundaryParameter()
         {
             var coordinate = new Coordinate(0, 0);
+
             void Call() => new CachedBoundary(coordinate, coordinate, null);
 
             Assert.Throws<ArgumentNullException>(Call);
