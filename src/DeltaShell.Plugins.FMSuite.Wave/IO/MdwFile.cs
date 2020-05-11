@@ -36,7 +36,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
         /// These mdw categories can have multiplicity greater than 1 (or gui only),
         /// excluded them from the generic property treatment..
         /// </summary>
-        public static readonly IList<string> ExcludedCategories = new List<string>
+        public static IList<string> ExcludedCategories { get; } = new List<string>
         {
             KnownWaveCategories.TimePointCategory,
             KnownWaveCategories.DomainCategory,
