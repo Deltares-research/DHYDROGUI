@@ -12,6 +12,7 @@ using DeltaShell.NGHS.IO.Helpers;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;
+using log4net;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Grids;
 using NetTopologySuite.Geometries;
@@ -24,6 +25,7 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
     /// </summary>
     public static class HydroUGridExtensions
     {
+        private static ILog Log = LogManager.GetLogger(typeof(HydroUGridExtensions));
         private const double EpsilonLocation = 1e-8;
 
         #region Mesh2d
@@ -294,14 +296,26 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
             {
                 // no begin point found, search neighboring branches
                 var firstLocation = GetNeighboringNetworkLocation(segment.Branch.Source, discretization, segment.Branch);
-                indices[0] = firstLocation != null ? locationIdLookup[firstLocation] : -1;
+                if (firstLocation != null)
+                    indices[0] = locationIdLookup[firstLocation];
+                else
+                {
+                    Log.Error($"Cannot find start edge node of section {segment.SegmentNumber} on branch {segment.Branch.Name} at chainage {segment.Chainage}");
+                    indices[0] = -1;
+                }
             }
 
             if (indices[1] == -1)
             {
                 // no end point found, search neighboring branches
                 var firstLocation = GetNeighboringNetworkLocation(segment.Branch.Target, discretization, segment.Branch);
-                indices[1] = firstLocation != null? locationIdLookup[firstLocation]: -1;
+                if (firstLocation != null)
+                    indices[1] = locationIdLookup[firstLocation];
+                else
+                {
+                    Log.Error($"Cannot find end edge node of section {segment.SegmentNumber} on branch {segment.Branch.Name} at chainage {segment.EndChainage}");
+                    indices[1] = -1;
+                }
             }
 
             return indices;
@@ -310,13 +324,13 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
         private static INetworkLocation GetNeighboringNetworkLocation(INode node, IDiscretization discretization, IBranch originalBranch)
         {
             var networkLocationsIn = node.IncomingBranches
-                .Where(b => b != originalBranch && (b is IChannel || b is IPipe))
+                .Where(b => b != originalBranch)
                 .Select(b => new { branch = b, location = discretization.GetLocationsForBranch(b).LastOrDefault() })
                 .Where(l => l.location != null && Math.Abs(l.location.Chainage - l.branch.Length) < EpsilonLocation)
                 .Select(l => l.location);
 
             var networkLocationsOut = node.OutgoingBranches
-                .Where(b => b != originalBranch && (b is IChannel || b is IPipe))
+                .Where(b => b != originalBranch)
                 .Select(b => discretization.GetLocationsForBranch(b).FirstOrDefault())
                 .Where(l => l != null && Math.Abs(l.Chainage) < EpsilonLocation);
 
