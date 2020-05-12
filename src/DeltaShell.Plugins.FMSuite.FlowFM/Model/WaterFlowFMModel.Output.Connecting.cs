@@ -56,9 +56,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         /// <summary>
         /// Moves all content in the source directory into the target directory.
         /// </summary>
-        /// <param name="sourceDirectory"> The source directory. </param>
-        /// <param name="targetDirectoryPath"> The target directory path. </param>
-        /// <remarks> <paramref name="sourceDirectory"/> should exist. </remarks>
+        /// <param name="outputPath"> The path to the output directory. </param>
         public virtual void ConnectOutput(string outputPath)
         {
             currentOutputDirectoryPath = outputPath;

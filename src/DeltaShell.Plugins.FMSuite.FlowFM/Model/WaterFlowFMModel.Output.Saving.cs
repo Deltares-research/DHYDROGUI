@@ -9,8 +9,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 {
     public partial class WaterFlowFMModel
     {
-        #region Output
-
+        private string currentOutputDirectoryPath;
         public const string DiaFileDataItemTag = "DiaFile";
 
         /// <summary>
@@ -91,7 +90,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             ReconnectOutputFiles(currentOutputDirectoryPath, true);
         }
 
-        private void MoveAllContentDirectory(DirectoryInfo sourceDirectory, string targetDirectoryPath)
+        private static void MoveAllContentDirectory(DirectoryInfo sourceDirectory, string targetDirectoryPath)
         {
             foreach (FileInfo file in sourceDirectory.EnumerateFiles())
             {
@@ -138,8 +137,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             file.MoveTo(targetPath);
         }
 
-        private void MoveDirectory(DirectoryInfo sourceDirectoryInfo, string targetParentDirectoryPath,
-                                   bool onSameVolume)
+        private static void MoveDirectory(DirectoryInfo sourceDirectoryInfo, string targetParentDirectoryPath,
+                                          bool onSameVolume)
         {
             var targetDirectoryInfo =
                 new DirectoryInfo(Path.Combine(targetParentDirectoryPath, sourceDirectoryInfo.Name));
@@ -187,7 +186,5 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                 }
             }
         }
-
-        #endregion Output
     }
 }

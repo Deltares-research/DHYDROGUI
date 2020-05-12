@@ -17,8 +17,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
     {
         public Func<string> WorkingDirectoryPathFunc =
             () => Path.Combine(DefaultModelSettings.DefaultDeltaShellWorkingDirectory);
-
-        private string currentOutputDirectoryPath;
         private string outputSnappedFeaturesPath;
 
         private CacheFile cacheFile = null;
