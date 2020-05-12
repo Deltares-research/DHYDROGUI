@@ -261,15 +261,17 @@ namespace DelftTools.Hydro.Validators
             }
         }
 
-        private static IEnumerable<IChannel> GetChainOfChannelsWithSameOrderNumber(IChannel channel, IHydroNetwork network, IChannel previousLink = null)
+        private static IEnumerable<IChannel> GetChainOfChannelsWithSameOrderNumber(IChannel channel, IHydroNetwork network, IList<IChannel> previousLinks = null)
         {
             var startNode = channel.Source;
+            previousLinks = previousLinks ?? new List<IChannel>();
             var channelTo = network.Channels.FirstOrDefault(c => c.OrderNumber == channel.OrderNumber && c.Target == startNode);
 
-            if (channelTo != null && channelTo != previousLink)
+            if (channelTo != null && !previousLinks.Contains(channelTo))
             {
                 yield return channelTo;
-                foreach (var channelInChain in GetChainOfChannelsWithSameOrderNumber(channelTo, network, channel))
+                previousLinks.Add(channel);
+                foreach (var channelInChain in GetChainOfChannelsWithSameOrderNumber(channelTo, network, previousLinks))
                 {
                     yield return channelInChain;
                 }
@@ -279,17 +281,17 @@ namespace DelftTools.Hydro.Validators
             var endNode = channel.Target;
             var channelFrom = network.Channels.FirstOrDefault(c => c.OrderNumber == channel.OrderNumber && c.Source == endNode);
 
-            if (channelFrom != null && channelFrom != previousLink)
+            if (channelFrom != null && !previousLinks.Contains(channelFrom))
             {
                 yield return channelFrom;
-
-                foreach (var channelInChain in GetChainOfChannelsWithSameOrderNumber(channelFrom, network, channel))
+                previousLinks.Add(channel);
+                foreach (var channelInChain in GetChainOfChannelsWithSameOrderNumber(channelFrom, network, previousLinks))
                 {
                     yield return channelInChain;
                 }
             }
 
-            if (previousLink == null)
+            if (!previousLinks.Any())
             {
                 yield return channel;
             }
