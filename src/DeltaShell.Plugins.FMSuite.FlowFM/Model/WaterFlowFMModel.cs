@@ -51,12 +51,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         private readonly DimrRunner runner;
         private WaterFlowFMModelDefinition modelDefinition;
 
-        [Obsolete("Necessary due to NHibernate")]
-        public WaterFlowFMModel() : this(null)
-        {
-
-        }
-
         /// <summary>
         /// Creates a new instance of the <see cref="WaterFlowFMModel"/>.
         /// </summary>
@@ -895,20 +889,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             fixedWeirProperties.Values.ForEach(d => d.Dispose());
             fixedWeirProperties.Clear();
             BridgePillarsDataModel.ForEach(d => d.Dispose());
-        }
-
-        #endregion
-
-        #region NHibernate
-
-        private int dirtyCounter; //tells NHibernate we need to be saved
-
-        private void MarkDirty()
-        {
-            unchecked
-            {
-                dirtyCounter++;
-            } //unchecked is default, but its here to declare intent
         }
 
         #endregion

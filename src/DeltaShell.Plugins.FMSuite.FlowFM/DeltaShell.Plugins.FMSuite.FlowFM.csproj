@@ -249,6 +249,7 @@
     <Compile Include="Model\WaterFlowFMModel.FileStructure.cs" />
     <Compile Include="Model\WaterFlowFMModel.IO.Export.cs" />
     <Compile Include="Model\WaterFlowFMModel.IO.Import.cs" />
+    <Compile Include="Model\WaterFlowFMModel.NHibernate.cs" />
     <Compile Include="Model\WaterFlowFMModel.Output.Connecting.cs" />
     <Compile Include="Model\WaterFlowFMModel.Running.cs" />
     <Compile Include="Model\WaterFlowFMModel.Output.Saving.cs" />
