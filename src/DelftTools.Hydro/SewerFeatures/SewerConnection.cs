@@ -503,18 +503,20 @@ namespace DelftTools.Hydro.SewerFeatures
 
         public void SetLengthOfConnectionBasedOnConnectedCompartmentsOrSetAFake()
         {
-            if (Math.Abs(Length) < 10e-6 && SourceCompartment?.Geometry?.Coordinate != null &&
+            if (Math.Abs(Length) < 1 && SourceCompartment?.Geometry?.Coordinate != null &&
                 TargetCompartment?.Geometry?.Coordinate != null)
             {
                 if (SourceCompartment.Geometry.Coordinate.Equals(TargetCompartment.Geometry.Coordinate))
                 {
+                    TargetCompartment.Geometry.Coordinate.X += 1;
                     Length = SourceCompartment.Geometry.Coordinate.Distance(
                         new Coordinate(TargetCompartment.Geometry.Coordinate.X + 1,
                             TargetCompartment.Geometry.Coordinate.Y));
                 }
                 else
                 {
-                    Length = SourceCompartment.Geometry.Coordinate.Distance(TargetCompartment.Geometry.Coordinate);
+                    var distance = SourceCompartment.Geometry.Coordinate.Distance(TargetCompartment.Geometry.Coordinate);
+                    Length = distance < 1 ? 1 : distance;
                 }
             }
         }

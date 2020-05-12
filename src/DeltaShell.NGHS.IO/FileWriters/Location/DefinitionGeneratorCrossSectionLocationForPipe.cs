@@ -37,7 +37,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Location
             var targetIniCategory = new DelftIniCategory(CrossSectionRegion.IniHeader);
             targetIniCategory.AddProperty(new DelftIniProperty(LocationRegion.PipeId.Key, pipe.Name + "_end", string.Empty));
             targetIniCategory.AddProperty(new DelftIniProperty(LocationRegion.BranchId.Key, pipe.Name, string.Empty));
-            targetIniCategory.AddProperty(LocationRegion.PipeChainage.Key, pipe.Length, format:LocationRegion.PipeChainage.Format);
+            targetIniCategory.AddProperty(LocationRegion.PipeChainage.Key, pipe.Length.TruncateByDigits(), format:LocationRegion.PipeChainage.Format);
             targetIniCategory.AddProperty(new DelftIniProperty(LocationRegion.Shift.Key, string.Format(CultureInfo.InvariantCulture, "{0:0.00}", pipe.LevelTarget), string.Empty));
             targetIniCategory.AddProperty(new DelftIniProperty(LocationRegion.Definition.Key, pipe.CrossSection.Definition.Name, string.Empty));
             return targetIniCategory;
