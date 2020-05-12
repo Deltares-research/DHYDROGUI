@@ -103,6 +103,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        public static System.Drawing.Bitmap Boundary_1d {
+            get {
+                object obj = ResourceManager.GetObject("Boundary_1d", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         public static System.Drawing.Bitmap BoundaryType_AstroComponent {
             get {
                 object obj = ResourceManager.GetObject("BoundaryType_AstroComponent", resourceCulture);
@@ -534,6 +544,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Properties {
         public static System.Drawing.Bitmap QHBoundary {
             get {
                 object obj = ResourceManager.GetObject("QHBoundary", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap realtime {
+            get {
+                object obj = ResourceManager.GetObject("realtime", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

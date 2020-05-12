@@ -156,7 +156,6 @@
     <Compile Include="FileSelectionControl.Designer.cs">
       <DependentUpon>FileSelectionControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="FMSuiteCommonGuiMapLayerProvider.cs" />
     <Compile Include="FMSuiteCommonGuiPlugin.cs" />
     <Compile Include="FMMenuItemHelper.cs" />
     <Compile Include="Forms\AstroComponentSelection.cs">

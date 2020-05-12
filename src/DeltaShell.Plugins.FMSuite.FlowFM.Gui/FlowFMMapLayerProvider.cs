@@ -10,11 +10,14 @@ using System.Runtime.CompilerServices;
 using DelftTools.Functions;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Link1d2d;
+using DelftTools.Hydro.Roughness;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Gui;
+using DelftTools.Shell.Gui.Swf;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
+using DelftTools.Utils.Drawing;
 using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.Common.Gui;
 using DeltaShell.NGHS.IO.DataObjects;
@@ -33,9 +36,12 @@ using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using DeltaShell.Plugins.NetworkEditor.MapLayers;
 using DeltaShell.Plugins.NetworkEditor.MapLayers.CustomRenderers;
+using DeltaShell.Plugins.NetworkEditor.MapLayers.Providers;
 using GeoAPI.Extensions.CoordinateSystems;
+using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
 using log4net;
+using NetTopologySuite.Algorithm;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Geometries;
 using SharpMap.Api;
@@ -48,6 +54,7 @@ using SharpMap.Rendering;
 using SharpMap.Rendering.Thematics;
 using SharpMap.Styles;
 using NetTopologySuite.Extensions.Coverages;
+using Orientation = SharpMap.Rendering.Orientation;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
 {
@@ -75,8 +82,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
 
         public ILayer CreateLayer(object data, object parent)
         {
-            var waterFlowFmModel = data as WaterFlowFMModel;
-            if (waterFlowFmModel != null)
+            if (data is WaterFlowFMModel waterFlowFmModel)
             {
                 return new ModelGroupLayer
                 {
@@ -87,8 +93,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 };
             }
 
-            var importedGridFile = data as ImportedFMNetFile;
-            if (importedGridFile != null)
+            if (data is ImportedFMNetFile importedGridFile)
             {
                 return new UnstructuredGridLayer
                 {
@@ -98,75 +103,91 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 };
             }
 
-            var feature2Ds = data as IEventedList<Feature2D>;
-            if (feature2Ds != null && parent is WaterFlowFMModel)
+            if (parent is WaterFlowFMModel fmModel)
             {
-                var fmModel = (WaterFlowFMModel) parent;
-                if (Equals(feature2Ds, fmModel.Boundaries))
+                if (data is IEventedList<Feature2D> feature2Ds)
                 {
-                    return new VectorLayer(BoundariesLayerName)
+                    if (Equals(feature2Ds, fmModel.Boundaries))
+                    {
+                        return new VectorLayer(BoundariesLayerName)
                         {
-                            DataSource =
-                                new Feature2DCollection().Init(feature2Ds, "Boundary", ModelName, fmModel.CoordinateSystem),
-                            FeatureEditor =
-                                new Boundary2DEditor(fmModel)
-                                    {
-                                        AllowRemovePoint = new RemoveBoundaryPointDialog(fmModel).ShowDialogForFeature
-                                    },
+                            DataSource = new WaterFlowFmModelFeature2DCollection().Init(feature2Ds, "Boundary", fmModel),
+                            FeatureEditor = new Boundary2DEditor(fmModel)
+                            {
+                                AllowRemovePoint = new RemoveBoundaryPointDialog(fmModel).ShowDialogForFeature
+                            },
                             Style = AreaLayerStyles.BoundariesStyle,
                             NameIsReadOnly = true
                         };
-                }
-                if (Equals(feature2Ds, fmModel.Pipes))
-                {
-                    return new VectorLayer(SourcesAndSinksLayerName)
+                    }
+                    if (Equals(feature2Ds, fmModel.Pipes))
+                    {
+                        return new VectorLayer(SourcesAndSinksLayerName)
                         {
-                            DataSource =
-                                new Feature2DCollection().Init(feature2Ds, "SourceSink", ModelName, fmModel.CoordinateSystem),
-                            FeatureEditor =
-                                new Feature2DEditor(fmModel),
+                            DataSource = new WaterFlowFmModelFeature2DCollection().Init(feature2Ds, "SourceSink", fmModel),
+                            FeatureEditor = new Feature2DEditor(fmModel),
                             Style = AreaLayerStyles.SourcesAndSinksStyle,
                             NameIsReadOnly = true,
                             CustomRenderers =
-                                new[] {new ArrowLineStringAdornerRenderer {Orientation = Orientation.Forward, Opacity = 1}}
+                                new[] { new ArrowLineStringAdornerRenderer { Orientation = Orientation.Forward, Opacity = 1 } }
                         };
+                    }
                 }
-            }
 
-            var links = data as IEventedList<ILink1D2D>;
-            if (links != null)
-            {
-                if (parent is WaterFlowFMModel)
+                if (data is IEventedList<ILink1D2D> links)
                 {
-                    var fmModel = (WaterFlowFMModel) parent;
                     var theme = Create1D2DLinksTheme();
 
                     return new VectorLayer(LayerName1D2DLinks)
                     {
-                        //DataSource = new WaterFlowFM1D2DLinkFeatureCollection(fmModel),
-                        DataSource =
-                            new Feature2DCollection().Init(links, "1d2dLink", ModelName, fmModel.CoordinateSystem),
+                        DataSource = new WaterFlowFmModelFeature2DCollection().Init(links, "1d2dLink", fmModel),
                         FeatureEditor = new Feature2DEditor(fmModel),
                         CanBeRemovedByUser = true,
                         SmoothingMode = SmoothingMode.AntiAlias,
                         Opacity = 0.7f,
                         Theme = theme,
-                        Style = (VectorStyle) theme.DefaultStyle,
+                        Style = (VectorStyle)theme.DefaultStyle,
                         Selectable = true,
-                        NameIsReadOnly = true,
-
+                        NameIsReadOnly = true
                     };
                 }
-                if (parent is FMMapFileFunctionStore)
+
+                if (data is IEventedList<BoundaryConditionSet> allBoundaryConditionSets)
                 {
-                    var coordinateSystem = ((FMMapFileFunctionStore)parent).Grid.CoordinateSystem;
+                    var theme = CreateBoundaryConditionsTheme();
+                    return new VectorLayer(BoundaryConditionsLayerName)
+                    {
+                        DataSource = new WaterFlowFmModelFeature2DCollection().Init(allBoundaryConditionSets, "BoundaryCondition", fmModel),
+                        Theme = theme,
+                        Style = (VectorStyle)theme.DefaultStyle,
+                        NameIsReadOnly = true,
+                        ShowInTreeView = true,
+                        ShowInLegend = false,
+                        Selectable = false
+                    };
+                }
+
+                if (data is IEventedList<Model1DBoundaryNodeData> boundaryNodeData)
+                {
+                    return CreateBoundaryNodeDataLayer(boundaryNodeData, fmModel);
+                }
+
+                if (data is IEventedList<Model1DLateralSourceData> lateralSourceData)
+                {
+                    return CreateLateralDataLayer(lateralSourceData, fmModel);
+                }
+            }
+
+            if (parent is FMMapFileFunctionStore mapFileFunctionStore)
+            {
+                if (data is IEventedList<ILink1D2D> linksMapfile)
+                {
+                    var coordinateSystem = mapFileFunctionStore.Grid.CoordinateSystem;
                     var theme = Create1D2DLinksTheme();
 
                     return new VectorLayer(LayerName1D2DLinks)
                     {
-                        //DataSource = new WaterFlowFM1D2DLinkFeatureCollection(fmModel),
-                        DataSource =
-                            new Feature2DCollection().Init(links, "1d2dLink", ModelName, coordinateSystem),
+                        DataSource = new Feature2DCollection().Init(linksMapfile, "1d2dLink", ModelName, coordinateSystem),
                         CanBeRemovedByUser = false,
                         SmoothingMode = SmoothingMode.AntiAlias,
                         Opacity = 0.7f,
@@ -178,23 +199,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 }
             }
 
-            var allBoundaryConditionSets = data as IEventedList<BoundaryConditionSet>;
-            if (allBoundaryConditionSets != null && parent is WaterFlowFMModel)
-            {
-                var fmModel = (WaterFlowFMModel) parent;
-                var theme = CreateBoundaryConditionsTheme();
-                return new VectorLayer(BoundaryConditionsLayerName)
-                    {
-                        DataSource = new Feature2DCollection().Init(allBoundaryConditionSets, "BoundaryCondition", ModelName, fmModel.CoordinateSystem),
-                        Theme = theme,
-                        Style = (VectorStyle) theme.DefaultStyle,
-                        NameIsReadOnly = true,
-                        ShowInTreeView = true,
-                        ShowInLegend = false,
-                        Selectable = false
-                    };
-            }
-
             if (data is FMMapFileFunctionStore)
             {
                 var groupLayer = new GroupLayer("Output 2D (map file)")
@@ -203,7 +207,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                         NameIsReadOnly = true
                     };
                 groupLayer.Layers.CollectionChanged += MapGroupLayerLayersCollectionChanged;
-                return groupLayer;  
+                return groupLayer;
             }
 
             if (data is FMHisFileFunctionStore)
@@ -226,8 +230,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 return groupLayer;
             }
 
-            var outputSnappedGroupLayerData = data as FMOutputSnappedFeaturesGroupLayerData;
-            if (outputSnappedGroupLayerData != null)
+            if (data is FMOutputSnappedFeaturesGroupLayerData outputSnappedGroupLayerData)
             {
                 var groupLayer = new GroupLayer(OutputSnappedFeaturesLayerName) { Visible = false, NameIsReadOnly = true };
 
@@ -236,8 +239,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 return groupLayer;
             }
 
-            var snappedGroupLayerData = data as FMSnappedFeaturesGroupLayerData;
-            if (snappedGroupLayerData != null)
+            if (data is FMSnappedFeaturesGroupLayerData snappedGroupLayerData)
             {
                 var groupLayer = new GroupLayer(GridSnappedFeaturesLayerName) {Visible = false, NameIsReadOnly = true};
                 foreach (var snappedFeatures in snappedGroupLayerData.ChildData)
@@ -261,8 +263,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 return groupLayer;
             }
 
-            var grouping = data as IGrouping<string, IFunction>;
-            if (grouping != null)
+            if (data is IGrouping<string, IFunction> grouping)
             {
                 var functions = grouping.ToList();
                 if (functions.Any())
@@ -291,8 +292,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 return featureCoverageLayer;
             }
 
-            var link1d2dCoverage = data as Links1D2DCoverage;
-            if (link1d2dCoverage != null)
+            if (data is Links1D2DCoverage link1d2dCoverage)
             {
                 // Create link 1d2d coverage layer
                 var featureCoverageLayer = new FeatureCoverageLayer()
@@ -412,7 +412,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
         public bool CanCreateLayerFor(object data, object parentObject)
         {
             return data is WaterFlowFMModel
-                // TODO Sil: add check if data is Featurecoverage with a certain name/type (find the breach width coverage)
+                   || data is IEventedList<Model1DBoundaryNodeData>
+                   || data is IEventedList<Model1DLateralSourceData>
                    || data is FeatureCoverage && IsCoverageLeveeBreachWidth((FeatureCoverage)data)
                    || data is Links1D2DCoverage
                    || data is IEventedList<ILink1D2D> && (parentObject is WaterFlowFMModel || parentObject is FMMapFileFunctionStore)
@@ -780,6 +781,81 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 ? GetRootModelRecursive(ownerModel)
                 : model;
         }
+
+        private static VectorLayer CreateBoundaryNodeDataLayer(
+            IEventedList<Model1DBoundaryNodeData> boundaryNodeDataList, WaterFlowFMModel fmModel)
+        {
+            return new VectorLayer("Boundary Data 1D")
+            {
+                Visible = false,
+                Selectable = true,
+                NameIsReadOnly = true,
+                DataSource = new ComplexFeatureCollection(fmModel.Network, (IList) boundaryNodeDataList, typeof(Model1DBoundaryNodeData)),
+                Theme = new CategorialTheme
+                {
+
+                    AttributeName = nameof(Model1DBoundaryNodeData.DataType),
+                    DefaultStyle = new VectorStyle
+                    {
+                        GeometryType = typeof(IPoint),
+                        Fill = new SolidBrush(Color.Transparent),
+                        EnableOutline = false
+                    }
+                    ,
+                    NoDataValues = new List<string> { "" },
+                    ThemeItems = new EventedList<IThemeItem>
+                    {
+                        CreateCategorialThemeItem(Model1DBoundaryNodeDataType.WaterLevelConstant, Properties.Resources.HConst),
+                        CreateCategorialThemeItem(Model1DBoundaryNodeDataType.WaterLevelTimeSeries, Properties.Resources.HBoundary),
+                        CreateCategorialThemeItem(Model1DBoundaryNodeDataType.FlowConstant, Properties.Resources.QConst),
+                        CreateCategorialThemeItem(Model1DBoundaryNodeDataType.FlowTimeSeries, Properties.Resources.QBoundary),
+                        CreateCategorialThemeItem(Model1DBoundaryNodeDataType.FlowWaterLevelTable, Properties.Resources.QHBoundary)
+                    }
+                }
+            };
+        }
+
+        private static VectorLayer CreateLateralDataLayer(IEventedList<Model1DLateralSourceData> lateralSourceDataList,
+            WaterFlowFMModel fmModel)
+        {
+            return new VectorLayer("Lateral Data 1D")
+            {
+                Visible = false,
+                Selectable = true,
+                NameIsReadOnly = true,
+                DataSource = new ComplexFeatureCollection(fmModel.Network, (IList)lateralSourceDataList, typeof(Model1DBoundaryNodeData)),
+                Theme = new CategorialTheme
+                {
+                    AttributeName = nameof(Model1DLateralSourceData.DataType),
+                    DefaultStyle = new VectorStyle(),
+                    NoDataValues = new List<string> { "" },
+                    ThemeItems = new EventedList<IThemeItem>
+                    {
+                        CreateCategorialThemeItem(Model1DLateralDataType.FlowConstant, Properties.Resources.QConst),
+                        CreateCategorialThemeItem(Model1DLateralDataType.FlowTimeSeries, Properties.Resources.QBoundary),
+                        CreateCategorialThemeItem(Model1DLateralDataType.FlowWaterLevelTable, Properties.Resources.QHBoundary),
+                        CreateCategorialThemeItem(Model1DLateralDataType.FlowRealTime, Properties.Resources.realtime)
+                    }
+                }
+            };
+        }
+
+        private static CategorialThemeItem CreateCategorialThemeItem<T>(T enumValue, Image overlayImage) where T : struct, IConvertible
+        {
+            var value = (Enum)Enum.Parse(typeof(T), enumValue.ToString());
+
+            return new CategorialThemeItem
+            {
+                Value = value,
+                Label = value.GetDescription(),
+                Style = new VectorStyle
+                {
+                    Symbol = new Bitmap(Properties.Resources.Boundary_1d.AddOverlayImage(overlayImage, 1, 1))
+                },
+
+            };
+        }
+
 
         private class FrictionGroupLayerData
         {

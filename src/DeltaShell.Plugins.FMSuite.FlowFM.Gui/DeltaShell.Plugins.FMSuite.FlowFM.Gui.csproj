@@ -419,6 +419,7 @@
     </Compile>
     <Compile Include="Editors\TracerDefinitionsEditorWpfViewModel.cs" />
     <Compile Include="WaterFlowFM1D2DLinkFeatureCollection.cs" />
+    <Compile Include="WaterFlowFmModelFeature2DCollection.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DelftTools.Hydro\DelftTools.Hydro.csproj">
@@ -580,6 +581,8 @@
     <None Include="Resources\BoundaryType_Harmonics.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\Boundary_1d.png" />
+    <None Include="Resources\realtime.png" />
     <None Include="Resources\FrictionDefinition.png" />
     <Resource Include="Resources\folder.png" />
     <None Include="Resources\QHBoundary.png" />

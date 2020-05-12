@@ -247,11 +247,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui
             yield return new PropertyInfo<Model1DLateralSourceData, Model1DLateralDataProperties>();
         }
 
-        public override IMapLayerProvider MapLayerProvider
-        {
-            get { return new FMSuiteCommonGuiMapLayerProvider(); }
-        }
-
         public override IGui Gui
         {
             get { return base.Gui; }
