@@ -285,7 +285,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
                 CreateDummyInputCacheFileForMdu(inputMduFilePath);
 
                 // When
-                using (WaterFlowFMModel model = WaterFlowFMModel.Import(inputMduFilePath, null))
+                using (WaterFlowFMModel model = new WaterFlowFMModel(inputMduFilePath))
                 {
                     Export(model, outputMduFilePath);
 

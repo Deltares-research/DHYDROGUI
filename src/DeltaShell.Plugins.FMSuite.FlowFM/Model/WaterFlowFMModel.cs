@@ -66,7 +66,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             base("FlowFM")
         {
             runner = new DimrRunner(this);
-            ImportProgressChanged = progressChanged;
+            importProgressChanged = progressChanged;
 
             // Create Sediment mode data item
             SedimentModelDataItem = new SedimentModelDataItem();
@@ -109,10 +109,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             {
                 LoadStateFromMdu(mduFilePath);
 
-                FireImportProgressChanged(this, "Reading spatial operations", 9, TotalImportSteps);
+                FireImportProgressChanged("Reading spatial operations", 9, TotalImportSteps);
                 AddSpatialDataItems();
                 ImportSpatialOperationsAfterCreating();
+
+                ClearOutputDirAndWaqDirProperty();
             }
+
+            importProgressChanged = null;
         }
 
         public Type SupportedRegionType => typeof(HydroArea);

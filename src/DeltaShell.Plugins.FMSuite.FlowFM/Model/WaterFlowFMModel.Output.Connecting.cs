@@ -186,7 +186,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                 return;
             }
 
-            FireImportProgressChanged(this, "Reading output files - Reading Map file", 1, 2);
+            FireImportProgressChanged("Reading output files - Reading Map file", 1, 2);
             BeginEdit(new DefaultEditAction("Reconnect output files"));
 
             ReconnectMapFile(outputDirectory.MapFilePath, switchTo);
@@ -240,7 +240,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             if (hisFilePath != null)
             {
                 ReportProgressText("Reading his file");
-                FireImportProgressChanged(this, "Reading output files - Reading His file", 1, 2);
+                FireImportProgressChanged("Reading output files - Reading His file", 1, 2);
                 if (switchTo && OutputHisFileStore != null)
                 {
                     OutputHisFileStore.Path = hisFilePath;
@@ -257,7 +257,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             if (classMapFilePath != null)
             {
                 ReportProgressText("Reading class map file");
-                FireImportProgressChanged(this, "Reading output files - Reading Class Map file", 1, 2);
+                FireImportProgressChanged("Reading output files - Reading Class Map file", 1, 2);
                 if (switchTo && OutputClassMapFileStore != null)
                 {
                     OutputClassMapFileStore.Path = classMapFilePath;
