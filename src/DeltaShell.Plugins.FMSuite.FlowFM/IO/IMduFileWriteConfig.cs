@@ -2,8 +2,7 @@
 {
     /// <summary>
     /// <see cref="IMduFileWriteConfig"/> collects a set of boolean values used to configure
-    /// which parts should be written, when <see cref="Files.MduFile.Write" /> and
-    /// <see cref="Files.MduFile.WriteProperties" /> are called.
+    /// which parts should be written.
     /// </summary>
     public interface IMduFileWriteConfig
     {
