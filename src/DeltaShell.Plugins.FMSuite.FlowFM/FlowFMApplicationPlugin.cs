@@ -89,7 +89,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     !(owner is ICompositeActivity) // Allow "standalone" flow models
                     || !((ICompositeActivity) owner).Activities.OfType<WaterFlowFMModel>().Any() &&
                     owner is IHydroModel, // Don't allow multiple flow models in one composite activity
-                CreateModel = owner => new WaterFlowFMModel() {WorkingDirectoryPathFunc = () => Application.WorkDirectory}
+                CreateModel = owner => new WaterFlowFMModel {WorkingDirectoryPathFunc = () => Application.WorkDirectory}
             };
         }
 

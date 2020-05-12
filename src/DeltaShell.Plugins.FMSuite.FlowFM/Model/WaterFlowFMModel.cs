@@ -51,6 +51,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         private readonly DimrRunner runner;
         private WaterFlowFMModelDefinition modelDefinition;
 
+        [Obsolete("Necessary due to NHibernate")]
+        public WaterFlowFMModel() : this(null)
+        {
+
+        }
+
         /// <summary>
         /// Creates a new instance of the <see cref="WaterFlowFMModel"/>.
         /// </summary>
