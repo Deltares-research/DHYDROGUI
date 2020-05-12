@@ -162,11 +162,14 @@
     <Compile Include="IO\DataAccessObjects\BcmBlockData.cs" />
     <Compile Include="IO\DataAccessObjects\BcmQuantityData.cs" />
     <Compile Include="IO\DataAccessObjects\BcQuantityData.cs" />
+    <Compile Include="IO\Files\ExtForceFileConstants.cs" />
+    <Compile Include="IO\Files\ExtForceFileReader.cs" />
     <Compile Include="IO\DelftIniReaders\MduDelftIniReader.cs" />
     <Compile Include="IO\Files\BcmFile.cs" />
     <Compile Include="IO\DataAccessBuilders\BcmFileFlowBoundaryDataBuilder.cs" />
     <Compile Include="IO\DelftIniCategoryExtension.cs" />
     <Compile Include="IO\Files\CacheFile.cs" />
+    <Compile Include="IO\Files\ExtForceFileWriter.cs" />
     <Compile Include="IO\Files\Helpers\CopyHandlers\FileCopyException.cs" />
     <Compile Include="IO\Files\Helpers\CopyHandlers\ICopyHandler.cs" />
     <Compile Include="IO\Files\Helpers\CopyHandlers\OverwriteCopyHandler.cs" />
