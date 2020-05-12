@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using DelftTools.Functions;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
@@ -10,6 +11,7 @@ using DeltaShell.Plugins.FMSuite.Common.IO.Files;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessObjects;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using GeoAPI.Extensions.Feature;
@@ -189,13 +191,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                 case offsetKey:
                     SetOffset(extForceFileItem);
                     break;
-                case AreaKey:
+                case areaKey:
                     SetArea(extForceFileItem);
                     break;
-                case AveragingTypeKey:
+                case averagingTypeKey:
                     SetAveragingType(extForceFileItem);
                     break;
-                case RelSearchCellSizeKey:
+                case relSearchCellSizeKey:
                     SetRelativeSearchCellSize(extForceFileItem);
                     break;
                 case frictionTypeKey:
@@ -309,7 +311,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
             try
             {
-                boundaryCondition = ExtForceFileHelper.ReadBoundaryConditionData(filePath,
+                boundaryCondition = ReadBoundaryConditionData(filePath,
                                                                                  uniqueFeature,
                                                                                  extForceFileItem,
                                                                                  modelReferenceDate);
@@ -334,7 +336,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             SourceAndSink sourceAndSink;
             try
             {
-                sourceAndSink = ExtForceFileHelper.ReadSourceAndSinkData(filePath, feature2D, extForceFileItem, modelReferenceDate);
+                sourceAndSink = ReadSourceAndSinkData(filePath, feature2D, extForceFileItem, modelReferenceDate);
             }
             catch (Exception e)
             {
@@ -624,12 +626,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                 FilePath = GetOtherFilePathInSameDirectory(ExtSubFilesReferenceFilePath, extForceFileItem.FileName)
             };
 
-            if (extForceFileItem.ModelData.TryGetValue(AveragingTypeKey, out object value))
+            if (extForceFileItem.ModelData.TryGetValue(averagingTypeKey, out object value))
             {
                 operation.AveragingMethod = (GridCellAveragingMethod)value;
             }
 
-            if (extForceFileItem.ModelData.TryGetValue(RelSearchCellSizeKey, out value))
+            if (extForceFileItem.ModelData.TryGetValue(relSearchCellSizeKey, out value))
             {
                 operation.RelativeSearchCellSize = (double)value;
             }
@@ -687,6 +689,196 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                     log.Warn(e.Message);
                 }
             }
+        }
+
+        private BoundaryCondition ReadBoundaryConditionData(string filePath, Feature2D feature2D,
+                                                            ExtForceFileItem extForceFileItem,
+                                                            DateTime modelReferenceDate)
+        {
+            FlowBoundaryQuantityType quantityType;
+            if (ExtForceQuantNames.TryParseBoundaryQuantityType(extForceFileItem.Quantity, out quantityType))
+            {
+                IList<int> dataFileNumbers;
+                BoundaryConditionDataType dataType;
+                string fileExtension;
+
+                if (TryDetermineForcingType(feature2D, filePath, out dataType,
+                                            out dataFileNumbers,
+                                            out fileExtension))
+                {
+                    // create a quantity name from the type and the tracer name if it is set to tracer.
+                    string quantityName = quantityType.ToString();
+                    if (quantityType == FlowBoundaryQuantityType.Tracer)
+                    {
+                        quantityName += "_" + extForceFileItem.Quantity.Substring(9); // remove tracerbnd
+                    }
+
+                    var boundaryCondition =
+                        (FlowBoundaryCondition)new FlowBoundaryConditionFactory().CreateBoundaryCondition(
+                            feature2D, quantityName, dataType);
+                    if (boundaryCondition == null)
+                    {
+                        log.ErrorFormat("Could not create boundary condition of quantity type {0}", quantityName);
+                        return null;
+                    }
+
+                    if (!double.IsNaN(extForceFileItem.Offset))
+                    {
+                        boundaryCondition.Offset = extForceFileItem.Offset;
+                    }
+
+                    if (!double.IsNaN(extForceFileItem.Factor))
+                    {
+                        boundaryCondition.Factor = extForceFileItem.Factor;
+                    }
+
+                    string[] splitExtension = fileExtension.Split('|');
+
+                    foreach (string extension in splitExtension)
+                    {
+                        foreach (int dataFileNumber in dataFileNumbers)
+                        {
+                            int pointIndex = dataFileNumber == 0 ? 0 : dataFileNumber - 1;
+
+                            boundaryCondition.AddPoint(pointIndex);
+
+                            string dataFilePath = ExtForceFileHelper.GetNumberedFilePath(filePath, extension, dataFileNumber);
+
+                            if (!File.Exists(dataFilePath))
+                            {
+                                continue;
+                            }
+
+                            ReadBoundaryConditionValues(boundaryCondition, dataFilePath, pointIndex,
+                                                        modelReferenceDate);
+
+                            if (boundaryCondition.IsHorizontallyUniform)
+                            {
+                                break;
+                            }
+                        }
+                    }
+
+                    return boundaryCondition;
+                }
+            }
+
+            return null;
+        }
+
+        private SourceAndSink ReadSourceAndSinkData(string filePath, Feature2D feature2D,
+                                                          ExtForceFileItem extForceFileItem,
+                                                          DateTime modelReferenceDate)
+        {
+            if (!Equals(extForceFileItem.Quantity, ExtForceQuantNames.SourceAndSink))
+            {
+                return null;
+            }
+
+            var sourceAndSink = new SourceAndSink
+            {
+                Feature = feature2D,
+            };
+            object area;
+            extForceFileItem.ModelData.TryGetValue(ExtForceFile.areaKey, out area);
+            if (area != null)
+            {
+                sourceAndSink.Area = Convert.ToDouble(area);
+            }
+
+            string dataFilePath = Path.ChangeExtension(filePath, ExtForceQuantNames.TimFileExtension);
+
+            if (!File.Exists(dataFilePath))
+            {
+                return sourceAndSink;
+            }
+
+            ReadSourceAndSinkValues(sourceAndSink, dataFilePath, modelReferenceDate);
+
+            return sourceAndSink;
+        }
+
+        private static void ReadBoundaryConditionValues(IBoundaryCondition boundaryCondition, string filePath,
+                                                        int pointIndex, DateTime modelReferenceDate)
+        {
+            IFunction data = boundaryCondition.GetDataAtPoint(pointIndex);
+            if (data == null)
+            {
+                return;
+            }
+
+            IList<HarmonicComponent> harmonicComponents;
+            switch (boundaryCondition.DataType)
+            {
+                case BoundaryConditionDataType.TimeSeries:
+                    if (filePath.EndsWith(ExtForceQuantNames.T3DFileExtension))
+                    {
+                        VerticalProfileDefinition verticalProfileDefinition;
+                        TimeSeries series = new T3DFile().Read(filePath, out verticalProfileDefinition);
+                        int index = boundaryCondition.DataPointIndices.IndexOf(pointIndex);
+                        boundaryCondition.PointDepthLayerDefinitions[index] = verticalProfileDefinition;
+                        data = boundaryCondition.GetDataAtPoint(pointIndex);
+                        FunctionHelper.SetValuesRaw<DateTime>(data.Arguments[0], series.Arguments[0].Values);
+                        for (var i = 0; i < data.Components.Count; ++i)
+                        {
+                            FunctionHelper.SetValuesRaw<double>(data.Components[i], series.Components[i].Values);
+                        }
+                    }
+                    else
+                    {
+                        new TimFile().Read(filePath, data, modelReferenceDate);
+                    }
+
+                    break;
+                case BoundaryConditionDataType.Qh:
+                    IFunction profile = new QhFile().Read(filePath);
+                    FunctionHelper.SetValuesRaw<double>(data.Arguments[0], profile.Arguments[0].Values);
+                    FunctionHelper.SetValuesRaw<double>(data.Components[0], profile.Components[0].Values);
+                    break;
+                case BoundaryConditionDataType.AstroComponents:
+                    harmonicComponents = new CmpFile().Read(filePath, BoundaryConditionDataType.AstroComponents);
+                    FunctionHelper.SetValuesRaw(data.Arguments[0], harmonicComponents.Select(h => h.Name));
+                    FunctionHelper.SetValuesRaw(data.Components[0], harmonicComponents.Select(h => h.Amplitude));
+                    FunctionHelper.SetValuesRaw(data.Components[1], harmonicComponents.Select(h => h.Phase));
+                    break;
+                case BoundaryConditionDataType.AstroCorrection:
+                    harmonicComponents = new CmpFile().Read(filePath, BoundaryConditionDataType.AstroComponents);
+                    FunctionHelper.SetValuesRaw(data.Arguments[0], harmonicComponents.Select(h => h.Name));
+                    FunctionHelper.SetValuesRaw(data.Components[0], harmonicComponents.Select(h => h.Amplitude));
+                    FunctionHelper.SetValuesRaw(data.Components[2], harmonicComponents.Select(h => h.Phase));
+                    break;
+                case BoundaryConditionDataType.Harmonics:
+                    harmonicComponents = new CmpFile()
+                                         .Read(filePath, BoundaryConditionDataType.Harmonics).OrderBy(c => c.Frequency)
+                                         .ToList();
+                    FunctionHelper.SetValuesRaw(data.Arguments[0], harmonicComponents.Select(h => h.Frequency));
+                    FunctionHelper.SetValuesRaw(data.Components[0], harmonicComponents.Select(h => h.Amplitude));
+                    FunctionHelper.SetValuesRaw(data.Components[1], harmonicComponents.Select(h => h.Phase));
+                    break;
+                case BoundaryConditionDataType.HarmonicCorrection:
+                    harmonicComponents = new CmpFile()
+                                         .Read(filePath, BoundaryConditionDataType.Harmonics).OrderBy(c => c.Frequency)
+                                         .ToList();
+                    FunctionHelper.SetValuesRaw(data.Arguments[0], harmonicComponents.Select(h => h.Frequency));
+                    FunctionHelper.SetValuesRaw(data.Components[0], harmonicComponents.Select(h => h.Amplitude));
+                    FunctionHelper.SetValuesRaw(data.Components[2], harmonicComponents.Select(h => h.Phase));
+                    break;
+            }
+        }
+
+        private void ReadSourceAndSinkValues(SourceAndSink sourceAndSink, string filePath,
+                                             DateTime modelReferenceDate)
+        {
+            IFunction data = sourceAndSink.Data;
+            if (data == null)
+            {
+                log.ErrorFormat(Resources.Read_SourceAndSink_values_failed__no_function_detected_for_SourceAndSink__0_,
+                                sourceAndSink.Name);
+                return;
+            }
+
+            TimeSeries readFunction = new TimFile().Read(filePath, modelReferenceDate);
+            sourceAndSink.CopyValuesFromFileToSourceAndSinkAttributes(readFunction);
         }
 
         private IEnumerable<ExtForceFileItem> FilterByFrictionType(IEnumerable<ExtForceFileItem> extForceFileItems,
@@ -839,15 +1031,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         {
             if (extForceFileItem.Quantity != ExtForceQuantNames.SourceAndSink && extForceFileItem.Operand == null)
             {
-                throw new FormatException(GetMessageUnexpectedKeyword(AreaKey));
+                throw new FormatException(GetMessageUnexpectedKeyword(areaKey));
             }
 
-            if (extForceFileItem.ModelData.ContainsKey(AreaKey))
+            if (extForceFileItem.ModelData.ContainsKey(areaKey))
             {
-                LogWarningQuantityPropertyAlreadySet(AreaKey);
+                LogWarningQuantityPropertyAlreadySet(areaKey);
             }
 
-            extForceFileItem.ModelData[AreaKey] = GetDoublePropertyValue(currentLine);
+            extForceFileItem.ModelData[areaKey] = GetDoublePropertyValue(currentLine);
         }
 
         private void SetAveragingType(ExtForceFileItem extForceFileItem)
@@ -855,15 +1047,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             if (extForceFileItem.FileType != ExtForceQuantNames.FileTypes.Triangulation &&
                 extForceFileItem.Operand == null)
             {
-                throw new FormatException(GetMessageUnexpectedKeyword(AveragingTypeKey));
+                throw new FormatException(GetMessageUnexpectedKeyword(averagingTypeKey));
             }
 
-            if (extForceFileItem.ModelData.ContainsKey(AveragingTypeKey))
+            if (extForceFileItem.ModelData.ContainsKey(averagingTypeKey))
             {
-                LogWarningQuantityPropertyAlreadySet(AveragingTypeKey);
+                LogWarningQuantityPropertyAlreadySet(averagingTypeKey);
             }
 
-            extForceFileItem.ModelData[AveragingTypeKey] = GetIntegerPropertyValue(currentLine);
+            extForceFileItem.ModelData[averagingTypeKey] = GetIntegerPropertyValue(currentLine);
         }
 
         private void SetRelativeSearchCellSize(ExtForceFileItem extForceFileItem)
@@ -871,15 +1063,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             if (extForceFileItem.FileType != ExtForceQuantNames.FileTypes.Triangulation &&
                 extForceFileItem.Operand == null)
             {
-                throw new FormatException(GetMessageUnexpectedKeyword(RelSearchCellSizeKey));
+                throw new FormatException(GetMessageUnexpectedKeyword(relSearchCellSizeKey));
             }
 
-            if (extForceFileItem.ModelData.ContainsKey(RelSearchCellSizeKey))
+            if (extForceFileItem.ModelData.ContainsKey(relSearchCellSizeKey))
             {
-                LogWarningQuantityPropertyAlreadySet(RelSearchCellSizeKey);
+                LogWarningQuantityPropertyAlreadySet(relSearchCellSizeKey);
             }
 
-            extForceFileItem.ModelData[RelSearchCellSizeKey] = GetDoublePropertyValue(currentLine);
+            extForceFileItem.ModelData[relSearchCellSizeKey] = GetDoublePropertyValue(currentLine);
         }
 
         private void SetFrictionType(ExtForceFileItem extForceFileItem)
@@ -948,6 +1140,92 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             }
 
             return valuePart;
+        }
+
+        private static bool TryDetermineForcingType(IFeature feature2D, string filePath,
+                                                    out BoundaryConditionDataType conditionDataType,
+                                                    out IList<int> dataFileNumbers,
+                                                    out string fileExtension)
+        {
+            IList<int> timFileNumbers = GetDataFileNumbers(filePath, feature2D.Geometry.NumPoints,
+                                                           ExtForceQuantNames.TimFileExtension);
+
+            IList<int> t3DFileNumbers = GetDataFileNumbers(filePath, feature2D.Geometry.NumPoints,
+                                                           ExtForceQuantNames.T3DFileExtension);
+
+            if (timFileNumbers.Any() && !t3DFileNumbers.Any())
+            {
+                dataFileNumbers = timFileNumbers;
+                fileExtension = ExtForceQuantNames.TimFileExtension;
+                conditionDataType = BoundaryConditionDataType.TimeSeries;
+                return true;
+            }
+
+            if (t3DFileNumbers.Any() && !timFileNumbers.Any())
+            {
+                dataFileNumbers = t3DFileNumbers;
+                fileExtension = ExtForceQuantNames.T3DFileExtension;
+                conditionDataType = BoundaryConditionDataType.TimeSeries;
+                return true;
+            }
+
+            if (timFileNumbers.Any() && t3DFileNumbers.Any())
+            {
+                dataFileNumbers = timFileNumbers.Concat(t3DFileNumbers).ToList();
+                fileExtension = string.Join("|", ExtForceQuantNames.TimFileExtension,
+                                            ExtForceQuantNames.T3DFileExtension);
+                conditionDataType = BoundaryConditionDataType.TimeSeries;
+                return true;
+            }
+
+            IList<int> cmpFileNumbers = GetDataFileNumbers(filePath, feature2D.Geometry.NumPoints,
+                                                           ExtForceQuantNames.CmpFileExtension);
+            if (cmpFileNumbers.Any())
+            {
+                dataFileNumbers = cmpFileNumbers;
+                fileExtension = ExtForceQuantNames.CmpFileExtension;
+                conditionDataType =
+                    new CmpFile().GetForcingType(ExtForceFileHelper.GetNumberedFilePath(filePath, fileExtension, dataFileNumbers[0]));
+                return true;
+            }
+
+            IList<int> qhFileNumbers = GetDataFileNumbers(filePath, 0, ExtForceQuantNames.QhFileExtension);
+
+            if (qhFileNumbers.Any())
+            {
+                dataFileNumbers = qhFileNumbers;
+                fileExtension = ExtForceQuantNames.QhFileExtension;
+                conditionDataType = BoundaryConditionDataType.Qh;
+                return true;
+            }
+
+            dataFileNumbers = new List<int>();
+            conditionDataType = BoundaryConditionDataType.TimeSeries;
+            fileExtension = ExtForceQuantNames.TimFileExtension;
+            return true;
+        }
+
+        private static IList<int> GetDataFileNumbers(string fileNameOrPath, int numPointsOnPolyLine,
+                                                     string fileExtension)
+        {
+            IList<int> dataFileNumbers = new List<int>();
+            if (numPointsOnPolyLine == 0 && File.Exists(ExtForceFileHelper.GetNumberedFilePath(fileNameOrPath, fileExtension, 0)))
+            {
+                dataFileNumbers.Add(0);
+            }
+            else
+            {
+                for (var i = 1; i <= numPointsOnPolyLine; i++)
+                {
+                    string expectedFileName = ExtForceFileHelper.GetNumberedFilePath(fileNameOrPath, fileExtension, i);
+                    if (File.Exists(expectedFileName))
+                    {
+                        dataFileNumbers.Add(i);
+                    }
+                }
+            }
+
+            return dataFileNumbers;
         }
     }
 }

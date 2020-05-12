@@ -3,9 +3,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Security;
+using DelftTools.Functions;
+using DelftTools.Utils.Collections;
+using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
 using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
+using DeltaShell.Plugins.FMSuite.Common.FunctionStores;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.Common.IO.Files;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
@@ -13,6 +17,9 @@ using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessObjects;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
+using GeoAPI.Extensions.Feature;
+using NetTopologySuite.Extensions.Features;
+using SharpMap;
 using SharpMap.Api.SpatialOperations;
 using SharpMap.SpatialOperations;
 
@@ -271,7 +278,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             {
                 polyLineForceFileItems.TryGetValue(sourceAndSink, out ExtForceFileItem matchingItem);
 
-                yield return ExtForceFileHelper.WriteSourceAndSinkData(ExtFilePath, sourceAndSink, referenceTime,
+                yield return WriteSourceAndSinkData(ExtFilePath, sourceAndSink, referenceTime,
                                                                        matchingItem, WriteToDisk, modelDefinition);
             }
         }
@@ -302,7 +309,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                                                     .ToList()
                                                     .IndexOf(flowBoundaryCondition);
 
-                    yield return ExtForceFileHelper.WriteBoundaryData(ExtFilePath, flowBoundaryCondition, referenceTime, index,
+                    yield return WriteBoundaryData(ExtFilePath, flowBoundaryCondition, referenceTime, index,
                                                                       matchingItem, WriteToDisk);
                 }
             }
@@ -325,7 +332,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                 {
                     ExtForceFileItem existingItem = GetExistingForceFileItemOrNull(importSamplesOperation);
                     yield return
-                        ExtForceFileHelper.WriteInitialConditionsSamples(ExtFilePath, quantity, importSamplesOperation,
+                        WriteInitialConditionsSamples(ExtFilePath, quantity, importSamplesOperation,
                                                                          existingItem, WriteToDisk, prefix);
                     continue;
                 }
@@ -335,7 +342,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                 {
                     ExtForceFileItem existingItem = GetExistingForceFileItemOrNull(spatialOperation);
                     yield return
-                        ExtForceFileHelper.WriteInitialConditionsPolygon(ExtFilePath, quantity, polygonOperation,
+                        WriteInitialConditionsPolygon(ExtFilePath, quantity, polygonOperation,
                                                                          existingItem, WriteToDisk, prefix);
 
                     continue;
@@ -345,16 +352,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                 if (addSamplesOperation != null)
                 {
                     yield return
-                        ExtForceFileHelper.WriteInitialConditionsUnsupported(ExtFilePath, quantity, addSamplesOperation,
-                                                                             WriteToDisk, prefix);
+                        WriteInitialConditionsUnsupported(ExtFilePath, quantity, addSamplesOperation,
+                                                          WriteToDisk, prefix);
                     continue;
                 }
 
                 throw new NotSupportedException($"Cannot serialize operation of type {spatialOperation.GetType()} to external forcings file");
             }
         }
-
-        public static string MakeXyzFileName(string quantity) => string.Join(".", quantity.Replace(" ", "_").Replace("\t", "_"), ExtForceQuantNames.XyzFileExtension);
 
         private IEnumerable<ExtForceFileItem> WriteWindItems(WaterFlowFMModelDefinition modelDefinition)
         {
@@ -461,10 +466,362 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             }
         }
 
+        public static ExtForceFileItem WriteBoundaryData(string filePath, FlowBoundaryCondition boundaryCondition,
+                                                         DateTime modelReferenceDate, int bcIndex,
+                                                         ExtForceFileItem existingExtForceFileItem = null,
+                                                         bool writeToDisk = true)
+        {
+            string quantityName =
+                ExtForceQuantNames.GetQuantityString(boundaryCondition);
+
+            Operator operand = bcIndex == 0 ? Operator.Overwrite : Operator.Add;
+
+            ExtForceFileItem extForceFileItem = existingExtForceFileItem ?? new ExtForceFileItem(quantityName)
+            {
+                FileName = ExtForceFileHelper.GetPliFileName(boundaryCondition),
+                FileType = ExtForceQuantNames.FileTypes.PolyTim,
+                Method = 3,
+                Operand = ExtForceQuantNames.OperatorToStringMapping[operand]
+            };
+
+            extForceFileItem.Quantity = quantityName;
+            extForceFileItem.Offset = boundaryCondition.Offset == 0 ? double.NaN : boundaryCondition.Offset;
+            extForceFileItem.Factor = boundaryCondition.Factor == 1 ? double.NaN : boundaryCondition.Factor;
+
+            ExtForceFileHelper.AddSuffixInCaseOfDuplicateFile(extForceFileItem);
+
+            if (writeToDisk)
+            {
+                string directory = Path.GetDirectoryName(filePath);
+
+                string pliFilePath = Path.Combine(directory, extForceFileItem.FileName);
+
+                new PliFile<Feature2D>().Write(pliFilePath, new EventedList<Feature2D> { boundaryCondition.Feature });
+
+                int count = boundaryCondition.Feature.Geometry.Coordinates.Length;
+
+                bool qhBoundary = boundaryCondition.DataType == BoundaryConditionDataType.Qh;
+                if (qhBoundary)
+                {
+                    count = 1; //yet another inconsistency in the kernel
+                }
+
+                for (var i = 0; i < count; ++i)
+                {
+                    string dataFileExtension =
+                        ExtForceQuantNames.ForcingToFileExtensionMapping[boundaryCondition.DataType];
+
+                    string dataFilePath = ExtForceFileHelper.GetNumberedFilePath(pliFilePath, dataFileExtension, qhBoundary ? 0 : i + 1);
+
+                    IFunction data = boundaryCondition.GetDataAtPoint(i);
+
+                    if (data == null)
+                    {
+                        if (File.Exists(dataFilePath))
+                        {
+                            File.Delete(dataFilePath);
+                        }
+                    }
+                    else
+                    {
+                        switch (boundaryCondition.DataType)
+                        {
+                            case BoundaryConditionDataType.HarmonicCorrection:
+                            case BoundaryConditionDataType.Harmonics:
+                            case BoundaryConditionDataType.AstroCorrection:
+                            case BoundaryConditionDataType.AstroComponents:
+                                new CmpFile().Write(dataFilePath, ExtForceFileHelper.ToHarmonicComponents(data));
+                                break;
+                            case BoundaryConditionDataType.TimeSeries:
+                                VerticalProfileDefinition depthLayerDefinition =
+                                    boundaryCondition.GetDepthLayerDefinitionAtPoint(i);
+                                if (depthLayerDefinition != null &&
+                                    depthLayerDefinition.Type != VerticalProfileType.Uniform)
+                                {
+                                    new T3DFile().Write(
+                                        dataFilePath.Replace(ExtForceQuantNames.TimFileExtension,
+                                                             ExtForceQuantNames.T3DFileExtension), data,
+                                        depthLayerDefinition,
+                                        modelReferenceDate);
+                                }
+                                else
+                                {
+                                    new TimFile().Write(dataFilePath, data, modelReferenceDate);
+                                }
+
+                                break;
+                            case BoundaryConditionDataType.Qh:
+                                new QhFile().Write(dataFilePath, data);
+                                break;
+                            default:
+                                throw new Exception("Writing boundary condition type " + boundaryCondition.DataType +
+                                                    " not (yet) implemented");
+                        }
+                    }
+                }
+            }
+
+            return extForceFileItem;
+        }
+
+        private ExtForceFileItem WriteSourceAndSinkData(string filePath, SourceAndSink sourceAndSink,
+                                                        DateTime referenceTime,
+                                                        ExtForceFileItem existingExtForceFileItem,
+                                                        bool writeToDisk,
+                                                        WaterFlowFMModelDefinition modelDefinition)
+        {
+            ExtForceFileItem extForceFileItem = existingExtForceFileItem ??
+                                                new ExtForceFileItem(ExtForceQuantNames.SourceAndSink)
+                                                {
+                                                    FileName = ExtForceFileHelper.GetPliFileName(sourceAndSink),
+                                                    FileType = ExtForceQuantNames.FileTypes.PolyTim,
+                                                    Method = 1,
+                                                    Operand = ExtForceQuantNames.OperatorToStringMapping[
+                                                        Operator.Overwrite]
+                                                };
+
+            if (sourceAndSink.Area > 0)
+            {
+                extForceFileItem.ModelData[ExtForceFile.areaKey] = sourceAndSink.Area;
+            }
+
+            ExtForceFileHelper.AddSuffixInCaseOfDuplicateFile(extForceFileItem);
+
+            if (writeToDisk)
+            {
+                string directory = Path.GetDirectoryName(filePath);
+                string pliFilePath = Path.Combine(directory, extForceFileItem.FileName);
+
+                new PliFile<Feature2D>().Write(pliFilePath, new EventedList<Feature2D> { sourceAndSink.Feature });
+                string dataFilePath = Path.ChangeExtension(pliFilePath, ExtForceQuantNames.TimFileExtension);
+
+                IFunction originalFunction = sourceAndSink.Function;
+                if (originalFunction == null)
+                {
+                    return extForceFileItem;
+                }
+
+                var function = (IFunction)originalFunction.Clone(true);
+
+                RemoveDisabledComponentsFromSourceAndSink(sourceAndSink, modelDefinition, function);
+
+                new TimFile().Write(dataFilePath, function, referenceTime);
+            }
+
+            return extForceFileItem;
+        }
+
+        private ExtForceFileItem WriteInitialConditionsSamples(string extForceFilePath,
+                                                               string extForceFileQuantityName,
+                                                               ImportSamplesSpatialOperation importSamplesOperation,
+                                                               ExtForceFileItem existingExtForceFileItem,
+                                                               bool writeToDisk, string prefix = null)
+        {
+            string targetDirectory = Path.GetDirectoryName(Path.GetFullPath(extForceFilePath));
+            if (writeToDisk)
+            {
+                if (Path.GetDirectoryName(importSamplesOperation.FilePath) != targetDirectory)
+                {
+                    try
+                    {
+                        importSamplesOperation.SwitchToDirectory(targetDirectory);
+                        if (existingExtForceFileItem != null)
+                        {
+                            existingExtForceFileItem.FileName =
+                                targetDirectory != null
+                                    ? importSamplesOperation.FilePath.Replace(targetDirectory + "\\", "")
+                                    : importSamplesOperation.FilePath;
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        log.Warn("Unable to import samples " + e.Message);
+                    }
+                }
+            }
+
+            string quantityName = prefix != null ? prefix + extForceFileQuantityName : extForceFileQuantityName;
+            ExtForceFileItem extForceFileItem = existingExtForceFileItem ?? new ExtForceFileItem(quantityName)
+            {
+                FileName =
+                    targetDirectory != null
+                        ? importSamplesOperation.FilePath.Replace(
+                            targetDirectory + "\\", "")
+                        : importSamplesOperation.FilePath,
+                FileType = GetSpatialOperationFileType(importSamplesOperation),
+                Method = GetImportSamplesSpatialOperationMethod(importSamplesOperation)
+            };
+            if (importSamplesOperation.InterpolationMethod == SpatialInterpolationMethod.Averaging)
+            {
+                extForceFileItem.ModelData[ExtForceFile.averagingTypeKey] =
+                    (int)importSamplesOperation.AveragingMethod;
+                extForceFileItem.ModelData[ExtForceFile.relSearchCellSizeKey] =
+                    importSamplesOperation.RelativeSearchCellSize;
+            }
+
+            extForceFileItem.Enabled = importSamplesOperation.Enabled;
+            extForceFileItem.Operand = ExtForceQuantNames.OperatorToStringMapping[Operator.Overwrite];
+
+            return extForceFileItem;
+        }
+
+        private static ExtForceFileItem WriteInitialConditionsUnsupported(string filePath, string quantity,
+                                                                          AddSamplesOperation operation,
+                                                                          bool writeToDisk, string prefix = null)
+        {
+            string quantityName = prefix != null ? prefix + quantity : quantity;
+            var forceFileItem = new ExtForceFileItem(quantityName)
+            {
+                FileName = MakeXyzFileName(quantity),
+                FileType = ExtForceQuantNames.FileTypes.Triangulation,
+                Method = GetAddSamplesMethod(),
+                Enabled = operation.Enabled,
+                Operand = ExtForceQuantNames.OperatorToStringMapping[Operator.Overwrite],
+            };
+            forceFileItem.ModelData[averagingTypeKey] = (int)GridCellAveragingMethod.ClosestPoint;
+            forceFileItem.ModelData[relSearchCellSizeKey] = 1.0;
+
+            if (writeToDisk)
+            {
+                string directoryName = Path.GetDirectoryName(filePath);
+                if (directoryName != null)
+                {
+                    string xyzFilePath = Path.Combine(directoryName, forceFileItem.FileName);
+
+                    XyzFile.Write(xyzFilePath, operation.GetPoints());
+                }
+                else
+                {
+                    throw new ArgumentException("Could not get directory name from file path" + filePath);
+                }
+            }
+
+            return forceFileItem;
+        }
+
+        private ExtForceFileItem WriteInitialConditionsPolygon(string extForceFilePath,
+                                                               string extForceFileQuantityName,
+                                                               SetValueOperation operation,
+                                                               ExtForceFileItem existingExtForceFileItem = null,
+                                                               bool writeToDisk = true, string prefix = null)
+        {
+            string quantityName = prefix != null ? prefix + extForceFileQuantityName : extForceFileQuantityName;
+            ExtForceFileItem extForceFileItem = existingExtForceFileItem ?? new ExtForceFileItem(quantityName)
+            {
+                FileName =
+                    $"{extForceFileQuantityName}_{operation.Name.Replace(" ", "_").Replace("\t", "_")}{FileConstants.PolylineFileExtension}",
+                FileType = ExtForceQuantNames.FileTypes.InsidePolygon,
+                Method = GetSetValueMethod()
+            };
+
+            ExtForceFileHelper.AddSuffixInCaseOfDuplicateFile(extForceFileItem);
+
+            Operator op = ExtForceQuantNames.OperatorMapping[operation.OperationType];
+
+            extForceFileItem.Value = operation.Value;
+            extForceFileItem.Enabled = operation.Enabled;
+            extForceFileItem.Operand = ExtForceQuantNames.OperatorToStringMapping[op];
+
+            if (writeToDisk)
+            {
+                string directoryName = Path.GetDirectoryName(extForceFilePath);
+                string polFilePath;
+                if (directoryName != null)
+                {
+                    polFilePath = Path.Combine(directoryName, extForceFileItem.FileName);
+                }
+                else
+                {
+                    throw new ArgumentException("Could not get directory name from file path" + extForceFilePath);
+                }
+
+                if (!string.IsNullOrEmpty(directoryName) && !Directory.Exists(directoryName))
+                {
+                    Directory.CreateDirectory(directoryName);
+                }
+
+                new PolFile<Feature2DPolygon>().Write(polFilePath, operation.Mask.Provider.Features.OfType<IFeature>());
+            }
+
+            return extForceFileItem;
+        }
+
+        private static int GetSetValueMethod()
+        {
+            return 4;
+        }
+
+        private static int GetAddSamplesMethod()
+        {
+            return 6;
+        }
+
+        private static int GetImportSamplesSpatialOperationMethod(ImportSamplesSpatialOperation operation)
+        {
+            switch (operation.InterpolationMethod)
+            {
+                case SpatialInterpolationMethod.Triangulation:
+                    return 5;
+                case SpatialInterpolationMethod.Averaging:
+                    return 6;
+                default:
+                    return -1;
+            }
+        }
+
+        private static int GetSpatialOperationFileType(ISpatialOperation operation)
+        {
+            if (operation is ImportSamplesOperation)
+            {
+                return 7;
+            }
+
+            if (operation is SetValueOperation)
+            {
+                return 10;
+            }
+
+            return -1;
+        }
+
+        private static void RemoveDisabledComponentsFromSourceAndSink(SourceAndSink sourceAndSink,
+                                                                      WaterFlowFMModelDefinition modelDefinition,
+                                                                      IFunction function)
+        {
+            if (!UseProperty(modelDefinition, KnownProperties.UseSalinity))
+            {
+                function.RemoveComponentByName(SourceAndSink.SalinityVariableName);
+            }
+
+            if ((HeatFluxModelType)modelDefinition.GetModelProperty(KnownProperties.Temperature).Value ==
+                HeatFluxModelType.None)
+            {
+                function.RemoveComponentByName(SourceAndSink.TemperatureVariableName);
+            }
+
+            if (!UseProperty(modelDefinition, GuiProperties.UseMorSed))
+            {
+                sourceAndSink.SedimentFractionNames.ForEach(function.RemoveComponentByName);
+            }
+
+            if (!UseProperty(modelDefinition, KnownProperties.SecondaryFlow))
+            {
+                function.RemoveComponentByName(SourceAndSink.SecondaryFlowVariableName);
+            }
+        }
+
+        private static bool UseProperty(WaterFlowFMModelDefinition modelDefinition, string useProperty)
+        {
+            WaterFlowFMProperty enable = modelDefinition.GetModelProperty(useProperty);
+            return (bool?)enable?.Value ?? true; // default to True
+        }
+
         private ExtForceFileItem GetExistingForceFileItemOrNull(object value)
         {
             return existingForceFileItems.Where(kvp => Equals(kvp.Value, value)).Select(kvp => kvp.Key)
                                          .FirstOrDefault();
         }
+
+        public static string MakeXyzFileName(string quantity) => string.Join(".", quantity.Replace(" ", "_").Replace("\t", "_"), ExtForceQuantNames.XyzFileExtension);
     }
 }
