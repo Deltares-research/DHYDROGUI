@@ -119,7 +119,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 extForceFileItem = null;
             }
 
-            var importSamplesOperation = new ImportSamplesSpatialOperationExtension
+            var importSamplesOperation = new ImportSamplesSpatialOperation
             {
                 FilePath = samplePath
             };

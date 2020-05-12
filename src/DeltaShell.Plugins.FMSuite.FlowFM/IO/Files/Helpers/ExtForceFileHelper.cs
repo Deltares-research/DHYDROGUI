@@ -20,52 +20,11 @@ using log4net;
 using NetTopologySuite.Extensions.Features;
 using SharpMap;
 using SharpMap.Api.SpatialOperations;
-using SharpMap.Data.Providers;
 using SharpMap.SpatialOperations;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers
 {
     // Hacky, but it does the job...
-    public class ImportSamplesSpatialOperationExtension : ImportSamplesOperation
-    {
-        public ImportSamplesSpatialOperationExtension() : base(false)
-        {
-            RelativeSearchCellSize = 1;
-            AveragingMethod = GridCellAveragingMethod.ClosestPoint;
-            InterpolationMethod = SpatialInterpolationMethod.Averaging;
-        }
-
-        public double RelativeSearchCellSize { get; set; }
-        public GridCellAveragingMethod AveragingMethod { get; set; }
-        public SpatialInterpolationMethod InterpolationMethod { get; set; }
-
-        public DelftTools.Utils.Tuple<ImportSamplesOperation, InterpolateOperation> CreateOperations()
-        {
-            var importSamplesOperation = new ImportSamplesOperation(false)
-            {
-                Name = Name,
-                CoordinateSystem = CoordinateSystem,
-                Dirty = true,
-                Enabled = Enabled,
-                FilePath = FilePath
-            };
-
-            var interpolateOperation = new InterpolateOperation
-            {
-                Name = "Interpolation",
-                CoordinateSystem = CoordinateSystem,
-                Dirty = true,
-                Enabled = Enabled,
-                RelativeSearchCellSize = RelativeSearchCellSize,
-                GridCellAveragingMethod = AveragingMethod,
-                InterpolationMethod = InterpolationMethod
-            };
-            interpolateOperation.Mask.Provider = new FeatureCollection(new List<Feature>(), typeof(Feature));
-            interpolateOperation.LinkInput(InterpolateOperation.InputSamplesName, importSamplesOperation.Output);
-            return new DelftTools.Utils.Tuple<ImportSamplesOperation, InterpolateOperation>(
-                importSamplesOperation, interpolateOperation);
-        }
-    }
 
     // YAGNI (GvdO) merge into extforce file, or strip extforce file from all path/file logic, but now it is not clear who is doing what
     public static class ExtForceFileHelper
@@ -526,7 +485,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers
 
         public static ExtForceFileItem WriteInitialConditionsSamples(string extForceFilePath,
                                                                      string extForceFileQuantityName,
-                                                                     ImportSamplesSpatialOperationExtension
+                                                                     ImportSamplesSpatialOperation
                                                                          importSamplesOperation,
                                                                      ExtForceFileItem existingExtForceFileItem,
                                                                      bool writeToDisk, string prefix = null)
@@ -912,9 +871,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers
                 return 4;
             }
 
-            if (operation is ImportSamplesSpatialOperationExtension)
+            if (operation is ImportSamplesSpatialOperation)
             {
-                switch (((ImportSamplesSpatialOperationExtension) operation).InterpolationMethod)
+                switch (((ImportSamplesSpatialOperation) operation).InterpolationMethod)
                 {
                     case SpatialInterpolationMethod.Triangulation:
                         return 5;

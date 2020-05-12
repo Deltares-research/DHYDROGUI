@@ -170,6 +170,7 @@
     <Compile Include="IO\Files\Helpers\CopyHandlers\FileCopyException.cs" />
     <Compile Include="IO\Files\Helpers\CopyHandlers\ICopyHandler.cs" />
     <Compile Include="IO\Files\Helpers\CopyHandlers\OverwriteCopyHandler.cs" />
+    <Compile Include="IO\Files\Helpers\ImportSamplesSpatialOperation.cs" />
     <Compile Include="IO\Files\Helpers\MduFileBackwardsCompatibilityConfigurationValues.cs" />
     <Compile Include="IO\Files\Helpers\MorphologyFileBackwardsCompatibilityConfigurationValues.cs" />
     <Compile Include="IO\Files\MduFileReader.cs" />

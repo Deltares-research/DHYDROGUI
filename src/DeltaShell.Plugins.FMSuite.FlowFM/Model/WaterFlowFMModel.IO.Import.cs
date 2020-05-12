@@ -1,9 +1,9 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow.DataItems;
-using DelftTools.Utils;
 using DelftTools.Utils.Collections;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.FMSuite.Common.DepthLayers;
@@ -223,13 +223,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                 foreach (ISpatialOperation operation in spatialOperationList)
                 {
                     // samples should directly be applied to the coverage with an interpolate operation
-                    var importSamplesSpatialOperationExtension = operation as ImportSamplesSpatialOperationExtension;
-                    if (importSamplesSpatialOperationExtension != null)
+                    var importSamplesSpatialOperation = operation as ImportSamplesSpatialOperation;
+                    if (importSamplesSpatialOperation != null)
                     {
                         Tuple<ImportSamplesOperation, InterpolateOperation> operations =
-                            importSamplesSpatialOperationExtension.CreateOperations();
-                        valueConverter.SpatialOperationSet.AddOperation(operations.First);
-                        valueConverter.SpatialOperationSet.AddOperation(operations.Second);
+                            importSamplesSpatialOperation.CreateOperations();
+                        valueConverter.SpatialOperationSet.AddOperation(operations.Item1);
+                        valueConverter.SpatialOperationSet.AddOperation(operations.Item2);
                     }
                     else
                     {

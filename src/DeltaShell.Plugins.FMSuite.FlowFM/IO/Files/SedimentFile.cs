@@ -254,7 +254,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                                                      ISpatialOperation spatialOperation,
                                                      KeyValuePair<string, IList<ISpatialOperation>> operations)
         {
-            var samplesOperation = spatialOperation as ImportSamplesSpatialOperationExtension;
+            var samplesOperation = spatialOperation as ImportSamplesSpatialOperation;
             if (samplesOperation != null)
             {
                 WriteXYZIfDirectoryExists(sedimentModelData, sedFilePath, spatialOperation,
@@ -473,7 +473,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             }
 
             WaterFlowFMModelDefinition modelDefinition = model.ModelDefinition;
-            var operation = new ImportSamplesSpatialOperationExtension
+            var operation = new ImportSamplesSpatialOperation
             {
                 Name = dataItemName,
                 FilePath = xyzFilePath,
