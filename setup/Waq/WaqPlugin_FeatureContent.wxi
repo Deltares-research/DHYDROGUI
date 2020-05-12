@@ -21,7 +21,7 @@
   <ComponentGroupRef Id="DidoLibs"/>
   <ComponentRef Id="dido_manuals"/>
 
-  <Feature Id="DuflowProcesses" Title="!(loc.DuFlowProcessFeatureName)" Description="!(loc.DuFlowProcessFeatureDescription)" Level="1000" Absent="allow" AllowAdvertise="no">
+  <Feature Id="DuflowProcesses" Title="!(loc.DuFlowProcessFeatureName)" Description="!(loc.DuFlowProcessFeatureDescription)" Level="1" Absent="allow" AllowAdvertise="no">
     <ComponentRef Id="WaterQualityDuflowLibrary"/>
 
     <Feature Id="DuflowProcesses_x64" Level="0" Absent="disallow" AllowAdvertise="no" Display="hidden">

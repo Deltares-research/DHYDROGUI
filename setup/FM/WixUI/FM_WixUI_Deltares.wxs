@@ -31,7 +31,6 @@
       <Publish Dialog="LicenseAgreementDlgDeltares" Control="Next" Event="NewDialog" Value="SetupTypeDlgDeltares" Order="2">LicenseAccepted = "1"</Publish>
 
       <Publish Dialog="SetupTypeDlgDeltares" Control="Back" Event="NewDialog" Value="LicenseAgreementDlgDeltares">1</Publish>
-      <Publish Dialog="SetupTypeDlgDeltares" Control="TypicalButton" Event="NewDialog" Value="VerifyReadyDlgDeltares">1</Publish>
       <Publish Dialog="SetupTypeDlgDeltares" Control="CustomButton" Event="NewDialog" Value="CustomizeDlgDeltares">1</Publish>
       <Publish Dialog="SetupTypeDlgDeltares" Control="CompleteButton" Event="NewDialog" Value="VerifyReadyDlgDeltares">1</Publish>
 
