@@ -56,9 +56,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
 
             Assert.AreEqual(0, model.SnapVersion);
             Assert.IsTrue(model.ValidateBeforeRun);
-
-            // DELFT3DFM-371: Disable Model Inspection
-            // Assert.IsTrue(model.ModelInspection);
         }
 
         [Test]

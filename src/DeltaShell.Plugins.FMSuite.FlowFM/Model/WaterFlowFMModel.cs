@@ -51,34 +51,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         private readonly DimrRunner runner;
         private WaterFlowFMModelDefinition modelDefinition;
 
-        public WaterFlowFMModel() : this(null)
-        {
-            // Create model definition
-            ModelDefinition = new WaterFlowFMModelDefinition();
-            ModelDefinition.GetModelProperty(KnownProperties.NetFile).Value = Name + NetFile.FullExtension;
-
-            SynchronizeModelDefinitions();
-
-            Grid = new UnstructuredGrid();
-            InitializeUnstructuredGridCoverages();
-
-            AddSpatialDataItems();
-            RenameSubFilesIfApplicable();
-        }
-
         /// <summary>
-        /// Constructor for existing mdu file
+        /// Creates a new instance of the <see cref="WaterFlowFMModel"/>.
         /// </summary>
-        public WaterFlowFMModel(string mduFilePath, ImportProgressChangedDelegate progressChanged = null) :
+        /// <param name="mduFilePath">The path to the mdu file (optional).</param>
+        /// <param name="progressChanged">A handle for notifying progress changes (optional).</param>
+        public WaterFlowFMModel(string mduFilePath = null, ImportProgressChangedDelegate progressChanged = null) :
             base("FlowFM")
         {
             runner = new DimrRunner(this);
             ImportProgressChanged = progressChanged;
 
-            //Create Sediment mode data item
+            // Create Sediment mode data item
             SedimentModelDataItem = new SedimentModelDataItem();
 
-            // set default settings
+            // Set default settings
             SnapVersion = 0;
             ValidateBeforeRun = true;
             DisableFlowNodeRenumbering = false;
@@ -89,9 +76,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
             SedimentOverallProperties = SedimentFractionHelper.GetSedimentationOverAllProperties();
 
-            // DELFT3DFM-371: Disable Model Inspection
-            // ModelInspection = true;
-
             var area = new HydroArea();
             AddDataItem(area, DataItemRole.Input, HydroAreaTag);
             areaDataItem = GetDataItemByTag(HydroAreaTag);
@@ -101,17 +85,28 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             ((INotifyPropertyChange) this).PropertyChanged += (s, e) => { MarkDirty(); };
             ((INotifyCollectionChanged) this).CollectionChanged += (s, e) => { MarkDirty(); };
 
-            // Load mdu model settings
+            // Initialize mdu model settings
             if (string.IsNullOrEmpty(mduFilePath))
             {
-                return;
+                ModelDefinition = new WaterFlowFMModelDefinition();
+                ModelDefinition.GetModelProperty(KnownProperties.NetFile).Value = Name + NetFile.FullExtension;
+
+                SynchronizeModelDefinitions();
+
+                Grid = new UnstructuredGrid();
+                InitializeUnstructuredGridCoverages();
+
+                AddSpatialDataItems();
+                RenameSubFilesIfApplicable();
             }
+            else
+            {
+                LoadStateFromMdu(mduFilePath);
 
-            LoadStateFromMdu(mduFilePath);
-
-            FireImportProgressChanged(this, "Reading spatial operations", 9, TotalImportSteps);
-            AddSpatialDataItems();
-            ImportSpatialOperationsAfterCreating();
+                FireImportProgressChanged(this, "Reading spatial operations", 9, TotalImportSteps);
+                AddSpatialDataItems();
+                ImportSpatialOperationsAfterCreating();
+            }
         }
 
         public Type SupportedRegionType => typeof(HydroArea);

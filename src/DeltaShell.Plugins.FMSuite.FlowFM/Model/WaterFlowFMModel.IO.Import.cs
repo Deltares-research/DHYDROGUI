@@ -239,7 +239,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             }
         }
 
-        public ImportProgressChangedDelegate ImportProgressChanged { get; set; }
+        private ImportProgressChangedDelegate ImportProgressChanged { get; set; }
 
         private void LoadModelFromMdu(string mduFilePath)
         {
