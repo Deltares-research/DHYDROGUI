@@ -933,11 +933,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                 }
             }
 
-            if (runner.Api == null)
-            {
-                return double.NaN;
-            }
-
             var nameable = feature as INameable;
             if (nameable == null)
             {
