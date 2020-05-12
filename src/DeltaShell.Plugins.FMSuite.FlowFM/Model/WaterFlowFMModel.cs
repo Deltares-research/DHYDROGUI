@@ -48,7 +48,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
     {
         private const string HydroAreaTag = "hydro_area_tag";
         private static readonly ILog Log = LogManager.GetLogger(typeof(WaterFlowFMModel));
-        private readonly IList<IDisposable> syncers = new List<IDisposable>();
         private readonly DimrRunner runner;
         private WaterFlowFMModelDefinition modelDefinition;
 
@@ -208,10 +207,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                                        ? new DepthLayerDefinition(DepthLayerType.Single)
                                        : new DepthLayerDefinition(ModelDefinition.Kmx);
 
-            syncers.Add(
-                new FeatureDataSyncer<Feature2D, BoundaryConditionSet>(Boundaries, BoundaryConditionSets,
-                                                                       CreateBoundaryCondition));
-            syncers.Add(new FeatureDataSyncer<Feature2D, SourceAndSink>(Pipes, SourcesAndSinks, CreateSourceAndSink));
+            InitializeSyncers();
         }
 
         private void AddTracerToSourcesAndSink(string name)
@@ -341,16 +337,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                 string numberedName = uniform ? name : name + "_" + i++;
                 AddOrRenameDataItem(coverage, numberedName);
             }
-        }
-
-        private static BoundaryConditionSet CreateBoundaryCondition(Feature2D feature)
-        {
-            return new BoundaryConditionSet {Feature = feature};
-        }
-
-        private static SourceAndSink CreateSourceAndSink(Feature2D feature)
-        {
-            return new SourceAndSink {Feature = feature};
         }
 
         private ModelFeatureCoordinateData<FixedWeir> CreateModelFeatureCoordinateDataFor(FixedWeir fixedWeir)
@@ -899,8 +885,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             // also disposes grid snap api, so if you remove this, at least make sure you dispose that one (holds remote instance in the air):
             Grid = null;
             DisposeSnapApi();
-            syncers.ForEach(s => s.Dispose());
-            syncers.Clear();
+            ClearSyncers();
 
             fixedWeirProperties.Values.ForEach(d => d.Dispose());
             fixedWeirProperties.Clear();

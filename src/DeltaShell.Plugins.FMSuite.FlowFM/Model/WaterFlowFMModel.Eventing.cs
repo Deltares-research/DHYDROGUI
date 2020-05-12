@@ -20,6 +20,7 @@ using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using DeltaShell.Plugins.FMSuite.FlowFM.Sediment;
 using GeoAPI.Extensions.Feature;
 using NetTopologySuite.Extensions.Coverages;
+using NetTopologySuite.Extensions.Features;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 {
@@ -61,7 +62,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         private void BoundaryConditionSetsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             IEnumerable<FlowBoundaryCondition> tracerBoundaryConditions = Enumerable.Empty<FlowBoundaryCondition>();
-            ;
 
             object removedOrAddedItem = e.GetRemovedOrAddedItem();
             var boundaryConditionSet = removedOrAddedItem as BoundaryConditionSet;
@@ -71,7 +71,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                 if (flowBoundaryCondition != null &&
                     flowBoundaryCondition.FlowQuantity == FlowBoundaryQuantityType.Tracer)
                 {
-                    tracerBoundaryConditions = new List<FlowBoundaryCondition>() {flowBoundaryCondition};
+                    tracerBoundaryConditions = new List<FlowBoundaryCondition> {flowBoundaryCondition};
                 }
             }
             else
@@ -948,6 +948,30 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             {
                 dataItems.Remove(dataItem);
             }
+        }
+
+        #endregion
+
+        #region Syncers
+
+        private readonly IList<IDisposable> syncers = new List<IDisposable>();
+
+        private void InitializeSyncers()
+        {
+            syncers.Add(new FeatureDataSyncer<Feature2D, BoundaryConditionSet>(
+                            Boundaries,
+                            BoundaryConditionSets,
+                            feature => new BoundaryConditionSet { Feature = feature }));
+            syncers.Add(new FeatureDataSyncer<Feature2D, SourceAndSink>(
+                            Pipes,
+                            SourcesAndSinks,
+                            feature => new SourceAndSink { Feature = feature }));
+        }
+
+        private void ClearSyncers()
+        {
+            syncers.ForEach(s => s.Dispose());
+            syncers.Clear();
         }
 
         #endregion

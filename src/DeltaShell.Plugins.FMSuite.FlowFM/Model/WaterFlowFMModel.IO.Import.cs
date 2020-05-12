@@ -57,8 +57,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         private void LoadStateFromMdu(string mduFilePath)
         {
             // in case we're reloading into an existing flow model instance..cleanup first
-            syncers.ForEach(s => s.Dispose());
-            syncers.Clear();
+            ClearSyncers();
 
             TracerDefinitions.Clear();
 
