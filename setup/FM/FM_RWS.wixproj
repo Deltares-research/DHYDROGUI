@@ -130,6 +130,7 @@
       <Link>RGFGridLibs.wxs</Link>
     </Compile>
     <Compile Include="Product.wxs" />
+    <Compile Include="WixUI\FM_SetupTypeDialog.wxs" />
     <Compile Include="WixUI\FM_WixUI_Deltares.wxs" />
   </ItemGroup>
   <ItemGroup>
