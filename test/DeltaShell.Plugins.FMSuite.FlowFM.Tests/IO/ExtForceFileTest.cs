@@ -1024,8 +1024,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 string extForceFileContent = File.ReadAllText(newExtForceFilePath);
                 Assert.IsTrue(extForceFileContent.Contains(
                                   "* FACTOR  =   : Conversion factor for this provider"));
-                // Assert.IsTrue(extForceFileContent.Contains(
-                //                   "* This comment line will not be removed, eventhough shiptxy is not yet supported."));
+                Assert.IsTrue(extForceFileContent.Contains(
+                                  "* This comment line will not be removed, eventhough shiptxy is not yet supported."));
             }
         }
 
