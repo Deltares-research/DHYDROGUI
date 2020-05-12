@@ -22,7 +22,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
         {
             // acceptanceModelName, preconditionExpectedBranchFeaturesCount, preconditionExpectedCatchmentsCount
             new object[] {"KorteWoerden", 84, 72},
-            new object[] {"DidactischStelsel", 108, 73},
+            new object[] {"DidactischStelsel", 108, 74},
             new object[] {"Groesb2", 719, 675},
             new object[] {"Pudong", 4974, 4936},
             new object[] {"Eindhoven", 0, 0} // TODO: Add preconditions when the model can be correctly imported

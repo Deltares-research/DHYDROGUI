@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
-using DelftTools.Hydro;
+﻿using DelftTools.Hydro;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff;
-using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw;
 using GeoAPI.Geometries;
 using log4net;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace DeltaShell.Plugins.ImportExport.GWSW
 {
@@ -16,7 +14,10 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
     /// </summary>
     public class NwrwDischargeData : INwrwFeature
     {
+        private const NwrwSurfaceType SpecialCaseSurfaceType = NwrwSurfaceType.ClosedPavedWithSlope;
+
         private static readonly ILog Log = LogManager.GetLogger(typeof(NwrwDischargeData));
+
 
         public string Name { get; set; } // UNI_IDE
         public DischargeType DischargeType { get; set; } // DEB_TYPE
@@ -26,6 +27,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
         public string Remark { get; set; } // ALG_TOE
 
         public IGeometry Geometry { get; set; }
+
 
         public void AddNwrwCatchmentModelDataToModel(IHydroModel model, NwrwImporterHelper helper)
         {
@@ -39,12 +41,13 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
                 return;
             }
 
-            if (DischargeType == DischargeType.Lateral)
+            if (!IsSpecialCase() && DischargeType == DischargeType.Lateral)
             {
                 return;
             } // handled in the importer, requires FM knowledge
 
-            if (!rrModel.NwrwDryWeatherFlowDefinitions.Any(dwfd => dwfd.Name.Equals(DryWeatherFlowId)))
+            if (!rrModel.NwrwDryWeatherFlowDefinitions.Any(dwfd => dwfd.Name.Equals(DryWeatherFlowId)) &&
+                !IsSpecialCase())
             {
                 Log.Warn($"Could not add '{DryWeatherFlowId}' to {Name}. No definition found for {DryWeatherFlowId}.");
                 return;
@@ -58,7 +61,21 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
 
         public void InitializeNwrwCatchmentModelData(NwrwData nwrwData)
         {
-            AddDryWeatherFlowToNwrwCatchment(nwrwData);
+            if (IsSpecialCase())
+            {
+                if (!nwrwData.SurfaceLevelDict.ContainsKey(SpecialCaseSurfaceType))
+                {
+                    nwrwData.SurfaceLevelDict.Add(SpecialCaseSurfaceType, LateralSurface);
+                }
+                else
+                {
+                    nwrwData.SurfaceLevelDict[SpecialCaseSurfaceType] += LateralSurface;
+                }
+            }
+            else
+            {
+                AddDryWeatherFlowToNwrwCatchment(nwrwData);
+            }
 
             nwrwData.LateralSurface = LateralSurface;
 
@@ -92,39 +109,40 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
         }
 
         /// <summary>
-        /// Sets the correct value for the lateral source property with the correct units.
-        /// If the NwrwDischargeData FOM has a DryWeatherFlowId, get the lateral source from
-        /// the corresponding definition. Else, we assume the lateral source was read directly
-        /// from Debiet.csv.
+        /// In case the DischargeType is 'LAT' and the SurfaceLevel is 0 (so, not a special case),
+        /// we have to create a lateral on the FM model with a flow in m³/s. In Verloop.csv the flow
+        /// is given in dm³/day. Here we convert the flow to the correct units.
         /// </summary>
+        /// <returns>Lateral flow in m³/s.</returns>
         /// <exception cref="ArgumentException">Thrown when the lateral surface could not be set.</exception>
-        public void SetCorrectLateralSurface(
+        /// <exception cref="InvalidOperationException">Thrown when the required dryweather flow definition cannot be found.</exception>
+        public double CalculateLateralFlow(
             ILookup<string, NwrwDryWeatherFlowDefinition> nwrwDryWeatherFlowDefinitionbyName)
         {
             if (nwrwDryWeatherFlowDefinitionbyName == null)
                 throw new ArgumentNullException(nameof(nwrwDryWeatherFlowDefinitionbyName));
 
-
             if (!string.IsNullOrWhiteSpace(DryWeatherFlowId) &&
                 !nwrwDryWeatherFlowDefinitionbyName.Contains(DryWeatherFlowId))
             {
-                Log.Warn($"Cannot find NwrwDryWeatherFlowDefinition in RR model by name: {DryWeatherFlowId}");
+                throw new InvalidOperationException($"Cannot find NwrwDryWeatherFlowDefinition in RR model by name: {DryWeatherFlowId}");
             }
 
-
-
-            if (string.IsNullOrWhiteSpace(DryWeatherFlowId) ||
-                !nwrwDryWeatherFlowDefinitionbyName.Contains(DryWeatherFlowId))
+            double lateralFlow = 0;
+            foreach (var dwf in nwrwDryWeatherFlowDefinitionbyName[DryWeatherFlowId])
             {
-                LateralSurface /= 86400; // from m³/day to m³/s
+                lateralFlow = dwf.DailyVolumeConstant / 1000 / 3600; // from dm³/day to m³/s 
             }
-            else
-            {
-                foreach (var dwf in nwrwDryWeatherFlowDefinitionbyName[DryWeatherFlowId])
-                {
-                    LateralSurface = dwf.DailyVolumeConstant / 1000 / 3600; // from dm³/day to m³/s 
-                }
-            }
+
+            return lateralFlow;
+        }
+
+        // FM1D2D-861
+        public bool IsSpecialCase()
+        {
+            return DischargeType == DischargeType.Lateral &&
+                   string.IsNullOrWhiteSpace(DryWeatherFlowId) &&
+                   LateralSurface > 0;
         }
     }
 

@@ -1594,8 +1594,8 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
                     returnedModel?.GetAllActivitiesRecursive<RainfallRunoffModel>()?.FirstOrDefault();
                 Assert.IsNotNull(rrModel);
 
-                Assert.That(rrModel.GetAllModelData().OfType<NwrwData>().Count(), Is.EqualTo(73));
-                Assert.That(rrModel.GetAllModelData().OfType<NwrwData>().Distinct().Count(), Is.EqualTo(73));
+                Assert.That(rrModel.GetAllModelData().OfType<NwrwData>().Count(), Is.EqualTo(74));
+                Assert.That(rrModel.GetAllModelData().OfType<NwrwData>().Distinct().Count(), Is.EqualTo(74));
             }
             finally
             {
@@ -1702,6 +1702,13 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
                 Assert.That(lei43.Name, Is.EqualTo("lei43"));
                 Assert.That(lei43.CalculationArea, Is.EqualTo(1227.0).Within(0.00005));
                 Assert.IsNotNull(lei43.Catchment);
+
+                // special case in Debiet.csv
+                NwrwData put10 = rrModel.GetAllModelData().OfType<NwrwData>().FirstOrDefault(md =>
+                    md.Name.Equals("put10", StringComparison.InvariantCultureIgnoreCase));
+                Assert.That(put10.SurfaceLevelDict.Count, Is.EqualTo(1));
+                Assert.That(put10.SurfaceLevelDict.ContainsKey(NwrwSurfaceType.ClosedPavedWithSlope), Is.True);
+                Assert.That(put10.SurfaceLevelDict[NwrwSurfaceType.ClosedPavedWithSlope], Is.EqualTo(12));
             }
             finally
             {
@@ -1834,11 +1841,11 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
                 Assert.That(lateralSourcesData.Count, Is.EqualTo(expectedLateralSourcesDataCount));
 
 
-                var expectedConstantTypeCount = 3;
+                var expectedConstantTypeCount = 2; // 2x 'LAT' in combination with a dryweather flow id
                 var constantLateralSourcesData = lateralSourcesData.Where(lsd => lsd.DataType == Model1DLateralDataType.FlowConstant);
                 Assert.That(constantLateralSourcesData.Count, Is.EqualTo(expectedConstantTypeCount));
 
-                var expectedRealTimeTypeCount = 68;
+                var expectedRealTimeTypeCount = 68 + 1; //68x 'VWD' and 1 special case
                 var realTimeLateralSourcesData = lateralSourcesData.Where(lsd => lsd.DataType == Model1DLateralDataType.FlowRealTime);
                 Assert.That(realTimeLateralSourcesData.Count, Is.EqualTo(expectedRealTimeTypeCount));
 
@@ -1852,6 +1859,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
                 FileUtils.DeleteIfExists(testDir);
             }
         }
+
 
         private GwswFileImporter SetupGwswFileImporter(IList<string> filesToImport, string testDir, DefinitionsProvider definitionProvider = null)
         {

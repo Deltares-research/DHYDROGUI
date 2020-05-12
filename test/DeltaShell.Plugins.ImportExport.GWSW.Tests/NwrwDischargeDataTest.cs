@@ -14,7 +14,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
         private const double tolerance = 0.0001;
 
         [Test]
-        public void GivenRrModelWithNwrwDryWeatherFlowDefinition_WhenCallingSetCorrectLateralSurface_ThenCorrectValueIsSetForLateralSurface()
+        public void GivenRrModelWithNwrwDryWeatherFlowDefinition_WhenCallingCalculateLateralFlow_ThenCorrectValueIsReturned()
         {
             using (var rrModel = new RainfallRunoffModel())
             {
@@ -37,71 +37,11 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
                 // setup when
                 var dwfdByName = rrModel.NwrwDryWeatherFlowDefinitions.ToLookup(dwfd => dwfd.Name, dwfd => dwfd);
                 // when
-                nwrwDischargeData.SetCorrectLateralSurface(dwfdByName);
+                var actualLateralFlow = nwrwDischargeData.CalculateLateralFlow(dwfdByName);
 
                 // then
                 var expectedValue = dwf.DailyVolumeConstant / 1000 / 3600; // from dm³/day to m³/s 
-                Assert.That(nwrwDischargeData.LateralSurface, Is.EqualTo(expectedValue).Within(tolerance));
-            }
-        }
-
-        [Test]
-        public void GivenRrModelWithNwrwDryWeatherFlowDefinitionAndDischargeDataHasNoId_WhenCallingSetCorrectLateralSurface_ThenCorrectValueIsSetForLateralSurface()
-        {
-            using (var rrModel = new RainfallRunoffModel())
-            {
-                // given
-                var random = new Random(21);
-                var lateralSurface = random.NextDouble();
-                var dwf = new NwrwDryWeatherFlowDefinition
-                {
-                    Name = "Test_dwf_def",
-                    DailyVolumeConstant = random.NextDouble() // dm³/day
-                };
-                rrModel.NwrwDryWeatherFlowDefinitions.Add(dwf);
-
-                var nwrwDischargeData = new NwrwDischargeData
-                {
-                    LateralSurface = lateralSurface
-                };
-
-                // setup when
-                var dwfdByName = rrModel.NwrwDryWeatherFlowDefinitions.ToLookup(dwfd => dwfd.Name, dwfd => dwfd);
-
-                // when
-                nwrwDischargeData.SetCorrectLateralSurface(dwfdByName);
-
-                // then
-                var expectedValue = lateralSurface / 86400; // from dm³/day to m³/s 
-                Assert.That(nwrwDischargeData.LateralSurface, Is.EqualTo(expectedValue).Within(tolerance));
-            }
-        }
-
-        [Test]
-        public void GivenRrModelWithoutNwrwDryWeatherFlowDefinition_WhenCallingSetCorrectLateralSurface_ThenCorrectValueIsSetForLateralSurface()
-        {
-            using (var rrModel = new RainfallRunoffModel())
-            {
-                // given
-                var random = new Random(21);
-                var name = "Test_dwf_def";
-                var lateralSurface = random.NextDouble(); // m³/day
-
-                var nwrwDischargeData = new NwrwDischargeData
-                {
-                    DryWeatherFlowId = name,
-                    LateralSurface = lateralSurface
-                };
-
-                // setup when
-                var dwfdByName = rrModel.NwrwDryWeatherFlowDefinitions.ToLookup(dwfd => dwfd.Name, dwfd => dwfd);
-
-                // when
-                nwrwDischargeData.SetCorrectLateralSurface(dwfdByName);
-
-                // then
-                var expectedValue = lateralSurface / 86400; // from m³/day to m³/s
-                Assert.That(nwrwDischargeData.LateralSurface, Is.EqualTo(expectedValue).Within(tolerance));
+                Assert.That(actualLateralFlow, Is.EqualTo(expectedValue).Within(tolerance));
             }
         }
 
@@ -109,7 +49,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
         public void SetCorrectLateralSurface_DictionaryNull_ThrowsArgumentNullException()
         {
             // Call
-            TestDelegate call = () => new NwrwDischargeData().SetCorrectLateralSurface(null);
+            TestDelegate call = () => new NwrwDischargeData().CalculateLateralFlow(null);
 
             // Assert
             Assert.That(call, Throws.TypeOf<ArgumentNullException>());
@@ -123,7 +63,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
             mocks.ReplayAll();
 
             // Call
-            TestDelegate call = () => new NwrwDischargeData().SetCorrectLateralSurface(null);
+            TestDelegate call = () => new NwrwDischargeData().CalculateLateralFlow(null);
 
             // Assert
             Assert.That(call, Throws.TypeOf<ArgumentNullException>());

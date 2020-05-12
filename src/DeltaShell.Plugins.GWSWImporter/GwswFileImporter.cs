@@ -409,10 +409,7 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
                 var nwrwDischargeDataFeatureElements = featureElements.OfType<NwrwDischargeData>().ToArray();
                 var nwrwDryWeatherFlowDefinitionbyName = rrModel.NwrwDryWeatherFlowDefinitions.ToLookup(dwfd => dwfd.Name, dwfd => dwfd);
 
-                // make sure the discharge data has the correct LateralSurface value
-                ParallelHelper.RunActionInParallel(this, nwrwDischargeDataFeatureElements, nwrwDischargeData => nwrwDischargeData.SetCorrectLateralSurface(nwrwDryWeatherFlowDefinitionbyName), "Set Correct LateralSurface");
-
-                ParallelHelper.RunActionInParallel(this, featureElements.OfType<NwrwDischargeData>().Where(nwrwDischargeData => nwrwDischargeData.DischargeType == DischargeType.Lateral).ToArray(), nwrwDischargeData =>
+                ParallelHelper.RunActionInParallel(this, featureElements.OfType<NwrwDischargeData>().Where(nwrwDischargeData => !nwrwDischargeData.IsSpecialCase() && nwrwDischargeData.DischargeType == DischargeType.Lateral).ToArray(), nwrwDischargeData =>
                 {
                     try
                     {
@@ -430,7 +427,7 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
                             };
 
                             AddLateralSourceToBranch(branch, lateralSource);
-                            flowByLateralSources.AddOrUpdate(lateralSource, nwrwDischargeData.LateralSurface,
+                            flowByLateralSources.AddOrUpdate(lateralSource, nwrwDischargeData.CalculateLateralFlow(nwrwDryWeatherFlowDefinitionbyName),
                                 (ls, oldSurfaceValue) => oldSurfaceValue);
 
                             var model1DLateralSourceData = new Model1DLateralSourceData
