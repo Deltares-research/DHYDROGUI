@@ -117,7 +117,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             }
         }
 
-        protected override bool ExcludeEqualsIdentifier => true;
+        protected override bool ExcludeEqualsIdentifier => false;
 
         protected override void CreateCommonBlock()
         {

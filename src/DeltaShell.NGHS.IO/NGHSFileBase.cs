@@ -459,6 +459,6 @@ namespace DeltaShell.NGHS.IO
             return doWriteLine;
         }
 
-        protected virtual bool ExcludeEqualsIdentifier => false;
+        protected virtual bool ExcludeEqualsIdentifier => true;
     }
 }
