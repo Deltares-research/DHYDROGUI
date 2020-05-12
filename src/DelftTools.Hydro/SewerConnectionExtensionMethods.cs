@@ -19,18 +19,19 @@ namespace DelftTools.Hydro
         {
             structure.Branch = sewerConnection;
             structure.Network = sewerConnection.Network;
-            structure.Chainage = sewerConnection.IsInternalConnection() ? 0 : 0.5;
 
-            if (sewerConnection.Geometry != null && sewerConnection.Geometry.Coordinates.Any())
+            if (!sewerConnection.IsInternalConnection() && sewerConnection.Geometry != null &&
+                sewerConnection.Geometry.Coordinates.Any())
             {
                 var x = (sewerConnection.Geometry.Coordinates[0].X + sewerConnection.Geometry.Coordinates[1].X) / 2;
                 var y = (sewerConnection.Geometry.Coordinates[0].Y + sewerConnection.Geometry.Coordinates[1].Y) / 2;
-                structure.Geometry = new Point(x,y);
+                structure.Geometry = new Point(x, y);
 
                 var dx = x - sewerConnection.Geometry.Coordinates[0].X;
-                var dy = y - sewerConnection.Geometry.Coordinates[0].Y; 
-                structure.Chainage = Math.Sqrt(dx*dx + dy*dy);
+                var dy = y - sewerConnection.Geometry.Coordinates[0].Y;
+                structure.Chainage = Math.Sqrt(dx * dx + dy * dy);
             }
+
             if (structure.Name == null) structure.Name = sewerConnection.Name;
 
             return HydroNetworkHelper.AddStructureToExistingCompositeStructureOrToANewOne(structure, sewerConnection, generateUniqueName);
