@@ -20,7 +20,7 @@ using NetTopologySuite.Extensions.Features;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 {
-    public class BndExtForceFile : FMSuiteFileBase
+    public class BndExtForceFile : NGHSFileBase
     {
         public const string BoundaryBlockKey = "[boundary]";
         public const string QuantityKey = "quantity";

@@ -9,13 +9,13 @@ using DelftTools.Functions.Generic;
 using DelftTools.Units;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.RegularExpressions;
-using DeltaShell.Plugins.FMSuite.Common.IO.Files;
+using DeltaShell.NGHS.IO;
 using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
 using log4net;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.IO
 {
-    public class BcwFile : FMSuiteFileBase
+    public class BcwFile : NGHSFileBase
     {
         public const string TimeFunctionAttributeName = "time_function";
         public const string RefDateAttributeName = "reference_date";

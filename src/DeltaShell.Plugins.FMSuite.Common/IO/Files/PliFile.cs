@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections.Generic;
+using DeltaShell.NGHS.IO;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
@@ -14,7 +15,7 @@ using NetTopologySuite.Geometries;
 
 namespace DeltaShell.Plugins.FMSuite.Common.IO.Files
 {
-    public class PliFile<T> : FMSuiteFileBase, IFeature2DFileBase<T> where T : IFeature, INameable, new()
+    public class PliFile<T> : NGHSFileBase, IFeature2DFileBase<T> where T : IFeature, INameable, new()
     {
         public const string Extension = "pli";
 

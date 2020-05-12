@@ -13,6 +13,7 @@ using DelftTools.Utils.Collections.Extensions;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.NetCdf;
 using DeltaShell.NGHS.Common.Logging;
+using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.Common.IO.Files;
@@ -37,7 +38,7 @@ using SharpMap.Api.SpatialOperations;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 {
-    public class MduFile : FMSuiteFileBase
+    public class MduFile : NGHSFileBase
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(MduFile));
 

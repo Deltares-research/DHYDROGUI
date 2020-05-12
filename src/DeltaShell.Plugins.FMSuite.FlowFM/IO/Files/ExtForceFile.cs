@@ -7,6 +7,7 @@ using DelftTools.Utils;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
 using DeltaShell.NGHS.Common.Logging;
+using DeltaShell.NGHS.IO;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.Common.IO.Files;
@@ -27,8 +28,10 @@ using SharpMap.SpatialOperations;
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 {
     //TODO: this has become a complete mess (The helper class too). Refactor.
-    public class ExtForceFile : FMSuiteFileBase
+    public class ExtForceFile : NGHSFileBase
     {
+        private const string ExtForcesFileQuantBlockStarter = "QUANTITY=";
+
         // Known file extensions
 
         // keywords in file used for modelDefinition specific data
@@ -66,7 +69,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
         private string currentLine;
 
-        public ExtForceFile() : base(true)
+        public ExtForceFile()
         {
             existingForceFileItems = new Dictionary<ExtForceFileItem, object>();
             supportedExtForceFileItems = new HashSet<ExtForceFileItem>();
@@ -112,6 +115,56 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                     yield return dataFile;
                 }
             }
+        }
+
+        protected override bool ExcludeEqualsIdentifier => true;
+
+        protected override void CreateCommonBlock()
+        {
+            if (CurrentLine.ToUpper().StartsWith(ExtForcesFileQuantBlockStarter))
+            {
+                LineNumber++;
+                storedNextInputLine = reader.ReadLine();
+                if (storedNextInputLine != null)
+                {
+                    string contentIdentifier =
+                        CreateContentIdentifier(CurrentLine.Trim() + storedNextInputLine.Trim());
+                    commentBlocks.Add(contentIdentifier, currentCommentBlock);
+                }
+            }
+            else
+            {
+                // can not handle internal comments
+                currentCommentBlock = null;
+            }
+        }
+
+        protected override bool WriteCommentBlock(string line, bool doWriteLine)
+        {
+            if (line.ToUpper().StartsWith(ExtForcesFileQuantBlockStarter))
+            {
+                storedNextOutputLine = line;
+                doWriteLine = false;
+            }
+            else
+            {
+                if (storedNextOutputLine != null)
+                {
+                    string contentIdentifier = CreateContentIdentifier(storedNextOutputLine + line.Trim());
+                    if (commentBlocks.ContainsKey(contentIdentifier))
+                    {
+                        foreach (string commentLine in commentBlocks[contentIdentifier])
+                        {
+                            writer.WriteLine(commentLine);
+                        }
+                    }
+
+                    writer.WriteLine(storedNextOutputLine);
+                    storedNextOutputLine = null;
+                }
+            }
+
+            return doWriteLine;
         }
 
         private string ExtFilePath { get; set; }

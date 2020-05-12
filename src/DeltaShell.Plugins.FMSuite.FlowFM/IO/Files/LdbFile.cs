@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Utils.Collections.Generic;
+using DeltaShell.NGHS.IO;
 using DeltaShell.Plugins.FMSuite.Common.IO.Files;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 {
-    public class LdbFile : FMSuiteFileBase, IFeature2DFileBase<LandBoundary2D>
+    public class LdbFile : NGHSFileBase, IFeature2DFileBase<LandBoundary2D>
     {
         public void Write(string filePath, IEnumerable<LandBoundary2D> area2DFeatures)
         {

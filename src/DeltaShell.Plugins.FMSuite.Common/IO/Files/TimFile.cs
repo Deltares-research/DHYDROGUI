@@ -5,11 +5,12 @@ using DelftTools.Functions;
 using DelftTools.Functions.Generic;
 using DelftTools.Utils;
 using DelftTools.Utils.Editing;
+using DeltaShell.NGHS.IO;
 using log4net;
 
 namespace DeltaShell.Plugins.FMSuite.Common.IO.Files
 {
-    public class TimFile : FMSuiteFileBase
+    public class TimFile : NGHSFileBase
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(TimFile));
 

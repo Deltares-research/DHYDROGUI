@@ -30,7 +30,7 @@ using NetTopologySuite.Extensions.Grids;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.IO
 {
-    public class MdwFile : FMSuiteFileBase
+    public class MdwFile : NGHSFileBase
     {
         /// <summary>
         /// These mdw categories can have multiplicity greater than 1 (or gui only),

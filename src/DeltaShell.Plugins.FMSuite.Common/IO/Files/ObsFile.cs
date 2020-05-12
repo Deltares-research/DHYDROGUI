@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections.Generic;
+using DeltaShell.NGHS.IO;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Geometries;
 
 namespace DeltaShell.Plugins.FMSuite.Common.IO.Files
 {
-    public class ObsFile<T> : FMSuiteFileBase, IFeature2DFileBase<T> where T : Feature2DPoint, new()
+    public class ObsFile<T> : NGHSFileBase, IFeature2DFileBase<T> where T : Feature2DPoint, new()
     {
         public void Write(string obsFilePath, IEnumerable<T> observationPoints, bool includeName = true)
         {

@@ -5,12 +5,13 @@ using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
 using DelftTools.Utils;
+using DeltaShell.NGHS.IO;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using log4net;
 
 namespace DeltaShell.Plugins.FMSuite.Common.IO.Files
 {
-    public class T3DFile : FMSuiteFileBase
+    public class T3DFile : NGHSFileBase
     {
         private const string LayerTypeKey = "LAYER_TYPE";
         private const string LayersKey = "LAYERS";
