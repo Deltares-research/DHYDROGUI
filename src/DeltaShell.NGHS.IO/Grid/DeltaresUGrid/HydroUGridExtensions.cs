@@ -565,6 +565,10 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
                     sewerConnection.TargetCompartment = compartments.ContainsKey(toNodeId) ? compartments[toNodeId] : null;
                 }
 
+                if (branch is IPipe pipe)
+                {
+                    pipe.WaterType = (SewerConnectionWaterType)networkGeometry.BranchTypes[i];
+                }
                 var nodeCount = networkGeometry.BranchGeometryNodesCount[i];
                 var coordinates = new Coordinate[nodeCount];
 
