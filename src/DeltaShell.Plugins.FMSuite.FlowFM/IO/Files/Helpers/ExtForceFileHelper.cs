@@ -24,8 +24,6 @@ using SharpMap.SpatialOperations;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers
 {
-    // Hacky, but it does the job...
-
     // YAGNI (GvdO) merge into extforce file, or strip extforce file from all path/file logic, but now it is not clear who is doing what
     public static class ExtForceFileHelper
     {
@@ -448,7 +446,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers
                 FileName =
                     $"{extForceFileQuantityName}_{operation.Name.Replace(" ", "_").Replace("\t", "_")}{FileConstants.PolylineFileExtension}",
                 FileType = ExtForceQuantNames.FileTypes.InsidePolygon,
-                Method = GetSpatialOperationMethod(operation)
+                Method = GetSetValueMethod()
             };
 
             AddSuffixInCaseOfDuplicateFile(extForceFileItem);
@@ -522,7 +520,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers
                             targetDirectory + "\\", "")
                         : importSamplesOperation.FilePath,
                 FileType = GetSpatialOperationFileType(importSamplesOperation),
-                Method = GetSpatialOperationMethod(importSamplesOperation)
+                Method = GetImportSamplesSpatialOperationMethod(importSamplesOperation)
             };
             if (importSamplesOperation.InterpolationMethod == SpatialInterpolationMethod.Averaging)
             {
@@ -547,7 +545,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers
             {
                 FileName = ExtForceFile.MakeXyzFileName(quantity),
                 FileType = ExtForceQuantNames.FileTypes.Triangulation,
-                Method = GetSpatialOperationMethod(operation),
+                Method = GetAddSamplesMethod(),
                 Enabled = operation.Enabled,
                 Operand = ExtForceQuantNames.OperatorToStringMapping[Operator.Overwrite]
             };
@@ -864,30 +862,27 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers
             sourceAndSink.CopyValuesFromFileToSourceAndSinkAttributes(readFunction);
         }
 
-        private static int GetSpatialOperationMethod(ISpatialOperation operation)
+        private static int GetSetValueMethod()
         {
-            if (operation is SetValueOperation)
-            {
-                return 4;
-            }
+            return 4;
+        }
 
-            if (operation is ImportSamplesSpatialOperation)
-            {
-                switch (((ImportSamplesSpatialOperation) operation).InterpolationMethod)
-                {
-                    case SpatialInterpolationMethod.Triangulation:
-                        return 5;
-                    case SpatialInterpolationMethod.Averaging:
-                        return 6;
-                }
-            }
+        private static int GetAddSamplesMethod()
+        {
+            return 6;
+        }
 
-            if (operation is AddSamplesOperation)
+        private static int GetImportSamplesSpatialOperationMethod(ImportSamplesSpatialOperation operation)
+        {
+            switch (operation.InterpolationMethod)
             {
-                return 6;
+                case SpatialInterpolationMethod.Triangulation:
+                    return 5;
+                case SpatialInterpolationMethod.Averaging:
+                    return 6;
+                default:
+                    return -1;
             }
-
-            return -1;
         }
 
         private static int GetSpatialOperationFileType(ISpatialOperation operation)
