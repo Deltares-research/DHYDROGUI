@@ -27,34 +27,33 @@ using SharpMap.SpatialOperations;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 {
-    //TODO: this has become a complete mess (The helper class too). Refactor.
     public class ExtForceFile : NGHSFileBase
     {
-        private const string ExtForcesFileQuantBlockStarter = "QUANTITY=";
+        private const string extForcesFileQuantityBlockStarter = "QUANTITY=";
 
         // Known file extensions
 
         // keywords in file used for modelDefinition specific data
-        public const string FricTypeKey = "IFRCTYP";
+        private const string frictionTypeKey = "IFRCTYP";
         public const string AreaKey = "AREA";
         public const string AveragingTypeKey = "AVERAGINGTYPE";
         public const string RelSearchCellSizeKey = "RELATIVESEARCHCELLSIZE";
 
         // general keywords in file
-        private const string DisabledQuantityKey = "DISABLED_QUANTITY";
-        private const string QuantityKey = "QUANTITY";
-        private const string FileNameKey = "FILENAME";
-        private const string FileTypeKey = "FILETYPE";
-        private const string MethodKey = "METHOD";
-        private const string OperandKey = "OPERAND";
+        private const string disabledQuantityKey = "DISABLED_QUANTITY";
+        private const string quantityKey = "QUANTITY";
+        private const string fileNameKey = "FILENAME";
+        private const string fileTypeKey = "FILETYPE";
+        private const string methodKey = "METHOD";
+        private const string operandKey = "OPERAND";
 
         // keywords in file used for polygons (*.pol files)
-        private const string ValueKey = "VALUE";
-        private const string FactorKey = "FACTOR";
-        private const string OffsetKey = "OFFSET";
-        private const string SedConcPostfix = "_SedConc";
+        private const string valueKey = "VALUE";
+        private const string factorKey = "FACTOR";
+        private const string offsetKey = "OFFSET";
+        private const string sedimentConcentrationPostfix = "_SedConc";
 
-        private static readonly string[] UnsupportedQuantityKeys =
+        private static readonly string[] unsupportedQuantityKeys =
         {
             "WUANTITY",
             "_UANTITY"
@@ -121,7 +120,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
         protected override void CreateCommonBlock()
         {
-            if (CurrentLine.ToUpper().StartsWith(ExtForcesFileQuantBlockStarter))
+            if (CurrentLine.ToUpper().StartsWith(extForcesFileQuantityBlockStarter))
             {
                 LineNumber++;
                 storedNextInputLine = reader.ReadLine();
@@ -141,7 +140,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
         protected override bool WriteCommentBlock(string line, bool doWriteLine)
         {
-            if (line.ToUpper().StartsWith(ExtForcesFileQuantBlockStarter))
+            if (line.ToUpper().StartsWith(extForcesFileQuantityBlockStarter))
             {
                 storedNextOutputLine = line;
                 doWriteLine = false;
@@ -176,9 +175,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             string lineToLower = line.ToLower();
             IEnumerable<string> keysToCheck = new[]
             {
-                QuantityKey,
-                DisabledQuantityKey
-            }.Concat(UnsupportedQuantityKeys).Select(s => s.ToLower());
+                quantityKey,
+                disabledQuantityKey
+            }.Concat(unsupportedQuantityKeys).Select(s => s.ToLower());
 
             return keysToCheck.Any(lineToLower.StartsWith);
         }
@@ -196,7 +195,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             {
                 ValidateFileType(extForceFileItem);
 
-                // check what type of polyline to read
+                // check what type of polyLine to read
                 bool isSourceAndSink = Equals(extForceFileItem.Quantity, ExtForceQuantNames.SourceAndSink);
 
                 if (!ExtForceQuantNames.TryParseBoundaryQuantityType(extForceFileItem.Quantity, out FlowBoundaryQuantityType quantityType) && !isSourceAndSink)
@@ -576,9 +575,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                  * The only Spatially Varying Sediment that gets read from the ExtForces file is
                  * SedimentConcentration. We could simply remove its prefix, however, due to the 
                  * way it's meant to be written in said file, we need to add the postfix */
-                string spatialvaryingSedConc = sedimentItem.Quantity.Substring(ExtForceQuantNames.InitialSpatialVaryingSedimentPrefix.Length) + SedConcPostfix;
+                string spatialVaryingSedimentConcentration = sedimentItem.Quantity.Substring(ExtForceQuantNames.InitialSpatialVaryingSedimentPrefix.Length) + sedimentConcentrationPostfix;
                 ReadSpatialOperationData(initialSedimentItems, modelDefinition, sedimentItem.Quantity,
-                                         spatialvaryingSedConc);
+                                         spatialVaryingSedimentConcentration);
             }
         }
 
@@ -600,9 +599,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
                 int frictionType = modelFrictionType;
 
-                if (extForceFileItem.ModelData.ContainsKey(FricTypeKey))
+                if (extForceFileItem.ModelData.ContainsKey(frictionTypeKey))
                 {
-                    frictionType = GetIntegerPropertyValue(extForceFileItem.ModelData[FricTypeKey].ToString());
+                    frictionType = GetIntegerPropertyValue(extForceFileItem.ModelData[frictionTypeKey].ToString());
                 }
 
                 if (frictionType != modelFrictionType)
@@ -850,25 +849,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                 foreach (ExtForceFileItem extForceFileItem in extForceFileItems)
                 {
                     WriteLine("");
-                    WriteLine((extForceFileItem.Enabled ? QuantityKey : DisabledQuantityKey) +
+                    WriteLine((extForceFileItem.Enabled ? quantityKey : disabledQuantityKey) +
                               "=" + extForceFileItem.Quantity);
-                    WriteLine(FileNameKey + "=" + extForceFileItem.FileName);
-                    WriteLine(FileTypeKey + "=" + extForceFileItem.FileType);
-                    WriteLine(MethodKey + "=" + extForceFileItem.Method);
-                    WriteLine(OperandKey + "=" + extForceFileItem.Operand);
+                    WriteLine(fileNameKey + "=" + extForceFileItem.FileName);
+                    WriteLine(fileTypeKey + "=" + extForceFileItem.FileType);
+                    WriteLine(methodKey + "=" + extForceFileItem.Method);
+                    WriteLine(operandKey + "=" + extForceFileItem.Operand);
                     if (!double.IsNaN(extForceFileItem.Value))
                     {
-                        WriteLine(ValueKey + "=" + extForceFileItem.Value);
+                        WriteLine(valueKey + "=" + extForceFileItem.Value);
                     }
 
                     if (!double.IsNaN(extForceFileItem.Factor))
                     {
-                        WriteLine(FactorKey + "=" + extForceFileItem.Factor);
+                        WriteLine(factorKey + "=" + extForceFileItem.Factor);
                     }
 
                     if (!double.IsNaN(extForceFileItem.Offset))
                     {
-                        WriteLine(OffsetKey + "=" + extForceFileItem.Offset);
+                        WriteLine(offsetKey + "=" + extForceFileItem.Offset);
                     }
 
                     if (extForceFileItem.ModelData != null)
@@ -907,7 +906,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         {
             var extForceFileItems = new List<ExtForceFileItem>();
 
-            ExtForceFileHelper.StartWritingSubFiles(); // hack: tracks & resolves duplicate filenames
+            ExtForceFileHelper.StartWritingSubFiles(); // hack: tracks & resolves duplicate file names
 
             if (writeBoundaryConditions)
             {
@@ -966,12 +965,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
             /* DELFT3DFM-1112
              * This is only meant for SedimentConcentration */
-            IEnumerable<string> sedConcSpatiallyVarying =
-                modelDefinition.InitialSpatiallyVaryingSedimentPropertyNames.Where(sp => sp.EndsWith(SedConcPostfix));
+            IEnumerable<string> sedimentConcentrationSpatiallyVarying =
+                modelDefinition.InitialSpatiallyVaryingSedimentPropertyNames.Where(sp => sp.EndsWith(sedimentConcentrationPostfix));
 
             var logHandler = new LogHandler("Ext force warning handler");
 
-            foreach (string spatiallyVaryingSedimentPropertyName in sedConcSpatiallyVarying)
+            foreach (string spatiallyVaryingSedimentPropertyName in sedimentConcentrationSpatiallyVarying)
             {
                 IList<ISpatialOperation> spatialOperations =
                     modelDefinition.GetSpatialOperations(spatiallyVaryingSedimentPropertyName);
@@ -998,11 +997,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                                                         .Distinct().ToList();
 
                 //Remove the postfix from the quantity (it is not accepted by the kernel)
-                if (spatiallyVaryingSedimentPropertyName.EndsWith(SedConcPostfix))
+                if (spatiallyVaryingSedimentPropertyName.EndsWith(sedimentConcentrationPostfix))
                 {
                     forceFileItems.ForEach(ffi => ffi.Quantity =
                                                       ffi.Quantity.Substring(
-                                                          0, ffi.Quantity.Length - SedConcPostfix.Length));
+                                                          0, ffi.Quantity.Length - sedimentConcentrationPostfix.Length));
                 }
 
                 extForceFileItems.AddRange(forceFileItems);
@@ -1241,7 +1240,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             string propertyName = GetKeyPart(currentLine);
             var extForceFileItem = new ExtForceFileItem(GetValuePart(currentLine));
 
-            if (propertyName != QuantityKey)
+            if (propertyName != quantityKey)
             {
                 //something other than QUANTITY must be disabled
                 extForceFileItem.Enabled = false;
@@ -1272,25 +1271,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
             switch (propertyName)
             {
-                case FileNameKey:
+                case fileNameKey:
                     SetFileName(extForceFileItem);
                     break;
-                case FileTypeKey:
+                case fileTypeKey:
                     SetFileType(extForceFileItem);
                     break;
-                case MethodKey:
+                case methodKey:
                     SetMethod(extForceFileItem);
                     break;
-                case OperandKey:
+                case operandKey:
                     SetOperand(extForceFileItem);
                     break;
-                case ValueKey:
+                case valueKey:
                     SetValue(extForceFileItem);
                     break;
-                case FactorKey:
+                case factorKey:
                     SetFactor(extForceFileItem);
                     break;
-                case OffsetKey:
+                case offsetKey:
                     SetOffset(extForceFileItem);
                     break;
                 case AreaKey:
@@ -1302,7 +1301,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                 case RelSearchCellSizeKey:
                     SetRelativeSearchCellSize(extForceFileItem);
                     break;
-                case FricTypeKey:
+                case frictionTypeKey:
                     SetFrictionType(extForceFileItem);
                     break;
                 default:
@@ -1322,7 +1321,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             }
             else
             {
-                LogWarningQuantityPropertyAlreadySet(FileNameKey);
+                LogWarningQuantityPropertyAlreadySet(fileNameKey);
             }
         }
 
@@ -1330,7 +1329,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         {
             if (extForceFileItem.FileName == null)
             {
-                throw new FormatException(GetMessageUnexpectedKeyword(FileTypeKey));
+                throw new FormatException(GetMessageUnexpectedKeyword(fileTypeKey));
             }
 
             if (extForceFileItem.FileType == int.MinValue)
@@ -1339,7 +1338,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             }
             else
             {
-                LogWarningQuantityPropertyAlreadySet(FileTypeKey);
+                LogWarningQuantityPropertyAlreadySet(fileTypeKey);
             }
         }
 
@@ -1347,7 +1346,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         {
             if (extForceFileItem.FileType == int.MinValue)
             {
-                throw new FormatException(GetMessageUnexpectedKeyword(MethodKey));
+                throw new FormatException(GetMessageUnexpectedKeyword(methodKey));
             }
 
             if (extForceFileItem.Method == int.MinValue)
@@ -1363,7 +1362,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             }
             else
             {
-                LogWarningQuantityPropertyAlreadySet(MethodKey);
+                LogWarningQuantityPropertyAlreadySet(methodKey);
             }
         }
 
@@ -1371,7 +1370,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         {
             if (extForceFileItem.Method == int.MinValue)
             {
-                throw new FormatException(GetMessageUnexpectedKeyword(OperandKey));
+                throw new FormatException(GetMessageUnexpectedKeyword(operandKey));
             }
 
             if (extForceFileItem.Operand == null)
@@ -1380,7 +1379,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             }
             else
             {
-                LogWarningQuantityPropertyAlreadySet(OperandKey);
+                LogWarningQuantityPropertyAlreadySet(operandKey);
             }
         }
 
@@ -1392,7 +1391,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             }
             else
             {
-                LogWarningQuantityPropertyAlreadySet(ValueKey);
+                LogWarningQuantityPropertyAlreadySet(valueKey);
             }
         }
 
@@ -1404,7 +1403,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             }
             else
             {
-                LogWarningQuantityPropertyAlreadySet(FactorKey);
+                LogWarningQuantityPropertyAlreadySet(factorKey);
             }
         }
 
@@ -1412,7 +1411,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         {
             if (extForceFileItem.Operand == null)
             {
-                throw new FormatException(GetMessageUnexpectedKeyword(OffsetKey));
+                throw new FormatException(GetMessageUnexpectedKeyword(offsetKey));
             }
 
             if (double.IsNaN(extForceFileItem.Offset))
@@ -1421,7 +1420,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             }
             else
             {
-                LogWarningQuantityPropertyAlreadySet(OffsetKey);
+                LogWarningQuantityPropertyAlreadySet(offsetKey);
             }
         }
 
@@ -1474,12 +1473,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
         private void SetFrictionType(ExtForceFileItem extForceFileItem)
         {
-            if (extForceFileItem.ModelData.ContainsKey(FricTypeKey))
+            if (extForceFileItem.ModelData.ContainsKey(frictionTypeKey))
             {
-                LogWarningQuantityPropertyAlreadySet(FricTypeKey);
+                LogWarningQuantityPropertyAlreadySet(frictionTypeKey);
             }
 
-            extForceFileItem.ModelData[FricTypeKey] = GetIntegerPropertyValue(currentLine);
+            extForceFileItem.ModelData[frictionTypeKey] = GetIntegerPropertyValue(currentLine);
         }
 
         private void LogWarningQuantityPropertyAlreadySet(string quantityName)
