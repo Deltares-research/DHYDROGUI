@@ -167,6 +167,7 @@
     <Compile Include="IO\DataAccessBuilders\BcmFileFlowBoundaryDataBuilder.cs" />
     <Compile Include="IO\DelftIniCategoryExtension.cs" />
     <Compile Include="IO\Files\CacheFile.cs" />
+    <Compile Include="IO\Files\ExtForceFile.Read.cs" />
     <Compile Include="IO\Files\Helpers\CopyHandlers\FileCopyException.cs" />
     <Compile Include="IO\Files\Helpers\CopyHandlers\ICopyHandler.cs" />
     <Compile Include="IO\Files\Helpers\CopyHandlers\OverwriteCopyHandler.cs" />
@@ -354,6 +355,7 @@
     <None Include="CsvFiles\structure-properties.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <Compile Include="IO\Files\ExtForceFile.Write.cs" />
     <None Include="toolboxes\Statistics.py">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

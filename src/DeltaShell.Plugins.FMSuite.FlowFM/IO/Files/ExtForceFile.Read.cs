@@ -1,0 +1,953 @@
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using DelftTools.Utils;
+using DelftTools.Utils.Collections.Generic;
+using DeltaShell.Plugins.FMSuite.Common.FeatureData;
+using DeltaShell.Plugins.FMSuite.Common.IO;
+using DeltaShell.Plugins.FMSuite.Common.IO.Files;
+using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessObjects;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers;
+using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
+using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
+using GeoAPI.Extensions.Feature;
+using GeoAPI.Geometries;
+using NetTopologySuite.Extensions.Features;
+using NetTopologySuite.Geometries;
+using SharpMap.Api.SpatialOperations;
+using SharpMap.Data.Providers;
+using SharpMap.SpatialOperations;
+
+namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
+{
+    public partial class ExtForceFile
+    {
+        public void Read(string extForceFilePath, WaterFlowFMModelDefinition modelDefinition, string extSubFilesReferenceFilePath)
+        {
+            ExtSubFilesReferenceFilePath = extSubFilesReferenceFilePath;
+            ExtFilePath = extForceFilePath;
+
+            Read(modelDefinition);
+        }
+
+        protected override void CreateCommonBlock()
+        {
+            if (CurrentLine.ToUpper().StartsWith(extForcesFileQuantityBlockStarter))
+            {
+                LineNumber++;
+                storedNextInputLine = reader.ReadLine();
+                if (storedNextInputLine != null)
+                {
+                    string contentIdentifier =
+                        CreateContentIdentifier(CurrentLine.Trim() + storedNextInputLine.Trim());
+                    commentBlocks.Add(contentIdentifier, currentCommentBlock);
+                }
+            }
+            else
+            {
+                // can not handle internal comments
+                currentCommentBlock = null;
+            }
+        }
+
+        private void Read(WaterFlowFMModelDefinition modelDefinition)
+        {
+            IEnumerable<ExtForceFileItem> extForceFileItems = ParseExtForceFile();
+            IList<ExtForceFileItem> forceFileItems =
+                extForceFileItems as IList<ExtForceFileItem> ?? extForceFileItems.ToList();
+
+            ReadPolyLineData(forceFileItems, modelDefinition);
+            ReadWindItems(forceFileItems, modelDefinition);
+            ReadHeatFluxModelData(forceFileItems, modelDefinition);
+            ReadSpatialData(forceFileItems, modelDefinition);
+            StoreUnknownQuantities(forceFileItems, modelDefinition);
+        }
+
+        private IEnumerable<ExtForceFileItem> GetUnknownExtForceFileItems(IEnumerable<ExtForceFileItem> allExtForceFileItems) =>
+            allExtForceFileItems.Except(supportedExtForceFileItems);
+
+        private void StoreUnknownQuantities(IEnumerable<ExtForceFileItem> allExtForceFileItems,
+                                            WaterFlowFMModelDefinition modelDefinition)
+        {
+            List<ExtForceFileItem> unknownForceFileItems = GetUnknownExtForceFileItems(allExtForceFileItems).ToList();
+            foreach (ExtForceFileItem unknownForceFileItem in unknownForceFileItems)
+            {
+                log.WarnFormat(
+                    Resources
+                        .ExtForceFile_StoreUnknownQuantities_Quantity___0___detected_in_the_external_force_file_and_will_be_passed_to_the_computational_core__This_may_affect_your_simulation_,
+                    unknownForceFileItem.Quantity);
+
+                string referencedFilePath =
+                    GetOtherFilePathInSameDirectory(ExtSubFilesReferenceFilePath, unknownForceFileItem.FileName);
+
+                var unsupportedFileBasedExtForceFileItem =
+                    new UnsupportedFileBasedExtForceFileItem(referencedFilePath, unknownForceFileItem);
+
+                modelDefinition.UnsupportedFileBasedExtForceFileItems.Add(unsupportedFileBasedExtForceFileItem);
+            }
+        }
+
+        private IEnumerable<ExtForceFileItem> ParseExtForceFile()
+        {
+            OpenInputFile(ExtFilePath);
+
+            try
+            {
+                currentLine = GetNextLine();
+
+                while (currentLine != null && IsNewEntry(currentLine))
+                {
+                    int startLineNumber = LineNumber;
+
+                    ExtForceFileItem extForceFileItem = ReadQuantityBlock(startLineNumber);
+
+                    if (IsValidQuantity(extForceFileItem))
+                    {
+                        yield return extForceFileItem;
+                    }
+                    else
+                    {
+                        log.WarnFormat(
+                            $"Invalid Quantity item '{extForceFileItem.Quantity}' starting on line {startLineNumber} in file {ExtFilePath}; Item is skipped.");
+                    }
+                }
+            }
+            finally
+            {
+                CloseInputFile();
+            }
+        }
+
+        private static bool IsNewEntry(string line)
+        {
+            string lineToLower = line.ToLower();
+            IEnumerable<string> keysToCheck = new[]
+            {
+                quantityKey,
+                disabledQuantityKey
+            }.Concat(unsupportedQuantityKeys).Select(s => s.ToLower());
+
+            return keysToCheck.Any(lineToLower.StartsWith);
+        }
+
+        private ExtForceFileItem ReadQuantityBlock(int startLineNumber)
+        {
+            string propertyName = GetKeyPart(currentLine);
+            var extForceFileItem = new ExtForceFileItem(GetValuePart(currentLine));
+
+            if (propertyName != quantityKey)
+            {
+                //something other than QUANTITY must be disabled
+                extForceFileItem.Enabled = false;
+            }
+
+            currentLine = GetNextLine();
+
+            try
+            {
+                while (currentLine != null && !IsNewEntry(currentLine))
+                {
+                    ReadQuantityProperty(extForceFileItem);
+                    currentLine = GetNextLine();
+                }
+            }
+            catch (FormatException e)
+            {
+                log.ErrorFormat("An error occured while reading Quantity item starting at line {0}: {1}.",
+                                startLineNumber, e.Message);
+            }
+
+            return extForceFileItem;
+        }
+
+        private void ReadQuantityProperty(ExtForceFileItem extForceFileItem)
+        {
+            string propertyName = GetKeyPart(currentLine);
+
+            switch (propertyName)
+            {
+                case fileNameKey:
+                    SetFileName(extForceFileItem);
+                    break;
+                case fileTypeKey:
+                    SetFileType(extForceFileItem);
+                    break;
+                case methodKey:
+                    SetMethod(extForceFileItem);
+                    break;
+                case operandKey:
+                    SetOperand(extForceFileItem);
+                    break;
+                case valueKey:
+                    SetValue(extForceFileItem);
+                    break;
+                case factorKey:
+                    SetFactor(extForceFileItem);
+                    break;
+                case offsetKey:
+                    SetOffset(extForceFileItem);
+                    break;
+                case AreaKey:
+                    SetArea(extForceFileItem);
+                    break;
+                case AveragingTypeKey:
+                    SetAveragingType(extForceFileItem);
+                    break;
+                case RelSearchCellSizeKey:
+                    SetRelativeSearchCellSize(extForceFileItem);
+                    break;
+                case frictionTypeKey:
+                    SetFrictionType(extForceFileItem);
+                    break;
+                default:
+                    log.WarnFormat(
+                        Resources
+                            .ExtForceFile_ReadQuantityProperty_Unexpected_line___0___on_line__1__in_file__2__and_will_be_ignored_,
+                        currentLine, LineNumber, ExtFilePath);
+                    break;
+            }
+        }
+
+        private void ReadPolyLineData(IEnumerable<ExtForceFileItem> extForceFileItems,
+                                      WaterFlowFMModelDefinition modelDefinition)
+        {
+            IEventedList<BoundaryConditionSet> boundaryConditionSets = modelDefinition.BoundaryConditionSets;
+            var boundaryConditions = new List<IBoundaryCondition>();
+            var sourcesAndSinks = new List<SourceAndSink>();
+
+            var modelReferenceDate = (DateTime)modelDefinition.GetModelProperty(KnownProperties.RefDate).Value;
+
+            foreach (ExtForceFileItem extForceFileItem in GetSupportedFileItems(extForceFileItems))
+            {
+                ValidateFileType(extForceFileItem);
+
+                // check what type of polyLine to read
+                bool isSourceAndSink = Equals(extForceFileItem.Quantity, ExtForceQuantNames.SourceAndSink);
+
+                if (!ExtForceQuantNames.TryParseBoundaryQuantityType(extForceFileItem.Quantity, out FlowBoundaryQuantityType quantityType) && !isSourceAndSink)
+                {
+                    continue;
+                }
+
+                supportedExtForceFileItems.Add(extForceFileItem);
+
+                // read the pli file
+                string pliFilePath = GetOtherFilePathInSameDirectory(ExtSubFilesReferenceFilePath, extForceFileItem.FileName);
+                IList<Feature2D> features2D = ReadFeatureFile(isSourceAndSink, pliFilePath);
+                existingForceFileItems[extForceFileItem] = features2D;
+
+                // go through all feature2Ds
+                foreach (Feature2D feature2D in features2D)
+                {
+                    if (isSourceAndSink)
+                    {
+                        SourceAndSink sourceAndSink = ReadSourceAndSink(pliFilePath, feature2D, extForceFileItem, modelReferenceDate);
+
+                        if (sourceAndSink == null)
+                        {
+                            continue;
+                        }
+
+                        polyLineForceFileItems[sourceAndSink] = extForceFileItem;
+                        sourcesAndSinks.Add(sourceAndSink);
+                    }
+                    else
+                    {
+                        BoundaryCondition boundaryCondition = ReadBoundaryCondition(boundaryConditionSets, feature2D, pliFilePath, extForceFileItem, modelReferenceDate);
+
+                        if (boundaryCondition == null)
+                        {
+                            continue;
+                        }
+
+                        polyLineForceFileItems[boundaryCondition] = extForceFileItem;
+                        boundaryConditions.Add(boundaryCondition);
+                    }
+                }
+            }
+
+            foreach (BoundaryConditionSet boundaryConditionSet in boundaryConditionSets)
+            {
+                var feature = boundaryConditionSet.Feature as IFeature;
+                boundaryConditionSet.BoundaryConditions = new EventedList<IBoundaryCondition>();
+                boundaryConditionSet.BoundaryConditions.AddRange(boundaryConditions.Where(bc => Equals(bc.Feature, feature)));
+            }
+
+            NamingHelper.MakeNamesUnique(boundaryConditionSets.Select(bd => bd.Feature).Cast<INameable>().ToList());
+            NamingHelper.MakeNamesUnique(sourcesAndSinks.Select(bd => bd.Feature).Cast<INameable>().ToList());
+
+            modelDefinition.Boundaries.AddRange(boundaryConditionSets.Select(bd => bd.Feature));
+            modelDefinition.SourcesAndSinks.AddRange(sourcesAndSinks);
+            modelDefinition.Pipes.AddRange(sourcesAndSinks.Select(ss => ss.Feature).Distinct());
+        }
+
+        private static IEnumerable<ExtForceFileItem> GetSupportedFileItems(IEnumerable<ExtForceFileItem> extForceFileItems)
+        {
+            return extForceFileItems.Where(
+                e =>
+                {
+                    string extension = Path.GetExtension(e.FileName);
+                    return extension == FileConstants.PliFileExtension
+                           || extension == FileConstants.PlizFileExtension;
+                });
+        }
+
+        private BoundaryCondition ReadBoundaryCondition(ICollection<BoundaryConditionSet> boundaryConditionSets, Feature2D feature2D,
+                                                        string filePath, ExtForceFileItem extForceFileItem, DateTime modelReferenceDate)
+        {
+            Feature2D uniqueFeature = boundaryConditionSets.Select(bcs => bcs.Feature)
+                                                           .FirstOrDefault(f => f.Geometry.EqualsTopologically(feature2D.Geometry)) ?? feature2D;
+
+            if (uniqueFeature == feature2D)
+            {
+                boundaryConditionSets.Add(new BoundaryConditionSet { Feature = feature2D });
+            }
+
+            BoundaryCondition boundaryCondition;
+
+            try
+            {
+                boundaryCondition = ExtForceFileHelper.ReadBoundaryConditionData(filePath,
+                                                                                 uniqueFeature,
+                                                                                 extForceFileItem,
+                                                                                 modelReferenceDate);
+            }
+            catch (Exception e)
+            {
+                if (e is ArgumentException || e is PathTooLongException || e is FormatException ||
+                    e is FileNotFoundException || e is IOException || e is OutOfMemoryException)
+                {
+                    throw new InvalidOperationException($"An error (Message: {e.Message}) occured while reading boundary condition data for " +
+                                                        $"feature {feature2D.Name} in file {ExtFilePath}", e);
+                }
+
+                throw;
+            }
+
+            return boundaryCondition;
+        }
+
+        private SourceAndSink ReadSourceAndSink(string filePath, Feature2D feature2D, ExtForceFileItem extForceFileItem, DateTime modelReferenceDate)
+        {
+            SourceAndSink sourceAndSink;
+            try
+            {
+                sourceAndSink = ExtForceFileHelper.ReadSourceAndSinkData(filePath, feature2D, extForceFileItem, modelReferenceDate);
+            }
+            catch (Exception e)
+            {
+                if (e is ArgumentException || e is PathTooLongException || e is FormatException ||
+                    e is FileNotFoundException || e is IOException || e is OutOfMemoryException)
+                {
+                    throw new InvalidOperationException($"An error (Message: {e.Message}) occured while source/sink data for " +
+                                                        $"feature {feature2D.Name} in file {ExtFilePath}", e);
+                }
+
+                throw;
+            }
+
+            return sourceAndSink;
+        }
+
+        private static void ValidateFileType(ExtForceFileItem extForceFileItem)
+        {
+            if (extForceFileItem.FileType != ExtForceQuantNames.FileTypes.PolyTim)
+            {
+                throw new NotSupportedException("The provided pli file is not a PolyTim file. " +
+                                                extForceFileItem.FileName);
+            }
+        }
+
+        private static IList<Feature2D> ReadFeatureFile(bool isSourceAndSink, string pliFilePath)
+        {
+            string extension = Path.GetExtension(pliFilePath);
+
+            PliFile<Feature2D> fileReader;
+            switch (extension)
+            {
+                case FileConstants.PliFileExtension:
+                    fileReader = new PliFile<Feature2D>();
+                    break;
+                case FileConstants.PlizFileExtension:
+                    fileReader = new PlizFile<Feature2D>();
+                    break;
+                default:
+                    throw new NotSupportedException($"Unsupported file extension ({extension}) encountered.");
+            }
+
+            return ReadPliFile(isSourceAndSink, pliFilePath, fileReader);
+        }
+
+        private static IList<Feature2D> ReadPliFile(bool isSourceAndSink, string pliFilePath, PliFile<Feature2D> fileReader)
+        {
+            if (isSourceAndSink)
+            {
+                fileReader.CreateDelegate = CreateFeature2D;
+            }
+
+            IList<Feature2D> features2D = fileReader.Read(pliFilePath);
+            return features2D;
+        }
+
+        private static Feature2D CreateFeature2D(List<Coordinate> points, string name) =>
+            points.Count == 1
+                ? new Feature2DPoint
+                {
+                    Name = name,
+                    Geometry = new Point(points[0])
+                }
+                : new Feature2D
+                {
+                    Name = name,
+                    Geometry = LineStringCreator.CreateLineString(points)
+                };
+
+        private void ReadHeatFluxModelData(IEnumerable<ExtForceFileItem> extForceFileItems,
+                                           WaterFlowFMModelDefinition modelDefinition)
+        {
+            var modelReferenceDate = (DateTime)modelDefinition.GetModelProperty(KnownProperties.RefDate).Value;
+            switch (modelDefinition.HeatFluxModel.Type)
+            {
+                case HeatFluxModelType.None:
+                    return;
+                case HeatFluxModelType.ExcessTemperature:
+                case HeatFluxModelType.Composite:
+                    ReadCompositeTemperatureData(extForceFileItems, modelDefinition, modelReferenceDate);
+                    return;
+            }
+        }
+
+        private void ReadCompositeTemperatureData(IEnumerable<ExtForceFileItem> extForceFileItems,
+                                          WaterFlowFMModelDefinition modelDefinition, DateTime modelReferenceDate)
+        {
+            HeatFluxModel heatFluxModel = modelDefinition.HeatFluxModel;
+
+            ExtForceFileItem forceFileItem = extForceFileItems.LastOrDefault(e => e.Quantity == ExtForceQuantNames.MeteoData ||
+                                                                                  e.Quantity == ExtForceQuantNames.MeteoDataWithRadiation);
+            try
+            {
+                if (forceFileItem == null)
+                {
+                    return;
+                }
+
+                supportedExtForceFileItems.Add(forceFileItem);
+
+                heatFluxModel.ContainsSolarRadiation =
+                    forceFileItem.Quantity == ExtForceQuantNames.MeteoDataWithRadiation;
+                string extension = Path.GetExtension(forceFileItem.FileName);
+
+                string filePath = GetOtherFilePathInSameDirectory(ExtSubFilesReferenceFilePath, forceFileItem.FileName);
+                if (extension == FileConstants.TimFileExtension)
+                {
+                    new TimFile().Read(filePath, heatFluxModel.MeteoData, modelReferenceDate);
+                    existingForceFileItems[forceFileItem] = heatFluxModel.MeteoData;
+                }
+                else if (extension == FileConstants.GriddedHeatFluxModelFileExtension)
+                {
+                    string gridFilePath = HeatFluxModel.GetCorrespondingGridFilePath(filePath);
+
+                    if (File.Exists(gridFilePath))
+                    {
+                        heatFluxModel.GriddedHeatFluxFilePath = filePath;
+                        heatFluxModel.GridFilePath = gridFilePath;
+
+                        existingForceFileItems[forceFileItem] = heatFluxModel.Type;
+                    }
+                    else
+                    {
+                        throw new FileNotFoundException($"Could not find heat flux grid file {gridFilePath}");
+                    }
+                }
+            }
+            catch (Exception ex) when (ex is FileNotFoundException || ex is ArgumentNullException ||
+                                       ex is InvalidOperationException || ex is ArgumentException ||
+                                       ex is IOException || ex is FormatException)
+            {
+                heatFluxModel.Type = HeatFluxModelType.None;
+                modelDefinition.GetModelProperty(KnownProperties.Temperature).SetValueAsString("0");
+                log.ErrorFormat(
+                    "An error occured while reading Quantity {0} of file {1}: {2} Process temperature is reset to None ",
+                    forceFileItem.Quantity, ExtFilePath, ex.Message);
+            }
+        }
+
+        private void ReadSpatialData(IList<ExtForceFileItem> extForceFileItems,
+                                     WaterFlowFMModelDefinition modelDefinition)
+        {
+            IList<ExtForceFileItem> unreadExtForceFileItems = extForceFileItems;
+
+            var knownQuantities = new Dictionary<string, string>
+            {
+                {ExtForceQuantNames.InitialWaterLevel, WaterFlowFMModelDefinition.InitialWaterLevelDataItemName},
+                {ExtForceQuantNames.InitialSalinity, WaterFlowFMModelDefinition.InitialSalinityDataItemName},
+                {ExtForceQuantNames.InitialSalinityTop, WaterFlowFMModelDefinition.InitialSalinityDataItemName},
+                {ExtForceQuantNames.InitialTemperature, WaterFlowFMModelDefinition.InitialTemperatureDataItemName},
+                {ExtForceQuantNames.FrictCoef, WaterFlowFMModelDefinition.RoughnessDataItemName},
+                {ExtForceQuantNames.HorEddyViscCoef, WaterFlowFMModelDefinition.ViscosityDataItemName},
+                {ExtForceQuantNames.HorEddyDiffCoef, WaterFlowFMModelDefinition.DiffusivityDataItemName}
+            };
+
+            foreach (KeyValuePair<string, string> quantityPair in knownQuantities)
+            {
+                List<ExtForceFileItem> readItems = unreadExtForceFileItems.Where(i => i.Quantity == quantityPair.Key).ToList();
+                if (quantityPair.Key.Equals(ExtForceQuantNames.FrictCoef))
+                {
+                    readItems = FilterByFrictionType(unreadExtForceFileItems, modelDefinition).ToList();
+                }
+
+                ReadSpatialOperationData(readItems, modelDefinition, quantityPair.Key, quantityPair.Value);
+
+                //Remove read items.
+                unreadExtForceFileItems = unreadExtForceFileItems.Except(readItems).ToList();
+                if (!unreadExtForceFileItems.Any())
+                {
+                    return;
+                }
+            }
+
+            //Read tracer items.
+            List<ExtForceFileItem> initialTracerItems = unreadExtForceFileItems
+                                                        .Where(fi => fi.Quantity.StartsWith(
+                                                                   ExtForceQuantNames.InitialTracerPrefix))
+                                                        .ToList();
+            foreach (ExtForceFileItem tracerItem in initialTracerItems)
+            {
+                string tracerName = tracerItem.Quantity.Substring(ExtForceQuantNames.InitialTracerPrefix.Length);
+                ReadSpatialOperationData(initialTracerItems, modelDefinition, tracerItem.Quantity, tracerName);
+            }
+
+            unreadExtForceFileItems = unreadExtForceFileItems.Except(initialTracerItems).ToList();
+            if (!unreadExtForceFileItems.Any())
+            {
+                return;
+            }
+
+            //Read sediment items.
+            List<ExtForceFileItem> initialSedimentItems = unreadExtForceFileItems
+                                                          .Where(fi => fi.Quantity.StartsWith(ExtForceQuantNames.InitialSpatialVaryingSedimentPrefix))
+                                                          .ToList();
+            foreach (ExtForceFileItem sedimentItem in initialSedimentItems)
+            {
+                /* DELFT3DFM-1112
+                 * The only Spatially Varying Sediment that gets read from the ExtForces file is
+                 * SedimentConcentration. We could simply remove its prefix, however, due to the 
+                 * way it's meant to be written in said file, we need to add the postfix */
+                string spatialVaryingSedimentConcentration = sedimentItem.Quantity.Substring(ExtForceQuantNames.InitialSpatialVaryingSedimentPrefix.Length) + sedimentConcentrationPostfix;
+                ReadSpatialOperationData(initialSedimentItems, modelDefinition, sedimentItem.Quantity,
+                                         spatialVaryingSedimentConcentration);
+            }
+        }
+
+        private void ReadSpatialOperationData(IEnumerable<ExtForceFileItem> spatialForcingsItems,
+                                              WaterFlowFMModelDefinition waterFlowFMModelDefinition, string quantity,
+                                              string dataItemName)
+        {
+            List<ExtForceFileItem> forcingsItems = spatialForcingsItems.Where(i => i.Quantity == quantity).ToList();
+
+            if (!forcingsItems.Any())
+            {
+                return;
+            }
+
+            IList<ISpatialOperation> spatialOperations = waterFlowFMModelDefinition.GetSpatialOperations(dataItemName);
+
+            bool createOperationSet = spatialOperations == null;
+
+            if (createOperationSet)
+            {
+                spatialOperations = new List<ISpatialOperation>();
+                waterFlowFMModelDefinition.SpatialOperations[dataItemName] = spatialOperations;
+            }
+
+            spatialOperations.Clear();
+            foreach (ExtForceFileItem extForceFileItem in forcingsItems)
+            {
+                supportedExtForceFileItems.Add(extForceFileItem);
+                ISpatialOperation spatialOperation = CreateSpatialOperation(extForceFileItem);
+                if (spatialOperation != null)
+                {
+                    spatialOperations.Add(spatialOperation);
+                }
+            }
+        }
+
+        private ISpatialOperation CreateSpatialOperation(ExtForceFileItem extForceFileItem)
+        {
+            switch (extForceFileItem.FileType)
+            {
+                case 7:
+                case 8:
+                    return CreateSamplesOperation(extForceFileItem);
+                case 10:
+                    return CreatePolygonOperation(extForceFileItem);
+                default:
+                    throw new ArgumentException($"Cannot construct spatial operation for file {extForceFileItem.FileName} with file type {extForceFileItem.FileType}");
+            }
+        }
+
+        private ISpatialOperation CreatePolygonOperation(ExtForceFileItem extForceFileItem)
+        {
+            string path = GetOtherFilePathInSameDirectory(ExtSubFilesReferenceFilePath, extForceFileItem.FileName);
+
+            IEnumerable<Feature> features = new PolFile<Feature2DPolygon>()
+                                            .Read(path).Select(f => new Feature
+                                            {
+                                                Geometry = f.Geometry,
+                                                Attributes = f.Attributes
+                                            });
+
+            string operationName = Path.GetFileNameWithoutExtension(extForceFileItem.FileName);
+
+            var operation = new SetValueOperation
+            {
+                Value = extForceFileItem.Value,
+                OperationType = ExtForceQuantNames.ParseOperationType(extForceFileItem.Operand),
+                Name = operationName
+            };
+            operation.Mask.Provider = new FeatureCollection(features.ToList(), typeof(Feature));
+
+            existingForceFileItems[extForceFileItem] = operation;
+
+            return operation;
+        }
+
+        private ISpatialOperation CreateSamplesOperation(ExtForceFileItem extForceFileItem)
+        {
+            string operationName = Path.GetFileNameWithoutExtension(extForceFileItem.FileName);
+
+            var operation = new ImportSamplesSpatialOperation
+            {
+                Name = operationName,
+                FilePath = GetOtherFilePathInSameDirectory(ExtSubFilesReferenceFilePath, extForceFileItem.FileName)
+            };
+
+            if (extForceFileItem.ModelData.TryGetValue(AveragingTypeKey, out object value))
+            {
+                operation.AveragingMethod = (GridCellAveragingMethod)value;
+            }
+
+            if (extForceFileItem.ModelData.TryGetValue(RelSearchCellSizeKey, out value))
+            {
+                operation.RelativeSearchCellSize = (double)value;
+            }
+
+            switch (extForceFileItem.Method)
+            {
+                case 5:
+                    operation.InterpolationMethod = SpatialInterpolationMethod.Triangulation;
+                    break;
+                case 6:
+                    operation.InterpolationMethod = SpatialInterpolationMethod.Averaging;
+                    break;
+                default:
+                    throw new Exception(
+                        $"Invalid interpolation method {extForceFileItem.Method} for file {extForceFileItem.FileName}");
+            }
+
+            existingForceFileItems[extForceFileItem] = operation;
+
+            return operation;
+        }
+
+        private void ReadWindItems(IEnumerable<ExtForceFileItem> extForceFileItems,
+                                   WaterFlowFMModelDefinition modelDefinition)
+        {
+            var refDate = (DateTime)modelDefinition.GetModelProperty(KnownProperties.RefDate).Value;
+            foreach (
+                ExtForceFileItem extForceFileItem in
+                extForceFileItems.Where(i => ExtForceQuantNames.WindQuantityNames.Values.Contains(i.Quantity)))
+            {
+                supportedExtForceFileItems.Add(extForceFileItem);
+                try
+                {
+                    IWindField windField = ExtForceFileHelper.CreateWindField(extForceFileItem, ExtFilePath);
+
+                    string windFile =
+                        GetOtherFilePathInSameDirectory(ExtSubFilesReferenceFilePath, extForceFileItem.FileName);
+
+                    if (!File.Exists(windFile))
+                    {
+                        throw new FileNotFoundException($"Wind file {windFile} could not be found");
+                    }
+
+                    if (windField is UniformWindField)
+                    {
+                        var fileReader = new TimFile();
+                        fileReader.Read(windFile, windField.Data, refDate);
+                    }
+
+                    modelDefinition.WindFields.Add(windField);
+                    existingForceFileItems[extForceFileItem] = windField;
+                }
+                catch (Exception e)
+                {
+                    log.Warn(e.Message);
+                }
+            }
+        }
+
+        private IEnumerable<ExtForceFileItem> FilterByFrictionType(IEnumerable<ExtForceFileItem> extForceFileItems,
+                                                                   WaterFlowFMModelDefinition modelDefinition)
+        {
+            WaterFlowFMProperty frictionTypeProperty = modelDefinition.Properties.FirstOrDefault(p => p.PropertyDefinition.MduPropertyName == KnownProperties.FrictionType);
+
+            int modelFrictionType = frictionTypeProperty != null
+                                        ? GetIntegerPropertyValue(frictionTypeProperty.GetValueAsString())
+                                        : 1;
+
+            foreach (ExtForceFileItem extForceFileItem in extForceFileItems)
+            {
+                if (extForceFileItem.Quantity != ExtForceQuantNames.FrictCoef)
+                {
+                    continue;
+                }
+
+                int frictionType = modelFrictionType;
+
+                if (extForceFileItem.ModelData.ContainsKey(frictionTypeKey))
+                {
+                    frictionType = GetIntegerPropertyValue(extForceFileItem.ModelData[frictionTypeKey].ToString());
+                }
+
+                if (frictionType != modelFrictionType)
+                {
+                    log.WarnFormat("Ignoring roughness operation with friction {0} type unequal to uniform model friction type {1}",
+                                   frictionType, modelFrictionType);
+                }
+                else
+                {
+                    yield return extForceFileItem;
+                }
+            }
+        }
+
+        private void SetFileName(ExtForceFileItem extForceFileItem)
+        {
+            if (string.IsNullOrEmpty(extForceFileItem.FileName))
+            {
+                extForceFileItem.FileName = GetValuePart(currentLine);
+            }
+            else
+            {
+                LogWarningQuantityPropertyAlreadySet(fileNameKey);
+            }
+        }
+
+        private void SetFileType(ExtForceFileItem extForceFileItem)
+        {
+            if (extForceFileItem.FileName == null)
+            {
+                throw new FormatException(GetMessageUnexpectedKeyword(fileTypeKey));
+            }
+
+            if (extForceFileItem.FileType == int.MinValue)
+            {
+                extForceFileItem.FileType = GetIntegerPropertyValue(currentLine);
+            }
+            else
+            {
+                LogWarningQuantityPropertyAlreadySet(fileTypeKey);
+            }
+        }
+
+        private void SetMethod(ExtForceFileItem extForceFileItem)
+        {
+            if (extForceFileItem.FileType == int.MinValue)
+            {
+                throw new FormatException(GetMessageUnexpectedKeyword(methodKey));
+            }
+
+            if (extForceFileItem.Method == int.MinValue)
+            {
+                extForceFileItem.Method = GetIntegerPropertyValue(currentLine);
+
+                // backward compatibility: samples triangulation changed from 4 to 5 in #30984
+                if (extForceFileItem.FileType == ExtForceQuantNames.FileTypes.Triangulation &&
+                    extForceFileItem.Method == 4)
+                {
+                    extForceFileItem.Method = 5;
+                }
+            }
+            else
+            {
+                LogWarningQuantityPropertyAlreadySet(methodKey);
+            }
+        }
+
+        private void SetOperand(ExtForceFileItem extForceFileItem)
+        {
+            if (extForceFileItem.Method == int.MinValue)
+            {
+                throw new FormatException(GetMessageUnexpectedKeyword(operandKey));
+            }
+
+            if (extForceFileItem.Operand == null)
+            {
+                extForceFileItem.Operand = GetValuePart(currentLine);
+            }
+            else
+            {
+                LogWarningQuantityPropertyAlreadySet(operandKey);
+            }
+        }
+
+        private void SetValue(ExtForceFileItem extForceFileItem)
+        {
+            if (double.IsNaN(extForceFileItem.Value))
+            {
+                extForceFileItem.Value = GetDouble(GetValuePart(currentLine));
+            }
+            else
+            {
+                LogWarningQuantityPropertyAlreadySet(valueKey);
+            }
+        }
+
+        private void SetFactor(ExtForceFileItem extForceFileItem)
+        {
+            if (double.IsNaN(extForceFileItem.Factor))
+            {
+                extForceFileItem.Factor = GetDouble(GetValuePart(currentLine));
+            }
+            else
+            {
+                LogWarningQuantityPropertyAlreadySet(factorKey);
+            }
+        }
+
+        private void SetOffset(ExtForceFileItem extForceFileItem)
+        {
+            if (extForceFileItem.Operand == null)
+            {
+                throw new FormatException(GetMessageUnexpectedKeyword(offsetKey));
+            }
+
+            if (double.IsNaN(extForceFileItem.Offset))
+            {
+                extForceFileItem.Offset = GetDouble(GetValuePart(currentLine));
+            }
+            else
+            {
+                LogWarningQuantityPropertyAlreadySet(offsetKey);
+            }
+        }
+
+        private void SetArea(ExtForceFileItem extForceFileItem)
+        {
+            if (extForceFileItem.Quantity != ExtForceQuantNames.SourceAndSink && extForceFileItem.Operand == null)
+            {
+                throw new FormatException(GetMessageUnexpectedKeyword(AreaKey));
+            }
+
+            if (extForceFileItem.ModelData.ContainsKey(AreaKey))
+            {
+                LogWarningQuantityPropertyAlreadySet(AreaKey);
+            }
+
+            extForceFileItem.ModelData[AreaKey] = GetDoublePropertyValue(currentLine);
+        }
+
+        private void SetAveragingType(ExtForceFileItem extForceFileItem)
+        {
+            if (extForceFileItem.FileType != ExtForceQuantNames.FileTypes.Triangulation &&
+                extForceFileItem.Operand == null)
+            {
+                throw new FormatException(GetMessageUnexpectedKeyword(AveragingTypeKey));
+            }
+
+            if (extForceFileItem.ModelData.ContainsKey(AveragingTypeKey))
+            {
+                LogWarningQuantityPropertyAlreadySet(AveragingTypeKey);
+            }
+
+            extForceFileItem.ModelData[AveragingTypeKey] = GetIntegerPropertyValue(currentLine);
+        }
+
+        private void SetRelativeSearchCellSize(ExtForceFileItem extForceFileItem)
+        {
+            if (extForceFileItem.FileType != ExtForceQuantNames.FileTypes.Triangulation &&
+                extForceFileItem.Operand == null)
+            {
+                throw new FormatException(GetMessageUnexpectedKeyword(RelSearchCellSizeKey));
+            }
+
+            if (extForceFileItem.ModelData.ContainsKey(RelSearchCellSizeKey))
+            {
+                LogWarningQuantityPropertyAlreadySet(RelSearchCellSizeKey);
+            }
+
+            extForceFileItem.ModelData[RelSearchCellSizeKey] = GetDoublePropertyValue(currentLine);
+        }
+
+        private void SetFrictionType(ExtForceFileItem extForceFileItem)
+        {
+            if (extForceFileItem.ModelData.ContainsKey(frictionTypeKey))
+            {
+                LogWarningQuantityPropertyAlreadySet(frictionTypeKey);
+            }
+
+            extForceFileItem.ModelData[frictionTypeKey] = GetIntegerPropertyValue(currentLine);
+        }
+
+        private void LogWarningQuantityPropertyAlreadySet(string quantityName)
+        {
+            log.WarnFormat(
+                Resources
+                    .ExtForceFile_LogWarningQuantityPropertyAlreadySet__0__is_already_set__Line__1__of_file__2__will_be_ignored_,
+                quantityName, LineNumber, ExtFilePath);
+        }
+
+        private string GetMessageUnexpectedKeyword(string quantityName) =>
+            string.Format(
+                Resources.ExtForceFile_GetMessageUnexpectedKeyword_Unexpected_keyword__0__on_line__1__of_file__2_,
+                quantityName, LineNumber, ExtFilePath);
+
+        private static bool IsValidQuantity(ExtForceFileItem extForceFileItem) =>
+            !(string.IsNullOrEmpty(extForceFileItem?.FileName)
+              || extForceFileItem.FileType == int.MinValue
+              || extForceFileItem.Method == int.MinValue
+              || extForceFileItem.Operand == null
+              || !extForceFileItem.Enabled);
+
+        private static string GetKeyPart(string line) => line.Substring(0, line.IndexOf("=")).Trim();
+
+        private double GetDoublePropertyValue(string line) => GetDouble(GetValuePart(line), "double value");
+
+        private int GetIntegerPropertyValue(string line) => GetInt(GetValuePart(line), "integer value");
+
+        private string GetValuePart(string line)
+        {
+            string valuePart;
+            try
+            {
+                // Strip "key=" part away, if present:
+                valuePart = line.Substring(line.IndexOf("=", StringComparison.Ordinal) + 1).Trim();
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+                throw new FormatException($"Expected '<key>=<value>(!/#)<comment>' formatted line on line {LineNumber} of file {OutputFilePath}");
+            }
+
+            // Determine comment starting index:
+            int commentIndex1 = valuePart.IndexOf('!');
+            int commentIndex2 = valuePart.IndexOf('#');
+            int commentIndex = Math.Min(commentIndex1, commentIndex2);
+            if (commentIndex < 0)
+            {
+                // not both characters present, may one of them
+                commentIndex = Math.Max(commentIndex1, commentIndex2);
+            }
+
+            // Strip comment, if present:
+            if (commentIndex1 > 0)
+            {
+                valuePart = valuePart.Substring(0, commentIndex).Trim();
+            }
+
+            return valuePart;
+        }
+    }
+}
