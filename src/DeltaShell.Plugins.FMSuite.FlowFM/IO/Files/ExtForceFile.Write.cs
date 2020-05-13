@@ -423,69 +423,98 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             }
         }
 
-        private IEnumerable<ExtForceFileItem> WriteSpatialData(string quantity,
-                                                               IEnumerable<ISpatialOperation> spatialOperations,
+        private IEnumerable<ExtForceFileItem> WriteSpatialData(string quantity, IEnumerable<ISpatialOperation> spatialOperations,
                                                                string prefix = null)
         {
-            if (spatialOperations == null)
-            {
-                yield break;
-            }
-
             // if all ops are interpolations/set value within polygons, write them to the file
-            foreach (ISpatialOperation spatialOperation in spatialOperations)
+            foreach (ISpatialOperation spatialOperation in spatialOperations ?? Enumerable.Empty<ISpatialOperation>())
             {
-                var importSamplesOperation = spatialOperation as ImportSamplesSpatialOperation;
-                if (importSamplesOperation != null)
+                ExtForceFileItem extForceFileItem;
+                Action writeAction;
+                switch (spatialOperation)
                 {
-                    ExtForceFileItem extForceFileItem =
-                        ExtForceFileItemFactory.GetInitialConditionsSamplesItem(importSamplesOperation, quantity,
-                                                                                prefix, existingForceFileItems,
-                                                                                Path.GetDirectoryName(Path.GetFullPath(extFilePath)));
-
-                    if (WriteToDisk)
-                    {
-                        WriteInitialConditionsSamples(importSamplesOperation, extForceFileItem);
-                    }
-
-                    yield return extForceFileItem;
-                    continue;
+                    case ImportSamplesSpatialOperation importSamplesOperation:
+                        extForceFileItem = ExtForceFileItemFactory.GetInitialConditionsSamplesItem(importSamplesOperation, quantity,
+                                                                                                   prefix, existingForceFileItems,
+                                                                                                   Path.GetDirectoryName(Path.GetFullPath(extFilePath)));
+                        writeAction = () => WriteInitialConditionsSamples(importSamplesOperation, extForceFileItem);
+                        break;
+                    case SetValueOperation polygonOperation:
+                        extForceFileItem = ExtForceFileItemFactory.GetInitialConditionsPolygonItem(polygonOperation, quantity,
+                                                                                                   prefix, existingForceFileItems);
+                        writeAction = () => WriteInitialConditionsPolygon(polygonOperation, extForceFileItem);
+                        break;
+                    case AddSamplesOperation addSamplesOperation:
+                        extForceFileItem = ExtForceFileItemFactory.GetInitialConditionsUnsupportedItem(addSamplesOperation, quantity, prefix);
+                        writeAction = () => WriteInitialConditionsUnsupported(addSamplesOperation, extForceFileItem);
+                        break;
+                    default:
+                        throw new NotImplementedException(
+                            $"Cannot serialize operation of type {spatialOperation.GetType()} to external forcings file");
                 }
 
-                var polygonOperation = spatialOperation as SetValueOperation;
-                if (polygonOperation != null)
+                if (WriteToDisk)
                 {
-                    ExtForceFileItem extForceFileItem =
-                        ExtForceFileItemFactory.GetInitialConditionsPolygonItem(polygonOperation, quantity,
-                                                                                prefix, existingForceFileItems);
-
-                    if (WriteToDisk)
-                    {
-                        WriteInitialConditionsPolygon(polygonOperation, extForceFileItem);
-                    }
-
-                    yield return extForceFileItem;
-
-                    continue;
+                    writeAction();
                 }
 
-                var addSamplesOperation = spatialOperation as AddSamplesOperation;
-                if (addSamplesOperation != null)
-                {
-                    ExtForceFileItem extForceFileItem =
-                        ExtForceFileItemFactory.GetInitialConditionsUnsupportedItem(addSamplesOperation, quantity, prefix);
-
-                    if (WriteToDisk)
-                    {
-                        WriteInitialConditionsUnsupported(addSamplesOperation, extForceFileItem);
-                    }
-
-                    yield return extForceFileItem;
-                    continue;
-                }
-
-                throw new NotSupportedException($"Cannot serialize operation of type {spatialOperation.GetType()} to external forcings file");
+                yield return extForceFileItem;
             }
+        }
+
+        private void WriteInitialConditionsSamples(ImportSamplesOperation importSamplesOperation,
+                                                   ExtForceFileItem extForceFileItem)
+        {
+            string targetDirectory = Path.GetDirectoryName(Path.GetFullPath(extFilePath));
+
+            if (Path.GetDirectoryName(importSamplesOperation.FilePath) != targetDirectory)
+            {
+                try
+                {
+                    importSamplesOperation.SwitchToDirectory(targetDirectory);
+                    extForceFileItem.FileName =
+                        targetDirectory != null
+                            ? importSamplesOperation.FilePath.Replace(targetDirectory + "\\", "")
+                            : importSamplesOperation.FilePath;
+                }
+                catch (Exception e)
+                {
+                    log.Warn("Unable to import samples " + e.Message);
+                }
+            }
+        }
+
+        private void WriteInitialConditionsUnsupported(SampleSpatialOperation spatialOperation,
+                                                       ExtForceFileItem extForceFileItem)
+        {
+            string directoryName = Path.GetDirectoryName(extFilePath);
+            if (directoryName == null)
+            {
+                throw new ArgumentException("Could not get directory name from file path" + extFilePath);
+            }
+
+            string xyzFilePath = Path.Combine(directoryName, extForceFileItem.FileName);
+
+            XyzFile.Write(xyzFilePath, spatialOperation.GetPoints());
+        }
+
+        private void WriteInitialConditionsPolygon(SpatialOperation spatialOperation,
+                                                   ExtForceFileItem extForceFileItem)
+        {
+            string directoryName = Path.GetDirectoryName(extFilePath);
+            if (directoryName == null)
+            {
+                throw new ArgumentException("Could not get directory name from file path" + extFilePath);
+            }
+
+            if (directoryName != string.Empty && !Directory.Exists(directoryName))
+            {
+                Directory.CreateDirectory(directoryName);
+            }
+
+            string polFilePath = Path.Combine(directoryName, extForceFileItem.FileName);
+
+            new PolFile<Feature2DPolygon>().Write(polFilePath, spatialOperation.Mask.Provider.Features.OfType<IFeature>());
         }
 
         private IEnumerable<ExtForceFileItem> WriteWindItems(WaterFlowFMModelDefinition modelDefinition)
@@ -593,61 +622,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             }
         }
 
-        private void WriteInitialConditionsSamples(ImportSamplesOperation importSamplesOperation,
-                                                   ExtForceFileItem extForceFileItem)
-        {
-            string targetDirectory = Path.GetDirectoryName(Path.GetFullPath(extFilePath));
-            
-            if (Path.GetDirectoryName(importSamplesOperation.FilePath) != targetDirectory)
-            {
-                try
-                {
-                    importSamplesOperation.SwitchToDirectory(targetDirectory);
-                    extForceFileItem.FileName =
-                        targetDirectory != null
-                            ? importSamplesOperation.FilePath.Replace(targetDirectory + "\\", "")
-                            : importSamplesOperation.FilePath;
-                }
-                catch (Exception e)
-                {
-                    log.Warn("Unable to import samples " + e.Message);
-                }
-            }
-        }
-
-        private void WriteInitialConditionsUnsupported(SampleSpatialOperation spatialOperation,
-                                                       ExtForceFileItem extForceFileItem)
-        {
-            string directoryName = Path.GetDirectoryName(extFilePath);
-            if (directoryName == null)
-            {
-                throw new ArgumentException("Could not get directory name from file path" + extFilePath);
-            }
-
-            string xyzFilePath = Path.Combine(directoryName, extForceFileItem.FileName);
-
-            XyzFile.Write(xyzFilePath, spatialOperation.GetPoints());
-        }
-
-        private void WriteInitialConditionsPolygon(SpatialOperation spatialOperation,
-                                                   ExtForceFileItem extForceFileItem)
-        {
-            string directoryName = Path.GetDirectoryName(extFilePath);
-            if (directoryName == null)
-            {
-                throw new ArgumentException("Could not get directory name from file path" + extFilePath);
-            }
-
-            if (directoryName != string.Empty && !Directory.Exists(directoryName))
-            {
-                Directory.CreateDirectory(directoryName);
-            }
-
-            string polFilePath = Path.Combine(directoryName, extForceFileItem.FileName);
-
-            new PolFile<Feature2DPolygon>().Write(polFilePath, spatialOperation.Mask.Provider.Features.OfType<IFeature>());
-        }
-
         private static void RemoveDisabledComponentsFromSourceAndSink(SourceAndSink sourceAndSink,
                                                                       WaterFlowFMModelDefinition modelDefinition,
                                                                       IFunction function)
@@ -685,7 +659,5 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             return existingForceFileItems.Where(kvp => Equals(kvp.Value, value)).Select(kvp => kvp.Key)
                                          .FirstOrDefault();
         }
-
-        public static string MakeXyzFileName(string quantity) => string.Join(".", quantity.Replace(" ", "_").Replace("\t", "_"), ExtForceQuantNames.XyzFileExtension);
     }
 }
