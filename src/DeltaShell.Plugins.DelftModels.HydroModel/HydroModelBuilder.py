@@ -104,7 +104,7 @@ class HydroModelBuilder(object):
                 model.Region.SubRegions.Add(area)
 
             if fmPlugin.loaded:
-                flowfm = WaterFlowFMModel(None, False, None, Name=self.DFLOW_FM_MODEL_NAME)
+                flowfm = WaterFlowFMModel(Name=self.DFLOW_FM_MODEL_NAME)
                 model.Activities.Add(flowfm)
 
             if wavePlugin.loaded:
