@@ -22,7 +22,7 @@ namespace DelftTools.Hydro.Tests
         public void GivenChannel_WhenSettingLengthToNonPositiveValue_ThenLengthIsUnchanged()
         {
             // Given
-            var initialChannelLength = 10.0;
+            const double initialChannelLength = 10.0;
             var channel = new Channel {Length = initialChannelLength};
 
             // When
@@ -36,7 +36,7 @@ namespace DelftTools.Hydro.Tests
         public void GivenChannel_WhenSettingLengthToNonPositiveValue_ThenMessageIsLogged()
         {
             // Given
-            var initialChannelLength = 10.0;
+            const double initialChannelLength = 10.0;
             var channel = new Channel {Length = initialChannelLength};
 
             // When - Then
@@ -49,7 +49,7 @@ namespace DelftTools.Hydro.Tests
         {
             var weir = new Weir {Name = "weir"};
             var compositeStructure = new CompositeBranchStructure {Structures = {weir}};
-            weir.ParentStructure = compositeStructure; // TODO: bug in implementation of CompositeBranchStructure, should not be required
+            weir.ParentStructure = compositeStructure;
             var channel = new Channel
             {
                 BranchFeatures =
@@ -99,8 +99,8 @@ namespace DelftTools.Hydro.Tests
                     weir2
                 }
             };
-            weir1.ParentStructure = compositeStructure; // TODO: bug in implementation of CompositeBranchStructure, should not be required
-            weir2.ParentStructure = compositeStructure; // TODO: bug in implementation of CompositeBranchStructure, should not be required
+            weir1.ParentStructure = compositeStructure;
+            weir2.ParentStructure = compositeStructure;
             var channel = new Channel
             {
                 BranchFeatures =
@@ -131,8 +131,8 @@ namespace DelftTools.Hydro.Tests
                     gate2
                 }
             };
-            gate1.ParentStructure = compositeStructure; // TODO: bug in implementation of CompositeBranchStructure, should not be required
-            gate2.ParentStructure = compositeStructure; // TODO: bug in implementation of CompositeBranchStructure, should not be required
+            gate1.ParentStructure = compositeStructure;
+            gate2.ParentStructure = compositeStructure;
             var channel = new Channel
             {
                 BranchFeatures =
