@@ -15,7 +15,7 @@ using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
 
-namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
+namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.DataAccessBuilders
 {
     [TestFixture]
     public class BcFileFlowBoundaryDataBuilderTest
