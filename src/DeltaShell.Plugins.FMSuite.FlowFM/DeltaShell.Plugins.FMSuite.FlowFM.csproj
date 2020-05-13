@@ -158,6 +158,7 @@
     <Compile Include="FeatureData\FixedWeirSchemes.cs" />
     <Compile Include="FlowFMApplicationPlugin.cs" />
     <Compile Include="FeatureData\GeometryExtensions.cs" />
+    <Compile Include="IO\DataAccessBuilders\ExtForceFileItemFactory.cs" />
     <Compile Include="IO\DataAccessObjects\BcBlockData.cs" />
     <Compile Include="IO\DataAccessObjects\BcmBlockData.cs" />
     <Compile Include="IO\DataAccessObjects\BcmQuantityData.cs" />
