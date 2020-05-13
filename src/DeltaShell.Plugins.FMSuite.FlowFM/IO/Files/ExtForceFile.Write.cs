@@ -34,7 +34,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         /// <param name="modelDefinition"> External forcings data </param>
         /// <param name="writeBoundaryConditions"> Whether we are writing boundary conditions. </param>
         public void Write(string extForceFilePath, WaterFlowFMModelDefinition modelDefinition,
-                          bool writeBoundaryConditions = true, bool switchTo = true)
+                          bool writeBoundaryConditions, bool switchTo)
         {
             extFilePath = extForceFilePath;
             Write(modelDefinition, writeBoundaryConditions, switchTo);
@@ -252,12 +252,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                 ExtForceFileItemFactory.GetUnknownQuantitiesItems(modelDefinition))
             {
                 ExtForceFileItem extForceFileItem = unknownQuantitiesItem.Value;
-                if (WriteToDisk)
-                {
-                    string relativeFilePath = extForceFileItem.FileName;
-                    string targetPath = Path.Combine(GetDirectoryName(), relativeFilePath);
-                    unknownQuantitiesItem.Key.CopyTo(targetPath);
-                }
+                string relativeFilePath = extForceFileItem.FileName;
+                string targetPath = Path.Combine(GetDirectoryName(), relativeFilePath);
+                unknownQuantitiesItem.Key.CopyTo(targetPath);
 
                 yield return extForceFileItem;
             }
@@ -272,11 +269,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
             foreach (KeyValuePair<SourceAndSink, ExtForceFileItem> sourceAndSink in sourceAndSinkItemsToWrite)
             {
-                if (WriteToDisk)
-                {
-                    WriteSourceAndSinkData(sourceAndSink, referenceTime, modelDefinition);
-                }
-
+                WriteSourceAndSinkData(sourceAndSink, referenceTime, modelDefinition);
                 yield return sourceAndSink.Value;
             }
         }
@@ -326,11 +319,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
             foreach (KeyValuePair<FlowBoundaryCondition, ExtForceFileItem> boundaryCondition in boundaryConditionsToWrite)
             {
-                if (WriteToDisk)
-                {
-                    WriteBoundaryData(boundaryCondition, referenceTime);
-                }
-
+                WriteBoundaryData(boundaryCondition, referenceTime);
                 yield return boundaryCondition.Value;
             }
         }
@@ -441,11 +430,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                             $"Cannot serialize operation of type {spatialDataItem.Key.GetType()} to external forcings file");
                 }
 
-                if (WriteToDisk)
-                {
-                    writeAction();
-                }
-
+                writeAction();
                 yield return extForceFileItem;
             }
         }
@@ -510,30 +495,28 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             var referenceTime = (DateTime) modelDefinition.GetModelProperty(KnownProperties.RefDate).Value;
             string directory = GetDirectoryName();
 
-            IDictionary<IWindField, ExtForceFileItem> items = ExtForceFileItemFactory.GetWindFieldItems(modelDefinition, ExistingForceFileItems);
+            IDictionary<IWindField, ExtForceFileItem> items =
+                ExtForceFileItemFactory.GetWindFieldItems(modelDefinition, ExistingForceFileItems);
 
             foreach (KeyValuePair<IWindField, ExtForceFileItem> windFieldItem in items)
             {
                 IWindField windField = windFieldItem.Key;
                 ExtForceFileItem extForceFileItem = windFieldItem.Value;
 
-                if (WriteToDisk)
+                if (windField is IFileBased fileBasedWindField)
                 {
-                    if (windField is IFileBased fileBasedWindField)
-                    {
-                        string newPath = Path.Combine(directory, extForceFileItem.FileName);
-                        fileBasedWindField.CopyTo(newPath);
-                    }
-
-                    if (windField is UniformWindField)
-                    {
-                        var timFile = new TimFile();
-                        string timFilePath = Path.Combine(directory, extForceFileItem.FileName);
-                        timFile.Write(timFilePath, windField.Data, referenceTime);
-                    }
-
-                    yield return extForceFileItem;
+                    string newPath = Path.Combine(directory, extForceFileItem.FileName);
+                    fileBasedWindField.CopyTo(newPath);
                 }
+
+                if (windField is UniformWindField)
+                {
+                    var timFile = new TimFile();
+                    string timFilePath = Path.Combine(directory, extForceFileItem.FileName);
+                    timFile.Write(timFilePath, windField.Data, referenceTime);
+                }
+
+                yield return extForceFileItem;
             }
         }
 
@@ -555,15 +538,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                         throw new InvalidOperationException("heat flux model was not correctly imported");
                     }
 
-                    if (WriteToDisk)
-                    {
-                        string newPath = Path.Combine(GetDirectoryName(), extForceFileItem.FileName);
-                        heatFluxModel.CopyTo(newPath, switchTo);
-                    }
+                    string newPath = Path.Combine(GetDirectoryName(), extForceFileItem.FileName);
+                    heatFluxModel.CopyTo(newPath, switchTo);
                 }
                 else
                 {
-                    if (WriteToDisk && extForceFileItem != null)
+                    if (extForceFileItem != null)
                     {
                         string path = GetOtherFilePathInSameDirectory(extFilePath, extForceFileItem.FileName);
                         new TimFile().Write(path, heatFluxModel.MeteoData,

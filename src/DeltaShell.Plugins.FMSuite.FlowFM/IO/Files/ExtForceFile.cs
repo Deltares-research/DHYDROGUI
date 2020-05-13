@@ -51,14 +51,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             ExistingForceFileItems = new Dictionary<ExtForceFileItem, object>();
             supportedExtForceFileItems = new HashSet<ExtForceFileItem>();
             PolyLineForceFileItems = new Dictionary<IFeatureData, ExtForceFileItem>();
-            WriteToDisk = true;
         }
 
         // items that existed in the file when the file was read
         public IDictionary<ExtForceFileItem, object> ExistingForceFileItems { get; }
         public IDictionary<IFeatureData, ExtForceFileItem> PolyLineForceFileItems { get; }
-
-        public bool WriteToDisk { get; set; }
 
         public IEnumerable<IBoundaryCondition> ExistingBoundaryConditions =>
             PolyLineForceFileItems.Keys.OfType<IBoundaryCondition>();
