@@ -10,11 +10,13 @@ using DeltaShell.NGHS.IO.DelftIniObjects;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.Common.IO.Files;
+using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessObjects;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
+using GeoAPI.Extensions.Feature;
 using log4net;
 using NetTopologySuite.Extensions.Features;
 
@@ -26,6 +28,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         public const string QuantityKey = "quantity";
         public const string LocationFileKey = "locationfile";
         public const string ForcingFileKey = "forcingfile";
+
         private const string areaKey = "area";
         private const string thatcherHarlemanTimeLagKey = "return_time";
         private const string openBoundaryToleranceKey = "OpenBoundaryTolerance";
@@ -112,14 +115,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                 refDate);
         }
 
-        private void Write(string filePath, string modelDefinitionModelName,
-                           IList<BoundaryConditionSet> boundaryConditionSets, IList<Embankment> embankments,
-                           WaterFlowFMProperty modelProperty, DateTime refDate)
+        private void Write(string filePath, string modelDefinitionModelName, IList<BoundaryConditionSet> boundaryConditionSets,
+                           IEnumerable<Embankment> embankments, ModelProperty modelProperty, DateTime refDate)
         {
             bndExtFilePath = filePath;
             IList<DelftIniCategory> bndExtForceFileItems =
                 WriteBndExtForceFileSubFiles(modelDefinitionModelName, boundaryConditionSets, refDate);
-            IList<DelftIniCategory> embankmentForceFileItems = WriteEmbankmentFiles(embankments);
+            IEnumerable<DelftIniCategory> embankmentForceFileItems = WriteEmbankmentFiles(embankments);
 
             List<DelftIniCategory> allItems = bndExtForceFileItems.Concat(embankmentForceFileItems).ToList();
             if (allItems.Count > 0)
@@ -188,7 +190,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
         private void WritePropertyValue(string propertyName, string propertyValue)
         {
-            WriteLine(propertyName + "=" + propertyValue);
+            WriteLine($"{propertyName}={propertyValue}");
         }
 
         // TODO: migrate sources & sinks to new format
@@ -233,7 +235,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             return resultingItems;
         }
 
-        private IList<DelftIniCategory> WriteEmbankmentFiles(IList<Embankment> embankments)
+        private IEnumerable<DelftIniCategory> WriteEmbankmentFiles(IEnumerable<Embankment> embankments)
         {
             var categories = new List<DelftIniCategory>();
 
@@ -293,9 +295,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         }
 
         private IEnumerable<DelftIniCategory> WriteBoundaryConditions(DateTime refDate, BcFile bcFile,
-                                                                      IEnumerable<IGrouping<string,
-                                                                          Tuple<IBoundaryCondition, BoundaryConditionSet
-                                                                          >>> grouping,
+                                                                      IEnumerable<IGrouping<string, Tuple<IBoundaryCondition, BoundaryConditionSet>>> grouping,
                                                                       BcFileFlowBoundaryDataBuilder boundaryDataBuilder,
                                                                       string modelDefinitionName)
         {
@@ -514,7 +514,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         }
 
         private static void LogWarningMessagesForOnePointGeometryEmbankments(
-            IList<Embankment> embankments, string pliFilePath)
+            IEnumerable<Embankment> embankments, string pliFilePath)
         {
             IEnumerable<Embankment> onePointEmbankments = embankments.Where(e => e.Geometry.Coordinates.Length == 1);
             string directory = Directory.GetParent(pliFilePath).FullName;
@@ -621,10 +621,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         }
 
         private static BcFileFlowBoundaryDataBuilder CreateFlowBoundaryDataBuilder(FlowBoundaryQuantityType quantity,
-                                                                                   Feature2D feature)
+                                                                                   IFeature feature)
         {
-            BcFileFlowBoundaryDataBuilder builder;
-
             List<FlowBoundaryQuantityType> excludedQuantities = Enum.GetValues(typeof(FlowBoundaryQuantityType))
                                                                     .Cast<FlowBoundaryQuantityType>()
                                                                     .Except(new[]
@@ -633,26 +631,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                                                                     })
                                                                     .ToList();
 
-            if (IsMorphologyRelatedProperty(quantity))
-            {
-                builder = new BcmFileFlowBoundaryDataBuilder
-                {
-                    ExcludedQuantities = excludedQuantities,
-                    OverwriteExistingData = true,
-                    CanCreateNewBoundaryCondition = true,
-                    LocationFilter = feature
-                };
-            }
-            else
-            {
-                builder = new BcFileFlowBoundaryDataBuilder
-                {
-                    ExcludedQuantities = excludedQuantities,
-                    OverwriteExistingData = true,
-                    CanCreateNewBoundaryCondition = true,
-                    LocationFilter = feature
-                };
-            }
+            BcFileFlowBoundaryDataBuilder builder = IsMorphologyRelatedProperty(quantity)
+                                                        ? new BcmFileFlowBoundaryDataBuilder()
+                                                        : new BcFileFlowBoundaryDataBuilder();
+
+            builder.ExcludedQuantities = excludedQuantities;
+            builder.OverwriteExistingData = true;
+            builder.CanCreateNewBoundaryCondition = true;
+            builder.LocationFilter = feature;
 
             return builder;
         }
