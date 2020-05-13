@@ -293,18 +293,31 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
         private void AddOrRenameDataItem(ICoverage coverage, string name)
         {
-            IDataItem existingDataItem = GetDataItemByValue(coverage);
-            if (existingDataItem == null)
+            IDataItem existingDataItemByValue = GetDataItemByValue(coverage);
+            IDataItem existingDataItemByName = GetDataItemByName(name);
+
+            if (existingDataItemByValue != null && existingDataItemByName != null)
             {
-                DataItems.Add(new DataItem(coverage, name) {Role = DataItemRole.Input});
+                return;
+            }
+
+            if (existingDataItemByValue != null)
+            {
+                existingDataItemByValue.Name = name;
+            }
+            else if (existingDataItemByName != null)
+            {
+                existingDataItemByName.Value = coverage;
             }
             else
             {
-                if (existingDataItem.Name != name)
-                {
-                    existingDataItem.Name = name;
-                }
+                DataItems.Add(new DataItem(coverage, name) { Role = DataItemRole.Input });
             }
+        }
+
+        private IDataItem GetDataItemByName(string dataItemName)
+        {
+            return AllDataItems.FirstOrDefault(di => di.Name == dataItemName);
         }
 
         private void AddOrRenameDataItems(CoverageDepthLayersList coverageDepthLayersList, string name)
