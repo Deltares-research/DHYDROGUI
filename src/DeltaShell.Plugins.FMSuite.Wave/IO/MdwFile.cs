@@ -7,6 +7,7 @@ using DelftTools.Functions;
 using DelftTools.Functions.Generic;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
+using DelftTools.Utils.Guards;
 using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.Common.IO;
 using DeltaShell.NGHS.Common.Logging;
@@ -689,16 +690,19 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
         /// <param name="modelDefinition">The model definition.</param>
         /// <param name="mdwCategories">The delft ini categories from the mdw file.</param>
         /// <param name="logHandler">The log handler.</param>
-        private void ConvertMdwCategoriesToModelDefinitionProperties(WaveModelDefinition modelDefinition,
-                                                                     IEnumerable<DelftIniCategory> mdwCategories,
-                                                                     ILogHandler logHandler)
+        private static void ConvertMdwCategoriesToModelDefinitionProperties(WaveModelDefinition modelDefinition, IList<DelftIniCategory> mdwCategories, ILogHandler logHandler)
         {
-            var backwardsCompatibilityHelper =
-                new DelftIniBackwardsCompatibilityHelper(new MdwFileBackwardsCompatibilityConfigurationValues());
+            ConvertMdwCategoryProperties(modelDefinition, mdwCategories, logHandler);
+            ConvertModelDefinitionProperties(modelDefinition, mdwCategories, logHandler);
+        }
+
+        private static void ConvertMdwCategoryProperties(WaveModelDefinition modelDefinition, IEnumerable<DelftIniCategory> mdwCategories, ILogHandler logHandler)
+        {
+            var backwardsCompatibilityHelper = new DelftIniBackwardsCompatibilityHelper(new MdwFileBackwardsCompatibilityConfigurationValues());
 
             foreach (DelftIniCategory category in mdwCategories)
             {
-                category.Name = backwardsCompatibilityHelper.GetUpdatedCategoryName(category.Name, logHandler) ?? category.Name;
+                category.Name = GetCategoryName(category, backwardsCompatibilityHelper, logHandler);
 
                 ModelPropertySchema<WaveModelPropertyDefinition> modelSchema = modelDefinition.ModelSchema;
                 if (!modelSchema.ModelDefinitionCategory.ContainsKey(category.Name))
@@ -709,76 +713,100 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                 ModelPropertyGroup definedCategory = modelSchema.ModelDefinitionCategory[category.Name];
                 foreach (DelftIniProperty mdwProperty in category.Properties)
                 {
-                    if (backwardsCompatibilityHelper.IsObsoletePropertyName(mdwProperty.Name))
+                    if (IsObsoleteProperty(mdwProperty, backwardsCompatibilityHelper, logHandler))
                     {
-                        logHandler?.ReportWarningFormat(Common.Properties.Resources.Parameter__0__is_not_supported_by_our_computational_core_and_will_be_removed_from_your_input_file, mdwProperty.Name);
                         continue;
                     }
 
-                    string propName = backwardsCompatibilityHelper.GetUpdatedPropertyName(mdwProperty.Name, logHandler) ?? mdwProperty.Name;
-                    string propertyValue = mdwProperty.Value;
+                    string propertyName = GetPropertyName(mdwProperty, backwardsCompatibilityHelper, logHandler);
 
-                    WaveModelPropertyDefinition definition =
-                        modelSchema.PropertyDefinitions.ContainsKey(propName.ToLower())
-                            ? modelSchema.PropertyDefinitions[propName.ToLower()]
-                            : new WaveModelPropertyDefinition
-                            {
-                                Caption = mdwProperty.Name,
-                                DataType = typeof(string),
-                                FileCategoryName = category.Name,
-                                FilePropertyName = mdwProperty.Name,
-                                Category = definedCategory.Name,
-                                // default value as string should always be an empty string and not null.
-                                DefaultValueAsString = string.Empty
-                            };
+                    WaveModelPropertyDefinition definition = GetWaveModelPropertyDefinition(mdwProperty, modelSchema, category, definedCategory, propertyName);
 
-                    modelDefinition.SetModelProperty(category.Name, propName,
-                                                     new WaveModelProperty(definition, propertyValue));
+                    modelDefinition.SetModelProperty(category.Name, propertyName, new WaveModelProperty(definition, mdwProperty.Value));
                 }
             }
+        }
 
-            foreach (KeyValuePair<string, WaveModelPropertyDefinition> propertyDefinition in modelDefinition
-                                                                                             .ModelSchema
-                                                                                             .PropertyDefinitions)
+        private static void ConvertModelDefinitionProperties(WaveModelDefinition modelDefinition, IEnumerable<DelftIniCategory> mdwCategories, ILogHandler logHandler)
+        {
+            foreach (KeyValuePair<string, WaveModelPropertyDefinition> propertyDefinition in modelDefinition.ModelSchema.PropertyDefinitions)
             {
-                if (propertyDefinition.Value.MultipleDefaultValuesAvailable)
+                WaveModelPropertyDefinition propertyValue = propertyDefinition.Value;
+
+                if (!propertyValue.MultipleDefaultValuesAvailable)
                 {
-                    string nameOfDependentOnProperty = propertyDefinition.Value.DefaultValueDependentOn;
-                    string nameOfPropertyWithMultipleDefaultValues = propertyDefinition.Value.FilePropertyName;
-                    string categoryNameWithPropertyWithMultipleDefaultValues =
-                        propertyDefinition.Value.FileCategoryName;
-
-                    //Both available
-                    List<DelftIniCategory> categoryOfDependentOnProperty =
-                        mdwCategories.Where(mc => mc.Properties
-                                                    .Any(p => p.Name.Equals(nameOfDependentOnProperty)))
-                                     .ToList();
-
-                    List<DelftIniCategory> categoryOfPropertyWithMultipleDefaultValues =
-                        mdwCategories.Where(mc => mc.Properties
-                                                    .Any(p => p.Name.Equals(nameOfPropertyWithMultipleDefaultValues)))
-                                     .ToList();
-
-                    //Situation in which property with multiple default values is missing and corresponding default value will be set.
-                    if (!categoryOfPropertyWithMultipleDefaultValues.Any() && categoryOfDependentOnProperty.Any())
-                    {
-                        Log.WarnFormat(
-                            "In the MDW file the property {0} is missing. Based on property {1} the default value is set",
-                            nameOfPropertyWithMultipleDefaultValues, nameOfDependentOnProperty);
-
-                        string categoryNameOfDependentOnProperty = categoryOfDependentOnProperty[0].Name;
-                        WaveModelProperty dependentOnProperty =
-                            modelDefinition.GetModelProperty(categoryNameOfDependentOnProperty,
-                                                             nameOfDependentOnProperty);
-                        WaveModelProperty propertyWithMultipleDefaultValues =
-                            modelDefinition.GetModelProperty(categoryNameWithPropertyWithMultipleDefaultValues,
-                                                             nameOfPropertyWithMultipleDefaultValues);
-                        var index = (int) dependentOnProperty.Value;
-                        propertyWithMultipleDefaultValues.SetValueAsString(
-                            propertyWithMultipleDefaultValues.PropertyDefinition.MultipleDefaultValues[index]);
-                    }
+                    continue;
                 }
+
+                string nameOfDependentOnProperty = propertyValue.DefaultValueDependentOn;
+                string nameOfPropertyWithMultipleDefaultValues = propertyValue.FilePropertyName;
+                string categoryNameWithPropertyWithMultipleDefaultValues = propertyValue.FileCategoryName;
+
+                IEnumerable<DelftIniCategory> categoryOfDependentOnProperty = GetCategoriesWithPropertyName(mdwCategories, nameOfDependentOnProperty);
+                IEnumerable<DelftIniCategory> categoryOfPropertyWithMultipleDefaultValues = GetCategoriesWithPropertyName(mdwCategories, nameOfPropertyWithMultipleDefaultValues);
+
+                // Situation in which property with multiple default values is missing and corresponding default value will be set.
+                if (categoryOfPropertyWithMultipleDefaultValues.Any() || !categoryOfDependentOnProperty.Any())
+                {
+                    continue;
+                }
+
+                logHandler.ReportWarningFormat("In the MDW file the property {0} is missing. Based on property {1} the default value is set",
+                                               nameOfPropertyWithMultipleDefaultValues, nameOfDependentOnProperty);
+
+                WaveModelProperty dependentOnProperty = modelDefinition.GetModelProperty(categoryOfDependentOnProperty.First().Name, nameOfDependentOnProperty);
+                WaveModelProperty propertyWithMultipleDefaultValues = modelDefinition.GetModelProperty(categoryNameWithPropertyWithMultipleDefaultValues, nameOfPropertyWithMultipleDefaultValues);
+
+                var index = (int) dependentOnProperty.Value;
+                propertyWithMultipleDefaultValues.SetValueAsString(propertyWithMultipleDefaultValues.PropertyDefinition.MultipleDefaultValues[index]);
             }
+        }
+
+        private static string GetCategoryName(DelftIniCategory category, DelftIniBackwardsCompatibilityHelper backwardsCompatibilityHelper, ILogHandler logHandler)
+        {
+            return backwardsCompatibilityHelper.GetUpdatedCategoryName(category.Name, logHandler) ?? category.Name;
+        }
+
+        private static string GetPropertyName(DelftIniProperty mdwProperty, DelftIniBackwardsCompatibilityHelper backwardsCompatibilityHelper, ILogHandler logHandler)
+        {
+            return backwardsCompatibilityHelper.GetUpdatedPropertyName(mdwProperty.Name, logHandler) ?? mdwProperty.Name;
+        }
+
+        private static WaveModelPropertyDefinition GetWaveModelPropertyDefinition(DelftIniProperty mdwProperty, ModelPropertySchema<WaveModelPropertyDefinition> modelSchema, DelftIniCategory category, ModelPropertyGroup definedCategory, string propName)
+        {
+            return modelSchema.PropertyDefinitions.ContainsKey(propName.ToLower())
+                       ? modelSchema.PropertyDefinitions[propName.ToLower()]
+                       : CreateWaveModelPropertyDefinition(mdwProperty, category, definedCategory);
+        }
+
+        private static bool IsObsoleteProperty(DelftIniProperty mdwProperty, DelftIniBackwardsCompatibilityHelper backwardsCompatibilityHelper, ILogHandler logHandler)
+        {
+            if (!backwardsCompatibilityHelper.IsObsoletePropertyName(mdwProperty.Name))
+            {
+                return false;
+            }
+
+            logHandler.ReportWarningFormat(Common.Properties.Resources.Parameter__0__is_not_supported_by_our_computational_core_and_will_be_removed_from_your_input_file, mdwProperty.Name);
+            return true;
+        }
+
+        private static WaveModelPropertyDefinition CreateWaveModelPropertyDefinition(DelftIniProperty mdwProperty, DelftIniCategory category, ModelPropertyGroup definedCategory)
+        {
+            return new WaveModelPropertyDefinition
+            {
+                Caption = mdwProperty.Name,
+                DataType = typeof(string),
+                FileCategoryName = category.Name,
+                FilePropertyName = mdwProperty.Name,
+                Category = definedCategory.Name,
+                // default value as string should always be an empty string and not null.
+                DefaultValueAsString = string.Empty
+            };
+        }
+
+        private static IEnumerable<DelftIniCategory> GetCategoriesWithPropertyName(IEnumerable<DelftIniCategory> mdwCategories, string propertyName)
+        {
+            return mdwCategories.Where(mc => mc.Properties.Any(p => p.Name.Equals(propertyName))).ToList();
         }
 
         private IEnumerable<WaveDomainData> CreateWaveDomainData(IEnumerable<DelftIniCategory> categories)

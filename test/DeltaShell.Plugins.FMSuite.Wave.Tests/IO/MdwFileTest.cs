@@ -29,6 +29,7 @@ using log4net.Core;
 using NetTopologySuite.Extensions.Grids;
 using NSubstitute;
 using NUnit.Framework;
+using NUnit.Framework.Constraints;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
 {
@@ -448,28 +449,30 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             var mdwFile = new MdwFile();
             string importedMdwFilePath = TestHelper.GetTestFilePath(@"ModelWithMissingMultipleDefaultValues\Waves.mdw");
 
-            var expectedMessages = new List<string>();
-            expectedMessages.Add(
-                "In the MDW file the property BedFricCoef is missing. Based on property BedFriction the default value is set");
-            expectedMessages.Add(
-                "In the MDW file the property MaxIter is missing. Based on property SimMode the default value is set");
+            var expectedMessages = new List<string>
+            {
+                "In the MDW file the property BedFricCoef is missing. Based on property BedFriction the default value is set",
+                "In the MDW file the property MaxIter is missing. Based on property SimMode the default value is set"
+            };
 
             IEnumerable<string> messages = expectedMessages;
 
-            TestHelper.AssertLogMessagesAreGenerated(() =>
-                                                     {
-                                                         WaveModelDefinition modelDefinition = mdwFile.Load(importedMdwFilePath);
-                                                         WaveModelProperty propertyBedFrictionCoef = modelDefinition.GetModelProperty(KnownWaveCategories.ProcessesCategory,
-                                                                                                                                      KnownWaveProperties.BedFrictionCoef);
-                                                         Assert.IsNotNull(propertyBedFrictionCoef);
-                                                         Assert.AreEqual("0.05", propertyBedFrictionCoef.GetValueAsString());
+            void Action()
+            {
+                WaveModelDefinition modelDefinition = mdwFile.Load(importedMdwFilePath);
+                WaveModelProperty propertyBedFrictionCoef = modelDefinition.GetModelProperty(KnownWaveCategories.ProcessesCategory, KnownWaveProperties.BedFrictionCoef);
+                Assert.IsNotNull(propertyBedFrictionCoef);
+                Assert.AreEqual("0.05", propertyBedFrictionCoef.GetValueAsString());
 
-                                                         WaveModelProperty propertyMaxIter = modelDefinition.GetModelProperty(KnownWaveCategories.NumericsCategory,
-                                                                                                                              KnownWaveProperties.MaxIter);
-                                                         Assert.IsNotNull(propertyMaxIter);
-                                                         Assert.AreEqual("15", propertyMaxIter.GetValueAsString());
-                                                     }
-                                                     , messages);
+                WaveModelProperty propertyMaxIter = modelDefinition.GetModelProperty(KnownWaveCategories.NumericsCategory, KnownWaveProperties.MaxIter);
+                Assert.IsNotNull(propertyMaxIter);
+                Assert.AreEqual("15", propertyMaxIter.GetValueAsString());
+            }
+
+            string logMessage = TestHelper.GetAllRenderedMessages(Action).Single();
+
+            Assert.That(logMessage, new ContainsConstraint("- In the MDW file the property BedFricCoef is missing. Based on property BedFriction the default value is set"));
+            Assert.That(logMessage, new ContainsConstraint("- In the MDW file the property MaxIter is missing. Based on property SimMode the default value is set"));
         }
 
         [Test]
