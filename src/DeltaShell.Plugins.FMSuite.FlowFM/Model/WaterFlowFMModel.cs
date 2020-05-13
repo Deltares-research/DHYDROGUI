@@ -62,7 +62,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             runner = new DimrRunner(this);
             importProgressChanged = progressChanged;
 
-            // Create Sediment mode data item
+            // Create sediment model data item
             SedimentModelDataItem = new SedimentModelDataItem();
 
             // Set default settings
@@ -382,6 +382,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                 }
 
                 sedimentFractions = value;
+
                 if (sedimentFractions != null)
                 {
                     ((INotifyPropertyChanged) SedimentFractions).PropertyChanged += SedimentFractionPropertyChanged;
@@ -469,7 +470,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             get => ModelDefinition.UseMorphologySediment;
             private set
             {
-                // empty, but just used for event bubbling                
+                // empty, but just used for event bubbling
             }
         }
 
@@ -478,7 +479,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             get => ModelDefinition.WriteSnappedFeatures;
             private set
             {
-                // empty, but just used for event bubbling                
+                // empty, but just used for event bubbling
             }
         }
 
@@ -609,8 +610,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             }
         }
 
-        public bool HydFileOutput { get; set; } // always on ??
-
         private int CdType
         {
             get => Convert.ToInt32(ModelDefinition.GetModelProperty(KnownProperties.ICdtyp).Value);
@@ -650,7 +649,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                 {
                     OutputMapFileStore.SetCoordinateSystem(value);
                 }
-                // coverages are handled via the feature collections.
+
+                // Note: coverages are handled via the feature collections.
 
                 InvalidateSnapping();
             }

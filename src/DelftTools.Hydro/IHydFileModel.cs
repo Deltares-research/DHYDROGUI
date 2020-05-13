@@ -11,10 +11,5 @@ namespace DelftTools.Hydro
         /// Path to the produced hyd file
         /// </summary>
         string HydFilePath { get; }
-
-        /// <summary>
-        /// Enables hyd file output to be created
-        /// </summary>
-        bool HydFileOutput { get; set; }
     }
 }
