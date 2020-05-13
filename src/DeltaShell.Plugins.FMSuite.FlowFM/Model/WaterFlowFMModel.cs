@@ -95,17 +95,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                 SynchronizeModelDefinitions();
 
                 Grid = new UnstructuredGrid();
+
                 InitializeUnstructuredGridCoverages();
 
                 AddSpatialDataItems();
+
                 RenameSubFilesIfApplicable();
             }
             else
             {
                 LoadStateFromMdu(mduFilePath);
 
-                FireImportProgressChanged("Reading spatial operations", 9, TotalImportSteps);
                 AddSpatialDataItems();
+
+                FireImportProgressChanged("Reading spatial operations", 9, TotalImportSteps);
                 ImportSpatialOperationsAfterCreating();
 
                 if (clearOutputDirs)
@@ -113,6 +116,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                     ClearOutputDirAndWaqDirProperty();
                 }
             }
+
+            InitializeSyncers();
 
             importProgressChanged = null;
         }
@@ -209,8 +214,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             DepthLayerDefinition = ModelDefinition.Kmx == 0
                                        ? new DepthLayerDefinition(DepthLayerType.Single)
                                        : new DepthLayerDefinition(ModelDefinition.Kmx);
-
-            InitializeSyncers();
         }
 
         private void AddTracerToSourcesAndSink(string name)

@@ -34,17 +34,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
         private void OnLoad(string mduPath)
         {
+            ClearSyncers();
+            TracerDefinitions.Clear();
+
             LoadStateFromMdu(mduPath);
             ImportSpatialOperationsAfterLoading();
         }
 
         private void LoadStateFromMdu(string mduFilePath)
         {
-            // in case we're reloading into an existing flow model instance..cleanup first
-            ClearSyncers();
-
-            TracerDefinitions.Clear();
-
             LoadModelFromMdu(mduFilePath);
 
             SynchronizeModelDefinitions();
