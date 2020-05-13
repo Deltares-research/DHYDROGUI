@@ -10,7 +10,6 @@ using DeltaShell.Plugins.FMSuite.Common.IO.Files;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessObjects;
 using GeoAPI.Extensions.Feature;
-using log4net;
 using NetTopologySuite.Extensions.Features;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers
@@ -18,8 +17,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers
     // YAGNI (GvdO) merge into extforce file, or strip extforce file from all path/file logic, but now it is not clear who is doing what
     public static class ExtForceFileHelper
     {
-        private static readonly ILog log = LogManager.GetLogger(typeof(ExtForceFileHelper));
-
         private static readonly List<string> previousPaths = new List<string>();
 
         public static string GetPliFileName(IFeatureData featureData)

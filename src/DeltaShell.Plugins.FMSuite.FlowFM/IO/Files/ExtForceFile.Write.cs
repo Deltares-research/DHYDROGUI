@@ -13,6 +13,7 @@ using DeltaShell.Plugins.FMSuite.Common.FunctionStores;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.Common.IO.Files;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessObjects;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
@@ -284,31 +285,107 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
         private IEnumerable<ExtForceFileItem> WriteBoundaryConditions(WaterFlowFMModelDefinition modelDefinition)
         {
-            var referenceTime = (DateTime)modelDefinition.GetModelProperty(KnownProperties.RefDate).Value;
+            IDictionary<FlowBoundaryCondition, ExtForceFileItem> boundaryConditionsToWrite =
+                ExtForceFileItemFactory.GetBoundaryConditionsItems(modelDefinition, polyLineForceFileItems);
 
             foreach (BoundaryConditionSet boundaryConditionSet in modelDefinition.BoundaryConditionSets.Where(bcs => bcs.Feature.Name != null))
             {
-                List<FlowBoundaryCondition> flowBoundaryConditions = boundaryConditionSet.BoundaryConditions.OfType<FlowBoundaryCondition>().ToList();
-
-                if (WriteToDisk && !flowBoundaryConditions.Any())
+                if (!boundaryConditionSet.BoundaryConditions.OfType<FlowBoundaryCondition>().Any())
                 {
                     log.WarnFormat("Boundary {0} has no boundary conditions defined for flow, and cannot be written to disc.",
                                    boundaryConditionSet.Name);
                 }
+            }
 
-                foreach (FlowBoundaryCondition flowBoundaryCondition in flowBoundaryConditions)
+            var referenceTime = (DateTime)modelDefinition.GetModelProperty(KnownProperties.RefDate).Value;
+
+            foreach (KeyValuePair<FlowBoundaryCondition, ExtForceFileItem> boundaryCondition in boundaryConditionsToWrite)
+            {
+                if (WriteToDisk)
                 {
-                    if (!polyLineForceFileItems.TryGetValue(flowBoundaryCondition, out ExtForceFileItem matchingItem))
+                    WriteBoundaryData(boundaryCondition, referenceTime);
+                }
+
+                yield return boundaryCondition.Value;
+            }
+        }
+
+        private void WriteBoundaryData(
+            KeyValuePair<FlowBoundaryCondition, ExtForceFileItem> boundaryConditionWithExtForceFileItem,
+            DateTime modelReferenceDate)
+        {
+            ExtForceFileItem extForceFileItem = boundaryConditionWithExtForceFileItem.Value;
+            FlowBoundaryCondition boundaryCondition = boundaryConditionWithExtForceFileItem.Key;
+
+            string directory = Path.GetDirectoryName(extFilePath);
+
+            string pliFilePath = Path.Combine(directory, extForceFileItem.FileName);
+
+            new PliFile<Feature2D>().Write(pliFilePath, new EventedList<Feature2D>
+            {
+                boundaryCondition.Feature
+            });
+
+            int count = boundaryCondition.Feature.Geometry.Coordinates.Length;
+
+            bool qhBoundary = boundaryCondition.DataType == BoundaryConditionDataType.Qh;
+            if (qhBoundary)
+            {
+                count = 1; //yet another inconsistency in the kernel
+            }
+
+            for (var i = 0; i < count; ++i)
+            {
+                string dataFileExtension =
+                    ExtForceQuantNames.ForcingToFileExtensionMapping[boundaryCondition.DataType];
+
+                string dataFilePath =
+                    ExtForceFileHelper.GetNumberedFilePath(pliFilePath, dataFileExtension, qhBoundary ? 0 : i + 1);
+
+                IFunction data = boundaryCondition.GetDataAtPoint(i);
+
+                if (data == null)
+                {
+                    if (File.Exists(dataFilePath))
                     {
-                        continue; //new boundary conditions shall be written by BndExtForceFile.
+                        File.Delete(dataFilePath);
                     }
+                }
+                else
+                {
+                    switch (boundaryCondition.DataType)
+                    {
+                        case BoundaryConditionDataType.HarmonicCorrection:
+                        case BoundaryConditionDataType.Harmonics:
+                        case BoundaryConditionDataType.AstroCorrection:
+                        case BoundaryConditionDataType.AstroComponents:
+                            new CmpFile().Write(dataFilePath, ExtForceFileHelper.ToHarmonicComponents(data));
+                            break;
+                        case BoundaryConditionDataType.TimeSeries:
+                            VerticalProfileDefinition depthLayerDefinition =
+                                boundaryCondition.GetDepthLayerDefinitionAtPoint(i);
+                            if (depthLayerDefinition != null &&
+                                depthLayerDefinition.Type != VerticalProfileType.Uniform)
+                            {
+                                new T3DFile().Write(
+                                    dataFilePath.Replace(ExtForceQuantNames.TimFileExtension,
+                                                         ExtForceQuantNames.T3DFileExtension), data,
+                                    depthLayerDefinition,
+                                    modelReferenceDate);
+                            }
+                            else
+                            {
+                                new TimFile().Write(dataFilePath, data, modelReferenceDate);
+                            }
 
-                    int index = boundaryConditionSet.BoundaryConditions
-                                                    .Where(b => b.VariableName == flowBoundaryCondition.VariableName)
-                                                    .ToList()
-                                                    .IndexOf(flowBoundaryCondition);
-
-                    yield return WriteBoundaryData(flowBoundaryCondition, referenceTime, index, matchingItem);
+                            break;
+                        case BoundaryConditionDataType.Qh:
+                            new QhFile().Write(dataFilePath, data);
+                            break;
+                        default:
+                            throw new Exception("Writing boundary condition type " + boundaryCondition.DataType +
+                                                " not (yet) implemented");
+                    }
                 }
             }
         }
@@ -456,103 +533,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                 log.ErrorFormat("Error during writing the heat flux model: {0}", ex.Message);
                 return extForceFileItems;
             }
-        }
-
-        private ExtForceFileItem WriteBoundaryData(FlowBoundaryCondition boundaryCondition,
-                                                         DateTime modelReferenceDate, int bcIndex,
-                                                         ExtForceFileItem existingExtForceFileItem = null)
-        {
-            string quantityName =
-                ExtForceQuantNames.GetQuantityString(boundaryCondition);
-
-            Operator operand = bcIndex == 0 ? Operator.Overwrite : Operator.Add;
-
-            ExtForceFileItem extForceFileItem = existingExtForceFileItem ?? new ExtForceFileItem(quantityName)
-            {
-                FileName = ExtForceFileHelper.GetPliFileName(boundaryCondition),
-                FileType = ExtForceQuantNames.FileTypes.PolyTim,
-                Method = 3,
-                Operand = ExtForceQuantNames.OperatorToStringMapping[operand]
-            };
-
-            extForceFileItem.Quantity = quantityName;
-            extForceFileItem.Offset = boundaryCondition.Offset == 0 ? double.NaN : boundaryCondition.Offset;
-            extForceFileItem.Factor = boundaryCondition.Factor == 1 ? double.NaN : boundaryCondition.Factor;
-
-            ExtForceFileHelper.AddSuffixInCaseOfDuplicateFile(extForceFileItem);
-
-            if (WriteToDisk)
-            {
-                string directory = Path.GetDirectoryName(extFilePath);
-
-                string pliFilePath = Path.Combine(directory, extForceFileItem.FileName);
-
-                new PliFile<Feature2D>().Write(pliFilePath, new EventedList<Feature2D> { boundaryCondition.Feature });
-
-                int count = boundaryCondition.Feature.Geometry.Coordinates.Length;
-
-                bool qhBoundary = boundaryCondition.DataType == BoundaryConditionDataType.Qh;
-                if (qhBoundary)
-                {
-                    count = 1; //yet another inconsistency in the kernel
-                }
-
-                for (var i = 0; i < count; ++i)
-                {
-                    string dataFileExtension =
-                        ExtForceQuantNames.ForcingToFileExtensionMapping[boundaryCondition.DataType];
-
-                    string dataFilePath = ExtForceFileHelper.GetNumberedFilePath(pliFilePath, dataFileExtension, qhBoundary ? 0 : i + 1);
-
-                    IFunction data = boundaryCondition.GetDataAtPoint(i);
-
-                    if (data == null)
-                    {
-                        if (File.Exists(dataFilePath))
-                        {
-                            File.Delete(dataFilePath);
-                        }
-                    }
-                    else
-                    {
-                        switch (boundaryCondition.DataType)
-                        {
-                            case BoundaryConditionDataType.HarmonicCorrection:
-                            case BoundaryConditionDataType.Harmonics:
-                            case BoundaryConditionDataType.AstroCorrection:
-                            case BoundaryConditionDataType.AstroComponents:
-                                new CmpFile().Write(dataFilePath, ExtForceFileHelper.ToHarmonicComponents(data));
-                                break;
-                            case BoundaryConditionDataType.TimeSeries:
-                                VerticalProfileDefinition depthLayerDefinition =
-                                    boundaryCondition.GetDepthLayerDefinitionAtPoint(i);
-                                if (depthLayerDefinition != null &&
-                                    depthLayerDefinition.Type != VerticalProfileType.Uniform)
-                                {
-                                    new T3DFile().Write(
-                                        dataFilePath.Replace(ExtForceQuantNames.TimFileExtension,
-                                                             ExtForceQuantNames.T3DFileExtension), data,
-                                        depthLayerDefinition,
-                                        modelReferenceDate);
-                                }
-                                else
-                                {
-                                    new TimFile().Write(dataFilePath, data, modelReferenceDate);
-                                }
-
-                                break;
-                            case BoundaryConditionDataType.Qh:
-                                new QhFile().Write(dataFilePath, data);
-                                break;
-                            default:
-                                throw new Exception("Writing boundary condition type " + boundaryCondition.DataType +
-                                                    " not (yet) implemented");
-                        }
-                    }
-                }
-            }
-
-            return extForceFileItem;
         }
 
         private ExtForceFileItem WriteSourceAndSinkData(SourceAndSink sourceAndSink,
