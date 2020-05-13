@@ -64,7 +64,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
         public void TestImportSimpleModelWith_SourceAndSink_Tracer_Morphology_CorrectlyUpdatesSourceAndSinkComponents()
         {
             var model = new WaterFlowFMModel();
-            model.LoadMdu(TestHelper.GetTestFilePath(@"SimpleModel_SourceAndSink_Tracer_Morphology\SimpleModel.mdu"));
+            model.ImportFromMdu(TestHelper.GetTestFilePath(@"SimpleModel_SourceAndSink_Tracer_Morphology\SimpleModel.mdu"));
 
             SourceAndSink sourceAndSink = model.SourcesAndSinks.FirstOrDefault();
 
@@ -97,7 +97,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
         public void TestAddingSourceAndSinkCorrectlyUpdatesSedimentFractionAndTracerNamesForSourceAndSink()
         {
             var model = new WaterFlowFMModel();
-            model.LoadMdu(TestHelper.GetTestFilePath(@"SimpleModel_SourceAndSink_Tracer_Morphology\SimpleModel.mdu"));
+            model.ImportFromMdu(TestHelper.GetTestFilePath(@"SimpleModel_SourceAndSink_Tracer_Morphology\SimpleModel.mdu"));
 
             var sourceAndSink = new SourceAndSink();
 
@@ -413,7 +413,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
 
             using (var model = new WaterFlowFMModel())
             {
-                model.LoadMdu(mduPath);
+                model.ImportFromMdu(mduPath);
 
                 ActivityRunner.RunActivity(model);
                 Assert.AreEqual(ActivityStatus.Cleaned, model.Status);
@@ -452,7 +452,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             mduPath = TestHelper.CreateLocalCopy(mduPath);
 
             var fmModel = new WaterFlowFMModel();
-            fmModel.LoadMdu(mduPath);
+            fmModel.ImportFromMdu(mduPath);
 
             Assert.That(fmModel.Name, Is.EqualTo("bendprof"));
             Assert.That(Path.GetFileName(fmModel.MduFilePath), Is.EqualTo("bendprof.mdu"));
@@ -498,7 +498,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             ICoordinateSystemFactory factory = Map.CoordinateSystemFactory;
 
             var model = new WaterFlowFMModel();
-            model.LoadMdu(TestHelper.GetTestFilePath(localMduFilePath));
+            model.ImportFromMdu(TestHelper.GetTestFilePath(localMduFilePath));
 
             model.CoordinateSystem = factory.CreateFromEPSG(28992);
 
@@ -543,7 +543,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             mduPath = TestHelper.CreateLocalCopy(mduPath);
 
             var model = new WaterFlowFMModel();
-            model.LoadMdu(mduPath);
+            model.ImportFromMdu(mduPath);
 
             ActivityRunner.RunActivity(model);
             var waterLevelFirstRun = (double) model.OutputWaterLevel[model.StopTime, 0];
@@ -565,7 +565,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             mduPath = TestHelper.CreateLocalCopy(mduPath);
 
             var model = new WaterFlowFMModel();
-            model.LoadMdu(mduPath);
+            model.ImportFromMdu(mduPath);
 
             ActivityRunner.RunActivity(model);
 
@@ -582,7 +582,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             mduPath = TestHelper.CreateLocalCopy(mduPath);
 
             var model = new WaterFlowFMModel();
-            model.LoadMdu(mduPath);
+            model.ImportFromMdu(mduPath);
 
             string outputDirectory = FileUtils.CreateTempDirectory();
             string diaFileName = string.Format("{0}.dia", model.Name);
@@ -607,7 +607,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             mduPath = TestHelper.CreateLocalCopy(mduPath);
 
             var model = new WaterFlowFMModel();
-            model.LoadMdu(mduPath);
+            model.ImportFromMdu(mduPath);
 
             string tempDir = Path.GetTempFileName();
             File.Delete(tempDir);
@@ -635,7 +635,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             string tempDir = FileUtils.CreateTempDirectory();
 
             var model = new WaterFlowFMModel();
-            model.LoadMdu(mduPath);
+            model.ImportFromMdu(mduPath);
 
             model.ModelDefinition.UseMorphologySediment = true;
             var sedFrac = new SedimentFraction
@@ -704,7 +704,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             model.ExportTo(mduExportPath);
 
             var modelAfterImport = new WaterFlowFMModel();
-            modelAfterImport.LoadMdu(mduExportPath);
+            modelAfterImport.ImportFromMdu(mduExportPath);
 
             ActivityRunner.RunActivity(modelAfterImport);
             string mduFilePathAfterExport = modelAfterImport.MduFilePath;
@@ -734,7 +734,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             mduPath = TestHelper.CreateLocalCopy(mduPath);
 
             var model = new WaterFlowFMModel();
-            model.LoadMdu(mduPath);
+            model.ImportFromMdu(mduPath);
 
             Assert.AreEqual(new DateTime(1992, 08, 31), model.StartTime);
 
@@ -753,7 +753,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             mduPath = TestHelper.CreateLocalCopy(mduPath);
 
             var model = new WaterFlowFMModel();
-            model.LoadMdu(mduPath);
+            model.ImportFromMdu(mduPath);
 
             Assert.AreEqual(null, model.CoordinateSystem);
         }
@@ -767,7 +767,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             mduPath = TestHelper.CreateLocalCopy(mduPath);
 
             var model = new WaterFlowFMModel();
-            model.LoadMdu(mduPath);
+            model.ImportFromMdu(mduPath);
 
             Assert.AreEqual("WGS 84", model.CoordinateSystem.Name);
         }
@@ -782,7 +782,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             mduPath = TestHelper.CreateLocalCopy(mduPath);
 
             var model = new WaterFlowFMModel();
-            model.LoadMdu(mduPath);
+            model.ImportFromMdu(mduPath);
 
             model.Initialize();
 
@@ -798,7 +798,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             mduPath = TestHelper.CreateLocalCopy(mduPath);
 
             var model = new WaterFlowFMModel();
-            model.LoadMdu(mduPath);
+            model.ImportFromMdu(mduPath);
 
             Assert.AreEqual(10, model.DepthLayerDefinition.NumLayers, "depth layers");
         }
@@ -813,7 +813,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             mduPath = TestHelper.CreateLocalCopy(mduPath);
 
             var model = new WaterFlowFMModel();
-            model.LoadMdu(mduPath);
+            model.ImportFromMdu(mduPath);
 
             string tempPath1 = Path.GetTempFileName();
             File.Delete(tempPath1);
@@ -844,7 +844,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             mduPath = TestHelper.CreateLocalCopy(mduPath);
 
             var model = new WaterFlowFMModel();
-            model.LoadMdu(mduPath);
+            model.ImportFromMdu(mduPath);
 
             string gridFile = model.NetFilePath;
 
@@ -864,7 +864,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
         public void ImportHarlingenAndCheckTimeSeries()
         {
             var model = new WaterFlowFMModel();
-            model.LoadMdu(TestHelper.GetTestFilePath(@"harlingen\har.mdu"));
+            model.ImportFromMdu(TestHelper.GetTestFilePath(@"harlingen\har.mdu"));
 
             IBoundaryCondition boundaryCondition =
                 model.BoundaryConditions.First(
@@ -899,7 +899,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             mduPath = TestHelper.CreateLocalCopy(mduPath);
 
             var model = new WaterFlowFMModel();
-            model.LoadMdu(mduPath);
+            model.ImportFromMdu(mduPath);
 
             var count = 0;
             ((INotifyPropertyChanged) model).PropertyChanged += (s, e) => count++;
@@ -921,7 +921,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             mduPath = TestHelper.CreateLocalCopy(mduPath);
 
             var model = new WaterFlowFMModel();
-            model.LoadMdu(mduPath);
+            model.ImportFromMdu(mduPath);
 
             Assert.IsTrue(model.ModelDefinition.SpatialOperations.Count > 0);
 
@@ -937,7 +937,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
         public void ImportSpatialOperationsTest()
         {
             var model = new WaterFlowFMModel();
-            model.LoadMdu(TestHelper.GetTestFilePath(@"chezy_samples\chezy.mdu"));
+            model.ImportFromMdu(TestHelper.GetTestFilePath(@"chezy_samples\chezy.mdu"));
 
             IValueConverter valueConverter = model.GetDataItemByValue(model.Roughness).ValueConverter;
             var spatialOperationValueConverter = valueConverter as SpatialOperationSetValueConverter;
@@ -954,7 +954,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
         public void ReloadBathymetryTest()
         {
             var model = new WaterFlowFMModel();
-            model.LoadMdu(TestHelper.GetTestFilePath(@"chezy_samples\chezy.mdu"));
+            model.ImportFromMdu(TestHelper.GetTestFilePath(@"chezy_samples\chezy.mdu"));
 
             UnstructuredGrid originalGrid = model.Grid;
             IDataItem bathymetryDataItem = model.GetDataItemByValue(model.Bathymetry);
@@ -986,7 +986,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
         public void ReloadGridShouldConstructEdges()
         {
             var model = new WaterFlowFMModel();
-            model.LoadMdu(TestHelper.GetTestFilePath(@"chezy_samples\chezy.mdu"));
+            model.ImportFromMdu(TestHelper.GetTestFilePath(@"chezy_samples\chezy.mdu"));
 
             new FlowFMNetFileImporter().ImportItem(TestHelper.GetTestFilePath(@"harlingen\fm_003_net.nc"), model);
             Assert.AreEqual(12845, model.Grid.Vertices.Count);
@@ -1096,7 +1096,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
 
             // Make FM model from Mdu file
             var fmModel = new WaterFlowFMModel();
-            fmModel.LoadMdu(mduFilePath);
+            fmModel.ImportFromMdu(mduFilePath);
 
             // Import dry points
 
@@ -1117,7 +1117,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
 
             // Make FM model from Mdu file
             var fmModel = new WaterFlowFMModel();
-            fmModel.LoadMdu(mduFilePath);
+            fmModel.ImportFromMdu(mduFilePath);
 
             // Import dry points
             fmModel.Area.Pumps.Add(new Pump2D {GroupName = Path.Combine(localPath, @"MduFileWithoutFeatureFileReferences/FeatureFiles/gate01.pli")});
@@ -1137,7 +1137,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
 
             // Make FM model from Mdu file
             var fmModel = new WaterFlowFMModel();
-            fmModel.LoadMdu(mduFilePath);
+            fmModel.ImportFromMdu(mduFilePath);
 
             // Import dry points
             fmModel.Area.Weirs.Add(new Weir2D {GroupName = Path.Combine(localPath, @"MduFileWithoutFeatureFileReferences/FeatureFiles/nonReferencedGates.pli")});
@@ -1155,7 +1155,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
 
             // Make FM model from Mdu file
             var fmModel = new WaterFlowFMModel();
-            fmModel.LoadMdu(mduFilePath);
+            fmModel.ImportFromMdu(mduFilePath);
 
             // Import dry points
             fmModel.Area.DryAreas.Add(new GroupableFeature2DPolygon() {GroupName = Path.Combine(localPath, @"MyDryAreas_dry.pol")});
@@ -1261,7 +1261,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
                 var counter = 0;
 
                 var fmModel = new WaterFlowFMModel();
-                fmModel.LoadMdu(mduFilePath);
+                fmModel.ImportFromMdu(mduFilePath);
 
                 fmModel.ReferenceTime = fmModel.StartTime;
                 fmModel.ProgressChanged += (sender, args) =>
@@ -1293,7 +1293,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             try
             {
                 var model = new WaterFlowFMModel();
-                model.LoadMdu(mduFilePath);
+                model.ImportFromMdu(mduFilePath);
 
                 ModelFeatureCoordinateData<FixedWeir> featureCoordinateData = model.FixedWeirsProperties.ElementAt(0);
 
@@ -1436,7 +1436,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             try
             {
                 var fmModel = new WaterFlowFMModel();
-                fmModel.LoadMdu(mduFilePath);
+                fmModel.ImportFromMdu(mduFilePath);
 
                 var clonedFmModel = fmModel.DeepClone() as WaterFlowFMModel;
 
@@ -1517,7 +1517,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             const string modelName = "some_model_name";
 
             var model = new WaterFlowFMModel();
-            model.LoadMdu(Path.Combine("directory", modelName + ".mdu"));
+            model.ImportFromMdu(Path.Combine("directory", modelName + ".mdu"));
 
             model.Name = modelName;
             model.ModelDefinition.ModelName = modelName;
@@ -1554,7 +1554,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
 
             //Load model 
             var model = new WaterFlowFMModel();
-            model.LoadMdu(mduPath);
+            model.ImportFromMdu(mduPath);
 
             object currentOutputDirectory = TypeUtils.GetField(model, "currentOutputDirectoryPath");
 
@@ -1570,7 +1570,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
 
             //Load model and "run"
             var model = new WaterFlowFMModel();
-            model.LoadMdu(mduPath);
+            model.ImportFromMdu(mduPath);
 
             TypeUtils.CallPrivateMethod(model, "OnFinish");
 
@@ -1593,7 +1593,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
 
                 //Load model and save
                 var model = new WaterFlowFMModel();
-                model.LoadMdu(mduPath);
+                model.ImportFromMdu(mduPath);
 
                 //Run, so that the CurrentOutputDirectory is set to WorkingDirectoryPath
                 TypeUtils.CallPrivateMethod(model, "OnFinish");
@@ -1640,7 +1640,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
 
                 //Create WaterFlowFMModel from target MDU, so that the outputDirectory is set correctly.
                 var model = new WaterFlowFMModel();
-                model.LoadMdu(targetMdu);
+                model.ImportFromMdu(targetMdu);
 
                 //Put random file and directory in targetfolder, so that you can check the clean up after a save.
                 Directory.CreateDirectory(Path.Combine(targetOutput, "blarg"));
@@ -1807,7 +1807,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             mduFilePath = TestHelper.CreateLocalCopy(mduFilePath);
 
             var model = new WaterFlowFMModel();
-            model.LoadMdu(mduFilePath);
+            model.ImportFromMdu(mduFilePath);
 
             string pathsRelativeToParent = model.ModelDefinition.GetModelProperty(KnownProperties.PathsRelativeToParent).GetValueAsString();
             Assert.AreEqual("0", pathsRelativeToParent, "The property for PathsRelativeToParent is {0} instead of 0. This is incorrect, because it was not written in the Mdu file", pathsRelativeToParent);
@@ -1951,7 +1951,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
         {
             // Given
             var model = new WaterFlowFMModel();
-            model.LoadMdu("input\\FlowFM.mdu");
+            model.ImportFromMdu("input\\FlowFM.mdu");
 
             model.DelwaqOutputDirectoryPath = delwaqOutputDirectoryPath;
 
@@ -1969,7 +1969,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             // Setup
             using (var model = new WaterFlowFMModel())
             {
-                model.LoadMdu(mduFilePath);
+                model.ImportFromMdu(mduFilePath);
 
                 model.Name = "modelB";
 

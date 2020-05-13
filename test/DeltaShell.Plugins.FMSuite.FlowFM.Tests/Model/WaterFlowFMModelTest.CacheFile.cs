@@ -55,7 +55,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
                 // Call
                 using (var model = new WaterFlowFMModel())
                 {
-                    model.LoadMdu(mduFilePath);
+                    model.ImportFromMdu(mduFilePath);
 
                     // Assert
                     Assert.That(model.CacheFile, Is.Not.Null, "Expected a .cache file to not be null.");
@@ -83,7 +83,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
 
                 using (var model = new WaterFlowFMModel())
                 {
-                    model.LoadMdu(mduFilePath);
+                    model.ImportFromMdu(mduFilePath);
 
                     // When
                     Run(model);
@@ -113,7 +113,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
 
                 using (var model = new WaterFlowFMModel())
                 {
-                    model.LoadMdu(inputMduFilePath);
+                    model.ImportFromMdu(inputMduFilePath);
 
                     // When
                     Export(model, outputMduFilePath);
@@ -143,7 +143,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
 
                 using (var model = new WaterFlowFMModel())
                 {
-                    model.LoadMdu(inputMduFilePath);
+                    model.ImportFromMdu(inputMduFilePath);
 
                     // When
                     Run(model);
@@ -174,7 +174,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
 
                 using (var model = new WaterFlowFMModel())
                 {
-                    model.LoadMdu(inputMduFilePath);
+                    model.ImportFromMdu(inputMduFilePath);
 
                     // When
                     Export(model, outputMduFilePath);
@@ -205,7 +205,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
 
                 using (var model = new WaterFlowFMModel())
                 {
-                    model.LoadMdu(inputMduFilePath);
+                    model.ImportFromMdu(inputMduFilePath);
 
                     // When
                     Export(model, outputMduFilePath);
@@ -237,7 +237,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
 
                 using (var model = new WaterFlowFMModel())
                 {
-                    model.LoadMdu(inputMduFilePath);
+                    model.ImportFromMdu(inputMduFilePath);
 
                     model.ModelDefinition.GetModelProperty(KnownProperties.UseCaching).Value = false;
 
@@ -270,7 +270,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
 
                 using (var model = new WaterFlowFMModel())
                 {
-                    model.LoadMdu(inputMduFilePath);
+                    model.ImportFromMdu(inputMduFilePath);
 
                     // When
                     Run(model);
@@ -303,7 +303,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
                 // When
                 using (WaterFlowFMModel model = new WaterFlowFMModel())
                 {
-                    model.LoadMdu(inputMduFilePath);
+                    model.ImportFromMdu(inputMduFilePath);
 
                     Export(model, outputMduFilePath);
 

@@ -395,7 +395,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         private static void ImportFlowFMModelAndAddToProject(IApplication app, string mduPath)
         {
             var fmModel = new WaterFlowFMModel();
-            fmModel.LoadMdu(mduPath);
+            fmModel.ImportFromMdu(mduPath);
 
             app.Project.RootFolder.Items.Add(fmModel);
         }

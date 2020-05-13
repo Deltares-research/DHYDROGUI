@@ -65,7 +65,7 @@ namespace DeltaShell.Dimr.Tests
 
             using (var model = new WaterFlowFMModel())
             {
-                model.LoadMdu(localCopy);
+                model.ImportFromMdu(localCopy);
 
                 // In order for this test to succeed, we need to manually set the Crest Width to anything greater than 0.
                 // This is due to the structures file (har_structures.ini) not containing values for Crest Width.

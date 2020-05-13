@@ -248,7 +248,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             {
                 /* Define new model */
                 var fmModel = new WaterFlowFMModel();
-                fmModel.LoadMdu(sedFile);
+                fmModel.ImportFromMdu(sedFile);
 
                 fmModel.ModelDefinition.UseMorphologySediment = true;
                 fmModel.Grid = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 2, 2);
@@ -430,7 +430,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 UnstructuredGrid grid = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 2, 2);
 
                 var fmModel = new WaterFlowFMModel();
-                fmModel.LoadMdu(sedFile);
+                fmModel.ImportFromMdu(sedFile);
 
                 fmModel.ModelDefinition.UseMorphologySediment = true;
                 fmModel.Grid = grid;
@@ -667,7 +667,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             model.ExportTo(mduPath);
 
             var importedModel = new WaterFlowFMModel();
-            importedModel.LoadMdu(mduPath);
+            importedModel.ImportFromMdu(mduPath);
 
             IEventedList<Feature2D> boundaries = importedModel.Boundaries;
             Assert.AreEqual(1, boundaries.Count);
@@ -766,7 +766,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             model.ExportTo(mduPath);
 
             var importedModel = new WaterFlowFMModel();
-            importedModel.LoadMdu(mduPath);
+            importedModel.ImportFromMdu(mduPath);
 
             IEventedList<Feature2D> boundaries = importedModel.Boundaries;
             Assert.AreEqual(1, boundaries.Count);

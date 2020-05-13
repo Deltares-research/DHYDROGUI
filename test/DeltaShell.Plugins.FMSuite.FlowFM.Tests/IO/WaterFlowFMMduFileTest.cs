@@ -182,7 +182,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             string fileObsPointsGroup1 = Path.Combine(mduDir, group1NameWE);
             using (var model = new WaterFlowFMModel())
             {
-                model.LoadMdu(mduFilePath);
+                model.ImportFromMdu(mduFilePath);
 
                 model.Area = new HydroArea();
 

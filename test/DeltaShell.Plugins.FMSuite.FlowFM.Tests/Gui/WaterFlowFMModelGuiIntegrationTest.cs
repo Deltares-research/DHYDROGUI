@@ -65,7 +65,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             mduPath = TestHelper.CreateLocalCopy(mduPath);
 
             var model = new WaterFlowFMModel();
-            model.LoadMdu(mduPath);
+            model.ImportFromMdu(mduPath);
 
             using (var gui = new DeltaShellGui())
             {
@@ -257,7 +257,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             mduPath = TestHelper.CreateLocalCopy(mduPath);
 
             var model = new WaterFlowFMModel();
-            model.LoadMdu(mduPath);
+            model.ImportFromMdu(mduPath);
 
             using (var gui = new DeltaShellGui())
             {
@@ -305,7 +305,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             mduPath = TestHelper.CreateLocalCopy(mduPath);
 
             var model = new WaterFlowFMModel { ShowModelRunConsole = true };
-            model.LoadMdu(mduPath);
+            model.ImportFromMdu(mduPath);
 
             model.ExplicitWorkingDirectory = model.WorkingDirectoryPath;
             using (var gui = new DeltaShellGui())
@@ -356,7 +356,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             mduPath = TestHelper.CreateLocalCopy(mduPath);
 
             var model = new WaterFlowFMModel {ShowModelRunConsole = true};
-            model.LoadMdu(mduPath);
+            model.ImportFromMdu(mduPath);
 
             using (var gui = new DeltaShellGui())
             {
@@ -399,7 +399,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             mduPath = TestHelper.CreateLocalCopy(mduPath);
 
             var model = new WaterFlowFMModel { ShowModelRunConsole = true };
-            model.LoadMdu(mduPath);
+            model.ImportFromMdu(mduPath);
 
             ActivityRunner.RunActivity(model);
 
@@ -565,7 +565,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                 testFilePath = TestHelper.CreateLocalCopy(testFilePath);
 
                 var model = new WaterFlowFMModel();
-                model.LoadMdu(testFilePath);
+                model.ImportFromMdu(testFilePath);
 
                 gui.Application.Project.RootFolder.Add(model);
 
@@ -1057,7 +1057,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             string mduPath = Path.Combine(tempDir, mduFileName);
 
             var model = new WaterFlowFMModel();
-            model.LoadMdu(mduPath);
+            model.ImportFromMdu(mduPath);
 
             return model;
         }

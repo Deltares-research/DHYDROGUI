@@ -34,7 +34,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.RgfGrid
             mduPath = TestHelper.CreateLocalCopy(mduPath);
 
             var model = new WaterFlowFMModel();
-            model.LoadMdu(mduPath);
+            model.ImportFromMdu(mduPath);
 
             PerformActionWithCancellationThread(MaxTimeOut, () =>
                                                     RgfGridEditor.OpenGrid(model.NetFilePath));
@@ -67,7 +67,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.RgfGrid
             mduPath = TestHelper.CreateLocalCopy(mduPath);
 
             var model = new WaterFlowFMModel();
-            model.LoadMdu(mduPath);
+            model.ImportFromMdu(mduPath);
 
             PerformActionWithCancellationThread(MaxTimeOut, () =>
                                                     RgfGridEditor.OpenGrid(model.NetFilePath, false, new[]

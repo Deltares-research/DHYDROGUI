@@ -36,7 +36,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                 mduPath = tempDirectory.CopyTestDataFileAndDirectoryToTempDirectory(mduPath);
 
                 var model = new WaterFlowFMModel();
-                model.LoadMdu(mduPath);
+                model.ImportFromMdu(mduPath);
 
                 var boundaryCondition = model.ModelDefinition.BoundaryConditions.ElementAt(0) as FlowBoundaryCondition;
                 Assert.That(boundaryCondition, Is.Not.Null);

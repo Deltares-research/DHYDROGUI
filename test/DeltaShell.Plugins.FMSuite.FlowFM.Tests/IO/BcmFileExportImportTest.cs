@@ -168,7 +168,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         {
             //Note, for the moment we assume these type of sediments are compatible with waterflowfm.
             var model = new WaterFlowFMModel();
-            model.LoadMdu(TestHelper.GetTestFilePath(@"simplebox/simplebox.mdu"));
+            model.ImportFromMdu(TestHelper.GetTestFilePath(@"simplebox/simplebox.mdu"));
 
             model.Name = "newname";
 

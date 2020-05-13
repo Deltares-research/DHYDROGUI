@@ -49,7 +49,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             mduPath = TestHelper.CreateLocalCopy(mduPath);
 
             var waterFlowFmModel = new WaterFlowFMModel();
-            waterFlowFmModel.LoadMdu(mduPath);
+            waterFlowFmModel.ImportFromMdu(mduPath);
 
             ShowModelLayers(waterFlowFmModel);
         }
@@ -63,7 +63,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             mduPath = TestHelper.CreateLocalCopy(mduPath);
 
             var waterFlowFmModel = new WaterFlowFMModel();
-            waterFlowFmModel.LoadMdu(mduPath);
+            waterFlowFmModel.ImportFromMdu(mduPath);
 
             ShowModelLayers(waterFlowFmModel);
         }
@@ -77,7 +77,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             mduPath = TestHelper.CreateLocalCopy(mduPath);
 
             var model = new WaterFlowFMModel();
-            model.LoadMdu(mduPath);
+            model.ImportFromMdu(mduPath);
 
             model.Area.DredgingLocations.Add(new GroupableFeature2D
             {
@@ -102,7 +102,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             mduPath = TestHelper.CreateLocalCopy(mduPath);
 
             var model = new WaterFlowFMModel();
-            model.LoadMdu(mduPath);
+            model.ImportFromMdu(mduPath);
 
             using (var gui = new DeltaShellGui())
             {

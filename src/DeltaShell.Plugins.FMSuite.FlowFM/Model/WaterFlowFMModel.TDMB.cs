@@ -72,7 +72,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             ExportTo(tempFilePath, false);
 
             var waterFlowFmModel = new WaterFlowFMModel();
-            waterFlowFmModel.LoadMdu(tempFilePath);
+            waterFlowFmModel.ImportFromMdu(tempFilePath);
 
             return waterFlowFmModel;
         }

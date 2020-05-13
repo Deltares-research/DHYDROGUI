@@ -148,7 +148,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             string localMduFilePath = TestHelper.CreateLocalCopy(mduPath);
 
             var model = new WaterFlowFMModel();
-            model.LoadMdu(localMduFilePath);
+            model.ImportFromMdu(localMduFilePath);
 
             ActivityRunner.RunActivity(model);
 
@@ -176,7 +176,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             string localMduFilePath = TestHelper.CreateLocalCopy(mduPath);
 
             var model = new WaterFlowFMModel();
-            model.LoadMdu(localMduFilePath);
+            model.ImportFromMdu(localMduFilePath);
 
             ActivityRunner.RunActivity(model);
 
@@ -212,7 +212,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             string localMduFilePath = TestHelper.CreateLocalCopy(mduPath);
 
             var model = new WaterFlowFMModel();
-            model.LoadMdu(localMduFilePath);
+            model.ImportFromMdu(localMduFilePath);
 
             ActivityRunner.RunActivity(model);
 
@@ -243,7 +243,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
             using (var model = new WaterFlowFMModel())
             {
-                model.LoadMdu(localMduFilePath);
+                model.ImportFromMdu(localMduFilePath);
 
                 var weir = new Weir2D("weir1", true)
                 {

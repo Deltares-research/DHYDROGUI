@@ -254,6 +254,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
                     using (var model = new WaterFlowFMModel())
                     {
+                        model.ImportFromMdu(tempMduFilePath);
+
                         AdjustSettingsOutputParameters(model);
                         UpdateBedLevel(model);
                         AddModelToProject(model, app);
@@ -302,7 +304,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
                     using (var model = new WaterFlowFMModel())
                     {
-                        model.LoadMdu(tempMduFilePath);
+                        model.ImportFromMdu(tempMduFilePath);
 
                         AdjustSettingsOutputParameters(model);
                         UpdateBedLevel(model);
@@ -351,7 +353,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
                     using (var model = new WaterFlowFMModel())
                     {
-                        model.LoadMdu(tempMduFilePath);
+                        model.ImportFromMdu(tempMduFilePath);
 
                         AdjustSettingsOutputParameters(model);
 
@@ -401,7 +403,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
                     using (var model = new WaterFlowFMModel())
                     {
-                        model.LoadMdu(tempMduFilePath);
+                        model.ImportFromMdu(tempMduFilePath);
 
                         AdjustSettingsOutputParameters(model);
                         UpdateBedLevel(model);
@@ -459,7 +461,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
                     using (var model = new WaterFlowFMModel())
                     {
-                        model.LoadMdu(tempMduFilePath);
+                        model.ImportFromMdu(tempMduFilePath);
 
                         AdjustSettingsOutputParameters(model);
                         UpdateBedLevel(model);
@@ -517,7 +519,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
                     using (var model = new WaterFlowFMModel())
                     {
-                        model.LoadMdu(tempMduFilePath);
+                        model.ImportFromMdu(tempMduFilePath);
 
                         AdjustSettingsOutputParameters(model);
                         UpdateBedLevel(model);
@@ -574,7 +576,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
                     using (var model = new WaterFlowFMModel())
                     {
-                        model.LoadMdu(tempMduFilePath);
+                        model.ImportFromMdu(tempMduFilePath);
 
                         AdjustSettingsOutputParameters(model);
                         UpdateBedLevel(model);
@@ -638,7 +640,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
                     using (var model = new WaterFlowFMModel())
                     {
-                        model.LoadMdu(tempMduFilePath);
+                        model.ImportFromMdu(tempMduFilePath);
 
                         AdjustSettingsOutputParameters(model);
                         UpdateBedLevel(model);
@@ -705,7 +707,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
                     using (var model = new WaterFlowFMModel())
                     {
-                        model.LoadMdu(tempMduFilePath);
+                        model.ImportFromMdu(tempMduFilePath);
 
                         AdjustSettingsOutputParameters(model);
                         UpdateBedLevel(model);
@@ -771,7 +773,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
                     using (var model = new WaterFlowFMModel())
                     {
-                        model.LoadMdu(tempMduFilePath);
+                        model.ImportFromMdu(tempMduFilePath);
 
                         AdjustSettingsOutputParameters(model);
                         UpdateBedLevel(model);
@@ -836,7 +838,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
                     using (var model = new WaterFlowFMModel())
                     {
-                        model.LoadMdu(tempMduFilePath);
+                        model.ImportFromMdu(tempMduFilePath);
 
                         AdjustSettingsOutputParameters(model);
                         UpdateBedLevel(model);
@@ -896,7 +898,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
                     using (var model = new WaterFlowFMModel())
                     {
-                        model.LoadMdu(tempMduFilePath);
+                        model.ImportFromMdu(tempMduFilePath);
 
                         AdjustSettingsOutputParameters(model);
                         UpdateBedLevel(model);
@@ -983,7 +985,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
                     using (var model = new WaterFlowFMModel())
                     {
-                        model.LoadMdu(tempMduFilePath);
+                        model.ImportFromMdu(tempMduFilePath);
 
                         AdjustSettingsOutputParameters(model);
                         UpdateBedLevel(model);

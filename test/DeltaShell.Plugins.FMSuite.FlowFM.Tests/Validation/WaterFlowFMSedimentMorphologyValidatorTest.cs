@@ -62,7 +62,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             string mduPath = TestHelper.GetTestFilePath(@"MyFmModel");
 
             var fmModel = new WaterFlowFMModel();
-            fmModel.LoadMdu(mduPath);
+            fmModel.ImportFromMdu(mduPath);
 
             fmModel.ModelDefinition.UseMorphologySediment = true;
 
@@ -225,7 +225,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             var mduPath = TestHelper.GetTestFilePath(@"MyFmModel");
 
             var fmModel = new WaterFlowFMModel();
-            fmModel.LoadMdu(mduPath);
+            fmModel.ImportFromMdu(mduPath);
 
             fmModel.ModelDefinition.UseMorphologySediment = true;
             fmModel.SedimentFractions = new EventedList<ISedimentFraction>
@@ -252,7 +252,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             string mduPath = TestHelper.GetTestFilePath(@"MyFmModel");
 
             var fmModel = new WaterFlowFMModel();
-            fmModel.LoadMdu(mduPath);
+            fmModel.ImportFromMdu(mduPath);
 
             fmModel.ModelDefinition.UseMorphologySediment = true;
 

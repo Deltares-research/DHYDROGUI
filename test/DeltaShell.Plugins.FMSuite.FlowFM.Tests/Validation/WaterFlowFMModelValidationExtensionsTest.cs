@@ -168,7 +168,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
         {
             //Arrange
             var model = new WaterFlowFMModel();
-            model.LoadMdu(TestHelper.GetTestFilePath(@"spatiallyVariantSediment\fullGridCoverage\FlowFM.mdu"));
+            model.ImportFromMdu(TestHelper.GetTestFilePath(@"spatiallyVariantSediment\fullGridCoverage\FlowFM.mdu"));
 
             //Act
             ValidationReport report = model.Validate();
@@ -185,7 +185,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
         {
             //Arrange
             var model = new WaterFlowFMModel();
-            model.LoadMdu(TestHelper.GetTestFilePath(@"spatiallyVariantSediment\fullGridCoverage\FlowFM.mdu"));
+            model.ImportFromMdu(TestHelper.GetTestFilePath(@"spatiallyVariantSediment\fullGridCoverage\FlowFM.mdu"));
 
             //Act
             ValidationReport report = model.Validate();

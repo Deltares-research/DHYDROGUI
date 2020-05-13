@@ -33,12 +33,26 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         private ImportProgressChangedDelegate importProgressChanged;
 
         /// <summary>
-        /// Creates a new instance of the <see cref="WaterFlowFMModel"/>.
+        /// Loads data from the provided <paramref name="mduFilePath"/>.
         /// </summary>
         /// <param name="mduFilePath">The path to the mdu file.</param>
-        /// <param name="clearOutputDirs">Whether or not any existing output directory properties need to be cleared (optional).</param>
+        public void LoadFromMdu(string mduFilePath)
+        {
+            ClearSyncers();
+            TracerDefinitions.Clear();
+
+            LoadStateFromMdu(mduFilePath);
+            ImportSpatialOperationsAfterLoading();
+
+            InitializeSyncers();
+        }
+
+        /// <summary>
+        /// Imports data from the provided <paramref name="mduFilePath"/>.
+        /// </summary>
+        /// <param name="mduFilePath">The path to the mdu file.</param>
         /// <param name="progressChanged">A handle for notifying progress changes (optional).</param>
-        public void LoadMdu(string mduFilePath, bool clearOutputDirs = false, ImportProgressChangedDelegate progressChanged = null)
+        public void ImportFromMdu(string mduFilePath, ImportProgressChangedDelegate progressChanged = null)
         {
             importProgressChanged = progressChanged;
 
@@ -46,12 +60,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             TracerDefinitions.Clear();
 
             LoadStateFromMdu(mduFilePath);
-            ImportSpatialOperationsAfterLoading();
-
-            if (clearOutputDirs)
-            {
-                ClearOutputDirAndWaqDirProperty();
-            }
+            AddSpatialDataItems();
+            ImportSpatialOperationsAfterCreating();
+            ClearOutputDirAndWaqDirProperty();
 
             InitializeSyncers();
 

@@ -50,7 +50,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             string localMduFilePath = TestHelper.CreateLocalCopy(mduPath);
 
             var model = new WaterFlowFMModel();
-            model.LoadMdu(localMduFilePath);
+            model.ImportFromMdu(localMduFilePath);
 
             ISedimentFraction fraction = model.SedimentFractions.FirstOrDefault(sf => sf.Name == "gouwe");
             Assert.IsNotNull(fraction);
@@ -83,7 +83,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 string localMduFilePath = Path.Combine(tempDir, mduFileName);
 
                 var model = new WaterFlowFMModel();
-                model.LoadMdu(localMduFilePath);
+                model.ImportFromMdu(localMduFilePath);
 
                 Assert.IsNotNull(model);
             });
@@ -99,7 +99,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             string localMduDir = Path.GetDirectoryName(localMduFilePath);
 
             var model = new WaterFlowFMModel();
-            model.LoadMdu(localMduFilePath);
+            model.ImportFromMdu(localMduFilePath);
 
             ActivityRunner.RunActivity(model);
 
@@ -123,7 +123,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             waterFlowFMModel.ExportTo(mduPath);
 
             var importedModel = new WaterFlowFMModel();
-            importedModel.LoadMdu(mduPath);
+            importedModel.ImportFromMdu(mduPath);
 
             Assert.IsTrue(importedModel.UseTemperature);
         }
@@ -249,7 +249,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
                     using (var model = new WaterFlowFMModel())
                     {
-                        model.LoadMdu(tempMduFilePath);
+                        model.ImportFromMdu(tempMduFilePath);
 
                         TypeUtils.CallPrivateMethod(model, "UpdateBathymetryCoverage", UnstructuredGridFileHelper.BedLevelLocation.Faces);
 

@@ -126,7 +126,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             string mduPath = TestHelper.GetTestFilePath(@"restart\bendprof.mdu");
 
             var model = new WaterFlowFMModel();
-            model.LoadMdu(TestHelper.CreateLocalCopy(mduPath));
+            model.ImportFromMdu(TestHelper.CreateLocalCopy(mduPath));
 
             Assert.AreEqual(true, model.WriteRestart);
             Assert.AreEqual(true, model.UseSaveStateTimeRange);
@@ -319,7 +319,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             mduPath = TestHelper.CreateLocalCopy(mduPath);
 
             var model = new WaterFlowFMModel();
-            model.LoadMdu(mduPath);
+            model.ImportFromMdu(mduPath);
 
             model.WriteRestart = true;
             model.StopTime = model.StartTime.AddMinutes(2); //6 sec timestep

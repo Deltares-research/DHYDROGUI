@@ -172,7 +172,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 string mduPath = Path.Combine(tempDir, $"{modelName}.mdu");
 
                 var fmModel = new WaterFlowFMModel();
-                fmModel.LoadMdu(mduPath);
+                fmModel.ImportFromMdu(mduPath);
 
                 fmModel.ExportTo(mduPath, false, false, false);
 

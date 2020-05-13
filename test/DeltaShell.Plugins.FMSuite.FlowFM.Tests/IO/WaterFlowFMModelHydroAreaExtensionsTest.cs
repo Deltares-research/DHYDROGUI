@@ -30,7 +30,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             mduFilePath = Path.Combine(localPath, @"MduFileWithoutFeatureFileReferences/FlowFM.mdu");
 
             fmModel = new WaterFlowFMModel();
-            fmModel.LoadMdu(mduFilePath);
+            fmModel.ImportFromMdu(mduFilePath);
         }
 
         [TearDown]

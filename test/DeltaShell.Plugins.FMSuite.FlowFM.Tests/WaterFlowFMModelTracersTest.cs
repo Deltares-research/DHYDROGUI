@@ -76,7 +76,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             model.ExportTo("tracertest/simplebox.mdu", false);
 
             var newModel = new WaterFlowFMModel();
-            newModel.LoadMdu("tracertest/simplebox.mdu");
+            newModel.ImportFromMdu("tracertest/simplebox.mdu");
 
             Assert.AreEqual(new[]
             {
@@ -151,7 +151,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             model.ExportTo("tracertest/simplebox.mdu", false);
 
             var newModel = new WaterFlowFMModel();
-            newModel.LoadMdu("tracertest/simplebox.mdu");
+            newModel.ImportFromMdu("tracertest/simplebox.mdu");
 
             Assert.AreEqual(new[]
             {
@@ -223,7 +223,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             model.ExportTo("tracertest/simplebox.mdu", false);
 
             var newModel = new WaterFlowFMModel();
-            newModel.LoadMdu("tracertest/simplebox.mdu");
+            newModel.ImportFromMdu("tracertest/simplebox.mdu");
 
             Assert.AreEqual(new[]
             {
@@ -314,7 +314,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             model.ExportTo("tracertest/simplebox.mdu", false);
 
             var newModel = new WaterFlowFMModel();
-            newModel.LoadMdu("tracertest/simplebox.mdu");
+            newModel.ImportFromMdu("tracertest/simplebox.mdu");
 
             Assert.AreEqual(new[]
             {
@@ -355,7 +355,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             mduPath = TestHelper.CreateLocalCopy(mduPath);
 
             var waterFlowFmModel = new WaterFlowFMModel();
-            waterFlowFmModel.LoadMdu(mduPath);
+            waterFlowFmModel.ImportFromMdu(mduPath);
 
             return waterFlowFmModel;
         }

@@ -831,7 +831,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             model.ExportTo(newNameMdu);
 
             var newModel = new WaterFlowFMModel();
-            newModel.LoadMdu(newNameMdu);
+            newModel.ImportFromMdu(newNameMdu);
 
             Assert.AreEqual(model.Name, newModel.ModelDefinition.ModelName);
             Assert.AreEqual(model.Name + FileConstants.BoundaryExternalForcingFileExtension,
@@ -846,7 +846,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             string mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
 
             var model = new WaterFlowFMModel();
-            model.LoadMdu(mduPath);
+            model.ImportFromMdu(mduPath);
 
             Assert.AreEqual(model.ModelDefinition.ModelName, model.Name);
             Assert.AreNotEqual(model.Name + FileConstants.ExternalForcingFileExtension,
@@ -868,7 +868,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             model.ExportTo(fullDirectoryPath);
 
             var newModel = new WaterFlowFMModel();
-            newModel.LoadMdu(fullDirectoryPath);
+            newModel.ImportFromMdu(fullDirectoryPath);
 
             Assert.AreEqual(model.Name, newModel.ModelDefinition.ModelName);
             Assert.AreNotEqual(model.Name + FileConstants.ExternalForcingFileExtension,
@@ -909,7 +909,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.IsTrue(File.Exists(@"tracer\feest.mdu"));
 
             var loadedModel = new WaterFlowFMModel();
-            loadedModel.LoadMdu(@"tracer\feest.mdu");
+            loadedModel.ImportFromMdu(@"tracer\feest.mdu");
 
             Assert.AreEqual(1, loadedModel.BoundaryConditions.Count());
             Assert.AreEqual("feest", ((FlowBoundaryCondition) loadedModel.BoundaryConditions.First()).TracerName);
@@ -928,7 +928,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             string mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
 
             var model = new WaterFlowFMModel();
-            model.LoadMdu(mduPath);
+            model.ImportFromMdu(mduPath);
 
             // update model definition (called during export)
             model.ModelDefinition.SelectSpatialOperations(model.DataItems, model.TracerDefinitions);
@@ -1013,7 +1013,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             string mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
 
             var model = new WaterFlowFMModel();
-            model.LoadMdu(mduPath);
+            model.ImportFromMdu(mduPath);
 
             // Set values in coverage
             model.Viscosity.SetValues(new[]
@@ -1202,7 +1202,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.IsTrue(workingMduFileInfo.Exists);
 
             var model = new WaterFlowFMModel();
-            model.LoadMdu(workingMduFilePath);
+            model.ImportFromMdu(workingMduFilePath);
 
             WaterFlowFMModelDefinition md = model.ModelDefinition;
 
@@ -1253,7 +1253,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             mduPath = TestHelper.CreateLocalCopy(mduPath);
 
             var model = new WaterFlowFMModel();
-            model.LoadMdu(mduPath);
+            model.ImportFromMdu(mduPath);
 
             WaterFlowFMModelDefinition md = model.ModelDefinition;
 

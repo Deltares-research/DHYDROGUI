@@ -22,7 +22,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
             path = TestHelper.CreateLocalCopy(path);
 
             var model = new WaterFlowFMModel();
-            model.LoadMdu(path);
+            model.ImportFromMdu(path);
 
             IGridOperationApi api = new UnstrucGridOperationApi(model);
             int[] result = api.GetLinkedCells();
@@ -38,7 +38,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
             path = TestHelper.CreateLocalCopy(path);
 
             var model = new WaterFlowFMModel();
-            model.LoadMdu(path);
+            model.ImportFromMdu(path);
 
             int[] result = model.GetLinkedCells();
 
@@ -53,7 +53,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
             mduPath = TestHelper.CreateLocalCopy(mduPath);
 
             var model = new WaterFlowFMModel();
-            model.LoadMdu(mduPath);
+            model.ImportFromMdu(mduPath);
 
             try
             {

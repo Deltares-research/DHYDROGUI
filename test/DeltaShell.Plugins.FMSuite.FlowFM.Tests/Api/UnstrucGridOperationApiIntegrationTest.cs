@@ -71,7 +71,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                 string mduFileDir = Path.GetDirectoryName(tempMduPath);
 
                 var fmModelUsedByApi = new WaterFlowFMModel();
-                fmModelUsedByApi.LoadMdu(Path.Combine(mduFileDir, tempMduPath));
+                fmModelUsedByApi.ImportFromMdu(Path.Combine(mduFileDir, tempMduPath));
 
                 string trtRouUsedInOriginalFMModel = model.ModelDefinition.GetModelProperty(KnownProperties.TrtRou).GetValueAsString();
                 Assert.That(trtRouUsedInOriginalFMModel, Is.EqualTo("Y"));
@@ -125,7 +125,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                     string mduFileDir = Path.GetDirectoryName(tempMduPath);
 
                     var fmModelUsedByApi = new WaterFlowFMModel();
-                    fmModelUsedByApi.LoadMdu(Path.Combine(mduFileDir, tempMduPath));
+                    fmModelUsedByApi.ImportFromMdu(Path.Combine(mduFileDir, tempMduPath));
 
                     Assert.That(fmModelUsedByApi.UseMorSed, Is.False,
                                 "Expected the used model not to have morphology.");
@@ -225,7 +225,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
 
                 using (var fmModelUsedByApi = new WaterFlowFMModel())
                 {
-                    fmModelUsedByApi.LoadMdu(GetApiMduFilePath(api));
+                    fmModelUsedByApi.ImportFromMdu(GetApiMduFilePath(api));
 
                     string apiFileName = fmModelUsedByApi.ModelDefinition.GetModelProperty(modelPropertyName).GetValueAsString();
                     Assert.IsEmpty(apiFileName);

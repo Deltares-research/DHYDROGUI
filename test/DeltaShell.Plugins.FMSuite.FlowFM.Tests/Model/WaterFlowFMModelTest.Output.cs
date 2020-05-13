@@ -28,7 +28,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
                 // Call
                 using (var model = new WaterFlowFMModel())
                 {
-                    model.LoadMdu(mduFilePath);
+                    model.ImportFromMdu(mduFilePath);
 
                     // Assert
                     Assert.That(model.OutputHisFileStore, Is.Not.Null, "Output files should be loaded.");
@@ -52,7 +52,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
                 // Call
                 using (var model = new WaterFlowFMModel())
                 {
-                    model.LoadMdu(mduFilePath);
+                    model.ImportFromMdu(mduFilePath);
 
                     // Assert
                     Assert.That(model.OutputHisFileStore, Is.Null, "Output files should not be loaded.");
@@ -94,7 +94,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
                 string mduFilePath = Path.Combine(tempDirectory.Path, "input", "FlowFM.mdu");
 
                 var waterFlowFmModel = new WaterFlowFMModel();
-                waterFlowFmModel.LoadMdu(mduFilePath);
+                waterFlowFmModel.ImportFromMdu(mduFilePath);
 
                 string hisFilePath = waterFlowFmModel.OutputHisFileStore.Path;
                 string mapFilePath = waterFlowFmModel.OutputMapFileStore.Path;

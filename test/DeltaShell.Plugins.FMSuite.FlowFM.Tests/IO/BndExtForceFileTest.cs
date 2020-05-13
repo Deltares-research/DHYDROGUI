@@ -959,7 +959,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             testFilePath = TestHelper.CreateLocalCopy(testFilePath);
 
             var model = new WaterFlowFMModel();
-            model.LoadMdu(testFilePath);
+            model.ImportFromMdu(testFilePath);
 
             model.Name = "newname";
             model.ModelDefinition.UseMorphologySediment = true;
@@ -1035,7 +1035,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             testFilePath = TestHelper.CreateLocalCopy(testFilePath);
 
             var model = new WaterFlowFMModel();
-            model.LoadMdu(testFilePath);
+            model.ImportFromMdu(testFilePath);
 
             model.Name = "newname";
 

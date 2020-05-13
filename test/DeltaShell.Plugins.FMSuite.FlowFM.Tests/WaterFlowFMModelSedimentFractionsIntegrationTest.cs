@@ -234,7 +234,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             mduPath = TestHelper.CreateLocalCopy(mduPath);
 
             var waterFlowFmModel = new WaterFlowFMModel();
-            waterFlowFmModel.LoadMdu(mduPath);
+            waterFlowFmModel.ImportFromMdu(mduPath);
 
             return waterFlowFmModel;
         }
