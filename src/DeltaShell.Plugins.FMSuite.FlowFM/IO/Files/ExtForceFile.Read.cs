@@ -241,7 +241,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                 // read the pli file
                 string pliFilePath = GetOtherFilePathInSameDirectory(extSubFilesReferenceFilePath, extForceFileItem.FileName);
                 IList<Feature2D> features2D = ReadFeatureFile(isSourceAndSink, pliFilePath);
-                existingForceFileItems[extForceFileItem] = features2D;
+                ExistingForceFileItems[extForceFileItem] = features2D;
 
                 // go through all feature2Ds
                 foreach (Feature2D feature2D in features2D)
@@ -255,7 +255,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                             continue;
                         }
 
-                        polyLineForceFileItems[sourceAndSink] = extForceFileItem;
+                        PolyLineForceFileItems[sourceAndSink] = extForceFileItem;
                         sourcesAndSinks.Add(sourceAndSink);
                     }
                     else
@@ -267,7 +267,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                             continue;
                         }
 
-                        polyLineForceFileItems[boundaryCondition] = extForceFileItem;
+                        PolyLineForceFileItems[boundaryCondition] = extForceFileItem;
                         boundaryConditions.Add(boundaryCondition);
                     }
                 }
@@ -448,7 +448,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                 if (extension == FileConstants.TimFileExtension)
                 {
                     new TimFile().Read(filePath, heatFluxModel.MeteoData, modelReferenceDate);
-                    existingForceFileItems[forceFileItem] = heatFluxModel.MeteoData;
+                    ExistingForceFileItems[forceFileItem] = heatFluxModel.MeteoData;
                 }
                 else if (extension == FileConstants.GriddedHeatFluxModelFileExtension)
                 {
@@ -459,7 +459,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                         heatFluxModel.GriddedHeatFluxFilePath = filePath;
                         heatFluxModel.GridFilePath = gridFilePath;
 
-                        existingForceFileItems[forceFileItem] = heatFluxModel.Type;
+                        ExistingForceFileItems[forceFileItem] = heatFluxModel.Type;
                     }
                     else
                     {
@@ -540,7 +540,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                  * The only Spatially Varying Sediment that gets read from the ExtForces file is
                  * SedimentConcentration. We could simply remove its prefix, however, due to the 
                  * way it's meant to be written in said file, we need to add the postfix */
-                string spatialVaryingSedimentConcentration = sedimentItem.Quantity.Substring(ExtForceQuantNames.InitialSpatialVaryingSedimentPrefix.Length) + sedimentConcentrationPostfix;
+                string spatialVaryingSedimentConcentration =
+                    sedimentItem.Quantity.Substring(ExtForceQuantNames.InitialSpatialVaryingSedimentPrefix.Length) +
+                    ExtForceFileConstants.SedimentConcentrationPostfix;
                 ReadSpatialOperationData(initialSedimentItems, modelDefinition, sedimentItem.Quantity,
                                          spatialVaryingSedimentConcentration);
             }
@@ -614,7 +616,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             };
             operation.Mask.Provider = new FeatureCollection(features.ToList(), typeof(Feature));
 
-            existingForceFileItems[extForceFileItem] = operation;
+            ExistingForceFileItems[extForceFileItem] = operation;
 
             return operation;
         }
@@ -652,7 +654,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                         $"Invalid interpolation method {extForceFileItem.Method} for file {extForceFileItem.FileName}");
             }
 
-            existingForceFileItems[extForceFileItem] = operation;
+            ExistingForceFileItems[extForceFileItem] = operation;
 
             return operation;
         }
@@ -685,7 +687,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                     }
 
                     modelDefinition.WindFields.Add(windField);
-                    existingForceFileItems[extForceFileItem] = windField;
+                    ExistingForceFileItems[extForceFileItem] = windField;
                 }
                 catch (Exception e)
                 {

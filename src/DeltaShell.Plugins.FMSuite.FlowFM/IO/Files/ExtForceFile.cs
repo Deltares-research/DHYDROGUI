@@ -32,7 +32,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         private const string valueKey = "VALUE";
         private const string factorKey = "FACTOR";
         private const string offsetKey = "OFFSET";
-        private const string sedimentConcentrationPostfix = "_SedConc";
 
         private static readonly string[] unsupportedQuantityKeys =
         {
@@ -41,11 +40,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         };
 
         private readonly ILog log = LogManager.GetLogger(typeof(ExtForceFile));
-
-        // items that existed in the file when the file was read
-        private readonly IDictionary<ExtForceFileItem, object> existingForceFileItems;
         private readonly HashSet<ExtForceFileItem> supportedExtForceFileItems;
-        private readonly IDictionary<IFeatureData, ExtForceFileItem> polyLineForceFileItems;
 
         private string currentLine;
 
@@ -53,15 +48,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
         public ExtForceFile()
         {
-            existingForceFileItems = new Dictionary<ExtForceFileItem, object>();
+            ExistingForceFileItems = new Dictionary<ExtForceFileItem, object>();
             supportedExtForceFileItems = new HashSet<ExtForceFileItem>();
-            polyLineForceFileItems = new Dictionary<IFeatureData, ExtForceFileItem>();
+            PolyLineForceFileItems = new Dictionary<IFeatureData, ExtForceFileItem>();
             WriteToDisk = true;
         }
 
+        // items that existed in the file when the file was read
+        public IDictionary<ExtForceFileItem, object> ExistingForceFileItems { get; }
+        public IDictionary<IFeatureData, ExtForceFileItem> PolyLineForceFileItems { get; }
+
         public bool WriteToDisk { get; set; }
 
-        public IEnumerable<IBoundaryCondition> ExistingBoundaryConditions => polyLineForceFileItems.Keys.OfType<IBoundaryCondition>();
+        public IEnumerable<IBoundaryCondition> ExistingBoundaryConditions =>
+            PolyLineForceFileItems.Keys.OfType<IBoundaryCondition>();
 
         /// <summary>
         /// Get the data files that are references in the extForceFile.
@@ -77,7 +77,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             {
                 foreach (FlowBoundaryCondition bc in boundaryConditionSet.BoundaryConditions.OfType<FlowBoundaryCondition>())
                 {
-                    polyLineForceFileItems.TryGetValue(bc, out ExtForceFileItem matchingItem);
+                    PolyLineForceFileItems.TryGetValue(bc, out ExtForceFileItem matchingItem);
                     List<string[]> dataFiles = ExtForceFileHelper.GetBoundaryDataFiles(bc, boundaryConditionSet, matchingItem).ToList();
 
                     foreach (string[] dataFile in dataFiles)
@@ -89,7 +89,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
             foreach (SourceAndSink sourceAndSink in modelDefinition.SourcesAndSinks)
             {
-                polyLineForceFileItems.TryGetValue(sourceAndSink, out ExtForceFileItem matchingItem);
+                PolyLineForceFileItems.TryGetValue(sourceAndSink, out ExtForceFileItem matchingItem);
                 List<string[]> dataFiles = ExtForceFileHelper.GetSourceAndSinkDataFiles(sourceAndSink, matchingItem).ToList();
 
                 foreach (string[] dataFile in dataFiles)

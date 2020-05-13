@@ -2,6 +2,7 @@
 using System.Linq;
 using DeltaShell.NGHS.IO.DelftIniObjects;
 using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessObjects;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
@@ -31,17 +32,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
 
                 if (subFile.Key.Equals(model.ModelDefinition.GetModelProperty(KnownProperties.ExtForceFile)))
                 {
-                    bool writeToDisk = extForceFile.WriteToDisk;
+                    IEnumerable<ExtForceFileItem> newExtForceFileItems =
+                        ExtForceFileItemFactory.GetItems(model.ExtFilePath, model.ModelDefinition, !newFormatBoundaryConditions,
+                                                         extForceFile.PolyLineForceFileItems, extForceFile.ExistingForceFileItems);
 
-                    extForceFile.WriteToDisk = false;
-
-                    IEnumerable<ExtForceFileItem> extForceFileItems =
-                        extForceFile.WriteExtForceFileSubFiles(model.ExtFilePath, model.ModelDefinition, false,
-                                                               !newFormatBoundaryConditions);
-
-                    extForceFile.WriteToDisk = writeToDisk;
-
-                    foreach (ExtForceFileItem extForceFileItem in extForceFileItems)
+                    foreach (ExtForceFileItem extForceFileItem in newExtForceFileItems)
                     {
                         newNode.AddChildItem(extForceFileItem.Quantity, extForceFileItem.FileName);
                     }

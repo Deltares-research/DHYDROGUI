@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using DelftTools.Utils.IO;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
@@ -9,12 +11,85 @@ using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using GeoAPI.Extensions.Feature;
+using SharpMap.Api.SpatialOperations;
 using SharpMap.SpatialOperations;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
 {
     public static class ExtForceFileItemFactory
     {
+        public static IEnumerable<ExtForceFileItem> GetItems(string path, WaterFlowFMModelDefinition modelDefinition,
+                                                             bool writeBoundaryConditions,
+                                                             IDictionary<IFeatureData, ExtForceFileItem> polyLineForceFileItems,
+                                                             IDictionary<ExtForceFileItem, object> existingForceFileItems)
+        {
+            var items = new List<ExtForceFileItem>();
+            
+            ExtForceFileHelper.StartWritingSubFiles();
+
+            if (writeBoundaryConditions)
+            {
+                items.AddRange(GetBoundaryConditionsItems(modelDefinition, polyLineForceFileItems).Values);
+            }
+
+            items.AddRange(GetSourceAndSinkItems(modelDefinition, polyLineForceFileItems).Values);
+            items.AddRange(GetSpatialDataItems(ExtForceQuantNames.InitialWaterLevel, modelDefinition.GetSpatialOperations(WaterFlowFMModelDefinition.InitialWaterLevelDataItemName), existingForceFileItems, path).Values);
+            items.AddRange(GetSpatialDataItems(ExtForceQuantNames.InitialSalinity, modelDefinition.GetSpatialOperations(WaterFlowFMModelDefinition.InitialSalinityDataItemName), existingForceFileItems, path).Values);
+            items.AddRange(GetSpatialDataItems(ExtForceQuantNames.InitialSalinity, modelDefinition.GetSpatialOperations(WaterFlowFMModelDefinition.InitialSalinityDataItemName), existingForceFileItems, path, " (layer 1)").Values);
+            items.AddRange(GetSpatialDataItems(ExtForceQuantNames.InitialSalinityTop, modelDefinition.GetSpatialOperations(WaterFlowFMModelDefinition.InitialSalinityDataItemName), existingForceFileItems, path, " (layer 2)").Values);
+            items.AddRange(GetSpatialDataItems(ExtForceQuantNames.InitialTemperature, modelDefinition.GetSpatialOperations(WaterFlowFMModelDefinition.InitialTemperatureDataItemName), existingForceFileItems, path).Values);
+            items.AddRange(GetSpatialDataItems(ExtForceQuantNames.FrictCoef, modelDefinition.GetSpatialOperations(WaterFlowFMModelDefinition.RoughnessDataItemName), existingForceFileItems, path).Values);
+            items.AddRange(GetSpatialDataItems(ExtForceQuantNames.HorEddyViscCoef, modelDefinition.GetSpatialOperations(WaterFlowFMModelDefinition.ViscosityDataItemName), existingForceFileItems, path).Values);
+            items.AddRange(GetSpatialDataItems(ExtForceQuantNames.HorEddyDiffCoef, modelDefinition.GetSpatialOperations(WaterFlowFMModelDefinition.DiffusivityDataItemName), existingForceFileItems, path).Values);
+
+            items.AddRange(GetWindFieldItems(modelDefinition, existingForceFileItems).Values);
+            
+            ExtForceFileItem heatFluxModelItem = GetHeatFluxModelItem(modelDefinition.HeatFluxModel, modelDefinition.ModelName, existingForceFileItems);
+            if (heatFluxModelItem != null)
+            {
+                items.Add(heatFluxModelItem);
+            }
+
+            items.AddRange(GetUnknownQuantitiesItems(modelDefinition).Values);
+
+            foreach (string tracerName in modelDefinition.InitialTracerNames)
+            {
+                items.AddRange(GetSpatialDataItems($"{ExtForceQuantNames.InitialTracerPrefix}{tracerName}", modelDefinition.GetSpatialOperations(tracerName), existingForceFileItems, path).Values);
+            }
+
+            /* DELFT3DFM-1112
+             * This is only meant for SedimentConcentration */
+            IEnumerable<string> sedimentConcentrationSpatiallyVarying =
+                modelDefinition.InitialSpatiallyVaryingSedimentPropertyNames.Where(
+                    sp => sp.EndsWith(ExtForceFileConstants.SedimentConcentrationPostfix));
+            foreach (string spatiallyVaryingSedimentPropertyName in sedimentConcentrationSpatiallyVarying)
+            {
+                IList<ISpatialOperation> spatialOperations =
+                    modelDefinition.GetSpatialOperations(spatiallyVaryingSedimentPropertyName);
+                if (spatialOperations?.All(s => s is ImportSamplesSpatialOperation ||
+                                                s is AddSamplesOperation) != true)
+                {
+                    continue;
+                }
+
+                List<ExtForceFileItem> forceFileItems =
+                    GetSpatialDataItems(spatiallyVaryingSedimentPropertyName, spatialOperations, existingForceFileItems, path,
+                                        ExtForceQuantNames.InitialSpatialVaryingSedimentPrefix).Values.ToList();
+
+                //Remove the postfix from the quantity (it is not accepted by the kernel)
+                if (spatiallyVaryingSedimentPropertyName.EndsWith(ExtForceFileConstants.SedimentConcentrationPostfix))
+                {
+                    forceFileItems.ForEach(ffi => ffi.Quantity =
+                                                      ffi.Quantity.Substring(
+                                                          0, ffi.Quantity.Length - ExtForceFileConstants.SedimentConcentrationPostfix.Length));
+                }
+
+                items.AddRange(forceFileItems);
+            }
+
+            return items.Distinct().ToArray();
+        }
+
         public static IDictionary<FlowBoundaryCondition, ExtForceFileItem> GetBoundaryConditionsItems(
             WaterFlowFMModelDefinition modelDefinition,
             IDictionary<IFeatureData, ExtForceFileItem> polyLineForceFileItems)
@@ -71,7 +146,78 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
                 sourceAndSink => GetSourceAndSinkItem(sourceAndSink, polyLineForceFileItems));
         }
 
-        public static ExtForceFileItem GetInitialConditionsSamplesItem(
+        public static IDictionary<ISpatialOperation, ExtForceFileItem> GetSpatialDataItems(
+            string quantity, IEnumerable<ISpatialOperation> spatialOperations,
+            IDictionary<ExtForceFileItem, object> existingForceFileItems, string filePath, string prefix = null)
+        {
+            var dictionary = new Dictionary<ISpatialOperation, ExtForceFileItem>();
+
+            foreach (ISpatialOperation spatialOperation in spatialOperations ?? Enumerable.Empty<ISpatialOperation>())
+            {
+                ExtForceFileItem extForceFileItem;
+                switch (spatialOperation)
+                {
+                    case ImportSamplesSpatialOperation importSamplesOperation:
+                        extForceFileItem = GetInitialConditionsSamplesItem(
+                            importSamplesOperation, quantity,
+                            prefix, existingForceFileItems,
+                            Path.GetDirectoryName(Path.GetFullPath(filePath)));
+                        break;
+                    case SetValueOperation polygonOperation:
+                        extForceFileItem = GetInitialConditionsPolygonItem(polygonOperation, quantity, prefix, existingForceFileItems);
+                        break;
+                    case AddSamplesOperation addSamplesOperation:
+                        extForceFileItem =
+                            GetInitialConditionsUnsupportedItem(addSamplesOperation, quantity, prefix);
+                        break;
+                    default:
+                        throw new NotImplementedException(
+                            $"Cannot serialize operation of type {spatialOperation.GetType()} to external forcings file");
+                }
+
+                dictionary.Add(spatialOperation, extForceFileItem);
+            }
+
+            return dictionary;
+        }
+
+        public static IDictionary<IWindField, ExtForceFileItem> GetWindFieldItems(
+            WaterFlowFMModelDefinition modelDefinition, IDictionary<ExtForceFileItem, object> existingForceFileItems)
+        {
+            var dictionary = new Dictionary<IWindField, ExtForceFileItem>();
+
+            ExtForceFileHelper.StartWritingSubFiles();
+
+            foreach (IWindField windField in modelDefinition.WindFields)
+            {
+                if (windField is IFileBased fileBasedWindField)
+                {
+                    ExtForceFileItem extForceFileItem = GetWindFieldItem(
+                        windField,
+                        Path.GetFileName(fileBasedWindField.Path),
+                        existingForceFileItems);
+
+                    dictionary.Add(windField, extForceFileItem);
+                    continue;
+                }
+
+                if (windField is UniformWindField)
+                {
+                    string fileName = string.Join(".", ExtForceQuantNames.WindQuantityNames[windField.Quantity],
+                                                  ExtForceQuantNames.TimFileExtension);
+                    ExtForceFileItem extForceFileItem = GetWindFieldItem(
+                        windField, fileName,
+                        existingForceFileItems);
+
+                    ExtForceFileHelper.AddSuffixInCaseOfDuplicateFile(extForceFileItem);
+                    dictionary.Add(windField, extForceFileItem);
+                }
+            }
+
+            return dictionary;
+        }
+
+        private static ExtForceFileItem GetInitialConditionsSamplesItem(
             ImportSamplesSpatialOperation spatialOperation, string extForceFileQuantityName, string prefix,
             IDictionary<ExtForceFileItem, object> existingForceFileItems, string targetDirectory)
         {
@@ -111,8 +257,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
             return extForceFileItem;
         }
 
-        public static ExtForceFileItem GetInitialConditionsPolygonItem(SetValueOperation spatialOperation, string extForceFileQuantityName, string prefix,
-                                                                       IDictionary<ExtForceFileItem, object> existingForceFileItems)
+        private static ExtForceFileItem GetInitialConditionsPolygonItem(SetValueOperation spatialOperation, string extForceFileQuantityName, string prefix,
+                                                                        IDictionary<ExtForceFileItem, object> existingForceFileItems)
         {
             if (spatialOperation == null)
             {
@@ -146,8 +292,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
             return extForceFileItem;
         }
 
-        public static ExtForceFileItem GetInitialConditionsUnsupportedItem(SampleSpatialOperation spatialOperation,
-                                                                           string extForceFileQuantityName, string prefix)
+        private static ExtForceFileItem GetInitialConditionsUnsupportedItem(SampleSpatialOperation spatialOperation,
+                                                                            string extForceFileQuantityName, string prefix)
         {
             if (spatialOperation == null)
             {
@@ -171,8 +317,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
             };
         }
 
-        public static ExtForceFileItem GetWindFieldExtForceFileItem(IWindField windField, string fileName,
-                                                                       IDictionary<ExtForceFileItem, object> existingForceFileItems)
+        private static ExtForceFileItem GetWindFieldItem(IWindField windField, string fileName,
+                                                         IDictionary<ExtForceFileItem, object> existingForceFileItems)
         {
             return GetExistingItem(windField, existingForceFileItems) ??
                    new ExtForceFileItem(ExtForceQuantNames.WindQuantityNames[windField.Quantity])

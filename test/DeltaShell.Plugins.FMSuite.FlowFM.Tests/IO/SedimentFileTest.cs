@@ -462,7 +462,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 };
                 fmModel.ModelDefinition.SelectSpatialOperations(fmModel.DataItems, fmModel.TracerDefinitions, initialSpatialOps);
                 var extFile = new ExtForceFile();
-                extFile.WriteExtForceFileSubFiles(sedFile, fmModel.ModelDefinition, false, false);
+                extFile.Write(sedFile, fmModel.ModelDefinition, false, false);
                 Assert.IsTrue(File.Exists(generatedXyzFile));
 
                 List<IPointValue> xyzFileValues = XyzFile.Read(generatedXyzFile).ToList();
@@ -685,7 +685,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                  */
                 Assert.IsFalse(File.Exists(generatedXyzFile));
                 var extFile = new ExtForceFile();
-                extFile.WriteExtForceFileSubFiles(sedFile, fmModel.ModelDefinition, false, false);
+                extFile.Write(sedFile, fmModel.ModelDefinition, false, false);
                 Assert.IsTrue(File.Exists(generatedXyzFile));
             }
             finally
