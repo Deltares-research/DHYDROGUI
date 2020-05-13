@@ -194,7 +194,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                 case offsetKey:
                     SetOffset(extForceFileItem);
                     break;
-                case areaKey:
+                case ExtForceFileConstants.AreaKey:
                     SetArea(extForceFileItem);
                     break;
                 case averagingTypeKey:
@@ -783,7 +783,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                 Feature = feature2D,
             };
             object area;
-            extForceFileItem.ModelData.TryGetValue(ExtForceFile.areaKey, out area);
+            extForceFileItem.ModelData.TryGetValue(ExtForceFileConstants.AreaKey, out area);
             if (area != null)
             {
                 sourceAndSink.Area = Convert.ToDouble(area);
@@ -1034,15 +1034,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         {
             if (extForceFileItem.Quantity != ExtForceQuantNames.SourceAndSink && extForceFileItem.Operand == null)
             {
-                throw new FormatException(GetMessageUnexpectedKeyword(areaKey));
+                throw new FormatException(GetMessageUnexpectedKeyword(ExtForceFileConstants.AreaKey));
             }
 
-            if (extForceFileItem.ModelData.ContainsKey(areaKey))
+            if (extForceFileItem.ModelData.ContainsKey(ExtForceFileConstants.AreaKey))
             {
-                LogWarningQuantityPropertyAlreadySet(areaKey);
+                LogWarningQuantityPropertyAlreadySet(ExtForceFileConstants.AreaKey);
             }
 
-            extForceFileItem.ModelData[areaKey] = GetDoublePropertyValue(currentLine);
+            extForceFileItem.ModelData[ExtForceFileConstants.AreaKey] = GetDoublePropertyValue(currentLine);
         }
 
         private void SetAveragingType(ExtForceFileItem extForceFileItem)

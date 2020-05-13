@@ -19,7 +19,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
         // keywords in file used for modelDefinition specific data
         private const string frictionTypeKey = "IFRCTYP";
-        private const string areaKey = "AREA";
         private const string averagingTypeKey = "AVERAGINGTYPE";
         private const string relSearchCellSizeKey = "RELATIVESEARCHCELLSIZE";
 

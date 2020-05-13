@@ -4,6 +4,7 @@ using System.Linq;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessObjects;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using GeoAPI.Extensions.Feature;
@@ -82,7 +83,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
 
             if (sourceAndSink.Area > 0)
             {
-                extForceFileItem.ModelData["AREA"] = sourceAndSink.Area;
+                extForceFileItem.ModelData[ExtForceFileConstants.AreaKey] = sourceAndSink.Area;
             }
 
             ExtForceFileHelper.AddSuffixInCaseOfDuplicateFile(extForceFileItem);
