@@ -60,42 +60,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         public IEnumerable<IBoundaryCondition> ExistingBoundaryConditions =>
             PolyLineForceFileItems.Keys.OfType<IBoundaryCondition>();
 
-        /// <summary>
-        /// Get the data files that are references in the extForceFile.
-        /// </summary>
-        /// <param name="modelDefinition"> </param>
-        /// <returns> A list of tuples of name and file path. </returns>
-        public IEnumerable<string[]> GetFeatureDataFiles(WaterFlowFMModelDefinition modelDefinition)
-        {
-            ExtForceFileHelper.StartWritingSubFiles();
-
-            foreach (BoundaryConditionSet boundaryConditionSet in
-                modelDefinition.BoundaryConditionSets.Where(bc => bc.Feature.Name != null))
-            {
-                foreach (FlowBoundaryCondition bc in boundaryConditionSet.BoundaryConditions.OfType<FlowBoundaryCondition>())
-                {
-                    PolyLineForceFileItems.TryGetValue(bc, out ExtForceFileItem matchingItem);
-                    List<string[]> dataFiles = ExtForceFileHelper.GetBoundaryDataFiles(bc, boundaryConditionSet, matchingItem).ToList();
-
-                    foreach (string[] dataFile in dataFiles)
-                    {
-                        yield return dataFile;
-                    }
-                }
-            }
-
-            foreach (SourceAndSink sourceAndSink in modelDefinition.SourcesAndSinks)
-            {
-                PolyLineForceFileItems.TryGetValue(sourceAndSink, out ExtForceFileItem matchingItem);
-                List<string[]> dataFiles = ExtForceFileHelper.GetSourceAndSinkDataFiles(sourceAndSink, matchingItem).ToList();
-
-                foreach (string[] dataFile in dataFiles)
-                {
-                    yield return dataFile;
-                }
-            }
-        }
-
         protected override bool ExcludeEqualsIdentifier => false;
     }
 }

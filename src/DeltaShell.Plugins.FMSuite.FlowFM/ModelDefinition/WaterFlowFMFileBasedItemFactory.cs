@@ -5,6 +5,7 @@ using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessObjects;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
@@ -44,7 +45,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
                     if (!newFormatBoundaryConditions)
                     {
                         IEnumerable<string[]> boundaryDataItems =
-                            extForceFile.GetFeatureDataFiles(model.ModelDefinition);
+                            ExtForceFileHelper.GetFeatureDataFiles(model.ModelDefinition, extForceFile.PolyLineForceFileItems);
 
                         foreach (string[] boundaryDataItem in boundaryDataItems)
                         {

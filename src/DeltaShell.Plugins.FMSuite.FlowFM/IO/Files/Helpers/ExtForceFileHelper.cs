@@ -9,6 +9,7 @@ using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.IO.Files;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessObjects;
+using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using GeoAPI.Extensions.Feature;
 using NetTopologySuite.Extensions.Features;
 
@@ -23,7 +24,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers
         {
             var featurePart =
                 new string(
-                    ((Feature2D)featureData.Feature).Name?.Where(c => !Path.GetInvalidFileNameChars().Contains(c))
+                    ((Feature2D) featureData.Feature).Name?.Where(c => !Path.GetInvalidFileNameChars().Contains(c))
                                                      .ToArray());
             if (string.IsNullOrEmpty(featurePart))
             {
@@ -40,74 +41,43 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers
             return filename + "." + PliFile<Feature2D>.Extension;
         }
 
-        public static IEnumerable<string[]> GetBoundaryDataFiles(FlowBoundaryCondition boundaryCondition,
-                                                                 BoundaryConditionSet boundaryConditionSet,
-                                                                 ExtForceFileItem existingExtForceFileItem)
+        /// <summary>
+        /// Get the data files that are references in the extForceFile.
+        /// </summary>
+        /// <param name="modelDefinition">The model definition.</param>
+        /// <param name="polyLineForceFileItems">The existing items.</param>
+        /// <returns>A collection containing collections of names.</returns>
+        public static IEnumerable<string[]> GetFeatureDataFiles(WaterFlowFMModelDefinition modelDefinition,
+                                                                IDictionary<IFeatureData, ExtForceFileItem> polyLineForceFileItems)
         {
-            string quantityName =
-                ExtForceQuantNames.GetQuantityString(boundaryCondition);
+            StartWritingSubFiles();
 
-            ExtForceFileItem extForceFileItem = existingExtForceFileItem ?? new ExtForceFileItem(quantityName)
+            foreach (BoundaryConditionSet boundaryConditionSet in
+                modelDefinition.BoundaryConditionSets.Where(bc => bc.Feature.Name != null))
             {
-                FileName = GetPliFileName(boundaryCondition),
-                FileType = ExtForceQuantNames.FileTypes.PolyTim
-            };
-
-            AddSuffixInCaseOfDuplicateFile(extForceFileItem);
-
-            foreach (int i in boundaryCondition.DataPointIndices)
-            {
-                string quantity = 
-                    $"{boundaryCondition.VariableDescription.ToLower()} {boundaryCondition.DataType.GetDescription().ToLower()} at {boundaryConditionSet.SupportPointNames[i]}";
-
-                string filePath;
-
-                if (boundaryCondition.DataType == BoundaryConditionDataType.TimeSeries &&
-                    !boundaryCondition.IsVerticallyUniform)
+                foreach (FlowBoundaryCondition bc in boundaryConditionSet
+                                                     .BoundaryConditions.OfType<FlowBoundaryCondition>())
                 {
-                    filePath = GetNumberedFilePath(extForceFileItem.FileName, ExtForceQuantNames.T3DFileExtension,
-                                                   i + 1);
+                    polyLineForceFileItems.TryGetValue(bc, out ExtForceFileItem matchingItem);
+                    string[][] dataFiles = GetBoundaryDataFiles(bc, boundaryConditionSet, matchingItem).ToArray();
+
+                    foreach (string[] dataFile in dataFiles)
+                    {
+                        yield return dataFile;
+                    }
                 }
-                else
-                {
-                    filePath = GetNumberedFilePath(extForceFileItem.FileName,
-                                                   ExtForceQuantNames.ForcingToFileExtensionMapping[
-                                                       boundaryCondition.DataType], i + 1);
-                }
-
-                if (filePath == null)
-                {
-                    yield break; //TODO: emit warning.
-                }
-
-                yield return new[]
-                {
-                    quantity,
-                    filePath
-                };
             }
-        }
 
-        public static IEnumerable<string[]> GetSourceAndSinkDataFiles(SourceAndSink sourceAndSink,
-                                                                      ExtForceFileItem existingExtForceFileItem)
-        {
-            const string quantityName = ExtForceQuantNames.SourceAndSink;
-
-            ExtForceFileItem extForceFileItem = existingExtForceFileItem ?? new ExtForceFileItem(quantityName)
+            foreach (SourceAndSink sourceAndSink in modelDefinition.SourcesAndSinks)
             {
-                FileName = GetPliFileName(sourceAndSink),
-                FileType = ExtForceQuantNames.FileTypes.PolyTim
-            };
+                polyLineForceFileItems.TryGetValue(sourceAndSink, out ExtForceFileItem matchingItem);
+                string[][] dataFiles = GetSourceAndSinkDataFiles(sourceAndSink, matchingItem).ToArray();
 
-            AddSuffixInCaseOfDuplicateFile(extForceFileItem);
-
-            string filePath = Path.ChangeExtension(extForceFileItem.FileName, ExtForceQuantNames.TimFileExtension);
-
-            yield return new[]
-            {
-                "Source/Sink",
-                filePath
-            };
+                foreach (string[] dataFile in dataFiles)
+                {
+                    yield return dataFile;
+                }
+            }
         }
 
         public static void StartWritingSubFiles()
@@ -149,15 +119,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers
 
             foreach (object arg in function.Arguments[0].Values)
             {
-                var amplitude = (double)function.Components[0][arg];
+                var amplitude = (double) function.Components[0][arg];
 
                 int phaseIndex = function.Components.Count == 4 ? 2 : 1;
 
-                var phase = (double)function.Components[phaseIndex][arg];
+                var phase = (double) function.Components[phaseIndex][arg];
 
                 list.Add(isAstro
-                             ? new HarmonicComponent((string)arg, amplitude, phase)
-                             : new HarmonicComponent((double)arg, amplitude, phase));
+                             ? new HarmonicComponent((string) arg, amplitude, phase)
+                             : new HarmonicComponent((double) arg, amplitude, phase));
             }
 
             return list;
@@ -280,6 +250,76 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers
             return i == 0
                        ? string.Join(".", filePathWithoutExtension, fileExtension)
                        : $"{filePathWithoutExtension}_{i:0000}.{fileExtension}";
+        }
+
+        private static IEnumerable<string[]> GetBoundaryDataFiles(FlowBoundaryCondition boundaryCondition,
+                                                                  BoundaryConditionSet boundaryConditionSet,
+                                                                  ExtForceFileItem existingExtForceFileItem)
+        {
+            string quantityName =
+                ExtForceQuantNames.GetQuantityString(boundaryCondition);
+
+            ExtForceFileItem extForceFileItem = existingExtForceFileItem ?? new ExtForceFileItem(quantityName)
+            {
+                FileName = GetPliFileName(boundaryCondition),
+                FileType = ExtForceQuantNames.FileTypes.PolyTim
+            };
+
+            AddSuffixInCaseOfDuplicateFile(extForceFileItem);
+
+            foreach (int i in boundaryCondition.DataPointIndices)
+            {
+                string quantity =
+                    $"{boundaryCondition.VariableDescription.ToLower()} {boundaryCondition.DataType.GetDescription().ToLower()} at {boundaryConditionSet.SupportPointNames[i]}";
+
+                string filePath;
+
+                if (boundaryCondition.DataType == BoundaryConditionDataType.TimeSeries &&
+                    !boundaryCondition.IsVerticallyUniform)
+                {
+                    filePath = GetNumberedFilePath(extForceFileItem.FileName, ExtForceQuantNames.T3DFileExtension,
+                                                   i + 1);
+                }
+                else
+                {
+                    filePath = GetNumberedFilePath(extForceFileItem.FileName,
+                                                   ExtForceQuantNames.ForcingToFileExtensionMapping[
+                                                       boundaryCondition.DataType], i + 1);
+                }
+
+                if (filePath == null)
+                {
+                    yield break; //TODO: emit warning.
+                }
+
+                yield return new[]
+                {
+                    quantity,
+                    filePath
+                };
+            }
+        }
+
+        private static IEnumerable<string[]> GetSourceAndSinkDataFiles(SourceAndSink sourceAndSink,
+                                                                       ExtForceFileItem existingExtForceFileItem)
+        {
+            const string quantityName = ExtForceQuantNames.SourceAndSink;
+
+            ExtForceFileItem extForceFileItem = existingExtForceFileItem ?? new ExtForceFileItem(quantityName)
+            {
+                FileName = GetPliFileName(sourceAndSink),
+                FileType = ExtForceQuantNames.FileTypes.PolyTim
+            };
+
+            AddSuffixInCaseOfDuplicateFile(extForceFileItem);
+
+            string filePath = Path.ChangeExtension(extForceFileItem.FileName, ExtForceQuantNames.TimFileExtension);
+
+            yield return new[]
+            {
+                "Source/Sink",
+                filePath
+            };
         }
     }
 }
