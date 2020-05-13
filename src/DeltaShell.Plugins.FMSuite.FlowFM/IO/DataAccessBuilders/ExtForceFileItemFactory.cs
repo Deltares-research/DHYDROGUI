@@ -12,7 +12,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
 {
     public static class ExtForceFileItemFactory
     {
-
         public static IDictionary<FlowBoundaryCondition, ExtForceFileItem> GetBoundaryConditionsItems(WaterFlowFMModelDefinition modelDefinition,
                                                                                IDictionary<IFeatureData, ExtForceFileItem> polyLineForceFileItems)
         {
@@ -39,40 +38,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
                         continue; //new boundary conditions shall be written by BndExtForceFile.
                     }
 
-                    int index = boundaryConditionSet.BoundaryConditions
-                                                    .Where(bc => bc.VariableDescription == flowBoundaryCondition.VariableDescription)
-                                                    .ToList().IndexOf(flowBoundaryCondition);
-
-                    boundaryConditionsItems.Add(flowBoundaryCondition, GetFlowBoundaryConditionsItem(flowBoundaryCondition, index, matchingItem));
+                    boundaryConditionsItems.Add(flowBoundaryCondition, GetFlowBoundaryConditionsItem(flowBoundaryCondition, matchingItem));
                 }
             }
 
             return boundaryConditionsItems;
         }
 
-        private static ExtForceFileItem GetFlowBoundaryConditionsItem(FlowBoundaryCondition flowBoundaryCondition, int boundaryConditionIndex, ExtForceFileItem existingItem)
+        private static ExtForceFileItem GetFlowBoundaryConditionsItem(FlowBoundaryCondition flowBoundaryCondition, ExtForceFileItem existingItem)
         {
-            string quantityName = ExtForceQuantNames.GetQuantityString(flowBoundaryCondition);
+            existingItem.Quantity = ExtForceQuantNames.GetQuantityString(flowBoundaryCondition);
+            existingItem.Offset = Math.Abs(flowBoundaryCondition.Offset) < 1e-6 ? double.NaN : flowBoundaryCondition.Offset;
+            existingItem.Factor = Math.Abs(flowBoundaryCondition.Factor - 1) < 1e-6 ? double.NaN : flowBoundaryCondition.Factor;
 
-            Operator operand = boundaryConditionIndex == 0 
-                                   ? Operator.Overwrite
-                                   : Operator.Add;
+            ExtForceFileHelper.AddSuffixInCaseOfDuplicateFile(existingItem);
 
-            ExtForceFileItem extForceFileItem = existingItem ?? new ExtForceFileItem(quantityName)
-            {
-                FileName = ExtForceFileHelper.GetPliFileName(flowBoundaryCondition),
-                FileType = ExtForceQuantNames.FileTypes.PolyTim,
-                Method = 3,
-                Operand = ExtForceQuantNames.OperatorToStringMapping[operand]
-            };
-
-            extForceFileItem.Quantity = quantityName;
-            extForceFileItem.Offset = Math.Abs(flowBoundaryCondition.Offset) < 1e-6 ? double.NaN : flowBoundaryCondition.Offset;
-            extForceFileItem.Factor = Math.Abs(flowBoundaryCondition.Factor - 1) < 1e-6 ? double.NaN : flowBoundaryCondition.Factor;
-
-            ExtForceFileHelper.AddSuffixInCaseOfDuplicateFile(extForceFileItem);
-
-            return extForceFileItem;
+            return existingItem;
         }
     }
 }
