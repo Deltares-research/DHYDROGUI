@@ -654,9 +654,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             return extForceFileItem;
         }
 
-        private ExtForceFileItem WriteInitialConditionsUnsupported(string quantity,
-                                                                          AddSamplesOperation operation,
-                                                                          string prefix = null)
+        private ExtForceFileItem WriteInitialConditionsUnsupported(string quantity, SampleSpatialOperation operation,
+                                                                   string prefix = null)
         {
             string quantityName = prefix != null ? prefix + quantity : quantity;
             var forceFileItem = new ExtForceFileItem(quantityName)
@@ -688,8 +687,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             return forceFileItem;
         }
 
-        private ExtForceFileItem WriteInitialConditionsPolygon(string extForceFileQuantityName,
-                                                               SetValueOperation operation,
+        private ExtForceFileItem WriteInitialConditionsPolygon(string extForceFileQuantityName, SetValueOperation operation,
                                                                ExtForceFileItem existingExtForceFileItem = null,
                                                                string prefix = null)
         {

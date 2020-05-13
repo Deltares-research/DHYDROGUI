@@ -26,10 +26,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 {
     public partial class ExtForceFile
     {
-        public void Read(string extForceFilePath, WaterFlowFMModelDefinition modelDefinition, string extSubFilesReferenceFilePath)
+        private string extSubFilesReferenceFilePath;
+
+        public void Read(string extForceFilePath, WaterFlowFMModelDefinition modelDefinition,
+                         string extForceSubFilesReferenceFilePath)
         {
-            ExtSubFilesReferenceFilePath = extSubFilesReferenceFilePath;
             extFilePath = extForceFilePath;
+            extSubFilesReferenceFilePath = extForceSubFilesReferenceFilePath;
 
             Read(modelDefinition);
         }
@@ -82,7 +85,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                     unknownForceFileItem.Quantity);
 
                 string referencedFilePath =
-                    GetOtherFilePathInSameDirectory(ExtSubFilesReferenceFilePath, unknownForceFileItem.FileName);
+                    GetOtherFilePathInSameDirectory(extSubFilesReferenceFilePath, unknownForceFileItem.FileName);
 
                 var unsupportedFileBasedExtForceFileItem =
                     new UnsupportedFileBasedExtForceFileItem(referencedFilePath, unknownForceFileItem);
@@ -236,7 +239,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                 supportedExtForceFileItems.Add(extForceFileItem);
 
                 // read the pli file
-                string pliFilePath = GetOtherFilePathInSameDirectory(ExtSubFilesReferenceFilePath, extForceFileItem.FileName);
+                string pliFilePath = GetOtherFilePathInSameDirectory(extSubFilesReferenceFilePath, extForceFileItem.FileName);
                 IList<Feature2D> features2D = ReadFeatureFile(isSourceAndSink, pliFilePath);
                 existingForceFileItems[extForceFileItem] = features2D;
 
@@ -441,7 +444,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                     forceFileItem.Quantity == ExtForceQuantNames.MeteoDataWithRadiation;
                 string extension = Path.GetExtension(forceFileItem.FileName);
 
-                string filePath = GetOtherFilePathInSameDirectory(ExtSubFilesReferenceFilePath, forceFileItem.FileName);
+                string filePath = GetOtherFilePathInSameDirectory(extSubFilesReferenceFilePath, forceFileItem.FileName);
                 if (extension == FileConstants.TimFileExtension)
                 {
                     new TimFile().Read(filePath, heatFluxModel.MeteoData, modelReferenceDate);
@@ -592,7 +595,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
         private ISpatialOperation CreatePolygonOperation(ExtForceFileItem extForceFileItem)
         {
-            string path = GetOtherFilePathInSameDirectory(ExtSubFilesReferenceFilePath, extForceFileItem.FileName);
+            string path = GetOtherFilePathInSameDirectory(extSubFilesReferenceFilePath, extForceFileItem.FileName);
 
             IEnumerable<Feature> features = new PolFile<Feature2DPolygon>()
                                             .Read(path).Select(f => new Feature
@@ -623,7 +626,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             var operation = new ImportSamplesSpatialOperation
             {
                 Name = operationName,
-                FilePath = GetOtherFilePathInSameDirectory(ExtSubFilesReferenceFilePath, extForceFileItem.FileName)
+                FilePath = GetOtherFilePathInSameDirectory(extSubFilesReferenceFilePath, extForceFileItem.FileName)
             };
 
             if (extForceFileItem.ModelData.TryGetValue(averagingTypeKey, out object value))
@@ -668,7 +671,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                     IWindField windField = ExtForceFileHelper.CreateWindField(extForceFileItem, extFilePath);
 
                     string windFile =
-                        GetOtherFilePathInSameDirectory(ExtSubFilesReferenceFilePath, extForceFileItem.FileName);
+                        GetOtherFilePathInSameDirectory(extSubFilesReferenceFilePath, extForceFileItem.FileName);
 
                     if (!File.Exists(windFile))
                     {

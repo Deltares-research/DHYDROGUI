@@ -103,7 +103,5 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         }
 
         protected override bool ExcludeEqualsIdentifier => false;
-
-        private string ExtSubFilesReferenceFilePath { get; set; }
     }
 }
