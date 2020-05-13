@@ -10,7 +10,6 @@ using DelftTools.Utils.IO;
 using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.FunctionStores;
-using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.Common.IO.Files;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders;
@@ -148,7 +147,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         }
 
         private IList<ExtForceFileItem> WriteExtForceFileSubFiles(WaterFlowFMModelDefinition modelDefinition,
-                                                                  bool writeBoundaryConditions, bool switchTo = true)
+                                                                  bool writeBoundaryConditions, bool switchTo)
         {
             var extForceFileItems = new List<ExtForceFileItem>();
 
@@ -197,13 +196,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
             extForceFileItems.AddRange(WriteWindItems(modelDefinition).Distinct());
 
-            var heatFluxModelDataItem = WriteHeatFluxModelData(modelDefinition, switchTo);
+            ExtForceFileItem heatFluxModelDataItem = WriteHeatFluxModelData(modelDefinition, switchTo);
             if (heatFluxModelDataItem != null)
             {
                 extForceFileItems.Add(heatFluxModelDataItem);
             }
-
-            // extForceFileItems.AddRange(WriteHeatFluxModelData(modelDefinition, switchTo).Distinct());
 
             extForceFileItems.AddRange(WriteUnknownQuantities(modelDefinition));
 
@@ -266,14 +263,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
         private IEnumerable<ExtForceFileItem> WriteUnknownQuantities(WaterFlowFMModelDefinition modelDefinition)
         {
-            foreach (IUnsupportedFileBasedExtForceFileItem unsupportedExtForceFileItem in modelDefinition
-                .UnsupportedFileBasedExtForceFileItems)
+            foreach (KeyValuePair<IUnsupportedFileBasedExtForceFileItem, ExtForceFileItem> unknownQuantitiesItem in ExtForceFileItemFactory.GetUnknownQuantitiesItems(modelDefinition))
             {
-                string relativeFilePath = unsupportedExtForceFileItem.UnsupportedExtForceFileItem.FileName;
-                string targetPath = Path.Combine(Path.GetDirectoryName(extFilePath), relativeFilePath);
-                unsupportedExtForceFileItem.CopyTo(targetPath);
+                ExtForceFileItem extForceFileItem = unknownQuantitiesItem.Value;
+                if (WriteToDisk)
+                {
+                    string relativeFilePath = extForceFileItem.FileName;
+                    string targetPath = Path.Combine(Path.GetDirectoryName(extFilePath), relativeFilePath);
+                    unknownQuantitiesItem.Key.CopyTo(targetPath);
+                }
 
-                yield return unsupportedExtForceFileItem.UnsupportedExtForceFileItem;
+                yield return extForceFileItem;
             }
         }
 

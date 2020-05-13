@@ -9,7 +9,6 @@ using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using GeoAPI.Extensions.Feature;
-using SharpMap.Api.SpatialOperations;
 using SharpMap.SpatialOperations;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
@@ -226,6 +225,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
             }
 
             return item;
+        }
+
+        public static IDictionary<IUnsupportedFileBasedExtForceFileItem, ExtForceFileItem> GetUnknownQuantitiesItems(WaterFlowFMModelDefinition modelDefinition)
+        {
+            return modelDefinition.UnsupportedFileBasedExtForceFileItems
+                                  .ToDictionary(i => i, i => i.UnsupportedExtForceFileItem);
         }
 
         private static ExtForceFileItem GetSourceAndSinkItem(SourceAndSink sourceAndSink,
