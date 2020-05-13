@@ -67,8 +67,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Readers
                     {
                         IEnumerable<string> lineValues =
                             currentLine.Split(' ').Select(l => l.Trim()).Where(v => v.Length > 0);
-                        IEnumerable<string> gridSizeString = lineValues;
-                        if (gridSizeString.Count() != 2)
+                        string[] gridSizeString = lineValues.ToArray();
+                        if (gridSizeString.Length != 2)
                         {
                             throw new Exception("Unknown file format");
                         }
@@ -88,7 +88,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Readers
 
                     IEnumerable<string> doubleValues =
                         currentLine.Split(' ').Select(l => l.Trim()).Where(v => v.Length > 0);
-
+                    
                     if (xCoordinates.Count < mSize * nSize)
                     {
                         xCoordinates.AddRange(doubleValues.Select(v => double.Parse(v, CultureInfo.InvariantCulture)));
@@ -98,16 +98,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Readers
                     yCoordinates.AddRange(doubleValues.Select(v => double.Parse(v, CultureInfo.InvariantCulture)));
                 }
 
-                // set dry cell points
-                for (var i = 0; i < xCoordinates.Count; ++i)
-                {
-                    if (xCoordinates[i] == dryCellValue &&
-                        yCoordinates[i] == dryCellValue)
-                    {
-                        xCoordinates[i] = double.NaN;
-                        yCoordinates[i] = double.NaN;
-                    }
-                }
+                SetDryCellPoints(xCoordinates, dryCellValue, yCoordinates);
             }
 
             // [nSize,mSize] is the shape of the data, following our convention
@@ -115,6 +106,19 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Readers
             var grid = new CurvilinearGrid(nSize, mSize, xCoordinates, yCoordinates, coordinateSystem) {IsTimeDependent = false};
 
             return grid;
+        }
+
+        private static void SetDryCellPoints(List<double> xCoordinates, double dryCellValue, List<double> yCoordinates)
+        {
+            for (var i = 0; i < xCoordinates.Count; ++i)
+            {
+                if (xCoordinates[i] == dryCellValue &&
+                    yCoordinates[i] == dryCellValue)
+                {
+                    xCoordinates[i] = double.NaN;
+                    yCoordinates[i] = double.NaN;
+                }
+            }
         }
 
         private static void CheckIfFileIsEmpty(StreamReader reader)
