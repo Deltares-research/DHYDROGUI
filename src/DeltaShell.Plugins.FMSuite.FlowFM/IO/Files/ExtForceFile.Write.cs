@@ -527,14 +527,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             {
                 if (windField is IFileBased fileBasedWindField)
                 {
-                    ExtForceFileItem extForceFileItem = GetExistingForceFileItemOrNull(windField) ??
-                                                        ExtForceFileHelper.CreateWindFieldExtForceFileItem(windField,
-                                                                                                           Path
-                                                                                                               .GetFileName(
-                                                                                                                   fileBasedWindField
-                                                                                                                       .Path));
-                    string newPath = Path.Combine(Path.GetDirectoryName(extFilePath), extForceFileItem.FileName);
-                    fileBasedWindField.CopyTo(newPath);
+                    ExtForceFileItem extForceFileItem = ExtForceFileItemFactory.CreateWindFieldExtForceFileItem(
+                                                            windField,
+                                                            Path.GetFileName(fileBasedWindField.Path),
+                                                            existingForceFileItems);
+                    if (WriteToDisk)
+                    {
+                        string newPath = Path.Combine(Path.GetDirectoryName(extFilePath), extForceFileItem.FileName);
+                        fileBasedWindField.CopyTo(newPath);
+                    }
+
                     yield return extForceFileItem;
                 }
 
@@ -542,13 +544,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                 {
                     string fileName = string.Join(".", ExtForceQuantNames.WindQuantityNames[windField.Quantity],
                                                   ExtForceQuantNames.TimFileExtension);
-                    ExtForceFileItem extForceFileItem = GetExistingForceFileItemOrNull(windField) ??
-                                                        ExtForceFileHelper.CreateWindFieldExtForceFileItem(
-                                                            windField, fileName);
+                    ExtForceFileItem extForceFileItem = ExtForceFileItemFactory.CreateWindFieldExtForceFileItem(
+                                                            windField, fileName,
+                                                            existingForceFileItems);
+
                     ExtForceFileHelper.AddSuffixInCaseOfDuplicateFile(extForceFileItem);
-                    var timFile = new TimFile();
-                    string timFilePath = Path.Combine(directory, extForceFileItem.FileName);
-                    timFile.Write(timFilePath, windField.Data, referenceTime);
+                    if (WriteToDisk)
+                    {
+                        var timFile = new TimFile();
+                        string timFilePath = Path.Combine(directory, extForceFileItem.FileName);
+                        timFile.Write(timFilePath, windField.Data, referenceTime);
+                    }
+
                     yield return extForceFileItem;
                 }
             }

@@ -172,6 +172,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
             };
         }
 
+        public static ExtForceFileItem CreateWindFieldExtForceFileItem(IWindField windField, string fileName,
+                                                                       IDictionary<ExtForceFileItem, object> existingForceFileItems)
+        {
+            return GetExistingItem(windField, existingForceFileItems) ??
+                   new ExtForceFileItem(ExtForceQuantNames.WindQuantityNames[windField.Quantity])
+                   {
+                       FileName = fileName,
+                       FileType = GetFileType(windField),
+                       Method = GetMethod(windField),
+                       Operand = "+"
+                   };
+        }
+
         private static ExtForceFileItem GetSourceAndSinkItem(SourceAndSink sourceAndSink,
                                                              IDictionary<IFeatureData, ExtForceFileItem> polyLineForceFileItems)
         {
@@ -221,9 +234,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
             }
         }
 
-        private static ExtForceFileItem GetExistingItem(ISpatialOperation spatialOperation, IDictionary<ExtForceFileItem, object> existingForceFileItems)
+        private static ExtForceFileItem GetExistingItem(object value, IDictionary<ExtForceFileItem, object> existingForceFileItems)
         {
-            return existingForceFileItems.Where(item => Equals(item.Value, spatialOperation))
+            return existingForceFileItems.Where(item => Equals(item.Value, value))
                                          .Select(item => item.Key)
                                          .FirstOrDefault();
         }
@@ -231,6 +244,50 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
         private static string MakeXyzFileName(string quantity)
         {
             return string.Join(".", quantity.Replace(" ", "_").Replace("\t", "_"), ExtForceQuantNames.XyzFileExtension);
+        }
+
+        private static int GetFileType(IWindField windField)
+        {
+            if (windField is UniformWindField uniformWindField)
+            {
+                return uniformWindField.Components.Contains(WindComponent.Magnitude)
+                           ? ExtForceQuantNames.FileTypes.UniMagDir
+                           : ExtForceQuantNames.FileTypes.Uniform;
+            }
+
+            if (windField is GriddedWindField)
+            {
+                return windField.Quantity == WindQuantity.VelocityVectorAirPressure
+                           ? ExtForceQuantNames.FileTypes.Curvi
+                           : ExtForceQuantNames.FileTypes.ArcInfo;
+            }
+
+            if (windField is SpiderWebWindField)
+            {
+                return ExtForceQuantNames.FileTypes.SpiderWeb;
+            }
+
+            return -1;
+        }
+
+        private static int GetMethod(IWindField windField)
+        {
+            if (windField is UniformWindField)
+            {
+                return 1;
+            }
+
+            if (windField is GriddedWindField)
+            {
+                return windField.Quantity == WindQuantity.VelocityVectorAirPressure ? 3 : 2;
+            }
+
+            if (windField is SpiderWebWindField)
+            {
+                return 1;
+            }
+
+            return -1;
         }
     }
 }

@@ -42,7 +42,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers
 
         public static IEnumerable<string[]> GetBoundaryDataFiles(FlowBoundaryCondition boundaryCondition,
                                                                  BoundaryConditionSet boundaryConditionSet,
-                                                                 ExtForceFileItem existingExtForceFileItem = null)
+                                                                 ExtForceFileItem existingExtForceFileItem)
         {
             string quantityName =
                 ExtForceQuantNames.GetQuantityString(boundaryCondition);
@@ -163,17 +163,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers
             return list;
         }
 
-        public static ExtForceFileItem CreateWindFieldExtForceFileItem(IWindField windField, string filePath)
-        {
-            return new ExtForceFileItem(ExtForceQuantNames.WindQuantityNames[windField.Quantity])
-            {
-                FileName = filePath,
-                FileType = GetFileType(windField),
-                Method = GetMethod(windField),
-                Operand = "+"
-            };
-        }
-
         public static IWindField CreateWindField(ExtForceFileItem extForceFileItem, string extForceFilePath)
         {
             if (!ExtForceQuantNames.WindQuantityNames.Values.Contains(extForceFileItem.Quantity))
@@ -291,50 +280,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers
             return i == 0
                        ? string.Join(".", filePathWithoutExtension, fileExtension)
                        : $"{filePathWithoutExtension}_{i:0000}.{fileExtension}";
-        }
-
-        private static int GetFileType(IWindField windField)
-        {
-            if (windField is UniformWindField uniformWindField)
-            {
-                return uniformWindField.Components.Contains(WindComponent.Magnitude)
-                           ? ExtForceQuantNames.FileTypes.UniMagDir
-                           : ExtForceQuantNames.FileTypes.Uniform;
-            }
-
-            if (windField is GriddedWindField)
-            {
-                return windField.Quantity == WindQuantity.VelocityVectorAirPressure
-                           ? ExtForceQuantNames.FileTypes.Curvi
-                           : ExtForceQuantNames.FileTypes.ArcInfo;
-            }
-
-            if (windField is SpiderWebWindField)
-            {
-                return ExtForceQuantNames.FileTypes.SpiderWeb;
-            }
-
-            return -1;
-        }
-
-        private static int GetMethod(IWindField windField)
-        {
-            if (windField is UniformWindField)
-            {
-                return 1;
-            }
-
-            if (windField is GriddedWindField)
-            {
-                return windField.Quantity == WindQuantity.VelocityVectorAirPressure ? 3 : 2;
-            }
-
-            if (windField is SpiderWebWindField)
-            {
-                return 1;
-            }
-
-            return -1;
         }
     }
 }
