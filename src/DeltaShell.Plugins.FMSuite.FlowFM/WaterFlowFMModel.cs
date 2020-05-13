@@ -3682,7 +3682,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             
             ReportProgressText("Initializing");
             runner.OnInitialize();
-            InitializeRunTimeGridOperationApi();
+            
+            if (Status != ActivityStatus.Failed)
+            {
+                InitializeRunTimeGridOperationApi();
+            }
 
             ReportProgressText();
         }
