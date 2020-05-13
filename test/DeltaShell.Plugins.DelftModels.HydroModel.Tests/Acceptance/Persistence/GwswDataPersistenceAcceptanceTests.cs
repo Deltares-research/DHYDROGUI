@@ -25,7 +25,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
             new object[] {"DidactischStelsel", 108, 74},
             new object[] {"Groesb2", 719, 675},
             new object[] {"Pudong", 4974, 4936},
-            new object[] {"Eindhoven", 0, 0} // TODO: Add preconditions when the model can be correctly imported
+            new object[] {"Eindhoven", 16529, 16131}
         };
 
         [TestFixtureSetUp]
