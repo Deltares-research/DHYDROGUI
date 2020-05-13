@@ -8,6 +8,7 @@ using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Core;
 using DeltaShell.NGHS.IO.TestUtils;
+using DeltaShell.NGHS.TestUtils;
 using DeltaShell.NGHS.TestUtils.AssertConstraints;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.Data.NHibernate;
@@ -704,6 +705,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
                                             startDate, 17, 19, 21, 23);
             AssertCorrectWaveEnergyFunction(data[supportPoint3].WaveEnergyFunction, 1,
                                             endDate, 18, 20, 22, 24);
+        }
+
+        [Test]
+        [Category(NghsTestCategory.PerformanceDotTrace)]
+        public void Load_TimeDependentSpatiallyVaryingBoundary_ShouldBeWithinExecutionTime()
+        {
+            new MdwFile().Load(TestHelper.GetTestFilePath(@"read_wave_boundaries\time_dependent-spatially_varying.mdw"));
         }
 
         [Test]
