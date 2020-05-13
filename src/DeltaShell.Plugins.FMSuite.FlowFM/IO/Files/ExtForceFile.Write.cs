@@ -533,7 +533,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             {
                 if (windField is IFileBased fileBasedWindField)
                 {
-                    ExtForceFileItem extForceFileItem = ExtForceFileItemFactory.CreateWindFieldExtForceFileItem(
+                    ExtForceFileItem extForceFileItem = ExtForceFileItemFactory.GetWindFieldExtForceFileItem(
                                                             windField,
                                                             Path.GetFileName(fileBasedWindField.Path),
                                                             existingForceFileItems);
@@ -550,7 +550,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                 {
                     string fileName = string.Join(".", ExtForceQuantNames.WindQuantityNames[windField.Quantity],
                                                   ExtForceQuantNames.TimFileExtension);
-                    ExtForceFileItem extForceFileItem = ExtForceFileItemFactory.CreateWindFieldExtForceFileItem(
+                    ExtForceFileItem extForceFileItem = ExtForceFileItemFactory.GetWindFieldExtForceFileItem(
                                                             windField, fileName,
                                                             existingForceFileItems);
 
@@ -568,54 +568,36 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         }
 
         private ExtForceFileItem WriteHeatFluxModelData(WaterFlowFMModelDefinition modelDefinition,
-                                                                     bool switchTo)
+                                                        bool switchTo)
         {
             ExtForceFileItem extForceFileItem = null;
             try
             {
-                var temperatureProcessNumber = (int)modelDefinition.HeatFluxModel.Type;
+                HeatFluxModel heatFluxModel = modelDefinition.HeatFluxModel;
 
-                if (temperatureProcessNumber == 5)
+                extForceFileItem = ExtForceFileItemFactory.GetHeatFluxModelItem(heatFluxModel, modelDefinition.ModelName,
+                                                                                existingForceFileItems);
+                
+                if (heatFluxModel.GriddedHeatFluxFilePath != null)
                 {
-                    extForceFileItem = GetExistingForceFileItemOrNull(modelDefinition.HeatFluxModel.Type);
-
-                    if (modelDefinition.HeatFluxModel.GriddedHeatFluxFilePath != null)
+                    if (extForceFileItem == null)
                     {
-                        if (extForceFileItem == null)
-                        {
-                            throw new InvalidOperationException("heat flux model was not correctly imported");
-                        }
-
-                        if (WriteToDisk)
-                        {
-                            string newPath = Path.Combine(Path.GetDirectoryName(extFilePath), extForceFileItem.FileName);
-
-                            modelDefinition.HeatFluxModel.CopyTo(newPath, switchTo);
-                        }
+                        throw new InvalidOperationException("heat flux model was not correctly imported");
                     }
-                    else
-                    {
-                        extForceFileItem =
-                            GetExistingForceFileItemOrNull(modelDefinition.HeatFluxModel.MeteoData)
-                            ??
-                            new ExtForceFileItem(
-                                modelDefinition.HeatFluxModel.ContainsSolarRadiation
-                                    ? ExtForceQuantNames.MeteoDataWithRadiation
-                                    : ExtForceQuantNames.MeteoData)
-                            {
-                                FileName = modelDefinition.ModelName + FileConstants.MeteoFileExtension,
-                                FileType = ExtForceQuantNames.FileTypes.Uniform,
-                                Method = 1,
-                                Operand = ExtForceQuantNames.OperatorToStringMapping[
-                                    Operator.Overwrite]
-                            };
 
-                        if (WriteToDisk)
-                        {
-                            string path = GetOtherFilePathInSameDirectory(extFilePath, extForceFileItem.FileName);
-                            new TimFile().Write(path, modelDefinition.HeatFluxModel.MeteoData,
-                                                (DateTime) modelDefinition.GetModelProperty(KnownProperties.RefDate).Value);
-                        }
+                    if (WriteToDisk)
+                    {
+                        string newPath = Path.Combine(Path.GetDirectoryName(extFilePath), extForceFileItem.FileName);
+                        heatFluxModel.CopyTo(newPath, switchTo);
+                    }
+                }
+                else
+                {
+                    if (WriteToDisk && extForceFileItem != null)
+                    {
+                        string path = GetOtherFilePathInSameDirectory(extFilePath, extForceFileItem.FileName);
+                        new TimFile().Write(path, heatFluxModel.MeteoData,
+                                            (DateTime) modelDefinition.GetModelProperty(KnownProperties.RefDate).Value);
                     }
                 }
 
@@ -661,12 +643,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         {
             WaterFlowFMProperty enable = modelDefinition.GetModelProperty(useProperty);
             return (bool?)enable?.Value ?? true; // default to True
-        }
-
-        private ExtForceFileItem GetExistingForceFileItemOrNull(object value)
-        {
-            return existingForceFileItems.Where(kvp => Equals(kvp.Value, value)).Select(kvp => kvp.Key)
-                                         .FirstOrDefault();
         }
     }
 }

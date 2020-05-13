@@ -172,7 +172,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
             };
         }
 
-        public static ExtForceFileItem CreateWindFieldExtForceFileItem(IWindField windField, string fileName,
+        public static ExtForceFileItem GetWindFieldExtForceFileItem(IWindField windField, string fileName,
                                                                        IDictionary<ExtForceFileItem, object> existingForceFileItems)
         {
             return GetExistingItem(windField, existingForceFileItems) ??
@@ -183,6 +183,49 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
                        Method = GetMethod(windField),
                        Operand = "+"
                    };
+        }
+
+        public static ExtForceFileItem GetHeatFluxModelItem(HeatFluxModel heatFluxModel, string modelName,
+                                                            IDictionary<ExtForceFileItem, object> existingForceFileItems)
+        {
+            if (heatFluxModel == null)
+            {
+                throw new ArgumentNullException(nameof(heatFluxModel));
+            }
+
+            if (existingForceFileItems == null)
+            {
+                throw new ArgumentNullException(nameof(existingForceFileItems));
+            }
+
+            HeatFluxModelType heatFluxModelType = heatFluxModel.Type;
+            if (heatFluxModelType != HeatFluxModelType.Composite)
+            {
+                return null;
+            }
+
+            ExtForceFileItem item;
+            if (heatFluxModel.GriddedHeatFluxFilePath != null)
+            {
+                item = GetExistingItem(heatFluxModelType, existingForceFileItems);
+            }
+            else
+            {
+                item = GetExistingItem(heatFluxModel.MeteoData, existingForceFileItems) ??
+                       new ExtForceFileItem(
+                           heatFluxModel.ContainsSolarRadiation
+                               ? ExtForceQuantNames.MeteoDataWithRadiation
+                               : ExtForceQuantNames.MeteoData)
+                       {
+                           FileName = modelName + FileConstants.MeteoFileExtension,
+                           FileType = ExtForceQuantNames.FileTypes.Uniform,
+                           Method = 1,
+                           Operand = ExtForceQuantNames.OperatorToStringMapping[
+                               Operator.Overwrite]
+                       };
+            }
+
+            return item;
         }
 
         private static ExtForceFileItem GetSourceAndSinkItem(SourceAndSink sourceAndSink,
