@@ -273,13 +273,46 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
         private IEnumerable<ExtForceFileItem> WriteSourcesAndSinks(WaterFlowFMModelDefinition modelDefinition)
         {
+            IDictionary<SourceAndSink, ExtForceFileItem> sourceAndSinkItemsToWrite =
+                ExtForceFileItemFactory.GetSourceAndSinkItems(modelDefinition, polyLineForceFileItems);
+
             var referenceTime = (DateTime)modelDefinition.GetModelProperty(KnownProperties.RefDate).Value;
 
-            foreach (SourceAndSink sourceAndSink in modelDefinition.SourcesAndSinks.Where(ss => ss.Feature.Name != null))
+            foreach (KeyValuePair<SourceAndSink, ExtForceFileItem> sourceAndSink in sourceAndSinkItemsToWrite)
             {
-                polyLineForceFileItems.TryGetValue(sourceAndSink, out ExtForceFileItem matchingItem);
+                if (WriteToDisk)
+                {
+                    WriteSourceAndSinkData(sourceAndSink, referenceTime, modelDefinition);
+                }
 
-                yield return WriteSourceAndSinkData(sourceAndSink, referenceTime, matchingItem, modelDefinition);
+                yield return sourceAndSink.Value;
+            }
+        }
+
+        private void WriteSourceAndSinkData(KeyValuePair<SourceAndSink, ExtForceFileItem> sourceAndSinkFileItem,
+                                            DateTime referenceTime,
+                                            WaterFlowFMModelDefinition modelDefinition)
+        {
+            ExtForceFileItem extForceFileItem = sourceAndSinkFileItem.Value;
+            SourceAndSink sourceAndSink = sourceAndSinkFileItem.Key;
+
+            string directory = Path.GetDirectoryName(extFilePath);
+            string pliFilePath = Path.Combine(directory, extForceFileItem.FileName);
+
+            new PliFile<Feature2D>().Write(pliFilePath, new EventedList<Feature2D>
+            {
+                sourceAndSink.Feature
+            });
+            string dataFilePath = Path.ChangeExtension(pliFilePath, ExtForceQuantNames.TimFileExtension);
+
+            IFunction originalFunction = sourceAndSink.Function;
+            if (originalFunction != null)
+            {
+                var function = (IFunction) originalFunction.Clone(true);
+
+                RemoveDisabledComponentsFromSourceAndSink(sourceAndSink, modelDefinition, function);
+
+                new TimFile().Write(dataFilePath, function, referenceTime);
             }
         }
 
@@ -533,52 +566,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                 log.ErrorFormat("Error during writing the heat flux model: {0}", ex.Message);
                 return extForceFileItems;
             }
-        }
-
-        private ExtForceFileItem WriteSourceAndSinkData(SourceAndSink sourceAndSink,
-                                                        DateTime referenceTime,
-                                                        ExtForceFileItem existingExtForceFileItem,
-                                                        WaterFlowFMModelDefinition modelDefinition)
-        {
-            ExtForceFileItem extForceFileItem = existingExtForceFileItem ??
-                                                new ExtForceFileItem(ExtForceQuantNames.SourceAndSink)
-                                                {
-                                                    FileName = ExtForceFileHelper.GetPliFileName(sourceAndSink),
-                                                    FileType = ExtForceQuantNames.FileTypes.PolyTim,
-                                                    Method = 1,
-                                                    Operand = ExtForceQuantNames.OperatorToStringMapping[
-                                                        Operator.Overwrite]
-                                                };
-
-            if (sourceAndSink.Area > 0)
-            {
-                extForceFileItem.ModelData[areaKey] = sourceAndSink.Area;
-            }
-
-            ExtForceFileHelper.AddSuffixInCaseOfDuplicateFile(extForceFileItem);
-
-            if (WriteToDisk)
-            {
-                string directory = Path.GetDirectoryName(extFilePath);
-                string pliFilePath = Path.Combine(directory, extForceFileItem.FileName);
-
-                new PliFile<Feature2D>().Write(pliFilePath, new EventedList<Feature2D> { sourceAndSink.Feature });
-                string dataFilePath = Path.ChangeExtension(pliFilePath, ExtForceQuantNames.TimFileExtension);
-
-                IFunction originalFunction = sourceAndSink.Function;
-                if (originalFunction == null)
-                {
-                    return extForceFileItem;
-                }
-
-                var function = (IFunction)originalFunction.Clone(true);
-
-                RemoveDisabledComponentsFromSourceAndSink(sourceAndSink, modelDefinition, function);
-
-                new TimFile().Write(dataFilePath, function, referenceTime);
-            }
-
-            return extForceFileItem;
         }
 
         private ExtForceFileItem WriteInitialConditionsSamples(string extForceFileQuantityName,
