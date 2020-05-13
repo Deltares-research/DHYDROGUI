@@ -295,14 +295,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
 
             modelDef.Obstacles.Clear();
 
-            //Modeldefinition properties updated during save
+            // Model definition properties updated during save
             mdwFile.SaveTo(targetPath, modelDef, true);
 
             Assert.AreEqual(string.Empty,
                             modelDef.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.ObstacleFile)
                                     .GetValueAsString());
 
-            //Verify what was really written in the file
+            // Verify what was really written in the file
             WaveModelDefinition modelDef2 = mdwFile.Load(targetPath);
 
             Assert.AreEqual(string.Empty,
@@ -312,7 +312,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        public void GivenAMdwFileWithConstantWind_WhenImportedAndChangedToTimeseries_ThenZerosShouldBeWrittenForWindSpeedAndDirectionInTheModelDefinitionProperties()
+        public void GivenAMdwFileWithConstantWind_WhenImportedAndChangedToTimeSeries_ThenZerosShouldBeWrittenForWindSpeedAndDirectionInTheModelDefinitionProperties()
         {
             var mdwFile = new MdwFile();
             string importedMdwFilePath = TestHelper.GetTestFilePath(@"wad\wad.mdw");
@@ -329,7 +329,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
 
             modelDef.TimePointData.WindDataType = InputFieldDataType.TimeVarying;
 
-            //Modeldefinition properties updated during save
+            // Model definition properties updated during save
             mdwFile.SaveTo(targetPath, modelDef, true);
 
             Assert.AreEqual("0",
@@ -340,7 +340,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
                             modelDef.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.WindDirection)
                                     .GetValueAsString());
 
-            //Verify what was really written in the file
+            // Verify what was really written in the file
             WaveModelDefinition modelDef2 = mdwFile.Load(targetPath);
 
             Assert.AreEqual("0",
@@ -354,10 +354,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
 
         [Test]
         [Category(TestCategory.Integration)]
-        public void GivenAWaveModelWithConstantHydronamics_WhenChangedToTimeseries_ThenZerosShouldBeWrittenForConstantWaterLevelVelocityXAndVelocityYInTheModelDefinitionProperties()
+        public void GivenAWaveModelWithConstantHydronamics_WhenChangedToTimeSeries_ThenZerosShouldBeWrittenForConstantWaterLevelVelocityXAndVelocityYInTheModelDefinitionProperties()
         {
             var mdwFile = new MdwFile();
-            var modelDef = new WaveModelDefinition() {OuterDomain = new WaveDomainData("Outer")};
+            var modelDef = new WaveModelDefinition {OuterDomain = new WaveDomainData("Outer")};
             string targetPath = TestHelper.GetCurrentMethodName() + "output.mdw";
 
             modelDef.TimePointData.HydroDataType = InputFieldDataType.Constant;
@@ -365,7 +365,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             modelDef.TimePointData.VelocityXConstant = 6;
             modelDef.TimePointData.VelocityYConstant = 6;
 
-            // update modeldefintion properties
+            // update model definition properties
             mdwFile.SaveTo(targetPath, modelDef, true);
 
             Assert.AreEqual("6",
@@ -427,14 +427,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
 
             modelDef.ObservationPoints.Clear();
 
-            //Modeldefinition properties updated during save
+            // Model definition properties updated during save
             mdwFile.SaveTo(targetPath, modelDef, true);
 
             Assert.AreEqual(string.Empty,
                             modelDef.GetModelProperty(KnownWaveCategories.OutputCategory, KnownWaveProperties.LocationFile)
                                     .GetValueAsString());
 
-            //Verify what was really written in the file
+            // Verify what was really written in the file
             WaveModelDefinition modelDef2 = mdwFile.Load(targetPath);
 
             Assert.AreEqual(string.Empty,
@@ -448,14 +448,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
         {
             var mdwFile = new MdwFile();
             string importedMdwFilePath = TestHelper.GetTestFilePath(@"ModelWithMissingMultipleDefaultValues\Waves.mdw");
-
-            var expectedMessages = new List<string>
-            {
-                "In the MDW file the property BedFricCoef is missing. Based on property BedFriction the default value is set",
-                "In the MDW file the property MaxIter is missing. Based on property SimMode the default value is set"
-            };
-
-            IEnumerable<string> messages = expectedMessages;
 
             void Action()
             {
@@ -828,7 +820,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
         public void Load_ThenCorrectSpectralDomainDataIsSet(WaveDirectionalSpaceType directionalSpaceType)
         {
             var random = new Random();
-            var expectedDomainData = new SpectralDomainData()
+            var expectedDomainData = new SpectralDomainData
             {
                 DirectionalSpaceType = directionalSpaceType,
                 NDir = random.Next(),
@@ -1193,26 +1185,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             geometricDefinition.StartingIndex.Returns(0);
             geometricDefinition.Length.Returns(10);
             geometricDefinition.GridSide.Returns(GridSide.East);
-            geometricDefinition.SupportPoints.Returns(new EventedList<SupportPoint>()
+            geometricDefinition.SupportPoints.Returns(new EventedList<SupportPoint>
             {
                 new SupportPoint(0, geometricDefinition),
                 new SupportPoint(10, geometricDefinition)
             });
 
             return geometricDefinition;
-        }
-
-        private DeltaShellApplication GetConfiguredApplication(string savePath)
-        {
-            var app = new DeltaShellApplication();
-            app.IsProjectCreatedInTemporaryDirectory = true;
-            app.Plugins.Add(new NHibernateDaoApplicationPlugin());
-            app.Plugins.Add(new CommonToolsApplicationPlugin());
-            app.Plugins.Add(new SharpMapGisApplicationPlugin());
-            app.Plugins.Add(new NetworkEditorApplicationPlugin());
-            app.Run();
-            app.SaveProjectAs(Path.Combine(savePath));
-            return app;
         }
 
         private static void AssertCorrectConstantParameters(ConstantParameters<PowerDefinedSpreading> supportPointData,

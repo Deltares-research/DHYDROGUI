@@ -61,11 +61,76 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to In the MDW file the property {0} is missing. Based on property {1} the default value is set.
+        /// </summary>
+        public static string MdwFile_In_the_MDW_file_the_property__0__is_missing__Based_on_property__1__the_default_value_is_set {
+            get {
+                return ResourceManager.GetString("MdwFile_In_the_MDW_file_the_property__0__is_missing__Based_on_property__1__the_de" +
+                        "fault_value_is_set", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid number of meteo files specified for single domain; meteo data set to default.
+        /// </summary>
+        public static string MdwFile_Invalid_number_of_meteo_files_specified_for_single_domain {
+            get {
+                return ResourceManager.GetString("MdwFile_Invalid_number_of_meteo_files_specified_for_single_domain", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to loading the D-Waves model.
         /// </summary>
         public static string MdwFile_Load_loading_the_D_Waves_model {
             get {
                 return ResourceManager.GetString("MdwFile_Load_loading_the_D_Waves_model", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Multiple spider web files specified for single domain; meteo data set to default.
+        /// </summary>
+        public static string MdwFile_Multiple_spider_web_files_specified_for_single_domain {
+            get {
+                return ResourceManager.GetString("MdwFile_Multiple_spider_web_files_specified_for_single_domain", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Obstacle polyline file {0} contain invalid geometry for obstacle {1}, skipping.
+        /// </summary>
+        public static string MdwFile_Obstacle_polyline_file__0__contain_invalid_geometry__1__ {
+            get {
+                return ResourceManager.GetString("MdwFile_Obstacle_polyline_file__0__contain_invalid_geometry__1__", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Obstacle polyline file {0} does not contain geometry for obstacle {1}, skipping.
+        /// </summary>
+        public static string MdwFile_Obstacle_polyline_file__0__does_not_contain_geometry__1__ {
+            get {
+                return ResourceManager.GetString("MdwFile_Obstacle_polyline_file__0__does_not_contain_geometry__1__", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Obstacle polyline file {0} does not exist.
+        /// </summary>
+        public static string MdwFile_Obstacle_polyline_file__0__does_not_exist {
+            get {
+                return ResourceManager.GetString("MdwFile_Obstacle_polyline_file__0__does_not_exist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Parsing error in file &apos;{0}&apos;. Can&apos;t convert &apos;{1}&apos; to a double. The property &apos;{2}&apos; has been given the default value &apos;{3}&apos;..
+        /// </summary>
+        public static string MdwFile_Parsing_error_in_file__0__can_not_convert__1__to_double_property__2__has_default__3__ {
+            get {
+                return ResourceManager.GetString("MdwFile_Parsing_error_in_file__0__can_not_convert__1__to_double_property__2__has_" +
+                        "default__3__", resourceCulture);
             }
         }
         

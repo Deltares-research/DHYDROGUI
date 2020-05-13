@@ -7,7 +7,6 @@ using DelftTools.Functions;
 using DelftTools.Functions.Generic;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
-using DelftTools.Utils.Guards;
 using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.Common.IO;
 using DeltaShell.NGHS.Common.Logging;
@@ -33,18 +32,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
 {
     public class MdwFile : NGHSFileBase
     {
-        /// <summary>
-        /// These mdw categories can have multiplicity greater than 1 (or gui only),
-        /// excluded them from the generic property treatment..
-        /// </summary>
-        public static IList<string> ExcludedCategories { get; } = new List<string>
-        {
-            KnownWaveCategories.TimePointCategory,
-            KnownWaveCategories.DomainCategory,
-            KnownWaveCategories.BoundaryCategory,
-            KnownWaveCategories.GuiOnlyCategory
-        };
-
         private const string PolyfileName = "PolylineFile";
 
         private const string WaveObstaclePropertyName = "Name";
@@ -61,13 +48,25 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
         private const string WaveObstaclePropertyReflectionCoefficient = "ReflecCoef";
         private const double WaveObstacleDefaultValueReflectionCoefficient = 0.0;
 
-        private static readonly ILog Log = LogManager.GetLogger(typeof(MdwFile));
+        private static readonly ILog log = LogManager.GetLogger(typeof(MdwFile));
+
+        /// <summary>
+        /// These mdw categories can have multiplicity greater than 1 (or gui only),
+        /// excluded them from the generic property treatment..
+        /// </summary>
+        public static IList<string> ExcludedCategories { get; } = new List<string>
+        {
+            KnownWaveCategories.TimePointCategory,
+            KnownWaveCategories.DomainCategory,
+            KnownWaveCategories.BoundaryCategory,
+            KnownWaveCategories.GuiOnlyCategory
+        };
 
         public string MdwFilePath { get; set; }
 
         public void SaveTo(string mdwTargetFilePath, WaveModelDefinition modelDefinition, bool switchTo)
         {
-            var logHandler = new LogHandler(Resources.MdwFile_SaveTo_exporting_the_D_Waves_model, Log);
+            var logHandler = new LogHandler(Resources.MdwFile_SaveTo_exporting_the_D_Waves_model, log);
             var filesManager = new FilesManager();
 
             string modelName = Path.GetFileNameWithoutExtension(mdwTargetFilePath);
@@ -191,7 +190,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
 
         public WaveModelDefinition Load(string filePath)
         {
-            var logHandler = new LogHandler(Resources.MdwFile_Load_loading_the_D_Waves_model, Log);
+            var logHandler = new LogHandler(Resources.MdwFile_Load_loading_the_D_Waves_model, log);
             MdwFilePath = filePath;
 
             var modelDefinition = new WaveModelDefinition();
@@ -225,31 +224,25 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             }
 
             // time frame
-            IList<DateTime> times;
-            modelDefinition.TimePointData =
-                CreateTimePointData(mdwCategories, modelDefinition.ModelReferenceDateTime, out times);
+            modelDefinition.TimePointData = CreateTimePointData(mdwCategories, modelDefinition.ModelReferenceDateTime, out IList<DateTime> _);
 
             ReadWaveBoundaries(modelDefinition, mdwCategories, mdwDir, logHandler);
 
-            modelDefinition.Obstacles.AddRange(
-                CreateObstacleData(
-                    mdwCategories.First(c => c.Name == KnownWaveCategories.GeneralCategory),
-                    modelDefinition));
+            modelDefinition.Obstacles.AddRange(CreateObstacleData(mdwCategories.First(c => c.Name == KnownWaveCategories.GeneralCategory),
+                                                                  modelDefinition));
 
             string locFile = mdwCategories.First(c => c.Name == KnownWaveCategories.OutputCategory)
                                           .GetPropertyValue(KnownWaveProperties.LocationFile);
             if (locFile != null)
             {
-                modelDefinition.ObservationPoints =
-                    new ObsFile<Feature2DPoint>().Read(Path.Combine(mdwDir, locFile), false);
+                modelDefinition.ObservationPoints = new ObsFile<Feature2DPoint>().Read(Path.Combine(mdwDir, locFile), false);
             }
 
             string curveFile = mdwCategories.First(c => c.Name == KnownWaveCategories.OutputCategory)
                                             .GetPropertyValue(KnownWaveProperties.CurveFile);
             if (curveFile != null)
             {
-                modelDefinition.ObservationCrossSections =
-                    new EventedList<Feature2D>(new PliFile<Feature2D>().Read(Path.Combine(mdwDir, curveFile)));
+                modelDefinition.ObservationCrossSections = new EventedList<Feature2D>(new PliFile<Feature2D>().Read(Path.Combine(mdwDir, curveFile)));
             }
 
             logHandler.LogReport();
@@ -257,7 +250,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             return modelDefinition;
         }
 
-        private void SetConstantWindProperties(WaveModelDefinition modelDefinition)
+        private static void SetConstantWindProperties(WaveModelDefinition modelDefinition)
         {
             if (modelDefinition.TimePointData.WindDataType == InputFieldDataType.Constant)
             {
@@ -275,39 +268,32 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             }
         }
 
-        private void SetConstantHydrodynamicsProperties(WaveModelDefinition modelDefinition)
+        private static void SetConstantHydrodynamicsProperties(WaveModelDefinition modelDefinition)
         {
             if (modelDefinition.TimePointData.HydroDataType == InputFieldDataType.Constant)
             {
                 modelDefinition.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.WaterLevel)
                                .Value = modelDefinition.TimePointData.WaterLevelConstant;
-                modelDefinition
-                        .GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.WaterVelocityX)
-                        .Value =
-                    modelDefinition.TimePointData.VelocityXConstant;
-                modelDefinition
-                        .GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.WaterVelocityY)
-                        .Value =
-                    modelDefinition.TimePointData.VelocityYConstant;
+                modelDefinition.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.WaterVelocityX)
+                               .Value = modelDefinition.TimePointData.VelocityXConstant;
+                modelDefinition.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.WaterVelocityY)
+                               .Value = modelDefinition.TimePointData.VelocityYConstant;
             }
             else
             {
                 modelDefinition.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.WaterLevel)
                                .SetValueAsString("0");
-                modelDefinition
-                    .GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.WaterVelocityX)
-                    .SetValueAsString("0");
-                modelDefinition
-                    .GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.WaterVelocityY)
-                    .SetValueAsString("0");
+                modelDefinition.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.WaterVelocityX)
+                               .SetValueAsString("0");
+                modelDefinition.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.WaterVelocityY)
+                               .SetValueAsString("0");
             }
         }
 
         private static List<DelftIniCategory> GroupPropertiesByMdwCategory(WaveModelDefinition modelDefinition)
         {
             var mdwCategories = new List<DelftIniCategory>();
-            IEnumerable<IGrouping<string, WaveModelProperty>> groupedProperties =
-                modelDefinition.Properties.GroupBy(p => p.PropertyDefinition.FileCategoryName);
+            IEnumerable<IGrouping<string, WaveModelProperty>> groupedProperties = modelDefinition.Properties.GroupBy(p => p.PropertyDefinition.FileCategoryName);
             foreach (IGrouping<string, WaveModelProperty> grouping in groupedProperties)
             {
                 string mdwCategoryName = grouping.Key;
@@ -405,7 +391,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             return null;
         }
 
-        private void CopyGridFiles(IEnumerable<string> gridFilePaths, string sourceDir, string targetDir)
+        private static void CopyGridFiles(IEnumerable<string> gridFilePaths, string sourceDir, string targetDir)
         {
             foreach (string filename in gridFilePaths)
             {
@@ -429,8 +415,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                 if (timeSeries.Any())
                 {
                     // update refdate before writing
-                    timeSeries.ForEach(f => f.Attributes[BcwFile.RefDateAttributeName] =
-                                                modelDefinition.ModelReferenceDateTime.ToString(BcwFile.DateFormatString));
+                    timeSeries.ForEach(f => f.Attributes[BcwFile.RefDateAttributeName] = modelDefinition.ModelReferenceDateTime.ToString(BcwFile.DateFormatString));
                     allTimeSeriesPerBoundary.Add(boundary.Name, timeSeries);
                 }
             }
@@ -455,9 +440,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
 
         private static void WriteObstacles(WaveModelDefinition modelDefinition, string modelName, string targetDir)
         {
-            WaveModelProperty propertyObstacleFile = modelDefinition.GetModelProperty(
-                KnownWaveCategories.GeneralCategory,
-                KnownWaveProperties.ObstacleFile);
+            WaveModelProperty propertyObstacleFile = modelDefinition.GetModelProperty(KnownWaveCategories.GeneralCategory,
+                                                                                      KnownWaveProperties.ObstacleFile);
 
             if (modelDefinition.Obstacles.Any())
             {
@@ -521,7 +505,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             }
         }
 
-        private void AddDomainCategories(IList<IWaveDomainData> allDomains, ref List<DelftIniCategory> mdwCategories)
+        private static void AddDomainCategories(IList<IWaveDomainData> allDomains, ref List<DelftIniCategory> mdwCategories)
         {
             foreach (IWaveDomainData domain in allDomains)
             {
@@ -550,8 +534,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                 if (!domain.UseGlobalMeteoData)
                 {
                     List<string> meteoFiles = GetMeteoFiles(domain.MeteoData);
-                    meteoFiles.ForEach(
-                        (mf, i) => domainCategory.AddProperty(KnownWaveProperties.MeteoFile, meteoFiles[i]));
+                    meteoFiles.ForEach((mf, i) => domainCategory.AddProperty(KnownWaveProperties.MeteoFile, meteoFiles[i]));
                 }
 
                 if (!domain.HydroFromFlowData.UseDefaultHydroFromFlowSettings)
@@ -559,14 +542,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                     domainCategory.AddProperty("FlowBedLevel", (int) domain.HydroFromFlowData.BedLevelUsage);
                     domainCategory.AddProperty("FlowWaterLevel", (int) domain.HydroFromFlowData.WaterLevelUsage);
                     domainCategory.AddProperty("FlowVelocity", (int) domain.HydroFromFlowData.VelocityUsage);
-                    domainCategory.AddProperty("FlowVelocityType",
-                                               domain.HydroFromFlowData.VelocityUsageType.GetDescription());
+                    domainCategory.AddProperty("FlowVelocityType", domain.HydroFromFlowData.VelocityUsageType.GetDescription());
                     domainCategory.AddProperty("FlowWind", (int) domain.HydroFromFlowData.WindUsage);
                 }
 
                 if (domain.SuperDomain != null)
                 {
-                    // position in list == position in mdw fiel == domain number:
+                    // position in list == position in mdw file == domain number:
                     int index = allDomains.IndexOf(domain.SuperDomain);
                     domainCategory.AddProperty("NestedInDomain", index + 1);
                 }
@@ -576,12 +558,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             }
         }
 
-        /// <summary>
-        /// Copies model files, relative to model directory
-        /// </summary>
-        /// <param name="name"> </param>
-        /// <param name="sourceDir"> </param>
-        /// <param name="targetDir"> </param>
         private static void CopyModelFile(string name, string sourceDir, string targetDir)
         {
             string originalFilePath = Path.Combine(sourceDir, name);
@@ -594,7 +570,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                 }
                 catch
                 {
-                    Log.ErrorFormat("Failed to copy {0} to {1}", originalFilePath, targetFilePath);
+                    log.ErrorFormat("Failed to copy {0} to {1}", originalFilePath, targetFilePath);
                     throw;
                 }
             }
@@ -605,26 +581,24 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
         {
             var categories = new List<DelftIniCategory>();
 
-            WaveInputFieldData timepointData = modelDefinition.TimePointData;
-            IMultiDimensionalArray<DateTime> times =
-                modelDefinition.TimePointData.InputFields.Arguments[0].GetValues<DateTime>();
+            WaveInputFieldData timePointData = modelDefinition.TimePointData;
+            IMultiDimensionalArray<DateTime> times = modelDefinition.TimePointData.InputFields.Arguments[0].GetValues<DateTime>();
 
             foreach (DateTime time in times)
             {
                 var timeCategory = new DelftIniCategory(KnownWaveCategories.TimePointCategory);
-                timeCategory.AddProperty(KnownWaveProperties.Time,
-                                         (time - modelDefinition.ModelReferenceDateTime).TotalMinutes);
+                timeCategory.AddProperty(KnownWaveProperties.Time, (time - modelDefinition.ModelReferenceDateTime).TotalMinutes);
 
-                double[] values = timepointData.InputFields.GetAllComponentValues(time).Cast<double>().ToArray();
+                double[] values = timePointData.InputFields.GetAllComponentValues(time).Cast<double>().ToArray();
 
-                if (timepointData.HydroDataType == InputFieldDataType.TimeVarying)
+                if (timePointData.HydroDataType == InputFieldDataType.TimeVarying)
                 {
                     timeCategory.AddProperty(KnownWaveProperties.WaterLevel, values[0]);
                     timeCategory.AddProperty(KnownWaveProperties.WaterVelocityX, values[1]);
                     timeCategory.AddProperty(KnownWaveProperties.WaterVelocityY, values[2]);
                 }
 
-                if (timepointData.WindDataType == InputFieldDataType.TimeVarying)
+                if (timePointData.WindDataType == InputFieldDataType.TimeVarying)
                 {
                     timeCategory.AddProperty(KnownWaveProperties.WindSpeed, values[3]);
                     timeCategory.AddProperty(KnownWaveProperties.WindDirection, values[4]);
@@ -647,7 +621,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             CurvilinearGrid grid = modelDefinition.OuterDomain.Grid;
             if (grid.IsEmpty)
             {
-                Log.Warn(Resources.MdwFile_ReadWaveBoundaries_Boundaries_cannot_be_imported__because_there_is_no_grid_detected);
+                log.Warn(Resources.MdwFile_ReadWaveBoundaries_Boundaries_cannot_be_imported__because_there_is_no_grid_detected);
                 return;
             }
 
@@ -751,7 +725,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                     continue;
                 }
 
-                logHandler.ReportWarningFormat("In the MDW file the property {0} is missing. Based on property {1} the default value is set",
+                logHandler.ReportWarningFormat(Resources.MdwFile_In_the_MDW_file_the_property__0__is_missing__Based_on_property__1__the_default_value_is_set,
                                                nameOfPropertyWithMultipleDefaultValues, nameOfDependentOnProperty);
 
                 WaveModelProperty dependentOnProperty = modelDefinition.GetModelProperty(categoryOfDependentOnProperty.First().Name, nameOfDependentOnProperty);
@@ -809,7 +783,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             return mdwCategories.Where(mc => mc.Properties.Any(p => p.Name.Equals(propertyName))).ToList();
         }
 
-        private IEnumerable<WaveDomainData> CreateWaveDomainData(IEnumerable<DelftIniCategory> categories)
+        private static IEnumerable<WaveDomainData> CreateWaveDomainData(IEnumerable<DelftIniCategory> categories)
         {
             foreach (DelftIniCategory domainCategory in categories.Where(
                 c => c.Name == KnownWaveCategories.DomainCategory))
@@ -817,12 +791,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                 string gridFileName = domainCategory.GetPropertyValue("Grid", "");
                 string domainName = Path.GetFileNameWithoutExtension(gridFileName);
 
-                var domain = new WaveDomainData(domainName);
-                domain.GridFileName = gridFileName;
-                domain.BedLevelGridFileName = domainCategory.GetPropertyValue("BedLevelGrid", "");
-                domain.BedLevelFileName = domainCategory.GetPropertyValue("BedLevel", "");
-                domain.NestedInDomain = int.Parse(domainCategory.GetPropertyValue("NestedInDomain", "-1"),
-                                                  NumberStyles.Any, CultureInfo.InvariantCulture);
+                var domain = new WaveDomainData(domainName)
+                {
+                    GridFileName = gridFileName,
+                    BedLevelGridFileName = domainCategory.GetPropertyValue("BedLevelGrid", ""),
+                    BedLevelFileName = domainCategory.GetPropertyValue("BedLevel", ""),
+                    NestedInDomain = int.Parse(domainCategory.GetPropertyValue("NestedInDomain", "-1"), NumberStyles.Any, CultureInfo.InvariantCulture)
+                };
 
                 string spaceType = domainCategory.GetPropertyValue("DirSpace");
                 if (spaceType != null)
@@ -832,9 +807,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                                                                          : WaveDirectionalSpaceType.Sector;
                     domain.SpectralDomainData.NDir = int.Parse(domainCategory.GetPropertyValue("NDir", "0"),
                                                                NumberStyles.Any, CultureInfo.InvariantCulture);
-                    domain.SpectralDomainData.StartDir = double.Parse(
-                        domainCategory.GetPropertyValue("StartDir", "0.0"), NumberStyles.Any,
-                        CultureInfo.InvariantCulture);
+                    domain.SpectralDomainData.StartDir = double.Parse(domainCategory.GetPropertyValue("StartDir", "0.0"),
+                                                                      NumberStyles.Any, CultureInfo.InvariantCulture);
                     domain.SpectralDomainData.EndDir = double.Parse(domainCategory.GetPropertyValue("EndDir", "0.0"),
                                                                     NumberStyles.Any, CultureInfo.InvariantCulture);
                     domain.SpectralDomainData.UseDefaultDirectionalSpace = false;
@@ -847,8 +821,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                 string nFreq = domainCategory.GetPropertyValue("NFreq");
                 if (nFreq != null)
                 {
-                    domain.SpectralDomainData.NFreq =
-                        (int) double.Parse(nFreq, NumberStyles.Any, CultureInfo.InvariantCulture);
+                    domain.SpectralDomainData.NFreq = (int) double.Parse(nFreq, NumberStyles.Any, CultureInfo.InvariantCulture);
                     domain.SpectralDomainData.FreqMin = double.Parse(domainCategory.GetPropertyValue("FreqMin", "0.0"),
                                                                      NumberStyles.Any, CultureInfo.InvariantCulture);
                     domain.SpectralDomainData.FreqMax = double.Parse(domainCategory.GetPropertyValue("FreqMax", "0.0"),
@@ -865,21 +838,27 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                 {
                     domain.HydroFromFlowData.BedLevelUsage =
                         (UsageFromFlowType) int.Parse(bedLevelUsage, NumberStyles.Any, CultureInfo.InvariantCulture);
-                    domain.HydroFromFlowData.WaterLevelUsage = (UsageFromFlowType) int.Parse(
-                        domainCategory.GetPropertyValue("FlowWaterLevel", "0"), NumberStyles.Any,
-                        CultureInfo.InvariantCulture);
-                    domain.HydroFromFlowData.VelocityUsage = (UsageFromFlowType) int.Parse(
-                        domainCategory.GetPropertyValue("FlowVelocity", "0"), NumberStyles.Any,
-                        CultureInfo.InvariantCulture);
+                    domain.HydroFromFlowData.WaterLevelUsage = (UsageFromFlowType) int.Parse(domainCategory.GetPropertyValue("FlowWaterLevel", "0"),
+                                                                                             NumberStyles.Any, CultureInfo.InvariantCulture);
+                    domain.HydroFromFlowData.VelocityUsage = (UsageFromFlowType) int.Parse(domainCategory.GetPropertyValue("FlowVelocity", "0"),
+                                                                                           NumberStyles.Any,
+                                                                                           CultureInfo.InvariantCulture);
                     string velocityType = domainCategory.GetPropertyValue("FlowVelocityType", "not-specified");
-                    domain.HydroFromFlowData.VelocityUsageType = velocityType == "wave-dependent"
-                                                                     ? VelocityComputationType.WaveDependent
-                                                                     : velocityType == "surface-layer"
-                                                                         ? VelocityComputationType.SurfaceLayer
-                                                                         : VelocityComputationType.DepthAveraged;
-                    domain.HydroFromFlowData.WindUsage = (UsageFromFlowType) int.Parse(
-                        domainCategory.GetPropertyValue("FlowWind", "0"), NumberStyles.Any,
-                        CultureInfo.InvariantCulture);
+                    switch (velocityType)
+                    {
+                        case "wave-dependent":
+                            domain.HydroFromFlowData.VelocityUsageType = VelocityComputationType.WaveDependent;
+                            break;
+                        case "surface-layer":
+                            domain.HydroFromFlowData.VelocityUsageType = VelocityComputationType.SurfaceLayer;
+                            break;
+                        default:
+                            domain.HydroFromFlowData.VelocityUsageType = VelocityComputationType.DepthAveraged;
+                            break;
+                    }
+
+                    domain.HydroFromFlowData.WindUsage = (UsageFromFlowType) int.Parse(domainCategory.GetPropertyValue("FlowWind", "0"),
+                                                                                       NumberStyles.Any, CultureInfo.InvariantCulture);
 
                     domain.HydroFromFlowData.UseDefaultHydroFromFlowSettings = false;
                 }
@@ -895,105 +874,93 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
         private WaveInputFieldData CreateTimePointData(IEnumerable<DelftIniCategory> mdwCategories,
                                                        DateTime referenceDate, out IList<DateTime> times)
         {
-            var timepointData = new WaveInputFieldData
+            var timePointData = new WaveInputFieldData
             {
                 HydroDataType = InputFieldDataType.Constant,
                 WindDataType = InputFieldDataType.Constant
             };
 
             times = new List<DateTime>();
-            List<DelftIniCategory> timePointCategories =
-                mdwCategories.Where(c => c.Name == KnownWaveCategories.TimePointCategory).ToList();
+            List<DelftIniCategory> timePointCategories = mdwCategories.Where(c => c.Name == KnownWaveCategories.TimePointCategory).ToList();
             if (timePointCategories.Any(c => c.GetPropertyValue(KnownWaveProperties.WaterLevel) != null))
             {
-                timepointData.HydroDataType = InputFieldDataType.TimeVarying;
+                timePointData.HydroDataType = InputFieldDataType.TimeVarying;
             }
 
             if (timePointCategories.Any(c => c.GetPropertyValue(KnownWaveProperties.WindSpeed) != null))
             {
-                timepointData.WindDataType = InputFieldDataType.TimeVarying;
+                timePointData.WindDataType = InputFieldDataType.TimeVarying;
             }
 
             DelftIniCategory generalCategory = mdwCategories.First(c => c.Name == KnownWaveCategories.GeneralCategory);
             List<string> meteoFiles = generalCategory.GetPropertyValues(KnownWaveProperties.MeteoFile).ToList();
             if (meteoFiles.Any())
             {
-                timepointData.WindDataType = InputFieldDataType.FromInputFiles;
-                timepointData.MeteoData = CreateMeteoDataFromFiles(meteoFiles);
+                timePointData.WindDataType = InputFieldDataType.FromInputFiles;
+                timePointData.MeteoData = CreateMeteoDataFromFiles(meteoFiles);
             }
 
-            if (timepointData.HydroDataType == InputFieldDataType.Constant)
+            if (timePointData.HydroDataType == InputFieldDataType.Constant)
             {
-                double waterlevel = double.Parse(
-                    generalCategory.GetPropertyValue(KnownWaveProperties.WaterLevel, "0.0"),
-                    NumberStyles.Any, CultureInfo.InvariantCulture);
-                double velocityX = double.Parse(
-                    generalCategory.GetPropertyValue(KnownWaveProperties.WaterVelocityX, "0.0"),
-                    NumberStyles.Any, CultureInfo.InvariantCulture);
-                double velocityY = double.Parse(
-                    generalCategory.GetPropertyValue(KnownWaveProperties.WaterVelocityY, "0.0"),
-                    NumberStyles.Any, CultureInfo.InvariantCulture);
-                timepointData.WaterLevelConstant = waterlevel;
-                timepointData.VelocityXConstant = velocityX;
-                timepointData.VelocityYConstant = velocityY;
-            }
-
-            if (timepointData.WindDataType == InputFieldDataType.Constant)
-            {
-                double windspeed = double.Parse(generalCategory.GetPropertyValue(KnownWaveProperties.WindSpeed, "0.0"),
+                double waterLevel = double.Parse(generalCategory.GetPropertyValue(KnownWaveProperties.WaterLevel, "0.0"),
+                                                 NumberStyles.Any, CultureInfo.InvariantCulture);
+                double velocityX = double.Parse(generalCategory.GetPropertyValue(KnownWaveProperties.WaterVelocityX, "0.0"),
                                                 NumberStyles.Any, CultureInfo.InvariantCulture);
-                double winddir = double.Parse(
-                    generalCategory.GetPropertyValue(KnownWaveProperties.WindDirection, "0.0"),
-                    NumberStyles.Any, CultureInfo.InvariantCulture);
-                timepointData.WindSpeedConstant = windspeed;
-                timepointData.WindDirectionConstant = winddir;
+                double velocityY = double.Parse(generalCategory.GetPropertyValue(KnownWaveProperties.WaterVelocityY, "0.0"),
+                                                NumberStyles.Any, CultureInfo.InvariantCulture);
+                timePointData.WaterLevelConstant = waterLevel;
+                timePointData.VelocityXConstant = velocityX;
+                timePointData.VelocityYConstant = velocityY;
             }
 
-            foreach (DelftIniCategory timepoint in timePointCategories)
+            if (timePointData.WindDataType == InputFieldDataType.Constant)
             {
-                DateTime time = referenceDate.AddMinutes(double.Parse(
-                                                             timepoint.GetPropertyValue(
-                                                                 KnownWaveProperties.Time, "0.0"),
-                                                             NumberStyles.Any,
-                                                             CultureInfo.InvariantCulture));
+                double windSpeed = double.Parse(generalCategory.GetPropertyValue(KnownWaveProperties.WindSpeed, "0.0"),
+                                                NumberStyles.Any, CultureInfo.InvariantCulture);
+                double windDirection = double.Parse(generalCategory.GetPropertyValue(KnownWaveProperties.WindDirection, "0.0"),
+                                                    NumberStyles.Any, CultureInfo.InvariantCulture);
+                timePointData.WindSpeedConstant = windSpeed;
+                timePointData.WindDirectionConstant = windDirection;
+            }
+
+            foreach (DelftIniCategory timePoint in timePointCategories)
+            {
+                DateTime time = referenceDate.AddMinutes(double.Parse(timePoint.GetPropertyValue(KnownWaveProperties.Time, "0.0"),
+                                                                      NumberStyles.Any,
+                                                                      CultureInfo.InvariantCulture));
                 times.Add(time);
 
-                double waterLevel;
-                if (!double.TryParse(timepoint.GetPropertyValue(KnownWaveProperties.WaterLevel), NumberStyles.Any,
-                                     CultureInfo.InvariantCulture, out waterLevel))
+                if (!double.TryParse(timePoint.GetPropertyValue(KnownWaveProperties.WaterLevel), NumberStyles.Any,
+                                     CultureInfo.InvariantCulture, out double waterLevel))
                 {
-                    waterLevel = (double) timepointData.InputFields.Components[0].DefaultValue;
+                    waterLevel = (double) timePointData.InputFields.Components[0].DefaultValue;
                 }
 
-                double velocityX;
-                if (!double.TryParse(timepoint.GetPropertyValue(KnownWaveProperties.WaterVelocityX), NumberStyles.Any,
-                                     CultureInfo.InvariantCulture, out velocityX))
+                if (!double.TryParse(timePoint.GetPropertyValue(KnownWaveProperties.WaterVelocityX), NumberStyles.Any,
+                                     CultureInfo.InvariantCulture, out double velocityX))
                 {
-                    velocityX = (double) timepointData.InputFields.Components[1].DefaultValue;
+                    velocityX = (double) timePointData.InputFields.Components[1].DefaultValue;
                 }
 
-                double velocityY;
-                if (!double.TryParse(timepoint.GetPropertyValue(KnownWaveProperties.WaterVelocityY), NumberStyles.Any,
-                                     CultureInfo.InvariantCulture, out velocityY))
+                if (!double.TryParse(timePoint.GetPropertyValue(KnownWaveProperties.WaterVelocityY), NumberStyles.Any,
+                                     CultureInfo.InvariantCulture, out double velocityY))
                 {
-                    velocityY = (double) timepointData.InputFields.Components[2].DefaultValue;
+                    velocityY = (double) timePointData.InputFields.Components[2].DefaultValue;
                 }
 
-                double windSpeed;
-                if (!double.TryParse(timepoint.GetPropertyValue(KnownWaveProperties.WindSpeed), NumberStyles.Any,
-                                     CultureInfo.InvariantCulture, out windSpeed))
+                if (!double.TryParse(timePoint.GetPropertyValue(KnownWaveProperties.WindSpeed), NumberStyles.Any,
+                                     CultureInfo.InvariantCulture, out double windSpeed))
                 {
-                    windSpeed = (double) timepointData.InputFields.Components[3].DefaultValue;
+                    windSpeed = (double) timePointData.InputFields.Components[3].DefaultValue;
                 }
 
-                double windDirection;
-                if (!double.TryParse(timepoint.GetPropertyValue(KnownWaveProperties.WindDirection), NumberStyles.Any,
-                                     CultureInfo.InvariantCulture, out windDirection))
+                if (!double.TryParse(timePoint.GetPropertyValue(KnownWaveProperties.WindDirection), NumberStyles.Any,
+                                     CultureInfo.InvariantCulture, out double windDirection))
                 {
-                    windDirection = (double) timepointData.InputFields.Components[4].DefaultValue;
+                    windDirection = (double) timePointData.InputFields.Components[4].DefaultValue;
                 }
 
-                timepointData.InputFields[time] = new[]
+                timePointData.InputFields[time] = new[]
                 {
                     waterLevel,
                     velocityX,
@@ -1003,7 +970,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                 };
             }
 
-            return timepointData;
+            return timePointData;
         }
 
         private WaveMeteoData CreateMeteoDataFromFiles(IReadOnlyCollection<string> meteoFiles)
@@ -1013,7 +980,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
 
             if (spwFiles.Count > 1)
             {
-                Log.Error("Multiple spider web files specified for single domain; meteo data set to default");
+                log.Error(Resources.MdwFile_Multiple_spider_web_files_specified_for_single_domain);
                 return new WaveMeteoData();
             }
 
@@ -1046,7 +1013,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             }
             else
             {
-                Log.Error("Invalid number of meteo files specified for single domain; meteo data set to default");
+                log.Error(Resources.MdwFile_Invalid_number_of_meteo_files_specified_for_single_domain);
                 return new WaveMeteoData();
             }
 
@@ -1072,7 +1039,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             string obstacleFilePath = Path.Combine(mdwDirectory, obstacleFile);
             if (!File.Exists(obstacleFilePath))
             {
-                Log.ErrorFormat("Obstacle file {0} does not exist", obstacleFilePath);
+                log.ErrorFormat("Obstacle file {0} does not exist", obstacleFilePath);
                 yield break;
             }
 
@@ -1083,13 +1050,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                 obtCategories = delftIniReader.ReadDelftIniFile(fileStream, obstacleFilePath);
             }
 
-            DelftIniCategory fileInfo =
-                obtCategories.First(c => c.Name == KnownWaveCategories.ObstacleFileInfoCategory);
+            DelftIniCategory fileInfo = obtCategories.First(c => c.Name == KnownWaveCategories.ObstacleFileInfoCategory);
             string polylineFileName = fileInfo.GetPropertyValue(PolyfileName);
             string geometryFilePath = Path.Combine(mdwDirectory, polylineFileName);
             if (!File.Exists(geometryFilePath))
             {
-                Log.ErrorFormat("Obstacle polyline file {0} does not exist", geometryFilePath);
+                log.ErrorFormat(Resources.MdwFile_Obstacle_polyline_file__0__does_not_exist, geometryFilePath);
                 yield break;
             }
 
@@ -1098,20 +1064,19 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             var pliFile = new PliFile<Feature2D>();
             Dictionary<string, Feature2D> features = pliFile.Read(geometryFilePath).ToDictionary(f => f.Name);
 
-            foreach (DelftIniCategory obstacle in obtCategories.Where(
-                o => o.Name == KnownWaveCategories.ObstacleCategory))
+            foreach (DelftIniCategory obstacle in obtCategories.Where(o => o.Name == KnownWaveCategories.ObstacleCategory))
             {
                 string name = obstacle.GetPropertyValue(WaveObstaclePropertyName, "default name");
                 if (!features.ContainsKey(name))
                 {
-                    Log.ErrorFormat("Obstacle polyline file {0} does not contain geometry for obstacle {1}, skipping",
+                    log.ErrorFormat(Resources.MdwFile_Obstacle_polyline_file__0__does_not_contain_geometry__1__,
                                     geometryFilePath, name);
                     continue;
                 }
 
                 if (!features[name].Geometry.IsValid)
                 {
-                    Log.ErrorFormat("Obstacle polyline file {0} contain invalid geometry for obstacle {1}, skipping",
+                    log.ErrorFormat(Resources.MdwFile_Obstacle_polyline_file__0__contain_invalid_geometry__1__,
                                     geometryFilePath, name);
                     continue;
                 }
@@ -1127,37 +1092,35 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                                ? ObstacleType.Dam
                                : ObstacleType.Sheet;
 
-                string reflType = obstacle.GetPropertyValue(WaveObstaclePropertyReflections);
+                string reflectionType = obstacle.GetPropertyValue(WaveObstaclePropertyReflections);
                 obs.ReflectionType = ReflectionType.No;
-                if (reflType == "specular")
+                switch (reflectionType)
                 {
-                    obs.ReflectionType = ReflectionType.Specular;
+                    case "specular":
+                        obs.ReflectionType = ReflectionType.Specular;
+                        break;
+                    case "diffuse":
+                        obs.ReflectionType = ReflectionType.Diffuse;
+                        break;
                 }
 
-                if (reflType == "diffuse")
-                {
-                    obs.ReflectionType = ReflectionType.Diffuse;
-                }
-
-                obs.TransmissionCoefficient = GetObstaclePropertyAndLogIfFails(
-                    obstacle, obstacleFile, WaveObstaclePropertyTransmissionCoefficient,
-                    WaveObstacleDefaultValueTransmissionCoefficient);
+                obs.TransmissionCoefficient = GetObstaclePropertyAndLogIfFails(obstacle, obstacleFile, WaveObstaclePropertyTransmissionCoefficient,
+                                                                               WaveObstacleDefaultValueTransmissionCoefficient);
                 obs.Height = GetObstaclePropertyAndLogIfFails(obstacle, obstacleFile, WaveObstaclePropertyHeight,
                                                               WaveObstacleDefaultValueHeight);
                 obs.Alpha = GetObstaclePropertyAndLogIfFails(obstacle, obstacleFile, WaveObstaclePropertyAlpha,
                                                              WaveObstacleDefaultValueAlpha);
                 obs.Beta = GetObstaclePropertyAndLogIfFails(obstacle, obstacleFile, WaveObstaclePropertyBeta,
                                                             WaveObstacleDefaultValueBeta);
-                obs.ReflectionCoefficient = GetObstaclePropertyAndLogIfFails(
-                    obstacle, obstacleFile, WaveObstaclePropertyReflectionCoefficient,
-                    WaveObstacleDefaultValueReflectionCoefficient);
+                obs.ReflectionCoefficient = GetObstaclePropertyAndLogIfFails(obstacle, obstacleFile, WaveObstaclePropertyReflectionCoefficient,
+                                                                             WaveObstacleDefaultValueReflectionCoefficient);
 
                 yield return obs;
             }
         }
 
-        private double GetObstaclePropertyAndLogIfFails(DelftIniCategory obstacle, string fileName, string property,
-                                                        double defaultValue)
+        private static double GetObstaclePropertyAndLogIfFails(DelftIniCategory obstacle, string fileName, string property,
+                                                               double defaultValue)
         {
             string input = obstacle.GetPropertyValue(property);
             if (input == null)
@@ -1165,15 +1128,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                 return defaultValue;
             }
 
-            double result;
-            if (double.TryParse(input, NumberStyles.Any, CultureInfo.InvariantCulture, out result))
+            if (double.TryParse(input, NumberStyles.Any, CultureInfo.InvariantCulture, out double result))
             {
                 return result;
             }
 
-            Log.WarnFormat(
-                "Parsing error in file '{0}'. Can't convert '{1}' to a double. The property '{2}' has been given the default value '{3}'.",
-                fileName, input, property, defaultValue);
+            log.WarnFormat(Resources.MdwFile_Parsing_error_in_file__0__can_not_convert__1__to_double_property__2__has_default__3__,
+                           fileName, input, property, defaultValue);
             return defaultValue;
         }
     }
