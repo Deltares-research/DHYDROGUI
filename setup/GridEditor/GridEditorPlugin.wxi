@@ -11,6 +11,8 @@
             <File Id="libifcoremd.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.Plugins.GridEditor\Lib\libifcoremd.dll' />
             <File Id="libmmd.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.Plugins.GridEditor\Lib\libmmd.dll' />
             <File Id="svml_dispmd.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.Plugins.GridEditor\Lib\svml_dispmd.dll' />
+            <File Id="vcruntime140.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.Plugins.GridEditor\Lib\vcruntime140.dll' />
+            <File Id="vcruntime140_1.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.Plugins.GridEditor\Lib\vcruntime140.dll' />
         </Component>
      </Directory>
   </Directory>
