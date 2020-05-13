@@ -55,13 +55,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         /// Creates a new instance of the <see cref="WaterFlowFMModel"/>.
         /// </summary>
         /// <param name="mduFilePath">The path to the mdu file (optional).</param>
-        /// <param name="clearOutputDirs">Whether or not any existing output directory properties need to be cleared.</param>
-        /// <param name="progressChanged">A handle for notifying progress changes (optional).</param>
-        public WaterFlowFMModel(string mduFilePath = null, bool clearOutputDirs = false, ImportProgressChangedDelegate progressChanged = null) :
+        public WaterFlowFMModel(string mduFilePath = null) :
             base("FlowFM")
         {
             runner = new DimrRunner(this);
-            importProgressChanged = progressChanged;
 
             // Create sediment model data item
             SedimentModelDataItem = new SedimentModelDataItem();
@@ -86,40 +83,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             ((INotifyPropertyChange) this).PropertyChanged += (s, e) => { MarkDirty(); };
             ((INotifyCollectionChanged) this).CollectionChanged += (s, e) => { MarkDirty(); };
 
-            // Initialize mdu model settings
-            if (string.IsNullOrEmpty(mduFilePath))
-            {
-                ModelDefinition = new WaterFlowFMModelDefinition();
-                ModelDefinition.GetModelProperty(KnownProperties.NetFile).Value = Name + NetFile.FullExtension;
+            ModelDefinition = new WaterFlowFMModelDefinition();
+            ModelDefinition.GetModelProperty(KnownProperties.NetFile).Value = Name + NetFile.FullExtension;
 
-                SynchronizeModelDefinitions();
+            SynchronizeModelDefinitions();
 
-                Grid = new UnstructuredGrid();
+            Grid = new UnstructuredGrid();
 
-                InitializeUnstructuredGridCoverages();
+            InitializeUnstructuredGridCoverages();
 
-                AddSpatialDataItems();
+            AddSpatialDataItems();
 
-                RenameSubFilesIfApplicable();
-            }
-            else
-            {
-                LoadStateFromMdu(mduFilePath);
-
-                AddSpatialDataItems();
-
-                FireImportProgressChanged("Reading spatial operations", 9, TotalImportSteps);
-                ImportSpatialOperationsAfterCreating();
-
-                if (clearOutputDirs)
-                {
-                    ClearOutputDirAndWaqDirProperty();
-                }
-            }
+            RenameSubFilesIfApplicable();
 
             InitializeSyncers();
 
-            importProgressChanged = null;
+            if (!string.IsNullOrEmpty(mduFilePath))
+            {
+                LoadMdu(mduFilePath);
+            }
         }
 
         public Type SupportedRegionType => typeof(HydroArea);
