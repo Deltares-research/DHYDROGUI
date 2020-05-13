@@ -455,8 +455,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                 var polygonOperation = spatialOperation as SetValueOperation;
                 if (polygonOperation != null)
                 {
-                    ExtForceFileItem existingItem = GetExistingForceFileItemOrNull(spatialOperation);
-                    yield return WriteInitialConditionsPolygon(quantity, polygonOperation, existingItem, prefix);
+                    ExtForceFileItem extForceFileItem =
+                        ExtForceFileItemFactory.GetInitialConditionsPolygonItem(polygonOperation, quantity,
+                                                                                prefix, existingForceFileItems);
+
+                    if (WriteToDisk)
+                    {
+                        WriteInitialConditionsPolygon(polygonOperation, extForceFileItem);
+                    }
+
+                    yield return extForceFileItem;
 
                     continue;
                 }
@@ -632,54 +640,23 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             return forceFileItem;
         }
 
-        private ExtForceFileItem WriteInitialConditionsPolygon(string extForceFileQuantityName, SetValueOperation operation,
-                                                               ExtForceFileItem existingExtForceFileItem = null,
-                                                               string prefix = null)
+        private void WriteInitialConditionsPolygon(SpatialOperation operation,
+                                                   ExtForceFileItem extForceFileItem)
         {
-            string quantityName = prefix != null ? prefix + extForceFileQuantityName : extForceFileQuantityName;
-            ExtForceFileItem extForceFileItem = existingExtForceFileItem ?? new ExtForceFileItem(quantityName)
+            string directoryName = Path.GetDirectoryName(extFilePath);
+            if (directoryName == null)
             {
-                FileName =
-                    $"{extForceFileQuantityName}_{operation.Name.Replace(" ", "_").Replace("\t", "_")}{FileConstants.PolylineFileExtension}",
-                FileType = ExtForceQuantNames.FileTypes.InsidePolygon,
-                Method = GetSetValueMethod()
-            };
-
-            ExtForceFileHelper.AddSuffixInCaseOfDuplicateFile(extForceFileItem);
-
-            Operator op = ExtForceQuantNames.OperatorMapping[operation.OperationType];
-
-            extForceFileItem.Value = operation.Value;
-            extForceFileItem.Enabled = operation.Enabled;
-            extForceFileItem.Operand = ExtForceQuantNames.OperatorToStringMapping[op];
-
-            if (WriteToDisk)
-            {
-                string directoryName = Path.GetDirectoryName(extFilePath);
-                string polFilePath;
-                if (directoryName != null)
-                {
-                    polFilePath = Path.Combine(directoryName, extForceFileItem.FileName);
-                }
-                else
-                {
-                    throw new ArgumentException("Could not get directory name from file path" + extFilePath);
-                }
-
-                if (!string.IsNullOrEmpty(directoryName) && !Directory.Exists(directoryName))
-                {
-                    Directory.CreateDirectory(directoryName);
-                }
-
-                new PolFile<Feature2DPolygon>().Write(polFilePath, operation.Mask.Provider.Features.OfType<IFeature>());
+                throw new ArgumentException("Could not get directory name from file path" + extFilePath);
             }
 
-            return extForceFileItem;
-        }
+            if (directoryName != string.Empty && !Directory.Exists(directoryName))
+            {
+                Directory.CreateDirectory(directoryName);
+            }
 
-        private static int GetSetValueMethod()
-        {
-            return 4;
+            string polFilePath = Path.Combine(directoryName, extForceFileItem.FileName);
+
+            new PolFile<Feature2DPolygon>().Write(polFilePath, operation.Mask.Provider.Features.OfType<IFeature>());
         }
 
         private static int GetAddSamplesMethod()

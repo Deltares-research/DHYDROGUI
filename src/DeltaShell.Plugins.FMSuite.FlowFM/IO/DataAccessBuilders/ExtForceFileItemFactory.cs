@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
+using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessObjects;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
@@ -85,9 +86,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
                 throw new ArgumentNullException(nameof(existingForceFileItems));
             }
 
-            ExtForceFileItem existingItem = existingForceFileItems.Where(kvp => Equals(kvp.Value, spatialOperation))
-                                                                  .Select(kvp => kvp.Key)
-                                                                  .FirstOrDefault();
+            ExtForceFileItem existingItem = GetExistingItem(spatialOperation, existingForceFileItems);
 
             string quantityName = prefix != null ? prefix + extForceFileQuantityName : extForceFileQuantityName;
             ExtForceFileItem extForceFileItem = existingItem ?? new ExtForceFileItem(quantityName)
@@ -109,6 +108,41 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
 
             extForceFileItem.Enabled = spatialOperation.Enabled;
             extForceFileItem.Operand = ExtForceQuantNames.OperatorToStringMapping[Operator.Overwrite];
+
+            return extForceFileItem;
+        }
+
+        public static ExtForceFileItem GetInitialConditionsPolygonItem(SetValueOperation spatialOperation, string extForceFileQuantityName, string prefix,
+                                                                       IDictionary<ExtForceFileItem, object> existingForceFileItems)
+        {
+            if (spatialOperation == null)
+            {
+                throw new ArgumentNullException(nameof(spatialOperation));
+            }
+
+            if (existingForceFileItems == null)
+            {
+                throw new ArgumentNullException(nameof(existingForceFileItems));
+            }
+
+            ExtForceFileItem existingItem = GetExistingItem(spatialOperation, existingForceFileItems);
+
+            string quantityName = prefix != null ? prefix + extForceFileQuantityName : extForceFileQuantityName;
+            ExtForceFileItem extForceFileItem = existingItem ?? new ExtForceFileItem(quantityName)
+            {
+                FileName =
+                    $"{extForceFileQuantityName}_{spatialOperation.Name.Replace(" ", "_").Replace("\t", "_")}{FileConstants.PolylineFileExtension}",
+                FileType = ExtForceQuantNames.FileTypes.InsidePolygon,
+                Method = 4
+            };
+
+            ExtForceFileHelper.AddSuffixInCaseOfDuplicateFile(extForceFileItem);
+
+            Operator op = ExtForceQuantNames.OperatorMapping[spatialOperation.OperationType];
+
+            extForceFileItem.Value = spatialOperation.Value;
+            extForceFileItem.Enabled = spatialOperation.Enabled;
+            extForceFileItem.Operand = ExtForceQuantNames.OperatorToStringMapping[op];
 
             return extForceFileItem;
         }
@@ -160,6 +194,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
                 default:
                     return -1;
             }
+        }
+
+        private static ExtForceFileItem GetExistingItem(ISpatialOperation spatialOperation, IDictionary<ExtForceFileItem, object> existingForceFileItems)
+        {
+            return existingForceFileItems.Where(item => Equals(item.Value, spatialOperation))
+                                         .Select(item => item.Key)
+                                         .FirstOrDefault();
         }
     }
 }
