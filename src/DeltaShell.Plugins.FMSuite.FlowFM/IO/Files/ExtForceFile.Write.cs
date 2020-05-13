@@ -440,7 +440,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                 {
                     ExtForceFileItem extForceFileItem =
                         ExtForceFileItemFactory.GetInitialConditionsSamplesItem(importSamplesOperation, quantity,
-                                                                                prefix,  existingForceFileItems,
+                                                                                prefix, existingForceFileItems,
                                                                                 Path.GetDirectoryName(Path.GetFullPath(extFilePath)));
 
                     if (WriteToDisk)
@@ -472,7 +472,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                 var addSamplesOperation = spatialOperation as AddSamplesOperation;
                 if (addSamplesOperation != null)
                 {
-                    yield return WriteInitialConditionsUnsupported(quantity, addSamplesOperation, prefix);
+                    ExtForceFileItem extForceFileItem =
+                        ExtForceFileItemFactory.GetInitialConditionsUnsupportedItem(addSamplesOperation, quantity, prefix);
+
+                    if (WriteToDisk)
+                    {
+                        WriteInitialConditionsUnsupported(addSamplesOperation, extForceFileItem);
+                    }
+
+                    yield return extForceFileItem;
                     continue;
                 }
 
@@ -607,40 +615,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             }
         }
 
-        private ExtForceFileItem WriteInitialConditionsUnsupported(string quantity, SampleSpatialOperation operation,
-                                                                   string prefix = null)
+        private void WriteInitialConditionsUnsupported(SampleSpatialOperation spatialOperation,
+                                                       ExtForceFileItem extForceFileItem)
         {
-            string quantityName = prefix != null ? prefix + quantity : quantity;
-            var forceFileItem = new ExtForceFileItem(quantityName)
+            string directoryName = Path.GetDirectoryName(extFilePath);
+            if (directoryName == null)
             {
-                FileName = MakeXyzFileName(quantity),
-                FileType = ExtForceQuantNames.FileTypes.Triangulation,
-                Method = GetAddSamplesMethod(),
-                Enabled = operation.Enabled,
-                Operand = ExtForceQuantNames.OperatorToStringMapping[Operator.Overwrite],
-            };
-            forceFileItem.ModelData[ExtForceFileConstants.AveragingTypeKey] = (int)GridCellAveragingMethod.ClosestPoint;
-            forceFileItem.ModelData[ExtForceFileConstants.RelSearchCellSizeKey] = 1.0;
-
-            if (WriteToDisk)
-            {
-                string directoryName = Path.GetDirectoryName(extFilePath);
-                if (directoryName != null)
-                {
-                    string xyzFilePath = Path.Combine(directoryName, forceFileItem.FileName);
-
-                    XyzFile.Write(xyzFilePath, operation.GetPoints());
-                }
-                else
-                {
-                    throw new ArgumentException("Could not get directory name from file path" + extFilePath);
-                }
+                throw new ArgumentException("Could not get directory name from file path" + extFilePath);
             }
 
-            return forceFileItem;
+            string xyzFilePath = Path.Combine(directoryName, extForceFileItem.FileName);
+
+            XyzFile.Write(xyzFilePath, spatialOperation.GetPoints());
         }
 
-        private void WriteInitialConditionsPolygon(SpatialOperation operation,
+        private void WriteInitialConditionsPolygon(SpatialOperation spatialOperation,
                                                    ExtForceFileItem extForceFileItem)
         {
             string directoryName = Path.GetDirectoryName(extFilePath);
@@ -656,12 +645,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
             string polFilePath = Path.Combine(directoryName, extForceFileItem.FileName);
 
-            new PolFile<Feature2DPolygon>().Write(polFilePath, operation.Mask.Provider.Features.OfType<IFeature>());
-        }
-
-        private static int GetAddSamplesMethod()
-        {
-            return 6;
+            new PolFile<Feature2DPolygon>().Write(polFilePath, spatialOperation.Mask.Provider.Features.OfType<IFeature>());
         }
 
         private static void RemoveDisabledComponentsFromSourceAndSink(SourceAndSink sourceAndSink,

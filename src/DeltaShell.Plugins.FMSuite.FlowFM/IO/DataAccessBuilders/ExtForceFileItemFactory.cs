@@ -147,6 +147,31 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
             return extForceFileItem;
         }
 
+        public static ExtForceFileItem GetInitialConditionsUnsupportedItem(SampleSpatialOperation spatialOperation,
+                                                                           string extForceFileQuantityName, string prefix)
+        {
+            if (spatialOperation == null)
+            {
+                throw new ArgumentNullException(nameof(spatialOperation));
+            }
+            
+            string quantityName = prefix != null ? prefix + extForceFileQuantityName : extForceFileQuantityName;
+
+            return new ExtForceFileItem(quantityName)
+            {
+                FileName = MakeXyzFileName(extForceFileQuantityName),
+                FileType = ExtForceQuantNames.FileTypes.Triangulation,
+                Method = 6,
+                Enabled = spatialOperation.Enabled,
+                Operand = ExtForceQuantNames.OperatorToStringMapping[Operator.Overwrite],
+                ModelData =
+                {
+                    [ExtForceFileConstants.AveragingTypeKey] = (int) GridCellAveragingMethod.ClosestPoint,
+                    [ExtForceFileConstants.RelSearchCellSizeKey] = 1.0
+                },
+            };
+        }
+
         private static ExtForceFileItem GetSourceAndSinkItem(SourceAndSink sourceAndSink,
                                                              IDictionary<IFeatureData, ExtForceFileItem> polyLineForceFileItems)
         {
@@ -201,6 +226,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
             return existingForceFileItems.Where(item => Equals(item.Value, spatialOperation))
                                          .Select(item => item.Key)
                                          .FirstOrDefault();
+        }
+
+        private static string MakeXyzFileName(string quantity)
+        {
+            return string.Join(".", quantity.Replace(" ", "_").Replace("\t", "_"), ExtForceQuantNames.XyzFileExtension);
         }
     }
 }
