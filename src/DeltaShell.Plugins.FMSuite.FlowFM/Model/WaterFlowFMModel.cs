@@ -55,8 +55,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         /// Creates a new instance of the <see cref="WaterFlowFMModel"/>.
         /// </summary>
         /// <param name="mduFilePath">The path to the mdu file (optional).</param>
+        /// <param name="clearOutputDirs">Whether or not any existing output directory properties need to be cleared.</param>
         /// <param name="progressChanged">A handle for notifying progress changes (optional).</param>
-        public WaterFlowFMModel(string mduFilePath = null, ImportProgressChangedDelegate progressChanged = null) :
+        public WaterFlowFMModel(string mduFilePath = null, bool clearOutputDirs = false, ImportProgressChangedDelegate progressChanged = null) :
             base("FlowFM")
         {
             runner = new DimrRunner(this);
@@ -107,7 +108,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                 AddSpatialDataItems();
                 ImportSpatialOperationsAfterCreating();
 
-                ClearOutputDirAndWaqDirProperty();
+                if (clearOutputDirs)
+                {
+                    ClearOutputDirAndWaqDirProperty();
+                }
             }
 
             importProgressChanged = null;
@@ -367,7 +371,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         private readonly Dictionary<IFeature, List<IDataItem>> areaDataItems =
             new Dictionary<IFeature, List<IDataItem>>();
 
-        private Dictionary<FixedWeir, ModelFeatureCoordinateData<FixedWeir>> fixedWeirProperties =
+        private readonly Dictionary<FixedWeir, ModelFeatureCoordinateData<FixedWeir>> fixedWeirProperties =
             new Dictionary<FixedWeir, ModelFeatureCoordinateData<FixedWeir>>();
 
         public IEventedList<ISedimentFraction> SedimentFractions
