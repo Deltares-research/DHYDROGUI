@@ -36,11 +36,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         {
             string mduPath = TestHelper.GetTestFilePath(@"data\f04_bottomfriction\c016_2DConveyance_bend\input\bendprof.mdu");
             mduPath = TestHelper.CreateLocalCopy(mduPath);
-            var model = new WaterFlowFMModel(mduPath)
-            {
-                WriteRestart = true,
-                OutputTimeStep = new TimeSpan(0, 0, 15)
-            };
+
+            var model = new WaterFlowFMModel();
+            model.LoadMdu(mduPath);
+
+            model.WriteRestart = true;
+            model.OutputTimeStep = new TimeSpan(0, 0, 15);
 
             model.StopTime = model.StartTime.AddMinutes(2); //6 sec timestep
             model.ModelDefinition.GetModelProperty(GuiProperties.HisOutputDeltaT).Value = model.TimeStep;

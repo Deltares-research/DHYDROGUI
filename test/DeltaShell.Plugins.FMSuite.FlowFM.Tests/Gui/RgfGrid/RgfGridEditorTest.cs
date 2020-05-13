@@ -32,7 +32,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.RgfGrid
         {
             string mduPath = TestHelper.GetTestFilePath(@"data\f04_bottomfriction\c016_2DConveyance_bend\input\bendprof.mdu");
             mduPath = TestHelper.CreateLocalCopy(mduPath);
-            var model = new WaterFlowFMModel(mduPath);
+
+            var model = new WaterFlowFMModel();
+            model.LoadMdu(mduPath);
 
             PerformActionWithCancellationThread(MaxTimeOut, () =>
                                                     RgfGridEditor.OpenGrid(model.NetFilePath));
@@ -63,7 +65,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.RgfGrid
         {
             string mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
             mduPath = TestHelper.CreateLocalCopy(mduPath);
-            var model = new WaterFlowFMModel(mduPath);
+
+            var model = new WaterFlowFMModel();
+            model.LoadMdu(mduPath);
 
             PerformActionWithCancellationThread(MaxTimeOut, () =>
                                                     RgfGridEditor.OpenGrid(model.NetFilePath, false, new[]

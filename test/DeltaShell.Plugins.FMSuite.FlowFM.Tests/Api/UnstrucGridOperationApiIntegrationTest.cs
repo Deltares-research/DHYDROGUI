@@ -69,7 +69,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                 var tempMduPath = (string) TypeUtils.GetField<UnstrucGridOperationApi, string>(api, "mduFilePath");
 
                 string mduFileDir = Path.GetDirectoryName(tempMduPath);
-                var fmModelUsedByApi = new WaterFlowFMModel(Path.Combine(mduFileDir, tempMduPath));
+
+                var fmModelUsedByApi = new WaterFlowFMModel();
+                fmModelUsedByApi.LoadMdu(Path.Combine(mduFileDir, tempMduPath));
 
                 string trtRouUsedInOriginalFMModel = model.ModelDefinition.GetModelProperty(KnownProperties.TrtRou).GetValueAsString();
                 Assert.That(trtRouUsedInOriginalFMModel, Is.EqualTo("Y"));
@@ -121,7 +123,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                     Assert.That(tempMduPath, Is.Not.Null,
                                 "Expected the API to return a mdu path.");
                     string mduFileDir = Path.GetDirectoryName(tempMduPath);
-                    var fmModelUsedByApi = new WaterFlowFMModel(Path.Combine(mduFileDir, tempMduPath));
+
+                    var fmModelUsedByApi = new WaterFlowFMModel();
+                    fmModelUsedByApi.LoadMdu(Path.Combine(mduFileDir, tempMduPath));
 
                     Assert.That(fmModelUsedByApi.UseMorSed, Is.False,
                                 "Expected the used model not to have morphology.");
@@ -219,8 +223,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                 string originalFileName = model.ModelDefinition.GetModelProperty(modelPropertyName).GetValueAsString();
                 Assert.That(originalFileName, Is.EqualTo(fileName));
 
-                using (var fmModelUsedByApi = new WaterFlowFMModel(GetApiMduFilePath(api)))
+                using (var fmModelUsedByApi = new WaterFlowFMModel())
                 {
+                    fmModelUsedByApi.LoadMdu(GetApiMduFilePath(api));
+
                     string apiFileName = fmModelUsedByApi.ModelDefinition.GetModelProperty(modelPropertyName).GetValueAsString();
                     Assert.IsEmpty(apiFileName);
                 }

@@ -957,11 +957,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             //Note, for the moment we assume these type of sediments are compatible with waterflowfm.
             string testFilePath = TestHelper.GetTestFilePath(@"simplebox/simplebox.mdu");
             testFilePath = TestHelper.CreateLocalCopy(testFilePath);
-            var model = new WaterFlowFMModel(testFilePath)
-            {
-                Name = "newname",
-                ModelDefinition = {UseMorphologySediment = true}
-            };
+
+            var model = new WaterFlowFMModel();
+            model.LoadMdu(testFilePath);
+
+            model.Name = "newname";
+            model.ModelDefinition.UseMorphologySediment = true;
 
             var sedFrac = new SedimentFraction {Name = "frac1"};
             model.SedimentFractions.Add(sedFrac);
@@ -1032,7 +1033,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             //Note, for the moment we assume these type of sediments are compatible with waterflowfm.
             string testFilePath = TestHelper.GetTestFilePath(@"simplebox/simplebox.mdu");
             testFilePath = TestHelper.CreateLocalCopy(testFilePath);
-            var model = new WaterFlowFMModel(testFilePath);
+
+            var model = new WaterFlowFMModel();
+            model.LoadMdu(testFilePath);
+
             model.Name = "newname";
 
             model.ModelDefinition.UseMorphologySediment = true;

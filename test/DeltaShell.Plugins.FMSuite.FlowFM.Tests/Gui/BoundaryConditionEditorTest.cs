@@ -552,7 +552,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         {
             string mduPath = TestHelper.GetTestFilePath(@"roughness\bendprof.mdu");
             mduPath = TestHelper.CreateLocalCopy(mduPath);
-            var model = new WaterFlowFMModel(mduPath);
+
+            var model = new WaterFlowFMModel();
+            model.LoadMdu(mduPath);
 
             using (var gui = new DeltaShellGui())
             {
@@ -588,7 +590,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         {
             string mduPath = TestHelper.GetTestFilePath(@"roughness\bendprof.mdu");
             mduPath = TestHelper.CreateLocalCopy(mduPath);
-            var model = new WaterFlowFMModel(mduPath);
+
+            var model = new WaterFlowFMModel();
+            model.LoadMdu(mduPath);
 
             using (var gui = new DeltaShellGui())
             {

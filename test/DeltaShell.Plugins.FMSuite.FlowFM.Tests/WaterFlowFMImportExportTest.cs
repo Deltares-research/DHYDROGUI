@@ -48,7 +48,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
               so it could happen the Spatially Varying operations are not loaded. */
             string mduPath = TestHelper.GetTestFilePath(@"spatially_varying_sediment_properties_in_model\FlowFM.mdu");
             string localMduFilePath = TestHelper.CreateLocalCopy(mduPath);
-            var model = new WaterFlowFMModel(localMduFilePath);
+
+            var model = new WaterFlowFMModel();
+            model.LoadMdu(localMduFilePath);
 
             ISedimentFraction fraction = model.SedimentFractions.FirstOrDefault(sf => sf.Name == "gouwe");
             Assert.IsNotNull(fraction);
@@ -80,7 +82,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 var mduFileName = "par16.mdu";
                 string localMduFilePath = Path.Combine(tempDir, mduFileName);
 
-                var model = new WaterFlowFMModel(localMduFilePath);
+                var model = new WaterFlowFMModel();
+                model.LoadMdu(localMduFilePath);
 
                 Assert.IsNotNull(model);
             });
@@ -95,7 +98,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             string localMduFilePath = TestHelper.CreateLocalCopy(mduPath);
             string localMduDir = Path.GetDirectoryName(localMduFilePath);
 
-            var model = new WaterFlowFMModel(localMduFilePath);
+            var model = new WaterFlowFMModel();
+            model.LoadMdu(localMduFilePath);
 
             ActivityRunner.RunActivity(model);
 
@@ -117,7 +121,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             const string mduFileName = "excesstemp.mdu";
             string mduPath = Path.Combine(Path.GetFullPath(dir), mduFileName);
             waterFlowFMModel.ExportTo(mduPath);
-            var importedModel = new WaterFlowFMModel(mduPath);
+
+            var importedModel = new WaterFlowFMModel();
+            importedModel.LoadMdu(mduPath);
+
             Assert.IsTrue(importedModel.UseTemperature);
         }
 
@@ -240,8 +247,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                         model.ReloadGrid(true, true);
                     }
 
-                    using (var model = new WaterFlowFMModel(tempMduFilePath))
+                    using (var model = new WaterFlowFMModel())
                     {
+                        model.LoadMdu(tempMduFilePath);
+
                         TypeUtils.CallPrivateMethod(model, "UpdateBathymetryCoverage", UnstructuredGridFileHelper.BedLevelLocation.Faces);
 
                         Project project = app.Project;

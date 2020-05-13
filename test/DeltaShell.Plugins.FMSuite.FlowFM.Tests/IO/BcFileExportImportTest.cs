@@ -28,7 +28,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [Test]
         public void ExportImportSalinityToSingleFile()
         {
-            var model = new WaterFlowFMModel(TestHelper.GetTestFilePath(@"harlingen/har.mdu"));
+            var model = new WaterFlowFMModel();
+            model.LoadMdu(TestHelper.GetTestFilePath(@"harlingen/har.mdu"));
 
             List<FlowBoundaryCondition> salinityBoundaryConditions =
                 model.BoundaryConditionSets.SelectMany(bcs => bcs.BoundaryConditions.OfType<FlowBoundaryCondition>())
@@ -105,7 +106,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [Test]
         public void ExportImportWaterLevelToFilePerFeature()
         {
-            var model = new WaterFlowFMModel(TestHelper.GetTestFilePath(@"harlingen/har.mdu"));
+            var model = new WaterFlowFMModel();
+            model.LoadMdu(TestHelper.GetTestFilePath(@"harlingen/har.mdu"));
 
             List<FlowBoundaryCondition> waterLevelBoundaryConditions =
                 model.BoundaryConditionSets.SelectMany(bcs => bcs.BoundaryConditions.OfType<FlowBoundaryCondition>())
@@ -189,7 +191,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [Test]
         public void ExportImportWaterLevelSalinityToSeparateFiles()
         {
-            var model = new WaterFlowFMModel(TestHelper.GetTestFilePath(@"harlingen/har.mdu"));
+            var model = new WaterFlowFMModel();
+            model.LoadMdu(TestHelper.GetTestFilePath(@"harlingen/har.mdu"));
 
             List<FlowBoundaryCondition> salinityBoundaryConditions =
                 model.BoundaryConditionSets.SelectMany(bcs => bcs.BoundaryConditions.OfType<FlowBoundaryCondition>())
@@ -267,7 +270,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [Test]
         public void ExportImportWaterLevelHarmonicCorrectionsToSeparateFiles()
         {
-            var model = new WaterFlowFMModel(TestHelper.GetTestFilePath(@"simplebox/simplebox.mdu"));
+            var model = new WaterFlowFMModel();
+            model.LoadMdu(TestHelper.GetTestFilePath(@"simplebox/simplebox.mdu"));
 
             IBoundaryCondition harmonicBoundaryCondition =
                 model.BoundaryConditions.First(bc => bc.DataType == BoundaryConditionDataType.Harmonics);
@@ -362,7 +366,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             //Note, for the moment we assume these type of sediments are compatible with waterflowfm.
             string testFilePath = TestHelper.GetTestFilePath(@"simplebox/simplebox.mdu");
             testFilePath = TestHelper.CreateLocalCopy(testFilePath);
-            var model = new WaterFlowFMModel(testFilePath);
+
+            var model = new WaterFlowFMModel();
+            model.LoadMdu(testFilePath);
+
             model.Name = "newname";
 
             model.ModelDefinition.UseMorphologySediment = true;

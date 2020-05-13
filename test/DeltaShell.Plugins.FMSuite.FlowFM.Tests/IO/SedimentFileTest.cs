@@ -66,7 +66,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             string mduFilePath = TestHelper.GetTestFilePath(@"sedmor\FlowFMCustomProperties\FlowFMCustomPropertiesSedMor.mdu");
 
             // When
-            var importedModel = new WaterFlowFMModel(mduFilePath);
+            var importedModel = new WaterFlowFMModel();
+            importedModel.LoadMdu(mduFilePath);
 
             // Then
             Assert.NotNull(importedModel, "Model was not imported.");
@@ -83,8 +84,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 mduFilePath = Path.Combine(tempDir, "FlowFMWithCustomProperties.mdu");
 
                 // When
-                new MduFile().Write(mduFilePath, modelDefinition, importedModel.Area, importedModel.FixedWeirsProperties, sedimentModelData: importedModel);
-                importedModel = new WaterFlowFMModel(mduFilePath);
+                importedModel = new WaterFlowFMModel();
+                importedModel.LoadMdu(mduFilePath);
 
                 // Then
                 Assert.NotNull(importedModel);
@@ -349,7 +350,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             try
             {
                 /* Define new model */
-                var fmModel = new WaterFlowFMModel(sedFile);
+                var fmModel = new WaterFlowFMModel();
+                fmModel.LoadMdu(sedFile);
+
                 fmModel.ModelDefinition.UseMorphologySediment = true;
 
                 //Area 
@@ -496,7 +499,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             try
             {
                 /* Define new model */
-                var fmModel = new WaterFlowFMModel(sedFile);
+                var fmModel = new WaterFlowFMModel();
+                fmModel.LoadMdu(sedFile);
+
                 fmModel.ModelDefinition.UseMorphologySediment = true;
                 UnstructuredGrid grid = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 2, 2);
                 fmModel.Grid = grid;
@@ -580,7 +585,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             try
             {
                 /* Define new model */
-                var fmModel = new WaterFlowFMModel(sedFile);
+                var fmModel = new WaterFlowFMModel();
+                fmModel.LoadMdu(sedFile);
+
                 fmModel.ModelDefinition.UseMorphologySediment = true;
                 UnstructuredGrid grid = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 2, 2);
                 fmModel.Grid = grid;
@@ -696,8 +703,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             string mduPath = TestHelper.GetTestFilePath(@"SpatiallyVarying_MudFraction\FlowFM.mdu");
             string localCopy = TestHelper.CreateLocalCopy(mduPath);
 
-            using (var model = new WaterFlowFMModel(localCopy))
+            using (var model = new WaterFlowFMModel())
             {
+                model.LoadMdu(localCopy);
+
                 ISedimentFraction fraction = model.SedimentFractions.FirstOrDefault(sf => sf.Name == "mudFraction");
                 Assert.IsNotNull(fraction);
                 var spatvaryingProp = fraction.CurrentSedimentType.Properties.FirstOrDefault(p => p.Name == "IniSedThick") as ISpatiallyVaryingSedimentProperty;
@@ -769,8 +778,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             string mduPath = TestHelper.GetTestFilePath(@"spatially_varying_sediment_properties_in_model\FlowFM.mdu");
             string localCopy = TestHelper.CreateLocalCopy(mduPath);
 
-            using (var model = new WaterFlowFMModel(localCopy))
+            using (var model = new WaterFlowFMModel())
             {
+                model.LoadMdu(localCopy);
+
                 ISedimentFraction fraction = model.SedimentFractions.FirstOrDefault(sf => sf.Name == "gouwe");
                 Assert.IsNotNull(fraction);
                 var spatvaryingProp = fraction.CurrentSedimentType.Properties.FirstOrDefault(p => p.Name == "IniSedThick") as
@@ -806,7 +817,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             try
             {
                 /* Define new model */
-                var fmModel = new WaterFlowFMModel(sedFile);
+                var fmModel = new WaterFlowFMModel();
+                fmModel.LoadMdu(sedFile);
+
                 fmModel.ModelDefinition.UseMorphologySediment = true;
 
                 /* Define test properties */
@@ -883,8 +896,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 TestHelper.GetTestFilePath(@"spatially_varying_sediment_properties_in_model\FlowFM.mdu");
             string localCopy = TestHelper.CreateLocalCopy(mduPath);
 
-            using (var orgModel = new WaterFlowFMModel(localCopy))
+            using (var orgModel = new WaterFlowFMModel())
             {
+                orgModel.LoadMdu(localCopy);
+
                 CheckModelCoverageValues(orgModel);
                 using (var model = (WaterFlowFMModel) orgModel.DeepClone())
                 {

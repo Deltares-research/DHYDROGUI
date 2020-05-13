@@ -53,8 +53,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
                 string mduFilePath = Path.Combine(inputPath, mduFileName);
 
                 // Call
-                using (var model = new WaterFlowFMModel(mduFilePath))
+                using (var model = new WaterFlowFMModel())
                 {
+                    model.LoadMdu(mduFilePath);
+
                     // Assert
                     Assert.That(model.CacheFile, Is.Not.Null, "Expected a .cache file to not be null.");
                     Assert.That(model.CacheFile.Exists, Is.False, "Expected no .cache file on disk to exist.");
@@ -79,8 +81,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
                 CopyInputData(inputPath);
                 string mduFilePath = Path.Combine(inputPath, mduFileName);
 
-                using (var model = new WaterFlowFMModel(mduFilePath))
+                using (var model = new WaterFlowFMModel())
                 {
+                    model.LoadMdu(mduFilePath);
+
                     // When
                     Run(model);
 
@@ -107,8 +111,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
                                   out string inputMduFilePath,
                                   out string outputMduFilePath);
 
-                using (var model = new WaterFlowFMModel(inputMduFilePath))
+                using (var model = new WaterFlowFMModel())
                 {
+                    model.LoadMdu(inputMduFilePath);
+
                     // When
                     Export(model, outputMduFilePath);
 
@@ -135,8 +141,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
                                   out string inputMduFilePath,
                                   out string outputMduFilePath);
 
-                using (var model = new WaterFlowFMModel(inputMduFilePath))
+                using (var model = new WaterFlowFMModel())
                 {
+                    model.LoadMdu(inputMduFilePath);
+
                     // When
                     Run(model);
                     Export(model, outputMduFilePath);
@@ -164,8 +172,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
                                   out string inputMduFilePath,
                                   out string outputMduFilePath);
 
-                using (var model = new WaterFlowFMModel(inputMduFilePath))
+                using (var model = new WaterFlowFMModel())
                 {
+                    model.LoadMdu(inputMduFilePath);
+
                     // When
                     Export(model, outputMduFilePath);
                     Run(model);
@@ -193,8 +203,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
                                   out string inputMduFilePath,
                                   out string outputMduFilePath);
 
-                using (var model = new WaterFlowFMModel(inputMduFilePath))
+                using (var model = new WaterFlowFMModel())
                 {
+                    model.LoadMdu(inputMduFilePath);
+
                     // When
                     Export(model, outputMduFilePath);
                     Run(model);
@@ -223,8 +235,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
                                   out string inputMduFilePath,
                                   out string outputMduFilePath);
 
-                using (var model = new WaterFlowFMModel(inputMduFilePath))
+                using (var model = new WaterFlowFMModel())
                 {
+                    model.LoadMdu(inputMduFilePath);
+
                     model.ModelDefinition.GetModelProperty(KnownProperties.UseCaching).Value = false;
 
                     // When
@@ -254,8 +268,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
                                   out string inputMduFilePath,
                                   out string outputMduFilePath);
 
-                using (var model = new WaterFlowFMModel(inputMduFilePath))
+                using (var model = new WaterFlowFMModel())
                 {
+                    model.LoadMdu(inputMduFilePath);
+
                     // When
                     Run(model);
                     Export(model, outputMduFilePath, false);
@@ -285,8 +301,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
                 CreateDummyInputCacheFileForMdu(inputMduFilePath);
 
                 // When
-                using (WaterFlowFMModel model = new WaterFlowFMModel(inputMduFilePath))
+                using (WaterFlowFMModel model = new WaterFlowFMModel())
                 {
+                    model.LoadMdu(inputMduFilePath);
+
                     Export(model, outputMduFilePath);
 
                     // Then

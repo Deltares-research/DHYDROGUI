@@ -82,7 +82,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
 
                 string mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
 
-                var waterFlowFmModel = new WaterFlowFMModel(TestHelper.CreateLocalCopy(mduPath));
+                var waterFlowFmModel = new WaterFlowFMModel();
+                waterFlowFmModel.LoadMdu(TestHelper.CreateLocalCopy(mduPath));
+
                 app.Project.RootFolder.Add(waterFlowFmModel);
 
                 var importHandler = new GuiImportHandler(gui);

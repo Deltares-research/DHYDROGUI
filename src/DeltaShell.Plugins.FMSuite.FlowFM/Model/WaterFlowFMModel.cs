@@ -6,7 +6,6 @@ using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
-using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Utils;
@@ -54,9 +53,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         /// <summary>
         /// Creates a new instance of the <see cref="WaterFlowFMModel"/>.
         /// </summary>
-        /// <param name="mduFilePath">The path to the mdu file (optional).</param>
-        public WaterFlowFMModel(string mduFilePath = null) :
-            base("FlowFM")
+        public WaterFlowFMModel() : base("FlowFM")
         {
             runner = new DimrRunner(this);
 
@@ -97,11 +94,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             RenameSubFilesIfApplicable();
 
             InitializeSyncers();
-
-            if (!string.IsNullOrEmpty(mduFilePath))
-            {
-                LoadMdu(mduFilePath);
-            }
         }
 
         public Type SupportedRegionType => typeof(HydroArea);

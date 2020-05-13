@@ -247,11 +247,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             try
             {
                 /* Define new model */
-                var fmModel = new WaterFlowFMModel(sedFile)
-                {
-                    ModelDefinition = {UseMorphologySediment = true},
-                    Grid = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 2, 2)
-                };
+                var fmModel = new WaterFlowFMModel();
+                fmModel.LoadMdu(sedFile);
+
+                fmModel.ModelDefinition.UseMorphologySediment = true;
+                fmModel.Grid = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 2, 2);
 
                 /* Define test properties */
                 var doubleSpatProp = new SpatiallyVaryingSedimentProperty<double>("SedConc", 0, 0, false, 0, true, "cc", "mydoubledescription", true, false)
@@ -428,11 +428,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             {
                 /* Define new model */
                 UnstructuredGrid grid = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 2, 2);
-                var fmModel = new WaterFlowFMModel(sedFile)
-                {
-                    ModelDefinition = {UseMorphologySediment = true},
-                    Grid = grid
-                };
+
+                var fmModel = new WaterFlowFMModel();
+                fmModel.LoadMdu(sedFile);
+
+                fmModel.ModelDefinition.UseMorphologySediment = true;
+                fmModel.Grid = grid;
 
                 var fraction = new SedimentFraction {Name = "Frac1"};
                 fmModel.SedimentFractions.Add(fraction);
@@ -665,7 +666,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
             model.ExportTo(mduPath);
 
-            var importedModel = new WaterFlowFMModel(mduPath);
+            var importedModel = new WaterFlowFMModel();
+            importedModel.LoadMdu(mduPath);
+
             IEventedList<Feature2D> boundaries = importedModel.Boundaries;
             Assert.AreEqual(1, boundaries.Count);
             Assert.AreEqual(feature.Geometry, boundaries.First().Geometry);
@@ -762,7 +765,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
             model.ExportTo(mduPath);
 
-            var importedModel = new WaterFlowFMModel(mduPath);
+            var importedModel = new WaterFlowFMModel();
+            importedModel.LoadMdu(mduPath);
+
             IEventedList<Feature2D> boundaries = importedModel.Boundaries;
             Assert.AreEqual(1, boundaries.Count);
             Assert.AreEqual(feature.Geometry, boundaries.First().Geometry);

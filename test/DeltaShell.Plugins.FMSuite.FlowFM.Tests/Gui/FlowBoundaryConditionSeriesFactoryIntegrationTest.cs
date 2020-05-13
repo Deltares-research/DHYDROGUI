@@ -34,7 +34,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                 // Get test data
                 string mduPath = TestHelper.GetTestFilePath(@"ExBedLoadTransportBoundary\FlowFM.mdu");
                 mduPath = tempDirectory.CopyTestDataFileAndDirectoryToTempDirectory(mduPath);
-                var model = new WaterFlowFMModel(mduPath);
+
+                var model = new WaterFlowFMModel();
+                model.LoadMdu(mduPath);
+
                 var boundaryCondition = model.ModelDefinition.BoundaryConditions.ElementAt(0) as FlowBoundaryCondition;
                 Assert.That(boundaryCondition, Is.Not.Null);
 

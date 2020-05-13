@@ -86,7 +86,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData
 
             model.ExportTo("boundaries/test.mdu");
 
-            var importedModel = new WaterFlowFMModel("boundaries/test.mdu");
+            var importedModel = new WaterFlowFMModel();
+            importedModel.LoadMdu("boundaries/test.mdu");
 
             Assert.AreEqual(2, importedModel.Boundaries.Count);
             Assert.AreEqual(2, importedModel.BoundaryConditions.Count());
@@ -127,7 +128,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData
 
             model.ExportTo("boundaries/test.mdu");
 
-            var importedModel = new WaterFlowFMModel("boundaries/test.mdu");
+            var importedModel = new WaterFlowFMModel();
+            importedModel.LoadMdu("boundaries/test.mdu");
 
             Assert.AreEqual(2, importedModel.Boundaries.Count);
             Assert.AreEqual(BoundaryConditionDataType.Harmonics, importedModel.BoundaryConditions.First().DataType);
@@ -184,7 +186,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData
 
             model.ExportTo("boundaries/test.mdu");
 
-            var importedModel = new WaterFlowFMModel("boundaries/test.mdu");
+            var importedModel = new WaterFlowFMModel();
+            importedModel.LoadMdu("boundaries/test.mdu");
 
             Assert.AreEqual(2, importedModel.Boundaries.Count);
 
@@ -414,7 +417,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData
             string mduPath = TestHelper.GetTestFilePath(@"simpleBox\simplebox.mdu");
             string localCopy = TestHelper.CreateLocalCopy(mduPath);
 
-            var model = new WaterFlowFMModel(localCopy);
+            var model = new WaterFlowFMModel();
+            model.LoadMdu(localCopy);
+
             model.StopTime = model.StartTime.AddMinutes(2);
 
             double left = model.Grid.Vertices.Min(v => v.X);

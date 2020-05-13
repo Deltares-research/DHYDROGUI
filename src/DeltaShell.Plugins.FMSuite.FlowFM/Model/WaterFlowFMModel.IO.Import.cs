@@ -38,7 +38,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         /// <param name="mduFilePath">The path to the mdu file.</param>
         /// <param name="clearOutputDirs">Whether or not any existing output directory properties need to be cleared (optional).</param>
         /// <param name="progressChanged">A handle for notifying progress changes (optional).</param>
-        public void LoadMdu(string mduFilePath = null, bool clearOutputDirs = false, ImportProgressChangedDelegate progressChanged = null)
+        public void LoadMdu(string mduFilePath, bool clearOutputDirs = false, ImportProgressChangedDelegate progressChanged = null)
         {
             importProgressChanged = progressChanged;
 

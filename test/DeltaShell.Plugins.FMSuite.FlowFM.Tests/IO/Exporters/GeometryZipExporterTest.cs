@@ -270,7 +270,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
                 destFilePath = Path.Combine(inputPath, Path.GetFileName(ncFilePath));
                 File.Copy(ncFilePath, destFilePath, true);
 
-                var model = new WaterFlowFMModel(mduFilePath);
+                var model = new WaterFlowFMModel();
+                model.LoadMdu(mduFilePath);
 
                 // Construct Path
                 string outputFilePath = Path.Combine(outputFolderPath, "output.zip");
@@ -346,7 +347,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
                     tempWriter.Flush();
                 }
 
-                var model = new WaterFlowFMModel(mduFilePath);
+                var model = new WaterFlowFMModel();
+                model.LoadMdu(mduFilePath);
 
                 // Construct Path
                 string outputFilePath = Path.Combine(outputFolderPath, "output.zip");

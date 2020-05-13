@@ -23,7 +23,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         {
             string mduPath = TestHelper.GetTestFilePath(@"waveFlowFM\fm\te0.mdu");
             string localFmPath = TestHelper.CreateLocalCopy(mduPath);
-            var fmModel = new WaterFlowFMModel(localFmPath);
+
+            var fmModel = new WaterFlowFMModel();
+            fmModel.LoadMdu(localFmPath);
+
             fmModel.StopTime = fmModel.StartTime + new TimeSpan(20 * fmModel.TimeStep.Ticks);
             ValidationReport fmReport = fmModel.Validate();
             Assert.AreEqual(0, fmReport.ErrorCount);

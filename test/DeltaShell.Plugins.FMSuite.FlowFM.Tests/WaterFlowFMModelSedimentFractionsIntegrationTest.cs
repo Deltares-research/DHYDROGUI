@@ -233,7 +233,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             string mduPath = TestHelper.GetTestFilePath(@"simpleBox\simplebox.mdu");
             mduPath = TestHelper.CreateLocalCopy(mduPath);
 
-            return new WaterFlowFMModel(mduPath);
+            var waterFlowFmModel = new WaterFlowFMModel();
+            waterFlowFmModel.LoadMdu(mduPath);
+
+            return waterFlowFmModel;
         }
 
         private static void CheckInitialConditionWithName(List<ISpatiallyVaryingSedimentProperty> svProps, WaterFlowFMModel model, SedimentFraction fraction, int svPropsCount)

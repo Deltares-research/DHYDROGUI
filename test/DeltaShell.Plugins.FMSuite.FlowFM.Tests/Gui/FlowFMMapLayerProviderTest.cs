@@ -47,7 +47,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             string mduPath =
                 TestHelper.GetTestFilePath(@"data\f04_bottomfriction\c016_2DConveyance_bend\input\bendprof.mdu");
             mduPath = TestHelper.CreateLocalCopy(mduPath);
-            ShowModelLayers(new WaterFlowFMModel(mduPath));
+
+            var waterFlowFmModel = new WaterFlowFMModel();
+            waterFlowFmModel.LoadMdu(mduPath);
+
+            ShowModelLayers(waterFlowFmModel);
         }
 
         [Test]
@@ -57,7 +61,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             string mduPath =
                 TestHelper.GetTestFilePath(@"mdu_ivoorkust\ivk.mdu");
             mduPath = TestHelper.CreateLocalCopy(mduPath);
-            ShowModelLayers(new WaterFlowFMModel(mduPath));
+
+            var waterFlowFmModel = new WaterFlowFMModel();
+            waterFlowFmModel.LoadMdu(mduPath);
+
+            ShowModelLayers(waterFlowFmModel);
         }
 
         [Test]
@@ -67,7 +75,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             string mduPath =
                 TestHelper.GetTestFilePath(@"data\f04_bottomfriction\c016_2DConveyance_bend\input\bendprof.mdu");
             mduPath = TestHelper.CreateLocalCopy(mduPath);
-            var model = new WaterFlowFMModel(mduPath);
+
+            var model = new WaterFlowFMModel();
+            model.LoadMdu(mduPath);
 
             model.Area.DredgingLocations.Add(new GroupableFeature2D
             {
@@ -90,7 +100,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         {
             string mduPath = TestHelper.GetTestFilePath(@"roughness\bendprof.mdu");
             mduPath = TestHelper.CreateLocalCopy(mduPath);
-            var model = new WaterFlowFMModel(mduPath);
+
+            var model = new WaterFlowFMModel();
+            model.LoadMdu(mduPath);
 
             using (var gui = new DeltaShellGui())
             {
