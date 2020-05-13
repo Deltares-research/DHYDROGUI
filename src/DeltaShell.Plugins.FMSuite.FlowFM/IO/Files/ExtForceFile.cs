@@ -52,6 +52,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
         private string currentLine;
 
+        private string extFilePath;
+
         public ExtForceFile()
         {
             existingForceFileItems = new Dictionary<ExtForceFileItem, object>();
@@ -101,8 +103,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         }
 
         protected override bool ExcludeEqualsIdentifier => false;
-
-        private string ExtFilePath { get; set; }
 
         private string ExtSubFilesReferenceFilePath { get; set; }
     }

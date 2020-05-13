@@ -29,7 +29,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         public void Read(string extForceFilePath, WaterFlowFMModelDefinition modelDefinition, string extSubFilesReferenceFilePath)
         {
             ExtSubFilesReferenceFilePath = extSubFilesReferenceFilePath;
-            ExtFilePath = extForceFilePath;
+            extFilePath = extForceFilePath;
 
             Read(modelDefinition);
         }
@@ -93,7 +93,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
         private IEnumerable<ExtForceFileItem> ParseExtForceFile()
         {
-            OpenInputFile(ExtFilePath);
+            OpenInputFile(extFilePath);
 
             try
             {
@@ -112,7 +112,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                     else
                     {
                         log.WarnFormat(
-                            $"Invalid Quantity item '{extForceFileItem.Quantity}' starting on line {startLineNumber} in file {ExtFilePath}; Item is skipped.");
+                            $"Invalid Quantity item '{extForceFileItem.Quantity}' starting on line {startLineNumber} in file {extFilePath}; Item is skipped.");
                     }
                 }
             }
@@ -207,7 +207,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                     log.WarnFormat(
                         Resources
                             .ExtForceFile_ReadQuantityProperty_Unexpected_line___0___on_line__1__in_file__2__and_will_be_ignored_,
-                        currentLine, LineNumber, ExtFilePath);
+                        currentLine, LineNumber, extFilePath);
                     break;
             }
         }
@@ -322,7 +322,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                     e is FileNotFoundException || e is IOException || e is OutOfMemoryException)
                 {
                     throw new InvalidOperationException($"An error (Message: {e.Message}) occured while reading boundary condition data for " +
-                                                        $"feature {feature2D.Name} in file {ExtFilePath}", e);
+                                                        $"feature {feature2D.Name} in file {extFilePath}", e);
                 }
 
                 throw;
@@ -344,7 +344,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                     e is FileNotFoundException || e is IOException || e is OutOfMemoryException)
                 {
                     throw new InvalidOperationException($"An error (Message: {e.Message}) occured while source/sink data for " +
-                                                        $"feature {feature2D.Name} in file {ExtFilePath}", e);
+                                                        $"feature {feature2D.Name} in file {extFilePath}", e);
                 }
 
                 throw;
@@ -472,7 +472,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                 modelDefinition.GetModelProperty(KnownProperties.Temperature).SetValueAsString("0");
                 log.ErrorFormat(
                     "An error occured while reading Quantity {0} of file {1}: {2} Process temperature is reset to None ",
-                    forceFileItem.Quantity, ExtFilePath, ex.Message);
+                    forceFileItem.Quantity, extFilePath, ex.Message);
             }
         }
 
@@ -665,7 +665,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                 supportedExtForceFileItems.Add(extForceFileItem);
                 try
                 {
-                    IWindField windField = ExtForceFileHelper.CreateWindField(extForceFileItem, ExtFilePath);
+                    IWindField windField = ExtForceFileHelper.CreateWindField(extForceFileItem, extFilePath);
 
                     string windFile =
                         GetOtherFilePathInSameDirectory(ExtSubFilesReferenceFilePath, extForceFileItem.FileName);
@@ -1089,13 +1089,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             log.WarnFormat(
                 Resources
                     .ExtForceFile_LogWarningQuantityPropertyAlreadySet__0__is_already_set__Line__1__of_file__2__will_be_ignored_,
-                quantityName, LineNumber, ExtFilePath);
+                quantityName, LineNumber, extFilePath);
         }
 
         private string GetMessageUnexpectedKeyword(string quantityName) =>
             string.Format(
                 Resources.ExtForceFile_GetMessageUnexpectedKeyword_Unexpected_keyword__0__on_line__1__of_file__2_,
-                quantityName, LineNumber, ExtFilePath);
+                quantityName, LineNumber, extFilePath);
 
         private static bool IsValidQuantity(ExtForceFileItem extForceFileItem) =>
             !(string.IsNullOrEmpty(extForceFileItem?.FileName)
