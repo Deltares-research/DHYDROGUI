@@ -167,6 +167,8 @@
     <Compile Include="IO\Files\BcmFile.cs" />
     <Compile Include="IO\DataAccessBuilders\BcmFileFlowBoundaryDataBuilder.cs" />
     <Compile Include="IO\DelftIniCategoryExtension.cs" />
+    <Compile Include="IO\Files\BndExtForceFile.Read.cs" />
+    <Compile Include="IO\Files\BndExtForceFile.Write.cs" />
     <Compile Include="IO\Files\CacheFile.cs" />
     <Compile Include="IO\Files\ExtForceFile.Read.cs" />
     <Compile Include="IO\Files\ExtForceFileConstants.cs" />

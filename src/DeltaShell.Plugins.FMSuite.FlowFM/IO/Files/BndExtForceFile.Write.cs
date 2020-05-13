@@ -1,0 +1,393 @@
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using DelftTools.Hydro;
+using DelftTools.Utils.IO;
+using DeltaShell.NGHS.IO.DelftIniObjects;
+using DeltaShell.Plugins.FMSuite.Common.FeatureData;
+using DeltaShell.Plugins.FMSuite.Common.IO;
+using DeltaShell.Plugins.FMSuite.Common.IO.Files;
+using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
+using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers;
+using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
+using NetTopologySuite.Extensions.Features;
+
+namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
+{
+    public partial class BndExtForceFile
+    {
+        private const double openBoundaryTolerance = 0.5;
+        private const BcFile.WriteMode bcFileWriteMode = BcFile.WriteMode.FilePerQuantity;
+        private const BcFile.WriteMode bcmFileWriteMode = BcFile.WriteMode.SingleFile;
+
+        private string bndExtFilePath;
+        
+        private string GetFullPathForWriting(string relativePath)
+        {
+            return Path.Combine(Path.GetDirectoryName(bndExtFilePath), relativePath);
+        }
+
+        public bool WriteToDisk { get; set; }
+
+        public void Write(string filePath, WaterFlowFMModelDefinition modelDefinition)
+        {
+            var refDate = (DateTime)modelDefinition.GetModelProperty(KnownProperties.RefDate).Value;
+
+            Write(
+                filePath,
+                modelDefinition.ModelName,
+                modelDefinition.BoundaryConditionSets,
+                modelDefinition.Embankments,
+                modelDefinition.GetModelProperty(KnownProperties.BndExtForceFile),
+                refDate);
+        }
+
+        private void Write(string filePath, string modelDefinitionModelName, IList<BoundaryConditionSet> boundaryConditionSets,
+                           IEnumerable<Embankment> embankments, ModelProperty modelProperty, DateTime refDate)
+        {
+            bndExtFilePath = filePath;
+            IList<DelftIniCategory> bndExtForceFileItems =
+                WriteBndExtForceFileSubFiles(modelDefinitionModelName, boundaryConditionSets, refDate);
+            IEnumerable<DelftIniCategory> embankmentForceFileItems = WriteEmbankmentFiles(embankments);
+
+            List<DelftIniCategory> allItems = bndExtForceFileItems.Concat(embankmentForceFileItems).ToList();
+            if (allItems.Count > 0)
+            {
+                WriteBndExtForceFile(allItems);
+                modelProperty.SetValueAsString(Path.GetFileName(bndExtFilePath));
+            }
+            else
+            {
+                FileUtils.DeleteIfExists(bndExtFilePath);
+                modelProperty.SetValueAsString(string.Empty);
+            }
+        }
+
+        private void WriteBndExtForceFile(IEnumerable<DelftIniCategory> bndExtForceFileItems)
+        {
+            OpenOutputFile(bndExtFilePath);
+            try
+            {
+                foreach (DelftIniCategory bndExtForceFileItem in bndExtForceFileItems)
+                {
+                    WriteLine("");
+                    WriteLine(BoundaryBlockKey);
+                    WritePropertyValue(QuantityKey, bndExtForceFileItem);
+                    WritePropertyValue(LocationFileKey, bndExtForceFileItem);
+
+                    string openBoundaryToleranceProperty = bndExtForceFileItem.GetPropertyValues(openBoundaryToleranceKey)
+                                                                              .FirstOrDefault();
+                    if (openBoundaryToleranceProperty != null)
+                    {
+                        WritePropertyValue(openBoundaryToleranceKey, openBoundaryToleranceProperty);
+                    }
+
+                    WritePropertyValues(ForcingFileKey, bndExtForceFileItem);
+                    WritePropertyValueIfNotNull(thatcherHarlemanTimeLagKey, bndExtForceFileItem);
+                    WritePropertyValueIfNotNull(areaKey, bndExtForceFileItem);
+                }
+            }
+            finally
+            {
+                CloseOutputFile();
+            }
+        }
+
+        private void WritePropertyValues(string propertyName, DelftIniCategory bndExtForceFileItem)
+        {
+            foreach (string propertyValue in bndExtForceFileItem.GetPropertyValues(propertyName))
+            {
+                WritePropertyValue(propertyName, propertyValue);
+            }
+        }
+
+        private void WritePropertyValueIfNotNull(string propertyName, DelftIniCategory bndExtForceFileItem)
+        {
+            string propertyValue = bndExtForceFileItem.GetPropertyValue(propertyName);
+            if (propertyValue != null)
+            {
+                WritePropertyValue(propertyName, propertyValue);
+            }
+        }
+
+        private void WritePropertyValue(string propertyName, DelftIniCategory bndExtForceFileItem)
+        {
+            WritePropertyValue(propertyName, bndExtForceFileItem.GetPropertyValue(propertyName));
+        }
+
+        private void WritePropertyValue(string propertyName, string propertyValue)
+        {
+            WriteLine($"{propertyName}={propertyValue}");
+        }
+
+        // TODO: migrate sources & sinks to new format
+
+        public IList<DelftIniCategory> WriteBndExtForceFileSubFiles(string modelDefinitionModelName,
+                                                                    IList<BoundaryConditionSet> boundaryConditionSets,
+                                                                    DateTime refDate)
+        {
+            WritePolyLines(boundaryConditionSets);
+
+            List<DelftIniCategory> resultingItems =
+                boundaryConditionSets.Where(bcs => !bcs.BoundaryConditions.Any())
+                                     .Select(boundaryConditionSet => existingPolyLineFiles.TryGetValue(
+                                                                         boundaryConditionSet.Feature, out string pliFileName)
+                                                                         ? CreateBoundaryBlock(
+                                                                             null, pliFileName, null, TimeSpan.Zero)
+                                                                         : null).Where(it => it != null)
+                                     .ToList();
+
+            /* Write all morphology boundaries in one file.*/
+            var bcmFile = new BcmFile
+            {
+                MultiFileMode = bcmFileWriteMode
+            };
+            IEnumerable<IGrouping<string, Tuple<IBoundaryCondition, BoundaryConditionSet>>> morphologyGroupings =
+                bcmFile.GroupBoundaryConditions(boundaryConditionSets);
+
+            WriteBoundaryConditions(refDate, bcmFile, morphologyGroupings, new BcmFileFlowBoundaryDataBuilder(),
+                                    modelDefinitionModelName);
+            /* No longer return the morphology groupings since they will not be written to the .ext file (DELFT3DFM-1106) */
+
+            var bcFile = new BcFile
+            {
+                MultiFileMode = bcFileWriteMode
+            };
+            IEnumerable<IGrouping<string, Tuple<IBoundaryCondition, BoundaryConditionSet>>> standardGroupings =
+                bcFile.GroupBoundaryConditions(boundaryConditionSets);
+            resultingItems.AddRange(WriteBoundaryConditions(refDate, bcFile, standardGroupings,
+                                                            new BcFileFlowBoundaryDataBuilder(),
+                                                            modelDefinitionModelName).Distinct());
+
+            return resultingItems;
+        }
+
+        private IEnumerable<DelftIniCategory> WriteEmbankmentFiles(IEnumerable<Embankment> embankments)
+        {
+            var categories = new List<DelftIniCategory>();
+
+            foreach (Embankment embankment in embankments)
+            {
+                if (!existingPolyLineFiles.TryGetValue(embankment, out string existingFile))
+                {
+                    existingFile = embankment.Name + FileConstants.EmbankmentFileExtension;
+                    existingPolyLineFiles[embankment] = existingFile;
+                }
+
+                if (WriteToDisk)
+                {
+                    new PlizFile<Embankment>().Write(GetFullPathForWriting(existingFile), new[]
+                    {
+                        embankment
+                    });
+                }
+
+                categories.Add(CreateBoundaryBlock(ExtForceQuantNames.EmbankmentBnd, existingFile,
+                                                   ExtForceQuantNames.EmbankmentForcingFile, TimeSpan.Zero, true));
+            }
+
+            return categories;
+        }
+
+        private void WritePolyLines(IEnumerable<BoundaryConditionSet> boundaryConditionSets)
+        {
+            foreach (BoundaryConditionSet boundaryConditionSet in boundaryConditionSets)
+            {
+                if (!existingPolyLineFiles.TryGetValue(boundaryConditionSet.Feature, out string existingFile))
+                {
+                    existingFile = ExtForceFileHelper.GetPliFileName(boundaryConditionSet);
+                    if (string.IsNullOrEmpty(existingFile))
+                    {
+                        return;
+                    }
+
+                    existingPolyLineFiles[boundaryConditionSet.Feature] = existingFile;
+                }
+
+                if (WriteToDisk)
+                {
+                    new PliFile<Feature2D>().Write(GetFullPathForWriting(existingFile), new[]
+                    {
+                        boundaryConditionSet.Feature
+                    });
+                }
+            }
+        }
+
+        private static string AddExtension(string fileName, string extension)
+        {
+            string cleanFileName = fileName.TrimEnd('.');
+            string cleanExtension = extension.TrimStart('.');
+            return string.Concat(cleanFileName, ".", cleanExtension);
+        }
+
+        private IEnumerable<DelftIniCategory> WriteBoundaryConditions(DateTime refDate, BcFile bcFile,
+                                                                      IEnumerable<IGrouping<string, Tuple<IBoundaryCondition, BoundaryConditionSet>>> grouping,
+                                                                      BcFileFlowBoundaryDataBuilder boundaryDataBuilder,
+                                                                      string modelDefinitionName)
+        {
+            var resultingItems = new List<DelftIniCategory>();
+
+            var fileNamesToBoundaryConditions =
+                new Dictionary<string, IList<Tuple<IBoundaryCondition, BoundaryConditionSet>>>();
+
+            foreach (IGrouping<string, Tuple<IBoundaryCondition, BoundaryConditionSet>> group in grouping)
+            {
+                foreach (Tuple<IBoundaryCondition, BoundaryConditionSet> tuple in group.Where(
+                    t => t.Item1 is FlowBoundaryCondition))
+                {
+                    existingBndForceFileItems.TryGetValue(tuple.Item1, out DelftIniCategory existingBlock);
+
+                    List<string> existingPaths = existingBlock != null
+                                                     ? existingBlock.GetPropertyValues(ForcingFileKey).ToList()
+                                                     : new List<string>();
+
+                    string fileName = group.Key;
+                    if (string.IsNullOrEmpty(fileName) && bcFile.MultiFileMode == BcFile.WriteMode.SingleFile)
+                    {
+                        fileName = modelDefinitionName;
+                    }
+
+                    string path = existingPaths.Any()
+                                      ? existingPaths.First()
+                                      : AddExtension(
+                                          fileName, bcFile is BcmFile ? BcmFile.Extension : BcFile.Extension);
+
+                    if (existingBlock != null && !existingPaths.Contains(path))
+                    {
+                        existingBlock.AddProperty(ForcingFileKey, path);
+                    }
+
+                    string corrPath = existingPaths.Count > 1
+                                          ? existingPaths[1]
+                                          : AddExtension(fileName + "_corr", BcFile.Extension);
+
+                    if (existingBlock != null)
+                    {
+                        // set thatcher harlemann time lag once it is already existent in the ext force file but it has changed.
+                        var condition = (FlowBoundaryCondition)tuple.Item1;
+                        existingBlock.SetProperty(thatcherHarlemanTimeLagKey,
+                                                  condition.ThatcherHarlemanTimeLag.TotalSeconds);
+
+                        if (BcFile.IsCorrectionType(tuple.Item1.DataType) && !existingPaths.Contains(corrPath))
+                        {
+                            existingBlock.AddProperty(ForcingFileKey, corrPath);
+                        }
+
+                        if (!BcFile.IsCorrectionType(tuple.Item1.DataType) && existingPaths.Contains(corrPath))
+                        {
+                            existingBlock.RemoveAllPropertiesWhere(p => p.Value == corrPath);
+                        }
+                    }
+
+                    if (fileNamesToBoundaryConditions.TryGetValue(
+                        path, out IList<Tuple<IBoundaryCondition, BoundaryConditionSet>> tuples))
+                    {
+                        tuples.Add(tuple);
+                    }
+                    else
+                    {
+                        tuples = new List<Tuple<IBoundaryCondition, BoundaryConditionSet>>
+                        {
+                            tuple
+                        };
+                        fileNamesToBoundaryConditions.Add(path, tuples);
+                    }
+
+                    if (BcFile.IsCorrectionType(tuple.Item1.DataType))
+                    {
+                        if (fileNamesToBoundaryConditions.TryGetValue(corrPath, out tuples))
+                        {
+                            tuples.Add(tuple);
+                        }
+                        else
+                        {
+                            tuples = new List<Tuple<IBoundaryCondition, BoundaryConditionSet>>
+                            {
+                                tuple
+                            };
+                            fileNamesToBoundaryConditions.Add(corrPath, tuples);
+                        }
+                    }
+
+                    if (existingBlock == null)
+                    {
+                        string quantityName =
+                            ExtForceQuantNames.GetQuantityString((FlowBoundaryCondition)tuple.Item1);
+
+                        string pliFileName = existingPolyLineFiles[tuple.Item2.Feature];
+
+                        DelftIniCategory bndBlock = CreateBoundaryBlock(quantityName, pliFileName, path,
+                                                                        ((FlowBoundaryCondition)tuple.Item1)
+                                                                        .ThatcherHarlemanTimeLag);
+
+                        if (BcFile.IsCorrectionType(tuple.Item1.DataType))
+                        {
+                            bndBlock.AddProperty(ForcingFileKey, corrPath);
+                        }
+
+                        resultingItems.Add(bndBlock);
+                    }
+                    else
+                    {
+                        resultingItems.Add(existingBlock);
+                    }
+                }
+            }
+
+            if (WriteToDisk)
+            {
+                foreach (KeyValuePair<string, IList<Tuple<IBoundaryCondition, BoundaryConditionSet>>>
+                             fileNamesToBoundaryCondition in fileNamesToBoundaryConditions)
+                {
+                    string fullPath = GetFullPathForWriting(fileNamesToBoundaryCondition.Key);
+
+                    bcFile.CorrectionFile = fullPath.EndsWith("_corr.bc");
+
+                    bcFile.Write(fileNamesToBoundaryCondition.Value.ToDictionary(t => t.Item1, t => t.Item2),
+                                 fullPath, boundaryDataBuilder, refDate);
+
+                    bcFile.CorrectionFile = false;
+                }
+            }
+
+            return resultingItems;
+        }
+
+        private static DelftIniCategory CreateBoundaryBlock(string quantity, string locationFilePath,
+                                                            string forcingFilePath, TimeSpan thatcherHarlemanTimeLag,
+                                                            bool isEmbankment = false)
+        {
+            var block = new DelftIniCategory(BoundaryBlockKey);
+            if (quantity != null)
+            {
+                block.AddProperty(QuantityKey, quantity);
+            }
+
+            if (locationFilePath != null)
+            {
+                block.AddProperty(LocationFileKey, locationFilePath);
+            }
+
+            if (forcingFilePath != null)
+            {
+                block.AddProperty(ForcingFileKey, forcingFilePath);
+            }
+
+            if (thatcherHarlemanTimeLag != TimeSpan.Zero)
+            {
+                block.AddProperty(thatcherHarlemanTimeLagKey, thatcherHarlemanTimeLag.TotalSeconds);
+            }
+
+            if (isEmbankment)
+            {
+                block.AddProperty(openBoundaryToleranceKey, openBoundaryTolerance);
+            }
+
+            return block;
+        }
+    }
+}
