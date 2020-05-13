@@ -8,6 +8,8 @@ using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using GeoAPI.Extensions.Feature;
+using SharpMap.Api.SpatialOperations;
+using SharpMap.SpatialOperations;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
 {
@@ -64,11 +66,55 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
                 throw new ArgumentNullException(nameof(polyLineForceFileItems));
             }
 
-            return modelDefinition.SourcesAndSinks.Where(ss => ss.Feature.Name != null).
-                                   ToDictionary(sourceAndSink => sourceAndSink, sourceAndSink => GetSourceAndSinkItem(sourceAndSink, polyLineForceFileItems));
+            return modelDefinition.SourcesAndSinks.Where(ss => ss.Feature.Name != null).ToDictionary(
+                sourceAndSink => sourceAndSink,
+                sourceAndSink => GetSourceAndSinkItem(sourceAndSink, polyLineForceFileItems));
         }
 
-        private static ExtForceFileItem GetSourceAndSinkItem(SourceAndSink sourceAndSink, IDictionary<IFeatureData, ExtForceFileItem> polyLineForceFileItems)
+        public static ExtForceFileItem GetInitialConditionsSamplesItem(
+            ImportSamplesSpatialOperation spatialOperation, string extForceFileQuantityName, string prefix,
+            IDictionary<ExtForceFileItem, object> existingForceFileItems, string targetDirectory)
+        {
+            if (spatialOperation == null)
+            {
+                throw new ArgumentNullException(nameof(spatialOperation));
+            }
+
+            if (existingForceFileItems == null)
+            {
+                throw new ArgumentNullException(nameof(existingForceFileItems));
+            }
+
+            ExtForceFileItem existingItem = existingForceFileItems.Where(kvp => Equals(kvp.Value, spatialOperation))
+                                                                  .Select(kvp => kvp.Key)
+                                                                  .FirstOrDefault();
+
+            string quantityName = prefix != null ? prefix + extForceFileQuantityName : extForceFileQuantityName;
+            ExtForceFileItem extForceFileItem = existingItem ?? new ExtForceFileItem(quantityName)
+            {
+                FileName =
+                    targetDirectory != null
+                        ? spatialOperation.FilePath.Replace(targetDirectory + "\\", "")
+                        : spatialOperation.FilePath,
+                FileType = 7,
+                Method = GetImportSamplesSpatialOperationMethod(spatialOperation)
+            };
+            if (spatialOperation.InterpolationMethod == SpatialInterpolationMethod.Averaging)
+            {
+                extForceFileItem.ModelData[ExtForceFileConstants.AveragingTypeKey] =
+                    (int) spatialOperation.AveragingMethod;
+                extForceFileItem.ModelData[ExtForceFileConstants.RelSearchCellSizeKey] =
+                    spatialOperation.RelativeSearchCellSize;
+            }
+
+            extForceFileItem.Enabled = spatialOperation.Enabled;
+            extForceFileItem.Operand = ExtForceQuantNames.OperatorToStringMapping[Operator.Overwrite];
+
+            return extForceFileItem;
+        }
+
+        private static ExtForceFileItem GetSourceAndSinkItem(SourceAndSink sourceAndSink,
+                                                             IDictionary<IFeatureData, ExtForceFileItem> polyLineForceFileItems)
         {
             polyLineForceFileItems.TryGetValue(sourceAndSink, out ExtForceFileItem existingItem);
 
@@ -101,6 +147,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
             ExtForceFileHelper.AddSuffixInCaseOfDuplicateFile(existingItem);
 
             return existingItem;
+        }
+
+        private static int GetImportSamplesSpatialOperationMethod(ImportSamplesSpatialOperation operation)
+        {
+            switch (operation.InterpolationMethod)
+            {
+                case SpatialInterpolationMethod.Triangulation:
+                    return 5;
+                case SpatialInterpolationMethod.Averaging:
+                    return 6;
+                default:
+                    return -1;
+            }
         }
     }
 }

@@ -438,8 +438,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                 var importSamplesOperation = spatialOperation as ImportSamplesSpatialOperation;
                 if (importSamplesOperation != null)
                 {
-                    ExtForceFileItem existingItem = GetExistingForceFileItemOrNull(importSamplesOperation);
-                    yield return WriteInitialConditionsSamples(quantity, importSamplesOperation, existingItem, prefix);
+                    ExtForceFileItem extForceFileItem =
+                        ExtForceFileItemFactory.GetInitialConditionsSamplesItem(importSamplesOperation, quantity,
+                                                                                prefix,  existingForceFileItems,
+                                                                                Path.GetDirectoryName(Path.GetFullPath(extFilePath)));
+
+                    if (WriteToDisk)
+                    {
+                        WriteInitialConditionsSamples(importSamplesOperation, extForceFileItem);
+                    }
+
+                    yield return extForceFileItem;
                     continue;
                 }
 
@@ -568,57 +577,26 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             }
         }
 
-        private ExtForceFileItem WriteInitialConditionsSamples(string extForceFileQuantityName,
-                                                               ImportSamplesSpatialOperation importSamplesOperation,
-                                                               ExtForceFileItem existingExtForceFileItem,
-                                                               string prefix = null)
+        private void WriteInitialConditionsSamples(ImportSamplesOperation importSamplesOperation,
+                                                   ExtForceFileItem extForceFileItem)
         {
             string targetDirectory = Path.GetDirectoryName(Path.GetFullPath(extFilePath));
-            if (WriteToDisk)
+            
+            if (Path.GetDirectoryName(importSamplesOperation.FilePath) != targetDirectory)
             {
-                if (Path.GetDirectoryName(importSamplesOperation.FilePath) != targetDirectory)
+                try
                 {
-                    try
-                    {
-                        importSamplesOperation.SwitchToDirectory(targetDirectory);
-                        if (existingExtForceFileItem != null)
-                        {
-                            existingExtForceFileItem.FileName =
-                                targetDirectory != null
-                                    ? importSamplesOperation.FilePath.Replace(targetDirectory + "\\", "")
-                                    : importSamplesOperation.FilePath;
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        log.Warn("Unable to import samples " + e.Message);
-                    }
+                    importSamplesOperation.SwitchToDirectory(targetDirectory);
+                    extForceFileItem.FileName =
+                        targetDirectory != null
+                            ? importSamplesOperation.FilePath.Replace(targetDirectory + "\\", "")
+                            : importSamplesOperation.FilePath;
+                }
+                catch (Exception e)
+                {
+                    log.Warn("Unable to import samples " + e.Message);
                 }
             }
-
-            string quantityName = prefix != null ? prefix + extForceFileQuantityName : extForceFileQuantityName;
-            ExtForceFileItem extForceFileItem = existingExtForceFileItem ?? new ExtForceFileItem(quantityName)
-            {
-                FileName =
-                    targetDirectory != null
-                        ? importSamplesOperation.FilePath.Replace(
-                            targetDirectory + "\\", "")
-                        : importSamplesOperation.FilePath,
-                FileType = GetSpatialOperationFileType(importSamplesOperation),
-                Method = GetImportSamplesSpatialOperationMethod(importSamplesOperation)
-            };
-            if (importSamplesOperation.InterpolationMethod == SpatialInterpolationMethod.Averaging)
-            {
-                extForceFileItem.ModelData[averagingTypeKey] =
-                    (int)importSamplesOperation.AveragingMethod;
-                extForceFileItem.ModelData[relSearchCellSizeKey] =
-                    importSamplesOperation.RelativeSearchCellSize;
-            }
-
-            extForceFileItem.Enabled = importSamplesOperation.Enabled;
-            extForceFileItem.Operand = ExtForceQuantNames.OperatorToStringMapping[Operator.Overwrite];
-
-            return extForceFileItem;
         }
 
         private ExtForceFileItem WriteInitialConditionsUnsupported(string quantity, SampleSpatialOperation operation,
@@ -633,8 +611,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                 Enabled = operation.Enabled,
                 Operand = ExtForceQuantNames.OperatorToStringMapping[Operator.Overwrite],
             };
-            forceFileItem.ModelData[averagingTypeKey] = (int)GridCellAveragingMethod.ClosestPoint;
-            forceFileItem.ModelData[relSearchCellSizeKey] = 1.0;
+            forceFileItem.ModelData[ExtForceFileConstants.AveragingTypeKey] = (int)GridCellAveragingMethod.ClosestPoint;
+            forceFileItem.ModelData[ExtForceFileConstants.RelSearchCellSizeKey] = 1.0;
 
             if (WriteToDisk)
             {
@@ -707,34 +685,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         private static int GetAddSamplesMethod()
         {
             return 6;
-        }
-
-        private static int GetImportSamplesSpatialOperationMethod(ImportSamplesSpatialOperation operation)
-        {
-            switch (operation.InterpolationMethod)
-            {
-                case SpatialInterpolationMethod.Triangulation:
-                    return 5;
-                case SpatialInterpolationMethod.Averaging:
-                    return 6;
-                default:
-                    return -1;
-            }
-        }
-
-        private static int GetSpatialOperationFileType(ISpatialOperation operation)
-        {
-            if (operation is ImportSamplesOperation)
-            {
-                return 7;
-            }
-
-            if (operation is SetValueOperation)
-            {
-                return 10;
-            }
-
-            return -1;
         }
 
         private static void RemoveDisabledComponentsFromSourceAndSink(SourceAndSink sourceAndSink,

@@ -197,10 +197,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                 case ExtForceFileConstants.AreaKey:
                     SetArea(extForceFileItem);
                     break;
-                case averagingTypeKey:
+                case ExtForceFileConstants.AveragingTypeKey:
                     SetAveragingType(extForceFileItem);
                     break;
-                case relSearchCellSizeKey:
+                case ExtForceFileConstants.RelSearchCellSizeKey:
                     SetRelativeSearchCellSize(extForceFileItem);
                     break;
                 case frictionTypeKey:
@@ -629,12 +629,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                 FilePath = GetOtherFilePathInSameDirectory(extSubFilesReferenceFilePath, extForceFileItem.FileName)
             };
 
-            if (extForceFileItem.ModelData.TryGetValue(averagingTypeKey, out object value))
+            if (extForceFileItem.ModelData.TryGetValue(ExtForceFileConstants.AveragingTypeKey, out object value))
             {
                 operation.AveragingMethod = (GridCellAveragingMethod)value;
             }
 
-            if (extForceFileItem.ModelData.TryGetValue(relSearchCellSizeKey, out value))
+            if (extForceFileItem.ModelData.TryGetValue(ExtForceFileConstants.RelSearchCellSizeKey, out value))
             {
                 operation.RelativeSearchCellSize = (double)value;
             }
@@ -1050,15 +1050,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             if (extForceFileItem.FileType != ExtForceQuantNames.FileTypes.Triangulation &&
                 extForceFileItem.Operand == null)
             {
-                throw new FormatException(GetMessageUnexpectedKeyword(averagingTypeKey));
+                throw new FormatException(GetMessageUnexpectedKeyword(ExtForceFileConstants.AveragingTypeKey));
             }
 
-            if (extForceFileItem.ModelData.ContainsKey(averagingTypeKey))
+            if (extForceFileItem.ModelData.ContainsKey(ExtForceFileConstants.AveragingTypeKey))
             {
-                LogWarningQuantityPropertyAlreadySet(averagingTypeKey);
+                LogWarningQuantityPropertyAlreadySet(ExtForceFileConstants.AveragingTypeKey);
             }
 
-            extForceFileItem.ModelData[averagingTypeKey] = GetIntegerPropertyValue(currentLine);
+            extForceFileItem.ModelData[ExtForceFileConstants.AveragingTypeKey] = GetIntegerPropertyValue(currentLine);
         }
 
         private void SetRelativeSearchCellSize(ExtForceFileItem extForceFileItem)
@@ -1066,15 +1066,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             if (extForceFileItem.FileType != ExtForceQuantNames.FileTypes.Triangulation &&
                 extForceFileItem.Operand == null)
             {
-                throw new FormatException(GetMessageUnexpectedKeyword(relSearchCellSizeKey));
+                throw new FormatException(GetMessageUnexpectedKeyword(ExtForceFileConstants.RelSearchCellSizeKey));
             }
 
-            if (extForceFileItem.ModelData.ContainsKey(relSearchCellSizeKey))
+            if (extForceFileItem.ModelData.ContainsKey(ExtForceFileConstants.RelSearchCellSizeKey))
             {
-                LogWarningQuantityPropertyAlreadySet(relSearchCellSizeKey);
+                LogWarningQuantityPropertyAlreadySet(ExtForceFileConstants.RelSearchCellSizeKey);
             }
 
-            extForceFileItem.ModelData[relSearchCellSizeKey] = GetDoublePropertyValue(currentLine);
+            extForceFileItem.ModelData[ExtForceFileConstants.RelSearchCellSizeKey] = GetDoublePropertyValue(currentLine);
         }
 
         private void SetFrictionType(ExtForceFileItem extForceFileItem)
