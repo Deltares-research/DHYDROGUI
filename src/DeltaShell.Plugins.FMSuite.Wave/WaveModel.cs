@@ -946,7 +946,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
                         bedFrictionCoefficientProperty.PropertyDefinition.MultipleDefaultValues[
                             (int) bedFrictionProperty.Value]);
 
-                    BedFriction = BedFriction;
+                    TriggerPropertyChanged(KnownWaveCategories.ProcessesCategory, KnownWaveProperties.BedFriction);
                     EndEdit();
                 }
 
@@ -966,63 +966,63 @@ namespace DeltaShell.Plugins.FMSuite.Wave
                         maxNrIterationsProperty.PropertyDefinition.MultipleDefaultValues[
                             (int) simulationModeProperty.Value]);
 
-                    SimulationMode = SimulationMode;
+                    TriggerPropertyChanged(KnownWaveCategories.GeneralCategory, KnownWaveProperties.SimulationMode);
                     EndEdit();
                 }
                 else if (prop.PropertyDefinition.FilePropertyName.Equals(KnownWaveProperties.DirectionalSpaceType,
                                                                          StringComparison.InvariantCultureIgnoreCase))
                 {
                     BeginEdit(new DefaultEditAction("Switching directional space type"));
-                    DirectionalSpaceType = DirectionalSpaceType;
+                    TriggerPropertyChanged(KnownWaveCategories.GeneralCategory, KnownWaveProperties.DirectionalSpaceType);
                     EndEdit();
                 }
                 else if (prop.PropertyDefinition.FilePropertyName.Equals(
                     KnownWaveProperties.WriteCOM, StringComparison.InvariantCultureIgnoreCase))
                 {
                     BeginEdit(new DefaultEditAction("Switching write COM"));
-                    WriteCOM = WriteCOM;
+                    TriggerPropertyChanged(KnownWaveCategories.OutputCategory, KnownWaveProperties.WriteCOM);
                     EndEdit();
                 }
                 else if (prop.PropertyDefinition.FilePropertyName.Equals(KnownWaveProperties.WriteTable,
                                                                          StringComparison.InvariantCultureIgnoreCase))
                 {
                     BeginEdit(new DefaultEditAction("Switching write table"));
-                    WriteTable = WriteTable;
+                    TriggerPropertyChanged(KnownWaveCategories.OutputCategory, KnownWaveProperties.WriteTable);
                     EndEdit();
                 }
                 else if (prop.PropertyDefinition.FilePropertyName.Equals(KnownWaveProperties.MapWriteNetCDF,
                                                                          StringComparison.InvariantCultureIgnoreCase))
                 {
                     BeginEdit(new DefaultEditAction("Switcing MapWriteNetCDF"));
-                    MapWriteNetCDF = MapWriteNetCDF;
+                    TriggerPropertyChanged(KnownWaveCategories.OutputCategory, KnownWaveProperties.MapWriteNetCDF);
                     EndEdit();
                 }
                 else if (prop.PropertyDefinition.FilePropertyName.Equals(KnownWaveProperties.Breaking,
                                                                          StringComparison.InvariantCultureIgnoreCase))
                 {
                     BeginEdit(new DefaultEditAction("Switching Breaking"));
-                    Breaking = Breaking;
+                    TriggerPropertyChanged(KnownWaveCategories.ProcessesCategory, KnownWaveProperties.Breaking);
                     EndEdit();
                 }
                 else if (prop.PropertyDefinition.FilePropertyName.Equals(KnownWaveProperties.Triads,
                                                                          StringComparison.InvariantCultureIgnoreCase))
                 {
                     BeginEdit(new DefaultEditAction("Switching Triads"));
-                    Triads = Triads;
+                    TriggerPropertyChanged(KnownWaveCategories.ProcessesCategory, KnownWaveProperties.Triads);
                     EndEdit();
                 }
                 else if (prop.PropertyDefinition.FilePropertyName.Equals(KnownWaveProperties.Diffraction,
                                                                          StringComparison.InvariantCultureIgnoreCase))
                 {
                     BeginEdit(new DefaultEditAction("Switching Diffraction"));
-                    Diffraction = Diffraction;
+                    TriggerPropertyChanged(KnownWaveCategories.ProcessesCategory, KnownWaveProperties.Diffraction);
                     EndEdit();
                 }
                 else if (prop.PropertyDefinition.FilePropertyName.Equals(KnownWaveProperties.WaveSetup,
                                                                          StringComparison.InvariantCultureIgnoreCase))
                 {
                     BeginEdit(new DefaultEditAction("Switching WaveSetup"));
-                    WaveSetup = WaveSetup;
+                    TriggerPropertyChanged(KnownWaveCategories.ProcessesCategory, KnownWaveProperties.WaveSetup);
                     if ((bool) prop.Value)
                     {
                         Log.WarnFormat(
@@ -1033,6 +1033,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave
                     EndEdit();
                 }
             }
+        }
+
+        private void TriggerPropertyChanged(string propertyCategory, string propertyName)
+        {
+            object propertyValue = ModelDefinition.GetModelProperty(propertyCategory, propertyName).Value;
+
+            // To trigger a propertychanged on the Wave model, this self assignment is necessary.
+            propertyValue = propertyValue;
         }
 
         private void BuildWaveDomains(IEnumerable<IWaveDomainData> allDomains, string workingDirectory, WaveModel model)

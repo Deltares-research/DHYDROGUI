@@ -296,21 +296,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                                                                    StringComparison.InvariantCultureIgnoreCase))
                 {
                     BeginEdit(new DefaultEditAction("Switching salinity process"));
-                    UseSalinity = SetActualValue(KnownProperties.UseSalinity);
+                    TriggerPropertyChanged(KnownProperties.UseSalinity);
                     EndEdit();
                 }
                 else if (prop.PropertyDefinition.MduPropertyName.Equals(GuiProperties.UseMorSed,
                                                                         StringComparison.InvariantCultureIgnoreCase))
                 {
                     BeginEdit(new DefaultEditAction("Switching morphology process"));
-                    UseMorSed = SetActualValue(GuiProperties.UseMorSed);
+                    TriggerPropertyChanged(GuiProperties.UseMorSed);
                     EndEdit();
                 }
                 else if (prop.PropertyDefinition.MduPropertyName.Equals(GuiProperties.WriteSnappedFeatures,
                                                                         StringComparison.InvariantCultureIgnoreCase))
                 {
                     BeginEdit(new DefaultEditAction("Switching write snapped features options"));
-                    WriteSnappedFeatures = SetActualValue(GuiProperties.WriteSnappedFeatures);
+                    TriggerPropertyChanged(GuiProperties.WriteSnappedFeatures);
                     EndEdit();
                 }
                 else if (prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.ISlope,
@@ -329,14 +329,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                                                                         StringComparison.InvariantCultureIgnoreCase))
                 {
                     BeginEdit(new DefaultEditAction("Switching 3D dynamics"));
-                    UseDepthLayers = SetActualValue(KnownProperties.Kmx);
+                    TriggerPropertyChanged(KnownProperties.Kmx);
                     EndEdit();
                 }
                 else if (prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.ICdtyp,
                                                                         StringComparison.InvariantCultureIgnoreCase))
                 {
                     BeginEdit(new DefaultEditAction("Switching wind formulation type"));
-                    CdType = CdType;
+                    TriggerPropertyChanged(KnownProperties.ICdtyp);
                     EndEdit();
                 }
                 else if (prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.Temperature,
@@ -350,120 +350,123 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                                                                         StringComparison.InvariantCultureIgnoreCase))
                 {
                     BeginEdit(new DefaultEditAction("Switching secondary flow process"));
-                    UseSecondaryFlow = SetActualValue(KnownProperties.SecondaryFlow);
+                    TriggerPropertyChanged(KnownProperties.SecondaryFlow);
                     EndEdit();
                 }
                 else if (prop.PropertyDefinition.MduPropertyName.Equals(GuiProperties.WriteHisFile,
                                                                         StringComparison.InvariantCultureIgnoreCase))
                 {
                     BeginEdit(new DefaultEditAction("Switching WriteHisFile"));
-                    WriteHisFile = SetActualValue(GuiProperties.WriteHisFile);
+                    TriggerPropertyChanged(GuiProperties.WriteHisFile);
                     EndEdit();
                 }
                 else if (prop.PropertyDefinition.MduPropertyName.Equals(GuiProperties.SpecifyHisStart,
                                                                         StringComparison.InvariantCultureIgnoreCase))
                 {
                     BeginEdit(new DefaultEditAction("Switching SpecifyHisStart"));
-                    SpecifyHisStart = SetActualValue(GuiProperties.SpecifyHisStart);
+                    TriggerPropertyChanged(GuiProperties.SpecifyHisStart);
                     EndEdit();
                 }
                 else if (prop.PropertyDefinition.MduPropertyName.Equals(GuiProperties.SpecifyHisStop,
                                                                         StringComparison.InvariantCultureIgnoreCase))
                 {
                     BeginEdit(new DefaultEditAction("Switching SpecifyHisStop"));
-                    SpecifyHisStop = SetActualValue(GuiProperties.SpecifyHisStop);
+                    TriggerPropertyChanged(GuiProperties.SpecifyHisStop);
                     EndEdit();
                 }
                 else if (prop.PropertyDefinition.MduPropertyName.Equals(GuiProperties.WriteMapFile,
                                                                         StringComparison.InvariantCultureIgnoreCase))
                 {
                     BeginEdit(new DefaultEditAction("Switching WriteMapFile"));
-                    WriteMapFile = SetActualValue(GuiProperties.WriteMapFile);
+                    TriggerPropertyChanged(GuiProperties.WriteMapFile);
                     EndEdit();
                 }
                 else if (prop.PropertyDefinition.MduPropertyName.Equals(GuiProperties.SpecifyMapStart,
                                                                         StringComparison.InvariantCultureIgnoreCase))
                 {
                     BeginEdit(new DefaultEditAction("Switching SpecifyMapStart"));
-                    SpecifyMapStart = SetActualValue(GuiProperties.SpecifyMapStart);
+                    TriggerPropertyChanged(GuiProperties.SpecifyMapStart);
                     EndEdit();
                 }
                 else if (prop.PropertyDefinition.MduPropertyName.Equals(GuiProperties.SpecifyMapStop,
                                                                         StringComparison.InvariantCultureIgnoreCase))
                 {
                     BeginEdit(new DefaultEditAction("Switching SpecifyMapStop"));
-                    SpecifyMapStop = SetActualValue(GuiProperties.SpecifyMapStop);
+                    TriggerPropertyChanged(GuiProperties.SpecifyMapStop);
                     EndEdit();
                 }
                 else if (prop.PropertyDefinition.MduPropertyName.Equals(GuiProperties.WriteClassMapFile,
                                                                         StringComparison.InvariantCultureIgnoreCase))
                 {
                     BeginEdit(new DefaultEditAction("Switching WriteClassMapFile"));
-                    WriteClassMapFile = SetActualValue(GuiProperties.WriteClassMapFile);
+                    TriggerPropertyChanged(GuiProperties.WriteClassMapFile);
                     EndEdit();
                 }
                 else if (prop.PropertyDefinition.MduPropertyName.Equals(GuiProperties.WriteRstFile,
                                                                         StringComparison.InvariantCultureIgnoreCase))
                 {
                     BeginEdit(new DefaultEditAction("Switching WriteRstFile"));
-                    WriteRstFile = SetActualValue(GuiProperties.WriteRstFile);
+                    TriggerPropertyChanged(GuiProperties.WriteRstFile);
                     EndEdit();
                 }
                 else if (prop.PropertyDefinition.MduPropertyName.Equals(GuiProperties.SpecifyRstStart,
                                                                         StringComparison.InvariantCultureIgnoreCase))
                 {
                     BeginEdit(new DefaultEditAction("Switching SpecifyRstStart"));
-                    SpecifyRstStart = SetActualValue(GuiProperties.SpecifyRstStart);
+                    TriggerPropertyChanged(GuiProperties.SpecifyRstStart);
                     EndEdit();
                 }
                 else if (prop.PropertyDefinition.MduPropertyName.Equals(GuiProperties.SpecifyRstStop,
                                                                         StringComparison.InvariantCultureIgnoreCase))
                 {
                     BeginEdit(new DefaultEditAction("Switching SpecifyRstStop"));
-                    SpecifyRstStop = SetActualValue(GuiProperties.SpecifyRstStop);
+                    TriggerPropertyChanged(GuiProperties.SpecifyRstStop);
                     EndEdit();
                 }
                 else if (prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.WaveModelNr,
                                                                         StringComparison.InvariantCultureIgnoreCase))
                 {
                     BeginEdit(new DefaultEditAction("Switching Waves Model Nr"));
-                    WaveModel = WaveModel;
+                    TriggerPropertyChanged(KnownProperties.WaveModelNr);
                     EndEdit();
                 }
                 else if (prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.Irov,
                                                                         StringComparison.InvariantCultureIgnoreCase))
                 {
                     BeginEdit(new DefaultEditAction("Switching Wall behavior type"));
-                    WaveModel = WaveModel;
+                    TriggerPropertyChanged(KnownProperties.Irov);
                     EndEdit();
                 }
                 else if (prop.PropertyDefinition.MduPropertyName.Equals(GuiProperties.SpecifyWaqOutputInterval,
                                                                         StringComparison.InvariantCultureIgnoreCase))
                 {
                     BeginEdit(new DefaultEditAction("Switching Waq output interval time"));
-                    SpecifyWaqOutputInterval = SetActualValue(GuiProperties.SpecifyWaqOutputInterval);
+                    TriggerPropertyChanged(GuiProperties.SpecifyWaqOutputInterval);
                     EndEdit();
                 }
                 else if (prop.PropertyDefinition.MduPropertyName.Equals(GuiProperties.SpecifyWaqOutputStartTime,
                                                                         StringComparison.InvariantCultureIgnoreCase))
                 {
                     BeginEdit(new DefaultEditAction("Switching Waq output start time"));
-                    SpecifyWaqOutputStartTime = SetActualValue(GuiProperties.SpecifyWaqOutputStartTime);
+                    TriggerPropertyChanged(GuiProperties.SpecifyWaqOutputStartTime);
                     EndEdit();
                 }
                 else if (prop.PropertyDefinition.MduPropertyName.Equals(GuiProperties.SpecifyWaqOutputStopTime,
                                                                         StringComparison.InvariantCultureIgnoreCase))
                 {
                     BeginEdit(new DefaultEditAction("Switching Waq output end time"));
-                    SpecifyWaqOutputStopTime = SetActualValue(GuiProperties.SpecifyWaqOutputStopTime);
+                    TriggerPropertyChanged(GuiProperties.SpecifyWaqOutputStopTime);
                     EndEdit();
                 }
             }
         }
 
-        private bool SetActualValue(string propertyName)
+        private void TriggerPropertyChanged(string propertyName)
         {
-            return (bool) ModelDefinition.GetModelProperty(propertyName).Value;
+            object propertyValue = ModelDefinition.GetModelProperty(propertyName).Value;
+            
+            // To trigger a propertychanged on the WaterFlowFMmodel, this self assignment is necessary.
+            propertyValue = propertyValue;
         }
 
         private void SyncFractionsAndTracers(SourceAndSink sourceAndSink)
