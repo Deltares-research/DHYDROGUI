@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Utils.Collections;
 using GeoAPI.Extensions.Coverages;
@@ -81,11 +82,22 @@ namespace DelftTools.Hydro
                         return null;
                     }
 
+                    // check if first or last is at begin or end node location
                     var index = b.incoming ? locations.Count - 1 : 0;
-                    return locations[index];
-                }).Where(l => l != null);
+                    var atBeginOrEnd = b.incoming
+                        ? Math.Abs(locations[index].Chainage - b.branch.Length) < 1e-8
+                        : Math.Abs(b.branch.Length) < 1e-8;
 
-                duplicateLocations.AddRange(nodeLocations.Skip(1));
+                    return atBeginOrEnd 
+                        ? locations[index] 
+                        : null;
+
+                }).Where(l => l != null).ToList();
+
+                if (nodeLocations.Count > 1)
+                {
+                    duplicateLocations.AddRange(nodeLocations.Skip(1));
+                }
             }
 
             return duplicateLocations;
