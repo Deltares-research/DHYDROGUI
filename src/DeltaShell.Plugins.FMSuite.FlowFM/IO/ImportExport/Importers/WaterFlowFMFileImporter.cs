@@ -73,7 +73,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
                     WorkingDirectoryPathFunc = StoreWorkingDirectoryPathFunc
                 };
 
-                importedFmModel.ImportFromMdu(path, ProgressChanged);
+                importedFmModel.ImportFromMdu(path, true, ProgressChanged);
 
                 //replace the FM Model
                 var targetFmModel = target as WaterFlowFMModel;

@@ -51,8 +51,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         /// Imports data from the provided <paramref name="mduFilePath"/>.
         /// </summary>
         /// <param name="mduFilePath">The path to the mdu file.</param>
+        /// <param name="clearOutputDirectories">Whether or not output directories need to be cleared (optional).</param>
         /// <param name="progressChanged">A handle for notifying progress changes (optional).</param>
-        public void ImportFromMdu(string mduFilePath, ImportProgressChangedDelegate progressChanged = null)
+        public void ImportFromMdu(string mduFilePath, bool clearOutputDirectories = false, ImportProgressChangedDelegate progressChanged = null)
         {
             importProgressChanged = progressChanged;
 
@@ -62,7 +63,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             LoadStateFromMdu(mduFilePath);
             AddSpatialDataItems();
             ImportSpatialOperationsAfterCreating();
-            ClearOutputDirAndWaqDirProperty();
+
+            if (clearOutputDirectories)
+            {
+                ClearOutputDirAndWaqDirProperty();
+            }
 
             InitializeSyncers();
 
