@@ -158,6 +158,7 @@
     <Compile Include="FeatureData\FixedWeirSchemes.cs" />
     <Compile Include="FlowFMApplicationPlugin.cs" />
     <Compile Include="FeatureData\GeometryExtensions.cs" />
+    <Compile Include="IO\DataAccessBuilders\DelftIniCategoryFactory.cs" />
     <Compile Include="IO\DataAccessBuilders\ExtForceFileItemFactory.cs" />
     <Compile Include="IO\DataAccessObjects\BcBlockData.cs" />
     <Compile Include="IO\DataAccessObjects\BcmBlockData.cs" />
@@ -169,6 +170,7 @@
     <Compile Include="IO\DelftIniCategoryExtension.cs" />
     <Compile Include="IO\Files\BndExtForceFile.Read.cs" />
     <Compile Include="IO\Files\BndExtForceFile.Write.cs" />
+    <Compile Include="IO\Files\BndExtForceFileConstants.cs" />
     <Compile Include="IO\Files\CacheFile.cs" />
     <Compile Include="IO\Files\ExtForceFile.Read.cs" />
     <Compile Include="IO\Files\ExtForceFileConstants.cs" />

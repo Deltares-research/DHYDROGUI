@@ -9,15 +9,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 {
     public partial class BndExtForceFile : NGHSFileBase
     {
-        public const string BoundaryBlockKey = "[boundary]";
-        public const string QuantityKey = "quantity";
-        public const string LocationFileKey = "locationfile";
-        public const string ForcingFileKey = "forcingfile";
-
         private const string areaKey = "area";
-        private const string thatcherHarlemanTimeLagKey = "return_time";
-        private const string openBoundaryToleranceKey = "OpenBoundaryTolerance";
-
         private static readonly ILog log = LogManager.GetLogger(typeof(BndExtForceFile));
 
         // items that existed in the file when the file was read

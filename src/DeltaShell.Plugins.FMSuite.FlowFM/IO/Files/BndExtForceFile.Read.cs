@@ -53,7 +53,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
             foreach (DelftIniCategory delftIniCategory in bndBlocks)
             {
-                string locationFile = delftIniCategory.GetPropertyValue(LocationFileKey);
+                string locationFile = delftIniCategory.GetPropertyValue(BndExtForceFileConstants.LocationFileKey);
                 bool locationFileHasAlreadyBeenRead = existingPolyLineFiles.Values.Contains(locationFile);
                 if (locationFile == null || locationFileHasAlreadyBeenRead)
                 {
@@ -124,7 +124,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
         private static bool IsEmbankmentCategory(DelftIniCategory delftIniCategory)
         {
-            return delftIniCategory.GetPropertyValue(QuantityKey) == ExtForceQuantNames.EmbankmentBnd;
+            return delftIniCategory.GetPropertyValue(BndExtForceFileConstants.QuantityKey) == ExtForceQuantNames.EmbankmentBnd;
         }
 
         private void ReadBoundaryConditions(IList<DelftIniCategory> delftIniCategories,
@@ -148,7 +148,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                     continue;
                 }
 
-                string pliFile = delftIniCategory.GetPropertyValue(LocationFileKey);
+                string pliFile = delftIniCategory.GetPropertyValue(BndExtForceFileConstants.LocationFileKey);
 
                 Feature2D feature = existingPolyLineFiles.FirstOrDefault(kvp => kvp.Value == pliFile).Key;
 
@@ -163,7 +163,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
                 // first loading signals, then corrections
 
-                string timeLagString = delftIniCategory.GetPropertyValue(thatcherHarlemanTimeLagKey);
+                string timeLagString = delftIniCategory.GetPropertyValue(BndExtForceFileConstants.ThatcherHarlemanTimeLagKey);
 
                 var usedDataBlocks = new List<BcBlockData>();
                 usedDataBlocks.AddRange(signalBlocks
@@ -242,7 +242,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         private static bool TryGetQuantityValue(DelftIniCategory delftIniCategory,
                                                 out FlowBoundaryQuantityType quantity)
         {
-            string quantityValue = delftIniCategory.GetPropertyValue(QuantityKey);
+            string quantityValue = delftIniCategory.GetPropertyValue(BndExtForceFileConstants.QuantityKey);
             quantity = FlowBoundaryQuantityType.WaterLevel;
 
             if (string.IsNullOrEmpty(quantityValue)
@@ -288,7 +288,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
             foreach (DelftIniCategory delftIniCategory in bndBlocks)
             {
-                IEnumerable<string> bcFiles = delftIniCategory.GetPropertyValues(ForcingFileKey);
+                IEnumerable<string> bcFiles = delftIniCategory.GetPropertyValues(BndExtForceFileConstants.ForcingFileKey);
                 bcFilePaths.AddRange(bcFiles.Select(GetFullPathForReading));
             }
 

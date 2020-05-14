@@ -71,20 +71,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
 
                         List<string> locationFiles =
                             bndExtForceFileItems.Select(
-                                                    item => item.GetPropertyValue(BndExtForceFile.LocationFileKey))
+                                                    item => item.GetPropertyValue(BndExtForceFileConstants.LocationFileKey))
                                                 .ToList();
 
                         foreach (string locationFile in locationFiles.Distinct())
                         {
-                            newNode.AddChildItem(BndExtForceFile.LocationFileKey, locationFile);
+                            newNode.AddChildItem(BndExtForceFileConstants.LocationFileKey, locationFile);
                         }
 
                         IEnumerable<string> forcingFiles =
-                            bndExtForceFileItems.Select(item => item.GetPropertyValue(BndExtForceFile.ForcingFileKey));
+                            bndExtForceFileItems.Select(item => item.GetPropertyValue(BndExtForceFileConstants.ForcingFileKey));
 
                         foreach (string forcingFile in forcingFiles.Distinct())
                         {
-                            newNode.AddChildItem(BndExtForceFile.ForcingFileKey, forcingFile);
+                            newNode.AddChildItem(BndExtForceFileConstants.ForcingFileKey, forcingFile);
                         }
 
                         bndExtForceFile.WriteToDisk = writeToDisk;

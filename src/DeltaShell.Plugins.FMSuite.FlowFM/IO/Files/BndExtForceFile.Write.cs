@@ -19,7 +19,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 {
     public partial class BndExtForceFile
     {
-        private const double openBoundaryTolerance = 0.5;
         private const BcFile.WriteMode bcFileWriteMode = BcFile.WriteMode.FilePerQuantity;
         private const BcFile.WriteMode bcmFileWriteMode = BcFile.WriteMode.SingleFile;
 
@@ -61,7 +60,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             List<DelftIniCategory> resultingItems =
                 boundaryConditionSets.Where(bcs => !bcs.BoundaryConditions.Any())
                                      .Select(boundaryConditionSet => existingPolyLineFiles.TryGetValue(boundaryConditionSet.Feature, out string pliFileName)
-                                                                         ? CreateBoundaryBlock(null, pliFileName, null, TimeSpan.Zero)
+                                                                         ? DelftIniCategoryFactory.CreateBoundaryBlock(null, pliFileName, null, TimeSpan.Zero)
                                                                          : null).Where(it => it != null)
                                      .ToList();
 
@@ -103,19 +102,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                 foreach (DelftIniCategory bndExtForceFileItem in bndExtForceFileItems)
                 {
                     WriteLine("");
-                    WriteLine(BoundaryBlockKey);
-                    WritePropertyValue(QuantityKey, bndExtForceFileItem);
-                    WritePropertyValue(LocationFileKey, bndExtForceFileItem);
+                    WriteLine(BndExtForceFileConstants.BoundaryBlockKey);
+                    WritePropertyValue(BndExtForceFileConstants.QuantityKey, bndExtForceFileItem);
+                    WritePropertyValue(BndExtForceFileConstants.LocationFileKey, bndExtForceFileItem);
 
-                    string openBoundaryToleranceProperty = bndExtForceFileItem.GetPropertyValues(openBoundaryToleranceKey)
+                    string openBoundaryToleranceProperty = bndExtForceFileItem.GetPropertyValues(BndExtForceFileConstants.OpenBoundaryToleranceKey)
                                                                               .FirstOrDefault();
                     if (openBoundaryToleranceProperty != null)
                     {
-                        WritePropertyValue(openBoundaryToleranceKey, openBoundaryToleranceProperty);
+                        WritePropertyValue(BndExtForceFileConstants.OpenBoundaryToleranceKey, openBoundaryToleranceProperty);
                     }
 
-                    WritePropertyValues(ForcingFileKey, bndExtForceFileItem);
-                    WritePropertyValueIfNotNull(thatcherHarlemanTimeLagKey, bndExtForceFileItem);
+                    WritePropertyValues(BndExtForceFileConstants.ForcingFileKey, bndExtForceFileItem);
+                    WritePropertyValueIfNotNull(BndExtForceFileConstants.ThatcherHarlemanTimeLagKey, bndExtForceFileItem);
                     WritePropertyValueIfNotNull(areaKey, bndExtForceFileItem);
                 }
             }
@@ -172,8 +171,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                     });
                 }
 
-                categories.Add(CreateBoundaryBlock(ExtForceQuantNames.EmbankmentBnd, existingFile,
-                                                   ExtForceQuantNames.EmbankmentForcingFile, TimeSpan.Zero, true));
+                categories.Add(DelftIniCategoryFactory.CreateBoundaryBlock(ExtForceQuantNames.EmbankmentBnd, existingFile,
+                                                                           ExtForceQuantNames.EmbankmentForcingFile, TimeSpan.Zero, true));
             }
 
             return categories;
@@ -229,7 +228,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                     existingBndForceFileItems.TryGetValue(tuple.Item1, out DelftIniCategory existingBlock);
 
                     List<string> existingPaths = existingBlock != null
-                                                     ? existingBlock.GetPropertyValues(ForcingFileKey).ToList()
+                                                     ? existingBlock.GetPropertyValues(BndExtForceFileConstants.ForcingFileKey).ToList()
                                                      : new List<string>();
 
                     string fileName = group.Key;
@@ -244,7 +243,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
                     if (existingBlock != null && !existingPaths.Contains(path))
                     {
-                        existingBlock.AddProperty(ForcingFileKey, path);
+                        existingBlock.AddProperty(BndExtForceFileConstants.ForcingFileKey, path);
                     }
 
                     string corrPath = existingPaths.Count > 1
@@ -255,11 +254,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                     {
                         // set thatcher harlemann time lag once it is already existent in the ext force file but it has changed.
                         var condition = (FlowBoundaryCondition) tuple.Item1;
-                        existingBlock.SetProperty(thatcherHarlemanTimeLagKey, condition.ThatcherHarlemanTimeLag.TotalSeconds);
+                        existingBlock.SetProperty(BndExtForceFileConstants.ThatcherHarlemanTimeLagKey, condition.ThatcherHarlemanTimeLag.TotalSeconds);
 
                         if (BcFile.IsCorrectionType(tuple.Item1.DataType) && !existingPaths.Contains(corrPath))
                         {
-                            existingBlock.AddProperty(ForcingFileKey, corrPath);
+                            existingBlock.AddProperty(BndExtForceFileConstants.ForcingFileKey, corrPath);
                         }
 
                         if (!BcFile.IsCorrectionType(tuple.Item1.DataType) && existingPaths.Contains(corrPath))
@@ -303,13 +302,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
                         string pliFileName = existingPolyLineFiles[tuple.Item2.Feature];
 
-                        DelftIniCategory bndBlock = CreateBoundaryBlock(quantityName, pliFileName, path,
+                        DelftIniCategory bndBlock = DelftIniCategoryFactory.CreateBoundaryBlock(quantityName, pliFileName, path,
                                                                         ((FlowBoundaryCondition) tuple.Item1)
                                                                         .ThatcherHarlemanTimeLag);
 
                         if (BcFile.IsCorrectionType(tuple.Item1.DataType))
                         {
-                            bndBlock.AddProperty(ForcingFileKey, corrPath);
+                            bndBlock.AddProperty(BndExtForceFileConstants.ForcingFileKey, corrPath);
                         }
 
                         resultingItems.Add(bndBlock);
@@ -338,39 +337,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             }
 
             return resultingItems;
-        }
-
-        private static DelftIniCategory CreateBoundaryBlock(string quantity, string locationFilePath,
-                                                            string forcingFilePath, TimeSpan thatcherHarlemanTimeLag,
-                                                            bool isEmbankment = false)
-        {
-            var block = new DelftIniCategory(BoundaryBlockKey);
-            if (quantity != null)
-            {
-                block.AddProperty(QuantityKey, quantity);
-            }
-
-            if (locationFilePath != null)
-            {
-                block.AddProperty(LocationFileKey, locationFilePath);
-            }
-
-            if (forcingFilePath != null)
-            {
-                block.AddProperty(ForcingFileKey, forcingFilePath);
-            }
-
-            if (thatcherHarlemanTimeLag != TimeSpan.Zero)
-            {
-                block.AddProperty(thatcherHarlemanTimeLagKey, thatcherHarlemanTimeLag.TotalSeconds);
-            }
-
-            if (isEmbankment)
-            {
-                block.AddProperty(openBoundaryToleranceKey, openBoundaryTolerance);
-            }
-
-            return block;
         }
     }
 }

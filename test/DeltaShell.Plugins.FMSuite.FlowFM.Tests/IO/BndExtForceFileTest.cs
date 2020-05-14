@@ -1008,13 +1008,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
             Assert.IsTrue(File.Exists(extFileName));
             string fileText = File.ReadAllText(extFileName);
-            Assert.That(fileText, Is.StringContaining(BndExtForceFile.BoundaryBlockKey)
-                                    .And.StringContaining(BndExtForceFile.QuantityKey + "=" + ExtForceQuantNames.ConcentrationAtBound + "frac1")
-                                    .And.StringContaining(BndExtForceFile.LocationFileKey + "=" + "L1.pli")
-                                    .And.StringContaining(BndExtForceFile.ForcingFileKey + "=" + "frac1.bc"));
+            Assert.That(fileText, Is.StringContaining(BndExtForceFileConstants.BoundaryBlockKey)
+                                    .And.StringContaining(BndExtForceFileConstants.QuantityKey + "=" + ExtForceQuantNames.ConcentrationAtBound + "frac1")
+                                    .And.StringContaining(BndExtForceFileConstants.LocationFileKey + "=" + "L1.pli")
+                                    .And.StringContaining(BndExtForceFileConstants.ForcingFileKey + "=" + "frac1.bc"));
 
             //check to see if only 2 boundaries are written
-            Assert.AreEqual(2, new Regex(Regex.Escape(BndExtForceFile.BoundaryBlockKey)).Matches(fileText).Count);
+            Assert.AreEqual(2, new Regex(Regex.Escape(BndExtForceFileConstants.BoundaryBlockKey)).Matches(fileText).Count);
 
             Assert.IsTrue(File.Exists("frac1.bc"));
 
