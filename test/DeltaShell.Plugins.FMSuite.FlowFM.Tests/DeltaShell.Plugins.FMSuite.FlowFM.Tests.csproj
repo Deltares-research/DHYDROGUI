@@ -341,6 +341,7 @@
     <Compile Include="IO\FileConstantsTest.cs" />
     <Compile Include="IO\Files\CacheFileTest.cs" />
     <Compile Include="IO\Files\Helpers\FileCopyExceptionTest.cs" />
+    <Compile Include="IO\Files\Helpers\ImportSamplesSpatialOperationTest.cs" />
     <Compile Include="IO\Files\Helpers\MduFileBackwardsCompatibilityConfigurationValuesTest.cs" />
     <Compile Include="IO\Files\Helpers\MorphologyFileBackwardsCompatibilityConfigurationValuesTest.cs" />
     <Compile Include="IO\Files\Helpers\OverwriteCopyHandlerTest.cs" />
