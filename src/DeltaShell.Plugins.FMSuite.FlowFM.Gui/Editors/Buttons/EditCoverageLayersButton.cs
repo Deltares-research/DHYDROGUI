@@ -11,9 +11,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors.Buttons
 {
     public static class EditCoverageLayersHelper
     {
-        public static string ToolTip = "Edit number of depth layers.";
-        public static string Label = "Depth layers";
-        public static Bitmap ButtonImage = Resources.waterLayers;
+        public const string ToolTip = "Edit number of depth layers.";
+        public const string Label = "Depth layers";
+        public static readonly Bitmap ButtonImage = Resources.waterLayers;
 
         public static void ButtonAction(object inputObject)
         {

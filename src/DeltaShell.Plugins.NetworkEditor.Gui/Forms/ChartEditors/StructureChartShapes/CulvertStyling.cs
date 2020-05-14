@@ -10,11 +10,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
     /// </summary>
     public static class CulvertStyling
     {
-        public static Color SiphonOffLevelColor = Color.Red;
-        public static Color SiphonOnLevelColor = Color.Black;
+        private static readonly Color SiphonOffLevelColor = Color.Red;
+        private static readonly Color SiphonOnLevelColor = Color.Black;
 
-        public static Color OutletColor = Color.CornflowerBlue;
-        public static Color InletColor = Color.MidnightBlue;
+        private static readonly Color OutletColor = Color.CornflowerBlue;
+        private static readonly Color InletColor = Color.MidnightBlue;
 
         private const int alpha = 40;
 

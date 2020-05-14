@@ -21,7 +21,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
     [Extension(typeof(IPlugin))]
     public class HydroModelApplicationPlugin : ApplicationPlugin, IDataAccessListenersProvider
     {
-        public static int MainThreadId;
+        public static int MainThreadId { get; set; }
         private static readonly ILog Log = LogManager.GetLogger(typeof(HydroModelApplicationPlugin));
 
         public HydroModelApplicationPlugin()
