@@ -46,7 +46,7 @@
             // 
             // textBoxDischargeCoefficient
             // 
-            this.textBoxDischargeCoefficient.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.bindingSourceSimpleWeirFormula, "ContractionCoefficient", true, System.Windows.Forms.DataSourceUpdateMode.OnValidation, null, "N3"));
+            this.textBoxDischargeCoefficient.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.bindingSourceSimpleWeirFormula, "CorrectionCoefficient", true, System.Windows.Forms.DataSourceUpdateMode.OnValidation, null, "N3"));
             this.textBoxDischargeCoefficient.Location = new System.Drawing.Point(156, 3);
             this.textBoxDischargeCoefficient.Name = "textBoxDischargeCoefficient";
             this.textBoxDischargeCoefficient.Size = new System.Drawing.Size(100, 20);

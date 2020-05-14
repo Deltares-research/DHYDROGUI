@@ -106,7 +106,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
             this.lateralCoefficientTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.lateralCoefficientTextBox.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.bindingSourceFormula, "ContractionCoefficient", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.lateralCoefficientTextBox.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.bindingSourceFormula, "CorrectionCoefficient", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.lateralCoefficientTextBox.Location = new System.Drawing.Point(116, 49);
             this.lateralCoefficientTextBox.Name = "lateralCoefficientTextBox";
             this.lateralCoefficientTextBox.Size = new System.Drawing.Size(145, 20);
