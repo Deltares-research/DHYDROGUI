@@ -45,9 +45,29 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                 Log.WarnFormat("Couldn't find file {0} for detailed branches and nodes information.", networkNetterPath);
             }
 
-            var nodeDataReader = new SobekRetentionsReader() { Sobek2Import = true };
-            var nodeData = nodeDataReader.Read(nodesPath).Cast<Retention>()
-                .ToDictionaryWithErrorDetails(nodesPath, c => c.Name);
+            Dictionary<string, Retention> nodeData = new Dictionary<string, Retention>();
+            var nodeDataReader = new SobekRetentionsReader() {Sobek2Import = true};
+            var retentions = nodeDataReader.Read(nodesPath).Cast<Retention>();
+            string doubleRetentions = "";
+            foreach (var retention in retentions)
+            {
+                if (nodeData.Keys.Contains(retention.Name))
+                {
+                    doubleRetentions += retention.Name + " ";
+                }
+                else
+                {
+                    nodeData.Add(retention.Name, retention);
+                }
+            }
+
+            if (doubleRetentions.Length > 0)
+            {
+                string warning =
+                    "The following retentions were multiple defined. Imported the first definition skipped the other(s):\n" +
+                    doubleRetentions;
+                Log.Warn(warning);
+            }
 
             var createdNodes = new SobekNetworkNodeFileReader().Read(networkPath)
                 .Concat(new SobekNetworkLinkageNodeFileReader().Read(networkPath).Cast<SobekNode>())
