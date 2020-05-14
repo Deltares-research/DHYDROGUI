@@ -367,6 +367,8 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
             var nodes = CreateNetworkNodes(network, networkGeometry, compartmentProperties);
             var branches = CreateBranches(networkGeometry, nodes, branchProperties);
 
+            branches.ForEach(b => b.Network = network);
+
             network.Nodes.AddRange(nodes.Distinct());
             network.Branches.AddRange(branches);
         }
