@@ -57,7 +57,6 @@ namespace DeltaShell.NGHS.IO.TestUtils
         public const double WEIR_CHAINAGE = 1.0;
         public const FlowDirection WEIR_FLOW_DIRECTION = FlowDirection.Both;
         public const double WEIR_DISCHARGE_COEFF = 2.0;
-        public const double WEIR_LATERAL_DISCHARGE_COEFF = 2.0;
 
         public const int UNI_WEIR_ID = 3;
         public const string UNI_WEIR_NAME = "Weir_1D_2";
