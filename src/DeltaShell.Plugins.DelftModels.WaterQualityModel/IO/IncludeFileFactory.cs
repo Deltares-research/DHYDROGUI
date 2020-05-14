@@ -220,18 +220,18 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
             {
                 writer.WriteLine("; output control (see DELWAQ-manual)");
                 writer.WriteLine("; yyyy/mm/dd-hh:mm:ss  yyyy/mm/dd-hh:mm:ss  dddhhmmss");
-                writer.WriteLine((string) "{0} for balance output",
-                                 (object) CreateDelwaqTimeSettingsInputString(waqSettings.BalanceStartTime,
-                                                                              waqSettings.BalanceStopTime,
-                                                                              waqSettings.BalanceTimeStep));
-                writer.WriteLine((string) "{0} for map output",
-                                 (object) CreateDelwaqTimeSettingsInputString(waqSettings.MapStartTime,
-                                                                              waqSettings.MapStopTime,
-                                                                              waqSettings.MapTimeStep));
-                writer.WriteLine((string) "{0} for his output",
-                                 (object) CreateDelwaqTimeSettingsInputString(waqSettings.HisStartTime,
-                                                                              waqSettings.HisStopTime,
-                                                                              waqSettings.HisTimeStep));
+                writer.WriteLine("{0} for balance output",
+                                 CreateDelwaqTimeSettingsInputString(waqSettings.BalanceStartTime,
+                                                                     waqSettings.BalanceStopTime,
+                                                                     waqSettings.BalanceTimeStep));
+                writer.WriteLine("{0} for map output",
+                                 CreateDelwaqTimeSettingsInputString(waqSettings.MapStartTime,
+                                                                     waqSettings.MapStopTime,
+                                                                     waqSettings.MapTimeStep));
+                writer.WriteLine("{0} for his output",
+                                 CreateDelwaqTimeSettingsInputString(waqSettings.HisStartTime,
+                                                                     waqSettings.HisStopTime,
+                                                                     waqSettings.HisTimeStep));
 
                 return writer.ToString();
             }
@@ -265,10 +265,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
             {
                 if (addEndLineCharacters)
                 {
-                    writer.WriteLine((string) "  {0} ; start time", (object) DateTimeToString(startTime));
-                    writer.WriteLine((string) "  {0} ; stop time", (object) DateTimeToString(stopTime));
+                    writer.WriteLine("  {0} ; start time", DateTimeToString(startTime));
+                    writer.WriteLine("  {0} ; stop time", DateTimeToString(stopTime));
                     writer.WriteLine("  0 ; timestep constant");
-                    writer.Write((string) "  {0} ; timestep", (object) FormatTimeStep(timeStep));
+                    writer.Write("  {0} ; timestep", FormatTimeStep(timeStep));
                 }
                 else
                 {
@@ -939,11 +939,5 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         }
 
         #endregion Block 9
-
-        /// <summary>
-        /// Create the T0 include content.
-        /// The startTime could be the start time of the model,
-        /// or the conversion-ref-time from the hyd-file.
-        /// </summary>
     }
 }
