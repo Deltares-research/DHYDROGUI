@@ -12,6 +12,15 @@ namespace DeltaShell.NGHS.TestUtils.AutoFixtureCustomizations
     {
         private static readonly Random random = new Random();
 
+        /// <summary>
+        /// Returns an random enum value based on the request.
+        /// </summary>
+        /// <param name="request">The request that describes what to create.</param>
+        /// <param name="context">Not used.</param>
+        /// <returns>
+        /// If the <paramref name="request"/> is applicable a randomly generated enum value using <see cref="Random"/>;
+        /// otherwise, a <see cref="NoSpecimen"/> instance.
+        /// </returns>
         public object Create(object request, ISpecimenContext context)
         {
             return IsApplicable(request, out Type type)
