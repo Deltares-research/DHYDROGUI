@@ -9,7 +9,7 @@
   <!--<ComponentRef Id="WaterQualitySobekLibrary"/>-->
   <ComponentGroupRef Id="SubstancesFiles"/>
   
-  <ComponentRef Id="WaterQuality_scripts_examples_files"/>
+  <!--<ComponentRef Id="WaterQuality_scripts_examples_files"/>-->
   <ComponentRef Id="WaterQuality_scripts_libraries_files"/>
   
   <ComponentGroupRef Id="PLCTLibs"/>

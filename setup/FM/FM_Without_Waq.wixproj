@@ -56,12 +56,6 @@
     <Content Include="..\Scripts\FMScripts.wxi">
       <Link>Scripts\FMScripts.wxi</Link>
     </Content>
-    <Content Include="..\Scripts\HydroModelScripts.wxi">
-      <Link>Scripts\HydroModelScripts.wxi</Link>
-    </Content>
-    <Content Include="..\Scripts\NetworkEditorScripts.wxi">
-      <Link>Scripts\NetworkEditorScripts.wxi</Link>
-    </Content>
     <Content Include="..\Scripts\RealTimeControlScripts.wxi">
       <Link>Scripts\RealTimeControlScripts.wxi</Link>
     </Content>

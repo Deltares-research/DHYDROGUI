@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Include>
-  <?include ..\Scripts\HydroModelScripts.wxi?>
   <?define hydromodel_plugin_bin="$(var.deltashell_output_folder)plugins\DeltaShell.Plugins.DelftModels.HydroModel\"?>
   <?define hydromodel_gui_plugin_bin="$(var.deltashell_output_folder)plugins\DeltaShell.Plugins.DelftModels.HydroModel.Gui\"?>
   <Directory Id='DeltaShell.Plugins.HydroModel' Name='DeltaShell.Plugins.HydroModel'>
