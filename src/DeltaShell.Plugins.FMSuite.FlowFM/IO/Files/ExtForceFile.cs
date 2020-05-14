@@ -910,31 +910,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             IEnumerable<string> sedConcSpatiallyVarying =
                 modelDefinition.InitialSpatiallyVaryingSedimentPropertyNames.Where(sp => sp.EndsWith(SedConcPostfix));
 
-            LogHandler log = new LogHandler("Ext force warning handler");
-
             foreach (string spatiallyVaryingSedimentPropertyName in sedConcSpatiallyVarying)
             {
                 IList<ISpatialOperation> spatialOperations =
                     modelDefinition.GetSpatialOperations(spatiallyVaryingSedimentPropertyName);
-                if (spatialOperations?.All(s => s is ImportSamplesSpatialOperationExtension ||
-                                                s is AddSamplesOperation) != true)
-                {
-                    string warnMsg = string.Format(
-                        Resources
-                            .SedimentFile_WriteSpatiallyVaryingSedimentPropertySubFiles_No_spatial_operations_of_type_Import__Add_or_Value_found_for_spatially_varying_property__0___Remember_to_interpolate_them_to_generate_the_xyz_file__Otherwise_the_model_might_not_run_as_expected_,
-                        spatiallyVaryingSedimentPropertyName);
-                    if (spatialOperations != null)
-                    {
-                        warnMsg = string.Format(
-                            Resources
-                                .SedimentFile_WriteSpatiallyVaryingSedimentPropertySubFiles_Cannot_create_xyz_file_for_spatial_varying_initial_condition__0__because_it_is_a_value_spatial_operation__please_interpolate_the_operation_to_the_grid_or,
-                            spatiallyVaryingSedimentPropertyName);
-                    }
-
-                    log.ReportWarning(warnMsg);
- 
-                    continue;
-                }
 
                 List<ExtForceFileItem> forceFileItems = WriteSpatialData(spatiallyVaryingSedimentPropertyName,
                                                                          spatialOperations,
@@ -952,8 +931,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
                 extForceFileItems.AddRange(forceFileItems);
             }
-
-            log.LogReport();
 
             return extForceFileItems;
         }
