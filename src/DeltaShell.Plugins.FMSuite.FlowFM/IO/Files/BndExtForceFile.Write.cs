@@ -213,8 +213,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         private IEnumerable<DelftIniCategory> WriteBoundaryConditions(
             DateTime refDate, BcFile bcFile,
             IEnumerable<IGrouping<string, Tuple<IBoundaryCondition, BoundaryConditionSet>>> grouping,
-            BcFileFlowBoundaryDataBuilder boundaryDataBuilder,
-            string modelDefinitionName)
+            BcFileFlowBoundaryDataBuilder boundaryDataBuilder, string modelDefinitionName)
         {
             var resultingItems = new List<DelftIniCategory>();
 
@@ -223,6 +222,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
             foreach (IGrouping<string, Tuple<IBoundaryCondition, BoundaryConditionSet>> group in grouping)
             {
+                string fileName = group.Key;
+
                 foreach (Tuple<IBoundaryCondition, BoundaryConditionSet> tuple in group.Where(t => t.Item1 is FlowBoundaryCondition))
                 {
                     existingBndForceFileItems.TryGetValue(tuple.Item1, out DelftIniCategory existingBlock);
@@ -231,7 +232,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                                                      ? existingBlock.GetPropertyValues(BndExtForceFileConstants.ForcingFileKey).ToList()
                                                      : new List<string>();
 
-                    string fileName = group.Key;
                     if (string.IsNullOrEmpty(fileName) && bcFile.MultiFileMode == BcFile.WriteMode.SingleFile)
                     {
                         fileName = modelDefinitionName;
