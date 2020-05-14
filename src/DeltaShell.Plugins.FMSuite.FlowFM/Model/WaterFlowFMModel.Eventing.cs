@@ -329,7 +329,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                                                                         StringComparison.InvariantCultureIgnoreCase))
                 {
                     TriggerPropertyChanged("Switching 3D dynamics", KnownProperties.Kmx,
-                                           o => UseDepthLayers = (bool) o);
+                                           o => UseDepthLayers = (int) o != 0);
                 }
                 else if (prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.ICdtyp,
                                                                         StringComparison.InvariantCultureIgnoreCase))
