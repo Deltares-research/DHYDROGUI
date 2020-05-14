@@ -84,8 +84,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 double[] newCellCenter =
                     transformation.MathTransform.Transform(new[]
                     {
-                        (double) cell.CenterX,
-                        (double) cell.CenterY
+                        cell.CenterX,
+                        cell.CenterY
                     });
                 cell.CenterX = (float) newCellCenter[0];
                 cell.CenterY = (float) newCellCenter[1];
