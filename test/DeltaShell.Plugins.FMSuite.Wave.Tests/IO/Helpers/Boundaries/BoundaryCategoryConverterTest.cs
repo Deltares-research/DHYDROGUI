@@ -118,10 +118,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Helpers.Boundaries
             Assert.That(result.PeriodType, Is.EqualTo(periodImportExportData.ExpectedValue));
             Assert.That(result.SpreadingType, Is.EqualTo(spreadingImportData.ExpectedValue));
             AssertRoundedValues(result.Distances, Doubles(distance1, distance2));
-            Assert.That(result.WaveHeights, Is.EqualTo(Doubles(waveHeight1, waveHeight2)));
-            Assert.That(result.Periods, Is.EqualTo(Doubles(period1, period2)));
-            Assert.That(result.Directions, Is.EqualTo(Doubles(direction1, direction2)));
-            Assert.That(result.DirectionalSpreadings, Is.EqualTo(Doubles(spreading1, spreading2)));
+            Assert.That(result.WaveHeights, Is.EqualTo(Doubles(waveHeight1, waveHeight2)).Within(doublePrecision));
+            Assert.That(result.Periods, Is.EqualTo(Doubles(period1, period2)).Within(doublePrecision));
+            Assert.That(result.Directions, Is.EqualTo(Doubles(direction1, direction2)).Within(doublePrecision));
+            Assert.That(result.DirectionalSpreadings, Is.EqualTo(Doubles(spreading1, spreading2)).Within(doublePrecision));
         }
 
         [Test]

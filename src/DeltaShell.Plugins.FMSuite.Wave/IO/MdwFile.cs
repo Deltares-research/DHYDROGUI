@@ -785,8 +785,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
 
         private static IEnumerable<WaveDomainData> CreateWaveDomainData(IEnumerable<DelftIniCategory> categories)
         {
-            foreach (DelftIniCategory domainCategory in categories.Where(
-                c => c.Name == KnownWaveCategories.DomainCategory))
+            foreach (DelftIniCategory domainCategory in categories.Where(c => c.Name == KnownWaveCategories.DomainCategory))
             {
                 string gridFileName = domainCategory.GetPropertyValue("Grid", "");
                 string domainName = Path.GetFileNameWithoutExtension(gridFileName);
@@ -799,75 +798,87 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                     NestedInDomain = int.Parse(domainCategory.GetPropertyValue("NestedInDomain", "-1"), NumberStyles.Any, CultureInfo.InvariantCulture)
                 };
 
-                string spaceType = domainCategory.GetPropertyValue("DirSpace");
-                if (spaceType != null)
-                {
-                    domain.SpectralDomainData.DirectionalSpaceType = spaceType == "circle"
-                                                                         ? WaveDirectionalSpaceType.Circle
-                                                                         : WaveDirectionalSpaceType.Sector;
-                    domain.SpectralDomainData.NDir = int.Parse(domainCategory.GetPropertyValue("NDir", "0"),
-                                                               NumberStyles.Any, CultureInfo.InvariantCulture);
-                    domain.SpectralDomainData.StartDir = double.Parse(domainCategory.GetPropertyValue("StartDir", "0.0"),
-                                                                      NumberStyles.Any, CultureInfo.InvariantCulture);
-                    domain.SpectralDomainData.EndDir = double.Parse(domainCategory.GetPropertyValue("EndDir", "0.0"),
-                                                                    NumberStyles.Any, CultureInfo.InvariantCulture);
-                    domain.SpectralDomainData.UseDefaultDirectionalSpace = false;
-                }
-                else
-                {
-                    domain.SpectralDomainData.UseDefaultDirectionalSpace = true;
-                }
-
-                string nFreq = domainCategory.GetPropertyValue("NFreq");
-                if (nFreq != null)
-                {
-                    domain.SpectralDomainData.NFreq = (int) double.Parse(nFreq, NumberStyles.Any, CultureInfo.InvariantCulture);
-                    domain.SpectralDomainData.FreqMin = double.Parse(domainCategory.GetPropertyValue("FreqMin", "0.0"),
-                                                                     NumberStyles.Any, CultureInfo.InvariantCulture);
-                    domain.SpectralDomainData.FreqMax = double.Parse(domainCategory.GetPropertyValue("FreqMax", "0.0"),
-                                                                     NumberStyles.Any, CultureInfo.InvariantCulture);
-                    domain.SpectralDomainData.UseDefaultFrequencySpace = false;
-                }
-                else
-                {
-                    domain.SpectralDomainData.UseDefaultFrequencySpace = true;
-                }
-
-                string bedLevelUsage = domainCategory.GetPropertyValue("FlowBedLevel");
-                if (bedLevelUsage != null)
-                {
-                    domain.HydroFromFlowData.BedLevelUsage =
-                        (UsageFromFlowType) int.Parse(bedLevelUsage, NumberStyles.Any, CultureInfo.InvariantCulture);
-                    domain.HydroFromFlowData.WaterLevelUsage = (UsageFromFlowType) int.Parse(domainCategory.GetPropertyValue("FlowWaterLevel", "0"),
-                                                                                             NumberStyles.Any, CultureInfo.InvariantCulture);
-                    domain.HydroFromFlowData.VelocityUsage = (UsageFromFlowType) int.Parse(domainCategory.GetPropertyValue("FlowVelocity", "0"),
-                                                                                           NumberStyles.Any,
-                                                                                           CultureInfo.InvariantCulture);
-                    string velocityType = domainCategory.GetPropertyValue("FlowVelocityType", "not-specified");
-                    switch (velocityType)
-                    {
-                        case "wave-dependent":
-                            domain.HydroFromFlowData.VelocityUsageType = VelocityComputationType.WaveDependent;
-                            break;
-                        case "surface-layer":
-                            domain.HydroFromFlowData.VelocityUsageType = VelocityComputationType.SurfaceLayer;
-                            break;
-                        default:
-                            domain.HydroFromFlowData.VelocityUsageType = VelocityComputationType.DepthAveraged;
-                            break;
-                    }
-
-                    domain.HydroFromFlowData.WindUsage = (UsageFromFlowType) int.Parse(domainCategory.GetPropertyValue("FlowWind", "0"),
-                                                                                       NumberStyles.Any, CultureInfo.InvariantCulture);
-
-                    domain.HydroFromFlowData.UseDefaultHydroFromFlowSettings = false;
-                }
-                else
-                {
-                    domain.HydroFromFlowData.UseDefaultHydroFromFlowSettings = true;
-                }
+                CreateDirectionalSpaceData(domainCategory, domain);
+                CreateFrequencySpaceData(domainCategory, domain);
+                CreateHydroFromFlowSettingsData(domainCategory, domain);
 
                 yield return domain;
+            }
+        }
+
+        private static void CreateHydroFromFlowSettingsData(DelftIniCategory domainCategory, WaveDomainData domain)
+        {
+            string bedLevelUsage = domainCategory.GetPropertyValue("FlowBedLevel");
+            if (bedLevelUsage != null)
+            {
+                domain.HydroFromFlowData.BedLevelUsage = (UsageFromFlowType) int.Parse(bedLevelUsage, NumberStyles.Any, CultureInfo.InvariantCulture);
+                domain.HydroFromFlowData.WaterLevelUsage = (UsageFromFlowType) int.Parse(domainCategory.GetPropertyValue("FlowWaterLevel", "0"),
+                                                                                         NumberStyles.Any, CultureInfo.InvariantCulture);
+                domain.HydroFromFlowData.VelocityUsage = (UsageFromFlowType) int.Parse(domainCategory.GetPropertyValue("FlowVelocity", "0"),
+                                                                                       NumberStyles.Any,
+                                                                                       CultureInfo.InvariantCulture);
+                string velocityType = domainCategory.GetPropertyValue("FlowVelocityType", "not-specified");
+                switch (velocityType)
+                {
+                    case "wave-dependent":
+                        domain.HydroFromFlowData.VelocityUsageType = VelocityComputationType.WaveDependent;
+                        break;
+                    case "surface-layer":
+                        domain.HydroFromFlowData.VelocityUsageType = VelocityComputationType.SurfaceLayer;
+                        break;
+                    default:
+                        domain.HydroFromFlowData.VelocityUsageType = VelocityComputationType.DepthAveraged;
+                        break;
+                }
+
+                domain.HydroFromFlowData.WindUsage = (UsageFromFlowType) int.Parse(domainCategory.GetPropertyValue("FlowWind", "0"),
+                                                                                   NumberStyles.Any, CultureInfo.InvariantCulture);
+
+                domain.HydroFromFlowData.UseDefaultHydroFromFlowSettings = false;
+            }
+            else
+            {
+                domain.HydroFromFlowData.UseDefaultHydroFromFlowSettings = true;
+            }
+        }
+
+        private static void CreateFrequencySpaceData(DelftIniCategory domainCategory, WaveDomainData domain)
+        {
+            string nFreq = domainCategory.GetPropertyValue("NFreq");
+            if (nFreq != null)
+            {
+                domain.SpectralDomainData.NFreq = (int) double.Parse(nFreq, NumberStyles.Any, CultureInfo.InvariantCulture);
+                domain.SpectralDomainData.FreqMin = double.Parse(domainCategory.GetPropertyValue("FreqMin", "0.0"),
+                                                                 NumberStyles.Any, CultureInfo.InvariantCulture);
+                domain.SpectralDomainData.FreqMax = double.Parse(domainCategory.GetPropertyValue("FreqMax", "0.0"),
+                                                                 NumberStyles.Any, CultureInfo.InvariantCulture);
+                domain.SpectralDomainData.UseDefaultFrequencySpace = false;
+            }
+            else
+            {
+                domain.SpectralDomainData.UseDefaultFrequencySpace = true;
+            }
+        }
+
+        private static void CreateDirectionalSpaceData(DelftIniCategory domainCategory, WaveDomainData domain)
+        {
+            string spaceType = domainCategory.GetPropertyValue("DirSpace");
+            if (spaceType != null)
+            {
+                domain.SpectralDomainData.DirectionalSpaceType = spaceType == "circle"
+                                                                     ? WaveDirectionalSpaceType.Circle
+                                                                     : WaveDirectionalSpaceType.Sector;
+                domain.SpectralDomainData.NDir = int.Parse(domainCategory.GetPropertyValue("NDir", "0"),
+                                                           NumberStyles.Any, CultureInfo.InvariantCulture);
+                domain.SpectralDomainData.StartDir = double.Parse(domainCategory.GetPropertyValue("StartDir", "0.0"),
+                                                                  NumberStyles.Any, CultureInfo.InvariantCulture);
+                domain.SpectralDomainData.EndDir = double.Parse(domainCategory.GetPropertyValue("EndDir", "0.0"),
+                                                                NumberStyles.Any, CultureInfo.InvariantCulture);
+                domain.SpectralDomainData.UseDefaultDirectionalSpace = false;
+            }
+            else
+            {
+                domain.SpectralDomainData.UseDefaultDirectionalSpace = true;
             }
         }
 
