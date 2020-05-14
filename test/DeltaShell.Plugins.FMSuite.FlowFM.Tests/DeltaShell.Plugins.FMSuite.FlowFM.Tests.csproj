@@ -324,6 +324,7 @@
     <Compile Include="IO\BcmFileTest.cs" />
     <Compile Include="IO\BndExtForceFileTest.cs" />
     <Compile Include="IO\CmpFileTest.cs" />
+    <Compile Include="IO\DataAccessBuilders\DelftIniCategoryFactoryTest.cs" />
     <Compile Include="IO\DataAccessBuilders\ExtForceFileItemFactoryTest.cs" />
     <Compile Include="IO\DelftIniCategoryExtensionTest.cs" />
     <Compile Include="IO\Exporters\BcFileExporterTest.cs" />
