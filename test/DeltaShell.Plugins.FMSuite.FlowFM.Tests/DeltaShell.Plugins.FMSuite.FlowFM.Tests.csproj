@@ -340,6 +340,7 @@
     <Compile Include="IO\ExtForceFileTest.cs" />
     <Compile Include="IO\FileConstantsTest.cs" />
     <Compile Include="IO\Files\CacheFileTest.cs" />
+    <Compile Include="IO\Files\ExtForceFileConstantsTest.cs" />
     <Compile Include="IO\Files\Helpers\FileCopyExceptionTest.cs" />
     <Compile Include="IO\Files\Helpers\ImportSamplesSpatialOperationTest.cs" />
     <Compile Include="IO\Files\Helpers\MduFileBackwardsCompatibilityConfigurationValuesTest.cs" />
