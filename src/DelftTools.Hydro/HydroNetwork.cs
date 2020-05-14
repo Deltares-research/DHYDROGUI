@@ -22,7 +22,7 @@ namespace DelftTools.Hydro
     public partial class HydroNetwork : Network, IHydroNetwork
     {
         public const string ImportBranchesActionName = "Import branches";
-        public static string CrossSectionSectionFormat = "Section{0:D3}";
+        public const string CrossSectionSectionFormat = "Section{0:D3}";
         private static readonly ILog log = LogManager.GetLogger(typeof(HydroNetwork));
 
         private IEventedList<Route> routes;
