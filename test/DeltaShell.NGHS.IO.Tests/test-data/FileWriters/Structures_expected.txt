@@ -28,7 +28,7 @@
     type                  = weir                
     crestLevel            = 3.000               
     crestWidth            = 5.000               
-    corrCoeff             = 4.000               
+    corrCoeff             = 2.000               
     useVelocityHeight     = true                
 
 [Structure]
