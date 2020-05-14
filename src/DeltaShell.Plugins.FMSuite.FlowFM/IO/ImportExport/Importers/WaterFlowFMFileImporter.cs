@@ -18,7 +18,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
     {
         private readonly ILog log = LogManager.GetLogger(typeof(WaterFlowFMFileImporter));
 
-        private Func<string> StoreWorkingDirectoryPathFunc;
+        private readonly Func<string> StoreWorkingDirectoryPathFunc;
 
         /// <summary>
         /// Constructor needed for connecting the Application.WorkingDirectory to the WaterFlowFMModel Working Directory.
