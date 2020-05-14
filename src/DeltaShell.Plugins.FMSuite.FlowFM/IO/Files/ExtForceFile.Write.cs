@@ -363,43 +363,41 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                     {
                         File.Delete(dataFilePath);
                     }
-                }
-                else
-                {
-                    switch (boundaryCondition.DataType)
-                    {
-                        case BoundaryConditionDataType.HarmonicCorrection:
-                        case BoundaryConditionDataType.Harmonics:
-                        case BoundaryConditionDataType.AstroCorrection:
-                        case BoundaryConditionDataType.AstroComponents:
-                            new CmpFile().Write(dataFilePath, ExtForceFileHelper.ToHarmonicComponents(data));
-                            break;
-                        case BoundaryConditionDataType.TimeSeries:
-                            VerticalProfileDefinition depthLayerDefinition =
-                                boundaryCondition.GetDepthLayerDefinitionAtPoint(i);
-                            if (depthLayerDefinition != null &&
-                                depthLayerDefinition.Type != VerticalProfileType.Uniform)
-                            {
-                                new T3DFile().Write(
-                                    dataFilePath.Replace(ExtForceQuantNames.TimFileExtension,
-                                                         ExtForceQuantNames.T3DFileExtension), data,
-                                    depthLayerDefinition,
-                                    modelReferenceDate);
-                            }
-                            else
-                            {
-                                new TimFile().Write(dataFilePath, data, modelReferenceDate);
-                            }
 
-                            break;
-                        case BoundaryConditionDataType.Qh:
-                            new QhFile().Write(dataFilePath, data);
-                            break;
-                        default:
-                            throw new Exception("Writing boundary condition type " + boundaryCondition.DataType +
-                                                " not (yet) implemented");
-                    }
+                    continue;
                 }
+                
+                switch (boundaryCondition.DataType)
+                {
+                    case BoundaryConditionDataType.HarmonicCorrection:
+                    case BoundaryConditionDataType.Harmonics:
+                    case BoundaryConditionDataType.AstroCorrection:
+                    case BoundaryConditionDataType.AstroComponents:
+                        new CmpFile().Write(dataFilePath, ExtForceFileHelper.ToHarmonicComponents(data));
+                        break;
+                    case BoundaryConditionDataType.TimeSeries:
+                        WriteTimeSeries(modelReferenceDate, dataFilePath, data, boundaryCondition.GetDepthLayerDefinitionAtPoint(i));
+                        break;
+                    case BoundaryConditionDataType.Qh:
+                        new QhFile().Write(dataFilePath, data);
+                        break;
+                    default:
+                        throw new Exception("Writing boundary condition type " + boundaryCondition.DataType +
+                                            " not (yet) implemented");
+                }
+            }
+        }
+
+        private static void WriteTimeSeries(DateTime modelReferenceDate, string dataFilePath, IFunction data, VerticalProfileDefinition depthLayerDefinition)
+        {
+            if (depthLayerDefinition != null && depthLayerDefinition.Type != VerticalProfileType.Uniform)
+            {
+                new T3DFile().Write(dataFilePath.Replace(ExtForceQuantNames.TimFileExtension, ExtForceQuantNames.T3DFileExtension),
+                                    data, depthLayerDefinition, modelReferenceDate);
+            }
+            else
+            {
+                new TimFile().Write(dataFilePath, data, modelReferenceDate);
             }
         }
 

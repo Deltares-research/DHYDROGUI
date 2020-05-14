@@ -60,52 +60,62 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                     continue;
                 }
 
-                if (string.IsNullOrEmpty(locationFile))
+                if (locationFile == string.Empty)
                 {
                     log.WarnFormat("Empty location file encountered in boundary ext-force file {0}", bndExtFilePath);
                     continue;
                 }
 
                 string pliFilePath = GetFullPathForReading(locationFile);
-
-                if (!File.Exists(pliFilePath))
-                {
-                    log.WarnFormat("Boundary location file {0} not found", pliFilePath);
-                }
+                CheckFilePath(pliFilePath, $"Boundary location file {pliFilePath} not found");
 
                 if (IsEmbankmentCategory(delftIniCategory))
                 {
-                    var plizFile = new PlizFile<Embankment>();
-                    IList<Embankment> embankments = plizFile.Read(pliFilePath);
-                    LogWarningMessagesForOnePointGeometryEmbankments(embankments, pliFilePath);
-
-                    Embankment[] validEmbankments = embankments.Where(e => e.Geometry.Coordinates.Length > 1).ToArray();
-                    if (!validEmbankments.Any())
-                    {
-                        continue;
-                    }
-
-                    modelDefinition.Embankments.Add(validEmbankments.First());
+                    ReadPlizFile(modelDefinition, pliFilePath);
                 }
                 else
                 {
-                    var pliFile = new PliFile<Feature2D>();
-                    IList<Feature2D> features = pliFile.Read(pliFilePath);
-                    if (!features.Any())
-                    {
-                        continue;
-                    }
-
-                    foreach (Feature2D feature in features)
-                    {
-                        existingPolyLineFiles[feature] = locationFile;
-                        modelDefinition.Boundaries.Add(feature);
-                        modelDefinition.BoundaryConditionSets.Add(new BoundaryConditionSet
-                        {
-                            Feature = feature
-                        });
-                    }
+                    ReadPliFile(modelDefinition, pliFilePath, locationFile);
                 }
+            }
+        }
+
+        private void ReadPliFile(WaterFlowFMModelDefinition modelDefinition, string pliFilePath, string locationFile)
+        {
+            var pliFile = new PliFile<Feature2D>();
+            IList<Feature2D> features = pliFile.Read(pliFilePath);
+
+            foreach (Feature2D feature in features)
+            {
+                existingPolyLineFiles[feature] = locationFile;
+                modelDefinition.Boundaries.Add(feature);
+                modelDefinition.BoundaryConditionSets.Add(new BoundaryConditionSet
+                {
+                    Feature = feature
+                });
+            }
+        }
+
+        private static void ReadPlizFile(WaterFlowFMModelDefinition modelDefinition, string pliFilePath)
+        {
+            var plizFile = new PlizFile<Embankment>();
+            IList<Embankment> embankments = plizFile.Read(pliFilePath);
+            LogWarningMessagesForOnePointGeometryEmbankments(embankments, pliFilePath);
+
+            Embankment[] validEmbankments = embankments.Where(e => e.Geometry.Coordinates.Length > 1).ToArray();
+            if (!validEmbankments.Any())
+            {
+                return;
+            }
+
+            modelDefinition.Embankments.Add(validEmbankments.First());
+        }
+
+        private static void CheckFilePath(string filePath, string warningMessage)
+        {
+            if (!File.Exists(filePath))
+            {
+                log.Warn(warningMessage);
             }
         }
 
