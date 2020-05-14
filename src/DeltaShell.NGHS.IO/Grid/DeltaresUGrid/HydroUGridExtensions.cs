@@ -5,6 +5,7 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.Link1d2d;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
+using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using Deltares.UGrid.Api;
 using DeltaShell.NGHS.IO.FileWriters.Network;
