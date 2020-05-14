@@ -456,9 +456,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
     // serializable
     public class StateInfo
     {
-        public string Name { get; private set; }
+        public string Name { get; set; }
 
-        public string ZipPath { get; private set; }
+        public string ZipPath { get; set; }
 
         public StateInfo(string name, string zipPath)
         {
