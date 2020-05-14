@@ -203,6 +203,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             }
         }
 
+        private static string AddExtension(string fileName, BcFile bcFile)
+        {
+            string extension = bcFile is BcmFile
+                                   ? BcmFile.Extension
+                                   : BcFile.Extension;
+
+            return AddExtension(fileName, extension);
+        }
+
         private static string AddExtension(string fileName, string extension)
         {
             string cleanFileName = fileName.TrimEnd('.');
@@ -239,7 +248,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
                     string path = existingPaths.Any()
                                       ? existingPaths.First()
-                                      : AddExtension(fileName, bcFile is BcmFile ? BcmFile.Extension : BcFile.Extension);
+                                      : AddExtension(fileName, bcFile);
 
                     if (existingBlock != null && !existingPaths.Contains(path))
                     {
@@ -267,33 +276,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                         }
                     }
 
-                    if (fileNamesToBoundaryConditions.TryGetValue(path, out IList<Tuple<IBoundaryCondition, BoundaryConditionSet>> tuples))
-                    {
-                        tuples.Add(tuple);
-                    }
-                    else
-                    {
-                        tuples = new List<Tuple<IBoundaryCondition, BoundaryConditionSet>>
-                        {
-                            tuple
-                        };
-                        fileNamesToBoundaryConditions.Add(path, tuples);
-                    }
+                    AddFileNamesToBoundaryConditions(fileNamesToBoundaryConditions, path, tuple);
 
                     if (BcFile.IsCorrectionType(tuple.Item1.DataType))
                     {
-                        if (fileNamesToBoundaryConditions.TryGetValue(corrPath, out tuples))
-                        {
-                            tuples.Add(tuple);
-                        }
-                        else
-                        {
-                            tuples = new List<Tuple<IBoundaryCondition, BoundaryConditionSet>>
-                            {
-                                tuple
-                            };
-                            fileNamesToBoundaryConditions.Add(corrPath, tuples);
-                        }
+                        AddFileNamesToBoundaryConditions(fileNamesToBoundaryConditions, corrPath, tuple);
                     }
 
                     if (existingBlock == null)
@@ -337,6 +324,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             }
 
             return resultingItems;
+        }
+
+        private static void AddFileNamesToBoundaryConditions(
+            IDictionary<string, IList<Tuple<IBoundaryCondition, BoundaryConditionSet>>> fileNamesToBoundaryConditions,
+            string path, Tuple<IBoundaryCondition, BoundaryConditionSet> tuple)
+        {
+            if (fileNamesToBoundaryConditions.TryGetValue(path, out IList<Tuple<IBoundaryCondition, BoundaryConditionSet>> tuples))
+            {
+                tuples.Add(tuple);
+            }
+            else
+            {
+                tuples = new List<Tuple<IBoundaryCondition, BoundaryConditionSet>>
+                {
+                    tuple
+                };
+                fileNamesToBoundaryConditions.Add(path, tuples);
+            }
         }
     }
 }
