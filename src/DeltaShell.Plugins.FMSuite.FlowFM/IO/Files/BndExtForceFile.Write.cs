@@ -33,7 +33,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
             ModelProperty modelProperty = modelDefinition.GetModelProperty(KnownProperties.BndExtForceFile);
             bndExtFilePath = filePath;
-            IList<DelftIniCategory> bndExtForceFileItems = WriteBndExtForceFileSubFiles(modelDefinition.ModelName, modelDefinition.BoundaryConditionSets, refDate);
+            IList<DelftIniCategory> bndExtForceFileItems = WriteBndExtForceFileSubFiles(modelDefinition.ModelName, modelDefinition.BoundaryConditionSets,
+                                                                                        refDate);
             IEnumerable<DelftIniCategory> embankmentForceFileItems = WriteEmbankmentFiles(modelDefinition.Embankments);
 
             List<DelftIniCategory> allItems = bndExtForceFileItems.Concat(embankmentForceFileItems).ToList();
@@ -210,10 +211,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             return string.Concat(cleanFileName, ".", cleanExtension);
         }
 
-        private IEnumerable<DelftIniCategory> WriteBoundaryConditions(DateTime refDate, BcFile bcFile,
-                                                                      IEnumerable<IGrouping<string, Tuple<IBoundaryCondition, BoundaryConditionSet>>> grouping,
-                                                                      BcFileFlowBoundaryDataBuilder boundaryDataBuilder,
-                                                                      string modelDefinitionName)
+        private IEnumerable<DelftIniCategory> WriteBoundaryConditions(
+            DateTime refDate, BcFile bcFile,
+            IEnumerable<IGrouping<string, Tuple<IBoundaryCondition, BoundaryConditionSet>>> grouping,
+            BcFileFlowBoundaryDataBuilder boundaryDataBuilder,
+            string modelDefinitionName)
         {
             var resultingItems = new List<DelftIniCategory>();
 
