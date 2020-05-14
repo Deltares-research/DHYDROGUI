@@ -607,7 +607,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         private int CdType
         {
             get => Convert.ToInt32(ModelDefinition.GetModelProperty(KnownProperties.ICdtyp).Value);
-            set {}
+            set
+            {
+                // empty, but just used for event bubbling
+            }
         }
 
         #region IHasCoordinateSystem

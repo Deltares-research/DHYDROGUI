@@ -382,8 +382,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                         new QhFile().Write(dataFilePath, data);
                         break;
                     default:
-                        throw new Exception("Writing boundary condition type " + boundaryCondition.DataType +
-                                            " not (yet) implemented");
+                        throw new NotSupportedException("Writing boundary condition type " + boundaryCondition.DataType +
+                                                        " not supported.");
                 }
             }
         }
