@@ -320,7 +320,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                         outputSnappedGroupLayerDataMapping.Add(model, outputLayerData);
                     }
 
-                    outputLayerData.coordinateSystem = model.CoordinateSystem;
+                    outputLayerData.CoordinateSystem = model.CoordinateSystem;
 
                     yield return outputLayerData;
                 }

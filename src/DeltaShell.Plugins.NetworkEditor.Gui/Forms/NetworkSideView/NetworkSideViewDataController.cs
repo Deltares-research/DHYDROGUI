@@ -28,7 +28,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
         private readonly DelayedEventHandler<FunctionValuesChangingEventArgs> delayedCoverageValuesChanged;
         private readonly IList<IFeatureCoverage> renderedFeatureCoverages = new List<IFeatureCoverage>();
         private readonly IList<INetworkCoverage> renderedNetworkCoverages = new List<INetworkCoverage>();
-        public OnDataChangedDelegate OnDataChanged;
+
+        public OnDataChangedDelegate OnDataChanged { get; set; }
 
         private bool disposed;
         private DelftTools.Utils.Tuple<double, double> minMax;
