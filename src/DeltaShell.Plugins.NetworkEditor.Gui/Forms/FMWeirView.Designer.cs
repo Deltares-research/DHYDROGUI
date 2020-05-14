@@ -98,7 +98,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
             this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel.Size = new System.Drawing.Size(414, 121);
+            this.tableLayoutPanel.Size = new System.Drawing.Size(374, 121);
             this.tableLayoutPanel.TabIndex = 0;
             // 
             // lateralCoefficientTextBox
@@ -107,7 +107,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.lateralCoefficientTextBox.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.bindingSourceFormula, "ContractionCoefficient", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.lateralCoefficientTextBox.Location = new System.Drawing.Point(156, 49);
+            this.lateralCoefficientTextBox.Location = new System.Drawing.Point(116, 49);
             this.lateralCoefficientTextBox.Name = "lateralCoefficientTextBox";
             this.lateralCoefficientTextBox.Size = new System.Drawing.Size(145, 20);
             this.lateralCoefficientTextBox.TabIndex = 6;
@@ -117,7 +117,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
             // 
             this.timeDependentLabel.AutoSize = true;
             this.timeDependentLabel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.timeDependentLabel.Location = new System.Drawing.Point(327, 0);
+            this.timeDependentLabel.Location = new System.Drawing.Point(287, 0);
             this.timeDependentLabel.Name = "timeDependentLabel";
             this.timeDependentLabel.Size = new System.Drawing.Size(84, 20);
             this.timeDependentLabel.TabIndex = 2;
@@ -130,7 +130,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
             this.crestLevelLabel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.crestLevelLabel.Location = new System.Drawing.Point(3, 20);
             this.crestLevelLabel.Name = "crestLevelLabel";
-            this.crestLevelLabel.Size = new System.Drawing.Size(147, 26);
+            this.crestLevelLabel.Size = new System.Drawing.Size(107, 26);
             this.crestLevelLabel.TabIndex = 3;
             this.crestLevelLabel.Text = "Crest level";
             this.crestLevelLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -141,16 +141,16 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
             this.lateralContractionLabel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lateralContractionLabel.Location = new System.Drawing.Point(3, 46);
             this.lateralContractionLabel.Name = "lateralContractionLabel";
-            this.lateralContractionLabel.Size = new System.Drawing.Size(147, 26);
+            this.lateralContractionLabel.Size = new System.Drawing.Size(107, 26);
             this.lateralContractionLabel.TabIndex = 4;
-            this.lateralContractionLabel.Text = "Lateral contraction coefficient";
+            this.lateralContractionLabel.Text = "Correction coefficient";
             this.lateralContractionLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // crestLevelCheckBox
             // 
             this.crestLevelCheckBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
             this.crestLevelCheckBox.AutoSize = true;
-            this.crestLevelCheckBox.Location = new System.Drawing.Point(361, 23);
+            this.crestLevelCheckBox.Location = new System.Drawing.Point(321, 23);
             this.crestLevelCheckBox.Name = "crestLevelCheckBox";
             this.crestLevelCheckBox.Size = new System.Drawing.Size(15, 20);
             this.crestLevelCheckBox.TabIndex = 7;
@@ -161,7 +161,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
             // 
             this.crestLevelContainer.Controls.Add(this.crestLevelTextBox);
             this.crestLevelContainer.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.crestLevelContainer.Location = new System.Drawing.Point(156, 23);
+            this.crestLevelContainer.Location = new System.Drawing.Point(116, 23);
             this.crestLevelContainer.Name = "crestLevelContainer";
             this.crestLevelContainer.Size = new System.Drawing.Size(145, 20);
             this.crestLevelContainer.TabIndex = 8;
@@ -182,7 +182,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
             // 
             this.label1.AutoSize = true;
             this.label1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label1.Location = new System.Drawing.Point(307, 20);
+            this.label1.Location = new System.Drawing.Point(267, 20);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(14, 26);
             this.label1.TabIndex = 9;
@@ -193,7 +193,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
             // 
             this.label2.AutoSize = true;
             this.label2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label2.Location = new System.Drawing.Point(307, 46);
+            this.label2.Location = new System.Drawing.Point(267, 46);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(14, 26);
             this.label2.TabIndex = 10;
@@ -207,7 +207,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
             this.labelCrestWidth.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.labelCrestWidth.Location = new System.Drawing.Point(3, 72);
             this.labelCrestWidth.Name = "labelCrestWidth";
-            this.labelCrestWidth.Size = new System.Drawing.Size(147, 26);
+            this.labelCrestWidth.Size = new System.Drawing.Size(107, 26);
             this.labelCrestWidth.TabIndex = 11;
             this.labelCrestWidth.Text = "Crest width";
             this.labelCrestWidth.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -216,7 +216,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
             // 
             this.textBoxCrestWidth.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.bindingSourceWeir, "CrestWidth", true));
             this.textBoxCrestWidth.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBoxCrestWidth.Location = new System.Drawing.Point(156, 75);
+            this.textBoxCrestWidth.Location = new System.Drawing.Point(116, 75);
             this.textBoxCrestWidth.Name = "textBoxCrestWidth";
             this.textBoxCrestWidth.Size = new System.Drawing.Size(145, 20);
             this.textBoxCrestWidth.TabIndex = 12;
@@ -226,7 +226,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
             // 
             this.label3.AutoSize = true;
             this.label3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label3.Location = new System.Drawing.Point(307, 72);
+            this.label3.Location = new System.Drawing.Point(267, 72);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(14, 26);
             this.label3.TabIndex = 13;
