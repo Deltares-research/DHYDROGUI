@@ -84,6 +84,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 mduFilePath = Path.Combine(tempDir, "FlowFMWithCustomProperties.mdu");
 
                 // When
+                new MduFile().Write(mduFilePath, modelDefinition, importedModel.Area, importedModel.FixedWeirsProperties, sedimentModelData: importedModel);
                 importedModel = new WaterFlowFMModel();
                 importedModel.ImportFromMdu(mduFilePath);
 
