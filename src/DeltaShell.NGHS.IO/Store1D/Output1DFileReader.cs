@@ -133,8 +133,11 @@ namespace DeltaShell.NGHS.IO.Store1D
         private IList<LocationMetaData> ParseLocationMetaData(IList<string> locationIds, IList<int> branchIds, IList<double> chainages,
             IList<double> xCoordinates, IList<double> yCoordinates)
         {
-            if (locationIds == null || branchIds == null || chainages == null || xCoordinates == null ||
-                yCoordinates == null) return new List<LocationMetaData>();
+            if (locationIds == null || !locationIds.Any() 
+                || branchIds == null || !branchIds.Any() 
+                || chainages == null || !chainages.Any() 
+                || xCoordinates == null || !xCoordinates.Any() 
+                || yCoordinates == null || !yCoordinates.Any()) return new List<LocationMetaData>();
 
             return locationIds.Where((s, i) => branchIds[i] != int.MinValue + 1).Select((id, index) =>
                     new LocationMetaData
