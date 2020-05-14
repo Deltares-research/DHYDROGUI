@@ -39,7 +39,7 @@
             // 
             // textBoxLateralContraction
             // 
-            this.textBoxLateralContraction.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.bindingSourceGatedWeirFormula, "LateralContraction", true, System.Windows.Forms.DataSourceUpdateMode.OnValidation, null, "N3"));
+            this.textBoxLateralContraction.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.bindingSourceGatedWeirFormula, "ContractionCoefficient", true, System.Windows.Forms.DataSourceUpdateMode.OnValidation, null, "N3"));
             this.textBoxLateralContraction.Location = new System.Drawing.Point(155, 34);
             this.textBoxLateralContraction.Name = "textBoxLateralContraction";
             this.textBoxLateralContraction.Size = new System.Drawing.Size(100, 20);

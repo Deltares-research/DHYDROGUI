@@ -204,7 +204,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
             var actualFormula = actualWeir.WeirFormula as SimpleWeirFormula;
 
             Assert.IsNotNull(actualFormula);
-            Assert.AreEqual(structure.DischargeCoefficient, actualFormula.DischargeCoefficient);           
+            Assert.AreEqual(structure.DischargeCoefficient * structure.LateralContractionCoefficient, actualFormula.CorrectionCoefficient);           
         }
 
         [Test]

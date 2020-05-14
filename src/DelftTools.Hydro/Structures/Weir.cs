@@ -34,8 +34,7 @@ namespace DelftTools.Hydro.Structures
             // todo: move initialization to demo model only
             WeirFormula = new SimpleWeirFormula
                 {
-                    DischargeCoefficient = 1.0,
-                    LateralContraction = 1.0
+                    CorrectionCoefficient = 1.0
                 };
             Name = name;
             CrestWidth = 5;

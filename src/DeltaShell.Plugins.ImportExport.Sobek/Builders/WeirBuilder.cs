@@ -112,8 +112,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Builders
             var formula = new GatedWeirFormula();
             formula.GateOpening = sobekOrifice.GateHeight - sobekOrifice.CrestLevel;
 
-            formula.ContractionCoefficient = sobekOrifice.ContractionCoefficient;
-            formula.LateralContraction = sobekOrifice.LateralContractionCoefficient;
+            formula.ContractionCoefficient = sobekOrifice.ContractionCoefficient * sobekOrifice.LateralContractionCoefficient;
             formula.UseMaxFlowNeg = sobekOrifice.UseMaximumFlowNeg;
             formula.MaxFlowNeg = sobekOrifice.MaximumFlowNeg;
             formula.UseMaxFlowPos = sobekOrifice.UseMaximumFlowPos;
@@ -153,9 +152,8 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Builders
         {
             return new SimpleWeirFormula
                        {
-                           LateralContraction = sobekWeir.LateralContractionCoefficient,
-                           DischargeCoefficient = sobekWeir.DischargeCoefficient
-                       };            
+                           CorrectionCoefficient = sobekWeir.DischargeCoefficient * sobekWeir.LateralContractionCoefficient
+            };            
         }
 
         private static IWeirFormula GetRiverWeirFormula(SobekRiverWeir sobekRiverWeir)

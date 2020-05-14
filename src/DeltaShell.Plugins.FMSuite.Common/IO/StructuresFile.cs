@@ -461,7 +461,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             }
 
             var formula = (SimpleWeirFormula)((IWeir)structure).WeirFormula;
-            properties.Add(ConstructProperty(StructureRegion.CorrectionCoeff.Key, formula.LateralContraction, structureType));
+            properties.Add(ConstructProperty(StructureRegion.CorrectionCoeff.Key, formula.CorrectionCoefficient, structureType));
             return properties;
         }
 

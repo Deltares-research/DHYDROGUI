@@ -24,21 +24,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         }
 
         [Category(PropertyWindowCategoryHelper.GeneralCategory)]
-        [DisplayName("Discharge coefficient")]
-        [Description("Discharge coefficient Ce.")]
-        public double DischargeCoefficient
+        [DisplayName("Correction coefficient")]
+        [Description("Correction coefficient")]
+        public double CorrectionCoefficient
         {
-            get { return SimpleWeirFormula.DischargeCoefficient; }
-            set { SimpleWeirFormula.DischargeCoefficient = value; }
-        }
-
-        [Category(PropertyWindowCategoryHelper.GeneralCategory)]
-        [DisplayName("Lateral contraction")]
-        [Description("Lateral contraction Cw.")]
-        public double LateralContraction
-        {
-            get { return SimpleWeirFormula.LateralContraction; }
-            set { SimpleWeirFormula.LateralContraction = value; }
+            get { return SimpleWeirFormula.CorrectionCoefficient; }
+            set { SimpleWeirFormula.CorrectionCoefficient = value; }
         }
     }
 }

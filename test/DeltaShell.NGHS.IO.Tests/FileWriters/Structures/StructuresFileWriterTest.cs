@@ -158,7 +158,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
             {
                 Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(2, 2) }),
                 CrestWidth = 2.58,
-                WeirFormula = new SimpleWeirFormula { LateralContraction = 0.34 },
+                WeirFormula = new SimpleWeirFormula { CorrectionCoefficient = 0.34 },
                 UseCrestLevelTimeSeries = true
             };
 

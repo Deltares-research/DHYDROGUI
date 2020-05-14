@@ -153,8 +153,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
         {
             return new SimpleWeirFormula
                        {
-                           LateralContraction = sobekWeir.LateralContractionCoefficient,
-                           DischargeCoefficient = sobekWeir.DischargeCoefficient
+                           CorrectionCoefficient = sobekWeir.DischargeCoefficient * sobekWeir.LateralContractionCoefficient
                        };            
         }
 

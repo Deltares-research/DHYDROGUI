@@ -15,7 +15,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
             var weir = (IWeir) hydroObject;
             AddCrestLevelProperty(weir);
             AddCrestWidthProperty(weir);
-            AddLateralContractionCoefficientProperty(weir);
+            AddCorrectionCoefficientProperty(weir);
             AddUseVelocityHeightProperty(weir);
 
             return IniCategory;
@@ -44,10 +44,10 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
             }
         }
 
-        private void AddLateralContractionCoefficientProperty(IWeir weir)
+        private void AddCorrectionCoefficientProperty(IWeir weir)
         {
             var weirFormula = (SimpleWeirFormula) weir.WeirFormula;
-            IniCategory.AddProperty(StructureRegion.CorrectionCoeff.Key, weirFormula.LateralContraction, StructureRegion.CorrectionCoeff.Description, StructureRegion.CorrectionCoeff.Format);
+            IniCategory.AddProperty(StructureRegion.CorrectionCoeff.Key, weirFormula.CorrectionCoefficient, StructureRegion.CorrectionCoeff.Description, StructureRegion.CorrectionCoeff.Format);
         }
 
         private void AddUseVelocityHeightProperty(IWeir weir)

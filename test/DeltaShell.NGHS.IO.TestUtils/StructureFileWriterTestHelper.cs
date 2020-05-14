@@ -272,8 +272,9 @@ namespace DeltaShell.NGHS.IO.TestUtils
             return weir;
         }
 
-        public static void AddSimpleWeir(this IBranch branch, long id, string name, double crestLevel, double crestWidth, double chainage,
-                                          FlowDirection flowDirection, double dischargeCoefficient, double lateralDischargeCoefficient)
+        public static void AddSimpleWeir(this IBranch branch, long id, string name, double crestLevel,
+            double crestWidth, double chainage,
+            FlowDirection flowDirection, double corrCoefficient)
         {
             var weir = AddWeir1D(branch, id, name, chainage);
             weir.CrestLevel = crestLevel;
@@ -282,8 +283,7 @@ namespace DeltaShell.NGHS.IO.TestUtils
 
             weir.WeirFormula = new SimpleWeirFormula
             {
-                DischargeCoefficient = dischargeCoefficient,
-                LateralContraction = lateralDischargeCoefficient
+                CorrectionCoefficient = corrCoefficient
             };
         }
 
@@ -367,9 +367,10 @@ namespace DeltaShell.NGHS.IO.TestUtils
             };
         }
 
-        public static void AddOrifice(this IBranch branch, long id, string name, double chainage, FlowDirection flowDirection,
-                                       double crestLevel, double crestWidth, double gateOpening, double contractionCoeff, double latContrCoeff,
-                                       bool useLimitFlowPos, double limitFlowPos, bool useLimitFlowNeg, double limitFlowNeg)
+        public static void AddOrifice(this IBranch branch, long id, string name, double chainage,
+            FlowDirection flowDirection,
+            double crestLevel, double crestWidth, double gateOpening, double corrCoeff,
+            bool useLimitFlowPos, double limitFlowPos, bool useLimitFlowNeg, double limitFlowNeg)
         {
             var weir = AddWeir1D(branch, id, name, chainage);
             weir.FlowDirection = flowDirection;
@@ -379,8 +380,7 @@ namespace DeltaShell.NGHS.IO.TestUtils
             weir.WeirFormula = new GatedWeirFormula
             {
                 GateOpening = gateOpening, // openlevel = CrestHeight + GateOpening
-                ContractionCoefficient = contractionCoeff,
-                LateralContraction = latContrCoeff,
+                ContractionCoefficient = corrCoeff,
                 UseMaxFlowPos = useLimitFlowPos,
                 MaxFlowPos = limitFlowPos,
                 UseMaxFlowNeg = useLimitFlowNeg,
@@ -574,7 +574,6 @@ namespace DeltaShell.NGHS.IO.TestUtils
             var compoundStructureId = 0;
             structures.ForEach(structure =>
             {
-                var compositeStructureInfo = new CompoundStructureInfo(compoundStructureId, string.Empty);
                 var definitionGeneratorStructure = DefinitionGeneratorFactory.GetDefinitionGeneratorStructure(structure.GetStructureType());
                 if (definitionGeneratorStructure != null)
                 {

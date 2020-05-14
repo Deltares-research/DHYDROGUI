@@ -16,8 +16,7 @@ namespace DelftTools.Hydro.Structures.WeirFormula
 
         private void Initialize()
         {
-            DischargeCoefficient = 1.0;
-            LateralContraction = 1.0;
+            CorrectionCoefficient = 1.0;
         }
 
         #region IWeirFormula Members
@@ -42,14 +41,9 @@ namespace DelftTools.Hydro.Structures.WeirFormula
         #endregion
         
         /// <summary>
-        /// Discharge coefficient Ce
+        /// Correction coefficient Cgf, Cgd, Cwf, Cwd
         /// </summary>
-        public virtual double DischargeCoefficient { get; set; }
-
-        /// <summary>
-        /// Lateral contraction Cw
-        /// </summary>
-        public virtual double LateralContraction { get; set; }
+        public virtual double CorrectionCoefficient { get; set; }
 
         public virtual bool UseVelocityHeight { get; set; }
 
@@ -57,8 +51,7 @@ namespace DelftTools.Hydro.Structures.WeirFormula
         {
             return new SimpleWeirFormula
                 {
-                    DischargeCoefficient = DischargeCoefficient,
-                    LateralContraction = LateralContraction,
+                    CorrectionCoefficient = CorrectionCoefficient,
                     UseVelocityHeight = UseVelocityHeight
                 };
         }

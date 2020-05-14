@@ -100,7 +100,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Import
 
             Assert.AreEqual(0.95, weir.CrestWidth);
             Assert.AreEqual(-1.49, weir.CrestLevel);
-            Assert.AreEqual(0.99, ((SimpleWeirFormula)weir.WeirFormula).DischargeCoefficient);
+            Assert.AreEqual(0.99, ((SimpleWeirFormula)weir.WeirFormula).CorrectionCoefficient);
         }
 
         [Test]

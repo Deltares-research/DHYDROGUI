@@ -48,7 +48,7 @@
             // 
             // textBoxDischargeCoefficient
             // 
-            this.textBoxDischargeCoefficient.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.bindingSourceSimpleWeirFormula, "DischargeCoefficient", true, System.Windows.Forms.DataSourceUpdateMode.OnValidation, null, "N3"));
+            this.textBoxDischargeCoefficient.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.bindingSourceSimpleWeirFormula, "ContractionCoefficient", true, System.Windows.Forms.DataSourceUpdateMode.OnValidation, null, "N3"));
             this.textBoxDischargeCoefficient.Location = new System.Drawing.Point(156, 3);
             this.textBoxDischargeCoefficient.Name = "textBoxDischargeCoefficient";
             this.textBoxDischargeCoefficient.Size = new System.Drawing.Size(100, 20);
@@ -70,7 +70,7 @@
             // 
             // textBoxLateralContraction
             // 
-            this.textBoxLateralContraction.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.bindingSourceSimpleWeirFormula, "LateralContraction", true, System.Windows.Forms.DataSourceUpdateMode.OnValidation, null, "N3"));
+            this.textBoxLateralContraction.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.bindingSourceSimpleWeirFormula, "ContractionCoefficient", true, System.Windows.Forms.DataSourceUpdateMode.OnValidation, null, "N3"));
             this.textBoxLateralContraction.Location = new System.Drawing.Point(156, 29);
             this.textBoxLateralContraction.Name = "textBoxLateralContraction";
             this.textBoxLateralContraction.Size = new System.Drawing.Size(100, 20);

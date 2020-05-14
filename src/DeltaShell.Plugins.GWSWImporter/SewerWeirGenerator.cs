@@ -54,7 +54,7 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
             if (dischargeCoefficient.TryGetValueAsDouble(out auxDouble))
             {
                 var weirFormula = weir.WeirFormula as SimpleWeirFormula;
-                if(weirFormula != null) weirFormula.DischargeCoefficient = auxDouble;
+                if(weirFormula != null) weirFormula.CorrectionCoefficient = auxDouble;
             }
         }
         

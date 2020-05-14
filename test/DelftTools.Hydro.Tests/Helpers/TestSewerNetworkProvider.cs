@@ -178,7 +178,7 @@ namespace DelftTools.Hydro.Tests.Helpers
                 CrestLevel = 0.0,
                 WeirFormula = new SimpleWeirFormula
                 {
-                    DischargeCoefficient = 0.0
+                    CorrectionCoefficient = 0.0
                 }
             };
 

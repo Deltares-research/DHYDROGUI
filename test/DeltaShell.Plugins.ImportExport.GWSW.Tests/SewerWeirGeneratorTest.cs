@@ -51,7 +51,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
             var structureTypeString = SewerStructureMapping.StructureType.Crest.GetDescription();
             var crestWidth = 3.0;
             var crestLevel = 2.7;
-            var dischargeCoefficient = 0.9;
+            var corrCoefficient = 0.9;
             var structureGwswElement = new GwswElement
             {
                 ElementTypeName = SewerFeatureType.Structure.ToString(),
@@ -61,7 +61,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
                     GetDefaultGwswAttribute(SewerStructureMapping.PropertyKeys.StructureType, structureTypeString, string.Empty),
                     GetDefaultGwswAttribute(SewerStructureMapping.PropertyKeys.CrestWidth, crestWidth.ToString(CultureInfo.InvariantCulture), string.Empty, TypeDouble),
                     GetDefaultGwswAttribute(SewerStructureMapping.PropertyKeys.CrestLevel, crestLevel.ToString(CultureInfo.InvariantCulture), string.Empty, TypeDouble),
-                    GetDefaultGwswAttribute(SewerStructureMapping.PropertyKeys.DischargeCoefficient, dischargeCoefficient.ToString(CultureInfo.InvariantCulture), string.Empty, TypeDouble)
+                    GetDefaultGwswAttribute(SewerStructureMapping.PropertyKeys.DischargeCoefficient, corrCoefficient.ToString(CultureInfo.InvariantCulture), string.Empty, TypeDouble)
                 }
             };
 
@@ -75,7 +75,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
 
             var weirFormula = createdWeir.WeirFormula as SimpleWeirFormula;
             Assert.IsNotNull(weirFormula);
-            Assert.That(weirFormula.DischargeCoefficient, Is.EqualTo(dischargeCoefficient));
+            Assert.That(weirFormula.CorrectionCoefficient, Is.EqualTo(corrCoefficient));
         }
 
         [TestCase(SewerConnectionMapping.FlowDirection.Open, FlowDirection.Both)]

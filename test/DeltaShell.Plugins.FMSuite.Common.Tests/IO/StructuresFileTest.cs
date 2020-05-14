@@ -503,7 +503,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                 CrestWidth = 25,
                 WeirFormula = new SimpleWeirFormula
                 {
-                    LateralContraction = 0.7
+                    CorrectionCoefficient = 0.7
                 },
                 Geometry = new LineString(new[] { new Coordinate(4, 5), new Coordinate(6, 7) })
             };
@@ -623,7 +623,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                 CrestWidth = 0,
                 WeirFormula = new SimpleWeirFormula
                 {
-                    LateralContraction = 0.7
+                    CorrectionCoefficient = 0.7
                 },
                 Geometry = new LineString(new[] { new Coordinate(4, 5), new Coordinate(6, 7) })
             };

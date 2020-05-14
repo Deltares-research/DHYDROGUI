@@ -15,7 +15,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.SewerFeatures
             weir.CrestLevel = CrestLevel;
             weir.WeirFormula = new SimpleWeirFormula
             {
-                DischargeCoefficient = ((SimpleWeirFormula)WeirFormula).DischargeCoefficient
+                CorrectionCoefficient = ((SimpleWeirFormula)WeirFormula).CorrectionCoefficient
             };
         }
     }

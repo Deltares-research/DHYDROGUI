@@ -298,10 +298,10 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
         {
             var simpleWeirFormula = new SimpleWeirFormula();
 
-            var property = structure2D.GetProperty(StructureRegion.LatContrCoeff.Key);
+            var property = structure2D.GetProperty(StructureRegion.CorrectionCoeff.Key);
             if (property != null)
             {
-                simpleWeirFormula.LateralContraction = DataTypeValueParser.FromString<double>(property.GetValueAsString());
+                simpleWeirFormula.CorrectionCoefficient = DataTypeValueParser.FromString<double>(property.GetValueAsString());
             }
             return simpleWeirFormula;
         }

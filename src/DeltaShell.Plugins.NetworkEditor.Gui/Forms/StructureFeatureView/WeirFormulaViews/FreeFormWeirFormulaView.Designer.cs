@@ -55,7 +55,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView.WeirFo
             // 
             // textBoxDischargeCoefficient
             // 
-            this.textBoxDischargeCoefficient.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.bindingSourceFreeFormWeirFormula, "DischargeCoefficient", true, System.Windows.Forms.DataSourceUpdateMode.OnValidation, null, "N3"));
+            this.textBoxDischargeCoefficient.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.bindingSourceFreeFormWeirFormula, "ContractionCoefficient", true, System.Windows.Forms.DataSourceUpdateMode.OnValidation, null, "N3"));
             this.textBoxDischargeCoefficient.Location = new System.Drawing.Point(158, 9);
             this.textBoxDischargeCoefficient.Name = "textBoxDischargeCoefficient";
             this.textBoxDischargeCoefficient.Size = new System.Drawing.Size(100, 20);

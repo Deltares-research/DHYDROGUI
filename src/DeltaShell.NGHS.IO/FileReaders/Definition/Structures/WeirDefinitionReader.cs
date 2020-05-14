@@ -77,8 +77,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures
                 case StructureType.Weir:
                     return new SimpleWeirFormula
                     {
-                        DischargeCoefficient = category.ReadProperty<double>(StructureRegion.CorrectionCoeff.Key),
-                        LateralContraction = 1
+                        CorrectionCoefficient = category.ReadProperty<double>(StructureRegion.CorrectionCoeff.Key)
                     };
                 case StructureType.UniversalWeir:
                     var readFormulaFromDefinition = new FreeFormWeirFormula

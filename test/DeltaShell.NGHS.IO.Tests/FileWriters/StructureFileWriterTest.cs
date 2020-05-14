@@ -55,8 +55,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
                 StructureFileWriterTestHelper.WEIR_CREST_WIDTH,
                 StructureFileWriterTestHelper.WEIR_CHAINAGE,
                 StructureFileWriterTestHelper.WEIR_FLOW_DIRECTION,
-                StructureFileWriterTestHelper.WEIR_DISCHARGE_COEFF,
-                StructureFileWriterTestHelper.WEIR_LATERAL_DISCHARGE_COEFF);
+                StructureFileWriterTestHelper.WEIR_DISCHARGE_COEFF);
 
             branch.AddUniversalWeir(
                 StructureFileWriterTestHelper.UNI_WEIR_ID,
@@ -107,7 +106,6 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
                 StructureFileWriterTestHelper.ORIFICE_CREST_WIDTH,
                 StructureFileWriterTestHelper.ORIFICE_GATE_OPENING,
                 StructureFileWriterTestHelper.ORIFICE_CONTRACTION_COEFF,
-                StructureFileWriterTestHelper.ORIFICE_LAT_CONTRACTION_COEFF,
                 StructureFileWriterTestHelper.ORIFICE_USE_LIMIT_FLOW_POS,
                 StructureFileWriterTestHelper.ORIFICE_LIMIT_FLOW_POS,
                 StructureFileWriterTestHelper.ORIFICE_USE_LIMIT_FLOW_NEG,
@@ -322,8 +320,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
                 StructureFileWriterTestHelper.WEIR_CREST_WIDTH,
                 StructureFileWriterTestHelper.WEIR_CHAINAGE,
                 StructureFileWriterTestHelper.WEIR_FLOW_DIRECTION,
-                StructureFileWriterTestHelper.WEIR_DISCHARGE_COEFF,
-                StructureFileWriterTestHelper.WEIR_LATERAL_DISCHARGE_COEFF);
+                StructureFileWriterTestHelper.WEIR_DISCHARGE_COEFF);
 
             StructureFileWriterTestHelper.WriteCrossSectionsToIni(network.Structures);
 
@@ -595,7 +592,6 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
                 StructureFileWriterTestHelper.ORIFICE_CREST_WIDTH,
                 StructureFileWriterTestHelper.ORIFICE_GATE_OPENING,
                 StructureFileWriterTestHelper.ORIFICE_CONTRACTION_COEFF,
-                StructureFileWriterTestHelper.ORIFICE_LAT_CONTRACTION_COEFF,
                 StructureFileWriterTestHelper.ORIFICE_USE_LIMIT_FLOW_POS,
                 StructureFileWriterTestHelper.ORIFICE_LIMIT_FLOW_POS,
                 StructureFileWriterTestHelper.ORIFICE_USE_LIMIT_FLOW_NEG,

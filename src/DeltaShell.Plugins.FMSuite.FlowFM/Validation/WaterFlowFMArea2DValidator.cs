@@ -113,11 +113,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                 }
                 if (weir.WeirFormula is SimpleWeirFormula)
                 {
-                    if (((SimpleWeirFormula) weir.WeirFormula).LateralContraction < 0.0)
+                    if (((SimpleWeirFormula) weir.WeirFormula).CorrectionCoefficient < 0.0)
                     {
                         issues.Add(new ValidationIssue(weir, ValidationSeverity.Error,
                             "weir '" + weir.Name +
-                            "': lateral contraction coefficient must be greater than or equal to zero.", weir));
+                            "': correction coefficient must be greater than or equal to zero.", weir));
                     }
                 }
             }

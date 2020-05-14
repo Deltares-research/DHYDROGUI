@@ -164,19 +164,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
         [DisplayFormat("0.00")]
         public double SDischargeCoefficient
         {
-            get { return SimpleWeirFormula.DischargeCoefficient; }
-            set { SimpleWeirFormula.DischargeCoefficient = value; }
+            get { return SimpleWeirFormula.CorrectionCoefficient; }
+            set { SimpleWeirFormula.CorrectionCoefficient = value; }
         }
         
-        [DynamicReadOnly]
-        [DisplayName("Lateral contraction")]
-        [DisplayFormat("0.00")]
-        public double SLateralContraction
-        {
-            get { return SimpleWeirFormula.LateralContraction; }
-            set { SimpleWeirFormula.LateralContraction = value; }
-        }
-
         [DynamicReadOnly]
         [DisplayName("Contraction coefficient")]
         [DisplayFormat("0.00")]

@@ -57,22 +57,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
         }
 
         [Category("General")]        
-        [DisplayName("Lateral contraction coefficient")]
-        [Description("Lateral contraction coefficient (0-1)")]
+        [DisplayName("Correction coefficient")]
+        [Description("Correction coefficient (0-1)")]
         [PropertyOrder(5)]
-        public double LateralContraction
+        public double CorrectionCoefficient
         {
             get
             {
                 var formula = data.WeirFormula as SimpleWeirFormula;
-                return formula == null ? 0 : formula.LateralContraction;
+                return formula == null ? 0 : formula.CorrectionCoefficient;
             }
             set
             {
                 var formula = data.WeirFormula as SimpleWeirFormula;
                 if (formula != null)
                 {
-                    formula.LateralContraction = value;
+                    formula.CorrectionCoefficient = value;
                 }
             }
         }

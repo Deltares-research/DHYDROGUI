@@ -211,12 +211,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
 
         #endregion Reusable
 
-        private void LateralCoefficientTextBoxValidated(object sender, EventArgs e)
+        private void CorrectionCoefficientTextBoxValidated(object sender, EventArgs e)
         {
             double coeff;
             if (ParseDouble(lateralCoefficientTextBox.Text, out coeff))
             {
-                ((SimpleWeirFormula) data.WeirFormula).LateralContraction = coeff;
+                ((SimpleWeirFormula) data.WeirFormula).CorrectionCoefficient = coeff;
             }
         }
 

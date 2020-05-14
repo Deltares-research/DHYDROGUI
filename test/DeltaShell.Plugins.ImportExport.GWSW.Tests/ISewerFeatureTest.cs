@@ -438,7 +438,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
 
             var network = TestSewerNetworkProvider.CreateSewerNetwork_TwoManholesWithOneCompartmentEach();
             var crestLevel = 0.7;
-            var contractionCoefficent = 1.1;
+            var correctionCoefficient = 1.1;
             var maxDischarge = 44.0;
             var orifice = new Orifice(orificeName)
             {
@@ -446,7 +446,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
                 MaxDischarge = maxDischarge,
                 WeirFormula = new GatedWeirFormula
                 {
-                    ContractionCoefficient = contractionCoefficent
+                    ContractionCoefficient= correctionCoefficient
                 }
             };
             AddSewerFeatureToNetwork(orifice, network);
@@ -465,7 +465,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
             Assert.IsNotNull(orificeInNetwork);
             Assert.That((object) orificeInNetwork.Name, Is.EqualTo(orificeName));
             Assert.That(orificeInNetwork.CrestLevel, Is.EqualTo(crestLevel));
-            Assert.That(((GatedWeirFormula)orificeInNetwork.WeirFormula).ContractionCoefficient, Is.EqualTo(contractionCoefficent));
+            Assert.That(((GatedWeirFormula)orificeInNetwork.WeirFormula).ContractionCoefficient, Is.EqualTo(correctionCoefficient));
             Assert.That(orificeInNetwork.MaxDischarge, Is.EqualTo(maxDischarge));
         }
 
@@ -1051,14 +1051,14 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
             var weirName = TestSewerNetworkProvider.WeirName;
             var crestWidth = 3.3;
             var crestLevel = -2.1;
-            var dischargeCoefficient = 0.8;
+            var correctionCoefficient = 0.8;
             var weirToAdd = new GwswStructureWeir(weirName)
             {
                 CrestWidth = crestWidth,
                 CrestLevel = crestLevel,
                 WeirFormula = new SimpleWeirFormula
                 {
-                    DischargeCoefficient = dischargeCoefficient
+                    CorrectionCoefficient = correctionCoefficient
                 }
             };
 
@@ -1080,7 +1080,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
 
             var weirFormula = weir.WeirFormula as SimpleWeirFormula;
             Assert.IsNotNull(weirFormula);
-            Assert.That(weirFormula.DischargeCoefficient, Is.EqualTo(dischargeCoefficient));
+            Assert.That(weirFormula.CorrectionCoefficient, Is.EqualTo(correctionCoefficient));
         }
 
         [Test]
@@ -1126,14 +1126,14 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
             var weirName = TestSewerNetworkProvider.WeirName;
             var crestWidth = 3.3;
             var crestLevel = -2.1;
-            var dischargeCoefficient = 0.8;
+            var correctionCoefficient = 0.8;
             var weirToAdd = new GwswStructureWeir(weirName)
             {
                 CrestWidth = crestWidth,
                 CrestLevel = crestLevel,
                 WeirFormula = new SimpleWeirFormula
                 {
-                    DischargeCoefficient = dischargeCoefficient
+                    CorrectionCoefficient = correctionCoefficient
                 }
             };
 
@@ -1155,7 +1155,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
 
             var weirFormula = weir.WeirFormula as SimpleWeirFormula;
             Assert.IsNotNull(weirFormula);
-            Assert.That(weirFormula.DischargeCoefficient, Is.EqualTo(dischargeCoefficient));
+            Assert.That(weirFormula.CorrectionCoefficient, Is.EqualTo(correctionCoefficient));
         }
 
         [Test]

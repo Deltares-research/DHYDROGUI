@@ -129,7 +129,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
             var expectedPliFileName = weirName + ".pli";
             var expectedCrestLevelString = $"{weirName}_crest_level.tim";
             var expectedCrestWidth = 2.58;
-            var expectedLateralContraction = 0.34;
+            var expectedCorrectionCoeff = 0.34;
 
             var fmModel = new WaterFlowFMModel
             {
@@ -139,7 +139,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
             {
                 Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(2, 2) }),
                 CrestWidth = expectedCrestWidth,
-                WeirFormula = new SimpleWeirFormula { LateralContraction = expectedLateralContraction},
+                WeirFormula = new SimpleWeirFormula { CorrectionCoefficient = expectedCorrectionCoeff},
                 UseCrestLevelTimeSeries = true
             };
             fmModel.Area.Weirs.Add(weir2D);
@@ -157,7 +157,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
                 CheckCommon2DDelftIniProperties(structureCategory, weirName, expectedType, expectedPliFileName);
                 CheckKeyValuePair(structureCategory, StructureRegion.CrestLevel.Key, expectedCrestLevelString);
                 CheckKeyValuePair(structureCategory, StructureRegion.CrestWidth.Key, expectedCrestWidth);
-                CheckKeyValuePair(structureCategory, StructureRegion.LatContrCoeff.Key, expectedLateralContraction);
+                CheckKeyValuePair(structureCategory, StructureRegion.CorrectionCoeff.Key, expectedCorrectionCoeff);
             }
             finally
             {
@@ -178,7 +178,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
             var expectedPliFileName = weirName + ".pli";
             var expectedCrestLevel = 1.12;
             var expectedCrestWidth = 2.58;
-            var expectedLateralContraction = 0.34;
+            var expectedCorrectionCoef = 0.34;
 
             var fmModel = new WaterFlowFMModel
             {
@@ -189,7 +189,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
                 Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(2, 2) }),
                 CrestLevel = expectedCrestLevel,
                 CrestWidth = expectedCrestWidth,
-                WeirFormula = new SimpleWeirFormula { LateralContraction = expectedLateralContraction }
+                WeirFormula = new SimpleWeirFormula { CorrectionCoefficient = expectedCorrectionCoef }
             };
             fmModel.Area.Weirs.Add(weir2D);
 
@@ -206,7 +206,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
                 CheckCommon2DDelftIniProperties(structureCategory, weirName, expectedType, expectedPliFileName);
                 CheckKeyValuePair(structureCategory, StructureRegion.CrestLevel.Key, expectedCrestLevel);
                 CheckKeyValuePair(structureCategory, StructureRegion.CrestWidth.Key, expectedCrestWidth);
-                CheckKeyValuePair(structureCategory, StructureRegion.LatContrCoeff.Key, expectedLateralContraction);
+                CheckKeyValuePair(structureCategory, StructureRegion.CorrectionCoeff.Key, expectedCorrectionCoef);
             }
             finally
             {

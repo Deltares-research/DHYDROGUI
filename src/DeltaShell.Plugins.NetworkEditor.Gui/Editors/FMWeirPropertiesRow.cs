@@ -81,16 +81,16 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors
             set { weir.CrestWidth = (value ? weir.Geometry.Length : 0.0); }
         }
 
-        [DisplayName("Lateral contraction coefficient")]
+        [DisplayName("Correction coefficient")]
         [DisplayFormat("0.00")]
-        public double SLateralContraction
+        public double SCorrectionCoefficient
         {
             get
             {
                 var f = formula as SimpleWeirFormula;
                 if (f != null)
                 {
-                    return f.LateralContraction;
+                    return f.CorrectionCoefficient;
                 }
                 return 0.0;
             }
@@ -99,7 +99,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors
                 var f = formula as SimpleWeirFormula;
                 if (f != null)
                 {
-                    f.LateralContraction = value;
+                    f.CorrectionCoefficient = value;
                 }
             }
         }

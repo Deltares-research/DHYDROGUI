@@ -393,8 +393,7 @@ namespace DeltaShell.Plugins.NGHS.IntegrationTests
                 FlowDirection = FlowDirection.Both,
                 WeirFormula = new SimpleWeirFormula
                 {
-                    LateralContraction = 0.9,
-                    DischargeCoefficient = 1.0
+                    CorrectionCoefficient = 0.9
                 }
             });
             var lineString = new LineString(new []{new Coordinate(0,0), new Coordinate(1,1)});            

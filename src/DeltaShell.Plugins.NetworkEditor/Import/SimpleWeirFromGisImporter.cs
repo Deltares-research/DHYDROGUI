@@ -147,11 +147,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Import
                 }
                 if (columnNameDC != null)
                 {
-                    formula.DischargeCoefficient = Convert.ToDouble(feature.Attributes[columnNameDC]);
+                    formula.CorrectionCoefficient *= Convert.ToDouble(feature.Attributes[columnNameDC]);
                 }
                 if (columnNameLC != null)
                 {
-                    formula.LateralContraction = Convert.ToDouble(feature.Attributes[columnNameLC]);
+                    formula.CorrectionCoefficient = Convert.ToDouble(feature.Attributes[columnNameLC]);
                 }
             }
             catch (Exception e)
