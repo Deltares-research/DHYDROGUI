@@ -189,7 +189,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid.DeltaresUGrid
             Assert.AreEqual(100, node2.Geometry.Coordinate.Y);
 
             Assert.AreEqual("manhole2 long", manhole2.LongName);
-            Assert.AreEqual(200, manhole2.Geometry.Coordinate.X);
+            Assert.AreEqual(201, manhole2.Geometry.Coordinate.X);
             Assert.AreEqual(50, manhole2.Geometry.Coordinate.Y);
             Assert.AreEqual(2, manhole2.Compartments.Count);
 

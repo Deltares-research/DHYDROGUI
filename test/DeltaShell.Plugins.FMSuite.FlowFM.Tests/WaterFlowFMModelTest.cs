@@ -1382,7 +1382,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             //model.NetworkDiscretization.Clear();
             //HydroNetworkHelper.GenerateDiscretization(model.NetworkDiscretization,true, true, 10d, false, 10d, false, false, true, 10d);
             HydroNetworkHelper.GenerateDiscretization(model.NetworkDiscretization,true, false, 10d, false, 10d, false, false, true, 10d);
-            Assert.That(model.NetworkDiscretization.Locations.Values.Count, Is.EqualTo(26));// auto generated, so no double points!
+            Assert.That(model.NetworkDiscretization.Locations.Values.Count, Is.EqualTo(27));// auto generated, so no double points!
 
             model.Grid = UnstructuredGridTestHelper.GenerateRegularGrid(100, 100, 2, 2, 0, 0);
             //create ring around grid and rural
