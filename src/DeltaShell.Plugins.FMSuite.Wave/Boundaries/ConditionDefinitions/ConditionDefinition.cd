@@ -1,0 +1,251 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Shapes.GaussShape">
+    <Position X="14.25" Y="6.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAgAAAQAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Boundaries\ConditionDefinitions\Shapes\GaussShape.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Shapes.JonswapShape">
+    <Position X="16.5" Y="6.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAgAAAAA=</HashCode>
+      <FileName>Boundaries\ConditionDefinitions\Shapes\JonswapShape.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Shapes.PiersonMoskowitzShape">
+    <Position X="18.75" Y="6.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Boundaries\ConditionDefinitions\Shapes\PiersonMoskowitzShape.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Shapes.BoundaryConditionShapeFactory" Collapsed="true">
+    <Position X="21.25" Y="6.5" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAARAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Boundaries\ConditionDefinitions\Shapes\BoundaryConditionShapeFactory.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.SpatiallyDefinedDataComponents.UniformDataComponent&lt;T&gt;">
+    <Position X="2.25" Y="6.25" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAgAAAAAAAAAAAAABAAAAAQAAAAAAA=</HashCode>
+      <FileName>Boundaries\ConditionDefinitions\SpatiallyDefinedDataComponents\UniformDataComponent.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.SpatiallyDefinedDataComponents.SpatiallyVaryingDataComponent&lt;T&gt;">
+    <Position X="5.25" Y="6.25" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAgAQAAAAAAAEAAABAAAAAQBAAAAAA=</HashCode>
+      <FileName>Boundaries\ConditionDefinitions\SpatiallyDefinedDataComponents\SpatiallyVaryingDataComponent.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.ForcingTypeDefinedParameters.ConstantParameters&lt;TSpreading&gt;">
+    <Position X="2.25" Y="12.75" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAABAAAAAAgACAAAAAAAAAAAAAAAAAAEAAAABI=</HashCode>
+      <FileName>Boundaries\ConditionDefinitions\ForcingTypeDefinedParameters\ConstantParameters.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.ForcingTypeDefinedParameters.FileBasedParameters">
+    <Position X="5.5" Y="12.75" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAABAAAAAAAA=</HashCode>
+      <FileName>Boundaries\ConditionDefinitions\ForcingTypeDefinedParameters\FileBasedParameters.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.ForcingTypeDefinedParameters.TimeDependentParameters&lt;TSpreading&gt;">
+    <Position X="8.75" Y="12.75" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAgAAAAAAAAAAAAAIAAAAAAAAAAAAA=</HashCode>
+      <FileName>Boundaries\ConditionDefinitions\ForcingTypeDefinedParameters\TimeDependentParameters.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spreading.DegreesDefinedSpreading">
+    <Position X="2.5" Y="18.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAgAAAAAAAgAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Boundaries\ConditionDefinitions\Spreading\DegreesDefinedSpreading.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spreading.PowerDefinedSpreading">
+    <Position X="5.25" Y="18.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAgAAAAAAAAAAAAAAQAAAAAAAAAAAA=</HashCode>
+      <FileName>Boundaries\ConditionDefinitions\Spreading\PowerDefinedSpreading.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spreading.SpreadingConversion">
+    <Position X="8.75" Y="16.5" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>ACAAAAAAAAAAAAAAAAAAAAAAABAAgAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Boundaries\ConditionDefinitions\Spreading\SpreadingConversion.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.SpatiallyDefinedDataComponents.SpatiallyDefinedDataComponentFactory" Collapsed="true">
+    <Position X="8.5" Y="6.25" Width="4.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEACAABAAAAABAAACAgAABAAIAAgCAAABEgIAAA=</HashCode>
+      <FileName>Boundaries\ConditionDefinitions\SpatiallyDefinedDataComponents\SpatiallyDefinedDataComponentFactory.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.ForcingTypeDefinedParameters.ForcingTypeDefinedParametersFactory" Collapsed="true">
+    <Position X="12.75" Y="12.75" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>ABAAAAAAAAAAAAAAACAAAAAEAAAAAFAAAEAAAAAIAAA=</HashCode>
+      <FileName>Boundaries\ConditionDefinitions\ForcingTypeDefinedParameters\ForcingTypeDefinedParametersFactory.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Interface Name="DeltaShell.Plugins.FMSuite.Wave.Boundaries.IWaveBoundary">
+    <Position X="16.75" Y="0.5" Width="4.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAFAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Boundaries\IWaveBoundary.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="ConditionDefinition" />
+    </ShowAsAssociation>
+  </Interface>
+  <Interface Name="DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.IWaveBoundaryConditionDefinition">
+    <Position X="16.75" Y="2.25" Width="4.25" />
+    <AssociationLine Name="PeriodType" Type="DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.BoundaryConditionPeriodType" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="20.438" Y="3.247" />
+        <Point X="20.438" Y="3.622" />
+        <Point X="27.75" Y="3.622" />
+        <Point X="27.75" Y="4.5" />
+      </Path>
+    </AssociationLine>
+    <AssociationLine Name="Shape" Type="DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Shapes.IBoundaryConditionShape" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="19.25" Y="3.247" />
+        <Point X="19.25" Y="4.999" />
+        <Point X="19" Y="4.999" />
+      </Path>
+    </AssociationLine>
+    <AssociationLine Name="DataComponent" Type="DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.SpatiallyDefinedDataComponents.ISpatiallyDefinedDataComponent" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="17.188" Y="3.247" />
+        <Point X="17.188" Y="3.5" />
+        <Point X="7.125" Y="3.5" />
+        <Point X="7.125" Y="4.999" />
+        <Point X="6.75" Y="4.999" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAAEAAAAAAAAAAAIAAACAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Boundaries\ConditionDefinitions\IWaveBoundaryConditionDefinition.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="PeriodType" />
+      <Property Name="Shape" />
+      <Property Name="DataComponent" />
+    </ShowAsAssociation>
+  </Interface>
+  <Interface Name="DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Shapes.IBoundaryConditionShape">
+    <Position X="15.75" Y="4.5" Width="3.25" />
+    <InheritanceLine Type="DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Shapes.IVisitableBoundaryConditionShape" ManuallyRouted="true" FixedToPoint="true">
+      <Path>
+        <Point X="17.375" Y="4.312" />
+        <Point X="17.375" Y="4.5" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Boundaries\ConditionDefinitions\Shapes\IBoundaryConditionShape.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.SpatiallyDefinedDataComponents.ISpatiallyDefinedDataComponent">
+    <Position X="3.75" Y="4.5" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Boundaries\ConditionDefinitions\SpatiallyDefinedDataComponents\ISpatiallyDefinedDataComponent.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Shapes.IVisitableBoundaryConditionShape" Collapsed="true">
+    <Position X="15.75" Y="3.75" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Boundaries\ConditionDefinitions\Shapes\IVisitableBoundaryConditionShape.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Shapes.IBoundaryConditionShapeFactory">
+    <Position X="21.25" Y="4.5" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAARAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Boundaries\ConditionDefinitions\Shapes\IBoundaryConditionShapeFactory.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.SpatiallyDefinedDataComponents.IVisitableSpatiallyDefinedDataComponent" Collapsed="true">
+    <Position X="3.75" Y="3.75" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Boundaries\ConditionDefinitions\SpatiallyDefinedDataComponents\IVisitableSpatiallyDefinedDataComponent.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.ForcingTypeDefinedParameters.IForcingTypeDefinedParameters" Collapsed="true">
+    <Position X="3.25" Y="10.25" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Boundaries\ConditionDefinitions\ForcingTypeDefinedParameters\IForcingTypeDefinedParameters.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.ForcingTypeDefinedParameters.IVisitableForcingTypeDefinedParameters" Collapsed="true">
+    <Position X="3.25" Y="9.5" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Boundaries\ConditionDefinitions\ForcingTypeDefinedParameters\IVisitableForcingTypeDefinedParameters.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spreading.IBoundaryConditionSpreading" Collapsed="true">
+    <Position X="3.25" Y="17.25" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Boundaries\ConditionDefinitions\Spreading\IBoundaryConditionSpreading.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.Spreading.IVisitableBoundaryConditionSpreading" Collapsed="true">
+    <Position X="3.25" Y="16.25" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Boundaries\ConditionDefinitions\Spreading\IVisitableBoundaryConditionSpreading.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.SpatiallyDefinedDataComponents.ISpatiallyDefinedDataComponentFactory">
+    <Position X="8.5" Y="4.5" Width="4.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAA=</HashCode>
+      <FileName>Boundaries\ConditionDefinitions\SpatiallyDefinedDataComponents\ISpatiallyDefinedDataComponentFactory.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.ForcingTypeDefinedParameters.IForcingTypeDefinedParametersFactory">
+    <Position X="12.75" Y="10" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>ABAAAAAAAAAAAAAAACAAAAAEAAAAAFAAAEAAAAAIAAA=</HashCode>
+      <FileName>Boundaries\ConditionDefinitions\ForcingTypeDefinedParameters\IForcingTypeDefinedParametersFactory.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Enum Name="DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.BoundaryConditionPeriodType" Collapsed="true">
+    <Position X="26.25" Y="4.5" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAA=</HashCode>
+      <FileName>Boundaries\ConditionDefinitions\BoundaryConditionPeriodType.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

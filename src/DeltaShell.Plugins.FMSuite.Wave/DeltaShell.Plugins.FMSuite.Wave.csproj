@@ -299,6 +299,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Boundaries\BoundaryModel.cd" />
+    <None Include="Boundaries\ConditionDefinitions\ConditionDefinition.cd" />
     <None Include="dwave-properties.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
