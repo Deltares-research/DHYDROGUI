@@ -8,7 +8,7 @@ using System.IO;
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
 {
     [TestFixture]
-    [Category("Build.Acceptance")]
+    [Category("Build.Acceptance.SaveLoad")]
     [Category(TestCategory.Slow)]
     [Category(TestCategory.WindowsForms)]
     public class GwswDataPersistenceAcceptanceTests

@@ -13,7 +13,7 @@ using NUnit.Framework;
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Run
 {
     [TestFixture]
-    [Category("Build.Acceptance")]
+    [Category("Build.Acceptance.Run")]
     [Category(TestCategory.Slow)]
     [Category(TestCategory.WindowsForms)]
     public class RunGwswModelAcceptanceTests
