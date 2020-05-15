@@ -1,7 +1,10 @@
 ﻿using System.Linq;
+using DelftTools.Hydro;
+using DelftTools.Hydro.SewerFeatures;
 using Deltares.UGrid.Api;
 using DeltaShell.NGHS.IO.Helpers;
 using GeoAPI.Extensions.Coverages;
+using GeoAPI.Extensions.Feature;
 using ProtoBuf;
 
 namespace DeltaShell.NGHS.IO.Grid.GridGeomApi
@@ -15,7 +18,10 @@ namespace DeltaShell.NGHS.IO.Grid.GridGeomApi
             var branches = discretization.Network.Branches;
 
             var branchesIndexLookup = branches.ToIndexDictionary();
-            var nodesIndexLookup = discretization.Network.Nodes.ToIndexDictionary();
+
+            var compartments = discretization.Network.Nodes.OfType<Manhole>().SelectMany(m => m.Compartments).OfType<object>();
+            var networkNodes = discretization.Network.Nodes.OfType<HydroNode>();
+            var nodesIndexLookup = networkNodes.Concat(compartments).ToList().ToIndexDictionary();
 
             nBranches = branches.Count;
             branchLength = new double[nBranches];
@@ -26,8 +32,17 @@ namespace DeltaShell.NGHS.IO.Grid.GridGeomApi
             {
                 var branch = branches[i];
                 branchLength[i] = branch.Length;
-                sourcenodeid[i] = nodesIndexLookup[branch.Source];
-                targetnodeid[i] = nodesIndexLookup[branch.Target];
+
+                if (branch is SewerConnection connection)
+                {
+                    sourcenodeid[i] = nodesIndexLookup[connection.SourceCompartment];
+                    targetnodeid[i] = nodesIndexLookup[connection.TargetCompartment];
+                }
+                else
+                {
+                    sourcenodeid[i] = nodesIndexLookup[branch.Source];
+                    targetnodeid[i] = nodesIndexLookup[branch.Target];
+                }
             }
 
             nMeshPoints = discretisationPoints.Count;
