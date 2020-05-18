@@ -1,5 +1,4 @@
 ﻿using DelftTools.TestUtils;
-using DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance;
 using DelftTools.Utils.IO;
 using NUnit.Framework;
 using System;
@@ -8,7 +7,7 @@ using System.IO;
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
 {
     [TestFixture]
-    [Category("Build.Acceptance.SaveLoad")]
+    [Category("Build.Acceptance.SaveLoad.GWSW")]
     [Category(TestCategory.Slow)]
     [Category(TestCategory.WindowsForms)]
     public class GwswDataPersistenceAcceptanceTests
