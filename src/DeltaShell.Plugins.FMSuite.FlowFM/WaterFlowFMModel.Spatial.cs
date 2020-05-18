@@ -817,6 +817,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 {
                     gridEditingCacheOfCoverageWithItsOwnPointCloudValues[originalCoverage] = originalCoverage.GetPointClouds();
                 }
+                foreach (var cov in
+                    valueConverter.SpatialOperationSet.GetAllFeatureProviders()
+                        .OfType<CoverageFeatureProvider>()
+                        .Select(fp => fp.Coverage)
+                        .OfType<UnstructuredGridCoverage>().Except(new[] { originalCoverage }))
+                {
+                    gridEditingCacheOfCoverageWithItsOwnPointCloudValues[cov] = cov.GetPointClouds();
+                }
+
+                var convertedValue = valueConverter.ConvertedValue as UnstructuredGridCoverage;
+                if (convertedValue != null)
+                    gridEditingCacheOfCoverageWithItsOwnPointCloudValues[convertedValue] = convertedValue.GetPointClouds();
             }
             else
             {
@@ -852,10 +864,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                         UpdateCoverageAfterGridStateChange(originalCoverage);
                         originalCoverage.EndEdit();
                     }
+                    foreach (var cov in
+                        valueConverter.SpatialOperationSet.GetAllFeatureProviders()
+                            .OfType<CoverageFeatureProvider>()
+                            .Select(fp => fp.Coverage)
+                            .OfType<UnstructuredGridCoverage>().Except(new[] { originalCoverage }))
+                    {
+                        UpdateCoverageAfterGridStateChange(cov);
+                    }
+                    UpdateCoverageAfterGridStateChange(valueConverter.ConvertedValue as UnstructuredGridCoverage);
                 }
                 finally
                 {
                     dataItem.ValueConverter = valueConverter;
+                    valueConverter.SpatialOperationSet.SetDirty();
                 }
             }
             else
