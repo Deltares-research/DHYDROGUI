@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Roughness;
 using DelftTools.Shell.Core.Properties;
 using DelftTools.Utils.IO;
 using DeltaShell.NGHS.IO.DataObjects.Friction;
-using DeltaShell.NGHS.IO.DataObjects.InitialConditions;
 using DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition;
 using DeltaShell.NGHS.IO.FileWriters.Location;
 using DeltaShell.NGHS.IO.FileWriters.Network;
@@ -28,16 +26,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         public const string CROSS_SECTION_DEFINITION_FILE_NAME = "crsdef.ini";
         public const string CROSS_SECTION_LOCATION_FILE_NAME = "crsloc.ini";
         public const string STRUCTURES_FILE_NAME = "structures.ini";
-        public const string INITIAL_CONDITIONS_FILE_NAME = "initialFields.ini";
 
-        public static void Write1D2DFeatures(
-            string targetMduFilePath, 
-            WaterFlowFMModelDefinition modelDefinition, 
-            IHydroNetwork network, 
-            HydroArea area, 
-            IEnumerable<RoughnessSection> roughnessSections, 
-            IEnumerable<ChannelFrictionDefinition> channelFrictionDefinitions,
-            IEnumerable<ChannelInitialConditionDefinition> channelInitialConditionDefinitions)
+        public static void Write1D2DFeatures(string targetMduFilePath, WaterFlowFMModelDefinition modelDefinition, IHydroNetwork network, HydroArea area, IEnumerable<RoughnessSection> roughnessSections, IEnumerable<ChannelFrictionDefinition> channelFrictionDefinitions)
         {
             WriteNodeFile(targetMduFilePath, modelDefinition, network);
             WriteBranchFile(targetMduFilePath, modelDefinition, network.Branches);
@@ -45,7 +35,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             WriteObservationPointsFiles(targetMduFilePath, modelDefinition, network);
             WriteStructuresFiles(targetMduFilePath, modelDefinition, network, area);
             WriteRoughnessFiles(targetMduFilePath, modelDefinition, roughnessSections, channelFrictionDefinitions);
-            WriteInitialConditionFiles(targetMduFilePath, modelDefinition, channelInitialConditionDefinitions);
         }
 
         private static void WriteObservationPointsFiles(string targetMduFilePath,
@@ -200,40 +189,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             
         }
 
-        private static void WriteInitialConditionFiles(
-            string targetMduFilePath,
-            WaterFlowFMModelDefinition modelDefinition,
-            IEnumerable<ChannelInitialConditionDefinition> channelInitialConditionDefinitions)
-        {
-            var directoryName = Path.GetDirectoryName(targetMduFilePath);
-            if (directoryName == null) return;
-
-            modelDefinition.SetModelProperty(KnownProperties.IniFieldFile, INITIAL_CONDITIONS_FILE_NAME);
-
-            var globalInitialConditionQuantity1D = (InitialConditionQuantity)(int)modelDefinition.GetModelProperty(GuiProperties.InitialConditionGlobalQuantity1D).Value;
-            double globalInitialConditionValue1D = (double)modelDefinition.GetModelProperty(GuiProperties.InitialConditionGlobalValue1D).Value;
-
-            // write initialFields.ini
-            var initialConditionFilePath = Path.Combine(directoryName, INITIAL_CONDITIONS_FILE_NAME);
-            FileWritingUtils.ThrowIfFileNotExists(initialConditionFilePath, directoryName,
-                filename => InitialConditionInitialFieldsFileWriter.WriteFile(filename, globalInitialConditionQuantity1D));
-
-            // write Initial<quantity>.ini
-            var intialConditionDefinitionFilename =
-                Path.Combine(directoryName, GetInitialConditionDefinitionFilename(globalInitialConditionQuantity1D));
-            FileWritingUtils.ThrowIfFileNotExists(intialConditionDefinitionFilename, directoryName,
-                filename => ChannelInitialConditionDefinitionFileWriter.WriteFile(
-                    filename, channelInitialConditionDefinitions, globalInitialConditionQuantity1D, globalInitialConditionValue1D));
-        }
-
         private static string GetRoughnessFilename(RoughnessSection roughnessSection)
         {
             return "roughness-" + roughnessSection.Name + ".ini";
-        }
-
-        private static string GetInitialConditionDefinitionFilename(InitialConditionQuantity quantity)
-        {
-            return $"Initial{quantity}.ini";
         }
     }
 }

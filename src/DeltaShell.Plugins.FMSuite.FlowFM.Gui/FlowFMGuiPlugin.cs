@@ -33,7 +33,6 @@ using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors.ModelFeatureCoordinateDataEditor;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms.Friction;
-using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms.InitialConditions;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.GraphicsProviders;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.PresentationObjects;
@@ -109,7 +108,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             yield return new FmMeteoItemListNodePresenter { GuiPlugin = this };
             yield return new ChannelFrictionDefinitionsWrapperNodePresenter { GuiPlugin = this };
             yield return new PipeFrictionDefinitionsWrapperNodePresenter { GuiPlugin = this };
-            yield return new ChannelInitialConditionDefinitionsWrapperNodePresenter { GuiPlugin = this };
         }
         public override IEnumerable<ViewInfo> GetViewInfoObjects()
         {
@@ -458,7 +456,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
 
             yield return CreateChannelFrictionDefinitionsWrapperViewInfo(() => Gui);
             yield return CreatePipeFrictionDefinitionsWrapperViewInfo(() => Gui);
-            yield return CreateChannelInitialConditionDefinitionsWrapperViewInfo(() => Gui);
         }
 
         private static ViewInfo<ChannelFrictionDefinitionsWrapper, ILayer, ChannelFrictionDefinitionsView> CreateChannelFrictionDefinitionsWrapperViewInfo(Func<IGui> getGui)
@@ -533,52 +530,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                     if (centralMap == null) return;
 
                     view.ZoomToFeature = feature => centralMap.MapView.EnsureVisible(feature);
-                }
-            };
-        }
-
-        private static ViewInfo<ChannelInitialConditionDefinitionsWrapper, ILayer, ChannelInitialConditionDefinitionsView> CreateChannelInitialConditionDefinitionsWrapperViewInfo(Func<IGui> getGui)
-        {
-            return new ViewInfo<ChannelInitialConditionDefinitionsWrapper, ILayer, ChannelInitialConditionDefinitionsView>
-            {
-                Description = "1D Initial Conditions - Channels",
-                GetViewName = (view, layer) => layer.Name,
-                GetViewData = channelInitialConditionDefinitionsWrapper =>
-                {
-                    return getGui().DocumentViews
-                        .OfType<ProjectItemMapView>()
-                        .Select(projectItemMapView => projectItemMapView.MapView.GetLayerForData(channelInitialConditionDefinitionsWrapper))
-                        .FirstOrDefault(layerData => layerData != null);
-                },
-                CompositeViewType = typeof(ProjectItemMapView),
-                GetCompositeViewData = channelInitialConditionDefinitionsWrapper => getGui().Application.Project.RootFolder
-                    .GetAllItemsRecursive()
-                    .OfType<WaterFlowFMModel>()
-                    .First(waterFlowFmModel => Equals(channelInitialConditionDefinitionsWrapper.WrappedData, waterFlowFmModel.ChannelInitialConditionDefinitions)),
-                AfterCreate = (view, channelInitialConditionDefinitionsWrapper) =>
-                {
-                    var gui = getGui();
-                    var flowFmModel = gui.Application.Project.RootFolder.GetAllItemsRecursive()
-                        .OfType<WaterFlowFMModel>()
-                        .First(waterFlowFmModel => Equals(channelInitialConditionDefinitionsWrapper.WrappedData, waterFlowFmModel.ChannelInitialConditionDefinitions));
-
-                    view.SetWaterFlowFmModel(flowFmModel);
-
-                    view.SetOpenGlobalInitialConditionSettingsMethod(() =>
-                    {
-                        gui.DocumentViewsResolver.OpenViewForData(new FmValidationShortcut
-                        {
-                            FlowFmModel = flowFmModel,
-                            TabName = "Initial Conditions"
-                        });
-                    });
-
-                    var centralMap = gui.DocumentViews
-                        .OfType<ProjectItemMapView>()
-                        .First(vi => vi.MapView.GetLayerForData(channelInitialConditionDefinitionsWrapper) != null);
-                    if (centralMap == null) return;
-
-                    view.SetZoomToFeatureMethod(feature => centralMap.MapView.EnsureVisible(feature));
                 }
             };
         }

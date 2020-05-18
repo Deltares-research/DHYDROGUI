@@ -74,7 +74,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         public const string FrictionType = "UnifFrictType";
         public const string WaveModelNr = "Wavemodelnr";
         public const string WaterLevIni = "WaterLevIni";
-        public const string IniFieldFile = "IniFieldFile";
         public const string COMFile = "comfile";
         public const string SolverType = "Icgsolver";
         public const string SecondaryFlow = "SecondaryFlow";
@@ -148,11 +147,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
 
         public const string UnifFrictCoefChannels = "UnifFrictCoefChannels";
         public const string UnifFrictTypeChannels = "UnifFrictTypeChannels";
-
-        public const string InitialConditionGlobalValue1D = "InitialConditionGlobalValue1D";
-        public const string InitialConditionGlobalQuantity1D = "InitialConditionGlobalQuantity1D";
-
-        
     }
 
 

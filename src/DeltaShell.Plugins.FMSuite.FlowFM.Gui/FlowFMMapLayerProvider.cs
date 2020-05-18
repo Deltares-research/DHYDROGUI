@@ -22,7 +22,6 @@ using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.Common.Gui;
 using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.NGHS.IO.DataObjects.Friction;
-using DeltaShell.NGHS.IO.DataObjects.InitialConditions;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.Common.Layers;
@@ -69,9 +68,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
 
         private static readonly ConditionalWeakTable<WaterFlowFMModel, FrictionGroupLayerData> frictionGroupLayerDataMapping =
             new ConditionalWeakTable<WaterFlowFMModel, FrictionGroupLayerData>();
-
-        private static readonly ConditionalWeakTable<WaterFlowFMModel, InitialConditionGroupLayerData> initialConditionGroupLayerDataMapping =
-            new ConditionalWeakTable<WaterFlowFMModel, InitialConditionGroupLayerData>();
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(FlowFMMapLayerProvider));
 
@@ -358,33 +354,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 };
             }
 
-            if (data is InitialConditionGroupLayerData)
-            {
-                return new GroupLayer("Initial Conditions 1D")
-                {
-                    LayersReadOnly = true,
-                    Selectable = false,
-                    NameIsReadOnly = true
-                };
-            }
-
-            if (data is ChannelInitialConditionDefinitionsWrapper channelInitialConditionDefinitionsWrapper)
-            {
-                return new VectorLayer("Channels")
-                {
-                    Visible = false,
-                    Selectable = true,
-                    NameIsReadOnly = true,
-                    CanBeRemovedByUser = false,
-                    DataSource = new FeatureCollection
-                    {
-                        FeatureType = typeof(ChannelInitialConditionDefinition),
-                        Features = (IList)channelInitialConditionDefinitionsWrapper.WrappedData,
-                        CoordinateSystem = ((InitialConditionGroupLayerData)parent).CoordinateSystem
-                    }
-                };
-            }
-
             return null;
         }
 
@@ -445,10 +414,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             return data is WaterFlowFMModel
                    || data is IEventedList<Model1DBoundaryNodeData>
                    || data is IEventedList<Model1DLateralSourceData>
-                   || data is FeatureCoverage && IsCoverageLeveeBreachWidth((FeatureCoverage) data)
+                   || data is FeatureCoverage && IsCoverageLeveeBreachWidth((FeatureCoverage)data)
                    || data is Links1D2DCoverage
-                   || data is IEventedList<ILink1D2D> &&
-                   (parentObject is WaterFlowFMModel || parentObject is FMMapFileFunctionStore)
+                   || data is IEventedList<ILink1D2D> && (parentObject is WaterFlowFMModel || parentObject is FMMapFileFunctionStore)
                    || data is IGrouping<string, IFunction>
                    || data is FMMapFileFunctionStore
                    || data is FMHisFileFunctionStore
@@ -458,12 +426,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                    || data is FMSnappedFeaturesGroupLayerData
                    || data is FMOutputSnappedFeaturesGroupLayerData
                    || data is CoverageDepthLayersList
-                   || data is IEventedList<Feature2D> // Boundaries and sources&sinks
+                   || data is IEventedList<Feature2D>  // Boundaries and sources&sinks
                    || data is FrictionGroupLayerData
                    || data is ChannelFrictionDefinitionsWrapper
-                   || data is PipeFrictionDefinitionsWrapper
-                   || data is InitialConditionGroupLayerData
-                   || data is ChannelInitialConditionDefinitionsWrapper;
+                   || data is PipeFrictionDefinitionsWrapper;
         }
 
         private bool IsCoverageLeveeBreachWidth(INameable data)
@@ -491,13 +457,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                     frictionGroupLayerDataMapping.Add(model, frictionGroupLayerDataElement);
                 }
                 yield return frictionGroupLayerDataElement;
-
-                if (!initialConditionGroupLayerDataMapping.TryGetValue(model, out var initialConditionGroupLayerDataElement))
-                {
-                    initialConditionGroupLayerDataElement = new InitialConditionGroupLayerData(model);
-                    initialConditionGroupLayerDataMapping.Add(model, initialConditionGroupLayerDataElement);
-                }
-                yield return initialConditionGroupLayerDataElement;
 
                 yield return model.BoundaryConditions1DDataItemSet.AsEventedList<Model1DBoundaryNodeData>();
                 yield return model.LateralSourcesDataItemSet.AsEventedList<Model1DLateralSourceData>();
@@ -643,14 +602,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                     yield return childLayerObject;
                 }
             }
-
-            if (data is InitialConditionGroupLayerData initialConditionGroupLayerData)
-            {
-                foreach (var childLayerObject in initialConditionGroupLayerData.ChildLayerObjects())
-                {
-                    yield return childLayerObject;
-                }
-            }
         }
 
         public void AfterCreate(ILayer layer, object layerObject, object parentObject, IDictionary<ILayer, object> objectsLookup)
@@ -670,7 +621,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                     model.InitialWaterLevel,
                     ChannelFrictionDefinitionsWrapper.GetInstance(model.ChannelFrictionDefinitions),
                     PipeFrictionDefinitionsWrapper.GetInstance(model.PipeFrictionDefinitions),
-                    ChannelInitialConditionDefinitionsWrapper.GetInstance(model.ChannelInitialConditionDefinitions),
                     model.RoughnessSections,
                     model.NetworkDiscretization,
                     model.Links,
@@ -923,23 +873,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 yield return ChannelFrictionDefinitionsWrapper.GetInstance(model.ChannelFrictionDefinitions);
                 yield return PipeFrictionDefinitionsWrapper.GetInstance(model.PipeFrictionDefinitions);
                 yield return model.RoughnessSections;
-            }
-        }
-
-        private class InitialConditionGroupLayerData
-        {
-            private readonly WaterFlowFMModel model;
-
-            public InitialConditionGroupLayerData(WaterFlowFMModel model)
-            {
-                this.model = model;
-            }
-
-            public ICoordinateSystem CoordinateSystem => model.CoordinateSystem;
-
-            public IEnumerable<object> ChildLayerObjects()
-            {
-                yield return ChannelInitialConditionDefinitionsWrapper.GetInstance(model.ChannelInitialConditionDefinitions);
             }
         }
     }

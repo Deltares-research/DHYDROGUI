@@ -38,7 +38,6 @@
   <ItemGroup>
     <Compile Include="CatchmentTest.cs" />
     <Compile Include="ChannelTest.cs" />
-    <Compile Include="InitialConditionQuantityTypeConverterTest.cs" />
     <Compile Include="RoughnessHelperTest.cs" />
     <Compile Include="SewerFeatures\CompartmentTest.cs" />
     <Compile Include="CrossSectionBranchFeatureTest.cs" />

@@ -31,14 +31,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         /// <exception cref="FileReadingException">When the file is empty or contains invalid information.</exception>
         public static void ReadFile(string filePath, WaterFlowFMModelDefinition modelDefinition, INetwork network, IEventedList<ChannelFrictionDefinition> channelFrictionDefinitions)
         {
-            if (!File.Exists(filePath)) throw new FileReadingException(string.Format(Resources.ReadFile_Could_not_read_file__0__properly__it_doesn_t_exist, filePath));
+            if (!File.Exists(filePath)) throw new FileReadingException(string.Format(Resources.ChannelFrictionDefinitionFileReader_ReadFile_Could_not_read_file__0__properly__it_doesn_t_exist_1, filePath));
 
             var categories = new DelftIniMultiLineReader().ReadDelftIniFile(filePath);
-            if (categories.Count == 0) throw new FileReadingException(string.Format(Resources.ReadFile_Could_not_read_file__0__properly__it_seems_empty, filePath));
+            if (categories.Count == 0) throw new FileReadingException(string.Format(Resources.ChannelFrictionDefinitionFileReader_ReadFile_Could_not_read_file__0__properly__it_seems_empty_1, filePath));
 
             // [Global]
             var globalCategory = categories.FirstOrDefault(category => category.Name.Equals(RoughnessDataRegion.GlobalIniHeader));
-            if (globalCategory == null) throw new FileReadingException(string.Format(Resources.ReadFile_Could_not_read_file__0__properly_no_global_property_was_found, filePath));
+            if (globalCategory == null) throw new FileReadingException(string.Format(Resources.ChannelFrictionDefinitionFileReader_ReadFile_Could_not_read_file__0__properly_no_global_property_was_found, filePath));
             SetGlobalDefinition(globalCategory, modelDefinition, filePath);
 
             // [Branch]
@@ -78,12 +78,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 var branchId = channelFrictionDefinitionCategory.ReadProperty<string>(SpatialDataRegion.BranchId.Key);
                 var branch = network.Branches.FirstOrDefault(b => b.Name == branchId);
                 if (!(branch is IChannel))
-                    throw new FileReadingException(string.Format(Resources.ChannelFrictionDefinitionFileReader_ReadFile_Branch___0___where_the_roughness_should_be_put_on_is_not_available_in_the_model1, branchId));
+                    throw new FileReadingException(string.Format(Resources.ChannelFrictionDefinitionFileReader_ReadFile_Branch___0___where_the_roughness_should_be_put_on_is_not_available_in_the_model1, filePath));
 
                 var channelFrictionDefinition = channelFrictionDefinitions.FirstOrDefault(cfd =>
                     cfd.Channel.Name.Equals(branch.Name, StringComparison.InvariantCultureIgnoreCase));
                 if (channelFrictionDefinition == null)
-                    throw new FileReadingException(string.Format(Resources.ChannelFrictionDefinitionFileReader_ReadFile_Branch___0___where_the_roughness_should_be_put_on_is_not_available_in_the_model1, branchId));
+                    throw new FileReadingException(string.Format(Resources.ChannelFrictionDefinitionFileReader_ReadFile_Branch___0___where_the_roughness_should_be_put_on_is_not_available_in_the_model1, filePath));
 
                 var functionTypeString = channelFrictionDefinitionCategory.ReadProperty<string>(RoughnessDataRegion.FunctionType.Key);
                 RoughnessFunction functionType = RoughnessHelper.ConvertStringToRoughnessFunction(functionTypeString);

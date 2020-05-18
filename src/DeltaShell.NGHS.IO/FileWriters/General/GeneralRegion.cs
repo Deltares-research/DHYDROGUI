@@ -52,9 +52,6 @@ namespace DeltaShell.NGHS.IO.FileWriters.General
         public const int Iterative1D2DCouplerMappingMajorVersion = 1;
         public const int Iterative1D2DCouplerMappingMinorVersion = 0;
 
-        public const int InitialConditionDataMajorVersion = 2;
-        public const int InitialConditionDataMinorVersion = 0;
-
 
         public static class FileTypeName
         {
@@ -75,7 +72,6 @@ namespace DeltaShell.NGHS.IO.FileWriters.General
             public const string RoughnessData = "roughness";
             public const string Retention = "retentions";
             public const string StorageNodes = "storageNodes";
-            public const string InitialConditionQuantity = "1dField";
         }
 
         public static readonly ConfigurationSetting FileVersion = new ConfigurationSetting(key:"fileVersion", description: "#File version. Do not edit this.");

@@ -355,18 +355,6 @@
     <Compile Include="Forms\FmMeteoSelectionDialog.Designer.cs">
       <DependentUpon>FmMeteoSelectionDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\InitialConditions\ChannelInitialConditionDefinitionsView.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Forms\InitialConditions\ChannelInitialConditionDefinitionsView.Designer.cs">
-      <DependentUpon>ChannelInitialConditionDefinitionsView.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\InitialConditions\ConstantSpatialChannelInitialConditionDefinitionsForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\InitialConditions\ConstantSpatialChannelInitialConditionDefinitionsForm.Designer.cs">
-      <DependentUpon>ConstantSpatialChannelInitialConditionDefinitionsForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\RefreshMainSectionWidthsDialog.xaml.cs">
       <DependentUpon>RefreshMainSectionWidthsDialog.xaml</DependentUpon>
     </Compile>
@@ -376,12 +364,10 @@
     <Compile Include="MapTools\Base1D2DLinksMapTool.cs" />
     <Compile Include="MapTools\GenerateLinksMapTool.cs" />
     <Compile Include="MapTools\MapTool1D2DLinksHelper.cs" />
-    <Compile Include="NodePresenters\ChannelInitialConditionDefinitionsWrapperNodePresenter.cs" />
     <Compile Include="NodePresenters\PipeFrictionDefinitionsWrapperNodePresenter.cs" />
     <Compile Include="NodePresenters\ChannelFrictionDefinitionsWrapperNodePresenter.cs" />
     <Compile Include="NodePresenters\FmMeteoItemListNodePresenter.cs" />
     <Compile Include="NodePresenters\FmMeteoItemNodePresenter.cs" />
-    <Compile Include="PresentationObjects\ChannelInitialConditionDefinitionsWrapper.cs" />
     <Compile Include="PresentationObjects\PipeFrictionDefinitionsWrapper.cs" />
     <Compile Include="PresentationObjects\ChannelFrictionDefinitionsWrapper.cs" />
     <Compile Include="Properties\PluginInfo.cs" />
@@ -554,9 +540,6 @@
     <EmbeddedResource Include="Forms\FmMeteoSelectionDialog.resx">
       <DependentUpon>FmMeteoSelectionDialog.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\InitialConditions\ConstantSpatialChannelInitialConditionDefinitionsForm.resx">
-      <DependentUpon>ConstantSpatialChannelInitialConditionDefinitionsForm.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Forms\WindSelectionDialog.resx">
       <DependentUpon>WindSelectionDialog.cs</DependentUpon>
     </EmbeddedResource>
@@ -697,7 +680,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>SubWCRev.exe "$(ProjectDir). " "$(ProjectDir)Properties\AssemblyInfo.cs.svn " "$(ProjectDir)Properties\AssemblyInfo.cs "</PreBuildEvent>
