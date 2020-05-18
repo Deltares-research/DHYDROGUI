@@ -20,7 +20,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
         /// <param name="forcingFilePath">The forcing file path.</param>
         /// <param name="thatcherHarlemanTimeLag">The Thatcher-Harleman time lag.</param>
         /// <param name="isEmbankment">Whether or not the feature is an embankment. </param>
-        /// <returns></returns>
+        /// <returns>
+        /// The created <see cref="DelftIniCategory" />.
+        /// </returns>
         public static DelftIniCategory CreateBoundaryBlock(string quantity, string locationFilePath,
                                                            string forcingFilePath, TimeSpan thatcherHarlemanTimeLag,
                                                            bool isEmbankment = false)

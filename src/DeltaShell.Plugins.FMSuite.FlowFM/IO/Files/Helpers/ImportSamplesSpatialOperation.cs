@@ -15,25 +15,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers
         /// <summary>
         /// Gets or sets the relative search cell size.
         /// </summary>
-        /// <value>
-        /// The relative search cell size.
-        /// </value>
         public double RelativeSearchCellSize { get; set; }
 
         /// <summary>
         /// Gets or sets the averaging method.
         /// </summary>
-        /// <value>
-        /// The averaging method.
-        /// </value>
         public GridCellAveragingMethod AveragingMethod { get; set; }
 
         /// <summary>
         /// Gets or sets the interpolation method.
         /// </summary>
-        /// <value>
-        /// The interpolation method.
-        /// </value>
         public SpatialInterpolationMethod InterpolationMethod { get; set; }
 
         /// <summary>
