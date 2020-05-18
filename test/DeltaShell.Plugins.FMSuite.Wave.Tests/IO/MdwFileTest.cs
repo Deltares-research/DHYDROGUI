@@ -706,7 +706,17 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
         [Category(NghsTestCategory.PerformanceDotTrace)]
         public void Load_TimeDependentSpatiallyVaryingBoundary_ShouldBeWithinExecutionTime()
         {
-            new MdwFile().Load(TestHelper.GetTestFilePath(@"read_wave_boundaries\time_dependent-spatially_varying.mdw"));
+            string mdwPath = TestHelper.GetTestFilePath(@"read_wave_boundaries\time_dependent-spatially_varying.mdw");
+            TimerMethod_LoadTimeDependentSpatiallyVaryingBoundary(mdwPath);
+        }
+
+        /// <summary>
+        /// Method to test by dot Trace. Should be public for setting thresholds.
+        /// </summary>
+        /// <param name="mdwPath"> The Mdw file path. </param>
+        public static void TimerMethod_LoadTimeDependentSpatiallyVaryingBoundary(string mdwPath)
+        {
+            new MdwFile().Load(mdwPath);
         }
 
         [Test]

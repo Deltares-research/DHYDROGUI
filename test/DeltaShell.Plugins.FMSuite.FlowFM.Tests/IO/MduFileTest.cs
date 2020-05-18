@@ -268,15 +268,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 var mduFile = new MduFile();
                 var area = new HydroArea();
 
-                PerformanceTestBridgePillarsImport(mduFile, testFilePath, area);
+                TimerMethod_ReadMduFileWithBridgePillars(mduFile, testFilePath, area);
             }
             finally
             {
                 FileUtils.DeleteIfExists(testFilePath);
             }
         }
-        
-        public static void PerformanceTestBridgePillarsImport(MduFile mduFile, string testFilePath, HydroArea area)
+
+        /// <summary>
+        /// Method to test by dot Trace. Should be public for setting thresholds.
+        /// </summary>
+        /// <param name="mduFile"> The Mdu file. </param>
+        /// <param name="testFilePath">The Mdu file path. </param>
+        /// <param name="area"> The area of the model. </param>
+        public static void TimerMethod_ReadMduFileWithBridgePillars(MduFile mduFile, string testFilePath, HydroArea area)
         {
             mduFile.Read(testFilePath, new WaterFlowFMModelDefinition(), area, null);
         }

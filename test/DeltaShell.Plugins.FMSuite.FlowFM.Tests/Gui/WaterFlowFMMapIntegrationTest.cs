@@ -106,14 +106,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                 model.ImportFromMdu(mduPath);
 
                 app.Project.RootFolder.Add(model);
-                
-                Run(gui, model);
+
+                TimerMethod_RunFMModelWithGUIVisible(gui, model);
 
                 Assert.That(model.Status, Is.EqualTo(ActivityStatus.Cleaned), "The model run did not finish successfully.");
             }
         }
-        
-        public static void Run(IGui gui, IActivity model)
+
+        /// <summary>
+        /// Method to test by dot Trace. Should be public for setting thresholds.
+        /// </summary>
+        /// <param name="gui"> DeltaShell application. </param>
+        /// <param name="model"> The model which should be run. </param>
+        public static void TimerMethod_RunFMModelWithGUIVisible(IGui gui, IActivity model)
         {
             gui.Application.ActivityRunner.Enqueue(model);
 
