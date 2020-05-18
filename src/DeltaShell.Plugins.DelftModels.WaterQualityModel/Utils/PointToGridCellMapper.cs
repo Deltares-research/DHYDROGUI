@@ -173,8 +173,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Utils
 
         public Cell GetCellFromWaqSegmentId(int segmentIndex)
         {
-            int singleLayerGridCellCount = Grid.Cells.Count;
-            return Grid.Cells[(segmentIndex - 1) % singleLayerGridCellCount];
+            return Grid.Cells[segmentIndex];
         }
     }
 }

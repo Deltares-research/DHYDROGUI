@@ -15,6 +15,7 @@ using SharpMap.CoordinateSystems.Transformations;
 using SharpMap.Layers;
 using SharpMap.Rendering;
 using SharpMap.UI.Tools;
+using Control = System.Windows.Forms.Control;
 using Point = System.Windows.Point;
 
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.MapTools
@@ -143,6 +144,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.MapTools
         private void FindGridCell(UnstructuredGridLayer gridLayer, PointToGridCellMapper gridCellMapper)
         {
             UnstructuredGrid grid = gridLayer.Grid;
+
+            segmentIndex = Math.Min(Math.Max(segmentIndex, 0), gridCellMapper.Grid.Cells.Count - 1);
 
             Cell gridCell = gridCellMapper.GetCellFromWaqSegmentId(segmentIndex);
 
