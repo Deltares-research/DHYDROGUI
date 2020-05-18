@@ -211,6 +211,8 @@
     <Compile Include="GroupablePointFeature.cs" />
     <Compile Include="Gully.cs" />
     <Compile Include="IDrainageBasin.cs" />
+    <Compile Include="InitialConditionQuantity.cs" />
+    <Compile Include="InitialConditionQuantityTypeConverter.cs" />
     <Compile Include="Link1d2d\ILink1D2D.cs" />
     <Compile Include="IStructure2D.cs" />
     <Compile Include="Link1d2d\ILink1D2DExtensions.cs" />

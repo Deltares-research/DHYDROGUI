@@ -71,7 +71,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Morphology boundary condition bcm-file importer could not import data onto given target.
+        ///   Looks up a localized string similar to Morphology boundary condition bcm-file importer could not import data onto given target..
         /// </summary>
         public static string BcmFileImporter_ImportItem_Morphology_boundary_condition_bcm_file_importer_could_not_import_data_onto_given_target {
             get {
@@ -81,7 +81,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Branch ({0}) where the roughness should be put on is not available in the model.
+        ///   Looks up a localized string similar to Branch ({0}) where the roughness should be put on is not available in the model..
         /// </summary>
         public static string ChannelFrictionDefinitionFileReader_ReadFile_Branch___0___where_the_roughness_should_be_put_on_is_not_available_in_the_model1 {
             get {
@@ -121,27 +121,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Could not read file {0} properly, it doesn&apos;t exist..
-        /// </summary>
-        public static string ChannelFrictionDefinitionFileReader_ReadFile_Could_not_read_file__0__properly__it_doesn_t_exist_1 {
-            get {
-                return ResourceManager.GetString("ChannelFrictionDefinitionFileReader_ReadFile_Could_not_read_file__0__properly__it" +
-                        "_doesn_t_exist_1", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Could not read file {0} properly, it seems empty.
-        /// </summary>
-        public static string ChannelFrictionDefinitionFileReader_ReadFile_Could_not_read_file__0__properly__it_seems_empty_1 {
-            get {
-                return ResourceManager.GetString("ChannelFrictionDefinitionFileReader_ReadFile_Could_not_read_file__0__properly__it" +
-                        "_seems_empty_1", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Could not read file {0} properly, invalid global value was given.
+        ///   Looks up a localized string similar to Could not read file {0} properly, invalid global value was given..
         /// </summary>
         public static string ChannelFrictionDefinitionFileReader_ReadFile_Could_not_read_file__0__properly_invalid_global_value_was_given {
             get {
@@ -151,12 +131,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Could not read file {0} properly, no global property was found.
+        ///   Looks up a localized string similar to Branch ({0}) where the initial condition should be put on is not available in the model..
         /// </summary>
-        public static string ChannelFrictionDefinitionFileReader_ReadFile_Could_not_read_file__0__properly_no_global_property_was_found {
+        public static string ChannelInitialConditionDefinitionFileReader_ReadFile_Branch___0___where_the_initial_condition_should_be_put_on_is_not_available_in_the_model {
             get {
-                return ResourceManager.GetString("ChannelFrictionDefinitionFileReader_ReadFile_Could_not_read_file__0__properly_no_" +
-                        "global_property_was_found", resourceCulture);
+                return ResourceManager.GetString("ChannelInitialConditionDefinitionFileReader_ReadFile_Branch___0___where_the_initi" +
+                        "al_condition_should_be_put_on_is_not_available_in_the_model", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not read {0} properly; {1} is not a valid quantity..
+        /// </summary>
+        public static string ChannelInitialConditionDefinitionFileReader_ReadFile_Could_not_read__0__properly__1__is_not_a_valid_quantity {
+            get {
+                return ResourceManager.GetString("ChannelInitialConditionDefinitionFileReader_ReadFile_Could_not_read__0__properly_" +
+                        "_1__is_not_a_valid_quantity", resourceCulture);
             }
         }
         
@@ -229,6 +219,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to No initial condition filename found in the mdu file. Skipping reading initial conditions..
+        /// </summary>
+        public static string FeatureFile1D2DReader_ReadInitialConditionFiles_No_initial_condition_filename_found_in_the_mdu_file_skipping_reading_initial_conditions {
+            get {
+                return ResourceManager.GetString("FeatureFile1D2DReader_ReadInitialConditionFiles_No_initial_condition_filename_fou" +
+                        "nd_in_the_mdu_file_skipping_reading_initial_conditions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to File import failed: {0}.
         /// </summary>
         public static string File_import_failed___0_ {
@@ -257,7 +257,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Could not set coordinate system in output map because grid is not set.
+        ///   Looks up a localized string similar to Could not set coordinate system in output map because grid is not set..
         /// </summary>
         public static string FMMapFileFunctionStore_CoordinateSystem_Could_not_set_coordinate_system_in_output_map_because_grid_is_not_set {
             get {
@@ -360,6 +360,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
             get {
                 object obj = ResourceManager.GetObject("hurricane2", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Only one quantity is currently supported. Reading the first and ignoring all others..
+        /// </summary>
+        public static string Initial_Condition_Warning_Only_one_quantity_type_is_currently_supported_reading_the_first_and_ignoring_all_others {
+            get {
+                return ResourceManager.GetString("Initial_Condition_Warning_Only_one_quantity_type_is_currently_supported_reading_t" +
+                        "he_first_and_ignoring_all_others", resourceCulture);
             }
         }
         
@@ -562,6 +572,42 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         public static string Read_SourceAndSink_values_failed__no_function_detected_for_SourceAndSink__0_ {
             get {
                 return ResourceManager.GetString("Read_SourceAndSink_values_failed__no_function_detected_for_SourceAndSink__0_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not read file {0} properly, it doesn&apos;t exist..
+        /// </summary>
+        public static string ReadFile_Could_not_read_file__0__properly__it_doesn_t_exist {
+            get {
+                return ResourceManager.GetString("ReadFile_Could_not_read_file__0__properly__it_doesn_t_exist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not read file {0} properly, it seems empty..
+        /// </summary>
+        public static string ReadFile_Could_not_read_file__0__properly__it_seems_empty {
+            get {
+                return ResourceManager.GetString("ReadFile_Could_not_read_file__0__properly__it_seems_empty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not read file {0} properly, no valid content categories found..
+        /// </summary>
+        public static string ReadFile_Could_not_read_file__0__properly__no_valid_content_categories_found {
+            get {
+                return ResourceManager.GetString("ReadFile_Could_not_read_file__0__properly__no_valid_content_categories_found", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not read file {0} properly, no global property was found..
+        /// </summary>
+        public static string ReadFile_Could_not_read_file__0__properly_no_global_property_was_found {
+            get {
+                return ResourceManager.GetString("ReadFile_Could_not_read_file__0__properly_no_global_property_was_found", resourceCulture);
             }
         }
         

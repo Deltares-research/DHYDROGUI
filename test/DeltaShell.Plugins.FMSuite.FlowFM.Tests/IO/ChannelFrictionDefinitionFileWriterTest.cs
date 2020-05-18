@@ -48,7 +48,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
                     // Call
                     FeatureFile1D2DWriter.Write1D2DFeatures(mduFilePath, fmModel.ModelDefinition,
-                        network, fmModel.Area, roughnessSections, channelFrictionDefinitions);
+                        network, fmModel.Area, roughnessSections, channelFrictionDefinitions, null);
 
                     // Assert
                     Assert.That(File.Exists(actualFilePath), Is.True);

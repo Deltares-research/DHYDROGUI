@@ -119,6 +119,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
                     PipeFrictionDefinitionsWrapper.GetInstance(model.PipeFrictionDefinitions),
                     new FmModelTreeShortcut("Lanes", FolderIcon, model, null, ShortCutType.FeatureSet, model.RoughnessSections)
                 }, "1D Roughness", FolderImageType.None),
+                new TreeFolder(model, new List<object>
+                {
+                    ChannelInitialConditionDefinitionsWrapper.GetInstance(model.ChannelInitialConditionDefinitions)
+                }, "1D Initial Conditions", FolderImageType.None),
                 model.BoundaryConditions1DDataItemSet,
                 model.LateralSourcesDataItemSet
             }, "1D", FolderImageType.None);

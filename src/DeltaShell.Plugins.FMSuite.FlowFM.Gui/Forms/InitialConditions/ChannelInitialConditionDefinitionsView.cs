@@ -1,0 +1,424 @@
+﻿using DelftTools.Controls;
+using DelftTools.Controls.Swf.Editors;
+using DelftTools.Controls.Swf.Table;
+using DelftTools.Shell.Gui;
+using DelftTools.Utils.Threading;
+using DeltaShell.NGHS.IO.DataObjects.InitialConditions;
+using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
+using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
+using SharpMap.Api.Layers;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Drawing;
+using System.Windows.Forms;
+using DelftTools.Hydro;
+using DelftTools.Utils.Collections.Generic;
+using GeoAPI.Extensions.Feature;
+using SharpMap.Data.Providers;
+using SharpMap.Layers;
+
+namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms.InitialConditions
+{
+    public partial class ChannelInitialConditionDefinitionsView : UserControl, ILayerEditorView, ISuspendibleView
+    {
+        private readonly VectorLayerAttributeTableView vectorLayerAttributeTableView;
+
+        private readonly DelayedEventHandler<EventArgs> delayedEventHandlerDefinitionsCollectionChanged;
+
+        private const int ChannelColumnIndex = 0;
+        private const int SpecificationColumnIndex = 1;
+        //private const int TypeColumnIndex = 2;
+        private const int ValueColumnIndex = 2;
+        private const int ButtonColumnIndex = 3;
+
+        private ILayer data;
+        private WaterFlowFMModel waterFlowFmModel;
+        private Action openGlobalInitialConditionSettings;
+        public event EventHandler SelectedFeaturesChanged;
+
+        public ChannelInitialConditionDefinitionsView()
+        {
+            InitializeComponent();
+
+            vectorLayerAttributeTableView = new VectorLayerAttributeTableView
+            {
+                Dock = DockStyle.Fill,
+                CanAddDeleteAttributes = false,
+                DeleteSelectedFeatures = () => { },
+                OpenViewMethod = feature => DoEditFunction(),
+                TableView =
+                {
+                    AutoGenerateColumns = false
+                }
+            };
+
+            vectorLayerAttributeTableView.SelectedFeaturesChanged += OnSelectedFeaturesChanged;
+            
+            Controls.Add(vectorLayerAttributeTableView);
+
+            SubscribeViewEvents();
+
+            delayedEventHandlerDefinitionsCollectionChanged =
+                new DelayedEventHandler<EventArgs>(ChannelInitialConditionDefinitionsCollectionChanged)
+                {
+                    FireLastEventOnly = true,
+                    Delay = 500,
+                    SynchronizingObject = this
+                };
+        }
+
+        public object Data
+        {
+            get => data;
+            set
+            {
+                data = value as ILayer;
+
+                vectorLayerAttributeTableView.Data = data;
+
+                UpdateTableView();
+            }
+        }
+
+        public Image Image { get; set; }
+        public ViewInfo ViewInfo { get; set; }
+
+        public IEnumerable<IFeature> SelectedFeatures
+        {
+            get => vectorLayerAttributeTableView.SelectedFeatures;
+            set => vectorLayerAttributeTableView.SelectedFeatures = value;
+        }
+
+        public ILayer Layer
+        {
+            get => vectorLayerAttributeTableView.Layer;
+            set => vectorLayerAttributeTableView.Layer = value;
+        }
+
+        public void EnsureVisible(object item)
+        {
+            vectorLayerAttributeTableView.EnsureVisible(item);
+        }
+
+        public void OnActivated()
+        {
+            vectorLayerAttributeTableView.OnActivated();
+        }
+
+        public void OnDeactivated()
+        {
+            vectorLayerAttributeTableView.OnDeactivated();
+        }
+
+        public void SetWaterFlowFmModel(WaterFlowFMModel model)
+        {
+            waterFlowFmModel = model;
+
+            UpdateTableView();
+
+            SubscribeDataEvents();
+        }
+
+        public void SetOpenGlobalInitialConditionSettingsMethod(Action openGlobalInitialConditionSettingsMethod)
+        {
+            openGlobalInitialConditionSettings = openGlobalInitialConditionSettingsMethod;
+        }
+
+        public void SetZoomToFeatureMethod(Action<object> zoomToFeatureMethod)
+        {
+            vectorLayerAttributeTableView.ZoomToFeature = zoomToFeatureMethod;
+        }
+
+        public void SuspendUpdates()
+        {
+            UnsubscribeViewEvents();
+            UnsubscribeDataEvents();
+
+            // Set dummy layer to bypass eventing
+            vectorLayerAttributeTableView.Data = new VectorLayer
+            {
+                DataSource = new FeatureCollection(new EventedList<ChannelInitialConditionDefinition>(), typeof(ChannelInitialConditionDefinition))
+            };
+        }
+
+        public void ResumeUpdates()
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                components?.Dispose();
+
+                UnsubscribeDataEvents();
+
+                delayedEventHandlerDefinitionsCollectionChanged.Dispose();
+            }
+
+            base.Dispose(disposing);
+        }
+
+        private void OnSelectedFeaturesChanged(object s, EventArgs a)
+        {
+            SelectedFeaturesChanged?.Invoke(s, a);
+        }
+
+        private void UpdateTableView()
+        {
+            if (data != null && waterFlowFmModel != null)
+            {
+                SetTableViewColumns();
+
+                vectorLayerAttributeTableView.TableView.BestFitColumns();
+            }
+        }
+
+        private void SubscribeViewEvents()
+        {
+            var tableView = vectorLayerAttributeTableView.TableView;
+
+            tableView.ReadOnlyCellFilter = ReadOnlyCellFilter;
+            tableView.UnboundColumnData = UnboundColumnData;
+        }
+
+        private void UnsubscribeViewEvents()
+        {
+            var tableView = vectorLayerAttributeTableView.TableView;
+
+            tableView.ReadOnlyCellFilter = null;
+            tableView.UnboundColumnData = null;
+        }
+
+        private bool ReadOnlyCellFilter(TableViewCell arg)
+        {
+            var editable = true;
+
+            if (data != null && arg.RowIndex >= 0 && arg.RowIndex < vectorLayerAttributeTableView.TableView.RowCount && arg.Column.AbsoluteIndex >= 0)
+            {
+                var channelInitialConditionDefinition = (ChannelInitialConditionDefinition)vectorLayerAttributeTableView.TableView.GetRowObjectAt(arg.RowIndex);
+
+                switch (arg.Column.AbsoluteIndex)
+                {
+                    case ChannelColumnIndex:
+                        editable = false;
+                        break;
+                    case SpecificationColumnIndex:
+                        break;
+                    case ValueColumnIndex:
+                        editable = channelInitialConditionDefinition.SpecificationType == ChannelInitialConditionSpecificationType.ConstantChannelInitialConditionDefinition;
+                        break;
+                    case ButtonColumnIndex:
+                        editable = channelInitialConditionDefinition.SpecificationType == ChannelInitialConditionSpecificationType.ModelSettings
+                                   || channelInitialConditionDefinition.SpecificationType == ChannelInitialConditionSpecificationType.SpatialChannelInitialConditionDefinition;
+                        break;
+                }
+            }
+
+            return !editable;
+        }
+
+        private object UnboundColumnData(int columnIndex, int dataSourceIndex, bool isGetData, bool isSetData, object value)
+        {
+            if (dataSourceIndex < 0 || columnIndex == ButtonColumnIndex)
+            {
+                return null;
+            }
+
+            var rowIndex = vectorLayerAttributeTableView.TableView.GetRowIndexByDataSourceIndex(dataSourceIndex);
+            var channelInitialConditionDefinition = (ChannelInitialConditionDefinition)vectorLayerAttributeTableView.TableView.GetRowObjectAt(rowIndex);
+
+            if (columnIndex == ChannelColumnIndex)
+            {
+                return channelInitialConditionDefinition.Channel.Name;
+            }
+
+            if (columnIndex == SpecificationColumnIndex)
+            {
+                if (isGetData)
+                {
+                    return channelInitialConditionDefinition.SpecificationType;
+                }
+
+                if (isSetData)
+                {
+                    var initialConditionQuantityToSet = channelInitialConditionDefinition.SpecificationType == ChannelInitialConditionSpecificationType.ConstantChannelInitialConditionDefinition
+                            ? channelInitialConditionDefinition.ConstantChannelInitialConditionDefinition.Quantity
+                            : channelInitialConditionDefinition.SpecificationType == ChannelInitialConditionSpecificationType.SpatialChannelInitialConditionDefinition
+                                ? channelInitialConditionDefinition.SpatialChannelInitialConditionDefinition.Quantity
+                                : GetModelSettingsQuantity();
+
+                    channelInitialConditionDefinition.SpecificationType = (ChannelInitialConditionSpecificationType)Enum.Parse(typeof(ChannelInitialConditionSpecificationType), value.ToString());
+
+                    if (channelInitialConditionDefinition.SpecificationType == ChannelInitialConditionSpecificationType.ConstantChannelInitialConditionDefinition)
+                    {
+                        channelInitialConditionDefinition.ConstantChannelInitialConditionDefinition.Quantity = initialConditionQuantityToSet;
+                        channelInitialConditionDefinition.ConstantChannelInitialConditionDefinition.Value = GetModelSettingsValue();
+                    }
+
+                    if (channelInitialConditionDefinition.SpecificationType == ChannelInitialConditionSpecificationType.SpatialChannelInitialConditionDefinition)
+                    {
+                        channelInitialConditionDefinition.SpatialChannelInitialConditionDefinition.Quantity = initialConditionQuantityToSet;
+                    }
+                }
+            }
+
+            if (columnIndex == ValueColumnIndex)
+            {
+                if (isGetData)
+                {
+                    if (channelInitialConditionDefinition.SpecificationType == ChannelInitialConditionSpecificationType.ConstantChannelInitialConditionDefinition)
+                    {
+                        return channelInitialConditionDefinition.ConstantChannelInitialConditionDefinition.Value;
+                    }
+
+                    if (channelInitialConditionDefinition.SpecificationType == ChannelInitialConditionSpecificationType.ModelSettings)
+                    {
+                        return GetModelSettingsValue();
+                    }
+                }
+
+                if (isSetData)
+                {
+                    if (channelInitialConditionDefinition.SpecificationType == ChannelInitialConditionSpecificationType.ConstantChannelInitialConditionDefinition)
+                    {
+                        channelInitialConditionDefinition.ConstantChannelInitialConditionDefinition.Value = double.Parse(value.ToString());
+                    }
+                }
+            }
+
+            return null;
+        }
+
+        private void SetTableViewColumns()
+        {
+            var tableView = vectorLayerAttributeTableView.TableView;
+
+            tableView.Columns.Clear();
+
+            AddChannelColumn(tableView);
+            AddSpecificationColumn(tableView);
+            //AddTypeColumn(tableView);
+            AddValueColumn(tableView);
+            AddButtonColumn(tableView);
+        }
+
+        private static void AddChannelColumn(TableView tableView)
+        {
+            tableView.AddUnboundColumn("Branch", typeof(string));
+        }
+
+        private static void AddSpecificationColumn(TableView tableView)
+        {
+            var columnIndex = tableView.AddUnboundColumn("Specification", typeof(ChannelInitialConditionSpecificationType));
+
+            tableView.Columns[columnIndex].Editor = new ComboBoxTypeEditor
+            {
+                Items = Enum.GetValues(typeof(ChannelInitialConditionSpecificationType)),
+                CustomFormatter = new EnumFormatter(typeof(ChannelInitialConditionSpecificationType)),
+                ItemsMandatory = false // Note: Don't remove, necessary for copy/paste
+            };
+        }
+
+        private static void AddValueColumn(TableView tableView)
+        {
+            tableView.AddUnboundColumn("Value", typeof(double));
+        }
+
+        private void AddButtonColumn(TableView tableView)
+        {
+            var buttonTypeEditor = new ButtonTypeEditor
+            {
+                ButtonClickAction = DoEditFunction,
+                HideOnReadOnly = true
+            };
+
+            tableView.AddUnboundColumn(" ", typeof(string), -1, buttonTypeEditor);
+        }
+
+        private void DoEditFunction()
+        {
+            var channelInitialConditionDefinition = (ChannelInitialConditionDefinition)vectorLayerAttributeTableView.TableView.CurrentFocusedRowObject;
+
+            switch (channelInitialConditionDefinition.SpecificationType)
+            {
+                case ChannelInitialConditionSpecificationType.ModelSettings:
+                {
+                    openGlobalInitialConditionSettings();
+                    return;
+                }
+                case ChannelInitialConditionSpecificationType.SpatialChannelInitialConditionDefinition:
+                {
+                    var spatialChannelInitialConditionDefinition = channelInitialConditionDefinition.SpatialChannelInitialConditionDefinition;
+
+                    Form form = new ConstantSpatialChannelInitialConditionDefinitionsForm(
+                        spatialChannelInitialConditionDefinition.ConstantSpatialChannelInitialConditionDefinitions,
+                        spatialChannelInitialConditionDefinition.Quantity,
+                        channelInitialConditionDefinition.Channel.Name);
+
+                    form.ShowDialog();
+                    break;
+                }
+            }
+        }
+
+        private WaterFlowFMProperty GetInitialConditionValueModelProperty()
+        {
+            return waterFlowFmModel.ModelDefinition.GetModelProperty(GuiProperties.InitialConditionGlobalValue1D);
+        }
+
+        private WaterFlowFMProperty GetInitialConditionQuantityModelProperty()
+        {
+            return waterFlowFmModel.ModelDefinition.GetModelProperty(GuiProperties.InitialConditionGlobalQuantity1D);
+        }
+
+        private double GetModelSettingsValue()
+        {
+            return (double)GetInitialConditionValueModelProperty().Value;
+        }
+
+        private InitialConditionQuantity GetModelSettingsQuantity()
+        {
+            return (InitialConditionQuantity)GetInitialConditionQuantityModelProperty().Value;
+        }
+        
+        private void SubscribeDataEvents()
+        {
+            waterFlowFmModel.ChannelInitialConditionDefinitions.CollectionChanged += delayedEventHandlerDefinitionsCollectionChanged;
+            ((INotifyPropertyChanged)waterFlowFmModel.ChannelInitialConditionDefinitions).PropertyChanged += ChannelInitialConditionDefinitionsPropertyChanged;
+            ((INotifyPropertyChanged)GetInitialConditionQuantityModelProperty()).PropertyChanged += InitialConditionModelSettingPropertyChanged;
+            ((INotifyPropertyChanged)GetInitialConditionValueModelProperty()).PropertyChanged += InitialConditionModelSettingPropertyChanged;
+        }
+
+        private void UnsubscribeDataEvents()
+        {
+            waterFlowFmModel.ChannelInitialConditionDefinitions.CollectionChanged -= delayedEventHandlerDefinitionsCollectionChanged;
+            ((INotifyPropertyChanged)waterFlowFmModel.ChannelInitialConditionDefinitions).PropertyChanged -= ChannelInitialConditionDefinitionsPropertyChanged;
+            ((INotifyPropertyChanged)GetInitialConditionQuantityModelProperty()).PropertyChanged -= InitialConditionModelSettingPropertyChanged;
+            ((INotifyPropertyChanged)GetInitialConditionValueModelProperty()).PropertyChanged -= InitialConditionModelSettingPropertyChanged;
+        }
+
+        private void ChannelInitialConditionDefinitionsCollectionChanged(object sender, EventArgs e)
+        {
+            vectorLayerAttributeTableView.TableView.BestFitColumns();
+        }
+
+        private void ChannelInitialConditionDefinitionsPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (sender is IChannel && e.PropertyName == nameof(IChannel.Name))
+            {
+                vectorLayerAttributeTableView.TableView.BestFitColumns();
+            }
+        }
+
+        private void InitialConditionModelSettingPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            vectorLayerAttributeTableView.TableView.RefreshData();
+            vectorLayerAttributeTableView.TableView.BestFitColumns();
+        }
+
+
+    }
+}
