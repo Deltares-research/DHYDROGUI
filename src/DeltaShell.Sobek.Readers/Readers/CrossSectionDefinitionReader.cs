@@ -385,6 +385,22 @@ namespace DeltaShell.Sobek.Readers.Readers
                                                                      });
             }
 
+            //check if is rectangle profile
+            var sobekTabulatedProfileRows = sobekCrossSectionDefinition.TabulatedProfile.ToArray();
+            if (sobekTabulatedProfileRows.Length == 3)
+            {
+                var b2 = sobekTabulatedProfileRows[1];
+                var b3 = sobekTabulatedProfileRows[2];
+                if (b3.Height - b2.Height <= 0.002
+                    && b3.TotalWidth < b2.TotalWidth - 0.02)
+                {
+                    sobekCrossSectionDefinition.Width = b2.TotalWidth;
+                    sobekCrossSectionDefinition.Height = b2.Height;
+                    sobekCrossSectionDefinition.Type = SobekCrossSectionDefinitionType.ClosedRectangular;
+                    return true;
+                }
+            }
+
             RemoveUnneccessaryLowestsPoints(sobekCrossSectionDefinition);
 
             const string dikePattern = @"dk\s*" + @"(?<SummerDike>" + RegularExpression.Integer + @")"

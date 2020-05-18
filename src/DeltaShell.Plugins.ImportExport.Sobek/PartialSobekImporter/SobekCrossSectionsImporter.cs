@@ -318,6 +318,8 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                     return GetCrossSectionDefinitionYZ(sobekCrossSectionDefinition);
                 case SobekCrossSectionDefinitionType.ClosedCircle:
                     return GetCrossSectionDefinitionClosedCircle(sobekCrossSectionDefinition);
+                case SobekCrossSectionDefinitionType.ClosedRectangular:
+                    return GetCrossSectionDefinitionClosedRectangular(sobekCrossSectionDefinition);
                 case SobekCrossSectionDefinitionType.EggShapedWidth:
                     return GetCrossSectionDefinitionEggShape(sobekCrossSectionDefinition);
                 case SobekCrossSectionDefinitionType.Trapezoidal:
@@ -392,6 +394,29 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             CrossSectionHelper.SetDefaultThalweg(crossSectionDefinitionClosedCircle);
 
             return crossSectionDefinitionClosedCircle;
+        }
+
+        private static ICrossSectionDefinition GetCrossSectionDefinitionClosedRectangular(SobekCrossSectionDefinition sobekCrossSectionDefinition)
+        {
+            if (sobekCrossSectionDefinition.Width < 0 || sobekCrossSectionDefinition.Height < 0)
+            {
+                return GetCrossSectionDefinitionZW(sobekCrossSectionDefinition);
+            }
+
+            var crossSectionStandardShapeRectangle = new CrossSectionStandardShapeRectangle
+                                                     {
+                                                         Height = sobekCrossSectionDefinition.Height,
+                                                         Width = sobekCrossSectionDefinition.Width,
+                                                         Closed = true
+                                                     };
+            var crossSectionDefinitionClosedRectangular = new CrossSectionDefinitionStandard(crossSectionStandardShapeRectangle)
+            {
+                Name = sobekCrossSectionDefinition.Name
+            };
+
+            CrossSectionHelper.SetDefaultThalweg(crossSectionDefinitionClosedRectangular);
+
+            return crossSectionDefinitionClosedRectangular;
         }
 
         private static ICrossSectionDefinition GetCrossSectionDefinitionZW(SobekCrossSectionDefinition sobekCrossSectionDefinition)

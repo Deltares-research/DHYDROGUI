@@ -13,7 +13,7 @@ namespace DeltaShell.Sobek.Readers.SobekDataObjects
         ClosedCircle = 4,
         EggShapedWidth = 6,
         //EggShapedRadius = 7, according to Sobek Help not implemented
-        //ClosedRectangular = 8, according to Sobek Help not implemented
+        ClosedRectangular = 8, 
         Yztable = 10,
         AsymmetricalTrapezoidal = 11
     }
