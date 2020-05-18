@@ -112,8 +112,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                 Assert.That(model.Status, Is.EqualTo(ActivityStatus.Cleaned), "The model run did not finish successfully.");
             }
         }
-
-        private static void Run(IGui gui, IActivity model)
+        
+        public static void Run(IGui gui, IActivity model)
         {
             gui.Application.ActivityRunner.Enqueue(model);
 

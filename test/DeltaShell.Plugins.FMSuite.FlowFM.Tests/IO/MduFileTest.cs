@@ -268,12 +268,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 var mduFile = new MduFile();
                 var area = new HydroArea();
 
-                mduFile.Read(testFilePath, new WaterFlowFMModelDefinition(), area, null);
+                PerformanceTestBridgePillarsImport(mduFile, testFilePath, area);
             }
             finally
             {
                 FileUtils.DeleteIfExists(testFilePath);
             }
+        }
+        
+        public static void PerformanceTestBridgePillarsImport(MduFile mduFile, string testFilePath, HydroArea area)
+        {
+            mduFile.Read(testFilePath, new WaterFlowFMModelDefinition(), area, null);
         }
 
         [Test]
