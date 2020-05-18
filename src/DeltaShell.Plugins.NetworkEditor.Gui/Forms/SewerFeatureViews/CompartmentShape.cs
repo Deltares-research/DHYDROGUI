@@ -32,7 +32,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
         public override object Source
         {
             get { return Compartment; }
-            set { Compartment = value as Compartment; }
+            set { Compartment = value as ICompartment; }
         }
 
         private void OnPropertyChanged(object sender, PropertyChangedEventArgs propertyChangedEventArgs)

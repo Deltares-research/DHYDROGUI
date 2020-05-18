@@ -506,18 +506,14 @@ namespace DelftTools.Hydro.SewerFeatures
             if (Math.Abs(Length) < 1 && SourceCompartment?.Geometry?.Coordinate != null &&
                 TargetCompartment?.Geometry?.Coordinate != null)
             {
-                if (SourceCompartment.Geometry.Coordinate.Equals(TargetCompartment.Geometry.Coordinate))
+                var distance = SourceCompartment.Geometry.Coordinate.Distance(TargetCompartment.Geometry.Coordinate);
+                if (distance < 1)
                 {
-                    TargetCompartment.Geometry.Coordinate.X += 1;
-                    Length = SourceCompartment.Geometry.Coordinate.Distance(
-                        new Coordinate(TargetCompartment.Geometry.Coordinate.X + 1,
-                            TargetCompartment.Geometry.Coordinate.Y));
+                    IsLengthCustom = true;
+                    Length = 1;
                 }
                 else
-                {
-                    var distance = SourceCompartment.Geometry.Coordinate.Distance(TargetCompartment.Geometry.Coordinate);
-                    Length = distance < 1 ? 1 : distance;
-                }
+                    Length = distance;
             }
         }
 
