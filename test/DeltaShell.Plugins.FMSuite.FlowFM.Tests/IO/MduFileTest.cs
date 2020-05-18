@@ -10,6 +10,7 @@ using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.NGHS.IO.TestUtils;
+using DeltaShell.NGHS.TestUtils;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
@@ -248,6 +249,26 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
                 CheckAttributeCollection(attributes, "Column3", expectedDiameters);
                 CheckAttributeCollection(attributes, "Column4", expectedCoeff);
+            }
+            finally
+            {
+                FileUtils.DeleteIfExists(testFilePath);
+            }
+        }
+
+        [Test]
+        [Category(NghsTestCategory.PerformanceDotTrace)]
+        public void Read_MduFileWithBridgePillars_ShouldBeWithinExecutionTime()
+        {
+            string testDataFilePath = TestHelper.GetTestFilePath(@"ImportMDUFile\bridge-1.mdu");
+            string testFilePath = TestHelper.CreateLocalCopy(testDataFilePath);
+
+            try
+            {
+                var mduFile = new MduFile();
+                var area = new HydroArea();
+
+                mduFile.Read(testFilePath, new WaterFlowFMModelDefinition(), area, null);
             }
             finally
             {

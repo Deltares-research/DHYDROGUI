@@ -5,11 +5,13 @@ using System.Threading;
 using System.Windows.Forms;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
+using DelftTools.Shell.Gui;
 using DelftTools.Shell.Gui.Swf.Validation;
 using DelftTools.TestUtils;
 using DelftTools.TestUtils.TestReferenceHelper;
 using DelftTools.Utils.Reflection;
 using DeltaShell.Gui;
+using DeltaShell.NGHS.TestUtils;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.CommonTools.Gui;
 using DeltaShell.Plugins.Data.NHibernate;
@@ -73,6 +75,51 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                 stopwatch.Stop();
                 Assert.Less(stopwatch.ElapsedMilliseconds, 50000);
                 Assert.That(model.Status, Is.EqualTo(ActivityStatus.Cleaned), "The model run did not finish successfully.");
+            }
+        }
+
+        [Test]
+        [Category(NghsTestCategory.PerformanceDotTrace)]
+        public void RunFMModelWithGUIVisible_ShouldBeWithinExecutionTime()
+        {
+            string mduPath = TestHelper.GetTestFilePath(@"smallModelWithManyTimeSteps\r01.mdu");
+
+            using (var gui = new DeltaShellGui())
+            {
+                IApplication app = gui.Application;
+                app.Plugins.Add(new NHibernateDaoApplicationPlugin());
+                app.Plugins.Add(new CommonToolsApplicationPlugin());
+                app.Plugins.Add(new SharpMapGisApplicationPlugin());
+                app.Plugins.Add(new FlowFMApplicationPlugin());
+                app.Plugins.Add(new NetworkEditorApplicationPlugin());
+
+                gui.Plugins.Add(new CommonToolsGuiPlugin());
+                gui.Plugins.Add(new SharpMapGisGuiPlugin());
+                gui.Plugins.Add(new NetworkEditorGuiPlugin());
+                gui.Plugins.Add(new FlowFMGuiPlugin());
+
+                gui.Run();
+
+                gui.MainWindow.Show();
+
+                var model = new WaterFlowFMModel();
+                model.ImportFromMdu(mduPath);
+
+                app.Project.RootFolder.Add(model);
+                
+                Run(gui, model);
+
+                Assert.That(model.Status, Is.EqualTo(ActivityStatus.Cleaned), "The model run did not finish successfully.");
+            }
+        }
+
+        private static void Run(IGui gui, IActivity model)
+        {
+            gui.Application.ActivityRunner.Enqueue(model);
+
+            while (gui.Application.IsActivityRunningOrWaiting(model))
+            {
+                Application.DoEvents();
             }
         }
 
