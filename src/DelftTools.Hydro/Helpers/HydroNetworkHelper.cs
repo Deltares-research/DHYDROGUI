@@ -251,6 +251,9 @@ namespace DelftTools.Hydro.Helpers
 
             discretization.RemoveLocations(discretization.GetDuplicateLocations());
 
+            // force refresh of caching (location dictionary) -> locations were removed
+            TypeUtils.SetField(discretization, "updateLocationsDictionary", true);
+
             discretization.SegmentGenerationMethod = SegmentGenerationMethod.SegmentBetweenLocationsAndConnectedBranchesWithoutLocationOnThemFullyCovered;
             discretization.Locations.SkipUniqueValuesCheck = false;
         }
