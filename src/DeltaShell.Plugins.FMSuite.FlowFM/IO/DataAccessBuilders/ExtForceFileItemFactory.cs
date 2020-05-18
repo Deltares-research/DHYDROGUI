@@ -16,8 +16,22 @@ using SharpMap.SpatialOperations;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
 {
+    /// <summary>
+    /// Provides methods to create <see cref="ExtForceFileItem"/>.
+    /// </summary>
     public static class ExtForceFileItemFactory
     {
+        /// <summary>
+        /// Gets the collection of <see cref="ExtForceFileItem"/> based of the specified <paramref name="modelDefinition"/>.
+        /// </summary>
+        /// <param name="path">The external forcing file path.</param>
+        /// <param name="modelDefinition">The model definition.</param>
+        /// <param name="writeBoundaryConditions"> Whether or not the boundary conditions should be written.</param>
+        /// <param name="polyLineForceFileItems">The poly line external force file items.</param>
+        /// <param name="existingForceFileItems">The existing external force file items.</param>
+        /// <returns>
+        /// A collection of <see cref="ExtForceFileItem"/> from the specified <paramref name="modelDefinition"/>.
+        /// </returns>
         public static IEnumerable<ExtForceFileItem> GetItems(string path, WaterFlowFMModelDefinition modelDefinition,
                                                              bool writeBoundaryConditions,
                                                              IDictionary<IFeatureData, ExtForceFileItem> polyLineForceFileItems,
@@ -90,6 +104,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
             return items.Distinct().ToArray();
         }
 
+        /// <summary>
+        /// Creates the mapping with each <see cref="FlowBoundaryCondition"/> from the specified <paramref name="modelDefinition"/>
+        /// and their corresponding created <see cref="ExtForceFileItem"/>.
+        /// </summary>
+        /// <param name="modelDefinition">The model definition.</param>
+        /// <param name="polyLineForceFileItems">The poly line external force file items.</param>
+        /// <returns>
+        /// A dictionary with each <see cref="FlowBoundaryCondition"/> and their corresponding <see cref="ExtForceFileItem"/>.
+        /// </returns>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when <paramref name="modelDefinition"/> or <paramref name="polyLineForceFileItems"/> is <c>null</c>.
+        /// </exception>
         public static IDictionary<FlowBoundaryCondition, ExtForceFileItem> GetBoundaryConditionsItems(
             WaterFlowFMModelDefinition modelDefinition,
             IDictionary<IFeatureData, ExtForceFileItem> polyLineForceFileItems)
@@ -127,6 +153,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
             return boundaryConditionsItems;
         }
 
+        /// <summary>
+        /// Creates the mapping with each <see cref="SourceAndSink"/> from the specified <paramref name="modelDefinition"/>
+        /// and their corresponding created <see cref="ExtForceFileItem"/>.
+        /// </summary>
+        /// <param name="modelDefinition">The model definition.</param>
+        /// <param name="polyLineForceFileItems">The poly line external force file items.</param>
+        /// <returns>
+        /// A dictionary with each <see cref="SourceAndSink"/> and their corresponding <see cref="ExtForceFileItem"/>.
+        /// </returns>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when <paramref name="modelDefinition"/> or <paramref name="polyLineForceFileItems"/> is <c>null</c>.
+        /// </exception>
         public static IDictionary<SourceAndSink, ExtForceFileItem> GetSourceAndSinkItems(
             WaterFlowFMModelDefinition modelDefinition,
             IDictionary<IFeatureData, ExtForceFileItem> polyLineForceFileItems)
@@ -146,6 +184,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
                 sourceAndSink => GetSourceAndSinkItem(sourceAndSink, polyLineForceFileItems));
         }
 
+        /// <summary>
+        /// Creates the mapping with each <see cref="ISpatialOperation"/> from the specified <paramref name="spatialOperations"/>
+        /// and their corresponding created <see cref="ExtForceFileItem"/>.
+        /// </summary>
+        /// <param name="quantity">The quantity name related to these <paramref name="spatialOperations"/>.</param>
+        /// <param name="spatialOperations">The spatial operations.</param>
+        /// <param name="existingForceFileItems">The existing external force file items.</param>
+        /// <param name="filePath">The external forcing file path.</param>
+        /// <param name="prefix">The optional prefix to be written before the quantity.</param>
+        /// <returns>
+        /// A dictionary with each <see cref="ISpatialOperation"/> and their corresponding <see cref="ExtForceFileItem"/>.
+        /// </returns>
+        /// <exception cref="NotSupportedException">
+        /// Thrown when an item in <paramref name="spatialOperations"/> is not an <see cref="ImportSamplesOperation"/>,
+        /// <see cref="SetValueOperation"/> or <see cref="AddSamplesOperation"/>.
+        /// </exception>
         public static IDictionary<ISpatialOperation, ExtForceFileItem> GetSpatialDataItems(
             string quantity, IEnumerable<ISpatialOperation> spatialOperations,
             IDictionary<ExtForceFileItem, object> existingForceFileItems, string filePath, string prefix = null)
@@ -171,7 +225,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
                             GetInitialConditionsUnsupportedItem(addSamplesOperation, quantity, prefix);
                         break;
                     default:
-                        throw new NotImplementedException(
+                        throw new NotSupportedException(
                             $"Cannot serialize operation of type {spatialOperation.GetType()} to external forcings file");
                 }
 
@@ -181,6 +235,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
             return dictionary;
         }
 
+        /// <summary>
+        /// Creates the mapping with each <see cref="IWindField"/> from the specified <paramref name="modelDefinition"/>
+        /// and their corresponding created <see cref="ExtForceFileItem"/>.
+        /// </summary>
+        /// <param name="modelDefinition">The model definition.</param>
+        /// <param name="existingForceFileItems">The existing external force file items.</param>
+        /// <returns>
+        /// A dictionary with each <see cref="IWindField"/> and their corresponding <see cref="ExtForceFileItem"/>.
+        /// </returns>
         public static IDictionary<IWindField, ExtForceFileItem> GetWindFieldItems(
             WaterFlowFMModelDefinition modelDefinition, IDictionary<ExtForceFileItem, object> existingForceFileItems)
         {
@@ -330,6 +393,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
                    };
         }
 
+        /// <summary>
+        /// Creates an <see cref="ExtForceFileItem"/> for the specified <paramref name="heatFluxModel"/>.
+        /// </summary>
+        /// <param name="heatFluxModel">The heat flux model.</param>
+        /// <param name="modelName">Name of the water flow fm model.</param>
+        /// <param name="existingForceFileItems">The existing force file items.</param>
+        /// <returns>
+        /// An <see cref="ExtForceFileItem"/> created for the specified <paramref name="heatFluxModel"/>.
+        /// </returns>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when <paramref name="heatFluxModel"/> or <paramref name="existingForceFileItems"/> is <c>null</c>.
+        /// </exception>
         public static ExtForceFileItem GetHeatFluxModelItem(HeatFluxModel heatFluxModel, string modelName,
                                                             IDictionary<ExtForceFileItem, object> existingForceFileItems)
         {
@@ -373,6 +448,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
             return item;
         }
 
+        /// <summary>
+        /// Creates the mapping with each <see cref="IUnsupportedFileBasedExtForceFileItem"/> from the specified <paramref name="modelDefinition"/>
+        /// and their corresponding created <see cref="ExtForceFileItem"/>.
+        /// </summary>
+        /// <param name="modelDefinition">The model definition.</param>
+        /// <returns>
+        /// A dictionary with each <see cref="IUnsupportedFileBasedExtForceFileItem"/> and their corresponding <see cref="ExtForceFileItem"/>.
+        /// </returns>
         public static IDictionary<IUnsupportedFileBasedExtForceFileItem, ExtForceFileItem> GetUnknownQuantitiesItems(WaterFlowFMModelDefinition modelDefinition)
         {
             return modelDefinition.UnsupportedFileBasedExtForceFileItems
