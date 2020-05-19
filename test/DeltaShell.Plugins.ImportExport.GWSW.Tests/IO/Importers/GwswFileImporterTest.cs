@@ -919,7 +919,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
             gwswImporter.LoadFeatureFiles(folderPath);
             gwswImporter.ImportItem(filePath, model);
             Assert.IsTrue(network.SewerConnections.Any(p =>
-                p.Source.Equals(sourceManhole) && p.Target.Equals(targetManhole)));
+                p.Source.Name.Equals(sourceManhole.Name,StringComparison.InvariantCultureIgnoreCase) && p.Target.Name.Equals(targetManhole.Name, StringComparison.InvariantCulture)));
         }
 
         [Test]

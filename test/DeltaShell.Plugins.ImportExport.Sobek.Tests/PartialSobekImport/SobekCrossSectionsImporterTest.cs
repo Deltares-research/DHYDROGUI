@@ -172,7 +172,9 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
             importer.Import();
 
             Assert.AreEqual(22, hydroNetwork.CrossSections.Count()); 
-            Assert.AreEqual(11, hydroNetwork.CrossSections.Where(t => t.CrossSectionType == CrossSectionType.Standard).Count());
+            //needs to be 12 now instead of 11 because we will retrieve height and width of a closed rectangular (id=19) from the table (5x10).
+            Assert.AreEqual(12, hydroNetwork.CrossSections.Where(t => t.CrossSectionType == CrossSectionType.Standard).Count());
+
 
             var definition = hydroNetwork.CrossSections.Where(
                 cs => cs.CrossSectionType == CrossSectionType.ZW && !cs.Definition.IsProxy).Select(
