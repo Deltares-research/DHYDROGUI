@@ -150,6 +150,10 @@
     <Compile Include="DataObjects\Friction\ConstantSpatialChannelFrictionDefinitionTest.cs" />
     <Compile Include="DataObjects\Friction\PipeFrictionDefinitionTest.cs" />
     <Compile Include="DataObjects\Friction\SpatialChannelFrictionDefinitionTest.cs" />
+    <Compile Include="DataObjects\InitialConditions\ChannelInitialConditionDefinitionTest.cs" />
+    <Compile Include="DataObjects\InitialConditions\ConstantChannelInitialConditionDefinitionTest.cs" />
+    <Compile Include="DataObjects\InitialConditions\ConstantSpatialChannelInitialConditionDefinitionTest.cs" />
+    <Compile Include="DataObjects\InitialConditions\SpatialChannelInitialConditionDefinitionTest.cs" />
     <Compile Include="DelftIniMultiLineReaderTest.cs" />
     <Compile Include="FileReaders\CrossSectionDefinitionFileReaderTest.cs" />
     <Compile Include="FileReaders\LocationFileReaderTest.cs" />

@@ -20,6 +20,7 @@ using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Editing;
 using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.NGHS.IO.DataObjects.Friction;
+using DeltaShell.NGHS.IO.DataObjects.InitialConditions;
 using DeltaShell.NGHS.IO.DataObjects.Model1D;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Feature;
@@ -217,6 +218,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
                 // Update channel friction definitions
                 ChannelFrictionDefinitions.AddRange(Network.Channels.Select(channel => new ChannelFrictionDefinition(channel)));
+
+                // Update channel initial condition definitions
+                ChannelInitialConditionDefinitions.AddRange(Network.Channels.Select(channel => new ChannelInitialConditionDefinition(channel)));
             }
         }
         
@@ -249,6 +253,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         public IEventedList<ChannelFrictionDefinition> ChannelFrictionDefinitions { get; private set; }
         public IEventedList<PipeFrictionDefinition> PipeFrictionDefinitions { get; private set; }
+
+        public IEventedList<ChannelInitialConditionDefinition> ChannelInitialConditionDefinitions { get; private set; }
 
         public bool UseReverseRoughness { get; set; }
         public bool UseReverseRoughnessInCalculation { get; set; }
@@ -298,6 +304,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                             }
 
                             ChannelFrictionDefinitions.Remove(ChannelFrictionDefinitions.First(cfd => ReferenceEquals(cfd.Channel, channel)));
+                            ChannelInitialConditionDefinitions.Remove(ChannelInitialConditionDefinitions.First(cicd => ReferenceEquals(cicd.Channel, channel)));
 
                             // remove all child data items
                             var dataItemsToRemove = new List<IDataItem>();
@@ -343,6 +350,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                             }
 
                             ChannelFrictionDefinitions.Add(new ChannelFrictionDefinition(channel));
+                            ChannelInitialConditionDefinitions.Add(new ChannelInitialConditionDefinition(channel));
 
                             break;
                         }
@@ -496,6 +504,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             ClearBoundaryConditions();
             ClearLateralSourceData();
             ClearChannelFrictionDefinitions();
+            ClearChannelInitialConditionDefinitions();
             RefreshNetworkDataRelatedData();
             
             // update network in output coverages
@@ -581,6 +590,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         private void ClearChannelFrictionDefinitions()
         {
             ChannelFrictionDefinitions.Clear();
+        }
+
+        private void ClearChannelInitialConditionDefinitions()
+        {
+            ChannelInitialConditionDefinitions.Clear();
         }
 
         /// <summary>

@@ -182,7 +182,7 @@
     <value>Unexpected location (dimension) '{0}'</value>
   </data>
   <data name="FMMapFileFunctionStore_CoordinateSystem_Could_not_set_coordinate_system_in_output_map_because_grid_is_not_set" xml:space="preserve">
-    <value>Could not set coordinate system in output map because grid is not set</value>
+    <value>Could not set coordinate system in output map because grid is not set.</value>
   </data>
   <data name="ExportGrid_Cannot_export_in_this_format_if_the_grid_is_not_correct" xml:space="preserve">
     <value>Cannot export in this format if the grid is not correct.</value>
@@ -215,7 +215,7 @@
     <value>Cannot read ibedcond because this is not an integer (number) in file {0}</value>
   </data>
   <data name="BcmFileImporter_ImportItem_Morphology_boundary_condition_bcm_file_importer_could_not_import_data_onto_given_target" xml:space="preserve">
-    <value>Morphology boundary condition bcm-file importer could not import data onto given target</value>
+    <value>Morphology boundary condition bcm-file importer could not import data onto given target.</value>
   </data>
   <data name="WaterFlowFMBoundaryConditionValidator_ValidateMorphologyBoundaryHaveHydroBoundaries_Morphology_boundary_condition_must_have_a_Hydro_boundary_condition_" xml:space="preserve">
     <value>Morphology boundary condition must have a Hydro boundary condition!</value>
@@ -437,7 +437,7 @@ File import of structures file '{1}' has failed.</value>
     <value>roughness-Channels.ini</value>
   </data>
   <data name="ChannelFrictionDefinitionFileReader_ReadFile_Branch___0___where_the_roughness_should_be_put_on_is_not_available_in_the_model1" xml:space="preserve">
-    <value>Branch ({0}) where the roughness should be put on is not available in the model</value>
+    <value>Branch ({0}) where the roughness should be put on is not available in the model.</value>
   </data>
   <data name="ChannelFrictionDefinitionFileReader_ReadFile_Could_not_read_content_section__0__properly_1" xml:space="preserve">
     <value>Could not read content section {0} properly</value>
@@ -449,15 +449,30 @@ File import of structures file '{1}' has failed.</value>
     <value>Could not read content section {0} properly; {1} is not a valid function type</value>
   </data>
   <data name="ChannelFrictionDefinitionFileReader_ReadFile_Could_not_read_file__0__properly_invalid_global_value_was_given" xml:space="preserve">
-    <value>Could not read file {0} properly, invalid global value was given</value>
+    <value>Could not read file {0} properly, invalid global value was given.</value>
   </data>
-  <data name="ChannelFrictionDefinitionFileReader_ReadFile_Could_not_read_file__0__properly_no_global_property_was_found" xml:space="preserve">
-    <value>Could not read file {0} properly, no global property was found</value>
+  <data name="ReadFile_Could_not_read_file__0__properly_no_global_property_was_found" xml:space="preserve">
+    <value>Could not read file {0} properly, no global property was found.</value>
   </data>
-  <data name="ChannelFrictionDefinitionFileReader_ReadFile_Could_not_read_file__0__properly__it_doesn_t_exist_1" xml:space="preserve">
+  <data name="ReadFile_Could_not_read_file__0__properly__it_doesn_t_exist" xml:space="preserve">
     <value>Could not read file {0} properly, it doesn't exist.</value>
   </data>
-  <data name="ChannelFrictionDefinitionFileReader_ReadFile_Could_not_read_file__0__properly__it_seems_empty_1" xml:space="preserve">
-    <value>Could not read file {0} properly, it seems empty</value>
+  <data name="ReadFile_Could_not_read_file__0__properly__it_seems_empty" xml:space="preserve">
+    <value>Could not read file {0} properly, it seems empty.</value>
+  </data>
+  <data name="ChannelInitialConditionDefinitionFileReader_ReadFile_Branch___0___where_the_initial_condition_should_be_put_on_is_not_available_in_the_model" xml:space="preserve">
+    <value>Branch ({0}) where the initial condition should be put on is not available in the model.</value>
+  </data>
+  <data name="ChannelInitialConditionDefinitionFileReader_ReadFile_Could_not_read__0__properly__1__is_not_a_valid_quantity" xml:space="preserve">
+    <value>Could not read {0} properly; {1} is not a valid quantity.</value>
+  </data>
+  <data name="FeatureFile1D2DReader_ReadInitialConditionFiles_No_initial_condition_filename_found_in_the_mdu_file_skipping_reading_initial_conditions" xml:space="preserve">
+    <value>No initial condition filename found in the mdu file. Skipping reading initial conditions.</value>
+  </data>
+  <data name="Initial_Condition_Warning_Only_one_quantity_type_is_currently_supported_reading_the_first_and_ignoring_all_others" xml:space="preserve">
+    <value>Only one quantity is currently supported. Reading the first and ignoring all others.</value>
+  </data>
+  <data name="ReadFile_Could_not_read_file__0__properly__no_valid_content_categories_found" xml:space="preserve">
+    <value>Could not read file {0} properly, no valid content categories found.</value>
   </data>
 </root>

@@ -134,6 +134,11 @@
     <Compile Include="DataObjects\Friction\ConstantChannelFrictionDefinition.cs" />
     <Compile Include="DataObjects\Friction\SpatialChannelFrictionDefinition.cs" />
     <Compile Include="DataObjects\Friction\ConstantSpatialChannelFrictionDefinition.cs" />
+    <Compile Include="DataObjects\InitialConditions\ChannelInitialConditionDefinition.cs" />
+    <Compile Include="DataObjects\InitialConditions\ChannelInitialConditionSpecificationType.cs" />
+    <Compile Include="DataObjects\InitialConditions\ConstantChannelInitialConditionDefinition.cs" />
+    <Compile Include="DataObjects\InitialConditions\ConstantSpatialChannelInitialConditionDefinition.cs" />
+    <Compile Include="DataObjects\InitialConditions\SpatialChannelInitialConditionDefinition.cs" />
     <Compile Include="DataObjects\Model1DBoundaryNodeDataExtensions.cs" />
     <Compile Include="DataObjects\Model1D\AggregationOptions.cs" />
     <Compile Include="DataObjects\Model1D\ElementSet.cs" />
