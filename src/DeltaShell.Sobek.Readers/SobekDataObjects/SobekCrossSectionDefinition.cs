@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using GeoAPI.Geometries;
 
 namespace DeltaShell.Sobek.Readers.SobekDataObjects
@@ -13,7 +14,7 @@ namespace DeltaShell.Sobek.Readers.SobekDataObjects
         ClosedCircle = 4,
         EggShapedWidth = 6,
         //EggShapedRadius = 7, according to Sobek Help not implemented
-        ClosedRectangular = 8, 
+        //ClosedRectangular = 8, according to Sobek Help not implemented
         Yztable = 10,
         AsymmetricalTrapezoidal = 11
     }
@@ -123,6 +124,25 @@ namespace DeltaShell.Sobek.Readers.SobekDataObjects
         public int StorageType { get; set; }
 
         public bool InferStandardType { get; set; }
+
+        public bool IsTabulatedProfileClosedRectangularShape
+        {
+            get
+            {
+                var sobekTabulatedProfileRows = TabulatedProfile.ToArray();
+                if (sobekTabulatedProfileRows.Length == 3)
+                {
+                    var b2 = sobekTabulatedProfileRows[1];
+                    var b3 = sobekTabulatedProfileRows[2];
+                    if (b3.Height - b2.Height <= 0.002
+                        && b3.TotalWidth < b2.TotalWidth - 0.02)
+                    {
+                        return true;
+                    }
+                }
+                return false;
+            }
+        }
 
         /// <summary>
         /// Adds row to the ty=0 ZW cross section table

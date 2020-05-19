@@ -385,20 +385,12 @@ namespace DeltaShell.Sobek.Readers.Readers
                                                                      });
             }
 
-            //check if is rectangle profile
-            var sobekTabulatedProfileRows = sobekCrossSectionDefinition.TabulatedProfile.ToArray();
-            if (sobekTabulatedProfileRows.Length == 3)
+            //check if is closed rectangle profile
+            if (sobekCrossSectionDefinition.IsTabulatedProfileClosedRectangularShape)
             {
-                var b2 = sobekTabulatedProfileRows[1];
-                var b3 = sobekTabulatedProfileRows[2];
-                if (b3.Height - b2.Height <= 0.002
-                    && b3.TotalWidth < b2.TotalWidth - 0.02)
-                {
-                    sobekCrossSectionDefinition.Width = b2.TotalWidth;
-                    sobekCrossSectionDefinition.Height = b2.Height;
-                    sobekCrossSectionDefinition.Type = SobekCrossSectionDefinitionType.ClosedRectangular;
-                    return true;
-                }
+                var b2 = sobekCrossSectionDefinition.TabulatedProfile.ElementAt(1);
+                sobekCrossSectionDefinition.Width = b2.TotalWidth;
+                sobekCrossSectionDefinition.Height = b2.Height;
             }
 
             RemoveUnneccessaryLowestsPoints(sobekCrossSectionDefinition);

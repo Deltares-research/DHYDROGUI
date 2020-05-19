@@ -647,7 +647,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        [Category("Quarantine")]
         public void ImportCalculationGridWithNetworkInDutchCulture()
         {
             var oldCulture = Thread.CurrentThread.CurrentCulture;
@@ -663,7 +662,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
             var network = waterFlowFmModel.Network;
 
             Assert.IsNotNull(waterFlowFmModel.NetworkDiscretization);
-            Assert.AreEqual(SegmentGenerationMethod.SegmentBetweenLocationsFullyCovered, waterFlowFmModel.NetworkDiscretization.SegmentGenerationMethod);
+            Assert.AreEqual(SegmentGenerationMethod.SegmentBetweenLocationsAndConnectedBranchesWithoutLocationOnThemFullyCovered, waterFlowFmModel.NetworkDiscretization.SegmentGenerationMethod);
 
             var branchCount = network.Branches.Count;
 
