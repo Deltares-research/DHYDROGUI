@@ -45,8 +45,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.NodePresenters
                 case ShortCutType.SettingsTab:
                     return true;
                 case ShortCutType.Grid:
-                    OpenGridEditor(shortcut);
                     Gui?.CommandHandler?.OpenView(shortcut.Model);
+                    Gui?.MainWindow?.SetActiveRibbonTab("Grid");
                     return false;
                 case ShortCutType.SpatialCoverage:
                     ConfigureSpatialEditor(shortcut);
