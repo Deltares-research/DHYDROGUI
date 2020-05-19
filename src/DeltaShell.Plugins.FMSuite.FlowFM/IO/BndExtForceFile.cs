@@ -970,12 +970,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     branch = network.Branches
                         .OfType<IPipe>()
                         .FirstOrDefault(p =>
-                            p.TargetCompartmentName.Equals(compartmentId,
-                                StringComparison.InvariantCultureIgnoreCase) ||
-                            p.SourceCompartmentName.Equals(compartmentId,
-                                StringComparison.InvariantCultureIgnoreCase));
+                            string.Equals(p.TargetCompartmentName,compartmentId, StringComparison.InvariantCultureIgnoreCase) ||
+                            string.Equals(p.SourceCompartmentName, compartmentId, StringComparison.InvariantCultureIgnoreCase));
                     if (branch is IPipe pipe)
-                        compartment = pipe.SourceCompartmentName.Equals(compartmentId)
+                        compartment = string.Equals(pipe.SourceCompartmentName,compartmentId)
                             ? pipe.SourceCompartment
                             : pipe.TargetCompartment;
 
