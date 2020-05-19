@@ -172,6 +172,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
         [Test]
         [Category(TestCategory.Slow)]
+        [Category("ToCheck")]
         public void ShowFMModelRunCoupledToRTC()
         {
             WaterFlowFMModel flow;
