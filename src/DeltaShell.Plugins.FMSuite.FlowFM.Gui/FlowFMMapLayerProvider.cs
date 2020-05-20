@@ -191,7 +191,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
 
                     return new VectorLayer(LayerName1D2DLinks)
                     {
-                        DataSource = new Feature2DCollection().Init(linksMapfile, "1d2dLink", ModelName, coordinateSystem),
+                        DataSource = new WaterFlowFmModelFeature2DCollection().Init(linksMapfile, "1d2dLink", ModelName, coordinateSystem),
                         CanBeRemovedByUser = false,
                         SmoothingMode = SmoothingMode.AntiAlias,
                         Opacity = 0.7f,

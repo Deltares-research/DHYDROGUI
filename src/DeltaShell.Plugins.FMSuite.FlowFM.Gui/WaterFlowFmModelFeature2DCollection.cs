@@ -7,7 +7,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
     public class WaterFlowFmModelFeature2DCollection : Feature2DCollection
     {
         private WaterFlowFMModel fmModel;
-
+        private static readonly string ModelName = typeof(WaterFlowFMModel).Name;
         public WaterFlowFMModel FmModel
         {
             get { return fmModel; }
@@ -32,7 +32,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             WaterFlowFMModel model)
         {
             FmModel = model;
-            Init(features, featureTypeName, FmModel.Name, FmModel.CoordinateSystem);
+            Init(features, featureTypeName, ModelName, FmModel.CoordinateSystem);
             return this;
         }
 
