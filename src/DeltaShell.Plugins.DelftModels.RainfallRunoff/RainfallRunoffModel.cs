@@ -82,6 +82,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
                 {
                     Name = RainfallRunoffModelDataSet.EvaporationName
                 };
+            GenerateDefaultEvaporationTimeSeries(globalEvaporation.Data);
             AddDataItem(globalEvaporation, RainfallRunoffModelDataSet.EvaporationName, DataItemRole.Input, RainfallRunoffModelDataSet.EvaporationTag);
 
             // precipitation
@@ -178,6 +179,31 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
                 WorkFlowTypeValidatorFactory.WorkFlowTypeValidators.Add(new RainfallRunoffInWorkFlowTypeValidatorProvider());
             }
             runner = new DimrRunner(this);
+        }
+
+        /// <summary>
+        /// Generate a default global evaporation timeseries
+        /// from 01-01-1980 until 01-01-2030.
+        /// </summary>
+        /// <param name="globalEvaporationData"></param>
+        private void GenerateDefaultEvaporationTimeSeries(IFunction globalEvaporationData)
+        {
+            var timeArgument = globalEvaporationData.Arguments.OfType<IVariable<DateTime>>().FirstOrDefault();
+            if (timeArgument != null)
+            {
+                var startDate = new DateTime(1980, 01, 01);
+                var endDate = new DateTime(2030, 01, 01);
+                var dates = new List<DateTime>();
+                var currentDate = startDate;
+
+                while (currentDate <= endDate)
+                {
+                    dates.Add(currentDate);
+                    currentDate = currentDate.AddYears(1);
+                }
+
+                timeArgument.SetValues(dates);
+            }
         }
 
         public override bool IsLinkAllowed(IDataItem source, IDataItem target)
