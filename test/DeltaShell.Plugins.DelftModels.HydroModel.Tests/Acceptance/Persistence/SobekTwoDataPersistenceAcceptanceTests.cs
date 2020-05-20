@@ -25,7 +25,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
         {
             new object[] {"DarEsSalaam", "14", 177, 0},
             new object[] {"Waardenburg", "27", 288, 0},
-            new object[] {"HogeRaam", "9", 0, 0}, // TODO: Add preconditions when the model can be correctly imported
+            new object[] {"HogeRaam", "9", 1477, 0}, // TODO: Add preconditions when the model can be correctly imported
             new object[] {"Jakarta", "3", 0, 0} // TODO: Add preconditions when the model can be correctly imported
         };
 
