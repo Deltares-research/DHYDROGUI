@@ -186,10 +186,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
         public static void ConfigureDemoPipeNetwork(IHydroNetwork network)
         {
             // add nodes and branches
-            INode node1 = new HydroNode { Name = "Node1", Network = network };
-            INode node2 = new HydroNode { Name = "Node2", Network = network };
-            INode node3 = new HydroNode { Name = "Node3", Network = network };
-            INode node4 = new HydroNode { Name = "Node4", Network = network };
+            INode node1 = new Manhole { Name = "Node1", Network = network };
+            INode node2 = new Manhole { Name = "Node2", Network = network };
+            INode node3 = new Manhole { Name = "Node3", Network = network };
+            INode node4 = new Manhole { Name = "Node4", Network = network };
 
             // create pipe network
             node1.Geometry = new Point(1, 0.5);
@@ -202,16 +202,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             network.Nodes.Add(node3);
             network.Nodes.Add(node4);
 
-
-            var pipe1 = new Pipe
-            {
-                Name = "pipe1",
-                Source = node1,
-                Target = node2,
-                Length = 2.06
-            };
-            var pipe2 = new Pipe {Name = "pipe2", Source = node2, Target = node3, Length = 2.5};
-            var pipe3 = new Pipe {Name = "pipe3", Source = node3, Target = node4, Length = 2.24};
+            var pipe1 = new Pipe {Name = "pipe1", Network = network, Source = node1, Target = node2, Length = 2.06};
+            var pipe2 = new Pipe {Name = "pipe2", Network = network, Source = node2, Target = node3, Length = 2.5};
+            var pipe3 = new Pipe {Name = "pipe3", Network = network, Source = node3, Target = node4, Length = 2.24};
 
             pipe1.Geometry = new LineString(new[]
             {

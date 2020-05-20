@@ -26,6 +26,11 @@ namespace DelftTools.Hydro.SewerFeatures
         public Compartment(string name)
         {
             Name = name;
+            SurfaceLevel = 0.0;
+            BottomLevel = -2.0;
+            FloodableArea = 100.0;
+            ManholeLength = 0.64;
+            ManholeWidth = 0.64;
         }
 
         [FeatureAttribute(Order = 1)]

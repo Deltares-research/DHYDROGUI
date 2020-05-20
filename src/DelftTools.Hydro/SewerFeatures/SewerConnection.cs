@@ -110,14 +110,7 @@ namespace DelftTools.Hydro.SewerFeatures
                     {
                         var uniqueCompartmentName = NetworkHelper.GetUniqueName("Compartment{0:D3}",
                             hydroNetwork.Manholes.SelectMany(m => m.Compartments), "Compartment");
-                        var newCompartment = new Compartment(uniqueCompartmentName)
-                        {
-                            SurfaceLevel = 0.0,
-                            BottomLevel = -2.0,
-                            FloodableArea = 100.0,
-                            ManholeLength = 0.64,
-                            ManholeWidth = 0.64
-                        };
+                        var newCompartment = new Compartment(uniqueCompartmentName);
                         lock (manhole.Compartments)
                         {
                             manhole.Compartments.Add(newCompartment);
@@ -141,7 +134,7 @@ namespace DelftTools.Hydro.SewerFeatures
 
         private void AfterSetSource()
         {
-            if (source == null) return;
+            if (source == null || source.OutgoingBranches.Contains(this)) return;
             lock (source.OutgoingBranches)
             {
                 source?.OutgoingBranches.Add(this);
@@ -197,14 +190,7 @@ namespace DelftTools.Hydro.SewerFeatures
                     {
                         var uniqueCompartmentName = NetworkHelper.GetUniqueName("Compartment{0:D3}",
                             hydroNetwork.Manholes.SelectMany(m => m.Compartments), "Compartment");
-                        var newCompartment = new Compartment(uniqueCompartmentName)
-                        {
-                            SurfaceLevel = 0.0,
-                            BottomLevel = -2.0,
-                            FloodableArea = 100.0,
-                            ManholeLength = 0.64,
-                            ManholeWidth = 0.64
-                        };
+                        var newCompartment = new Compartment(uniqueCompartmentName);
                         lock (manhole.Compartments)
                         {
                             manhole.Compartments.Add(newCompartment);
@@ -228,7 +214,7 @@ namespace DelftTools.Hydro.SewerFeatures
 
         private void AfterTargetSet()
         {
-            if(target == null) return;
+            if(target == null || target.IncomingBranches.Contains(this)) return;
             lock (target.IncomingBranches)
             {
                 target?.IncomingBranches.Add(this);
