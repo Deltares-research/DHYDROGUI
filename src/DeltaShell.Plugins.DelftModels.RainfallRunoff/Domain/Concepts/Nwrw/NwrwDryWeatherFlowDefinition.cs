@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.ComponentModel;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using DelftTools.Hydro;
 using DelftTools.Utils.Aop;
@@ -35,7 +36,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
         {
             var rrModel = model as RainfallRunoffModel;
             if (rrModel == null) throw new ArgumentException();
-            if (rrModel.NwrwDryWeatherFlowDefinitions.Contains(this)) return;
+            if (rrModel.NwrwDryWeatherFlowDefinitions.Any(definition => definition.Name.Equals(this.Name, StringComparison.InvariantCultureIgnoreCase))) return;
             if (NotSupportedByKernel()) return;
 
             ConvertGwswUnitsToKernelUnits();
