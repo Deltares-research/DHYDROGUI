@@ -976,6 +976,7 @@ src/DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui/Controls/MeteoStationsList
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui/Controls/MultipleDataEditor.Designer.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui/Controls/MultipleDataEditor.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui/Controls/MultipleDataEditor.resx -text
+src/DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui/Controls/NwrwMultipleDataEditor.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui/Controls/RRBoundarySeriesView.Designer.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui/Controls/RRBoundarySeriesView.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui/Controls/RRBoundarySeriesView.resx -text

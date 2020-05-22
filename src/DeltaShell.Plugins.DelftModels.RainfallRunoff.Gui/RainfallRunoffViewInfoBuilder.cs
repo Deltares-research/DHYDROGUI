@@ -37,7 +37,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui
             yield return new ViewInfo<IEventedList<NwrwDryWeatherFlowDefinition>, NwrwDryWeatherFlowDefinitionView>
                 {
                     Description = "Dryweather flow view",
-                    GetViewName = (v, o) => "Dryweather Flow Definitions",
+                    GetViewName = (v, o) => "Dryweather Flow Definitions"
                 };
             yield return new ViewInfo<IEventedList<NwrwDefinition>, NwrwDefinitionView>
             {
@@ -245,7 +245,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui
                         DefaultAfterCreate(v, o, rainfallRunoffGuiPlugin.Gui);
                     }
                 };
-            yield return new ViewInfo<TreeFolder, IEnumerable<IDataRowProvider>, MultipleDataEditor>
+            yield return new ViewInfo<TreeFolder, IEnumerable<IDataRowProvider>, NwrwMultipleDataEditor>
                 {
                     Description = "Catchment attribute viewer",
                     GetViewName = (v, o) => "Multiple data editor (D-RR)",

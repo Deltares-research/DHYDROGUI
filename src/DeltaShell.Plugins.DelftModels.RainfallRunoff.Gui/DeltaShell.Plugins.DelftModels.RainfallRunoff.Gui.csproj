@@ -282,6 +282,9 @@
     <Compile Include="Controls\MultipleDataEditor.Designer.cs">
       <DependentUpon>MultipleDataEditor.cs</DependentUpon>
     </Compile>
+    <Compile Include="Controls\NwrwMultipleDataEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Controls\RainfallRunoffFormsHelper.cs" />
     <Compile Include="Controls\RRBoundarySeriesView.cs">
       <SubType>UserControl</SubType>

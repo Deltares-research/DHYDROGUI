@@ -50,7 +50,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Controls
 
         #region IView<IEnumerable<IDataRowProvider>> Members
 
-        public object Data
+        public virtual object Data
         {
             get { return data; }
             set
@@ -109,6 +109,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Controls
                 }
             }
         }
+        
 
         private void CreateTabsForProviders()
         {
@@ -180,7 +181,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Controls
             ShowDataForSelectedTab();
         }
 
-        private void ShowDataForSelectedTab()
+        protected void ShowDataForSelectedTab()
         {
             if (tabControl.SelectedTab != null) //happens on closing view
             {
