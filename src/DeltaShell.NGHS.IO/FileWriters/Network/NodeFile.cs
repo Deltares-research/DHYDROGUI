@@ -59,6 +59,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Network
             iniCategory.AddProperty(new DelftIniProperty(KnownPropertyNames.StreetLevel, GetValueAsStringWithFormat(compartment.SurfaceLevel, "{0:0.000}"), string.Empty));
             iniCategory.AddProperty(new DelftIniProperty(KnownPropertyNames.StorageType, "Reservoir", string.Empty));
             iniCategory.AddProperty(new DelftIniProperty(KnownPropertyNames.StreetStorageArea, GetValueAsStringWithFormat(compartment.FloodableArea, "{0:0.000}"), string.Empty));
+            iniCategory.AddProperty(new DelftIniProperty(KnownPropertyNames.CompartmentShape, compartment.Shape.ToString(), String.Empty));
             return iniCategory;
         }
 
@@ -90,6 +91,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Network
                         StreetLevel = GetPropertyValueAsDouble(KnownPropertyNames.StreetLevel, category),
                         StorageType = category.GetPropertyValue(KnownPropertyNames.StorageType),
                         StreetStorageArea = GetPropertyValueAsDouble(KnownPropertyNames.StreetStorageArea, category),
+                        CompartmentShape = (CompartmentShape)Enum.Parse(typeof(CompartmentShape), category.ReadProperty<string>(KnownPropertyNames.CompartmentShape))
                     };
                 })
                 .ToList();
@@ -112,6 +114,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Network
             public const string StreetLevel = "StreetLevel";
             public const string StorageType = "StorageType";
             public const string StreetStorageArea = "StreetStorageArea";
+            public const string CompartmentShape = "CompartmentShape";
         }
 
         public class CompartmentProperties
@@ -135,6 +138,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Network
             public string StorageType { get; set; }
 
             public double StreetStorageArea { get; set; }
+            public CompartmentShape CompartmentShape { get; set; }
         }
     }
 }
