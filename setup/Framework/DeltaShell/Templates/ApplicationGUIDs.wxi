@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Include>
+  <?define DesktopShortcutAnyCPUGuid="{95CB41B6-30AB-4AAC-AEEE-668392F53324}"?>
+  <?define UninstallShortcutComponentGuid="{3B4C917B-3AE4-44DE-85DA-25A69EA3FCA3}"?>
+  <?define ProgramGroupMenuDirComponentGuid="{9BF1DDA5-45BF-48F4-BA8F-DFF6428EAAC3}"?>
+  <?define ManualsMenuShortcutsGuid="{5EA01710-000D-4E1A-9B76-57866DD75E17}"?>
+  <?define ScriptingPluginGuid="{55650CE6-D752-4D5B-A6DB-7BD485CD45A8}"?>
+  <?define ScriptingPluginToolFolderGuid="{BE41DBC6-55BD-4F56-A0C3-CE51365AB95F}"?>
+  <?define ScriptingPluginDllsFolderGuid="{E6922A3D-F4CD-4228-940C-D917CC84ED09}"?>
+</Include>
