@@ -26,5 +26,17 @@ namespace DelftTools.Hydro.Tests
             TestDelegate action = () => InitialConditionQuantityTypeConverter.ConvertStringToInitialConditionQuantity(invalidQuantity);
             Assert.Throws<InvalidOperationException>(action);
         }
+
+        [Test]
+        [TestCase( InitialConditionQuantity.WaterDepth, "Water depth")]
+        [TestCase( InitialConditionQuantity.WaterLevel, "Water level")]
+        public void GivenInitialConditionQuantity_WhenCallingInitialConditionQuantityConverter_ThenReturnsCorrectInitialConditionQuantityString(
+            InitialConditionQuantity initialConditionQuantity,
+            string expectedInitialConditionQuantityString
+            )
+        {
+            var actualInitialConditionQuantityString = InitialConditionQuantityTypeConverter.ConvertInitialConditionQuantityToString(initialConditionQuantity);
+            Assert.That(actualInitialConditionQuantityString, Is.EqualTo(expectedInitialConditionQuantityString));
+        }
     }
 }

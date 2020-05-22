@@ -19,6 +19,9 @@ namespace DeltaShell.NGHS.IO.DataObjects.InitialConditions
         {
             Channel = channel;
         }
+        public ChannelInitialConditionDefinition()
+        {
+        }
 
         public IChannel Channel { get; private set; }
 
@@ -54,7 +57,14 @@ namespace DeltaShell.NGHS.IO.DataObjects.InitialConditions
 
         public object Clone()
         {
-            throw new System.NotImplementedException();
+            var clone = (ChannelInitialConditionDefinition)Activator.CreateInstance(this.GetType());
+            clone.Channel = Channel;
+            clone.SpecificationType = specificationType;
+            clone.ConstantChannelInitialConditionDefinition = ConstantChannelInitialConditionDefinition;
+            clone.SpatialChannelInitialConditionDefinition = SpatialChannelInitialConditionDefinition;
+            clone.Geometry = Geometry;
+            clone.Attributes = Attributes;
+            return clone;
         }
 
         # endregion

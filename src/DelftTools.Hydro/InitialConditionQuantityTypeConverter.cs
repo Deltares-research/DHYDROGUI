@@ -24,7 +24,27 @@ namespace DelftTools.Hydro
                 case "waterdepth":
                     return InitialConditionQuantity.WaterDepth;
                 default:
-                    throw new InvalidOperationException($"{initialConditionQuantityString} is not a valid initial condition quantity");
+                    throw new InvalidOperationException($"{initialConditionQuantityString} is not a valid initial condition quantity.");
+            }
+        }
+
+        /// <summary>
+        /// Converts a <see cref="InitialConditionQuantity"/> to a string.
+        /// </summary>
+        /// <param name="quantity">The <see cref="InitialConditionQuantity"/> to convert.</param>
+        /// <returns>A string representing the quantity.</returns>
+        /// <exception cref="InvalidOperationException">When an invalid quantity is provided.</exception>
+        public static string ConvertInitialConditionQuantityToString(
+            InitialConditionQuantity quantity)
+        {
+            switch (quantity)
+            {
+                case InitialConditionQuantity.WaterLevel:
+                    return "Water level";
+                case InitialConditionQuantity.WaterDepth:
+                    return "Water depth";
+                default:
+                    throw new InvalidOperationException($"{quantity} is not a valid initial condition quantity.");
             }
         }
     }
