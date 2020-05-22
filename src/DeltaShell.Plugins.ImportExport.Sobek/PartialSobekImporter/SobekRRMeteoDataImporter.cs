@@ -196,6 +196,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                 }
                 else
                 {
+                    evaporation.Data.Arguments[0].Clear();
                     evaporation.Data.Arguments[0].SetValues(evapDict.Keys);
 
                     // stations already filled in (shared with precipitation)
@@ -263,6 +264,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
         {
             // just do it global
             evaporation.DataDistributionType = MeteoDataDistributionType.Global;
+            evaporation.Data.Arguments[0].Clear();
             evaporation.Data.Arguments[0].SetValues(times);
             evaporation.Data.SetValues(values);
         }

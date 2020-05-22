@@ -27,6 +27,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Exporters
         {
             rainfallRunoffModel.Evaporation.DataDistributionType = MeteoDataDistributionType.Global;
             var data = rainfallRunoffModel.Evaporation.MeteoDataDistributed.Data;
+            data.Arguments[0].Clear(); // remove default values
             data.Arguments[0].SetValues(new[] { new DateTime(2014,1,1), new DateTime(2014,1,2), new DateTime(2014,1,3) });
             data.Components[0].SetValues(new[] {1.0, 2.0, 3.0});
 

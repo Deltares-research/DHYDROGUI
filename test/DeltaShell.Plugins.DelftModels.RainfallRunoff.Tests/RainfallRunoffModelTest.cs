@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.TestUtils.TestReferenceHelper;
@@ -198,6 +199,41 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
             {
                 Assert.DoesNotThrow(() => TypeUtils.CallPrivateMethod(model, "GetMetaDataRequirements", version));
             }
+        }
+
+        [Test]
+        public void NewRainfallRunoffModelHasCorrectDefaultEvaporationData()
+        {
+            var model = new RainfallRunoffModel();
+
+            var expectedDates = new List<DateTime>();
+            var startDate = new DateTime(1980, 01, 01);
+            var endDate = new DateTime(2030, 01, 01);
+            var currentDate = startDate;
+
+            while (currentDate <= endDate)
+            {
+                expectedDates.Add(currentDate);
+                currentDate = currentDate.AddYears(1);
+            }
+            Assert.That(expectedDates.Count, Is.EqualTo(51));
+            Assert.That(expectedDates.First(), Is.EqualTo(new DateTime(1980,1,1)));
+            Assert.That(expectedDates.Last(), Is.EqualTo(new DateTime(2030,1,1)));
+
+
+            var actualEvaporationTimeData = model.Evaporation.Data.Arguments[0].Values;
+            var actualEvaporationValues = model.Evaporation.Data.Components[0].Values;
+
+            // assert that all expected dates are present in the actual evaporation data
+            Assert.That(actualEvaporationTimeData.Count, Is.EqualTo(expectedDates.Count));
+            foreach (var expectedDate in expectedDates)
+            {
+                Assert.That(actualEvaporationTimeData.Contains(expectedDate));
+            }
+
+            // assert that the component is set to 0 for each date
+            Assert.That(actualEvaporationValues.Count, Is.EqualTo(expectedDates.Count));
+            Assert.That(actualEvaporationValues, Is.All.EqualTo(0));
         }
     }
 }
