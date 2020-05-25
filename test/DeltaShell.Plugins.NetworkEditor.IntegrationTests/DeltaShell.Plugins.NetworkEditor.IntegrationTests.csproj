@@ -225,7 +225,6 @@
   <ItemGroup>
     <Compile Include="CaseAnalysisGuiIntegrationTest.cs" />
     <Compile Include="DeltaShellNetworkEditorIntegrationTest.cs" />
-    <Compile Include="HydroAreaGuiIntegrationTest.cs" />
     <Compile Include="NHibernate\NHibernateCrossSectionTest.cs" />
     <Compile Include="NHibernate\NHibernateDrainageBasinIntegrationTest.cs" />
     <Compile Include="NHibernate\NHibernateHydroNetworkIntegrationTest.cs" />

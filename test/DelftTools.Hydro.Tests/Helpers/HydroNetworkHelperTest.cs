@@ -24,29 +24,6 @@ namespace DelftTools.Hydro.Tests.Helpers
     public class HydroNetworkHelperTest
     {
         [Test]
-        public void TestAddStructureToExistingCompositeStructureOrToANewOne_GeneratesUniqueNamesForCompositeBranchStructures()
-        {
-            IHydroNetwork network = HydroNetworkHelper.GetSnakeHydroNetwork(1);
-            IBranch branch = network.Branches.First();
-            Assert.NotNull(branch);
-
-            var weir1 = new Weir("weir1") {Chainage = branch.Length / 3};
-            var weir2 = new Weir("weir2") {Chainage = branch.Length / 3};
-            var weir3 = new Weir("weir3") {Chainage = (branch.Length * 2) / 3};
-
-            HydroNetworkHelper.AddStructureToExistingCompositeStructureOrToANewOne(weir1, branch);
-            Assert.AreEqual(1, network.CompositeBranchStructures.Count());
-
-            HydroNetworkHelper.AddStructureToExistingCompositeStructureOrToANewOne(weir2, branch);
-            Assert.AreEqual(1, network.CompositeBranchStructures.Count());
-
-            HydroNetworkHelper.AddStructureToExistingCompositeStructureOrToANewOne(weir3, branch);
-            Assert.AreEqual(2, network.CompositeBranchStructures.Count());
-
-            Assert.IsTrue(network.CompositeBranchStructures.Select(cbs => cbs.Name).HasUniqueValues());
-        }
-
-        [Test]
         public void DetectAndUpdateBranchBoundaries()
         {
             var network = new HydroNetwork();

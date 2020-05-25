@@ -224,35 +224,7 @@ namespace DelftTools.Hydro.Helpers
 
             structure.Branch.BranchFeatures.Add(structure);
         }
-
-        public static void AddStructureToExistingCompositeStructureOrToANewOne(IStructure1D structure, IBranch branch)
-        {
-            ICompositeBranchStructure compositeBranchStructure = branch
-                                                                 .BranchFeatures.OfType<ICompositeBranchStructure>()
-                                                                 .FirstOrDefault(
-                                                                     f => Math.Abs(f.Chainage - structure.Chainage) <
-                                                                          0.01);
-
-            if (compositeBranchStructure == null)
-            {
-                compositeBranchStructure = new CompositeBranchStructure
-                {
-                    Branch = branch,
-                    Network = branch.Network,
-                    Chainage = structure.Chainage,
-                    Geometry = (IGeometry) structure.Geometry?.Clone()
-                };
-
-                // make new composite structure names unique
-                compositeBranchStructure.Name =
-                    GetUniqueFeatureName(compositeBranchStructure.Network as HydroNetwork, compositeBranchStructure);
-
-                branch.BranchFeatures.Add(compositeBranchStructure);
-            }
-
-            AddStructureToComposite(compositeBranchStructure, structure);
-        }
-
+        
         /// <summary>
         /// Removes a structure from the hydro network
         /// </summary>
