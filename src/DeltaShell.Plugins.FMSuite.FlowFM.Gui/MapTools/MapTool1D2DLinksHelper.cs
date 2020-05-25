@@ -38,7 +38,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
             if (link == null) 
                 return false;
 
-            if (linkType == LinkType.GullySewer && IsLinkConnectedToAGully(link, fmModel))
+            if (linkType != LinkType.GullySewer || IsLinkConnectedToAGully(link, fmModel))
             {
                 fmModel.Links.Add(link);
             }
