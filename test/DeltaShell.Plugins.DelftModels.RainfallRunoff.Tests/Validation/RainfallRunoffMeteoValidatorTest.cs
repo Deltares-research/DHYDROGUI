@@ -25,11 +25,9 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Validation
             Assert.AreEqual(ValidationSeverity.Error, report.Severity());
             var issues = report.GetAllIssuesRecursive();
 
-            Assert.AreEqual(2, issues.Count);
+            Assert.AreEqual(1, issues.Count);
             Assert.AreEqual("Not enough values defined", issues[0].Message);
             Assert.AreEqual(rrm.Precipitation, issues[0].Subject);
-            Assert.AreEqual("Not enough values defined", issues[1].Message);
-            Assert.AreEqual(rrm.Evaporation, issues[1].Subject);
         }
 
         [Test]
