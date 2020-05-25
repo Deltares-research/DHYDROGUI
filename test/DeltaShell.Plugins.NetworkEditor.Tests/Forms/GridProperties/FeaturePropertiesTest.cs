@@ -13,16 +13,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.GridProperties
     public class FeaturePropertiesTest
     {
         [Test]
-        [Category(TestCategory.WindowsForms)]
-        public void ShowPropertiesOfBridge()
-        {
-            var bridge = new Bridge();
-            bridge.Attributes.Add("test", "11");
-
-            WindowsFormsTestHelper.ShowModal(new PropertyGrid {SelectedObject = new BridgeProperties {Data = bridge}});
-        }
-
-        [Test]
         [Category(TestCategory.Integration)]
         public void MoveBranchNodeShouldMoveBranchStructures()
         {

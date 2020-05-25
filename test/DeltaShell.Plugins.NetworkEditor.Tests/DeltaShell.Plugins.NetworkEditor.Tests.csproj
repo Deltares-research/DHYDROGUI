@@ -241,32 +241,22 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AreaLayerTest.cs" />
-    <Compile Include="CulvertPropertiesTest.cs" />
     <Compile Include="Forms\CrossSectionView\ProfileMutators\YZProfileMutatorTest.cs" />
-    <Compile Include="Forms\GridProperties\BridgePropertiesTest.cs" />
     <Compile Include="Forms\GridProperties\CatchmentPropertiesTest.cs" />
-    <Compile Include="Forms\GridProperties\CompositeStructurePropertiesTest.cs" />
     <Compile Include="Forms\GridProperties\CrossSectionDefinitionPropertiesTest.cs" />
     <Compile Include="Forms\GridProperties\CrossSectionSectionTypePropertiesTest.cs" />
-    <Compile Include="Forms\GridProperties\CulvertPropertiesTest.cs" />
     <Compile Include="Forms\GridProperties\DiscretizationPropertiesTest.cs" />
     <Compile Include="Forms\GridProperties\DrainageBasinPropertiesTest.cs" />
-    <Compile Include="Forms\GridProperties\ExtraResistancePropertiesTest.cs" />
     <Compile Include="Forms\GridProperties\FeatureCoveragePropertiesTest.cs" />
     <Compile Include="Forms\GridProperties\HydroLinkPropertiesTest.cs" />
     <Compile Include="Forms\GridProperties\HydroNodePropertiesTest.cs" />
     <Compile Include="Forms\GridProperties\HydroRegionPropertiesTest.cs" />
-    <Compile Include="Forms\GridProperties\LateralSourcePropertiesTest.cs" />
     <Compile Include="Forms\GridProperties\NetworkCoveragePropertiesTest.cs" />
     <Compile Include="Forms\GridProperties\NetworkLocationPropertiesTest.cs" />
     <Compile Include="Forms\GridProperties\NetworkPropertiesTest.cs" />
     <Compile Include="Forms\GridProperties\NetworkSegmentPropertiesTest.cs" />
-    <Compile Include="Forms\GridProperties\ObservationPointPropertiesTest.cs" />
-    <Compile Include="Forms\GridProperties\PumpPropertiesTest.cs" />
-    <Compile Include="Forms\GridProperties\RetentionPropertiesTest.cs" />
     <Compile Include="Forms\GridProperties\RunoffBoundaryPropertiesTest.cs" />
     <Compile Include="Forms\GridProperties\WasteWaterTreatmentPlantPropertiesTest.cs" />
-    <Compile Include="Forms\GridProperties\WeirPropertiesTest.cs" />
     <Compile Include="Forms\StructureFeatureView\CrestValidationRuleTest.cs" />
     <Compile Include="Forms\StructureFeatureView\CrestWidthValidationRuleTest.cs" />
     <Compile Include="Forms\StructureFeatureView\CulvertViewWpfModelTest.cs" />
@@ -346,7 +336,6 @@
     <Compile Include="NetworkEditorPluginTest.cs" />
     <Compile Include="NetworkEditorTestHelper.cs" />
     <Compile Include="TestClassSetup.cs" />
-    <Compile Include="Forms\GridProperties\CrossSectionPropertiesTest.cs" />
     <Compile Include="Forms\NetworkSideView\BedLevelNetworkCoverageBuilderTest.cs" />
     <Compile Include="Forms\NetworkSideView\NetworkSideViewDataTest.cs" />
     <Compile Include="Forms\NetworkSideView\NetworkSideViewFunctionTest.cs" />

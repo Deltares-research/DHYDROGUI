@@ -198,7 +198,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
 
         public override IEnumerable<PropertyInfo> GetPropertyInfos()
         {
-            yield return new PropertyInfo<ICrossSection, CrossSectionProperties>();
             yield return new PropertyInfo<ICrossSectionDefinition, CrossSectionDefinitionProperties>();
             yield return new PropertyInfo<IHydroNode, HydroNodeProperties>();
             yield return new PropertyInfo<IChannel, ChannelProperties>();
@@ -208,22 +207,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             yield return new PropertyInfo<Discretization, DiscretizationProperties>();
             yield return new PropertyInfo<INetworkCoverage, NetworkCoverageProperties>();
             yield return new PropertyInfo<IFeatureCoverage, FeatureCoverageProperties>();
-            yield return new PropertyInfo<ICompositeBranchStructure, CompositeStructureProperties>();
-            yield return new PropertyInfo<IWeir, WeirProperties> {AdditionalDataCheck = w => w.HydroNetwork != null};
             yield return new PropertyInfo<IGate, GateProperties>();
-            yield return new PropertyInfo<IPump, PumpProperties>();
-            yield return new PropertyInfo<IBridge, BridgeProperties>();
-            yield return new PropertyInfo<ICulvert, CulvertProperties>();
-            yield return new PropertyInfo<IExtraResistance, ExtraResistanceProperties>();
-            yield return new PropertyInfo<LateralSource, LateralSourceProperties>();
-            yield return new PropertyInfo<ObservationPoint, ObservationPointProperties>();
             yield return new PropertyInfo<Catchment, CatchmentProperties>();
             yield return new PropertyInfo<WasteWaterTreatmentPlant, WasteWaterTreatmentPlantProperties>();
             yield return new PropertyInfo<RunoffBoundary, RunoffBoundaryProperties>();
             yield return new PropertyInfo<NetworkLocation, NetworkLocationProperties>();
             yield return new PropertyInfo<NetworkSegment, NetworkSegmentProperties>();
             yield return new PropertyInfo<CrossSectionSectionType, CrossSectionSectionTypeProperties>();
-            yield return new PropertyInfo<Retention, RetentionProperties>();
             yield return new PropertyInfo<HydroLink, HydroLinkProperties>();
             yield return new PropertyInfo<HydroArea, HydroAreaProperties>();
         }

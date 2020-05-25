@@ -478,17 +478,12 @@
     <Compile Include="Forms\NetworkSideView\NetworkSideViewDataController.cs" />
     <Compile Include="Forms\NetworkSideView\NetworkSideViewHelper.cs" />
     <Compile Include="Forms\NetworkSideView\SideViewCoveragesContextMenu.cs" />
-    <Compile Include="Forms\PropertyGrid\BridgeProperties.cs" />
     <Compile Include="Forms\PropertyGrid\CatchmentProperties.cs" />
     <Compile Include="Forms\PropertyGrid\ChannelProperties.cs" />
-    <Compile Include="Forms\PropertyGrid\CompositeStructureProperties.cs" />
     <Compile Include="Forms\PropertyGrid\CrossSectionDefinitionProperties.cs" />
-    <Compile Include="Forms\PropertyGrid\CrossSectionProperties.cs" />
     <Compile Include="Forms\PropertyGrid\CrossSectionSectionTypeProperties.cs" />
-    <Compile Include="Forms\PropertyGrid\CulvertProperties.cs" />
     <Compile Include="Forms\PropertyGrid\DiscretizationProperties.cs" />
     <Compile Include="Forms\PropertyGrid\DrainageBasinProperties.cs" />
-    <Compile Include="Forms\PropertyGrid\ExtraResistanceProperties.cs" />
     <Compile Include="Forms\PropertyGrid\FeatureCoverageProperties.cs" />
     <Compile Include="Forms\PropertyGrid\FreeFormWeirFormulaProperties.cs" />
     <Compile Include="Forms\PropertyGrid\GatedWeirFormulaProperties.cs" />
@@ -497,23 +492,18 @@
     <Compile Include="Forms\PropertyGrid\HydroLinkProperties.cs" />
     <Compile Include="Forms\PropertyGrid\HydroNodeProperties.cs" />
     <Compile Include="Forms\PropertyGrid\HydroRegionProperties.cs" />
-    <Compile Include="Forms\PropertyGrid\LateralSourceProperties.cs" />
     <Compile Include="Forms\PropertyGrid\NetworkCoverageProperties.cs" />
     <Compile Include="Forms\PropertyGrid\NetworkLocationProperties.cs" />
     <Compile Include="Forms\PropertyGrid\HydroNetworkProperties.cs" />
     <Compile Include="Forms\PropertyGrid\HydroAreaProperties.cs" />
     <Compile Include="Forms\PropertyGrid\NetworkSegmentProperties.cs" />
-    <Compile Include="Forms\PropertyGrid\ObservationPointProperties.cs" />
     <Compile Include="Forms\PropertyGrid\PierWeirFormulaProperties.cs" />
-    <Compile Include="Forms\PropertyGrid\PumpProperties.cs" />
-    <Compile Include="Forms\PropertyGrid\RetentionProperties.cs" />
     <Compile Include="Forms\PropertyGrid\RiverWeirFormulaProperties.cs" />
     <Compile Include="Forms\PropertyGrid\RunoffBoundaryProperties.cs" />
     <Compile Include="Forms\PropertyGrid\SimpleWeirFormulaProperties.cs" />
     <Compile Include="Forms\PropertyGrid\TimeDependency.cs" />
     <Compile Include="Forms\PropertyGrid\WasteWaterTreatmentPlantProperties.cs" />
     <Compile Include="Forms\PropertyGrid\WeirFormulaProperties.cs" />
-    <Compile Include="Forms\PropertyGrid\WeirProperties.cs" />
     <Compile Include="Forms\SimpleProgress.cs">
       <SubType>Form</SubType>
     </Compile>

@@ -73,63 +73,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Helpers
             }
         }
 
-        // HACK: this method looks like a total hack, getting plugin instance, creating editors without layers. It does not use a "normal" way to edit features.
-        public static void MoveBranchFeatureTo(IBranchFeature branchFeature, double chainage, bool forceMaintainBranch = true)
-        {
-            object selection = NetworkEditorGuiPlugin.Instance == null ? null : NetworkEditorGuiPlugin.Instance.Gui.Selection;
-            chainage = BranchFeature.SnapChainage(branchFeature.Branch.Length, chainage);
-            ValidateChainage(chainage, branchFeature);
-
-            branchFeature.Network.BeginEdit(string.Format("Move branchfeature {0}", branchFeature));
-            // moving branchFeature will remove it from and add it to collection; save selection and restore 
-            // when done.
-            try
-            {
-                var e = new HydroNetworkFeatureEditor(branchFeature.Network);
-
-                IFeatureInteractor interactor = e.CreateInteractor(null, branchFeature);
-                interactor.Tolerance = 0.5;
-
-                var oldCoordinate = (Coordinate) branchFeature.Geometry.Coordinates[0].Clone();
-                Coordinate newCoordinate = GetCoordinateForBranchFeature(branchFeature, chainage);
-
-                double deltaX = newCoordinate.X - oldCoordinate.X;
-                double deltaY = newCoordinate.Y - oldCoordinate.Y;
-                interactor.Start();
-                TrackerFeature tracker = interactor.Trackers.FirstOrDefault(); // Not OK: what about extended, deformable branch features?
-                if (tracker != null)
-                {
-                    interactor.MoveTracker(tracker, deltaX, deltaY);
-                }
-
-                var snapResult = new SnapResult(interactor.TargetFeature.Geometry.Coordinate, branchFeature.Branch, interactor.Layer, branchFeature.Branch.Geometry, 0, 0);
-                //if the interactor can maintain the interactor we want that (when only changing offset)
-                if (interactor is IBranchMaintainableInteractor)
-                {
-                    (interactor as IBranchMaintainableInteractor).Stop(snapResult, forceMaintainBranch);
-                }
-                else
-                {
-                    interactor.Stop(snapResult);
-                }
-
-                // Ensure offset is as specified (Unaffected by rounding), especially noticeable for integer 'chainage'
-                EnsureInputChainageIsAsExpected(branchFeature, chainage);
-
-                if (NetworkEditorGuiPlugin.Instance != null)
-                {
-                    NetworkEditorGuiPlugin.Instance.Gui.Selection = selection;
-                }
-            }
-            finally
-            {
-                if (branchFeature.Network != null)
-                {
-                    branchFeature.Network.EndEdit();
-                }
-            }
-        }
-
         public static void UpdateBranchFeatureGeometry(IBranchFeature branchFeature, double calculationLength)
         {
             object selection = NetworkEditorGuiPlugin.Instance == null || NetworkEditorGuiPlugin.Instance.Gui == null ? null : NetworkEditorGuiPlugin.Instance.Gui.Selection;
