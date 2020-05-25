@@ -224,26 +224,6 @@ namespace DelftTools.Hydro.Helpers
 
             structure.Branch.BranchFeatures.Add(structure);
         }
-        
-        /// <summary>
-        /// Removes a structure from the hydro network
-        /// </summary>
-        /// <param name="structure"> </param>
-        public static void RemoveStructure(IStructure1D structure)
-        {
-            IBranch channel = structure.Branch;
-            if (channel == null)
-            {
-                return; // Do nothing if structure is not on a branch
-            }
-
-            channel.Network.BeginEdit("Delete " + structure.Name);
-
-            channel.BranchFeatures.Remove(structure);
-            RemoveFromChannel(structure, channel);
-
-            channel.Network.EndEdit();
-        }
 
         public static IHydroNetwork GetSnakeHydroNetwork(params Point[] points)
         {

@@ -433,7 +433,6 @@
       <DependentUpon>HydroRegionTreeView.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\HydroRegionTreeView\NodePresenters\BranchFeatureTreeViewNodePresenterBase.cs" />
-    <Compile Include="Forms\HydroRegionTreeView\NodePresenters\BridgeTreeViewNodePresenter.cs" />
     <Compile Include="Forms\HydroRegionTreeView\NodePresenters\CatchmentsTreeViewNodePresenter.cs" />
     <Compile Include="Forms\HydroRegionTreeView\NodePresenters\CatchmentTreeViewNodePresenter.cs" />
     <Compile Include="Forms\HydroRegionTreeView\NodePresenters\CatchmentTypeNodePresenter.cs" />
@@ -444,9 +443,7 @@
     <Compile Include="Forms\HydroRegionTreeView\NodePresenters\CrossSectionSectionTypesTreeViewNodePresenter.cs" />
     <Compile Include="Forms\HydroRegionTreeView\NodePresenters\CrossSectionSectionTypeTreeViewNodePresenter.cs" />
     <Compile Include="Forms\HydroRegionTreeView\NodePresenters\CrossSectionTreeViewNodePresenter.cs" />
-    <Compile Include="Forms\HydroRegionTreeView\NodePresenters\CulvertTreeViewNodePresenter.cs" />
     <Compile Include="Forms\HydroRegionTreeView\NodePresenters\DrainageBasinTreeViewNodePresenter.cs" />
-    <Compile Include="Forms\HydroRegionTreeView\NodePresenters\ExtraRestanceTreeViewNodePresenter.cs" />
     <Compile Include="Forms\HydroRegionTreeView\NodePresenters\HydroAreaTreeViewNodePresenter.cs" />
     <Compile Include="Forms\HydroRegionTreeView\NodePresenters\HydroRegionTreeViewNodePresenter.cs" />
     <Compile Include="Forms\HydroRegionTreeView\NodePresenters\LateralSourceTreeViewNodePresenter.cs" />
@@ -454,16 +451,13 @@
     <Compile Include="Forms\HydroRegionTreeView\NodePresenters\NetworkRouteTreeViewNodePresenter.cs" />
     <Compile Include="Forms\HydroRegionTreeView\NodePresenters\NetworkTreeViewNodePresenter.cs" />
     <Compile Include="Forms\HydroRegionTreeView\NodePresenters\ObservationPointTreeViewNodePresenter.cs" />
-    <Compile Include="Forms\HydroRegionTreeView\NodePresenters\PumpTreeViewNodePresenter.cs" />
     <Compile Include="Forms\HydroRegionTreeView\NodePresenters\RetentionNodePresenter.cs" />
     <Compile Include="Forms\HydroRegionTreeView\NodePresenters\RunoffBoundariesTreeViewNodePresenter.cs" />
     <Compile Include="Forms\HydroRegionTreeView\NodePresenters\RunoffBoundaryTreeViewNodePresenter.cs" />
     <Compile Include="Forms\HydroRegionTreeView\NodePresenters\SharedCrossSectionDefinitionsTreeViewNodePresenter.cs" />
     <Compile Include="Forms\HydroRegionTreeView\NodePresenters\SharedCrossSectionDefinitionTreeViewNodePresenter.cs" />
-    <Compile Include="Forms\HydroRegionTreeView\NodePresenters\StructureViewNodePresenter.cs" />
     <Compile Include="Forms\HydroRegionTreeView\NodePresenters\WasteWaterTreatmentPlantsTreeViewNodePresenter.cs" />
     <Compile Include="Forms\HydroRegionTreeView\NodePresenters\WasteWaterTreatmentPlantTreeViewNodePresenter.cs" />
-    <Compile Include="Forms\HydroRegionTreeView\NodePresenters\WeirTreeViewNodePresenter.cs" />
     <Compile Include="Forms\HydroRegionTreeView\TreeViewBranchFeatureNodeSorter.cs" />
     <Compile Include="Forms\ImportBranchFeatureDialog.cs">
       <SubType>Form</SubType>

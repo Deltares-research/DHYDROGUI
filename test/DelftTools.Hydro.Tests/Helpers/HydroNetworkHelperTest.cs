@@ -1524,14 +1524,7 @@ namespace DelftTools.Hydro.Tests.Helpers
             Assert.That(nameAlreadyExistCreateNew, Is.Not.Null);
             Assert.That(nameAlreadyExistCreateNew, Is.Not.EqualTo(link.Name));
         }
-
-        [Test]
-        public void RemoveStructureOnDisconnectedStructureShouldNotCrashTools9784()
-        {
-            var weir = new Weir();
-            Assert.DoesNotThrow(() => HydroNetworkHelper.RemoveStructure(weir));
-        }
-
+        
         /// <summary>
         /// Creates a simple test network of 1 branch and 2 nodes. The branch has '3' parts, in the center of
         /// the first and last is a cross section.

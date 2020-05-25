@@ -71,36 +71,5 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Editors
                 mapControl.Dispose();
             }
         }
-
-        [Test]
-        public void PropertyTest()
-        {
-            var pumpEditor = new StructureInteractor<Pump>(new VectorLayer {Map = mapControl.Map}, pump,
-                                                           new VectorStyle {Symbol = new Bitmap(16, 16)}, null);
-            Assert.AreEqual(true, pumpEditor.AllowDeletion());
-            Assert.AreEqual(true, pumpEditor.AllowMove());
-            Assert.AreEqual(true, pumpEditor.AllowSingleClickAndMove());
-        }
-
-        [Test]
-        public void MovePump()
-        {
-            var pumpEditor = new StructureInteractor<Pump>(new VectorLayer {Map = mapControl.Map}, pump,
-                                                           new VectorStyle {Symbol = new Bitmap(16, 16)}, null);
-            const double deltaX = 5;
-            const double deltaY = 0;
-
-            pumpEditor.Start();
-            pumpEditor.MoveTracker(pumpEditor.Trackers[0], deltaX, deltaY);
-
-            // result are not yet stored
-            Assert.AreEqual(5, pump.Geometry.Coordinates[0].X);
-            Assert.AreEqual(0, pump.Geometry.Coordinates[0].Y);
-
-            pumpEditor.Stop(new SnapResult(pumpEditor.TargetFeature.Geometry.Coordinate, pump.Channel, pumpEditor.Layer, pump.Channel.Geometry, 0, 0));
-
-            Assert.AreEqual(10, pump.Geometry.Coordinates[0].X);
-            Assert.AreEqual(0, pump.Geometry.Coordinates[0].Y);
-        }
     }
 }
