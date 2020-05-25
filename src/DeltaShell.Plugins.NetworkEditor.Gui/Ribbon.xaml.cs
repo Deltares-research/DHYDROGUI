@@ -34,7 +34,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
         private ICommand showHydroRegionContentsCommand = new ShowHydroRegionTreeViewCommand();
         private ICommand addNewBranchCommand = new AddNewBranchCommand();
         private ICommand addNewBranchScribbleCommand = new AddNewBranchUsingScribbleModeCommand();
-        private ICommand insertNewNodeCommand = new InsertNewNodeCommand();
         private ICommand addNewCrossSectionYZCommand = new AddNewCrossSectionYZCommand();
         private ICommand addNewCrossSectionZWCommand = new AddNewCrossSectionZWCommand();
         private ICommand addNewCrossSectionXYZCommand = new AddNewCrossSectionXYZCommand();
@@ -49,7 +48,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
         private ICommand addNewLateralSourceCommand = new AddNewLateralSourceCommand();
         private ICommand addNewRetentionCommand = new AddNewRetentionCommand();
         private ICommand addNewObservationPointCommand = new AddNewObservationPointCommand();
-        private ICommand addNewRouteCommand = new AddNewNetworkRouteCommand();
         private ICommand showCrossSectionHistoryCommand = new ShowCrossSectionHistoryCommand();
         private ICommand addNewCatchmentPolderCommand = new AddNewCatchmentCommand.AddNewPolderCommand();
         private ICommand addNewCatchmentPavedCommand = new AddNewCatchmentCommand.AddNewPavedCommand();
@@ -92,7 +90,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 yield return showHydroRegionContentsCommand;
                 yield return addNewBranchCommand;
                 yield return addNewBranchScribbleCommand;
-                yield return insertNewNodeCommand;
                 yield return addNewCrossSectionYZCommand;
                 yield return addNewCrossSectionZWCommand;
                 yield return addNewCrossSectionXYZCommand;
@@ -107,7 +104,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 yield return addNewLateralSourceCommand;
                 yield return addNewRetentionCommand;
                 yield return addNewObservationPointCommand;
-                yield return addNewRouteCommand;
                 yield return showCrossSectionHistoryCommand;
                 yield return addNewCatchmentPolderCommand;
                 yield return addNewCatchmentPavedCommand;
@@ -153,7 +149,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             // branch tools
             ButtonAddNewBranch.SetState(addNewBranchCommand, showNetworkTools);
             ButtonAddNewBranchScribble.SetState(addNewBranchScribbleCommand, showNetworkTools);
-            ButtonInsertNewNode.SetState(insertNewNodeCommand, showNetworkTools);
 
             // crossSection tools
             ButtonAddNewCrossSectionYZ.SetState(addNewCrossSectionYZCommand, showNetworkTools);
@@ -173,7 +168,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             ButtonAddNewRetention.SetState(addNewRetentionCommand, showNetworkTools);
             ButtonAddNewObservationPoint.SetState(addNewObservationPointCommand, showNetworkTools);
 
-            ButtonAddNewRoute.SetState(addNewRouteCommand, showNetworkTools);
             ButtonShowCrossSectionHistory.SetState(showCrossSectionHistoryCommand);
 
             // catchment tools
@@ -325,13 +319,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             addNewBranchScribbleCommand.Execute();
             ValidateItems();
         }
-
-        private void ButtonInsertNewNode_Click(object sender, RoutedEventArgs e)
-        {
-            insertNewNodeCommand.Execute();
-            ValidateItems();
-        }
-
+        
         private void ButtonAddNewCrossSectionYZ_Click(object sender, RoutedEventArgs e)
         {
             addNewCrossSectionYZCommand.Execute();
@@ -415,13 +403,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             addNewObservationPointCommand.Execute();
             ValidateItems();
         }
-
-        private void ButtonAddNewRoute_Click(object sender, RoutedEventArgs e)
-        {
-            addNewRouteCommand.Execute();
-            ValidateItems();
-        }
-
+        
         private void ButtonShowCrossSectionHistory_Click(object sender, RoutedEventArgs e)
         {
             showCrossSectionHistoryCommand.Execute();

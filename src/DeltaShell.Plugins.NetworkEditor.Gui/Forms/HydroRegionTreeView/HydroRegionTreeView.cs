@@ -456,15 +456,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
                 SelectedNetwork.SharedCrossSectionDefinitions.Add(definition);
             }
         }
-
-        private void AddRouteToolStripMenuItemClick(object sender, EventArgs e)
-        {
-            if (SelectedNetwork != null)
-            {
-                HydroNetworkHelper.AddNewRouteToNetwork(SelectedNetwork);
-            }
-        }
-
+        
         private void ShowUsageToolStripMenuItemClick(object sender, EventArgs e)
         {
             var definition = TreeView.SelectedNode.Tag as ICrossSectionDefinition;

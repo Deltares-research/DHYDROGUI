@@ -398,14 +398,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
             this.addRouteToolStripMenuItem});
             this.contextMenuRoutes.Name = "contextMenuRoutes";
             this.contextMenuRoutes.Size = new System.Drawing.Size(153, 48);
-            // 
-            // addRouteToolStripMenuItem
-            // 
-            this.addRouteToolStripMenuItem.Image = global::DeltaShell.Plugins.NetworkEditor.Gui.Properties.Resources.route;
-            this.addRouteToolStripMenuItem.Name = "addRouteToolStripMenuItem";
-            this.addRouteToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.addRouteToolStripMenuItem.Text = "Add Route";
-            this.addRouteToolStripMenuItem.Click += new System.EventHandler(this.AddRouteToolStripMenuItemClick);
+           
             // 
             // HydroRegionTreeView
             // 

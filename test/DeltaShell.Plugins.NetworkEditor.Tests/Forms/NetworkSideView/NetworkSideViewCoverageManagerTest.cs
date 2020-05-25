@@ -185,25 +185,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.NetworkSideView
             Mocks.VerifyAll();
 
             called.Should("Delegate not called once!").Be.EqualTo(1);
-        }
-
-        [Test]
-        [Category(TestCategory.Integration)]
-        public void DelegateCalledOnRouteRemove()
-        {
-            var called = 0;
-
-            var project = new Project();
-            IHydroNetwork network = HydroNetworkHelper.GetSnakeHydroNetwork(2);
-            Route route = HydroNetworkHelper.AddNewRouteToNetwork(network);
-
-            project.RootFolder.Add(network);
-
-            new NetworkSideViewCoverageManager(route, (INotifyCollectionChange) project, null) {OnRouteRemoved = delegate { called++; }};
-
-            network.Routes.RemoveAt(0);
-
-            called.Should("Delegate not called once!").Be.EqualTo(1);
-        }
+        }        
     }
 }

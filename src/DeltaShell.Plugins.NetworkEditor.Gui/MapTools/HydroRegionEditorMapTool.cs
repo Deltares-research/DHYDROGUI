@@ -304,12 +304,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
                                     })
                         };
                 }
-
-                yield return new MapToolContextMenuItem
-                    {
-                        Priority = 3,
-                        MenuItem = new ToolStripMenuItem("Insert Node", null, (s, e) => InsertNode(channels))
-                    };
                 
                 yield return new MapToolContextMenuItem
                     {
@@ -697,38 +691,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
             MapControl.SelectTool.RefreshSelection();
             MapControl.Refresh();
         }
-
-        private void InsertNode(IList<IChannel> channels)
-        {
-            if (contextMenuWorldPosition == null)
-            {
-                return;
-            }
-
-            if (channels == null || !channels.Any())
-            {
-                return;
-            }
-
-            IChannel branch;
-            if (channels.Count == 1)
-            {
-                branch = channels.First();
-            }
-            else
-            {
-                var point = new Point(contextMenuWorldPosition);
-                Dictionary<IChannel, double> distanceLookup = channels.ToDictionary(c => c, c => c.Geometry.Distance(point));
-                double lowestDistance = distanceLookup.Min(kvp => kvp.Value);
-
-                branch = distanceLookup.First(kvp => Math.Abs(kvp.Value - lowestDistance) < 0.000000001).Key;
-            }
-            
-            HydroNetworkHelper.SplitChannelAtNode(branch, contextMenuWorldPosition);
-            MapControl.SelectTool.RefreshSelection();
-            MapControl.Refresh();
-        }
-
+        
         private static bool IsOriented(IBranchFeature branchFeature)
         {
             if (branchFeature is ICompositeBranchStructure)
