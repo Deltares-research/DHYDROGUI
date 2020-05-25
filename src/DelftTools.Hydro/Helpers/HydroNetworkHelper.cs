@@ -153,36 +153,6 @@ namespace DelftTools.Hydro.Helpers
         }
 
         /// <summary>
-        /// Switches the direction of the branch
-        /// </summary>
-        /// <param name="branch"> </param>
-        public static void ReverseBranch(IBranch branch) // TODO: move to NetworkHelper ... 
-        {
-            var branchReverseAction = new BranchReverseAction(branch);
-            branch.Network.BeginEdit(branchReverseAction);
-
-            INode fromNode = branch.Source;
-            INode toNode = branch.Target;
-
-            branch.Target = null; // Prevents IsConnectedToMultipleBranches from becoming true when false
-            branch.Source = toNode;
-            branch.Target = fromNode;
-
-            // Reverse the linestring geometry
-            var vertices = new List<Coordinate>();
-            for (int i = branch.Geometry.Coordinates.Length - 1; i >= 0; i--)
-            {
-                vertices.Add(new Coordinate(branch.Geometry.Coordinates[i].X, branch.Geometry.Coordinates[i].Y));
-            }
-
-            branch.Geometry = new LineString(vertices.ToArray()); // endGeometry;
-
-            ReverseBranchBranchFeatures(branch);
-
-            branch.Network.EndEdit();
-        }
-
-        /// <summary>
         /// Removes structureFeatures without structures. StructureFeatures are helper/container
         /// object that are created/deleted automatically.
         /// </summary>
@@ -359,28 +329,7 @@ namespace DelftTools.Hydro.Helpers
             NetworkHelper.AddBranchFeatureToBranch(branchFeature, branch, offset);
             return branchFeature;
         }
-
-        private static int GetAvailableRouteNumber(IHydroNetwork network)
-        {
-            var lastNr = 0;
-
-            foreach (Route route in network.Routes.Reverse())
-            {
-                try
-                {
-                    lastNr = int.Parse(route.Name.Split('_')[1]);
-                    break;
-                }
-                catch (Exception)
-                {
-                    //don't do anything: exception on split or on parse: non standard name
-                    log.DebugFormat("Non-standard name '{0}' detected. Skipping!", route.Name);
-                }
-            }
-
-            return lastNr + 1;
-        }
-
+        
         /// <summary>
         /// Returns the number of networklocation in a coverage for a branch
         /// </summary>

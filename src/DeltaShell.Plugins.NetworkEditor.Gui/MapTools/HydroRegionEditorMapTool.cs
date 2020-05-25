@@ -198,23 +198,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
             get { return true; }
             set { }
         }
-
-        public void ReverseBranch(IChannel branch)
-        {
-            if (branch.BranchFeatures.OfType<IStructure1D>().Any(IsOriented))
-            {
-                DialogResult result = MessageBox.Show(
-                    "Your branch contains oriented structures and cross sections, which will not be reversed upon reversal of the flow direction. Continue?",
-                    "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-                if (result != DialogResult.Yes)
-                {
-                    return;
-                }
-            }
-            HydroNetworkHelper.ReverseBranch(branch);
-            MapControl.Refresh();
-        }
-
+        
         // TODO: currently interactor is always active, should be removed after "Edit Network ..." menu or toolbar will be added to activate interactor for a selected network
 
         public override void OnMouseDown(Coordinate worldPosition, MouseEventArgs e)
@@ -304,12 +288,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
                                     })
                         };
                 }
-                
-                yield return new MapToolContextMenuItem
-                    {
-                        Priority = 3,
-                        MenuItem = new ToolStripMenuItem("Reverse direction", null, (s,e) => ReverseBranch(channels))
-                    };
             }
 
             List<INetworkLocation> networkLocations = MapControl.SelectedFeatures.OfType<INetworkLocation>().ToList();
@@ -710,26 +688,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
             }
             return false;
         }
-
-        private void ReverseBranch(IEnumerable<IChannel> channels)
-        {
-            if (channels.Any(c => c.BranchFeatures.Any(IsOriented)))
-            {
-                DialogResult result = MessageBox.Show(
-                    "Your branch contains oriented structures and cross sections, which will not be reversed upon reversal of the flow direction. Continue?",
-                    "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-                if (result != DialogResult.Yes)
-                {
-                    return;
-                }
-            }
-            foreach (IChannel channel in channels)
-            {
-                HydroNetworkHelper.ReverseBranch(channel);
-            }
-            MapControl.Refresh();
-        }
-
+        
         private static void ToggleFixedGridPoint(IDiscretization discretization, IEnumerable<INetworkLocation> networkLocations)
         {
             foreach (INetworkLocation networkLocation in networkLocations)
