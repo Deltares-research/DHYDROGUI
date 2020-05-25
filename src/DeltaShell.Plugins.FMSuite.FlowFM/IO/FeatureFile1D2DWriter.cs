@@ -189,9 +189,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             // write lanes files
             foreach (var roughnessSection in sections)
             {
-                // in lane must use the all over global value
-                roughnessSection.SetDefaultRoughnessType(globalFrictionType);
-                roughnessSection.SetDefaultRoughnessValue(globalFrictionValue);
+                // in lane must use the all over global value, except sewer lane(s)
+                if (!roughnessSection.Name.ToLower().Contains("sewer"))
+                {
+                    roughnessSection.SetDefaultRoughnessType(globalFrictionType);
+                    roughnessSection.SetDefaultRoughnessValue(globalFrictionValue);
+                }
 
                 var roughnessFileName = GetRoughnessFilename(roughnessSection);
                 var roughnessFilePath = System.IO.Path.Combine(directoryName, roughnessFileName);
