@@ -188,7 +188,6 @@
     <Compile Include="MapLayers\Editors\Interactors\CompositeStructureInteractor.cs" />
     <Compile Include="MapLayers\Editors\Interactors\CrossSectionInteractor.cs" />
     <Compile Include="MapLayers\Editors\Interactors\DiffuseLateralSourceInteractor.cs" />
-    <Compile Include="MapLayers\Editors\Interactors\StructureToCompositeStructureTopology.cs" />
     <Compile Include="MapLayers\Editors\Interactors\WasteWaterTreatmentPlantFeatureInteractor.cs" />
     <Compile Include="MapLayers\Editors\HydroNetworkFeatureEditor.cs" />
     <EmbeddedResource Include="MapLayers\Providers\HydroNetworkFeatureCollection.hbm.xml" />

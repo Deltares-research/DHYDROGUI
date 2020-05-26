@@ -24,20 +24,6 @@ namespace DelftTools.Hydro.Helpers
         private static readonly ILog log = LogManager.GetLogger(typeof(HydroNetworkHelper));
         
         /// <summary>
-        /// Removes structureFeatures without structures. StructureFeatures are helper/container
-        /// object that are created/deleted automatically.
-        /// </summary>
-        public static void RemoveUnusedCompositeStructures(IHydroNetwork network)
-        {
-            foreach (ICompositeBranchStructure structure in network
-                                                            .CompositeBranchStructures
-                                                            .Where(s => s.Structures.Count == 0).ToArray())
-            {
-                structure.Branch.BranchFeatures.Remove(structure);
-            }
-        }
-
-        /// <summary>
         /// Sets the default name of a specific feature.
         /// </summary>
         /// <param name="region"> </param>
