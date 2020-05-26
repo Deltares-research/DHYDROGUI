@@ -4,6 +4,8 @@
 *.userosscache
 *.sln.docstates
 *.userprefs
+*.sln.metaproj
+*.sln.metaproj.tmp
 
 [Dd]ebug/
 [Rr]elease/
@@ -51,7 +53,3 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
-
-# msbuild
-.metaproj
-.metaproj.tmp
