@@ -517,7 +517,7 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
                         case SewerConnectionWaterType.Combined:
                             return BranchType.MixedFlow;
                         default:
-                            throw new ArgumentOutOfRangeException();
+                            return BranchType.SurfaceWater;
                     }
                 default:
                     return BranchType.SurfaceWater;
