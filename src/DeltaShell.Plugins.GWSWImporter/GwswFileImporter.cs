@@ -236,7 +236,7 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
                             listOfErrors.Enqueue(e.Message);
                         }
                     }, "Generating Hydrolinks");
-                while (network.LateralSources.Select(ls => ls.Name).Distinct().Count() != network.LateralSources.Select(ls =>Name).Count())
+                while (network.LateralSources.Select(ls => ls.Name).Distinct().Count() != network.LateralSources.Select(ls =>ls.Name).Count())
                 {
                     NamingHelper.MakeNamesUnique(network.LateralSources);
                 }

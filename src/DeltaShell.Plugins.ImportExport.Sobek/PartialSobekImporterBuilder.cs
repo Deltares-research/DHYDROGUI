@@ -190,7 +190,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
                 new SobekBoundaryConditionsImporter(),
                 new SobekLateralSourcesDataImporter(),
                 new SobekComputationalGridImporter(),
-                new SobekLinkageNodeImporter(),
+                //new SobekLinkageNodeImporter(),//niet ondersteunt, het model moet eerst naar een recentere versie moet worden geconverteerd.
                 new SobekRetentionImporter(),
                 //new SobekSaltImporter(),
                 new SobekSettingsImporter()
