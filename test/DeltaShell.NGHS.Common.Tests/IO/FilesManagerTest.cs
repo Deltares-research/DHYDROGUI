@@ -6,9 +6,9 @@ using DelftTools.TestUtils;
 using DeltaShell.NGHS.Common.IO;
 using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.NGHS.IO.TestUtils;
-using DeltaShell.NGHS.TestUtils.AssertConstraints;
 using NSubstitute;
 using NUnit.Framework;
+using Does = DeltaShell.NGHS.TestUtils.AssertConstraints.Does;
 
 namespace DeltaShell.NGHS.Common.Tests.IO
 {

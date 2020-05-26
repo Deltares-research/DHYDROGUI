@@ -12,10 +12,5 @@ namespace DeltaShell.NGHS.TestUtils.AssertConstraints
         /// Gets the exist constraint
         /// </summary>
         public static ExistConstraint Exist => new ExistConstraint();
-
-        /// <summary>
-        /// Gets the constraint expression that negates the following constraint.
-        /// </summary>
-        public static ConstraintExpression Not => new ConstraintExpression().Not;
     }
 }
