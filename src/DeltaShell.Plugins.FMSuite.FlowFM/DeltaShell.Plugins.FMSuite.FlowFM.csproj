@@ -151,7 +151,6 @@
     <Compile Include="FeatureData\BridgePillarFmModelFeatureCoordinateDataSyncExtensions.cs" />
     <Compile Include="FeatureData\DataColumn.cs" />
     <Compile Include="FeatureData\DataColumnsNameComparer.cs" />
-    <Compile Include="FmModelSettings.cs" />
     <Compile Include="IO\BathymetryFileWriter.cs" />
     <Compile Include="IO\BcMeteoFileDataBuilder.cs" />
     <Compile Include="IO\ChannelFrictionDefinitionFileReader.cs" />
@@ -322,11 +321,6 @@
     <ProjectReference Include="..\DeltaShell.NGHS.IO\DeltaShell.NGHS.IO.csproj">
       <Project>{E22A9330-5EE9-4C26-A014-3269BCF78DED}</Project>
       <Name>DeltaShell.NGHS.IO</Name>
-      <Private>False</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\DeltaShell.Plugins.DelftModels.RainfallRunoff\DeltaShell.Plugins.DelftModels.RainfallRunoff.csproj">
-      <Project>{1d52125e-f765-4d51-80c8-f9a67c6be3d1}</Project>
-      <Name>DeltaShell.Plugins.DelftModels.RainfallRunoff</Name>
       <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\DeltaShell.Plugins.NetworkEditor\DeltaShell.Plugins.NetworkEditor.csproj">

@@ -117,7 +117,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
 
         public string DisplayName
         {
-            get { return null; }
+            get { return Name; }
         }
 
         public object TargetObject

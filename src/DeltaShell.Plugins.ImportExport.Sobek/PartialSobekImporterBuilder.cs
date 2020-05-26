@@ -91,7 +91,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
         {
             var importers = new List<IPartialSobekImporter>
             {
-                //new SobekRRDrainageBasinImporter(),
+                new SobekRRDrainageBasinImporter(),
             };
 
             return BuildPartialSobekImporter(sobekPath, basin, importers);
@@ -139,18 +139,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
                 importers.Distinct(new ImporterTypeComparer()).
                     ToList());
         }
-        private class ImporterTypeComparer : IEqualityComparer<IPartialSobekImporter>
-        {
-            public bool Equals(IPartialSobekImporter x, IPartialSobekImporter y)
-            {
-                return x.GetType() == y.GetType();
-            }
-
-            public int GetHashCode(IPartialSobekImporter obj)
-            {
-                return obj.GetType().GetHashCode();
-            }
-        }
 
         private static IPartialSobekImporter BuildHydroRegionImporter(string sobekPath, HydroRegion region)
         {
@@ -161,11 +149,13 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
                                     new SobekStructuresImporter(),
                                     new SobekLateralSourcesImporter(),
                                     new SobekRetentionImporter(),
-                                    new SobekLinkageNodeImporter()
+                                    new SobekLinkageNodeImporter(),
+                                    new SobekRRDrainageBasinImporter(),
                                 };
 
             return BuildPartialSobekImporter(sobekPath, region, importers);
         }
+
         private static IPartialSobekImporter BuildWaterFlowFMModelImporter(string sobekPath, WaterFlowFMModel waterFlowFMModel)
         {
             return BuildPartialSobekImporter(sobekPath, waterFlowFMModel, GetWaterFlowFMModelImporters());
@@ -176,7 +166,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
             return BuildPartialSobekImporter(sobekPath, realTimeControlModel, GetRealTimeControlModelImporters());
         }
 
-        private static IEnumerable<IPartialSobekImporter> GetRealTimeControlModelImporters()
+        public static IEnumerable<IPartialSobekImporter> GetRealTimeControlModelImporters()
         {
             return new[] { new SobekControllersTriggersImporter() };
         }
@@ -186,7 +176,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
             return BuildPartialSobekImporter(sobekPath, rainfallRunoffModel, GetRainfallRunoffModelImporters());
         }
 
-        private static IEnumerable<IPartialSobekImporter> GetWaterFlowFMModelImporters()
+        public static IEnumerable<IPartialSobekImporter> GetWaterFlowFMModelImporters()
         {
             return new List<IPartialSobekImporter>
             {
@@ -208,19 +198,31 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
             };
         }
 
-        private static IEnumerable<IPartialSobekImporter> GetRainfallRunoffModelImporters()
+        public static IEnumerable<IPartialSobekImporter> GetRainfallRunoffModelImporters()
         {
             return new List<IPartialSobekImporter>
             {
-                //new SobekRRDrainageBasinImporter(),
-                //new SobekRRSettingsImporter(),
-                //new SobekRRPavedImporter(),
-                //new SobekRRUnpavedImporter(),
-                //new SobekRRGreenhouseImporter(),
-                //new SobekRRSacramentoImporter(),
-                //new SobekRRMeteoDataImporter(),
-                //new SobekRRBoundaryConditionsImporter(),
+                new SobekRRDrainageBasinImporter(),
+                new SobekRRSettingsImporter(),
+                new SobekRRPavedImporter(),
+                new SobekRRUnpavedImporter(),
+                new SobekRRGreenhouseImporter(),
+                new SobekRRSacramentoImporter(),
+                new SobekRRMeteoDataImporter(),
+                new SobekRRBoundaryConditionsImporter(),
             };
+        }
+    }
+    internal class ImporterTypeComparer : IEqualityComparer<IPartialSobekImporter>
+    {
+        public bool Equals(IPartialSobekImporter x, IPartialSobekImporter y)
+        {
+            return x.GetType() == y.GetType();
+        }
+
+        public int GetHashCode(IPartialSobekImporter obj)
+        {
+            return obj.GetType().GetHashCode();
         }
     }
 }

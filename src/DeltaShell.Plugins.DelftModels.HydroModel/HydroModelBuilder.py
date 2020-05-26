@@ -182,6 +182,11 @@ class HydroModelBuilder(object):
             w.Activities.AddRange((ActivityWrapper(rr), w1))
             model.Workflows.Add(w)
 
+        if rr and dflowfm and rtc:
+            w = ParallelActivity(Name="(RR + RTC + FlowFM)")
+            w.Activities.AddRange((ActivityWrapper(rr), ActivityWrapper(rtc), ActivityWrapper(dflowfm)))
+            model.Workflows.Add(w)
+
         if dflowfm and rtc:
             w = ParallelActivity(Name="(RTC + FlowFM)")
             w.Activities.AddRange((ActivityWrapper(rtc), ActivityWrapper(dflowfm)))

@@ -1,20 +1,20 @@
-﻿<UserControl x:Class="DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms.CreateFmModelSettingView"
+﻿<UserControl x:Class="DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.CreateHydroModelSettingView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:gui="clr-namespace:DeltaShell.NGHS.Common.Gui;assembly=DeltaShell.NGHS.Common.Gui"
+             xmlns:forms="clr-namespace:DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms"
              mc:Ignorable="d" 
              Background="White"
              Foreground="Black">
     <UserControl.DataContext>
-        <local:CreateFmModelSettingViewViewModel x:Name="ViewModel"/>
+        <forms:CreateHydroModelSettingViewViewModel x:Name="ViewModel"/>
     </UserControl.DataContext>
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="../GraphicsProviders/FMGuiGraphics.xaml"/>
+                <ResourceDictionary Source="../GraphicsProviders/HydroModelGuiGraphics.xaml"/>
                 <ResourceDictionary Source="/DelftTools.Controls.Wpf;Component/DrawingBrushesDictionary.xaml" />
                 <ResourceDictionary Source="/DelftTools.Controls.Wpf;Component/DeltaresStyleDictionairy.xaml" />
             </ResourceDictionary.MergedDictionaries>
@@ -43,7 +43,7 @@
                 Margin="5" 
                 MinWidth="100"
                 MinHeight="100"
-                Fill="{StaticResource ResourceKey=FMModelBrush}"/>
+                Fill="{StaticResource ResourceKey=HydroModelBrush}"/>
         </Border>
 
         <Button Grid.Row="0" 
@@ -82,6 +82,9 @@
                 <Grid.RowDefinitions>
                     <RowDefinition />
                     <RowDefinition />   
+                    <RowDefinition />   
+                    <RowDefinition />   
+                    <RowDefinition />   
                 </Grid.RowDefinitions>
 
                 <TextBlock Grid.Row="0" 
@@ -107,6 +110,46 @@
                                             Grid.Column="1" 
                                             Margin="0,2,5,2"
                                             CoordinateSystem = "{Binding ModelSettings.CoordinateSystem}"/>
+                <TextBlock Grid.Row="2" 
+                           Grid.Column="0" 
+                           Text="Use RR"
+                           VerticalAlignment="Center"
+                           Margin="0,2,0,2"/>
+                <CheckBox
+                    Grid.Row="2" 
+                    Grid.Column="1" 
+                    Focusable ="True"
+                    Margin="0,2,5,2"
+                    VerticalAlignment="Center"
+                    IsChecked="{Binding ModelSettings.UseRR}"
+                    />
+                <TextBlock Grid.Row="3" 
+                           Grid.Column="0" 
+                           Text="Use FlowFM"
+                           VerticalAlignment="Center"
+                           Margin="0,2,0,2"/>
+                <CheckBox
+                    Grid.Row="3" 
+                    Grid.Column="1" 
+                    Focusable ="True"
+                    Margin="0,2,5,2"
+                    VerticalAlignment="Center"
+                    IsChecked="{Binding ModelSettings.UseFlowFM}"
+                    />
+                <TextBlock Grid.Row="4" 
+                           Grid.Column="0" 
+                           Text="Use RTC"
+                           VerticalAlignment="Center"
+                           Margin="0,2,0,2"/>
+                <CheckBox
+                    Grid.Row="4" 
+                    Grid.Column="1" 
+                    Focusable ="True"
+                    Margin="0,2,5,2"
+                    VerticalAlignment="Center"
+                    IsChecked="{Binding ModelSettings.UseRTC}"
+                    />
+
             </Grid>
 
             <Button HorizontalAlignment="Left"

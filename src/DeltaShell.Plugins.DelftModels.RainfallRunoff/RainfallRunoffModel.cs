@@ -629,6 +629,11 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
             get { return Basin; }
         }
 
+        public bool IsActivityOfEnumType(ModelType type)
+        {
+            return type == ModelType.DRR;
+        }
+
         public virtual Type SupportedRegionType { get { return typeof (IDrainageBasin); } }
 
         public IEnumerable<CatchmentModelData> GetAllModelData()

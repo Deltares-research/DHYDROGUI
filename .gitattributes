@@ -349,6 +349,7 @@ src/DelftTools.Hydro/Link1d2d/Link1D2DCoverage.cs -text
 src/DelftTools.Hydro/Link1d2d/Link1D2DCoverage.hbm.xml -text
 src/DelftTools.Hydro/Link1d2d/Link1D2DCoverageLayer.cs -text
 src/DelftTools.Hydro/LinkType.cs -text
+src/DelftTools.Hydro/ModelSettings.cs -text
 src/DelftTools.Hydro/NameableFeatureComparer.cs -text
 src/DelftTools.Hydro/ObservationCrossSection2D.cs -text
 src/DelftTools.Hydro/ObservationPoint.cs -text
@@ -763,6 +764,9 @@ src/DeltaShell.Plugins.DelftModels.HydroModel.Gui/Forms/ActivityShapes/ParallelA
 src/DeltaShell.Plugins.DelftModels.HydroModel.Gui/Forms/ActivityShapes/SequentialActivityShape.cs -text
 src/DeltaShell.Plugins.DelftModels.HydroModel.Gui/Forms/ActivityShapes/ShapeFactory.cs -text
 src/DeltaShell.Plugins.DelftModels.HydroModel.Gui/Forms/ActivityShapes/SimpleActivityShape.cs -text
+src/DeltaShell.Plugins.DelftModels.HydroModel.Gui/Forms/CreateHydroModelSettingView.xaml -text
+src/DeltaShell.Plugins.DelftModels.HydroModel.Gui/Forms/CreateHydroModelSettingView.xaml.cs -text
+src/DeltaShell.Plugins.DelftModels.HydroModel.Gui/Forms/CreateHydroModelSettingViewViewModel.cs -text
 src/DeltaShell.Plugins.DelftModels.HydroModel.Gui/Forms/DHydroExporterDialog.Designer.cs -text
 src/DeltaShell.Plugins.DelftModels.HydroModel.Gui/Forms/DHydroExporterDialog.cs -text
 src/DeltaShell.Plugins.DelftModels.HydroModel.Gui/Forms/HydroModelSettings.Designer.cs -text
@@ -789,6 +793,8 @@ src/DeltaShell.Plugins.DelftModels.HydroModel.Gui/Forms/SettingsWpf/WpfSettingsV
 src/DeltaShell.Plugins.DelftModels.HydroModel.Gui/Forms/WorkflowEditorControl.Designer.cs -text
 src/DeltaShell.Plugins.DelftModels.HydroModel.Gui/Forms/WorkflowEditorControl.cs -text
 src/DeltaShell.Plugins.DelftModels.HydroModel.Gui/Forms/WorkflowEditorControl.resx -text
+src/DeltaShell.Plugins.DelftModels.HydroModel.Gui/GraphicsProviders/HydroModelGuiGraphics.xaml -text
+src/DeltaShell.Plugins.DelftModels.HydroModel.Gui/GraphicsProviders/HydroModelGuiGraphicsProvider.cs -text
 src/DeltaShell.Plugins.DelftModels.HydroModel.Gui/HydroModelGuiPlugin.cs -text
 src/DeltaShell.Plugins.DelftModels.HydroModel.Gui/HydroModelMapLayerProvider.cs -text
 src/DeltaShell.Plugins.DelftModels.HydroModel.Gui/Iterative1D2DCouplerLinkFeatureCollection.cs -text
@@ -832,6 +838,7 @@ src/DeltaShell.Plugins.DelftModels.HydroModel/HydroModelApplicationPlugin.cs -te
 src/DeltaShell.Plugins.DelftModels.HydroModel/HydroModelBuilder.cs -text
 src/DeltaShell.Plugins.DelftModels.HydroModel/HydroModelBuilder.py -text
 src/DeltaShell.Plugins.DelftModels.HydroModel/HydroModelExtensions.cs -text
+src/DeltaShell.Plugins.DelftModels.HydroModel/HydroModelSettings.cs -text
 src/DeltaShell.Plugins.DelftModels.HydroModel/IHydroModelWorkFlow.cs -text
 src/DeltaShell.Plugins.DelftModels.HydroModel/IHydroModelWorkFlow.hbm.xml -text
 src/DeltaShell.Plugins.DelftModels.HydroModel/IHydroModelWorkFlowData.cs -text
@@ -1901,7 +1908,6 @@ src/DeltaShell.Plugins.FMSuite.FlowFM/FeatureData/SourceAndSink.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/FeatureData/SupportedVerticalProfileTypes.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/FixedWeirSchemes.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/FlowFMApplicationPlugin.cs -text
-src/DeltaShell.Plugins.FMSuite.FlowFM/FmModelSettings.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/IO/BathymetryFileWriter.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/IO/BcFile.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/IO/BcFileFlowBoundaryDataBuilder.cs -text

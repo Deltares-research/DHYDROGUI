@@ -156,6 +156,10 @@
     <Compile Include="Forms\ActivityShapes\SequentialActivityShape.cs" />
     <Compile Include="Forms\ActivityShapes\ShapeFactory.cs" />
     <Compile Include="Forms\ActivityShapes\SimpleActivityShape.cs" />
+    <Compile Include="Forms\CreateHydroModelSettingView.xaml.cs">
+      <DependentUpon>CreateHydroModelSettingView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\CreateHydroModelSettingViewViewModel.cs" />
     <Compile Include="Forms\DHydroExporterDialog.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -188,6 +192,7 @@
     </Compile>
     <Compile Include="Forms\SettingsWpf\WpfSettingsViewModel.cs" />
     <Compile Include="Forms\SettingsWpf\WpfSettingsViewModelDesignInstances.cs" />
+    <Compile Include="GraphicsProviders\HydroModelGuiGraphicsProvider.cs" />
     <Compile Include="Properties\PluginInfo.cs" />
     <Compile Include="ViewModels\TimeDependentModelBaseViewModel.cs" />
     <Compile Include="Views\HydroModelTimeSettingsView.xaml.cs">
@@ -275,7 +280,15 @@
     <None Include="Resources\validation.png" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Forms\CreateHydroModelSettingView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Forms\SettingsWpf\WpfSettingsView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="GraphicsProviders\HydroModelGuiGraphics.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

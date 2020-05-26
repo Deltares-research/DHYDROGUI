@@ -3316,6 +3316,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             get { return fmRegion; }
         }
 
+        public bool IsActivityOfEnumType(ModelType type)
+        {
+            return type == ModelType.DFlowFM;
+        }
+
         public Type SupportedRegionType
         {
             get { return typeof (HydroArea); }

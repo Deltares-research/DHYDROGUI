@@ -18,6 +18,7 @@ using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.DelftModels.HydroModel.Export;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.ProjectExplorer;
+using DeltaShell.Plugins.DelftModels.HydroModel.Gui.GraphicsProviders;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui.PropertyClasses;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using Mono.Addins;
@@ -32,10 +33,12 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui
         private readonly HydroModelMapLayerProvider hydroModelMapLayerProvider = new HydroModelMapLayerProvider();
         private ClonableToolStripMenuItem modelMergeMenuItem;
         private ContextMenuStrip modelMergeMenu;
+        private readonly IGraphicsProvider graphicsProvider;
 
         public HydroModelGuiPlugin()
         {
             InitializeComponent();
+            graphicsProvider = new HydroModelGuiGraphicsProvider();
         }
 
         private void InitializeComponent()
@@ -80,7 +83,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui
         {
             get { return "1.1.0.0"; }
         }
-
+        public override IGraphicsProvider GraphicsProvider
+        {
+            get { return graphicsProvider; }
+        }
         public override IEnumerable<PropertyInfo> GetPropertyInfos()
         {
             yield return new PropertyInfo<Iterative1D2DCoupler, Iterative1D2DCouplerProperties>();
@@ -116,6 +122,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui
 
         public override IEnumerable<ViewInfo> GetViewInfoObjects()
         {
+            yield return new ViewInfo<ProjectTemplate, CreateHydroModelSettingView>
+            {
+                AdditionalDataCheck = t => t.Id?.Equals(HydroModelApplicationPlugin.RHUINTEGRATEDMODEL_TEMPLATE_ID, StringComparison.CurrentCultureIgnoreCase) ?? false
+            };
             yield return new ViewInfo<HydroModel, HydroModelSettings>
                 {
                     Description = "Hydro Model Settings",

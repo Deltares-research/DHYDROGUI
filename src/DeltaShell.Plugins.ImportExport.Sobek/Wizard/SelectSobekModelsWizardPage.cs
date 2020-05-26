@@ -33,6 +33,17 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Wizard
             get { return chkboxRR.Enabled; }
             set { chkboxRR.Enabled = value; }
         }
+        public bool ImportRtc
+        {
+            get { return chkboxRTC.Checked; }
+            set { chkboxRTC.Checked = value; }
+        }
+
+        public bool ImportRtcEnabled
+        {
+            get { return chkboxRTC.Enabled; }
+            set { chkboxRTC.Enabled = value; }
+        }
 
         public bool CanFinish()
         {
@@ -41,7 +52,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Wizard
 
         public bool CanDoNext()
         {
-            return ImportFlow || ImportRR;
+            return ImportFlow || ImportRR || ImportRtc;
         }
 
         public bool CanDoPrevious()

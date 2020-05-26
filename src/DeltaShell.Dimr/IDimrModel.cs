@@ -45,5 +45,13 @@ namespace DeltaShell.Dimr
 
         Array GetVar(string category, string itemName = null, string parameter = null);
         void SetVar(Array values, string category, string itemName = null, string parameter = null);
+        bool IsActivityOfEnumType(ModelType type);
+
+    }
+    public enum ModelType
+    {
+        DRR,
+        DFBC,
+        DFlowFM
     }
 }

@@ -1,14 +1,17 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.Controls.Swf;
 using DelftTools.Controls.Swf.WizardPages;
 using DelftTools.Hydro.Roughness;
 using DelftTools.Shell.Core.Extensions;
+using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.DelftModels.HydroModel;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff;
 using DeltaShell.Plugins.DelftModels.RealTimeControl;
 using DeltaShell.Plugins.FMSuite.FlowFM;
+using DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter;
 
 namespace DeltaShell.Plugins.ImportExport.Sobek.Wizard
 {
@@ -71,6 +74,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Wizard
                     selectSobekModelsWizardPage.ImportRR = false;
                     selectSobekModelsWizardPage.ImportRREnabled = false; 
                     selectSobekModelsWizardPage.ImportFlow = true;
+                    selectSobekModelsWizardPage.ImportRtc = true;                    
                 }
                 else if (selectFileWizardPage.FileName.ToLower().EndsWith("network.tp"))
                 {
@@ -82,9 +86,11 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Wizard
 
                     // Add RTC in case that a flow model is detected. In case no controls are detected afterwards, this will be deleted. 
                     selectSobekModelsWizardPage.ImportFlow = settingsDat.Contains("channel=-1") || settingsDat.Contains("river=-1") || settingsDat.Contains("sewer=-1");
+                    selectSobekModelsWizardPage.ImportRtc = selectSobekModelsWizardPage.ImportFlow;
                     selectSobekModelsWizardPage.ImportRR = settingsDat.Contains("3b=-1");
                     
                     selectSobekModelsWizardPage.ImportFlowEnabled = settingsDat.Contains("channel=-1") || settingsDat.Contains("river=-1") || settingsDat.Contains("sewer=-1");
+                    selectSobekModelsWizardPage.ImportRtcEnabled = selectSobekModelsWizardPage.ImportFlow;
                     selectSobekModelsWizardPage.ImportRREnabled = settingsDat.Contains("3b=-1");
                     }
                 else
@@ -96,8 +102,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Wizard
             {
                 importer.useFm = selectSobekModelsWizardPage.ImportFlow;
                 importer.useRR = selectSobekModelsWizardPage.ImportRR;
-                importer.useRTC = selectSobekModelsWizardPage.ImportFlow; 
-
+                importer.useRTC = selectSobekModelsWizardPage.ImportRtc;
                 selectSobekPartsWizardPage.PartialSobekImporter = importer;
             }
             else if (page == selectSobekPartsWizardPage)
@@ -106,8 +111,19 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Wizard
             }
             base.OnPageCompleted(page);
         }
+        private IEnumerable<IPartialSobekImporter> GetImporters(IPartialSobekImporter partialImporter)
+        {
+            while (partialImporter != null)
+            {
+                yield return partialImporter;
+                partialImporter = partialImporter.PartialSobekImporter;
+            }
+        }
         protected override void OnDialogFinished()
         {
+            importer.useRTC = GetImporters(importer).Where(i => PartialSobekImporterBuilder.GetRealTimeControlModelImporters().Any(rtcImp => i.GetType().Implements(rtcImp.GetType()))).Any(imp => imp.IsActive);
+            importer.useRR = GetImporters(importer).Where(i => PartialSobekImporterBuilder.GetRainfallRunoffModelImporters().Any(rrImp => i.GetType().Implements(rrImp.GetType()))).Any(imp => imp.IsActive);
+            importer.useFm = GetImporters(importer).Where(i => PartialSobekImporterBuilder.GetWaterFlowFMModelImporters().Any(fmImp => i.GetType().Implements(fmImp.GetType()))).Any(imp => imp.IsActive);
             ConfigureIntegratedModel(importer);
             base.OnDialogFinished();
         }

@@ -565,6 +565,12 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
         public virtual void SetVar(Array values, string category, string itemName = null, string parameter = null)
         {
         }
+
+        public bool IsActivityOfEnumType(ModelType type)
+        {
+            return false;
+        }
+
         #endregion
 
         #region Implementation of IDataItemOwner

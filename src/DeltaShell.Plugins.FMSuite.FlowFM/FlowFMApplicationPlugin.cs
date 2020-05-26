@@ -92,13 +92,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             yield return new ProjectTemplate
             {
                 Id = FM_MODEL_DEFAULT_PROJECT_TEMPLATE_ID,
-                Category = "FM",
+                Category = "RHU Templates",
                 Name = "FM model",
                 Description = "Creates a new standalone flexible mesh model",
                 ExecuteTemplate = (p, settings) =>
                 {
                     var model = new WaterFlowFMModel();
-                    if (settings is FmModelSettings modelSettings)
+                    if (settings is ModelSettings modelSettings)
                     {
                         model.Name = modelSettings.ModelName;
                         model.CoordinateSystem = modelSettings.CoordinateSystem;

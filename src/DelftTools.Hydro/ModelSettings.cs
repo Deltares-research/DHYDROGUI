@@ -1,8 +1,8 @@
 using GeoAPI.Extensions.CoordinateSystems;
 
-namespace DeltaShell.Plugins.FMSuite.FlowFM
+namespace DelftTools.Hydro
 {
-    public class FmModelSettings
+    public class ModelSettings
     {
         public string ModelName { get; set; } = "FM_model";
 

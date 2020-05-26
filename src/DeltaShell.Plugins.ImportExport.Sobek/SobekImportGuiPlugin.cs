@@ -43,7 +43,11 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
             yield return new ViewInfo<SobekHydroModelImporter, ImportSobekHydroModelWizardDialog>
             {
                 GetViewName = (v, o) => v.Title,
-                AfterCreate = (dialog, importer) => importer.TargetObject = Gui.Selection as HydroModel
+                AfterCreate = (dialog, importer) =>
+                {
+                    importer.TargetObject = Gui.Selection as HydroModel;
+                    importer.Application = Gui.Application;
+                }
             };
             yield return new ViewInfo<SobekModelToWaterFlowFMImporter, ImportSobekWaterFlowFMWizardDialog>
             {

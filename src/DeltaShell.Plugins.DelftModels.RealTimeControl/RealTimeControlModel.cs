@@ -529,6 +529,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         {
             runner.SetVar(string.Format("{0}/{1}/{2}/{3}", Name, category, itemName, parameter), values);
         }
+
+        public virtual bool IsActivityOfEnumType(ModelType type)
+        {
+            return type == ModelType.DFBC;
+        }
+
         public virtual bool CanRunParallel { get { return false; } }
         public virtual string MpiCommunicatorString { get { return null; } }
 

@@ -8,7 +8,7 @@ using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow;
-using DelftTools.Utils.Aop;
+using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.DelftModels.HydroModel;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff;
 using DeltaShell.Plugins.DelftModels.RealTimeControl;
@@ -116,15 +116,20 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
             }
 
             // Configure the TargetObject of the IPartialSobekImporter part of the importer
-            TargetObject = target ?? CreateHydroModel();
-            var targetIsEmptyProject = target as Project;
+            var targetObjectInternal = target ?? TargetObject;
+            var targetIsEmptyProject = targetObjectInternal as Project;
             if (targetIsEmptyProject != null && !targetIsEmptyProject.RootFolder.GetAllModelsRecursive().Any())
             {
-                TargetObject = CreateHydroModel();
-                //targetIsEmptyProject.BeginEdit(new DefaultEditAction("Import Sobek 2 model into Project"));
-                //targetIsEmptyProject.RootFolder.Add(CreateHydroModel());
+                targetObjectInternal = TargetObject;
+                targetObject = targetObjectInternal;
+                targetObjectWasSetExternal = true;
             }
 
+            if (Application != null && Application.GetAllModelsInProject().Contains(targetObjectInternal))
+            {
+                Application.Project.RootFolder.Items.Remove((HydroModel)targetObjectInternal);
+            }
+            
             if (ShouldCancel)
             {
                 return null;
@@ -140,6 +145,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
                 {
                     return null;
                 }
+                SetImportedSobekFileObjectModelToDHydroDomainObjectModel(targetObjectInternal);
 
                 SyncModelTimes();
 
@@ -148,12 +154,15 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
                     return null;
                 }
 
-                return TargetObject;
+                return targetObjectInternal;
             }
             finally
             {
                 importer = null; // make sure we keep no more references to the partial importers
-                //targetIsEmptyProject?.EndEdit();
+                if (Application != null && !Application.GetAllModelsInProject().Contains(targetObjectInternal))
+                {
+                    Application.Project.RootFolder.Items.Add((HydroModel)targetObjectInternal);
+                }
             }
         }
 
@@ -166,17 +175,31 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
 
         public string DisplayName
         {
-            get { return null; }
+            get { return Name; }
         }
 
         public object TargetObject
         {
-            get { return targetObject; }
+            get
+            {
+                if (targetObject != null)
+                {
+                    return targetObject;
+                }
+                targetObject = CreateHydroModel();
+                targetObjectWasSetExternal = targetObject != null;
+                return targetObject;
+            }
             set
             {
-                targetObjectWasSetExternal = true;
                 targetObject = value;
+                targetObjectWasSetExternal = targetObject != null;
             }
+        }
+
+        public void Import()
+        {
+            PartialSobekImporter.Import();
         }
 
         public IPartialSobekImporter PartialSobekImporter
@@ -190,16 +213,13 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
             set { }
         }
 
-        [InvokeRequired]
-        public void Import()
+        private void SetImportedSobekFileObjectModelToDHydroDomainObjectModel(object targetObjectInternal)
         {
-            PartialSobekImporter.Import();
-
             // In case an RTC model is present, but doesn't contain any control groups, the RTC model is removed. 
-            var hydroModel = TargetObject as HydroModel;
+            var hydroModel = targetObjectInternal as HydroModel;
             if (hydroModel == null)
             {
-                var targetObjectIsProject = TargetObject as Project;
+                var targetObjectIsProject = targetObjectInternal as Project;
                 if (targetObjectIsProject == null)
                     return;
                 hydroModel = targetObjectIsProject.RootFolder.GetAllModelsRecursive().OfType<HydroModel>().FirstOrDefault();
@@ -241,6 +261,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
         public Action<IPartialSobekImporter> AfterImport { get; set; }
 
         public Action<IPartialSobekImporter> BeforeImport { get; set; }
+        public IApplication Application { get; set; }
 
         # endregion
 
@@ -265,8 +286,29 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
 
             // Build using the selected models
             var previousImporter = importer;
-            importer = PartialSobekImporterBuilder.BuildPartialSobekImporter(PathSobek, CreateHydroModel()); //build on clean hydro model instance (not the target object)
-            
+            importer = PartialSobekImporterBuilder.BuildPartialSobekImporter(PathSobek, targetObject);
+            if (useFm && !GetImporters(importer).Any(i => PartialSobekImporterBuilder.GetWaterFlowFMModelImporters().Any(imp => i.GetType().Implements(imp.GetType()))))
+            {
+                importer = PartialSobekImporterBuilder.BuildPartialSobekImporter(importer.PathSobek,
+                    importer.TargetObject, GetImporters(importer).Reverse().Concat(PartialSobekImporterBuilder.GetWaterFlowFMModelImporters())
+                        .Distinct(new ImporterTypeComparer()).ToList());
+
+            }
+            if (useRR && !GetImporters(importer).Any(i => PartialSobekImporterBuilder.GetRainfallRunoffModelImporters().Any(imp => i.GetType().Implements(imp.GetType()))))
+            {
+                importer = PartialSobekImporterBuilder.BuildPartialSobekImporter(importer.PathSobek,
+                    importer.TargetObject,
+                    GetImporters(importer).Reverse().Concat(PartialSobekImporterBuilder.GetRainfallRunoffModelImporters())
+                        .Distinct(new ImporterTypeComparer()).ToList());
+
+            }
+            if (useRTC && !GetImporters(importer).Any(i => PartialSobekImporterBuilder.GetRealTimeControlModelImporters().All(imp => i.GetType().Implements(imp.GetType()))))
+            {
+                importer = PartialSobekImporterBuilder.BuildPartialSobekImporter(importer.PathSobek,
+                    importer.TargetObject,
+                    GetImporters(importer).Reverse().Concat(PartialSobekImporterBuilder.GetRealTimeControlModelImporters())
+                        .Distinct(new ImporterTypeComparer()).ToList());
+            }
             var importers = GetImporters(importer).Reverse().ToList();
 
             // Restore IsActive setting:
@@ -287,7 +329,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
             {
                 var imp = importers[i];
 
-                imp.TargetObject = TargetObject; // update the target object
+                imp.TargetObject = targetObject; // update the target object
 
                 imp.BeforeImport = currentImporter =>
                     {
@@ -317,7 +359,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
                     if (nextImporterIndex >= 0)
                         ProgressChanged(importers[nextImporterIndex].DisplayName, currentStep, totalSteps);
                     else
-                        ProgressChanged(DisplayName, totalSteps, totalSteps);
+                        ProgressChanged(DisplayName + " imported successfully, loading into DeltaShell", totalSteps, totalSteps);
                 };
             }
         }
@@ -432,14 +474,14 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
                                 parallelActivities.Add(RtcWorkflowName);
                             }
 
-                                if (parallelActivities.Count == 1)
-                                {
-                                    sequentialActivities.Add(parallelActivities[0]);
-                                }
-                                else if (parallelActivities.Count > 1)
-                                {
-                                    sequentialActivities.Add("(" + String.Join(" + ", parallelActivities) + ")");
-                                }
+                            if (parallelActivities.Count == 1)
+                            {
+                                sequentialActivities.Add(parallelActivities[0]);
+                            }
+                            else if (parallelActivities.Count > 1)
+                            {
+                                sequentialActivities.Add("(" + String.Join(" + ", parallelActivities) + ")");
+                            }
                             
                             parallelActivities.Clear();
                             currentTask = fileTask;
@@ -459,7 +501,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
                 // If an RTC group is detected, but not included as parallel to the flow module, add it. 
                 if (parallelActivities.Contains(FlowFMWorkflowName) && !parallelActivities.Contains(RtcWorkflowName) && rtcFound)
                 {
-                    parallelActivities.Add(RtcWorkflowName);
+                    parallelActivities.Insert(parallelActivities.IndexOf(FlowFMWorkflowName),RtcWorkflowName);
                 }
                 
                 // Add remaining items in parallelActivities and construct the string representation of the workflow , e.g.: (rr + flow) + waq

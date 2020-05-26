@@ -2,11 +2,14 @@
 using System.Linq;
 using System.Reflection;
 using System.Threading;
+using DelftTools.Hydro;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Dao;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections;
+using DelftTools.Utils.Reflection;
+using DeltaShell.Dimr;
 using DeltaShell.Plugins.DelftModels.HydroModel.Export;
 using log4net;
 using log4net.Appender;
@@ -18,6 +21,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
     [Extension(typeof(IPlugin))]
     public class HydroModelApplicationPlugin : ApplicationPlugin, IDataAccessListenersProvider
     {
+        public const string RHUINTEGRATEDMODEL_TEMPLATE_ID = "RHUIntegratedModel";
         public static int MainThreadId;
         private static readonly ILog Log = LogManager.GetLogger(typeof(HydroModelApplicationPlugin));
 
@@ -189,7 +193,44 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
             base.Deactivate();
         }
+        public override IEnumerable<ProjectTemplate> ProjectTemplates()
+        {
+            yield return new ProjectTemplate
+            {
+                Id = RHUINTEGRATEDMODEL_TEMPLATE_ID,
+                Category = "RHU Templates",
+                Name = "RHU model",
+                Description = "Creates a new Integrated Hydro model with RHU D-HYDRO models",
+                ExecuteTemplate = (p, settings) =>
+                {
 
+                    var model = new HydroModelBuilder().BuildModel(ModelGroup.RHUModels);
+                    if (settings is HydroModelProjectTemplateSettings modelSettings)
+                    {
+                        model.Name = modelSettings.ModelName;
+                        model.CoordinateSystem = modelSettings.CoordinateSystem;
+                        if (!modelSettings.UseRR)
+                        {
+                            model.Models.OfType<IHydroModel>().Where(hm => hm is IDimrModel dimrModel && dimrModel.IsActivityOfEnumType(ModelType.DRR)).ForEach(m => model.Region.SubRegions.RemoveAllWhere(r => m.Region.AllRegions.Any(sr => sr.GetType().Implements(r.GetType()))));
+                            model.Activities.RemoveAllWhere(a =>a is IDimrModel dimrModel && dimrModel.IsActivityOfEnumType(ModelType.DRR));
+                        }
+                        if (!modelSettings.UseFlowFM)
+                        {
+                            model.Models.OfType<IHydroModel>().Where(hm => hm is IDimrModel dimrModel && dimrModel.IsActivityOfEnumType(ModelType.DFlowFM)).ForEach(m => model.Region.SubRegions.RemoveAllWhere(r => m.Region.AllRegions.Any(sr => sr.GetType().Implements(r.GetType()))));
+                            model.Activities.RemoveAllWhere(a => a is IDimrModel dimrModel && dimrModel.IsActivityOfEnumType(ModelType.DFlowFM));
+                        }
+
+                        if (!modelSettings.UseRTC || !modelSettings.UseFlowFM && !modelSettings.UseRR)
+                        {
+                            model.Activities.RemoveAllWhere(a => a is IDimrModel dimrModel && dimrModel.IsActivityOfEnumType(ModelType.DFBC));
+                        }
+                    }
+
+                    p.RootFolder.Items.Add(model);
+
+                }
+            };
+        }
         public override IEnumerable<IFileExporter> GetFileExporters()
         {
             yield return new DHydroConfigXmlExporter();

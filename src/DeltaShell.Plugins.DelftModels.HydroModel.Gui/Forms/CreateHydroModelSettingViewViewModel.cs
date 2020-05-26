@@ -5,14 +5,13 @@ using System.Runtime.CompilerServices;
 using System.Windows.Data;
 using System.Windows.Input;
 using DelftTools.Controls.Wpf.Commands;
-using DelftTools.Hydro;
 using DelftTools.Shell.Core;
 using GeoAPI.Extensions.CoordinateSystems;
 using SharpMap;
 
-namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
+namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms
 {
-    public class CreateFmModelSettingViewViewModel : INotifyPropertyChanged
+    public class CreateHydroModelSettingViewViewModel : INotifyPropertyChanged
     {
         private readonly ICommand applyTemplateCommand;
         private readonly ICommand cancelTemplateCommand;
@@ -20,7 +19,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
         private string filterText;
         private ProjectTemplate projectTemplate;
 
-        public CreateFmModelSettingViewViewModel()
+        public CreateHydroModelSettingViewViewModel()
         {
             applyTemplateCommand = new RelayCommand((o) =>
             {
@@ -77,7 +76,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
         /// </summary>
         public Action CancelProjectTemplate { get; set; }
 
-        public ModelSettings ModelSettings { get; } = new ModelSettings();
+        public HydroModelProjectTemplateSettings ModelSettings { get; } = new HydroModelProjectTemplateSettings() {ModelName = "Integrated Model"};
 
         public CollectionView CoordinateSystems
         {

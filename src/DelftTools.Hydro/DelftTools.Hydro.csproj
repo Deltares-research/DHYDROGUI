@@ -203,6 +203,7 @@
     <Compile Include="ExtensionMethods.cs" />
     <Compile Include="DrainageBasin.cs" />
     <Compile Include="Embankment.cs" />
+    <Compile Include="ModelSettings.cs" />
     <Compile Include="GroupableFeature2D.cs" />
     <Compile Include="GroupableFeature2DPoint.cs" />
     <Compile Include="GroupableFeature2DPolygon.cs" />
