@@ -5,7 +5,6 @@ using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Editing;
 using DeltaShell.Plugins.NetworkEditor.Gui.MapTools;
 using DeltaShell.Plugins.NetworkEditor.MapLayers;
-using DeltaShell.Plugins.NetworkEditor.MapLayers.Editors;
 using DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using GeoAPI.Extensions.Networks;
@@ -14,9 +13,7 @@ using NetTopologySuite.Extensions.Geometries;
 using NetTopologySuite.Extensions.Networks;
 using NetTopologySuite.Geometries;
 using NetTopologySuite.LinearReferencing;
-using SharpMap.Api.Editors;
 using SharpMap.Editors.FallOff;
-using SharpMap.Editors.Interactors.Network;
 using SharpMap.UI.Forms;
 using GeometryFactory = SharpMap.Converters.Geometries.GeometryFactory;
 
@@ -167,63 +164,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Helpers
             {
                 node.Network.EndEdit();
             }
-        }
-
-        /// <summary>
-        /// Changes <c>Offset</c> of <paramref name="branchFeature"/> and related features as
-        /// <see cref="GeometryHelper.Distance(ILineString , ICoordinate )"/>
-        /// produces rounded results. Editors, like 'BranchFeatureInteractor', set <paramref name="branchFeature"/> <c>Offset</c>
-        /// to this rounded value, resulting in
-        /// integer values as <paramref name="chainage"/> to end up as doubles, which is unwanted behavior.
-        /// </summary>
-        /// <param name="branchFeature"></param>
-        /// <param name="chainage"></param>
-        private static void EnsureInputChainageIsAsExpected(IBranchFeature branchFeature, double chainage)
-        {
-            branchFeature.Chainage = chainage;
-
-            if (branchFeature is ICompositeBranchStructure)
-            {
-                foreach (IStructure1D structure in ((ICompositeBranchStructure) branchFeature).Structures)
-                {
-                    structure.Chainage = chainage;
-                }
-            }
-
-            if (branchFeature is IStructure1D && ((IStructure1D) branchFeature).ParentStructure != null)
-            {
-                ((IStructure1D) branchFeature).ParentStructure.Chainage = chainage;
-            }
-        }
-
-        private static void ValidateChainage(double chainage, IBranchFeature branchFeature)
-        {
-            if (chainage < 0)
-            {
-                throw new ArgumentException("Chainage can not be negative.", "chainage");
-            }
-
-            //if (chainage > branchFeature.Branch.Geometry.Length)
-            if (chainage > branchFeature.Branch.Length)
-            {
-                throw new ArgumentException("Chainage can not exceed the length of the channel.", "chainage");
-            }
-
-            if (chainage + branchFeature.Length > branchFeature.Branch.Length)
-            {
-                throw new ArgumentException("Combined length and chainage can not exceed the length of the channel.", "chainage");
-            }
-        }
-
-        private static Coordinate GetCoordinateForBranchFeature(IBranchFeature branchFeature, double offset)
-        {
-            if (branchFeature.Branch.IsLengthCustom)
-            {
-                offset *= branchFeature.Branch.Geometry.Length / branchFeature.Branch.Length;
-            }
-
-            return GeometryHelper.LineStringCoordinate((ILineString) branchFeature.Branch.Geometry,
-                                                       offset);
         }
     }
 }

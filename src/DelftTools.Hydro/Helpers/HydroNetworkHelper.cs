@@ -329,51 +329,6 @@ namespace DelftTools.Hydro.Helpers
             chainages.Sort();
         }
 
-        /// <summary>
-        /// Update the offsets of the branchFeatures. The location on the map are not changed merely there offset
-        /// relative to the start of the branch.
-        /// </summary>
-        /// <param name="branch"> </param>
-        private static void ReverseBranchBranchFeatures(IBranch branch)
-        {
-            IBranchFeature[] reversedBranchFeatures = branch.BranchFeatures.Reverse().ToArray();
-
-            double length = branch.Length;
-            foreach (IBranchFeature branchFeature in reversedBranchFeatures)
-            {
-                branchFeature.SetBeingMoved(true);
-                branchFeature.Chainage =
-                    BranchFeature.SnapChainage(length, length - branchFeature.Chainage - branchFeature.Length);
-            }
-
-            branch.BranchFeatures.Clear();
-            branch.BranchFeatures.AddRange(reversedBranchFeatures);
-
-            foreach (IBranchFeature branchFeature in reversedBranchFeatures)
-            {
-                branchFeature.SetBeingMoved(false);
-            }
-        }
-
-        [EditAction]
-        private static void RemoveFromChannel(IStructure1D structure, IBranch channel)
-        {
-            if (null == structure.ParentStructure)
-            {
-                return;
-            }
-
-            structure.ParentStructure.Structures.Remove(structure);
-            structure.Branch = null;
-            if (structure.ParentStructure.Structures.Count != 0)
-            {
-                return;
-            }
-
-            channel.BranchFeatures.Remove(structure.ParentStructure);
-            structure.ParentStructure.Branch = null;
-        }
-
         private static void AddSnakeNetwork(bool generateIDs, Point[] points, IHydroNetwork network)
         {
             var crossSectionType = new CrossSectionSectionType {Name = "FlutPleen"};
