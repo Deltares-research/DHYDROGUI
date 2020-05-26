@@ -193,7 +193,6 @@
     <Compile Include="Commands\RelayCommand.cs" />
     <Compile Include="Commands\ShowCrossSectionHistoryCommand.cs" />
     <Compile Include="Commands\ShowHydroRegionTreeViewCommand.cs" />
-    <Compile Include="Commands\ShowSideViewCommand.cs" />
     <Compile Include="Editors\FMGatePropertiesRow.cs" />
     <Compile Include="Editors\FMPumpPropertiesRow.cs" />
     <Compile Include="Editors\FMWeirPropertiesRow.cs" />
@@ -283,25 +282,6 @@
     <Compile Include="Forms\ChartEditors\StructureChartShapes\WeirInSideViewShape.cs" />
     <Compile Include="Forms\ChartEditors\StructureChartShapes\WeirInStructureViewShape.cs" />
     <Compile Include="Forms\ChartEditors\StructureChartShapes\WeirShapeFeature.cs" />
-    <Compile Include="Forms\CompositeStructureView\CompositeStructureView.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Forms\CompositeStructureView\CompositeStructureView.Designer.cs">
-      <DependentUpon>CompositeStructureView.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\CompositeStructureView\CompositeStructureViewDataBuilder.cs" />
-    <Compile Include="Forms\CompositeStructureView\CompositeStructureViewHelper.cs" />
-    <Compile Include="Forms\CompositeStructureView\CompositeStructureViewPresenter.cs" />
-    <Compile Include="Forms\CompositeStructureView\ICompositeStructureView.cs" />
-    <Compile Include="Forms\CompositeStructureView\IStructureView.cs" />
-    <Compile Include="Forms\CompositeStructureView\StructurePresenter.cs" />
-    <Compile Include="Forms\CompositeStructureView\StructureView.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Forms\CompositeStructureView\StructureView.Designer.cs">
-      <DependentUpon>StructureView.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\CompositeStructureView\StructureViewHelper.cs" />
     <Compile Include="Forms\ComputationalGridDialog.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -465,21 +445,7 @@
     <Compile Include="Forms\ImportBranchFeatureDialog.Designer.cs">
       <DependentUpon>ImportBranchFeatureDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\NetworkSideView\CompositeStructureViewDataController.cs" />
-    <Compile Include="Forms\NetworkSideView\INetworkSideView.cs" />
-    <Compile Include="Forms\NetworkSideView\INetworkSideViewData.cs" />
-    <Compile Include="Forms\NetworkSideView\NetworkSideView.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Forms\NetworkSideView\NetworkSideView.Designer.cs">
-      <DependentUpon>NetworkSideView.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\NetworkSideView\NetworkSideViewCoverageManager.cs" />
-    <Compile Include="Forms\NetworkSideView\NetworkSideViewDataController.cs" />
-    <Compile Include="Forms\NetworkSideView\NetworkSideViewHelper.cs" />
-    <Compile Include="Forms\NetworkSideView\SideViewCoveragesContextMenu.cs" />
     <Compile Include="Forms\PropertyGrid\CatchmentProperties.cs" />
-    <Compile Include="Forms\PropertyGrid\ChannelProperties.cs" />
     <Compile Include="Forms\PropertyGrid\CrossSectionDefinitionProperties.cs" />
     <Compile Include="Forms\PropertyGrid\CrossSectionSectionTypeProperties.cs" />
     <Compile Include="Forms\PropertyGrid\DiscretizationProperties.cs" />
@@ -635,14 +601,6 @@
     <EmbeddedResource Include="Forms\CaseAnalysis\CoverageAnalysisView.resx">
       <DependentUpon>CoverageAnalysisView.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\CompositeStructureView\CompositeStructureView.resx">
-      <DependentUpon>CompositeStructureView.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\CompositeStructureView\StructureView.resx">
-      <DependentUpon>StructureView.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
     <EmbeddedResource Include="Forms\ComputationalGridDialog.resx">
       <DependentUpon>ComputationalGridDialog.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -704,10 +662,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ImportBranchFeatureDialog.resx">
       <DependentUpon>ImportBranchFeatureDialog.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\NetworkSideView\NetworkSideView.resx">
-      <DependentUpon>NetworkSideView.cs</DependentUpon>
-      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\SimpleProgress.resx">
       <DependentUpon>SimpleProgress.cs</DependentUpon>

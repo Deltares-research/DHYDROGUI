@@ -61,23 +61,7 @@ namespace DelftTools.Hydro.Helpers
 
             return uniqueName;
         }
-
-        public static void AddStructureToComposite(ICompositeBranchStructure compositeBranchStructure,
-                                                   IStructure1D structure)
-        {
-            structure.Branch = compositeBranchStructure.Branch;
-            structure.ParentStructure = compositeBranchStructure;
-            structure.Chainage = compositeBranchStructure.Chainage;
-            compositeBranchStructure.Structures.Add(structure);
-
-            if (null != compositeBranchStructure.Geometry)
-            {
-                structure.Geometry = (IGeometry) compositeBranchStructure.Geometry.Clone();
-            }
-
-            structure.Branch.BranchFeatures.Add(structure);
-        }
-
+        
         public static IHydroNetwork GetSnakeHydroNetwork(params Point[] points)
         {
             return GetSnakeHydroNetwork(false, points);

@@ -101,7 +101,7 @@
             </fluent:RibbonGroupBox>
 
             <fluent:RibbonGroupBox Header="Analysis" x:Name="Analysis" Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\AnalysisGroup.png">
-                <fluent:Button x:Name="ButtonShowSideView" Header="Show Side View" ToolTip="Show Side View" Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\sideview.png" Click="ButtonShowSideView_Click" SizeDefinition="Middle,Small,Small" />
+                
             </fluent:RibbonGroupBox>
         </fluent:RibbonTabItem>
 

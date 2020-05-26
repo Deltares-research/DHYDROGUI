@@ -25,12 +25,9 @@ using DeltaShell.Plugins.HydroNetworkEditor.Gui.Editors;
 using DeltaShell.Plugins.NetworkEditor.Gui.Editors;
 using DeltaShell.Plugins.NetworkEditor.Gui.Export;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms;
-using DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView;
-using DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid;
-using DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView;
 using DeltaShell.Plugins.NetworkEditor.Gui.Helpers;
 using DeltaShell.Plugins.NetworkEditor.Gui.Layers;
 using DeltaShell.Plugins.NetworkEditor.Gui.ProjectExplorer;
@@ -195,7 +192,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
         {
             yield return new PropertyInfo<ICrossSectionDefinition, CrossSectionDefinitionProperties>();
             yield return new PropertyInfo<IHydroNode, HydroNodeProperties>();
-            yield return new PropertyInfo<IChannel, ChannelProperties>();
             yield return new PropertyInfo<IHydroNetwork, HydroNetworkProperties>();
             yield return new PropertyInfo<DrainageBasin, DrainageBasinProperties>();
             yield return new PropertyInfo<HydroRegion, HydroRegionProperties>();
@@ -215,44 +211,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
 
         public override IEnumerable<ViewInfo> GetViewInfoObjects()
         {
-            yield return new ViewInfo<IPump, PumpView>
-            {
-                AdditionalDataCheck = o => o != null && o.Branch != null,
-                CompositeViewType = typeof(CompositeStructureView),
-                GetCompositeViewData = o => o.ParentStructure
-            };
-            yield return new ViewInfo<IWeir, WeirView>
-            {
-                AdditionalDataCheck = o => o != null && o.Branch != null,
-                CompositeViewType = typeof(CompositeStructureView),
-                GetCompositeViewData = o => o.ParentStructure
-            };
-            yield return new ViewInfo<IBridge, BridgeView>
-            {
-                CompositeViewType = typeof(CompositeStructureView),
-                GetCompositeViewData = o => o.ParentStructure
-            };
-            yield return new ViewInfo<ICulvert, CulvertViewWpf>
-            {
-                CompositeViewType = typeof(CompositeStructureView),
-                GetCompositeViewData = o => o.ParentStructure
-            };
-            yield return new ViewInfo<IExtraResistance, ExtraResistanceView>
-            {
-                CompositeViewType = typeof(CompositeStructureView),
-                GetCompositeViewData = o => o.ParentStructure
-            };
-            yield return new ViewInfo<ICompositeBranchStructure, CompositeStructureView>
-            {
-                AfterCreate = (v, o) =>
-                {
-                    v.Presenter = new CompositeStructureViewPresenter
-                    {
-                        SelectionContainer = Gui,
-                        CreateView = ob => Gui.DocumentViewsResolver.CreateViewForData(ob, info => info.CompositeViewType == typeof(CompositeStructureView))
-                    };
-                }
-            };
             yield return new ViewInfo<IEnumerable<IGate>, ILayer, VectorLayerAttributeTableView>
             {
                 Description = "Attribute Table",
@@ -300,19 +258,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                     IHydroNetwork network = Gui.Application.Project.GetAllItemsRecursive().OfType<IHydroNetwork>().FirstOrDefault(n => n.SharedCrossSectionDefinitions.Contains(o));
                     CrossSectionDefinitionViewModel viewModel = CrossSectionDefinitionViewModelProvider.GetViewModel(o, network);
                     v.ViewModel = viewModel;
-                }
-            };
-            yield return new ViewInfo<Route, NetworkSideView>
-            {
-                Description = "Network side view",
-                AdditionalDataCheck = r => r.Locations.Values.Count > 1,
-                AfterCreate = (v, o) =>
-                {
-                    Project project = Gui.Application.Project;
-                    IEnumerable<ICoverage> coverages = project.GetAllItemsRecursive().OfType<ICoverage>().Distinct();
-                    var manager = new NetworkSideViewCoverageManager(o, (INotifyCollectionChange) project,
-                                                                     coverages) {OnRouteRemoved = () => Gui.DocumentViews.Remove(v)};
-                    v.DataController = new NetworkSideViewDataController(o, manager, GetModelNameForCoverage);
                 }
             };
             yield return new ViewInfo<Embankment, IGeometry, GeometryEditor>
@@ -482,11 +427,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 compositeView.ChildViews
                              .OfType<MapView>()
                              .ForEach(mv => HydroRegionEditorHelper.RemoveHydroRegionEditorMapTool(mv.MapControl));
-            }
-
-            if (view is NetworkSideView networkSideView)
-            {
-                networkSideView.SelectionChanged -= NetworkSideViewSelectionChanged;
             }
         }
 
@@ -841,11 +781,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                     }
                 }
             }
-
-            if (view is NetworkSideView sideView)
-            {
-                sideView.SelectionChanged += NetworkSideViewSelectionChanged;
-            }
         }
 
         private void AddRegionLayer(IRegion region, IMap map)
@@ -922,22 +857,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             else if (activeView is CrossSectionDefinitionView)
             {
                 region = (activeView as CrossSectionDefinitionView).ViewModel.HydroNetwork;
-            }
-            else if (activeView is CompositeStructureView)
-            {
-                var structureView = (CompositeStructureView) activeView;
-
-                var structure = structureView.Data as IStructure1D;
-
-                if (structure != null)
-                {
-                    region = (IHydroNetwork) structure.Network;
-                }
-            }
-            else if (activeView is NetworkSideView)
-            {
-                var route = ((NetworkSideView) activeView).Data as Route;
-                region = route != null ? route.Network as IHydroNetwork : null;
             }
             else if (activeView != null)
             {

@@ -60,7 +60,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
         private ICommand addNewRunoffBoundaryCommand = new AddNewDrainageBasinFeatureCommand(HydroRegionEditorMapTool.AddRunoffBoundaryToolName);
         private ICommand addNewLinkCommand = new AddNewLinkCommand();
         private ICommand addNewNetworkLocationCommand = new AddNewNetworkLocationCommand();
-        private ICommand showSideViewCommand = new ShowSideViewCommand();
         private ICommand openCaseAnalysisCommand = new OpenCaseAnalysisViewCommand();
 
         private ICommand addThinDam2dCommand = new MapToolCommand(HydroRegionEditorMapTool.ThinDamToolName) {LayerType = typeof(HydroAreaLayer)};
@@ -125,7 +124,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 yield return addDryArea2dCommand;
                 yield return addNewLinkCommand;
                 yield return addNewNetworkLocationCommand;
-                yield return showSideViewCommand;
                 yield return openCaseAnalysisCommand;
                 yield return addNewEmbankmentCommand;
                 yield return addEnclosure2dCommand;
@@ -197,13 +195,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             ButtonAddBridgePillar.SetState(addBridgePillarCommand, showArea2DTools);
 
             ButtonAddNewLink.SetState(addNewLinkCommand, regions.Count > 0);
-
-            ButtonShowSideView.IsEnabled = showSideViewCommand.Enabled;
-            ButtonShowSideView.Visibility = showNetworkTools ? Visibility.Visible : Visibility.Collapsed;
-
+            
             ButtonOpenCaseAnalysis.IsEnabled = openCaseAnalysisCommand.Enabled;
-            ButtonShowSideView.Visibility = showNetworkTools ? Visibility.Visible : Visibility.Collapsed;
-
+            
             SetCoverageComboBox();
 
             // Depends on SetCoverageComboBox
@@ -527,12 +521,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
         private void ButtonAddNewNetworkLocation_Click(object sender, RoutedEventArgs e)
         {
             addNewNetworkLocationCommand.Execute();
-            ValidateItems();
-        }
-
-        private void ButtonShowSideView_Click(object sender, RoutedEventArgs e)
-        {
-            showSideViewCommand.Execute();
             ValidateItems();
         }
 
