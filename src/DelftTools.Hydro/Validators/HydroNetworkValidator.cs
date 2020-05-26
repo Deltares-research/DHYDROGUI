@@ -188,14 +188,14 @@ namespace DelftTools.Hydro.Validators
             {
                 if (!channelsCheckedOnInterpolationBranches.Contains(channel.Name))
                 {
-                    var chainOfChannels = GetChainOfChannelsWithSameOrderNumber(channel, network);
+                    var chainOfChannels = GetChainOfChannelsWithSameOrderNumber(channel, network).ToList();
 
                     foreach (var issue in GetCorrectCrossSectionsOnChannelIssue(chainOfChannels, network))
                     {
                         yield return issue;
                     }
 
-                    chainOfChannels.All(c => channelsCheckedOnInterpolationBranches.Add(c.Name));
+                    chainOfChannels.ForEach(c => channelsCheckedOnInterpolationBranches.Add(c.Name));
                 }
             }
         }
@@ -275,7 +275,7 @@ namespace DelftTools.Hydro.Validators
                 {
                     yield return channelInChain;
                 }
-                
+                previousLinks.Remove(channel);
             }
 
             var endNode = channel.Target;
@@ -289,6 +289,7 @@ namespace DelftTools.Hydro.Validators
                 {
                     yield return channelInChain;
                 }
+                previousLinks.Remove(channel);
             }
 
             if (!previousLinks.Any())
