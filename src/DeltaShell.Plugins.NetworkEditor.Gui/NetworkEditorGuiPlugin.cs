@@ -33,7 +33,6 @@ using DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView;
 using DeltaShell.Plugins.NetworkEditor.Gui.Helpers;
 using DeltaShell.Plugins.NetworkEditor.Gui.Layers;
-using DeltaShell.Plugins.NetworkEditor.Gui.MapTools;
 using DeltaShell.Plugins.NetworkEditor.Gui.ProjectExplorer;
 using DeltaShell.Plugins.NetworkEditor.MapLayers;
 using DeltaShell.Plugins.SharpMapGis.Gui;
@@ -50,7 +49,6 @@ using SharpMap;
 using SharpMap.Api;
 using SharpMap.Api.Layers;
 using SharpMap.Layers;
-using SharpMap.UI.Forms;
 using PropertyInfo = DelftTools.Shell.Gui.PropertyInfo;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui
@@ -64,10 +62,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
         private const string SeparatorToolStripMenuKey = "Separator";
         private HydroRegionTreeView hydroRegionTreeView;
         private bool settingGuiSelection;
-        private ClonableToolStripMenuItem generateCalculationGridLocationsToolStripMenuItem;
-        private ClonableToolStripMenuItem removeCalculationGridLocationsToolStripMenuItem;
         private ClonableToolStripMenuItem convertCoordinateSystemToolStripMenuItem;
-        private ContextMenuStrip calculationGridMenu;
         private ContextMenuStrip hydroRegionContextMenu;
         private ContextMenuStrip convertCoordinateSystemContextMenu;
         private IGui gui;
@@ -445,17 +440,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 return new MenuItemContextMenuStripAdapter(convertCoordinateSystemContextMenu);
             }
 
-            if (data is IDiscretization discretization)
-            {
-                generateCalculationGridLocationsToolStripMenuItem.Tag = discretization;
-                generateCalculationGridLocationsToolStripMenuItem.Enabled = true;
-
-                removeCalculationGridLocationsToolStripMenuItem.Tag = discretization;
-                removeCalculationGridLocationsToolStripMenuItem.Enabled = discretization.Locations.Values.Count > 0;
-
-                return new MenuItemContextMenuStripAdapter(calculationGridMenu);
-            }
-
             return null;
         }
 
@@ -673,41 +657,15 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
 
         private void InitializeComponent()
         {
-            generateCalculationGridLocationsToolStripMenuItem = new ClonableToolStripMenuItem
-            {
-                Image = Properties.Resources.GeneratePoints,
-                Name = "generateCalculationGridLocationsToolStripMenuItem",
-                Text = Properties.Resources.NetworkEditorGuiPlugin_InitializeComponent_Generate_Computational_Grid_Nodes___
-            };
-
-            removeCalculationGridLocationsToolStripMenuItem = new ClonableToolStripMenuItem
-            {
-                Image = Properties.Resources.RemovePoints,
-                Name = "removeCalculationGridLocationsToolStripMenuItem",
-                Text = Properties.Resources.NetworkEditorGuiPlugin_InitializeComponent_Remove_Computational_Grid_Nodes
-            };
             convertCoordinateSystemToolStripMenuItem = new ClonableToolStripMenuItem
             {
                 Image = Properties.Resources.HydroRegion,
                 Name = "convertCoordinateSystemToolStripMenuItem",
                 Text = "Convert to Coordinate System..."
             };
-
-            generateCalculationGridLocationsToolStripMenuItem.Click += GenerateCalculationGridLocationsToolStripMenuItemClick;
-            removeCalculationGridLocationsToolStripMenuItem.Click += RemoveCalculationGridLocationsToolStripMenuItem_Click;
+            
             convertCoordinateSystemToolStripMenuItem.Click += ConvertCoordinateSystemToolStripMenuItemClick;
-
-            calculationGridMenu = new ContextMenuStrip
-            {
-                Name = "calculationGridMenu",
-                Size = new Size(210, 48)
-            };
-            calculationGridMenu.Items.AddRange(new ToolStripItem[]
-            {
-                generateCalculationGridLocationsToolStripMenuItem,
-                removeCalculationGridLocationsToolStripMenuItem
-            });
-
+            
             hydroRegionContextMenu = new ContextMenuStrip
             {
                 Name = "addNewHydroRegion",
@@ -1046,36 +1004,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             //open view for selected object
             Gui.CommandHandler.OpenViewForSelection();
         }
-
-        private void GenerateCalculationGridLocationsToolStripMenuItemClick(object sender, EventArgs e)
-        {
-            var discretization = (IDiscretization) ((ToolStripMenuItem) sender).Tag;
-            var hydroNetwork = (IHydroNetwork) discretization.Network;
-
-            // if the actievview is the discretization view allow generation of gridpoints 
-            // for selected channel only.
-            MapControl mapControl = null;
-
-            if (Gui.DocumentViews.ActiveView is CoverageView coverageView && coverageView.Coverage == discretization)
-            {
-                MapView mapView = coverageView.ChildViews.OfType<MapView>().FirstOrDefault();
-                mapControl = mapView?.MapControl;
-            }
-
-            IList<IChannel> selectedChannels = null;
-            if (mapControl != null)
-            {
-                selectedChannels = mapControl.SelectedFeatures.OfType<IChannel>().Where(f => Equals(f.Network, hydroNetwork)).ToList();
-            }
-
-            bool hasRun = HydroNetworkEditorMapToolHelper.RunCalculationGridWizard(selectedChannels, discretization);
-            if (hasRun)
-            {
-                Gui.CommandHandler.OpenView(discretization);
-                RefreshMapViewSelection();
-            }
-        }
-
+        
         private void RemoveCalculationGridLocationsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var discretization = (IDiscretization) ((ToolStripMenuItem) sender).Tag;

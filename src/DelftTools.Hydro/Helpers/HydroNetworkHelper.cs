@@ -10,7 +10,6 @@ using GeoAPI.Extensions.Feature;
 using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;
 using log4net;
-using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Networks;
 using NetTopologySuite.Geometries;
 
@@ -25,130 +24,6 @@ namespace DelftTools.Hydro.Helpers
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(HydroNetworkHelper));
         
-        /// <summary>
-        /// </summary>
-        /// <param name="networkCoverage"> </param>
-        /// <param name="branch"> </param>
-        /// <param name="offsets"> </param>
-        public static void GenerateDiscretization(INetworkCoverage networkCoverage, IChannel branch,
-                                                  IEnumerable<double> offsets)
-        {
-            NetworkHelper.ClearLocations(networkCoverage, branch);
-            List<NetworkLocation> locations = offsets.Select(offset => new NetworkLocation(branch, offset)).ToList();
-            networkCoverage.Locations.AddValues(locations);
-        }
-
-        public static void GenerateDiscretization(IDiscretization discretization,
-                                                  bool overWriteSegments, bool eraseExisting,
-                                                  double minimumCellLength, bool gridAtStructure,
-                                                  double structureDistance, bool gridAtCrossSection,
-                                                  bool gridAtLaterals,
-                                                  bool gridAtFixedLength, double fixedLength,
-                                                  IList<IChannel> selectedChannels = null)
-        {
-            discretization.Locations.SkipUniqueValuesCheck = true;
-
-            selectedChannels = selectedChannels ?? discretization.Network.Branches.Cast<IChannel>().ToList();
-            discretization.SegmentGenerationMethod = SegmentGenerationMethod.None;
-            foreach (Channel channel in selectedChannels)
-            {
-                if (BranchLocationCount(discretization, channel) > 1)
-                {
-                    if (!overWriteSegments)
-                    {
-                        continue;
-                    }
-                }
-
-                if (eraseExisting)
-                {
-                    NetworkHelper.ClearLocations(discretization, channel);
-                }
-                else
-                {
-                    GenerateDiscretization(discretization, channel,
-                                           minimumCellLength,
-                                           gridAtStructure,
-                                           structureDistance,
-                                           gridAtCrossSection,
-                                           gridAtLaterals,
-                                           gridAtFixedLength,
-                                           fixedLength);
-                }
-            }
-
-            discretization.SegmentGenerationMethod = SegmentGenerationMethod.SegmentBetweenLocationsFullyCovered;
-
-            discretization.Locations.SkipUniqueValuesCheck = false;
-        }
-
-        /// <summary>
-        /// Generates calculation grid cells for a branch, When the grid is generated at cross sections and at fixed
-        /// length each subbranch between two cross sections processed separately to prevent too small grid cells.
-        /// todo add support for structures etc.
-        /// </summary>
-        /// <param name="discretization"> </param>
-        /// <param name="branch"> </param>
-        /// <param name="minimumCellLength"> </param>
-        /// <param name="gridAtStructure"> </param>
-        /// <param name="structureDistance"> </param>
-        /// <param name="gridAtCrossSection"> </param>
-        /// <param name="gridAtLaterals"> </param>
-        /// <param name="gridAtFixedLength"> </param>
-        /// <param name="fixedLength"> </param>
-        public static void GenerateDiscretization(IDiscretization discretization, IChannel branch,
-                                                  double minimumCellLength, bool gridAtStructure,
-                                                  double structureDistance, bool gridAtCrossSection,
-                                                  bool gridAtLaterals, bool gridAtFixedLength, double fixedLength)
-        {
-            var offsets = new List<double> {0.0};
-
-            // remember network locations the user has fixed.
-            INetworkLocation[] existingLocations =
-                discretization.Locations.Values.Where(nl => nl.Branch == branch).ToArray();
-            List<double> fixedOffsets = (from networkLocation in existingLocations
-                                         where discretization.IsFixedPoint(networkLocation)
-                                         select networkLocation.Chainage).ToList();
-            offsets.AddRange(fixedOffsets);
-            double length = branch.Length;
-            offsets.Add(length);
-            offsets = offsets.Distinct().ToList();
-
-            if (gridAtStructure)
-            {
-                AddGridChainageForCompositeStructures(branch, minimumCellLength, structureDistance, offsets);
-            }
-
-            if (gridAtCrossSection)
-            {
-                AddGridChainagesForBranchFeatures(branch, minimumCellLength, offsets,
-                                                  branch.CrossSections.OfType<IBranchFeature>());
-            }
-
-            if (gridAtLaterals)
-            {
-                AddGridChainagesForBranchFeatures(branch, minimumCellLength, offsets,
-                                                  branch.BranchSources.OfType<IBranchFeature>());
-            }
-
-            AddGridChainagesAtFixedIntervals(offsets, gridAtFixedLength, fixedLength);
-            GenerateDiscretization(discretization, branch, offsets);
-            INetworkLocation[] networkLocations = discretization
-                                                  .Locations.Values
-                                                  .Where(loc => loc.Branch == branch &&
-                                                                fixedOffsets.Contains(loc.Chainage)).ToArray();
-
-            bool wasSkipping = discretization.Locations.SkipUniqueValuesCheck;
-            discretization.Locations.SkipUniqueValuesCheck = false;
-            foreach (INetworkLocation networkLocation in networkLocations)
-            {
-                //set the points as fixed again.
-                discretization.ToggleFixedPoint(networkLocation);
-            }
-
-            discretization.Locations.SkipUniqueValuesCheck = wasSkipping;
-        }
-
         /// <summary>
         /// Removes structureFeatures without structures. StructureFeatures are helper/container
         /// object that are created/deleted automatically.
