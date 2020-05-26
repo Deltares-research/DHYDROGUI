@@ -4,7 +4,6 @@ using System.Linq;
 using System.Reflection;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Structures;
-using DelftTools.Utils.Aop;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Extensions.Networks;
