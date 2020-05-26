@@ -4,11 +4,9 @@ using System.Linq;
 using System.Reflection;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Structures;
-using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;
-using log4net;
 using NetTopologySuite.Extensions.Networks;
 using NetTopologySuite.Geometries;
 
@@ -21,8 +19,6 @@ namespace DelftTools.Hydro.Helpers
     // TODO: split into NetworkHelper and HydroNetworkHelper?
     public class HydroNetworkHelper
     {
-        private static readonly ILog log = LogManager.GetLogger(typeof(HydroNetworkHelper));
-        
         /// <summary>
         /// Sets the default name of a specific feature.
         /// </summary>
@@ -137,181 +133,6 @@ namespace DelftTools.Hydro.Helpers
             branchFeature.Name = "cross_section";
             NetworkHelper.AddBranchFeatureToBranch(branchFeature, branch, offset);
             return branchFeature;
-        }
-        
-        /// <summary>
-        /// Returns the number of networklocation in a coverage for a branch
-        /// </summary>
-        /// <param name="networkCoverage"> </param>
-        /// <param name="branch"> </param>
-        /// <returns> </returns>
-        private static int BranchLocationCount(INetworkCoverage networkCoverage, IChannel branch)
-        {
-            return networkCoverage.Locations.Values.Where(nl => nl.Branch == branch).Count();
-        }
-
-        private static void AddGridChainagesAtFixedIntervals(List<double> chainages, bool gridAtFixedLength,
-                                                             double fixedLength)
-        {
-            // sort chainage and treat every cell now as separately when processing gridAtFixedLength
-            chainages.Sort();
-            if (gridAtFixedLength)
-            {
-                var fixedChainages = new List<double>();
-                for (var i = 1; i < chainages.Count; i++)
-                {
-                    double segmentLength = chainages[i] - chainages[i - 1];
-                    if (segmentLength > fixedLength)
-                    {
-                        var numberOfNewSegments = (int) Math.Ceiling(segmentLength / fixedLength);
-                        for (var j = 1; j < numberOfNewSegments; j++)
-                        {
-                            fixedChainages.Add(chainages[i - 1] + (j * (segmentLength / numberOfNewSegments)));
-                        }
-                    }
-                }
-
-                chainages.AddRange(fixedChainages);
-                chainages.Sort();
-            }
-        }
-
-        private static string GetNameForType(Type type)
-        {
-            if (type == typeof(CrossSection))
-            {
-                return "cross section";
-            }
-
-            if (type == typeof(LateralSource))
-            {
-                return "lateral source";
-            }
-
-            return type.ToString();
-        }
-
-        private static void AddGridChainagesForBranchFeatures(IChannel branch, double minimumCellLength,
-                                                              List<double> chainages,
-                                                              IEnumerable<IBranchFeature> features)
-        {
-            IBranchFeature item = features.FirstOrDefault();
-            string typeName = item != null ? GetNameForType(item.GetType()) : "<unknown>";
-
-            var previous = 0.0;
-            foreach (IBranchFeature feature in features.OrderBy(cs => cs.Chainage))
-            {
-                var i = 0;
-                while (i < chainages.Count && chainages[i] < feature.Chainage)
-                {
-                    previous = chainages[i];
-                    i++;
-                }
-
-                // Is distance to predecessor large enough?
-                if (feature.Chainage - previous >= minimumCellLength)
-                {
-                    // Is distance to successor too small?
-                    if (i < chainages.Count && chainages[i] - feature.Chainage < minimumCellLength)
-                    {
-                        log.Warn(string.Format(
-                                     "No grid point generated for {4} {0}:{1} at {2:f2} too close to point at {3:f2}.",
-                                     feature.Name, branch.Name, feature.Chainage, chainages[i], typeName));
-                        continue;
-                    }
-
-                    if (branch.BranchFeatures.OfType<IStructure1D>()
-                              .Any(bf => Math.Abs(bf.Chainage - feature.Chainage) < BranchFeature.Epsilon))
-                    {
-                        log.InfoFormat(
-                            "No grid point generated for {3} {0}:{1} at {2:f2}. Grid point would overlap with structure.",
-                            feature.Name, branch.Name, feature.Chainage, typeName);
-                        continue;
-                    }
-
-                    chainages.Insert(i, feature.Chainage);
-
-                    previous = feature.Chainage;
-                }
-                else
-                {
-                    log.Warn(string.Format(
-                                 "No grid point generated for {4} {0}:{1} at {2:f2} too close to point at {3:f2}.",
-                                 feature.Name, branch.Name, feature.Chainage, previous, typeName));
-                }
-
-                // segment would be too small skip
-            }
-        }
-
-        /// <summary>
-        /// Adds gridpoints for locations where CompositeStructures are defined.
-        /// </summary>
-        /// <param name="branch"> </param>
-        /// <param name="minimumCellLength"> </param>
-        /// <param name="structureDistance"> </param>
-        /// <param name="chainages"> </param>
-        private static void AddGridChainageForCompositeStructures(IChannel branch, double minimumCellLength,
-                                                                  double structureDistance, List<double> chainages)
-        {
-            double step = structureDistance;
-
-            var compositeStructures =
-                branch.BranchFeatures.Where(bf => bf is ICompositeBranchStructure).OrderBy(bf => bf.Chainage).Select(
-                    bf => new
-                    {
-                        bf.Name,
-                        Chainage = bf.Chainage
-                    });
-            var previousChainage = 0.0;
-
-            IList<double> structureChainages = new List<double>();
-            var i = 0;
-            var previousIsStructure = false;
-
-            foreach (var compositeStructure in compositeStructures)
-            {
-                while (i < chainages.Count && chainages[i] < compositeStructure.Chainage)
-                {
-                    previousIsStructure = false;
-                    previousChainage = chainages[i];
-                    i++;
-                }
-
-                // add gridpoint before structure
-                double beforeChainage = compositeStructure.Chainage - step;
-                if (beforeChainage - previousChainage >= minimumCellLength)
-                {
-                    structureChainages.Add(beforeChainage);
-
-                    previousChainage = beforeChainage;
-                    previousIsStructure = true;
-                }
-                else if (previousIsStructure)
-                {
-                    // if predessor is also structure center the gridpoint between the 2 structures
-                    structureChainages[structureChainages.Count - 1] = (beforeChainage + previousChainage) / 2;
-                    previousChainage = structureChainages[structureChainages.Count - 1];
-                }
-
-                // add gridpoint after structure
-                double afterChainage = compositeStructure.Chainage + step;
-                if (afterChainage - previousChainage >= minimumCellLength)
-                {
-                    if (i < chainages.Count && chainages[i] - afterChainage < minimumCellLength)
-                    {
-                        continue;
-                    }
-
-                    structureChainages.Add(afterChainage);
-
-                    previousChainage = afterChainage;
-                    previousIsStructure = true;
-                }
-            }
-
-            chainages.AddRange(structureChainages);
-            chainages.Sort();
         }
 
         private static void AddSnakeNetwork(bool generateIDs, Point[] points, IHydroNetwork network)
