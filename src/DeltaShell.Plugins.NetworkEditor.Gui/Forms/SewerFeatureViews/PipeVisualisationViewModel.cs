@@ -190,15 +190,5 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
         public Func<double> GetActualHeight { get; set; }
 
         public Func<Canvas> DrawingCanvas { get; set; }
-
-        public double TargetCompartmentBottomLevel
-        {
-            get { return Pipe?.TargetCompartment?.BottomLevel ?? 0d; }
-        }
-
-        public double TargetCompartmentSurfaceLevel
-        {
-            get { return Pipe?.TargetCompartment?.BottomLevel ?? 0d; }
-        }
     }
 }
