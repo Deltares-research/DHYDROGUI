@@ -197,7 +197,7 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
                 networkLocations[i] = new NetworkLocation
                 {
                     Branch = networkBranch,
-                    Chainage = networkBranch.CorrectlyRoundOffChainageIfChainageIsOnEndOfBranch(meshGeometryBranchChainage),
+                    Chainage = networkBranch.Length - meshGeometryBranchChainage < 0.000001 ? networkBranch.Length : meshGeometryBranchChainage,
                     Name = meshGeometry.NodeIds[i],
                     LongName = meshGeometry.NodeLongNames[i],
                     Geometry = new Point(meshGeometry.NodesX[i], meshGeometry.NodesY[i])
