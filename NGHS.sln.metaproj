@@ -1,0 +1,1320 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" InitialTargets="ValidateSolutionConfiguration;ValidateToolsVersions;ValidateProjects" DefaultTargets="Build">
+  <PropertyGroup>
+    <MSBuildExtensionsPath32>C:\Program Files (x86)\Microsoft Visual Studio\2017\Professional\MSBuild</MSBuildExtensionsPath32>
+    <MSBuildExtensionsPath>C:\Program Files (x86)\Microsoft Visual Studio\2017\Professional\MSBuild</MSBuildExtensionsPath>
+    <MSBuildToolsPath32>C:\Program Files (x86)\Microsoft Visual Studio\2017\Professional\MSBuild\15.0\bin</MSBuildToolsPath32>
+    <MSBuildToolsPath64>C:\Program Files (x86)\Microsoft Visual Studio\2017\Professional\MSBuild\15.0\bin\amd64</MSBuildToolsPath64>
+    <MSBuildSDKsPath>C:\Program Files (x86)\Microsoft Visual Studio\2017\Professional\MSBuild\Sdks</MSBuildSDKsPath>
+    <FrameworkSDKRoot>C:\Program Files (x86)\Microsoft SDKs\Windows\v10.0A\</FrameworkSDKRoot>
+    <MSBuildRuntimeVersion>4.0.30319</MSBuildRuntimeVersion>
+    <MSBuildFrameworkToolsPath>C:\Windows\Microsoft.NET\Framework\v4.0.30319\</MSBuildFrameworkToolsPath>
+    <MSBuildFrameworkToolsPath32>C:\Windows\Microsoft.NET\Framework\v4.0.30319\</MSBuildFrameworkToolsPath32>
+    <MSBuildFrameworkToolsPath64>C:\Windows\Microsoft.NET\Framework64\v4.0.30319\</MSBuildFrameworkToolsPath64>
+    <MSBuildFrameworkToolsRoot>C:\Windows\Microsoft.NET\Framework\</MSBuildFrameworkToolsRoot>
+    <SDK35ToolsPath>C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\bin\</SDK35ToolsPath>
+    <SDK40ToolsPath>C:\Program Files (x86)\Microsoft SDKs\Windows\v10.0A\bin\NETFX 4.6.1 Tools\</SDK40ToolsPath>
+    <WindowsSDK80Path>C:\Program Files (x86)\Windows Kits\8.1\</WindowsSDK80Path>
+    <VsInstallRoot>C:\Program Files (x86)\Microsoft Visual Studio\2017\Professional</VsInstallRoot>
+    <MSBuildToolsRoot>C:\Program Files (x86)\Microsoft Visual Studio\2017\Professional\MSBuild</MSBuildToolsRoot>
+    <RoslynTargetsPath>C:\Program Files (x86)\Microsoft Visual Studio\2017\Professional\MSBuild\15.0\bin\Roslyn</RoslynTargetsPath>
+    <VCTargetsPath>C:\Program Files (x86)\Microsoft Visual Studio\2017\Professional\Common7\IDE\VC\VCTargets\</VCTargetsPath>
+    <VCTargetsPath14>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\</VCTargetsPath14>
+    <VCTargetsPath12>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\</VCTargetsPath12>
+    <VCTargetsPath11>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V110\</VCTargetsPath11>
+    <VCTargetsPath10>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\</VCTargetsPath10>
+    <AndroidTargetsPath>C:\Program Files (x86)\Microsoft Visual Studio\2017\Professional\MSBuild\Microsoft\MDD\Android\V150\</AndroidTargetsPath>
+    <iOSTargetsPath>C:\Program Files (x86)\Microsoft Visual Studio\2017\Professional\MSBuild\Microsoft\MDD\iOS\V150\</iOSTargetsPath>
+    <VisualStudioVersion>15.0</VisualStudioVersion>
+    <Platform>Any CPU</Platform>
+    <AspNetConfiguration>Debug</AspNetConfiguration>
+    <SolutionDir>D:\BuildAgent\work\647fda35ead99de4\</SolutionDir>
+    <SolutionExt>.sln</SolutionExt>
+    <SolutionFileName>NGHS.sln</SolutionFileName>
+    <SolutionName>NGHS</SolutionName>
+    <SolutionPath>D:\BuildAgent\work\647fda35ead99de4\NGHS.sln</SolutionPath>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <CurrentSolutionConfigurationContents>
+      <SolutionConfiguration xmlns="">
+  <ProjectConfiguration Project="{E22A9330-5EE9-4C26-A014-3269BCF78DED}" AbsolutePath="D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.NGHS.IO\DeltaShell.NGHS.IO.csproj" BuildProjectInSolution="True">Debug|AnyCPU</ProjectConfiguration>
+  <ProjectConfiguration Project="{9F94F7FE-C79C-4E32-B3DC-A11C01B79349}" AbsolutePath="D:\BuildAgent\work\647fda35ead99de4\src\DelftTools.Hydro\DelftTools.Hydro.csproj" BuildProjectInSolution="True">Debug|AnyCPU</ProjectConfiguration>
+  <ProjectConfiguration Project="{6F5B9016-2DD7-4148-BA0B-0167B9E57D78}" AbsolutePath="D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Plugins.DelftModels.HydroModel\DeltaShell.Plugins.DelftModels.HydroModel.csproj" BuildProjectInSolution="True">Debug|AnyCPU</ProjectConfiguration>
+  <ProjectConfiguration Project="{67C4F55D-2CF5-424D-91A3-A68365AC1C9C}" AbsolutePath="D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Plugins.DelftModels.HydroModel.Gui\DeltaShell.Plugins.DelftModels.HydroModel.Gui.csproj" BuildProjectInSolution="True">Debug|AnyCPU</ProjectConfiguration>
+  <ProjectConfiguration Project="{7DAD8091-178D-43B1-97A7-D47A5C5FAAEA}" AbsolutePath="D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Plugins.DelftModels.RealTimeControl\DeltaShell.Plugins.DelftModels.RealTimeControl.csproj" BuildProjectInSolution="True">Debug|AnyCPU</ProjectConfiguration>
+  <ProjectConfiguration Project="{A2D91FEB-C4D5-401A-AF97-ED0072899423}" AbsolutePath="D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Plugins.DelftModels.RealTimeControl.Gui\DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.csproj" BuildProjectInSolution="True">Debug|AnyCPU</ProjectConfiguration>
+  <ProjectConfiguration Project="{91A0DBAF-8970-4152-A8CC-EF283AC482C3}" AbsolutePath="D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Plugins.DelftModels.RTCShapes\DeltaShell.Plugins.DelftModels.RTCShapes.csproj" BuildProjectInSolution="True">Debug|AnyCPU</ProjectConfiguration>
+  <ProjectConfiguration Project="{803D13C0-3274-4C83-AE54-5D828B3338F2}" AbsolutePath="D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Plugins.DelftModels.WaterQualityModel\DeltaShell.Plugins.DelftModels.WaterQualityModel.csproj" BuildProjectInSolution="True">Debug|AnyCPU</ProjectConfiguration>
+  <ProjectConfiguration Project="{0D371464-C886-433D-912D-84A3EF0ADE01}" AbsolutePath="D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui\DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.csproj" BuildProjectInSolution="True">Debug|AnyCPU</ProjectConfiguration>
+  <ProjectConfiguration Project="{33E367F7-FC78-4E22-8213-4374CBFB86CB}" AbsolutePath="D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Plugins.FMSuite.Common\DeltaShell.Plugins.FMSuite.Common.csproj" BuildProjectInSolution="True">Debug|AnyCPU</ProjectConfiguration>
+  <ProjectConfiguration Project="{7F3D15D6-3425-47A6-AFD4-9B6E054EE8BE}" AbsolutePath="D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Plugins.FMSuite.Common.Gui\DeltaShell.Plugins.FMSuite.Common.Gui.csproj" BuildProjectInSolution="True">Debug|AnyCPU</ProjectConfiguration>
+  <ProjectConfiguration Project="{56103155-E7A6-45D7-BA64-50A6F9D81B94}" AbsolutePath="D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Plugins.FMSuite.FlowFM\DeltaShell.Plugins.FMSuite.FlowFM.csproj" BuildProjectInSolution="True">Debug|AnyCPU</ProjectConfiguration>
+  <ProjectConfiguration Project="{96CD03F1-2715-4827-95E1-3277A2DEADAE}" AbsolutePath="D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Plugins.FMSuite.FlowFM.Gui\DeltaShell.Plugins.FMSuite.FlowFM.Gui.csproj" BuildProjectInSolution="True">Debug|AnyCPU</ProjectConfiguration>
+  <ProjectConfiguration Project="{6C01336E-AA42-44E2-B72C-430CD2AC4469}" AbsolutePath="D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Plugins.FMSuite.Wave\DeltaShell.Plugins.FMSuite.Wave.csproj" BuildProjectInSolution="True">Debug|AnyCPU</ProjectConfiguration>
+  <ProjectConfiguration Project="{9BFE4F50-7809-4BB6-A967-51B08E7359F5}" AbsolutePath="D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Plugins.FMSuite.Wave.Gui\DeltaShell.Plugins.FMSuite.Wave.Gui.csproj" BuildProjectInSolution="True">Debug|AnyCPU</ProjectConfiguration>
+  <ProjectConfiguration Project="{56F47238-4ADC-4F56-BC27-BF1A0476D85C}" AbsolutePath="D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Plugins.NetworkEditor.Gui\DeltaShell.Plugins.NetworkEditor.Gui.csproj" BuildProjectInSolution="True">Debug|AnyCPU</ProjectConfiguration>
+  <ProjectConfiguration Project="{11330F89-2B3D-449D-9211-EA3E0D7F6CDC}" AbsolutePath="D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Plugins.NetworkEditor\DeltaShell.Plugins.NetworkEditor.csproj" BuildProjectInSolution="True">Debug|AnyCPU</ProjectConfiguration>
+  <ProjectConfiguration Project="{49CD81DC-63D2-4A23-818E-ADE790E1D9D8}" AbsolutePath="D:\BuildAgent\work\647fda35ead99de4\test\DelftTools.Hydro.Tests\DelftTools.Hydro.Tests.csproj" BuildProjectInSolution="True">Debug|AnyCPU</ProjectConfiguration>
+  <ProjectConfiguration Project="{37D8E5D9-D0FD-4AF4-93B3-7F6B663D7B3B}" AbsolutePath="D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.NGHS.IO.Tests\DeltaShell.NGHS.IO.Tests.csproj" BuildProjectInSolution="True">Debug|AnyCPU</ProjectConfiguration>
+  <ProjectConfiguration Project="{002EB0B8-8D52-4794-A00E-A5D1FC465BFD}" AbsolutePath="D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.NGHS.IO.TestUtils\DeltaShell.NGHS.IO.TestUtils.csproj" BuildProjectInSolution="True">Debug|AnyCPU</ProjectConfiguration>
+  <ProjectConfiguration Project="{D59204E6-28FC-41FF-AF68-D362AD569FA5}" AbsolutePath="D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.Plugins.DelftModels.HydroModel.Tests\DeltaShell.Plugins.DelftModels.HydroModel.Tests.csproj" BuildProjectInSolution="True">Debug|AnyCPU</ProjectConfiguration>
+  <ProjectConfiguration Project="{47CA60D9-C910-454A-9B82-DB168922E7D3}" AbsolutePath="D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.Plugins.DelftModels.RealTimeControl.Tests\DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.csproj" BuildProjectInSolution="True">Debug|AnyCPU</ProjectConfiguration>
+  <ProjectConfiguration Project="{7DB6154D-DC27-4F52-8FCB-6E1583CA2C76}" AbsolutePath="D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.Plugins.DelftModels.RTCShapes\DeltaShell.Plugins.DelftModels.RTCShapes.Tests.csproj" BuildProjectInSolution="True">Debug|AnyCPU</ProjectConfiguration>
+  <ProjectConfiguration Project="{E4E30624-F4E6-4DAF-97A7-08E131E0C598}" AbsolutePath="D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests\DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.csproj" BuildProjectInSolution="True">Debug|AnyCPU</ProjectConfiguration>
+  <ProjectConfiguration Project="{7EC5B8E8-E326-4C4C-9D9B-E70388F0E4CA}" AbsolutePath="D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.Plugins.FMSuite.Common.Tests\DeltaShell.Plugins.FMSuite.Common.Tests.csproj" BuildProjectInSolution="True">Debug|AnyCPU</ProjectConfiguration>
+  <ProjectConfiguration Project="{19EC5699-52F8-4AD8-A888-C7B65F8F045B}" AbsolutePath="D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.Plugins.FMSuite.FlowFM.Tests\DeltaShell.Plugins.FMSuite.FlowFM.Tests.csproj" BuildProjectInSolution="True">Debug|AnyCPU</ProjectConfiguration>
+  <ProjectConfiguration Project="{78000514-A748-4411-AD2E-4305C52CB626}" AbsolutePath="D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.Plugins.FMSuite.Wave.Tests\DeltaShell.Plugins.FMSuite.Wave.Tests.csproj" BuildProjectInSolution="True">Debug|AnyCPU</ProjectConfiguration>
+  <ProjectConfiguration Project="{87BD2952-04F1-482D-B7DB-39A1508F55C9}" AbsolutePath="D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.Plugins.NetworkEditor.IntegrationTests\DeltaShell.Plugins.NetworkEditor.IntegrationTests.csproj" BuildProjectInSolution="True">Debug|AnyCPU</ProjectConfiguration>
+  <ProjectConfiguration Project="{2D52249A-F256-49CD-A3F3-3A2EC3944CA7}" AbsolutePath="D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.Plugins.NetworkEditor.Tests\DeltaShell.Plugins.NetworkEditor.Tests.csproj" BuildProjectInSolution="True">Debug|AnyCPU</ProjectConfiguration>
+  <ProjectConfiguration Project="{D578BCD2-34D0-4378-9522-AA304B768A22}" AbsolutePath="D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.Plugins.NGHS.IntegrationTests\DeltaShell.Plugins.NGHS.IntegrationTests.csproj" BuildProjectInSolution="True">Debug|AnyCPU</ProjectConfiguration>
+  <ProjectConfiguration Project="{E6D98011-3562-4EE6-961C-19C47139DFE8}" AbsolutePath="D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils\DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils.csproj" BuildProjectInSolution="True">Debug|AnyCPU</ProjectConfiguration>
+  <ProjectConfiguration Project="{AD22CEC6-2A71-478C-96C3-B7ACDFE9B84B}" AbsolutePath="D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Dimr\DeltaShell.Dimr.csproj" BuildProjectInSolution="True">Debug|AnyCPU</ProjectConfiguration>
+  <ProjectConfiguration Project="{CF858CE7-64A0-46B1-A075-7394D09C0C80}" AbsolutePath="D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.Dimr.IntegrationTests\DeltaShell.Dimr.IntegrationTests.csproj" BuildProjectInSolution="True">Debug|AnyCPU</ProjectConfiguration>
+  <ProjectConfiguration Project="{52847CB2-6A62-4B5A-8302-67198745D073}" AbsolutePath="D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Dimr.Gui\DeltaShell.Dimr.Gui.csproj" BuildProjectInSolution="True">Debug|AnyCPU</ProjectConfiguration>
+  <ProjectConfiguration Project="{F5E4F533-E9BB-4656-AB51-CCDE96EA57A5}" AbsolutePath="D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.Dimr.Tests\DeltaShell.Dimr.Tests.csproj" BuildProjectInSolution="True">Debug|AnyCPU</ProjectConfiguration>
+  <ProjectConfiguration Project="{4A0F7700-AA64-463F-A602-8C15E3886EC5}" AbsolutePath="D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.NGHS.TestUtils\DeltaShell.NGHS.TestUtils.csproj" BuildProjectInSolution="True">Debug|AnyCPU</ProjectConfiguration>
+  <ProjectConfiguration Project="{AE78982B-8798-4B5A-9DB4-FCA8F5C8428B}" AbsolutePath="D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.NGHS.Common\DeltaShell.NGHS.Common.csproj" BuildProjectInSolution="True">Debug|AnyCPU</ProjectConfiguration>
+  <ProjectConfiguration Project="{DDE486F6-FE47-450D-B337-B6F688BF47BE}" AbsolutePath="D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.NGHS.Common.Tests\DeltaShell.NGHS.Common.Tests.csproj" BuildProjectInSolution="True">Debug|AnyCPU</ProjectConfiguration>
+  <ProjectConfiguration Project="{90DED9A6-DD9A-4694-ADEC-5918C12435C8}" AbsolutePath="D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.NGHS.Common.Gui\DeltaShell.NGHS.Common.Gui.csproj" BuildProjectInSolution="True">Debug|AnyCPU</ProjectConfiguration>
+</SolutionConfiguration>
+    </CurrentSolutionConfigurationContents>
+    <NuGetRestoreTargets>C:\Program Files (x86)\Microsoft Visual Studio\2017\Professional\MSBuild\..\Common7\IDE\CommonExtensions\Microsoft\NuGet\NuGet.targets</NuGetRestoreTargets>
+    <IsRestoreTargetsFileLoaded>true</IsRestoreTargetsFileLoaded>
+    <RestoreTaskAssemblyFile>NuGet.Build.Tasks.dll</RestoreTaskAssemblyFile>
+    <HideWarningsAndErrors>false</HideWarningsAndErrors>
+    <RestoreRecursive>true</RestoreRecursive>
+    <MSBuildAllProjects>;C:\Program Files (x86)\Microsoft Visual Studio\2017\Professional\Common7\IDE\CommonExtensions\Microsoft\NuGet\NuGet.targets</MSBuildAllProjects>
+    <RestoreUseSkipNonexistentTargets>true</RestoreUseSkipNonexistentTargets>
+    <ValidateRuntimeIdentifierCompatibility>false</ValidateRuntimeIdentifierCompatibility>
+    <RestoreContinueOnError>WarnAndContinue</RestoreContinueOnError>
+    <RestoreBuildInParallel>true</RestoreBuildInParallel>
+    <_RestoreSolutionFileUsed>true</_RestoreSolutionFileUsed>
+    <_GenerateRestoreGraphProjectEntryInputProperties>
+      ExcludeRestorePackageImports=true;
+      _RestoreSolutionFileUsed=true;
+      SolutionDir=D:\BuildAgent\work\647fda35ead99de4\;
+      SolutionName=NGHS;
+    </_GenerateRestoreGraphProjectEntryInputProperties>
+  </PropertyGroup>
+  <ItemDefinitionGroup />
+  <ItemGroup>
+    <SolutionConfiguration Include="Debug|Any CPU">
+      <Configuration>Debug</Configuration>
+      <Platform>Any CPU</Platform>
+      <Content>
+        <SolutionConfiguration xmlns="">
+  <ProjectConfiguration Project="{E22A9330-5EE9-4C26-A014-3269BCF78DED}" AbsolutePath="D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.NGHS.IO\DeltaShell.NGHS.IO.csproj" BuildProjectInSolution="True">Debug|AnyCPU</ProjectConfiguration>
+  <ProjectConfiguration Project="{9F94F7FE-C79C-4E32-B3DC-A11C01B79349}" AbsolutePath="D:\BuildAgent\work\647fda35ead99de4\src\DelftTools.Hydro\DelftTools.Hydro.csproj" BuildProjectInSolution="True">Debug|AnyCPU</ProjectConfiguration>
+  <ProjectConfiguration Project="{6F5B9016-2DD7-4148-BA0B-0167B9E57D78}" AbsolutePath="D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Plugins.DelftModels.HydroModel\DeltaShell.Plugins.DelftModels.HydroModel.csproj" BuildProjectInSolution="True">Debug|AnyCPU</ProjectConfiguration>
+  <ProjectConfiguration Project="{67C4F55D-2CF5-424D-91A3-A68365AC1C9C}" AbsolutePath="D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Plugins.DelftModels.HydroModel.Gui\DeltaShell.Plugins.DelftModels.HydroModel.Gui.csproj" BuildProjectInSolution="True">Debug|AnyCPU</ProjectConfiguration>
+  <ProjectConfiguration Project="{7DAD8091-178D-43B1-97A7-D47A5C5FAAEA}" AbsolutePath="D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Plugins.DelftModels.RealTimeControl\DeltaShell.Plugins.DelftModels.RealTimeControl.csproj" BuildProjectInSolution="True">Debug|AnyCPU</ProjectConfiguration>
+  <ProjectConfiguration Project="{A2D91FEB-C4D5-401A-AF97-ED0072899423}" AbsolutePath="D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Plugins.DelftModels.RealTimeControl.Gui\DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.csproj" BuildProjectInSolution="True">Debug|AnyCPU</ProjectConfiguration>
+  <ProjectConfiguration Project="{91A0DBAF-8970-4152-A8CC-EF283AC482C3}" AbsolutePath="D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Plugins.DelftModels.RTCShapes\DeltaShell.Plugins.DelftModels.RTCShapes.csproj" BuildProjectInSolution="True">Debug|AnyCPU</ProjectConfiguration>
+  <ProjectConfiguration Project="{803D13C0-3274-4C83-AE54-5D828B3338F2}" AbsolutePath="D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Plugins.DelftModels.WaterQualityModel\DeltaShell.Plugins.DelftModels.WaterQualityModel.csproj" BuildProjectInSolution="True">Debug|AnyCPU</ProjectConfiguration>
+  <ProjectConfiguration Project="{0D371464-C886-433D-912D-84A3EF0ADE01}" AbsolutePath="D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui\DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.csproj" BuildProjectInSolution="True">Debug|AnyCPU</ProjectConfiguration>
+  <ProjectConfiguration Project="{33E367F7-FC78-4E22-8213-4374CBFB86CB}" AbsolutePath="D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Plugins.FMSuite.Common\DeltaShell.Plugins.FMSuite.Common.csproj" BuildProjectInSolution="True">Debug|AnyCPU</ProjectConfiguration>
+  <ProjectConfiguration Project="{7F3D15D6-3425-47A6-AFD4-9B6E054EE8BE}" AbsolutePath="D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Plugins.FMSuite.Common.Gui\DeltaShell.Plugins.FMSuite.Common.Gui.csproj" BuildProjectInSolution="True">Debug|AnyCPU</ProjectConfiguration>
+  <ProjectConfiguration Project="{56103155-E7A6-45D7-BA64-50A6F9D81B94}" AbsolutePath="D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Plugins.FMSuite.FlowFM\DeltaShell.Plugins.FMSuite.FlowFM.csproj" BuildProjectInSolution="True">Debug|AnyCPU</ProjectConfiguration>
+  <ProjectConfiguration Project="{96CD03F1-2715-4827-95E1-3277A2DEADAE}" AbsolutePath="D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Plugins.FMSuite.FlowFM.Gui\DeltaShell.Plugins.FMSuite.FlowFM.Gui.csproj" BuildProjectInSolution="True">Debug|AnyCPU</ProjectConfiguration>
+  <ProjectConfiguration Project="{6C01336E-AA42-44E2-B72C-430CD2AC4469}" AbsolutePath="D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Plugins.FMSuite.Wave\DeltaShell.Plugins.FMSuite.Wave.csproj" BuildProjectInSolution="True">Debug|AnyCPU</ProjectConfiguration>
+  <ProjectConfiguration Project="{9BFE4F50-7809-4BB6-A967-51B08E7359F5}" AbsolutePath="D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Plugins.FMSuite.Wave.Gui\DeltaShell.Plugins.FMSuite.Wave.Gui.csproj" BuildProjectInSolution="True">Debug|AnyCPU</ProjectConfiguration>
+  <ProjectConfiguration Project="{56F47238-4ADC-4F56-BC27-BF1A0476D85C}" AbsolutePath="D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Plugins.NetworkEditor.Gui\DeltaShell.Plugins.NetworkEditor.Gui.csproj" BuildProjectInSolution="True">Debug|AnyCPU</ProjectConfiguration>
+  <ProjectConfiguration Project="{11330F89-2B3D-449D-9211-EA3E0D7F6CDC}" AbsolutePath="D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Plugins.NetworkEditor\DeltaShell.Plugins.NetworkEditor.csproj" BuildProjectInSolution="True">Debug|AnyCPU</ProjectConfiguration>
+  <ProjectConfiguration Project="{49CD81DC-63D2-4A23-818E-ADE790E1D9D8}" AbsolutePath="D:\BuildAgent\work\647fda35ead99de4\test\DelftTools.Hydro.Tests\DelftTools.Hydro.Tests.csproj" BuildProjectInSolution="True">Debug|AnyCPU</ProjectConfiguration>
+  <ProjectConfiguration Project="{37D8E5D9-D0FD-4AF4-93B3-7F6B663D7B3B}" AbsolutePath="D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.NGHS.IO.Tests\DeltaShell.NGHS.IO.Tests.csproj" BuildProjectInSolution="True">Debug|AnyCPU</ProjectConfiguration>
+  <ProjectConfiguration Project="{002EB0B8-8D52-4794-A00E-A5D1FC465BFD}" AbsolutePath="D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.NGHS.IO.TestUtils\DeltaShell.NGHS.IO.TestUtils.csproj" BuildProjectInSolution="True">Debug|AnyCPU</ProjectConfiguration>
+  <ProjectConfiguration Project="{D59204E6-28FC-41FF-AF68-D362AD569FA5}" AbsolutePath="D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.Plugins.DelftModels.HydroModel.Tests\DeltaShell.Plugins.DelftModels.HydroModel.Tests.csproj" BuildProjectInSolution="True">Debug|AnyCPU</ProjectConfiguration>
+  <ProjectConfiguration Project="{47CA60D9-C910-454A-9B82-DB168922E7D3}" AbsolutePath="D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.Plugins.DelftModels.RealTimeControl.Tests\DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.csproj" BuildProjectInSolution="True">Debug|AnyCPU</ProjectConfiguration>
+  <ProjectConfiguration Project="{7DB6154D-DC27-4F52-8FCB-6E1583CA2C76}" AbsolutePath="D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.Plugins.DelftModels.RTCShapes\DeltaShell.Plugins.DelftModels.RTCShapes.Tests.csproj" BuildProjectInSolution="True">Debug|AnyCPU</ProjectConfiguration>
+  <ProjectConfiguration Project="{E4E30624-F4E6-4DAF-97A7-08E131E0C598}" AbsolutePath="D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests\DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.csproj" BuildProjectInSolution="True">Debug|AnyCPU</ProjectConfiguration>
+  <ProjectConfiguration Project="{7EC5B8E8-E326-4C4C-9D9B-E70388F0E4CA}" AbsolutePath="D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.Plugins.FMSuite.Common.Tests\DeltaShell.Plugins.FMSuite.Common.Tests.csproj" BuildProjectInSolution="True">Debug|AnyCPU</ProjectConfiguration>
+  <ProjectConfiguration Project="{19EC5699-52F8-4AD8-A888-C7B65F8F045B}" AbsolutePath="D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.Plugins.FMSuite.FlowFM.Tests\DeltaShell.Plugins.FMSuite.FlowFM.Tests.csproj" BuildProjectInSolution="True">Debug|AnyCPU</ProjectConfiguration>
+  <ProjectConfiguration Project="{78000514-A748-4411-AD2E-4305C52CB626}" AbsolutePath="D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.Plugins.FMSuite.Wave.Tests\DeltaShell.Plugins.FMSuite.Wave.Tests.csproj" BuildProjectInSolution="True">Debug|AnyCPU</ProjectConfiguration>
+  <ProjectConfiguration Project="{87BD2952-04F1-482D-B7DB-39A1508F55C9}" AbsolutePath="D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.Plugins.NetworkEditor.IntegrationTests\DeltaShell.Plugins.NetworkEditor.IntegrationTests.csproj" BuildProjectInSolution="True">Debug|AnyCPU</ProjectConfiguration>
+  <ProjectConfiguration Project="{2D52249A-F256-49CD-A3F3-3A2EC3944CA7}" AbsolutePath="D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.Plugins.NetworkEditor.Tests\DeltaShell.Plugins.NetworkEditor.Tests.csproj" BuildProjectInSolution="True">Debug|AnyCPU</ProjectConfiguration>
+  <ProjectConfiguration Project="{D578BCD2-34D0-4378-9522-AA304B768A22}" AbsolutePath="D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.Plugins.NGHS.IntegrationTests\DeltaShell.Plugins.NGHS.IntegrationTests.csproj" BuildProjectInSolution="True">Debug|AnyCPU</ProjectConfiguration>
+  <ProjectConfiguration Project="{E6D98011-3562-4EE6-961C-19C47139DFE8}" AbsolutePath="D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils\DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils.csproj" BuildProjectInSolution="True">Debug|AnyCPU</ProjectConfiguration>
+  <ProjectConfiguration Project="{AD22CEC6-2A71-478C-96C3-B7ACDFE9B84B}" AbsolutePath="D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Dimr\DeltaShell.Dimr.csproj" BuildProjectInSolution="True">Debug|AnyCPU</ProjectConfiguration>
+  <ProjectConfiguration Project="{CF858CE7-64A0-46B1-A075-7394D09C0C80}" AbsolutePath="D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.Dimr.IntegrationTests\DeltaShell.Dimr.IntegrationTests.csproj" BuildProjectInSolution="True">Debug|AnyCPU</ProjectConfiguration>
+  <ProjectConfiguration Project="{52847CB2-6A62-4B5A-8302-67198745D073}" AbsolutePath="D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Dimr.Gui\DeltaShell.Dimr.Gui.csproj" BuildProjectInSolution="True">Debug|AnyCPU</ProjectConfiguration>
+  <ProjectConfiguration Project="{F5E4F533-E9BB-4656-AB51-CCDE96EA57A5}" AbsolutePath="D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.Dimr.Tests\DeltaShell.Dimr.Tests.csproj" BuildProjectInSolution="True">Debug|AnyCPU</ProjectConfiguration>
+  <ProjectConfiguration Project="{4A0F7700-AA64-463F-A602-8C15E3886EC5}" AbsolutePath="D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.NGHS.TestUtils\DeltaShell.NGHS.TestUtils.csproj" BuildProjectInSolution="True">Debug|AnyCPU</ProjectConfiguration>
+  <ProjectConfiguration Project="{AE78982B-8798-4B5A-9DB4-FCA8F5C8428B}" AbsolutePath="D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.NGHS.Common\DeltaShell.NGHS.Common.csproj" BuildProjectInSolution="True">Debug|AnyCPU</ProjectConfiguration>
+  <ProjectConfiguration Project="{DDE486F6-FE47-450D-B337-B6F688BF47BE}" AbsolutePath="D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.NGHS.Common.Tests\DeltaShell.NGHS.Common.Tests.csproj" BuildProjectInSolution="True">Debug|AnyCPU</ProjectConfiguration>
+  <ProjectConfiguration Project="{90DED9A6-DD9A-4694-ADEC-5918C12435C8}" AbsolutePath="D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.NGHS.Common.Gui\DeltaShell.NGHS.Common.Gui.csproj" BuildProjectInSolution="True">Debug|AnyCPU</ProjectConfiguration>
+</SolutionConfiguration>
+      </Content>
+    </SolutionConfiguration>
+    <SolutionConfiguration Include="Release|Any CPU">
+      <Configuration>Release</Configuration>
+      <Platform>Any CPU</Platform>
+      <Content>
+        <SolutionConfiguration xmlns="">
+  <ProjectConfiguration Project="{E22A9330-5EE9-4C26-A014-3269BCF78DED}" AbsolutePath="D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.NGHS.IO\DeltaShell.NGHS.IO.csproj" BuildProjectInSolution="True">Release|AnyCPU</ProjectConfiguration>
+  <ProjectConfiguration Project="{9F94F7FE-C79C-4E32-B3DC-A11C01B79349}" AbsolutePath="D:\BuildAgent\work\647fda35ead99de4\src\DelftTools.Hydro\DelftTools.Hydro.csproj" BuildProjectInSolution="True">Release|AnyCPU</ProjectConfiguration>
+  <ProjectConfiguration Project="{6F5B9016-2DD7-4148-BA0B-0167B9E57D78}" AbsolutePath="D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Plugins.DelftModels.HydroModel\DeltaShell.Plugins.DelftModels.HydroModel.csproj" BuildProjectInSolution="True">Release|AnyCPU</ProjectConfiguration>
+  <ProjectConfiguration Project="{67C4F55D-2CF5-424D-91A3-A68365AC1C9C}" AbsolutePath="D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Plugins.DelftModels.HydroModel.Gui\DeltaShell.Plugins.DelftModels.HydroModel.Gui.csproj" BuildProjectInSolution="True">Release|AnyCPU</ProjectConfiguration>
+  <ProjectConfiguration Project="{7DAD8091-178D-43B1-97A7-D47A5C5FAAEA}" AbsolutePath="D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Plugins.DelftModels.RealTimeControl\DeltaShell.Plugins.DelftModels.RealTimeControl.csproj" BuildProjectInSolution="True">Release|AnyCPU</ProjectConfiguration>
+  <ProjectConfiguration Project="{A2D91FEB-C4D5-401A-AF97-ED0072899423}" AbsolutePath="D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Plugins.DelftModels.RealTimeControl.Gui\DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.csproj" BuildProjectInSolution="True">Release|AnyCPU</ProjectConfiguration>
+  <ProjectConfiguration Project="{91A0DBAF-8970-4152-A8CC-EF283AC482C3}" AbsolutePath="D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Plugins.DelftModels.RTCShapes\DeltaShell.Plugins.DelftModels.RTCShapes.csproj" BuildProjectInSolution="True">Release|AnyCPU</ProjectConfiguration>
+  <ProjectConfiguration Project="{803D13C0-3274-4C83-AE54-5D828B3338F2}" AbsolutePath="D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Plugins.DelftModels.WaterQualityModel\DeltaShell.Plugins.DelftModels.WaterQualityModel.csproj" BuildProjectInSolution="True">Release|AnyCPU</ProjectConfiguration>
+  <ProjectConfiguration Project="{0D371464-C886-433D-912D-84A3EF0ADE01}" AbsolutePath="D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui\DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.csproj" BuildProjectInSolution="True">Release|AnyCPU</ProjectConfiguration>
+  <ProjectConfiguration Project="{33E367F7-FC78-4E22-8213-4374CBFB86CB}" AbsolutePath="D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Plugins.FMSuite.Common\DeltaShell.Plugins.FMSuite.Common.csproj" BuildProjectInSolution="True">Release|AnyCPU</ProjectConfiguration>
+  <ProjectConfiguration Project="{7F3D15D6-3425-47A6-AFD4-9B6E054EE8BE}" AbsolutePath="D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Plugins.FMSuite.Common.Gui\DeltaShell.Plugins.FMSuite.Common.Gui.csproj" BuildProjectInSolution="True">Release|AnyCPU</ProjectConfiguration>
+  <ProjectConfiguration Project="{56103155-E7A6-45D7-BA64-50A6F9D81B94}" AbsolutePath="D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Plugins.FMSuite.FlowFM\DeltaShell.Plugins.FMSuite.FlowFM.csproj" BuildProjectInSolution="True">Release|AnyCPU</ProjectConfiguration>
+  <ProjectConfiguration Project="{96CD03F1-2715-4827-95E1-3277A2DEADAE}" AbsolutePath="D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Plugins.FMSuite.FlowFM.Gui\DeltaShell.Plugins.FMSuite.FlowFM.Gui.csproj" BuildProjectInSolution="True">Release|AnyCPU</ProjectConfiguration>
+  <ProjectConfiguration Project="{6C01336E-AA42-44E2-B72C-430CD2AC4469}" AbsolutePath="D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Plugins.FMSuite.Wave\DeltaShell.Plugins.FMSuite.Wave.csproj" BuildProjectInSolution="True">Release|AnyCPU</ProjectConfiguration>
+  <ProjectConfiguration Project="{9BFE4F50-7809-4BB6-A967-51B08E7359F5}" AbsolutePath="D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Plugins.FMSuite.Wave.Gui\DeltaShell.Plugins.FMSuite.Wave.Gui.csproj" BuildProjectInSolution="True">Release|AnyCPU</ProjectConfiguration>
+  <ProjectConfiguration Project="{56F47238-4ADC-4F56-BC27-BF1A0476D85C}" AbsolutePath="D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Plugins.NetworkEditor.Gui\DeltaShell.Plugins.NetworkEditor.Gui.csproj" BuildProjectInSolution="True">Release|AnyCPU</ProjectConfiguration>
+  <ProjectConfiguration Project="{11330F89-2B3D-449D-9211-EA3E0D7F6CDC}" AbsolutePath="D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Plugins.NetworkEditor\DeltaShell.Plugins.NetworkEditor.csproj" BuildProjectInSolution="True">Release|AnyCPU</ProjectConfiguration>
+  <ProjectConfiguration Project="{49CD81DC-63D2-4A23-818E-ADE790E1D9D8}" AbsolutePath="D:\BuildAgent\work\647fda35ead99de4\test\DelftTools.Hydro.Tests\DelftTools.Hydro.Tests.csproj" BuildProjectInSolution="True">Release|AnyCPU</ProjectConfiguration>
+  <ProjectConfiguration Project="{37D8E5D9-D0FD-4AF4-93B3-7F6B663D7B3B}" AbsolutePath="D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.NGHS.IO.Tests\DeltaShell.NGHS.IO.Tests.csproj" BuildProjectInSolution="True">Release|AnyCPU</ProjectConfiguration>
+  <ProjectConfiguration Project="{002EB0B8-8D52-4794-A00E-A5D1FC465BFD}" AbsolutePath="D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.NGHS.IO.TestUtils\DeltaShell.NGHS.IO.TestUtils.csproj" BuildProjectInSolution="True">Release|AnyCPU</ProjectConfiguration>
+  <ProjectConfiguration Project="{D59204E6-28FC-41FF-AF68-D362AD569FA5}" AbsolutePath="D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.Plugins.DelftModels.HydroModel.Tests\DeltaShell.Plugins.DelftModels.HydroModel.Tests.csproj" BuildProjectInSolution="True">Release|AnyCPU</ProjectConfiguration>
+  <ProjectConfiguration Project="{47CA60D9-C910-454A-9B82-DB168922E7D3}" AbsolutePath="D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.Plugins.DelftModels.RealTimeControl.Tests\DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.csproj" BuildProjectInSolution="True">Release|AnyCPU</ProjectConfiguration>
+  <ProjectConfiguration Project="{7DB6154D-DC27-4F52-8FCB-6E1583CA2C76}" AbsolutePath="D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.Plugins.DelftModels.RTCShapes\DeltaShell.Plugins.DelftModels.RTCShapes.Tests.csproj" BuildProjectInSolution="True">Release|AnyCPU</ProjectConfiguration>
+  <ProjectConfiguration Project="{E4E30624-F4E6-4DAF-97A7-08E131E0C598}" AbsolutePath="D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests\DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.csproj" BuildProjectInSolution="True">Release|AnyCPU</ProjectConfiguration>
+  <ProjectConfiguration Project="{7EC5B8E8-E326-4C4C-9D9B-E70388F0E4CA}" AbsolutePath="D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.Plugins.FMSuite.Common.Tests\DeltaShell.Plugins.FMSuite.Common.Tests.csproj" BuildProjectInSolution="True">Release|AnyCPU</ProjectConfiguration>
+  <ProjectConfiguration Project="{19EC5699-52F8-4AD8-A888-C7B65F8F045B}" AbsolutePath="D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.Plugins.FMSuite.FlowFM.Tests\DeltaShell.Plugins.FMSuite.FlowFM.Tests.csproj" BuildProjectInSolution="True">Release|AnyCPU</ProjectConfiguration>
+  <ProjectConfiguration Project="{78000514-A748-4411-AD2E-4305C52CB626}" AbsolutePath="D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.Plugins.FMSuite.Wave.Tests\DeltaShell.Plugins.FMSuite.Wave.Tests.csproj" BuildProjectInSolution="True">Release|AnyCPU</ProjectConfiguration>
+  <ProjectConfiguration Project="{87BD2952-04F1-482D-B7DB-39A1508F55C9}" AbsolutePath="D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.Plugins.NetworkEditor.IntegrationTests\DeltaShell.Plugins.NetworkEditor.IntegrationTests.csproj" BuildProjectInSolution="True">Release|AnyCPU</ProjectConfiguration>
+  <ProjectConfiguration Project="{2D52249A-F256-49CD-A3F3-3A2EC3944CA7}" AbsolutePath="D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.Plugins.NetworkEditor.Tests\DeltaShell.Plugins.NetworkEditor.Tests.csproj" BuildProjectInSolution="True">Release|AnyCPU</ProjectConfiguration>
+  <ProjectConfiguration Project="{D578BCD2-34D0-4378-9522-AA304B768A22}" AbsolutePath="D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.Plugins.NGHS.IntegrationTests\DeltaShell.Plugins.NGHS.IntegrationTests.csproj" BuildProjectInSolution="True">Release|AnyCPU</ProjectConfiguration>
+  <ProjectConfiguration Project="{E6D98011-3562-4EE6-961C-19C47139DFE8}" AbsolutePath="D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils\DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils.csproj" BuildProjectInSolution="True">Release|AnyCPU</ProjectConfiguration>
+  <ProjectConfiguration Project="{AD22CEC6-2A71-478C-96C3-B7ACDFE9B84B}" AbsolutePath="D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Dimr\DeltaShell.Dimr.csproj" BuildProjectInSolution="True">Release|AnyCPU</ProjectConfiguration>
+  <ProjectConfiguration Project="{CF858CE7-64A0-46B1-A075-7394D09C0C80}" AbsolutePath="D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.Dimr.IntegrationTests\DeltaShell.Dimr.IntegrationTests.csproj" BuildProjectInSolution="True">Release|AnyCPU</ProjectConfiguration>
+  <ProjectConfiguration Project="{52847CB2-6A62-4B5A-8302-67198745D073}" AbsolutePath="D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Dimr.Gui\DeltaShell.Dimr.Gui.csproj" BuildProjectInSolution="True">Release|AnyCPU</ProjectConfiguration>
+  <ProjectConfiguration Project="{F5E4F533-E9BB-4656-AB51-CCDE96EA57A5}" AbsolutePath="D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.Dimr.Tests\DeltaShell.Dimr.Tests.csproj" BuildProjectInSolution="True">Release|AnyCPU</ProjectConfiguration>
+  <ProjectConfiguration Project="{4A0F7700-AA64-463F-A602-8C15E3886EC5}" AbsolutePath="D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.NGHS.TestUtils\DeltaShell.NGHS.TestUtils.csproj" BuildProjectInSolution="True">Release|AnyCPU</ProjectConfiguration>
+  <ProjectConfiguration Project="{AE78982B-8798-4B5A-9DB4-FCA8F5C8428B}" AbsolutePath="D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.NGHS.Common\DeltaShell.NGHS.Common.csproj" BuildProjectInSolution="True">Release|AnyCPU</ProjectConfiguration>
+  <ProjectConfiguration Project="{DDE486F6-FE47-450D-B337-B6F688BF47BE}" AbsolutePath="D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.NGHS.Common.Tests\DeltaShell.NGHS.Common.Tests.csproj" BuildProjectInSolution="True">Release|AnyCPU</ProjectConfiguration>
+  <ProjectConfiguration Project="{90DED9A6-DD9A-4694-ADEC-5918C12435C8}" AbsolutePath="D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.NGHS.Common.Gui\DeltaShell.NGHS.Common.Gui.csproj" BuildProjectInSolution="True">Release|AnyCPU</ProjectConfiguration>
+</SolutionConfiguration>
+      </Content>
+    </SolutionConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.NGHS.IO\DeltaShell.NGHS.IO.csproj">
+      <ToolsVersion>
+      </ToolsVersion>
+      <SkipNonexistentProjects>False</SkipNonexistentProjects>
+      <AdditionalProperties>Configuration=Debug; Platform=AnyCPU</AdditionalProperties>
+      <Configuration>Debug</Configuration>
+      <Platform>AnyCPU</Platform>
+    </ProjectReference>
+    <ProjectReference Include="D:\BuildAgent\work\647fda35ead99de4\src\DelftTools.Hydro\DelftTools.Hydro.csproj">
+      <ToolsVersion>
+      </ToolsVersion>
+      <SkipNonexistentProjects>False</SkipNonexistentProjects>
+      <AdditionalProperties>Configuration=Debug; Platform=AnyCPU</AdditionalProperties>
+      <Configuration>Debug</Configuration>
+      <Platform>AnyCPU</Platform>
+    </ProjectReference>
+    <ProjectReference Include="D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Plugins.DelftModels.HydroModel\DeltaShell.Plugins.DelftModels.HydroModel.csproj">
+      <ToolsVersion>
+      </ToolsVersion>
+      <SkipNonexistentProjects>False</SkipNonexistentProjects>
+      <AdditionalProperties>Configuration=Debug; Platform=AnyCPU</AdditionalProperties>
+      <Configuration>Debug</Configuration>
+      <Platform>AnyCPU</Platform>
+    </ProjectReference>
+    <ProjectReference Include="D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Plugins.DelftModels.HydroModel.Gui\DeltaShell.Plugins.DelftModels.HydroModel.Gui.csproj">
+      <ToolsVersion>
+      </ToolsVersion>
+      <SkipNonexistentProjects>False</SkipNonexistentProjects>
+      <AdditionalProperties>Configuration=Debug; Platform=AnyCPU</AdditionalProperties>
+      <Configuration>Debug</Configuration>
+      <Platform>AnyCPU</Platform>
+    </ProjectReference>
+    <ProjectReference Include="D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Plugins.DelftModels.RealTimeControl\DeltaShell.Plugins.DelftModels.RealTimeControl.csproj">
+      <ToolsVersion>
+      </ToolsVersion>
+      <SkipNonexistentProjects>False</SkipNonexistentProjects>
+      <AdditionalProperties>Configuration=Debug; Platform=AnyCPU</AdditionalProperties>
+      <Configuration>Debug</Configuration>
+      <Platform>AnyCPU</Platform>
+    </ProjectReference>
+    <ProjectReference Include="D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Plugins.DelftModels.RealTimeControl.Gui\DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.csproj">
+      <ToolsVersion>
+      </ToolsVersion>
+      <SkipNonexistentProjects>False</SkipNonexistentProjects>
+      <AdditionalProperties>Configuration=Debug; Platform=AnyCPU</AdditionalProperties>
+      <Configuration>Debug</Configuration>
+      <Platform>AnyCPU</Platform>
+    </ProjectReference>
+    <ProjectReference Include="D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Plugins.DelftModels.RTCShapes\DeltaShell.Plugins.DelftModels.RTCShapes.csproj">
+      <ToolsVersion>
+      </ToolsVersion>
+      <SkipNonexistentProjects>False</SkipNonexistentProjects>
+      <AdditionalProperties>Configuration=Debug; Platform=AnyCPU</AdditionalProperties>
+      <Configuration>Debug</Configuration>
+      <Platform>AnyCPU</Platform>
+    </ProjectReference>
+    <ProjectReference Include="D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Plugins.DelftModels.WaterQualityModel\DeltaShell.Plugins.DelftModels.WaterQualityModel.csproj">
+      <ToolsVersion>
+      </ToolsVersion>
+      <SkipNonexistentProjects>False</SkipNonexistentProjects>
+      <AdditionalProperties>Configuration=Debug; Platform=AnyCPU</AdditionalProperties>
+      <Configuration>Debug</Configuration>
+      <Platform>AnyCPU</Platform>
+    </ProjectReference>
+    <ProjectReference Include="D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui\DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.csproj">
+      <ToolsVersion>
+      </ToolsVersion>
+      <SkipNonexistentProjects>False</SkipNonexistentProjects>
+      <AdditionalProperties>Configuration=Debug; Platform=AnyCPU</AdditionalProperties>
+      <Configuration>Debug</Configuration>
+      <Platform>AnyCPU</Platform>
+    </ProjectReference>
+    <ProjectReference Include="D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Plugins.FMSuite.Common\DeltaShell.Plugins.FMSuite.Common.csproj">
+      <ToolsVersion>
+      </ToolsVersion>
+      <SkipNonexistentProjects>False</SkipNonexistentProjects>
+      <AdditionalProperties>Configuration=Debug; Platform=AnyCPU</AdditionalProperties>
+      <Configuration>Debug</Configuration>
+      <Platform>AnyCPU</Platform>
+    </ProjectReference>
+    <ProjectReference Include="D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Plugins.FMSuite.Common.Gui\DeltaShell.Plugins.FMSuite.Common.Gui.csproj">
+      <ToolsVersion>
+      </ToolsVersion>
+      <SkipNonexistentProjects>False</SkipNonexistentProjects>
+      <AdditionalProperties>Configuration=Debug; Platform=AnyCPU</AdditionalProperties>
+      <Configuration>Debug</Configuration>
+      <Platform>AnyCPU</Platform>
+    </ProjectReference>
+    <ProjectReference Include="D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Plugins.FMSuite.FlowFM\DeltaShell.Plugins.FMSuite.FlowFM.csproj">
+      <ToolsVersion>
+      </ToolsVersion>
+      <SkipNonexistentProjects>False</SkipNonexistentProjects>
+      <AdditionalProperties>Configuration=Debug; Platform=AnyCPU</AdditionalProperties>
+      <Configuration>Debug</Configuration>
+      <Platform>AnyCPU</Platform>
+    </ProjectReference>
+    <ProjectReference Include="D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Plugins.FMSuite.FlowFM.Gui\DeltaShell.Plugins.FMSuite.FlowFM.Gui.csproj">
+      <ToolsVersion>
+      </ToolsVersion>
+      <SkipNonexistentProjects>False</SkipNonexistentProjects>
+      <AdditionalProperties>Configuration=Debug; Platform=AnyCPU</AdditionalProperties>
+      <Configuration>Debug</Configuration>
+      <Platform>AnyCPU</Platform>
+    </ProjectReference>
+    <ProjectReference Include="D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Plugins.FMSuite.Wave\DeltaShell.Plugins.FMSuite.Wave.csproj">
+      <ToolsVersion>
+      </ToolsVersion>
+      <SkipNonexistentProjects>False</SkipNonexistentProjects>
+      <AdditionalProperties>Configuration=Debug; Platform=AnyCPU</AdditionalProperties>
+      <Configuration>Debug</Configuration>
+      <Platform>AnyCPU</Platform>
+    </ProjectReference>
+    <ProjectReference Include="D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Plugins.FMSuite.Wave.Gui\DeltaShell.Plugins.FMSuite.Wave.Gui.csproj">
+      <ToolsVersion>
+      </ToolsVersion>
+      <SkipNonexistentProjects>False</SkipNonexistentProjects>
+      <AdditionalProperties>Configuration=Debug; Platform=AnyCPU</AdditionalProperties>
+      <Configuration>Debug</Configuration>
+      <Platform>AnyCPU</Platform>
+    </ProjectReference>
+    <ProjectReference Include="D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Plugins.NetworkEditor.Gui\DeltaShell.Plugins.NetworkEditor.Gui.csproj">
+      <ToolsVersion>
+      </ToolsVersion>
+      <SkipNonexistentProjects>False</SkipNonexistentProjects>
+      <AdditionalProperties>Configuration=Debug; Platform=AnyCPU</AdditionalProperties>
+      <Configuration>Debug</Configuration>
+      <Platform>AnyCPU</Platform>
+    </ProjectReference>
+    <ProjectReference Include="D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Plugins.NetworkEditor\DeltaShell.Plugins.NetworkEditor.csproj">
+      <ToolsVersion>
+      </ToolsVersion>
+      <SkipNonexistentProjects>False</SkipNonexistentProjects>
+      <AdditionalProperties>Configuration=Debug; Platform=AnyCPU</AdditionalProperties>
+      <Configuration>Debug</Configuration>
+      <Platform>AnyCPU</Platform>
+    </ProjectReference>
+    <ProjectReference Include="D:\BuildAgent\work\647fda35ead99de4\test\DelftTools.Hydro.Tests\DelftTools.Hydro.Tests.csproj">
+      <ToolsVersion>
+      </ToolsVersion>
+      <SkipNonexistentProjects>False</SkipNonexistentProjects>
+      <AdditionalProperties>Configuration=Debug; Platform=AnyCPU</AdditionalProperties>
+      <Configuration>Debug</Configuration>
+      <Platform>AnyCPU</Platform>
+    </ProjectReference>
+    <ProjectReference Include="D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.NGHS.IO.Tests\DeltaShell.NGHS.IO.Tests.csproj">
+      <ToolsVersion>
+      </ToolsVersion>
+      <SkipNonexistentProjects>False</SkipNonexistentProjects>
+      <AdditionalProperties>Configuration=Debug; Platform=AnyCPU</AdditionalProperties>
+      <Configuration>Debug</Configuration>
+      <Platform>AnyCPU</Platform>
+    </ProjectReference>
+    <ProjectReference Include="D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.NGHS.IO.TestUtils\DeltaShell.NGHS.IO.TestUtils.csproj">
+      <ToolsVersion>
+      </ToolsVersion>
+      <SkipNonexistentProjects>False</SkipNonexistentProjects>
+      <AdditionalProperties>Configuration=Debug; Platform=AnyCPU</AdditionalProperties>
+      <Configuration>Debug</Configuration>
+      <Platform>AnyCPU</Platform>
+    </ProjectReference>
+    <ProjectReference Include="D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.Plugins.DelftModels.HydroModel.Tests\DeltaShell.Plugins.DelftModels.HydroModel.Tests.csproj">
+      <ToolsVersion>
+      </ToolsVersion>
+      <SkipNonexistentProjects>False</SkipNonexistentProjects>
+      <AdditionalProperties>Configuration=Debug; Platform=AnyCPU</AdditionalProperties>
+      <Configuration>Debug</Configuration>
+      <Platform>AnyCPU</Platform>
+    </ProjectReference>
+    <ProjectReference Include="D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.Plugins.DelftModels.RealTimeControl.Tests\DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.csproj">
+      <ToolsVersion>
+      </ToolsVersion>
+      <SkipNonexistentProjects>False</SkipNonexistentProjects>
+      <AdditionalProperties>Configuration=Debug; Platform=AnyCPU</AdditionalProperties>
+      <Configuration>Debug</Configuration>
+      <Platform>AnyCPU</Platform>
+    </ProjectReference>
+    <ProjectReference Include="D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.Plugins.DelftModels.RTCShapes\DeltaShell.Plugins.DelftModels.RTCShapes.Tests.csproj">
+      <ToolsVersion>
+      </ToolsVersion>
+      <SkipNonexistentProjects>False</SkipNonexistentProjects>
+      <AdditionalProperties>Configuration=Debug; Platform=AnyCPU</AdditionalProperties>
+      <Configuration>Debug</Configuration>
+      <Platform>AnyCPU</Platform>
+    </ProjectReference>
+    <ProjectReference Include="D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests\DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.csproj">
+      <ToolsVersion>
+      </ToolsVersion>
+      <SkipNonexistentProjects>False</SkipNonexistentProjects>
+      <AdditionalProperties>Configuration=Debug; Platform=AnyCPU</AdditionalProperties>
+      <Configuration>Debug</Configuration>
+      <Platform>AnyCPU</Platform>
+    </ProjectReference>
+    <ProjectReference Include="D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.Plugins.FMSuite.Common.Tests\DeltaShell.Plugins.FMSuite.Common.Tests.csproj">
+      <ToolsVersion>
+      </ToolsVersion>
+      <SkipNonexistentProjects>False</SkipNonexistentProjects>
+      <AdditionalProperties>Configuration=Debug; Platform=AnyCPU</AdditionalProperties>
+      <Configuration>Debug</Configuration>
+      <Platform>AnyCPU</Platform>
+    </ProjectReference>
+    <ProjectReference Include="D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.Plugins.FMSuite.FlowFM.Tests\DeltaShell.Plugins.FMSuite.FlowFM.Tests.csproj">
+      <ToolsVersion>
+      </ToolsVersion>
+      <SkipNonexistentProjects>False</SkipNonexistentProjects>
+      <AdditionalProperties>Configuration=Debug; Platform=AnyCPU</AdditionalProperties>
+      <Configuration>Debug</Configuration>
+      <Platform>AnyCPU</Platform>
+    </ProjectReference>
+    <ProjectReference Include="D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.Plugins.FMSuite.Wave.Tests\DeltaShell.Plugins.FMSuite.Wave.Tests.csproj">
+      <ToolsVersion>
+      </ToolsVersion>
+      <SkipNonexistentProjects>False</SkipNonexistentProjects>
+      <AdditionalProperties>Configuration=Debug; Platform=AnyCPU</AdditionalProperties>
+      <Configuration>Debug</Configuration>
+      <Platform>AnyCPU</Platform>
+    </ProjectReference>
+    <ProjectReference Include="D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.Plugins.NetworkEditor.IntegrationTests\DeltaShell.Plugins.NetworkEditor.IntegrationTests.csproj">
+      <ToolsVersion>
+      </ToolsVersion>
+      <SkipNonexistentProjects>False</SkipNonexistentProjects>
+      <AdditionalProperties>Configuration=Debug; Platform=AnyCPU</AdditionalProperties>
+      <Configuration>Debug</Configuration>
+      <Platform>AnyCPU</Platform>
+    </ProjectReference>
+    <ProjectReference Include="D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.Plugins.NetworkEditor.Tests\DeltaShell.Plugins.NetworkEditor.Tests.csproj">
+      <ToolsVersion>
+      </ToolsVersion>
+      <SkipNonexistentProjects>False</SkipNonexistentProjects>
+      <AdditionalProperties>Configuration=Debug; Platform=AnyCPU</AdditionalProperties>
+      <Configuration>Debug</Configuration>
+      <Platform>AnyCPU</Platform>
+    </ProjectReference>
+    <ProjectReference Include="D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.Plugins.NGHS.IntegrationTests\DeltaShell.Plugins.NGHS.IntegrationTests.csproj">
+      <ToolsVersion>
+      </ToolsVersion>
+      <SkipNonexistentProjects>False</SkipNonexistentProjects>
+      <AdditionalProperties>Configuration=Debug; Platform=AnyCPU</AdditionalProperties>
+      <Configuration>Debug</Configuration>
+      <Platform>AnyCPU</Platform>
+    </ProjectReference>
+    <ProjectReference Include="D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils\DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils.csproj">
+      <ToolsVersion>
+      </ToolsVersion>
+      <SkipNonexistentProjects>False</SkipNonexistentProjects>
+      <AdditionalProperties>Configuration=Debug; Platform=AnyCPU</AdditionalProperties>
+      <Configuration>Debug</Configuration>
+      <Platform>AnyCPU</Platform>
+    </ProjectReference>
+    <ProjectReference Include="D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Dimr\DeltaShell.Dimr.csproj">
+      <ToolsVersion>
+      </ToolsVersion>
+      <SkipNonexistentProjects>False</SkipNonexistentProjects>
+      <AdditionalProperties>Configuration=Debug; Platform=AnyCPU</AdditionalProperties>
+      <Configuration>Debug</Configuration>
+      <Platform>AnyCPU</Platform>
+    </ProjectReference>
+    <ProjectReference Include="D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.Dimr.IntegrationTests\DeltaShell.Dimr.IntegrationTests.csproj">
+      <ToolsVersion>
+      </ToolsVersion>
+      <SkipNonexistentProjects>False</SkipNonexistentProjects>
+      <AdditionalProperties>Configuration=Debug; Platform=AnyCPU</AdditionalProperties>
+      <Configuration>Debug</Configuration>
+      <Platform>AnyCPU</Platform>
+    </ProjectReference>
+    <ProjectReference Include="D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Dimr.Gui\DeltaShell.Dimr.Gui.csproj">
+      <ToolsVersion>
+      </ToolsVersion>
+      <SkipNonexistentProjects>False</SkipNonexistentProjects>
+      <AdditionalProperties>Configuration=Debug; Platform=AnyCPU</AdditionalProperties>
+      <Configuration>Debug</Configuration>
+      <Platform>AnyCPU</Platform>
+    </ProjectReference>
+    <ProjectReference Include="D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.Dimr.Tests\DeltaShell.Dimr.Tests.csproj">
+      <ToolsVersion>
+      </ToolsVersion>
+      <SkipNonexistentProjects>False</SkipNonexistentProjects>
+      <AdditionalProperties>Configuration=Debug; Platform=AnyCPU</AdditionalProperties>
+      <Configuration>Debug</Configuration>
+      <Platform>AnyCPU</Platform>
+    </ProjectReference>
+    <ProjectReference Include="D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.NGHS.TestUtils\DeltaShell.NGHS.TestUtils.csproj">
+      <ToolsVersion>
+      </ToolsVersion>
+      <SkipNonexistentProjects>False</SkipNonexistentProjects>
+      <AdditionalProperties>Configuration=Debug; Platform=AnyCPU</AdditionalProperties>
+      <Configuration>Debug</Configuration>
+      <Platform>AnyCPU</Platform>
+    </ProjectReference>
+    <ProjectReference Include="D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.NGHS.Common\DeltaShell.NGHS.Common.csproj">
+      <ToolsVersion>
+      </ToolsVersion>
+      <SkipNonexistentProjects>False</SkipNonexistentProjects>
+      <AdditionalProperties>Configuration=Debug; Platform=AnyCPU</AdditionalProperties>
+      <Configuration>Debug</Configuration>
+      <Platform>AnyCPU</Platform>
+    </ProjectReference>
+    <ProjectReference Include="D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.NGHS.Common.Tests\DeltaShell.NGHS.Common.Tests.csproj">
+      <ToolsVersion>
+      </ToolsVersion>
+      <SkipNonexistentProjects>False</SkipNonexistentProjects>
+      <AdditionalProperties>Configuration=Debug; Platform=AnyCPU</AdditionalProperties>
+      <Configuration>Debug</Configuration>
+      <Platform>AnyCPU</Platform>
+    </ProjectReference>
+    <ProjectReference Include="D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.NGHS.Common.Gui\DeltaShell.NGHS.Common.Gui.csproj">
+      <ToolsVersion>
+      </ToolsVersion>
+      <SkipNonexistentProjects>False</SkipNonexistentProjects>
+      <AdditionalProperties>Configuration=Debug; Platform=AnyCPU</AdditionalProperties>
+      <Configuration>Debug</Configuration>
+      <Platform>AnyCPU</Platform>
+    </ProjectReference>
+  </ItemGroup>
+  <Target Name="Restore" DependsOnTargets="_GenerateRestoreGraph">
+    <RemoveDuplicates Inputs="@(_RestoreGraphEntry)">
+      <Output TaskParameter="Filtered" ItemName="_RestoreGraphEntryFiltered" />
+    </RemoveDuplicates>
+    <RestoreTask RestoreGraphItems="@(_RestoreGraphEntryFiltered)" RestoreDisableParallel="$(RestoreDisableParallel)" RestoreNoCache="$(RestoreNoCache)" RestoreIgnoreFailedSources="$(RestoreIgnoreFailedSources)" RestoreRecursive="$(RestoreRecursive)" RestoreForce="$(RestoreForce)" HideWarningsAndErrors="$(HideWarningsAndErrors)" Interactive="$(NuGetInteractive)" RestoreForceEvaluate="$(RestoreForceEvaluate)" />
+  </Target>
+  <Target Name="GenerateRestoreGraphFile" DependsOnTargets="_GenerateRestoreGraph">
+    <Error Condition="$(RestoreGraphOutputPath) == ''" Text="Missing RestoreGraphOutputPath property!" />
+    <RemoveDuplicates Inputs="@(_RestoreGraphEntry)">
+      <Output TaskParameter="Filtered" ItemName="_RestoreGraphEntryFiltered" />
+    </RemoveDuplicates>
+    <WriteRestoreGraphTask RestoreGraphItems="@(_RestoreGraphEntryFiltered)" RestoreGraphOutputPath="$(RestoreGraphOutputPath)" RestoreRecursive="$(RestoreRecursive)" />
+  </Target>
+  <Target Name="CollectPackageReferences" Returns="@(PackageReference)" />
+  <Target Name="_LoadRestoreGraphEntryPoints" Returns="@(RestoreGraphProjectInputItems)">
+    <GetRestoreSolutionProjectsTask Condition=" $(MSBuildProjectFullPath.EndsWith('.metaproj')) == 'true' AND @(RestoreGraphProjectInputItems) == '' " ProjectReferences="@(ProjectReference)" SolutionFilePath="$(MSBuildProjectFullPath)">
+      <Output TaskParameter="OutputProjectReferences" ItemName="RestoreGraphProjectInputItems" />
+    </GetRestoreSolutionProjectsTask>
+  </Target>
+  <Target Name="_FilterRestoreGraphProjectInputItems" DependsOnTargets="_LoadRestoreGraphEntryPoints" Returns="@(FilteredRestoreGraphProjectInputItems)">
+    <RemoveDuplicates Inputs="@(_FilteredRestoreGraphProjectInputItemsTmp)">
+      <Output TaskParameter="Filtered" ItemName="FilteredRestoreGraphProjectInputItemsWithoutDuplicates" />
+    </RemoveDuplicates>
+    <MsBuild Condition=" '$(RestoreUseSkipNonexistentTargets)' == 'true' " BuildInParallel="$(RestoreBuildInParallel)" Projects="@(FilteredRestoreGraphProjectInputItemsWithoutDuplicates)" Targets="_IsProjectRestoreSupported" SkipNonexistentTargets="true" Properties="$(_GenerateRestoreGraphProjectEntryInputProperties)">
+      <Output TaskParameter="TargetOutputs" ItemName="FilteredRestoreGraphProjectInputItems" />
+    </MsBuild>
+    <MsBuild Condition=" '$(RestoreUseSkipNonexistentTargets)' != 'true' " ContinueOnError="$(RestoreContinueOnError)" Projects="@(FilteredRestoreGraphProjectInputItemsWithoutDuplicates)" Targets="_IsProjectRestoreSupported" Properties="$(_GenerateRestoreGraphProjectEntryInputProperties)">
+      <Output TaskParameter="TargetOutputs" ItemName="FilteredRestoreGraphProjectInputItems" />
+    </MsBuild>
+    <WarnForInvalidProjectsTask Condition=" '$(DisableWarnForInvalidRestoreProjects)' != 'true' " AllProjects="@(FilteredRestoreGraphProjectInputItemsWithoutDuplicates)" ValidProjects="@(FilteredRestoreGraphProjectInputItems)" />
+  </Target>
+  <Target Name="_GenerateRestoreGraph" DependsOnTargets="_FilterRestoreGraphProjectInputItems;_GetAllRestoreProjectPathItems" Returns="@(_RestoreGraphEntry)">
+    <Message Text="Generating dg file" Importance="low" />
+    <Message Text="%(_RestoreProjectPathItems.Identity)" Importance="low" />
+    <MsBuild BuildInParallel="$(RestoreBuildInParallel)" Projects="@(_GenerateRestoreGraphProjectEntryInput)" Targets="_GenerateRestoreGraphProjectEntry" Properties="$(_GenerateRestoreGraphProjectEntryInputProperties)">
+      <Output TaskParameter="TargetOutputs" ItemName="_RestoreGraphEntry" />
+    </MsBuild>
+    <MsBuild BuildInParallel="$(RestoreBuildInParallel)" Projects="@(_RestoreProjectPathItems)" Targets="_GenerateProjectRestoreGraph" Properties="$(_GenerateRestoreGraphProjectEntryInputProperties)">
+      <Output TaskParameter="TargetOutputs" ItemName="_RestoreGraphEntry" />
+    </MsBuild>
+  </Target>
+  <Target Name="_GenerateRestoreGraphProjectEntry" DependsOnTargets="_GenerateRestoreSpecs;_GenerateDotnetCliToolReferenceSpecs" Returns="@(_RestoreGraphEntry)" />
+  <Target Name="_GenerateRestoreSpecs" DependsOnTargets="_GetRestoreProjectStyle" Returns="@(_RestoreGraphEntry)">
+    <Message Text="Restore entry point $(MSBuildProjectFullPath)" Importance="low" />
+  </Target>
+  <Target Name="_GenerateDotnetCliToolReferenceSpecs" DependsOnTargets="_GetRestoreSettings" Returns="@(_RestoreGraphEntry)">
+    <GetRestoreDotnetCliToolsTask Condition=" '$(RestoreDotnetCliToolReferences)' == '' OR '$(RestoreDotnetCliToolReferences)' == 'true' " ProjectPath="$(MSBuildProjectFullPath)" ToolFramework="$(DotnetCliToolTargetFramework)" RestorePackagesPath="$(_OutputPackagesPath)" RestoreFallbackFolders="$(_OutputFallbackFolders)" RestoreSources="$(_OutputSources)" RestoreConfigFilePaths="$(_OutputConfigFilePaths)" DotnetCliToolReferences="@(DotnetCliToolReference)">
+      <Output TaskParameter="RestoreGraphItems" ItemName="_RestoreGraphEntry" />
+    </GetRestoreDotnetCliToolsTask>
+  </Target>
+  <Target Name="_GetProjectJsonPath" Returns="$(_CurrentProjectJsonPath)">
+    <GetRestoreProjectJsonPathTask Condition=" '$(RestoreProjectStyle)' == 'ProjectJson' OR '$(RestoreProjectStyle)' == '' " ProjectPath="$(MSBuildProjectFullPath)">
+      <Output TaskParameter="ProjectJsonPath" ItemName="_CurrentProjectJsonPath" />
+    </GetRestoreProjectJsonPathTask>
+  </Target>
+  <Target Name="_GetRestoreProjectStyle" DependsOnTargets="_GetProjectJsonPath;CollectPackageReferences" Returns="$(RestoreProjectStyle);$(PackageReferenceCompatibleProjectStyle)" />
+  <Target Name="EnableIntermediateOutputPathMismatchWarning" Condition="'$(RestoreProjectStyle)' == 'PackageReference'" DependsOnTargets="_GetRestoreProjectStyle" />
+  <Target Name="_GetRestoreTargetFrameworksOutput" DependsOnTargets="_GetRestoreProjectStyle" Returns="@(_RestoreTargetFrameworksOutputFiltered)">
+    <GetProjectTargetFrameworksTask Condition=" '$(RestoreProjectStyle)' != 'ProjectJson' " ProjectPath="$(MSBuildProjectFullPath)" TargetFrameworks="$(TargetFrameworks)" TargetFramework="$(TargetFramework)" TargetFrameworkMoniker="$(TargetFrameworkMoniker)" TargetPlatformIdentifier="$(TargetPlatformIdentifier)" TargetPlatformVersion="$(TargetPlatformVersion)" TargetPlatformMinVersion="$(TargetPlatformMinVersion)">
+      <Output TaskParameter="ProjectTargetFrameworks" ItemName="_RestoreProjectFramework" />
+    </GetProjectTargetFrameworksTask>
+  </Target>
+  <Target Name="_GetRestoreTargetFrameworksAsItems" DependsOnTargets="_GetRestoreProjectStyle" Returns="@(_RestoreTargetFrameworkItems)" />
+  <Target Name="_GetRestoreSettings" Condition=" '$(RestoreProjectStyle)' == 'PackageReference' OR '$(RestoreProjectStyle)' == 'ProjectJson' OR '$(RestoreProjectStyle)' == 'DotnetToolReference' " DependsOnTargets="_GetRestoreSettingsOverrides;_GetRestoreSettingsCurrentProject;_GetRestoreSettingsAllFrameworks" Returns="$(_OutputSources);$(_OutputPackagesPath);$(_OutputFallbackFolders);$(_OutputConfigFilePaths)">
+    <GetRestoreSettingsTask ProjectUniqueName="$(MSBuildProjectFullPath)" RestoreSources="$(RestoreSources)" RestorePackagesPath="$(RestorePackagesPath)" RestoreFallbackFolders="$(RestoreFallbackFolders)" RestoreConfigFile="$(RestoreConfigFile)" RestoreRootConfigDirectory="$(RestoreRootConfigDirectory)" RestoreSolutionDirectory="$(RestoreSolutionDirectory)" RestoreSettingsPerFramework="@(_RestoreSettingsPerFramework)" RestorePackagesPathOverride="$(_RestorePackagesPathOverride)" RestoreSourcesOverride="$(_RestoreSourcesOverride)" RestoreFallbackFoldersOverride="$(_RestoreFallbackFoldersOverride)" MSBuildStartupDirectory="$(MSBuildStartupDirectory)">
+      <Output TaskParameter="OutputSources" ItemName="_OutputSources" />
+      <Output TaskParameter="OutputPackagesPath" ItemName="_OutputPackagesPath" />
+      <Output TaskParameter="OutputFallbackFolders" ItemName="_OutputFallbackFolders" />
+      <Output TaskParameter="OutputConfigFilePaths" ItemName="_OutputConfigFilePaths" />
+    </GetRestoreSettingsTask>
+  </Target>
+  <Target Name="_GetRestoreSettingsCurrentProject" Condition=" '$(TargetFrameworks)' == '' AND '$(PackageReferenceCompatibleProjectStyle)' == 'true' " DependsOnTargets="_GetRestoreSettingsPerFramework" Returns="@(_RestoreSettingsPerFramework)" />
+  <Target Name="_GetRestoreSettingsAllFrameworks" Condition=" '$(TargetFrameworks)' != '' AND '$(PackageReferenceCompatibleProjectStyle)' == 'true' " DependsOnTargets="_GetRestoreTargetFrameworksAsItems;_GetRestoreProjectStyle" Returns="@(_RestoreSettingsPerFramework)">
+    <MSBuild BuildInParallel="$(RestoreBuildInParallel)" Projects="$(MSBuildProjectFullPath)" Targets="_GetRestoreSettingsPerFramework" Properties="TargetFramework=%(_RestoreTargetFrameworkItems.Identity);&#xD;&#xA;                  $(_GenerateRestoreGraphProjectEntryInputProperties)">
+      <Output TaskParameter="TargetOutputs" ItemName="_RestoreSettingsPerFramework" />
+    </MSBuild>
+  </Target>
+  <Target Name="_GetRestoreSettingsPerFramework" Returns="@(_RestoreSettingsPerFramework)" />
+  <Target Name="_GenerateRestoreProjectSpec" DependsOnTargets="_GetRestoreProjectStyle;_GetRestoreTargetFrameworksOutput;_GetRestoreSettings" Returns="@(_RestoreGraphEntry)">
+    <ConvertToAbsolutePath Condition=" '$(PackageReferenceCompatibleProjectStyle)' == 'true' OR '$(RestoreProjectStyle)' == 'ProjectJson'" Paths="$(RestoreOutputPath)">
+      <Output TaskParameter="AbsolutePaths" ItemName="RestoreOutputAbsolutePath" />
+    </ConvertToAbsolutePath>
+  </Target>
+  <Target Name="_GenerateProjectRestoreGraph" DependsOnTargets="&#xD;&#xA;      _GetRestoreProjectStyle;&#xD;&#xA;      _GetRestoreTargetFrameworksOutput;&#xD;&#xA;      _GenerateRestoreProjectSpec;&#xD;&#xA;      _GenerateRestoreDependencies" Returns="@(_RestoreGraphEntry)" />
+  <Target Name="_GenerateRestoreDependencies" DependsOnTargets="_GenerateProjectRestoreGraphAllFrameworks;_GenerateProjectRestoreGraphCurrentProject" Returns="@(_RestoreGraphEntry)" />
+  <Target Name="_GenerateProjectRestoreGraphAllFrameworks" Condition=" '$(TargetFrameworks)' != '' " DependsOnTargets="_GetRestoreTargetFrameworksAsItems" Returns="@(_RestoreGraphEntry)">
+    <MSBuild BuildInParallel="$(RestoreBuildInParallel)" Projects="$(MSBuildProjectFullPath)" Targets="_GenerateProjectRestoreGraphPerFramework" Properties="TargetFramework=%(_RestoreTargetFrameworkItems.Identity);&#xD;&#xA;                  $(_GenerateRestoreGraphProjectEntryInputProperties)">
+      <Output TaskParameter="TargetOutputs" ItemName="_RestoreGraphEntry" />
+    </MSBuild>
+  </Target>
+  <Target Name="_GenerateProjectRestoreGraphCurrentProject" Condition=" '$(TargetFrameworks)' == '' " DependsOnTargets="_GenerateProjectRestoreGraphPerFramework" Returns="@(_RestoreGraphEntry)" />
+  <Target Name="_GenerateProjectRestoreGraphPerFramework" DependsOnTargets="_GetRestoreProjectStyle;CollectPackageReferences" Returns="@(_RestoreGraphEntry)">
+    <GetRestoreProjectReferencesTask ProjectUniqueName="$(MSBuildProjectFullPath)" ProjectReferences="@(ProjectReference)" TargetFrameworks="$(TargetFramework)" ParentProjectPath="$(MSBuildProjectFullPath)">
+      <Output TaskParameter="RestoreGraphItems" ItemName="_RestoreGraphEntry" />
+    </GetRestoreProjectReferencesTask>
+    <GetRestorePackageReferencesTask Condition=" '$(PackageReferenceCompatibleProjectStyle)' == 'true' " ProjectUniqueName="$(MSBuildProjectFullPath)" PackageReferences="@(PackageReference)" TargetFrameworks="$(TargetFramework)">
+      <Output TaskParameter="RestoreGraphItems" ItemName="_RestoreGraphEntry" />
+    </GetRestorePackageReferencesTask>
+  </Target>
+  <Target Name="_GenerateRestoreProjectPathItemsCurrentProject" Condition=" '$(TargetFrameworks)' == '' " DependsOnTargets="_GenerateRestoreProjectPathItemsPerFramework" Returns="@(_RestoreProjectPathItems)" />
+  <Target Name="_GenerateRestoreProjectPathItemsPerFramework" Returns="@(_RestoreProjectPathItems)">
+    <ConvertToAbsolutePath Paths="@(ProjectReference)">
+      <Output TaskParameter="AbsolutePaths" ItemName="_RestoreGraphAbsoluteProjectPaths" />
+    </ConvertToAbsolutePath>
+  </Target>
+  <Target Name="_GenerateRestoreProjectPathItems" DependsOnTargets="_GenerateRestoreProjectPathItemsAllFrameworks;_GenerateRestoreProjectPathItemsCurrentProject" Returns="@(_CurrentRestoreProjectPathItems)">
+    <RemoveDuplicates Inputs="@(_RestoreProjectPathItems)">
+      <Output TaskParameter="Filtered" ItemName="_CurrentRestoreProjectPathItems" />
+    </RemoveDuplicates>
+  </Target>
+  <Target Name="_GenerateRestoreProjectPathItemsAllFrameworks" Condition=" '$(TargetFrameworks)' != '' " DependsOnTargets="_GetRestoreTargetFrameworksAsItems" Returns="@(_RestoreProjectPathItems)">
+    <MSBuild Condition=" '$(RestoreUseSkipNonexistentTargets)' == 'true' " BuildInParallel="$(RestoreBuildInParallel)" Projects="$(MSBuildProjectFullPath)" Targets="_GenerateRestoreProjectPathItemsPerFramework" SkipNonexistentTargets="true" SkipNonexistentProjects="true" Properties="TargetFramework=%(_RestoreTargetFrameworkItems.Identity);&#xD;&#xA;                  $(_GenerateRestoreGraphProjectEntryInputProperties)">
+      <Output TaskParameter="TargetOutputs" ItemName="_RestoreProjectPathItems" />
+    </MSBuild>
+    <MSBuild Condition=" '$(RestoreUseSkipNonexistentTargets)' != 'true' " ContinueOnError="$(RestoreContinueOnError)" Projects="$(MSBuildProjectFullPath)" Targets="_GenerateRestoreProjectPathItemsPerFramework" Properties="TargetFramework=%(_RestoreTargetFrameworkItems.Identity);&#xD;&#xA;                  $(_GenerateRestoreGraphProjectEntryInputProperties)">
+      <Output TaskParameter="TargetOutputs" ItemName="_RestoreProjectPathItems" />
+    </MSBuild>
+  </Target>
+  <Target Name="_GenerateRestoreProjectPathWalk" DependsOnTargets="_GenerateRestoreProjectPathItems" Returns="@(_RestoreProjectPathItems)">
+    <MSBuild Condition=" '$(RestoreUseSkipNonexistentTargets)' == 'true' " BuildInParallel="$(RestoreBuildInParallel)" Projects="@(_CurrentRestoreProjectPathItems)" Targets="_GenerateRestoreProjectPathWalk" SkipNonexistentTargets="true" SkipNonexistentProjects="true" Properties="$(_GenerateRestoreGraphProjectEntryInputProperties)">
+      <Output TaskParameter="TargetOutputs" ItemName="_GenerateRestoreProjectPathWalkOutputs" />
+    </MSBuild>
+    <MSBuild Condition=" '$(RestoreUseSkipNonexistentTargets)' != 'true' " ContinueOnError="$(RestoreContinueOnError)" Projects="@(_CurrentRestoreProjectPathItems)" Targets="_GenerateRestoreProjectPathWalk" Properties="$(_GenerateRestoreGraphProjectEntryInputProperties)">
+      <Output TaskParameter="TargetOutputs" ItemName="_GenerateRestoreProjectPathWalkOutputs" />
+    </MSBuild>
+    <RemoveDuplicates Inputs="@(_GenerateRestoreProjectPathWalkOutputs)">
+      <Output TaskParameter="Filtered" ItemName="_RestoreProjectPathItems" />
+    </RemoveDuplicates>
+  </Target>
+  <Target Name="_GetAllRestoreProjectPathItems" DependsOnTargets="_FilterRestoreGraphProjectInputItems" Returns="@(_RestoreProjectPathItems)">
+    <MsBuild Condition=" '$(RestoreUseSkipNonexistentTargets)' == 'true' " BuildInParallel="$(RestoreBuildInParallel)" Projects="@(FilteredRestoreGraphProjectInputItems)" Targets="_GenerateRestoreProjectPathWalk" SkipNonexistentTargets="true" SkipNonexistentProjects="true" Properties="$(_GenerateRestoreGraphProjectEntryInputProperties)">
+      <Output TaskParameter="TargetOutputs" ItemName="_RestoreProjectPathItemsOutputs" />
+    </MsBuild>
+    <MsBuild Condition=" '$(RestoreUseSkipNonexistentTargets)' != 'true' " ContinueOnError="$(RestoreContinueOnError)" Projects="@(FilteredRestoreGraphProjectInputItems)" Targets="_GenerateRestoreProjectPathWalk" Properties="$(_GenerateRestoreGraphProjectEntryInputProperties)">
+      <Output TaskParameter="TargetOutputs" ItemName="_RestoreProjectPathItemsOutputs" />
+    </MsBuild>
+    <RemoveDuplicates Inputs="@(_RestoreProjectPathItemsOutputs)">
+      <Output TaskParameter="Filtered" ItemName="_RestoreProjectPathItemsWithoutDupes" />
+    </RemoveDuplicates>
+    <MsBuild Condition=" '$(RestoreUseSkipNonexistentTargets)' == 'true' " BuildInParallel="$(RestoreBuildInParallel)" Projects="@(_RestoreProjectPathItemsWithoutDupes)" Targets="_IsProjectRestoreSupported" SkipNonexistentTargets="true" SkipNonexistentProjects="true" Properties="$(_GenerateRestoreGraphProjectEntryInputProperties)">
+      <Output TaskParameter="TargetOutputs" ItemName="_RestoreProjectPathItems" />
+    </MsBuild>
+    <MsBuild Condition=" '$(RestoreUseSkipNonexistentTargets)' != 'true' " ContinueOnError="$(RestoreContinueOnError)" Projects="@(_RestoreProjectPathItemsWithoutDupes)" Targets="_IsProjectRestoreSupported" Properties="$(_GenerateRestoreGraphProjectEntryInputProperties)">
+      <Output TaskParameter="TargetOutputs" ItemName="_RestoreProjectPathItems" />
+    </MsBuild>
+  </Target>
+  <Target Name="_GetRestoreSettingsOverrides" Returns="$(_RestorePackagesPathOverride);$(_RestoreSourcesOverride);$(_RestoreFallbackFoldersOverride)">
+    <MsBuild Condition=" '$(RestorePackagesPath)' != '' " BuildInParallel="$(RestoreBuildInParallel)" Projects="$(MSBuildThisFileFullPath)" Targets="_GetRestorePackagesPathOverride">
+      <Output TaskParameter="TargetOutputs" ItemName="_RestorePackagesPathOverride" />
+    </MsBuild>
+    <MsBuild Condition=" '$(RestoreSources)' != '' " BuildInParallel="$(RestoreBuildInParallel)" Projects="$(MSBuildThisFileFullPath)" Targets="_GetRestoreSourcesOverride">
+      <Output TaskParameter="TargetOutputs" ItemName="_RestoreSourcesOverride" />
+    </MsBuild>
+    <MsBuild Condition=" '$(RestoreFallbackFolders)' != '' " BuildInParallel="$(RestoreBuildInParallel)" Projects="$(MSBuildThisFileFullPath)" Targets="_GetRestoreFallbackFoldersOverride">
+      <Output TaskParameter="TargetOutputs" ItemName="_RestoreFallbackFoldersOverride" />
+    </MsBuild>
+  </Target>
+  <Target Name="_GetRestorePackagesPathOverride" Returns="$(_RestorePackagesPathOverride)" />
+  <Target Name="_GetRestoreSourcesOverride" Returns="$(_RestoreSourcesOverride)" />
+  <Target Name="_GetRestoreFallbackFoldersOverride" Returns="$(_RestoreFallbackFoldersOverride)" />
+  <Target Name="_IsProjectRestoreSupported" Returns="@(_ValidProjectsForRestore)" />
+  <Target Name="GetSolutionConfigurationContents" Outputs="$(SolutionConfigurationContents)" />
+  <Target Name="ValidateProjects" />
+  <Target Name="ValidateToolsVersions">
+    <Error Condition="'$(MSBuildToolsVersion)' == '2.0' and ('$(ProjectToolsVersion)' != '2.0' and '$(ProjectToolsVersion)' != '')" Text="The tools version &quot;$(MSBuildToolsVersion)&quot; of the solution does not support building projects with a different tools version." Code="MSB4149" HelpKeyword="MSBuild.SolutionToolsVersionDoesNotSupportProjectToolsVersion" />
+  </Target>
+  <Target Name="ValidateSolutionConfiguration">
+    <Error Condition="('$(CurrentSolutionConfigurationContents)' == '') and ('$(SkipInvalidConfigurations)' != 'true')" Text="The specified solution configuration &quot;$(Configuration)|$(Platform)&quot; is invalid. Please specify a valid solution configuration using the Configuration and Platform properties (e.g. MSBuild.exe Solution.sln /p:Configuration=Debug /p:Platform=&quot;Any CPU&quot;) or leave those properties blank to use the default solution configuration." Code="MSB4126" HelpKeyword="MSBuild.SolutionInvalidSolutionConfiguration" />
+    <Warning Condition="('$(CurrentSolutionConfigurationContents)' == '') and ('$(SkipInvalidConfigurations)' == 'true')" Text="The specified solution configuration &quot;$(Configuration)|$(Platform)&quot; is invalid. Please specify a valid solution configuration using the Configuration and Platform properties (e.g. MSBuild.exe Solution.sln /p:Configuration=Debug /p:Platform=&quot;Any CPU&quot;) or leave those properties blank to use the default solution configuration." Code="MSB4126" HelpKeyword="MSBuild.SolutionInvalidSolutionConfiguration" />
+    <Message Condition="'$(CurrentSolutionConfigurationContents)' != ''" Text="Building solution configuration &quot;$(Configuration)|$(Platform)&quot;." />
+  </Target>
+  <Target Name="Build" Outputs="@(CollectedBuildOutput)">
+    <MSBuild Projects="@(ProjectReference)" BuildInParallel="True" Properties="BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" SkipNonexistentProjects="%(ProjectReference.SkipNonexistentProjects)">
+      <Output TaskParameter="TargetOutputs" ItemName="CollectedBuildOutput" />
+    </MSBuild>
+  </Target>
+  <Target Name="Clean">
+    <MSBuild Projects="@(ProjectReference-&gt;Reverse())" Targets="Clean" BuildInParallel="True" Properties="BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" SkipNonexistentProjects="%(ProjectReference.SkipNonexistentProjects)" />
+  </Target>
+  <Target Name="Rebuild" Outputs="@(CollectedBuildOutput)">
+    <MSBuild Projects="@(ProjectReference)" Targets="Rebuild" BuildInParallel="True" Properties="BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" SkipNonexistentProjects="%(ProjectReference.SkipNonexistentProjects)">
+      <Output TaskParameter="TargetOutputs" ItemName="CollectedBuildOutput" />
+    </MSBuild>
+  </Target>
+  <Target Name="Publish">
+    <MSBuild Projects="@(ProjectReference)" Targets="Publish" BuildInParallel="True" Properties="BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" SkipNonexistentProjects="%(ProjectReference.SkipNonexistentProjects)" />
+  </Target>
+  <Target Name="src\DeltaShell_NGHS_IO" Outputs="@(src_DeltaShell_NGHS_IOBuildOutput)">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.NGHS.IO\DeltaShell.NGHS.IO.csproj'" Projects="@(ProjectReference)" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)">
+      <Output TaskParameter="TargetOutputs" ItemName="src_DeltaShell_NGHS_IOBuildOutput" />
+    </MSBuild>
+  </Target>
+  <Target Name="src\DeltaShell_NGHS_IO:Clean">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.NGHS.IO\DeltaShell.NGHS.IO.csproj'" Projects="@(ProjectReference)" Targets="Clean" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" />
+  </Target>
+  <Target Name="src\DeltaShell_NGHS_IO:Rebuild" Outputs="@(src_DeltaShell_NGHS_IOBuildOutput)">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.NGHS.IO\DeltaShell.NGHS.IO.csproj'" Projects="@(ProjectReference)" Targets="Rebuild" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)">
+      <Output TaskParameter="TargetOutputs" ItemName="src_DeltaShell_NGHS_IOBuildOutput" />
+    </MSBuild>
+  </Target>
+  <Target Name="src\DeltaShell_NGHS_IO:Publish">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.NGHS.IO\DeltaShell.NGHS.IO.csproj'" Projects="@(ProjectReference)" Targets="Publish" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" />
+  </Target>
+  <Target Name="src\DelftTools_Hydro" Outputs="@(src_DelftTools_HydroBuildOutput)">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\src\DelftTools.Hydro\DelftTools.Hydro.csproj'" Projects="@(ProjectReference)" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)">
+      <Output TaskParameter="TargetOutputs" ItemName="src_DelftTools_HydroBuildOutput" />
+    </MSBuild>
+  </Target>
+  <Target Name="src\DelftTools_Hydro:Clean">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\src\DelftTools.Hydro\DelftTools.Hydro.csproj'" Projects="@(ProjectReference)" Targets="Clean" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" />
+  </Target>
+  <Target Name="src\DelftTools_Hydro:Rebuild" Outputs="@(src_DelftTools_HydroBuildOutput)">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\src\DelftTools.Hydro\DelftTools.Hydro.csproj'" Projects="@(ProjectReference)" Targets="Rebuild" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)">
+      <Output TaskParameter="TargetOutputs" ItemName="src_DelftTools_HydroBuildOutput" />
+    </MSBuild>
+  </Target>
+  <Target Name="src\DelftTools_Hydro:Publish">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\src\DelftTools.Hydro\DelftTools.Hydro.csproj'" Projects="@(ProjectReference)" Targets="Publish" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" />
+  </Target>
+  <Target Name="src\DeltaShell_Plugins_DelftModels_HydroModel" Outputs="@(src_DeltaShell_Plugins_DelftModels_HydroModelBuildOutput)">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Plugins.DelftModels.HydroModel\DeltaShell.Plugins.DelftModels.HydroModel.csproj'" Projects="@(ProjectReference)" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)">
+      <Output TaskParameter="TargetOutputs" ItemName="src_DeltaShell_Plugins_DelftModels_HydroModelBuildOutput" />
+    </MSBuild>
+  </Target>
+  <Target Name="src\DeltaShell_Plugins_DelftModels_HydroModel:Clean">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Plugins.DelftModels.HydroModel\DeltaShell.Plugins.DelftModels.HydroModel.csproj'" Projects="@(ProjectReference)" Targets="Clean" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" />
+  </Target>
+  <Target Name="src\DeltaShell_Plugins_DelftModels_HydroModel:Rebuild" Outputs="@(src_DeltaShell_Plugins_DelftModels_HydroModelBuildOutput)">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Plugins.DelftModels.HydroModel\DeltaShell.Plugins.DelftModels.HydroModel.csproj'" Projects="@(ProjectReference)" Targets="Rebuild" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)">
+      <Output TaskParameter="TargetOutputs" ItemName="src_DeltaShell_Plugins_DelftModels_HydroModelBuildOutput" />
+    </MSBuild>
+  </Target>
+  <Target Name="src\DeltaShell_Plugins_DelftModels_HydroModel:Publish">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Plugins.DelftModels.HydroModel\DeltaShell.Plugins.DelftModels.HydroModel.csproj'" Projects="@(ProjectReference)" Targets="Publish" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" />
+  </Target>
+  <Target Name="src\DeltaShell_Plugins_DelftModels_HydroModel_Gui" Outputs="@(src_DeltaShell_Plugins_DelftModels_HydroModel_GuiBuildOutput)">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Plugins.DelftModels.HydroModel.Gui\DeltaShell.Plugins.DelftModels.HydroModel.Gui.csproj'" Projects="@(ProjectReference)" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)">
+      <Output TaskParameter="TargetOutputs" ItemName="src_DeltaShell_Plugins_DelftModels_HydroModel_GuiBuildOutput" />
+    </MSBuild>
+  </Target>
+  <Target Name="src\DeltaShell_Plugins_DelftModels_HydroModel_Gui:Clean">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Plugins.DelftModels.HydroModel.Gui\DeltaShell.Plugins.DelftModels.HydroModel.Gui.csproj'" Projects="@(ProjectReference)" Targets="Clean" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" />
+  </Target>
+  <Target Name="src\DeltaShell_Plugins_DelftModels_HydroModel_Gui:Rebuild" Outputs="@(src_DeltaShell_Plugins_DelftModels_HydroModel_GuiBuildOutput)">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Plugins.DelftModels.HydroModel.Gui\DeltaShell.Plugins.DelftModels.HydroModel.Gui.csproj'" Projects="@(ProjectReference)" Targets="Rebuild" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)">
+      <Output TaskParameter="TargetOutputs" ItemName="src_DeltaShell_Plugins_DelftModels_HydroModel_GuiBuildOutput" />
+    </MSBuild>
+  </Target>
+  <Target Name="src\DeltaShell_Plugins_DelftModels_HydroModel_Gui:Publish">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Plugins.DelftModels.HydroModel.Gui\DeltaShell.Plugins.DelftModels.HydroModel.Gui.csproj'" Projects="@(ProjectReference)" Targets="Publish" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" />
+  </Target>
+  <Target Name="src\DeltaShell_Plugins_DelftModels_RealTimeControl" Outputs="@(src_DeltaShell_Plugins_DelftModels_RealTimeControlBuildOutput)">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Plugins.DelftModels.RealTimeControl\DeltaShell.Plugins.DelftModels.RealTimeControl.csproj'" Projects="@(ProjectReference)" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)">
+      <Output TaskParameter="TargetOutputs" ItemName="src_DeltaShell_Plugins_DelftModels_RealTimeControlBuildOutput" />
+    </MSBuild>
+  </Target>
+  <Target Name="src\DeltaShell_Plugins_DelftModels_RealTimeControl:Clean">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Plugins.DelftModels.RealTimeControl\DeltaShell.Plugins.DelftModels.RealTimeControl.csproj'" Projects="@(ProjectReference)" Targets="Clean" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" />
+  </Target>
+  <Target Name="src\DeltaShell_Plugins_DelftModels_RealTimeControl:Rebuild" Outputs="@(src_DeltaShell_Plugins_DelftModels_RealTimeControlBuildOutput)">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Plugins.DelftModels.RealTimeControl\DeltaShell.Plugins.DelftModels.RealTimeControl.csproj'" Projects="@(ProjectReference)" Targets="Rebuild" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)">
+      <Output TaskParameter="TargetOutputs" ItemName="src_DeltaShell_Plugins_DelftModels_RealTimeControlBuildOutput" />
+    </MSBuild>
+  </Target>
+  <Target Name="src\DeltaShell_Plugins_DelftModels_RealTimeControl:Publish">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Plugins.DelftModels.RealTimeControl\DeltaShell.Plugins.DelftModels.RealTimeControl.csproj'" Projects="@(ProjectReference)" Targets="Publish" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" />
+  </Target>
+  <Target Name="src\DeltaShell_Plugins_DelftModels_RealTimeControl_Gui" Outputs="@(src_DeltaShell_Plugins_DelftModels_RealTimeControl_GuiBuildOutput)">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Plugins.DelftModels.RealTimeControl.Gui\DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.csproj'" Projects="@(ProjectReference)" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)">
+      <Output TaskParameter="TargetOutputs" ItemName="src_DeltaShell_Plugins_DelftModels_RealTimeControl_GuiBuildOutput" />
+    </MSBuild>
+  </Target>
+  <Target Name="src\DeltaShell_Plugins_DelftModels_RealTimeControl_Gui:Clean">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Plugins.DelftModels.RealTimeControl.Gui\DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.csproj'" Projects="@(ProjectReference)" Targets="Clean" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" />
+  </Target>
+  <Target Name="src\DeltaShell_Plugins_DelftModels_RealTimeControl_Gui:Rebuild" Outputs="@(src_DeltaShell_Plugins_DelftModels_RealTimeControl_GuiBuildOutput)">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Plugins.DelftModels.RealTimeControl.Gui\DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.csproj'" Projects="@(ProjectReference)" Targets="Rebuild" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)">
+      <Output TaskParameter="TargetOutputs" ItemName="src_DeltaShell_Plugins_DelftModels_RealTimeControl_GuiBuildOutput" />
+    </MSBuild>
+  </Target>
+  <Target Name="src\DeltaShell_Plugins_DelftModels_RealTimeControl_Gui:Publish">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Plugins.DelftModels.RealTimeControl.Gui\DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.csproj'" Projects="@(ProjectReference)" Targets="Publish" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" />
+  </Target>
+  <Target Name="src\DeltaShell_Plugins_DelftModels_RTCShapes" Outputs="@(src_DeltaShell_Plugins_DelftModels_RTCShapesBuildOutput)">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Plugins.DelftModels.RTCShapes\DeltaShell.Plugins.DelftModels.RTCShapes.csproj'" Projects="@(ProjectReference)" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)">
+      <Output TaskParameter="TargetOutputs" ItemName="src_DeltaShell_Plugins_DelftModels_RTCShapesBuildOutput" />
+    </MSBuild>
+  </Target>
+  <Target Name="src\DeltaShell_Plugins_DelftModels_RTCShapes:Clean">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Plugins.DelftModels.RTCShapes\DeltaShell.Plugins.DelftModels.RTCShapes.csproj'" Projects="@(ProjectReference)" Targets="Clean" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" />
+  </Target>
+  <Target Name="src\DeltaShell_Plugins_DelftModels_RTCShapes:Rebuild" Outputs="@(src_DeltaShell_Plugins_DelftModels_RTCShapesBuildOutput)">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Plugins.DelftModels.RTCShapes\DeltaShell.Plugins.DelftModels.RTCShapes.csproj'" Projects="@(ProjectReference)" Targets="Rebuild" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)">
+      <Output TaskParameter="TargetOutputs" ItemName="src_DeltaShell_Plugins_DelftModels_RTCShapesBuildOutput" />
+    </MSBuild>
+  </Target>
+  <Target Name="src\DeltaShell_Plugins_DelftModels_RTCShapes:Publish">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Plugins.DelftModels.RTCShapes\DeltaShell.Plugins.DelftModels.RTCShapes.csproj'" Projects="@(ProjectReference)" Targets="Publish" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" />
+  </Target>
+  <Target Name="src\DeltaShell_Plugins_DelftModels_WaterQualityModel" Outputs="@(src_DeltaShell_Plugins_DelftModels_WaterQualityModelBuildOutput)">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Plugins.DelftModels.WaterQualityModel\DeltaShell.Plugins.DelftModels.WaterQualityModel.csproj'" Projects="@(ProjectReference)" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)">
+      <Output TaskParameter="TargetOutputs" ItemName="src_DeltaShell_Plugins_DelftModels_WaterQualityModelBuildOutput" />
+    </MSBuild>
+  </Target>
+  <Target Name="src\DeltaShell_Plugins_DelftModels_WaterQualityModel:Clean">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Plugins.DelftModels.WaterQualityModel\DeltaShell.Plugins.DelftModels.WaterQualityModel.csproj'" Projects="@(ProjectReference)" Targets="Clean" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" />
+  </Target>
+  <Target Name="src\DeltaShell_Plugins_DelftModels_WaterQualityModel:Rebuild" Outputs="@(src_DeltaShell_Plugins_DelftModels_WaterQualityModelBuildOutput)">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Plugins.DelftModels.WaterQualityModel\DeltaShell.Plugins.DelftModels.WaterQualityModel.csproj'" Projects="@(ProjectReference)" Targets="Rebuild" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)">
+      <Output TaskParameter="TargetOutputs" ItemName="src_DeltaShell_Plugins_DelftModels_WaterQualityModelBuildOutput" />
+    </MSBuild>
+  </Target>
+  <Target Name="src\DeltaShell_Plugins_DelftModels_WaterQualityModel:Publish">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Plugins.DelftModels.WaterQualityModel\DeltaShell.Plugins.DelftModels.WaterQualityModel.csproj'" Projects="@(ProjectReference)" Targets="Publish" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" />
+  </Target>
+  <Target Name="src\DeltaShell_Plugins_DelftModels_WaterQualityModel_Gui" Outputs="@(src_DeltaShell_Plugins_DelftModels_WaterQualityModel_GuiBuildOutput)">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui\DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.csproj'" Projects="@(ProjectReference)" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)">
+      <Output TaskParameter="TargetOutputs" ItemName="src_DeltaShell_Plugins_DelftModels_WaterQualityModel_GuiBuildOutput" />
+    </MSBuild>
+  </Target>
+  <Target Name="src\DeltaShell_Plugins_DelftModels_WaterQualityModel_Gui:Clean">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui\DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.csproj'" Projects="@(ProjectReference)" Targets="Clean" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" />
+  </Target>
+  <Target Name="src\DeltaShell_Plugins_DelftModels_WaterQualityModel_Gui:Rebuild" Outputs="@(src_DeltaShell_Plugins_DelftModels_WaterQualityModel_GuiBuildOutput)">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui\DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.csproj'" Projects="@(ProjectReference)" Targets="Rebuild" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)">
+      <Output TaskParameter="TargetOutputs" ItemName="src_DeltaShell_Plugins_DelftModels_WaterQualityModel_GuiBuildOutput" />
+    </MSBuild>
+  </Target>
+  <Target Name="src\DeltaShell_Plugins_DelftModels_WaterQualityModel_Gui:Publish">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui\DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.csproj'" Projects="@(ProjectReference)" Targets="Publish" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" />
+  </Target>
+  <Target Name="src\DeltaShell_Plugins_FMSuite_Common" Outputs="@(src_DeltaShell_Plugins_FMSuite_CommonBuildOutput)">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Plugins.FMSuite.Common\DeltaShell.Plugins.FMSuite.Common.csproj'" Projects="@(ProjectReference)" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)">
+      <Output TaskParameter="TargetOutputs" ItemName="src_DeltaShell_Plugins_FMSuite_CommonBuildOutput" />
+    </MSBuild>
+  </Target>
+  <Target Name="src\DeltaShell_Plugins_FMSuite_Common:Clean">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Plugins.FMSuite.Common\DeltaShell.Plugins.FMSuite.Common.csproj'" Projects="@(ProjectReference)" Targets="Clean" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" />
+  </Target>
+  <Target Name="src\DeltaShell_Plugins_FMSuite_Common:Rebuild" Outputs="@(src_DeltaShell_Plugins_FMSuite_CommonBuildOutput)">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Plugins.FMSuite.Common\DeltaShell.Plugins.FMSuite.Common.csproj'" Projects="@(ProjectReference)" Targets="Rebuild" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)">
+      <Output TaskParameter="TargetOutputs" ItemName="src_DeltaShell_Plugins_FMSuite_CommonBuildOutput" />
+    </MSBuild>
+  </Target>
+  <Target Name="src\DeltaShell_Plugins_FMSuite_Common:Publish">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Plugins.FMSuite.Common\DeltaShell.Plugins.FMSuite.Common.csproj'" Projects="@(ProjectReference)" Targets="Publish" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" />
+  </Target>
+  <Target Name="src\DeltaShell_Plugins_FMSuite_Common_Gui" Outputs="@(src_DeltaShell_Plugins_FMSuite_Common_GuiBuildOutput)">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Plugins.FMSuite.Common.Gui\DeltaShell.Plugins.FMSuite.Common.Gui.csproj'" Projects="@(ProjectReference)" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)">
+      <Output TaskParameter="TargetOutputs" ItemName="src_DeltaShell_Plugins_FMSuite_Common_GuiBuildOutput" />
+    </MSBuild>
+  </Target>
+  <Target Name="src\DeltaShell_Plugins_FMSuite_Common_Gui:Clean">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Plugins.FMSuite.Common.Gui\DeltaShell.Plugins.FMSuite.Common.Gui.csproj'" Projects="@(ProjectReference)" Targets="Clean" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" />
+  </Target>
+  <Target Name="src\DeltaShell_Plugins_FMSuite_Common_Gui:Rebuild" Outputs="@(src_DeltaShell_Plugins_FMSuite_Common_GuiBuildOutput)">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Plugins.FMSuite.Common.Gui\DeltaShell.Plugins.FMSuite.Common.Gui.csproj'" Projects="@(ProjectReference)" Targets="Rebuild" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)">
+      <Output TaskParameter="TargetOutputs" ItemName="src_DeltaShell_Plugins_FMSuite_Common_GuiBuildOutput" />
+    </MSBuild>
+  </Target>
+  <Target Name="src\DeltaShell_Plugins_FMSuite_Common_Gui:Publish">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Plugins.FMSuite.Common.Gui\DeltaShell.Plugins.FMSuite.Common.Gui.csproj'" Projects="@(ProjectReference)" Targets="Publish" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" />
+  </Target>
+  <Target Name="src\DeltaShell_Plugins_FMSuite_FlowFM" Outputs="@(src_DeltaShell_Plugins_FMSuite_FlowFMBuildOutput)">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Plugins.FMSuite.FlowFM\DeltaShell.Plugins.FMSuite.FlowFM.csproj'" Projects="@(ProjectReference)" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)">
+      <Output TaskParameter="TargetOutputs" ItemName="src_DeltaShell_Plugins_FMSuite_FlowFMBuildOutput" />
+    </MSBuild>
+  </Target>
+  <Target Name="src\DeltaShell_Plugins_FMSuite_FlowFM:Clean">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Plugins.FMSuite.FlowFM\DeltaShell.Plugins.FMSuite.FlowFM.csproj'" Projects="@(ProjectReference)" Targets="Clean" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" />
+  </Target>
+  <Target Name="src\DeltaShell_Plugins_FMSuite_FlowFM:Rebuild" Outputs="@(src_DeltaShell_Plugins_FMSuite_FlowFMBuildOutput)">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Plugins.FMSuite.FlowFM\DeltaShell.Plugins.FMSuite.FlowFM.csproj'" Projects="@(ProjectReference)" Targets="Rebuild" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)">
+      <Output TaskParameter="TargetOutputs" ItemName="src_DeltaShell_Plugins_FMSuite_FlowFMBuildOutput" />
+    </MSBuild>
+  </Target>
+  <Target Name="src\DeltaShell_Plugins_FMSuite_FlowFM:Publish">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Plugins.FMSuite.FlowFM\DeltaShell.Plugins.FMSuite.FlowFM.csproj'" Projects="@(ProjectReference)" Targets="Publish" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" />
+  </Target>
+  <Target Name="src\DeltaShell_Plugins_FMSuite_FlowFM_Gui" Outputs="@(src_DeltaShell_Plugins_FMSuite_FlowFM_GuiBuildOutput)">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Plugins.FMSuite.FlowFM.Gui\DeltaShell.Plugins.FMSuite.FlowFM.Gui.csproj'" Projects="@(ProjectReference)" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)">
+      <Output TaskParameter="TargetOutputs" ItemName="src_DeltaShell_Plugins_FMSuite_FlowFM_GuiBuildOutput" />
+    </MSBuild>
+  </Target>
+  <Target Name="src\DeltaShell_Plugins_FMSuite_FlowFM_Gui:Clean">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Plugins.FMSuite.FlowFM.Gui\DeltaShell.Plugins.FMSuite.FlowFM.Gui.csproj'" Projects="@(ProjectReference)" Targets="Clean" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" />
+  </Target>
+  <Target Name="src\DeltaShell_Plugins_FMSuite_FlowFM_Gui:Rebuild" Outputs="@(src_DeltaShell_Plugins_FMSuite_FlowFM_GuiBuildOutput)">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Plugins.FMSuite.FlowFM.Gui\DeltaShell.Plugins.FMSuite.FlowFM.Gui.csproj'" Projects="@(ProjectReference)" Targets="Rebuild" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)">
+      <Output TaskParameter="TargetOutputs" ItemName="src_DeltaShell_Plugins_FMSuite_FlowFM_GuiBuildOutput" />
+    </MSBuild>
+  </Target>
+  <Target Name="src\DeltaShell_Plugins_FMSuite_FlowFM_Gui:Publish">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Plugins.FMSuite.FlowFM.Gui\DeltaShell.Plugins.FMSuite.FlowFM.Gui.csproj'" Projects="@(ProjectReference)" Targets="Publish" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" />
+  </Target>
+  <Target Name="src\DeltaShell_Plugins_FMSuite_Wave" Outputs="@(src_DeltaShell_Plugins_FMSuite_WaveBuildOutput)">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Plugins.FMSuite.Wave\DeltaShell.Plugins.FMSuite.Wave.csproj'" Projects="@(ProjectReference)" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)">
+      <Output TaskParameter="TargetOutputs" ItemName="src_DeltaShell_Plugins_FMSuite_WaveBuildOutput" />
+    </MSBuild>
+  </Target>
+  <Target Name="src\DeltaShell_Plugins_FMSuite_Wave:Clean">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Plugins.FMSuite.Wave\DeltaShell.Plugins.FMSuite.Wave.csproj'" Projects="@(ProjectReference)" Targets="Clean" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" />
+  </Target>
+  <Target Name="src\DeltaShell_Plugins_FMSuite_Wave:Rebuild" Outputs="@(src_DeltaShell_Plugins_FMSuite_WaveBuildOutput)">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Plugins.FMSuite.Wave\DeltaShell.Plugins.FMSuite.Wave.csproj'" Projects="@(ProjectReference)" Targets="Rebuild" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)">
+      <Output TaskParameter="TargetOutputs" ItemName="src_DeltaShell_Plugins_FMSuite_WaveBuildOutput" />
+    </MSBuild>
+  </Target>
+  <Target Name="src\DeltaShell_Plugins_FMSuite_Wave:Publish">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Plugins.FMSuite.Wave\DeltaShell.Plugins.FMSuite.Wave.csproj'" Projects="@(ProjectReference)" Targets="Publish" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" />
+  </Target>
+  <Target Name="src\DeltaShell_Plugins_FMSuite_Wave_Gui" Outputs="@(src_DeltaShell_Plugins_FMSuite_Wave_GuiBuildOutput)">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Plugins.FMSuite.Wave.Gui\DeltaShell.Plugins.FMSuite.Wave.Gui.csproj'" Projects="@(ProjectReference)" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)">
+      <Output TaskParameter="TargetOutputs" ItemName="src_DeltaShell_Plugins_FMSuite_Wave_GuiBuildOutput" />
+    </MSBuild>
+  </Target>
+  <Target Name="src\DeltaShell_Plugins_FMSuite_Wave_Gui:Clean">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Plugins.FMSuite.Wave.Gui\DeltaShell.Plugins.FMSuite.Wave.Gui.csproj'" Projects="@(ProjectReference)" Targets="Clean" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" />
+  </Target>
+  <Target Name="src\DeltaShell_Plugins_FMSuite_Wave_Gui:Rebuild" Outputs="@(src_DeltaShell_Plugins_FMSuite_Wave_GuiBuildOutput)">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Plugins.FMSuite.Wave.Gui\DeltaShell.Plugins.FMSuite.Wave.Gui.csproj'" Projects="@(ProjectReference)" Targets="Rebuild" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)">
+      <Output TaskParameter="TargetOutputs" ItemName="src_DeltaShell_Plugins_FMSuite_Wave_GuiBuildOutput" />
+    </MSBuild>
+  </Target>
+  <Target Name="src\DeltaShell_Plugins_FMSuite_Wave_Gui:Publish">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Plugins.FMSuite.Wave.Gui\DeltaShell.Plugins.FMSuite.Wave.Gui.csproj'" Projects="@(ProjectReference)" Targets="Publish" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" />
+  </Target>
+  <Target Name="src\DeltaShell_Plugins_NetworkEditor_Gui" Outputs="@(src_DeltaShell_Plugins_NetworkEditor_GuiBuildOutput)">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Plugins.NetworkEditor.Gui\DeltaShell.Plugins.NetworkEditor.Gui.csproj'" Projects="@(ProjectReference)" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)">
+      <Output TaskParameter="TargetOutputs" ItemName="src_DeltaShell_Plugins_NetworkEditor_GuiBuildOutput" />
+    </MSBuild>
+  </Target>
+  <Target Name="src\DeltaShell_Plugins_NetworkEditor_Gui:Clean">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Plugins.NetworkEditor.Gui\DeltaShell.Plugins.NetworkEditor.Gui.csproj'" Projects="@(ProjectReference)" Targets="Clean" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" />
+  </Target>
+  <Target Name="src\DeltaShell_Plugins_NetworkEditor_Gui:Rebuild" Outputs="@(src_DeltaShell_Plugins_NetworkEditor_GuiBuildOutput)">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Plugins.NetworkEditor.Gui\DeltaShell.Plugins.NetworkEditor.Gui.csproj'" Projects="@(ProjectReference)" Targets="Rebuild" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)">
+      <Output TaskParameter="TargetOutputs" ItemName="src_DeltaShell_Plugins_NetworkEditor_GuiBuildOutput" />
+    </MSBuild>
+  </Target>
+  <Target Name="src\DeltaShell_Plugins_NetworkEditor_Gui:Publish">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Plugins.NetworkEditor.Gui\DeltaShell.Plugins.NetworkEditor.Gui.csproj'" Projects="@(ProjectReference)" Targets="Publish" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" />
+  </Target>
+  <Target Name="src\DeltaShell_Plugins_NetworkEditor" Outputs="@(src_DeltaShell_Plugins_NetworkEditorBuildOutput)">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Plugins.NetworkEditor\DeltaShell.Plugins.NetworkEditor.csproj'" Projects="@(ProjectReference)" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)">
+      <Output TaskParameter="TargetOutputs" ItemName="src_DeltaShell_Plugins_NetworkEditorBuildOutput" />
+    </MSBuild>
+  </Target>
+  <Target Name="src\DeltaShell_Plugins_NetworkEditor:Clean">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Plugins.NetworkEditor\DeltaShell.Plugins.NetworkEditor.csproj'" Projects="@(ProjectReference)" Targets="Clean" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" />
+  </Target>
+  <Target Name="src\DeltaShell_Plugins_NetworkEditor:Rebuild" Outputs="@(src_DeltaShell_Plugins_NetworkEditorBuildOutput)">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Plugins.NetworkEditor\DeltaShell.Plugins.NetworkEditor.csproj'" Projects="@(ProjectReference)" Targets="Rebuild" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)">
+      <Output TaskParameter="TargetOutputs" ItemName="src_DeltaShell_Plugins_NetworkEditorBuildOutput" />
+    </MSBuild>
+  </Target>
+  <Target Name="src\DeltaShell_Plugins_NetworkEditor:Publish">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Plugins.NetworkEditor\DeltaShell.Plugins.NetworkEditor.csproj'" Projects="@(ProjectReference)" Targets="Publish" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" />
+  </Target>
+  <Target Name="test\DelftTools_Hydro_Tests" Outputs="@(test_DelftTools_Hydro_TestsBuildOutput)">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\test\DelftTools.Hydro.Tests\DelftTools.Hydro.Tests.csproj'" Projects="@(ProjectReference)" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)">
+      <Output TaskParameter="TargetOutputs" ItemName="test_DelftTools_Hydro_TestsBuildOutput" />
+    </MSBuild>
+  </Target>
+  <Target Name="test\DelftTools_Hydro_Tests:Clean">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\test\DelftTools.Hydro.Tests\DelftTools.Hydro.Tests.csproj'" Projects="@(ProjectReference)" Targets="Clean" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" />
+  </Target>
+  <Target Name="test\DelftTools_Hydro_Tests:Rebuild" Outputs="@(test_DelftTools_Hydro_TestsBuildOutput)">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\test\DelftTools.Hydro.Tests\DelftTools.Hydro.Tests.csproj'" Projects="@(ProjectReference)" Targets="Rebuild" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)">
+      <Output TaskParameter="TargetOutputs" ItemName="test_DelftTools_Hydro_TestsBuildOutput" />
+    </MSBuild>
+  </Target>
+  <Target Name="test\DelftTools_Hydro_Tests:Publish">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\test\DelftTools.Hydro.Tests\DelftTools.Hydro.Tests.csproj'" Projects="@(ProjectReference)" Targets="Publish" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" />
+  </Target>
+  <Target Name="test\DeltaShell_NGHS_IO_Tests" Outputs="@(test_DeltaShell_NGHS_IO_TestsBuildOutput)">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.NGHS.IO.Tests\DeltaShell.NGHS.IO.Tests.csproj'" Projects="@(ProjectReference)" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)">
+      <Output TaskParameter="TargetOutputs" ItemName="test_DeltaShell_NGHS_IO_TestsBuildOutput" />
+    </MSBuild>
+  </Target>
+  <Target Name="test\DeltaShell_NGHS_IO_Tests:Clean">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.NGHS.IO.Tests\DeltaShell.NGHS.IO.Tests.csproj'" Projects="@(ProjectReference)" Targets="Clean" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" />
+  </Target>
+  <Target Name="test\DeltaShell_NGHS_IO_Tests:Rebuild" Outputs="@(test_DeltaShell_NGHS_IO_TestsBuildOutput)">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.NGHS.IO.Tests\DeltaShell.NGHS.IO.Tests.csproj'" Projects="@(ProjectReference)" Targets="Rebuild" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)">
+      <Output TaskParameter="TargetOutputs" ItemName="test_DeltaShell_NGHS_IO_TestsBuildOutput" />
+    </MSBuild>
+  </Target>
+  <Target Name="test\DeltaShell_NGHS_IO_Tests:Publish">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.NGHS.IO.Tests\DeltaShell.NGHS.IO.Tests.csproj'" Projects="@(ProjectReference)" Targets="Publish" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" />
+  </Target>
+  <Target Name="test\DeltaShell_NGHS_IO_TestUtils" Outputs="@(test_DeltaShell_NGHS_IO_TestUtilsBuildOutput)">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.NGHS.IO.TestUtils\DeltaShell.NGHS.IO.TestUtils.csproj'" Projects="@(ProjectReference)" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)">
+      <Output TaskParameter="TargetOutputs" ItemName="test_DeltaShell_NGHS_IO_TestUtilsBuildOutput" />
+    </MSBuild>
+  </Target>
+  <Target Name="test\DeltaShell_NGHS_IO_TestUtils:Clean">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.NGHS.IO.TestUtils\DeltaShell.NGHS.IO.TestUtils.csproj'" Projects="@(ProjectReference)" Targets="Clean" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" />
+  </Target>
+  <Target Name="test\DeltaShell_NGHS_IO_TestUtils:Rebuild" Outputs="@(test_DeltaShell_NGHS_IO_TestUtilsBuildOutput)">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.NGHS.IO.TestUtils\DeltaShell.NGHS.IO.TestUtils.csproj'" Projects="@(ProjectReference)" Targets="Rebuild" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)">
+      <Output TaskParameter="TargetOutputs" ItemName="test_DeltaShell_NGHS_IO_TestUtilsBuildOutput" />
+    </MSBuild>
+  </Target>
+  <Target Name="test\DeltaShell_NGHS_IO_TestUtils:Publish">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.NGHS.IO.TestUtils\DeltaShell.NGHS.IO.TestUtils.csproj'" Projects="@(ProjectReference)" Targets="Publish" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" />
+  </Target>
+  <Target Name="test\DeltaShell_Plugins_DelftModels_HydroModel_Tests" Outputs="@(test_DeltaShell_Plugins_DelftModels_HydroModel_TestsBuildOutput)">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.Plugins.DelftModels.HydroModel.Tests\DeltaShell.Plugins.DelftModels.HydroModel.Tests.csproj'" Projects="@(ProjectReference)" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)">
+      <Output TaskParameter="TargetOutputs" ItemName="test_DeltaShell_Plugins_DelftModels_HydroModel_TestsBuildOutput" />
+    </MSBuild>
+  </Target>
+  <Target Name="test\DeltaShell_Plugins_DelftModels_HydroModel_Tests:Clean">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.Plugins.DelftModels.HydroModel.Tests\DeltaShell.Plugins.DelftModels.HydroModel.Tests.csproj'" Projects="@(ProjectReference)" Targets="Clean" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" />
+  </Target>
+  <Target Name="test\DeltaShell_Plugins_DelftModels_HydroModel_Tests:Rebuild" Outputs="@(test_DeltaShell_Plugins_DelftModels_HydroModel_TestsBuildOutput)">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.Plugins.DelftModels.HydroModel.Tests\DeltaShell.Plugins.DelftModels.HydroModel.Tests.csproj'" Projects="@(ProjectReference)" Targets="Rebuild" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)">
+      <Output TaskParameter="TargetOutputs" ItemName="test_DeltaShell_Plugins_DelftModels_HydroModel_TestsBuildOutput" />
+    </MSBuild>
+  </Target>
+  <Target Name="test\DeltaShell_Plugins_DelftModels_HydroModel_Tests:Publish">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.Plugins.DelftModels.HydroModel.Tests\DeltaShell.Plugins.DelftModels.HydroModel.Tests.csproj'" Projects="@(ProjectReference)" Targets="Publish" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" />
+  </Target>
+  <Target Name="test\DeltaShell_Plugins_DelftModels_RealTimeControl_Tests" Outputs="@(test_DeltaShell_Plugins_DelftModels_RealTimeControl_TestsBuildOutput)">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.Plugins.DelftModels.RealTimeControl.Tests\DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.csproj'" Projects="@(ProjectReference)" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)">
+      <Output TaskParameter="TargetOutputs" ItemName="test_DeltaShell_Plugins_DelftModels_RealTimeControl_TestsBuildOutput" />
+    </MSBuild>
+  </Target>
+  <Target Name="test\DeltaShell_Plugins_DelftModels_RealTimeControl_Tests:Clean">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.Plugins.DelftModels.RealTimeControl.Tests\DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.csproj'" Projects="@(ProjectReference)" Targets="Clean" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" />
+  </Target>
+  <Target Name="test\DeltaShell_Plugins_DelftModels_RealTimeControl_Tests:Rebuild" Outputs="@(test_DeltaShell_Plugins_DelftModels_RealTimeControl_TestsBuildOutput)">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.Plugins.DelftModels.RealTimeControl.Tests\DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.csproj'" Projects="@(ProjectReference)" Targets="Rebuild" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)">
+      <Output TaskParameter="TargetOutputs" ItemName="test_DeltaShell_Plugins_DelftModels_RealTimeControl_TestsBuildOutput" />
+    </MSBuild>
+  </Target>
+  <Target Name="test\DeltaShell_Plugins_DelftModels_RealTimeControl_Tests:Publish">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.Plugins.DelftModels.RealTimeControl.Tests\DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.csproj'" Projects="@(ProjectReference)" Targets="Publish" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" />
+  </Target>
+  <Target Name="test\DeltaShell_Plugins_DelftModels_RTCShapes_Tests" Outputs="@(test_DeltaShell_Plugins_DelftModels_RTCShapes_TestsBuildOutput)">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.Plugins.DelftModels.RTCShapes\DeltaShell.Plugins.DelftModels.RTCShapes.Tests.csproj'" Projects="@(ProjectReference)" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)">
+      <Output TaskParameter="TargetOutputs" ItemName="test_DeltaShell_Plugins_DelftModels_RTCShapes_TestsBuildOutput" />
+    </MSBuild>
+  </Target>
+  <Target Name="test\DeltaShell_Plugins_DelftModels_RTCShapes_Tests:Clean">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.Plugins.DelftModels.RTCShapes\DeltaShell.Plugins.DelftModels.RTCShapes.Tests.csproj'" Projects="@(ProjectReference)" Targets="Clean" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" />
+  </Target>
+  <Target Name="test\DeltaShell_Plugins_DelftModels_RTCShapes_Tests:Rebuild" Outputs="@(test_DeltaShell_Plugins_DelftModels_RTCShapes_TestsBuildOutput)">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.Plugins.DelftModels.RTCShapes\DeltaShell.Plugins.DelftModels.RTCShapes.Tests.csproj'" Projects="@(ProjectReference)" Targets="Rebuild" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)">
+      <Output TaskParameter="TargetOutputs" ItemName="test_DeltaShell_Plugins_DelftModels_RTCShapes_TestsBuildOutput" />
+    </MSBuild>
+  </Target>
+  <Target Name="test\DeltaShell_Plugins_DelftModels_RTCShapes_Tests:Publish">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.Plugins.DelftModels.RTCShapes\DeltaShell.Plugins.DelftModels.RTCShapes.Tests.csproj'" Projects="@(ProjectReference)" Targets="Publish" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" />
+  </Target>
+  <Target Name="test\DeltaShell_Plugins_DelftModels_WaterQualityModel_Tests" Outputs="@(test_DeltaShell_Plugins_DelftModels_WaterQualityModel_TestsBuildOutput)">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests\DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.csproj'" Projects="@(ProjectReference)" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)">
+      <Output TaskParameter="TargetOutputs" ItemName="test_DeltaShell_Plugins_DelftModels_WaterQualityModel_TestsBuildOutput" />
+    </MSBuild>
+  </Target>
+  <Target Name="test\DeltaShell_Plugins_DelftModels_WaterQualityModel_Tests:Clean">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests\DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.csproj'" Projects="@(ProjectReference)" Targets="Clean" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" />
+  </Target>
+  <Target Name="test\DeltaShell_Plugins_DelftModels_WaterQualityModel_Tests:Rebuild" Outputs="@(test_DeltaShell_Plugins_DelftModels_WaterQualityModel_TestsBuildOutput)">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests\DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.csproj'" Projects="@(ProjectReference)" Targets="Rebuild" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)">
+      <Output TaskParameter="TargetOutputs" ItemName="test_DeltaShell_Plugins_DelftModels_WaterQualityModel_TestsBuildOutput" />
+    </MSBuild>
+  </Target>
+  <Target Name="test\DeltaShell_Plugins_DelftModels_WaterQualityModel_Tests:Publish">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests\DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.csproj'" Projects="@(ProjectReference)" Targets="Publish" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" />
+  </Target>
+  <Target Name="test\DeltaShell_Plugins_FMSuite_Common_Tests" Outputs="@(test_DeltaShell_Plugins_FMSuite_Common_TestsBuildOutput)">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.Plugins.FMSuite.Common.Tests\DeltaShell.Plugins.FMSuite.Common.Tests.csproj'" Projects="@(ProjectReference)" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)">
+      <Output TaskParameter="TargetOutputs" ItemName="test_DeltaShell_Plugins_FMSuite_Common_TestsBuildOutput" />
+    </MSBuild>
+  </Target>
+  <Target Name="test\DeltaShell_Plugins_FMSuite_Common_Tests:Clean">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.Plugins.FMSuite.Common.Tests\DeltaShell.Plugins.FMSuite.Common.Tests.csproj'" Projects="@(ProjectReference)" Targets="Clean" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" />
+  </Target>
+  <Target Name="test\DeltaShell_Plugins_FMSuite_Common_Tests:Rebuild" Outputs="@(test_DeltaShell_Plugins_FMSuite_Common_TestsBuildOutput)">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.Plugins.FMSuite.Common.Tests\DeltaShell.Plugins.FMSuite.Common.Tests.csproj'" Projects="@(ProjectReference)" Targets="Rebuild" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)">
+      <Output TaskParameter="TargetOutputs" ItemName="test_DeltaShell_Plugins_FMSuite_Common_TestsBuildOutput" />
+    </MSBuild>
+  </Target>
+  <Target Name="test\DeltaShell_Plugins_FMSuite_Common_Tests:Publish">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.Plugins.FMSuite.Common.Tests\DeltaShell.Plugins.FMSuite.Common.Tests.csproj'" Projects="@(ProjectReference)" Targets="Publish" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" />
+  </Target>
+  <Target Name="test\DeltaShell_Plugins_FMSuite_FlowFM_Tests" Outputs="@(test_DeltaShell_Plugins_FMSuite_FlowFM_TestsBuildOutput)">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.Plugins.FMSuite.FlowFM.Tests\DeltaShell.Plugins.FMSuite.FlowFM.Tests.csproj'" Projects="@(ProjectReference)" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)">
+      <Output TaskParameter="TargetOutputs" ItemName="test_DeltaShell_Plugins_FMSuite_FlowFM_TestsBuildOutput" />
+    </MSBuild>
+  </Target>
+  <Target Name="test\DeltaShell_Plugins_FMSuite_FlowFM_Tests:Clean">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.Plugins.FMSuite.FlowFM.Tests\DeltaShell.Plugins.FMSuite.FlowFM.Tests.csproj'" Projects="@(ProjectReference)" Targets="Clean" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" />
+  </Target>
+  <Target Name="test\DeltaShell_Plugins_FMSuite_FlowFM_Tests:Rebuild" Outputs="@(test_DeltaShell_Plugins_FMSuite_FlowFM_TestsBuildOutput)">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.Plugins.FMSuite.FlowFM.Tests\DeltaShell.Plugins.FMSuite.FlowFM.Tests.csproj'" Projects="@(ProjectReference)" Targets="Rebuild" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)">
+      <Output TaskParameter="TargetOutputs" ItemName="test_DeltaShell_Plugins_FMSuite_FlowFM_TestsBuildOutput" />
+    </MSBuild>
+  </Target>
+  <Target Name="test\DeltaShell_Plugins_FMSuite_FlowFM_Tests:Publish">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.Plugins.FMSuite.FlowFM.Tests\DeltaShell.Plugins.FMSuite.FlowFM.Tests.csproj'" Projects="@(ProjectReference)" Targets="Publish" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" />
+  </Target>
+  <Target Name="test\DeltaShell_Plugins_FMSuite_Wave_Tests" Outputs="@(test_DeltaShell_Plugins_FMSuite_Wave_TestsBuildOutput)">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.Plugins.FMSuite.Wave.Tests\DeltaShell.Plugins.FMSuite.Wave.Tests.csproj'" Projects="@(ProjectReference)" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)">
+      <Output TaskParameter="TargetOutputs" ItemName="test_DeltaShell_Plugins_FMSuite_Wave_TestsBuildOutput" />
+    </MSBuild>
+  </Target>
+  <Target Name="test\DeltaShell_Plugins_FMSuite_Wave_Tests:Clean">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.Plugins.FMSuite.Wave.Tests\DeltaShell.Plugins.FMSuite.Wave.Tests.csproj'" Projects="@(ProjectReference)" Targets="Clean" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" />
+  </Target>
+  <Target Name="test\DeltaShell_Plugins_FMSuite_Wave_Tests:Rebuild" Outputs="@(test_DeltaShell_Plugins_FMSuite_Wave_TestsBuildOutput)">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.Plugins.FMSuite.Wave.Tests\DeltaShell.Plugins.FMSuite.Wave.Tests.csproj'" Projects="@(ProjectReference)" Targets="Rebuild" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)">
+      <Output TaskParameter="TargetOutputs" ItemName="test_DeltaShell_Plugins_FMSuite_Wave_TestsBuildOutput" />
+    </MSBuild>
+  </Target>
+  <Target Name="test\DeltaShell_Plugins_FMSuite_Wave_Tests:Publish">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.Plugins.FMSuite.Wave.Tests\DeltaShell.Plugins.FMSuite.Wave.Tests.csproj'" Projects="@(ProjectReference)" Targets="Publish" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" />
+  </Target>
+  <Target Name="test\DeltaShell_Plugins_NetworkEditor_IntegrationTests" Outputs="@(test_DeltaShell_Plugins_NetworkEditor_IntegrationTestsBuildOutput)">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.Plugins.NetworkEditor.IntegrationTests\DeltaShell.Plugins.NetworkEditor.IntegrationTests.csproj'" Projects="@(ProjectReference)" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)">
+      <Output TaskParameter="TargetOutputs" ItemName="test_DeltaShell_Plugins_NetworkEditor_IntegrationTestsBuildOutput" />
+    </MSBuild>
+  </Target>
+  <Target Name="test\DeltaShell_Plugins_NetworkEditor_IntegrationTests:Clean">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.Plugins.NetworkEditor.IntegrationTests\DeltaShell.Plugins.NetworkEditor.IntegrationTests.csproj'" Projects="@(ProjectReference)" Targets="Clean" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" />
+  </Target>
+  <Target Name="test\DeltaShell_Plugins_NetworkEditor_IntegrationTests:Rebuild" Outputs="@(test_DeltaShell_Plugins_NetworkEditor_IntegrationTestsBuildOutput)">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.Plugins.NetworkEditor.IntegrationTests\DeltaShell.Plugins.NetworkEditor.IntegrationTests.csproj'" Projects="@(ProjectReference)" Targets="Rebuild" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)">
+      <Output TaskParameter="TargetOutputs" ItemName="test_DeltaShell_Plugins_NetworkEditor_IntegrationTestsBuildOutput" />
+    </MSBuild>
+  </Target>
+  <Target Name="test\DeltaShell_Plugins_NetworkEditor_IntegrationTests:Publish">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.Plugins.NetworkEditor.IntegrationTests\DeltaShell.Plugins.NetworkEditor.IntegrationTests.csproj'" Projects="@(ProjectReference)" Targets="Publish" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" />
+  </Target>
+  <Target Name="test\DeltaShell_Plugins_NetworkEditor_Tests" Outputs="@(test_DeltaShell_Plugins_NetworkEditor_TestsBuildOutput)">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.Plugins.NetworkEditor.Tests\DeltaShell.Plugins.NetworkEditor.Tests.csproj'" Projects="@(ProjectReference)" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)">
+      <Output TaskParameter="TargetOutputs" ItemName="test_DeltaShell_Plugins_NetworkEditor_TestsBuildOutput" />
+    </MSBuild>
+  </Target>
+  <Target Name="test\DeltaShell_Plugins_NetworkEditor_Tests:Clean">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.Plugins.NetworkEditor.Tests\DeltaShell.Plugins.NetworkEditor.Tests.csproj'" Projects="@(ProjectReference)" Targets="Clean" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" />
+  </Target>
+  <Target Name="test\DeltaShell_Plugins_NetworkEditor_Tests:Rebuild" Outputs="@(test_DeltaShell_Plugins_NetworkEditor_TestsBuildOutput)">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.Plugins.NetworkEditor.Tests\DeltaShell.Plugins.NetworkEditor.Tests.csproj'" Projects="@(ProjectReference)" Targets="Rebuild" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)">
+      <Output TaskParameter="TargetOutputs" ItemName="test_DeltaShell_Plugins_NetworkEditor_TestsBuildOutput" />
+    </MSBuild>
+  </Target>
+  <Target Name="test\DeltaShell_Plugins_NetworkEditor_Tests:Publish">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.Plugins.NetworkEditor.Tests\DeltaShell.Plugins.NetworkEditor.Tests.csproj'" Projects="@(ProjectReference)" Targets="Publish" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" />
+  </Target>
+  <Target Name="test\DeltaShell_Plugins_NGHS_IntegrationTests" Outputs="@(test_DeltaShell_Plugins_NGHS_IntegrationTestsBuildOutput)">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.Plugins.NGHS.IntegrationTests\DeltaShell.Plugins.NGHS.IntegrationTests.csproj'" Projects="@(ProjectReference)" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)">
+      <Output TaskParameter="TargetOutputs" ItemName="test_DeltaShell_Plugins_NGHS_IntegrationTestsBuildOutput" />
+    </MSBuild>
+  </Target>
+  <Target Name="test\DeltaShell_Plugins_NGHS_IntegrationTests:Clean">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.Plugins.NGHS.IntegrationTests\DeltaShell.Plugins.NGHS.IntegrationTests.csproj'" Projects="@(ProjectReference)" Targets="Clean" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" />
+  </Target>
+  <Target Name="test\DeltaShell_Plugins_NGHS_IntegrationTests:Rebuild" Outputs="@(test_DeltaShell_Plugins_NGHS_IntegrationTestsBuildOutput)">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.Plugins.NGHS.IntegrationTests\DeltaShell.Plugins.NGHS.IntegrationTests.csproj'" Projects="@(ProjectReference)" Targets="Rebuild" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)">
+      <Output TaskParameter="TargetOutputs" ItemName="test_DeltaShell_Plugins_NGHS_IntegrationTestsBuildOutput" />
+    </MSBuild>
+  </Target>
+  <Target Name="test\DeltaShell_Plugins_NGHS_IntegrationTests:Publish">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.Plugins.NGHS.IntegrationTests\DeltaShell.Plugins.NGHS.IntegrationTests.csproj'" Projects="@(ProjectReference)" Targets="Publish" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" />
+  </Target>
+  <Target Name="test\DeltaShell_Plugins_DelftModels_RealTimeControl_TestUtils" Outputs="@(test_DeltaShell_Plugins_DelftModels_RealTimeControl_TestUtilsBuildOutput)">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils\DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils.csproj'" Projects="@(ProjectReference)" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)">
+      <Output TaskParameter="TargetOutputs" ItemName="test_DeltaShell_Plugins_DelftModels_RealTimeControl_TestUtilsBuildOutput" />
+    </MSBuild>
+  </Target>
+  <Target Name="test\DeltaShell_Plugins_DelftModels_RealTimeControl_TestUtils:Clean">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils\DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils.csproj'" Projects="@(ProjectReference)" Targets="Clean" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" />
+  </Target>
+  <Target Name="test\DeltaShell_Plugins_DelftModels_RealTimeControl_TestUtils:Rebuild" Outputs="@(test_DeltaShell_Plugins_DelftModels_RealTimeControl_TestUtilsBuildOutput)">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils\DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils.csproj'" Projects="@(ProjectReference)" Targets="Rebuild" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)">
+      <Output TaskParameter="TargetOutputs" ItemName="test_DeltaShell_Plugins_DelftModels_RealTimeControl_TestUtilsBuildOutput" />
+    </MSBuild>
+  </Target>
+  <Target Name="test\DeltaShell_Plugins_DelftModels_RealTimeControl_TestUtils:Publish">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils\DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils.csproj'" Projects="@(ProjectReference)" Targets="Publish" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" />
+  </Target>
+  <Target Name="src\DeltaShell_Dimr" Outputs="@(src_DeltaShell_DimrBuildOutput)">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Dimr\DeltaShell.Dimr.csproj'" Projects="@(ProjectReference)" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)">
+      <Output TaskParameter="TargetOutputs" ItemName="src_DeltaShell_DimrBuildOutput" />
+    </MSBuild>
+  </Target>
+  <Target Name="src\DeltaShell_Dimr:Clean">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Dimr\DeltaShell.Dimr.csproj'" Projects="@(ProjectReference)" Targets="Clean" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" />
+  </Target>
+  <Target Name="src\DeltaShell_Dimr:Rebuild" Outputs="@(src_DeltaShell_DimrBuildOutput)">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Dimr\DeltaShell.Dimr.csproj'" Projects="@(ProjectReference)" Targets="Rebuild" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)">
+      <Output TaskParameter="TargetOutputs" ItemName="src_DeltaShell_DimrBuildOutput" />
+    </MSBuild>
+  </Target>
+  <Target Name="src\DeltaShell_Dimr:Publish">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Dimr\DeltaShell.Dimr.csproj'" Projects="@(ProjectReference)" Targets="Publish" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" />
+  </Target>
+  <Target Name="test\DeltaShell_Dimr_IntegrationTests" Outputs="@(test_DeltaShell_Dimr_IntegrationTestsBuildOutput)">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.Dimr.IntegrationTests\DeltaShell.Dimr.IntegrationTests.csproj'" Projects="@(ProjectReference)" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)">
+      <Output TaskParameter="TargetOutputs" ItemName="test_DeltaShell_Dimr_IntegrationTestsBuildOutput" />
+    </MSBuild>
+  </Target>
+  <Target Name="test\DeltaShell_Dimr_IntegrationTests:Clean">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.Dimr.IntegrationTests\DeltaShell.Dimr.IntegrationTests.csproj'" Projects="@(ProjectReference)" Targets="Clean" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" />
+  </Target>
+  <Target Name="test\DeltaShell_Dimr_IntegrationTests:Rebuild" Outputs="@(test_DeltaShell_Dimr_IntegrationTestsBuildOutput)">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.Dimr.IntegrationTests\DeltaShell.Dimr.IntegrationTests.csproj'" Projects="@(ProjectReference)" Targets="Rebuild" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)">
+      <Output TaskParameter="TargetOutputs" ItemName="test_DeltaShell_Dimr_IntegrationTestsBuildOutput" />
+    </MSBuild>
+  </Target>
+  <Target Name="test\DeltaShell_Dimr_IntegrationTests:Publish">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.Dimr.IntegrationTests\DeltaShell.Dimr.IntegrationTests.csproj'" Projects="@(ProjectReference)" Targets="Publish" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" />
+  </Target>
+  <Target Name="src\DeltaShell_Dimr_Gui" Outputs="@(src_DeltaShell_Dimr_GuiBuildOutput)">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Dimr.Gui\DeltaShell.Dimr.Gui.csproj'" Projects="@(ProjectReference)" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)">
+      <Output TaskParameter="TargetOutputs" ItemName="src_DeltaShell_Dimr_GuiBuildOutput" />
+    </MSBuild>
+  </Target>
+  <Target Name="src\DeltaShell_Dimr_Gui:Clean">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Dimr.Gui\DeltaShell.Dimr.Gui.csproj'" Projects="@(ProjectReference)" Targets="Clean" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" />
+  </Target>
+  <Target Name="src\DeltaShell_Dimr_Gui:Rebuild" Outputs="@(src_DeltaShell_Dimr_GuiBuildOutput)">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Dimr.Gui\DeltaShell.Dimr.Gui.csproj'" Projects="@(ProjectReference)" Targets="Rebuild" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)">
+      <Output TaskParameter="TargetOutputs" ItemName="src_DeltaShell_Dimr_GuiBuildOutput" />
+    </MSBuild>
+  </Target>
+  <Target Name="src\DeltaShell_Dimr_Gui:Publish">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.Dimr.Gui\DeltaShell.Dimr.Gui.csproj'" Projects="@(ProjectReference)" Targets="Publish" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" />
+  </Target>
+  <Target Name="test\DeltaShell_Dimr_Tests" Outputs="@(test_DeltaShell_Dimr_TestsBuildOutput)">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.Dimr.Tests\DeltaShell.Dimr.Tests.csproj'" Projects="@(ProjectReference)" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)">
+      <Output TaskParameter="TargetOutputs" ItemName="test_DeltaShell_Dimr_TestsBuildOutput" />
+    </MSBuild>
+  </Target>
+  <Target Name="test\DeltaShell_Dimr_Tests:Clean">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.Dimr.Tests\DeltaShell.Dimr.Tests.csproj'" Projects="@(ProjectReference)" Targets="Clean" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" />
+  </Target>
+  <Target Name="test\DeltaShell_Dimr_Tests:Rebuild" Outputs="@(test_DeltaShell_Dimr_TestsBuildOutput)">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.Dimr.Tests\DeltaShell.Dimr.Tests.csproj'" Projects="@(ProjectReference)" Targets="Rebuild" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)">
+      <Output TaskParameter="TargetOutputs" ItemName="test_DeltaShell_Dimr_TestsBuildOutput" />
+    </MSBuild>
+  </Target>
+  <Target Name="test\DeltaShell_Dimr_Tests:Publish">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.Dimr.Tests\DeltaShell.Dimr.Tests.csproj'" Projects="@(ProjectReference)" Targets="Publish" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" />
+  </Target>
+  <Target Name="test\DeltaShell_NGHS_TestUtils" Outputs="@(test_DeltaShell_NGHS_TestUtilsBuildOutput)">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.NGHS.TestUtils\DeltaShell.NGHS.TestUtils.csproj'" Projects="@(ProjectReference)" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)">
+      <Output TaskParameter="TargetOutputs" ItemName="test_DeltaShell_NGHS_TestUtilsBuildOutput" />
+    </MSBuild>
+  </Target>
+  <Target Name="test\DeltaShell_NGHS_TestUtils:Clean">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.NGHS.TestUtils\DeltaShell.NGHS.TestUtils.csproj'" Projects="@(ProjectReference)" Targets="Clean" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" />
+  </Target>
+  <Target Name="test\DeltaShell_NGHS_TestUtils:Rebuild" Outputs="@(test_DeltaShell_NGHS_TestUtilsBuildOutput)">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.NGHS.TestUtils\DeltaShell.NGHS.TestUtils.csproj'" Projects="@(ProjectReference)" Targets="Rebuild" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)">
+      <Output TaskParameter="TargetOutputs" ItemName="test_DeltaShell_NGHS_TestUtilsBuildOutput" />
+    </MSBuild>
+  </Target>
+  <Target Name="test\DeltaShell_NGHS_TestUtils:Publish">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.NGHS.TestUtils\DeltaShell.NGHS.TestUtils.csproj'" Projects="@(ProjectReference)" Targets="Publish" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" />
+  </Target>
+  <Target Name="src\DeltaShell_NGHS_Common" Outputs="@(src_DeltaShell_NGHS_CommonBuildOutput)">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.NGHS.Common\DeltaShell.NGHS.Common.csproj'" Projects="@(ProjectReference)" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)">
+      <Output TaskParameter="TargetOutputs" ItemName="src_DeltaShell_NGHS_CommonBuildOutput" />
+    </MSBuild>
+  </Target>
+  <Target Name="src\DeltaShell_NGHS_Common:Clean">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.NGHS.Common\DeltaShell.NGHS.Common.csproj'" Projects="@(ProjectReference)" Targets="Clean" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" />
+  </Target>
+  <Target Name="src\DeltaShell_NGHS_Common:Rebuild" Outputs="@(src_DeltaShell_NGHS_CommonBuildOutput)">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.NGHS.Common\DeltaShell.NGHS.Common.csproj'" Projects="@(ProjectReference)" Targets="Rebuild" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)">
+      <Output TaskParameter="TargetOutputs" ItemName="src_DeltaShell_NGHS_CommonBuildOutput" />
+    </MSBuild>
+  </Target>
+  <Target Name="src\DeltaShell_NGHS_Common:Publish">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.NGHS.Common\DeltaShell.NGHS.Common.csproj'" Projects="@(ProjectReference)" Targets="Publish" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" />
+  </Target>
+  <Target Name="test\DeltaShell_NGHS_Common_Tests" Outputs="@(test_DeltaShell_NGHS_Common_TestsBuildOutput)">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.NGHS.Common.Tests\DeltaShell.NGHS.Common.Tests.csproj'" Projects="@(ProjectReference)" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)">
+      <Output TaskParameter="TargetOutputs" ItemName="test_DeltaShell_NGHS_Common_TestsBuildOutput" />
+    </MSBuild>
+  </Target>
+  <Target Name="test\DeltaShell_NGHS_Common_Tests:Clean">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.NGHS.Common.Tests\DeltaShell.NGHS.Common.Tests.csproj'" Projects="@(ProjectReference)" Targets="Clean" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" />
+  </Target>
+  <Target Name="test\DeltaShell_NGHS_Common_Tests:Rebuild" Outputs="@(test_DeltaShell_NGHS_Common_TestsBuildOutput)">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.NGHS.Common.Tests\DeltaShell.NGHS.Common.Tests.csproj'" Projects="@(ProjectReference)" Targets="Rebuild" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)">
+      <Output TaskParameter="TargetOutputs" ItemName="test_DeltaShell_NGHS_Common_TestsBuildOutput" />
+    </MSBuild>
+  </Target>
+  <Target Name="test\DeltaShell_NGHS_Common_Tests:Publish">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\test\DeltaShell.NGHS.Common.Tests\DeltaShell.NGHS.Common.Tests.csproj'" Projects="@(ProjectReference)" Targets="Publish" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" />
+  </Target>
+  <Target Name="src\DeltaShell_NGHS_Common_Gui" Outputs="@(src_DeltaShell_NGHS_Common_GuiBuildOutput)">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.NGHS.Common.Gui\DeltaShell.NGHS.Common.Gui.csproj'" Projects="@(ProjectReference)" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)">
+      <Output TaskParameter="TargetOutputs" ItemName="src_DeltaShell_NGHS_Common_GuiBuildOutput" />
+    </MSBuild>
+  </Target>
+  <Target Name="src\DeltaShell_NGHS_Common_Gui:Clean">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.NGHS.Common.Gui\DeltaShell.NGHS.Common.Gui.csproj'" Projects="@(ProjectReference)" Targets="Clean" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" />
+  </Target>
+  <Target Name="src\DeltaShell_NGHS_Common_Gui:Rebuild" Outputs="@(src_DeltaShell_NGHS_Common_GuiBuildOutput)">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.NGHS.Common.Gui\DeltaShell.NGHS.Common.Gui.csproj'" Projects="@(ProjectReference)" Targets="Rebuild" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)">
+      <Output TaskParameter="TargetOutputs" ItemName="src_DeltaShell_NGHS_Common_GuiBuildOutput" />
+    </MSBuild>
+  </Target>
+  <Target Name="src\DeltaShell_NGHS_Common_Gui:Publish">
+    <MSBuild Condition="'%(ProjectReference.Identity)' == 'D:\BuildAgent\work\647fda35ead99de4\src\DeltaShell.NGHS.Common.Gui\DeltaShell.NGHS.Common.Gui.csproj'" Projects="@(ProjectReference)" Targets="Publish" BuildInParallel="True" ToolsVersion="$(ProjectToolsVersion)" Properties="Configuration=Debug; Platform=AnyCPU;BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" />
+  </Target>
+</Project>
