@@ -1495,6 +1495,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             var structureFilesWithBadReferences = new List<string>();
             foreach (string filePath in featureFilePaths)
             {
+                LogHandler logHandler = new LogHandler("import of the structure file: " + filePath);
+
                 string structureFilePath = System.IO.Path.GetFullPath(filePath);
 
                 string structuresSubFilesReferenceFilePath = pathsRelativeToParent ? filePath : mduFilePath;
@@ -1506,6 +1508,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                 };
                 List<Structure2D> featuresToAdd = fileReader.ReadStructures2D(structureFilePath).ToList();
                 var referencesToNonExistentFilesExist = false;
+
                 featuresToAdd.ForEach(f =>
                 {
                     string featureFileName = f.GetProperty(KnownStructureProperties.PolylineFile).GetValueAsString();
@@ -1515,13 +1518,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                     if (!File.Exists(featureFilePath))
                     {
                         referencesToNonExistentFilesExist = true;
-                        Log.ErrorFormat(Resources.MduFile_RemoveAllStructuresFilesWithBadReferences_, featureFilePath,
-                                        structureFilePath);
                     }
                 });
+
                 if (referencesToNonExistentFilesExist)
                 {
                     structureFilesWithBadReferences.Add(structureFilePath);
+                    featuresToAdd.ForEach(f =>
+                   {
+                       string featureFileName = f.GetProperty(KnownStructureProperties.PolylineFile).GetValueAsString();
+                       string featureFilePath =
+                           System.IO.Path.Combine(System.IO.Path.GetDirectoryName(structuresSubFilesReferenceFilePath), featureFileName);
+                       logHandler.ReportErrorFormat(Resources.MduFile_RemoveAllStructuresFilesWithBadReferencesShortVersion_, featureFilePath,
+                                         structureFilePath);
+                   });
+                   logHandler.LogReport();
                 }
             }
 

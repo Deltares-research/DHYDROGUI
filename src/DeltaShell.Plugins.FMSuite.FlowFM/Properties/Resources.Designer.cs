@@ -662,12 +662,30 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to File at location &apos;{0}&apos; is referenced in structures file &apos;{1}&apos;, but does not exist..
+        /// </summary>
+        public static string MduFile_RemoveAllStructuresFilesWithBadReferencesShortVersion_ {
+            get {
+                return ResourceManager.GetString("MduFile_RemoveAllStructuresFilesWithBadReferencesShortVersion_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to File at location &apos;{0}&apos; does not exist, but is defined in MDU file at &apos;{1}&apos;
         ///at property &apos;{2}&apos;. Model information may have been lost while loading model &apos;{3}&apos;..
         /// </summary>
         public static string MduFile_RemoveNonExistentFilePaths_ {
             get {
                 return ResourceManager.GetString("MduFile_RemoveNonExistentFilePaths_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Something went wrong during the import of the structures file. .
+        /// </summary>
+        public static string MduFile_SomethingWentWrongHeader_ {
+            get {
+                return ResourceManager.GetString("MduFile_SomethingWentWrongHeader_", resourceCulture);
             }
         }
         

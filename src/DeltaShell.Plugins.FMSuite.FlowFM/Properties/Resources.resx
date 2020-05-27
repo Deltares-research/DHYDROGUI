@@ -311,9 +311,15 @@ Change this group name and save the project again to write these features to a s
   <data name="FMOutputSnappedFeaturesGroupLayerData_GetValidLayersLocation_Output_snapped_feature_layers_location_not_found_at___0_" xml:space="preserve">
     <value>Output snapped feature layers location not found at: {0}</value>
   </data>
+  <data name="MduFile_SomethingWentWrongHeader_" xml:space="preserve">
+    <value>Something went wrong during the import of the structures file. </value>
+  </data>
   <data name="MduFile_RemoveAllStructuresFilesWithBadReferences_" xml:space="preserve">
     <value>File at location '{0}' is referenced in structures file '{1}', but does not exist.
 File import of structures file '{1}' has failed.</value>
+  </data>
+  <data name="MduFile_RemoveAllStructuresFilesWithBadReferencesShortVersion_" xml:space="preserve">
+    <value>File at location '{0}' is referenced in structures file '{1}', but does not exist.</value>
   </data>
   <data name="GwswFileImporterBase_ImportDefinitionFile_Not_possible_to_import__0_" xml:space="preserve">
     <value>Not possible to import {0}</value>
