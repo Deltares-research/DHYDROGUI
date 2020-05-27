@@ -26,6 +26,7 @@ using GeoAPI.Extensions.Coverages;
 using log4net;
 using Mono.Addins;
 using ValidationAspects;
+using Clipboard = DelftTools.Controls.Clipboard;
 using PropertyInfo = DelftTools.Shell.Gui.PropertyInfo;
 using TreeNode = DelftTools.Controls.Swf.TreeViewControls.TreeNode;
 using TreeView = DelftTools.Controls.Swf.TreeViewControls.TreeView;

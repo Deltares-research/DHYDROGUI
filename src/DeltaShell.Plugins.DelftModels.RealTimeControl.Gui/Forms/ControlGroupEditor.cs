@@ -21,6 +21,7 @@ using DeltaShell.Plugins.DelftModels.RTCShapes.Shapes;
 using GeoAPI.Extensions.Feature;
 using log4net;
 using Netron.GraphLib;
+using Clipboard = DelftTools.Controls.Clipboard;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
 {
@@ -375,7 +376,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
             var menuItem = (MenuItem) sender;
             RealTimeControlModelCopyPasteHelper.SetRtcObjectsToClipBoard((IEnumerable<ShapeBase>) menuItem.Tag);
         }
-
+        
         private void CopyAsImageToClipboard(object sender, EventArgs e)
         {
             Clipboard.SetImage(graphControl.NetronGraph.GetDiagramImage());
