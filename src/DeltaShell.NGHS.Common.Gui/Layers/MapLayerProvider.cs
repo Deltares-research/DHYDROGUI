@@ -42,5 +42,9 @@ namespace DeltaShell.NGHS.Common.Gui.Layers
         {
             return subProviders.SelectMany(lp => lp.GenerateChildLayerObjects(data));
         }
+        public void AfterCreate(ILayer layer, object layerObject, object parentObject, IDictionary<ILayer, object> objectsLookup)
+        {
+            // Nothing needs to be done after creation
+        }
     }
 }

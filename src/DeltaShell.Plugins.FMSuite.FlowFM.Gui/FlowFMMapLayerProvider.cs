@@ -424,6 +424,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             }
         }
 
+        public void AfterCreate(ILayer layer, object layerObject, object parentObject, IDictionary<ILayer, object> objectsLookup)
+        {
+            // Nothing needs to be done after creation
+        }
+
         private static string GetCommonFunctionName(IList<IFunction> functions)
         {
             if (!functions.Any())

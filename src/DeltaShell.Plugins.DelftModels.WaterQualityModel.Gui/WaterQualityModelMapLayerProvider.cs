@@ -87,6 +87,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui
             }
         }
 
+        public void AfterCreate(ILayer layer, object layerObject, object parentObject, IDictionary<ILayer, object> objectsLookup)
+        {
+            // Nothing needs to be done after creation
+        }
+
         private static ILayer CreateLayerForWaterQualityModel(object data, object parentData)
         {
             var waterQualityModel = data as WaterQualityModel;

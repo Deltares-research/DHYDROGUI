@@ -89,7 +89,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             Assert.NotNull(groupLayer);
             Assert.IsTrue(groupLayer.LayersReadOnly);
 
-            ILayer[] allLayers = Map.GetLayers(groupLayer.Layers, true, true).ToArray();
+            ILayer[] allLayers = groupLayer.Layers.GetLayersRecursive(true, true).ToArray();
 
             Assert.AreEqual(17, allLayers.Length);
 
