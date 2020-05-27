@@ -4,15 +4,16 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <ProductVersion>3.7</ProductVersion>
-    <ProjectGuid>f30c1a46-d283-484e-aabe-ef52f9168e08</ProjectGuid>
+    <ProjectGuid>211886f5-cf84-4a3a-abfc-2758337943ea</ProjectGuid>
     <SchemaVersion>2.0</SchemaVersion>
     <OutputName>DefaultDeltaresDialogs</OutputName>
     <OutputType>Library</OutputType>
+    <Name>DefaultDeltaresDialogs</Name>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <OutputPath>bin\$(Configuration)\</OutputPath>
     <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
-    <DefineConstants>Debug;</DefineConstants>
+    <DefineConstants>Debug</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <OutputPath>bin\$(Configuration)\</OutputPath>
@@ -51,13 +52,16 @@
     <Compile Include="WixUI_Deltares.wxs" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Localization\" />
+  </ItemGroup>
+  <ItemGroup>
     <EmbeddedResource Include="Localization\en-Us.wxl" />
     <EmbeddedResource Include="Localization\nl-NL.wxl" />
     <EmbeddedResource Include="Localization\WixUI_en-us.wxl" />
     <EmbeddedResource Include="Localization\WixUI_nl-NL.wxl" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Localization" />
+    <Content Include="packages.config" />
   </ItemGroup>
   <Import Project="$(WixTargetsPath)" Condition=" '$(WixTargetsPath)' != '' " />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\WiX\v3.x\Wix.targets" Condition=" '$(WixTargetsPath)' == '' AND Exists('$(MSBuildExtensionsPath32)\Microsoft\WiX\v3.x\Wix.targets') " />

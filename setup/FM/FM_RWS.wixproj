@@ -169,7 +169,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Framework\DefaultDeltaresDialogs\DefaultDeltaresDialogs.wixproj">
       <Name>DefaultDeltaresDialogs</Name>
-      <Project>{f30c1a46-d283-484e-aabe-ef52f9168e08}</Project>
+      <Project>{211886f5-cf84-4a3a-abfc-2758337943ea}</Project>
       <Private>True</Private>
       <DoNotHarvest>True</DoNotHarvest>
       <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
