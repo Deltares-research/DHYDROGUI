@@ -6,12 +6,8 @@ using System.Linq;
 using DelftTools.Functions;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Generic;
-using DeltaShell.Core;
 using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.NGHS.TestUtils;
-using DeltaShell.NGHS.TestUtils.AssertConstraints;
-using DeltaShell.Plugins.CommonTools;
-using DeltaShell.Plugins.Data.NHibernate;
 using DeltaShell.Plugins.FMSuite.Common.Properties;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions;
@@ -23,13 +19,12 @@ using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.WaveEnergy
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
 using DeltaShell.Plugins.FMSuite.Wave.IO;
 using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
-using DeltaShell.Plugins.NetworkEditor;
-using DeltaShell.Plugins.SharpMapGis;
 using log4net.Core;
 using NetTopologySuite.Extensions.Grids;
 using NSubstitute;
 using NUnit.Framework;
 using NUnit.Framework.Constraints;
+using Does = DeltaShell.NGHS.TestUtils.AssertConstraints.Does;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
 {
