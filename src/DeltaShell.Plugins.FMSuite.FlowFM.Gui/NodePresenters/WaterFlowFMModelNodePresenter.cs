@@ -5,8 +5,11 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using DelftTools.Controls;
 using DelftTools.Controls.Swf;
+using DelftTools.Controls.Wpf.ValueConverters;
 using DelftTools.Functions;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
@@ -15,6 +18,7 @@ using DelftTools.Shell.Gui.Swf;
 using DelftTools.Shell.Gui.Swf.Validation;
 using DelftTools.Utils;
 using DeltaShell.Dimr;
+using DeltaShell.NGHS.Common.Gui;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf;
 using DeltaShell.Plugins.FMSuite.Common.Gui;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors;
@@ -26,7 +30,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
 {
     public class WaterFlowFMModelNodePresenter : ModelNodePresenterBase<WaterFlowFMModel>
     {
-        public static readonly Bitmap UnstrucModelIcon = new Bitmap(Resources.unstrucmodel, 16, 16);
+        public static Bitmap UnstrucModelIcon;
         public static readonly Bitmap ThinDamIcon = new Bitmap(Resources.thindam, 16, 16);
         public static readonly Bitmap FixedWeirIcon = new Bitmap(Resources.fixedweir, 16, 16);
         public static readonly Bitmap LeveeBreachIcon = new Bitmap(Resources.DamBreak, 16, 16);
@@ -56,6 +60,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
 
         public WaterFlowFMModelNodePresenter(GuiPlugin guiPlugin) : base(guiPlugin)
         {
+            var graphicsProvider = guiPlugin.GraphicsProvider;
+            UnstrucModelIcon = new DrawingBrush{Drawing = graphicsProvider.CreateDrawingGroupFor(typeof(WaterFlowFMModel))}.BitmapFromBrush(16, 16);
         }
 
         public override void UpdateNode(ITreeNode parentNode, ITreeNode node, WaterFlowFMModel nodeData)

@@ -16,6 +16,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.GraphicsProviders
 
         public bool CanProvideDrawingGroupFor(object item)
         {
+            if (item is Type type && type == typeof(WaterFlowFMModel))
+            {
+                return true;
+            }
+            
             if (item is ModelInfo modelInfo)
             {
                 return modelInfo.Name == FlowFMApplicationPlugin.FlowFlexibleMeshModelModelInfoName;
@@ -38,12 +43,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.GraphicsProviders
         {
             if ((item is ModelInfo modelInfo && modelInfo.Name == FlowFMApplicationPlugin.FlowFlexibleMeshModelModelInfoName) ||
                 (item is ProjectTemplate projectTemplate && projectTemplate.Id == "FMModel") ||
-                item is WaterFlowFMFileImporter)
+                item is WaterFlowFMFileImporter ||
+                (item is Type type && type== typeof(WaterFlowFMModel)))
             {
                 return (DrawingGroup) resources["FMModelDrawingGroup"];
             }
-
-
+            
             return null;
         }
     }
