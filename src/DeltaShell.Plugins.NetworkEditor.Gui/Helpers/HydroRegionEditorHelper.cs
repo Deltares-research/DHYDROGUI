@@ -1,7 +1,6 @@
 using System;
 using System.Linq;
 using DelftTools.Hydro;
-using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Editing;
 using DeltaShell.Plugins.NetworkEditor.Gui.MapTools;
 using DeltaShell.Plugins.NetworkEditor.MapLayers;
@@ -9,7 +8,6 @@ using DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;
-using NetTopologySuite.Extensions.Geometries;
 using NetTopologySuite.Extensions.Networks;
 using NetTopologySuite.Geometries;
 using NetTopologySuite.LinearReferencing;

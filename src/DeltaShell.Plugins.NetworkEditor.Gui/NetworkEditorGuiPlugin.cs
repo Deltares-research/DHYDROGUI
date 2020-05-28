@@ -618,12 +618,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 convertCoordinateSystemToolStripMenuItem
             });
         }
-
-        private void NetworkSideViewSelectionChanged(object sender, SelectedItemChangedEventArgs e)
-        {
-            Gui.Selection = e.Item;
-        }
-
+        
         private void ApplicationProjectOpened(Project project)
         {
             project.RootFolder.CollectionChanged += RootFolderCollectionChanged;
@@ -923,15 +918,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             //open view for selected object
             Gui.CommandHandler.OpenViewForSelection();
         }
-        
-        private void RemoveCalculationGridLocationsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            var discretization = (IDiscretization) ((ToolStripMenuItem) sender).Tag;
-            discretization.Clear();
-
-            //this should not be necessary...but collectionchanged is not properly handled in map
-            RefreshMapViewSelection();
-        }
 
         private void RefreshMapViewSelection()
         {
@@ -952,21 +938,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 MapView mapView = GetFocusedMapView();
                 mapView?.Map?.ZoomToExtents();
             }
-        }
-
-        private string GetModelNameForCoverage(ICoverage coverage)
-        {
-            IEnumerable<IModel> allModels = Gui.Application.GetAllModelsInProject();
-            List<IModel> models = allModels.Where(m => m.GetAllItemsRecursive().Any(obj => obj is IFunction &&
-                                                                                           coverage.IsEqualOrDescendant(obj as IFunction))).ToList();
-
-            if (models.Count > 1) //several matches, do more filtering
-            {
-                models = models.Where(m => !(m is CompositeModel)).ToList();
-            }
-
-            IModel model = models.FirstOrDefault();
-            return model != null ? model.Name : "";
         }
     }
 }
