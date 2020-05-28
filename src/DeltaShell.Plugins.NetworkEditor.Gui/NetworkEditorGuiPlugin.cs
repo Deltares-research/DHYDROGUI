@@ -918,13 +918,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             //open view for selected object
             Gui.CommandHandler.OpenViewForSelection();
         }
-
-        private void RefreshMapViewSelection()
-        {
-            MapView mapView = Gui.DocumentViews.ActiveView.GetViewsOfType<MapView>().FirstOrDefault();
-            mapView?.MapControl.SelectTool.RefreshSelection();
-        }
-
+        
         private void ConvertCoordinateSystemToolStripMenuItemClick(object sender, EventArgs e)
         {
             var network = ((ToolStripMenuItem) sender).Tag as INetwork;
