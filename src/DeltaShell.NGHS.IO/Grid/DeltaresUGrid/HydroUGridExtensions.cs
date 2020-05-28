@@ -27,7 +27,7 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
     public static class HydroUGridExtensions
     {
         private static ILog Log = LogManager.GetLogger(typeof(HydroUGridExtensions));
-        private const double EpsilonLocation = 1e-8;
+        private const double EpsilonLocation = 1e-5;
 
         #region Mesh2d
 
@@ -301,6 +301,20 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
                     indices[0] = locationIdLookup[firstLocation];
                 else
                 {
+                    //Log.Error($"Cannot find start edge node of section {segment.SegmentNumber} on branch {segment.Branch.Name} at chainage {segment.Chainage}");
+                    indices[0] = -1;
+                }
+            }
+
+            if (indices[0] == -1)
+            {
+                // no begin point found, search coordinates
+                var firstLocation = discretization.Locations.Values.FirstOrDefault(l =>l.Geometry.Coordinate.Equals2D(segment.Geometry.Coordinates.FirstOrDefault(), epsilonLocation));
+                
+                if (firstLocation != null)
+                    indices[0] = locationIdLookup[firstLocation];
+                else
+                {
                     Log.Error($"Cannot find start edge node of section {segment.SegmentNumber} on branch {segment.Branch.Name} at chainage {segment.Chainage}");
                     indices[0] = -1;
                 }
@@ -314,11 +328,23 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
                     indices[1] = locationIdLookup[firstLocation];
                 else
                 {
-                    Log.Error($"Cannot find end edge node of section {segment.SegmentNumber} on branch {segment.Branch.Name} at chainage {segment.EndChainage}");
+                    //Log.Error($"Cannot find end edge node of section {segment.SegmentNumber} on branch {segment.Branch.Name} at chainage {segment.EndChainage}");
                     indices[1] = -1;
                 }
             }
+            if (indices[1] == -1)
+            {
+                // no end point found, search coordinates
+                var firstLocation = discretization.Locations.Values.FirstOrDefault(l => l.Geometry.Coordinate.Equals2D(segment.Geometry.Coordinates.LastOrDefault(), epsilonLocation));
 
+                if (firstLocation != null)
+                    indices[1] = locationIdLookup[firstLocation];
+                else
+                {
+                    Log.Error($"Cannot find start edge node of section {segment.SegmentNumber} on branch {segment.Branch.Name} at chainage {segment.Chainage}");
+                    indices[1] = -1;
+                }
+            }
             return indices;
         }
 

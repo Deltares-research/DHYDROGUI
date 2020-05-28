@@ -159,7 +159,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
             finally
             {
                 importer = null; // make sure we keep no more references to the partial importers
-                if (Application != null && !Application.GetAllModelsInProject().Contains(targetObjectInternal))
+                if (Application != null && !Application.GetAllModelsInProject().Contains(targetObjectInternal) && target is HydroModel)
                 {
                     Application.Project.RootFolder.Items.Add((HydroModel)targetObjectInternal);
                 }
