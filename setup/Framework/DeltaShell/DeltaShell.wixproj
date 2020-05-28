@@ -19,12 +19,6 @@
     <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Library.wxs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="packages.config" />
-    <Content Include="Plugins\ToolboxPlugin.wxi" />
-    <Content Include="PythonScripts_FeatureContent.wxi" />
     <Content Include="DotNetFramework4Check.wxi" />
     <Content Include="GdalData.wxi" />
     <Content Include="GdalData_FeatureContent.wxi" />
@@ -33,6 +27,7 @@
     <Content Include="Manuals\Delta_Shell_User_Manual.pdf" />
     <Content Include="NetCdf.wxi" />
     <Content Include="OSVersionCheck.wxi" />
+    <Content Include="packages.config" />
     <Content Include="Plugins\CommonToolsGuiPlugin.wxi" />
     <Content Include="Plugins\CommonToolsPlugin.wxi" />
     <Content Include="Plugins\NetCDFPlugin.wxi" />
@@ -43,7 +38,9 @@
     <Content Include="Plugins\SharpMapGisGuiPlugin.wxi" />
     <Content Include="Plugins\SharpMapGisPlugin.wxi" />
     <Content Include="Plugins\ToolboxGuiPlugin.wxi" />
+    <Content Include="Plugins\ToolboxPlugin.wxi" />
     <Content Include="PythonLibraries_FeatureContent.wxi" />
+    <Content Include="PythonScripts_FeatureContent.wxi" />
     <Content Include="SharpMap.wxi" />
     <Content Include="Templates\ApplicationGUIDs.wxi" />
     <Content Include="Templates\GuiConfigXml.wxi" />
@@ -51,8 +48,11 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Manuals\" />
-    <Folder Include="Plugins" />
+    <Folder Include="Plugins\" />
     <Folder Include="Templates" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Library.wxs" />
   </ItemGroup>
   <Import Project="$(WixTargetsPath)" Condition=" '$(WixTargetsPath)' != '' " />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\WiX\v3.x\Wix.targets" Condition=" '$(WixTargetsPath)' == '' AND Exists('$(MSBuildExtensionsPath32)\Microsoft\WiX\v3.x\Wix.targets') " />

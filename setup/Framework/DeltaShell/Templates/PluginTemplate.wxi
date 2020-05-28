@@ -97,10 +97,14 @@
   <!--Include the guids that should be regenerated regularly-->
   <?include "ApplicationGUIDs.wxi"?>
   
+  <?ifdef excludeBuildNumberFromVersion ?>
+  <?define FullProductVersion="$(var.ReleaseVersion).0" ?>
+  <?else?>
   <?ifdef env.BUILD_NUMBER ?>
   <?define FullProductVersion="$(var.ReleaseVersion).$(env.BUILD_NUMBER)" ?>
   <?else?>
   <?define FullProductVersion="$(var.ReleaseVersion).0" ?>
+  <?endif?>
   <?endif?>
   
   <?define ShortProductVersion="$(var.ReleaseVersion)"?>
