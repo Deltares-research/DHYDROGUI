@@ -23,7 +23,7 @@
 
     <?define deltashell_scripting_DLLs_dir = "$(var.deltashell_output_folder)plugins\DeltaShell.Plugins.Scripting\DLLs\"?>
     <Directory Id="dir_dlls_0" Name="dlls">
-      <Component Id="comp_IronPythonDlls_0" KeyPath="yes" Guid="$(var.ScriptingPluginDllsFolerGuid)">
+      <Component Id="comp_IronPythonDlls_0" KeyPath="yes" Guid="$(var.ScriptingPluginDllsFolderGuid)">
         <File Id="file_IronPythonDlls_0" Source="$(var.deltashell_scripting_DLLs_dir)AddAsClrRef.txt" />
         <RemoveFolder Id="RemoveDLLsFolder" On="uninstall" />
       </Component>

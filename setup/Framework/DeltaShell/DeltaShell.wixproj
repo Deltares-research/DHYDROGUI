@@ -19,6 +19,11 @@
     <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
   </PropertyGroup>
   <ItemGroup>
+    <Folder Include="Manuals\" />
+    <Folder Include="Plugins\" />
+    <Folder Include="Templates" />
+  </ItemGroup>
+  <ItemGroup>
     <Content Include="DotNetFramework4Check.wxi" />
     <Content Include="GdalData.wxi" />
     <Content Include="GdalData_FeatureContent.wxi" />
@@ -45,11 +50,6 @@
     <Content Include="Templates\ApplicationGUIDs.wxi" />
     <Content Include="Templates\GuiConfigXml.wxi" />
     <Content Include="Templates\PluginTemplate.wxi" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Manuals\" />
-    <Folder Include="Plugins\" />
-    <Folder Include="Templates" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Library.wxs" />
