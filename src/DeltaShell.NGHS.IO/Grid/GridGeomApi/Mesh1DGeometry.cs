@@ -4,7 +4,6 @@ using DelftTools.Hydro.SewerFeatures;
 using Deltares.UGrid.Api;
 using DeltaShell.NGHS.IO.Helpers;
 using GeoAPI.Extensions.Coverages;
-using GeoAPI.Extensions.Feature;
 using ProtoBuf;
 
 namespace DeltaShell.NGHS.IO.Grid.GridGeomApi

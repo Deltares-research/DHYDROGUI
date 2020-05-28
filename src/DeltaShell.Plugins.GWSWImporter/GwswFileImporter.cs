@@ -601,7 +601,7 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
         private void AddDiscretisationPointsOfSewerConnections(IHydroNetwork network, IDiscretization networkDiscretization)
         {
             while (network.Branches.Select(ls => ls.Name).Distinct().Count() !=
-                   network.Branches.Select(ls => Name).Count())
+                   network.Branches.Count)
             {
                 NamingHelper.MakeNamesUnique(network.Branches);
             }
@@ -610,7 +610,6 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
             var nrOfImportedFeatureElements = networkSewerConnections.Length;
             var stepSize = nrOfImportedFeatureElements / 20;
             var listOfErrors = new List<string>();
-            var currentLocations = new HashSet<Coordinate>(networkDiscretization.Locations.Values.Select(l => l.Geometry?.Coordinate));
             var newLocations = new List<NetworkLocation>();
             var bubblingEnabled = EventSettings.BubblingEnabled;
             try
@@ -631,29 +630,10 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
                         }
 
                         var sourceLocation = new NetworkLocation(sewerConnection, 0.0);
-                        var locationGeometry = sourceLocation.Geometry;
-                        if (locationGeometry != null)
-                        {
-                            if (!currentLocations.Contains(locationGeometry.Coordinate))
-                            {
-                                newLocations.Add(sourceLocation);
-                                currentLocations.Add(locationGeometry.Coordinate);
-                            }
-                        }
+                        var targetLocation = new NetworkLocation(sewerConnection, sewerConnection.Length);
 
-                        if (sewerConnection?.Length > 0)
-                        {
-                            var targetLocation = new NetworkLocation(sewerConnection, sewerConnection.Length);
-                            locationGeometry = targetLocation.Geometry;
-                            if (locationGeometry != null)
-                            {
-                                if (!currentLocations.Contains(locationGeometry.Coordinate))
-                                {
-                                    newLocations.Add(targetLocation);
-                                    currentLocations.Add(locationGeometry.Coordinate);
-                                }
-                            }
-                        }
+                        newLocations.Add(sourceLocation);
+                        newLocations.Add(targetLocation);
                     }
                     catch (Exception exception)
                     {
@@ -662,6 +642,9 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
                 });
 
                 networkDiscretization.Locations.AddValues(newLocations);
+                networkDiscretization.Network = network;
+                networkDiscretization.RemoveLocations(networkDiscretization.GetDuplicatePointsOnManholes());
+
                 if (listOfErrors.Any())
                     Log.ErrorFormat(
                         $"While adding discretisation points to network discretisation we encountered the following errors: {Environment.NewLine}{string.Join(Environment.NewLine, listOfErrors)}");

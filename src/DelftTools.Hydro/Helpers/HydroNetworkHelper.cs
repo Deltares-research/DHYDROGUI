@@ -249,7 +249,7 @@ namespace DelftTools.Hydro.Helpers
             // force refresh of caching (location dictionary) -> new locations are added
             TypeUtils.SetField(discretization, "updateLocationsDictionary", true);
 
-            discretization.RemoveLocations(discretization.GetDuplicateLocations());
+            discretization.RemoveLocations(discretization.GetDuplicatePointsOnHydroNodes());
 
             // force refresh of caching (location dictionary) -> locations were removed
             TypeUtils.SetField(discretization, "updateLocationsDictionary", true);

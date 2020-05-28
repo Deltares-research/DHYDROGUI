@@ -3194,6 +3194,7 @@ test/DelftTools.Hydro.Tests/DataSets/FastXYZDataTableTest.cs -text
 test/DelftTools.Hydro.Tests/DataSets/FastYZDataTableTest.cs -text
 test/DelftTools.Hydro.Tests/DataSets/FastZWDataTableTest.cs -text
 test/DelftTools.Hydro.Tests/DelftTools.Hydro.Tests.csproj -text
+test/DelftTools.Hydro.Tests/DiscretizationExtensionsTest.cs -text
 test/DelftTools.Hydro.Tests/DrainageBasinTest.cs -text
 test/DelftTools.Hydro.Tests/Forms/NetworkCoverageFunctionViewTest.cs -text
 test/DelftTools.Hydro.Tests/GroupableFeatureComparerTest.cs -text
