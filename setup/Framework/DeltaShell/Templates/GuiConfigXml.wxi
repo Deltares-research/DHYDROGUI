@@ -1,5 +1,5 @@
 <Include xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
-
+  
   <util:XmlFile Id="SetKey2$(var.GUICONFIGFILE)"
     Action="setValue"
     ElementPath="/configuration/appSettings/add[\[]@key=&quot;applicationName&quot;[\]]/@value"

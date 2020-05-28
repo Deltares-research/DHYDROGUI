@@ -22,6 +22,7 @@
     <Compile Include="Library.wxs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="packages.config" />
     <Content Include="Plugins\ToolboxPlugin.wxi" />
     <Content Include="PythonScripts_FeatureContent.wxi" />
     <Content Include="DotNetFramework4Check.wxi" />
