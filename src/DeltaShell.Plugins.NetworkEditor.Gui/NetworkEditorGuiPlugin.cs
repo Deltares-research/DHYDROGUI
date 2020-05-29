@@ -7,7 +7,6 @@ using System.Reflection;
 using System.Windows.Forms;
 using DelftTools.Controls;
 using DelftTools.Controls.Swf;
-using DelftTools.Functions;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Structures;
