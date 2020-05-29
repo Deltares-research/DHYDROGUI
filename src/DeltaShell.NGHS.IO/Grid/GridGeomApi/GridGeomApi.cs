@@ -167,9 +167,9 @@ namespace DeltaShell.NGHS.IO.Grid.GridGeomApi
             var linkInformation = new LinkInformation();
 
             var linksCount = 0;
-            var intLinkType = (int)linkType;
-
-            if (DoWithApi(() => geomWrapper.GetLinkCount(ref linksCount, ref intLinkType)))
+            var linkTypeNumber = GetLinkTypeNumber(linkType);
+            
+            if (DoWithApi(() => geomWrapper.GetLinkCount(ref linksCount, ref linkTypeNumber)))
                 return linkInformation;
 
             var fromArrayHandle = GCHandle.Alloc(new int[linksCount], GCHandleType.Pinned);
@@ -178,7 +178,7 @@ namespace DeltaShell.NGHS.IO.Grid.GridGeomApi
             var fromPointer = fromArrayHandle.AddrOfPinnedObject();
             var toPointer = toArrayHandle.AddrOfPinnedObject();
 
-            if (DoWithApi(() => geomWrapper.Get1d2dLinks(ref fromPointer, ref toPointer, ref linksCount, ref intLinkType)))
+            if (DoWithApi(() => geomWrapper.Get1d2dLinks(ref fromPointer, ref toPointer, ref linksCount, ref linkTypeNumber)))
             {
                 return linkInformation;
             }
@@ -190,6 +190,21 @@ namespace DeltaShell.NGHS.IO.Grid.GridGeomApi
             toArrayHandle.Free();
 
             return linkInformation;
+        }
+
+        private int GetLinkTypeNumber(LinkType linkType)
+        {
+            switch (linkType)
+            {
+                case LinkType.EmbeddedOneToOne:
+                case LinkType.EmbeddedOneToMany:
+                case LinkType.Lateral:
+                    return 3;
+                case LinkType.GullySewer:
+                    return 5;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(linkType), linkType, null);
+            }
         }
 
         private static int[] CreateValueArray(IntPtr pointer, int size)

@@ -5,15 +5,15 @@ namespace DelftTools.Hydro
     public enum LinkType
     {
         [Description("1D2D embedded (1-to-1)")]
-        EmbeddedOneToOne = 3,
+        EmbeddedOneToOne,
 
         [Description("1D2D embedded (1-to-n)")]
-        EmbeddedOneToMany = -1,
+        EmbeddedOneToMany,
 
         [Description("1D2D lateral")]
-        Lateral = -2,
+        Lateral,
 
         [Description("Gully sewer")]
-        GullySewer = 5
+        GullySewer
     }
 }
