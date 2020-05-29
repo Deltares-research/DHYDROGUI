@@ -629,11 +629,13 @@ namespace DeltaShell.Plugins.ImportExport.Gwsw
                             EventSettings.BubblingEnabled = false;
                         }
 
-                        var sourceLocation = new NetworkLocation(sewerConnection, 0.0);
-                        var targetLocation = new NetworkLocation(sewerConnection, sewerConnection.Length);
+                        // add location for begin and end of the sewer connection
+                        newLocations.Add(new NetworkLocation(sewerConnection, 0.0));
 
-                        newLocations.Add(sourceLocation);
-                        newLocations.Add(targetLocation);
+                        if (sewerConnection.Length > 0)
+                        {
+                            newLocations.Add(new NetworkLocation(sewerConnection, sewerConnection.Length));
+                        }
                     }
                     catch (Exception exception)
                     {

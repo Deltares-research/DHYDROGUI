@@ -78,9 +78,9 @@ namespace DelftTools.Hydro.Tests
 
             // Assert
             Assert.AreEqual(3, duplicates.Count);
-            Assert.AreEqual(new NetworkLocation(), duplicates[0]);
-            Assert.AreEqual(new NetworkLocation(), duplicates[0]);
-            Assert.AreEqual(new NetworkLocation(), duplicates[0]);
+            Assert.AreEqual(new NetworkLocation(connection2, 0), duplicates[0]);
+            Assert.AreEqual(new NetworkLocation(connection3, 0), duplicates[1]);
+            Assert.AreEqual(new NetworkLocation(connection4, 0), duplicates[2]);
         }
     }
 }
