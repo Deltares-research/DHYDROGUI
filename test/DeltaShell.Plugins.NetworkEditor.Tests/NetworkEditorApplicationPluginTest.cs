@@ -25,7 +25,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
             Assert.That(applicationPlugin.Description,
                         Is.EqualTo(Resources.NetworkEditorApplicationPlugin_Description));
             Assert.That(applicationPlugin.Version,
-                        Is.EqualTo(applicationPlugin.GetType().Assembly.GetName().Version.ToString()));
+                        Is.EqualTo(AssemblyUtils.GetAssemblyInfo(applicationPlugin.GetType().Assembly).Version));
             Assert.IsTrue(new Regex(@"\d.\d.\d.\d").IsMatch(applicationPlugin.FileFormatVersion));
             IEnumerable<Assembly> persistentAssemblies = applicationPlugin.GetPersistentAssemblies();
             List<Assembly> assemblies = persistentAssemblies.ToList();
