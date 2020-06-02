@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Globalization;
+﻿using System.Globalization;
 using System.Linq;
 using System.Xml.Linq;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
@@ -13,8 +12,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport.Expo
     [TestFixture]
     public class StandardConditionSerializerTest
     {
-        private static readonly XNamespace fns = "http://www.wldelft.nl/fews";
-
         private const string @implicit = StandardCondition.ReferenceType.Implicit;
         private const string name = "Trigger31";
         private const string inputName = "AlarmREGEN";
@@ -22,6 +19,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport.Expo
         private const double value = 1.5;
         private const string trueReference = "REGEN-ORANGE";
         private const string falseReference = "REGEN-ROT";
+        private static readonly XNamespace fns = "http://www.wldelft.nl/fews";
 
         private PIDRule trueRule;
         private PIDRule falseRule;
@@ -85,7 +83,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport.Expo
                     new Input
                     {
                         ParameterName = inputParameterName,
-                        Feature = new RtcTestFeature { Name = inputName }
+                        Feature = new RtcTestFeature {Name = inputName}
                     },
                 Value = value
             };
@@ -99,7 +97,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport.Expo
                     new Input
                     {
                         ParameterName = inputParameterName,
-                        Feature = new RtcTestFeature { Name = inputName }
+                        Feature = new RtcTestFeature {Name = inputName}
                     },
                 Value = value
             };
@@ -128,7 +126,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport.Expo
             var inputExpression = new Input
             {
                 ParameterName = "WaterLevel2",
-                Feature = new RtcTestFeature { Name = "ObservationPoint2" }
+                Feature = new RtcTestFeature {Name = "ObservationPoint2"}
             };
             expression.Inputs.Add(inputExpression);
             expression.Expression = "A+1+2";
@@ -138,7 +136,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport.Expo
             var inputExpression2 = new Input
             {
                 ParameterName = "WaterLevel3",
-                Feature = new RtcTestFeature { Name = "ObservationPoint3" }
+                Feature = new RtcTestFeature {Name = "ObservationPoint3"}
             };
             expression2.Inputs.Add(inputExpression2);
             expression2.Expression = "A+1+2";
@@ -148,60 +146,59 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport.Expo
             condition.FalseOutputs.Add(expression2);
 
             var serializer = new StandardConditionSerializer(condition);
-            string retrievedXml = serializer.ToXml(fns, "Group1/").Single().ToString(SaveOptions.DisableFormatting);
+            var retrievedXml = serializer.ToXml(fns, "Group1/").Single().ToString(SaveOptions.DisableFormatting);
 
-            var expectedXml =
+            string expectedXml =
                 "<trigger xmlns=\"http://www.wldelft.nl/fews\">" +
-                    "<standard id=\"[StandardCondition]Group1/Standard Condition\">" +
-                        "<condition>" +
-                            "<x1Series ref=\"EXPLICIT\">[Input]ObservationPoint1/WaterLevel1</x1Series>" +
-                            "<relationalOperator>Equal</relationalOperator>" +
-                            "<x2Value>0</x2Value>" +
-                        "</condition>" +
-                        "<true>" +
-                            "<trigger>" +
-                                "<expression id=\"Group1/expression\">" +
-                                    "<x1Series ref=\"IMPLICIT\">expression/([Input]ObservationPoint2/WaterLevel2 + 1)</x1Series>" +
-                                    "<mathematicalOperator>+</mathematicalOperator>" +
-                                    "<x2Value>2</x2Value>" +
-                                    "<y>expression</y>" +
-                                "</expression>" +
-                            "</trigger>" +
-                            "<trigger>" +
-                                "<expression id=\"Group1/expression/([Input]ObservationPoint2/WaterLevel2 + 1)\">" +
-                                    "<x1Series ref=\"IMPLICIT\">[Input]ObservationPoint2/WaterLevel2</x1Series>" +
-                                    "<mathematicalOperator>+</mathematicalOperator>" +
-                                    "<x2Value>1</x2Value>" +
-                                    "<y>expression/([Input]ObservationPoint2/WaterLevel2 + 1)</y>" +
-                                "</expression>" +
-                            "</trigger>" +
-                        "</true>" +
-                        "<false>" +
-                            "<trigger>" +
-                                "<expression id=\"Group1/expression2\">" +
-                                    "<x1Series ref=\"IMPLICIT\">expression2/([Input]ObservationPoint3/WaterLevel3 + 1)</x1Series>" +
-                                    "<mathematicalOperator>+</mathematicalOperator>" +
-                                    "<x2Value>2</x2Value>" +
-                                    "<y>expression2</y>" +
-                                "</expression>" +
-                            "</trigger>" +
-                            "<trigger>" +
-                                "<expression id=\"Group1/expression2/([Input]ObservationPoint3/WaterLevel3 + 1)\">" +
-                                    "<x1Series ref=\"IMPLICIT\">[Input]ObservationPoint3/WaterLevel3</x1Series>" +
-                                    "<mathematicalOperator>+</mathematicalOperator>" +
-                                    "<x2Value>1</x2Value>" +
-                                    "<y>expression2/([Input]ObservationPoint3/WaterLevel3 + 1)</y>" +
-                                "</expression>" +
-                            "</trigger>" +
-                        "</false>" +
-                        "<output>" +
-                            "<status>[Status]Group1/Standard Condition" + "</status>" +
-                        "</output>" +
-                    "</standard>" +
+                "<standard id=\"[StandardCondition]Group1/Standard Condition\">" +
+                "<condition>" +
+                "<x1Series ref=\"EXPLICIT\">[Input]ObservationPoint1/WaterLevel1</x1Series>" +
+                "<relationalOperator>Equal</relationalOperator>" +
+                "<x2Value>0</x2Value>" +
+                "</condition>" +
+                "<true>" +
+                "<trigger>" +
+                "<expression id=\"Group1/expression\">" +
+                "<x1Series ref=\"IMPLICIT\">expression/([Input]ObservationPoint2/WaterLevel2 + 1)</x1Series>" +
+                "<mathematicalOperator>+</mathematicalOperator>" +
+                "<x2Value>2</x2Value>" +
+                "<y>expression</y>" +
+                "</expression>" +
+                "</trigger>" +
+                "<trigger>" +
+                "<expression id=\"Group1/expression/([Input]ObservationPoint2/WaterLevel2 + 1)\">" +
+                "<x1Series ref=\"IMPLICIT\">[Input]ObservationPoint2/WaterLevel2</x1Series>" +
+                "<mathematicalOperator>+</mathematicalOperator>" +
+                "<x2Value>1</x2Value>" +
+                "<y>expression/([Input]ObservationPoint2/WaterLevel2 + 1)</y>" +
+                "</expression>" +
+                "</trigger>" +
+                "</true>" +
+                "<false>" +
+                "<trigger>" +
+                "<expression id=\"Group1/expression2\">" +
+                "<x1Series ref=\"IMPLICIT\">expression2/([Input]ObservationPoint3/WaterLevel3 + 1)</x1Series>" +
+                "<mathematicalOperator>+</mathematicalOperator>" +
+                "<x2Value>2</x2Value>" +
+                "<y>expression2</y>" +
+                "</expression>" +
+                "</trigger>" +
+                "<trigger>" +
+                "<expression id=\"Group1/expression2/([Input]ObservationPoint3/WaterLevel3 + 1)\">" +
+                "<x1Series ref=\"IMPLICIT\">[Input]ObservationPoint3/WaterLevel3</x1Series>" +
+                "<mathematicalOperator>+</mathematicalOperator>" +
+                "<x2Value>1</x2Value>" +
+                "<y>expression2/([Input]ObservationPoint3/WaterLevel3 + 1)</y>" +
+                "</expression>" +
+                "</trigger>" +
+                "</false>" +
+                "<output>" +
+                "<status>[Status]Group1/Standard Condition" + "</status>" +
+                "</output>" +
+                "</standard>" +
                 "</trigger>";
 
-                Assert.AreEqual(expectedXml, retrievedXml);
-
+            Assert.AreEqual(expectedXml, retrievedXml);
         }
 
         private string OriginXml()

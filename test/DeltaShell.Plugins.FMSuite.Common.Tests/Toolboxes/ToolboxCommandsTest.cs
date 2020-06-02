@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using DelftTools.TestUtils;
 using DeltaShell.Plugins.FMSuite.Common.Toolboxes;
@@ -12,8 +13,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.Toolboxes
         [Test]
         public void LoadScriptsFromDisk()
         {
-            var toolboxDirectory = Path.Combine(TestHelper.GetTestDataDirectory(), "toolboxes");
-            var commands = ToolboxCommands.LoadFrom(toolboxDirectory).OrderBy(c => c.Title).ToList();
+            string toolboxDirectory = Path.Combine(TestHelper.GetTestDataDirectory(), "toolboxes");
+            List<ScriptCommand> commands = ToolboxCommands.LoadFrom(toolboxDirectory).OrderBy(c => c.Title).ToList();
 
             Assert.AreEqual(2, commands.Count);
 

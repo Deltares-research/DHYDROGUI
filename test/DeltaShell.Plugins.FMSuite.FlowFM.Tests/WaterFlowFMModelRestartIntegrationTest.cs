@@ -27,7 +27,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Test]
         public void WriteRestart()
         {
-            using (var model = LoadBendProfModelWithWriteRestart())
+            using (WaterFlowFMModel model = LoadBendProfModelWithWriteRestart())
             {
                 ActivityRunner.RunActivity(model);
 
@@ -51,9 +51,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 var path = "restart.dsproj";
                 app.SaveProjectAs(path); // save to initialize file repository..
 
-                using (var model = LoadBendProfModelWithWriteRestart())
+                using (WaterFlowFMModel model = LoadBendProfModelWithWriteRestart())
                 {
-
                     app.Project.RootFolder.Add(model);
 
                     model.SaveStateStartTime = model.StartTime;
@@ -63,8 +62,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                     ActivityRunner.RunActivity(model);
                     model.RestartInput = (FileBasedRestartState) model.GetRestartOutputStates().First().Clone();
 
-                    var countBefore = model.GetRestartOutputStates().Count();
-                    var nameBefore = model.GetRestartOutputStates().First().Name;
+                    int countBefore = model.GetRestartOutputStates().Count();
+                    string nameBefore = model.GetRestartOutputStates().First().Name;
 
                     var newPath = "/new/restartNew.dsproj";
 
@@ -97,9 +96,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 var path = "restart.dsproj";
                 app.SaveProjectAs(path); // save to initialize file repository..
 
-                using (var model = LoadBendProfModelWithWriteRestart())
+                using (WaterFlowFMModel model = LoadBendProfModelWithWriteRestart())
                 {
-
                     app.Project.RootFolder.Add(model);
 
                     model.SaveStateStartTime = model.StartTime;
@@ -125,7 +123,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Test]
         public void LoadModelWithRestartOptionsSetCheckThem()
         {
-            var mduPath = TestHelper.GetTestFilePath(@"restart\bendprof.mdu");
+            string mduPath = TestHelper.GetTestFilePath(@"restart\bendprof.mdu");
             var model = new WaterFlowFMModel(TestHelper.CreateLocalCopy(mduPath));
 
             Assert.AreEqual(true, model.WriteRestart);
@@ -142,7 +140,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Test]
         public void WriteRestartMultipleTimes()
         {
-            var model = LoadBendProfModelWithWriteRestart();
+            WaterFlowFMModel model = LoadBendProfModelWithWriteRestart();
             model.StopTime = model.StartTime.AddMinutes(15);
 
             model.SaveStateStartTime = model.StartTime;
@@ -161,7 +159,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var restartFilePath = "input\\bendprof_19920831_000200_rst.nc";
             FileUtils.DeleteIfExists("input");
 
-            var model = LoadBendProfModelWithWriteRestart();
+            WaterFlowFMModel model = LoadBendProfModelWithWriteRestart();
 
             try
             {
@@ -174,13 +172,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 model.Initialize();
 
                 restartFilePath = Path.Combine(model.DimrExportDirectoryPath, model.DirectoryName,
-                    Path.GetFileName(restartFilePath));
+                                               Path.GetFileName(restartFilePath));
 
                 Assert.AreEqual(ActivityStatus.Initialized, model.Status);
                 Assert.IsTrue(File.Exists(restartFilePath), "restart file exists");
                 Assert.AreEqual(Path.GetFileName(restartFilePath),
-                    model.ModelDefinition.GetModelProperty(KnownProperties.RestartFile).GetValueAsString(),
-                    "model definition is adjusted");
+                                model.ModelDefinition.GetModelProperty(KnownProperties.RestartFile).GetValueAsString(),
+                                "model definition is adjusted");
             }
             finally
             {
@@ -196,7 +194,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             FileUtils.DeleteIfExists("input");
             FileUtils.DeleteIfExists("restartmodel");
 
-            var model = LoadBendProfModelWithWriteRestart();
+            WaterFlowFMModel model = LoadBendProfModelWithWriteRestart();
 
             try
             {
@@ -212,13 +210,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 Directory.CreateDirectory("restartmodel");
                 exporter.Export(model, "restartmodel/bendprof.mdu");
 
-                var temp = FileUtils.CreateTempDirectory();
+                string temp = FileUtils.CreateTempDirectory();
                 var importer = new WaterFlowFMFileImporter(delegate() { return temp; });
                 var importedModel = (WaterFlowFMModel) importer.ImportItem("restartmodel/bendprof.mdu");
 
                 Assert.IsTrue(importedModel.UseRestart);
                 Assert.AreEqual(Path.GetFileName(importedModel.RestartInput.Path),
-                    "state_bendprof_1992-08-31_00-02-00.zip");
+                                "state_bendprof_1992-08-31_00-02-00.zip");
             }
             finally
             {
@@ -231,83 +229,91 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         public void CompareFullRunWithRestartedRun()
         {
             var measureLocation = new Coordinate(100, 100);
-            using (var model = LoadBendProfModelWithWriteRestart())
+            using (WaterFlowFMModel model = LoadBendProfModelWithWriteRestart())
             {
-
                 // first half:
                 model.StopTime = model.StartTime.AddMinutes(2); //6 sec timestep
-                ActivityRunner.RunActivity(model); //generates an output state
+                ActivityRunner.RunActivity(model);              //generates an output state
                 Assert.AreEqual(ActivityStatus.Cleaned, model.Status);
-                var waterLevelResultsFirstHalf = GetWaterLevelValuesAtPoint(model, measureLocation);
+                IList<double> waterLevelResultsFirstHalf = GetWaterLevelValuesAtPoint(model, measureLocation);
                 var restartHalfway = (FileBasedRestartState) model.GetRestartOutputStates().Last().Clone();
 
                 // full run:
                 model.WriteRestart = false;
                 model.StopTime = model.StartTime.AddMinutes(4); //6 sec timestep
-                ActivityRunner.RunActivity(model); //generates an output state
+                ActivityRunner.RunActivity(model);              //generates an output state
                 Assert.AreEqual(ActivityStatus.Cleaned, model.Status);
-                var fullRunTimes = model.OutputWaterLevel.Time.Values.ToList();
-                var waterLevelResultsFullRun = GetWaterLevelValuesAtPoint(model, measureLocation);
+                List<DateTime> fullRunTimes = model.OutputWaterLevel.Time.Values.ToList();
+                IList<double> waterLevelResultsFullRun = GetWaterLevelValuesAtPoint(model, measureLocation);
 
                 // restarted run (from halfway):
                 model.RestartInput = restartHalfway;
                 model.UseRestart = true;
                 model.StartTime = model.StartTime.AddMinutes(2);
                 model.StopTime = model.StartTime.AddMinutes(2); //6 sec timestep
-                ActivityRunner.RunActivity(model); //generates an output state
+                ActivityRunner.RunActivity(model);              //generates an output state
                 Assert.AreEqual(ActivityStatus.Cleaned, model.Status);
-                var waterLevelResultsSecondHalf =
+                IList<double> waterLevelResultsSecondHalf =
                     GetWaterLevelValuesAtPoint(model,
-                        measureLocation); //first time step overlaps with last timestep of first run
+                                               measureLocation); //first time step overlaps with last timestep of first run
 
                 // log to console:
                 const string format = "{0,-25}{1,-20}{2,-20}{3,-20}{4,-20}";
-                var indexOf2ndRun = waterLevelResultsFirstHalf.Count - 1;
-                for (int i = 0; i < fullRunTimes.Count; i++)
+                int indexOf2ndRun = waterLevelResultsFirstHalf.Count - 1;
+                for (var i = 0; i < fullRunTimes.Count; i++)
                 {
                     if (i == 0)
+                    {
                         Console.WriteLine(Environment.NewLine + format + Environment.NewLine, "(t)", "Full", "First",
-                            "Second", "Diff");
+                                          "Second", "Diff");
+                    }
 
-                    var currentTime = fullRunTimes[i];
-                    var fullRunLevel = waterLevelResultsFullRun[i];
-                    var firstHalfLevel = i <= indexOf2ndRun ? waterLevelResultsFirstHalf[i].ToString() : "";
-                    var secondHalfLevel = i >= indexOf2ndRun
-                        ? waterLevelResultsSecondHalf[i - indexOf2ndRun].ToString()
-                        : "";
+                    DateTime currentTime = fullRunTimes[i];
+                    double fullRunLevel = waterLevelResultsFullRun[i];
+                    string firstHalfLevel = i <= indexOf2ndRun ? waterLevelResultsFirstHalf[i].ToString() : "";
+                    string secondHalfLevel = i >= indexOf2ndRun
+                                                 ? waterLevelResultsSecondHalf[i - indexOf2ndRun].ToString()
+                                                 : "";
 
-                    var diff = waterLevelResultsFullRun[i] - (i >= indexOf2ndRun
-                                   ? waterLevelResultsSecondHalf[i - indexOf2ndRun]
-                                   : waterLevelResultsFirstHalf[i]);
+                    double diff = waterLevelResultsFullRun[i] - (i >= indexOf2ndRun
+                                                                     ? waterLevelResultsSecondHalf[i - indexOf2ndRun]
+                                                                     : waterLevelResultsFirstHalf[i]);
 
                     Console.WriteLine(format, currentTime.ToString(), fullRunLevel, firstHalfLevel, secondHalfLevel,
-                        diff);
+                                      diff);
                 }
 
-                var combinedRunResults =
+                List<double> combinedRunResults =
                     waterLevelResultsFirstHalf.Concat(waterLevelResultsSecondHalf.Skip(1)).ToList();
 
                 // asserts:
                 Assert.AreEqual(waterLevelResultsFullRun.Count, combinedRunResults.Count);
-                for (int i = 0; i < waterLevelResultsFullRun.Count; i++)
+                for (var i = 0; i < waterLevelResultsFullRun.Count; i++)
+                {
                     Assert.AreEqual(waterLevelResultsFullRun[i], combinedRunResults[i], 0.05, "index:" + i); //5cm..
+                }
             }
         }
 
         private static IList<double> GetWaterLevelValuesAtPoint(WaterFlowFMModel model, Coordinate measureLocation)
         {
             var result = new List<double>();
-            if (model == null || model.OutputWaterLevel == null || model.OutputWaterLevel.Time == null) return result;
-            
-            foreach (var time in model.OutputWaterLevel.Time.Values)
+            if (model == null || model.OutputWaterLevel == null || model.OutputWaterLevel.Time == null)
+            {
+                return result;
+            }
+
+            foreach (DateTime time in model.OutputWaterLevel.Time.Values)
+            {
                 result.Add((double) model.OutputWaterLevel.Evaluate(measureLocation, time));
+            }
 
             return result;
         }
 
         private static WaterFlowFMModel LoadBendProfModelWithWriteRestart()
         {
-            var mduPath = TestHelper.GetTestFilePath(@"data\f04_bottomfriction\c016_2DConveyance_bend\input\bendprof.mdu");
+            string mduPath = TestHelper.GetTestFilePath(@"data\f04_bottomfriction\c016_2DConveyance_bend\input\bendprof.mdu");
             mduPath = TestHelper.CreateLocalCopy(mduPath);
             var model = new WaterFlowFMModel(mduPath);
 

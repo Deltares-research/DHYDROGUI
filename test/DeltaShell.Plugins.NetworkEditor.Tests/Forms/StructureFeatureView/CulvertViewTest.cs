@@ -17,7 +17,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
             WpfTestHelper.ShowModal(view);
         }
 
-
         [Test]
         [Category(TestCategory.WindowsForms)]
         public void ShowCulvertViewWpf()
@@ -41,124 +40,129 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
 
             var culvertViewWpf = new CulvertViewWpf();
             culvertViewWpf.Data = culvert;
-            var model = (CulvertViewWpfViewModel)culvertViewWpf.DataContext;
+            var model = (CulvertViewWpfViewModel) culvertViewWpf.DataContext;
 
-            #region  Roughness
-                Assert.That(culvert.FrictionType, Is.EqualTo(model.SelectedCulvertFrictionType));
-                culvert.FrictionType = CulvertFrictionType.Chezy;
-                Assert.That(culvert.FrictionType, Is.EqualTo(model.SelectedCulvertFrictionType));
-            
-                culvert.Friction = 2.0;
-                Assert.That(culvert.Friction, Is.EqualTo(model.FrictionValue));
-                culvert.Friction = 1.0;
-                Assert.That(culvert.Friction, Is.EqualTo(model.FrictionValue));
+            #region Roughness
 
-                culvert.GroundLayerEnabled = true;
-                Assert.That(culvert.GroundLayerEnabled, Is.EqualTo(model.IsGroundLayer));
-                culvert.GroundLayerEnabled = false;
-                Assert.That(culvert.GroundLayerEnabled, Is.EqualTo(model.IsGroundLayer));
-            
-                culvert.GroundLayerRoughness = 2.0;
-                Assert.That(culvert.GroundLayerRoughness, Is.EqualTo(model.GroundLayerRoughness));
-                culvert.GroundLayerRoughness = 1.0;
-                Assert.That(culvert.GroundLayerRoughness, Is.EqualTo(model.GroundLayerRoughness));
+            Assert.That(culvert.FrictionType, Is.EqualTo(model.SelectedCulvertFrictionType));
+            culvert.FrictionType = CulvertFrictionType.Chezy;
+            Assert.That(culvert.FrictionType, Is.EqualTo(model.SelectedCulvertFrictionType));
 
-                culvert.GroundLayerThickness = 2.0;
-                Assert.That(culvert.GroundLayerThickness, Is.EqualTo(model.GroundLayerThickness));
-                culvert.GroundLayerThickness = 1.0;
-                Assert.That(culvert.GroundLayerThickness, Is.EqualTo(model.GroundLayerThickness));
+            culvert.Friction = 2.0;
+            Assert.That(culvert.Friction, Is.EqualTo(model.FrictionValue));
+            culvert.Friction = 1.0;
+            Assert.That(culvert.Friction, Is.EqualTo(model.FrictionValue));
+
+            culvert.GroundLayerEnabled = true;
+            Assert.That(culvert.GroundLayerEnabled, Is.EqualTo(model.IsGroundLayer));
+            culvert.GroundLayerEnabled = false;
+            Assert.That(culvert.GroundLayerEnabled, Is.EqualTo(model.IsGroundLayer));
+
+            culvert.GroundLayerRoughness = 2.0;
+            Assert.That(culvert.GroundLayerRoughness, Is.EqualTo(model.GroundLayerRoughness));
+            culvert.GroundLayerRoughness = 1.0;
+            Assert.That(culvert.GroundLayerRoughness, Is.EqualTo(model.GroundLayerRoughness));
+
+            culvert.GroundLayerThickness = 2.0;
+            Assert.That(culvert.GroundLayerThickness, Is.EqualTo(model.GroundLayerThickness));
+            culvert.GroundLayerThickness = 1.0;
+            Assert.That(culvert.GroundLayerThickness, Is.EqualTo(model.GroundLayerThickness));
+
             #endregion
-            
+
             #region structure culvert
-                Assert.That(culvert.CulvertType, Is.EqualTo(model.SelectedCulvertStructureType));
-                culvert.CulvertType = CulvertType.Siphon;
-                Assert.That(culvert.CulvertType, Is.EqualTo(model.SelectedCulvertStructureType));
 
-                culvert.CulvertLength = 2.0;
-                Assert.That(culvert.CulvertLength, Is.EqualTo(model.CulvertLength));
-                culvert.CulvertLength = 1.0;
-                Assert.That(culvert.CulvertLength, Is.EqualTo(model.CulvertLength));
+            Assert.That(culvert.CulvertType, Is.EqualTo(model.SelectedCulvertStructureType));
+            culvert.CulvertType = CulvertType.Siphon;
+            Assert.That(culvert.CulvertType, Is.EqualTo(model.SelectedCulvertStructureType));
 
-                culvert.OffsetY = 2.0;
-                Assert.That(culvert.OffsetY, Is.EqualTo(model.CulvertOffsetY));
-                culvert.OffsetY = 1.0;
-                Assert.That(culvert.OffsetY, Is.EqualTo(model.CulvertOffsetY));
+            culvert.CulvertLength = 2.0;
+            Assert.That(culvert.CulvertLength, Is.EqualTo(model.CulvertLength));
+            culvert.CulvertLength = 1.0;
+            Assert.That(culvert.CulvertLength, Is.EqualTo(model.CulvertLength));
 
-                culvert.InletLevel = 2.0;
-                Assert.That(culvert.InletLevel, Is.EqualTo(model.InletLevel));
-                culvert.InletLevel = 1.0;
-                Assert.That(culvert.InletLevel, Is.EqualTo(model.InletLevel));
+            culvert.OffsetY = 2.0;
+            Assert.That(culvert.OffsetY, Is.EqualTo(model.CulvertOffsetY));
+            culvert.OffsetY = 1.0;
+            Assert.That(culvert.OffsetY, Is.EqualTo(model.CulvertOffsetY));
 
-                culvert.OutletLevel = 2.0;
-                Assert.That(culvert.OutletLevel, Is.EqualTo(model.OutletLevel));
-                culvert.OutletLevel = 1.0;
-                Assert.That(culvert.OutletLevel, Is.EqualTo(model.OutletLevel));
+            culvert.InletLevel = 2.0;
+            Assert.That(culvert.InletLevel, Is.EqualTo(model.InletLevel));
+            culvert.InletLevel = 1.0;
+            Assert.That(culvert.InletLevel, Is.EqualTo(model.InletLevel));
 
-                culvert.InletLossCoefficient = 2.0;
-                Assert.That(culvert.InletLossCoefficient, Is.EqualTo(model.InletLossCoeff));
-                culvert.InletLossCoefficient = 1.0;
-                Assert.That(culvert.InletLossCoefficient, Is.EqualTo(model.InletLossCoeff));
+            culvert.OutletLevel = 2.0;
+            Assert.That(culvert.OutletLevel, Is.EqualTo(model.OutletLevel));
+            culvert.OutletLevel = 1.0;
+            Assert.That(culvert.OutletLevel, Is.EqualTo(model.OutletLevel));
 
-                culvert.OutletLossCoefficient = 2.0;
-                Assert.That(culvert.OutletLossCoefficient, Is.EqualTo(model.OutletLossCoeff));
-                culvert.OutletLossCoefficient = 1.0;
-                Assert.That(culvert.OutletLossCoefficient, Is.EqualTo(model.OutletLossCoeff));
-            
-                //CulverType = Siphon
-                Assert.That(model.BendLossCoeffVisibility, Is.True);
-                culvert.CulvertType = CulvertType.Culvert;
-                Assert.That(model.BendLossCoeffVisibility, Is.False);
+            culvert.InletLossCoefficient = 2.0;
+            Assert.That(culvert.InletLossCoefficient, Is.EqualTo(model.InletLossCoeff));
+            culvert.InletLossCoefficient = 1.0;
+            Assert.That(culvert.InletLossCoefficient, Is.EqualTo(model.InletLossCoeff));
 
-                culvert.SiphonOnLevel = 2.0;
-                Assert.That(culvert.SiphonOnLevel, Is.EqualTo(model.SiphonOnLevel));
-                culvert.SiphonOnLevel = 1.0;
-                Assert.That(culvert.SiphonOnLevel, Is.EqualTo(model.SiphonOnLevel));
+            culvert.OutletLossCoefficient = 2.0;
+            Assert.That(culvert.OutletLossCoefficient, Is.EqualTo(model.OutletLossCoeff));
+            culvert.OutletLossCoefficient = 1.0;
+            Assert.That(culvert.OutletLossCoefficient, Is.EqualTo(model.OutletLossCoeff));
 
-                culvert.SiphonOffLevel = 2.0;
-                Assert.That(culvert.SiphonOffLevel, Is.EqualTo(model.SiphonOffLevel));
-                culvert.SiphonOffLevel = 1.0;
-                Assert.That(culvert.SiphonOffLevel, Is.EqualTo(model.SiphonOffLevel));
+            //CulverType = Siphon
+            Assert.That(model.BendLossCoeffVisibility, Is.True);
+            culvert.CulvertType = CulvertType.Culvert;
+            Assert.That(model.BendLossCoeffVisibility, Is.False);
 
-                culvert.FlowDirection = FlowDirection.None;
-                Assert.That(model.FlowIsPositive, Is.False);
-                Assert.That(model.FlowIsNegative, Is.False);
+            culvert.SiphonOnLevel = 2.0;
+            Assert.That(culvert.SiphonOnLevel, Is.EqualTo(model.SiphonOnLevel));
+            culvert.SiphonOnLevel = 1.0;
+            Assert.That(culvert.SiphonOnLevel, Is.EqualTo(model.SiphonOnLevel));
 
-                culvert.FlowDirection = FlowDirection.Positive;
-                Assert.That(model.FlowIsPositive, Is.True);
-                Assert.That(model.FlowIsNegative, Is.False);
+            culvert.SiphonOffLevel = 2.0;
+            Assert.That(culvert.SiphonOffLevel, Is.EqualTo(model.SiphonOffLevel));
+            culvert.SiphonOffLevel = 1.0;
+            Assert.That(culvert.SiphonOffLevel, Is.EqualTo(model.SiphonOffLevel));
 
-                culvert.FlowDirection = FlowDirection.None;
-                culvert.FlowDirection = FlowDirection.Negative;
-                Assert.That(model.FlowIsPositive, Is.False);
-                Assert.That(model.FlowIsNegative, Is.True);
+            culvert.FlowDirection = FlowDirection.None;
+            Assert.That(model.FlowIsPositive, Is.False);
+            Assert.That(model.FlowIsNegative, Is.False);
 
-                culvert.FlowDirection = FlowDirection.Both;
-                Assert.That(model.FlowIsPositive, Is.True);
-                Assert.That(model.FlowIsNegative, Is.True);
+            culvert.FlowDirection = FlowDirection.Positive;
+            Assert.That(model.FlowIsPositive, Is.True);
+            Assert.That(model.FlowIsNegative, Is.False);
 
-                
-                Assert.That(model.NegativeFlowDirectionFlowVisibility, Is.True);
-                culvert.CulvertType = CulvertType.Siphon;
-                Assert.That(model.NegativeFlowDirectionFlowVisibility, Is.False);
+            culvert.FlowDirection = FlowDirection.None;
+            culvert.FlowDirection = FlowDirection.Negative;
+            Assert.That(model.FlowIsPositive, Is.False);
+            Assert.That(model.FlowIsNegative, Is.True);
 
-                culvert.IsGated = false;
-                Assert.That(culvert.IsGated, Is.EqualTo(model.IsGated));
-                culvert.IsGated = true;
-                Assert.That(culvert.IsGated, Is.EqualTo(model.IsGated));
+            culvert.FlowDirection = FlowDirection.Both;
+            Assert.That(model.FlowIsPositive, Is.True);
+            Assert.That(model.FlowIsNegative, Is.True);
 
-                culvert.GateInitialOpening = 2.0;
-                Assert.That(culvert.GateInitialOpening, Is.EqualTo(model.GateInitialGateOpening));
-                culvert.GateInitialOpening = 1.0;
-                Assert.That(culvert.GateInitialOpening, Is.EqualTo(model.GateInitialGateOpening));
+            Assert.That(model.NegativeFlowDirectionFlowVisibility, Is.True);
+            culvert.CulvertType = CulvertType.Siphon;
+            Assert.That(model.NegativeFlowDirectionFlowVisibility, Is.False);
 
-                Assert.That(culvert.GateLowerEdgeLevel, Is.EqualTo(model.GateLowEdgeLevel));
+            culvert.IsGated = false;
+            Assert.That(culvert.IsGated, Is.EqualTo(model.IsGated));
+            culvert.IsGated = true;
+            Assert.That(culvert.IsGated, Is.EqualTo(model.IsGated));
+
+            culvert.GateInitialOpening = 2.0;
+            Assert.That(culvert.GateInitialOpening, Is.EqualTo(model.GateInitialGateOpening));
+            culvert.GateInitialOpening = 1.0;
+            Assert.That(culvert.GateInitialOpening, Is.EqualTo(model.GateInitialGateOpening));
+
+            Assert.That(culvert.GateLowerEdgeLevel, Is.EqualTo(model.GateLowEdgeLevel));
+
             #endregion
 
             #region Geometry
+
             culvert.GeometryType = CulvertGeometryType.Ellipse;
             Assert.That(culvert.GeometryType, Is.EqualTo(model.SelectedCulvertGeometryType));
             culvert.GeometryType = CulvertGeometryType.Tabulated;
             Assert.That(culvert.GeometryType, Is.EqualTo(model.SelectedCulvertGeometryType));
+
             #endregion
         }
     }

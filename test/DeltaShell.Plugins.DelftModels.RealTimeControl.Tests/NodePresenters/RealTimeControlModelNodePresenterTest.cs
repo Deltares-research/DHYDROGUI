@@ -8,6 +8,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.NodePresenters
     [TestFixture]
     public class RealTimeControlModelNodePresenterTest
     {
+        [Test]
+        public void TagTypeShouldBeRealTimeControlModel()
+        {
+            RealTimeControlModelNodePresenter realTimeControlModelNodePresenter = GetRealTimeControlModelNodePresenter();
+            Assert.AreEqual(typeof(RealTimeControlModel), realTimeControlModelNodePresenter.NodeTagType);
+        }
+
         private static RealTimeControlModelNodePresenter GetRealTimeControlModelNodePresenter()
         {
             var mockRepo = new MockRepository();
@@ -16,13 +23,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.NodePresenters
             pluginGuiMock.Expect(pg => pg.Gui).Return(gui);
 
             return new RealTimeControlModelNodePresenter(pluginGuiMock);
-        }
-
-        [Test]
-        public void TagTypeShouldBeRealTimeControlModel()
-        {
-            var realTimeControlModelNodePresenter = GetRealTimeControlModelNodePresenter();
-            Assert.AreEqual(typeof(RealTimeControlModel),realTimeControlModelNodePresenter.NodeTagType);
         }
     }
 }

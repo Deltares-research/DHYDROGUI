@@ -1,5 +1,4 @@
-﻿using DelftTools.TestUtils;
-using DeltaShell.NGHS.IO.TestUtils;
+﻿using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.DomainSpecificDataEditor.ViewModels;
 using NUnit.Framework;
 
@@ -16,6 +15,64 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.DomainSpecificDataEd
         {
             domainData = new SpectralDomainData();
             viewModel = new DirectionalSpaceSettingsViewModel(domainData);
+        }
+
+        [Test]
+        public void SetTypeToCircle_ThenStartDirectionAndEndDirectionAreCorrectlySet()
+        {
+            // Setup
+            viewModel.Type = DirectionalSpaceType.Sector;
+            viewModel.StartDirection = 3;
+            viewModel.EndDirection = 3;
+
+            // Call
+            viewModel.Type = DirectionalSpaceType.Circle;
+
+            // Assert
+            Assert.That(viewModel.StartDirection, Is.EqualTo(0));
+            Assert.That(viewModel.EndDirection, Is.EqualTo(360));
+        }
+
+        [Test]
+        public void GetNrOfDirections_ReturnsCorrectValue()
+        {
+            // Setup
+            const int value = 7;
+            domainData.NDir = value;
+
+            // Call
+            int resultedValue = viewModel.NrOfDirections;
+
+            // Assert
+            Assert.That(resultedValue, Is.EqualTo(value));
+        }
+
+        [Test]
+        public void GetStartDirection_ReturnsCorrectValue()
+        {
+            // Setup
+            const double value = 7;
+            domainData.StartDir = value;
+
+            // Call
+            double resultedValue = viewModel.StartDirection;
+
+            // Assert
+            Assert.That(resultedValue, Is.EqualTo(value));
+        }
+
+        [Test]
+        public void GetEndDirection_ReturnsCorrectValue()
+        {
+            // Setup
+            const double value = 7;
+            domainData.EndDir = value;
+
+            // Call
+            double resultedValue = viewModel.EndDirection;
+
+            // Assert
+            Assert.That(resultedValue, Is.EqualTo(value));
         }
 
         [TestCase(WaveDirectionalSpaceType.Circle, DirectionalSpaceType.Circle)]
@@ -54,36 +111,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.DomainSpecificDataEd
             Assert.That(domainData.DirectionalSpaceType, Is.EqualTo(expectedFileType));
         }
 
-        [Test]
-        public void SetTypeToCircle_ThenStartDirectionAndEndDirectionAreCorrectlySet()
-        {
-            // Setup
-            viewModel.Type = DirectionalSpaceType.Sector;
-            viewModel.StartDirection = 3;
-            viewModel.EndDirection = 3;
-
-            // Call
-            viewModel.Type = DirectionalSpaceType.Circle;
-
-            // Assert
-            Assert.That(viewModel.StartDirection, Is.EqualTo(0));
-            Assert.That(viewModel.EndDirection, Is.EqualTo(360));
-        }
-
-        [Test]
-        public void GetNrOfDirections_ReturnsCorrectValue()
-        {
-            // Setup
-            const int value = 7;
-            domainData.NDir = value;
-
-            // Call
-            int resultedValue = viewModel.NrOfDirections;
-
-            // Assert
-            Assert.That(resultedValue, Is.EqualTo(value));
-        }
-
         [TestCase(7, 0)]
         [TestCase(5, 1)]
         public void SetNrOfDirections_SetsCorrectPropertyValueOnModel(
@@ -101,20 +128,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.DomainSpecificDataEd
             Assert.That(domainData.NDir, Is.EqualTo(setValue));
         }
 
-        [Test]
-        public void GetStartDirection_ReturnsCorrectValue()
-        {
-            // Setup
-            const double value = 7;
-            domainData.StartDir = value;
-
-            // Call
-            double resultedValue = viewModel.StartDirection;
-
-            // Assert
-            Assert.That(resultedValue, Is.EqualTo(value));
-        }
-
         [TestCase(7.5, 0)]
         [TestCase(5.5, 1)]
         public void SetStartDirection_SetsCorrectPropertyValueOnModel(double setValue, int expectedPropertyChangedCount)
@@ -129,20 +142,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.DomainSpecificDataEd
             int propertyChangedCount = viewModel.CountPropertyChangedFired(Call, nameof(viewModel.StartDirection));
             Assert.That(propertyChangedCount, Is.EqualTo(expectedPropertyChangedCount));
             Assert.That(domainData.StartDir, Is.EqualTo(setValue));
-        }
-
-        [Test]
-        public void GetEndDirection_ReturnsCorrectValue()
-        {
-            // Setup
-            const double value = 7;
-            domainData.EndDir = value;
-
-            // Call
-            double resultedValue = viewModel.EndDirection;
-
-            // Assert
-            Assert.That(resultedValue, Is.EqualTo(value));
         }
 
         [TestCase(7.5, 0)]

@@ -11,14 +11,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport.Expo
     [TestFixture]
     public class DirectionalConditionSerializerTest
     {
-        private static readonly XNamespace fns = "http://www.wldelft.nl/fews";
-
         private const string @implicit = StandardCondition.ReferenceType.Implicit;
         private const string name = "Trigger31";
         private const string inputName = "AlarmREGEN";
         private const string inputParameterName = "DeadBandTime";
         private const string trueReference = "REGEN-ORANGE";
         private const string falseReference = "REGEN-ROT";
+        private static readonly XNamespace fns = "http://www.wldelft.nl/fews";
 
         private PIDRule trueRule;
         private PIDRule falseRule;

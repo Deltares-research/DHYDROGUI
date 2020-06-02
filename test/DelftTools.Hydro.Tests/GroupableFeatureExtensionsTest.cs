@@ -8,19 +8,18 @@ namespace DelftTools.Hydro.Tests
     [TestFixture]
     public class GroupableFeatureExtensionsTest
     {
-        private readonly MockRepository mock = new MockRepository();
-
         private const int NumberOfItemsInGroupA = 5;
         private const string NameGroupA = "Group_A";
         private const int NumberOfItemsInGroupB = 5;
         private const string NameGroupB = "Group_B";
         private const int NumberOfUngroupedItems = 5;
+        private readonly MockRepository mock = new MockRepository();
 
         [Test]
         public void GroupableItemRemoveGroupTest()
         {
             IEventedList<IGroupableFeature> eventedList = new EventedList<IGroupableFeature>();
-            
+
             PopulateListWithGroupableFeatures(eventedList);
 
             // remove all items with group B groupName
@@ -38,9 +37,9 @@ namespace DelftTools.Hydro.Tests
         public void GroupableItemsRemoveUngroupedTest()
         {
             IEventedList<IGroupableFeature> eventedList = new EventedList<IGroupableFeature>();
-            
+
             PopulateListWithGroupableFeatures(eventedList, true);
-            
+
             // remove all ungrouped items
             eventedList.RemoveUngroupedItems();
 
@@ -51,14 +50,14 @@ namespace DelftTools.Hydro.Tests
         private void PopulateListWithGroupableFeatures(IEventedList<IGroupableFeature> eventedList, bool addUngroupedItems = false)
         {
             // populate list
-            for (int i = 0; i < NumberOfItemsInGroupA; ++i)
+            for (var i = 0; i < NumberOfItemsInGroupA; ++i)
             {
                 var groupableFeature = mock.Stub<IGroupableFeature>();
                 groupableFeature.GroupName = NameGroupA;
                 eventedList.Add(groupableFeature);
             }
 
-            for (int i = 0; i < NumberOfItemsInGroupB; ++i)
+            for (var i = 0; i < NumberOfItemsInGroupB; ++i)
             {
                 var groupableFeature = mock.Stub<IGroupableFeature>();
                 groupableFeature.GroupName = NameGroupB;
@@ -67,7 +66,7 @@ namespace DelftTools.Hydro.Tests
 
             if (addUngroupedItems)
             {
-                for (int i = 0; i < NumberOfUngroupedItems; ++i)
+                for (var i = 0; i < NumberOfUngroupedItems; ++i)
                 {
                     var groupableFeature = mock.Stub<IGroupableFeature>();
                     eventedList.Add(groupableFeature);

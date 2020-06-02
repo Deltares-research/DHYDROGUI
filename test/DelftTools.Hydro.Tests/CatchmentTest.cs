@@ -19,15 +19,15 @@ namespace DelftTools.Hydro.Tests
         public void CloneWithNoGeometry()
         {
             var catchment = new Catchment();
-            var clone = (Catchment)catchment.Clone();
+            var clone = (Catchment) catchment.Clone();
 
             Assert.IsNotNull(clone);
         }
-        
+
         [Test]
         public void DefaultGeometryForArea()
         {
-            var catchment = new Catchment { IsGeometryDerivedFromAreaSize = true };
+            var catchment = new Catchment {IsGeometryDerivedFromAreaSize = true};
             var expected = 500;
             catchment.SetAreaSize(expected);
 
@@ -49,7 +49,7 @@ namespace DelftTools.Hydro.Tests
         [Test]
         public void DefaultGeometryForEmptyArea()
         {
-            var catchment = new Catchment { IsGeometryDerivedFromAreaSize = true };
+            var catchment = new Catchment {IsGeometryDerivedFromAreaSize = true};
             var expected = 0;
             catchment.SetAreaSize(expected);
 
@@ -62,7 +62,7 @@ namespace DelftTools.Hydro.Tests
         {
             var catchment = new Catchment();
             catchment.Geometry = new Point(15d, 15d);
-            var clone = (Catchment)catchment.Clone();
+            var clone = (Catchment) catchment.Clone();
 
             Assert.AreEqual(catchment.Geometry, clone.Geometry);
             Assert.AreNotSame(catchment.Geometry, clone.Geometry);
@@ -74,18 +74,20 @@ namespace DelftTools.Hydro.Tests
         {
             var catchment1 = new Catchment();
             var catchment2 = new Catchment
-                                 {
-                                     Name = "Aapje",
-                                     Geometry =
-                                         new Polygon(
-                                         new LinearRing(new[]
-                                                            {
-                                                                new Coordinate(10d, 10d), new Coordinate(20d, 10d),
-                                                                new Coordinate(15d, 15d), new Coordinate(10d, 10d)
-                                                            })),
-                                     Description = "Komt uit de mouw",
-                                     Basin = new DrainageBasin()
-                                 };
+            {
+                Name = "Aapje",
+                Geometry =
+                    new Polygon(
+                        new LinearRing(new[]
+                        {
+                            new Coordinate(10d, 10d),
+                            new Coordinate(20d, 10d),
+                            new Coordinate(15d, 15d),
+                            new Coordinate(10d, 10d)
+                        })),
+                Description = "Komt uit de mouw",
+                Basin = new DrainageBasin()
+            };
             catchment2.Attributes.Add("gras", 15);
 
             catchment1.CopyFrom(catchment2);
@@ -102,29 +104,29 @@ namespace DelftTools.Hydro.Tests
         public void SettingGeometryShouldChangeInteriorPointAccordingly()
         {
             var catchment = new Catchment
+            {
+                Geometry = new Polygon(new LinearRing(new[]
                 {
-                    Geometry = new Polygon(new LinearRing(new[]
-                        {
-                            new Coordinate(0,0), 
-                            new Coordinate(10,0), 
-                            new Coordinate(10,10), 
-                            new Coordinate(0,10), 
-                            new Coordinate(0,0)
-                        }))
-                };
+                    new Coordinate(0, 0),
+                    new Coordinate(10, 0),
+                    new Coordinate(10, 10),
+                    new Coordinate(0, 10),
+                    new Coordinate(0, 0)
+                }))
+            };
 
             Assert.AreEqual(5, catchment.InteriorPoint.X);
             Assert.AreEqual(5, catchment.InteriorPoint.Y);
 
-            catchment.Geometry = new Polygon(new LinearRing(new []
-                {
-                    new Coordinate(0, 0),
-                    new Coordinate(20, 0),
-                    new Coordinate(20, 20),
-                    new Coordinate(0, 20),
-                    new Coordinate(0, 0)
-                }));
-            
+            catchment.Geometry = new Polygon(new LinearRing(new[]
+            {
+                new Coordinate(0, 0),
+                new Coordinate(20, 0),
+                new Coordinate(20, 20),
+                new Coordinate(0, 20),
+                new Coordinate(0, 0)
+            }));
+
             Assert.AreEqual(10, catchment.InteriorPoint.X);
             Assert.AreEqual(10, catchment.InteriorPoint.Y);
         }
@@ -141,7 +143,11 @@ namespace DelftTools.Hydro.Tests
         [Test]
         public void PolderCanHavePavedSubCatchment()
         {
-            var catchment = new Catchment {CatchmentType = CatchmentType.Polder, Geometry = new Point(0, 0)};
+            var catchment = new Catchment
+            {
+                CatchmentType = CatchmentType.Polder,
+                Geometry = new Point(0, 0)
+            };
 
             catchment.AddSubCatchment(CatchmentType.Paved);
             Assert.IsTrue(catchment.SubCatchments.Count == 1);

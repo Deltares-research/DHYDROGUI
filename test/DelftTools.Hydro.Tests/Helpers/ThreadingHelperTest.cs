@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using DelftTools.Hydro.Helpers;
 using NUnit.Framework;
 
@@ -11,9 +12,9 @@ namespace DelftTools.Hydro.Tests.Helpers
         [RequiresMTA]
         public void ConvertMultiThreaded()
         {
-            var numbers = Enumerable.Range(0, 5000).ToList();
+            List<int> numbers = Enumerable.Range(0, 5000).ToList();
 
-            var oneAndAHalfTimes = numbers.ConvertMultiThreaded(i => i * 1.5);
+            IList<double> oneAndAHalfTimes = numbers.ConvertMultiThreaded(i => i * 1.5);
 
             Assert.AreEqual(numbers[0], oneAndAHalfTimes[0]);
             Assert.AreEqual(numbers[2000] * 1.5, oneAndAHalfTimes[2000]);

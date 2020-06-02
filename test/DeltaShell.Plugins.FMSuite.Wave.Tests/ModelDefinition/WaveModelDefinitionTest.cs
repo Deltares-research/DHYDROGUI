@@ -1,5 +1,6 @@
 ﻿using System.Globalization;
 using DelftTools.TestUtils;
+using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
 using DeltaShell.Plugins.FMSuite.Wave.IO;
 using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
 using NUnit.Framework;
@@ -13,9 +14,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.ModelDefinition
         [Category(TestCategory.DataAccess)]
         public void ReadModelDefinitionFromMdw()
         {
-            var mdwPath = TestHelper.GetTestFilePath(@"wave_timespacevarbnd\tst.mdw");
-            var modelDefinition = new MdwFile().Load(mdwPath);
-            
+            string mdwPath = TestHelper.GetTestFilePath(@"wave_timespacevarbnd\tst.mdw");
+            WaveModelDefinition modelDefinition = new MdwFile().Load(mdwPath);
+
             Assert.AreEqual(6, modelDefinition.ModelSchema.GuiPropertyGroups.Count);
             Assert.AreEqual(6, modelDefinition.ModelSchema.ModelDefinitionCategory.Count);
 
@@ -28,21 +29,21 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.ModelDefinition
         public void GivenACsvFileWithMultipleDefaultValuesForBedFricCoefBasedOnBedFriction_WhenCreatingTheModelDefinition_ThenTheCorrectDefaultValueShouldBeSet()
         {
             var modelDefinition = new WaveModelDefinition();
-            var schema = modelDefinition.ModelSchema;
-            var propertyDefinitionBedFrictionCoef = schema.PropertyDefinitions[KnownWaveProperties.BedFrictionCoef.ToLower()];
+            ModelPropertySchema<WaveModelPropertyDefinition> schema = modelDefinition.ModelSchema;
+            WaveModelPropertyDefinition propertyDefinitionBedFrictionCoef = schema.PropertyDefinitions[KnownWaveProperties.BedFrictionCoef.ToLower()];
 
-            var propertyBedFriction = modelDefinition.GetModelProperty(KnownWaveCategories.ProcessesCategory, KnownWaveProperties.BedFriction);
+            WaveModelProperty propertyBedFriction = modelDefinition.GetModelProperty(KnownWaveCategories.ProcessesCategory, KnownWaveProperties.BedFriction);
             Assert.IsNotNull(propertyBedFriction);
 
             //Check DefaultValueAsString
             var valueBedFriction = (int) propertyBedFriction.Value;
-            var expectedDefaultValue = propertyDefinitionBedFrictionCoef.MultipleDefaultValues[valueBedFriction];
+            string expectedDefaultValue = propertyDefinitionBedFrictionCoef.MultipleDefaultValues[valueBedFriction];
             Assert.AreEqual(expectedDefaultValue, propertyDefinitionBedFrictionCoef.DefaultValueAsString);
 
             // Check value of property
-            var propertyBedFrictionCoef = modelDefinition.GetModelProperty(KnownWaveCategories.ProcessesCategory, KnownWaveProperties.BedFrictionCoef);
+            WaveModelProperty propertyBedFrictionCoef = modelDefinition.GetModelProperty(KnownWaveCategories.ProcessesCategory, KnownWaveProperties.BedFrictionCoef);
             Assert.IsNotNull(propertyBedFriction);
-            var retrievedBedFrictionCoef = string.Format(CultureInfo.InvariantCulture, "{0}", propertyBedFrictionCoef.Value);
+            string retrievedBedFrictionCoef = string.Format(CultureInfo.InvariantCulture, "{0}", propertyBedFrictionCoef.Value);
             Assert.AreEqual(expectedDefaultValue, retrievedBedFrictionCoef);
         }
 
@@ -50,21 +51,21 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.ModelDefinition
         public void GivenACsvFileWithMultipleDefaultValuesForMaxIterBasedOnSimMode_WhenCreatingTheModelDefinition_ThenTheCorrectDefaultValueShouldBeSet()
         {
             var modelDefinition = new WaveModelDefinition();
-            var schema = modelDefinition.ModelSchema;
-            var propertyDefinitionMaxIter = schema.PropertyDefinitions[KnownWaveProperties.MaxIter.ToLower()];
+            ModelPropertySchema<WaveModelPropertyDefinition> schema = modelDefinition.ModelSchema;
+            WaveModelPropertyDefinition propertyDefinitionMaxIter = schema.PropertyDefinitions[KnownWaveProperties.MaxIter.ToLower()];
 
-            var propertySimMode = modelDefinition.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.SimulationMode);
+            WaveModelProperty propertySimMode = modelDefinition.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.SimulationMode);
             Assert.IsNotNull(propertySimMode);
 
             //Check DefaultValueAsString
-            var valueBedFriction = (int)propertySimMode.Value;
-            var expectedDefaultValue = propertyDefinitionMaxIter.MultipleDefaultValues[valueBedFriction];
+            var valueBedFriction = (int) propertySimMode.Value;
+            string expectedDefaultValue = propertyDefinitionMaxIter.MultipleDefaultValues[valueBedFriction];
             Assert.AreEqual(expectedDefaultValue, propertyDefinitionMaxIter.DefaultValueAsString);
 
             // Check value of property
-            var propertyMaxIter = modelDefinition.GetModelProperty(KnownWaveCategories.NumericsCategory, KnownWaveProperties.MaxIter);
+            WaveModelProperty propertyMaxIter = modelDefinition.GetModelProperty(KnownWaveCategories.NumericsCategory, KnownWaveProperties.MaxIter);
             Assert.IsNotNull(propertySimMode);
-            var retrievedMaxIter = string.Format(CultureInfo.InvariantCulture, "{0}", propertyMaxIter.Value);
+            string retrievedMaxIter = string.Format(CultureInfo.InvariantCulture, "{0}", propertyMaxIter.Value);
             Assert.AreEqual(expectedDefaultValue, retrievedMaxIter);
         }
     }

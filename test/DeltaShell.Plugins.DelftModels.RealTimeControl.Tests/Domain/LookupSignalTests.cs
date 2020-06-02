@@ -29,8 +29,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
             var signal = new LookupSignal();
 
             // Bare Lookup Signal
-            var validationResult = signal.Validate();
-            var exceptionCount = validationResult.Messages.Count();
+            ValidationResult validationResult = signal.Validate();
+            int exceptionCount = validationResult.Messages.Count();
             Assert.AreEqual(4, exceptionCount);
             Assert.AreEqual(false, validationResult.IsValid);
 
@@ -62,8 +62,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
             var signal = new LookupSignal();
 
             // Bare Lookup Signal
-            var validationResult = signal.Validate();
-            var exceptionCount = validationResult.Messages.Count();
+            ValidationResult validationResult = signal.Validate();
+            int exceptionCount = validationResult.Messages.Count();
             Assert.AreEqual(4, exceptionCount);
             Assert.AreEqual(false, validationResult.IsValid);
         }
@@ -74,8 +74,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
             var signal = new LookupSignal();
 
             signal.Function = tableFunction;
-            var validationResult = signal.Validate();
-            var exceptionCount = validationResult.Messages.Count();
+            ValidationResult validationResult = signal.Validate();
+            int exceptionCount = validationResult.Messages.Count();
             Assert.AreEqual(3, exceptionCount);
             Assert.AreEqual(false, validationResult.IsValid);
         }
@@ -87,8 +87,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
 
             // Input Added
             signal.Inputs.Add(new Input());
-            var validationResult = signal.Validate();
-            var exceptionCount = validationResult.Messages.Count();
+            ValidationResult validationResult = signal.Validate();
+            int exceptionCount = validationResult.Messages.Count();
             Assert.AreEqual(3, exceptionCount);
             Assert.AreEqual(false, validationResult.IsValid);
         }
@@ -100,8 +100,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
 
             // Rule Added
             signal.RuleBases.Add(new PIDRule());
-            var validationResult = signal.Validate();
-            var exceptionCount = validationResult.Messages.Count();
+            ValidationResult validationResult = signal.Validate();
+            int exceptionCount = validationResult.Messages.Count();
             Assert.AreEqual(2, exceptionCount);
             Assert.AreEqual(false, validationResult.IsValid);
         }
@@ -109,30 +109,39 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
         [Test]
         public void CopyFromAndClone()
         {
-            var source = new LookupSignal
-            {
-                Name = "signaltest"
-            };
+            var source = new LookupSignal {Name = "signaltest"};
 
             var newSignal = new LookupSignal();
-            var argumentValues = new[] { 60, 120.0, 360.0 };
-            var componentValues = new[] { 8.0, 9.0, 10.0 };
-            for (int i = 0; i < argumentValues.Count(); i++)
+            double[] argumentValues = new[]
+            {
+                60,
+                120.0,
+                360.0
+            };
+            var componentValues = new[]
+            {
+                8.0,
+                9.0,
+                10.0
+            };
+            for (var i = 0; i < argumentValues.Count(); i++)
             {
                 source.Function[argumentValues[i]] = componentValues[i];
             }
+
             newSignal.CopyFrom(source);
 
             Assert.AreEqual(source.Name, newSignal.Name);
 
-            for (int i = 0; i < source.Function.Arguments[0].Values.Count; i++)
+            for (var i = 0; i < source.Function.Arguments[0].Values.Count; i++)
             {
                 Assert.AreEqual(source.Function.Arguments[0].Values[i], newSignal.Function.Arguments[0].Values[i]);
                 Assert.AreEqual(source.Function.Components[0].Values[i], newSignal.Function.Components[0].Values[i]);
             }
+
             Assert.AreEqual(source.Interpolation, newSignal.Interpolation);
 
-            var clone = (LookupSignal)source.Clone();
+            var clone = (LookupSignal) source.Clone();
             Assert.IsFalse(ReferenceEquals(source, clone));
             Assert.AreEqual(source.Name, clone.Name);
         }
@@ -147,8 +156,5 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
                 Interpolation = InterpolationType.None
             };
         }
-
-
     }
-
 }

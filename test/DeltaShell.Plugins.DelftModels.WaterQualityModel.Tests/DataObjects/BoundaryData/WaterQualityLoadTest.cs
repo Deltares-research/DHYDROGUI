@@ -28,7 +28,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.DataObjects.Bou
             Assert.IsNaN(load.Z);
             Assert.AreEqual(string.Empty, load.LoadType);
         }
-        
+
         [Test]
         public void NewlyCreatedWaterQualityLoadIsValidFeature()
         {
@@ -40,7 +40,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.DataObjects.Bou
             // assert
             Assert.IsInstanceOf<Feature>(load);
             Assert.IsInstanceOf<IPoint>(load.Geometry);
-            var point = (IPoint)load.Geometry;
+            var point = (IPoint) load.Geometry;
             Assert.AreEqual(0.0, point.X);
             Assert.AreEqual(0.0, point.Y);
             Assert.IsNaN(point.Z);
@@ -60,12 +60,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.DataObjects.Bou
             // call
             load.X = 1.2;
             load.Y = 3.4;
-            load.Z = 5.6;   
+            load.Z = 5.6;
 
             // assert
-            Assert.AreEqual(1.2, ((IPoint)load.Geometry).X);
-            Assert.AreEqual(3.4, ((IPoint)load.Geometry).Y);
-            Assert.AreEqual(5.6, ((IPoint)load.Geometry).Z);
+            Assert.AreEqual(1.2, ((IPoint) load.Geometry).X);
+            Assert.AreEqual(3.4, ((IPoint) load.Geometry).Y);
+            Assert.AreEqual(5.6, ((IPoint) load.Geometry).Z);
         }
 
         [Test]
@@ -75,7 +75,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.DataObjects.Bou
             var load = new WaterQualityLoad();
 
             // call
-            var point = (IPoint)load.Geometry;
+            var point = (IPoint) load.Geometry;
             point.X = 1.2;
             point.Y = 3.4;
             point.Z = 5.6;
@@ -107,10 +107,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.DataObjects.Bou
         [Test]
         public void SetGeometryToDifferentIPointUpdatesXYZ()
         {
-            var load = new WaterQualityLoad
-                {
-                    Geometry = new Point(1.1, 7.9, double.NaN)
-                };
+            var load = new WaterQualityLoad {Geometry = new Point(1.1, 7.9, double.NaN)};
 
             Assert.AreEqual(1.1, load.X);
             Assert.AreEqual(7.9, load.Y);

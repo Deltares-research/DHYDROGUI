@@ -14,6 +14,9 @@ using DeltaShell.Plugins.FMSuite.Wave.IO;
 using DeltaShell.Plugins.FMSuite.Wave.IO.Importers;
 using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.Wave.Properties;
+using GeoAPI.CoordinateSystems.Transformations;
+using GeoAPI.Extensions.CoordinateSystems;
+using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Grids;
 using NSubstitute;
 using NUnit.Framework;
@@ -65,12 +68,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         [Category(TestCategory.Slow)]
         public void ReadTestModelFromFile()
         {
-            var mdwPath = TestHelper.GetTestFilePath(@"wave_timespacevarbnd/tst.mdw");
+            string mdwPath = TestHelper.GetTestFilePath(@"wave_timespacevarbnd/tst.mdw");
             Assert.IsTrue(File.Exists(mdwPath));
 
             var waveModel = new WaveModel(mdwPath);
 
-            var grid = waveModel.OuterDomain.Grid;
+            CurvilinearGrid grid = waveModel.OuterDomain.Grid;
             Assert.IsTrue(grid != null);
             Assert.AreEqual(121, grid.Arguments[0].Values.Count); // N or y-direction
             Assert.AreEqual(236, grid.Arguments[1].Values.Count); // M or x-direction
@@ -80,7 +83,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         [Category(TestCategory.DataAccess)]
         public void ReadTestModelWithFlowCouplingFromFile()
         {
-            var mdwPath = TestHelper.GetTestFilePath(@"flow_coupled/wave.mdw");
+            string mdwPath = TestHelper.GetTestFilePath(@"flow_coupled/wave.mdw");
             Assert.IsTrue(File.Exists(mdwPath));
 
             var waveModel = new WaveModel(mdwPath);
@@ -91,7 +94,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
             Assert.AreEqual(UsageFromFlowType.UseAndExtend, waveModel.OuterDomain.HydroFromFlowData.WindUsage);
             Assert.AreEqual(UsageFromFlowType.UseAndExtend, waveModel.OuterDomain.HydroFromFlowData.VelocityUsage);
             Assert.AreEqual(VelocityComputationType.DepthAveraged,
-                waveModel.OuterDomain.HydroFromFlowData.VelocityUsageType); // not specified, hence default
+                            waveModel.OuterDomain.HydroFromFlowData.VelocityUsageType); // not specified, hence default
         }
 
         [Test]
@@ -100,18 +103,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         {
             const int wgs84CS = 4326;
             const int rd = 28992;
-            
-            var localMdwPath = WaveTestHelper.CreateLocalCopy(TestHelper.GetTestFilePath(@"flow_coupled/wave.mdw"));
-            var waveModel = new WaveModel(localMdwPath)
-            {
-                CoordinateSystem = new OgrCoordinateSystemFactory().CreateFromEPSG(wgs84CS)
-            };
-            
-            var src = new OgrCoordinateSystemFactory().CreateFromEPSG(wgs84CS);
-            var target = new OgrCoordinateSystemFactory().CreateFromEPSG(rd);
-            var transformation = new OgrCoordinateSystemFactory().CreateTransformation(src, target);
 
-            var grid = waveModel.OuterDomain.Grid;
+            string localMdwPath = WaveTestHelper.CreateLocalCopy(TestHelper.GetTestFilePath(@"flow_coupled/wave.mdw"));
+            var waveModel = new WaveModel(localMdwPath) {CoordinateSystem = new OgrCoordinateSystemFactory().CreateFromEPSG(wgs84CS)};
+
+            ICoordinateSystem src = new OgrCoordinateSystemFactory().CreateFromEPSG(wgs84CS);
+            ICoordinateSystem target = new OgrCoordinateSystemFactory().CreateFromEPSG(rd);
+            ICoordinateTransformation transformation = new OgrCoordinateSystemFactory().CreateTransformation(src, target);
+
+            CurvilinearGrid grid = waveModel.OuterDomain.Grid;
             Assert.IsTrue(grid.CoordinateSystem.IsGeographic);
 
             string coordinateSystemType;
@@ -133,33 +133,30 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
             const int nad27_utm16N = 26916;
             const int pseudo_webm = 3857;
 
-            var localMdwPath =
+            string localMdwPath =
                 WaveTestHelper.CreateLocalCopy(TestHelper.GetTestFilePath(@"wave_timespacevarbnd/tst.mdw"));
-            var waveModel = new WaveModel(localMdwPath)
-            {
-                CoordinateSystem = new OgrCoordinateSystemFactory().CreateFromEPSG(nad27_utm16N)
-            };
+            var waveModel = new WaveModel(localMdwPath) {CoordinateSystem = new OgrCoordinateSystemFactory().CreateFromEPSG(nad27_utm16N)};
 
-            var src = new OgrCoordinateSystemFactory().CreateFromEPSG(nad27_utm16N);
-            var target = new OgrCoordinateSystemFactory().CreateFromEPSG(pseudo_webm);
-            var fromUTM16ToWebMercator = new OgrCoordinateSystemFactory().CreateTransformation(src, target);
-            var fromWebMercatorToUTM16 = new OgrCoordinateSystemFactory().CreateTransformation(target, src);
+            ICoordinateSystem src = new OgrCoordinateSystemFactory().CreateFromEPSG(nad27_utm16N);
+            ICoordinateSystem target = new OgrCoordinateSystemFactory().CreateFromEPSG(pseudo_webm);
+            ICoordinateTransformation fromUTM16ToWebMercator = new OgrCoordinateSystemFactory().CreateTransformation(src, target);
+            ICoordinateTransformation fromWebMercatorToUTM16 = new OgrCoordinateSystemFactory().CreateTransformation(target, src);
 
-            var coordinates =
+            List<Coordinate> coordinates =
                 WaveModelCoordinateConversion.GetAllModelFeatures(waveModel)
-                    .SelectMany(f => f.Geometry.Coordinates)
-                    .ToList();
+                                             .SelectMany(f => f.Geometry.Coordinates)
+                                             .ToList();
 
             waveModel.TransformCoordinates(fromUTM16ToWebMercator);
             waveModel.TransformCoordinates(fromWebMercatorToUTM16);
 
-            var coordinatesAfter =
+            List<Coordinate> coordinatesAfter =
                 WaveModelCoordinateConversion.GetAllModelFeatures(waveModel)
-                    .SelectMany(f => f.Geometry.Coordinates)
-                    .ToList();
+                                             .SelectMany(f => f.Geometry.Coordinates)
+                                             .ToList();
 
             Assert.AreEqual(coordinatesAfter.Count, coordinates.Count);
-            for (int i = 0; i < coordinates.Count; ++i)
+            for (var i = 0; i < coordinates.Count; ++i)
             {
                 Assert.AreEqual(coordinatesAfter[i].X, coordinates[i].X, 1e-05);
                 Assert.AreEqual(coordinatesAfter[i].Y, coordinates[i].Y, 1e-05);
@@ -177,9 +174,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         public void WaveModel_LogMessage_IsShown_When_WaveSetup_SetsValue_True()
         {
             var waveModel = new WaveModel();
-            var expectedMssg = Resources
+            string expectedMssg = Resources
                 .WaveModel_WaveSetup_With_WaveSetup_set_to_True_parallel_runs_will_fail__normal_runs_with_lakes_will_produce_unreliable_values_;
-            TestHelper.AssertAtLeastOneLogMessagesContains( () => waveModel.ModelDefinition.WaveSetup = true, expectedMssg);
+            TestHelper.AssertAtLeastOneLogMessagesContains(() => waveModel.ModelDefinition.WaveSetup = true, expectedMssg);
             Assert.IsTrue(waveModel.ModelDefinition.WaveSetup);
         }
 
@@ -187,11 +184,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         public void GivenAWaveModel_WhenSettingBedfrictionToCollins_ThenTheBedfrictionCoefficientShouldAlsoBeChanged()
         {
             var waveModel = new WaveModel();
-            
-            var prop = waveModel.ModelDefinition.GetModelProperty(KnownWaveCategories.ProcessesCategory,
-                KnownWaveProperties.BedFriction);
-            var prop2 = waveModel.ModelDefinition.GetModelProperty(KnownWaveCategories.ProcessesCategory,
-                KnownWaveProperties.BedFrictionCoef);
+
+            WaveModelProperty prop = waveModel.ModelDefinition.GetModelProperty(KnownWaveCategories.ProcessesCategory,
+                                                                                KnownWaveProperties.BedFriction);
+            WaveModelProperty prop2 = waveModel.ModelDefinition.GetModelProperty(KnownWaveCategories.ProcessesCategory,
+                                                                                 KnownWaveProperties.BedFrictionCoef);
 
             Assert.AreEqual("0.038", prop2.GetValueAsString());
             prop.SetValueAsString("collins");
@@ -203,10 +200,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         {
             var waveModel = new WaveModel();
 
-            var prop = waveModel.ModelDefinition.GetModelProperty(KnownWaveCategories.ProcessesCategory,
-                KnownWaveProperties.BedFriction);
-            var prop2 = waveModel.ModelDefinition.GetModelProperty(KnownWaveCategories.ProcessesCategory,
-                KnownWaveProperties.BedFrictionCoef);
+            WaveModelProperty prop = waveModel.ModelDefinition.GetModelProperty(KnownWaveCategories.ProcessesCategory,
+                                                                                KnownWaveProperties.BedFriction);
+            WaveModelProperty prop2 = waveModel.ModelDefinition.GetModelProperty(KnownWaveCategories.ProcessesCategory,
+                                                                                 KnownWaveProperties.BedFrictionCoef);
 
             Assert.AreEqual("0.038", prop2.GetValueAsString());
             prop.SetValueAsString("madsen et al.");
@@ -218,10 +215,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         {
             var waveModel = new WaveModel();
 
-            var prop = waveModel.ModelDefinition.GetModelProperty(KnownWaveCategories.GeneralCategory,
-                KnownWaveProperties.SimulationMode);
-            var prop2 = waveModel.ModelDefinition.GetModelProperty(KnownWaveCategories.NumericsCategory,
-                KnownWaveProperties.MaxIter);
+            WaveModelProperty prop = waveModel.ModelDefinition.GetModelProperty(KnownWaveCategories.GeneralCategory,
+                                                                                KnownWaveProperties.SimulationMode);
+            WaveModelProperty prop2 = waveModel.ModelDefinition.GetModelProperty(KnownWaveCategories.NumericsCategory,
+                                                                                 KnownWaveProperties.MaxIter);
 
             Assert.AreEqual("50", prop2.GetValueAsString());
             prop.SetValueAsString("non-stationary");
@@ -232,13 +229,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         public void
             GivenWaveModelWithOuterDomainWithCoordinateSystemSetWhenAddingInnerDomainThenInnerDomainShouldGetSameCoordinateSystem()
         {
-            var waveGridFileFilePath = TestHelper.GetTestFilePath(@"importers\Grid_001.grd");
+            string waveGridFileFilePath = TestHelper.GetTestFilePath(@"importers\Grid_001.grd");
             var waveModel = new WaveModel();
-            var tempWorkingDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+            string tempWorkingDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
             try
             {
                 waveModel.MdwFile.MdwFilePath = tempWorkingDirectory;
-                var waveGridFileImporter = new WaveGridFileImporter("my test", () => new[] { waveModel });
+                var waveGridFileImporter = new WaveGridFileImporter("my test", () => new[]
+                {
+                    waveModel
+                });
                 waveModel.OuterDomain.Grid.Attributes[CurvilinearGrid.CoordinateSystemKey] = "Test";
                 waveGridFileImporter.ImportItem(waveGridFileFilePath, waveModel.OuterDomain.Grid);
                 Assert.That(waveModel.OuterDomain.Grid.CoordinateSystem, Is.Not.Null);
@@ -258,19 +258,22 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         public void
             GivenWaveModelWithOuterDomainWithCoordinateSystemSetWhenSettingExteriorDomainThenExteriorDomainShouldGetSameCoordinateSystem()
         {
-            var waveGridFileFilePath = TestHelper.GetTestFilePath(@"importers\Grid_001.grd");
+            string waveGridFileFilePath = TestHelper.GetTestFilePath(@"importers\Grid_001.grd");
             var waveModel = new WaveModel();
-            var tempWorkingDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+            string tempWorkingDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
             try
             {
                 waveModel.MdwFile.MdwFilePath = tempWorkingDirectory;
-                var waveGridFileImporter = new WaveGridFileImporter("my test", () => new[] { waveModel });
+                var waveGridFileImporter = new WaveGridFileImporter("my test", () => new[]
+                {
+                    waveModel
+                });
                 waveModel.OuterDomain.Grid.Attributes[CurvilinearGrid.CoordinateSystemKey] = "Test";
                 waveGridFileImporter.ImportItem(waveGridFileFilePath, waveModel.OuterDomain.Grid);
                 Assert.That(waveModel.OuterDomain.Grid.CoordinateSystem, Is.Not.Null);
                 Assert.That(waveModel.CoordinateSystem, Is.Not.Null);
                 var exterior = new WaveDomainData("exterior");
-                var oldOuterDomain = waveModel.OuterDomain;
+                IWaveDomainData oldOuterDomain = waveModel.OuterDomain;
                 waveModel.OuterDomain = exterior;
                 waveModel.AddSubDomain(exterior, oldOuterDomain);
                 Assert.That(waveModel.CoordinateSystem, Is.Not.Null);
@@ -287,13 +290,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         public void
             GivenWaveModelWithOuterDomainWithCoordinateSystemSetWhenAddingInnerDomainTwiceThenInnerDomainsShouldGetSameCoordinateSystem()
         {
-            var waveGridFileFilePath = TestHelper.GetTestFilePath(@"importers\Grid_001.grd");
+            string waveGridFileFilePath = TestHelper.GetTestFilePath(@"importers\Grid_001.grd");
             var waveModel = new WaveModel();
-            var tempWorkingDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+            string tempWorkingDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
             try
             {
                 waveModel.MdwFile.MdwFilePath = tempWorkingDirectory;
-                var waveGridFileImporter = new WaveGridFileImporter("my test", () => new[] {waveModel});
+                var waveGridFileImporter = new WaveGridFileImporter("my test", () => new[]
+                {
+                    waveModel
+                });
                 waveModel.OuterDomain.Grid.Attributes[CurvilinearGrid.CoordinateSystemKey] = "Test";
                 waveGridFileImporter.ImportItem(waveGridFileFilePath, waveModel.OuterDomain.Grid);
                 Assert.That(waveModel.OuterDomain.Grid.CoordinateSystem, Is.Not.Null);
@@ -315,8 +321,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         [Test]
         public void GivenWaveModelWithSphericalCoordinates_WhenSettingCoordinateSystem_ThenOuterDomainGridHasTheSameCoordinateSystem()
         {
-            var waveFilePath = TestHelper.GetTestFilePath(@"mdw_coordinates\spherical.mdw");
-            var localFilePath = TestHelper.CreateLocalCopy(waveFilePath);
+            string waveFilePath = TestHelper.GetTestFilePath(@"mdw_coordinates\spherical.mdw");
+            string localFilePath = TestHelper.CreateLocalCopy(waveFilePath);
             try
             {
                 var waveModel = new WaveModel(localFilePath);
@@ -334,8 +340,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         [Test]
         public void GivenWaveModelWithCartesianCoordinates_WhenSettingCoordinateSystem_ThenOuterDomainGridHasTheSameCoordinateSystem()
         {
-            var waveFilePath = TestHelper.GetTestFilePath(@"mdw_coordinates\cartesian.mdw");
-            var localFilePath = TestHelper.CreateLocalCopy(waveFilePath);
+            string waveFilePath = TestHelper.GetTestFilePath(@"mdw_coordinates\cartesian.mdw");
+            string localFilePath = TestHelper.CreateLocalCopy(waveFilePath);
             try
             {
                 var waveModel = new WaveModel(localFilePath);
@@ -357,10 +363,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
             const string originalName = "Outer";
             const string newName = "Blarg";
 
-            var waveModel = new WaveModel
-            {
-                OuterDomain = new WaveDomainData(originalName)
-            };
+            var waveModel = new WaveModel {OuterDomain = new WaveDomainData(originalName)};
 
             var dataItem = waveModel.GetDataItemByTag(WaveModel.WavmStoreDataItemTag + originalName) as DataItem;
             Assert.NotNull(dataItem);
@@ -382,7 +385,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
             // Private field outputIsEmpty is set to false after a successful model run. This field should be false when clearing model output.
             // As we do not focus on model run, we use reflection to set this field and omit the model run.
             TypeUtils.SetField(waveModel, "outputIsEmpty", false);
-            
+
             // Call
             waveModel.ClearOutput();
 
@@ -401,7 +404,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
             // Private field outputIsEmpty is set to false after a successful model run. This field should be false when clearing model output.
             // As we do not focus on model run, we use reflection to set this field and omit the model run.
             TypeUtils.SetField(waveModel, "outputIsEmpty", false);
-            
+
             // Call
             waveModel.ClearOutput();
 
@@ -422,7 +425,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
 
             Assert.AreEqual(datetime, waveInputFieldData.InputFields.Arguments[0].DefaultValue);
         }
-        
+
         [Test]
         public void IsCoupledToFlow_ShouldAlwaysBeFalseForAStandAloneModel()
         {
@@ -442,7 +445,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
                     Path.Combine(TestHelper.GetTestDataDirectory(), "output_wavm", "Output1Domain");
                 string outputDirectoryInTemp = tempDirectory.CopyDirectoryToTempDirectory(outputDirectory);
 
-
                 // Act
                 waveModel.ConnectOutput(outputDirectoryInTemp);
 
@@ -453,7 +455,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
 
                 IDataItem swanLogDataItem = waveModel.AllDataItems.Single(di => di.Tag == "SwanLogDataItemTag");
                 Assert.AreEqual(File.ReadAllText(Path.Combine(outputDirectoryInTemp, "swn-diag.Waves")),
-                                ((TextDocument)swanLogDataItem.Value).Content);
+                                ((TextDocument) swanLogDataItem.Value).Content);
             }
         }
 
@@ -475,7 +477,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
                 Assert.IsTrue(waveModel.OutputIsEmpty);
             }
         }
-
 
         [Test]
         [Category(TestCategory.DataAccess)]
@@ -505,7 +506,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
 
                 IDataItem swanLogDataItem = waveModel.AllDataItems.Single(di => di.Tag == WaveModel.SwanLogDataItemTag);
                 Assert.AreEqual(File.ReadAllText(Path.Combine(outputDirectoryInTemp, "swn-diag.Waves")),
-                                ((TextDocument)swanLogDataItem.Value).Content);
+                                ((TextDocument) swanLogDataItem.Value).Content);
             }
         }
 
@@ -579,7 +580,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         public void ConnectOutput_WhenSwanFileMissing_ShouldGiveLogWarningToUser()
         {
             using (var tempDirectory = new TemporaryDirectory())
-            using (var waveModel = new WaveModel { Name = "wave" })
+            using (var waveModel = new WaveModel {Name = "wave"})
             {
                 // Arrange
                 string outputDirectory = Path.Combine(TestHelper.GetTestDataDirectory(), "output_wavm");

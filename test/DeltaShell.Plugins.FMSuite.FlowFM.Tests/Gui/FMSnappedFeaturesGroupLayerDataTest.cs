@@ -42,7 +42,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
             using (var gui = new DeltaShellGui())
             {
-                var app = gui.Application;
+                IApplication app = gui.Application;
                 app.Plugins.Add(new NHibernateDaoApplicationPlugin());
                 app.Plugins.Add(new CommonToolsApplicationPlugin());
                 app.Plugins.Add(new SharpMapGisApplicationPlugin());
@@ -56,12 +56,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
                 gui.Run();
 
-                var fmModel = AddFMModelToProject(app);
+                WaterFlowFMModel fmModel = AddFMModelToProject(app);
 
                 gui.CommandHandler.OpenView(fmModel, typeof(ProjectItemMapView));
-                var mapView = gui.DocumentViews.OfType<ProjectItemMapView>().FirstOrDefault();
+                ProjectItemMapView mapView = gui.DocumentViews.OfType<ProjectItemMapView>().FirstOrDefault();
                 Assert.IsNotNull(mapView);
-                var modelLayer = (GroupLayer)mapView.MapView.GetLayerForData(fmModel);
+                var modelLayer = (GroupLayer) mapView.MapView.GetLayerForData(fmModel);
 
                 var snappedLayer = modelLayer.Layers.FirstOrDefault(l => l.Name == FlowFMMapLayerProvider.GridSnappedFeaturesLayerName) as GroupLayer;
                 Assert.IsNotNull(snappedLayer);
@@ -87,22 +87,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         [Test]
         public void SnappedObservationPointsFeatureIsGenerated()
         {
-            var netFile = TestHelper.GetTestFilePath(@"basicGrid\basicGrid_net.nc");
+            string netFile = TestHelper.GetTestFilePath(@"basicGrid\basicGrid_net.nc");
             netFile = TestHelper.CreateLocalCopy(netFile);
 
             using (var gui = new DeltaShellGui())
             {
-                var snappedLayers = SnappedLayers(gui, netFile);
+                IEventedList<ILayer> snappedLayers = SnappedLayers(gui, netFile);
 
-                var model = gui.Application.GetAllModelsInProject().OfType<WaterFlowFMModel>().FirstOrDefault();
+                WaterFlowFMModel model = gui.Application.GetAllModelsInProject().OfType<WaterFlowFMModel>().FirstOrDefault();
                 Assert.IsNotNull(model);
 
-                var gridExtent = model.GridExtent;
-                var center = gridExtent.Centre;
-                model.Area.ObservationPoints.Add(new GroupableFeature2DPoint()
-                {
-                    Geometry = new Point(center)
-                });
+                Envelope gridExtent = model.GridExtent;
+                Coordinate center = gridExtent.Centre;
+                model.Area.ObservationPoints.Add(new GroupableFeature2DPoint() {Geometry = new Point(center)});
                 Assert.IsTrue(SnapLayerHasFeatures(snappedLayers, "Observation points (snapped)"));
             }
         }
@@ -110,21 +107,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         [Test]
         public void SnappedThinDamsFeatureIsGenerated()
         {
-            var netFile = TestHelper.GetTestFilePath(@"basicGrid\basicGrid_net.nc");
+            string netFile = TestHelper.GetTestFilePath(@"basicGrid\basicGrid_net.nc");
             netFile = TestHelper.CreateLocalCopy(netFile);
 
             using (var gui = new DeltaShellGui())
             {
-                var snappedLayers = SnappedLayers(gui, netFile);
+                IEventedList<ILayer> snappedLayers = SnappedLayers(gui, netFile);
 
-                var model = gui.Application.GetAllModelsInProject().OfType<WaterFlowFMModel>().FirstOrDefault();
-                Assert.IsNotNull( model );
+                WaterFlowFMModel model = gui.Application.GetAllModelsInProject().OfType<WaterFlowFMModel>().FirstOrDefault();
+                Assert.IsNotNull(model);
 
-                var gridExtent = model.GridExtent;
-                var center = gridExtent.Centre;
+                Envelope gridExtent = model.GridExtent;
+                Coordinate center = gridExtent.Centre;
                 model.Area.ThinDams.Add(new ThinDam2D
                 {
-                    Geometry = new LineString(new[] { center.CoordinateValue, new Coordinate(center.X + 100.0, center.Y + 100.0) })
+                    Geometry = new LineString(new[]
+                    {
+                        center.CoordinateValue,
+                        new Coordinate(center.X + 100.0, center.Y + 100.0)
+                    })
                 });
                 Assert.IsTrue(SnapLayerHasFeatures(snappedLayers, "Thin dams (snapped)"));
             }
@@ -133,21 +134,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         [Test]
         public void SnappedFixedWeirsFeatureIsGenerated()
         {
-            var netFile = TestHelper.GetTestFilePath(@"basicGrid\basicGrid_net.nc");
+            string netFile = TestHelper.GetTestFilePath(@"basicGrid\basicGrid_net.nc");
             netFile = TestHelper.CreateLocalCopy(netFile);
 
             using (var gui = new DeltaShellGui())
             {
-                var snappedLayers = SnappedLayers(gui, netFile);
+                IEventedList<ILayer> snappedLayers = SnappedLayers(gui, netFile);
 
-                var model = gui.Application.GetAllModelsInProject().OfType<WaterFlowFMModel>().FirstOrDefault();
+                WaterFlowFMModel model = gui.Application.GetAllModelsInProject().OfType<WaterFlowFMModel>().FirstOrDefault();
                 Assert.IsNotNull(model);
 
-                var gridExtent = model.GridExtent;
-                var center = gridExtent.Centre;
+                Envelope gridExtent = model.GridExtent;
+                Coordinate center = gridExtent.Centre;
                 model.Area.FixedWeirs.Add(new FixedWeir()
                 {
-                    Geometry = new LineString(new[] { center.CoordinateValue, new Coordinate(center.X + 100.0, center.Y + 100.0) })
+                    Geometry = new LineString(new[]
+                    {
+                        center.CoordinateValue,
+                        new Coordinate(center.X + 100.0, center.Y + 100.0)
+                    })
                 });
 
                 Assert.IsTrue(SnapLayerHasFeatures(snappedLayers, "Fixed weirs (snapped)"));
@@ -157,22 +162,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         [Test]
         public void SnappedDryPointsFeatureIsGenerated()
         {
-            var netFile = TestHelper.GetTestFilePath(@"basicGrid\basicGrid_net.nc");
+            string netFile = TestHelper.GetTestFilePath(@"basicGrid\basicGrid_net.nc");
             netFile = TestHelper.CreateLocalCopy(netFile);
 
             using (var gui = new DeltaShellGui())
             {
-                var snappedLayers = SnappedLayers(gui, netFile);
+                IEventedList<ILayer> snappedLayers = SnappedLayers(gui, netFile);
 
-                var model = gui.Application.GetAllModelsInProject().OfType<WaterFlowFMModel>().FirstOrDefault();
+                WaterFlowFMModel model = gui.Application.GetAllModelsInProject().OfType<WaterFlowFMModel>().FirstOrDefault();
                 Assert.IsNotNull(model);
 
-                var gridExtent = model.GridExtent;
-                var center = gridExtent.Centre;
-                model.Area.DryPoints.Add(new GroupablePointFeature()
-                {
-                    Geometry = new Point(center)
-                });
+                Envelope gridExtent = model.GridExtent;
+                Coordinate center = gridExtent.Centre;
+                model.Area.DryPoints.Add(new GroupablePointFeature() {Geometry = new Point(center)});
 
                 Assert.IsTrue(SnapLayerHasFeatures(snappedLayers, "Dry points (snapped)"));
             }
@@ -181,21 +183,27 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         [Test]
         public void SnappedDryAreasFeatureIsGenerated()
         {
-            var netFile = TestHelper.GetTestFilePath(@"basicGrid\basicGrid_net.nc");
+            string netFile = TestHelper.GetTestFilePath(@"basicGrid\basicGrid_net.nc");
             netFile = TestHelper.CreateLocalCopy(netFile);
 
             using (var gui = new DeltaShellGui())
             {
-                var snappedLayers = SnappedLayers(gui, netFile);
+                IEventedList<ILayer> snappedLayers = SnappedLayers(gui, netFile);
 
-                var model = gui.Application.GetAllModelsInProject().OfType<WaterFlowFMModel>().FirstOrDefault();
+                WaterFlowFMModel model = gui.Application.GetAllModelsInProject().OfType<WaterFlowFMModel>().FirstOrDefault();
                 Assert.IsNotNull(model);
 
-                var gridExtent = model.GridExtent;
-                var center = gridExtent.Centre;
+                Envelope gridExtent = model.GridExtent;
+                Coordinate center = gridExtent.Centre;
                 model.Area.DryAreas.Add(new GroupableFeature2DPolygon()
                 {
-                    Geometry = new LineString(new[] { center.CoordinateValue, new Coordinate(center.X, center.Y + 50.0), new Coordinate(center.X + 50.0, center.Y ), center.CoordinateValue })
+                    Geometry = new LineString(new[]
+                    {
+                        center.CoordinateValue,
+                        new Coordinate(center.X, center.Y + 50.0),
+                        new Coordinate(center.X + 50.0, center.Y),
+                        center.CoordinateValue
+                    })
                 });
 
                 Assert.IsTrue(SnapLayerHasFeatures(snappedLayers, "Dry areas (snapped)"));
@@ -205,21 +213,27 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         [Test]
         public void SnappedEnclosureFeatureIsGenerated()
         {
-            var netFile = TestHelper.GetTestFilePath(@"basicGrid\basicGrid_net.nc");
+            string netFile = TestHelper.GetTestFilePath(@"basicGrid\basicGrid_net.nc");
             netFile = TestHelper.CreateLocalCopy(netFile);
 
             using (var gui = new DeltaShellGui())
             {
-                var snappedLayers = SnappedLayers(gui, netFile);
+                IEventedList<ILayer> snappedLayers = SnappedLayers(gui, netFile);
 
-                var model = gui.Application.GetAllModelsInProject().OfType<WaterFlowFMModel>().FirstOrDefault();
+                WaterFlowFMModel model = gui.Application.GetAllModelsInProject().OfType<WaterFlowFMModel>().FirstOrDefault();
                 Assert.IsNotNull(model);
 
-                var gridExtent = model.GridExtent;
-                var center = gridExtent.Centre;
+                Envelope gridExtent = model.GridExtent;
+                Coordinate center = gridExtent.Centre;
                 model.Area.Enclosures.Add(new GroupableFeature2DPolygon()
                 {
-                    Geometry = new LineString(new[] { center.CoordinateValue, new Coordinate(center.X, center.Y + 50.0), new Coordinate(center.X + 50.0, center.Y), center.CoordinateValue })
+                    Geometry = new LineString(new[]
+                    {
+                        center.CoordinateValue,
+                        new Coordinate(center.X, center.Y + 50.0),
+                        new Coordinate(center.X + 50.0, center.Y),
+                        center.CoordinateValue
+                    })
                 });
 
                 Assert.IsTrue(SnapLayerHasFeatures(snappedLayers, "Enclosure (snapped)"));
@@ -229,21 +243,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         [Test]
         public void SnappedPumpsFeatureIsGenerated()
         {
-            var netFile = TestHelper.GetTestFilePath(@"basicGrid\basicGrid_net.nc");
+            string netFile = TestHelper.GetTestFilePath(@"basicGrid\basicGrid_net.nc");
             netFile = TestHelper.CreateLocalCopy(netFile);
 
             using (var gui = new DeltaShellGui())
             {
-                var snappedLayers = SnappedLayers(gui, netFile);
+                IEventedList<ILayer> snappedLayers = SnappedLayers(gui, netFile);
 
-                var model = gui.Application.GetAllModelsInProject().OfType<WaterFlowFMModel>().FirstOrDefault();
+                WaterFlowFMModel model = gui.Application.GetAllModelsInProject().OfType<WaterFlowFMModel>().FirstOrDefault();
                 Assert.IsNotNull(model);
 
-                var gridExtent = model.GridExtent;
-                var center = gridExtent.Centre;
+                Envelope gridExtent = model.GridExtent;
+                Coordinate center = gridExtent.Centre;
                 model.Area.Pumps.Add(new Pump2D()
                 {
-                    Geometry = new LineString(new[] { center.CoordinateValue, new Coordinate(center.X + 100.0, center.Y + 100.0) })
+                    Geometry = new LineString(new[]
+                    {
+                        center.CoordinateValue,
+                        new Coordinate(center.X + 100.0, center.Y + 100.0)
+                    })
                 });
 
                 Assert.IsTrue(SnapLayerHasFeatures(snappedLayers, "Pumps (snapped)"));
@@ -253,45 +271,53 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         [Test]
         public void SnappedWeirsFeatureIsGenerated()
         {
-            var netFile = TestHelper.GetTestFilePath(@"basicGrid\basicGrid_net.nc");
+            string netFile = TestHelper.GetTestFilePath(@"basicGrid\basicGrid_net.nc");
             netFile = TestHelper.CreateLocalCopy(netFile);
 
             using (var gui = new DeltaShellGui())
             {
-                var snappedLayers = SnappedLayers(gui, netFile);
+                IEventedList<ILayer> snappedLayers = SnappedLayers(gui, netFile);
 
-                var model = gui.Application.GetAllModelsInProject().OfType<WaterFlowFMModel>().FirstOrDefault();
+                WaterFlowFMModel model = gui.Application.GetAllModelsInProject().OfType<WaterFlowFMModel>().FirstOrDefault();
                 Assert.IsNotNull(model);
 
-                var gridExtent = model.GridExtent;
-                var center = gridExtent.Centre;
+                Envelope gridExtent = model.GridExtent;
+                Coordinate center = gridExtent.Centre;
                 model.Area.Weirs.Add(new Weir2D()
                 {
-                    Geometry = new LineString(new[] { center.CoordinateValue, new Coordinate(center.X + 100.0, center.Y + 100.0) })
+                    Geometry = new LineString(new[]
+                    {
+                        center.CoordinateValue,
+                        new Coordinate(center.X + 100.0, center.Y + 100.0)
+                    })
                 });
 
                 Assert.IsTrue(SnapLayerHasFeatures(snappedLayers, "Structures (snapped)"));
             }
         }
-        
+
         [Test]
         public void SnappedObservationCrossSectionFeatureIsGenerated()
         {
-            var netFile = TestHelper.GetTestFilePath(@"basicGrid\basicGrid_net.nc");
+            string netFile = TestHelper.GetTestFilePath(@"basicGrid\basicGrid_net.nc");
             netFile = TestHelper.CreateLocalCopy(netFile);
 
             using (var gui = new DeltaShellGui())
             {
-                var snappedLayers = SnappedLayers(gui, netFile);
+                IEventedList<ILayer> snappedLayers = SnappedLayers(gui, netFile);
 
-                var model = gui.Application.GetAllModelsInProject().OfType<WaterFlowFMModel>().FirstOrDefault();
+                WaterFlowFMModel model = gui.Application.GetAllModelsInProject().OfType<WaterFlowFMModel>().FirstOrDefault();
                 Assert.IsNotNull(model);
 
-                var gridExtent = model.GridExtent;
-                var center = gridExtent.Centre;
+                Envelope gridExtent = model.GridExtent;
+                Coordinate center = gridExtent.Centre;
                 model.Area.ObservationCrossSections.Add(new ObservationCrossSection2D()
                 {
-                    Geometry = new LineString(new[] { center.CoordinateValue, new Coordinate(center.X + 100.0, center.Y + 100.0) })
+                    Geometry = new LineString(new[]
+                    {
+                        center.CoordinateValue,
+                        new Coordinate(center.X + 100.0, center.Y + 100.0)
+                    })
                 });
 
                 Assert.IsTrue(SnapLayerHasFeatures(snappedLayers, "Observation cross sections (snapped)"));
@@ -301,21 +327,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         [Test]
         public void SnappedEmbankmentsFeatureIsGenerated()
         {
-            var netFile = TestHelper.GetTestFilePath(@"basicGrid\basicGrid_net.nc");
+            string netFile = TestHelper.GetTestFilePath(@"basicGrid\basicGrid_net.nc");
             netFile = TestHelper.CreateLocalCopy(netFile);
 
             using (var gui = new DeltaShellGui())
             {
-                var snappedLayers = SnappedLayers(gui, netFile);
+                IEventedList<ILayer> snappedLayers = SnappedLayers(gui, netFile);
 
-                var model = gui.Application.GetAllModelsInProject().OfType<WaterFlowFMModel>().FirstOrDefault();
+                WaterFlowFMModel model = gui.Application.GetAllModelsInProject().OfType<WaterFlowFMModel>().FirstOrDefault();
                 Assert.IsNotNull(model);
 
-                var gridExtent = model.GridExtent;
-                var center = gridExtent.Centre;
+                Envelope gridExtent = model.GridExtent;
+                Coordinate center = gridExtent.Centre;
                 model.Area.Embankments.Add(new Embankment()
                 {
-                    Geometry = new LineString(new[] { center.CoordinateValue, new Coordinate(center.X + 100.0, center.Y + 100.0) })
+                    Geometry = new LineString(new[]
+                    {
+                        center.CoordinateValue,
+                        new Coordinate(center.X + 100.0, center.Y + 100.0)
+                    })
                 });
 
                 Assert.IsTrue(SnapLayerHasFeatures(snappedLayers, "Embankments (snapped)"));
@@ -325,23 +355,27 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         [Test]
         public void SnappedSourcesAndSinksFeatureIsGenerated()
         {
-            var netFile = TestHelper.GetTestFilePath(@"basicGrid\basicGrid_net.nc");
+            string netFile = TestHelper.GetTestFilePath(@"basicGrid\basicGrid_net.nc");
             netFile = TestHelper.CreateLocalCopy(netFile);
 
             using (var gui = new DeltaShellGui())
             {
-                var snappedLayers = SnappedLayers(gui, netFile);
+                IEventedList<ILayer> snappedLayers = SnappedLayers(gui, netFile);
 
-                var model = gui.Application.GetAllModelsInProject().OfType<WaterFlowFMModel>().FirstOrDefault();
+                WaterFlowFMModel model = gui.Application.GetAllModelsInProject().OfType<WaterFlowFMModel>().FirstOrDefault();
                 Assert.IsNotNull(model);
 
-                var gridExtent = model.GridExtent;
-                var center = gridExtent.Centre;
+                Envelope gridExtent = model.GridExtent;
+                Coordinate center = gridExtent.Centre;
                 model.SourcesAndSinks.Add(new SourceAndSink
                 {
                     Feature = new Feature2D
                     {
-                        Geometry = new LineString(new[] { center.CoordinateValue, new Coordinate(center.X + 100.0, center.Y + 100.0) })
+                        Geometry = new LineString(new[]
+                        {
+                            center.CoordinateValue,
+                            new Coordinate(center.X + 100.0, center.Y + 100.0)
+                        })
                     }
                 });
 
@@ -352,22 +386,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         [Test]
         public void SnappedBoundaryFeatureIsGenerated()
         {
-            var netFile = TestHelper.GetTestFilePath(@"basicGrid\basicGrid_net.nc");
+            string netFile = TestHelper.GetTestFilePath(@"basicGrid\basicGrid_net.nc");
             netFile = TestHelper.CreateLocalCopy(netFile);
 
             using (var gui = new DeltaShellGui())
             {
-                var snappedLayers = SnappedLayers(gui, netFile);
+                IEventedList<ILayer> snappedLayers = SnappedLayers(gui, netFile);
 
-
-                var model = gui.Application.GetAllModelsInProject().OfType<WaterFlowFMModel>().FirstOrDefault();
+                WaterFlowFMModel model = gui.Application.GetAllModelsInProject().OfType<WaterFlowFMModel>().FirstOrDefault();
                 Assert.IsNotNull(model);
 
                 model.Boundaries.Add(
                     new Feature2D
                     {
                         Geometry = new LineString(new[]
-                            {new Coordinate(0.0, 0.0), new Coordinate(100.0, 100.0)})
+                        {
+                            new Coordinate(0.0, 0.0),
+                            new Coordinate(100.0, 100.0)
+                        })
                     });
 
                 Assert.IsTrue(SnapLayerHasFeatures(snappedLayers, "Boundaries (snapped)"));
@@ -376,7 +412,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
         private static IEventedList<ILayer> SnappedLayers(DeltaShellGui gui, string netFile)
         {
-            var app = gui.Application;
+            IApplication app = gui.Application;
             app.Plugins.Add(new NHibernateDaoApplicationPlugin());
             app.Plugins.Add(new CommonToolsApplicationPlugin());
             app.Plugins.Add(new SharpMapGisApplicationPlugin());
@@ -390,20 +426,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
             gui.Run();
 
-            var fmModel = AddFMModelToProject(app);
+            WaterFlowFMModel fmModel = AddFMModelToProject(app);
 
             //Add a basic grid
             ImportGrid(app, netFile, fmModel);
 
             gui.CommandHandler.OpenView(fmModel, typeof(ProjectItemMapView));
-            var mapView = gui.DocumentViews.OfType<ProjectItemMapView>().FirstOrDefault();
+            ProjectItemMapView mapView = gui.DocumentViews.OfType<ProjectItemMapView>().FirstOrDefault();
             var modelLayer = (GroupLayer) mapView.MapView.GetLayerForData(fmModel);
 
             var snappedLayer =
                 modelLayer.Layers.FirstOrDefault(l => l.Name == FlowFMMapLayerProvider.GridSnappedFeaturesLayerName) as
                     GroupLayer;
             Assert.IsNotNull(snappedLayer);
-            var snappedLayers = snappedLayer.Layers;
+            IEventedList<ILayer> snappedLayers = snappedLayer.Layers;
 
             //Make sure the layers are visible.
             snappedLayer.Visible = true;
@@ -412,13 +448,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
         private static bool SnapLayerHasFeatures(IList<ILayer> layers, string layerName)
         {
-            var snappedFeature = GetSnappedFeatureCollectionFromLayers(layers, layerName);
+            SnappedFeatureCollection snappedFeature = GetSnappedFeatureCollectionFromLayers(layers, layerName);
             return snappedFeature.Features.Count > 0;
         }
 
         private static SnappedFeatureCollection GetSnappedFeatureCollectionFromLayers(IList<ILayer> layers, string layerName)
         {
-            var layer = layers.FirstOrDefault(l => l.Name == layerName);
+            ILayer layer = layers.FirstOrDefault(l => l.Name == layerName);
             return layer?.DataSource as SnappedFeatureCollection;
         }
 
@@ -426,14 +462,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         {
             return layers.Any() && layers.Any(l => ((SnappedFeatureCollection) l.DataSource).SnapApiFeatureType == operationApiName && l.Name == layerName);
         }
+
         private static WaterFlowFMModel AddFMModelToProject(IApplication app)
         {
             // Add water flow model to project
-            var project = app.Project;
+            Project project = app.Project;
             project.RootFolder.Add(new WaterFlowFMModel());
 
             // Check model name
-            var targetModel = project.RootFolder.Models.OfType<WaterFlowFMModel>().FirstOrDefault();
+            WaterFlowFMModel targetModel = project.RootFolder.Models.OfType<WaterFlowFMModel>().FirstOrDefault();
             Assert.IsNotNull(targetModel);
             Assert.IsFalse(targetModel.Area.LandBoundaries.Any());
             return targetModel;
@@ -442,9 +479,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         private static void ImportGrid(IApplication app, string netFile, WaterFlowFMModel targetModel)
         {
             //Import grid
-            var importerGrid = app.FileImporters.OfType<FlowFMNetFileImporter>().FirstOrDefault();
+            FlowFMNetFileImporter importerGrid = app.FileImporters.OfType<FlowFMNetFileImporter>().FirstOrDefault();
             Assert.IsNotNull(importerGrid);
-            var gridImported = importerGrid.ImportItem(netFile, targetModel.Grid);
+            object gridImported = importerGrid.ImportItem(netFile, targetModel.Grid);
             Assert.IsNotNull(gridImported);
         }
     }

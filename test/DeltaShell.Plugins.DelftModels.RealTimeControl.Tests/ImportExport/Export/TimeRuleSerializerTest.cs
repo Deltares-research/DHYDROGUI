@@ -14,15 +14,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport.Expo
     [TestFixture]
     public class TimeRuleSerializerTest
     {
-        private static readonly XNamespace fns = "http://www.wldelft.nl/fews";
-
         private const string name = "TimeRule";
         private const string outputLocationName = "output location name";
         private const string outputParameterName = "output parameter name";
 
         private const InterpolationType interpolationOptions = InterpolationType.Linear;
-        private Output output;
         private const string inputReferenceEnumStringType = "IMPLICIT";
+        private static readonly XNamespace fns = "http://www.wldelft.nl/fews";
+        private Output output;
 
         [SetUp]
         public void SetUp()
@@ -30,7 +29,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport.Expo
             output = new Output
             {
                 ParameterName = outputParameterName,
-                Feature = new RtcTestFeature { Name = outputLocationName },
+                Feature = new RtcTestFeature {Name = outputLocationName},
             };
         }
 
@@ -40,7 +39,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport.Expo
             var timeRule = new TimeRule
             {
                 Name = name,
-                Outputs = new EventedList<Output> { output },
+                Outputs = new EventedList<Output> {output},
                 InterpolationOptionsTime = interpolationOptions,
                 Reference = inputReferenceEnumStringType
             };
@@ -48,6 +47,28 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport.Expo
             var serializer = new TimeRuleSerializer(timeRule);
 
             Assert.AreEqual(OriginXml(), serializer.ToXml(fns, "").Single().ToString(SaveOptions.DisableFormatting));
+        }
+
+        [Test]
+        public void XmlTimeSeriesGeneration()
+        {
+            var timeRule = new TimeRule
+            {
+                Name = name,
+                Outputs = new EventedList<Output> {output},
+                InterpolationOptionsTime = interpolationOptions
+            };
+
+            var start = new DateTime(2011, 1, 1, 9, 30, 0);
+            var stop = new DateTime(2011, 1, 1, 15, 30, 0);
+            var step = new TimeSpan(0, 6, 0, 0);
+
+            var serializer = new TimeRuleSerializer(timeRule);
+
+            var xmlTimeSeries = serializer.XmlImportTimeSeries("prefix/", start, stop, step).First()
+                                          .GetTimeSeriesXElementForTimeSeriesFile("", new TimeSpan(0, 1, 0, 0)).ToString(SaveOptions.DisableFormatting);
+
+            Assert.AreEqual(TimeSeriesXml(), xmlTimeSeries);
         }
 
         private static string OriginXml()
@@ -62,28 +83,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport.Expo
                    "</output>" +
                    "</timeAbsolute>" +
                    "</rule>";
-        }
-
-        [Test]
-        public void XmlTimeSeriesGeneration()
-        {
-            var timeRule = new TimeRule
-            {
-                Name = name,
-                Outputs = new EventedList<Output> { output },
-                InterpolationOptionsTime = interpolationOptions
-            };
-
-            var start = new DateTime(2011, 1, 1, 9, 30, 0);
-            var stop = new DateTime(2011, 1, 1, 15, 30, 0);
-            var step = new TimeSpan(0, 6, 0, 0);
-
-            var serializer = new TimeRuleSerializer(timeRule);
-
-            var xmlTimeSeries = serializer.XmlImportTimeSeries("prefix/", start, stop, step).First()
-                                          .GetTimeSeriesXElementForTimeSeriesFile("", new TimeSpan(0, 1, 0, 0)).ToString(SaveOptions.DisableFormatting);
-
-            Assert.AreEqual(TimeSeriesXml(), xmlTimeSeries);
         }
 
         private static string TimeSeriesXml()

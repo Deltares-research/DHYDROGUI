@@ -17,54 +17,56 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Editors.ModelFeatureCoordinate
     [TestFixture]
     public class BoundaryGeometryPreviewWindowsFormsHostMapTest
     {
-        [Test, NUnit.Framework.Category(TestCategory.Integration)]
+        [Test]
+        [NUnit.Framework.Category(TestCategory.Integration)]
         public void SettingFeatureGeometrySetsFeatureGeometryDataOnBoundaryGeometryPreview()
         {
             var lineGeomery = new LineString(new[]
             {
-                new Coordinate(0,0),
-                new Coordinate(10,10),
+                new Coordinate(0, 0),
+                new Coordinate(10, 10),
                 new Coordinate(10, 0),
                 new Coordinate(0, 0)
             });
 
             var boundaryGeometryPreview = new BoundaryGeometryPreview();
-            var windowsFormsHost = new WindowsFormsHost { Child = boundaryGeometryPreview };
+            var windowsFormsHost = new WindowsFormsHost {Child = boundaryGeometryPreview};
 
             Assert.IsNull(boundaryGeometryPreview.DataPoints);
 
             BoundaryGeometryPreviewWindowsFormsHostMap.SetFeatureGeometry(windowsFormsHost, lineGeomery);
 
-            var usedFeatureGeometry = (LineString)TypeUtils.GetField(boundaryGeometryPreview, "featureGeometry");
+            var usedFeatureGeometry = (LineString) TypeUtils.GetField(boundaryGeometryPreview, "featureGeometry");
             Assert.AreEqual(lineGeomery, usedFeatureGeometry);
 
             Assert.IsNotNull(boundaryGeometryPreview.DataPoints);
             Assert.AreEqual(4, boundaryGeometryPreview.DataPoints.Count);
 
             // first point should be selected
-            var selectedPoints = (IList<int>)TypeUtils.GetField(boundaryGeometryPreview, "selectedPoints");
+            var selectedPoints = (IList<int>) TypeUtils.GetField(boundaryGeometryPreview, "selectedPoints");
 
             Assert.AreEqual(1, selectedPoints.Count);
             Assert.AreEqual(0, selectedPoints[0]);
         }
 
-        [Test, NUnit.Framework.Category(TestCategory.Integration)]
+        [Test]
+        [NUnit.Framework.Category(TestCategory.Integration)]
         public void SettingFeatureSetsFeatureDataOnBoundaryGeometryPreview()
         {
             var lineGeomery = new LineString(new[]
             {
-                new Coordinate(0,0),
-                new Coordinate(10,10),
+                new Coordinate(0, 0),
+                new Coordinate(10, 10),
                 new Coordinate(10, 0),
                 new Coordinate(0, 0)
             });
 
             var mocks = new MockRepository();
-            var feature = (IFeature)mocks.StrictMultiMock(typeof(IFeature), typeof(INotifyPropertyChange));
+            var feature = (IFeature) mocks.StrictMultiMock(typeof(IFeature), typeof(INotifyPropertyChange));
 
             feature.Expect(f => f.Geometry).Return(lineGeomery).Repeat.Any();
-            ((INotifyPropertyChanging)feature).Expect(f => f.PropertyChanging += null).IgnoreArguments();
-            ((INotifyPropertyChanged)feature).Expect(f => f.PropertyChanged += null).IgnoreArguments();
+            ((INotifyPropertyChanging) feature).Expect(f => f.PropertyChanging += null).IgnoreArguments();
+            ((INotifyPropertyChanged) feature).Expect(f => f.PropertyChanged += null).IgnoreArguments();
 
             mocks.ReplayAll();
 
@@ -82,28 +84,29 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Editors.ModelFeatureCoordinate
             mocks.VerifyAll();
         }
 
-        [Test, NUnit.Framework.Category(TestCategory.Integration)]
+        [Test]
+        [NUnit.Framework.Category(TestCategory.Integration)]
         public void SettingSelectedIndexSetsIndexOnDataOnBoundaryGeometryPreview()
         {
             var lineGeomery = new LineString(new[]
             {
-                new Coordinate(0,0),
-                new Coordinate(10,10),
+                new Coordinate(0, 0),
+                new Coordinate(10, 10),
                 new Coordinate(10, 0),
                 new Coordinate(0, 0)
             });
 
             var mocks = new MockRepository();
-            var feature = (IFeature)mocks.StrictMultiMock(typeof(IFeature), typeof(INotifyPropertyChange));
+            var feature = (IFeature) mocks.StrictMultiMock(typeof(IFeature), typeof(INotifyPropertyChange));
 
             feature.Expect(f => f.Geometry).Return(lineGeomery).Repeat.Any();
-            ((INotifyPropertyChanging)feature).Expect(f => f.PropertyChanging += null).IgnoreArguments();
-            ((INotifyPropertyChanged)feature).Expect(f => f.PropertyChanged += null).IgnoreArguments();
+            ((INotifyPropertyChanging) feature).Expect(f => f.PropertyChanging += null).IgnoreArguments();
+            ((INotifyPropertyChanged) feature).Expect(f => f.PropertyChanged += null).IgnoreArguments();
 
             mocks.ReplayAll();
 
             var boundaryGeometryPreview = new BoundaryGeometryPreview();
-            var windowsFormsHost = new WindowsFormsHost { Child = boundaryGeometryPreview };
+            var windowsFormsHost = new WindowsFormsHost {Child = boundaryGeometryPreview};
 
             Assert.IsNull(boundaryGeometryPreview.DataPoints);
 
@@ -115,7 +118,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Editors.ModelFeatureCoordinate
 
             BoundaryGeometryPreviewWindowsFormsHostMap.SetSelectedIndex(windowsFormsHost, 1);
 
-            var selectedPoints = (IList<int>)TypeUtils.GetField(boundaryGeometryPreview, "selectedPoints");
+            var selectedPoints = (IList<int>) TypeUtils.GetField(boundaryGeometryPreview, "selectedPoints");
 
             Assert.AreEqual(1, selectedPoints.Count);
             Assert.AreEqual(1, selectedPoints[0]);

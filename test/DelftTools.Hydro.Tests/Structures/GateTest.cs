@@ -35,7 +35,7 @@ namespace DelftTools.Hydro.Tests.Structures
                 LowerEdgeLevel = -3,
                 SillWidth = 78,
             };
-            var clonedGate = (IGate)gate.Clone();
+            var clonedGate = (IGate) gate.Clone();
 
             Assert.AreEqual(clonedGate.Name, gate.Name);
             Assert.AreEqual(clonedGate.OffsetY, gate.OffsetY);
@@ -52,30 +52,30 @@ namespace DelftTools.Hydro.Tests.Structures
             //the target should copy all the property values form the source 
             //into the target, but not the name and geometry!! 
             IGate sourceGate = new Gate("Source Gate")
-                {
-                    Geometry = new Point(7, 0),
-                    OffsetY = 175,
-                    OpeningWidth = 75,
-                    Name = "Source Weir",
-                    UseSillLevelTimeSeries = true,
-                    UseLowerEdgeLevelTimeSeries = true,
-                    UseOpeningWidthTimeSeries = true,
-                    SillWidth = 150
-                };
+            {
+                Geometry = new Point(7, 0),
+                OffsetY = 175,
+                OpeningWidth = 75,
+                Name = "Source Weir",
+                UseSillLevelTimeSeries = true,
+                UseLowerEdgeLevelTimeSeries = true,
+                UseOpeningWidthTimeSeries = true,
+                SillWidth = 150
+            };
             sourceGate.SillLevelTimeSeries[new DateTime(2013, 6, 5, 4, 3, 2, 1)] = 1.2;
             sourceGate.LowerEdgeLevelTimeSeries[new DateTime(2013, 1, 2, 3, 4, 5, 6)] = 7.8;
             sourceGate.OpeningWidthTimeSeries[new DateTime(2013, 9, 10, 11, 12, 13, 14)] = 15.16;
             IGate targetGate = new Gate("Target Gate")
-                {
-                    Geometry = new Point(42, 0),
-                    OffsetY = 571,
-                    OpeningWidth = 55,
-                    SillLevel = -1,
-                    Name = "Target Weir",
-                    UseLowerEdgeLevelTimeSeries = false,
-                    UseOpeningWidthTimeSeries = false,
-                    SillWidth = 130
-                };
+            {
+                Geometry = new Point(42, 0),
+                OffsetY = 571,
+                OpeningWidth = 55,
+                SillLevel = -1,
+                Name = "Target Weir",
+                UseLowerEdgeLevelTimeSeries = false,
+                UseOpeningWidthTimeSeries = false,
+                SillWidth = 130
+            };
             targetGate.CopyFrom(sourceGate);
 
             Assert.AreNotEqual(sourceGate.Name, targetGate.Name);

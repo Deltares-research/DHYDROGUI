@@ -11,29 +11,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms.Properties
     {
         private readonly Random random = new Random();
 
-        [TestCase(true)]
-        [TestCase(false)]
-        public void Constructor_InitializesInstanceCorrectly(bool isReadOnly)
-        {
-            // Setup
-            const string key = "descriptor_key";
-            var attribute = Substitute.For<Attribute>();
-            attribute.TypeId.Returns("");
-            Attribute[] attributes =
-            {
-                attribute
-            };
-
-            // Call
-            var descriptor = new KeyValuePairPropertyDescriptor<string>(key, attributes, isReadOnly);
-
-            // Assert
-            Assert.That(descriptor.Name, Is.EqualTo(key));
-            Assert.That(descriptor.Attributes.Count, Is.EqualTo(1));
-            Assert.That(descriptor.Attributes[0], Is.SameAs(attribute));
-            Assert.That(descriptor.IsReadOnly, Is.EqualTo(isReadOnly));
-        }
-
         [Test]
         public void GetValue_ReturnsCorrectResult()
         {
@@ -207,6 +184,29 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms.Properties
 
             // Assert
             Assert.That(result, Is.EqualTo(typeof(string)));
+        }
+
+        [TestCase(true)]
+        [TestCase(false)]
+        public void Constructor_InitializesInstanceCorrectly(bool isReadOnly)
+        {
+            // Setup
+            const string key = "descriptor_key";
+            var attribute = Substitute.For<Attribute>();
+            attribute.TypeId.Returns("");
+            Attribute[] attributes =
+            {
+                attribute
+            };
+
+            // Call
+            var descriptor = new KeyValuePairPropertyDescriptor<string>(key, attributes, isReadOnly);
+
+            // Assert
+            Assert.That(descriptor.Name, Is.EqualTo(key));
+            Assert.That(descriptor.Attributes.Count, Is.EqualTo(1));
+            Assert.That(descriptor.Attributes[0], Is.SameAs(attribute));
+            Assert.That(descriptor.IsReadOnly, Is.EqualTo(isReadOnly));
         }
     }
 }

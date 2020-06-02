@@ -15,7 +15,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
         [Category(TestCategory.WindowsForms)]
         public void ShowEmpty()
         {
-            var pumpView = new PumpView { Data = null };
+            var pumpView = new PumpView {Data = null};
             WindowsFormsTestHelper.ShowModal(pumpView);
         }
 
@@ -32,12 +32,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
         [Category(TestCategory.WindowsForms)]
         public void ShowPumpViewShouldNotCausePropertyChanged()
         {
-            int called = 0;
+            var called = 0;
 
             var pump = new Pump();
             pump.ControlDirection = PumpControlDirection.DeliverySideControl; //this triggers the checkboxes to change
 
-            ((INotifyPropertyChange)pump).PropertyChanged += (s, e) => called++;
+            ((INotifyPropertyChange) pump).PropertyChanged += (s, e) => called++;
             var pumpView = new PumpView {Data = pump};
             WindowsFormsTestHelper.ShowModal(pumpView);
 
@@ -52,36 +52,33 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
 
             var pumpView = new PumpView {Data = pump};
 
-            var checkBoxDeliverySide = (CheckBox)pumpView.Controls.Find("checkBoxDelivery", true)[0];
+            var checkBoxDeliverySide = (CheckBox) pumpView.Controls.Find("checkBoxDelivery", true)[0];
 
             WindowsFormsTestHelper.ShowModal(pumpView,
                                              f =>
-                                                 {
-                                                     Assert.IsFalse(checkBoxDeliverySide.Checked);
-                                                     pump.ControlDirection = PumpControlDirection.DeliverySideControl;
-                                                     Assert.IsTrue(checkBoxDeliverySide.Checked);
-                                                 });
+                                             {
+                                                 Assert.IsFalse(checkBoxDeliverySide.Checked);
+                                                 pump.ControlDirection = PumpControlDirection.DeliverySideControl;
+                                                 Assert.IsTrue(checkBoxDeliverySide.Checked);
+                                             });
         }
 
         [Test]
         [Category(TestCategory.WindowsForms)]
         public void ChangingPumpDirectionToNegativeShouldUpdatePumpViewCorrectly()
         {
-            var pump = new Pump
-                {
-                    Branch = new Channel()
-                };
-            var pumpView = new PumpView { Data = pump };
+            var pump = new Pump {Branch = new Channel()};
+            var pumpView = new PumpView {Data = pump};
 
-            var radioDirectionIsNegative = (RadioButton)pumpView.Controls.Find("radioButtonNegative", true)[0];
-            
+            var radioDirectionIsNegative = (RadioButton) pumpView.Controls.Find("radioButtonNegative", true)[0];
+
             WindowsFormsTestHelper.ShowModal(pumpView,
                                              f =>
-                                                 {
-                                                     Assert.IsFalse(radioDirectionIsNegative.Checked);
-                                                     pump.DirectionIsPositive = false;
-                                                     Assert.IsTrue(radioDirectionIsNegative.Checked);
-                                                 });
+                                             {
+                                                 Assert.IsFalse(radioDirectionIsNegative.Checked);
+                                                 pump.DirectionIsPositive = false;
+                                                 Assert.IsTrue(radioDirectionIsNegative.Checked);
+                                             });
         }
     }
 }

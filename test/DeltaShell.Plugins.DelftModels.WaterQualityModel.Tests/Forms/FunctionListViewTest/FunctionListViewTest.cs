@@ -29,11 +29,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Forms.FunctionL
 
             WindowsFormsTestHelper.ShowModal(functionListView);
         }
-        
+
         [Test]
         public void TestShowFunctionListViewWithoutData()
         {
-            var functionListView = new FunctionListView { Data = null };
+            var functionListView = new FunctionListView {Data = null};
 
             WindowsFormsTestHelper.ShowModal(functionListView);
         }
@@ -41,7 +41,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Forms.FunctionL
         [Test]
         public void TestShowFunctionListViewWithData()
         {
-            var functionListView = new FunctionListView { Data = CreateFunctionList() };
+            var functionListView = new FunctionListView {Data = CreateFunctionList()};
 
             Assert.IsFalse(functionListView.ShowArguments);
             Assert.IsFalse(functionListView.ShowComponents);
@@ -62,7 +62,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Forms.FunctionL
                 gui.Application.Plugins.Add(new CommonToolsApplicationPlugin());
                 gui.Plugins.Add(new CommonToolsGuiPlugin());
                 gui.Run();
-                
+
                 var mockRep = new MockRepository();
                 var functionCreator = mockRep.StrictMock<IFunctionTypeCreator>();
 
@@ -76,22 +76,22 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Forms.FunctionL
                 mockRep.ReplayAll();
 
                 var functionListView = new FunctionListView
-                    {
-                        Gui = gui,
-                        Data = CreateFunctionList(),
-                        ShowArguments = true,
-                        ShowComponents = true
-                    };
+                {
+                    Gui = gui,
+                    Data = CreateFunctionList(),
+                    ShowArguments = true,
+                    ShowComponents = true
+                };
 
                 functionListView.FunctionCreators.Add(functionCreator);
-                gui.DocumentViewsResolver.DefaultViewTypes.Add(typeof (Function), typeof (FunctionView));
+                gui.DocumentViewsResolver.DefaultViewTypes.Add(typeof(Function), typeof(FunctionView));
                 WindowsFormsTestHelper.ShowModal(functionListView, delegate
-                    {
-                        ((IEventedList<IFunction>)functionListView.Data).Add(new Function("function 5")); // Add a function after the view is created
-                        TypeUtils.CallPrivateMethod(functionListView, "OpenViewForFunction"); // Open a view for the selected function
+                {
+                    ((IEventedList<IFunction>) functionListView.Data).Add(new Function("function 5")); // Add a function after the view is created
+                    TypeUtils.CallPrivateMethod(functionListView, "OpenViewForFunction");              // Open a view for the selected function
 
-                        functionListView.ShowEditButtons = false; // Hide the edit buttons
-                    });
+                    functionListView.ShowEditButtons = false; // Hide the edit buttons
+                });
             }
         }
 
@@ -115,8 +115,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Forms.FunctionL
         [Test]
         public void TestFunctionListView_SetInitialValueColumn_True_UpdatesDefaultValueColumnCaption()
         {
-            var listView = new FunctionListView { UseInitialValueColumn = true };
-            var column = TypeUtils.GetField<FunctionListView, ITableViewColumn>(listView, "defaultValueColumn");
+            var listView = new FunctionListView {UseInitialValueColumn = true};
+            ITableViewColumn column = TypeUtils.GetField<FunctionListView, ITableViewColumn>(listView, "defaultValueColumn");
             Assert.AreEqual(Resources.FunctionListView_GetDefaultValueColumnName_Initial_value, column.Caption);
 
             listView.UseInitialValueColumn = false;
@@ -126,8 +126,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Forms.FunctionL
         [Test]
         public void TestFunctionListView_SetInitialValueColumn_False_UpdatesDefaultValueColumnCaption()
         {
-            var listView = new FunctionListView { UseInitialValueColumn = false };
-            var column = TypeUtils.GetField<FunctionListView, ITableViewColumn>(listView, "defaultValueColumn");
+            var listView = new FunctionListView {UseInitialValueColumn = false};
+            ITableViewColumn column = TypeUtils.GetField<FunctionListView, ITableViewColumn>(listView, "defaultValueColumn");
             Assert.AreEqual(Resources.FunctionListView_InitializeTableView_Default_value, column.Caption);
 
             listView.UseInitialValueColumn = true;
@@ -137,16 +137,50 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Forms.FunctionL
         private static EventedList<IFunction> CreateFunctionList()
         {
             return new EventedList<IFunction>
+            {
+                new Function("function 1")
                 {
-                    new Function("function 1") 
-                        { 
-                            Arguments = new EventedList<IVariable> { new Variable<DateTime> { Name = "Argument", Unit = new Unit("Unit", "u") } },
-                            Components = new EventedList<IVariable> { new Variable<double> { Name = "Component", Unit = new Unit("Unit", "u") } } 
-                        },
-                    new Function("function 2") { Arguments = new EventedList<IVariable> { new Variable<DateTime> { Name = "Argument", Unit = new Unit("Unit", "u") } } },
-                    new Function("function 3") { Components = new EventedList<IVariable> { new Variable<double> { Name = "Component", Unit = new Unit("Unit", "u") } } },
-                    new Function("function 4")
-                };
+                    Arguments = new EventedList<IVariable>
+                    {
+                        new Variable<DateTime>
+                        {
+                            Name = "Argument",
+                            Unit = new Unit("Unit", "u")
+                        }
+                    },
+                    Components = new EventedList<IVariable>
+                    {
+                        new Variable<double>
+                        {
+                            Name = "Component",
+                            Unit = new Unit("Unit", "u")
+                        }
+                    }
+                },
+                new Function("function 2")
+                {
+                    Arguments = new EventedList<IVariable>
+                    {
+                        new Variable<DateTime>
+                        {
+                            Name = "Argument",
+                            Unit = new Unit("Unit", "u")
+                        }
+                    }
+                },
+                new Function("function 3")
+                {
+                    Components = new EventedList<IVariable>
+                    {
+                        new Variable<double>
+                        {
+                            Name = "Component",
+                            Unit = new Unit("Unit", "u")
+                        }
+                    }
+                },
+                new Function("function 4")
+            };
         }
     }
 }

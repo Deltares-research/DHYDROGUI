@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
         [SetUp]
         public void Setup()
         {
-            this.exporter = new QhFileExporter();
+            exporter = new QhFileExporter();
         }
 
         [Test]
@@ -59,7 +59,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
             Assert.That(exporter.Export(itemMock, null), Is.False);
 
             const string expectedLogMessage = "Failed to export data to";
-            TestHelper.AssertAtLeastOneLogMessagesContains(()=> exporter.Export(itemMock, null), expectedLogMessage);
+            TestHelper.AssertAtLeastOneLogMessagesContains(() => exporter.Export(itemMock, null), expectedLogMessage);
 
             mocks.VerifyAll();
         }
@@ -87,7 +87,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
             var dataFunctionMock = mocks.DynamicMock<IFunction>();
             var arrayMock = mocks.DynamicMock<IMultiDimensionalArray>();
 
-            var emptyList = new List<object>().GetEnumerator(); // We need an empty list for QhFile to succeed at writing.
+            List<object>.Enumerator emptyList = new List<object>().GetEnumerator(); // We need an empty list for QhFile to succeed at writing.
             arrayMock.Expect(n => n.GetEnumerator()).Return(null).WhenCalled(x => x.ReturnValue = emptyList);
             dataFunctionMock.Expect(n => n.Arguments[0].Values).Return(arrayMock).Repeat.Any();
 
@@ -96,7 +96,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
 
             mocks.ReplayAll();
 
-            var exportDir = FileUtils.CreateTempDirectory();
+            string exportDir = FileUtils.CreateTempDirectory();
             FileUtils.CreateDirectoryIfNotExists(exportDir);
             try
             {
@@ -106,7 +106,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
             {
                 FileUtils.DeleteIfExists(exportDir);
             }
-            
+
             mocks.VerifyAll();
         }
 

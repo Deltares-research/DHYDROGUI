@@ -12,29 +12,29 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Forms.DataSetMa
     [TestFixture]
     public class DataTableManagerViewTest
     {
-        [Test, Category(TestCategory.WindowsForms)]
+        [Test]
+        [Category(TestCategory.WindowsForms)]
         public void ShowDataTableManagerViewWithoutData()
         {
             var manager = new DataTableManagerView();
             WindowsFormsTestHelper.ShowModal(manager);
         }
 
-        [Test, Category(TestCategory.WindowsForms)]
+        [Test]
+        [Category(TestCategory.WindowsForms)]
         public void ShowDatasetManager()
         {
-            var dataTableManager = new DataTableManager
-                {
-                    FolderPath = @"D:\test\"
-                };
+            var dataTableManager = new DataTableManager {FolderPath = @"D:\test\"};
 
             var mocks = new MockRepository();
             var dataFile1 = mocks.Stub<TextDocumentFromFile>();
             var dataFile2 = mocks.Stub<TextDocumentFromFile>();
-            
+
             var substanceUseforFile1 = mocks.Stub<TextDocumentFromFile>();
             var substanceUseforFile2 = mocks.Stub<TextDocumentFromFile>();
 
-            dataFile1.Path = @"C:\Temp\data1.dat"; ;
+            dataFile1.Path = @"C:\Temp\data1.dat";
+            ;
             dataFile1.Content =
                 "                      chla         nh4          no3          pim          po4          pom          sio2         tsm\r\n" +
                 "2011/02/24-00:00:00   1.4057E+00   4.2025E-03   1.5700E-03   1.0000E-02   1.8000E-03   1.0000E-02   2.2385E-02   1.0000E-02\r\n" +
@@ -73,7 +73,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Forms.DataSetMa
                 "2011/03/29-00:00:00   6.8463E-01   3.6950E-03   4.9500E-03   1.5139E-03   1.7516E-03   1.2222E-03   3.0925E-02   2.4167E-03\r\n" +
                 "2011/03/30-00:00:00   6.8463E-01   3.6950E-03   4.9500E-03   1.5139E-03   1.7516E-03   1.2222E-03   3.0925E-02   2.4167E-03\r\n";
 
-            dataFile2.Path = @"C:\Temp\data2.dat"; ;
+            dataFile2.Path = @"C:\Temp\data2.dat";
+            ;
             dataFile2.Content =
                 "                      chla         nh4          no3          pim          po4          pom          sio2         tsm\r\n" +
                 "2011/01/01-00:00:00   5.6667E-02   1.3695E-02   1.5720E-03   1.0000E-02   1.8000E-03   1.0000E-02   2.2650E-02   1.0000E-02\r\n" +
@@ -107,7 +108,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Forms.DataSetMa
                 "2011/01/29-00:00:00   5.6667E-02   1.3695E-02   1.5720E-03   1.0000E-02   1.8000E-03   1.0000E-02   2.2650E-02   1.0000E-02\r\n" +
                 "2011/01/30-00:00:00   5.6667E-02   1.3695E-02   1.5720E-03   1.0000E-02   1.8000E-03   1.0000E-02   2.2650E-02   1.0000E-02\r\n";
 
-
             substanceUseforFile1.Path = @"C:\Temp\temp1.uf";
             substanceUseforFile1.Content = "Substance USEFOR 1";
 
@@ -117,27 +117,27 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Forms.DataSetMa
             mocks.ReplayAll();
 
             var dataTables = new EventedList<DataTable>
+            {
+                new DataTable
                 {
-                    new DataTable
-                        {
-                            Name = "Test dataset",
-                            IsEnabled = true,
-                            DataFile = dataFile1,
-                            SubstanceUseforFile = substanceUseforFile1
-                        },
-                    new DataTable
-                        {
-                            Name = "Test dataset2",
-                            IsEnabled = false,
-                            DataFile = dataFile2,
-                            SubstanceUseforFile = substanceUseforFile2
-                        }
-                };
+                    Name = "Test dataset",
+                    IsEnabled = true,
+                    DataFile = dataFile1,
+                    SubstanceUseforFile = substanceUseforFile1
+                },
+                new DataTable
+                {
+                    Name = "Test dataset2",
+                    IsEnabled = false,
+                    DataFile = dataFile2,
+                    SubstanceUseforFile = substanceUseforFile2
+                }
+            };
 
-            TypeUtils.SetField(dataTableManager, "dataTables",dataTables);
-            
-            var manager = new DataTableManagerView { DataTableManager = dataTableManager };
+            TypeUtils.SetField(dataTableManager, "dataTables", dataTables);
+
+            var manager = new DataTableManagerView {DataTableManager = dataTableManager};
             WindowsFormsTestHelper.ShowModal(manager);
-        } 
+        }
     }
 }

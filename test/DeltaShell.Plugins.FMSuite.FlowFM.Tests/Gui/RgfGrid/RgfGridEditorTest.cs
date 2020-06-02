@@ -23,20 +23,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.RgfGrid
 
         // TODO: tried to un-mute these tests, still having trouble when running on build server (better luck next time)
 
-        [Test, RequiresMTA, Timeout(MaxTimeOut)]
+        [Test]
+        [RequiresMTA]
+        [Timeout(MaxTimeOut)]
         [Category(TestCategory.VerySlow)]
         [Ignore("Times-out on Build Server, needs to be run manually :(")]
         public void ShowWithData()
         {
-            var mduPath = TestHelper.GetTestFilePath(@"data\f04_bottomfriction\c016_2DConveyance_bend\input\bendprof.mdu");
+            string mduPath = TestHelper.GetTestFilePath(@"data\f04_bottomfriction\c016_2DConveyance_bend\input\bendprof.mdu");
             mduPath = TestHelper.CreateLocalCopy(mduPath);
             var model = new WaterFlowFMModel(mduPath);
 
-            PerformActionWithCancellationThread(MaxTimeOut, () => 
-                RgfGridEditor.OpenGrid(model.NetFilePath));
+            PerformActionWithCancellationThread(MaxTimeOut, () =>
+                                                    RgfGridEditor.OpenGrid(model.NetFilePath));
         }
 
-        [Test, RequiresMTA, Timeout(MaxTimeOut)]
+        [Test]
+        [RequiresMTA]
+        [Timeout(MaxTimeOut)]
         [Category(TestCategory.VerySlow)]
         [Ignore("Times-out on Build Server, needs to be run manually :(")]
         public void ShowWithEmptyGrid()
@@ -44,44 +48,79 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.RgfGrid
             var model = new WaterFlowFMModel();
             ((IFileBased) model).CreateNew(Path.Combine(Path.GetTempPath(), "model"));
             model.ModelDefinition.GetModelProperty(KnownProperties.NetFile)
-                .SetValueAsString(model.Name + "_net.nc");
+                 .SetValueAsString(model.Name + "_net.nc");
 
-            PerformActionWithCancellationThread(MaxTimeOut, () => 
-                RgfGridEditor.OpenGrid(model.NetFilePath, true, new string[0]));
+            PerformActionWithCancellationThread(MaxTimeOut, () =>
+                                                    RgfGridEditor.OpenGrid(model.NetFilePath, true, new string[0]));
         }
 
-        [Test, RequiresMTA, Timeout(MaxTimeOut)]
+        [Test]
+        [RequiresMTA]
+        [Timeout(MaxTimeOut)]
         [Category(TestCategory.VerySlow)]
         [Ignore("Times-out on Build Server, needs to be run manually :(")]
         public void ShowWithDataAndLandBoundary()
         {
-            var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
+            string mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
             mduPath = TestHelper.CreateLocalCopy(mduPath);
             var model = new WaterFlowFMModel(mduPath);
 
-            PerformActionWithCancellationThread(MaxTimeOut, () => 
-                RgfGridEditor.OpenGrid(model.NetFilePath, false, new[] {TestHelper.GetTestFilePath(@"harlingen\Harlingen_haven.ldb")}));
+            PerformActionWithCancellationThread(MaxTimeOut, () =>
+                                                    RgfGridEditor.OpenGrid(model.NetFilePath, false, new[]
+                                                    {
+                                                        TestHelper.GetTestFilePath(@"harlingen\Harlingen_haven.ldb")
+                                                    }));
         }
 
-        [Test, RequiresMTA]
+        [Test]
+        [RequiresMTA]
         [Category(TestCategory.Slow)]
         public void GeneratePolygonsForEmbankments()
         {
             var pointList = new[]
             {
-                new Coordinate {X = 10, Y = 10},
-                new Coordinate {X = 30, Y = 10},
-                new Coordinate {X = 50, Y = 20},
-                new Coordinate {X = 40, Y = 40},
-                new Coordinate {X = 20, Y = 50},
-                new Coordinate {X = 0, Y = 30},
-                new Coordinate {X = 10, Y = 10},
+                new Coordinate
+                {
+                    X = 10,
+                    Y = 10
+                },
+                new Coordinate
+                {
+                    X = 30,
+                    Y = 10
+                },
+                new Coordinate
+                {
+                    X = 50,
+                    Y = 20
+                },
+                new Coordinate
+                {
+                    X = 40,
+                    Y = 40
+                },
+                new Coordinate
+                {
+                    X = 20,
+                    Y = 50
+                },
+                new Coordinate
+                {
+                    X = 0,
+                    Y = 30
+                },
+                new Coordinate
+                {
+                    X = 10,
+                    Y = 10
+                },
             };
 
-            var polygons = new List<IPolygon> { new Polygon(new LinearRing(pointList)) };
+            var polygons = new List<IPolygon> {new Polygon(new LinearRing(pointList))};
 
-            TestHelper.PerformActionInTemporaryDirectory(temporaryDir => {
-                var gridPath = Path.Combine(temporaryDir, "empty_grid.nc");
+            TestHelper.PerformActionInTemporaryDirectory(temporaryDir =>
+            {
+                string gridPath = Path.Combine(temporaryDir, "empty_grid.nc");
                 UnstructuredGridFileHelper.WriteEmptyUnstructuredGridFile(gridPath);
 
                 // perform operation
@@ -91,28 +130,57 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.RgfGrid
 
                 using (var uGrid = new UGrid(gridPath))
                 {
-                    var numEdges = uGrid.GetNumberOfEdgesForMeshId(1);
+                    int numEdges = uGrid.GetNumberOfEdgesForMeshId(1);
                     Assert.AreEqual(12, numEdges); // 12 new rows. 
                 }
             });
         }
 
-        [Test, RequiresMTA]
+        [Test]
+        [RequiresMTA]
         [Category(TestCategory.Slow)]
         public void GenerateAnExtraGrid()
         {
             var pointList = new[]
             {
-                new Coordinate {X = 110, Y = 10},
-                new Coordinate {X = 130, Y = 10},
-                new Coordinate {X = 150, Y = 20},
-                new Coordinate {X = 140, Y = 40},
-                new Coordinate {X = 120, Y = 50},
-                new Coordinate {X = 100, Y = 30},
-                new Coordinate {X = 110, Y = 10},
+                new Coordinate
+                {
+                    X = 110,
+                    Y = 10
+                },
+                new Coordinate
+                {
+                    X = 130,
+                    Y = 10
+                },
+                new Coordinate
+                {
+                    X = 150,
+                    Y = 20
+                },
+                new Coordinate
+                {
+                    X = 140,
+                    Y = 40
+                },
+                new Coordinate
+                {
+                    X = 120,
+                    Y = 50
+                },
+                new Coordinate
+                {
+                    X = 100,
+                    Y = 30
+                },
+                new Coordinate
+                {
+                    X = 110,
+                    Y = 10
+                },
             };
             var polygons = new List<IPolygon> {new Polygon(new LinearRing(pointList))};
-            var gridPath = TestHelper.GetTestFilePath(@"grid_generation\existing_grid.nc");
+            string gridPath = TestHelper.GetTestFilePath(@"grid_generation\existing_grid.nc");
             gridPath = TestHelper.CreateLocalCopy(gridPath);
 
             // perform operation
@@ -122,7 +190,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.RgfGrid
 
             using (var uGrid = new UGrid(gridPath))
             {
-                var numEdges = uGrid.GetNumberOfEdgesForMeshId(1);
+                int numEdges = uGrid.GetNumberOfEdgesForMeshId(1);
                 Assert.AreEqual(24, numEdges); // 12 existing + 12 new rows.
             }
         }
@@ -143,14 +211,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.RgfGrid
             const int millisecondsToSleep = 100;
 
             // Get active rgfGrid processes (there should only be one)
-            var rgfGridProcesses = Process.GetProcessesByName(RgfGridEditor.MfeAppProcessName);
+            Process[] rgfGridProcesses = Process.GetProcessesByName(RgfGridEditor.MfeAppProcessName);
             while (!rgfGridProcesses.Any())
             {
                 Thread.Sleep(millisecondsToSleep);
                 rgfGridProcesses = Process.GetProcessesByName(RgfGridEditor.MfeAppProcessName);
             }
 
-            foreach (var process in rgfGridProcesses)
+            foreach (Process process in rgfGridProcesses)
             {
                 var totalTimeWaiting = 0;
                 // attempt to close rgfGrid (may not be successful straight away)

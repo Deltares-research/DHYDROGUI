@@ -12,7 +12,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Forms
     public class SubstanceProcessLibraryViewTest
     {
         private SubstanceProcessLibrary substanceProcessLibrary;
-        
+
         [TestFixtureSetUp]
         public void TestFixtureSetUp()
         {
@@ -22,7 +22,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Forms
         [Test]
         public void ShowSubstanceProcessLibraryViewEmpty()
         {
-            var view = new SubstanceProcessLibraryView { Data = null };
+            var view = new SubstanceProcessLibraryView {Data = null};
 
             WindowsFormsTestHelper.ShowModal(view);
         }
@@ -30,35 +30,35 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Forms
         [Test]
         public void ShowSubstanceProcessLibraryViewWithData()
         {
-            var view = new SubstanceProcessLibraryView { Data = substanceProcessLibrary };
+            var view = new SubstanceProcessLibraryView {Data = substanceProcessLibrary};
 
             WindowsFormsTestHelper.ShowModal(view, delegate
-                                                       {
-                                                           Assert.AreEqual(2, ((ITableView) TypeUtils.GetField(view, "tableViewProcesses")).Columns.Count);
-                                                           Assert.AreEqual(4, ((ITableView) TypeUtils.GetField(view, "tableViewParameters")).Columns.Count);
-                                                           Assert.AreEqual(4, ((ITableView) TypeUtils.GetField(view, "tableViewActiveSubstances")).Columns.Count);
-                                                           Assert.AreEqual(4, ((ITableView) TypeUtils.GetField(view, "tableViewInactiveSubstances")).Columns.Count);
-                                                           Assert.AreEqual(4, ((ITableView) TypeUtils.GetField(view, "tableViewOutputParameters")).Columns.Count);
-                                                       });
+            {
+                Assert.AreEqual(2, ((ITableView) TypeUtils.GetField(view, "tableViewProcesses")).Columns.Count);
+                Assert.AreEqual(4, ((ITableView) TypeUtils.GetField(view, "tableViewParameters")).Columns.Count);
+                Assert.AreEqual(4, ((ITableView) TypeUtils.GetField(view, "tableViewActiveSubstances")).Columns.Count);
+                Assert.AreEqual(4, ((ITableView) TypeUtils.GetField(view, "tableViewInactiveSubstances")).Columns.Count);
+                Assert.AreEqual(4, ((ITableView) TypeUtils.GetField(view, "tableViewOutputParameters")).Columns.Count);
+            });
         }
 
         [Test]
         public void ShowSubstanceProcessLibraryViewWithDataAndNameAndDescriptionColumnsOnly()
         {
             var view = new SubstanceProcessLibraryView
-                           {
-                               Data = substanceProcessLibrary, 
-                               ShowNameAndDescriptionColumnsOnly = true
-                           };
+            {
+                Data = substanceProcessLibrary,
+                ShowNameAndDescriptionColumnsOnly = true
+            };
 
             WindowsFormsTestHelper.ShowModal(view, delegate
-                                                       {
-                                                           Assert.AreEqual(2, ((ITableView) TypeUtils.GetField(view, "tableViewProcesses")).Columns.Count);
-                                                           Assert.AreEqual(2, ((ITableView) TypeUtils.GetField(view, "tableViewParameters")).Columns.Count);
-                                                           Assert.AreEqual(2, ((ITableView) TypeUtils.GetField(view, "tableViewActiveSubstances")).Columns.Count);
-                                                           Assert.AreEqual(2, ((ITableView) TypeUtils.GetField(view, "tableViewInactiveSubstances")).Columns.Count);
-                                                           Assert.AreEqual(2, ((ITableView) TypeUtils.GetField(view, "tableViewOutputParameters")).Columns.Count);
-                                                       });
+            {
+                Assert.AreEqual(2, ((ITableView) TypeUtils.GetField(view, "tableViewProcesses")).Columns.Count);
+                Assert.AreEqual(2, ((ITableView) TypeUtils.GetField(view, "tableViewParameters")).Columns.Count);
+                Assert.AreEqual(2, ((ITableView) TypeUtils.GetField(view, "tableViewActiveSubstances")).Columns.Count);
+                Assert.AreEqual(2, ((ITableView) TypeUtils.GetField(view, "tableViewInactiveSubstances")).Columns.Count);
+                Assert.AreEqual(2, ((ITableView) TypeUtils.GetField(view, "tableViewOutputParameters")).Columns.Count);
+            });
         }
     }
 }

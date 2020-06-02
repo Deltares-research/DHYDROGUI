@@ -1,4 +1,6 @@
 ﻿using System.ComponentModel;
+using DelftTools.Functions;
+using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
@@ -10,7 +12,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         public void ConstFunctionBubblesPropertyChangedAfterChangingDefaultValue()
         {
             var count = 0;
-            var constFunction = WaterQualityFunctionFactory.CreateConst("Const function", 1.0, "Component", "m3", "description");
+            IFunction constFunction = WaterQualityFunctionFactory.CreateConst("Const function", 1.0, "Component", "m3", "description");
 
             ((INotifyPropertyChanged) constFunction).PropertyChanged += (s, e) => count++;
 
@@ -25,7 +27,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             // setup
 
             // call
-            var function = WaterQualityFunctionFactory.CreateFunctionFromHydroDynamics("From hyd-file", double.NaN, "Component","Bytes/m^2", "with description");
+            FunctionFromHydroDynamics function = WaterQualityFunctionFactory.CreateFunctionFromHydroDynamics("From hyd-file", double.NaN, "Component", "Bytes/m^2", "with description");
 
             // assert
             Assert.AreEqual("From hyd-file", function.Name);
@@ -50,12 +52,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             var urlPath = @"test\url";
 
             // call
-            var function = WaterQualityFunctionFactory.CreateSegmentFunction(
+            SegmentFileFunction function = WaterQualityFunctionFactory.CreateSegmentFunction(
                 name,
                 defaultValue,
                 componentName,
-                unitName, 
-                description, 
+                unitName,
+                description,
                 urlPath);
 
             // assert
@@ -67,7 +69,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             Assert.AreEqual(unitName, function.Components[0].Unit.Symbol);
             Assert.AreEqual(description, function.Attributes[WaterQualityFunctionFactory.DESCRIPTION_ATTRIBUTE]);
             Assert.AreEqual(urlPath, function.UrlPath);
-
         }
     }
 }

@@ -9,6 +9,7 @@ using DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.FeatureEditing;
 using DeltaShell.Plugins.SharpMapGis.Gui;
 using NUnit.Framework;
 using SharpMap;
+using SharpMap.Api;
 using SharpMap.Api.Layers;
 using SharpMap.Layers;
 
@@ -38,38 +39,46 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             };
 
             // call & assert
-            foreach (var data in dataArray)
+            foreach (object data in dataArray)
             {
                 Assert.IsTrue(layerProvider.CanCreateLayerFor(data, model),
-                    "Should be able to create layer for data: {0}", data);
+                              "Should be able to create layer for data: {0}", data);
             }
         }
-        
-        [Test, Category(TestCategory.Integration)]
+
+        [Test]
+        [Category(TestCategory.Integration)]
         public void CreateMapLayerForWaterQualityModel()
         {
             var model = new WaterQualityModel();
-            model.SubstanceProcessLibrary.Substances.AddRange(new []
+            model.SubstanceProcessLibrary.Substances.AddRange(new[]
+            {
+                new WaterQualitySubstance
                 {
-                    new WaterQualitySubstance { Name = "B", Active = false },
-                    new WaterQualitySubstance { Name = "A", Active = true }
-                });
+                    Name = "B",
+                    Active = false
+                },
+                new WaterQualitySubstance
+                {
+                    Name = "A",
+                    Active = true
+                }
+            });
             model.Loads.AddRange(new[]
             {
-                new WaterQualityLoad { Name = "Load 1" },
-                new WaterQualityLoad { Name = "Load 2" }, 
+                new WaterQualityLoad {Name = "Load 1"},
+                new WaterQualityLoad {Name = "Load 2"},
             });
 
             var mapLayerProviders = new IMapLayerProvider[]
-                {
-                    new WaterQualityModelMapLayerProvider(), 
-                    new SharpMapLayerProvider()
-                };
-
+            {
+                new WaterQualityModelMapLayerProvider(),
+                new SharpMapLayerProvider()
+            };
 
             var layerObjectLookup = new Dictionary<ILayer, object>();
-            var modelLayer = MapLayerProviderHelper.CreateLayersRecursive(model, null, mapLayerProviders, layerObjectLookup);
-            
+            ILayer modelLayer = MapLayerProviderHelper.CreateLayersRecursive(model, null, mapLayerProviders, layerObjectLookup);
+
             Assert.NotNull(modelLayer);
             Assert.NotNull(layerObjectLookup);
 
@@ -80,21 +89,21 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             Assert.NotNull(groupLayer);
             Assert.IsTrue(groupLayer.LayersReadOnly);
 
-            var allLayers = Map.GetLayers(groupLayer.Layers, true, true).ToArray();
+            ILayer[] allLayers = Map.GetLayers(groupLayer.Layers, true, true).ToArray();
 
             Assert.AreEqual(17, allLayers.Length);
 
             #region Loads layer
 
-            var loadsLayer = allLayers.First(l => l.Name == "Loads");
+            ILayer loadsLayer = allLayers.First(l => l.Name == "Loads");
             Assert.IsTrue(loadsLayer.NameIsReadOnly);
             Assert.IsFalse(loadsLayer.ReadOnly);
             Assert.IsInstanceOf<WaterQualityFeatureEditor>(loadsLayer.FeatureEditor);
             Assert.IsInstanceOf<VectorLayer>(loadsLayer);
-            var vectorLayer = (VectorLayer)loadsLayer;
+            var vectorLayer = (VectorLayer) loadsLayer;
             Assert.IsTrue(vectorLayer.Style.HasCustomSymbol);
 
-            var featureProvider = loadsLayer.DataSource;
+            IFeatureProvider featureProvider = loadsLayer.DataSource;
             Assert.AreEqual(typeof(WaterQualityLoad), featureProvider.FeatureType);
             Assert.AreEqual(2, featureProvider.GetFeatureCount());
             Assert.AreEqual(model.Grid.CoordinateSystem, featureProvider.CoordinateSystem);
@@ -103,7 +112,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
 
             #region Observation Areas layer
 
-            var observationAreaLayer = allLayers.First(l => l.Name == "Observation Areas");
+            ILayer observationAreaLayer = allLayers.First(l => l.Name == "Observation Areas");
             Assert.IsTrue(observationAreaLayer.NameIsReadOnly);
             Assert.IsFalse(observationAreaLayer.ReadOnly);
             Assert.IsInstanceOf<UnstructuredGridCellCoverageLayer>(observationAreaLayer);
@@ -111,15 +120,19 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             #endregion
 
             #region Substances layer
-            var substancesLayer = allLayers.First(l => l.Name == "Substances");
+
+            ILayer substancesLayer = allLayers.First(l => l.Name == "Substances");
             Assert.IsTrue(substancesLayer.NameIsReadOnly);
             Assert.IsFalse(substancesLayer.ReadOnly);
+
             #endregion
 
             #region Output Parameters layer
-            var outputParametersLayer = allLayers.First(l => l.Name == "Output Parameters");
+
+            ILayer outputParametersLayer = allLayers.First(l => l.Name == "Output Parameters");
             Assert.IsTrue(outputParametersLayer.NameIsReadOnly);
             Assert.IsFalse(outputParametersLayer.ReadOnly);
+
             #endregion
         }
     }

@@ -14,7 +14,7 @@ namespace DeltaShell.NGHS.TestUtils
             //Given
             using (var app = new DeltaShellApplication())
             {
-                var appPlugin = applicationPlugin;
+                ApplicationPlugin appPlugin = applicationPlugin;
 
                 app.Project = new Project();
                 appPlugin.Application = app;
@@ -35,7 +35,7 @@ namespace DeltaShell.NGHS.TestUtils
             // Given
             using (var app = new DeltaShellApplication())
             {
-                var appPlugin = applicationPlugin;
+                ApplicationPlugin appPlugin = applicationPlugin;
 
                 app.Project = new Project();
                 appPlugin.Application = app;

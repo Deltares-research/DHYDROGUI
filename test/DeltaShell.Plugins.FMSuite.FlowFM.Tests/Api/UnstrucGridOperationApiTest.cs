@@ -35,10 +35,28 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
             meshApi.Expect(a => a.GetSnappedFeature(string.Empty, null, null, ref doubleValues, ref doubleValues, ref intValues))
                    .IgnoreArguments()
                    .OutRef(
-                       new[] { 0.0, 1.0, 1.0, -999.0 },
-                       new[] { 0.0, 0.0, 1.0, -999.0 },
-                       new[] { 1, 1, 1, 0 }
-                       )
+                       new[]
+                       {
+                           0.0,
+                           1.0,
+                           1.0,
+                           -999.0
+                       },
+                       new[]
+                       {
+                           0.0,
+                           0.0,
+                           1.0,
+                           -999.0
+                       },
+                       new[]
+                       {
+                           1,
+                           1,
+                           1,
+                           0
+                       }
+                   )
                    .Return(true);
 
             var coordinates = new[]
@@ -97,9 +115,27 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
             meshApi.Expect(a => a.GetSnappedFeature(string.Empty, null, null, ref doubleValues, ref doubleValues, ref intValues))
                    .IgnoreArguments()
                    .OutRef(
-                       new[] { 0.0, -999.0, 2.0, -999.0 },
-                       new[] { 0.0, -999.0, 1.0, -999.0 },
-                       new[] { 1, 0, 2, 0 }
+                       new[]
+                       {
+                           0.0,
+                           -999.0,
+                           2.0,
+                           -999.0
+                       },
+                       new[]
+                       {
+                           0.0,
+                           -999.0,
+                           1.0,
+                           -999.0
+                       },
+                       new[]
+                       {
+                           1,
+                           0,
+                           2,
+                           0
+                       }
                    )
                    .Return(true);
 
@@ -140,9 +176,33 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
             meshApi.Expect(a => a.GetSnappedFeature(string.Empty, null, null, ref doubleValues, ref doubleValues, ref intValues))
                    .IgnoreArguments()
                    .OutRef(
-                       new[] { 0.0, 1.0, -999.0, 2.0, 3.0, -999.0 },
-                       new[] { 0.0, 1.0, -999.0, 1.0, 3.0, -999.0 },
-                       new[] { 1, 1, 0, 2, 2, 0 }
+                       new[]
+                       {
+                           0.0,
+                           1.0,
+                           -999.0,
+                           2.0,
+                           3.0,
+                           -999.0
+                       },
+                       new[]
+                       {
+                           0.0,
+                           1.0,
+                           -999.0,
+                           1.0,
+                           3.0,
+                           -999.0
+                       },
+                       new[]
+                       {
+                           1,
+                           1,
+                           0,
+                           2,
+                           2,
+                           0
+                       }
                    )
                    .Return(true);
 

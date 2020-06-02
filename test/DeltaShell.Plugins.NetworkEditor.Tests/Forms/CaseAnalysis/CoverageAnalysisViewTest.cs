@@ -1,7 +1,9 @@
+using DelftTools.Hydro;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Shell.Core;
 using DelftTools.TestUtils;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.CaseAnalysis;
+using NetTopologySuite.Extensions.Coverages;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CaseAnalysis
@@ -15,13 +17,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CaseAnalysis
         {
             var project = new Project();
 
-            var network = HydroNetworkHelper.GetSnakeHydroNetwork(3);
+            IHydroNetwork network = HydroNetworkHelper.GetSnakeHydroNetwork(3);
 
             project.RootFolder.Add(NetworkCoverageOperationsTest.CreateRandomNetworkCoverage(network));
             project.RootFolder.Add(NetworkCoverageOperationsTest.CreateRandomNetworkCoverage(network));
             project.RootFolder.Add(NetworkCoverageOperationsTest.CreateRandomNetworkCoverage(network));
 
-            using (var view = new CoverageAnalysisView { Data = project })
+            using (var view = new CoverageAnalysisView {Data = project})
             {
                 WindowsFormsTestHelper.ShowModal(view);
             }
@@ -33,15 +35,15 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CaseAnalysis
         {
             var project = new Project();
 
-            var network = HydroNetworkHelper.GetSnakeHydroNetwork(3);
-            var network2 = HydroNetworkHelper.GetSnakeHydroNetwork(3);
+            IHydroNetwork network = HydroNetworkHelper.GetSnakeHydroNetwork(3);
+            IHydroNetwork network2 = HydroNetworkHelper.GetSnakeHydroNetwork(3);
 
             project.RootFolder.Add(NetworkCoverageOperationsTest.CreateRandomNetworkCoverage(network));
             project.RootFolder.Add(NetworkCoverageOperationsTest.CreateRandomNetworkCoverage(network));
             project.RootFolder.Add(NetworkCoverageOperationsTest.CreateRandomNetworkCoverage(network));
             project.RootFolder.Add(NetworkCoverageOperationsTest.CreateRandomNetworkCoverage(network2));
 
-            using (var view = new CoverageAnalysisView { Data = project })
+            using (var view = new CoverageAnalysisView {Data = project})
             {
                 WindowsFormsTestHelper.ShowModal(view);
             }
@@ -53,26 +55,25 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CaseAnalysis
         {
             var project = new Project();
 
-            var network = HydroNetworkHelper.GetSnakeHydroNetwork(3);
+            IHydroNetwork network = HydroNetworkHelper.GetSnakeHydroNetwork(3);
 
-            var cov1 = NetworkCoverageOperationsTest.CreateRandomNetworkCoverage(network);
-            var cov2 = NetworkCoverageOperationsTest.CreateRandomNetworkCoverage(network);
-            var cov3 = NetworkCoverageOperationsTest.CreateRandomNetworkCoverage(network);
+            NetworkCoverage cov1 = NetworkCoverageOperationsTest.CreateRandomNetworkCoverage(network);
+            NetworkCoverage cov2 = NetworkCoverageOperationsTest.CreateRandomNetworkCoverage(network);
+            NetworkCoverage cov3 = NetworkCoverageOperationsTest.CreateRandomNetworkCoverage(network);
             project.RootFolder.Add(cov1);
             project.RootFolder.Add(cov2);
 
-            using (var view = new CoverageAnalysisView { Data = project })
+            using (var view = new CoverageAnalysisView {Data = project})
             {
                 WindowsFormsTestHelper.ShowModal(
                     view,
                     f =>
-                        {
-                            project.RootFolder.Add(cov3);
-                            project.RootFolder.Items.RemoveAt(0);
-                            project.RootFolder.Items.RemoveAt(0);
-                        });
+                    {
+                        project.RootFolder.Add(cov3);
+                        project.RootFolder.Items.RemoveAt(0);
+                        project.RootFolder.Items.RemoveAt(0);
+                    });
             }
         }
-        
     }
 }

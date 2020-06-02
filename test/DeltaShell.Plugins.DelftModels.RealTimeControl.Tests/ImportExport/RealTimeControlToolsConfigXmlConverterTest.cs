@@ -17,216 +17,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
     [TestFixture]
     public class RealTimeControlToolsConfigXmlConverterTest
     {
-        private readonly Random random = new Random();
-        private readonly ExpressionNodeEqualityComparer nodeComparer = new ExpressionNodeEqualityComparer();
-
         private const string ControlGroupName = "control_group_name";
         private const string ComponentName = "component_name";
-
-        [TestCase(timeRelativeEnumStringType.ABSOLUTE, false,
-            interpolationOptionEnumStringType.LINEAR, InterpolationType.Linear)]
-        [TestCase(timeRelativeEnumStringType.RELATIVE, true,
-            interpolationOptionEnumStringType.BLOCK, InterpolationType.Constant)]
-        public void ConvertToDataAccessObjects_RelativeTimeRule_CorrectResultIsReturned(
-            timeRelativeEnumStringType reference, bool expectedFromValue,
-            interpolationOptionEnumStringType interpolationOption, InterpolationType expectedInterpolation)
-        {
-            // Setup
-            RuleXML ruleElement = CreateRelativeTimeRuleElement(ControlGroupName, interpolationOption, reference);
-
-            RuleXML[] ruleElements = {ruleElement};
-            var triggerElements = new TriggerXML[]{};
-
-            // Call
-            IRtcDataAccessObject<RtcBaseObject>[] dataAccessObjects = RealTimeControlToolsConfigXmlConverter
-                                                                      .ConvertToDataAccessObjects(ruleElements, triggerElements)
-                                                                      .ToArray();
-
-            // Assert
-            Assert.That(dataAccessObjects, Has.Length.EqualTo(1));
-            var ruleObj = dataAccessObjects[0] as RuleDataAccessObject;
-            Assert.That(ruleObj, Is.Not.Null);
-
-            AssertRelativeTimeRuleValidity(ruleObj.Object, expectedFromValue, expectedInterpolation);
-        }
-
-        [TestCase(PIDRule.PIDRuleSetpointType.Constant, 7d)]
-        [TestCase(PIDRule.PIDRuleSetpointType.TimeSeries, 0d)]
-        [TestCase(PIDRule.PIDRuleSetpointType.Signal, 0d)]
-        public void ConvertToDataAccessObjects_PidRule_CorrectResultIsReturned(
-            PIDRule.PIDRuleSetpointType expectedSetpointType,
-            object expectedConstantValue)
-        {
-            // Setup
-            RuleXML ruleElement = CreatePidRuleElement(ControlGroupName, expectedSetpointType);
-
-            RuleXML[] ruleElements = {ruleElement};
-            var triggerElements = new TriggerXML[]{};
-
-            // Call
-            IRtcDataAccessObject<RtcBaseObject>[] dataAccessObjects = RealTimeControlToolsConfigXmlConverter
-                                                                      .ConvertToDataAccessObjects(ruleElements, triggerElements)
-                                                                      .ToArray();
-
-            // Assert
-            Assert.That(dataAccessObjects, Has.Length.EqualTo(1));
-            var ruleObj = dataAccessObjects[0] as RuleDataAccessObject;
-            Assert.That(ruleObj, Is.Not.Null);
-            AssertPidRuleValidity(ruleObj.Object, expectedSetpointType, expectedConstantValue);
-        }
-
-        [TestCase(ItemChoiceType5.settingMaxStep, Item1ChoiceType3.deadbandSetpointAbsolute,
-            IntervalRule.IntervalRuleIntervalType.Fixed, IntervalRule.IntervalRuleDeadBandType.Fixed, false)]
-        [TestCase(ItemChoiceType5.settingMaxSpeed, Item1ChoiceType3.deadbandSetpointRelative,
-            IntervalRule.IntervalRuleIntervalType.Variable, IntervalRule.IntervalRuleDeadBandType.PercentageDischarge,
-            false)]
-        [TestCase(ItemChoiceType5.settingMaxSpeed, Item1ChoiceType3.deadbandSetpointRelative,
-            IntervalRule.IntervalRuleIntervalType.Signal, IntervalRule.IntervalRuleDeadBandType.PercentageDischarge,
-            true)]
-        public void ConvertToDataAccessObjects_IntervalRule_CorrectResultIsReturned(
-            ItemChoiceType5 intervalType,
-            Item1ChoiceType3 deadBandType,
-            IntervalRule.IntervalRuleIntervalType expectedIntervalType,
-            IntervalRule.IntervalRuleDeadBandType expectedDeadBandType,
-            bool signalAsSetpoint)
-        {
-            // Setup
-            RuleXML ruleElement =
-                CreateIntervalRuleElement(ControlGroupName, signalAsSetpoint, intervalType, deadBandType);
-            RuleXML[] ruleElements = {ruleElement};
-            var triggerElements = new TriggerXML[]{};
-
-            // Call
-            IRtcDataAccessObject<RtcBaseObject>[] dataAccessObjects = RealTimeControlToolsConfigXmlConverter
-                                                                      .ConvertToDataAccessObjects(ruleElements, triggerElements)
-                                                                      .ToArray();
-
-            // Assert
-            Assert.That(dataAccessObjects, Has.Length.EqualTo(1));
-            var ruleObj = dataAccessObjects[0] as RuleDataAccessObject;
-            Assert.That(ruleObj, Is.Not.Null);
-            AssertIntervalRuleValidity(ruleObj.Object, expectedIntervalType, expectedDeadBandType);
-        }
-
-        [TestCase(interpolationOptionEnumStringType.LINEAR, interpolationOptionEnumStringType.LINEAR,
-            InterpolationHydraulicType.Linear, ExtrapolationHydraulicType.Linear)]
-        [TestCase(interpolationOptionEnumStringType.BLOCK, interpolationOptionEnumStringType.BLOCK,
-            InterpolationHydraulicType.Constant, ExtrapolationHydraulicType.Constant)]
-        public void ConvertToDataAccessObjects_HydraulicRule_CorrectResultIsReturned(
-            interpolationOptionEnumStringType interpolation,
-            interpolationOptionEnumStringType extrapolation,
-            InterpolationHydraulicType expectedInterpolation,
-            ExtrapolationHydraulicType expectedExtrapolation)
-        {
-            // Setup
-            RuleXML ruleElement = CreateLookupTableRuleElement(RtcXmlTag.HydraulicRule, ControlGroupName, interpolation,
-                                                               extrapolation);
-
-            RuleXML[] ruleElements = {ruleElement};
-            var triggerElements = new TriggerXML[]{};
-
-            // Call
-            IRtcDataAccessObject<RtcBaseObject>[] dataAccessObjects = RealTimeControlToolsConfigXmlConverter
-                                                                      .ConvertToDataAccessObjects(ruleElements, triggerElements)
-                                                                      .ToArray();
-
-            // Assert
-            Assert.That(dataAccessObjects, Has.Length.EqualTo(1));
-            var ruleObj = dataAccessObjects[0] as RuleDataAccessObject;
-            Assert.That(ruleObj, Is.Not.Null);
-            AssertHydraulicRuleValidity(ruleObj.Object, expectedInterpolation, expectedExtrapolation);
-        }
-
-        [TestCase(interpolationOptionEnumStringType.LINEAR, interpolationOptionEnumStringType.LINEAR,
-            InterpolationHydraulicType.Linear, ExtrapolationHydraulicType.Linear)]
-        [TestCase(interpolationOptionEnumStringType.BLOCK, interpolationOptionEnumStringType.BLOCK,
-            InterpolationHydraulicType.Constant, ExtrapolationHydraulicType.Constant)]
-        public void ConvertToDataAccessObjects_FactorRule_CorrectResultIsReturned(
-            interpolationOptionEnumStringType interpolation,
-            interpolationOptionEnumStringType extrapolation,
-            InterpolationHydraulicType expectedInterpolation,
-            ExtrapolationHydraulicType expectedExtrapolation)
-        {
-            // Setup
-            RuleXML ruleElement = CreateLookupTableRuleElement(
-                RtcXmlTag.FactorRule, ControlGroupName, interpolation, extrapolation);
-
-            RuleXML[] ruleElements = {ruleElement};
-            var triggerElements = new TriggerXML[]{};
-
-            // Call
-            IRtcDataAccessObject<RtcBaseObject>[] dataAccessObjects = RealTimeControlToolsConfigXmlConverter
-                                                                      .ConvertToDataAccessObjects(ruleElements, triggerElements)
-                                                                      .ToArray();
-
-            // Assert
-            Assert.That(dataAccessObjects, Has.Length.EqualTo(1));
-            var ruleObj = dataAccessObjects[0] as RuleDataAccessObject;
-            Assert.That(ruleObj, Is.Not.Null);
-
-            AssertFactorRuleValidity(ruleObj.Object, expectedInterpolation, expectedExtrapolation);
-        }
-
-        [TestCase(RtcXmlTag.StandardCondition, typeof(StandardCondition), inputReferenceEnumStringType.EXPLICIT,
-            StandardCondition.ReferenceType.Explicit, relationalOperatorEnumStringType.Equal, Operation.Equal, 3.3)]
-        [TestCase(RtcXmlTag.StandardCondition, typeof(StandardCondition), inputReferenceEnumStringType.IMPLICIT,
-            StandardCondition.ReferenceType.Implicit, relationalOperatorEnumStringType.Greater, Operation.Greater, 3.3)]
-        [TestCase(RtcXmlTag.TimeCondition, typeof(TimeCondition), inputReferenceEnumStringType.EXPLICIT,
-            StandardCondition.ReferenceType.Explicit, relationalOperatorEnumStringType.GreaterEqual,
-            Operation.GreaterEqual, 3.3)]
-        [TestCase(RtcXmlTag.TimeCondition, typeof(TimeCondition), inputReferenceEnumStringType.IMPLICIT,
-            StandardCondition.ReferenceType.Implicit, relationalOperatorEnumStringType.Less, Operation.Less, 3.3)]
-        [TestCase(RtcXmlTag.DirectionalCondition, typeof(DirectionalCondition), inputReferenceEnumStringType.EXPLICIT,
-            StandardCondition.ReferenceType.Explicit, relationalOperatorEnumStringType.LessEqual, Operation.LessEqual,
-            0.0)]
-        [TestCase(RtcXmlTag.DirectionalCondition, typeof(DirectionalCondition), inputReferenceEnumStringType.IMPLICIT,
-            StandardCondition.ReferenceType.Implicit, relationalOperatorEnumStringType.Unequal, Operation.Unequal, 0.0)]
-        public void ConvertToDataAccessObjects_StandardCondition_CorrectResultIsReturned(
-            string tag, Type expectedConditionType,
-            inputReferenceEnumStringType reference, string expectedReference,
-            relationalOperatorEnumStringType operatorType, Operation expectedOperation,
-            double expectedValue)
-        {
-            // Setup
-            TriggerXML conditionElement = CreateStandardConditionElement(
-                tag, ControlGroupName, ComponentName, reference, operatorType);
-
-            var ruleElements = new RuleXML[]{};
-            TriggerXML[] triggerElements = {conditionElement};
-
-            // Call
-            IRtcDataAccessObject<RtcBaseObject>[] dataAccessObjects = RealTimeControlToolsConfigXmlConverter
-                                                                      .ConvertToDataAccessObjects(ruleElements, triggerElements)
-                                                                      .ToArray();
-
-            // Assert
-            Assert.That(dataAccessObjects, Has.Length.EqualTo(1));
-            var conditionObj = dataAccessObjects[0] as ConditionDataAccessObject;
-            Assert.That(conditionObj, Is.Not.Null);
-            AssertStandardConditionValidity(conditionObj.Object, expectedConditionType, expectedReference,
-                                            expectedOperation, expectedValue);
-        }
-
-        [TestCase(true, 2)]
-        [TestCase(false, 1)]
-        public void ConvertToDataAccessObjects_StandardConditionWithOutput_CorrectResultIsReturned(
-            bool hasOutput, int expectedNumberOfConditions)
-        {
-            // Setup
-            TriggerXML conditionElement = CreateStandardConditionElement(
-                RtcXmlTag.StandardCondition, ControlGroupName, ComponentName, hasOutput: hasOutput);
-
-            var ruleElements = new RuleXML[] { };
-            TriggerXML[] triggerElements = { conditionElement };
-
-            // Call
-            IRtcDataAccessObject<RtcBaseObject>[] dataAccessObjects = RealTimeControlToolsConfigXmlConverter
-                                                                      .ConvertToDataAccessObjects(ruleElements, triggerElements)
-                                                                      .ToArray();
-
-            // Assert
-            Assert.That(dataAccessObjects, Has.Length.EqualTo(expectedNumberOfConditions));
-        }
+        private readonly Random random = new Random();
+        private readonly ExpressionNodeEqualityComparer nodeComparer = new ExpressionNodeEqualityComparer();
 
         [Test]
         public void ConvertToDataAccessObjects_TimeRule_CorrectResultIsReturned()
@@ -234,8 +28,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
             // Setup
             RuleXML ruleElement = CreateTimeRuleElement(ControlGroupName);
 
-            RuleXML[] ruleElements = {ruleElement};
-            var triggerElements = new TriggerXML[]{};
+            RuleXML[] ruleElements =
+            {
+                ruleElement
+            };
+            var triggerElements = new TriggerXML[]
+                {};
 
             // Call
             IRtcDataAccessObject<RtcBaseObject>[] dataAccessObjects = RealTimeControlToolsConfigXmlConverter
@@ -265,7 +63,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
                 CreateRelativeTimeRuleElement(controlGroup1Name)
             };
 
-            var triggerElements = new TriggerXML[]{};
+            var triggerElements = new TriggerXML[]
+                {};
 
             // Call
             IRtcDataAccessObject<RtcBaseObject>[] dataAccessObjects = RealTimeControlToolsConfigXmlConverter
@@ -279,10 +78,450 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
             Assert.AreEqual(controlGroup2Name, controlGroupNames.Last());
         }
 
+        [Test]
+        public void ConvertToExpressionTrees_MultipleExpressions_OneControlGroup_ReturnsCorrectTree()
+        {
+            // Setup
+            string leafInput = $"{RtcXmlTag.Input}some_input";
+
+            const string nameA = "A";
+            string idA = $"{ControlGroupName}/{nameA}";
+            var operatorA = Operator.Subtract; // TODO random
+
+            const string nameB = "B";
+            string idB = $"{ControlGroupName}/{nameB}";
+            var operatorB = Operator.Add; // TODO random
+
+            ExpressionXML expressionA = ExpressionXMLBuilder.Create(idA, operatorA, nameA)
+                                                            .WithInputAsFirstReference(nameB)
+                                                            .AndInputAsSecondReference(leafInput);
+            ExpressionXML expressionB = ExpressionXMLBuilder.Create(idB, operatorB, nameB)
+                                                            .WithInputAsFirstReference(leafInput)
+                                                            .AndInputAsSecondReference(leafInput);
+
+            TriggerXML[] triggers = WrapTriggers(expressionB, expressionA);
+            RuleXML[] ruleElements =
+                {};
+
+            IRtcDataAccessObject<RtcBaseObject>[] dataAccessObjects = RealTimeControlToolsConfigXmlConverter
+                                                                      .ConvertToDataAccessObjects(ruleElements, triggers)
+                                                                      .ToArray();
+
+            // Assert
+            Assert.That(dataAccessObjects, Has.Length.EqualTo(1));
+
+            ExpressionTree tree = AssertExpressionTree(dataAccessObjects.OfType<ExpressionTree>().ToArray(), idA,
+                                                       ControlGroupName, nameA);
+            BranchNode branchNode = AssertCorrectBranchNode(tree.RootNode, nameA, operatorA);
+            AssertCorrectBranchNodeWithTwoLeafNodes(branchNode.FirstNode, nameB, operatorB, leafInput, leafInput);
+            AssertCorrectLeafNode(branchNode.SecondNode, leafInput);
+        }
+
+        [Test]
+        public void ConvertToExpressionTrees_MultipleExpressions_MultipleControlGroups_ReturnsCorrectResult()
+        {
+            // Setup
+            string leafInput = $"{RtcXmlTag.Input}some_input";
+            const string controlGroup1 = "controlgroup_A";
+            const string controlGroup2 = "controlgroup_B";
+
+            const string expressionNameA = "A";
+            var operatorA = Operator.Subtract; // TODO random
+
+            const string expressionNameB = "B";
+            var operatorB = Operator.Add; // TODO random
+
+            string idA1 = $"{controlGroup1}/{expressionNameA}";
+            string idB1 = $"{controlGroup1}/{expressionNameB}";
+
+            string idA2 = $"{controlGroup2}/{expressionNameA}";
+            string idB2 = $"{controlGroup2}/{expressionNameB}";
+
+            TriggerXML[] triggers = WrapTriggers(
+                ExpressionXMLBuilder.Create(idA1, operatorA, expressionNameA)
+                                    .WithInputAsFirstReference(expressionNameB)
+                                    .AndInputAsSecondReference(leafInput),
+                ExpressionXMLBuilder.Create(idB1, operatorB, expressionNameB)
+                                    .WithInputAsFirstReference(leafInput)
+                                    .AndInputAsSecondReference(leafInput),
+                ExpressionXMLBuilder.Create(idA2, operatorA, expressionNameA)
+                                    .WithInputAsFirstReference(expressionNameB)
+                                    .AndInputAsSecondReference(leafInput),
+                ExpressionXMLBuilder.Create(idB2, operatorB, expressionNameB)
+                                    .WithInputAsFirstReference(leafInput)
+                                    .AndInputAsSecondReference(leafInput));
+            RuleXML[] rules =
+                {};
+
+            // Call
+            IRtcDataAccessObject<RtcBaseObject>[] dataAccessObjects = RealTimeControlToolsConfigXmlConverter
+                                                                      .ConvertToDataAccessObjects(rules, triggers)
+                                                                      .ToArray();
+
+            // Assert
+            Assert.That(dataAccessObjects, Has.Length.EqualTo(2));
+            ExpressionTree[] trees = dataAccessObjects.OfType<ExpressionTree>().ToArray();
+
+            ExpressionTree tree = AssertExpressionTree(trees, idA1, controlGroup1, expressionNameA);
+            BranchNode branchNode = AssertCorrectBranchNode(tree.RootNode, expressionNameA, operatorA);
+            AssertCorrectBranchNodeWithTwoLeafNodes(branchNode.FirstNode, expressionNameB, operatorB, leafInput,
+                                                    leafInput);
+            AssertCorrectLeafNode(branchNode.SecondNode, leafInput);
+
+            tree = AssertExpressionTree(trees, idA2, controlGroup2, expressionNameA);
+            branchNode = AssertCorrectBranchNode(tree.RootNode, expressionNameA, operatorA);
+            AssertCorrectBranchNodeWithTwoLeafNodes(branchNode.FirstNode, expressionNameB, operatorB, leafInput,
+                                                    leafInput);
+            AssertCorrectLeafNode(branchNode.SecondNode, leafInput);
+        }
+
+        [Test]
+        [Category(TestCategory.Integration)]
+        public void ConvertToExpressionTrees_WithComplexExample_ReturnsCorrectTree()
+        {
+            // Setup
+            string leafInput = $"{RtcXmlTag.Input}some_input"; // TODO random : constant or param
+            var @operator = Operator.Add;                      // TODO random
+
+            const string nameA = "A";
+            string idA = $"{ControlGroupName}/{nameA}";
+
+            const string nameB = "B";
+            string idB = $"{ControlGroupName}/{nameB}";
+
+            const string nameC = "C";
+            string idC = $"{ControlGroupName}/{nameC}";
+
+            const string nameD = "D";
+            string idD = $"{ControlGroupName}/{nameD}";
+
+            const string nameE = "E";
+            string idE = $"{ControlGroupName}/{nameE}";
+
+            const string nameF = "F";
+            string idF1 = $"{ControlGroupName}/{nameF}_1";
+            string idF2 = $"{ControlGroupName}/{nameF}_2";
+
+            const string nameG = "G";
+            string idG = $"{ControlGroupName}/{nameG}";
+
+            const string nameH = "H";
+            string idH = $"{ControlGroupName}/{nameH}";
+
+            var condition2 =
+                (StandardTriggerXML) CreateStandardConditionElement(RtcXmlTag.StandardCondition, ControlGroupName,
+                                                                    "condition2").Item;
+
+            ConditionXmlBuilder.Start(condition2)
+                               .WithTrueOutput(ExpressionXMLBuilder.Create(idF1, @operator, nameF)
+                                                                   .WithInputAsFirstReference(nameD)
+                                                                   .AndInputAsSecondReference(nameG))
+                               .WithTrueOutput(ExpressionXMLBuilder.Create(idG, @operator, nameG)
+                                                                   .WithInputAsFirstReference(leafInput)
+                                                                   .AndInputAsSecondReference(leafInput))
+                               .WithFalseOutput(ExpressionXMLBuilder.Create(idF2, @operator, nameF)
+                                                                    .WithInputAsFirstReference(nameD)
+                                                                    .AndInputAsSecondReference(leafInput));
+
+            var condition1 =
+                (StandardTriggerXML) CreateStandardConditionElement(RtcXmlTag.StandardCondition, ControlGroupName,
+                                                                    "condition1").Item;
+            ConditionXmlBuilder.Start(condition1)
+                               .WithTrueOutput(condition2)
+                               .WithFalseOutput(ExpressionXMLBuilder.Create(idH, @operator, nameH)
+                                                                    .WithInputAsFirstReference(leafInput)
+                                                                    .AndInputAsSecondReference(leafInput));
+
+            TriggerXML[] triggers = WrapTriggers(
+                ExpressionXMLBuilder.Create(idA, @operator, nameA)
+                                    .WithInputAsFirstReference(leafInput)
+                                    .AndInputAsSecondReference(leafInput),
+                ExpressionXMLBuilder.Create(idB, @operator, nameB)
+                                    .WithInputAsFirstReference(leafInput)
+                                    .AndInputAsSecondReference(leafInput),
+                ExpressionXMLBuilder.Create(idC, @operator, nameC)
+                                    .WithInputAsFirstReference(nameA)
+                                    .AndInputAsSecondReference(nameB),
+                ExpressionXMLBuilder.Create(idD, @operator, nameD)
+                                    .WithInputAsFirstReference(leafInput)
+                                    .AndInputAsSecondReference(leafInput),
+                ExpressionXMLBuilder.Create(idE, @operator, nameE)
+                                    .WithInputAsFirstReference(nameF)
+                                    .AndInputAsSecondReference(leafInput),
+                condition1);
+
+            RuleXML[] rules =
+                {};
+
+            // Call
+            IRtcDataAccessObject<RtcBaseObject>[] dataAccessObjects = RealTimeControlToolsConfigXmlConverter
+                                                                      .ConvertToDataAccessObjects(rules, triggers)
+                                                                      .ToArray();
+
+            // Assert
+            Assert.That(dataAccessObjects, Has.Length.EqualTo(8));
+            ExpressionTree[] trees = dataAccessObjects.OfType<ExpressionTree>().ToArray();
+
+            ExpressionTree treeC = AssertExpressionTree(trees, idC, ControlGroupName, nameC);
+            BranchNode rootNode = AssertCorrectBranchNode(treeC.RootNode, nameC, @operator);
+            AssertCorrectBranchNodeWithTwoLeafNodes(rootNode.FirstNode, nameA, @operator, leafInput, leafInput);
+            AssertCorrectBranchNodeWithTwoLeafNodes(rootNode.SecondNode, nameB, @operator, leafInput, leafInput);
+
+            ExpressionTree treeD = AssertExpressionTree(trees, idD, ControlGroupName, nameD);
+            AssertCorrectBranchNodeWithTwoLeafNodes(treeD.RootNode, nameD, @operator, leafInput, leafInput);
+
+            ExpressionTree treeE = AssertExpressionTree(trees, idE, ControlGroupName, nameE);
+            AssertCorrectBranchNodeWithTwoLeafNodes(treeE.RootNode, nameE, @operator, nameF, leafInput);
+
+            ExpressionTree treeF1 = AssertExpressionTree(trees, idF1, ControlGroupName, nameF);
+            rootNode = AssertCorrectBranchNode(treeF1.RootNode, nameF, @operator);
+            AssertCorrectLeafNode(rootNode.FirstNode, nameD);
+            AssertCorrectBranchNodeWithTwoLeafNodes(rootNode.SecondNode, nameG, @operator, leafInput, leafInput);
+
+            ExpressionTree treeF2 = AssertExpressionTree(trees, idF2, ControlGroupName, nameF);
+            AssertCorrectBranchNodeWithTwoLeafNodes(treeF2.RootNode, nameF, @operator, nameD, leafInput);
+
+            ExpressionTree treeH = AssertExpressionTree(trees, idH, ControlGroupName, nameH);
+            AssertCorrectBranchNodeWithTwoLeafNodes(treeH.RootNode, nameH, @operator, leafInput, leafInput);
+        }
+
+        [TestCase(timeRelativeEnumStringType.ABSOLUTE, false,
+                  interpolationOptionEnumStringType.LINEAR, InterpolationType.Linear)]
+        [TestCase(timeRelativeEnumStringType.RELATIVE, true,
+                  interpolationOptionEnumStringType.BLOCK, InterpolationType.Constant)]
+        public void ConvertToDataAccessObjects_RelativeTimeRule_CorrectResultIsReturned(
+            timeRelativeEnumStringType reference, bool expectedFromValue,
+            interpolationOptionEnumStringType interpolationOption, InterpolationType expectedInterpolation)
+        {
+            // Setup
+            RuleXML ruleElement = CreateRelativeTimeRuleElement(ControlGroupName, interpolationOption, reference);
+
+            RuleXML[] ruleElements =
+            {
+                ruleElement
+            };
+            var triggerElements = new TriggerXML[]
+                {};
+
+            // Call
+            IRtcDataAccessObject<RtcBaseObject>[] dataAccessObjects = RealTimeControlToolsConfigXmlConverter
+                                                                      .ConvertToDataAccessObjects(ruleElements, triggerElements)
+                                                                      .ToArray();
+
+            // Assert
+            Assert.That(dataAccessObjects, Has.Length.EqualTo(1));
+            var ruleObj = dataAccessObjects[0] as RuleDataAccessObject;
+            Assert.That(ruleObj, Is.Not.Null);
+
+            AssertRelativeTimeRuleValidity(ruleObj.Object, expectedFromValue, expectedInterpolation);
+        }
+
+        [TestCase(PIDRule.PIDRuleSetpointType.Constant, 7d)]
+        [TestCase(PIDRule.PIDRuleSetpointType.TimeSeries, 0d)]
+        [TestCase(PIDRule.PIDRuleSetpointType.Signal, 0d)]
+        public void ConvertToDataAccessObjects_PidRule_CorrectResultIsReturned(
+            PIDRule.PIDRuleSetpointType expectedSetpointType,
+            object expectedConstantValue)
+        {
+            // Setup
+            RuleXML ruleElement = CreatePidRuleElement(ControlGroupName, expectedSetpointType);
+
+            RuleXML[] ruleElements =
+            {
+                ruleElement
+            };
+            var triggerElements = new TriggerXML[]
+                {};
+
+            // Call
+            IRtcDataAccessObject<RtcBaseObject>[] dataAccessObjects = RealTimeControlToolsConfigXmlConverter
+                                                                      .ConvertToDataAccessObjects(ruleElements, triggerElements)
+                                                                      .ToArray();
+
+            // Assert
+            Assert.That(dataAccessObjects, Has.Length.EqualTo(1));
+            var ruleObj = dataAccessObjects[0] as RuleDataAccessObject;
+            Assert.That(ruleObj, Is.Not.Null);
+            AssertPidRuleValidity(ruleObj.Object, expectedSetpointType, expectedConstantValue);
+        }
+
+        [TestCase(ItemChoiceType5.settingMaxStep, Item1ChoiceType3.deadbandSetpointAbsolute,
+                  IntervalRule.IntervalRuleIntervalType.Fixed, IntervalRule.IntervalRuleDeadBandType.Fixed, false)]
+        [TestCase(ItemChoiceType5.settingMaxSpeed, Item1ChoiceType3.deadbandSetpointRelative,
+                  IntervalRule.IntervalRuleIntervalType.Variable, IntervalRule.IntervalRuleDeadBandType.PercentageDischarge,
+                  false)]
+        [TestCase(ItemChoiceType5.settingMaxSpeed, Item1ChoiceType3.deadbandSetpointRelative,
+                  IntervalRule.IntervalRuleIntervalType.Signal, IntervalRule.IntervalRuleDeadBandType.PercentageDischarge,
+                  true)]
+        public void ConvertToDataAccessObjects_IntervalRule_CorrectResultIsReturned(
+            ItemChoiceType5 intervalType,
+            Item1ChoiceType3 deadBandType,
+            IntervalRule.IntervalRuleIntervalType expectedIntervalType,
+            IntervalRule.IntervalRuleDeadBandType expectedDeadBandType,
+            bool signalAsSetpoint)
+        {
+            // Setup
+            RuleXML ruleElement =
+                CreateIntervalRuleElement(ControlGroupName, signalAsSetpoint, intervalType, deadBandType);
+            RuleXML[] ruleElements =
+            {
+                ruleElement
+            };
+            var triggerElements = new TriggerXML[]
+                {};
+
+            // Call
+            IRtcDataAccessObject<RtcBaseObject>[] dataAccessObjects = RealTimeControlToolsConfigXmlConverter
+                                                                      .ConvertToDataAccessObjects(ruleElements, triggerElements)
+                                                                      .ToArray();
+
+            // Assert
+            Assert.That(dataAccessObjects, Has.Length.EqualTo(1));
+            var ruleObj = dataAccessObjects[0] as RuleDataAccessObject;
+            Assert.That(ruleObj, Is.Not.Null);
+            AssertIntervalRuleValidity(ruleObj.Object, expectedIntervalType, expectedDeadBandType);
+        }
+
         [TestCase(interpolationOptionEnumStringType.LINEAR, interpolationOptionEnumStringType.LINEAR,
-            InterpolationHydraulicType.Linear, ExtrapolationHydraulicType.Linear)]
+                  InterpolationHydraulicType.Linear, ExtrapolationHydraulicType.Linear)]
         [TestCase(interpolationOptionEnumStringType.BLOCK, interpolationOptionEnumStringType.BLOCK,
-            InterpolationHydraulicType.Constant, ExtrapolationHydraulicType.Constant)]
+                  InterpolationHydraulicType.Constant, ExtrapolationHydraulicType.Constant)]
+        public void ConvertToDataAccessObjects_HydraulicRule_CorrectResultIsReturned(
+            interpolationOptionEnumStringType interpolation,
+            interpolationOptionEnumStringType extrapolation,
+            InterpolationHydraulicType expectedInterpolation,
+            ExtrapolationHydraulicType expectedExtrapolation)
+        {
+            // Setup
+            RuleXML ruleElement = CreateLookupTableRuleElement(RtcXmlTag.HydraulicRule, ControlGroupName, interpolation,
+                                                               extrapolation);
+
+            RuleXML[] ruleElements =
+            {
+                ruleElement
+            };
+            var triggerElements = new TriggerXML[]
+                {};
+
+            // Call
+            IRtcDataAccessObject<RtcBaseObject>[] dataAccessObjects = RealTimeControlToolsConfigXmlConverter
+                                                                      .ConvertToDataAccessObjects(ruleElements, triggerElements)
+                                                                      .ToArray();
+
+            // Assert
+            Assert.That(dataAccessObjects, Has.Length.EqualTo(1));
+            var ruleObj = dataAccessObjects[0] as RuleDataAccessObject;
+            Assert.That(ruleObj, Is.Not.Null);
+            AssertHydraulicRuleValidity(ruleObj.Object, expectedInterpolation, expectedExtrapolation);
+        }
+
+        [TestCase(interpolationOptionEnumStringType.LINEAR, interpolationOptionEnumStringType.LINEAR,
+                  InterpolationHydraulicType.Linear, ExtrapolationHydraulicType.Linear)]
+        [TestCase(interpolationOptionEnumStringType.BLOCK, interpolationOptionEnumStringType.BLOCK,
+                  InterpolationHydraulicType.Constant, ExtrapolationHydraulicType.Constant)]
+        public void ConvertToDataAccessObjects_FactorRule_CorrectResultIsReturned(
+            interpolationOptionEnumStringType interpolation,
+            interpolationOptionEnumStringType extrapolation,
+            InterpolationHydraulicType expectedInterpolation,
+            ExtrapolationHydraulicType expectedExtrapolation)
+        {
+            // Setup
+            RuleXML ruleElement = CreateLookupTableRuleElement(
+                RtcXmlTag.FactorRule, ControlGroupName, interpolation, extrapolation);
+
+            RuleXML[] ruleElements =
+            {
+                ruleElement
+            };
+            var triggerElements = new TriggerXML[]
+                {};
+
+            // Call
+            IRtcDataAccessObject<RtcBaseObject>[] dataAccessObjects = RealTimeControlToolsConfigXmlConverter
+                                                                      .ConvertToDataAccessObjects(ruleElements, triggerElements)
+                                                                      .ToArray();
+
+            // Assert
+            Assert.That(dataAccessObjects, Has.Length.EqualTo(1));
+            var ruleObj = dataAccessObjects[0] as RuleDataAccessObject;
+            Assert.That(ruleObj, Is.Not.Null);
+
+            AssertFactorRuleValidity(ruleObj.Object, expectedInterpolation, expectedExtrapolation);
+        }
+
+        [TestCase(RtcXmlTag.StandardCondition, typeof(StandardCondition), inputReferenceEnumStringType.EXPLICIT,
+                  StandardCondition.ReferenceType.Explicit, relationalOperatorEnumStringType.Equal, Operation.Equal, 3.3)]
+        [TestCase(RtcXmlTag.StandardCondition, typeof(StandardCondition), inputReferenceEnumStringType.IMPLICIT,
+                  StandardCondition.ReferenceType.Implicit, relationalOperatorEnumStringType.Greater, Operation.Greater, 3.3)]
+        [TestCase(RtcXmlTag.TimeCondition, typeof(TimeCondition), inputReferenceEnumStringType.EXPLICIT,
+                  StandardCondition.ReferenceType.Explicit, relationalOperatorEnumStringType.GreaterEqual,
+                  Operation.GreaterEqual, 3.3)]
+        [TestCase(RtcXmlTag.TimeCondition, typeof(TimeCondition), inputReferenceEnumStringType.IMPLICIT,
+                  StandardCondition.ReferenceType.Implicit, relationalOperatorEnumStringType.Less, Operation.Less, 3.3)]
+        [TestCase(RtcXmlTag.DirectionalCondition, typeof(DirectionalCondition), inputReferenceEnumStringType.EXPLICIT,
+                  StandardCondition.ReferenceType.Explicit, relationalOperatorEnumStringType.LessEqual, Operation.LessEqual,
+                  0.0)]
+        [TestCase(RtcXmlTag.DirectionalCondition, typeof(DirectionalCondition), inputReferenceEnumStringType.IMPLICIT,
+                  StandardCondition.ReferenceType.Implicit, relationalOperatorEnumStringType.Unequal, Operation.Unequal, 0.0)]
+        public void ConvertToDataAccessObjects_StandardCondition_CorrectResultIsReturned(
+            string tag, Type expectedConditionType,
+            inputReferenceEnumStringType reference, string expectedReference,
+            relationalOperatorEnumStringType operatorType, Operation expectedOperation,
+            double expectedValue)
+        {
+            // Setup
+            TriggerXML conditionElement = CreateStandardConditionElement(
+                tag, ControlGroupName, ComponentName, reference, operatorType);
+
+            var ruleElements = new RuleXML[]
+                {};
+            TriggerXML[] triggerElements =
+            {
+                conditionElement
+            };
+
+            // Call
+            IRtcDataAccessObject<RtcBaseObject>[] dataAccessObjects = RealTimeControlToolsConfigXmlConverter
+                                                                      .ConvertToDataAccessObjects(ruleElements, triggerElements)
+                                                                      .ToArray();
+
+            // Assert
+            Assert.That(dataAccessObjects, Has.Length.EqualTo(1));
+            var conditionObj = dataAccessObjects[0] as ConditionDataAccessObject;
+            Assert.That(conditionObj, Is.Not.Null);
+            AssertStandardConditionValidity(conditionObj.Object, expectedConditionType, expectedReference,
+                                            expectedOperation, expectedValue);
+        }
+
+        [TestCase(true, 2)]
+        [TestCase(false, 1)]
+        public void ConvertToDataAccessObjects_StandardConditionWithOutput_CorrectResultIsReturned(
+            bool hasOutput, int expectedNumberOfConditions)
+        {
+            // Setup
+            TriggerXML conditionElement = CreateStandardConditionElement(
+                RtcXmlTag.StandardCondition, ControlGroupName, ComponentName, hasOutput: hasOutput);
+
+            var ruleElements = new RuleXML[]
+                {};
+            TriggerXML[] triggerElements =
+            {
+                conditionElement
+            };
+
+            // Call
+            IRtcDataAccessObject<RtcBaseObject>[] dataAccessObjects = RealTimeControlToolsConfigXmlConverter
+                                                                      .ConvertToDataAccessObjects(ruleElements, triggerElements)
+                                                                      .ToArray();
+
+            // Assert
+            Assert.That(dataAccessObjects, Has.Length.EqualTo(expectedNumberOfConditions));
+        }
+
+        [TestCase(interpolationOptionEnumStringType.LINEAR, interpolationOptionEnumStringType.LINEAR,
+                  InterpolationHydraulicType.Linear, ExtrapolationHydraulicType.Linear)]
+        [TestCase(interpolationOptionEnumStringType.BLOCK, interpolationOptionEnumStringType.BLOCK,
+                  InterpolationHydraulicType.Constant, ExtrapolationHydraulicType.Constant)]
         public void
             GivenASignalElementAndAControlGroup_WhenCreateSignalsFromXmlElementsAndAddToControlGroupIsCalled_CorrectSignalIsCreatedAndAddedToControlGroup(
                 interpolationOptionEnumStringType interpolation,
@@ -294,8 +533,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
             RuleXML signalElement = CreateLookupTableRuleElement(RtcXmlTag.LookupSignal, ControlGroupName,
                                                                  interpolation,
                                                                  extrapolation);
-            RuleXML[] ruleElements = {signalElement};
-            var triggerElements = new TriggerXML[]{};
+            RuleXML[] ruleElements =
+            {
+                signalElement
+            };
+            var triggerElements = new TriggerXML[]
+                {};
 
             // Call
             IRtcDataAccessObject<RtcBaseObject>[] dataAccessObjects = RealTimeControlToolsConfigXmlConverter
@@ -311,10 +554,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
 
         private static RuleXML CreateTimeRuleElement(string controlGroupName)
         {
-            var timeRuleElement = new TimeAbsoluteXML
-            {
-                id = RtcXmlTag.TimeRule + controlGroupName + "/" + ComponentName
-            };
+            var timeRuleElement = new TimeAbsoluteXML {id = RtcXmlTag.TimeRule + controlGroupName + "/" + ComponentName};
 
             var ruleElement = new RuleXML {Item = timeRuleElement};
 
@@ -480,10 +720,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
 
             if (hasOutput)
             {
-                standardConditionElement.@true = new List<TriggerXML>
-                {
-                    CreateStandardConditionElement(tag, controlGroupName, conditionName + ":true_output")
-                };
+                standardConditionElement.@true = new List<TriggerXML> {CreateStandardConditionElement(tag, controlGroupName, conditionName + ":true_output")};
             }
 
             var conditionElement = new TriggerXML {Item = standardConditionElement};
@@ -643,7 +880,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
         {
             // Setup
             TriggerXML[] triggers = WrapTriggers(expressionXml);
-            var ruleElements = new RuleXML[]{};
+            var ruleElements = new RuleXML[]
+                {};
             IRtcDataAccessObject<RtcBaseObject>[] dataAccessObjects = RealTimeControlToolsConfigXmlConverter
                                                                       .ConvertToDataAccessObjects(ruleElements, triggers)
                                                                       .ToArray();
@@ -671,107 +909,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
                                                .Using(nodeComparer));
         }
 
-        [Test]
-        public void ConvertToExpressionTrees_MultipleExpressions_OneControlGroup_ReturnsCorrectTree()
-        {
-            // Setup
-            string leafInput = $"{RtcXmlTag.Input}some_input";
-
-            const string nameA = "A";
-            string idA = $"{ControlGroupName}/{nameA}";
-            var operatorA = Operator.Subtract; // TODO random
-
-            const string nameB = "B";
-            string idB = $"{ControlGroupName}/{nameB}";
-            var operatorB = Operator.Add; // TODO random
-
-            ExpressionXML expressionA = ExpressionXMLBuilder.Create(idA, operatorA, nameA)
-                                                            .WithInputAsFirstReference(nameB)
-                                                            .AndInputAsSecondReference(leafInput);
-            ExpressionXML expressionB = ExpressionXMLBuilder.Create(idB, operatorB, nameB)
-                                                            .WithInputAsFirstReference(leafInput)
-                                                            .AndInputAsSecondReference(leafInput);
-
-            TriggerXML[] triggers = WrapTriggers(expressionB, expressionA);
-            RuleXML[] ruleElements = {};
-
-            IRtcDataAccessObject<RtcBaseObject>[] dataAccessObjects = RealTimeControlToolsConfigXmlConverter
-                                                                      .ConvertToDataAccessObjects(ruleElements, triggers)
-                                                                      .ToArray();
-
-            // Assert
-            Assert.That(dataAccessObjects, Has.Length.EqualTo(1));
-
-            ExpressionTree tree = AssertExpressionTree(dataAccessObjects.OfType<ExpressionTree>().ToArray(), idA,
-                                                       ControlGroupName, nameA);
-            BranchNode branchNode = AssertCorrectBranchNode(tree.RootNode, nameA, operatorA);
-            AssertCorrectBranchNodeWithTwoLeafNodes(branchNode.FirstNode, nameB, operatorB, leafInput, leafInput);
-            AssertCorrectLeafNode(branchNode.SecondNode, leafInput);
-        }
-
-        [Test]
-        public void ConvertToExpressionTrees_MultipleExpressions_MultipleControlGroups_ReturnsCorrectResult()
-        {
-            // Setup
-            string leafInput = $"{RtcXmlTag.Input}some_input";
-            const string controlGroup1 = "controlgroup_A";
-            const string controlGroup2 = "controlgroup_B";
-
-            const string expressionNameA = "A";
-            var operatorA = Operator.Subtract; // TODO random
-
-            const string expressionNameB = "B";
-            var operatorB = Operator.Add; // TODO random
-
-            string idA1 = $"{controlGroup1}/{expressionNameA}";
-            string idB1 = $"{controlGroup1}/{expressionNameB}";
-
-            string idA2 = $"{controlGroup2}/{expressionNameA}";
-            string idB2 = $"{controlGroup2}/{expressionNameB}";
-
-            TriggerXML[] triggers = WrapTriggers(
-                ExpressionXMLBuilder.Create(idA1, operatorA, expressionNameA)
-                                    .WithInputAsFirstReference(expressionNameB)
-                                    .AndInputAsSecondReference(leafInput),
-                ExpressionXMLBuilder.Create(idB1, operatorB, expressionNameB)
-                                    .WithInputAsFirstReference(leafInput)
-                                    .AndInputAsSecondReference(leafInput),
-                ExpressionXMLBuilder.Create(idA2, operatorA, expressionNameA)
-                                    .WithInputAsFirstReference(expressionNameB)
-                                    .AndInputAsSecondReference(leafInput),
-                ExpressionXMLBuilder.Create(idB2, operatorB, expressionNameB)
-                                    .WithInputAsFirstReference(leafInput)
-                                    .AndInputAsSecondReference(leafInput));
-            RuleXML[] rules = {};
-
-            // Call
-            IRtcDataAccessObject<RtcBaseObject>[] dataAccessObjects = RealTimeControlToolsConfigXmlConverter
-                                                                      .ConvertToDataAccessObjects(rules, triggers)
-                                                                      .ToArray();
-
-            // Assert
-            Assert.That(dataAccessObjects, Has.Length.EqualTo(2));
-            ExpressionTree[] trees = dataAccessObjects.OfType<ExpressionTree>().ToArray();
-
-            ExpressionTree tree = AssertExpressionTree(trees, idA1, controlGroup1, expressionNameA);
-            BranchNode branchNode = AssertCorrectBranchNode(tree.RootNode, expressionNameA, operatorA);
-            AssertCorrectBranchNodeWithTwoLeafNodes(branchNode.FirstNode, expressionNameB, operatorB, leafInput,
-                                                    leafInput);
-            AssertCorrectLeafNode(branchNode.SecondNode, leafInput);
-
-            tree = AssertExpressionTree(trees, idA2, controlGroup2, expressionNameA);
-            branchNode = AssertCorrectBranchNode(tree.RootNode, expressionNameA, operatorA);
-            AssertCorrectBranchNodeWithTwoLeafNodes(branchNode.FirstNode, expressionNameB, operatorB, leafInput,
-                                                    leafInput);
-            AssertCorrectLeafNode(branchNode.SecondNode, leafInput);
-        }
-
         [TestCaseSource(nameof(ExpressionGroupsTestCases))]
         public void ConvertToExpressionTrees_TriggerXmlsFromDifferentExpressionGroups_ReturnsExpectedTrees(
             TriggerXML[] triggers, int expectedCount, string[] expectedIds)
         {
             // Setup
-            RuleXML[] rules = {};
+            RuleXML[] rules =
+                {};
 
             // Call
             IRtcDataAccessObject<RtcBaseObject>[] dataAccessObjects = RealTimeControlToolsConfigXmlConverter
@@ -781,115 +925,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
             // Assert
             Assert.That(dataAccessObjects, Has.Length.EqualTo(expectedCount));
             expectedIds.ForEach(id => Assert.NotNull(dataAccessObjects.SingleOrDefault(t => t.Id == id)));
-        }
-
-        [Test]
-        [Category(TestCategory.Integration)]
-        public void ConvertToExpressionTrees_WithComplexExample_ReturnsCorrectTree()
-        {
-            // Setup
-            string leafInput = $"{RtcXmlTag.Input}some_input"; // TODO random : constant or param
-            var @operator = Operator.Add;                      // TODO random
-
-            const string nameA = "A";
-            string idA = $"{ControlGroupName}/{nameA}";
-
-            const string nameB = "B";
-            string idB = $"{ControlGroupName}/{nameB}";
-
-            const string nameC = "C";
-            string idC = $"{ControlGroupName}/{nameC}";
-
-            const string nameD = "D";
-            string idD = $"{ControlGroupName}/{nameD}";
-
-            const string nameE = "E";
-            string idE = $"{ControlGroupName}/{nameE}";
-
-            const string nameF = "F";
-            string idF1 = $"{ControlGroupName}/{nameF}_1";
-            string idF2 = $"{ControlGroupName}/{nameF}_2";
-
-            const string nameG = "G";
-            string idG = $"{ControlGroupName}/{nameG}";
-
-            const string nameH = "H";
-            string idH = $"{ControlGroupName}/{nameH}";
-
-            var condition2 =
-                (StandardTriggerXML) CreateStandardConditionElement(RtcXmlTag.StandardCondition, ControlGroupName,
-                                                                    "condition2").Item;
-
-            ConditionXmlBuilder.Start(condition2)
-                               .WithTrueOutput(ExpressionXMLBuilder.Create(idF1, @operator, nameF)
-                                                                   .WithInputAsFirstReference(nameD)
-                                                                   .AndInputAsSecondReference(nameG))
-                               .WithTrueOutput(ExpressionXMLBuilder.Create(idG, @operator, nameG)
-                                                                   .WithInputAsFirstReference(leafInput)
-                                                                   .AndInputAsSecondReference(leafInput))
-                               .WithFalseOutput(ExpressionXMLBuilder.Create(idF2, @operator, nameF)
-                                                                    .WithInputAsFirstReference(nameD)
-                                                                    .AndInputAsSecondReference(leafInput));
-
-            var condition1 =
-                (StandardTriggerXML) CreateStandardConditionElement(RtcXmlTag.StandardCondition, ControlGroupName,
-                                                                    "condition1").Item;
-            ConditionXmlBuilder.Start(condition1)
-                               .WithTrueOutput(condition2)
-                               .WithFalseOutput(ExpressionXMLBuilder.Create(idH, @operator, nameH)
-                                                                    .WithInputAsFirstReference(leafInput)
-                                                                    .AndInputAsSecondReference(leafInput));
-
-            TriggerXML[] triggers = WrapTriggers(
-                ExpressionXMLBuilder.Create(idA, @operator, nameA)
-                                    .WithInputAsFirstReference(leafInput)
-                                    .AndInputAsSecondReference(leafInput),
-                ExpressionXMLBuilder.Create(idB, @operator, nameB)
-                                    .WithInputAsFirstReference(leafInput)
-                                    .AndInputAsSecondReference(leafInput),
-                ExpressionXMLBuilder.Create(idC, @operator, nameC)
-                                    .WithInputAsFirstReference(nameA)
-                                    .AndInputAsSecondReference(nameB),
-                ExpressionXMLBuilder.Create(idD, @operator, nameD)
-                                    .WithInputAsFirstReference(leafInput)
-                                    .AndInputAsSecondReference(leafInput),
-                ExpressionXMLBuilder.Create(idE, @operator, nameE)
-                                    .WithInputAsFirstReference(nameF)
-                                    .AndInputAsSecondReference(leafInput),
-                condition1);
-
-            RuleXML[] rules = {};
-
-            // Call
-            IRtcDataAccessObject<RtcBaseObject>[] dataAccessObjects = RealTimeControlToolsConfigXmlConverter
-                                                                      .ConvertToDataAccessObjects(rules, triggers)
-                                                                      .ToArray();
-
-            // Assert
-            Assert.That(dataAccessObjects, Has.Length.EqualTo(8));
-            ExpressionTree[] trees = dataAccessObjects.OfType<ExpressionTree>().ToArray();
-
-            ExpressionTree treeC = AssertExpressionTree(trees, idC, ControlGroupName, nameC);
-            BranchNode rootNode = AssertCorrectBranchNode(treeC.RootNode, nameC, @operator);
-            AssertCorrectBranchNodeWithTwoLeafNodes(rootNode.FirstNode, nameA, @operator, leafInput, leafInput);
-            AssertCorrectBranchNodeWithTwoLeafNodes(rootNode.SecondNode, nameB, @operator, leafInput, leafInput);
-
-            ExpressionTree treeD = AssertExpressionTree(trees, idD, ControlGroupName, nameD);
-            AssertCorrectBranchNodeWithTwoLeafNodes(treeD.RootNode, nameD, @operator, leafInput, leafInput);
-
-            ExpressionTree treeE = AssertExpressionTree(trees, idE, ControlGroupName, nameE);
-            AssertCorrectBranchNodeWithTwoLeafNodes(treeE.RootNode, nameE, @operator, nameF, leafInput);
-
-            ExpressionTree treeF1 = AssertExpressionTree(trees, idF1, ControlGroupName, nameF);
-            rootNode = AssertCorrectBranchNode(treeF1.RootNode, nameF, @operator);
-            AssertCorrectLeafNode(rootNode.FirstNode, nameD);
-            AssertCorrectBranchNodeWithTwoLeafNodes(rootNode.SecondNode, nameG, @operator, leafInput, leafInput);
-
-            ExpressionTree treeF2 = AssertExpressionTree(trees, idF2, ControlGroupName, nameF);
-            AssertCorrectBranchNodeWithTwoLeafNodes(treeF2.RootNode, nameF, @operator, nameD, leafInput);
-
-            ExpressionTree treeH = AssertExpressionTree(trees, idH, ControlGroupName, nameH);
-            AssertCorrectBranchNodeWithTwoLeafNodes(treeH.RootNode, nameH, @operator, leafInput, leafInput);
         }
 
         [TestCaseSource(nameof(GetTriggerObjects))]
@@ -956,7 +991,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
             const string yName = "expression_name";
             string id = $"{ControlGroupName}/{yName}";
 
-            string constantValue = random.NextDouble().ToString();
+            var constantValue = random.NextDouble().ToString();
             var constantLeafNode = new ConstantValueLeafNode(constantValue);
 
             string inputReference = $"{RtcXmlTag.Input}some_input";
@@ -1038,7 +1073,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
             IList<ExpressionXML> expressions =
                 RetrieveExampleSetExpressionElements(idA, nameA, idB, nameB, idC, nameC, idD, nameD);
             TriggerXML[] triggers = WrapTriggers(expressions);
-            string[] expectedIds = {idA};
+            string[] expectedIds =
+            {
+                idA
+            };
 
             yield return new TestCaseData(triggers, 1, expectedIds).SetName("Same control group, same level.");
 

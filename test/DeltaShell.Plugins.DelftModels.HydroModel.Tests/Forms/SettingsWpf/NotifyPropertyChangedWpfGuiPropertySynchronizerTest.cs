@@ -61,17 +61,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.SettingsWpf
             {
                 var propertyOneNotified = false;
                 var propertyOne = new WpfGuiProperty(new FieldUIDescription(null, null));
-                propertyOne.PropertyChanged += (sender, args) =>
-                {
-                    propertyOneNotified = true;
-                };
+                propertyOne.PropertyChanged += (sender, args) => { propertyOneNotified = true; };
 
                 var propertyTwoNotified = false;
                 var propertyTwo = new WpfGuiProperty(new FieldUIDescription(null, null));
-                propertyTwo.PropertyChanged += (sender, args) =>
-                {
-                    propertyTwoNotified = true;
-                };
+                propertyTwo.PropertyChanged += (sender, args) => { propertyTwoNotified = true; };
 
                 synchronizer.SynchronizeProperties(new[]
                 {
@@ -97,17 +91,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.SettingsWpf
 
             var propertyOneNotified = false;
             var propertyOne = new WpfGuiProperty(new FieldUIDescription(null, null));
-            propertyOne.PropertyChanged += (sender, args) =>
-            {
-                propertyOneNotified = true;
-            };
+            propertyOne.PropertyChanged += (sender, args) => { propertyOneNotified = true; };
 
             var propertyTwoNotified = false;
             var propertyTwo = new WpfGuiProperty(new FieldUIDescription(null, null));
-            propertyTwo.PropertyChanged += (sender, args) =>
-            {
-                propertyTwoNotified = true;
-            };
+            propertyTwo.PropertyChanged += (sender, args) => { propertyTwoNotified = true; };
 
             synchronizer.SynchronizeProperties(new[]
             {

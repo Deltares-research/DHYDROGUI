@@ -12,7 +12,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Editors
         [Test]
         public void UpdatesOfTracersIsSyncedWithTracerList()
         {
-            var tracersList = new EventedList<string> {"abc", "def"};
+            var tracersList = new EventedList<string>
+            {
+                "abc",
+                "def"
+            };
 
             var addCount = 0;
             var removeCount = 0;
@@ -30,10 +34,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Editors
                 }
             };
 
-            var viewmodel = new TracerDefinitionsEditorWpfViewModel
-            {
-                TracersList = tracersList
-            };
+            var viewmodel = new TracerDefinitionsEditorWpfViewModel {TracersList = tracersList};
 
             Assert.AreEqual(viewmodel.TracersList, viewmodel.Tracers);
 
@@ -59,12 +60,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Editors
         [TestCase(WaterFlowFMModelDefinition.BathymetryDataItemName, false, "The name 'Bed Level' cannot be a known default name\n\rThe name 'Bed Level', cannot contain spaces or (back-)slashes")]
         public void AddTracerCommandCanExecuteShouldCheckParameterValidity(string parameter, bool canExecute, string message)
         {
-            var viewmodel = new TracerDefinitionsEditorWpfViewModel
-            {
-                TracersList = new EventedList<string> { "DuplicateTest" }
-            };
+            var viewmodel = new TracerDefinitionsEditorWpfViewModel {TracersList = new EventedList<string> {"DuplicateTest"}};
 
-            var canExecuteResult = viewmodel.AddTracerCommand.CanExecute(parameter);
+            bool canExecuteResult = viewmodel.AddTracerCommand.CanExecute(parameter);
 
             Assert.AreEqual(canExecute, canExecuteResult);
             Assert.AreEqual(viewmodel.CanAddMessage, message);
@@ -73,10 +71,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Editors
         [Test]
         public void AddTracerCommandAddsATracer()
         {
-            var viewmodel = new TracerDefinitionsEditorWpfViewModel
-            {
-                TracersList = new EventedList<string> { "abc" }
-            };
+            var viewmodel = new TracerDefinitionsEditorWpfViewModel {TracersList = new EventedList<string> {"abc"}};
 
             viewmodel.AddTracerCommand.Execute("def");
 
@@ -88,7 +83,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Editors
         {
             var viewmodel = new TracerDefinitionsEditorWpfViewModel
             {
-                TracersList = new EventedList<string> { "abc", "def", "ghi" }
+                TracersList = new EventedList<string>
+                {
+                    "abc",
+                    "def",
+                    "ghi"
+                }
             };
 
             // no MayRemove set
@@ -120,6 +120,5 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Editors
             Assert.AreEqual(1, viewmodel.TracersList.Count);
             Assert.AreEqual(mayRemoveCount, 2);
         }
-
     }
 }

@@ -3,6 +3,7 @@ using System.Windows.Forms.Integration;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Structures;
+using DelftTools.Shell.Core;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Gui;
@@ -21,7 +22,6 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests
 {
     [TestFixture]
     [Category(TestCategory.Integration)]
-
     public class HydroAreaGuiIntegrationTest
     {
         [Test]
@@ -30,7 +30,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests
         {
             using (var gui = new DeltaShellGui())
             {
-                var app = gui.Application;
+                IApplication app = gui.Application;
 
                 app.Plugins.Add(new CommonToolsApplicationPlugin());
                 app.Plugins.Add(new NetworkEditorApplicationPlugin());
@@ -39,17 +39,33 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests
                 gui.Plugins.Add(new NetworkEditorGuiPlugin());
                 gui.Run();
 
-                var project = app.Project;
+                Project project = app.Project;
                 var network = new HydroNetwork();
                 var area = new HydroArea();
-                project.RootFolder.Add(new IHydroRegion[] {network, area});
+                project.RootFolder.Add(new IHydroRegion[]
+                {
+                    network,
+                    area
+                });
 
                 network.Nodes = new EventedList<INode>
                 {
-                    new HydroNode {Name = "node1", Geometry = new Point(0, 0)},
-                    new HydroNode {Name = "node2", Geometry = new Point(1, 1)}
+                    new HydroNode
+                    {
+                        Name = "node1",
+                        Geometry = new Point(0, 0)
+                    },
+                    new HydroNode
+                    {
+                        Name = "node2",
+                        Geometry = new Point(1, 1)
+                    }
                 };
-                var branchGeometry = new LineString(new [] {new Coordinate(0, 0), new Coordinate(1, 1)});
+                var branchGeometry = new LineString(new[]
+                {
+                    new Coordinate(0, 0),
+                    new Coordinate(1, 1)
+                });
                 var channel = new Channel
                 {
                     Name = "branch",
@@ -89,7 +105,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests
         {
             using (var gui = new DeltaShellGui())
             {
-                var app = gui.Application;
+                IApplication app = gui.Application;
 
                 app.Plugins.Add(new CommonToolsApplicationPlugin());
                 app.Plugins.Add(new NetworkEditorApplicationPlugin());
@@ -98,17 +114,33 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests
                 gui.Plugins.Add(new NetworkEditorGuiPlugin());
                 gui.Run();
 
-                var project = app.Project;
+                Project project = app.Project;
                 var network = new HydroNetwork();
                 var area = new HydroArea();
-                project.RootFolder.Add(new IHydroRegion[] { network, area });
+                project.RootFolder.Add(new IHydroRegion[]
+                {
+                    network,
+                    area
+                });
 
                 network.Nodes = new EventedList<INode>
                 {
-                    new HydroNode {Name = "node1", Geometry = new Point(0, 0)},
-                    new HydroNode {Name = "node2", Geometry = new Point(1, 1)}
+                    new HydroNode
+                    {
+                        Name = "node1",
+                        Geometry = new Point(0, 0)
+                    },
+                    new HydroNode
+                    {
+                        Name = "node2",
+                        Geometry = new Point(1, 1)
+                    }
                 };
-                var branchGeometry = new LineString(new [] { new Coordinate(0, 0), new Coordinate(1, 1) });
+                var branchGeometry = new LineString(new[]
+                {
+                    new Coordinate(0, 0),
+                    new Coordinate(1, 1)
+                });
                 var channel = new Channel
                 {
                     Name = "branch",
@@ -118,7 +150,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests
                 };
                 network.Branches.Add(channel);
 
-                var networkPump = new Pump("networkpump") { Chainage = 0.5 };
+                var networkPump = new Pump("networkpump") {Chainage = 0.5};
 
                 HydroNetworkHelper.AddStructureToExistingCompositeStructureOrToANewOne(networkPump, network.Branches[0]);
 

@@ -23,65 +23,76 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.ActivityShapes
         [Test]
         public void GetRequiredSizeWithoutChildActivities()
         {
-            var graphControl = new GraphControl { AllowDrop = false, AllowAddConnection = false, AllowAddShape = false, AllowDeleteShape = false, AllowMoveShape = false };
-            var graphics = graphControl.Graphics;
+            var graphControl = new GraphControl
+            {
+                AllowDrop = false,
+                AllowAddConnection = false,
+                AllowAddShape = false,
+                AllowDeleteShape = false,
+                AllowMoveShape = false
+            };
+            Graphics graphics = graphControl.Graphics;
 
-            var shape = new SequentialActivityShape(null) { Activity = null };
+            var shape = new SequentialActivityShape(null) {Activity = null};
             var size = TypeUtils.CallPrivateMethod<SizeF>(shape, "GetRequiredSize", graphics);
 
             Assert.Greater(size.Width, 1,
-                "Should require more width than 1 pixel.");
+                           "Should require more width than 1 pixel.");
             Assert.Greater(size.Height, 1,
-                "Should require mode height than 1 pixel.");
+                           "Should require mode height than 1 pixel.");
             Assert.AreEqual(new RectangleF(0, 0, 1, 1), shape.Rectangle,
-                "GetRequiredSize should not set actual size.");
+                            "GetRequiredSize should not set actual size.");
 
             shape.Activity = new SequentialActivity();
             size = TypeUtils.CallPrivateMethod<SizeF>(shape, "GetRequiredSize", graphics);
 
             Assert.Greater(size.Width, 1,
-                "Should require more width than 1 pixel.");
+                           "Should require more width than 1 pixel.");
             Assert.Greater(size.Height, 1,
-                "Should require mode height than 1 pixel.");
+                           "Should require mode height than 1 pixel.");
             Assert.AreEqual(new RectangleF(0, 0, 1, 1), shape.Rectangle,
-                "GetRequiredSize should not set actual size.");
+                            "GetRequiredSize should not set actual size.");
         }
 
         [Test]
         public void GetRequiredSizeWithChildActivities()
         {
-            var graphControl = new GraphControl { AllowDrop = false, AllowAddConnection = false, AllowAddShape = false, AllowDeleteShape = false, AllowMoveShape = false };
-            var graphics = graphControl.Graphics;
+            var graphControl = new GraphControl
+            {
+                AllowDrop = false,
+                AllowAddConnection = false,
+                AllowAddShape = false,
+                AllowDeleteShape = false,
+                AllowMoveShape = false
+            };
+            Graphics graphics = graphControl.Graphics;
 
-            var shape = new SequentialActivityShape(graphControl) { Activity = null };
+            var shape = new SequentialActivityShape(graphControl) {Activity = null};
             var emptySize = TypeUtils.CallPrivateMethod<SizeF>(shape, "GetRequiredSize", graphics);
 
             var parallelActivity = new SequentialActivity();
             parallelActivity.Activities.AddRange(new[]
-                        {
-                            ActivityShapeTestHelper.CreateSimpleActivity("Simple Activity 1"),
-                            ActivityShapeTestHelper.CreateSimpleActivity("Longer name than Sequential activity"),
-                            ActivityShapeTestHelper.CreateSimpleActivity("Simple Activity 3")
-                        });
-            shape = new SequentialActivityShape(graphControl)
             {
-                Activity = parallelActivity
-            };
+                ActivityShapeTestHelper.CreateSimpleActivity("Simple Activity 1"),
+                ActivityShapeTestHelper.CreateSimpleActivity("Longer name than Sequential activity"),
+                ActivityShapeTestHelper.CreateSimpleActivity("Simple Activity 3")
+            });
+            shape = new SequentialActivityShape(graphControl) {Activity = parallelActivity};
             var size = TypeUtils.CallPrivateMethod<SizeF>(shape, "GetRequiredSize", graphics);
 
             Assert.Greater(size.Width, emptySize.Width,
-                "Should require more width than when it was empty.");
+                           "Should require more width than when it was empty.");
             Assert.Greater(size.Height, emptySize.Height,
-                "Should require mode height than when it was empty.");
+                           "Should require mode height than when it was empty.");
             Assert.AreEqual(new RectangleF(0, 0, 1, 1), shape.Rectangle,
-                "GetRequiredSize should not set actual size.");
+                            "GetRequiredSize should not set actual size.");
         }
 
         [Test]
         [ExpectedException(typeof(ArgumentException), UserMessage = "Value must be a SequentialActivity")]
         public void ThrowWhenAssigningIncompatibleActivity()
         {
-            var shape = new SequentialActivityShape(null) { Activity = ActivityShapeTestHelper.CreateSimpleActivity() };
+            var shape = new SequentialActivityShape(null) {Activity = ActivityShapeTestHelper.CreateSimpleActivity()};
         }
     }
 }

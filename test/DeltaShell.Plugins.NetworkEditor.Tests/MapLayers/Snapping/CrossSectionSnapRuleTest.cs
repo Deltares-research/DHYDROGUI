@@ -5,6 +5,7 @@ using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
+using SharpMap.Api.Editors;
 using SharpMap.Api.Layers;
 using SharpMap.Data.Providers;
 using SharpMap.Editors.Snapping;
@@ -18,9 +19,19 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Snapping
         [Test]
         public void SnapTest()
         {
-            var channel = new Channel { Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(20, 0) }) };
-            var branches = new[] { channel };
-            
+            var channel = new Channel
+            {
+                Geometry = new LineString(new[]
+                {
+                    new Coordinate(0, 0),
+                    new Coordinate(20, 0)
+                })
+            };
+            Channel[] branches = new[]
+            {
+                channel
+            };
+
             var branchLayer = new VectorLayer("") {DataSource = new FeatureCollection {Features = branches}};
 
             var branchSnapRule = new CrossSectionSnapRule
@@ -29,9 +40,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Snapping
                 SnapRole = SnapRole.AllTrackers,
                 PixelGravity = 40
             };
-            var candidates = new[] { new Tuple<IFeature, ILayer>(channel, branchLayer) };
-            var snapResult = branchSnapRule.Execute(null, candidates, channel.Geometry, null, new Coordinate(0, 0), new Envelope(new Coordinate(0, 0)), 0);
-
+            var candidates = new[]
+            {
+                new Tuple<IFeature, ILayer>(channel, branchLayer)
+            };
+            SnapResult snapResult = branchSnapRule.Execute(null, candidates, channel.Geometry, null, new Coordinate(0, 0), new Envelope(new Coordinate(0, 0)), 0);
         }
     }
 }

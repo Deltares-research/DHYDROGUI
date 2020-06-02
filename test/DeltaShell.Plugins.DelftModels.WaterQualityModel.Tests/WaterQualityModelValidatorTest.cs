@@ -29,7 +29,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         public void ValidateEmptyModel()
         {
             var model = new WaterQualityModel();
-            var report = new WaterQualityModelValidator().Validate(model);
+            ValidationReport report = new WaterQualityModelValidator().Validate(model);
 
             Assert.AreEqual(0, report.Issues.Count());
             Assert.AreEqual(2, report.AllErrors.Count()); // no substances and Hyd file
@@ -57,6 +57,50 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
                         $"View data of validation issue should be {typeof(HydFileImporter)}.");
         }
 
+        [Test]
+        [TestCase(@"segFileA.tau", true)]
+        [TestCase(@"segFileB.tau", false)]
+        [TestCase(@"", false)]
+        public void ValidateModelWithProcessCoeficientsSegmentFunctionType(string segmentFunctionFile,
+                                                                           bool validationExpected)
+        {
+            var model = new WaterQualityModel();
+            string dataDir = Path.Combine(TestHelper.GetTestDataDirectory(), @"TestSegFunctionFiles");
+            string segmentFunctionPath = segmentFunctionFile != "" ? Path.Combine(dataDir, segmentFunctionFile) : null;
+
+            // setup (we don't really care for the content, just for the path being valid or not.
+            SegmentFileFunction segFunc = WaterQualityFunctionFactory.CreateSegmentFunction("A", 1.2, "irrelevant", "g", "A",
+                                                                                            segmentFunctionPath);
+            model.ProcessCoefficients.Add(segFunc);
+
+            ValidationReport report = new WaterQualityModelValidator().Validate(model);
+
+            Assert.AreEqual(0, report.Issues.Count());
+            Assert.That(report.AllErrors.Count(), Is.EqualTo(2 + (validationExpected ? 0 : 1))); // no substances and no hyd file initially.
+            if (!validationExpected)
+            {
+                string message = string.Format("Segmentation file for function: {0} not specified", segFunc.Name);
+                if (segmentFunctionFile != "")
+                {
+                    message = string.Format("Could not find segmentation file for function: {0}", segFunc.Name);
+                }
+
+                var validationFailed = new ValidationIssue(segFunc, ValidationSeverity.Error, message);
+                Assert.True(report.AllErrors.Contains(validationFailed));
+            }
+        }
+
+        [Test]
+        public void ModelWantingToUseTooManyThreads()
+        {
+            // Pretty sure this will be a valid 'too big' value for any machine available ^_^
+            var model = new WaterQualityModel {ModelSettings = {NrOfThreads = int.MaxValue}};
+
+            ValidationReport report = new WaterQualityModelValidator().Validate(model);
+
+            AssertExpectedValidationIssue(report, "This machine cannot use more threads than ", i => Equals(i.Subject, model) && i.Severity == ValidationSeverity.Error);
+        }
+
         private static WaterQualityModel GetStubbedWaterQualityModel(IHydroData hydroData)
         {
             var model = MockRepository.GenerateStub<WaterQualityModel>();
@@ -69,47 +113,33 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             return model;
         }
 
-        [Test]
-        [TestCase(@"segFileA.tau", true)]
-        [TestCase(@"segFileB.tau", false)]
-        [TestCase(@"", false)]
-        public void ValidateModelWithProcessCoeficientsSegmentFunctionType(string segmentFunctionFile,
-            bool validationExpected)
+        private static void AssertExpectedValidationIssue(ValidationReport report, string text, Func<ValidationIssue, bool> filter)
         {
-            var model = new WaterQualityModel();
-            string dataDir = Path.Combine(TestHelper.GetTestDataDirectory(), @"TestSegFunctionFiles");
-            string segmentFunctionPath = segmentFunctionFile != "" ? Path.Combine(dataDir, segmentFunctionFile) : null;
-
-            // setup (we don't really care for the content, just for the path being valid or not.
-            var segFunc = WaterQualityFunctionFactory.CreateSegmentFunction("A", 1.2, "irrelevant", "g", "A",
-                segmentFunctionPath);
-            model.ProcessCoefficients.Add(segFunc);
-
-            var report = new WaterQualityModelValidator().Validate(model);
-
-            Assert.AreEqual(0, report.Issues.Count());
-            Assert.That(report.AllErrors.Count(), Is.EqualTo(2 + (validationExpected ? 0 : 1))); // no substances and no hyd file initially.
-            if (!validationExpected)
-            {
-                var message = string.Format("Segmentation file for function: {0} not specified", segFunc.Name);
-                if (segmentFunctionFile != "")
-                {
-                    message = string.Format("Could not find segmentation file for function: {0}", segFunc.Name);
-                }
-                var validationFailed = new ValidationIssue(segFunc, ValidationSeverity.Error, message);
-                Assert.True(report.AllErrors.Contains(validationFailed));
-            }
+            Assert.That(report.GetAllIssuesRecursive().Where(filter).Any(i => i.Message.Contains(text)),
+                        "Expected message:" + Environment.NewLine +
+                        text + Environment.NewLine +
+                        "Available validation messages:" + Environment.NewLine +
+                        string.Join(Environment.NewLine,
+                                    report.GetAllIssuesRecursive().Select(i => string.Format("{0}: {1}", i.Severity, i.Message))));
         }
 
-        [Test]
-        public void ModelWantingToUseTooManyThreads()
+        private static void ExpectValidationIssue(ValidationReport report, string text)
         {
-            // Pretty sure this will be a valid 'too big' value for any machine available ^_^
-            var model = new WaterQualityModel { ModelSettings = { NrOfThreads = int.MaxValue } };
-            
-            var report = new WaterQualityModelValidator().Validate(model);
+            AssertExpectedValidationIssue(report, text, i => true);
+        }
 
-            AssertExpectedValidationIssue(report, "This machine cannot use more threads than ", i => Equals(i.Subject, model) && i.Severity == ValidationSeverity.Error);
+        private static WaterQualityModel CreateValidFractionsWaterQualityModel()
+        {
+            var waterQualityModel = new WaterQualityModel();
+            var hydroData = MockRepository.GenerateStub<IHydroData>();
+
+            hydroData.Stub(d => d.FilePath).Return(TestHelper.GetTestFilePath(@"ValidWaqModels\\Flow1D\\sobek.hyd")).Repeat.Any();
+
+            TypeUtils.SetPrivatePropertyValue(waterQualityModel, nameof(waterQualityModel.HydroData), hydroData);
+
+            waterQualityModel.SubstanceProcessLibrary.Substances.Add(new WaterQualitySubstance {Name = "substance"});
+
+            return waterQualityModel;
         }
 
         #region Observation Point / Areas
@@ -119,44 +149,74 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         {
             // setup
             var model = new WaterQualityModel();
-            TestHydroDataStub data = new TestHydroDataStub();
+            var data = new TestHydroDataStub();
             model.ImportHydroData(data);
-            model.ObservationAreas.SetValuesAsLabels(new[]{"A","B", "A", "A"});
-            model.ObservationPoints.Add(new WaterQualityObservationPoint { Name = "A", Z = (model.ZTop + model.ZBot) / 2 });
+            model.ObservationAreas.SetValuesAsLabels(new[]
+            {
+                "A",
+                "B",
+                "A",
+                "A"
+            });
+            model.ObservationPoints.Add(new WaterQualityObservationPoint
+            {
+                Name = "A",
+                Z = (model.ZTop + model.ZBot) / 2
+            });
 
             // call
-            var report = new WaterQualityModelValidator().Validate(model);
+            ValidationReport report = new WaterQualityModelValidator().Validate(model);
 
             // assert
             const string expectedMessageA = "Observation point names should be unique and another observation area with name 'A' was already found.";
             AssertExpectedValidationIssue(report, expectedMessageA,
-                i => Equals(i.Subject, model.ObservationPoints[0]) && i.Severity == ValidationSeverity.Error);
+                                          i => Equals(i.Subject, model.ObservationPoints[0]) && i.Severity == ValidationSeverity.Error);
         }
-        
+
         [Test]
         public void ModelWithNonUniqueNamedObservationPointsIsInvalid()
         {
             // setup
             var model = new WaterQualityModel();
-            model.ObservationPoints.Add(new WaterQualityObservationPoint { Name = "A", Z = (model.ZTop + model.ZBot) / 2 });
-            model.ObservationPoints.Add(new WaterQualityObservationPoint { Name = "B", Z = (model.ZTop + model.ZBot) / 2 });
-            model.ObservationPoints.Add(new WaterQualityObservationPoint { Name = "A", Z = (model.ZTop + model.ZBot) / 2 });
-            model.ObservationPoints.Add(new WaterQualityObservationPoint { Name = "B", Z = (model.ZTop + model.ZBot) / 2 });
-            model.ObservationPoints.Add(new WaterQualityObservationPoint { Name = "A", Z = (model.ZTop + model.ZBot) / 2 });
+            model.ObservationPoints.Add(new WaterQualityObservationPoint
+            {
+                Name = "A",
+                Z = (model.ZTop + model.ZBot) / 2
+            });
+            model.ObservationPoints.Add(new WaterQualityObservationPoint
+            {
+                Name = "B",
+                Z = (model.ZTop + model.ZBot) / 2
+            });
+            model.ObservationPoints.Add(new WaterQualityObservationPoint
+            {
+                Name = "A",
+                Z = (model.ZTop + model.ZBot) / 2
+            });
+            model.ObservationPoints.Add(new WaterQualityObservationPoint
+            {
+                Name = "B",
+                Z = (model.ZTop + model.ZBot) / 2
+            });
+            model.ObservationPoints.Add(new WaterQualityObservationPoint
+            {
+                Name = "A",
+                Z = (model.ZTop + model.ZBot) / 2
+            });
 
             // call
-            var report = new WaterQualityModelValidator().Validate(model);
+            ValidationReport report = new WaterQualityModelValidator().Validate(model);
 
             // assert
             const string expectedMessageA = "Observation point names should be unique and another observation point with name 'A' was already found.";
             AssertExpectedValidationIssue(report, expectedMessageA,
-                i => Equals(i.Subject, model.ObservationPoints[2]) && i.Severity == ValidationSeverity.Error);
+                                          i => Equals(i.Subject, model.ObservationPoints[2]) && i.Severity == ValidationSeverity.Error);
             AssertExpectedValidationIssue(report, expectedMessageA,
-                i => Equals(i.Subject, model.ObservationPoints[4]) && i.Severity == ValidationSeverity.Error);
+                                          i => Equals(i.Subject, model.ObservationPoints[4]) && i.Severity == ValidationSeverity.Error);
 
             const string expectedMessageB = "Observation point names should be unique and another observation point with name 'B' was already found.";
             AssertExpectedValidationIssue(report, expectedMessageB,
-                i => Equals(i.Subject, model.ObservationPoints[3]) && i.Severity == ValidationSeverity.Error);
+                                          i => Equals(i.Subject, model.ObservationPoints[3]) && i.Severity == ValidationSeverity.Error);
         }
 
         [Test]
@@ -172,17 +232,17 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             });
 
             // call
-            var report = new WaterQualityModelValidator().Validate(model);
+            ValidationReport report = new WaterQualityModelValidator().Validate(model);
 
             // assert
             const string expectedMessage = "Observation point 'A' has an undefined Z.";
             AssertExpectedValidationIssue(report, expectedMessage,
-                i => Equals(i.Subject, model.ObservationPoints[0]) && i.Severity == ValidationSeverity.Error);
+                                          i => Equals(i.Subject, model.ObservationPoints[0]) && i.Severity == ValidationSeverity.Error);
 
-            var expectedIlligalZMessage = string.Format("Observation point 'A' has height of {0}, but is required to be in range [0, 1].",
-                double.NaN);
+            string expectedIlligalZMessage = string.Format("Observation point 'A' has height of {0}, but is required to be in range [0, 1].",
+                                                           double.NaN);
             Assert.IsFalse(report.GetAllIssuesRecursive().Any(i => i.Message.Contains(expectedIlligalZMessage)),
-                "If Z is NaN, there should be no message about Z being out of a certain range.");
+                           "If Z is NaN, there should be no message about Z being out of a certain range.");
         }
 
         [Test]
@@ -199,7 +259,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             });
 
             // call
-            var report = new WaterQualityModelValidator().Validate(model);
+            ValidationReport report = new WaterQualityModelValidator().Validate(model);
             var expectedMessage = "There are observation points available, but the monitoring output level excludes them from delwaq. Level: None";
 
             AssertExpectedValidationIssue(report, expectedMessage, i => Equals(i.Subject, model) && i.Severity == ValidationSeverity.Warning);
@@ -219,7 +279,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             });
 
             // call
-            var report = new WaterQualityModelValidator().Validate(model);
+            ValidationReport report = new WaterQualityModelValidator().Validate(model);
             var expectedMessage = "There are observation points available, but the monitoring output level excludes them from delwaq. Level: Areas";
 
             AssertExpectedValidationIssue(report, expectedMessage, i => Equals(i.Subject, model) && i.Severity == ValidationSeverity.Warning);
@@ -229,11 +289,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         [Combinatorial]
         public void ModelWithObservationPointThatHaveNoDefinedZAndIsNotSinglePointIsValid(
             [Values(ObservationPointType.Average,
-                ObservationPointType.OneOnEachLayer)] ObservationPointType type)
+                    ObservationPointType.OneOnEachLayer)]
+            ObservationPointType type)
         {
             // setup
             Assert.AreNotEqual(ObservationPointType.SinglePoint, type,
-                "Test precondition: do not evaluate for SinglePoint");
+                               "Test precondition: do not evaluate for SinglePoint");
 
             var model = new WaterQualityModel();
             model.ObservationPoints.Add(new WaterQualityObservationPoint
@@ -244,46 +305,49 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             });
 
             // call
-            var report = new WaterQualityModelValidator().Validate(model);
+            ValidationReport report = new WaterQualityModelValidator().Validate(model);
 
             // assert
             const string expectedMessage = "Observation point 'A' has an undefined Z.";
             Assert.IsFalse(report.GetAllIssuesRecursive().Any(i => i.Message.Contains(expectedMessage)),
-                "There should be no validation message about Z is NaN for non-SinglePoint types.");
+                           "There should be no validation message about Z is NaN for non-SinglePoint types.");
 
-            var expectedIlligalZMessage = string.Format("Observation point 'A' has height of {0}, but is required to be in range [0, 1].",
-                double.NaN);
+            string expectedIlligalZMessage = string.Format("Observation point 'A' has height of {0}, but is required to be in range [0, 1].",
+                                                           double.NaN);
             Assert.IsFalse(report.GetAllIssuesRecursive().Any(i => i.Message.Contains(expectedIlligalZMessage)),
-                "There should be no validation message about Z is NaN for non-SinglePoint types.");
+                           "There should be no validation message about Z is NaN for non-SinglePoint types.");
         }
 
         [Test]
         [Combinatorial]
         public void SigmaModelWithObservationPointWithIllegalZIsInvalid(
-            [Values(1.0 + 1e-6, 12.34, 0.0 - 1e-6, -34.56)] double z)
+            [Values(1.0 + 1e-6, 12.34, 0.0 - 1e-6, -34.56)]
+            double z)
         {
             // setup
-            var hydroData = new TestHydroDataStub { ModelType = HydroDynamicModelType.Unstructured };
+            var hydroData = new TestHydroDataStub {ModelType = HydroDynamicModelType.Unstructured};
 
             var model = new WaterQualityModel();
             model.ImportHydroData(hydroData);
 
             Assert.AreEqual(HydroDynamicModelType.Unstructured, model.ModelType,
-                "Precondition: Model is set up as Sigma (unstructured) model.");
+                            "Precondition: Model is set up as Sigma (unstructured) model.");
 
             model.ObservationPoints.Add(new WaterQualityObservationPoint
             {
                 Name = "A",
                 ObservationPointType = ObservationPointType.SinglePoint,
-                X = 5, Y = 5, Z = z
+                X = 5,
+                Y = 5,
+                Z = z
             });
 
             // call
-            var report = new WaterQualityModelValidator().Validate(model);
+            ValidationReport report = new WaterQualityModelValidator().Validate(model);
 
             // assert
-            var expectedMessage = string.Format("Observation point 'A' has height of {0}, but is required to be in range [0, 1].",
-                z);
+            string expectedMessage = string.Format("Observation point 'A' has height of {0}, but is required to be in range [0, 1].",
+                                                   z);
             AssertExpectedValidationIssue(report, expectedMessage, i => i.Severity == ValidationSeverity.Error);
         }
 
@@ -291,39 +355,46 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         [Combinatorial]
         public void SigmaModelWithObservationPointsWithlegalZIsValid(
             [Values(ObservationPointType.SinglePoint,
-                ObservationPointType.Average,
-                ObservationPointType.OneOnEachLayer)] ObservationPointType type)
+                    ObservationPointType.Average,
+                    ObservationPointType.OneOnEachLayer)]
+            ObservationPointType type)
         {
             // setup
-            var hydroData = new TestHydroDataStub { ModelType = HydroDynamicModelType.Unstructured };
+            var hydroData = new TestHydroDataStub {ModelType = HydroDynamicModelType.Unstructured};
 
             var model = new WaterQualityModel();
             model.ImportHydroData(hydroData);
 
             Assert.AreEqual(HydroDynamicModelType.Unstructured, model.ModelType,
-                "Precondition: Model is set up as Sigma (unstructured) model.");
+                            "Precondition: Model is set up as Sigma (unstructured) model.");
 
             model.ObservationPoints.Add(new WaterQualityObservationPoint
             {
                 Name = "A",
                 ObservationPointType = type,
-                X = 5, Y = 5, Z = 1.0
+                X = 5,
+                Y = 5,
+                Z = 1.0
             });
             model.ObservationPoints.Add(new WaterQualityObservationPoint
             {
                 Name = "B",
                 ObservationPointType = type,
-                X = 5, Y = 5, Z = 0.34
+                X = 5,
+                Y = 5,
+                Z = 0.34
             });
             model.ObservationPoints.Add(new WaterQualityObservationPoint
             {
                 Name = "C",
                 ObservationPointType = type,
-                X = 5, Y = 5, Z = 0.0
+                X = 5,
+                Y = 5,
+                Z = 0.0
             });
 
             // call
-            var report = new WaterQualityModelValidator().Validate(model);
+            ValidationReport report = new WaterQualityModelValidator().Validate(model);
 
             // assert
             Assert.AreEqual(0, report.Issues.Count());
@@ -332,7 +403,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         [Test]
         [Combinatorial]
         public void ZlayerModelWithObservationPointWithIllegalZIsInvalid(
-            [Values(12.34, -2.5 + 1e-6, -6.8 - 1e-6, -34.56)]double z)
+            [Values(12.34, -2.5 + 1e-6, -6.8 - 1e-6, -34.56)]
+            double z)
         {
             // setup
             const double topLevel = -2.5;
@@ -348,21 +420,23 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             model.ImportHydroData(hydroData);
 
             Assert.AreEqual(LayerType.ZLayer, model.LayerType,
-                "Precondition: Model is set up as Z-layer (unstructured) model.");
+                            "Precondition: Model is set up as Z-layer (unstructured) model.");
 
             model.ObservationPoints.Add(new WaterQualityObservationPoint
             {
                 Name = "A",
                 ObservationPointType = ObservationPointType.SinglePoint,
-                X = 5, Y = 5, Z = z
+                X = 5,
+                Y = 5,
+                Z = z
             });
 
             // call
-            var report = new WaterQualityModelValidator().Validate(model);
+            ValidationReport report = new WaterQualityModelValidator().Validate(model);
 
             // assert
-            var expectedMessage = string.Format("Observation point 'A' has height of {0}, but is required to be in range [{1}, {2}].",
-                z, bottomLevel, topLevel);
+            string expectedMessage = string.Format("Observation point 'A' has height of {0}, but is required to be in range [{1}, {2}].",
+                                                   z, bottomLevel, topLevel);
             AssertExpectedValidationIssue(report, expectedMessage, i => i.Severity == ValidationSeverity.Error);
         }
 
@@ -370,8 +444,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         [Combinatorial]
         public void ZLayerModelWithObservationPointWithlegalZIsValid(
             [Values(ObservationPointType.SinglePoint,
-                ObservationPointType.Average,
-                ObservationPointType.OneOnEachLayer)] ObservationPointType type)
+                    ObservationPointType.Average,
+                    ObservationPointType.OneOnEachLayer)]
+            ObservationPointType type)
         {
             // setup
             var hydroData = new TestHydroDataStub
@@ -385,29 +460,35 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             model.ImportHydroData(hydroData);
 
             Assert.AreEqual(LayerType.ZLayer, model.LayerType,
-                "Precondition: Model is set up as Z-layer (unstructured) model.");
+                            "Precondition: Model is set up as Z-layer (unstructured) model.");
 
             model.ObservationPoints.Add(new WaterQualityObservationPoint
             {
                 Name = "A",
                 ObservationPointType = type,
-                X = 5, Y = 5, Z = -2.5
+                X = 5,
+                Y = 5,
+                Z = -2.5
             });
             model.ObservationPoints.Add(new WaterQualityObservationPoint
             {
                 Name = "B",
                 ObservationPointType = type,
-                X = 5, Y = 5, Z = -4.69
+                X = 5,
+                Y = 5,
+                Z = -4.69
             });
             model.ObservationPoints.Add(new WaterQualityObservationPoint
             {
                 Name = "C",
                 ObservationPointType = type,
-                X = 5, Y = 5, Z = -6.8
+                X = 5,
+                Y = 5,
+                Z = -6.8
             });
 
             // call
-            var report = new WaterQualityModelValidator().Validate(model);
+            ValidationReport report = new WaterQualityModelValidator().Validate(model);
 
             // assert
             Assert.AreEqual(0, report.Issues.Count());
@@ -417,8 +498,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         [Combinatorial]
         public void ModelWithObservationPointsInsideInactiveCellGivesWarning(
             [Values(ObservationPointType.SinglePoint,
-                ObservationPointType.Average,
-                ObservationPointType.OneOnEachLayer)] ObservationPointType type)
+                    ObservationPointType.Average,
+                    ObservationPointType.OneOnEachLayer)]
+            ObservationPointType type)
         {
             // setup
             var hydroData = new TestHydroDataStub
@@ -438,40 +520,51 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             {
                 Name = "A",
                 ObservationPointType = type,
-                X = 5, Y = 5, Z = 0.5
+                X = 5,
+                Y = 5,
+                Z = 0.5
             });
             model.ObservationPoints.Add(new WaterQualityObservationPoint
             {
                 Name = "B",
                 ObservationPointType = type,
-                X = 5, Y = 15, Z = 0.5
+                X = 5,
+                Y = 15,
+                Z = 0.5
             });
             model.ObservationPoints.Add(new WaterQualityObservationPoint
             {
                 Name = "C",
                 ObservationPointType = type,
-                X = 15, Y = 5, Z = 0.5
+                X = 15,
+                Y = 5,
+                Z = 0.5
             });
             model.ObservationPoints.Add(new WaterQualityObservationPoint
             {
                 Name = "D",
                 ObservationPointType = type,
-                X = 15, Y = 15, Z = 0.5
+                X = 15,
+                Y = 15,
+                Z = 0.5
             });
 
             // call
-            var report = new WaterQualityModelValidator().Validate(model);
+            ValidationReport report = new WaterQualityModelValidator().Validate(model);
 
             // assert
             const string expectedMessageB = "Observation point 'B' is inside an inactive cell.";
             AssertExpectedValidationIssue(report, expectedMessageB,
-                i => Equals(i.Subject, model.ObservationPoints[1]) && i.Severity == ValidationSeverity.Warning);
+                                          i => Equals(i.Subject, model.ObservationPoints[1]) && i.Severity == ValidationSeverity.Warning);
         }
 
         [Test]
-        public void ModelWithObservationPointOutsideGridIsInvalid([Values(0.0 - double.Epsilon, 20.0 + double.Epsilon)] double x,
-                                                                  [Values(0.0 - double.Epsilon, 20.0 + double.Epsilon)] double y,
-                                                                  [Values(ObservationPointType.SinglePoint, ObservationPointType.Average, ObservationPointType.OneOnEachLayer)] ObservationPointType type)
+        public void ModelWithObservationPointOutsideGridIsInvalid([Values(0.0 - double.Epsilon, 20.0 + double.Epsilon)]
+                                                                  double x,
+                                                                  [Values(0.0 - double.Epsilon, 20.0 + double.Epsilon)]
+                                                                  double y,
+                                                                  [Values(ObservationPointType.SinglePoint, ObservationPointType.Average, ObservationPointType.OneOnEachLayer)]
+                                                                  ObservationPointType type)
         {
             // setup
             var hydroData = new TestHydroDataStub
@@ -496,12 +589,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             });
 
             // call
-            var report = new WaterQualityModelValidator().Validate(model);
+            ValidationReport report = new WaterQualityModelValidator().Validate(model);
 
             // assert
             AssertExpectedValidationIssue(report,
-                "Observation point 'A' is not within grid or has ambiguous location (on a grid edge or grid vertex).",
-                i => Equals(i.Subject, model.ObservationPoints[0]) && i.Severity == ValidationSeverity.Error);
+                                          "Observation point 'A' is not within grid or has ambiguous location (on a grid edge or grid vertex).",
+                                          i => Equals(i.Subject, model.ObservationPoints[0]) && i.Severity == ValidationSeverity.Error);
         }
 
         [Test]
@@ -510,8 +603,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             [Values(0.0, 10.0, 20)] double x,
             [Values(0.0, 10.0, 20)] double y,
             [Values(ObservationPointType.SinglePoint,
-                ObservationPointType.Average,
-                ObservationPointType.OneOnEachLayer)] ObservationPointType type)
+                    ObservationPointType.Average,
+                    ObservationPointType.OneOnEachLayer)]
+            ObservationPointType type)
         {
             // setup
             var hydroData = new TestHydroDataStub
@@ -530,16 +624,18 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             {
                 Name = "T",
                 ObservationPointType = type,
-                X = x, Y = y, Z = 0.5
+                X = x,
+                Y = y,
+                Z = 0.5
             });
 
             // call
-            var report = new WaterQualityModelValidator().Validate(model);
+            ValidationReport report = new WaterQualityModelValidator().Validate(model);
 
             // assert
             AssertExpectedValidationIssue(report,
-                "Observation point 'T' is not within grid or has ambiguous location (on a grid edge or grid vertex).",
-                i => Equals(i.Subject, model.ObservationPoints[0]) && i.Severity == ValidationSeverity.Error);
+                                          "Observation point 'T' is not within grid or has ambiguous location (on a grid edge or grid vertex).",
+                                          i => Equals(i.Subject, model.ObservationPoints[0]) && i.Severity == ValidationSeverity.Error);
         }
 
         #endregion
@@ -566,10 +662,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             model.SubstanceProcessLibrary.ProcessDefinitionFilesPath = "thisPathDoesNotExist";
 
             // add a substance
-            model.SubstanceProcessLibrary.Substances.Add(new WaterQualitySubstance { Name = "substance" });
+            model.SubstanceProcessLibrary.Substances.Add(new WaterQualitySubstance {Name = "substance"});
 
             // call
-            var report = new WaterQualityModelValidator().Validate(model);
+            ValidationReport report = new WaterQualityModelValidator().Validate(model);
 
             // assert
             Assert.IsTrue(report.AllErrors.Any(e => e.Subject is SubstanceProcessLibrary));
@@ -580,25 +676,45 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         {
             // setup
             var model = new WaterQualityModel();
-            model.Loads.Add(new WaterQualityLoad { Name = "A", Z = (model.ZTop + model.ZBot) / 2 });
-            model.Loads.Add(new WaterQualityLoad { Name = "B", Z = (model.ZTop + model.ZBot) / 2 });
-            model.Loads.Add(new WaterQualityLoad { Name = "A", Z = (model.ZTop + model.ZBot) / 2 });
-            model.Loads.Add(new WaterQualityLoad { Name = "B", Z = (model.ZTop + model.ZBot) / 2 });
-            model.Loads.Add(new WaterQualityLoad { Name = "A", Z = (model.ZTop + model.ZBot) / 2 });
+            model.Loads.Add(new WaterQualityLoad
+            {
+                Name = "A",
+                Z = (model.ZTop + model.ZBot) / 2
+            });
+            model.Loads.Add(new WaterQualityLoad
+            {
+                Name = "B",
+                Z = (model.ZTop + model.ZBot) / 2
+            });
+            model.Loads.Add(new WaterQualityLoad
+            {
+                Name = "A",
+                Z = (model.ZTop + model.ZBot) / 2
+            });
+            model.Loads.Add(new WaterQualityLoad
+            {
+                Name = "B",
+                Z = (model.ZTop + model.ZBot) / 2
+            });
+            model.Loads.Add(new WaterQualityLoad
+            {
+                Name = "A",
+                Z = (model.ZTop + model.ZBot) / 2
+            });
 
             // call
-            var report = new WaterQualityModelValidator().Validate(model);
+            ValidationReport report = new WaterQualityModelValidator().Validate(model);
 
             // assert
             const string expectedMessageA = "Load names should be unique and another load with name 'A' was already found.";
             AssertExpectedValidationIssue(report, expectedMessageA,
-                i => Equals(i.Subject, model.Loads[2]) && i.Severity == ValidationSeverity.Error);
+                                          i => Equals(i.Subject, model.Loads[2]) && i.Severity == ValidationSeverity.Error);
             AssertExpectedValidationIssue(report, expectedMessageA,
-                i => Equals(i.Subject, model.Loads[4]) && i.Severity == ValidationSeverity.Error);
+                                          i => Equals(i.Subject, model.Loads[4]) && i.Severity == ValidationSeverity.Error);
 
             const string expectedMessageB = "Load names should be unique and another load with name 'B' was already found.";
             AssertExpectedValidationIssue(report, expectedMessageB,
-                i => Equals(i.Subject, model.Loads[3]) && i.Severity == ValidationSeverity.Error);
+                                          i => Equals(i.Subject, model.Loads[3]) && i.Severity == ValidationSeverity.Error);
         }
 
         [Test]
@@ -606,20 +722,24 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         {
             // setup
             var model = new WaterQualityModel();
-            model.Loads.Add(new WaterQualityLoad { Name = "A", Z = double.NaN });
+            model.Loads.Add(new WaterQualityLoad
+            {
+                Name = "A",
+                Z = double.NaN
+            });
 
             // call
-            var report = new WaterQualityModelValidator().Validate(model);
+            ValidationReport report = new WaterQualityModelValidator().Validate(model);
 
             // assert
             const string expectedMessage = "Load 'A' has an undefined Z.";
             AssertExpectedValidationIssue(report, expectedMessage,
-                i => Equals(i.Subject, model.Loads[0]) && i.Severity == ValidationSeverity.Error);
+                                          i => Equals(i.Subject, model.Loads[0]) && i.Severity == ValidationSeverity.Error);
 
-            var expectedIlligalZMessage = string.Format("Load 'A' has height of {0}, but is required to be in range [0, 1].",
-                double.NaN);
+            string expectedIlligalZMessage = string.Format("Load 'A' has height of {0}, but is required to be in range [0, 1].",
+                                                           double.NaN);
             Assert.IsFalse(report.GetAllIssuesRecursive().Any(i => i.Message.Contains(expectedIlligalZMessage)),
-                "If Z is NaN, there should be no message about Z being out of a certain range.");
+                           "If Z is NaN, there should be no message about Z being out of a certain range.");
         }
 
         [Test]
@@ -630,21 +750,27 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         public void SigmaModelWithLoadWithIllegalZIsInvalid(double z)
         {
             // setup
-            var hydroData = new TestHydroDataStub { ModelType = HydroDynamicModelType.Unstructured };
+            var hydroData = new TestHydroDataStub {ModelType = HydroDynamicModelType.Unstructured};
 
             var model = new WaterQualityModel();
             model.ImportHydroData(hydroData);
 
             Assert.AreEqual(HydroDynamicModelType.Unstructured, model.ModelType,
-                "Precondition: Model is set up as Sigma (unstructured) model.");
+                            "Precondition: Model is set up as Sigma (unstructured) model.");
 
-            model.Loads.Add(new WaterQualityLoad { Name = "A", X = 5, Y = 5, Z = z });
+            model.Loads.Add(new WaterQualityLoad
+            {
+                Name = "A",
+                X = 5,
+                Y = 5,
+                Z = z
+            });
 
             // call
-            var report = new WaterQualityModelValidator().Validate(model);
+            ValidationReport report = new WaterQualityModelValidator().Validate(model);
 
             // assert
-            var expectedMessage = string.Format("Load 'A' has height of {0}, but is required to be in range [0, 1].", z);
+            string expectedMessage = string.Format("Load 'A' has height of {0}, but is required to be in range [0, 1].", z);
             AssertExpectedValidationIssue(report, expectedMessage, i => i.Severity == ValidationSeverity.Error);
         }
 
@@ -652,20 +778,38 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         public void SigmaModelWithLoadWithlegalZIsValid()
         {
             // setup
-            var hydroData = new TestHydroDataStub { ModelType = HydroDynamicModelType.Unstructured };
+            var hydroData = new TestHydroDataStub {ModelType = HydroDynamicModelType.Unstructured};
 
             var model = new WaterQualityModel();
             model.ImportHydroData(hydroData);
 
             Assert.AreEqual(HydroDynamicModelType.Unstructured, model.ModelType,
-                "Precondition: Model is set up as Sigma (unstructured) model.");
+                            "Precondition: Model is set up as Sigma (unstructured) model.");
 
-            model.Loads.Add(new WaterQualityLoad { Name = "A", X = 5, Y = 5, Z = 1.0 });
-            model.Loads.Add(new WaterQualityLoad { Name = "B", X = 5, Y = 5, Z = 0.34 });
-            model.Loads.Add(new WaterQualityLoad { Name = "C", X = 5, Y = 5, Z = 0.0 });
+            model.Loads.Add(new WaterQualityLoad
+            {
+                Name = "A",
+                X = 5,
+                Y = 5,
+                Z = 1.0
+            });
+            model.Loads.Add(new WaterQualityLoad
+            {
+                Name = "B",
+                X = 5,
+                Y = 5,
+                Z = 0.34
+            });
+            model.Loads.Add(new WaterQualityLoad
+            {
+                Name = "C",
+                X = 5,
+                Y = 5,
+                Z = 0.0
+            });
 
             // call
-            var report = new WaterQualityModelValidator().Validate(model);
+            ValidationReport report = new WaterQualityModelValidator().Validate(model);
 
             // assert
             Assert.AreEqual(0, report.Issues.Count());
@@ -692,16 +836,22 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             model.ImportHydroData(hydroData);
 
             Assert.AreEqual(LayerType.ZLayer, model.LayerType,
-                "Precondition: Model is set up as Z-layer (unstructured) model.");
+                            "Precondition: Model is set up as Z-layer (unstructured) model.");
 
-            model.Loads.Add(new WaterQualityLoad { Name = "A", X = 5, Y = 5, Z = z });
+            model.Loads.Add(new WaterQualityLoad
+            {
+                Name = "A",
+                X = 5,
+                Y = 5,
+                Z = z
+            });
 
             // call
-            var report = new WaterQualityModelValidator().Validate(model);
+            ValidationReport report = new WaterQualityModelValidator().Validate(model);
 
             // assert
-            var expectedMessage = string.Format("Load 'A' has height of {0}, but is required to be in range [{1}, {2}].",
-                z, bottomLevel, topLevel);
+            string expectedMessage = string.Format("Load 'A' has height of {0}, but is required to be in range [{1}, {2}].",
+                                                   z, bottomLevel, topLevel);
             AssertExpectedValidationIssue(report, expectedMessage, i => i.Severity == ValidationSeverity.Error);
         }
 
@@ -720,14 +870,32 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             model.ImportHydroData(hydroData);
 
             Assert.AreEqual(LayerType.ZLayer, model.LayerType,
-                "Precondition: Model is set up as Z-layer (unstructured) model.");
+                            "Precondition: Model is set up as Z-layer (unstructured) model.");
 
-            model.Loads.Add(new WaterQualityLoad { Name = "A", X = 5, Y = 5, Z = -2.5 });
-            model.Loads.Add(new WaterQualityLoad { Name = "B", X = 5, Y = 5, Z = -4.69 });
-            model.Loads.Add(new WaterQualityLoad { Name = "C", X = 5, Y = 5, Z = -6.8 });
+            model.Loads.Add(new WaterQualityLoad
+            {
+                Name = "A",
+                X = 5,
+                Y = 5,
+                Z = -2.5
+            });
+            model.Loads.Add(new WaterQualityLoad
+            {
+                Name = "B",
+                X = 5,
+                Y = 5,
+                Z = -4.69
+            });
+            model.Loads.Add(new WaterQualityLoad
+            {
+                Name = "C",
+                X = 5,
+                Y = 5,
+                Z = -6.8
+            });
 
             // call
-            var report = new WaterQualityModelValidator().Validate(model);
+            ValidationReport report = new WaterQualityModelValidator().Validate(model);
 
             // assert
             Assert.AreEqual(0, report.Issues.Count());
@@ -750,23 +918,49 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
 
             Assert.IsTrue(model.HasHydroDataImported);
 
-            model.Loads.Add(new WaterQualityLoad { Name = "A", X = 5, Y = 5, Z = 0.5 });
-            model.Loads.Add(new WaterQualityLoad { Name = "B", X = 5, Y = 15, Z = 0.5 });
-            model.Loads.Add(new WaterQualityLoad { Name = "C", X = 15, Y = 5, Z = 0.5 });
-            model.Loads.Add(new WaterQualityLoad { Name = "D", X = 15, Y = 15, Z = 0.5 });
+            model.Loads.Add(new WaterQualityLoad
+            {
+                Name = "A",
+                X = 5,
+                Y = 5,
+                Z = 0.5
+            });
+            model.Loads.Add(new WaterQualityLoad
+            {
+                Name = "B",
+                X = 5,
+                Y = 15,
+                Z = 0.5
+            });
+            model.Loads.Add(new WaterQualityLoad
+            {
+                Name = "C",
+                X = 15,
+                Y = 5,
+                Z = 0.5
+            });
+            model.Loads.Add(new WaterQualityLoad
+            {
+                Name = "D",
+                X = 15,
+                Y = 15,
+                Z = 0.5
+            });
 
             // call
-            var report = new WaterQualityModelValidator().Validate(model);
+            ValidationReport report = new WaterQualityModelValidator().Validate(model);
 
             // assert
             const string expectedMessageB = "Load 'B' is inside an inactive cell.";
             AssertExpectedValidationIssue(report, expectedMessageB,
-                i => Equals(i.Subject, model.Loads[1]) && i.Severity == ValidationSeverity.Warning);
+                                          i => Equals(i.Subject, model.Loads[1]) && i.Severity == ValidationSeverity.Warning);
         }
 
         [Test]
-        public void ModelWithLoadOutsideGridIsInvalid([Values(0.0 - double.Epsilon, 20.0 + double.Epsilon)] double x,
-                                                      [Values(0.0 - double.Epsilon, 20.0 + double.Epsilon)] double y)
+        public void ModelWithLoadOutsideGridIsInvalid([Values(0.0 - double.Epsilon, 20.0 + double.Epsilon)]
+                                                      double x,
+                                                      [Values(0.0 - double.Epsilon, 20.0 + double.Epsilon)]
+                                                      double y)
         {
             // setup
             var hydroData = new TestHydroDataStub
@@ -781,15 +975,21 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
 
             Assert.IsTrue(model.HasHydroDataImported);
 
-            model.Loads.Add(new WaterQualityLoad { Name = "A", X = x, Y = y, Z = 0.5 });
+            model.Loads.Add(new WaterQualityLoad
+            {
+                Name = "A",
+                X = x,
+                Y = y,
+                Z = 0.5
+            });
 
             // call
-            var report = new WaterQualityModelValidator().Validate(model);
+            ValidationReport report = new WaterQualityModelValidator().Validate(model);
 
             // assert
             AssertExpectedValidationIssue(report,
-                "Load 'A' is not within grid or has ambiguous location (on a grid edge or grid vertex).",
-                i => Equals(i.Subject, model.Loads[0]) && i.Severity == ValidationSeverity.Error);
+                                          "Load 'A' is not within grid or has ambiguous location (on a grid edge or grid vertex).",
+                                          i => Equals(i.Subject, model.Loads[0]) && i.Severity == ValidationSeverity.Error);
         }
 
         [TestCase(19, 19)]
@@ -809,10 +1009,16 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
 
             Assert.IsTrue(model.HasHydroDataImported);
 
-            model.Loads.Add(new WaterQualityLoad { Name = "A", X = x, Y = y, Z = 0.5 });
+            model.Loads.Add(new WaterQualityLoad
+            {
+                Name = "A",
+                X = x,
+                Y = y,
+                Z = 0.5
+            });
 
             // call
-            var report = new WaterQualityModelValidator().Validate(model);
+            ValidationReport report = new WaterQualityModelValidator().Validate(model);
 
             // assert
             Assert.That(report.Issues.Count(), Is.EqualTo(0));
@@ -837,46 +1043,52 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
 
             Assert.IsTrue(model.HasHydroDataImported);
 
-            model.Loads.Add(new WaterQualityLoad { Name = "T", X = x, Y = y, Z = 0.5 });
+            model.Loads.Add(new WaterQualityLoad
+            {
+                Name = "T",
+                X = x,
+                Y = y,
+                Z = 0.5
+            });
 
             // call
-            var report = new WaterQualityModelValidator().Validate(model);
+            ValidationReport report = new WaterQualityModelValidator().Validate(model);
 
             // assert
             AssertExpectedValidationIssue(report,
-                "Load 'T' is not within grid or has ambiguous location (on a grid edge or grid vertex).",
-                i => Equals(i.Subject, model.Loads[0]) && i.Severity == ValidationSeverity.Error);
+                                          "Load 'T' is not within grid or has ambiguous location (on a grid edge or grid vertex).",
+                                          i => Equals(i.Subject, model.Loads[0]) && i.Severity == ValidationSeverity.Error);
         }
 
         #endregion
-        
+
         #region Restart
-        
+
         [Test]
         public void WaqModelForFractionCalculationWithValidDataAndRestartWithoutMetadataValidation()
         {
-            var waterQualityModel = CreateValidFractionsWaterQualityModel();
+            WaterQualityModel waterQualityModel = CreateValidFractionsWaterQualityModel();
 
-            var validRestartFilePath =
+            string validRestartFilePath =
                 TestHelper.GetTestFilePath("valid_fractions_state_without_metadata_WAQ.zip");
             waterQualityModel.RestartInput = new FileBasedRestartState("validation", validRestartFilePath);
             waterQualityModel.UseRestart = true;
 
-            var report = new WaterQualityModelValidator().Validate(waterQualityModel);
+            ValidationReport report = new WaterQualityModelValidator().Validate(waterQualityModel);
             Assert.That(report.GetAllIssuesRecursive().Count(x => x.Severity == ValidationSeverity.Error) == 0);
         }
 
         [Test]
         public void WaqModelForFractionCalculationWithFailingOptionalRequirementRestartState()
         {
-            var waterQualityModel = CreateValidFractionsWaterQualityModel();
+            WaterQualityModel waterQualityModel = CreateValidFractionsWaterQualityModel();
 
-            var validRestartFilePath =
+            string validRestartFilePath =
                 TestHelper.GetTestFilePath("valid_fractions_state_nonmatching_active_WAQ.zip");
             waterQualityModel.RestartInput = new FileBasedRestartState("validation", validRestartFilePath);
             waterQualityModel.UseRestart = true;
 
-            var report = new WaterQualityModelValidator().Validate(waterQualityModel);
+            ValidationReport report = new WaterQualityModelValidator().Validate(waterQualityModel);
             Assert.That(report.GetAllIssuesRecursive().Count(x => x.Severity == ValidationSeverity.Error) == 0);
 
             /*
@@ -891,28 +1103,28 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         [Test]
         public void WaqModelForFractionCalculationWithValidDataAndRestartIncompatibleModelTypeValidation()
         {
-            var waterQualityModel = CreateValidFractionsWaterQualityModel();
+            WaterQualityModel waterQualityModel = CreateValidFractionsWaterQualityModel();
 
-            var validRestartFilePath =
+            string validRestartFilePath =
                 TestHelper.GetTestFilePath("invalid_modeltype_state_WAQ.zip");
             waterQualityModel.RestartInput = new FileBasedRestartState("validation", validRestartFilePath);
             waterQualityModel.UseRestart = true;
 
-            var report = new WaterQualityModelValidator().Validate(waterQualityModel);
+            ValidationReport report = new WaterQualityModelValidator().Validate(waterQualityModel);
             ExpectValidationIssue(report, "Model type of 'test' is not compatible.");
         }
 
         [Test]
         public void WaqModelForFractionCalculationWithValidDataAndRestartIncompatibleVersionValidation()
         {
-            var waterQualityModel = CreateValidFractionsWaterQualityModel();
+            WaterQualityModel waterQualityModel = CreateValidFractionsWaterQualityModel();
 
-            var validRestartFilePath =
+            string validRestartFilePath =
                 TestHelper.GetTestFilePath("invalid_version_state_WAQ.zip");
             waterQualityModel.RestartInput = new FileBasedRestartState("validation", validRestartFilePath);
             waterQualityModel.UseRestart = true;
 
-            var report = new WaterQualityModelValidator().Validate(waterQualityModel);
+            ValidationReport report = new WaterQualityModelValidator().Validate(waterQualityModel);
             ExpectValidationIssue(report, "Version 2 is not supported.");
         }
 
@@ -922,22 +1134,50 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
 
         private static string FormatTimeString(DateTime dateTime)
         {
-            var culture = CultureInfo.InvariantCulture;
-            var format = String.Format("yyyy{0}MM{0}dd HH{1}mm{1}ss", culture.DateTimeFormat.DateSeparator,
-                culture.DateTimeFormat.TimeSeparator);
+            CultureInfo culture = CultureInfo.InvariantCulture;
+            string format = string.Format("yyyy{0}MM{0}dd HH{1}mm{1}ss", culture.DateTimeFormat.DateSeparator,
+                                          culture.DateTimeFormat.TimeSeparator);
 
             return dateTime.ToString(format, culture);
         }
 
         private static object[] OutputTimersCase =
         {
-            new object[] { 0, 0},
-            new object[] { 0, 1},
-            new object[] { 1, 0},
-            new object[] { 1, 1},
-            new object[] { 0, -1},
-            new object[] { -1, 0},
-            new object[] { -1, -1},
+            new object[]
+            {
+                0,
+                0
+            },
+            new object[]
+            {
+                0,
+                1
+            },
+            new object[]
+            {
+                1,
+                0
+            },
+            new object[]
+            {
+                1,
+                1
+            },
+            new object[]
+            {
+                0,
+                -1
+            },
+            new object[]
+            {
+                -1,
+                0
+            },
+            new object[]
+            {
+                -1,
+                -1
+            },
         };
 
         [Test]
@@ -947,23 +1187,23 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             var model = new WaterQualityModel();
             var description = "balance output";
 
-            var referenceStartTime = model.StartTime;
-            var referenceStopTime = model.StopTime;
-            var expectedMssg = string.Format(
+            DateTime referenceStartTime = model.StartTime;
+            DateTime referenceStopTime = model.StopTime;
+            string expectedMssg = string.Format(
                 Resources.WaterQualityModelValidator_CheckTimers_Timers_for__0__are_not_equal_to_the_simulation_period_of_the_model___1____2____Please_verify_that_they_overlap_with_the_simulation_period_,
                 description, FormatTimeString(referenceStartTime), FormatTimeString(referenceStopTime));
 
             //Set output timers:
-            var changeStartTime = startTime > 0 || startTime < 0;
-            var changeStopTime = stopTime > 0 || stopTime < 0;
+            bool changeStartTime = startTime > 0 || startTime < 0;
+            bool changeStopTime = stopTime > 0 || stopTime < 0;
             model.ModelSettings.BalanceStartTime = changeStartTime ? referenceStartTime.AddDays(startTime) : referenceStartTime;
             model.ModelSettings.BalanceStopTime = changeStopTime ? referenceStopTime.AddDays(stopTime) : referenceStopTime;
 
-            var report = new WaterQualityModelValidator().Validate(model);
+            ValidationReport report = new WaterQualityModelValidator().Validate(model);
 
             Assert.GreaterOrEqual(1, report.InfoCount);
-            var timeChanged = changeStartTime || changeStopTime;
-            Assert.AreEqual(timeChanged, report.GetAllIssuesRecursive().Any( i => i.Severity == ValidationSeverity.Info && i.Message == expectedMssg));
+            bool timeChanged = changeStartTime || changeStopTime;
+            Assert.AreEqual(timeChanged, report.GetAllIssuesRecursive().Any(i => i.Severity == ValidationSeverity.Info && i.Message == expectedMssg));
         }
 
         [Test]
@@ -973,22 +1213,22 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             var model = new WaterQualityModel();
             var description = "monitoring locations output";
 
-            var referenceStartTime = model.StartTime;
-            var referenceStopTime = model.StopTime;
-            var expectedMssg = string.Format(
+            DateTime referenceStartTime = model.StartTime;
+            DateTime referenceStopTime = model.StopTime;
+            string expectedMssg = string.Format(
                 Resources.WaterQualityModelValidator_CheckTimers_Timers_for__0__are_not_equal_to_the_simulation_period_of_the_model___1____2____Please_verify_that_they_overlap_with_the_simulation_period_,
                 description, FormatTimeString(referenceStartTime), FormatTimeString(referenceStopTime));
 
             //Set output timers:
-            var changeStartTime = startTime > 0 || startTime < 0;
-            var changeStopTime = stopTime > 0 || stopTime < 0;
+            bool changeStartTime = startTime > 0 || startTime < 0;
+            bool changeStopTime = stopTime > 0 || stopTime < 0;
             model.ModelSettings.HisStartTime = changeStartTime ? referenceStartTime.AddDays(startTime) : referenceStartTime;
             model.ModelSettings.HisStopTime = changeStopTime ? referenceStopTime.AddDays(stopTime) : referenceStopTime;
 
-            var report = new WaterQualityModelValidator().Validate(model);
+            ValidationReport report = new WaterQualityModelValidator().Validate(model);
 
             Assert.GreaterOrEqual(1, report.InfoCount);
-            var timeChanged = changeStartTime || changeStopTime;
+            bool timeChanged = changeStartTime || changeStopTime;
             Assert.AreEqual(timeChanged, report.GetAllIssuesRecursive().Any(i => i.Severity == ValidationSeverity.Info && i.Message == expectedMssg));
         }
 
@@ -999,22 +1239,22 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             var model = new WaterQualityModel();
             var description = "cells output";
 
-            var referenceStartTime = model.StartTime;
-            var referenceStopTime = model.StopTime;
-            var expectedMssg = string.Format(
+            DateTime referenceStartTime = model.StartTime;
+            DateTime referenceStopTime = model.StopTime;
+            string expectedMssg = string.Format(
                 Resources.WaterQualityModelValidator_CheckTimers_Timers_for__0__are_not_equal_to_the_simulation_period_of_the_model___1____2____Please_verify_that_they_overlap_with_the_simulation_period_,
                 description, FormatTimeString(referenceStartTime), FormatTimeString(referenceStopTime));
 
             //Set output timers:
-            var changeStartTime = startTime > 0 || startTime < 0;
-            var changeStopTime = stopTime > 0 || stopTime < 0;
+            bool changeStartTime = startTime > 0 || startTime < 0;
+            bool changeStopTime = stopTime > 0 || stopTime < 0;
             model.ModelSettings.MapStartTime = changeStartTime ? referenceStartTime.AddDays(startTime) : referenceStartTime;
             model.ModelSettings.MapStopTime = changeStopTime ? referenceStopTime.AddDays(stopTime) : referenceStopTime;
 
-            var report = new WaterQualityModelValidator().Validate(model);
+            ValidationReport report = new WaterQualityModelValidator().Validate(model);
 
             Assert.GreaterOrEqual(1, report.InfoCount);
-            var timeChanged = changeStartTime || changeStopTime;
+            bool timeChanged = changeStartTime || changeStopTime;
             Assert.AreEqual(timeChanged, report.GetAllIssuesRecursive().Any(i => i.Severity == ValidationSeverity.Info && i.Message == expectedMssg));
         }
 
@@ -1030,9 +1270,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             Assert.IsNotNull(waqModel);
 
             var validator = new WaterQualityModelValidator();
-            var report = validator.Validate(waqModel);
+            ValidationReport report = validator.Validate(waqModel);
             var categoryName = "Process coefficients";
-            var subReport = report.SubReports.FirstOrDefault( sr => sr.Category == categoryName);
+            ValidationReport subReport = report.SubReports.FirstOrDefault(sr => sr.Category == categoryName);
 
             Assert.IsNotNull(subReport);
             Assert.IsFalse(subReport.Issues.Any());
@@ -1044,8 +1284,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         {
             //Set up the model and the substances
 
-            #region  Set up model
-            var modelFilePath = TestHelper.GetTestFilePath(@"ValidWaqModels\\Flow1D\\sobek.hyd");
+            #region Set up model
+
+            string modelFilePath = TestHelper.GetTestFilePath(@"ValidWaqModels\\Flow1D\\sobek.hyd");
             Assert.IsTrue(File.Exists(modelFilePath));
 
             var importer = new HydFileImporter();
@@ -1053,7 +1294,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             {
                 Assert.IsNotNull(waqModel);
 
-                var subsFilePath = TestHelper.GetTestFilePath(@"ValidWaqModels\\02b_Oxygen_bod_sediment.sub");
+                string subsFilePath = TestHelper.GetTestFilePath(@"ValidWaqModels\\02b_Oxygen_bod_sediment.sub");
                 Assert.IsTrue(File.Exists(subsFilePath));
                 new SubFileImporter().Import(waqModel.SubstanceProcessLibrary, subsFilePath);
                 Assert.IsNotNull(waqModel.SubstanceProcessLibrary);
@@ -1063,17 +1304,17 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
 
                 //Calling private method just to check this return.
                 var validationResult = TypeUtils.CallPrivateStaticMethod(typeof(WaterQualityModelValidator),
-                    "ValidateProcessCoefficients",
-                    waqModel.SubstanceProcessLibrary,
-                    waqModel.ProcessCoefficients,
-                    new List<WaqProcessValidationRule>()
-                ) as IEnumerable<ValidationIssue>;
+                                                                         "ValidateProcessCoefficients",
+                                                                         waqModel.SubstanceProcessLibrary,
+                                                                         waqModel.ProcessCoefficients,
+                                                                         new List<WaqProcessValidationRule>()
+                                       ) as IEnumerable<ValidationIssue>;
 
                 Assert.IsNotNull(validationResult);
-                var issues = validationResult.ToList();
+                List<ValidationIssue> issues = validationResult.ToList();
                 Assert.IsTrue(issues.Any());
 
-                var expectedMssg = string.Format(Resources.WaterQualityModelValidator_ValidateProcessCoefficients_No_process_coefficient_rules_have_been_loaded__Therefore_they_cannot_be_validated_);
+                string expectedMssg = string.Format(Resources.WaterQualityModelValidator_ValidateProcessCoefficients_No_process_coefficient_rules_have_been_loaded__Therefore_they_cannot_be_validated_);
                 Assert.IsTrue(issues.Any(iss => iss.Severity == ValidationSeverity.Warning && iss.Message.Contains(expectedMssg)));
             }
         }
@@ -1084,8 +1325,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         {
             //Set up the model and the substances
 
-            #region  Set up model
-            var modelFilePath = TestHelper.GetTestFilePath(@"ValidWaqModels\\Flow1D\\sobek.hyd");
+            #region Set up model
+
+            string modelFilePath = TestHelper.GetTestFilePath(@"ValidWaqModels\\Flow1D\\sobek.hyd");
             Assert.IsTrue(File.Exists(modelFilePath));
 
             var importer = new HydFileImporter();
@@ -1093,7 +1335,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             {
                 Assert.IsNotNull(waqModel);
 
-                var subsFilePath = TestHelper.GetTestFilePath(@"ValidWaqModels\\02b_Oxygen_bod_sediment.sub");
+                string subsFilePath = TestHelper.GetTestFilePath(@"ValidWaqModels\\02b_Oxygen_bod_sediment.sub");
                 Assert.IsTrue(File.Exists(subsFilePath));
                 new SubFileImporter().Import(waqModel.SubstanceProcessLibrary, subsFilePath);
                 Assert.IsNotNull(waqModel.SubstanceProcessLibrary);
@@ -1104,22 +1346,22 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
                 //We know that the parameter swoxydem has a rule and is contained in the library
                 //for the test data we are using. So let's remove it for this test.
                 var swoxydem = "swoxydem";
-                var swoxyDemParam = waqModel.ProcessCoefficients.FirstOrDefault(pc => pc.Name.ToLower().Equals(swoxydem));
+                IFunction swoxyDemParam = waqModel.ProcessCoefficients.FirstOrDefault(pc => pc.Name.ToLower().Equals(swoxydem));
                 Assert.IsNotNull(swoxyDemParam);
 
                 //Calling private method just to check this return.
                 var validationResult = TypeUtils.CallPrivateStaticMethod(typeof(WaterQualityModelValidator),
-                    "ValidateProcessCoefficients",
-                    new SubstanceProcessLibrary(),
-                    waqModel.ProcessCoefficients,
-                    waqModel.WaqProcessesRules
-                ) as IEnumerable<ValidationIssue>;
+                                                                         "ValidateProcessCoefficients",
+                                                                         new SubstanceProcessLibrary(),
+                                                                         waqModel.ProcessCoefficients,
+                                                                         waqModel.WaqProcessesRules
+                                       ) as IEnumerable<ValidationIssue>;
 
                 Assert.IsNotNull(validationResult);
-                var issues = validationResult.ToList();
+                List<ValidationIssue> issues = validationResult.ToList();
                 Assert.IsTrue(issues.Any());
 
-                var expectedMssg = string.Format(Resources.WaterQualityModelValidator_ValidateProcessCoefficients_The_Substance_library_does_not_contain_the_given_parameter__0__, swoxyDemParam.Name);
+                string expectedMssg = string.Format(Resources.WaterQualityModelValidator_ValidateProcessCoefficients_The_Substance_library_does_not_contain_the_given_parameter__0__, swoxyDemParam.Name);
                 Assert.IsTrue(issues.Any(iss => iss.Severity == ValidationSeverity.Warning && iss.Message.Contains(expectedMssg)));
             }
         }
@@ -1130,8 +1372,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         {
             //Set up the model and the substances
 
-            #region  Set up model
-            var modelFilePath = TestHelper.GetTestFilePath(@"ValidWaqModels\\Flow1D\\sobek.hyd");
+            #region Set up model
+
+            string modelFilePath = TestHelper.GetTestFilePath(@"ValidWaqModels\\Flow1D\\sobek.hyd");
             Assert.IsTrue(File.Exists(modelFilePath));
 
             var importer = new HydFileImporter();
@@ -1139,7 +1382,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             {
                 Assert.IsNotNull(waqModel);
 
-                var subsFilePath = TestHelper.GetTestFilePath(@"ValidWaqModels\\02b_Oxygen_bod_sediment.sub");
+                string subsFilePath = TestHelper.GetTestFilePath(@"ValidWaqModels\\02b_Oxygen_bod_sediment.sub");
                 Assert.IsTrue(File.Exists(subsFilePath));
                 new SubFileImporter().Import(waqModel.SubstanceProcessLibrary, subsFilePath);
                 Assert.IsNotNull(waqModel.SubstanceProcessLibrary);
@@ -1149,27 +1392,29 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
 
                 //Get one of the parameters
                 var swoxydem = "swoxydem";
-                var swoxyDemParam = waqModel.ProcessCoefficients.FirstOrDefault(pc => pc.Name.ToLower().Equals(swoxydem));
+                IFunction swoxyDemParam = waqModel.ProcessCoefficients.FirstOrDefault(pc => pc.Name.ToLower().Equals(swoxydem));
                 Assert.IsNotNull(swoxyDemParam);
                 var invalidValue = 3;
 
                 var validator = new WaterQualityModelValidator();
-                var report = validator.Validate(waqModel);
+                ValidationReport report = validator.Validate(waqModel);
                 var categoryName = "Process coefficients";
-                var subReport = report.SubReports.FirstOrDefault(sr => sr.Category == categoryName);
+                ValidationReport subReport = report.SubReports.FirstOrDefault(sr => sr.Category == categoryName);
 
                 Assert.IsNotNull(subReport);
                 Assert.IsFalse(subReport.Issues.Any());
 
-                var message = Resources .WaqValidationRulesExtension_GetWaqProcessValidationRuleAsString_Process_coefficient__0___value__1____2__3__;
+                string message = Resources.WaqValidationRulesExtension_GetWaqProcessValidationRuleAsString_Process_coefficient__0___value__1____2__3__;
                 message = message.Replace(".", string.Empty); //small trick.
-                var expectedMssg = string.Format(message, swoxyDemParam.Name, invalidValue, string.Empty, string.Empty);
+                string expectedMssg = string.Format(message, swoxyDemParam.Name, invalidValue, string.Empty, string.Empty);
                 Assert.IsFalse(subReport.Issues.Any(iss => iss.Severity == ValidationSeverity.Warning && iss.Message.Contains(expectedMssg)));
 
                 //Modify the parameter for which we know the validation will fail, let´s use:
                 //SWOXYDEM,0,2,int,
                 if (swoxyDemParam.Components != null && swoxyDemParam.Components.Any())
+                {
                     swoxyDemParam.Components[0].DefaultValue = invalidValue;
+                }
 
                 report = validator.Validate(waqModel);
                 subReport = report.SubReports.FirstOrDefault(sr => sr.Category == categoryName);
@@ -1182,33 +1427,5 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         }
 
         #endregion
-
-        private static void AssertExpectedValidationIssue(ValidationReport report, string text, Func<ValidationIssue, bool> filter)
-        {
-            Assert.That(report.GetAllIssuesRecursive().Where(filter).Any(i => i.Message.Contains(text)),
-                "Expected message:" + Environment.NewLine +
-                text + Environment.NewLine +
-                "Available validation messages:" + Environment.NewLine +
-                string.Join(Environment.NewLine,
-                    report.GetAllIssuesRecursive().Select(i => string.Format("{0}: {1}", i.Severity, i.Message))));
-        }
-
-        private static void ExpectValidationIssue(ValidationReport report, string text)
-        {
-            AssertExpectedValidationIssue(report, text, i => true);
-        }
-        private static WaterQualityModel CreateValidFractionsWaterQualityModel()
-        {
-            var waterQualityModel = new WaterQualityModel();
-            var hydroData = MockRepository.GenerateStub<IHydroData>();
-
-            hydroData.Stub(d => d.FilePath).Return(TestHelper.GetTestFilePath(@"ValidWaqModels\\Flow1D\\sobek.hyd")).Repeat.Any();
-
-            TypeUtils.SetPrivatePropertyValue(waterQualityModel, nameof(waterQualityModel.HydroData), hydroData);
-
-            waterQualityModel.SubstanceProcessLibrary.Substances.Add(new WaterQualitySubstance { Name = "substance" });
-
-            return waterQualityModel;
-        }
     }
 }

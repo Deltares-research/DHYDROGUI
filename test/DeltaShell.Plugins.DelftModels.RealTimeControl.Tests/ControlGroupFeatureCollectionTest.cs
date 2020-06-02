@@ -26,10 +26,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
             });
             controlGroups.Add(new ControlGroup
             {
-                Inputs = {new Input(), new Input()},
+                Inputs =
+                {
+                    new Input(),
+                    new Input()
+                },
                 Outputs = {new Output()}
             });
-            
+
             Assert.AreEqual(5, collection.Features.Count);
             Assert.AreEqual(typeof(ConnectionPoint), collection.FeatureType);
         }
@@ -39,30 +43,31 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
         {
             var controlGroups = new EventedList<ControlGroup>();
 
-            var collection = new ControlGroupFeatureCollection(controlGroups)
-            {
-                UseConnections = true
-            };
-            
+            var collection = new ControlGroupFeatureCollection(controlGroups) {UseConnections = true};
+
             var rule = new PIDRule("testRule");
             var input = new Input
-                            {
-                                ParameterName = "InParam", 
-                                Feature = new RtcTestFeature{Geometry = new Point(0,0)}
-                            };
+            {
+                ParameterName = "InParam",
+                Feature = new RtcTestFeature {Geometry = new Point(0, 0)}
+            };
             var output = new Output
-                             {
-                                 ParameterName = "OutParam",
-                                 Feature = new RtcTestFeature { Geometry = new Point(10, 10) }
-                             };
-            var controlGroup = new ControlGroup { Name = "testControlGroup" };
-            var condition = new StandardCondition { Name = "testCondition", Input = input };
+            {
+                ParameterName = "OutParam",
+                Feature = new RtcTestFeature {Geometry = new Point(10, 10)}
+            };
+            var controlGroup = new ControlGroup {Name = "testControlGroup"};
+            var condition = new StandardCondition
+            {
+                Name = "testCondition",
+                Input = input
+            };
 
             rule.Outputs.Add(output);
-            
+
             condition.Input = input;
             condition.FalseOutputs.Add(rule);
-            
+
             controlGroup.Rules.Add(rule);
             controlGroup.Conditions.Add(condition);
 
@@ -73,7 +78,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
 
             Assert.AreEqual(1, collection.Features.Count);
             Assert.AreEqual(typeof(Connection), collection.FeatureType);
-            Assert.AreEqual(new LineString(new []{ new Coordinate(0, 0), new Coordinate(10, 10), }), ((IFeature)collection.Features[0]).Geometry);
-        } 
+            Assert.AreEqual(new LineString(new[]
+                            {
+                                new Coordinate(0, 0),
+                                new Coordinate(10, 10),
+                            }), ((IFeature) collection.Features[0]).Geometry);
+        }
     }
 }

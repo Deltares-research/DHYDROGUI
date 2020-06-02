@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
+using DelftTools.Controls;
 using DelftTools.Controls.Swf.Charting;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Helpers;
-using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Core;
+using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Shell.Gui;
 using DelftTools.TestUtils;
 using DelftTools.TestUtils.TestReferenceHelper;
@@ -23,7 +24,6 @@ using DeltaShell.Plugins.NetworkEditor.MapLayers;
 using DeltaShell.Plugins.ProjectExplorer;
 using DeltaShell.Plugins.SharpMapGis;
 using DeltaShell.Plugins.SharpMapGis.Gui;
-using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms.CoverageViews;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Coverages;
@@ -34,6 +34,7 @@ using Rhino.Mocks;
 using SharpMap;
 using SharpTestsEx;
 using Control = System.Windows.Controls.Control;
+using TreeView = DelftTools.Controls.Swf.TreeViewControls.TreeView;
 
 namespace DeltaShell.Plugins.NetworkEditor.Tests
 {
@@ -49,7 +50,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
         {
             using (var gui = new DeltaShellGui())
             {
-                var app = gui.Application;
+                IApplication app = gui.Application;
 
                 app.Plugins.Add(new NetworkEditorApplicationPlugin());
                 app.Plugins.Add(new SharpMapGisApplicationPlugin());
@@ -58,40 +59,33 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
                 gui.Plugins.Add(new SharpMapGisGuiPlugin());
                 gui.Plugins.Add(new NetworkEditorGuiPlugin());
 
-                
                 gui.Run();
 
                 // Create a network coverage and add it to the root folder
-                var networkCoverage = new NetworkCoverage { Network = new HydroNetwork { Name = "HydroNetwork 1" } };
+                var networkCoverage = new NetworkCoverage {Network = new HydroNetwork {Name = "HydroNetwork 1"}};
                 app.Project.RootFolder.Add(networkCoverage);
 
                 // Create two view contexts and add them to the gui context manager
                 var coverageViewViewContext1 = new CoverageViewViewContext
-                    {
-                        Coverage = networkCoverage, 
-                        Map = new Map { Layers =
-                                            {
-                                                MapLayerProviderHelper.CreateLayersRecursive(networkCoverage.Network, null, new List<IMapLayerProvider>{new NetworkEditorMapLayerProvider()})
-                                            } }
-                    };
-                
+                {
+                    Coverage = networkCoverage,
+                    Map = new Map {Layers = {MapLayerProviderHelper.CreateLayersRecursive(networkCoverage.Network, null, new List<IMapLayerProvider> {new NetworkEditorMapLayerProvider()})}}
+                };
+
                 var coverageViewViewContext2 = new CoverageViewViewContext
-                    {
-                        Coverage = networkCoverage, 
-                        Map = new Map { Layers =
-                                            {
-                                                MapLayerProviderHelper.CreateLayersRecursive(networkCoverage.Network, null, new List<IMapLayerProvider>{new NetworkEditorMapLayerProvider()})
-                                            } }
-                    };
+                {
+                    Coverage = networkCoverage,
+                    Map = new Map {Layers = {MapLayerProviderHelper.CreateLayersRecursive(networkCoverage.Network, null, new List<IMapLayerProvider> {new NetworkEditorMapLayerProvider()})}}
+                };
 
                 ((GuiContextManager) gui.ViewContextManager).ProjectViewContexts.Add(coverageViewViewContext1);
                 ((GuiContextManager) gui.ViewContextManager).ProjectViewContexts.Add(coverageViewViewContext2);
-                
+
                 // Change the network of the coverage layer
-                networkCoverage.Network = new HydroNetwork { Name = "HydroNetwork 2" };
+                networkCoverage.Network = new HydroNetwork {Name = "HydroNetwork 2"};
 
                 // Check if the network of both coverage view view contexts is correctly updated
-                var hydroNetworkMapLayer = coverageViewViewContext1.Map.Layers.OfType<HydroRegionMapLayer>().First(l => l.Region is IHydroNetwork);
+                HydroRegionMapLayer hydroNetworkMapLayer = coverageViewViewContext1.Map.Layers.OfType<HydroRegionMapLayer>().First(l => l.Region is IHydroNetwork);
                 Assert.AreEqual("HydroNetwork 2", hydroNetworkMapLayer.Region.Name);
 
                 hydroNetworkMapLayer = coverageViewViewContext2.Map.Layers.OfType<HydroRegionMapLayer>().First(l => l.Region is IHydroNetwork);
@@ -105,7 +99,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
         {
             using (var gui = new DeltaShellGui())
             {
-                var app = gui.Application;
+                IApplication app = gui.Application;
 
                 app.Plugins.Add(new NetworkEditorApplicationPlugin());
                 app.Plugins.Add(new SharpMapGisApplicationPlugin());
@@ -116,28 +110,26 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
                 gui.Plugins.Add(new SharpMapGisGuiPlugin());
                 gui.Plugins.Add(new NetworkEditorGuiPlugin());
 
-                
                 gui.Run();
 
                 app.UserSettings["autosaveWindowLayout"] = false; // skip damagin of window layout
 
-                var networkCoverage = new NetworkCoverage { Name = "coverage1" };
+                var networkCoverage = new NetworkCoverage {Name = "coverage1"};
                 app.Project.RootFolder.Add(networkCoverage);
 
                 Action afterShow = () =>
-                                       {
-                                           var networkCoverageDataItem = app.Project.RootFolder.DataItems.Last();
+                {
+                    IDataItem networkCoverageDataItem = app.Project.RootFolder.DataItems.Last();
 
-                                           var treeView = ProjectExplorerGuiPlugin.Instance.ProjectExplorer.TreeView;
-                                           treeView.Refresh();
-                                           var nodePresenter = treeView.GetTreeViewNodePresenter(networkCoverageDataItem, null);
+                    ITreeView treeView = ProjectExplorerGuiPlugin.Instance.ProjectExplorer.TreeView;
+                    treeView.Refresh();
+                    ITreeNodePresenter nodePresenter = treeView.GetTreeViewNodePresenter(networkCoverageDataItem, null);
 
-                                           treeView.WaitUntilAllEventsAreProcessed();
-                                           var node = treeView.GetNodeByTag(networkCoverageDataItem);
+                    treeView.WaitUntilAllEventsAreProcessed();
+                    ITreeNode node = treeView.GetNodeByTag(networkCoverageDataItem);
 
-                                           nodePresenter.CanRenameNode(node).Should("Renaming network coverages in project explorer is off by default").Be.False();
-
-                                       };
+                    nodePresenter.CanRenameNode(node).Should("Renaming network coverages in project explorer is off by default").Be.False();
+                };
 
                 WpfTestHelper.ShowModal((Control) gui.MainWindow, afterShow);
             }
@@ -149,16 +141,15 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
         {
             using (var gui = new DeltaShellGui())
             {
-                var app = gui.Application;
+                IApplication app = gui.Application;
 
                 app.Plugins.Add(new NetworkEditorApplicationPlugin());
-                app.Plugins.Add(new SharpMapGisApplicationPlugin()); 
-                
+                app.Plugins.Add(new SharpMapGisApplicationPlugin());
+
                 gui.Plugins.Add(new ProjectExplorerGuiPlugin());
                 gui.Plugins.Add(new SharpMapGisGuiPlugin());
                 gui.Plugins.Add(new NetworkEditorGuiPlugin());
 
-                
                 gui.Run();
 
                 app.UserSettings["autosaveWindowLayout"] = false; // skip damagin of window layout
@@ -166,16 +157,16 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
                 var network = new HydroNetwork();
                 app.Project.RootFolder.Add(network);
 
-                var treeView = gui.ToolWindowViews.AllViews.OfType<HydroRegionTreeView>().First().TreeView;
+                TreeView treeView = gui.ToolWindowViews.AllViews.OfType<HydroRegionTreeView>().First().TreeView;
 
                 WpfTestHelper.ShowModal((Control) gui.MainWindow,
-                    () =>
-                        {
-                            gui.Selection = app.Project.RootFolder.DataItems.First(di => di.Value == network);
-                            Assert.AreEqual(network, treeView.Data);
-                            treeView.SelectedNode = treeView.AllLoadedNodes.First(n => n.Text == "Shared Cross Section Definitions");
-                            Assert.AreEqual(network, treeView.Data);
-                        });
+                                        () =>
+                                        {
+                                            gui.Selection = app.Project.RootFolder.DataItems.First(di => di.Value == network);
+                                            Assert.AreEqual(network, treeView.Data);
+                                            treeView.SelectedNode = treeView.AllLoadedNodes.First(n => n.Text == "Shared Cross Section Definitions");
+                                            Assert.AreEqual(network, treeView.Data);
+                                        });
             }
         }
 
@@ -185,7 +176,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
         {
             using (var gui = new DeltaShellGui())
             {
-                var app = gui.Application;
+                IApplication app = gui.Application;
 
                 app.Plugins.Add(new NetworkEditorApplicationPlugin());
                 app.Plugins.Add(new SharpMapGisApplicationPlugin());
@@ -194,7 +185,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
                 gui.Plugins.Add(new SharpMapGisGuiPlugin());
                 gui.Plugins.Add(new NetworkEditorGuiPlugin());
 
-                
                 gui.Run();
 
                 app.UserSettings["autosaveWindowLayout"] = false; // skip damagin of window layout
@@ -202,28 +192,62 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
                 var network = new HydroNetwork();
                 app.Project.RootFolder.Add(network);
                 var branch1 = new Branch
-                                  {
-                                      Geometry = new LineString(new [] {new Coordinate(0, 0), new Coordinate(100, 0)})
-                                  };
+                {
+                    Geometry = new LineString(new[]
+                    {
+                        new Coordinate(0, 0),
+                        new Coordinate(100, 0)
+                    })
+                };
                 NetworkHelper.AddChannelToHydroNetwork(network, branch1);
 
-                var cs1 = HydroNetworkHelper.AddCrossSectionDefinitionToBranch(branch1, CrossSectionDefinitionYZ.CreateDefault("cs1"), 15);
-                var cs2 = HydroNetworkHelper.AddCrossSectionDefinitionToBranch(branch1, CrossSectionDefinitionYZ.CreateDefault("cs2"), 30);
+                ICrossSection cs1 = HydroNetworkHelper.AddCrossSectionDefinitionToBranch(branch1, CrossSectionDefinitionYZ.CreateDefault("cs1"), 15);
+                ICrossSection cs2 = HydroNetworkHelper.AddCrossSectionDefinitionToBranch(branch1, CrossSectionDefinitionYZ.CreateDefault("cs2"), 30);
 
                 var main = new CrossSectionSectionType {Name = "Main"};
                 var fp1 = new CrossSectionSectionType {Name = "FloodPlain1"};
 
-                cs1.Definition.Sections.Add(new CrossSectionSection {MinY = 0, MaxY = 25, SectionType = fp1});
-                cs1.Definition.Sections.Add(new CrossSectionSection {MinY = 25, MaxY = 75, SectionType = main});
-                cs1.Definition.Sections.Add(new CrossSectionSection {MinY = 75, MaxY = 100, SectionType = fp1});
+                cs1.Definition.Sections.Add(new CrossSectionSection
+                {
+                    MinY = 0,
+                    MaxY = 25,
+                    SectionType = fp1
+                });
+                cs1.Definition.Sections.Add(new CrossSectionSection
+                {
+                    MinY = 25,
+                    MaxY = 75,
+                    SectionType = main
+                });
+                cs1.Definition.Sections.Add(new CrossSectionSection
+                {
+                    MinY = 75,
+                    MaxY = 100,
+                    SectionType = fp1
+                });
                 cs1.Name = "cs1";
 
-                cs2.Definition.Sections.Add(new CrossSectionSection { MinY = 0, MaxY = 20, SectionType = fp1 });
-                cs2.Definition.Sections.Add(new CrossSectionSection { MinY = 20, MaxY = 80, SectionType = main });
-                cs2.Definition.Sections.Add(new CrossSectionSection {MinY = 80, MaxY = 100, SectionType = fp1});
+                cs2.Definition.Sections.Add(new CrossSectionSection
+                {
+                    MinY = 0,
+                    MaxY = 20,
+                    SectionType = fp1
+                });
+                cs2.Definition.Sections.Add(new CrossSectionSection
+                {
+                    MinY = 20,
+                    MaxY = 80,
+                    SectionType = main
+                });
+                cs2.Definition.Sections.Add(new CrossSectionSection
+                {
+                    MinY = 80,
+                    MaxY = 100,
+                    SectionType = fp1
+                });
                 cs2.Name = "cs2";
 
-                var treeView = gui.ToolWindowViews.AllViews.OfType<HydroRegionTreeView>().First().TreeView;
+                TreeView treeView = gui.ToolWindowViews.AllViews.OfType<HydroRegionTreeView>().First().TreeView;
 
                 WpfTestHelper.ShowModal(
                     (Control) gui.MainWindow,
@@ -231,16 +255,16 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
                     {
                         gui.CommandHandler.OpenView(cs1);
                         var csView = (CrossSectionView) gui.DocumentViews.ActiveView;
-                        var cs1Node = treeView.GetNodeByTag(cs1);
-                        var cs2Node = treeView.GetNodeByTag(cs2);
-                        
-                        var propBefore = TestReferenceHelper.FindEventSubscriptions(cs2);
-                        var chartView = (ChartView)csView.Controls.Find("chartView", true)[0];
+                        ITreeNode cs1Node = treeView.GetNodeByTag(cs1);
+                        ITreeNode cs2Node = treeView.GetNodeByTag(cs2);
 
-                        var innerChart = TypeUtils.GetField(chartView.Chart, "chart");
-                        var innerTools = TypeUtils.GetPropertyValue(innerChart, "Tools");
+                        int propBefore = TestReferenceHelper.FindEventSubscriptions(cs2);
+                        var chartView = (ChartView) csView.Controls.Find("chartView", true)[0];
+
+                        object innerChart = TypeUtils.GetField(chartView.Chart, "chart");
+                        object innerTools = TypeUtils.GetPropertyValue(innerChart, "Tools");
                         var toolsBefore = (int) TypeUtils.GetPropertyValue(innerTools, "Count");
-                        
+
                         treeView.SelectedNode = cs2Node;
 
                         Assert.AreEqual(cs2, csView.Data);
@@ -254,8 +278,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
                         Application.DoEvents();
                         Thread.Sleep(100);
 
-                        var propAfter = TestReferenceHelper.FindEventSubscriptions(cs2);
-                        var toolsAfter = (int)TypeUtils.GetPropertyValue(innerTools, "Count");
+                        int propAfter = TestReferenceHelper.FindEventSubscriptions(cs2);
+                        var toolsAfter = (int) TypeUtils.GetPropertyValue(innerTools, "Count");
 
                         Assert.AreEqual(propBefore, propAfter, "#event leaks");
                         Assert.AreEqual(toolsBefore, toolsAfter, "#tools leaks");

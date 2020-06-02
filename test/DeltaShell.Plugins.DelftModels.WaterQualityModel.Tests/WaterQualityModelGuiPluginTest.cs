@@ -9,6 +9,7 @@ using DelftTools.Hydro;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Gui;
+using DelftTools.Shell.Gui.Forms;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.UndoRedo;
@@ -30,6 +31,7 @@ using DeltaShell.Plugins.SharpMapGis.Gui.Commands.SpatialOperations;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using NUnit.Framework;
 using Rhino.Mocks;
+using SharpMap.Api;
 using SharpMap.UI.Tools;
 using Control = System.Windows.Controls.Control;
 
@@ -43,20 +45,20 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         [Category(TestCategory.Slow)]
         public void GetRibbonCommandHandlerReturnsWaterQualityRibbon()
         {
-            MockRepository mocks = new MockRepository();
+            var mocks = new MockRepository();
             var guiStub = mocks.Stub<IGui>();
             var applicationStub = mocks.Stub<IApplication>();
             guiStub.Application = applicationStub;
 
             // setup
-            using(var gisPlugin = new SharpMapGisGuiPlugin())
+            using (var gisPlugin = new SharpMapGisGuiPlugin())
             using (var guiPlugin = new WaterQualityModelGuiPlugin())
             {
                 gisPlugin.Gui = guiStub;
                 gisPlugin.InitializeSpatialOperationSetLayerView();
 
                 // call
-                var ribbonCommandHandler = guiPlugin.RibbonCommandHandler;
+                IRibbonCommandHandler ribbonCommandHandler = guiPlugin.RibbonCommandHandler;
 
                 // assert
                 Assert.IsInstanceOf<WaterQualityRibbon>(ribbonCommandHandler);
@@ -73,7 +75,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             using (var guiPlugin = new WaterQualityModelGuiPlugin())
             {
                 // call
-                var canCopy = guiPlugin.CanCopy(modelStub);
+                bool canCopy = guiPlugin.CanCopy(modelStub);
 
                 // assert
                 Assert.IsFalse(canCopy);
@@ -90,13 +92,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             using (var guiPlugin = new WaterQualityModelGuiPlugin())
             {
                 // call
-                var canCopy = guiPlugin.CanCut(modelStub);
+                bool canCopy = guiPlugin.CanCut(modelStub);
 
                 // assert
                 Assert.IsFalse(canCopy);
             }
         }
-        
+
         [Test]
         public void OnAddingNewProjectItemMapViewWaqMapToolsShouldBeAdded()
         {
@@ -108,10 +110,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
                 guiPlugin.OnViewAdded(projectItemMapView);
 
                 // assert
-                var addLoadTool = projectItemMapView.MapView.MapControl.GetToolByName(WaterQualityModelGuiPlugin.AddWaterQualityLoadMapToolName);
+                IMapTool addLoadTool = projectItemMapView.MapView.MapControl.GetToolByName(WaterQualityModelGuiPlugin.AddWaterQualityLoadMapToolName);
                 Assert.IsInstanceOf<NewPointFeatureTool<WaterQualityLoad>>(addLoadTool);
 
-                var addObservationPointTool = projectItemMapView.MapView.MapControl.GetToolByName(WaterQualityModelGuiPlugin.AddObservationPointMapToolName);
+                IMapTool addObservationPointTool = projectItemMapView.MapView.MapControl.GetToolByName(WaterQualityModelGuiPlugin.AddObservationPointMapToolName);
                 Assert.IsInstanceOf<NewPointFeatureTool<WaterQualityObservationPoint>>(addObservationPointTool);
             }
         }
@@ -123,7 +125,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             var guiPlugin = new WaterQualityModelGuiPlugin();
 
             // call
-            var nodePresenters = guiPlugin.GetProjectTreeViewNodePresenters().ToArray();
+            ITreeNodePresenter[] nodePresenters = guiPlugin.GetProjectTreeViewNodePresenters().ToArray();
 
             // assert
             Assert.IsTrue(nodePresenters.Any(np => np is SubstanceProcessLibraryNodePresenter));
@@ -137,7 +139,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         [Test]
         public void TestAllOperationsAreExcludedButSetLabel()
         {
-            MockRepository mocks = new MockRepository();
+            var mocks = new MockRepository();
             var guiStub = mocks.Stub<IGui>();
             var applicationStub = mocks.Stub<IApplication>();
             guiStub.Application = applicationStub;
@@ -150,11 +152,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
                 gisPlugin.InitializeSpatialOperationSetLayerView();
 
                 // initialize the ribbon
-                var ribbon = guiPlugin.RibbonCommandHandler;
+                IRibbonCommandHandler ribbon = guiPlugin.RibbonCommandHandler;
 
                 // instantiate the ribbon command handler of the waq gui plugin
                 SpatialOperationCommandBase command = gisPlugin.RibbonCommandHandler.Commands.OfType<SetLabelCommand>().First();
-                var excludedTypes = guiPlugin.GetExcludedLayerDataTypesForSpatialOperation(command).ToList();
+                List<Type> excludedTypes = guiPlugin.GetExcludedLayerDataTypesForSpatialOperation(command).ToList();
 
                 Assert.IsEmpty(excludedTypes);
 
@@ -180,10 +182,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
 
             var appPlugins = new List<ApplicationPlugin>();
             var guiPlugins = new List<GuiPlugin>();
-            
+
             Expect.Call(app.ActivityRunner).Return(activityRunner).Repeat.Any();
             Expect.Call(app.Plugins).Return(appPlugins).Repeat.Any();
-            Expect.Call(app.GetAllModelsInProject()).Return(new List<IModel> {hydFileModel1, hydFileModel2, hydFileModel3});
+            Expect.Call(app.GetAllModelsInProject()).Return(new List<IModel>
+            {
+                hydFileModel1,
+                hydFileModel2,
+                hydFileModel3
+            });
 
             Expect.Call(gui.Plugins).Return(guiPlugins).Repeat.Any();
             Expect.Call(gui.UndoRedoManager).Return(undoRedoManager).Repeat.Any();
@@ -196,52 +203,23 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             mocks.ReplayAll();
 
             var guiPlugin = new WaterQualityModelGuiPlugin {Gui = gui};
-            var menu = guiPlugin.GetContextMenu(null, model);
+            IMenuItem menu = guiPlugin.GetContextMenu(null, model);
 
             Assert.IsInstanceOf<MenuItemContextMenuStripAdapter>(menu);
-            
-            var contextMenu = ((MenuItemContextMenuStripAdapter) menu).ContextMenuStrip;
+
+            ContextMenuStrip contextMenu = ((MenuItemContextMenuStripAdapter) menu).ContextMenuStrip;
             Assert.AreEqual(1, contextMenu.Items.Count);
-            
-            var toolStripItem = contextMenu.Items[0];
+
+            ToolStripItem toolStripItem = contextMenu.Items[0];
             Assert.AreEqual("Use the .hyd File from...", toolStripItem.Text);
             Assert.IsInstanceOf<ClonableToolStripMenuItem>(toolStripItem);
 
-            var contextMenuItems = ((ClonableToolStripMenuItem)toolStripItem).DropDownItems;
+            ToolStripItemCollection contextMenuItems = ((ClonableToolStripMenuItem) toolStripItem).DropDownItems;
             Assert.AreEqual(2, contextMenuItems.Count); // only IHydFileModels should be present
             Assert.AreEqual(hydFileModel1.Name, contextMenuItems[0].Text);
             Assert.AreEqual(hydFileModel3.Name, contextMenuItems[1].Text);
 
             mocks.VerifyAll();
-
-        }
-
-        [TestCase(null)]
-        [TestCase("")]
-        public void
-            GivenAHydFileModelWithANullOrEmptyHydFilePath_WhenGetContextMenuIsCalled_ThenCorrectToolStripMenuItemIsCreated(
-                string hydFilePath)
-        {
-            // Given
-            const string hydFileModelName = "hyd_file_model_name";
-            WaterQualityModelGuiPlugin guiPlugin =
-                CreateFullyConfiguredGuiPluginWithHydFileModel(hydFilePath, hydFileModelName);
-
-            // When
-            IMenuItem menu = guiPlugin.GetContextMenu(null, MockRepository.GenerateStub<WaterQualityModel>());
-
-            // Then
-            ContextMenuStrip contextMenu = ((MenuItemContextMenuStripAdapter) menu).ContextMenuStrip;
-            ToolStripItem toolStripItem = contextMenu.Items[0];
-            ToolStripItemCollection contextMenuItems = ((ClonableToolStripMenuItem) toolStripItem).DropDownItems;
-
-            string expectedToolTipText =
-                Resources.WaterQualityModelGuiPlugin_CreateHydFileModelMenuItem_No_hyd_file_was_produced;
-
-            ToolStripItem toolStripMenuItem = contextMenuItems[0];
-            Assert.That(toolStripMenuItem.Enabled, Is.False);
-            Assert.That(toolStripMenuItem.ToolTipText, Is.EqualTo(expectedToolTipText));
-            Assert.That(toolStripMenuItem.Text, Is.EqualTo(hydFileModelName));
         }
 
         [Test]
@@ -307,49 +285,16 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             Assert.That(toolStripMenuItem.Text, Is.EqualTo(hydFileModelName));
         }
 
-        private static WaterQualityModelGuiPlugin CreateFullyConfiguredGuiPluginWithHydFileModel(
-            string hydFilePath,
-            string hydFileModelName)
-        {
-            var hydFileModel = MockRepository.GenerateStub<IHydFileModel>();
-            hydFileModel.Stub(m => m.HydFilePath).Return(hydFilePath);
-            hydFileModel.Name = hydFileModelName;
-
-            var app = MockRepository.GenerateStub<IApplication>();
-            app.Stub(a => a.ActivityRunner).Return(MockRepository.GenerateStub<IActivityRunner>());
-            app.Stub(a => a.Plugins).Return(new List<ApplicationPlugin>());
-            app.Stub(a => a.GetAllModelsInProject()).Return(new List<IModel> {hydFileModel});
-
-            var gui = MockRepository.GenerateStub<IGui>();
-            gui.Stub(g => g.Plugins).Return(new List<GuiPlugin>());
-            gui.Stub(g => g.UndoRedoManager).Return(MockRepository.GenerateStub<IUndoRedoManager>());
-            gui.Application = app;
-
-            return new WaterQualityModelGuiPlugin {Gui = gui};
-        }
-
-        private static WaterQualityModel AddWaterQualityModelToProject(IApplication app)
-        {
-            // Add WaterQualityModel to project
-            var project = app.Project;
-            project.RootFolder.Add(new WaterQualityModel());
-
-            //Check model name
-            var targetmodel = project.RootFolder.Models.OfType<WaterQualityModel>().FirstOrDefault();
-            Assert.IsNotNull(targetmodel);
-            return targetmodel;
-        }
-
         [Test]
         [Category(TestCategory.WindowsForms)]
         public void Check_When_NewWaqModel_Created_And_HydFileImported_Then_ZoomToExtents()
         {
-            var hydFile = TestHelper.GetTestFilePath(@"WaterQualityDataFiles\flow-model\westernscheldt01.hyd");
+            string hydFile = TestHelper.GetTestFilePath(@"WaterQualityDataFiles\flow-model\westernscheldt01.hyd");
             hydFile = TestHelper.CreateLocalCopy(hydFile);
 
             using (var gui = new DeltaShellGui())
             {
-                var app = gui.Application;
+                IApplication app = gui.Application;
                 app.Plugins.Add(new SharpMapGisApplicationPlugin());
                 app.Plugins.Add(new WaterQualityModelApplicationPlugin());
 
@@ -363,33 +308,36 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
 
                 Action mainWindowShown = delegate
                 {
-                    var waqModel = AddWaterQualityModelToProject(app);
+                    WaterQualityModel waqModel = AddWaterQualityModelToProject(app);
                     //First call to initialize the view.
                     gui.CommandHandler.OpenView(waqModel, typeof(ProjectItemMapView));
 
                     //import hyd model that contains grid
-                    var importer = app.FileImporters.OfType<HydFileImporter>().FirstOrDefault();
+                    HydFileImporter importer = app.FileImporters.OfType<HydFileImporter>().FirstOrDefault();
                     Assert.IsNotNull(importer);
 
                     var subFileImportActivity =
                         new FileImportActivity(importer, waqModel)
                         {
-                            Files = new[] { hydFile }
+                            Files = new[]
+                            {
+                                hydFile
+                            }
                         };
                     app.RunActivity(subFileImportActivity);
 
                     //Get the view
-                    var targetView = gui.DocumentViews.AllViews.OfType<ProjectItemMapView>().FirstOrDefault();
+                    ProjectItemMapView targetView = gui.DocumentViews.AllViews.OfType<ProjectItemMapView>().FirstOrDefault();
 
                     //Get the height and Width we got from the map after the above actions.
-                    var map = targetView.MapView.Map;
-                    var orHeight = targetView.MapView.Map.Envelope.Height;
-                    var orWidth = targetView.MapView.Map.Envelope.Width;
+                    IMap map = targetView.MapView.Map;
+                    double orHeight = targetView.MapView.Map.Envelope.Height;
+                    double orWidth = targetView.MapView.Map.Envelope.Width;
 
                     Assert.AreEqual(orHeight, map.Envelope.Height);
                     Assert.AreEqual(orWidth, map.Envelope.Width);
                 };
-                WpfTestHelper.ShowModal((Control)gui.MainWindow, mainWindowShown);
+                WpfTestHelper.ShowModal((Control) gui.MainWindow, mainWindowShown);
             }
 
             //Clean directory
@@ -428,6 +376,67 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
                 Assert.That(viewInfo.Description, Is.EqualTo("Boundary Data Wizard Dialog"));
                 Assert.That(viewInfo.AdditionalDataCheck, Is.Not.Null);
             }
+        }
+
+        [TestCase(null)]
+        [TestCase("")]
+        public void
+            GivenAHydFileModelWithANullOrEmptyHydFilePath_WhenGetContextMenuIsCalled_ThenCorrectToolStripMenuItemIsCreated(
+                string hydFilePath)
+        {
+            // Given
+            const string hydFileModelName = "hyd_file_model_name";
+            WaterQualityModelGuiPlugin guiPlugin =
+                CreateFullyConfiguredGuiPluginWithHydFileModel(hydFilePath, hydFileModelName);
+
+            // When
+            IMenuItem menu = guiPlugin.GetContextMenu(null, MockRepository.GenerateStub<WaterQualityModel>());
+
+            // Then
+            ContextMenuStrip contextMenu = ((MenuItemContextMenuStripAdapter) menu).ContextMenuStrip;
+            ToolStripItem toolStripItem = contextMenu.Items[0];
+            ToolStripItemCollection contextMenuItems = ((ClonableToolStripMenuItem) toolStripItem).DropDownItems;
+
+            string expectedToolTipText =
+                Resources.WaterQualityModelGuiPlugin_CreateHydFileModelMenuItem_No_hyd_file_was_produced;
+
+            ToolStripItem toolStripMenuItem = contextMenuItems[0];
+            Assert.That(toolStripMenuItem.Enabled, Is.False);
+            Assert.That(toolStripMenuItem.ToolTipText, Is.EqualTo(expectedToolTipText));
+            Assert.That(toolStripMenuItem.Text, Is.EqualTo(hydFileModelName));
+        }
+
+        private static WaterQualityModelGuiPlugin CreateFullyConfiguredGuiPluginWithHydFileModel(
+            string hydFilePath,
+            string hydFileModelName)
+        {
+            var hydFileModel = MockRepository.GenerateStub<IHydFileModel>();
+            hydFileModel.Stub(m => m.HydFilePath).Return(hydFilePath);
+            hydFileModel.Name = hydFileModelName;
+
+            var app = MockRepository.GenerateStub<IApplication>();
+            app.Stub(a => a.ActivityRunner).Return(MockRepository.GenerateStub<IActivityRunner>());
+            app.Stub(a => a.Plugins).Return(new List<ApplicationPlugin>());
+            app.Stub(a => a.GetAllModelsInProject()).Return(new List<IModel> {hydFileModel});
+
+            var gui = MockRepository.GenerateStub<IGui>();
+            gui.Stub(g => g.Plugins).Return(new List<GuiPlugin>());
+            gui.Stub(g => g.UndoRedoManager).Return(MockRepository.GenerateStub<IUndoRedoManager>());
+            gui.Application = app;
+
+            return new WaterQualityModelGuiPlugin {Gui = gui};
+        }
+
+        private static WaterQualityModel AddWaterQualityModelToProject(IApplication app)
+        {
+            // Add WaterQualityModel to project
+            Project project = app.Project;
+            project.RootFolder.Add(new WaterQualityModel());
+
+            //Check model name
+            WaterQualityModel targetmodel = project.RootFolder.Models.OfType<WaterQualityModel>().FirstOrDefault();
+            Assert.IsNotNull(targetmodel);
+            return targetmodel;
         }
     }
 }

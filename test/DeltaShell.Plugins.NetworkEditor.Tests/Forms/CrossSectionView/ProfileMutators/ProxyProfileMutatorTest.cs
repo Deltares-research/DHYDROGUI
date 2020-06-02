@@ -20,11 +20,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CrossSectionView.ProfileM
 
             var proxy = new ProxyProfileMutator(proxyDefinition, innerMutator);
 
-            Expect.Call(()=>innerMutator.AddPoint(2, 2));
+            Expect.Call(() => innerMutator.AddPoint(2, 2));
             mocks.ReplayAll();
-            proxy.AddPoint(2,2);
+            proxy.AddPoint(2, 2);
             mocks.VerifyAll();
-
         }
     }
 }

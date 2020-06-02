@@ -20,7 +20,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.FeatureData
             var count = 0;
             set.CollectionChanged += (sender, args) => count++;
 
-            set.BoundaryConditions.Add(new TestBoundaryCondition(BoundaryConditionDataType.Empty,false,false));
+            set.BoundaryConditions.Add(new TestBoundaryCondition(BoundaryConditionDataType.Empty, false, false));
 
             Assert.AreEqual(1, count);
         }

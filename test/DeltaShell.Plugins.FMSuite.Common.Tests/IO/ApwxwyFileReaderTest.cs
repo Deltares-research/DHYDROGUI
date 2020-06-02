@@ -10,6 +10,14 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
     [TestFixture]
     public class ApwxwyFileReaderTest
     {
+        [Test]
+        public void GivenNonExistingApwxwyFile_WhenReading_LogMessageShouldBeGiven()
+        {
+            const string filePath = "NonExistingFilePath.apwxwy";
+            TestHelper.AssertAtLeastOneLogMessagesContains(() => ReadGridFileFromApwxwyFile(filePath),
+                                                           $"File at '{filePath}' was not found.");
+        }
+
         [TestCase(@"windFiles\myWindFile.apwxwy", "wind1.grd")]
         [TestCase(@"windFiles\myWindFile2.apwxwy", "wind2.grd")]
         [TestCase(@"windFiles\myWindFile3.apwxwy", null)]
@@ -19,17 +27,9 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
         [TestCase(@"windFiles\myWindFileExceptionAfterGridFileNameGiven.apwxwy", "wind4.grd")]
         public void GivenApwxwyFile_WhenReading_GridFileNameIsReturned(string relativeTestFilePath, string expectedGridFileName)
         {
-            var filePath = TestHelper.GetTestFilePath(relativeTestFilePath);
-            var testFilePath = TestHelper.CreateLocalCopy(filePath);
+            string filePath = TestHelper.GetTestFilePath(relativeTestFilePath);
+            string testFilePath = TestHelper.CreateLocalCopy(filePath);
             Assert.That(ReadGridFileFromApwxwyFile(testFilePath), Is.EqualTo(expectedGridFileName));
-        }
-
-        [Test]
-        public void GivenNonExistingApwxwyFile_WhenReading_LogMessageShouldBeGiven()
-        {
-            const string filePath = "NonExistingFilePath.apwxwy";
-            TestHelper.AssertAtLeastOneLogMessagesContains(() => ReadGridFileFromApwxwyFile(filePath),
-                $"File at '{filePath}' was not found.");
         }
 
         private static string ReadGridFileFromApwxwyFile(string filePath)

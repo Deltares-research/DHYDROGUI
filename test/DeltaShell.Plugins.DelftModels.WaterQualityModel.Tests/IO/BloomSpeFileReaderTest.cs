@@ -19,16 +19,61 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
 
             BloomInfo result = BloomSpeFileReader.Read(filePath);
 
-            var expected = new[]
+            string[] expected = new[]
             {
-                "extvlfdi_e","extvlffl_e","extvlgre_e","extvlaph_n","extvlaph_p","extvlapf_e","extvlapf_n","extvlblu_n","extvlblu_p","extvlmdi_e",
-                "extvlmdi_n","extvlmdi_p","extvlmfl_e","extvldim_m","extvlulf_n","extvlulf_p","extvlnod_e",
-                
-                "extuvfdi_e","extuvffl_e","extuvgre_e","extuvaph_n","extuvaph_p","extuvapf_e","extuvapf_n","extuvblu_n","extuvblu_p","extuvmdi_e",
-                "extuvmdi_n","extuvmdi_p","extuvmfl_e","extuvdim_m","extuvulf_n","extuvulf_p","extuvnod_e",
-                
-                "ncrfdi_e","ncrffl_e","ncrgre_e","ncraph_n","ncraph_p","ncrapf_e","ncrapf_n","ncrblu_n","ncrblu_p","ncrmdi_e","ncrmdi_n","ncrmdi_p",
-                "ncrmfl_e","ncrdim_m","ncrulf_n","ncrulf_p","ncrnod_e",
+                "extvlfdi_e",
+                "extvlffl_e",
+                "extvlgre_e",
+                "extvlaph_n",
+                "extvlaph_p",
+                "extvlapf_e",
+                "extvlapf_n",
+                "extvlblu_n",
+                "extvlblu_p",
+                "extvlmdi_e",
+                "extvlmdi_n",
+                "extvlmdi_p",
+                "extvlmfl_e",
+                "extvldim_m",
+                "extvlulf_n",
+                "extvlulf_p",
+                "extvlnod_e",
+
+                "extuvfdi_e",
+                "extuvffl_e",
+                "extuvgre_e",
+                "extuvaph_n",
+                "extuvaph_p",
+                "extuvapf_e",
+                "extuvapf_n",
+                "extuvblu_n",
+                "extuvblu_p",
+                "extuvmdi_e",
+                "extuvmdi_n",
+                "extuvmdi_p",
+                "extuvmfl_e",
+                "extuvdim_m",
+                "extuvulf_n",
+                "extuvulf_p",
+                "extuvnod_e",
+
+                "ncrfdi_e",
+                "ncrffl_e",
+                "ncrgre_e",
+                "ncraph_n",
+                "ncraph_p",
+                "ncrapf_e",
+                "ncrapf_n",
+                "ncrblu_n",
+                "ncrblu_p",
+                "ncrmdi_e",
+                "ncrmdi_n",
+                "ncrmdi_p",
+                "ncrmfl_e",
+                "ncrdim_m",
+                "ncrulf_n",
+                "ncrulf_p",
+                "ncrnod_e",
             };
 
             var expectedDescriptions = new[]

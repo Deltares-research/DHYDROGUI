@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Helpers;
 using DelftTools.TestUtils;
@@ -9,7 +10,7 @@ using NUnit.Framework;
 namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CrossSectionView
 {
     /// <summary>
-    /// Since most functionality is kept on CrossSectionDefinitionView the tests here should only be 
+    /// Since most functionality is kept on CrossSectionDefinitionView the tests here should only be
     /// about the wrapper view : CrossSectionView
     /// </summary>
     [TestFixture]
@@ -25,16 +26,16 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CrossSectionView
             var crossSectionDefinitionYZ = CrossSectionDefinitionYZ.CreateDefault();
             crossSectionDefinitionYZ.Name = "Poldersloot";
 
-            var bigYz= CrossSectionDefinitionYZ.CreateDefault();
+            var bigYz = CrossSectionDefinitionYZ.CreateDefault();
             bigYz.Name = "Suez kanaal";
             bigYz.ShiftLevel(10);
 
             cs.HydroNetwork.SharedCrossSectionDefinitions.Add(crossSectionDefinitionYZ);
             cs.HydroNetwork.SharedCrossSectionDefinitions.Add(bigYz);
 
-            var crossSectionView = new Gui.Forms.CrossSectionView.CrossSectionView { Data = cs };
+            var crossSectionView = new Gui.Forms.CrossSectionView.CrossSectionView {Data = cs};
 
-            WindowsFormsTestHelper.ShowModal(crossSectionView,(f)=>cs.HydroNetwork.SharedCrossSectionDefinitions.Add(new CrossSectionDefinitionZW()));
+            WindowsFormsTestHelper.ShowModal(crossSectionView, (f) => cs.HydroNetwork.SharedCrossSectionDefinitions.Add(new CrossSectionDefinitionZW()));
         }
 
         [Test]
@@ -43,28 +44,31 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CrossSectionView
             ICrossSection cs = GetXYZCrossSectionOnHydroNetwork();
             cs.Name = "Rijn";
 
-            var crossSectionView = new Gui.Forms.CrossSectionView.CrossSectionView { Data = cs };
+            var crossSectionView = new Gui.Forms.CrossSectionView.CrossSectionView {Data = cs};
 
             WindowsFormsTestHelper.ShowModal(crossSectionView, (f) => cs.HydroNetwork.SharedCrossSectionDefinitions.Add(new CrossSectionDefinitionZW()));
         }
 
         [Test]
-        public void  ShowWithProxyDefinitions()
+        public void ShowWithProxyDefinitions()
         {
             //TODO : add checks for unsubscribtion
             var definitionYZ = CrossSectionDefinitionYZ.CreateDefault("yz");
             var definitionZW = CrossSectionDefinitionZW.CreateDefault("zw");
-            var hydroNetwork = HydroNetworkHelper.GetSnakeHydroNetwork(1);
-            hydroNetwork.SharedCrossSectionDefinitions.AddRange(new ICrossSectionDefinition[]{definitionYZ,definitionZW});
-            var channel = hydroNetwork.Channels.First();
+            IHydroNetwork hydroNetwork = HydroNetworkHelper.GetSnakeHydroNetwork(1);
+            hydroNetwork.SharedCrossSectionDefinitions.AddRange(new ICrossSectionDefinition[]
+            {
+                definitionYZ,
+                definitionZW
+            });
+            IChannel channel = hydroNetwork.Channels.First();
             var proxyDefinition = new CrossSectionDefinitionProxy(definitionYZ) {LevelShift = 1.1};
 
-            var cs = HydroNetworkHelper.AddCrossSectionDefinitionToBranch(channel, proxyDefinition, 10);
+            ICrossSection cs = HydroNetworkHelper.AddCrossSectionDefinitionToBranch(channel, proxyDefinition, 10);
 
-            var crossSectionView = new Gui.Forms.CrossSectionView.CrossSectionView { Data = cs };
+            var crossSectionView = new Gui.Forms.CrossSectionView.CrossSectionView {Data = cs};
             WindowsFormsTestHelper.ShowModal(crossSectionView);
         }
-
 
         [Test]
         public void ShowWithSecondProxyDefinition()
@@ -74,16 +78,16 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CrossSectionView
             var second = CrossSectionDefinitionYZ.CreateDefault();
             first.Name = "first";
             second.Name = "second";
-            var hydroNetwork = HydroNetworkHelper.GetSnakeHydroNetwork(1);
+            IHydroNetwork hydroNetwork = HydroNetworkHelper.GetSnakeHydroNetwork(1);
             hydroNetwork.SharedCrossSectionDefinitions.Add(first);
             hydroNetwork.SharedCrossSectionDefinitions.Add(second);
 
-            var channel = hydroNetwork.Channels.First();
-            var proxyDefinition = new CrossSectionDefinitionProxy(second) { LevelShift = 1.1 };
+            IChannel channel = hydroNetwork.Channels.First();
+            var proxyDefinition = new CrossSectionDefinitionProxy(second) {LevelShift = 1.1};
 
-            var cs = HydroNetworkHelper.AddCrossSectionDefinitionToBranch(channel, proxyDefinition, 10);
+            ICrossSection cs = HydroNetworkHelper.AddCrossSectionDefinitionToBranch(channel, proxyDefinition, 10);
 
-            var crossSectionView = new Gui.Forms.CrossSectionView.CrossSectionView { Data = cs };
+            var crossSectionView = new Gui.Forms.CrossSectionView.CrossSectionView {Data = cs};
             WindowsFormsTestHelper.ShowModal(crossSectionView);
         }
 
@@ -98,9 +102,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CrossSectionView
             crossSectionDefinitionYZ.YZDataTable.AddCrossSectionYZRow(5, 6, 1);
             crossSectionDefinitionYZ.YZDataTable.AddCrossSectionYZRow(6, 8, 0);
 
-            
-            var hydroNetwork = HydroNetworkHelper.GetSnakeHydroNetwork(1);
-            var channel = hydroNetwork.Channels.First();
+            IHydroNetwork hydroNetwork = HydroNetworkHelper.GetSnakeHydroNetwork(1);
+            IChannel channel = hydroNetwork.Channels.First();
             return HydroNetworkHelper.AddCrossSectionDefinitionToBranch(channel, crossSectionDefinitionYZ, 10);
         }
 
@@ -108,20 +111,20 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CrossSectionView
         {
             var crossSectionDefinitionXYZ = CrossSectionDefinitionXYZ.CreateDefault();
             var coordinates = new[]
-                         {
-                             new Coordinate(0, 0),
-                             new Coordinate(2, 0),
-                             new Coordinate(4, -10),
-                             new Coordinate(6, -10),
-                             new Coordinate(8, 0),
-                             new Coordinate(10, 0)
-                         };
+            {
+                new Coordinate(0, 0),
+                new Coordinate(2, 0),
+                new Coordinate(4, -10),
+                new Coordinate(6, -10),
+                new Coordinate(8, 0),
+                new Coordinate(10, 0)
+            };
 
             //make geometry on the y/z plane
             crossSectionDefinitionXYZ.Geometry = new LineString(coordinates.Select(c => new Coordinate(0, c.X, c.Y)).ToArray());
 
-            var hydroNetwork = HydroNetworkHelper.GetSnakeHydroNetwork(1);
-            var channel = hydroNetwork.Channels.First();
+            IHydroNetwork hydroNetwork = HydroNetworkHelper.GetSnakeHydroNetwork(1);
+            IChannel channel = hydroNetwork.Channels.First();
             return HydroNetworkHelper.AddCrossSectionDefinitionToBranch(channel, crossSectionDefinitionXYZ, 10);
         }
     }

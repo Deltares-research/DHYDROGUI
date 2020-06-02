@@ -3,7 +3,6 @@ using Rhino.Mocks;
 
 namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.FeatureDataView
 {
-    
     [TestFixture]
     public class FeatureDataViewTest
     {
@@ -56,6 +55,5 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.FeatureDataView
             WindowsFormsTestHelper.ShowModal(localizedDataView);
         }
         */
-
     }
 }

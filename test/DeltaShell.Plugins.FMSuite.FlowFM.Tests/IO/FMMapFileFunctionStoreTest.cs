@@ -25,9 +25,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [Test]
         public void OpenMapFileCheckFunctions_Sedimentation() // Issue #: DELFT3DFM-775
         {
-            var testDataFilePath = TestHelper.GetTestFilePath(@"output_mapfiles");
+            string testDataFilePath = TestHelper.GetTestFilePath(@"output_mapfiles");
             var zmDfmZipFileName = "zm_dfm_map.zip";
-            var zmDfmZipFilePath = Path.Combine(testDataFilePath, zmDfmZipFileName);
+            string zmDfmZipFilePath = Path.Combine(testDataFilePath, zmDfmZipFileName);
 
             TestHelper.PerformActionInTemporaryDirectory(tempDir =>
             {
@@ -35,22 +35,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 ZipFileUtils.Extract(zmDfmZipFilePath, tempDir);
 
                 var simpleBoxMapFileName = "sedimentation_map.nc";
-                var mapFilePath = Path.Combine(tempDir, simpleBoxMapFileName);
+                string mapFilePath = Path.Combine(tempDir, simpleBoxMapFileName);
 
-                var store = new FMMapFileFunctionStore
-                {
-                    Path = mapFilePath
-                };
+                var store = new FMMapFileFunctionStore {Path = mapFilePath};
 
                 Assert.AreEqual(43, store.Functions.Count);
 
-                var groupings = store.GetFunctionGrouping().ToList();
+                List<IGrouping<string, IFunction>> groupings = store.GetFunctionGrouping().ToList();
                 Assert.AreEqual(31, groupings.Count);
 
-                var numberOfSingleGroupings = groupings.Count(g => g.Count() == 1);
+                int numberOfSingleGroupings = groupings.Count(g => g.Count() == 1);
                 Assert.AreEqual(20, numberOfSingleGroupings);
 
-                var numberOfMultipleGroupings = groupings.Count(g => g.Count() > 1);
+                int numberOfMultipleGroupings = groupings.Count(g => g.Count() > 1);
                 Assert.AreEqual(11, numberOfMultipleGroupings);
             });
         }
@@ -58,9 +55,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [Test]
         public void OpenMapFileCheckFunctions()
         {
-            var testDataFilePath = TestHelper.GetTestFilePath(@"output_mapfiles");
+            string testDataFilePath = TestHelper.GetTestFilePath(@"output_mapfiles");
             var zmDfmZipFileName = "zm_dfm_map.zip";
-            var zmDfmZipFilePath = Path.Combine(testDataFilePath, zmDfmZipFileName);
+            string zmDfmZipFilePath = Path.Combine(testDataFilePath, zmDfmZipFileName);
 
             TestHelper.PerformActionInTemporaryDirectory(tempDir =>
             {
@@ -68,11 +65,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 ZipFileUtils.Extract(zmDfmZipFilePath, tempDir);
 
                 var bendprofMapFileName = "bendprof_map.nc";
-                var mapFilePath = Path.Combine(tempDir, bendprofMapFileName);
-                var store = new FMMapFileFunctionStore
-                {
-                    Path = mapFilePath
-                };
+                string mapFilePath = Path.Combine(tempDir, bendprofMapFileName);
+                var store = new FMMapFileFunctionStore {Path = mapFilePath};
 
                 Assert.AreEqual(12, store.Functions.Count);
             });
@@ -81,9 +75,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [Test]
         public void OpenMapFileCheckFunctions_NcFileContaining3DimensionalDataWithLowerUgridVersion()
         {
-            var testDataFilePath = TestHelper.GetTestFilePath(@"output_mapfiles");
+            string testDataFilePath = TestHelper.GetTestFilePath(@"output_mapfiles");
             var zmDfmZipFileName = "zm_dfm_map.zip";
-            var zmDfmZipFilePath = Path.Combine(testDataFilePath, zmDfmZipFileName);
+            string zmDfmZipFilePath = Path.Combine(testDataFilePath, zmDfmZipFileName);
 
             TestHelper.PerformActionInTemporaryDirectory(tempDir =>
             {
@@ -91,23 +85,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 ZipFileUtils.Extract(zmDfmZipFilePath, tempDir);
 
                 var zmDfmMapFile = "zm_dfm_map.nc";
-                var mapFilePath = Path.Combine(tempDir, zmDfmMapFile);
-                var store = new FMMapFileFunctionStore
-                {
-                    Path =  mapFilePath
-                };
+                string mapFilePath = Path.Combine(tempDir, zmDfmMapFile);
+                var store = new FMMapFileFunctionStore {Path = mapFilePath};
 
                 Assert.AreEqual(19, store.Functions.Count);
-             });
+            });
         }
 
         [Test]
         [Category(TestCategory.Slow)]
         public void OpenMapFileCheckMinMax()
         {
-            var testDataFilePath = TestHelper.GetTestFilePath(@"output_mapfiles");
+            string testDataFilePath = TestHelper.GetTestFilePath(@"output_mapfiles");
             var zmDfmZipFileName = "zm_dfm_map.zip";
-            var zmDfmZipFilePath = Path.Combine(testDataFilePath, zmDfmZipFileName);
+            string zmDfmZipFilePath = Path.Combine(testDataFilePath, zmDfmZipFileName);
 
             TestHelper.PerformActionInTemporaryDirectory(tempDir =>
             {
@@ -115,28 +106,23 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 ZipFileUtils.Extract(zmDfmZipFilePath, tempDir);
 
                 var zmDfmMapFile = "zm_dfm_map.nc";
-                var mapFilePath = Path.Combine(tempDir, zmDfmMapFile);
-                var store = new FMMapFileFunctionStore
-                {
-                    Path = mapFilePath
-                };
+                string mapFilePath = Path.Combine(tempDir, zmDfmMapFile);
+                var store = new FMMapFileFunctionStore {Path = mapFilePath};
 
                 // 0.0 is the lowest and 17.8562 the highest value of the first time slice
-                var storeFunction = store.Functions[0];
+                IFunction storeFunction = store.Functions[0];
                 Assert.AreEqual(0.0, store.GetMinValue<double>(storeFunction.Components[0]), 0.001);
                 Assert.AreEqual(17.8562, store.GetMaxValue<double>(storeFunction.Components[0]), 0.001);
             });
-
-
         }
-        
+
         [Test]
         [Category(TestCategory.Slow)]
         public void OpenSingleTimeSliceMapFileCheckWaterLevelFunction()
         {
-            var testDataFilePath = TestHelper.GetTestFilePath(@"output_mapfiles");
+            string testDataFilePath = TestHelper.GetTestFilePath(@"output_mapfiles");
             var zmDfmZipFileName = "zm_dfm_map.zip";
-            var zmDfmZipFilePath = Path.Combine(testDataFilePath, zmDfmZipFileName);
+            string zmDfmZipFilePath = Path.Combine(testDataFilePath, zmDfmZipFileName);
 
             TestHelper.PerformActionInTemporaryDirectory(tempDir =>
             {
@@ -144,14 +130,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 ZipFileUtils.Extract(zmDfmZipFilePath, tempDir);
 
                 var simpleBoxMapFileName = "bendprof_map.nc";
-                var mapFilePath = Path.Combine(tempDir, simpleBoxMapFileName);
+                string mapFilePath = Path.Combine(tempDir, simpleBoxMapFileName);
 
-                var store = new FMMapFileFunctionStore
-                {
-                    Path = mapFilePath
-                };
+                var store = new FMMapFileFunctionStore {Path = mapFilePath};
 
-                var waterLevelFunction = (UnstructuredGridCellCoverage)store.Functions.FirstOrDefault(f => f.Components[0].Name == "mesh2d_s1");
+                var waterLevelFunction = (UnstructuredGridCellCoverage) store.Functions.FirstOrDefault(f => f.Components[0].Name == "mesh2d_s1");
 
                 Assert.IsNotNull(waterLevelFunction);
                 Assert.IsNotNull(waterLevelFunction.Grid);
@@ -159,16 +142,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 Assert.AreEqual(4000, waterLevelFunction.GetValues().Count);
                 Assert.AreEqual(10, waterLevelFunction.Time.Values.Count);
                 Assert.AreEqual(new DateTime(1992, 8, 31), waterLevelFunction.Time.Values.First());
-                Assert.AreEqual(2.74655, (double)waterLevelFunction.Components[0].Values[0], 0.001);
+                Assert.AreEqual(2.74655, (double) waterLevelFunction.Components[0].Values[0], 0.001);
             });
         }
 
         [Test]
         public void OpenSingleTimeSliceMapFileFilterTime()
         {
-            var testDataFilePath = TestHelper.GetTestFilePath(@"output_mapfiles");
+            string testDataFilePath = TestHelper.GetTestFilePath(@"output_mapfiles");
             var zmDfmZipFileName = "zm_dfm_map.zip";
-            var zmDfmZipFilePath = Path.Combine(testDataFilePath, zmDfmZipFileName);
+            string zmDfmZipFilePath = Path.Combine(testDataFilePath, zmDfmZipFileName);
 
             TestHelper.PerformActionInTemporaryDirectory(tempDir =>
             {
@@ -176,31 +159,28 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 ZipFileUtils.Extract(zmDfmZipFilePath, tempDir);
 
                 var simpleBoxMapFileName = "bendprof_map.nc";
-                var mapFilePath = Path.Combine(tempDir, simpleBoxMapFileName);
+                string mapFilePath = Path.Combine(tempDir, simpleBoxMapFileName);
 
-                var store = new FMMapFileFunctionStore
-                {
-                    Path = mapFilePath
-                };
+                var store = new FMMapFileFunctionStore {Path = mapFilePath};
 
-                var waterLevelFunction = (UnstructuredGridCellCoverage)store.Functions.FirstOrDefault(f => f.Components[0].Name == "mesh2d_s1");
+                var waterLevelFunction = (UnstructuredGridCellCoverage) store.Functions.FirstOrDefault(f => f.Components[0].Name == "mesh2d_s1");
 
                 Assert.IsNotNull(waterLevelFunction);
 
-                var timeSlice = waterLevelFunction.GetValues(new VariableValueFilter<DateTime>(waterLevelFunction.Time,
-                    new DateTime(1992, 8, 31)));
+                IMultiDimensionalArray timeSlice = waterLevelFunction.GetValues(new VariableValueFilter<DateTime>(waterLevelFunction.Time,
+                                                                                                                  new DateTime(1992, 8, 31)));
 
                 Assert.AreEqual(400, timeSlice.Count);
-                Assert.AreEqual(2.74655, (double)timeSlice[0], 0.001);
+                Assert.AreEqual(2.74655, (double) timeSlice[0], 0.001);
             });
         }
 
         [Test]
         public void OpenMapFileReadFlowElements()
         {
-            var testDataFilePath = TestHelper.GetTestFilePath(@"output_mapfiles");
+            string testDataFilePath = TestHelper.GetTestFilePath(@"output_mapfiles");
             var zmDfmZipFileName = "zm_dfm_map.zip";
-            var zmDfmZipFilePath = Path.Combine(testDataFilePath, zmDfmZipFileName);
+            string zmDfmZipFilePath = Path.Combine(testDataFilePath, zmDfmZipFileName);
 
             TestHelper.PerformActionInTemporaryDirectory(tempDir =>
             {
@@ -208,14 +188,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 ZipFileUtils.Extract(zmDfmZipFilePath, tempDir);
 
                 var simpleBoxMapFileName = "bendprof_map.nc";
-                var mapFilePath = Path.Combine(tempDir, simpleBoxMapFileName);
+                string mapFilePath = Path.Combine(tempDir, simpleBoxMapFileName);
 
-                var store = new FMMapFileFunctionStore
-                {
-                    Path = mapFilePath
-                };
+                var store = new FMMapFileFunctionStore {Path = mapFilePath};
 
-                var waterLevelFunction = (UnstructuredGridCellCoverage)store.Functions.FirstOrDefault(f => f.Components[0].Name == "mesh2d_s1");
+                var waterLevelFunction = (UnstructuredGridCellCoverage) store.Functions.FirstOrDefault(f => f.Components[0].Name == "mesh2d_s1");
 
                 Assert.IsNotNull(waterLevelFunction);
                 Assert.AreEqual(400, waterLevelFunction.Arguments[1].Values.Count);
@@ -226,9 +203,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [Test]
         public void OpenMapFileCheckWaterLevelFunction()
         {
-            var testDataFilePath = TestHelper.GetTestFilePath(@"output_mapfiles");
+            string testDataFilePath = TestHelper.GetTestFilePath(@"output_mapfiles");
             var zmDfmZipFileName = "zm_dfm_map.zip";
-            var zmDfmZipFilePath = Path.Combine(testDataFilePath, zmDfmZipFileName);
+            string zmDfmZipFilePath = Path.Combine(testDataFilePath, zmDfmZipFileName);
 
             TestHelper.PerformActionInTemporaryDirectory(tempDir =>
             {
@@ -236,18 +213,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 ZipFileUtils.Extract(zmDfmZipFilePath, tempDir);
 
                 var zmDfmMapFile = "zm_dfm_map.nc";
-                var mapFilePath = Path.Combine(tempDir, zmDfmMapFile);
-                var store = new FMMapFileFunctionStore
-                {
-                    Path = mapFilePath
-                };
+                string mapFilePath = Path.Combine(tempDir, zmDfmMapFile);
+                var store = new FMMapFileFunctionStore {Path = mapFilePath};
 
                 // 0.0 is the lowest and 17.8562 the highest value of the first time slice
-                var storeFunction = store.Functions[0];
+                IFunction storeFunction = store.Functions[0];
                 Assert.AreEqual(0.0, store.GetMinValue<double>(storeFunction.Components[0]), 0.001);
                 Assert.AreEqual(17.8562, store.GetMaxValue<double>(storeFunction.Components[0]), 0.001);
 
-                var waterLevelFunction = (UnstructuredGridCellCoverage)store.Functions.FirstOrDefault(f => f.Components[0].Name == "s1");
+                var waterLevelFunction = (UnstructuredGridCellCoverage) store.Functions.FirstOrDefault(f => f.Components[0].Name == "s1");
 
                 Assert.IsNotNull(waterLevelFunction);
                 Assert.IsNotNull(waterLevelFunction.Grid);
@@ -257,7 +231,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 Assert.AreEqual(38912, waterLevelFunction.GetValues().Count);
                 Assert.AreEqual(new DateTime(2011, 8, 1, 0, 0, 0), waterLevelFunction.Time.Values.First());
                 Assert.AreEqual(new DateTime(2011, 8, 1, 2, 0, 0), waterLevelFunction.Time.Values.Last());
-                Assert.AreEqual(0.0d, (double)waterLevelFunction.Components[0].Values[0], 0.001);
+                Assert.AreEqual(0.0d, (double) waterLevelFunction.Components[0].Values[0], 0.001);
                 Assert.AreEqual("m", waterLevelFunction.Components[0].Unit.Symbol);
 
                 var filter = new VariableValueFilter<DateTime>(waterLevelFunction.Time, waterLevelFunction.Time.Values.First());
@@ -270,9 +244,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [Category(TestCategory.Slow)]
         public void OpenUgridMapFileCheckFunctions()
         {
-            var testDataFilePath = TestHelper.GetTestFilePath(@"output_mapfiles");
+            string testDataFilePath = TestHelper.GetTestFilePath(@"output_mapfiles");
             var zmDfmZipFileName = "zm_dfm_map.zip";
-            var zmDfmZipFilePath = Path.Combine(testDataFilePath, zmDfmZipFileName);
+            string zmDfmZipFilePath = Path.Combine(testDataFilePath, zmDfmZipFileName);
 
             TestHelper.PerformActionInTemporaryDirectory(tempDir =>
             {
@@ -280,11 +254,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 ZipFileUtils.Extract(zmDfmZipFilePath, tempDir);
 
                 var zmDfmMapFile = "bendprof_map.nc";
-                var mapFilePath = Path.Combine(tempDir, zmDfmMapFile);
-                var store = new FMMapFileFunctionStore
-                {
-                    Path = mapFilePath
-                };
+                string mapFilePath = Path.Combine(tempDir, zmDfmMapFile);
+                var store = new FMMapFileFunctionStore {Path = mapFilePath};
 
                 var expectedCoverages = new string[11]
                 {
@@ -304,19 +275,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 Assert.AreEqual(12, store.Functions.Count); // total == 11 (including CustomVelocity coverage)
 
                 // Check coverages from MapFile variables
-                var coveragesFromMapFileVariables = store.Functions.Where(f => f.Components.Count == 1).ToArray();
+                IFunction[] coveragesFromMapFileVariables = store.Functions.Where(f => f.Components.Count == 1).ToArray();
                 Assert.AreEqual(11, coveragesFromMapFileVariables.Length);
 
                 expectedCoverages.ForEach(expectedCoverage =>
-                    Assert.IsTrue(coveragesFromMapFileVariables.Any(c => c.Components[0].Name == expectedCoverage),
-                        string.Format("Expected coverage missing after opening Map file: {0}", expectedCoverage)));
+                                              Assert.IsTrue(coveragesFromMapFileVariables.Any(c => c.Components[0].Name == expectedCoverage),
+                                                            string.Format("Expected coverage missing after opening Map file: {0}", expectedCoverage)));
 
                 coveragesFromMapFileVariables.Select(c => c.Components[0].Name).ForEach(coverageName =>
-                    Assert.IsTrue(expectedCoverages.Contains(coverageName),
-                        string.Format("Unexpected coverage found after opening Map file: {0}", coverageName)));
+                                                                                            Assert.IsTrue(expectedCoverages.Contains(coverageName),
+                                                                                                          string.Format("Unexpected coverage found after opening Map file: {0}", coverageName)));
 
                 // Check CustomVelocity coverage
-                var customVelocityCoverage = store.Functions.FirstOrDefault(f => f.Components.Count == 2);
+                IFunction customVelocityCoverage = store.Functions.FirstOrDefault(f => f.Components.Count == 2);
                 Assert.NotNull(customVelocityCoverage, "CustomVelocity coverage not found");
 
                 Assert.AreEqual("mesh2d_ucx", customVelocityCoverage.Components[0].Name);
@@ -336,10 +307,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 FileUtils.CopyDirectory(testDataFilePath, tempDir);
                 ZipFileUtils.Extract(zmDfmZipFilePath, tempDir);
 
-                var store = new FMMapFileFunctionStore
-                {
-                    Path = Path.Combine(tempDir, "simplebox_hex7_map.nc")
-                };
+                var store = new FMMapFileFunctionStore {Path = Path.Combine(tempDir, "simplebox_hex7_map.nc")};
 
                 Assert.AreEqual(28992, store.Grid.CoordinateSystem.AuthorityCode); // Amersfoort RD new
 
@@ -352,9 +320,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [Test]
         public void Test_GivenAThreeDimensionalVariable_CorrectAmountOfValuesIsGiven()
         {
-            var testDataFilePath = TestHelper.GetTestFilePath(@"output_mapfiles");
+            string testDataFilePath = TestHelper.GetTestFilePath(@"output_mapfiles");
             var zmDfmZipFileName = "zm_dfm_map.zip";
-            var zmDfmZipFilePath = Path.Combine(testDataFilePath, zmDfmZipFileName);
+            string zmDfmZipFilePath = Path.Combine(testDataFilePath, zmDfmZipFileName);
 
             TestHelper.PerformActionInTemporaryDirectory(tempDir =>
             {
@@ -362,19 +330,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 ZipFileUtils.Extract(zmDfmZipFilePath, tempDir);
 
                 var zmDfmMapFile = "my_map.nc";
-                var mapFilePath = Path.Combine(tempDir, zmDfmMapFile);
+                string mapFilePath = Path.Combine(tempDir, zmDfmMapFile);
 
-                var store = new FMMapFileFunctionStore
-                {
-                    Path = mapFilePath
-                };
-                var function = (UnstructuredGridCellCoverage)store.Functions.FirstOrDefault(f => f.Components[0].Name == "mesh2d_sxtot");
+                var store = new FMMapFileFunctionStore {Path = mapFilePath};
+                var function = (UnstructuredGridCellCoverage) store.Functions.FirstOrDefault(f => f.Components[0].Name == "mesh2d_sxtot");
 
-                var filterTime = function.Time.Values.FirstOrDefault();
+                DateTime filterTime = function.Time.Values.FirstOrDefault();
                 var filter = new VariableValueFilter<DateTime>(function.Time, filterTime);
                 try
                 {
-                    var filteredValues = function.GetValues(filter);
+                    IMultiDimensionalArray filteredValues = function.GetValues(filter);
                     if (function.Components[0].ValueType == typeof(double))
                     {
                         Assert.That(filteredValues.Cast<double>().ToArray().Length, Is.EqualTo(551));
@@ -389,10 +354,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
         /// <summary>
         /// GIVEN a 3D map file
-        ///   AND a function store reading this map file
+        /// AND a function store reading this map file
         /// WHEN variables are retrieved
         /// THEN no exception is thrown
-        ///  AND an error is logged.
+        /// AND an error is logged.
         /// </summary>
         [Test]
         public void GivenA3DMapFileAndAFunctionStoreReadingThisMapFile_WhenVariablesAreRetrieved_ThenNoExceptionIsThrownAndAnErrorIsLogged()
@@ -405,15 +370,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
                 string mapFilePath = Path.Combine(tempDir.Path, mapFileName);
 
-
-                var store = new FMMapFileFunctionStore
-                {
-                    Path = mapFilePath
-                };
-
+                var store = new FMMapFileFunctionStore {Path = mapFilePath};
 
                 const string compName = "mesh2d_q1";
-                var function = 
+                var function =
                     (UnstructuredGridEdgeCoverage) store.Functions
                                                         .FirstOrDefault(f => f.Components[0].Name == compName);
 
@@ -426,7 +386,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                     IMultiDimensionalArray filteredValues = function.GetValues(filter);
 
                     // Trigger lazy initialization
-                    IEnumerator _ =  filteredValues.GetEnumerator();
+                    IEnumerator _ = filteredValues.GetEnumerator();
                 }
 
                 void executeTestActionWithoutException()

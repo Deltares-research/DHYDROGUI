@@ -16,28 +16,25 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.SettingsWpf
             Assert.IsNotNull(converter);
         }
 
-        private enum DummyEnum
-        {
-            First = 1,
-            Second = 2,
-            Third = 3,
-        }
-
         [Test]
         public void WpfEnumConverter_Convert_Given_EnumType_Value_Returns_EnumArray()
         {
             var converter = new WpfEnumConverter();
             Assert.IsNotNull(converter);
 
-            var convertedValue = converter.Convert(typeof(DummyEnum), typeof(DummyEnum), null, CultureInfo.InvariantCulture);
+            object convertedValue = converter.Convert(typeof(DummyEnum), typeof(DummyEnum), null, CultureInfo.InvariantCulture);
             Assert.IsNotNull(convertedValue);
 
             var arrayResult = convertedValue as Enum[];
-            var expectedResult = new[] {DummyEnum.First, DummyEnum.Second, DummyEnum.Third};
+            var expectedResult = new[]
+            {
+                DummyEnum.First,
+                DummyEnum.Second,
+                DummyEnum.Third
+            };
             Assert.IsNotNull(arrayResult);
             Assert.AreEqual(3, arrayResult.Length);
             Assert.AreEqual(expectedResult, arrayResult);
-            
         }
 
         [Test]
@@ -47,9 +44,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.SettingsWpf
             Assert.IsNotNull(converter);
 
             object result = null;
-            Assert.DoesNotThrow( () => result = converter.Convert(null, null, null, CultureInfo.InvariantCulture));
+            Assert.DoesNotThrow(() => result = converter.Convert(null, null, null, CultureInfo.InvariantCulture));
             Assert.IsNotNull(result);
-            Assert.AreEqual( DependencyProperty.UnsetValue, result);
+            Assert.AreEqual(DependencyProperty.UnsetValue, result);
         }
 
         [Test]
@@ -65,6 +62,13 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.SettingsWpf
             object result = null;
             Assert.DoesNotThrow(() => result = converter.ConvertBack(valueToConvert, null, null, CultureInfo.InvariantCulture));
             Assert.AreEqual(valueToConvert, result);
+        }
+
+        private enum DummyEnum
+        {
+            First = 1,
+            Second = 2,
+            Third = 3,
         }
     }
 }

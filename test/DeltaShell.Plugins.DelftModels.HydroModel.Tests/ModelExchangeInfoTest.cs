@@ -11,7 +11,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         [Test]
         public void GetExchangeIdentifierWithParameter()
         {
-            Feature f = new Feature();
+            var f = new Feature();
             IDataItem item = new DataItem(f, "test");
             item.ValueConverter = new FeaturePropertyValueConverter(f, "Geometry");
 
@@ -23,7 +23,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         [Test]
         public void GetExchangeIdentifierNoParameter()
         {
-            Feature f = new Feature();
+            var f = new Feature();
             IDataItem item = new DataItem(f, "test");
             string id = ModelExchange.GetExchangeIdentifier(item);
             Assert.AreEqual("test", id);

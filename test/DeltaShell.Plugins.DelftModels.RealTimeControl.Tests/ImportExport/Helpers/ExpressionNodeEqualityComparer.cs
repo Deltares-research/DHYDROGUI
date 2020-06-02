@@ -1,12 +1,12 @@
-﻿using DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.DataAccess;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.DataAccess;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport.Helpers
 {
     /// <summary>
     /// Compares the equality of expression nodes.
     /// </summary>
-    /// <seealso cref="IEqualityComparer{IExpressionNode}" />
+    /// <seealso cref="IEqualityComparer{T}"/>
     internal class ExpressionNodeEqualityComparer : IEqualityComparer<IExpressionNode>
     {
         public bool Equals(IExpressionNode x, IExpressionNode y)
@@ -24,18 +24,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport.Help
             }
         }
 
-        private bool EqualsBranchNode(IBranchNode x, IBranchNode y)
-        {
-            return x.OperatorValue == y.OperatorValue &&
-                   Equals(x.FirstNode, y.FirstNode) &&
-                   Equals(x.SecondNode, y.SecondNode);
-        }
-
-        private static bool EqualsLeafNode(ILeafNode x, ILeafNode y)
-        {
-            return x.Value == y.Value;
-        }
-
         public int GetHashCode(IExpressionNode node)
         {
             switch (node)
@@ -49,6 +37,18 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport.Help
                 default:
                     return 0;
             }
+        }
+
+        private bool EqualsBranchNode(IBranchNode x, IBranchNode y)
+        {
+            return x.OperatorValue == y.OperatorValue &&
+                   Equals(x.FirstNode, y.FirstNode) &&
+                   Equals(x.SecondNode, y.SecondNode);
+        }
+
+        private static bool EqualsLeafNode(ILeafNode x, ILeafNode y)
+        {
+            return x.Value == y.Value;
         }
     }
 }

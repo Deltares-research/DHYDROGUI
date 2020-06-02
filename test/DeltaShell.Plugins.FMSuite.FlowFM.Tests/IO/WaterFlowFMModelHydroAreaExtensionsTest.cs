@@ -26,7 +26,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         public void Setup()
         {
             mocks = new MockRepository();
-            var localPath = TestHelper.CreateLocalCopy(TestHelper.GetTestFilePath(@"HydroAreaCollection/MduFileProjects"));
+            string localPath = TestHelper.CreateLocalCopy(TestHelper.GetTestFilePath(@"HydroAreaCollection/MduFileProjects"));
             mduFilePath = Path.Combine(localPath, @"MduFileWithoutFeatureFileReferences/FlowFM.mdu");
             fmModel = new WaterFlowFMModel(mduFilePath);
         }
@@ -66,7 +66,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [TestCase("FeatureFiles/gate02.pli", "FlowFM_structures.ini")]
         public void GivenStructureWithGroupNameThatIsNotInSubfolderOfMduFolder_WhenUpdatingGroupName_ThenGroupNameWillBeTheStructureFileName(string fileName, string expectedGroupName)
         {
-            var parentDir = Directory.GetParent(Directory.GetParent(mduFilePath).FullName).FullName;
+            string parentDir = Directory.GetParent(Directory.GetParent(mduFilePath).FullName).FullName;
             CheckUpdatingNamesForStructures(fileName, expectedGroupName, parentDir);
         }
 
@@ -75,7 +75,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [TestCase("FeatureFiles/myFile.ext", "myFile.ext")]
         public void GivenHydroAreaFeatureWithGroupNameThatIsNotInSubfolderOfMduFolder_WhenUpdatingGroupName_ThenGroupNameWillBeTheFileName(string fileName, string expectedGroupName)
         {
-            var parentDir = Directory.GetParent(Directory.GetParent(mduFilePath).FullName).FullName;
+            string parentDir = Directory.GetParent(Directory.GetParent(mduFilePath).FullName).FullName;
             CheckUpdatingNamesForHydroAreaFeatures(fileName, expectedGroupName, parentDir);
         }
 
@@ -85,7 +85,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [TestCase("FeatureFiles/gate02.pli", "FeatureFiles/FlowFM_structures.ini")]
         public void GivenStructureWithGroupNameThatIsInSubfolderOfMduFolder_WhenUpdatingGroupName_ThenGroupNameWillBeTheStructureFileName(string fileName, string expectedGroupName)
         {
-            var parentDir = Directory.GetParent(mduFilePath).FullName;
+            string parentDir = Directory.GetParent(mduFilePath).FullName;
             CheckUpdatingNamesForStructures(fileName, expectedGroupName, parentDir);
         }
 
@@ -94,10 +94,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [TestCase("FeatureFiles/myFile.ext", "FeatureFiles/myFile.ext")]
         public void GivenHydroAreaFeatureWithGroupNameThatIsInSubfolderOfMduFolder_WhenUpdatingGroupName_ThenGroupNameWillBeTheRelativePath(string fileName, string expectedGroupName)
         {
-            var parentDir = Directory.GetParent(mduFilePath).FullName;
+            string parentDir = Directory.GetParent(mduFilePath).FullName;
             CheckUpdatingNamesForHydroAreaFeatures(fileName, expectedGroupName, parentDir);
         }
-        
+
+        [Test]
+        public void GetFeaturesFromCategory_ReturnsExceptionForUnknownCategory()
+        {
+            // Given
+            var area = new HydroArea();
+            const string category = "Unknown";
+
+            // When Then
+            var ex =
+                Assert.Throws<ArgumentException>(() => area.GetFeaturesFromCategory(category));
+            Assert.AreEqual($"unknown category {category} used.", ex.Message,
+                            "The exception message is different than expected");
+        }
+
         [TestCaseSource(nameof(DifferentTestCaseData))]
         public void GetFeaturesFromCategory_ReturnsExpectedFeatures(HydroArea area, string category, IEnumerable<IFeature> areaFeatures)
         {
@@ -107,20 +121,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             // Then
             Assert.AreEqual(areaFeatures, retrievedFeatures,
                             "Incorrect features are retrieved by the method GetFeaturesFromCategory");
-        }
-
-        [Test]
-        public void GetFeaturesFromCategory_ReturnsExceptionForUnknownCategory()
-        {
-            // Given
-            HydroArea area = new HydroArea();
-            const string category = "Unknown";
-
-            // When Then
-            ArgumentException ex =
-                Assert.Throws<ArgumentException>(() => area.GetFeaturesFromCategory(category));
-            Assert.AreEqual($"unknown category {category} used.", ex.Message,
-                            "The exception message is different than expected");
         }
 
         #region Helper methods
@@ -147,12 +147,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
             var area = new HydroArea();
 
-            for (int i = 0; i < k; i++)
+            for (var i = 0; i < k; i++)
             {
                 var pump = new Pump2D();
-                var simpleWeir = new Weir2D { WeirFormula = new SimpleWeirFormula() };
-                var gate = new Weir2D { WeirFormula = new GatedWeirFormula() };
-                var generalStructure = new Weir2D { WeirFormula = new GeneralStructureWeirFormula() };
+                var simpleWeir = new Weir2D {WeirFormula = new SimpleWeirFormula()};
+                var gate = new Weir2D {WeirFormula = new GatedWeirFormula()};
+                var generalStructure = new Weir2D {WeirFormula = new GeneralStructureWeirFormula()};
                 var observationPoint = new GroupableFeature2DPoint();
                 var observationCrossSection = new ObservationCrossSection2D();
 
@@ -169,14 +169,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
         private void CheckUpdatingNamesForStructures(string fileName, string expectedGroupName, string parentDir)
         {
-            var groupName = Path.Combine(parentDir, fileName);
+            string groupName = Path.Combine(parentDir, fileName);
             CheckIfUpdateGroupNameGivesTheDesiredResult<Weir2D>(groupName, expectedGroupName);
             CheckIfUpdateGroupNameGivesTheDesiredResult<Pump2D>(groupName, expectedGroupName);
         }
 
         private void CheckUpdatingNamesForHydroAreaFeatures(string fileName, string expectedGroupName, string parentDir)
         {
-            var groupName = Path.Combine(parentDir, fileName);
+            string groupName = Path.Combine(parentDir, fileName);
             CheckIfUpdateGroupNameGivesTheDesiredResult<LandBoundary2D>(groupName, expectedGroupName);
             CheckIfUpdateGroupNameGivesTheDesiredResult<GroupableFeature2DPolygon>(groupName, expectedGroupName);
             CheckIfUpdateGroupNameGivesTheDesiredResult<ThinDam2D>(groupName, expectedGroupName);
@@ -195,7 +195,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
             Assert.That(gate.GroupName, Is.EqualTo(expectedGroupName));
         }
-        
+
         #endregion
     }
 }

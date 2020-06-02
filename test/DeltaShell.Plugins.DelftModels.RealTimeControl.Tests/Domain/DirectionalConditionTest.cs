@@ -10,14 +10,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
 {
     public class DirectionalConditionTest
     {
-        private static readonly XNamespace Fns = "http://www.wldelft.nl/fews";
-
         private const string Implicit = StandardCondition.ReferenceType.Implicit;
         private const string Name = "Trigger31";
         private const string InputName = "AlarmREGEN";
         private const string InputParameterName = "DeadBandTime";
         private const string TrueReference = "REGEN-ORANGE";
         private const string FalseReference = "REGEN-ROT";
+        private static readonly XNamespace Fns = "http://www.wldelft.nl/fews";
 
         private PIDRule trueRule;
         private PIDRule falseRule;
@@ -26,8 +25,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
         [SetUp]
         public void SetUp()
         {
-            trueRule = new PIDRule { Name = TrueReference };
-            falseRule = new PIDRule { Name = FalseReference };
+            trueRule = new PIDRule {Name = TrueReference};
+            falseRule = new PIDRule {Name = FalseReference};
 
             directionalCondition = new DirectionalCondition
             {
@@ -35,10 +34,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
                 Reference = Implicit,
                 Operation = Operation.Greater,
                 Input = new Input
-                    {
-                        ParameterName = InputParameterName,
-                        Feature = new RtcTestFeature { Name = InputName }
-                    },
+                {
+                    ParameterName = InputParameterName,
+                    Feature = new RtcTestFeature {Name = InputName}
+                },
             };
         }
 
@@ -54,8 +53,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
 
         private string ExpectedXml()
         {
-            var seriesOne = RtcXmlTag.Input + InputName + "/" + InputParameterName;
-            var previousTimeStep = seriesOne + "-1";
+            string seriesOne = RtcXmlTag.Input + InputName + "/" + InputParameterName;
+            string previousTimeStep = seriesOne + "-1";
 
             return
                 "<trigger xmlns=\"" + Fns.ToString() + "\">" +

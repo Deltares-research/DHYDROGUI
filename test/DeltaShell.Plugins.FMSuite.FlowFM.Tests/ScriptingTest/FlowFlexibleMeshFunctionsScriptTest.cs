@@ -34,7 +34,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.ScriptingTest
         public void TestFixture()
         {
             var standardLibPath = @"plugins\DeltaShell.Plugins.Scripting\Lib";
-            var sitePackagesPath = Path.Combine(standardLibPath, "site-packages");
+            string sitePackagesPath = Path.Combine(standardLibPath, "site-packages");
 
             ScriptHost.AdditionalSearchPaths.Add(standardLibPath);
             ScriptHost.AdditionalSearchPaths.Add(sitePackagesPath);
@@ -48,7 +48,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.ScriptingTest
 
         [Test]
         [Category(TestCategory.WindowsForms)]
-        [Category(TestCategory.Jira)]  // D3DFMIQ-1713
+        [Category(TestCategory.Jira)] // D3DFMIQ-1713
         public void ExpendingGridShouldWork()
         {
             using (var gui = new DeltaShellGui())
@@ -56,27 +56,23 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.ScriptingTest
                 AddPlugins(gui);
                 gui.Run();
 
-                const string script = "from Libraries.FlowFlexibleMeshFunctions import *\n"           +
+                const string script = "from Libraries.FlowFlexibleMeshFunctions import *\n" +
                                       "GenerateRegularGridForModel(fmModel, 5, 11, 100, 100, 0, 0)\n" +
                                       "GenerateRegularGridForModel(fmModel, 10, 22, 50, 50, 500, 0, True)";
-                var tempDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+                string tempDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
                 Directory.CreateDirectory(tempDirectory);
-                var waterFlowFmModel = new WaterFlowFMModel { ExplicitWorkingDirectory = tempDirectory };
+                var waterFlowFmModel = new WaterFlowFMModel {ExplicitWorkingDirectory = tempDirectory};
 
                 TypeUtils.SetPrivatePropertyValue(waterFlowFmModel, nameof(waterFlowFmModel.MduFilePath), "Test.mdu");
 
+                var variables = new Dictionary<string, object> {{"fmModel", waterFlowFmModel}};
 
-                var variables = new Dictionary<string, object>
-                    {
-                        {"fmModel", waterFlowFmModel} 
-                    };
-
-                WpfTestHelper.ShowModal((Control)gui.MainWindow, () =>
+                WpfTestHelper.ShowModal((Control) gui.MainWindow, () =>
                 {
                     IApplication app = gui.Application;
                     try
                     {
-                        var declaredVariables = app.ScriptRunner.RunScript(script, variables);
+                        IEnumerable<KeyValuePair<string, object>> declaredVariables = app.ScriptRunner.RunScript(script, variables);
                         var fmModel = declaredVariables.FirstOrDefault(kvp => kvp.Key == "fmModel").Value as WaterFlowFMModel;
                         Assert.That(fmModel, Is.Not.Null);
                         Assert.That(fmModel.Grid, Is.Not.Null);
@@ -86,13 +82,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.ScriptingTest
                     }
                     catch (Exception exception)
                     {
-                        
-                        Assert.Fail("Cannot extend grid of Fm model in script because : {0}",exception.Message);
+                        Assert.Fail("Cannot extend grid of Fm model in script because : {0}", exception.Message);
                     }
-                    
                 });
             }
         }
+
         private static void AddPlugins(IGui gui)
         {
             IApplication app = gui.Application;

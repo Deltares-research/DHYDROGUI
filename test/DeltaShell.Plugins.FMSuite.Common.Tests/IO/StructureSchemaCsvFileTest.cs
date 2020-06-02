@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using DelftTools.TestUtils;
 using DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures;
+using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
@@ -17,7 +18,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
         [Category(TestCategory.DataAccess)]
         public void ReadApplicationCsvFile()
         {
-            var schema = new StructureSchemaCsvFile().ReadStructureSchema(ApplicationStructuresSchemaCsvFilePath);
+            StructureSchema<ModelPropertyDefinition> schema = new StructureSchemaCsvFile().ReadStructureSchema(ApplicationStructuresSchemaCsvFilePath);
 
             Assert.AreEqual(5, schema.StructurePropertyGroups.Count);
             Assert.AreEqual(5, schema.StructurePropertyGroups["structure"].PropertyDefinitions.Count);

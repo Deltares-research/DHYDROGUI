@@ -26,6 +26,7 @@ using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO;
 using DeltaShell.Plugins.SharpMapGis.ImportExport;
 using DeltaShell.Plugins.SharpMapGis.SpatialOperations;
+using GeoAPI.Extensions.CoordinateSystems;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Coverages;
@@ -59,16 +60,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             modelDefinition.SetGuiTimePropertiesFromMduProperties();
 
-            Assert.IsTrue((bool)modelDefinition.GetModelProperty(GuiProperties.WriteMapFile).Value);
+            Assert.IsTrue((bool) modelDefinition.GetModelProperty(GuiProperties.WriteMapFile).Value);
             Assert.NotNull(modelDefinition.GetModelProperty(GuiProperties.MapOutputDeltaT).Value);
 
-            Assert.IsTrue((bool)modelDefinition.GetModelProperty(GuiProperties.WriteHisFile).Value);
+            Assert.IsTrue((bool) modelDefinition.GetModelProperty(GuiProperties.WriteHisFile).Value);
             Assert.NotNull(modelDefinition.GetModelProperty(GuiProperties.HisOutputDeltaT).Value);
 
-            Assert.IsTrue((bool)modelDefinition.GetModelProperty(GuiProperties.WriteRstFile).Value);
+            Assert.IsTrue((bool) modelDefinition.GetModelProperty(GuiProperties.WriteRstFile).Value);
             Assert.NotNull(modelDefinition.GetModelProperty(GuiProperties.RstOutputDeltaT).Value);
 
-            Assert.IsTrue((bool)modelDefinition.GetModelProperty(GuiProperties.SpecifyWaqOutputInterval).Value);
+            Assert.IsTrue((bool) modelDefinition.GetModelProperty(GuiProperties.SpecifyWaqOutputInterval).Value);
             Assert.NotNull(modelDefinition.GetModelProperty(GuiProperties.WaqOutputDeltaT).Value);
         }
 
@@ -88,9 +89,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         {
             var modelDefinition = new WaterFlowFMModelDefinition();
 
-            var writeMapFile = (bool)modelDefinition.GetModelProperty(GuiProperties.WriteMapFile).Value;
+            var writeMapFile = (bool) modelDefinition.GetModelProperty(GuiProperties.WriteMapFile).Value;
             Assert.IsTrue(writeMapFile);
-            var mapOutputInterval = (TimeSpan)modelDefinition.GetModelProperty(GuiProperties.MapOutputDeltaT).Value;
+            var mapOutputInterval = (TimeSpan) modelDefinition.GetModelProperty(GuiProperties.MapOutputDeltaT).Value;
             Assert.IsTrue(new TimeSpan(0, 0, 20, 0).Equals(mapOutputInterval));
         }
 
@@ -99,9 +100,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         {
             var modelDefinition = new WaterFlowFMModelDefinition();
 
-            var writeHisFile = (bool)modelDefinition.GetModelProperty(GuiProperties.WriteHisFile).Value;
+            var writeHisFile = (bool) modelDefinition.GetModelProperty(GuiProperties.WriteHisFile).Value;
             Assert.IsTrue(writeHisFile);
-            var hisOutputInterval = (TimeSpan)modelDefinition.GetModelProperty(GuiProperties.HisOutputDeltaT).Value;
+            var hisOutputInterval = (TimeSpan) modelDefinition.GetModelProperty(GuiProperties.HisOutputDeltaT).Value;
             Assert.IsTrue(new TimeSpan(0, 0, 5, 0).Equals(hisOutputInterval));
         }
 
@@ -110,9 +111,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         {
             var modelDefinition = new WaterFlowFMModelDefinition();
 
-            var writeRestartFile = (bool)modelDefinition.GetModelProperty(GuiProperties.WriteRstFile).Value;
+            var writeRestartFile = (bool) modelDefinition.GetModelProperty(GuiProperties.WriteRstFile).Value;
             Assert.IsFalse(writeRestartFile);
-            var restartOutputInterval = (TimeSpan)modelDefinition.GetModelProperty(GuiProperties.RstOutputDeltaT).Value;
+            var restartOutputInterval = (TimeSpan) modelDefinition.GetModelProperty(GuiProperties.RstOutputDeltaT).Value;
             Assert.IsTrue(new TimeSpan(1, 0, 0, 0).Equals(restartOutputInterval));
         }
 
@@ -121,9 +122,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         {
             var modelDefinition = new WaterFlowFMModelDefinition();
 
-            var writeWaqFile = (bool)modelDefinition.GetModelProperty(GuiProperties.SpecifyWaqOutputInterval).Value;
+            var writeWaqFile = (bool) modelDefinition.GetModelProperty(GuiProperties.SpecifyWaqOutputInterval).Value;
             Assert.IsFalse(writeWaqFile);
-            var waqOutputInterval = (TimeSpan)modelDefinition.GetModelProperty(GuiProperties.WaqOutputDeltaT).Value;
+            var waqOutputInterval = (TimeSpan) modelDefinition.GetModelProperty(GuiProperties.WaqOutputDeltaT).Value;
             Assert.IsTrue(new TimeSpan(0, 0, 0, 0).Equals(waqOutputInterval));
         }
 
@@ -133,16 +134,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         {
             const string netFileName = "bendprof_map.nc";
             const string outputDirName = "readWriteMdu";
-            if (Directory.Exists(outputDirName)) Directory.Delete(outputDirName, true);
+            if (Directory.Exists(outputDirName))
+            {
+                Directory.Delete(outputDirName, true);
+            }
 
             // setup
-            var mduFilePath = TestHelper.GetTestFilePath(testFilePath);
-            var mduDir = Path.GetDirectoryName(mduFilePath);
-            var modelName = Path.GetFileName(mduFilePath);
+            string mduFilePath = TestHelper.GetTestFilePath(testFilePath);
+            string mduDir = Path.GetDirectoryName(mduFilePath);
+            string modelName = Path.GetFileName(mduFilePath);
 
-            var testDataFilePath = TestHelper.GetTestFilePath(@"output_mapfiles");
+            string testDataFilePath = TestHelper.GetTestFilePath(@"output_mapfiles");
             var zmDfmZipFileName = "zm_dfm_map.zip";
-            var zmDfmZipFilePath = Path.Combine(testDataFilePath, zmDfmZipFileName);
+            string zmDfmZipFilePath = Path.Combine(testDataFilePath, zmDfmZipFileName);
 
             TestHelper.PerformActionInTemporaryDirectory(tempDir =>
             {
@@ -153,7 +157,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 mduFile.Read(mduFilePath, modelDefinition, area, allFixedWeirsAndCorrespondingProperties);
 
                 // set coordinate system
-                var coordinateSystem = new OgrCoordinateSystemFactory().CreateFromEPSG(4326); //wsg84
+                ICoordinateSystem coordinateSystem = new OgrCoordinateSystemFactory().CreateFromEPSG(4326); //wsg84
                 modelDefinition.CoordinateSystem = coordinateSystem;
 
                 // setup test netfile
@@ -163,22 +167,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 ZipFileUtils.Extract(zmDfmZipFilePath, tempDir);
 
                 var simpleBoxMapFileName = "bendprof_map.nc";
-                var mapFilePath = Path.Combine(tempDir, simpleBoxMapFileName);
+                string mapFilePath = Path.Combine(tempDir, simpleBoxMapFileName);
 
-                var outputDir = Directory.CreateDirectory(outputDirName);
-                var netFile = Path.Combine(outputDir.FullName, netFileName);
+                DirectoryInfo outputDir = Directory.CreateDirectory(outputDirName);
+                string netFile = Path.Combine(outputDir.FullName, netFileName);
                 File.Copy(mapFilePath, netFile);
 
                 // write mdu file
                 mduFile.Write(outputDirName + @"/fm_files.mdu", modelDefinition, area, allFixedWeirsAndCorrespondingProperties.Values);
 
                 // read coordinate system from file
-                var fileCoordinateSystem = NetFile.ReadCoordinateSystem(netFile);
+                ICoordinateSystem fileCoordinateSystem = NetFile.ReadCoordinateSystem(netFile);
                 Assert.AreEqual(coordinateSystem.AuthorityCode, fileCoordinateSystem.AuthorityCode);
             });
-
-
-
         }
 
         [Test]
@@ -187,12 +188,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         {
             const string netFileName = "Custom_Ugrid.nc";
             const string outputDirName = "readWriteMdu";
-            if (Directory.Exists(outputDirName)) Directory.Delete(outputDirName, true);
+            if (Directory.Exists(outputDirName))
+            {
+                Directory.Delete(outputDirName, true);
+            }
 
             // setup
-            var mduFilePath = TestHelper.GetTestFilePath(testFilePath);
-            var mduDir = Path.GetDirectoryName(mduFilePath);
-            var modelName = Path.GetFileName(mduFilePath);
+            string mduFilePath = TestHelper.GetTestFilePath(testFilePath);
+            string mduDir = Path.GetDirectoryName(mduFilePath);
+            string modelName = Path.GetFileName(mduFilePath);
 
             var area = new HydroArea();
             var modelDefinition = new WaterFlowFMModelDefinition(mduDir, modelName);
@@ -201,29 +205,29 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             mduFile.Read(mduFilePath, modelDefinition, area, allFixedWeirsAndCorrespondingProperties);
 
             // set coordinate system
-            var coordinateSystem = new OgrCoordinateSystemFactory().CreateFromEPSG(28992); //rd new
+            ICoordinateSystem coordinateSystem = new OgrCoordinateSystemFactory().CreateFromEPSG(28992); //rd new
             modelDefinition.CoordinateSystem = coordinateSystem;
 
             // setup test netfile
             modelDefinition.Properties.First(p => p.PropertyDefinition.MduPropertyName == "NetFile").Value = netFileName;
-            var existingNetFile = TestHelper.GetTestFilePath(@"ugrid\" + netFileName);
-            var outputDir = Directory.CreateDirectory(outputDirName);
-            var netFile = Path.Combine(outputDir.FullName, netFileName);
+            string existingNetFile = TestHelper.GetTestFilePath(@"ugrid\" + netFileName);
+            DirectoryInfo outputDir = Directory.CreateDirectory(outputDirName);
+            string netFile = Path.Combine(outputDir.FullName, netFileName);
             File.Copy(existingNetFile, netFile);
 
             // write mdu file
-            mduFile.Write(outputDirName+@"/fm_files.mdu", modelDefinition, area, allFixedWeirsAndCorrespondingProperties.Values);
+            mduFile.Write(outputDirName + @"/fm_files.mdu", modelDefinition, area, allFixedWeirsAndCorrespondingProperties.Values);
 
             // read coordinate system from file
-            var fileCoordinateSystem = NetFile.ReadCoordinateSystem(netFile);
+            ICoordinateSystem fileCoordinateSystem = NetFile.ReadCoordinateSystem(netFile);
             Assert.AreEqual(coordinateSystem.AuthorityCode, fileCoordinateSystem.AuthorityCode);
 
             // Additional step for UGrid files...
             // read node_z.grid_mapping
-            var netCdfFile = NetCdfFile.OpenExisting(netFile);
-            var netCdfVariable = netCdfFile.GetVariableByName("mesh2d_node_z");
+            NetCdfFile netCdfFile = NetCdfFile.OpenExisting(netFile);
+            NetCdfVariable netCdfVariable = netCdfFile.GetVariableByName("mesh2d_node_z");
 
-            var gridMapping = netCdfFile.GetAttributeValue(netCdfVariable, "grid_mapping");
+            string gridMapping = netCdfFile.GetAttributeValue(netCdfVariable, "grid_mapping");
 
             // Attribute Value: "projected_coordinate_system" - relates to the variable name in NetCdfFile
             Assert.AreEqual("projected_coordinate_system", gridMapping);
@@ -234,29 +238,28 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         public void ReadWriteMduFilesWithDifferentUnknownProperties()
         {
             // read model A
-            var mduFilePathA = TestHelper.GetTestFilePath(@"mdu_examples\modelA.mdu");
-            var mduDirA = Path.GetDirectoryName(mduFilePathA);
-            var modelNameA = Path.GetFileName(mduFilePathA);
+            string mduFilePathA = TestHelper.GetTestFilePath(@"mdu_examples\modelA.mdu");
+            string mduDirA = Path.GetDirectoryName(mduFilePathA);
+            string modelNameA = Path.GetFileName(mduFilePathA);
             var modelDefinitionA = new WaterFlowFMModelDefinition(mduDirA, modelNameA);
             var allFixedWeirsAndCorrespondingProperties = new Dictionary<FixedWeir, ModelFeatureCoordinateData<FixedWeir>>();
             var mduFileInA = new MduFile();
             mduFileInA.Read(mduFilePathA, modelDefinitionA, new HydroArea(), allFixedWeirsAndCorrespondingProperties);
-            var fileCategories = modelDefinitionA.Properties.Select(p => p.PropertyDefinition.FileCategoryName);
+            IEnumerable<string> fileCategories = modelDefinitionA.Properties.Select(p => p.PropertyDefinition.FileCategoryName);
             Assert.IsTrue(fileCategories.Contains("group_A"));
             Assert.AreEqual("A", modelDefinitionA.GetModelProperty("parametera").Value);
 
-
             // read model B, should not affect model A properties and custom groups...
-            var mduFilePathB = TestHelper.GetTestFilePath(@"mdu_examples\modelB.mdu");
-            var mduDirB = Path.GetDirectoryName(mduFilePathB);
-            var modelNameB = Path.GetFileName(mduFilePathB);
+            string mduFilePathB = TestHelper.GetTestFilePath(@"mdu_examples\modelB.mdu");
+            string mduDirB = Path.GetDirectoryName(mduFilePathB);
+            string modelNameB = Path.GetFileName(mduFilePathB);
             var modelDefinitionB = new WaterFlowFMModelDefinition(mduDirB, modelNameB);
             var mduFileInB = new MduFile();
             mduFileInB.Read(mduFilePathB, modelDefinitionB, new HydroArea(), new Dictionary<FixedWeir, ModelFeatureCoordinateData<FixedWeir>>());
             Assert.AreEqual("B", modelDefinitionB.GetModelProperty("parameterb").Value);
 
             // write and confirm output model A
-            var mduFilePathOutA = Path.Combine(modelNameA + "_out" + ".mdu");
+            string mduFilePathOutA = Path.Combine(modelNameA + "_out" + ".mdu");
             var mduFileOutA = new MduFile();
 
             var mduFileWriteConfig = new MduFileWriteConfig
@@ -265,28 +268,27 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 WriteFeatures = false,
             };
 
-            mduFileOutA.Write(mduFilePathOutA, 
-                              modelDefinitionA, 
-                              new HydroArea(), 
-                              new List<ModelFeatureCoordinateData<FixedWeir>>(), 
-                              mduFileWriteConfig, 
-                              switchTo: false);
-
-            var linesOutA = File.ReadAllLines(mduFilePathOutA).ToList();
-            Assert.IsFalse(linesOutA.Any(l => l.Contains("parameterB"))); // models shouldn't mix their custom props!
-
-
-            // write and confirm output model B
-            var mduFilePathOutB = Path.Combine(modelNameB + "_out" + ".mdu");
-            var mduFileOutB = new MduFile();
-            mduFileOutB.Write(mduFilePathOutB, 
-                              modelDefinitionB, 
+            mduFileOutA.Write(mduFilePathOutA,
+                              modelDefinitionA,
                               new HydroArea(),
                               new List<ModelFeatureCoordinateData<FixedWeir>>(),
-                              mduFileWriteConfig, 
-                              switchTo: false);
+                              mduFileWriteConfig,
+                              false);
 
-            var linesOutB = File.ReadAllLines(mduFilePathOutB).ToList();
+            List<string> linesOutA = File.ReadAllLines(mduFilePathOutA).ToList();
+            Assert.IsFalse(linesOutA.Any(l => l.Contains("parameterB"))); // models shouldn't mix their custom props!
+
+            // write and confirm output model B
+            string mduFilePathOutB = Path.Combine(modelNameB + "_out" + ".mdu");
+            var mduFileOutB = new MduFile();
+            mduFileOutB.Write(mduFilePathOutB,
+                              modelDefinitionB,
+                              new HydroArea(),
+                              new List<ModelFeatureCoordinateData<FixedWeir>>(),
+                              mduFileWriteConfig,
+                              false);
+
+            List<string> linesOutB = File.ReadAllLines(mduFilePathOutB).ToList();
             Assert.IsFalse(linesOutB.Any(l => l.Contains("parameterA")));
             Assert.IsFalse(linesOutB.Any(l => l.Contains("[group_A]")));
         }
@@ -295,9 +297,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Category(TestCategory.DataAccess)]
         public void ReadLandBoundaryAndObservationsFile()
         {
-            var mduFilePath = TestHelper.GetTestFilePath(testFilePath);
-            var mduDir = Path.GetDirectoryName(mduFilePath);
-            var modelName = Path.GetFileName(mduFilePath);
+            string mduFilePath = TestHelper.GetTestFilePath(testFilePath);
+            string mduDir = Path.GetDirectoryName(mduFilePath);
+            string modelName = Path.GetFileName(mduFilePath);
 
             var area = new HydroArea();
             var modelDefinition = new WaterFlowFMModelDefinition(mduDir, modelName);
@@ -305,37 +307,37 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var mduFile = new MduFile();
             mduFile.Read(mduFilePath, modelDefinition, area, allFixedWeirsAndCorrespondingProperties);
 
-            var obsFileProperty =
+            WaterFlowFMProperty obsFileProperty =
                 modelDefinition.GetModelProperty(KnownProperties.ObsFile);
-            var obsFilePath = MduFileHelper.GetSubfilePath(mduFilePath, obsFileProperty);
+            string obsFilePath = MduFileHelper.GetSubfilePath(mduFilePath, obsFileProperty);
             Assert.AreEqual(Path.Combine(mduDir, "fm_files_obs.xyn"), obsFilePath, "obs file path");
             var obsFile = new ObsFile<GroupableFeature2DPoint>();
-            var observationPoints = obsFile.Read(obsFilePath);
+            IList<GroupableFeature2DPoint> observationPoints = obsFile.Read(obsFilePath);
             Assert.AreEqual(51, observationPoints.Count, "#observationPoints");
             Assert.AreEqual("2241", observationPoints[11].Name, "name of 12th obs");
             Assert.AreEqual("1853", observationPoints[40].Name, "name of 41st obs");
             Assert.AreEqual(26597.0, observationPoints[46].X, "X for obs with id 1769");
             Assert.AreEqual(33609.45, observationPoints[50].Y, "Y for last obs, id 47");
 
-            var lbdFileProperty =
+            WaterFlowFMProperty lbdFileProperty =
                 modelDefinition.GetModelProperty(KnownProperties.LandBoundaryFile);
-            var lbdFilePath = MduFileHelper.GetSubfilePath(mduFilePath, lbdFileProperty);
+            string lbdFilePath = MduFileHelper.GetSubfilePath(mduFilePath, lbdFileProperty);
             Assert.AreEqual(Path.Combine(mduDir, "tst.ldb"), lbdFilePath, "ldb file path");
             var ldbFile = new LdbFile();
-            var landBoundaries = ldbFile.Read(lbdFilePath);
+            IList<LandBoundary2D> landBoundaries = ldbFile.Read(lbdFilePath);
             Assert.AreEqual(2, landBoundaries.Count, "#landBoundaries");
             Assert.AreEqual("L2", landBoundaries[1].Name, "name of 2nd land bound part");
-            Assert.AreEqual(172.002274, ((ILineString)landBoundaries[0].Geometry).GetPointN(0).X, "X for first point of L1");
-            Assert.AreEqual(160.002625, ((ILineString)landBoundaries[1].Geometry).GetPointN(2).Y, "Y for last point of L2");
+            Assert.AreEqual(172.002274, ((ILineString) landBoundaries[0].Geometry).GetPointN(0).X, "X for first point of L1");
+            Assert.AreEqual(160.002625, ((ILineString) landBoundaries[1].Geometry).GetPointN(2).Y, "Y for last point of L2");
         }
 
         [Test]
         [Category(TestCategory.DataAccess)]
         public void ReadFixedWeirsWithMissingValuesFile()
         {
-            var mduFilePath = TestHelper.GetTestFilePath(testFilePath);
-            var mduDir = Path.GetDirectoryName(mduFilePath);
-            var modelName = Path.GetFileName(mduFilePath);
+            string mduFilePath = TestHelper.GetTestFilePath(testFilePath);
+            string mduDir = Path.GetDirectoryName(mduFilePath);
+            string modelName = Path.GetFileName(mduFilePath);
 
             var area = new HydroArea();
             var modelDefinition = new WaterFlowFMModelDefinition(mduDir, modelName);
@@ -343,15 +345,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var mduFile = new MduFile();
             mduFile.Read(mduFilePath, modelDefinition, area, allFixedWeirsAndCorrespondingProperties);
 
-            var fixedWeirFileProperty =
+            WaterFlowFMProperty fixedWeirFileProperty =
                 modelDefinition.GetModelProperty(KnownProperties.FixedWeirFile);
-            var fixedWeirFilePath = MduFileHelper.GetSubfilePath(mduFilePath, fixedWeirFileProperty);
+            string fixedWeirFilePath = MduFileHelper.GetSubfilePath(mduFilePath, fixedWeirFileProperty);
             Assert.AreEqual(Path.Combine(mduDir, "miss_val_fxw.pli"), fixedWeirFilePath, "obs file path");
             var fixedWeirFile = new PliFile<FixedWeir>();
-            var fixedWeirs = fixedWeirFile.Read(fixedWeirFilePath);
+            IList<FixedWeir> fixedWeirs = fixedWeirFile.Read(fixedWeirFilePath);
             Assert.AreEqual(6, fixedWeirs.Count, "#fixedWeirs");
             Assert.AreEqual("bl01-3", fixedWeirs[2].Name, "name of 3th fixed weir");
-            var polyline = ((ILineString)fixedWeirs[5].Geometry);
+            var polyline = (ILineString) fixedWeirs[5].Geometry;
             Assert.AreEqual(188676.078, polyline.GetPointN(1).X, "X for last poly line part");
             Assert.AreEqual(428853.531, polyline.GetPointN(1).Y, "Y for last poly line part");
         }
@@ -360,9 +362,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Category(TestCategory.DataAccess)]
         public void ReadExtForceFileAndPlifiles()
         {
-            var mduFilePath = TestHelper.GetTestFilePath(testFilePath);
-            var mduDir = Path.GetDirectoryName(mduFilePath);
-            var modelName = Path.GetFileName(mduFilePath);
+            string mduFilePath = TestHelper.GetTestFilePath(testFilePath);
+            string mduDir = Path.GetDirectoryName(mduFilePath);
+            string modelName = Path.GetFileName(mduFilePath);
 
             var area = new HydroArea();
             var modelDefinition = new WaterFlowFMModelDefinition(mduDir, modelName);
@@ -371,14 +373,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             mduFile.Read(mduFilePath, modelDefinition, area, allFixedWeirsAndCorrespondingProperties);
 
             Assert.AreEqual(4, modelDefinition.BoundaryConditions.Count(), "#ext_force_items");
-            foreach (var bc in modelDefinition.BoundaryConditions.OfType<BoundaryCondition>())
+            foreach (BoundaryCondition bc in modelDefinition.BoundaryConditions.OfType<BoundaryCondition>())
             {
                 if (bc.Name.Contains("bndB"))
                 {
                     Assert.AreEqual(BoundaryConditionDataType.TimeSeries, bc.DataType, "bound.type for bound A and B");
                     Assert.AreEqual(2, bc.DataPointIndices.Count());
-                    Assert.AreEqual(5, ((ITimeSeries)bc.GetDataAtPoint(0)).Time.Values.Count);
-                    Assert.AreEqual(5, ((ITimeSeries)bc.GetDataAtPoint(1)).Time.Values.Count);
+                    Assert.AreEqual(5, ((ITimeSeries) bc.GetDataAtPoint(0)).Time.Values.Count);
+                    Assert.AreEqual(5, ((ITimeSeries) bc.GetDataAtPoint(1)).Time.Values.Count);
                 }
                 else if (bc.Name.Contains("left"))
                 {
@@ -404,9 +406,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Category(TestCategory.DataAccess)]
         public void ReadStructuresFile()
         {
-            var mduFilePath = TestHelper.GetTestFilePath(testFilePath);
-            var mduDir = Path.GetDirectoryName(mduFilePath);
-            var modelName = Path.GetFileName(mduFilePath);
+            string mduFilePath = TestHelper.GetTestFilePath(testFilePath);
+            string mduDir = Path.GetDirectoryName(mduFilePath);
+            string modelName = Path.GetFileName(mduFilePath);
 
             var area = new HydroArea();
             var modelDefinition = new WaterFlowFMModelDefinition(mduDir, modelName);
@@ -416,16 +418,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             Assert.AreEqual(2, area.Pumps.Count);
             Assert.AreEqual(3, area.Weirs.Count);
-            Assert.AreEqual(1,area.Weirs.Where(w =>w.WeirFormula.GetType() == typeof(GatedWeirFormula)).ToList().Count);
+            Assert.AreEqual(1, area.Weirs.Where(w => w.WeirFormula.GetType() == typeof(GatedWeirFormula)).ToList().Count);
             Assert.AreEqual(2, area.Weirs.Where(w => w.WeirFormula.GetType() == typeof(SimpleWeirFormula)).ToList().Count);
         }
 
-        
         [Test]
         [Category(TestCategory.DataAccess)]
         public void ReadAndWriteOutputSettings()
         {
-            var mduDir =
+            string mduDir =
                 Path.Combine(TestHelper.GetTestDataDirectory(), "simpleBox");
 
             var area = new HydroArea();
@@ -436,7 +437,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             var modelStartTime = (DateTime) modelDefinition.GetModelProperty(GuiProperties.StartTime).Value;
             var modelStopTime = (DateTime) modelDefinition.GetModelProperty(GuiProperties.StopTime).Value;
-            
+
             Assert.AreEqual(new DateTime(2001, 01, 01, 0, 2, 0), modelStartTime);
             Assert.AreEqual(new DateTime(2001, 01, 01, 0, 12, 0), modelStopTime);
 
@@ -467,9 +468,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             const string saveToDir = "readWriteSimpleBox";
             Directory.CreateDirectory(saveToDir);
-            var fullDirectoryPath = Path.Combine(Directory.GetCurrentDirectory(), saveToDir);
+            string fullDirectoryPath = Path.Combine(Directory.GetCurrentDirectory(), saveToDir);
 
-            var mduFileSaveToPath = Path.Combine(fullDirectoryPath, "simplebox.mdu");
+            string mduFileSaveToPath = Path.Combine(fullDirectoryPath, "simplebox.mdu");
             mduFile.Write(mduFileSaveToPath, modelDefinition, area, allFixedWeirsAndCorrespondingProperties.Values);
 
             var savedModelDefinition = new WaterFlowFMModelDefinition(saveToDir, "simplebox");
@@ -504,7 +505,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             const string saveToDir = "readWriteIvk";
             Directory.CreateDirectory(saveToDir);
 
-            string mduFileSaveToPath = Path.Combine(saveToDir,"ivk.mdu");
+            string mduFileSaveToPath = Path.Combine(saveToDir, "ivk.mdu");
             mduFile.Write(mduFileSaveToPath, modelDefinition, area, allFixedWeirsAndCorrespondingProperties.Values);
 
             string mduContent = File.ReadAllText(mduFileSaveToPath);
@@ -516,7 +517,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.IsTrue(pliFileContent.Contains("versie2_01"));
             Assert.IsTrue(pliFileContent.Contains("    16    2"));
             Assert.IsTrue(pliFileContent.Contains("-3.645997829983308E+000  4.676944264305948E+000"));
-            
+
             string extFileSaveToPath = NGHSFileBase.GetOtherFilePathInSameDirectory(mduFileSaveToPath, "ivk_wet.ext");
             string extFileContent = File.ReadAllText(extFileSaveToPath);
             Assert.IsTrue(extFileContent.Contains("QUANTITY=waterlevelbnd"));
@@ -528,15 +529,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.IsTrue(extFileContent.Contains("METHOD=3"));
             Assert.IsTrue(extFileContent.Contains("OPERAND=O"));
             Assert.IsFalse(extFileContent.Contains(
-                "! this comment inside the block will not be kept"));
+                               "! this comment inside the block will not be kept"));
             Assert.IsTrue(extFileContent.Contains(
-                "* this comment block should still be there"));
+                              "* this comment block should still be there"));
             Assert.IsTrue(extFileContent.Contains(
-                "# this one too"));
+                              "# this one too"));
             Assert.IsTrue(extFileContent.Contains(
-                "* and this one too"));
+                              "* and this one too"));
             Assert.IsTrue(extFileContent.Contains(
-                "* and finally this one"));
+                              "* and finally this one"));
         }
 
         [Test]
@@ -608,32 +609,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             }
         }
 
-        private static IEnumerable<KeyValuePair<string, string>> GetExpectedKeyValuePairs(IEnumerable<string> lines)
-        {
-            foreach (string line in lines)
-            {
-                string trimmedLine = line.Trim();
-                if (trimmedLine == string.Empty ||
-                    trimmedLine.StartsWith("[") ||
-                    trimmedLine.StartsWith("#"))
-                {
-                    continue;
-                }
-
-                string[] segments = trimmedLine.Split('=', '#');
-
-                string key = segments[0].Trim();
-                string value = segments[1].Trim();
-
-                yield return new KeyValuePair<string, string>(key, value);
-            }
-        }
-        
         [Test]
         [Category(TestCategory.DataAccess)]
         public void ReadAndWriteModelDefinitionC010TimeSeries()
         {
-            var mduDir =
+            string mduDir =
                 Path.Combine(TestHelper.GetTestDataDirectory(), @"data\f05_boundary_conditions\c010_time_series\input");
 
             var area = new HydroArea();
@@ -645,21 +625,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             const string saveToDir = "readWriteC010";
             Directory.CreateDirectory(saveToDir);
 
-            var mduFileSaveToPath = Path.Combine(saveToDir, "boundcond_test.mdu");
+            string mduFileSaveToPath = Path.Combine(saveToDir, "boundcond_test.mdu");
             mduFile.Write(mduFileSaveToPath, modelDefinition, area, allFixedWeirsAndCorrespondingProperties.Values);
 
-            var mduContent = File.ReadAllText(mduFileSaveToPath);
+            string mduContent = File.ReadAllText(mduFileSaveToPath);
             WaterFlowFMMduFileTestHelper.AssertContainsMduLine(mduContent, "NetFile", "boundcond_test_net.nc");
             WaterFlowFMMduFileTestHelper.AssertContainsMduLine(mduContent, "CFLWaveFrac", "0.1");
 
-            var pliFileSaveToPath = FMSuiteFileBase.GetOtherFilePathInSameDirectory(mduFileSaveToPath, "north.pli");
-            var pliFileContent = File.ReadAllText(pliFileSaveToPath);
+            string pliFileSaveToPath = NGHSFileBase.GetOtherFilePathInSameDirectory(mduFileSaveToPath, "north.pli");
+            string pliFileContent = File.ReadAllText(pliFileSaveToPath);
             Assert.IsTrue(pliFileContent.Contains("north"));
             Assert.IsTrue(pliFileContent.Contains("    7    2"));
             Assert.IsTrue(pliFileContent.Contains("1.000000000000000E+002  1.050000000000000E+002"));
 
-            var extFileSaveToPath = FMSuiteFileBase.GetOtherFilePathInSameDirectory(mduFileSaveToPath, "boundcond_test.ext");
-            var extFileContent = File.ReadAllText(extFileSaveToPath);
+            string extFileSaveToPath = NGHSFileBase.GetOtherFilePathInSameDirectory(mduFileSaveToPath, "boundcond_test.ext");
+            string extFileContent = File.ReadAllText(extFileSaveToPath);
             Assert.IsTrue(extFileContent.Contains("QUANTITY=waterlevelbnd"));
             Assert.IsTrue(extFileContent.Contains("FILENAME=north.pli"));
             Assert.IsTrue(extFileContent.Contains("QUANTITY=waterlevelbnd"));
@@ -673,7 +653,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Category(TestCategory.DataAccess)]
         public void ReadModelDefinitionC075Frictiontypes()
         {
-            var mduDir =
+            string mduDir =
                 Path.Combine(TestHelper.GetTestDataDirectory(), @"c075_Frictiontypes");
 
             var area = new HydroArea();
@@ -690,7 +670,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Category(TestCategory.Slow)]
         public void ReadWriteModelDefinitionHarlingenAndCheckAstroComponents()
         {
-            var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
+            string mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
 
             var area = new HydroArea();
             var modelDefinition = new WaterFlowFMModelDefinition(Path.GetDirectoryName(mduPath), "original");
@@ -698,27 +678,27 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var mduFile = new MduFile();
             mduFile.Read(mduPath, modelDefinition, area, allFixedWeirsAndCorrespondingProperties);
 
-            var exportedBoundary =
+            IBoundaryCondition exportedBoundary =
                 modelDefinition.BoundaryConditions.First(
                     bc => bc.DataType == BoundaryConditionDataType.Harmonics);
 
-            var firstPoint = exportedBoundary.DataPointIndices.FirstOrDefault();
+            int firstPoint = exportedBoundary.DataPointIndices.FirstOrDefault();
 
-            var exportedHarmonics = exportedBoundary.GetDataAtPoint(firstPoint);
+            IFunction exportedHarmonics = exportedBoundary.GetDataAtPoint(firstPoint);
 
-            string mduExportPath = "har_export.mdu";
+            var mduExportPath = "har_export.mdu";
             mduExportPath = Path.Combine(Directory.GetCurrentDirectory(), mduExportPath);
             mduFile.Write(mduExportPath, modelDefinition, area, allFixedWeirsAndCorrespondingProperties.Values);
 
             var modelDefinitionReimport = new WaterFlowFMModelDefinition(Path.GetDirectoryName(mduExportPath), "exported");
-            
+
             new MduFile().Read(mduExportPath, modelDefinitionReimport, area, allFixedWeirsAndCorrespondingProperties);
 
-            var boundaryCondition = modelDefinitionReimport.BoundaryConditions.First(bc => bc.DataType == BoundaryConditionDataType.Harmonics && bc.ProcessName == "Flow");
-            
+            IBoundaryCondition boundaryCondition = modelDefinitionReimport.BoundaryConditions.First(bc => bc.DataType == BoundaryConditionDataType.Harmonics && bc.ProcessName == "Flow");
+
             firstPoint = boundaryCondition.DataPointIndices.FirstOrDefault();
 
-            var importedHarmonics = boundaryCondition.GetDataAtPoint(firstPoint);
+            IFunction importedHarmonics = boundaryCondition.GetDataAtPoint(firstPoint);
 
             Assert.AreEqual(exportedHarmonics.Arguments[0].Values[0], importedHarmonics.Arguments[0].Values[0], "period");
             Assert.AreEqual(exportedHarmonics.Components[0].Values[0], importedHarmonics.Components[0].Values[0], "amplitude");
@@ -729,9 +709,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Category(TestCategory.Integration)]
         public void ReadMduAndVerifyIsEnabled()
         {
-            var mduFilePath = TestHelper.GetTestFilePath(testFilePath);
-            var mduDir = Path.GetDirectoryName(mduFilePath);
-            var modelName = Path.GetFileName(mduFilePath);
+            string mduFilePath = TestHelper.GetTestFilePath(testFilePath);
+            string mduDir = Path.GetDirectoryName(mduFilePath);
+            string modelName = Path.GetFileName(mduFilePath);
 
             var area = new HydroArea();
             var modelDefinition = new WaterFlowFMModelDefinition(mduDir, modelName);
@@ -739,10 +719,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var mduFile = new MduFile();
             mduFile.Read(mduFilePath, modelDefinition, area, allFixedWeirsAndCorrespondingProperties);
 
-            var useSalinity = modelDefinition.GetModelProperty(KnownProperties.UseSalinity);
+            WaterFlowFMProperty useSalinity = modelDefinition.GetModelProperty(KnownProperties.UseSalinity);
             useSalinity.Value = true;
 
-            var limtypsa = modelDefinition.GetModelProperty(KnownProperties.Limtypsa);
+            WaterFlowFMProperty limtypsa = modelDefinition.GetModelProperty(KnownProperties.Limtypsa);
             Assert.IsTrue(limtypsa.IsEnabled(modelDefinition.Properties));
 
             useSalinity.Value = false;
@@ -753,20 +733,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Category(TestCategory.Integration)]
         public void PropertyChangedEventsAreBubbledForModelProperties()
         {
-            var mduFilePath = TestHelper.GetTestFilePath(testFilePath);
-            var mduDir = Path.GetDirectoryName(mduFilePath);
-            var modelName = Path.GetFileName(mduFilePath);
+            string mduFilePath = TestHelper.GetTestFilePath(testFilePath);
+            string mduDir = Path.GetDirectoryName(mduFilePath);
+            string modelName = Path.GetFileName(mduFilePath);
 
             var area = new HydroArea();
             var modelDefinition = new WaterFlowFMModelDefinition(mduDir, modelName);
             var allFixedWeirsAndCorrespondingProperties = new Dictionary<FixedWeir, ModelFeatureCoordinateData<FixedWeir>>();
             var mduFile = new MduFile();
-            mduFile.Read(mduFilePath, modelDefinition, area,allFixedWeirsAndCorrespondingProperties);
+            mduFile.Read(mduFilePath, modelDefinition, area, allFixedWeirsAndCorrespondingProperties);
 
-             var useSalinity = modelDefinition.GetModelProperty(KnownProperties.UseSalinity);
+            WaterFlowFMProperty useSalinity = modelDefinition.GetModelProperty(KnownProperties.UseSalinity);
             useSalinity.Value = true;
 
-            var limtypsa = modelDefinition.GetModelProperty(KnownProperties.Limtypsa);
+            WaterFlowFMProperty limtypsa = modelDefinition.GetModelProperty(KnownProperties.Limtypsa);
             Assert.IsTrue(limtypsa.IsEnabled(modelDefinition.Properties));
 
             useSalinity.Value = false;
@@ -777,23 +757,23 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Category(TestCategory.DataAccess)]
         public void SettingUseMorSedShouldWriteSedimentSection()
         {
-            var mduFilePath = TestHelper.GetTestFilePath(testFilePath);
+            string mduFilePath = TestHelper.GetTestFilePath(testFilePath);
             mduFilePath = TestHelper.CreateLocalCopy(mduFilePath);
-            var mduDir = Path.GetDirectoryName(mduFilePath);
+            string mduDir = Path.GetDirectoryName(mduFilePath);
 
             try
             {
-                var modelName = Path.GetFileName(mduFilePath);
-                var justModelName = Path.GetFileNameWithoutExtension(modelName);
+                string modelName = Path.GetFileName(mduFilePath);
+                string justModelName = Path.GetFileNameWithoutExtension(modelName);
                 var area = new HydroArea();
                 var modelDefinition = new WaterFlowFMModelDefinition(mduDir, modelName);
                 var allFixedWeirsAndCorrespondingProperties = new Dictionary<FixedWeir, ModelFeatureCoordinateData<FixedWeir>>();
                 var mduFile = new MduFile();
                 mduFile.Read(mduFilePath, modelDefinition, area, allFixedWeirsAndCorrespondingProperties);
 
-                var useMorSed = modelDefinition.GetModelProperty("UseMorSed");
+                WaterFlowFMProperty useMorSed = modelDefinition.GetModelProperty("UseMorSed");
                 Assert.IsFalse(bool.Parse(useMorSed.Value.ToString()));
-                var readAllText = File.ReadAllText(mduFilePath);
+                string readAllText = File.ReadAllText(mduFilePath);
                 Assert.IsFalse(readAllText.Contains("[sediment]"));
                 Assert.IsFalse(readAllText.Contains(KnownProperties.SedFile));
                 Assert.IsFalse(readAllText.Contains(justModelName + ".sed"));
@@ -837,7 +817,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var boundary = new Feature2D
             {
                 Name = "bound",
-                Geometry = new LineString(new [] {new Coordinate(0, 0), new Coordinate(0, 100)})
+                Geometry = new LineString(new[]
+                {
+                    new Coordinate(0, 0),
+                    new Coordinate(0, 100)
+                })
             };
             model.Boundaries.Add(boundary);
             model.BoundaryConditionSets[0].BoundaryConditions.Add(
@@ -850,7 +834,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             Assert.AreEqual(model.Name, newModel.ModelDefinition.ModelName);
             Assert.AreEqual(model.Name + FileConstants.BoundaryExternalForcingFileExtension,
-                newModel.ModelDefinition.GetModelProperty(KnownProperties.BndExtForceFile).Value);
+                            newModel.ModelDefinition.GetModelProperty(KnownProperties.BndExtForceFile).Value);
         }
 
         [Test]
@@ -858,30 +842,34 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Category(TestCategory.Slow)]
         public void IrregularlyNamedMduSubfilesShouldKeepNames()
         {
-            var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
+            string mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
 
             var model = new WaterFlowFMModel(mduPath);
 
             Assert.AreEqual(model.ModelDefinition.ModelName, model.Name);
             Assert.AreNotEqual(model.Name + FileConstants.ExternalForcingFileExtension,
-                            model.ModelDefinition.GetModelProperty(KnownProperties.ExtForceFile).Value);
+                               model.ModelDefinition.GetModelProperty(KnownProperties.ExtForceFile).Value);
 
             model.Name = "newname";
             model.Boundaries.Add(new Feature2D
             {
                 Name = "bound",
-                Geometry = new LineString(new [] { new Coordinate(0, 0), new Coordinate(0, 100) })
+                Geometry = new LineString(new[]
+                {
+                    new Coordinate(0, 0),
+                    new Coordinate(0, 100)
+                })
             });
 
             const string newnameMdu = "RenameIO/newname.mdu";
-            var fullDirectoryPath = Path.Combine(Directory.GetCurrentDirectory(), newnameMdu);
+            string fullDirectoryPath = Path.Combine(Directory.GetCurrentDirectory(), newnameMdu);
             model.ExportTo(fullDirectoryPath);
 
             var newModel = new WaterFlowFMModel(fullDirectoryPath);
 
             Assert.AreEqual(model.Name, newModel.ModelDefinition.ModelName);
             Assert.AreNotEqual(model.Name + FileConstants.ExternalForcingFileExtension,
-                            newModel.ModelDefinition.GetModelProperty(KnownProperties.ExtForceFile).Value);
+                               newModel.ModelDefinition.GetModelProperty(KnownProperties.ExtForceFile).Value);
         }
 
         [Test]
@@ -891,24 +879,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var model = new WaterFlowFMModel {Name = "feest"};
 
             var geometry = new LineString(
-                new []
-                    {
-                        new Coordinate(0, 0),
-                        new Coordinate(1, 0),
-                    });
+                new[]
+                {
+                    new Coordinate(0, 0),
+                    new Coordinate(1, 0),
+                });
 
             model.Boundaries.Add(new Feature2D
             {
-                    Name = "polygon",
-                    Geometry = geometry,
-                });
+                Name = "polygon",
+                Geometry = geometry,
+            });
 
             var condition = new FlowBoundaryCondition(FlowBoundaryQuantityType.Tracer,
                                                       BoundaryConditionDataType.TimeSeries)
-                {
-                    Feature = model.Boundaries[0],
-                    TracerName = "feest",
-                };
+            {
+                Feature = model.Boundaries[0],
+                TracerName = "feest",
+            };
             condition.AddPoint(0);
             condition.AddPoint(1);
             model.BoundaryConditionSets[0].BoundaryConditions.Add(condition);
@@ -920,7 +908,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var loadedModel = new WaterFlowFMModel(@"tracer\feest.mdu");
 
             Assert.AreEqual(1, loadedModel.BoundaryConditions.Count());
-            Assert.AreEqual("feest", ((FlowBoundaryCondition)loadedModel.BoundaryConditions.First()).TracerName);
+            Assert.AreEqual("feest", ((FlowBoundaryCondition) loadedModel.BoundaryConditions.First()).TracerName);
         }
 
         [Test]
@@ -933,17 +921,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             // (This can happen when exporting spatial operations that comprise of added points but no interpolation
             // - we're not interested in these for the mdu, they will be saved as dataitems to the dsproj)
 
-            var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
+            string mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
             var model = new WaterFlowFMModel(mduPath);
-            
+
             // update model definition (called during export)
             model.ModelDefinition.SelectSpatialOperations(model.DataItems, model.TracerDefinitions);
 
-            var mduSpatialOperations = model.ModelDefinition.SpatialOperations;
+            IDictionary<string, IList<ISpatialOperation>> mduSpatialOperations = model.ModelDefinition.SpatialOperations;
             Assert.AreEqual(3, mduSpatialOperations.Count);
 
             // retrieve value converter for InitialWaterLevel dataitem
-            var valueConverter = SpatialOperationValueConverterFactory.GetOrCreateSpatialOperationValueConverter(
+            SpatialOperationSetValueConverter valueConverter = SpatialOperationValueConverterFactory.GetOrCreateSpatialOperationValueConverter(
                 model.GetDataItemByValue(model.InitialWaterLevel), model.InitialWaterLevel.Name);
 
             // Generate samples to add
@@ -954,11 +942,36 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 {
                     PointValues = new List<IPointValue>
                     {
-                        new PointValue { X = model.Grid.Cells[0].CenterX, Y = model.Grid.Cells[0].CenterY, Value = 45},
-                        new PointValue { X = model.Grid.Cells[1].CenterX, Y = model.Grid.Cells[1].CenterY, Value = 67},
-                        new PointValue { X = model.Grid.Cells[2].CenterX, Y = model.Grid.Cells[2].CenterY, Value = 78},
-                        new PointValue { X = model.Grid.Cells[3].CenterX, Y = model.Grid.Cells[3].CenterY, Value = 58},
-                        new PointValue { X = model.Grid.Cells[4].CenterX, Y = model.Grid.Cells[4].CenterY, Value = 39}
+                        new PointValue
+                        {
+                            X = model.Grid.Cells[0].CenterX,
+                            Y = model.Grid.Cells[0].CenterY,
+                            Value = 45
+                        },
+                        new PointValue
+                        {
+                            X = model.Grid.Cells[1].CenterX,
+                            Y = model.Grid.Cells[1].CenterY,
+                            Value = 67
+                        },
+                        new PointValue
+                        {
+                            X = model.Grid.Cells[2].CenterX,
+                            Y = model.Grid.Cells[2].CenterY,
+                            Value = 78
+                        },
+                        new PointValue
+                        {
+                            X = model.Grid.Cells[3].CenterX,
+                            Y = model.Grid.Cells[3].CenterY,
+                            Value = 58
+                        },
+                        new PointValue
+                        {
+                            X = model.Grid.Cells[4].CenterX,
+                            Y = model.Grid.Cells[4].CenterY,
+                            Value = 39
+                        }
                     }
                 }
             });
@@ -977,7 +990,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var interpolateOperation = new InterpolateOperation();
             interpolateOperation.SetInputData(InterpolateOperation.InputSamplesName, samples.Output.Provider);
             Assert.IsNotNull(valueConverter.SpatialOperationSet.AddOperation(interpolateOperation));
-            
+
             // update model definition (called during export)
             model.ModelDefinition.SelectSpatialOperations(model.DataItems, model.TracerDefinitions);
 
@@ -991,22 +1004,34 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Category(TestCategory.Slow)]
         public void ImportSpatialOperationsTest()
         {
-            var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
+            string mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
 
             var model = new WaterFlowFMModel(mduPath);
 
             // Set values in coverage
-            model.Viscosity.SetValues(new[]{500.0});       
-    
+            model.Viscosity.SetValues(new[]
+            {
+                500.0
+            });
+
             // create a spatial operation set on bathymetry
-            var valueConverter = SpatialOperationValueConverterFactory.GetOrCreateSpatialOperationValueConverter(
+            SpatialOperationSetValueConverter valueConverter = SpatialOperationValueConverterFactory.GetOrCreateSpatialOperationValueConverter(
                 model.GetDataItemByValue(model.Viscosity), model.Viscosity.Name);
 
             // add an unsupported operation (erase for example)
-            var polygons = new[] { new Feature
+            var polygons = new[]
             {
-                Geometry = new[]{new Coordinate(-5,-5), new Coordinate(5,-5), new Coordinate(5,5), new Coordinate(-5,5)}.ToPolygon()
-            }};
+                new Feature
+                {
+                    Geometry = new[]
+                    {
+                        new Coordinate(-5, -5),
+                        new Coordinate(5, -5),
+                        new Coordinate(5, 5),
+                        new Coordinate(-5, 5)
+                    }.ToPolygon()
+                }
+            };
 
             var mask = new FeatureCollection(polygons, typeof(Feature));
             var eraseOperation = new EraseOperation();
@@ -1015,12 +1040,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             model.ModelDefinition.SelectSpatialOperations(model.DataItems, model.TracerDefinitions);
 
-            var viscosityOperations = model.ModelDefinition.SpatialOperations.First(kvp => kvp.Key == model.Viscosity.Name).Value;
+            IList<ISpatialOperation> viscosityOperations = model.ModelDefinition.SpatialOperations.First(kvp => kvp.Key == model.Viscosity.Name).Value;
 
             Assert.AreEqual(1, viscosityOperations.Count);
             Assert.IsTrue(viscosityOperations[0] is AddSamplesOperation);
 
-            var salinityOperations = model.ModelDefinition.SpatialOperations.First(kvp => kvp.Key == model.InitialSalinity.Name).Value;
+            IList<ISpatialOperation> salinityOperations = model.ModelDefinition.SpatialOperations.First(kvp => kvp.Key == model.InitialSalinity.Name).Value;
 
             Assert.AreEqual(2, salinityOperations.Count);
             Assert.IsTrue(salinityOperations[0] is SetValueOperation);
@@ -1034,17 +1059,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             waterFlowFMModel.ModelDefinition.GetModelProperty(KnownProperties.Temperature).SetValueAsString("1");
             Assert.AreEqual(HeatFluxModelType.TransportOnly, waterFlowFMModel.HeatFluxModelType);
-            
+
             waterFlowFMModel.ModelDefinition.GetModelProperty(KnownProperties.Temperature).SetValueAsString("3");
             Assert.AreEqual(HeatFluxModelType.ExcessTemperature, waterFlowFMModel.HeatFluxModelType);
-            
+
             waterFlowFMModel.ModelDefinition.GetModelProperty(KnownProperties.Temperature).SetValueAsString("5");
             Assert.AreEqual(HeatFluxModelType.Composite, waterFlowFMModel.HeatFluxModelType);
-            
+
             waterFlowFMModel.ModelDefinition.GetModelProperty(KnownProperties.Temperature).SetValueAsString("0");
             Assert.AreEqual(HeatFluxModelType.None, waterFlowFMModel.HeatFluxModelType);
         }
-        
+
         [Test]
         [TestCase(MapFormatType.NetCdf, true, MapFormatType.Ugrid)]
         [TestCase(MapFormatType.NetCdf, false, MapFormatType.NetCdf)]
@@ -1074,13 +1099,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [TestCase(MapFormatType.NetCdf, false, MapFormatType.NetCdf)]
         [TestCase(MapFormatType.Ugrid, true, MapFormatType.Ugrid)]
         [TestCase(MapFormatType.Ugrid, false, MapFormatType.Ugrid)]
-
         public void GivenModelDefinitionWhenSettingUseMorSedValueThenMapFormatHasExpectedValue(MapFormatType mapFormatType, bool useMorSed, MapFormatType expectedMapFormatType)
         {
-            var modelDefinition = new WaterFlowFMModelDefinition
-            {
-                MapFormat = mapFormatType
-            };
+            var modelDefinition = new WaterFlowFMModelDefinition {MapFormat = mapFormatType};
             modelDefinition.UseMorphologySediment = useMorSed;
 
             // Check that MapFormat property value has been changed accordingly
@@ -1097,9 +1118,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         public void GivenMduFileWhenImportingThenMapFormatHasExpectedValue(string relativeMduFilepath, MapFormatType expectedMapFormatType, bool expectedUseMorSedValue)
         {
             // setup
-            var mduFilePath = TestHelper.GetTestFilePath(relativeMduFilepath);
-            var mduDir = Path.GetDirectoryName(mduFilePath);
-            var modelName = Path.GetFileName(mduFilePath);
+            string mduFilePath = TestHelper.GetTestFilePath(relativeMduFilepath);
+            string mduDir = Path.GetDirectoryName(mduFilePath);
+            string modelName = Path.GetFileName(mduFilePath);
 
             // Read the mdu file for modelDefinition properties
             var area = new HydroArea();
@@ -1113,12 +1134,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.AreEqual(expectedUseMorSedValue, modelDefinition.UseMorphologySediment);
             Assert.AreEqual(expectedMapFormatType, modelDefinition.MapFormat);
         }
-        
+
         [Test]
         public void WriteSnappedFeaturesTest()
         {
             var model = new WaterFlowFMModel();
-            var md = model.ModelDefinition;
+            WaterFlowFMModelDefinition md = model.ModelDefinition;
 
             /* Default is false */
             Assert.IsFalse(md.WriteSnappedFeatures);
@@ -1133,7 +1154,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         public void UpdateWriteOutputSnappedFeaturesWaterfallTest()
         {
             var model = new WaterFlowFMModel();
-            var md = model.ModelDefinition;
+            WaterFlowFMModelDefinition md = model.ModelDefinition;
 
             /* Default is false */
             Assert.IsFalse(md.WriteSnappedFeatures);
@@ -1159,22 +1180,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [TestCase(KnownProperties.Wrishp_dryarea)]
         [TestCase(KnownProperties.Wrishp_enc)]
         [TestCase(KnownProperties.Wrishp_src)]
-        [TestCase(KnownProperties.Wrishp_pump)] 
+        [TestCase(KnownProperties.Wrishp_pump)]
         [Category(TestCategory.Jira)] // D3DFMIQ-278
         public void UpdateMduFileAfterSettingOptionWriteShapeFileTest(string property)
         {
-            var mduFilePath = TestHelper.GetTestFilePath(@"outputKnownProperties\FlowFM.mdu");
+            string mduFilePath = TestHelper.GetTestFilePath(@"outputKnownProperties\FlowFM.mdu");
             var mduFileInfo = new FileInfo(mduFilePath);
             Assert.IsTrue(mduFileInfo.Exists);
 
-            var workingDirectory = FileUtils.CreateTempDirectory();
-            var workingMduFilePath = TestHelper.GetTestFilePath(Path.Combine(workingDirectory, mduFileInfo.Name));
+            string workingDirectory = FileUtils.CreateTempDirectory();
+            string workingMduFilePath = TestHelper.GetTestFilePath(Path.Combine(workingDirectory, mduFileInfo.Name));
             FileUtils.CopyFile(mduFileInfo.FullName, workingMduFilePath);
             var workingMduFileInfo = new FileInfo(workingMduFilePath);
             Assert.IsTrue(workingMduFileInfo.Exists);
 
             var model = new WaterFlowFMModel(workingMduFilePath);
-            var md = model.ModelDefinition;
+            WaterFlowFMModelDefinition md = model.ModelDefinition;
 
             Assert.IsFalse(md.WriteSnappedFeatures);
             CheckOutputSnappedFeaturesValue(false, md);
@@ -1187,24 +1208,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.IsFalse(md.WriteSnappedFeatures);
             CheckOutputSnappedFeaturesValue(md.WriteSnappedFeatures, md);
 
-            var checkedProperty = md.KnownWriteOutputSnappedFeatures.Where(sf => sf.Equals(property)).FirstOrDefault();
+            string checkedProperty = md.KnownWriteOutputSnappedFeatures.Where(sf => sf.Equals(property)).FirstOrDefault();
             Assert.IsNotNull(checkedProperty);
 
             md.GetModelProperty(checkedProperty).Value = true;
             Assert.AreEqual(true, md.GetModelProperty(checkedProperty).Value);
 
-            var uncheckedProperties = md.KnownWriteOutputSnappedFeatures.Where(sf => sf != checkedProperty).ToList();
+            List<string> uncheckedProperties = md.KnownWriteOutputSnappedFeatures.Where(sf => sf != checkedProperty).ToList();
             Assert.IsTrue(uncheckedProperties.TrueForAll(p => md.GetModelProperty(p).Value.Equals(false)));
 
-            var mduFile = new MduFile(); 
-            
+            var mduFile = new MduFile();
+
             string saveToPath = Path.Combine(workingDirectory, "saved.mdu");
             var saveToFileInfo = new FileInfo(saveToPath);
             mduFile.Write(saveToPath, md, new HydroArea(), new List<ModelFeatureCoordinateData<FixedWeir>>());
             Assert.IsTrue(saveToFileInfo.Exists);
 
-            var modelFromSavedMduFile = new WaterFlowFMModel();        
-            var mdFromSavedMduFile = modelFromSavedMduFile.ModelDefinition;
+            var modelFromSavedMduFile = new WaterFlowFMModel();
+            WaterFlowFMModelDefinition mdFromSavedMduFile = modelFromSavedMduFile.ModelDefinition;
             mduFile.Read(saveToPath, mdFromSavedMduFile, new HydroArea(), new Dictionary<FixedWeir, ModelFeatureCoordinateData<FixedWeir>>());
 
             Assert.AreEqual(true, mdFromSavedMduFile.GetModelProperty(checkedProperty).Value);
@@ -1219,31 +1240,23 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Category(TestCategory.Slow)]
         public void UpdateWriteOutputSnappedFeaturesWaterfallFromFileTest()
         {
-            var mduPath = TestHelper.GetTestFilePath(@"outputSnappedFeatures\outputSnappedFeatures.dsproj_data\FlowFM\FlowFM.mdu");
+            string mduPath = TestHelper.GetTestFilePath(@"outputSnappedFeatures\outputSnappedFeatures.dsproj_data\FlowFM\FlowFM.mdu");
             mduPath = TestHelper.CreateLocalCopy(mduPath);
             var model = new WaterFlowFMModel(mduPath);
-            var md = model.ModelDefinition;
+            WaterFlowFMModelDefinition md = model.ModelDefinition;
 
             Assert.IsTrue(md.WriteSnappedFeatures);
             CheckOutputSnappedFeaturesValue(true, md);
         }
 
-        private void CheckOutputSnappedFeaturesValue(bool expectedValue, WaterFlowFMModelDefinition modelDefinition)
-        {
-            foreach (var testProp in modelDefinition.KnownWriteOutputSnappedFeatures)
-            {
-                Assert.AreEqual(expectedValue, modelDefinition.GetModelProperty(testProp).Value);
-            }
-        }
-
         [Test]
         public void ReadEnclosureFile()
         {
-            var mduFilePath = TestHelper.GetTestFilePath(@"enclosureFiles\FlowFM.mdu");
+            string mduFilePath = TestHelper.GetTestFilePath(@"enclosureFiles\FlowFM.mdu");
             mduFilePath = TestHelper.CreateLocalCopy(mduFilePath);
 
-            var mduDir = Path.GetDirectoryName(mduFilePath);
-            var modelName = Path.GetFileName(mduFilePath);
+            string mduDir = Path.GetDirectoryName(mduFilePath);
+            string modelName = Path.GetFileName(mduFilePath);
 
             var area = new HydroArea();
             var modelDefinition = new WaterFlowFMModelDefinition(mduDir, modelName);
@@ -1258,16 +1271,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Test]
         public void Read3EnclosuresWithSameNameFromFile()
         {
-            var mduFilePath = TestHelper.GetTestFilePath(@"enclosureFiles\threeEnclosuresDifferentName.mdu");
+            string mduFilePath = TestHelper.GetTestFilePath(@"enclosureFiles\threeEnclosuresDifferentName.mdu");
             mduFilePath = TestHelper.CreateLocalCopy(mduFilePath);
 
-            var mduDir = Path.GetDirectoryName(mduFilePath);
-            var modelName = Path.GetFileName(mduFilePath);
+            string mduDir = Path.GetDirectoryName(mduFilePath);
+            string modelName = Path.GetFileName(mduFilePath);
 
             var area = new HydroArea();
             area.Enclosures.Add(
                 FlowFMTestHelper.CreateFeature2DPolygonFromGeometry(
-                    "Enclosure01", 
+                    "Enclosure01",
                     FlowFMTestHelper.GetValidGeometryForEnclosureExample()));
             var modelDefinition = new WaterFlowFMModelDefinition(mduDir, modelName);
             var allFixedWeirsAndCorrespondingProperties = new Dictionary<FixedWeir, ModelFeatureCoordinateData<FixedWeir>>();
@@ -1281,11 +1294,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Test]
         public void Read3EnclosuresWithDifferentNameFromFile()
         {
-            var mduFilePath = TestHelper.GetTestFilePath(@"enclosureFiles\threeEnclosuresDifferentName.mdu");
+            string mduFilePath = TestHelper.GetTestFilePath(@"enclosureFiles\threeEnclosuresDifferentName.mdu");
             mduFilePath = TestHelper.CreateLocalCopy(mduFilePath);
 
-            var mduDir = Path.GetDirectoryName(mduFilePath);
-            var modelName = Path.GetFileName(mduFilePath);
+            string mduDir = Path.GetDirectoryName(mduFilePath);
+            string modelName = Path.GetFileName(mduFilePath);
 
             var area = new HydroArea();
             area.Enclosures.Add(
@@ -1304,10 +1317,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Test]
         public void WriteEnclosureFile()
         {
-            var nameWithoutExtension = Path.GetTempFileName();
-            var mduFilePath = String.Concat(nameWithoutExtension, ".mdu");
-            var mduDir = Path.GetDirectoryName(mduFilePath);
-            var encFilePath = TestHelper.GetTestFilePath(String.Concat(nameWithoutExtension,"_enc.pol"));
+            string nameWithoutExtension = Path.GetTempFileName();
+            string mduFilePath = string.Concat(nameWithoutExtension, ".mdu");
+            string mduDir = Path.GetDirectoryName(mduFilePath);
+            string encFilePath = TestHelper.GetTestFilePath(string.Concat(nameWithoutExtension, "_enc.pol"));
 
             try
             {
@@ -1318,8 +1331,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 var modelDefinition = new WaterFlowFMModelDefinition(mduDir, Path.GetFileName(mduFilePath));
                 var allFixedWeirsAndCorrespondingProperties = new Dictionary<FixedWeir, ModelFeatureCoordinateData<FixedWeir>>();
                 //Add an enclosure.
-                var enclosureGeom = FlowFMTestHelper.GetValidGeometryForEnclosureExample();
-                var newEnclosure =
+                Polygon enclosureGeom = FlowFMTestHelper.GetValidGeometryForEnclosureExample();
+                GroupableFeature2DPolygon newEnclosure =
                     FlowFMTestHelper.CreateFeature2DPolygonFromGeometry(featureName, enclosureGeom);
                 area.Enclosures.Add(newEnclosure);
                 Assert.AreEqual(1, area.Enclosures.Count);
@@ -1329,7 +1342,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 Assert.IsTrue(File.Exists(mduFilePath));
                 Assert.IsTrue(File.Exists(encFilePath));
 
-                var writtenEncFile = File.ReadAllText(encFilePath);
+                string writtenEncFile = File.ReadAllText(encFilePath);
                 Assert.NotNull(writtenEncFile);
                 Assert.IsNotEmpty(writtenEncFile);
 
@@ -1345,10 +1358,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Test]
         public void WriteAndReadEnclosureFileTest()
         {
-            var nameWithoutExtension = Path.GetTempFileName();
-            var mduFilePath = String.Concat(nameWithoutExtension, ".mdu");
-            var mduDir = Path.GetDirectoryName(mduFilePath);
-            var encFilePath = TestHelper.GetTestFilePath(String.Concat(nameWithoutExtension, "_enc.pol"));
+            string nameWithoutExtension = Path.GetTempFileName();
+            string mduFilePath = string.Concat(nameWithoutExtension, ".mdu");
+            string mduDir = Path.GetDirectoryName(mduFilePath);
+            string encFilePath = TestHelper.GetTestFilePath(string.Concat(nameWithoutExtension, "_enc.pol"));
 
             try
             {
@@ -1363,8 +1376,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 var modelDefinition = new WaterFlowFMModelDefinition(mduDir, Path.GetFileName(mduFilePath));
                 var allFixedWeirsAndCorrespondingProperties = new Dictionary<FixedWeir, ModelFeatureCoordinateData<FixedWeir>>();
                 //Add an enclosure.
-                var enclosureGeom = FlowFMTestHelper.GetValidGeometryForEnclosureExample();
-                var newEnclosure =
+                Polygon enclosureGeom = FlowFMTestHelper.GetValidGeometryForEnclosureExample();
+                GroupableFeature2DPolygon newEnclosure =
                     FlowFMTestHelper.CreateFeature2DPolygonFromGeometry(featureName, enclosureGeom);
                 area.Enclosures.Add(newEnclosure);
                 Assert.AreEqual(1, area.Enclosures.Count);
@@ -1377,7 +1390,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
                 var readModelDefinition = new WaterFlowFMModelDefinition();
                 var readArea = new HydroArea();
-               
 
                 mduFile.Read(mduFilePath, readModelDefinition, readArea, allFixedWeirsAndCorrespondingProperties);
 
@@ -1399,15 +1411,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [TestCase(KnownProperties.FixedWeirFile)]
         [TestCase(KnownProperties.StructuresFile)]
         [TestCase(KnownProperties.ObsCrsFile)]
-        [TestCase(KnownProperties.DryPointsFile)]    
+        [TestCase(KnownProperties.DryPointsFile)]
         public void HydroAreaPropertyIsMultipleEntriesFileName(string hydroAreaFileProperty)
         {
-            var nameWithoutExtension = Path.GetTempFileName();
-            var mduFilePath = String.Concat(nameWithoutExtension, ".mdu");
-            var mduDir = Path.GetDirectoryName(mduFilePath);
+            string nameWithoutExtension = Path.GetTempFileName();
+            string mduFilePath = string.Concat(nameWithoutExtension, ".mdu");
+            string mduDir = Path.GetDirectoryName(mduFilePath);
             var modelDefinition = new WaterFlowFMModelDefinition(mduDir, Path.GetFileName(mduFilePath));
 
-            var property = modelDefinition.GetModelProperty(hydroAreaFileProperty);
+            WaterFlowFMProperty property = modelDefinition.GetModelProperty(hydroAreaFileProperty);
             Assert.IsNotNull(property);
             Assert.AreEqual(typeof(List<string>), property.Value.GetType());
             Assert.AreEqual(true, MduFileHelper.IsFileValued(property));
@@ -1429,7 +1441,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.IsNull(fmModel.ModelDefinition.HeatFluxModel.MeteoData);
             fmModel.ModelDefinition.HeatFluxModel.Type = HeatFluxModelType.Composite;
 
-            var meteoData = fmModel.ModelDefinition.HeatFluxModel.MeteoData;
+            IFunction meteoData = fmModel.ModelDefinition.HeatFluxModel.MeteoData;
             Assert.IsNotNull(meteoData);
 
             // Check arguments
@@ -1437,7 +1449,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.That(meteoData.Arguments.FirstOrDefault()?.Name, Is.EqualTo("Time"));
 
             // Check components
-            var meteoDataComponents = meteoData.Components;
+            IEventedList<IVariable> meteoDataComponents = meteoData.Components;
             Assert.That(meteoDataComponents.Count, Is.EqualTo(3));
             Assert.That(meteoDataComponents[0].Name, Is.EqualTo(humidity));
             Assert.That(meteoDataComponents[1].Name, Is.EqualTo(airtemperature));
@@ -1455,16 +1467,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
-        [TestCase(KnownProperties.SedFile,"Sediment")]
-        [TestCase(KnownProperties.morphology,"Morphology")]
-
+        [TestCase(KnownProperties.SedFile, "Sediment")]
+        [TestCase(KnownProperties.morphology, "Morphology")]
         public void Test_GetTabName_WithValidKeysAndModel_ExpectedTabNamesAreGiven(string key, string expectedName)
         {
             var tabName = string.Empty;
             Assert.DoesNotThrow(() =>
                 {
                     TestHelper.AssertLogMessagesCount(
-                        () => tabName = WaterFlowFMModelDefinition.GetTabName(key, fmModel:new WaterFlowFMModel()), 0);
+                        () => tabName = WaterFlowFMModelDefinition.GetTabName(key, fmModel: new WaterFlowFMModel()), 0);
                 }
             );
             Assert.NotNull(tabName);
@@ -1474,9 +1485,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Test]
         public void Test_GetTabName_WithValidSedimentKeyAndWithoutModel_EmptyStringIsGivenAndNoLogMessages()
         {
-            var key = KnownProperties.SedFile;
+            string key = KnownProperties.SedFile;
             var expectedName = string.Empty;
-            string tabName = "Not Empty";
+            var tabName = "Not Empty";
 
             Assert.DoesNotThrow(() =>
                 {
@@ -1494,13 +1505,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         {
             var key = "invalid";
             var message = "non-existent file";
-            var expectedMessage = String.Format(
+            string expectedMessage = string.Format(
                 Resources.WaterFlowFMModelDefinition_GetTabName_Invalid_gui_group_id_for___0___in_the_scheme_of_dflowfmmorpropertiescsv___1_,
                 message,
                 key);
 
             var expectedName = string.Empty;
-            string tabName = "Not Empty";
+            var tabName = "Not Empty";
 
             Assert.DoesNotThrow(() =>
             {
@@ -1517,7 +1528,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         public void Test_GuiPropertyGroups_GetUniqueGuiPropertyGroupsFromModelAndMorphologyPropertyGroups()
         {
             Dictionary<string, ModelPropertyGroup> dummyVar;
-            Assert.DoesNotThrow(() => dummyVar = WaterFlowFMModelDefinition.GuiPropertyGroups );
+            Assert.DoesNotThrow(() => dummyVar = WaterFlowFMModelDefinition.GuiPropertyGroups);
         }
 
         [Test]
@@ -1532,7 +1543,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             modelDefinition.GetModelProperty(WaterFlowFMModelDefinition.ClassMapFilePropertyName).SetValueAsString(propertyValue);
 
             // When
-            var resultedFileName = modelDefinition.ClassMapFileName;
+            string resultedFileName = modelDefinition.ClassMapFileName;
 
             //Then
             Assert.AreEqual(expectedString, resultedFileName);
@@ -1546,11 +1557,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         public void GivenAModelDefinition_WhenMapFileNameIsCalled_ThenCorrectStringIsReturned(string propertyValue, string expectedString)
         {
             // Given
-            var modelDefinition = new WaterFlowFMModelDefinition { ModelName = "FlowFM1" };
+            var modelDefinition = new WaterFlowFMModelDefinition {ModelName = "FlowFM1"};
             modelDefinition.GetModelProperty(WaterFlowFMModelDefinition.MapFilePropertyName).SetValueAsString(propertyValue);
 
             // When
-            var resultedFileName = modelDefinition.MapFileName;
+            string resultedFileName = modelDefinition.MapFileName;
 
             //Then
             Assert.AreEqual(expectedString, resultedFileName);
@@ -1568,7 +1579,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             modelDefinition.GetModelProperty(WaterFlowFMModelDefinition.HisFilePropertyName).SetValueAsString(propertyValue);
 
             // When
-            var resultedFileName = modelDefinition.HisFileName;
+            string resultedFileName = modelDefinition.HisFileName;
 
             //Then
             Assert.AreEqual(expectedString, resultedFileName);
@@ -1579,19 +1590,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         {
             // Given
             var modelDefinition = new WaterFlowFMModelDefinition();
-            var classMapOutputDeltaTProperty = modelDefinition.GetModelProperty(GuiProperties.ClassMapOutputDeltaT);
-            var classMapIntervalProperty = modelDefinition.GetModelProperty(KnownProperties.ClassMapInterval);
+            WaterFlowFMProperty classMapOutputDeltaTProperty = modelDefinition.GetModelProperty(GuiProperties.ClassMapOutputDeltaT);
+            WaterFlowFMProperty classMapIntervalProperty = modelDefinition.GetModelProperty(KnownProperties.ClassMapInterval);
 
             classMapIntervalProperty.Value = new List<double> {120};
-            Assert.IsTrue(new TimeSpan(0, 0, 5, 0).Equals((TimeSpan)classMapOutputDeltaTProperty.Value));
+            Assert.IsTrue(new TimeSpan(0, 0, 5, 0).Equals((TimeSpan) classMapOutputDeltaTProperty.Value));
 
             // When 
             modelDefinition.SetGuiTimePropertiesFromMduProperties();
 
             // Then
-            Assert.IsTrue(new TimeSpan(0, 0, 2, 0).Equals((TimeSpan)classMapOutputDeltaTProperty.Value));
-            var writeClassMapFilePropertyValue = modelDefinition.GetModelProperty(GuiProperties.WriteClassMapFile).Value;
-            Assert.AreEqual(true, (bool)writeClassMapFilePropertyValue);
+            Assert.IsTrue(new TimeSpan(0, 0, 2, 0).Equals((TimeSpan) classMapOutputDeltaTProperty.Value));
+            object writeClassMapFilePropertyValue = modelDefinition.GetModelProperty(GuiProperties.WriteClassMapFile).Value;
+            Assert.AreEqual(true, (bool) writeClassMapFilePropertyValue);
         }
 
         [Test]
@@ -1600,20 +1611,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             // Given
             var modelDefinition = new WaterFlowFMModelDefinition();
 
-            var classMapIntervalProperty = modelDefinition.GetModelProperty(KnownProperties.ClassMapInterval);
-            var classMapOutputDeltaTProperty = modelDefinition.GetModelProperty(GuiProperties.ClassMapOutputDeltaT);
-            var writeClassMapFileProperty = modelDefinition.GetModelProperty(GuiProperties.WriteClassMapFile);
+            WaterFlowFMProperty classMapIntervalProperty = modelDefinition.GetModelProperty(KnownProperties.ClassMapInterval);
+            WaterFlowFMProperty classMapOutputDeltaTProperty = modelDefinition.GetModelProperty(GuiProperties.ClassMapOutputDeltaT);
+            WaterFlowFMProperty writeClassMapFileProperty = modelDefinition.GetModelProperty(GuiProperties.WriteClassMapFile);
 
-            classMapIntervalProperty.Value = new List<double>();          
-            classMapOutputDeltaTProperty.Value = new TimeSpan(0,0,10,0);        
+            classMapIntervalProperty.Value = new List<double>();
+            classMapOutputDeltaTProperty.Value = new TimeSpan(0, 0, 10, 0);
             writeClassMapFileProperty.Value = false;
 
             // When 
             modelDefinition.SetGuiTimePropertiesFromMduProperties();
 
             // Then
-            Assert.IsEmpty((IList<double>)classMapIntervalProperty.Value);
-            Assert.AreEqual(0, new TimeSpan(0,0,5,0).CompareTo((TimeSpan)classMapOutputDeltaTProperty.Value));
+            Assert.IsEmpty((IList<double>) classMapIntervalProperty.Value);
+            Assert.AreEqual(0, new TimeSpan(0, 0, 5, 0).CompareTo((TimeSpan) classMapOutputDeltaTProperty.Value));
             Assert.AreEqual(true, (bool) writeClassMapFileProperty.Value);
         }
 
@@ -1630,11 +1641,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             modelDefinition.GetModelProperty(KnownProperties.OutputDir).SetValueAsString(propertyValue);
 
             // When
-            var resultedString = modelDefinition.OutputDirectoryName;
+            string resultedString = modelDefinition.OutputDirectoryName;
 
             // Then
             Assert.AreEqual(expectedString, resultedString,
-                $"When the value of the 'OutputDir' property is \"{propertyValue}\" then the expected OutputDirectoryName is \"{expectedString}\", but it was \"{resultedString}\".");
+                            $"When the value of the 'OutputDir' property is \"{propertyValue}\" then the expected OutputDirectoryName is \"{expectedString}\", but it was \"{resultedString}\".");
         }
 
         [Test]
@@ -1642,16 +1653,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         {
             // given
             var modelDefinition = new WaterFlowFMModelDefinition();
-            var property = modelDefinition.GetModelProperty(KnownProperties.OutputDir);
+            WaterFlowFMProperty property = modelDefinition.GetModelProperty(KnownProperties.OutputDir);
             modelDefinition.Properties.Remove(property);
             const string expectedString = FileConstants.OutputDirectoryName;
 
             // When
-            var resultedString = modelDefinition.OutputDirectoryName;
+            string resultedString = modelDefinition.OutputDirectoryName;
 
             // Then
             Assert.AreEqual(expectedString, resultedString,
-                $"When the model definition does not contain the 'OutputDir' property, then the expected OutputDirectoryName is \"{expectedString}\", but it was \"{resultedString}\".");
+                            $"When the model definition does not contain the 'OutputDir' property, then the expected OutputDirectoryName is \"{expectedString}\", but it was \"{resultedString}\".");
         }
 
         [Test]
@@ -1672,8 +1683,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             void TestAction()
             {
                 modelDefinition.SelectSpatialOperations(
-                    new[] {dataItemWithConverter, dataItemWithoutConverter},
-                    new[] {name}
+                    new[]
+                    {
+                        dataItemWithConverter,
+                        dataItemWithoutConverter
+                    },
+                    new[]
+                    {
+                        name
+                    }
                 );
             }
 
@@ -1702,10 +1720,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         public void SetUseMorphologySediment_False_ThenSedimentModelNumberIsEqualTo0()
         {
             // Setup
-            var modelDefinition = new WaterFlowFMModelDefinition
-            {
-                UseMorphologySediment = true
-            };
+            var modelDefinition = new WaterFlowFMModelDefinition {UseMorphologySediment = true};
 
             // Precondition
             Assert.That(modelDefinition.GetModelProperty(KnownProperties.SedimentModelNumber).GetValueAsString(), Is.EqualTo("4"));
@@ -1717,13 +1732,43 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.That(modelDefinition.GetModelProperty(KnownProperties.SedimentModelNumber).GetValueAsString(), Is.EqualTo("0"));
         }
 
+        private static IEnumerable<KeyValuePair<string, string>> GetExpectedKeyValuePairs(IEnumerable<string> lines)
+        {
+            foreach (string line in lines)
+            {
+                string trimmedLine = line.Trim();
+                if (trimmedLine == string.Empty ||
+                    trimmedLine.StartsWith("[") ||
+                    trimmedLine.StartsWith("#"))
+                {
+                    continue;
+                }
+
+                string[] segments = trimmedLine.Split('=', '#');
+
+                string key = segments[0].Trim();
+                string value = segments[1].Trim();
+
+                yield return new KeyValuePair<string, string>(key, value);
+            }
+        }
+
+        private void CheckOutputSnappedFeaturesValue(bool expectedValue, WaterFlowFMModelDefinition modelDefinition)
+        {
+            foreach (string testProp in modelDefinition.KnownWriteOutputSnappedFeatures)
+            {
+                Assert.AreEqual(expectedValue, modelDefinition.GetModelProperty(testProp).Value);
+            }
+        }
+
         private static IDataItem CreateCoverageDataItem(string name, bool withValueConverter)
         {
             var grid = new UnstructuredGrid
             {
                 Cells = new List<Cell>
                 {
-                    new Cell(new int[] {})
+                    new Cell(new int[]
+                                 {})
                 }
             };
 

@@ -73,11 +73,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             var modelOne = new HydFileData();
             var modelTwo = new HydFileData();
 
-            var testFile = TestHelper.GetTestFilePath(@"TestSegFunctionFiles\segFileB.vol");
+            string testFile = TestHelper.GetTestFilePath(@"TestSegFunctionFiles\segFileB.vol");
             testFile = TestHelper.CreateLocalCopySingleFile(testFile);
             Assert.IsTrue(File.Exists(testFile));
 
-            var funcsArray = new Func<HydFileData, string , string>[]
+            var funcsArray = new Func<HydFileData, string, string>[]
             {
                 (hfd, val) => hfd.VolumesRelativePath = val,
                 (hfd, val) => hfd.AreasRelativePath = val,
@@ -96,12 +96,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
                 (hfd, val) => hfd.GridRelativePath = val
             };
 
-            foreach (var func in funcsArray)
+            foreach (Func<HydFileData, string, string> func in funcsArray)
             {
                 //Overwrite the property value
                 func.Invoke(modelOne, testFile);
                 Assert.AreNotEqual(modelOne, modelTwo);
-                
+
                 //Restore it so there will only be one different.
                 func.Invoke(modelOne, string.Empty);
             }
@@ -121,9 +121,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             {
                 FileUtils.CopyDirectory(Path.Combine(TestHelper.GetTestDataDirectory(), @"IO\square\"), targetDirectory);
 
-                var newFilePath = Path.Combine(targetDirectory, hydFileName);
-                
-                var data = HydFileReader.ReadAll(new FileInfo(newFilePath));
+                string newFilePath = Path.Combine(targetDirectory, hydFileName);
+
+                HydFileData data = HydFileReader.ReadAll(new FileInfo(newFilePath));
                 var count = 0;
                 data.DataChanged += (s, e) => count++;
 
@@ -137,8 +137,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
                 Application.DoEvents();
                 Thread.Sleep(200);
 
-                Assert.AreEqual(1,count);
-
+                Assert.AreEqual(1, count);
             }
             finally
             {
@@ -156,7 +155,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             var data = new HydFileData();
 
             // call
-            var hasData = data.HasDataFor(null);
+            bool hasData = data.HasDataFor(null);
 
             // assert
             Assert.IsFalse(hasData);
@@ -166,13 +165,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         public void HasSameSchematizationForItself()
         {
             // setup
-            var data = new HydFileData
-            {
-                Checksum = "1234567890abcdfe1234567890abcdfe"
-            };
+            var data = new HydFileData {Checksum = "1234567890abcdfe1234567890abcdfe"};
 
             // call
-            var isSame = data.HasSameSchematization(data);
+            bool isSame = data.HasSameSchematization(data);
 
             // assert
             Assert.IsTrue(isSame);
@@ -183,14 +179,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         {
             // setup
             const string checksumStub = "1234567890abcdfe1234567890abcdfe";
-            var data = new HydFileData
-            {
-                Checksum = checksumStub
-            };
-            var data2 = new HydFileData
-            {
-                Checksum = checksumStub
-            };
+            var data = new HydFileData {Checksum = checksumStub};
+            var data2 = new HydFileData {Checksum = checksumStub};
 
             // call & assert
             Assert.IsTrue(data.HasSameSchematization(data2));
@@ -201,15 +191,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         public void HasSameSchematizationForDifferentHydFile()
         {
             // setup
-            var data = new HydFileData
-            {
-                Checksum = "1234567890abcdfe1234567890abcdfe"
-            };
+            var data = new HydFileData {Checksum = "1234567890abcdfe1234567890abcdfe"};
 
-            var data2 = new HydFileData
-            {
-                Checksum = "abcdef12345678900987654321fedcba"
-            };
+            var data2 = new HydFileData {Checksum = "abcdef12345678900987654321fedcba"};
 
             // call & assert
             Assert.IsFalse(data.HasSameSchematization(data2));
@@ -220,10 +204,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         public void HasSameSchematizationWithNonHydFileDataReturnsFalse()
         {
             // setup
-            var data = new HydFileData
-            {
-                Checksum = "1234567890abcdfe1234567890abcdfe"
-            };
+            var data = new HydFileData {Checksum = "1234567890abcdfe1234567890abcdfe"};
 
             var dataStub = new TestHydroDataStub();
 

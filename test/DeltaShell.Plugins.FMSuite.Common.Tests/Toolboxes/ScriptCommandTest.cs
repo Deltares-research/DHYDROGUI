@@ -15,14 +15,14 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.Toolboxes
         public void RunScriptAddScopeAndVerifyLog()
         {
             // load all test scripts
-            var toolboxDirectory = Path.Combine(TestHelper.GetTestDataDirectory(), "toolboxes");
+            string toolboxDirectory = Path.Combine(TestHelper.GetTestDataDirectory(), "toolboxes");
             var bathyCommand = new ScriptCommand("Bathy", null,
                                                  Path.Combine(toolboxDirectory, "Bathymetry from Gebco.py"));
             var logger = new StubLogger();
 
             // prepare a scope variable
             var uri = new Uri("file://test-uri");
-            var scope = new Dictionary<string, object> { { "uri", uri } };
+            var scope = new Dictionary<string, object> {{"uri", uri}};
 
             // run the script
             bathyCommand.Execute(logger, scope);
@@ -39,6 +39,21 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.Toolboxes
             public readonly List<string> Infos = new List<string>();
             public readonly List<string> Errors = new List<string>();
 
+            public void DumpToConsole()
+            {
+                Console.WriteLine("Infos:");
+                foreach (string info in Infos)
+                {
+                    Console.WriteLine(info);
+                }
+
+                Console.WriteLine("Errors:");
+                foreach (string error in Errors)
+                {
+                    Console.WriteLine(error);
+                }
+            }
+
             public void Info(string format, params string[] args)
             {
                 Infos.Add(string.Format(format, args));
@@ -47,16 +62,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.Toolboxes
             public void Error(string format, params string[] args)
             {
                 Errors.Add(string.Format(format, args));
-            }
-
-            public void DumpToConsole()
-            {
-                Console.WriteLine("Infos:");
-                foreach (var info in Infos)
-                    Console.WriteLine(info);
-                Console.WriteLine("Errors:");
-                foreach (var error in Errors)
-                    Console.WriteLine(error);
             }
         }
     }

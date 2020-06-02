@@ -106,7 +106,7 @@ namespace DelftTools.Hydro.Tests
                 undoManager.Undo();
 
                 Assert.AreEqual(5.0, def.YZDataTable[0].Yq);
-                Assert.AreEqual(5.0, def.YZDataTable[0].Z); 
+                Assert.AreEqual(5.0, def.YZDataTable[0].Z);
                 Assert.AreEqual(8.0, def.YZDataTable[1].Yq);
                 Assert.AreEqual(5.0, def.YZDataTable[1].Z);
                 Assert.AreEqual(1, undoManager.RedoStack.Count(), "#redo");

@@ -6,10 +6,12 @@ using DelftTools.Controls.Swf.DataEditorGenerator.Metadata;
 using DelftTools.Shell.Gui;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections;
+using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors.Buttons;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
+using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using NUnit.Framework;
 using Rhino.Mocks;
 
@@ -28,12 +30,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Editors
                 Data = fmModel,
             };
 
-            var wpfSettingsViewModel = (WpfSettingsViewModel)fmViewWPF.DataContext;
+            var wpfSettingsViewModel = (WpfSettingsViewModel) fmViewWPF.DataContext;
             SetUiProperties(fmModel, wpfSettingsViewModel);
 
             WpfTestHelper.ShowModal(fmViewWPF);
 
-            var props = fmModel.ModelDefinition.Properties;
+            IEventedList<WaterFlowFMProperty> props = fmModel.ModelDefinition.Properties;
             Assert.IsNotNull(props);
         }
 
@@ -46,7 +48,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Editors
             {
                 Data = fmModel,
             };
-            var wpfSettingsViewModel = (WpfSettingsViewModel)fmViewWpf.DataContext;
+            var wpfSettingsViewModel = (WpfSettingsViewModel) fmViewWpf.DataContext;
 
             SetUiProperties(fmModel, wpfSettingsViewModel);
             var fieldUi = new FieldUIDescription(o => fmModel.UseMorSed, null, o => true, o =>
@@ -59,7 +61,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Editors
             fieldUiDescriptions.Add(fieldUi);
 
             var cat = new WpfGuiCategory("Sediment", fieldUiDescriptions);
-            var sedProperty = cat.Properties.FirstOrDefault();
+            WpfGuiProperty sedProperty = cat.Properties.FirstOrDefault();
             Assert.IsNotNull(sedProperty);
             sedProperty.GetModel = () => fmModel;
 
@@ -68,7 +70,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Editors
 
             WpfTestHelper.ShowModal(fmViewWpf);
 
-            var props = fmModel.ModelDefinition.Properties;
+            IEventedList<WaterFlowFMProperty> props = fmModel.ModelDefinition.Properties;
             Assert.IsNotNull(props);
         }
 
@@ -77,14 +79,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Editors
         public void Test_WaterFlowFMModelViewWPF_AddExtras_Property()
         {
             var fmModel = new WaterFlowFMModel();
-            var fmViewWpf = new WpfSettingsView
-            {
-                Data = fmModel
-            };
+            var fmViewWpf = new WpfSettingsView {Data = fmModel};
 
-            var wpfSettingsViewModel = (WpfSettingsViewModel)fmViewWpf.DataContext;
+            var wpfSettingsViewModel = (WpfSettingsViewModel) fmViewWpf.DataContext;
             Func<object, bool> isEnabledFunc = o => true;
-            Func<object, bool> isVisibleFunc = o => (o is WaterFlowFMModel) && (o as WaterFlowFMModel).DepthLayerDefinition != null;
+            Func<object, bool> isVisibleFunc = o => o is WaterFlowFMModel && (o as WaterFlowFMModel).DepthLayerDefinition != null;
             var depthlayers = new FieldUIDescription(d => fmModel.DepthLayerDefinition?.Description, null, isEnabledFunc, isVisibleFunc)
             {
                 Category = "General",
@@ -97,18 +96,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Editors
             };
 
             Assert.IsTrue(depthlayers.IsVisible(fmModel));
-            var wpfGuiCategory = new WpfGuiCategory("General", new List<FieldUIDescription>() { depthlayers });
-            var prop = wpfGuiCategory.Properties.FirstOrDefault();
+            var wpfGuiCategory = new WpfGuiCategory("General", new List<FieldUIDescription>() {depthlayers});
+            WpfGuiProperty prop = wpfGuiCategory.Properties.FirstOrDefault();
             wpfGuiCategory.Properties.ForEach(p => p.GetModel = () => fmModel);
             wpfSettingsViewModel.SettingsCategories = new ObservableCollection<WpfGuiCategory>(
-                new List<WpfGuiCategory> { wpfGuiCategory });
+                new List<WpfGuiCategory> {wpfGuiCategory});
 
             Assert.IsNotNull(prop);
             prop.CustomCommand.ButtonFunction = (o) => EditDepthLayersHelper.ButtonAction(o);
             prop.CustomCommand.ButtonImage = EditDepthLayersHelper.ButtonImage;
             WpfTestHelper.ShowModal(fmViewWpf);
 
-            var props = fmModel.ModelDefinition.Properties;
+            IEventedList<WaterFlowFMProperty> props = fmModel.ModelDefinition.Properties;
             Assert.IsNotNull(props);
         }
 
@@ -122,14 +121,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Editors
                 Data = fmModel,
             };
 
-            var wpfSettingsViewModel = (WpfSettingsViewModel)fmViewWPF.DataContext;
+            var wpfSettingsViewModel = (WpfSettingsViewModel) fmViewWPF.DataContext;
             SetUiProperties(fmModel, wpfSettingsViewModel);
 
             fmModel.ModelDefinition.Properties.ForEach(p => p.PropertyDefinition.IsEnabled = (c) => false);
 
             WpfTestHelper.ShowModal(fmViewWPF);
 
-            var props = fmModel.ModelDefinition.Properties;
+            IEventedList<WaterFlowFMProperty> props = fmModel.ModelDefinition.Properties;
             Assert.IsNotNull(props);
         }
 
@@ -143,20 +142,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Editors
                 Data = fmModel,
             };
 
-            var wpfSettingsViewModel = (WpfSettingsViewModel)fmViewWPF.DataContext;
+            var wpfSettingsViewModel = (WpfSettingsViewModel) fmViewWPF.DataContext;
             SetUiProperties(fmModel, wpfSettingsViewModel);
 
             fmModel.ModelDefinition.Properties.ForEach(p => p.PropertyDefinition.IsVisible = (c) => false);
 
             WpfTestHelper.ShowModal(fmViewWPF);
 
-            var props = fmModel.ModelDefinition.Properties;
+            IEventedList<WaterFlowFMProperty> props = fmModel.ModelDefinition.Properties;
             Assert.IsNotNull(props);
-        }
-
-        private void SetUiProperties(WaterFlowFMModel model, WpfSettingsViewModel settings)
-        {
-            settings.SettingsCategories = WaterFlowFmSettingsHelper.GetWpfGuiCategories(model, null);
         }
 
         /// <summary>
@@ -175,6 +169,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Editors
             // Then
             Assert.That(result, Is.Not.Null, "Expected a non null result.");
             Assert.That(result, Is.Empty, "Expected an empty collection.");
+        }
+
+        private void SetUiProperties(WaterFlowFMModel model, WpfSettingsViewModel settings)
+        {
+            settings.SettingsCategories = WaterFlowFmSettingsHelper.GetWpfGuiCategories(model, null);
         }
     }
 }

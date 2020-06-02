@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using System.Linq;
+using DelftTools.Functions;
 using DelftTools.Shell.Gui;
 using DelftTools.TestUtils;
 using DelftTools.Utils.PropertyBag.Dynamic;
@@ -18,20 +19,20 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
     [TestFixture]
     public class WaterQualityModelPropertiesTest
     {
-        static readonly string[] iterationRelatedProperties =
+        private static readonly string[] iterationRelatedProperties =
         {
             nameof(WaterQualityModelProperties.IterationMaximum),
             nameof(WaterQualityModelProperties.Tolerance),
             nameof(WaterQualityModelProperties.WriteIterationReport)
         };
 
-        static readonly NumericalScheme[] iterationRelatedSchemes =
+        private static readonly NumericalScheme[] iterationRelatedSchemes =
         {
             NumericalScheme.Scheme15,
             NumericalScheme.Scheme16,
             NumericalScheme.Scheme21,
             NumericalScheme.Scheme22
-        };  
+        };
 
         [Test]
         [Category(TestCategory.WindowsForms)]
@@ -39,13 +40,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         {
             var mockrepos = new MockRepository();
             var guiMock = mockrepos.Stub<IGui>();
-            var grid = new PropertyGrid(guiMock)
-            {
-                Data = new DynamicPropertyBag(new WaterQualityModelProperties
-                {
-                    Data = new WaterQualityModel()
-                })
-            };
+            var grid = new PropertyGrid(guiMock) {Data = new DynamicPropertyBag(new WaterQualityModelProperties {Data = new WaterQualityModel()})};
 
             WindowsFormsTestHelper.ShowModal(grid);
         }
@@ -57,11 +52,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             var mockrepos = new MockRepository();
             var guiMock = mockrepos.Stub<IGui>();
             var model1D = new WaterQualityModel();
-            var settings = model1D.ModelSettings;
+            WaterQualityModelSettings settings = model1D.ModelSettings;
 
             // General
             model1D.Name = "test model";
-            
+
             // Simulation timers
             model1D.StartTime = new DateTime(2011, 1, 1);
             model1D.StopTime = new DateTime(2011, 2, 1);
@@ -82,13 +77,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             settings.BalanceStopTime = new DateTime(2014, 2, 1);
             settings.BalanceTimeStep = new TimeSpan(4, 4, 4, 4);
 
-            var grid = new PropertyGrid(guiMock)
-            {
-                Data = new WaterQualityModelProperties
-                {
-                    Data = model1D
-                }
-            };
+            var grid = new PropertyGrid(guiMock) {Data = new WaterQualityModelProperties {Data = model1D}};
 
             WindowsFormsTestHelper.ShowModal(grid);
         }
@@ -98,16 +87,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         {
             // setup
             var model = new WaterQualityModel();
-            var properties = new WaterQualityModelProperties
-            {
-                Data = model
-            };
+            var properties = new WaterQualityModelProperties {Data = model};
 
             Assert.IsNull(model.HydroData,
-                "Precondition check failed: no hydro data importer should be set on waq-model.");
+                          "Precondition check failed: no hydro data importer should be set on waq-model.");
 
             // call
-            var layers = properties.WaterQualityLayerThicknesses;
+            string[] layers = properties.WaterQualityLayerThicknesses;
 
             // assert
             CollectionAssert.IsEmpty(layers);
@@ -124,17 +110,23 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             {
                 new HydFileImporter().ImportItem(hydPath, model);
 
-                var properties = new WaterQualityModelProperties
-                {
-                    Data = model
-                };
+                var properties = new WaterQualityModelProperties {Data = model};
 
                 // call
-                var layers = properties.WaterQualityLayerThicknesses;
+                string[] layers = properties.WaterQualityLayerThicknesses;
 
                 // assert
-                var expectedLayerNumbers = new[] { 0.143, 0.143, 0.143, 0.143, 0.143, 0.143, 0.143 };
-                var expectedTexts = expectedLayerNumbers.Select(d => d.ToString("F3", CultureInfo.InvariantCulture)).ToArray();
+                var expectedLayerNumbers = new[]
+                {
+                    0.143,
+                    0.143,
+                    0.143,
+                    0.143,
+                    0.143,
+                    0.143,
+                    0.143
+                };
+                string[] expectedTexts = expectedLayerNumbers.Select(d => d.ToString("F3", CultureInfo.InvariantCulture)).ToArray();
                 CollectionAssert.AreEqual(expectedTexts, layers);
             }
         }
@@ -146,20 +138,20 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         {
             // setup
             var model = new WaterQualityModel();
-            var horizontalDispersionFunction = model.Dispersion[0];
+            IFunction horizontalDispersionFunction = model.Dispersion[0];
 
-            var properties = new WaterQualityModelProperties { Data = model };
-            
-            var creator = FunctionTypeCreatorFactory.CreateUnstructuredGridCoverageCreator();
+            var properties = new WaterQualityModelProperties {Data = model};
+
+            IFunctionTypeCreator creator = FunctionTypeCreatorFactory.CreateUnstructuredGridCoverageCreator();
             FunctionTypeCreator.ReplaceFunctionUsingCreator(model.Dispersion, horizontalDispersionFunction, creator, model);
 
             horizontalDispersionFunction = model.Dispersion[0];
             Assert.IsTrue(horizontalDispersionFunction.IsUnstructuredGridCellCoverage(),
-                "Test precondition: Dispersion should be a coverage");
+                          "Test precondition: Dispersion should be a coverage");
 
             // call
-            var propertyName = nameof(WaterQualityModel.HorizontalDispersion);
-            var isReadOnly = properties.ValidateDynamicAttributes(propertyName);
+            string propertyName = nameof(WaterQualityModel.HorizontalDispersion);
+            bool isReadOnly = properties.ValidateDynamicAttributes(propertyName);
 
             // assert
             Assert.IsTrue(isReadOnly);
@@ -170,16 +162,16 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         {
             // setup
             var model = new WaterQualityModel();
-            var horizontalDispersionFunction = model.Dispersion[0];
+            IFunction horizontalDispersionFunction = model.Dispersion[0];
 
-            var properties = new WaterQualityModelProperties { Data = model };
+            var properties = new WaterQualityModelProperties {Data = model};
 
             Assert.IsTrue(horizontalDispersionFunction.IsConst(),
-                "Test precondition: Dispersion should be a constant value.");
+                          "Test precondition: Dispersion should be a constant value.");
 
             // call
-            var propertyName = nameof(WaterQualityModel.HorizontalDispersion);
-            var isReadOnly = properties.ValidateDynamicAttributes(propertyName);
+            string propertyName = nameof(WaterQualityModel.HorizontalDispersion);
+            bool isReadOnly = properties.ValidateDynamicAttributes(propertyName);
 
             // assert
             Assert.IsFalse(isReadOnly);
@@ -192,12 +184,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             var properties = new WaterQualityModelProperties();
 
             // call
-            var isReadOnly = properties.ValidateDynamicAttributes(null);
+            bool isReadOnly = properties.ValidateDynamicAttributes(null);
 
             // assert
             Assert.IsFalse(isReadOnly);
         }
-        
+
         [Test]
         [TestCaseSource("iterationRelatedSchemes")]
         public void IterationRelatedPropertiesShouldBeEditableForIterativeCalculationSchemes(NumericalScheme scheme)
@@ -206,12 +198,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             var model = new WaterQualityModel();
             model.ModelSettings.NumericalScheme = scheme;
 
-            var properties = new WaterQualityModelProperties { Data = model };
+            var properties = new WaterQualityModelProperties {Data = model};
 
-            foreach (var propertyName in iterationRelatedProperties)
+            foreach (string propertyName in iterationRelatedProperties)
             {
                 // call
-                var isReadOnly = properties.ValidateDynamicAttributes(propertyName);
+                bool isReadOnly = properties.ValidateDynamicAttributes(propertyName);
 
                 // assert
                 Assert.IsFalse(isReadOnly, string.Format("Expected property {0} to be editable", propertyName));
@@ -223,16 +215,16 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         {
             // setup
             var model = new WaterQualityModel();
-            
-            var properties = new WaterQualityModelProperties { Data = model };
 
-            foreach (var nonIterativeScheme in Enum.GetValues(typeof(NumericalScheme)).OfType<NumericalScheme>().Except(iterationRelatedSchemes))
+            var properties = new WaterQualityModelProperties {Data = model};
+
+            foreach (NumericalScheme nonIterativeScheme in Enum.GetValues(typeof(NumericalScheme)).OfType<NumericalScheme>().Except(iterationRelatedSchemes))
             {
                 model.ModelSettings.NumericalScheme = nonIterativeScheme;
-                foreach (var propertyName in iterationRelatedProperties)
+                foreach (string propertyName in iterationRelatedProperties)
                 {
                     // call
-                    var isReadonly = properties.ValidateDynamicAttributes(propertyName);
+                    bool isReadonly = properties.ValidateDynamicAttributes(propertyName);
 
                     // assert
                     Assert.IsTrue(isReadonly, string.Format("Expected property {0} to be read-only for scheme {1}", propertyName, nonIterativeScheme));

@@ -24,13 +24,13 @@ namespace DeltaShell.NGHS.IO.Tests.FunctionStores
         [Test]
         public void CopyTo_IsSuccessfulWhenCopyingToNonExistantDirectory()
         {
-            var mapFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), "FunctionStores", "deltashell.map");
-            var store = new ReadOnlyMapHisFileFunctionStore { Path = mapFilePath };
+            string mapFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), "FunctionStores", "deltashell.map");
+            var store = new ReadOnlyMapHisFileFunctionStore {Path = mapFilePath};
 
-            var directoryPath = Path.Combine(TestHelper.GetTestDataDirectory(), "DirectoryDoesNotExist");
+            string directoryPath = Path.Combine(TestHelper.GetTestDataDirectory(), "DirectoryDoesNotExist");
             FileUtils.DeleteIfExists(directoryPath);
 
-            var filePath = Path.Combine(directoryPath, "deltashell.map");
+            string filePath = Path.Combine(directoryPath, "deltashell.map");
             store.CopyTo(filePath);
         }
 
@@ -42,12 +42,12 @@ namespace DeltaShell.NGHS.IO.Tests.FunctionStores
             var lastTimeStep = new DateTime(2010, 1, 2, 0, 0, 0);
             var dtVariable = new Variable<DateTime>();
 
-            var store = new ReadOnlyMapHisFileFunctionStore { Path = mapFilePath };
-            var times = store.GetVariableValues<DateTime>(dtVariable);
+            var store = new ReadOnlyMapHisFileFunctionStore {Path = mapFilePath};
+            IMultiDimensionalArray<DateTime> times = store.GetVariableValues<DateTime>(dtVariable);
 
             Assert.AreEqual(25, times.Count);
-            var startTime = firstTimeStep;
-            var endTime = lastTimeStep;
+            DateTime startTime = firstTimeStep;
+            DateTime endTime = lastTimeStep;
 
             Assert.IsTrue(times[0].CompareTo(startTime) == 0);
             Assert.IsTrue(times[24].CompareTo(endTime) == 0);
@@ -59,11 +59,11 @@ namespace DeltaShell.NGHS.IO.Tests.FunctionStores
         [Test]
         public void ReadTimeStepValuesFromMapFileStore()
         {
-            var mapFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), "FunctionStores", "deltashell.map");
+            string mapFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), "FunctionStores", "deltashell.map");
             var timeStep7 = new DateTime(2010, 1, 1, 6, 0, 0);
             var lastTimeStep = new DateTime(2010, 1, 2, 0, 0, 0);
 
-            var store = new ReadOnlyMapHisFileFunctionStore { Path = mapFilePath };
+            var store = new ReadOnlyMapHisFileFunctionStore {Path = mapFilePath};
             var component = new Variable<double>("Salinity");
             var funtion = new Function("Salinity");
 
@@ -75,16 +75,22 @@ namespace DeltaShell.NGHS.IO.Tests.FunctionStores
             var timeFilter = new VariableValueFilter<DateTime>
             {
                 Variable = timeVariable,
-                Values = new[] { timeStep7 }
+                Values = new[]
+                {
+                    timeStep7
+                }
             };
 
-            var values = store.GetVariableValues(component, timeFilter);
+            IMultiDimensionalArray values = store.GetVariableValues(component, timeFilter);
 
             Assert.AreEqual(2, values.Count);
             Assert.AreEqual(19.767536163330078, values[0]);
             Assert.AreEqual(27.733558654785156, values[1]);
 
-            timeFilter.Values = new[] { lastTimeStep };
+            timeFilter.Values = new[]
+            {
+                lastTimeStep
+            };
             values = store.GetVariableValues(component, timeFilter);
 
             Assert.AreEqual(2, values.Count);
@@ -99,8 +105,8 @@ namespace DeltaShell.NGHS.IO.Tests.FunctionStores
         public void ReadTimeSeriesValuesFromMapFileStore()
         {
             string mapFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), "FunctionStores", "deltashell.map");
-            var store = new ReadOnlyMapHisFileFunctionStore { Path = mapFilePath };
-            
+            var store = new ReadOnlyMapHisFileFunctionStore {Path = mapFilePath};
+
             var component = new Variable<double>("Salinity");
             var funtion = new Function("Salinity");
 
@@ -108,11 +114,18 @@ namespace DeltaShell.NGHS.IO.Tests.FunctionStores
             funtion.Arguments.Add(new Variable<int>("cell_index"));
             funtion.Components.Add(component);
 
-            var locationFilter = new VariableValueFilter<int> { Variable = funtion.Arguments[1], Values = new[] { 1 } };
-            var values = store.GetVariableValues<double>(component, locationFilter);
+            var locationFilter = new VariableValueFilter<int>
+            {
+                Variable = funtion.Arguments[1],
+                Values = new[]
+                {
+                    1
+                }
+            };
+            IMultiDimensionalArray<double> values = store.GetVariableValues<double>(component, locationFilter);
 
-            Assert.AreEqual(30.0, values[0]); // first timestep
-            Assert.AreEqual(27.733558654785156, values[6]); // timestep 7
+            Assert.AreEqual(30.0, values[0]);                   // first timestep
+            Assert.AreEqual(27.733558654785156, values[6]);     // timestep 7
             Assert.AreEqual(14.770989418029785, values.Last()); // last timestep
         }
 
@@ -121,8 +134,8 @@ namespace DeltaShell.NGHS.IO.Tests.FunctionStores
         public void ReadTimeStepsFromStoreUsingCoverageFromMapFileStore()
         {
             string mapFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), "FunctionStores", "deltashell.map");
-            var store = new ReadOnlyMapHisFileFunctionStore { Path = mapFilePath };
-            var unstrCellCoverage = new UnstructuredGridCellCoverage(new UnstructuredGrid(), true) { Store = store };
+            var store = new ReadOnlyMapHisFileFunctionStore {Path = mapFilePath};
+            var unstrCellCoverage = new UnstructuredGridCellCoverage(new UnstructuredGrid(), true) {Store = store};
 
             Assert.AreEqual(25, unstrCellCoverage.Time.Values.Count);
         }
@@ -130,32 +143,34 @@ namespace DeltaShell.NGHS.IO.Tests.FunctionStores
         [Test]
         public void ReadTimeSeriesFromHisFileStore()
         {
-            var path = Path.Combine(TestHelper.GetTestDataDirectory(), "FunctionStores", "rrbalans.his");
+            string path = Path.Combine(TestHelper.GetTestDataDirectory(), "FunctionStores", "rrbalans.his");
             var store = new ReadOnlyMapHisFileFunctionStore
-                {
-                    Path = path,
-                    GetParameterName = s => "DWF Paved"
+            {
+                Path = path,
+                GetParameterName = s => "DWF Paved"
             };
 
-            var timeseries = new TimeSeries {Name = "DWF paved (bm)" };
+            var timeseries = new TimeSeries {Name = "DWF paved (bm)"};
             timeseries.Components.Add(new Variable<double>("DWF paved (bm)"));
             timeseries.Store = store;
 
             Assert.AreEqual(11713, timeseries.Time.Values.Count);
             Assert.AreEqual(11713, timeseries.GetValues<double>().Count);
-
         }
 
         [Test]
         public void ReadFeatureCoverageTimeSliceFromHisFileStore()
         {
-            var path = Path.Combine(TestHelper.GetTestDataDirectory(), "FunctionStores", "rrrunoff.his");
-            
-            var catchment = new Catchment { Name = "Catchment1" };
+            string path = Path.Combine(TestHelper.GetTestDataDirectory(), "FunctionStores", "rrrunoff.his");
+
+            var catchment = new Catchment {Name = "Catchment1"};
             var featureCoverage = new FeatureCoverage("Outflow(hbv)")
             {
                 IsTimeDependent = true,
-                Features = new EventedList<IFeature>(new IFeature[] { catchment })
+                Features = new EventedList<IFeature>(new IFeature[]
+                {
+                    catchment
+                })
             };
 
             featureCoverage.Arguments.Add(new Variable<IFeature>("Feature"));
@@ -165,7 +180,7 @@ namespace DeltaShell.NGHS.IO.Tests.FunctionStores
             {
                 Path = path,
                 GetParameterName = s => "Total Outflow [m3/s]",
-                LocationFromObjectToString = f => ((INameable)f).Name,
+                LocationFromObjectToString = f => ((INameable) f).Name,
                 LocationsFromStringToObject = n => featureCoverage.Features.OfType<INameable>().FirstOrDefault(f => f.Name == n)
             };
 
@@ -177,7 +192,7 @@ namespace DeltaShell.NGHS.IO.Tests.FunctionStores
             var timeFilter = new VariableValueFilter<DateTime>(featureCoverage.Time, featureCoverage.Time.Values[1]);
             Assert.AreEqual(1, featureCoverage.GetValues<double>(timeFilter).Count);
 
-            var timeSeries = featureCoverage.GetTimeSeries(catchment);
+            IFunction timeSeries = featureCoverage.GetTimeSeries(catchment);
             Assert.AreEqual(25, timeSeries.Arguments[0].Values.Count);
             Assert.AreEqual(25, timeSeries.GetValues().Count);
 

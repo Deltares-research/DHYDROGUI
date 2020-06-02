@@ -7,6 +7,15 @@
     /// </summary>
     public class AcceptanceModelExportResultConfig
     {
+        /// <summary> The root folder in which we put our diagnostic report folder (should be the checkout folder). </summary>
+        public const string ReleaseFolder = @"..\..\";
+
+        /// <summary> The path to the report folder. </summary>
+        public const string ReportFolder = ReleaseFolder + @"\DiagnosticReport";
+
+        /// <summary> The delft3dfm export directory. </summary>
+        public const string Delft3DfmExportDirectory = ReportFolder + @"\DELFT3D-FM";
+
         /// <summary>
         /// Initialize a new <see cref="AcceptanceModelExportResultConfig"/> with default empty values.
         /// </summary>
@@ -19,30 +28,24 @@
             HasValidated = false;
         }
 
-        /// <summary> The root folder in which we put our diagnostic report folder (should be the checkout folder). </summary>
-        public const string ReleaseFolder = @"..\..\";
-
-        /// <summary> The path to the report folder. </summary>
-        public const string ReportFolder = ReleaseFolder + @"\DiagnosticReport";
-
-        /// <summary> The delft3dfm export directory. </summary>
-        public const string Delft3DfmExportDirectory = ReportFolder + @"\DELFT3D-FM";
-
         /// <summary>
         /// Gets or sets the path to the working directory as used by the tests.
         /// </summary>
         /// <value> The path to the working directory. </value>
         public string WorkingDirectory { get; set; }
+
         /// <summary>
         /// Gets or sets the name of the current model.
         /// </summary>
         /// <value>The name of the current model.</value>
         public string CurrentModelName { get; set; }
+
         /// <summary>
         /// Gets or sets the name of the output.
         /// </summary>
         /// <value>The name of the output.</value>
         public string OutputName { get; set; }
+
         /// <summary>
         /// Gets or sets whether the current test has exported its diagnostic file.
         /// </summary>

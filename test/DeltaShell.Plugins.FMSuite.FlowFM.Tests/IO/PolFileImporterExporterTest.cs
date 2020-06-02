@@ -6,22 +6,23 @@ using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.ImportersExporters;
 using NetTopologySuite.Extensions.Features;
+using NetTopologySuite.Geometries;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 {
     [TestFixture]
-    class PolFileImporterExporterTest
+    internal class PolFileImporterExporterTest
     {
         [Test]
         [TestCase("enclosureFiles\\threeEnclosuresDifferentName_enc.pol", 3)]
         [TestCase("enclosureFiles\\threeEnclosuresSameName_enc.pol", 3)]
         public void ImportMultipleEnclosuresWhenNoPreviousAreCreated(string polFileLocation, int expectedEnclosures)
         {
-            var filePath = TestHelper.GetTestFilePath(polFileLocation);
+            string filePath = TestHelper.GetTestFilePath(polFileLocation);
             Assert.NotNull(filePath);
             Assert.IsTrue(File.Exists(filePath));
-            var polFilePath = TestHelper.CreateLocalCopy(filePath);
+            string polFilePath = TestHelper.CreateLocalCopy(filePath);
             try
             {
                 var importer = new PolFileImporterExporter();
@@ -39,25 +40,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             {
                 FileUtils.DeleteIfExists(polFilePath);
             }
-            
         }
 
         [Test]
         [TestCase("enclosureFiles\\threeEnclosuresDifferentName_enc.pol", 3)] /*Enclosure01, Enclosure02, Enclosure03*/
-        [TestCase("enclosureFiles\\threeEnclosuresSameName_enc.pol", 1)] /*Enclosure01, Enclosure01, Enclosure01*/
+        [TestCase("enclosureFiles\\threeEnclosuresSameName_enc.pol", 1)]      /*Enclosure01, Enclosure01, Enclosure01*/
         public void ImportMultipleEnclosuresWhenThereAreAlreadyCreated(string polFileLocation, int expectedEnclosures)
         {
-            var filePath = TestHelper.GetTestFilePath(polFileLocation);
+            string filePath = TestHelper.GetTestFilePath(polFileLocation);
             Assert.NotNull(filePath);
             Assert.IsTrue(File.Exists(filePath));
-            var polFilePath = TestHelper.CreateLocalCopy(filePath);
+            string polFilePath = TestHelper.CreateLocalCopy(filePath);
 
             try
             {
                 var importer = new PolFileImporterExporter();
                 var area = new HydroArea();
 
-                var newEnclosure = FlowFMTestHelper.CreateFeature2DPolygonFromGeometry(
+                GroupableFeature2DPolygon newEnclosure = FlowFMTestHelper.CreateFeature2DPolygonFromGeometry(
                     "Enclosure01" /* This name is present in all files above*/,
                     FlowFMTestHelper.GetValidGeometryForEnclosureExample());
                 area.Enclosures.Add(newEnclosure);
@@ -74,27 +74,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             {
                 FileUtils.DeleteIfExists(polFilePath);
             }
-            
         }
 
         [Test]
         public void ExportImportEnclosure()
         {
-
-            var filePath = String.Concat(Path.GetTempFileName(), ".pol");
+            string filePath = string.Concat(Path.GetTempFileName(), ".pol");
             Assert.NotNull(filePath);
 
             var featureName = "Enclosure01";
-            var enclosurePolygonToWrite = FlowFMTestHelper.GetValidGeometryForEnclosureExample();
-            var polygonFeature = FlowFMTestHelper.CreateFeature2DPolygonFromGeometry(featureName, enclosurePolygonToWrite);
-            var enclosureFeatureList = new List<Feature2DPolygon> { polygonFeature };
+            Polygon enclosurePolygonToWrite = FlowFMTestHelper.GetValidGeometryForEnclosureExample();
+            GroupableFeature2DPolygon polygonFeature = FlowFMTestHelper.CreateFeature2DPolygonFromGeometry(featureName, enclosurePolygonToWrite);
+            var enclosureFeatureList = new List<Feature2DPolygon> {polygonFeature};
 
             try
             {
                 var importerExporter = new PolFileImporterExporter();
                 var area = new HydroArea();
 
-                var newEnclosure = FlowFMTestHelper.CreateFeature2DPolygonFromGeometry(
+                GroupableFeature2DPolygon newEnclosure = FlowFMTestHelper.CreateFeature2DPolygonFromGeometry(
                     "Enclosure01" /* This name is present in all files above*/,
                     FlowFMTestHelper.GetValidGeometryForEnclosureExample());
                 area.Enclosures.Add(newEnclosure);
@@ -102,7 +100,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
                 Assert.IsTrue(importerExporter.Export(area.Enclosures, filePath));
                 Assert.IsTrue(File.Exists(filePath));
-                var writtenFile = File.ReadAllText(filePath);
+                string writtenFile = File.ReadAllText(filePath);
                 Assert.NotNull(writtenFile);
                 Assert.IsNotEmpty(writtenFile);
                 Assert.AreEqual(FlowFMTestHelper.GetExpectedEnclosurePolFileContent(featureName), writtenFile);
@@ -111,8 +109,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 Assert.AreEqual(0, area.Enclosures.Count);
                 importerExporter.ImportItem(filePath, area.Enclosures);
                 Assert.AreEqual(1, area.Enclosures.Count);
-                
-                var importedFeature = enclosureFeatureList[0];
+
+                Feature2DPolygon importedFeature = enclosureFeatureList[0];
                 Assert.AreEqual(featureName, importedFeature.Name);
                 Assert.AreEqual(newEnclosure.Geometry, importedFeature.Geometry);
             }
@@ -121,6 +119,5 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 FileUtils.DeleteIfExists(filePath);
             }
         }
-
     }
 }

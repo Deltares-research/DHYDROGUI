@@ -35,7 +35,7 @@ namespace DelftTools.Hydro.Tests
             crossSection.MakeDefinitionLocal();
 
             Assert.IsTrue(crossSection.Definition is CrossSectionDefinitionStandard);
-            Assert.AreEqual(7, ((CrossSectionDefinitionStandard)crossSection.Definition).LevelShift);
+            Assert.AreEqual(7, ((CrossSectionDefinitionStandard) crossSection.Definition).LevelShift);
         }
     }
 }

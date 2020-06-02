@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using DelftTools.TestUtils;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
+using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Grids;
@@ -26,16 +27,28 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Layers
         [Test]
         public void ShowGridLayer()
         {
-            var mduPath = TestHelper.GetTestFilePath(@"data\f04_bottomfriction\c016_2DConveyance_bend\input\bendprof.mdu");
+            string mduPath = TestHelper.GetTestFilePath(@"data\f04_bottomfriction\c016_2DConveyance_bend\input\bendprof.mdu");
             mduPath = TestHelper.CreateLocalCopy(mduPath);
-            var grid = MapFileImporter.Import(mduPath, "bendprof_map.nc");
+            UnstructuredGrid grid = MapFileImporter.Import(mduPath, "bendprof_map.nc");
 
-            var gridLayer = new UnstructuredGridLayer { Grid = grid };
+            var gridLayer = new UnstructuredGridLayer {Grid = grid};
 
-            var map = new Map { Layers = { gridLayer }, Size = new Size { Width = 800, Height = 800 } };
+            var map = new Map
+            {
+                Layers = {gridLayer},
+                Size = new Size
+                {
+                    Width = 800,
+                    Height = 800
+                }
+            };
             map.ZoomToExtents();
 
-            var mapControl = new MapControl { Map = map, Dock = DockStyle.Fill };
+            var mapControl = new MapControl
+            {
+                Map = map,
+                Dock = DockStyle.Fill
+            };
 
             WindowsFormsTestHelper.ShowModal(mapControl);
         }
@@ -43,16 +56,28 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Layers
         [Test]
         public void ShowLargerGridLayer()
         {
-            var mduPath = TestHelper.GetTestFilePath(@"data\pensioen\pensioen.mdu");
+            string mduPath = TestHelper.GetTestFilePath(@"data\pensioen\pensioen.mdu");
             mduPath = TestHelper.CreateLocalCopy(mduPath);
-            var grid = MapFileImporter.Import(mduPath, "pensioen_map.nc");
+            UnstructuredGrid grid = MapFileImporter.Import(mduPath, "pensioen_map.nc");
 
-            var gridLayer = new UnstructuredGridLayer { Grid = grid };
+            var gridLayer = new UnstructuredGridLayer {Grid = grid};
 
-            var map = new Map { Layers = { gridLayer }, Size = new Size { Width = 800, Height = 800 } };
+            var map = new Map
+            {
+                Layers = {gridLayer},
+                Size = new Size
+                {
+                    Width = 800,
+                    Height = 800
+                }
+            };
             map.ZoomToExtents();
 
-            var mapControl = new MapControl { Map = map, Dock = DockStyle.Fill };
+            var mapControl = new MapControl
+            {
+                Map = map,
+                Dock = DockStyle.Fill
+            };
 
             WindowsFormsTestHelper.ShowModal(mapControl);
         }
@@ -63,33 +88,33 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Layers
         {
             const int ms = 1000;
             const int ns = 1000;
-            const int numVertices = (ms + 1)*(ns + 1);
-            
+            const int numVertices = (ms + 1) * (ns + 1);
+
             var vertices = new List<Coordinate>(numVertices);
             var edgesVertexIndices = new int[ms * ns * 4, 2];
 
             var r = new Random();
 
             // generate random grid
-            for (int n = 0; n <= ns; n++) 
+            for (var n = 0; n <= ns; n++)
             {
-                for (int m = 0; m <= ms; m++)
+                for (var m = 0; m <= ms; m++)
                 {
                     vertices.Add(new Coordinate(m, n, r.Next(20)));
                 }
             }
 
-            for (int m = 0; m < ms; m++)
+            for (var m = 0; m < ms; m++)
             {
-                for (int n = 0; n < ns; n++)
+                for (var n = 0; n < ns; n++)
                 {
-                    var c = n * ms + m;
-                    var lb = c + n;
-                    var rb = lb + 1;
-                    var lo = rb + ms;
-                    var ro = lo + 1;
+                    int c = (n * ms) + m;
+                    int lb = c + n;
+                    int rb = lb + 1;
+                    int lo = rb + ms;
+                    int ro = lo + 1;
 
-                    var e = c*4;
+                    int e = c * 4;
                     edgesVertexIndices[e, 0] = lb;
                     edgesVertexIndices[e, 1] = rb;
                     edgesVertexIndices[e + 1, 0] = rb;
@@ -101,14 +126,26 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Layers
                 }
             }
 
-            var grid = UnstructuredGridFactory.CreateFromVertexAndEdgeList(vertices, edgesVertexIndices, oneBased:false);
-                        
-            var gridLayer = new UnstructuredGridLayer { Grid = grid };
+            UnstructuredGrid grid = UnstructuredGridFactory.CreateFromVertexAndEdgeList(vertices, edgesVertexIndices, oneBased: false);
 
-            var map = new Map { Layers = { gridLayer }, Size = new Size { Width = 800, Height = 800 } };
+            var gridLayer = new UnstructuredGridLayer {Grid = grid};
+
+            var map = new Map
+            {
+                Layers = {gridLayer},
+                Size = new Size
+                {
+                    Width = 800,
+                    Height = 800
+                }
+            };
             map.ZoomToExtents();
 
-            var mapControl = new MapControl { Map = map, Dock = DockStyle.Fill };
+            var mapControl = new MapControl
+            {
+                Map = map,
+                Dock = DockStyle.Fill
+            };
 
             WindowsFormsTestHelper.ShowModal(mapControl);
         }
@@ -116,17 +153,29 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Layers
         [Test]
         public void ShowIvoorkustGridLayer()
         {
-            var mduPath = TestHelper.GetTestFilePath(@"mdu_ivoorkust\ivk.mdu");
+            string mduPath = TestHelper.GetTestFilePath(@"mdu_ivoorkust\ivk.mdu");
             mduPath = TestHelper.CreateLocalCopy(mduPath);
             var m = new WaterFlowFMModel(mduPath);
-            var grid = m.Grid;
+            UnstructuredGrid grid = m.Grid;
 
             var gridLayer = new UnstructuredGridLayer {Grid = grid};
 
-            var map = new Map { Layers = { gridLayer }, Size = new Size { Width = 800, Height = 800 } };
+            var map = new Map
+            {
+                Layers = {gridLayer},
+                Size = new Size
+                {
+                    Width = 800,
+                    Height = 800
+                }
+            };
             map.ZoomToExtents();
 
-            var mapControl = new MapControl { Map = map, Dock = DockStyle.Fill };
+            var mapControl = new MapControl
+            {
+                Map = map,
+                Dock = DockStyle.Fill
+            };
 
             WindowsFormsTestHelper.ShowModal(mapControl);
         }
@@ -134,14 +183,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Layers
         [Test]
         public void CreateUnstructuredGridCellForPointOnGetFeatures()
         {
-            var map = new Map{ Zoom = 100.0 };
-            var grid = UnstructuredGridTestHelper.GenerateRegularGrid(10, 10, 100, 100);
-            var layer = new UnstructuredGridLayer {Grid = grid, Map = map};
+            var map = new Map {Zoom = 100.0};
+            UnstructuredGrid grid = UnstructuredGridTestHelper.GenerateRegularGrid(10, 10, 100, 100);
+            var layer = new UnstructuredGridLayer
+            {
+                Grid = grid,
+                Map = map
+            };
 
-            var features = layer.GetFeatures(new Point(50, 150)).ToList(); // cell 10
+            List<IFeature> features = layer.GetFeatures(new Point(50, 150)).ToList(); // cell 10
             Assert.AreEqual(1, features.Count);
 
-            var gridCell = (UnstructuredGridFeature)features[0];
+            var gridCell = (UnstructuredGridFeature) features[0];
             Assert.AreEqual(10, gridCell.Index);
             Assert.AreEqual(grid, gridCell.UnstructuredGrid);
             Assert.AreEqual(grid.Cells[10].ToPolygon(grid), gridCell.Geometry);

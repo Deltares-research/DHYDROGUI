@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
@@ -22,9 +23,11 @@ using DeltaShell.Plugins.SharpMapGis.SpatialOperations;
 using GeoAPI.Extensions.Coverages;
 using log4net.Core;
 using NetTopologySuite.Extensions.Coverages;
+using NetTopologySuite.Extensions.Grids;
 using NUnit.Framework;
 using Rhino.Mocks;
 using SharpMap;
+using SharpMap.Api.SpatialOperations;
 using SharpMap.Data.Providers;
 using SharpMap.SpatialOperations;
 using SharpMapTestUtils;
@@ -35,21 +38,39 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
     [Category(TestCategory.DataAccess)]
     public class SedimentFileTest
     {
+        private static readonly string[] iniPropertyNamesOverall =
+        {
+            "Bros",
+            "Bounty"
+        };
+
+        private static readonly string[] iniPropertyNamesSedimentFraction =
+        {
+            "MilkyWay",
+            "Snickers"
+        };
+
+        private static readonly string[] iniPropertyNamesUnknown =
+        {
+            "Toblerone",
+            "Twix"
+        };
+
         [Test]
         // The way the sediment reader it's developed forces a model to be created in order to import the .sed file properties
         public void GivenAnMduWithSedimentFileWithUnknownProperties_WhenReadingAndWriting_ThenTheCorrectPropertiesAreCreatedAndCorrectlyWrittenToTheFile()
         {
-            #region Load 
+            #region Load
 
             // Given
-            var mduFilePath = TestHelper.GetTestFilePath(@"sedmor\FlowFMCustomProperties\FlowFMCustomPropertiesSedMor.mdu");
+            string mduFilePath = TestHelper.GetTestFilePath(@"sedmor\FlowFMCustomProperties\FlowFMCustomPropertiesSedMor.mdu");
 
             // When
             var importedModel = new WaterFlowFMModel(mduFilePath);
 
             // Then
             Assert.NotNull(importedModel, "Model was not imported.");
-            var modelDefinition = importedModel.ModelDefinition;
+            WaterFlowFMModelDefinition modelDefinition = importedModel.ModelDefinition;
             ValidateAllUnknownProperties(modelDefinition);
 
             #endregion
@@ -79,9 +100,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         {
             // Given
             var model = new WaterFlowFMModel();
-            var properties = model.ModelDefinition.Properties;
-            var originalNumberOfProperties = properties.Count;
-            var sedFilePath = TestHelper.GetTestFilePath(@"sedmor\FlowFMCustomProperties\SedCustomProperties.sed");
+            IEventedList<WaterFlowFMProperty> properties = model.ModelDefinition.Properties;
+            int originalNumberOfProperties = properties.Count;
+            string sedFilePath = TestHelper.GetTestFilePath(@"sedmor\FlowFMCustomProperties\SedCustomProperties.sed");
 
             // When
             SedimentFile.LoadSediments(sedFilePath, model);
@@ -92,47 +113,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             ValidateAllUnknownProperties(model.ModelDefinition);
         }
 
-        private static void ValidateAllUnknownProperties(WaterFlowFMModelDefinition modelDefinition)
-        {
-            var properties = modelDefinition.Properties;
-
-            const string sedimentFraction1Name = "sed1";
-            var unknownPropertiesForSed1 = properties.Where(p => p.PropertyDefinition.Category.Equals(sedimentFraction1Name)).ToList();
-            ValidatePropertiesCategory(unknownPropertiesForSed1, SedimentFile.Header, sedimentFraction1Name);
-
-            const string sedimentFraction2Name = "sed2";
-            var unknownPropertiesForSed2 = properties.Where(p => p.PropertyDefinition.Category.Equals(sedimentFraction2Name)).ToList();
-            ValidatePropertiesCategory(unknownPropertiesForSed2, SedimentFile.Header, sedimentFraction2Name);
-
-            const string customCategoryName = "MyCustomCategory";
-            var propertiesUnknownCategory = properties.Where(p => p.PropertyDefinition.FileCategoryName == customCategoryName).ToList();
-            ValidatePropertiesCategory(propertiesUnknownCategory, customCategoryName, customCategoryName);
-        }
-
-        private static void ValidatePropertiesCategory(List<WaterFlowFMProperty> properties, string fileCategoryName, string categoryName)
-        {
-            Assert.IsTrue(properties.All(p => p.PropertyDefinition.UnknownPropertySource.Equals(PropertySource.SedimentFile)));
-            Assert.IsTrue(properties.All(p => p.PropertyDefinition.FileCategoryName.Equals(fileCategoryName)));
-            Assert.IsTrue(properties.All(p => p.PropertyDefinition.Category.Equals(categoryName)));
-
-            ValidateProperty(properties, "MyCustomStringProp", "\"777\"");
-            ValidateProperty(properties, "MyCustomBoolProp", "1");
-            ValidateProperty(properties, "MyCustomDoubleProp", "7.77");
-            ValidateProperty(properties, "MyCustomIntProp", "777");
-        }
-
-        private static void ValidateProperty(IEnumerable<WaterFlowFMProperty> properties, string propertyName, string propertyValue)
-        {
-            WaterFlowFMProperty customStringProperty = properties.FirstOrDefault(p => p.PropertyDefinition.FilePropertyName.Equals(propertyName));
-            Assert.NotNull(customStringProperty);
-            Assert.AreEqual(propertyValue, customStringProperty.Value);
-        }
-
         [Test]
         public void SaveAndReadSedFileWithCustomProperties()
         {
-            
-            var sedFile = Path.GetTempFileName();
+            string sedFile = Path.GetTempFileName();
             try
             {
                 /* Define new model */
@@ -140,30 +124,36 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 fmModel.ModelDefinition.UseMorphologySediment = true;
 
                 /*  Definition of properties   */
-                var intProp = new SedimentProperty<int>("MyIntProp", 0, 0,false, 0, false, "liter", "MyIntDescription", false);
+                var intProp = new SedimentProperty<int>("MyIntProp", 0, 0, false, 0, false, "liter", "MyIntDescription", false);
                 intProp.Value = 27;
 
                 var boolProp = new SedimentProperty<bool>("MyBoolProp", false, false, false, false, false, "sec",
-                    "MyBoolDescription", false);
+                                                          "MyBoolDescription", false);
                 boolProp.Value = true;
 
                 var doubleProp = new SedimentProperty<double>("MyDoubleProp", 0, 0, false, 0, false, "cc",
-                    "MyDoubleDescription", false);
+                                                              "MyDoubleDescription", false);
                 doubleProp.Value = 11.2;
-                
+
                 var formulaProp = new SedimentProperty<int>("TraFrm", -1, -2, false, 18, false, string.Empty, "Integer selecting the transport formula", true);
 
                 /* Set sediment and formula properties */
                 var testSedimentType = new SedimentType();
                 testSedimentType.Key = "MySedType";
-                testSedimentType.Properties = new EventedList<ISedimentProperty>() { intProp, doubleProp, boolProp, formulaProp };
+                testSedimentType.Properties = new EventedList<ISedimentProperty>()
+                {
+                    intProp,
+                    doubleProp,
+                    boolProp,
+                    formulaProp
+                };
 
                 var testFormulaType = new SedimentFormulaType();
-                testFormulaType.Properties = new EventedList<ISedimentProperty>() { formulaProp };
+                testFormulaType.Properties = new EventedList<ISedimentProperty>() {formulaProp};
 
                 var overallProp = new SedimentProperty<double>("MyOverallProp", 0, 0, true, 0, false, "km", "MyOverallDescription", false);
                 overallProp.Value = 80.1;
-                fmModel.SedimentOverallProperties = new EventedList<ISedimentProperty>() { overallProp };
+                fmModel.SedimentOverallProperties = new EventedList<ISedimentProperty>() {overallProp};
 
                 /*Add the fraction to the model*/
                 var fraction = new SedimentFraction();
@@ -171,22 +161,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 fraction.CurrentSedimentType = testSedimentType;
                 fraction.CurrentFormulaType = testFormulaType;
 
-                fmModel.SedimentFractions = new EventedList<ISedimentFraction>() { fraction };
-                var modelDefinition = fmModel.ModelDefinition;
+                fmModel.SedimentFractions = new EventedList<ISedimentFraction>() {fraction};
+                WaterFlowFMModelDefinition modelDefinition = fmModel.ModelDefinition;
 
                 /* Test */
                 SedimentFile.Save(sedFile, modelDefinition, fmModel);
-                var sedWritten = File.ReadAllText(sedFile);
-                Assert.That(sedWritten, Is.StringContaining(SedimentFile.GeneralHeader)); 
-                Assert.That(sedWritten, Is.StringContaining(SedimentFile.OverallHeader)); 
-                Assert.That(sedWritten, Is.StringContaining(SedimentFile.Header)); 
-                Assert.That(sedWritten, Is.StringContaining("MyIntProp")); 
-                Assert.That(sedWritten, Is.StringContaining("MyBoolProp")); 
-                Assert.That(sedWritten, Is.StringContaining("MyDoubleProp")); 
-                Assert.That(sedWritten, Is.StringContaining("MyOverallProp")); 
-                Assert.That(sedWritten, Is.StringContaining("TraFrm")); 
-                Assert.That(sedWritten, Is.StringContaining("MySedimentName")); 
-                Assert.That(sedWritten, Is.StringContaining("MySedType")); 
+                string sedWritten = File.ReadAllText(sedFile);
+                Assert.That(sedWritten, Is.StringContaining(SedimentFile.GeneralHeader));
+                Assert.That(sedWritten, Is.StringContaining(SedimentFile.OverallHeader));
+                Assert.That(sedWritten, Is.StringContaining(SedimentFile.Header));
+                Assert.That(sedWritten, Is.StringContaining("MyIntProp"));
+                Assert.That(sedWritten, Is.StringContaining("MyBoolProp"));
+                Assert.That(sedWritten, Is.StringContaining("MyDoubleProp"));
+                Assert.That(sedWritten, Is.StringContaining("MyOverallProp"));
+                Assert.That(sedWritten, Is.StringContaining("TraFrm"));
+                Assert.That(sedWritten, Is.StringContaining("MySedimentName"));
+                Assert.That(sedWritten, Is.StringContaining("MySedType"));
             }
             finally
             {
@@ -197,8 +187,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [Test]
         public void SaveAndLoadSedFileWithInValidFractionNameShouldThrowException()
         {
-            
-            var sedFile = Path.GetTempFileName();
+            string sedFile = Path.GetTempFileName();
             try
             {
                 /* Define new model */
@@ -208,7 +197,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 /*Add the fraction to the model*/
                 var fraction = new SedimentFraction();
                 fraction.Name = "MySedimen*tName";
-                var spatiallyVaryingProperty =
+                ISpatiallyVaryingSedimentProperty spatiallyVaryingProperty =
                     fraction.CurrentSedimentType.Properties.OfType<ISpatiallyVaryingSedimentProperty>().FirstOrDefault();
                 Assert.IsNotNull(spatiallyVaryingProperty);
                 Assert.AreEqual("SedConc", spatiallyVaryingProperty.Name);
@@ -221,20 +210,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 Assert.IsNotNull(spatiallyVaryingProperty);
                 Assert.AreEqual("SedConc", spatiallyVaryingProperty.Name);
                 Assert.IsTrue(spatiallyVaryingProperty.IsVisible);
-                Assert.IsTrue(spatiallyVaryingProperty.IsEnabled);//sedconc is always disabled
+                Assert.IsTrue(spatiallyVaryingProperty.IsEnabled); //sedconc is always disabled
                 Assert.IsNotNull(spatiallyVaryingProperty.SpatiallyVaryingName);
 
-                var modelDefinition = fmModel.ModelDefinition;
+                WaterFlowFMModelDefinition modelDefinition = fmModel.ModelDefinition;
                 SedimentFile.Save(sedFile, modelDefinition, fmModel);
 
                 var model = new WaterFlowFMModel();
                 LogHelper.ConfigureLogging(Level.Error);
                 try
                 {
-                    TestHelper.AssertLogMessageIsGenerated(() =>
-                    {
-                        SedimentFile.LoadSediments(sedFile, model);
-                    }, string.Format(@"Could not read sediment file because : Value cannot be null.{0}Parameter name: Sediment name MySedimen*tName in sediment file {1} is invalid to deltashell", Environment.NewLine, sedFile));
+                    TestHelper.AssertLogMessageIsGenerated(() => { SedimentFile.LoadSediments(sedFile, model); }, string.Format(@"Could not read sediment file because : Value cannot be null.{0}Parameter name: Sediment name MySedimen*tName in sediment file {1} is invalid to deltashell", Environment.NewLine, sedFile));
                 }
                 finally
                 {
@@ -250,8 +236,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [Test]
         public void SaveAndLoadSedFileWithModifiedPropertiesValues()
         {
-
-            var sedFile = Path.GetTempFileName();
+            string sedFile = Path.GetTempFileName();
             try
             {
                 /* Define new model */
@@ -261,9 +246,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 /* Define test properties */
                 var intProp = new SedimentProperty<int>("IopSus", 0, 0, false, 0, false, "liter", "myintdescription", false);
                 intProp.Value = 27;
-                
+
                 var boolProp = new SedimentProperty<bool>("EpsPar", false, false, false, false, false, "sec",
-                    "mybooldescription", false);
+                                                          "mybooldescription", false);
                 boolProp.Value = true;
 
                 var doubleProp = new SedimentProperty<double>("SedDia", 0, 0, false, 0, false, "cc", "mydoubledescription", false);
@@ -283,11 +268,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 /* Set sediment and formula properties */
                 var testSedimentType = new SedimentType();
                 testSedimentType.Key = "sand";
-                testSedimentType.Properties = new EventedList<ISedimentProperty>() { intProp, doubleProp, boolProp, sedConcProp, formulaProp, doubleValuePropertyProp };
-                
+                testSedimentType.Properties = new EventedList<ISedimentProperty>()
+                {
+                    intProp,
+                    doubleProp,
+                    boolProp,
+                    sedConcProp,
+                    formulaProp,
+                    doubleValuePropertyProp
+                };
+
                 var overallProp = new SedimentProperty<double>("Cref", 0, 0, true, 0, false, "km", "myoveralldescription", false);
                 overallProp.Value = 80.1;
-                fmModel.SedimentOverallProperties = new EventedList<ISedimentProperty>(){ overallProp};
+                fmModel.SedimentOverallProperties = new EventedList<ISedimentProperty>() {overallProp};
 
                 /*Add the fraction to the model*/
                 var fraction = new SedimentFraction();
@@ -295,8 +288,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 fraction.CurrentSedimentType = testSedimentType;
                 fraction.CurrentFormulaType = fraction.SupportedFormulaTypes.FirstOrDefault(sft => sft.TraFrm == -2);
 
-                fmModel.SedimentFractions = new EventedList<ISedimentFraction>() { fraction };
-                var modelDefinition = fmModel.ModelDefinition;
+                fmModel.SedimentFractions = new EventedList<ISedimentFraction>() {fraction};
+                WaterFlowFMModelDefinition modelDefinition = fmModel.ModelDefinition;
 
                 /* Test */
                 SedimentFile.Save(sedFile, modelDefinition, fmModel);
@@ -305,10 +298,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
                 var loadedOverallProp = model.SedimentOverallProperties.FirstOrDefault() as ISedimentProperty<double>;
                 Assert.IsNotNull(loadedOverallProp);
-                Assert.That(loadedOverallProp.Name, Is.StringContaining("Cref")); 
+                Assert.That(loadedOverallProp.Name, Is.StringContaining("Cref"));
                 Assert.That(loadedOverallProp.Value, Is.EqualTo(80.1).Within(0.01));
 
-                var loadedSedimentFraction = model.SedimentFractions.FirstOrDefault();
+                ISedimentFraction loadedSedimentFraction = model.SedimentFractions.FirstOrDefault();
                 Assert.IsNotNull(loadedSedimentFraction);
                 Assert.That(loadedSedimentFraction.Name, Is.StringContaining("MySedimentName"));
                 Assert.That(loadedSedimentFraction.CurrentSedimentType.Key, Is.StringContaining("sand"));
@@ -340,20 +333,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 Assert.IsNotNull(loadedSpatDoubleProp);
                 Assert.IsFalse(loadedSpatDoubleProp.IsSpatiallyVarying);
                 Assert.That(loadedSpatDoubleProp.Value, Is.EqualTo(13.0).Within(0.01));
-
             }
             finally
             {
                 FileUtils.DeleteIfExists(sedFile);
             }
-
         }
 
         [Test]
         public void SaveSedFileWithSpatiallyVaryingProperties()
         {
-            var sedFile = Path.GetTempFileName();
-            var generatedXyzFile = Path.Combine(Path.GetDirectoryName(sedFile), "mysedimentName_SedConc." + XyzFile.Extension);
+            string sedFile = Path.GetTempFileName();
+            string generatedXyzFile = Path.Combine(Path.GetDirectoryName(sedFile), "mysedimentName_SedConc." + XyzFile.Extension);
 
             try
             {
@@ -365,10 +356,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 // Import dry points
                 const string baseFolderPath = @"HydroAreaCollection/MduFileProjects";
 
-                fmModel.Area.DryAreas.Add(new GroupableFeature2DPolygon()
-                {
-                    GroupName = Path.Combine(Directory.GetCurrentDirectory(), baseFolderPath, @"MyDryAreas_dry.pol")
-                });
+                fmModel.Area.DryAreas.Add(new GroupableFeature2DPolygon() {GroupName = Path.Combine(Directory.GetCurrentDirectory(), baseFolderPath, @"MyDryAreas_dry.pol")});
 
                 /* Define test properties */
                 var doubleSpatProp = new SpatiallyVaryingSedimentProperty<double>("SedConc", 0, 0, false, 0, true, "cc", "mydoubledescription", true, false);
@@ -382,20 +370,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 /* Set sediment and formula properties */
                 var testSedimentType = new SedimentType();
                 testSedimentType.Key = "sand";
-                testSedimentType.Properties = new EventedList<ISedimentProperty>() { doubleSpatProp, doubleSpatProp2 };
-                
+                testSedimentType.Properties = new EventedList<ISedimentProperty>()
+                {
+                    doubleSpatProp,
+                    doubleSpatProp2
+                };
+
                 var overallProp = new SedimentProperty<double>("Cref", 0, 0, true, 0, false, "km", "myoveralldescription", false);
                 overallProp.Value = 80.1;
-                fmModel.SedimentOverallProperties = new EventedList<ISedimentProperty>() { overallProp };
+                fmModel.SedimentOverallProperties = new EventedList<ISedimentProperty>() {overallProp};
 
                 /*Add the fraction to the model*/
                 var fraction = new SedimentFraction();
                 fraction.Name = "mysedimentName";
                 fraction.CurrentSedimentType = testSedimentType;
-               
+
                 /*  Test    */
-                var grid = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 2, 2);
-                
+                UnstructuredGrid grid = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 2, 2);
+
                 /*SedThick coverage*/
                 var covSedThick = new UnstructuredGridCellCoverage(grid, false);
                 covSedThick[0] = 0.1;
@@ -406,12 +398,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 covSedThick.Name = "mysedimentName_IniSedThick";
 
                 covSedThick.Components[0].NoDataValue = -999;
-                
+
                 var dataSedThickItem = new DataItem();
                 dataSedThickItem.Name = "mysedimentName_IniSedThick";
                 dataSedThickItem.Value = covSedThick;
                 dataSedThickItem.Role = DataItemRole.Input;
-                
+
                 /*SedCon coverage*/
                 var covSedConc = new UnstructuredGridCellCoverage(grid, false);
                 covSedConc[0] = 0.1;
@@ -429,19 +421,23 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 dataSedConcItem.Role = DataItemRole.Input;
 
                 /*Add coverages to fraction and model.*/
-                fmModel.DataItems = new EventedList<IDataItem> { dataSedThickItem, dataSedConcItem };
+                fmModel.DataItems = new EventedList<IDataItem>
+                {
+                    dataSedThickItem,
+                    dataSedConcItem
+                };
                 fmModel.SedimentOverallProperties = new EventedList<ISedimentProperty>();
                 fmModel.SedimentFractions = new EventedList<ISedimentFraction>();
                 fmModel.SedimentFractions.Add(fraction);
 
-                var modelDefinition = fmModel.ModelDefinition;
+                WaterFlowFMModelDefinition modelDefinition = fmModel.ModelDefinition;
                 /* 
                  * SedimentFile.Save(sedFile, fmModel);
                  * Spatially varying operations no longer get saved through this method but through ExtForceFile.cs
                  */
                 SedimentFile.Save(sedFile, modelDefinition, fmModel);
 
-                var sedWritten = File.ReadAllText(sedFile);
+                string sedWritten = File.ReadAllText(sedFile);
                 Assert.That(sedWritten, Is.StringContaining(SedimentFile.GeneralHeader));
                 Assert.That(sedWritten, Is.Not.StringContaining("SedConc"));
                 Assert.That(sedWritten, Is.StringContaining("#mysedimentName#"));
@@ -453,16 +449,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 Assert.That(sedWritten, Is.Not.StringContaining("80.1"));
 
                 Assert.IsFalse(File.Exists(generatedXyzFile));
-                
+
                 /* Check the ExtFile */
                 // update model definition (called during export)
-                var initialSpatialOps = new List<string>() { doubleSpatProp.SpatiallyVaryingName, doubleSpatProp2.SpatiallyVaryingName };
+                var initialSpatialOps = new List<string>()
+                {
+                    doubleSpatProp.SpatiallyVaryingName,
+                    doubleSpatProp2.SpatiallyVaryingName
+                };
                 fmModel.ModelDefinition.SelectSpatialOperations(fmModel.DataItems, fmModel.TracerDefinitions, initialSpatialOps);
                 var extFile = new ExtForceFile();
                 extFile.WriteExtForceFileSubFiles(sedFile, fmModel.ModelDefinition, false, false);
                 Assert.IsTrue(File.Exists(generatedXyzFile));
 
-                var xyzFileValues = XyzFile.Read(generatedXyzFile).ToList();
+                List<IPointValue> xyzFileValues = XyzFile.Read(generatedXyzFile).ToList();
                 Assert.That(xyzFileValues.ElementAt(0).X, Is.EqualTo(covSedThick.Coordinates.ElementAt(0).X));
                 Assert.That(xyzFileValues.ElementAt(0).Y, Is.EqualTo(covSedThick.Coordinates.ElementAt(0).Y));
                 Assert.That(xyzFileValues.ElementAt(0).Value, Is.EqualTo(covSedThick.GetValues<double>().ElementAt(0)));
@@ -484,71 +484,84 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 FileUtils.DeleteIfExists(sedFile);
                 FileUtils.DeleteIfExists(generatedXyzFile);
             }
-
         }
 
         [Test]
         [Category(TestCategory.Slow)]
         public void SaveSedFileWithSpatiallyVaryingPropertiesAndNoOperationsGeneratesWarningMessages()
         {
-            var sedFile = Path.GetTempFileName();
-            var generatedXyzFile = Path.Combine(Path.GetDirectoryName(sedFile), "mysedimentName_SedConc." + XyzFile.Extension);
+            string sedFile = Path.GetTempFileName();
+            string generatedXyzFile = Path.Combine(Path.GetDirectoryName(sedFile), "mysedimentName_SedConc." + XyzFile.Extension);
 
             try
             {
                 /* Define new model */
                 var fmModel = new WaterFlowFMModel(sedFile);
                 fmModel.ModelDefinition.UseMorphologySediment = true;
-                var grid = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 2, 2);
+                UnstructuredGrid grid = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 2, 2);
                 fmModel.Grid = grid;
 
-                var fraction = new SedimentFraction() { Name = "Frac1" };
+                var fraction = new SedimentFraction() {Name = "Frac1"};
                 fmModel.SedimentFractions.Add(fraction);
 
-                var modelDefinition = fmModel.ModelDefinition;
+                WaterFlowFMModelDefinition modelDefinition = fmModel.ModelDefinition;
                 // Save SedFile with no spatially varying properties. No warnings should be given.
-                TestHelper.AssertLogMessagesCount( () => SedimentFile.Save(sedFile, modelDefinition, fmModel), 0);
-                
+                TestHelper.AssertLogMessagesCount(() => SedimentFile.Save(sedFile, modelDefinition, fmModel), 0);
+
                 // Add a spatially varying prop 
-                var randomSVProp = fraction.CurrentSedimentType.Properties.OfType<ISpatiallyVaryingSedimentProperty>().FirstOrDefault(p => p.Name != "SedConc");
+                ISpatiallyVaryingSedimentProperty randomSVProp = fraction.CurrentSedimentType.Properties.OfType<ISpatiallyVaryingSedimentProperty>().FirstOrDefault(p => p.Name != "SedConc");
                 Assert.NotNull(randomSVProp);
                 randomSVProp.IsSpatiallyVarying = true;
                 // Warning should be given.
                 TestHelper.AssertAtLeastOneLogMessagesContains(
                     () => SedimentFile.Save(sedFile, fmModel.ModelDefinition, fmModel),
-                    String.Format(Resources.SedimentFile_WriteSpatiallyVaryingSedimentPropertySubFiles_No_spatial_operations_of_type_Import__Add_or_Value_found_for_spatially_varying_property__0___Remember_to_interpolate_them_to_generate_the_xyz_file__Otherwise_the_model_might_not_run_as_expected_, randomSVProp.SpatiallyVaryingName));
+                    string.Format(Resources.SedimentFile_WriteSpatiallyVaryingSedimentPropertySubFiles_No_spatial_operations_of_type_Import__Add_or_Value_found_for_spatially_varying_property__0___Remember_to_interpolate_them_to_generate_the_xyz_file__Otherwise_the_model_might_not_run_as_expected_, randomSVProp.SpatiallyVaryingName));
 
                 //Add a 'value' operation, another warning should be given.
-                var dataItem = fmModel.AllDataItems.FirstOrDefault(di => di.Name == randomSVProp.SpatiallyVaryingName);
+                IDataItem dataItem = fmModel.AllDataItems.FirstOrDefault(di => di.Name == randomSVProp.SpatiallyVaryingName);
 
                 // retrieve / create value converter for mysedimentName_SedConc dataitem
-                var valueConverter = SpatialOperationValueConverterFactory.GetOrCreateSpatialOperationValueConverter(dataItem, randomSVProp.SpatiallyVaryingName);
+                SpatialOperationSetValueConverter valueConverter = SpatialOperationValueConverterFactory.GetOrCreateSpatialOperationValueConverter(dataItem, randomSVProp.SpatiallyVaryingName);
                 var samples = new SetValueOperation();
-                samples.SetInputData(ValueOperationBase.MainInputName, new PointCloudFeatureProvider
+                samples.SetInputData(SpatialOperation.MainInputName, new PointCloudFeatureProvider
                 {
                     PointCloud = new PointCloud
                     {
                         PointValues = new List<IPointValue>
                         {
-                            new PointValue { X = fmModel.Grid.Cells[0].CenterX, Y = fmModel.Grid.Cells[0].CenterY, Value = 12},
-                            new PointValue { X = fmModel.Grid.Cells[1].CenterX, Y = fmModel.Grid.Cells[1].CenterY, Value = 30},
-                            new PointValue { X = fmModel.Grid.Cells[2].CenterX, Y = fmModel.Grid.Cells[2].CenterY, Value = 31},
+                            new PointValue
+                            {
+                                X = fmModel.Grid.Cells[0].CenterX,
+                                Y = fmModel.Grid.Cells[0].CenterY,
+                                Value = 12
+                            },
+                            new PointValue
+                            {
+                                X = fmModel.Grid.Cells[1].CenterX,
+                                Y = fmModel.Grid.Cells[1].CenterY,
+                                Value = 30
+                            },
+                            new PointValue
+                            {
+                                X = fmModel.Grid.Cells[2].CenterX,
+                                Y = fmModel.Grid.Cells[2].CenterY,
+                                Value = 31
+                            },
                         },
                     },
-
                 });
-                var sp = valueConverter.SpatialOperationSet.AddOperation(samples);
+                ISpatialOperation sp = valueConverter.SpatialOperationSet.AddOperation(samples);
                 valueConverter.SpatialOperationSet.Execute();
 
                 // update model definition (called during export)
-                var initialSpatialOps = new List<string>() { randomSVProp.SpatiallyVaryingName };
+                var initialSpatialOps = new List<string>() {randomSVProp.SpatiallyVaryingName};
                 fmModel.ModelDefinition.SelectSpatialOperations(fmModel.DataItems, fmModel.TracerDefinitions, initialSpatialOps);
 
                 // New Warning should be given.
-            
+
                 TestHelper.AssertAtLeastOneLogMessagesContains(
                     () => SedimentFile.Save(sedFile, modelDefinition, fmModel),
-                    String.Format(Resources.SedimentFile_WriteSpatiallyVaryingSedimentPropertySubFiles_Cannot_create_xyz_file_for_spatial_varying_initial_condition__0__because_it_is_a_value_spatial_operation__please_interpolate_the_operation_to_the_grid_or, randomSVProp.SpatiallyVaryingName));
+                    string.Format(Resources.SedimentFile_WriteSpatiallyVaryingSedimentPropertySubFiles_Cannot_create_xyz_file_for_spatial_varying_initial_condition__0__because_it_is_a_value_spatial_operation__please_interpolate_the_operation_to_the_grid_or, randomSVProp.SpatiallyVaryingName));
             }
             finally
             {
@@ -561,15 +574,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [Category(TestCategory.Slow)]
         public void SaveSedFileWithSpatiallyVaryingPropertiesAndAddValuesOperation()
         {
-            var sedFile = Path.GetTempFileName();
-            var generatedXyzFile = Path.Combine(Path.GetDirectoryName(sedFile), "mysedimentName_SedConc." + XyzFile.Extension);
-            string fileCopyName = "";
+            string sedFile = Path.GetTempFileName();
+            string generatedXyzFile = Path.Combine(Path.GetDirectoryName(sedFile), "mysedimentName_SedConc." + XyzFile.Extension);
+            var fileCopyName = "";
             try
             {
                 /* Define new model */
                 var fmModel = new WaterFlowFMModel(sedFile);
                 fmModel.ModelDefinition.UseMorphologySediment = true;
-                var grid = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 2, 2);
+                UnstructuredGrid grid = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 2, 2);
                 fmModel.Grid = grid;
 
                 /* Define test properties */
@@ -586,12 +599,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                     Properties = new EventedList<ISedimentProperty> {doubleSpatProp}
                 };
 
-                var overallProp = new SedimentProperty<double>("Cref", 0, 0, true, 0, false, "km", "myoveralldescription", false)
-                {
-                    Value = 80.1
-                };
+                var overallProp = new SedimentProperty<double>("Cref", 0, 0, true, 0, false, "km", "myoveralldescription", false) {Value = 80.1};
 
-                fmModel.SedimentOverallProperties = new EventedList<ISedimentProperty>() { overallProp };
+                fmModel.SedimentOverallProperties = new EventedList<ISedimentProperty>() {overallProp};
 
                 /*Add the fraction to the model*/
                 var fraction = new SedimentFraction
@@ -606,29 +616,43 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 fmModel.SedimentFractions = new EventedList<ISedimentFraction>();
                 fmModel.SedimentFractions.Add(fraction);
 
-                var dataItem = fmModel.AllDataItems.FirstOrDefault(di => di.Name == "mysedimentName_SedConc");
-                
+                IDataItem dataItem = fmModel.AllDataItems.FirstOrDefault(di => di.Name == "mysedimentName_SedConc");
+
                 // retrieve / create value converter for mysedimentName_SedConc dataitem
-                var valueConverter = SpatialOperationValueConverterFactory.GetOrCreateSpatialOperationValueConverter(dataItem, "mysedimentName_SedConc");
+                SpatialOperationSetValueConverter valueConverter = SpatialOperationValueConverterFactory.GetOrCreateSpatialOperationValueConverter(dataItem, "mysedimentName_SedConc");
                 var samples = new AddSamplesOperation(false);
                 samples.SetInputData(AddSamplesOperation.SamplesInputName, new PointCloudFeatureProvider
                 {
                     PointCloud = new PointCloud
                     {
                         PointValues = new List<IPointValue>
+                        {
+                            new PointValue
                             {
-                                    new PointValue { X = fmModel.Grid.Cells[0].CenterX, Y = fmModel.Grid.Cells[0].CenterY, Value = 12},
-                                    new PointValue { X = fmModel.Grid.Cells[1].CenterX, Y = fmModel.Grid.Cells[1].CenterY, Value = 30},
-                                    new PointValue { X = fmModel.Grid.Cells[2].CenterX, Y = fmModel.Grid.Cells[2].CenterY, Value = 31},
-                                },
+                                X = fmModel.Grid.Cells[0].CenterX,
+                                Y = fmModel.Grid.Cells[0].CenterY,
+                                Value = 12
+                            },
+                            new PointValue
+                            {
+                                X = fmModel.Grid.Cells[1].CenterX,
+                                Y = fmModel.Grid.Cells[1].CenterY,
+                                Value = 30
+                            },
+                            new PointValue
+                            {
+                                X = fmModel.Grid.Cells[2].CenterX,
+                                Y = fmModel.Grid.Cells[2].CenterY,
+                                Value = 31
+                            },
+                        },
                     },
-                    
                 });
                 valueConverter.SpatialOperationSet.AddOperation(samples);
                 valueConverter.SpatialOperationSet.Execute();
 
                 // update model definition (called during export)
-                var initialSpatialOps = new List<string>() { doubleSpatProp.SpatiallyVaryingName };
+                var initialSpatialOps = new List<string>() {doubleSpatProp.SpatiallyVaryingName};
                 fmModel.ModelDefinition.SelectSpatialOperations(fmModel.DataItems, fmModel.TracerDefinitions, initialSpatialOps);
                 // create an interpolate operation using the samples added earlier
                 var interpolateOperation = new InterpolateOperation();
@@ -638,10 +662,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 // update model definition (called during export)
                 fmModel.ModelDefinition.SelectSpatialOperations(fmModel.DataItems, fmModel.TracerDefinitions, initialSpatialOps);
 
-                var modelDefinition = fmModel.ModelDefinition;
+                WaterFlowFMModelDefinition modelDefinition = fmModel.ModelDefinition;
                 SedimentFile.Save(sedFile, modelDefinition, fmModel);
-                
-                var sedWritten = File.ReadAllText(sedFile);
+
+                string sedWritten = File.ReadAllText(sedFile);
                 Assert.That(sedWritten, Is.StringContaining(SedimentFile.GeneralHeader));
                 Assert.That(sedWritten, Is.Not.StringContaining("SedConc"));
                 Assert.That(sedWritten, Is.StringContaining("#mysedimentName#"));
@@ -663,28 +687,27 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 FileUtils.DeleteIfExists(fileCopyName);
                 FileUtils.DeleteIfExists(generatedXyzFile);
             }
-
         }
 
         [Test]
         [Category(TestCategory.Slow)]
         public void LoadSedFileWithSpatiallyVaryingProperties_MudFraction()
         {
-            var mduPath = TestHelper.GetTestFilePath(@"SpatiallyVarying_MudFraction\FlowFM.mdu");
-            var localCopy = TestHelper.CreateLocalCopy(mduPath);
+            string mduPath = TestHelper.GetTestFilePath(@"SpatiallyVarying_MudFraction\FlowFM.mdu");
+            string localCopy = TestHelper.CreateLocalCopy(mduPath);
 
             using (var model = new WaterFlowFMModel(localCopy))
             {
-                var fraction = model.SedimentFractions.FirstOrDefault(sf => sf.Name == "mudFraction");
+                ISedimentFraction fraction = model.SedimentFractions.FirstOrDefault(sf => sf.Name == "mudFraction");
                 Assert.IsNotNull(fraction);
                 var spatvaryingProp = fraction.CurrentSedimentType.Properties.FirstOrDefault(p => p.Name == "IniSedThick") as ISpatiallyVaryingSedimentProperty;
                 Assert.IsNotNull(spatvaryingProp);
                 Assert.IsTrue(spatvaryingProp.IsSpatiallyVarying);
-                var dataItem = model.DataItems.FirstOrDefault(di => di.Name == "mudFraction_IniSedThick");
+                IDataItem dataItem = model.DataItems.FirstOrDefault(di => di.Name == "mudFraction_IniSedThick");
                 Assert.IsNotNull(dataItem);
                 var coverage = dataItem.Value as UnstructuredGridCellCoverage;
                 Assert.IsNotNull(coverage);
-                var values = coverage.GetValues<double>();
+                IMultiDimensionalArray<double> values = coverage.GetValues<double>();
 
                 Assert.That(values.Count == 9);
                 Assert.That(values[0], Is.EqualTo(-999.0).Within(0.1));
@@ -743,22 +766,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [Category(TestCategory.Slow)]
         public void LoadSedFileWithSpatiallyVaryingProperties()
         {
-            var mduPath = TestHelper.GetTestFilePath(@"spatially_varying_sediment_properties_in_model\FlowFM.mdu");
-            var localCopy = TestHelper.CreateLocalCopy(mduPath);
+            string mduPath = TestHelper.GetTestFilePath(@"spatially_varying_sediment_properties_in_model\FlowFM.mdu");
+            string localCopy = TestHelper.CreateLocalCopy(mduPath);
 
             using (var model = new WaterFlowFMModel(localCopy))
             {
-                var fraction = model.SedimentFractions.FirstOrDefault(sf => sf.Name == "gouwe");
+                ISedimentFraction fraction = model.SedimentFractions.FirstOrDefault(sf => sf.Name == "gouwe");
                 Assert.IsNotNull(fraction);
                 var spatvaryingProp = fraction.CurrentSedimentType.Properties.FirstOrDefault(p => p.Name == "IniSedThick") as
-                        ISpatiallyVaryingSedimentProperty;
+                                          ISpatiallyVaryingSedimentProperty;
                 Assert.IsNotNull(spatvaryingProp);
                 Assert.IsTrue(spatvaryingProp.IsSpatiallyVarying);
-                var dataItem = model.DataItems.FirstOrDefault(di => di.Name == "gouwe_IniSedThick");
+                IDataItem dataItem = model.DataItems.FirstOrDefault(di => di.Name == "gouwe_IniSedThick");
                 Assert.IsNotNull(dataItem);
                 var coverage = dataItem.Value as UnstructuredGridCellCoverage;
                 Assert.IsNotNull(coverage);
-                var values = coverage.GetValues<double>();
+                IMultiDimensionalArray<double> values = coverage.GetValues<double>();
 
                 Assert.That(values.Count == 9);
                 Assert.That(values[0], Is.EqualTo(-999.0).Within(0.1));
@@ -776,9 +799,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [Test]
         public void SaveSedFileWithSpatiallyVaryingPropertiesAndImportOperation()
         {
-            var sedFile = Path.GetTempFileName();
-            var generatedXyzFile = Path.Combine(Path.GetDirectoryName(sedFile),
-                "mysedimentName_IniSedThick." + XyzFile.Extension);
+            string sedFile = Path.GetTempFileName();
+            string generatedXyzFile = Path.Combine(Path.GetDirectoryName(sedFile),
+                                                   "mysedimentName_IniSedThick." + XyzFile.Extension);
 
             try
             {
@@ -788,7 +811,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
                 /* Define test properties */
                 var doubleSpatProp = new SpatiallyVaryingSedimentProperty<double>("IniSed", 0, 0, false, 0, true, "cc",
-                    "mydoubledescription", true, false);
+                                                                                  "mydoubledescription", true, false);
                 doubleSpatProp.SpatiallyVaryingName = "mysedimentName_IniSedThick";
                 doubleSpatProp.Value = 12.3;
 
@@ -807,19 +830,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 fraction.Name = "mysedimentName";
                 fraction.CurrentSedimentType = testSedimentType;
 
-                var fileName = TestHelper.GetTestFilePath(@"harlingen_model_3d\har_V3.xyz");
+                string fileName = TestHelper.GetTestFilePath(@"harlingen_model_3d\har_V3.xyz");
                 fileName = TestHelper.CreateLocalCopy(fileName);
 
                 fmModel.SedimentOverallProperties = new EventedList<ISedimentProperty>();
                 fmModel.SedimentFractions = new EventedList<ISedimentFraction>();
                 fmModel.SedimentFractions.Add(fraction);
 
-                var dataItem = fmModel.AllDataItems.FirstOrDefault(di => di.Name == "mysedimentName_IniSedThick");
+                IDataItem dataItem = fmModel.AllDataItems.FirstOrDefault(di => di.Name == "mysedimentName_IniSedThick");
 
                 // retrieve / create value converter for mysedimentName_SedConc dataitem
-                var valueConverter =
+                SpatialOperationSetValueConverter valueConverter =
                     SpatialOperationValueConverterFactory.GetOrCreateSpatialOperationValueConverter(dataItem,
-                        "mysedimentName_IniSedThick");
+                                                                                                    "mysedimentName_IniSedThick");
 
                 valueConverter.SpatialOperationSet.AddOperation(new ImportSamplesSpatialOperationExtension()
                 {
@@ -827,16 +850,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                     FilePath = Path.GetFullPath(fileName)
                 });
                 valueConverter.SpatialOperationSet.Execute();
-                var modelDefinition = fmModel.ModelDefinition;
+                WaterFlowFMModelDefinition modelDefinition = fmModel.ModelDefinition;
                 SedimentFile.Save(sedFile, modelDefinition, fmModel);
-                var sedWritten = File.ReadAllText(sedFile);
+                string sedWritten = File.ReadAllText(sedFile);
                 Assert.That(sedWritten, Is.StringContaining(SedimentFile.GeneralHeader));
                 Assert.That(sedWritten, Is.StringContaining("#mysedimentName#"));
-                
+
                 /* Sed conc is in ExtForceFile */
                 Assert.That(sedWritten, Is.Not.StringContaining("SedConc"));
                 Assert.That(sedWritten, Is.Not.StringContaining("#mysedimentName_SedConc#"));
-                
+
                 /* Custom property */
                 Assert.That(sedWritten, Is.StringContaining("IniSed"));
                 Assert.That(sedWritten, Is.StringContaining("#mysedimentName_IniSedThick.xyz#"));
@@ -856,51 +879,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [Category(TestCategory.Slow)]
         public void CloneLoadedSedFileWithSpatiallyVaryingProperties()
         {
-            var mduPath =
-            TestHelper.GetTestFilePath(@"spatially_varying_sediment_properties_in_model\FlowFM.mdu");
-            var localCopy = TestHelper.CreateLocalCopy(mduPath);
+            string mduPath =
+                TestHelper.GetTestFilePath(@"spatially_varying_sediment_properties_in_model\FlowFM.mdu");
+            string localCopy = TestHelper.CreateLocalCopy(mduPath);
 
             using (var orgModel = new WaterFlowFMModel(localCopy))
             {
                 CheckModelCoverageValues(orgModel);
-                using (var model = (WaterFlowFMModel)orgModel.DeepClone())
+                using (var model = (WaterFlowFMModel) orgModel.DeepClone())
                 {
                     CheckModelCoverageValues(model);
                 }
             }
         }
 
-        private static void CheckModelCoverageValues(WaterFlowFMModel model)
-        {
-            var fraction = model.SedimentFractions.FirstOrDefault(sf => sf.Name == "gouwe");
-            Assert.IsNotNull(fraction);
-            var spatvaryingProp =
-                fraction.CurrentSedimentType.Properties.FirstOrDefault(p => p.Name == "IniSedThick") as
-                    ISpatiallyVaryingSedimentProperty;
-            Assert.IsNotNull(spatvaryingProp);
-            Assert.IsTrue(spatvaryingProp.IsSpatiallyVarying);
-            var dataItem = model.DataItems.FirstOrDefault(di => di.Name == "gouwe_IniSedThick");
-            Assert.IsNotNull(dataItem);
-            var coverage = dataItem.Value as UnstructuredGridCellCoverage;
-            Assert.IsNotNull(coverage);
-            var values = coverage.GetValues<double>();
-
-            Assert.That(values.Count == 9);
-            Assert.That(values[0], Is.EqualTo(-999.0).Within(0.1));
-            Assert.That(values[1], Is.EqualTo(-999.0).Within(0.1));
-            Assert.That(values[2], Is.EqualTo(-999.0).Within(0.1));
-            Assert.That(values[3], Is.EqualTo(10.0).Within(0.1));
-            Assert.That(values[4], Is.EqualTo(10.0).Within(0.1));
-            Assert.That(values[5], Is.EqualTo(-999.0).Within(0.1));
-            Assert.That(values[6], Is.EqualTo(10.0).Within(0.1));
-            Assert.That(values[7], Is.EqualTo(10.0).Within(0.1));
-            Assert.That(values[8], Is.EqualTo(-999.0).Within(0.1));
-        }
-
         /// <summary>
         /// GIVEN a SedFile without unknown features
-        ///   AND an FM Model
-        ///   AND a logHandler
+        /// AND an FM Model
+        /// AND a logHandler
         /// WHEN LoadSediments is called with these parameters
         /// THEN no warning messages are logged
         /// </summary>
@@ -933,10 +929,73 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             }
         }
 
+        private static void ValidateAllUnknownProperties(WaterFlowFMModelDefinition modelDefinition)
+        {
+            IEventedList<WaterFlowFMProperty> properties = modelDefinition.Properties;
+
+            const string sedimentFraction1Name = "sed1";
+            List<WaterFlowFMProperty> unknownPropertiesForSed1 = properties.Where(p => p.PropertyDefinition.Category.Equals(sedimentFraction1Name)).ToList();
+            ValidatePropertiesCategory(unknownPropertiesForSed1, SedimentFile.Header, sedimentFraction1Name);
+
+            const string sedimentFraction2Name = "sed2";
+            List<WaterFlowFMProperty> unknownPropertiesForSed2 = properties.Where(p => p.PropertyDefinition.Category.Equals(sedimentFraction2Name)).ToList();
+            ValidatePropertiesCategory(unknownPropertiesForSed2, SedimentFile.Header, sedimentFraction2Name);
+
+            const string customCategoryName = "MyCustomCategory";
+            List<WaterFlowFMProperty> propertiesUnknownCategory = properties.Where(p => p.PropertyDefinition.FileCategoryName == customCategoryName).ToList();
+            ValidatePropertiesCategory(propertiesUnknownCategory, customCategoryName, customCategoryName);
+        }
+
+        private static void ValidatePropertiesCategory(List<WaterFlowFMProperty> properties, string fileCategoryName, string categoryName)
+        {
+            Assert.IsTrue(properties.All(p => p.PropertyDefinition.UnknownPropertySource.Equals(PropertySource.SedimentFile)));
+            Assert.IsTrue(properties.All(p => p.PropertyDefinition.FileCategoryName.Equals(fileCategoryName)));
+            Assert.IsTrue(properties.All(p => p.PropertyDefinition.Category.Equals(categoryName)));
+
+            ValidateProperty(properties, "MyCustomStringProp", "\"777\"");
+            ValidateProperty(properties, "MyCustomBoolProp", "1");
+            ValidateProperty(properties, "MyCustomDoubleProp", "7.77");
+            ValidateProperty(properties, "MyCustomIntProp", "777");
+        }
+
+        private static void ValidateProperty(IEnumerable<WaterFlowFMProperty> properties, string propertyName, string propertyValue)
+        {
+            WaterFlowFMProperty customStringProperty = properties.FirstOrDefault(p => p.PropertyDefinition.FilePropertyName.Equals(propertyName));
+            Assert.NotNull(customStringProperty);
+            Assert.AreEqual(propertyValue, customStringProperty.Value);
+        }
+
+        private static void CheckModelCoverageValues(WaterFlowFMModel model)
+        {
+            ISedimentFraction fraction = model.SedimentFractions.FirstOrDefault(sf => sf.Name == "gouwe");
+            Assert.IsNotNull(fraction);
+            var spatvaryingProp =
+                fraction.CurrentSedimentType.Properties.FirstOrDefault(p => p.Name == "IniSedThick") as
+                    ISpatiallyVaryingSedimentProperty;
+            Assert.IsNotNull(spatvaryingProp);
+            Assert.IsTrue(spatvaryingProp.IsSpatiallyVarying);
+            IDataItem dataItem = model.DataItems.FirstOrDefault(di => di.Name == "gouwe_IniSedThick");
+            Assert.IsNotNull(dataItem);
+            var coverage = dataItem.Value as UnstructuredGridCellCoverage;
+            Assert.IsNotNull(coverage);
+            IMultiDimensionalArray<double> values = coverage.GetValues<double>();
+
+            Assert.That(values.Count == 9);
+            Assert.That(values[0], Is.EqualTo(-999.0).Within(0.1));
+            Assert.That(values[1], Is.EqualTo(-999.0).Within(0.1));
+            Assert.That(values[2], Is.EqualTo(-999.0).Within(0.1));
+            Assert.That(values[3], Is.EqualTo(10.0).Within(0.1));
+            Assert.That(values[4], Is.EqualTo(10.0).Within(0.1));
+            Assert.That(values[5], Is.EqualTo(-999.0).Within(0.1));
+            Assert.That(values[6], Is.EqualTo(10.0).Within(0.1));
+            Assert.That(values[7], Is.EqualTo(10.0).Within(0.1));
+            Assert.That(values[8], Is.EqualTo(-999.0).Within(0.1));
+        }
+
         /// <summary>
         /// GIVEN a SedFile with unknown features
-        ///   AND an FM Model
-        ///   AND a logHandler
+        /// AND an FM Model
+        /// AND a logHandler
         /// WHEN LoadSediments is called with these parameters
         /// THEN the correct warning message is logged
         /// </summary>
@@ -966,7 +1025,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [TestCase(2, 2, 0)]
         [TestCase(2, 2, 1)]
         [TestCase(2, 2, 2)]
-
         public void GivenASedFileWithUnknownFeaturesAndAnFMModelAndALogHandler_WhenLoadSedimentsIsCalledWithTheseParameters_ThenTheCorrectWarningMessageIsLogged(int nUnknownOverall, int nUnknownSediment, int nUnknownUnknown)
         {
             using (var tempDir = new TemporaryDirectory())
@@ -1001,12 +1059,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
                 mock.Expect(lh => lh.ReportWarningFormat(
                                 Arg<string>.Matches(m => m.Equals(Resources.MorphologySediment_ReadCategoryProperties_Unsupported_keyword___0___at_line___1___detected_and_will_be_passed_to_the_computational_core__Note_that_some_data_or_the_connection_to_linked_files_may_be_lost_)),
-                                Arg<object[]>.Matches(o => o.Length == 2 && (o[0] as string).Equals(propName) && (o[1] is int))))
+                                Arg<object[]>.Matches(o => o.Length == 2 && (o[0] as string).Equals(propName) && o[1] is int)))
                     .Repeat.Once();
             }
         }
 
-        private static void CreateSedFile(string path, 
+        private static void CreateSedFile(string path,
                                           int nUnknownOverall,
                                           int nUnknownSediment,
                                           int nUnknownUnknown)
@@ -1069,9 +1127,5 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
             new DelftIniWriter().WriteDelftIniFile(iniCategories, path, false);
         }
-
-        private static readonly string[] iniPropertyNamesOverall = { "Bros", "Bounty" };
-        private static readonly string[] iniPropertyNamesSedimentFraction = { "MilkyWay", "Snickers" };
-        private static readonly string[] iniPropertyNamesUnknown = { "Toblerone", "Twix" };
     }
 }

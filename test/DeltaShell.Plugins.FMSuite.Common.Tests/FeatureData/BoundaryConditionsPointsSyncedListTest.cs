@@ -45,7 +45,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.FeatureData
             };
 
             // Call
-            string stringRepresentation = boundaryConditionPoints.ToString();
+            var stringRepresentation = boundaryConditionPoints.ToString();
 
             // Assert
             Assert.AreEqual("Creation_0, Creation_1, Creation_2", stringRepresentation);
@@ -69,7 +69,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.FeatureData
             var boundaryConditionPoints = new BoundaryConditionsPointsSyncedList {Feature = feature2D};
 
             // Call
-            string stringRepresentation = boundaryConditionPoints.ToString();
+            var stringRepresentation = boundaryConditionPoints.ToString();
 
             // Assert
             Assert.AreEqual(boundaryConditionPoints.GetType().FullName, stringRepresentation);

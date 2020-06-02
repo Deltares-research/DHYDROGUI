@@ -20,38 +20,47 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         [Test]
         public void ShowWithCustomConstituents()
         {
-            var frequencies = new[] {0.5*Math.PI, Math.PI, 1.5*Math.PI};
+            double[] frequencies = new[]
+            {
+                0.5 * Math.PI,
+                Math.PI,
+                1.5 * Math.PI
+            };
 
             var view = new AstroComponentSelection
-                {
-                    AstroComponents =
-                        new Dictionary<string, double>
-                            {
-                                {"aap", frequencies[0]},
-                                {"noot", frequencies[1]},
-                                {"mies", frequencies[2]}
-                            }
-                };
+            {
+                AstroComponents =
+                    new Dictionary<string, double>
+                    {
+                        {"aap", frequencies[0]},
+                        {"noot", frequencies[1]},
+                        {"mies", frequencies[2]}
+                    }
+            };
             WindowsFormsTestHelper.ShowModal(view);
         }
 
         [Test]
         public void ShowWithCustomConstituentPeriods()
         {
-            var frequencies = new[] { 0.5 * Math.PI, Math.PI, 1.5 * Math.PI };
+            double[] frequencies = new[]
+            {
+                0.5 * Math.PI,
+                Math.PI,
+                1.5 * Math.PI
+            };
 
             var view = new AstroComponentSelection
-                {
+            {
                 AstroComponents =
                     new Dictionary<string, double>
-                            {
-                                {"aap", frequencies[0]},
-                                {"noot", frequencies[1]},
-                                {"mies", frequencies[2]}
-                            }
+                    {
+                        {"aap", frequencies[0]},
+                        {"noot", frequencies[1]},
+                        {"mies", frequencies[2]}
+                    }
             };
             WindowsFormsTestHelper.ShowModal(view);
         }
-
     }
 }

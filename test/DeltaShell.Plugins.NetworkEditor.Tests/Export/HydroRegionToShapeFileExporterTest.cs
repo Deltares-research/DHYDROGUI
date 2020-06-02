@@ -8,8 +8,48 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Export
     [TestFixture]
     public class HydroRegionToShapeFileExporterTest
     {
-        private IHydroNetwork hydroNetwork;
         private const string TestOutputDirectoryName = "./HydroRegionShapeFileExporterTestOutput";
+        private IHydroNetwork hydroNetwork;
+
+        [SetUp]
+        public void SetUp()
+        {
+            CleanDirectory();
+
+            hydroNetwork = new HydroNetwork();
+            var node1 = new HydroNode
+            {
+                Name = "Node1",
+                Network = hydroNetwork,
+                Geometry = new Point(0.0, 0.0)
+            };
+            var node2 = new HydroNode
+            {
+                Name = "Node2",
+                Network = hydroNetwork,
+                Geometry = new Point(100.0, 0.0)
+            };
+            hydroNetwork.Nodes.Add(node1);
+            hydroNetwork.Nodes.Add(node2);
+
+            var branch = new Channel("branch1", node1, node2)
+            {
+                Geometry = new LineString(new[]
+                {
+                    node1.Geometry.Coordinate,
+                    node2.Geometry.Coordinate
+                })
+            };
+            hydroNetwork.Branches.Add(branch);
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            CleanDirectory();
+
+            hydroNetwork = null;
+        }
 
         [TestFixtureSetUp]
         public void TestFixtureSetUp()
@@ -24,32 +64,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Export
             {
                 Directory.Delete(TestOutputDirectoryName, true);
             }
-        }
-
-        [SetUp]
-        public void SetUp()
-        {
-            CleanDirectory();
-
-            hydroNetwork = new HydroNetwork();
-            var node1 = new HydroNode { Name = "Node1", Network = hydroNetwork, Geometry = new Point(0.0, 0.0) };
-            var node2 = new HydroNode { Name = "Node2", Network = hydroNetwork, Geometry = new Point(100.0, 0.0) };
-            hydroNetwork.Nodes.Add(node1);
-            hydroNetwork.Nodes.Add(node2);
-
-            var branch = new Channel("branch1", node1, node2)
-            {
-                Geometry = new LineString(new[] { node1.Geometry.Coordinate, node2.Geometry.Coordinate })
-            };
-            hydroNetwork.Branches.Add(branch);
-        }
-
-        [TearDown]
-        public void TearDown()
-        {
-            CleanDirectory();
-
-            hydroNetwork = null;
         }
 
         private static void CleanDirectory()

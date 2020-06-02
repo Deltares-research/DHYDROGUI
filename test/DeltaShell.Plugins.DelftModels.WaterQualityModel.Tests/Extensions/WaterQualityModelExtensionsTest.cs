@@ -28,7 +28,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Extensions
 
             mocks.ReplayAll();
 
-            var path = Path.Combine(Directory.GetCurrentDirectory(), "a.txt");
+            string path = Path.Combine(Directory.GetCurrentDirectory(), "a.txt");
             const string content = "test";
             FileUtils.DeleteIfExists(path);
             File.WriteAllText(path, content);
@@ -79,21 +79,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Extensions
             }
         }
 
-        private static void AssertCorrectDataItem(ICollection dataItems, IModel model, string content)
-        {
-            Assert.AreEqual(1, dataItems.Count);
-            Assert.AreEqual(WaterQualityModel.GridDataItemMetaData.Name, model.DataItems[0].Name);
-            var document = (TextDocument) model.DataItems[0].Value;
-            Assert.That(document.Content, Is.EqualTo(content));
-        }
-
         [Test]
         public void SetupModelDataFolderStructureTest()
         {
             // setup
-            var model = new WaterQualityModel { Name = "My Model" };
-            model.SetWorkingDirectoryInModelSettings(() => Path.Combine(Path.GetTempPath(),"DeltaShell_Working_Directory"));
-            var projectDataDir = Path.Combine(Directory.GetCurrentDirectory(), "A");
+            var model = new WaterQualityModel {Name = "My Model"};
+            model.SetWorkingDirectoryInModelSettings(() => Path.Combine(Path.GetTempPath(), "DeltaShell_Working_Directory"));
+            string projectDataDir = Path.Combine(Directory.GetCurrentDirectory(), "A");
             FileUtils.DeleteIfExists(projectDataDir);
 
             // call
@@ -109,6 +101,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Extensions
             Assert.IsFalse(Directory.Exists(Path.Combine(projectDataDir, "My_Model_output")));
             Assert.IsFalse(Directory.Exists(Path.Combine(projectDataDir, "My_Model", "boundary_data_tables")));
             Assert.IsFalse(Directory.Exists(Path.Combine(projectDataDir, "My_Model", "load_data_tables")));
+        }
+
+        private static void AssertCorrectDataItem(ICollection dataItems, IModel model, string content)
+        {
+            Assert.AreEqual(1, dataItems.Count);
+            Assert.AreEqual(WaterQualityModel.GridDataItemMetaData.Name, model.DataItems[0].Name);
+            var document = (TextDocument) model.DataItems[0].Value;
+            Assert.That(document.Content, Is.EqualTo(content));
         }
     }
 }

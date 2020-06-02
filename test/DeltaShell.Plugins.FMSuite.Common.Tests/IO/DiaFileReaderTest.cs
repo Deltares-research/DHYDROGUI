@@ -29,33 +29,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             }
         }
 
-        private static IEnumerable<TestCaseData> GetFileContents()
-        {
-            string warningError = "** WARNING  :  This is a warning!"
-                                  + Environment.NewLine
-                                  + errorLine;
-
-            string errorOnMultipleLines = "** ERROR  :     this is a"
-                                          + Environment.NewLine
-                                          + "n error!";
-
-            string errorOnMultipleLinesAndWarning = "** ERROR  :     this is a"
-                                                   + Environment.NewLine
-                                                   + "n error!"
-                                                   + Environment.NewLine
-                                                   + "** WARNING  :  This is a warning!";
-
-            string errorAndComment = errorLine
-                                     + Environment.NewLine
-                                     + "* This is not an ERROR message";
-
-            yield return new TestCaseData(errorLine, errorLine);
-            yield return new TestCaseData(warningError, errorLine);
-            yield return new TestCaseData(errorOnMultipleLines, errorOnMultipleLines);
-            yield return new TestCaseData(errorOnMultipleLinesAndWarning, errorOnMultipleLines);
-            yield return new TestCaseData(errorAndComment, errorLine);
-        }
-
         [Test]
         public void GetAllMessages_WithNonMessagesLines_ThenOnlyMessagesAreReturned()
         {
@@ -144,6 +117,33 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                 Assert.That(exception.ParamName, Is.EqualTo("streamReader"));
                 Assert.That(exception.Message, Is.EqualTo($"Stream is not readable.{Environment.NewLine}Parameter name: streamReader"));
             }
+        }
+
+        private static IEnumerable<TestCaseData> GetFileContents()
+        {
+            string warningError = "** WARNING  :  This is a warning!"
+                                  + Environment.NewLine
+                                  + errorLine;
+
+            string errorOnMultipleLines = "** ERROR  :     this is a"
+                                          + Environment.NewLine
+                                          + "n error!";
+
+            string errorOnMultipleLinesAndWarning = "** ERROR  :     this is a"
+                                                    + Environment.NewLine
+                                                    + "n error!"
+                                                    + Environment.NewLine
+                                                    + "** WARNING  :  This is a warning!";
+
+            string errorAndComment = errorLine
+                                     + Environment.NewLine
+                                     + "* This is not an ERROR message";
+
+            yield return new TestCaseData(errorLine, errorLine);
+            yield return new TestCaseData(warningError, errorLine);
+            yield return new TestCaseData(errorOnMultipleLines, errorOnMultipleLines);
+            yield return new TestCaseData(errorOnMultipleLinesAndWarning, errorOnMultipleLines);
+            yield return new TestCaseData(errorAndComment, errorLine);
         }
     }
 }

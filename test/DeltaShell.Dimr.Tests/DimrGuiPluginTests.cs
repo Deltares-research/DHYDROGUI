@@ -3,6 +3,7 @@ using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Gui;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Dimr.Gui;
+using DeltaShell.Dimr.Gui.Properties;
 using DeltaShell.Gui;
 using NUnit.Framework;
 using Rhino.Mocks;
@@ -22,9 +23,10 @@ namespace DeltaShell.Dimr.Tests
                 gui.Run();
                 Assert.AreEqual(dimrGuiPlugin, DimrGuiPlugin.Instance);
                 Assert.AreEqual("Dimr (UI)", DimrGuiPlugin.Instance.Name);
-                Assert.AreEqual(Gui.Properties.Resources.DimrGuiPlugin_Description_Provides_possibilities_to_configure_DIMR_settings, DimrGuiPlugin.Instance.Description);
+                Assert.AreEqual(Resources.DimrGuiPlugin_Description_Provides_possibilities_to_configure_DIMR_settings, DimrGuiPlugin.Instance.Description);
                 Assert.That(DimrGuiPlugin.Instance.RibbonCommandHandler.GetType().Namespace, Is.StringStarting("DeltaShell.Dimr.Gui"));
             }
+
             Assert.IsNull(DimrGuiPlugin.Instance);
         }
 
@@ -32,7 +34,7 @@ namespace DeltaShell.Dimr.Tests
         public void TestIsOnlyDimrModelSelected()
         {
             var mocks = new MockRepository();
-            
+
             var viewlist = mocks.DynamicMock<IViewList>();
             var gui = mocks.DynamicMock<IGui>();
 
@@ -46,7 +48,7 @@ namespace DeltaShell.Dimr.Tests
                 guiPlugin.Gui = gui;
 
                 Assert.False(guiPlugin.IsOnlyDimrModelSelected);
-                
+
                 mocks.BackToRecordAll();
 
                 var dimrModel = mocks.DynamicMock<IDimrModel>();
@@ -58,7 +60,7 @@ namespace DeltaShell.Dimr.Tests
                 mocks.BackToRecordAll();
 
                 var workflow = mocks.DynamicMock<ICompositeActivity>();
-                workflow.Expect(wf => wf.Activities).Return(new EventedList<IActivity>() { dimrModel } ).Repeat.Any();
+                workflow.Expect(wf => wf.Activities).Return(new EventedList<IActivity>() {dimrModel}).Repeat.Any();
 
                 var compositeActivity = mocks.DynamicMultiMock<IModel>(typeof(ICompositeActivity));
                 ((ICompositeActivity) compositeActivity).Expect(ca => ca.CurrentWorkflow).Return(workflow).Repeat.Any();
@@ -68,6 +70,7 @@ namespace DeltaShell.Dimr.Tests
 
                 Assert.True(guiPlugin.IsOnlyDimrModelSelected);
             }
+
             mocks.VerifyAll();
         }
 

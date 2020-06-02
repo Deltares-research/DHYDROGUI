@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using DelftTools.Shell.Core;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
 using DeltaShell.Core;
@@ -67,7 +68,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Importers
         {
             importer = new WaveBoundaryFileImporter();
             var target = new List<string>();
-            var boundaryConditions = importer.ImportItem(string.Empty, target);
+            object boundaryConditions = importer.ImportItem(string.Empty, target);
             Assert.IsNull(boundaryConditions);
         }
 
@@ -77,23 +78,23 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Importers
         public void ImportItemTest_WhenBoundaryConditionModelDoesNotExist_ThenWarningIsLogged()
         {
             importer = new WaveBoundaryFileImporter();
-            var saveDirPath = FileUtils.CreateTempDirectory();
+            string saveDirPath = FileUtils.CreateTempDirectory();
             var projectName = "MyProject";
-            var savePath = Path.Combine(saveDirPath, projectName + ".dsproj");
+            string savePath = Path.Combine(saveDirPath, projectName + ".dsproj");
             var boundaryName = "boundary";
-            var boundary = CreateBoundary(boundaryName);
-            var boundaryCondition = CreateBoundaryCondition(boundary);
+            Feature2D boundary = CreateBoundary(boundaryName);
+            WaveBoundaryCondition boundaryCondition = CreateBoundaryCondition(boundary);
 
             try
             {
-                using (var app = GetRunningApplication(savePath))
+                using (DeltaShellApplication app = GetRunningApplication(savePath))
                 {
                     using (var model = new WaveModel())
                     {
-                        var project = app.Project;
+                        Project project = app.Project;
                         project.RootFolder.Add(model);
 
-                        var refTime = model.ModelDefinition.ModelReferenceDateTime;
+                        DateTime refTime = model.ModelDefinition.ModelReferenceDateTime;
                         SetData(boundaryCondition, refTime);
 
                         model.Boundaries.Add(boundary);
@@ -101,9 +102,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Importers
 
                         app.SaveProjectAs(savePath);
 
-                        var bcwFilePath = Directory.GetFiles(Path.Combine(saveDirPath, projectName + ".dsproj_data"),
-                            "*.bcw",
-                            SearchOption.AllDirectories).FirstOrDefault();
+                        string bcwFilePath = Directory.GetFiles(Path.Combine(saveDirPath, projectName + ".dsproj_data"),
+                                                                "*.bcw",
+                                                                SearchOption.AllDirectories).FirstOrDefault();
                         Assert.IsNotNullOrEmpty(bcwFilePath, "There was no .bcw file created.");
 
                         model.BoundaryConditions.Clear();
@@ -126,23 +127,23 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Importers
         public void ImportItemTest_WhenBoundaryConditionModelIsNotTimeseries_ThenWarningIsLogged()
         {
             importer = new WaveBoundaryFileImporter();
-            var saveDirPath = FileUtils.CreateTempDirectory();
+            string saveDirPath = FileUtils.CreateTempDirectory();
             var projectName = "MyProject";
-            var savePath = Path.Combine(saveDirPath, projectName + ".dsproj");
+            string savePath = Path.Combine(saveDirPath, projectName + ".dsproj");
             var boundaryName = "boundary";
-            var boundary = CreateBoundary(boundaryName);
-            var boundaryCondition = CreateBoundaryCondition(boundary);
+            Feature2D boundary = CreateBoundary(boundaryName);
+            WaveBoundaryCondition boundaryCondition = CreateBoundaryCondition(boundary);
 
             try
             {
-                using (var app = GetRunningApplication(savePath))
+                using (DeltaShellApplication app = GetRunningApplication(savePath))
                 {
                     using (var model = new WaveModel())
                     {
-                        var project = app.Project;
+                        Project project = app.Project;
                         project.RootFolder.Add(model);
 
-                        var refTime = model.ModelDefinition.ModelReferenceDateTime;
+                        DateTime refTime = model.ModelDefinition.ModelReferenceDateTime;
                         SetData(boundaryCondition, refTime);
 
                         model.Boundaries.Add(boundary);
@@ -150,22 +151,19 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Importers
 
                         app.SaveProjectAs(savePath);
 
-                        var bcwFilePath = Directory.GetFiles(Path.Combine(saveDirPath, projectName + ".dsproj_data"),
-                            "*.bcw", SearchOption.AllDirectories).FirstOrDefault();
+                        string bcwFilePath = Directory.GetFiles(Path.Combine(saveDirPath, projectName + ".dsproj_data"),
+                                                                "*.bcw", SearchOption.AllDirectories).FirstOrDefault();
                         Assert.IsNotNullOrEmpty(bcwFilePath, "There was no .bcw file created.");
 
                         model.BoundaryConditions.Clear();
                         Assert.AreEqual(model.BoundaryConditions.Count, 0);
 
                         var newBoundaryCondition =
-                            new WaveBoundaryCondition(BoundaryConditionDataType.ParameterizedSpectrumConstant)
-                            {
-                                Name = boundaryName
-                            };
+                            new WaveBoundaryCondition(BoundaryConditionDataType.ParameterizedSpectrumConstant) {Name = boundaryName};
 
                         model.BoundaryConditions.Add(newBoundaryCondition);
 
-                        var message =
+                        string message =
                             $"Could not import boundary condition; boundary {boundaryName} is not of type {BoundaryConditionDataType.ParameterizedSpectrumTimeseries}";
                         TestHelper.AssertAtLeastOneLogMessagesContains(
                             () => importer.ImportItem(bcwFilePath, model.BoundaryConditions), message);
@@ -183,23 +181,23 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Importers
         public void ImportItemTest_WhenBoundaryConditionModelNumberOfSupportPointsDoNotMatchWithFile_ThenWarningIsLogged()
         {
             importer = new WaveBoundaryFileImporter();
-            var saveDirPath = FileUtils.CreateTempDirectory();
+            string saveDirPath = FileUtils.CreateTempDirectory();
             var projectName = "MyProject";
-            var savePath = Path.Combine(saveDirPath, projectName + ".dsproj");
+            string savePath = Path.Combine(saveDirPath, projectName + ".dsproj");
             var boundaryName = "boundary";
-            var boundary = CreateBoundary(boundaryName);
-            var boundaryCondition = CreateBoundaryCondition(boundary);
+            Feature2D boundary = CreateBoundary(boundaryName);
+            WaveBoundaryCondition boundaryCondition = CreateBoundaryCondition(boundary);
 
             try
             {
-                using (var app = GetRunningApplication(savePath))
+                using (DeltaShellApplication app = GetRunningApplication(savePath))
                 {
                     using (var model = new WaveModel())
                     {
-                        var project = app.Project;
+                        Project project = app.Project;
                         project.RootFolder.Add(model);
 
-                        var refTime = model.ModelDefinition.ModelReferenceDateTime;
+                        DateTime refTime = model.ModelDefinition.ModelReferenceDateTime;
                         SetData(boundaryCondition, refTime);
 
                         model.Boundaries.Add(boundary);
@@ -207,8 +205,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Importers
 
                         app.SaveProjectAs(savePath);
 
-                        var bcwFilePath = Directory.GetFiles(Path.Combine(saveDirPath, projectName + ".dsproj_data"),
-                            "*.bcw", SearchOption.AllDirectories).FirstOrDefault();
+                        string bcwFilePath = Directory.GetFiles(Path.Combine(saveDirPath, projectName + ".dsproj_data"),
+                                                                "*.bcw", SearchOption.AllDirectories).FirstOrDefault();
                         Assert.IsNotNullOrEmpty(bcwFilePath, "There was no .bcw file created.");
 
                         model.BoundaryConditions.Clear();
@@ -223,7 +221,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Importers
 
                         model.BoundaryConditions.Add(newBoundaryCondition);
 
-                        var message =
+                        string message =
                             $"Could not import data onto boundary {boundaryName}; number of timeseries in file ({1}) did not match the number of support points ({0})";
                         TestHelper.AssertAtLeastOneLogMessagesContains(
                             () => importer.ImportItem(bcwFilePath, model.BoundaryConditions), message);
@@ -242,23 +240,23 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Importers
         public void ImportItemTest_CorrectDataIsSetOnImportedBoundaryCondition()
         {
             importer = new WaveBoundaryFileImporter();
-            var saveDirPath = FileUtils.CreateTempDirectory();
+            string saveDirPath = FileUtils.CreateTempDirectory();
             var projectName = "MyProject";
-            var savePath = Path.Combine(saveDirPath, projectName + ".dsproj");
+            string savePath = Path.Combine(saveDirPath, projectName + ".dsproj");
             var boundaryName = "boundary";
-            var boundary = CreateBoundary(boundaryName);
-            var boundaryCondition = CreateBoundaryCondition(boundary);
+            Feature2D boundary = CreateBoundary(boundaryName);
+            WaveBoundaryCondition boundaryCondition = CreateBoundaryCondition(boundary);
 
             try
             {
-                using (var app = GetRunningApplication(savePath))
+                using (DeltaShellApplication app = GetRunningApplication(savePath))
                 {
                     using (var model = new WaveModel())
                     {
-                        var project = app.Project;
+                        Project project = app.Project;
                         project.RootFolder.Add(model);
 
-                        var refTime = model.ModelDefinition.ModelReferenceDateTime;
+                        DateTime refTime = model.ModelDefinition.ModelReferenceDateTime;
                         SetData(boundaryCondition, refTime);
 
                         model.Boundaries.Add(boundary);
@@ -266,8 +264,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Importers
 
                         app.SaveProjectAs(savePath);
 
-                        var bcwFilePath = Directory.GetFiles(Path.Combine(saveDirPath, projectName + ".dsproj_data"),
-                            "*.bcw", SearchOption.AllDirectories).FirstOrDefault();
+                        string bcwFilePath = Directory.GetFiles(Path.Combine(saveDirPath, projectName + ".dsproj_data"),
+                                                                "*.bcw", SearchOption.AllDirectories).FirstOrDefault();
                         Assert.IsNotNullOrEmpty(bcwFilePath, "There was no .bcw file created.");
 
                         model.BoundaryConditions.Clear();
@@ -285,17 +283,29 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Importers
 
                         importer.ImportItem(bcwFilePath, model.BoundaryConditions);
 
-                        var setBoundaryCondition = model.BoundaryConditions.FirstOrDefault();
+                        WaveBoundaryCondition setBoundaryCondition = model.BoundaryConditions.FirstOrDefault();
 
                         Assert.IsTrue(model.BoundaryConditions.Count == 1);
                         Assert.IsTrue(setBoundaryCondition != null);
                         Assert.IsTrue(setBoundaryCondition.DataPointIndices.Count == 1);
-                        Assert.AreEqual(new[] {refTime, refTime.AddDays(1)},
-                            setBoundaryCondition.GetDataAtPoint(0).Arguments[0].Values);
-                        Assert.AreEqual(new double[] {1, 2},
-                            setBoundaryCondition.GetDataAtPoint(0).Components[0].Values);
-                        Assert.AreEqual(new double[] {3, 4},
-                            setBoundaryCondition.GetDataAtPoint(0).Components[1].Values);
+                        Assert.AreEqual(new[]
+                                        {
+                                            refTime,
+                                            refTime.AddDays(1)
+                                        },
+                                        setBoundaryCondition.GetDataAtPoint(0).Arguments[0].Values);
+                        Assert.AreEqual(new double[]
+                                        {
+                                            1,
+                                            2
+                                        },
+                                        setBoundaryCondition.GetDataAtPoint(0).Components[0].Values);
+                        Assert.AreEqual(new double[]
+                                        {
+                                            3,
+                                            4
+                                        },
+                                        setBoundaryCondition.GetDataAtPoint(0).Components[1].Values);
                     }
                 }
             }
@@ -308,7 +318,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Importers
         [Test]
         public void TargetDataDirectory()
         {
-            string targetDataDirectory = "dir";
+            var targetDataDirectory = "dir";
             importer = new WaveBoundaryFileImporter {TargetDataDirectory = targetDataDirectory};
             Assert.AreEqual(targetDataDirectory, importer.TargetDataDirectory);
         }
@@ -326,7 +336,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Importers
         public void ProgressChangedTest()
         {
             importer = new WaveBoundaryFileImporter();
-            bool succes = false;
+            var succes = false;
             importer.ProgressChanged = (name, current, total) => { succes = true; };
             importer.ProgressChanged("Importing boundary file...", 1, 2);
             Assert.IsTrue(succes);
@@ -345,9 +355,21 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Importers
 
         private static void SetData(WaveBoundaryCondition boundaryCondition, DateTime refTime)
         {
-            boundaryCondition.PointData[0].Arguments[0].SetValues(new[] {refTime, refTime.AddDays(1)});
-            boundaryCondition.PointData[0].Components[0].SetValues(new double[] {1, 2});
-            boundaryCondition.PointData[0].Components[1].SetValues(new double[] {3, 4});
+            boundaryCondition.PointData[0].Arguments[0].SetValues(new[]
+            {
+                refTime,
+                refTime.AddDays(1)
+            });
+            boundaryCondition.PointData[0].Components[0].SetValues(new double[]
+            {
+                1,
+                2
+            });
+            boundaryCondition.PointData[0].Components[1].SetValues(new double[]
+            {
+                3,
+                4
+            });
         }
 
         private static WaveBoundaryCondition CreateBoundaryCondition(Feature2D boundary)
@@ -363,7 +385,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Importers
         {
             var boundary = new Feature2D
             {
-                Geometry = new LineString(new[] {new Coordinate(0, 0), new Coordinate(0, 1)}),
+                Geometry = new LineString(new[]
+                {
+                    new Coordinate(0, 0),
+                    new Coordinate(0, 1)
+                }),
                 Name = boundaryName
             };
             return boundary;

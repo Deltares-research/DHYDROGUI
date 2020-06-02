@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Utils;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.SubstanceProcessLibrary;
@@ -12,20 +13,28 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.DataObjects.Sub
         public void TestGetDifferentTypeOfSubstances()
         {
             var substanceProcessLibrary = new DelftModels.WaterQualityModel.DataObjects.SubstanceProcessLibrary.SubstanceProcessLibrary()
+            {
+                Name = "Library",
+                Substances =
                 {
-                    Name = "Library",
-                    Substances =
-                        {
-                            new WaterQualitySubstance { Name = "A", Active = true },
-                            new WaterQualitySubstance { Name = "B", Active = false }
-                        }
-                };
+                    new WaterQualitySubstance
+                    {
+                        Name = "A",
+                        Active = true
+                    },
+                    new WaterQualitySubstance
+                    {
+                        Name = "B",
+                        Active = false
+                    }
+                }
+            };
 
-            var activeSubstances = substanceProcessLibrary.ActiveSubstances;
+            IEnumerable<WaterQualitySubstance> activeSubstances = substanceProcessLibrary.ActiveSubstances;
             Assert.AreEqual(1, activeSubstances.Count());
             Assert.AreEqual("A", activeSubstances.ElementAt(0).Name);
 
-            var inActiveSubstances = substanceProcessLibrary.InActiveSubstances;
+            IEnumerable<WaterQualitySubstance> inActiveSubstances = substanceProcessLibrary.InActiveSubstances;
             Assert.AreEqual(1, inActiveSubstances.Count());
             Assert.AreEqual("B", inActiveSubstances.ElementAt(0).Name);
         }
@@ -34,37 +43,37 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.DataObjects.Sub
         public void TestToString()
         {
             var substanceProcessLibrary = new DelftModels.WaterQualityModel.DataObjects.SubstanceProcessLibrary.SubstanceProcessLibrary
+            {
+                Substances =
                 {
-                    Substances =
-                        {
-                            new WaterQualitySubstance { Name = "A" },
-                            new WaterQualitySubstance { Name = "B" },
-                            new WaterQualitySubstance { Name = "C" },
-                            new WaterQualitySubstance { Name = "D" }
-                        },
-                    Processes =
-                        {
-                            new WaterQualityProcess { Name = "E" },
-                            new WaterQualityProcess { Name = "F" },
-                            new WaterQualityProcess { Name = "G" },
-                            new WaterQualityProcess { Name = "H" }
-                        },
-                    Parameters =
-                        {
-                            new WaterQualityParameter { Name = "I" },
-                            new WaterQualityParameter { Name = "J" },
-                            new WaterQualityParameter { Name = "K" }
-                        },
-                    OutputParameters =
-                        {
-                            new WaterQualityOutputParameter { Name = "L" },
-                            new WaterQualityOutputParameter { Name = "M" },
-                            new WaterQualityOutputParameter { Name = "N" },
-                            new WaterQualityOutputParameter { Name = "O" },
-                            new WaterQualityOutputParameter { Name = "P" }
-                        }
-                };
-            
+                    new WaterQualitySubstance {Name = "A"},
+                    new WaterQualitySubstance {Name = "B"},
+                    new WaterQualitySubstance {Name = "C"},
+                    new WaterQualitySubstance {Name = "D"}
+                },
+                Processes =
+                {
+                    new WaterQualityProcess {Name = "E"},
+                    new WaterQualityProcess {Name = "F"},
+                    new WaterQualityProcess {Name = "G"},
+                    new WaterQualityProcess {Name = "H"}
+                },
+                Parameters =
+                {
+                    new WaterQualityParameter {Name = "I"},
+                    new WaterQualityParameter {Name = "J"},
+                    new WaterQualityParameter {Name = "K"}
+                },
+                OutputParameters =
+                {
+                    new WaterQualityOutputParameter {Name = "L"},
+                    new WaterQualityOutputParameter {Name = "M"},
+                    new WaterQualityOutputParameter {Name = "N"},
+                    new WaterQualityOutputParameter {Name = "O"},
+                    new WaterQualityOutputParameter {Name = "P"}
+                }
+            };
+
             const string expectedString = "Substances\n" +
                                           "A\n" +
                                           "B\n" +
@@ -97,14 +106,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.DataObjects.Sub
         public void TestClone()
         {
             var substanceProcessLibrary = new DelftModels.WaterQualityModel.DataObjects.SubstanceProcessLibrary.SubstanceProcessLibrary
-                {
-                    Id = 2,
-                    Name = "Name",
-                    Substances = { new WaterQualitySubstance() },
-                    Parameters = { new WaterQualityParameter() },
-                    Processes = { new WaterQualityProcess() },
-                    OutputParameters = { new WaterQualityOutputParameter() }
-                };
+            {
+                Id = 2,
+                Name = "Name",
+                Substances = {new WaterQualitySubstance()},
+                Parameters = {new WaterQualityParameter()},
+                Processes = {new WaterQualityProcess()},
+                OutputParameters = {new WaterQualityOutputParameter()}
+            };
 
             var substanceProcessLibraryClone = substanceProcessLibrary.Clone() as DelftModels.WaterQualityModel.DataObjects.SubstanceProcessLibrary.SubstanceProcessLibrary;
 
@@ -135,10 +144,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.DataObjects.Sub
         {
             var counter = 0;
             var substanceProcessLibrary = new DelftModels.WaterQualityModel.DataObjects.SubstanceProcessLibrary.SubstanceProcessLibrary
-                {
-                    Name = "Library",
-                    OutputParameters = { new WaterQualityOutputParameter { Name = "Parameter" } }
-                };
+            {
+                Name = "Library",
+                OutputParameters = {new WaterQualityOutputParameter {Name = "Parameter"}}
+            };
 
             ((INotifyPropertyChange) substanceProcessLibrary).PropertyChanged += (s, e) => counter++;
 

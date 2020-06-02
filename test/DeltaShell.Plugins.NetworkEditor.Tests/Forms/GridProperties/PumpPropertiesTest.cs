@@ -12,7 +12,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.GridProperties
         [Category(TestCategory.WindowsForms)]
         public void ShowProperties()
         {
-            WindowsFormsTestHelper.ShowPropertyGridForObject(new PumpProperties { Data = new Pump() });
+            WindowsFormsTestHelper.ShowPropertyGridForObject(new PumpProperties {Data = new Pump()});
         }
     }
 }

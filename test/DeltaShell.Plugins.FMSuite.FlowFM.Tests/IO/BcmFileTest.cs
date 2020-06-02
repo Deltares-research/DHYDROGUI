@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using DelftTools.TestUtils;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessObjects;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
 using NUnit.Framework;
 
@@ -32,14 +34,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var boundaryConditionSet3 = new BoundaryConditionSet();
             boundaryConditionSet3.BoundaryConditions.Add(new FlowBoundaryCondition(FlowBoundaryQuantityType.MorphologyBedLevelFixed, BoundaryConditionDataType.Empty));
 
-            var boundaryConditions = new List<BoundaryConditionSet>() { boundaryConditionSet1, boundaryConditionSet2, boundaryConditionSet3 };
+            var boundaryConditions = new List<BoundaryConditionSet>()
+            {
+                boundaryConditionSet1,
+                boundaryConditionSet2,
+                boundaryConditionSet3
+            };
 
             // group boundary conditions
             var bcmFile = new BcmFile();
-            var groupings = bcmFile.GroupBoundaryConditions(boundaryConditions).ToList();
+            List<IGrouping<string, Tuple<IBoundaryCondition, BoundaryConditionSet>>> groupings = bcmFile.GroupBoundaryConditions(boundaryConditions).ToList();
 
             // check that non-Morphology related boundary conditions are filtered out
-            var groupedBoundaryConditions = groupings.SelectMany(g => g).Select(g => g.Item1).OfType<FlowBoundaryCondition>().ToList();
+            List<FlowBoundaryCondition> groupedBoundaryConditions = groupings.SelectMany(g => g).Select(g => g.Item1).OfType<FlowBoundaryCondition>().ToList();
             // there are 3 conditions but 1 of them is without boundary data... so that is also not in the count!
             Assert.AreEqual(2, groupedBoundaryConditions.Count);
 
@@ -50,18 +57,31 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             Assert.AreEqual(0, groupedBoundaryConditions.Count(bc => bc.FlowQuantity == FlowBoundaryQuantityType.Discharge));
         }
 
-        [TestCase(@"BcmFiles\MorphologyBedLevelPrescribed.bcm", new [] { "time", BcmFileFlowBoundaryDataBuilder.BedLevelAtBound }, 23)]
-        [TestCase(@"BcmFiles\MorphologyBedLevelChangePrescribed.bcm", new[] { "time", BcmFileFlowBoundaryDataBuilder.BedLevelChangeAtBound }, 12)]
-        [TestCase(@"BcmFiles\MorphologyBedLoadTransport.bcm", new[] { "time", BcmFileFlowBoundaryDataBuilder.BedLoadAtBound+"abc", BcmFileFlowBoundaryDataBuilder.BedLoadAtBound + "def" }, 289)]
+        [TestCase(@"BcmFiles\MorphologyBedLevelPrescribed.bcm", new[]
+        {
+            "time",
+            BcmFileFlowBoundaryDataBuilder.BedLevelAtBound
+        }, 23)]
+        [TestCase(@"BcmFiles\MorphologyBedLevelChangePrescribed.bcm", new[]
+        {
+            "time",
+            BcmFileFlowBoundaryDataBuilder.BedLevelChangeAtBound
+        }, 12)]
+        [TestCase(@"BcmFiles\MorphologyBedLoadTransport.bcm", new[]
+        {
+            "time",
+            BcmFileFlowBoundaryDataBuilder.BedLoadAtBound + "abc",
+            BcmFileFlowBoundaryDataBuilder.BedLoadAtBound + "def"
+        }, 289)]
         [Category(TestCategory.DataAccess)]
         public void TestReadMorphologyBoundaryConditions(string testFile, string[] quantityNames, int numValues)
         {
-            var filePath = TestHelper.GetTestFilePath(testFile);
+            string filePath = TestHelper.GetTestFilePath(testFile);
             var bcmFile = new BcmFile();
-            var blockData = bcmFile.Read(filePath).ToList();
+            List<BcBlockData> blockData = bcmFile.Read(filePath).ToList();
 
             Assert.AreEqual(1, blockData.Count);
-            var quantities = blockData[0].Quantities;
+            IList<BcQuantityData> quantities = blockData[0].Quantities;
 
             Assert.AreEqual(quantityNames.Length, quantities.Count);
 

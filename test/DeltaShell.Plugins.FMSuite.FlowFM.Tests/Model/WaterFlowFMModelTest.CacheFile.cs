@@ -22,48 +22,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
         private const string sourceDirectoryName = "WaterFlowFMModel.CacheFile";
         private const string mduFileName = "CacheFileTest.mdu";
 
-        private static void CopyInputData(string inputFolder)
-        {
-            string sourceFolder = Path.Combine(TestHelper.GetTestDataDirectory(), sourceDirectoryName);
-
-            var inputPathInfo = new DirectoryInfo(inputFolder);
-            var sourcePathInfo = new DirectoryInfo(sourceFolder);
-
-            FileUtils.CopyAll(sourcePathInfo, inputPathInfo, null);
-        }
-
-        private static void PrepareFileSystem(TemporaryDirectory tempDir, 
-                                              out string inputMduFilePath,
-                                              out string outputMduFilePath)
-        {
-            string inputPath = Path.Combine(tempDir.Path, input);
-            FileUtils.CreateDirectoryIfNotExists(inputPath);
-            inputMduFilePath = Path.Combine(inputPath, mduFileName);
-
-            CopyInputData(inputPath);
-
-            string outputPath = Path.Combine(tempDir.Path, output);
-            FileUtils.CreateDirectoryIfNotExists(outputPath);
-            outputMduFilePath = Path.Combine(outputPath, mduFileName);
-        }
-
-        private static void CreateDummyInputCacheFileForMdu(string mduPath)
-        {
-            string dummyCacheFilePath = Path.ChangeExtension(mduPath, FileConstants.CachingFileExtension);
-            using (FileStream _ = File.Create(dummyCacheFilePath)) { }
-        }
-
-        private static void Run(WaterFlowFMModel model)
-        {
-            ActivityRunner.RunActivity(model);
-            Assert.That(model.Status, Is.EqualTo(ActivityStatus.Cleaned), "Model run has failed, status was:");
-        }
-
-        private static void Export(WaterFlowFMModel model, string exportPath, bool switchTo = true)
-        {
-            model.ExportTo(exportPath, switchTo);
-        }
-
         [Test]
         [Category(TestCategory.Integration)]
         public void Constructor_CorrectCacheFile()
@@ -145,7 +103,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             // Given
             using (var tempDir = new TemporaryDirectory())
             {
-                PrepareFileSystem(tempDir, 
+                PrepareFileSystem(tempDir,
                                   out string inputMduFilePath,
                                   out string outputMduFilePath);
 
@@ -165,7 +123,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             }
         }
 
-
         [Test]
         [Category(TestCategory.Integration)]
         [Category(TestCategory.Slow)]
@@ -174,10 +131,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             // Given
             using (var tempDir = new TemporaryDirectory())
             {
-                PrepareFileSystem(tempDir, 
+                PrepareFileSystem(tempDir,
                                   out string inputMduFilePath,
                                   out string outputMduFilePath);
-                
+
                 using (var model = new WaterFlowFMModel(inputMduFilePath))
                 {
                     // When
@@ -203,10 +160,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             // Given
             using (var tempDir = new TemporaryDirectory())
             {
-                PrepareFileSystem(tempDir, 
+                PrepareFileSystem(tempDir,
                                   out string inputMduFilePath,
                                   out string outputMduFilePath);
-                
+
                 using (var model = new WaterFlowFMModel(inputMduFilePath))
                 {
                     // When
@@ -232,10 +189,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             // Given
             using (var tempDir = new TemporaryDirectory())
             {
-                PrepareFileSystem(tempDir, 
+                PrepareFileSystem(tempDir,
                                   out string inputMduFilePath,
                                   out string outputMduFilePath);
-                
+
                 using (var model = new WaterFlowFMModel(inputMduFilePath))
                 {
                     // When
@@ -262,10 +219,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             // Given
             using (var tempDir = new TemporaryDirectory())
             {
-                PrepareFileSystem(tempDir, 
+                PrepareFileSystem(tempDir,
                                   out string inputMduFilePath,
                                   out string outputMduFilePath);
-                
+
                 using (var model = new WaterFlowFMModel(inputMduFilePath))
                 {
                     model.ModelDefinition.GetModelProperty(KnownProperties.UseCaching).Value = false;
@@ -293,10 +250,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             // Given
             using (var tempDir = new TemporaryDirectory())
             {
-                PrepareFileSystem(tempDir, 
+                PrepareFileSystem(tempDir,
                                   out string inputMduFilePath,
                                   out string outputMduFilePath);
-                
+
                 using (var model = new WaterFlowFMModel(inputMduFilePath))
                 {
                     // When
@@ -322,7 +279,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             // Given
             using (var tempDir = new TemporaryDirectory())
             {
-                PrepareFileSystem(tempDir, 
+                PrepareFileSystem(tempDir,
                                   out string inputMduFilePath,
                                   out string outputMduFilePath);
                 CreateDummyInputCacheFileForMdu(inputMduFilePath);
@@ -339,10 +296,52 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
                     string expectedPath = Path.ChangeExtension(model.MduFilePath, FileConstants.CachingFileExtension);
                     Assert.That(model.CacheFile.Path, Is.EqualTo(expectedPath), "Expected a different path:");
 
-                    Assert.That(File.Exists(model.CacheFile.Path), 
+                    Assert.That(File.Exists(model.CacheFile.Path),
                                 $"Expected the cache file to exist at {model.CacheFile.Path}");
                 }
             }
+        }
+
+        private static void CopyInputData(string inputFolder)
+        {
+            string sourceFolder = Path.Combine(TestHelper.GetTestDataDirectory(), sourceDirectoryName);
+
+            var inputPathInfo = new DirectoryInfo(inputFolder);
+            var sourcePathInfo = new DirectoryInfo(sourceFolder);
+
+            FileUtils.CopyAll(sourcePathInfo, inputPathInfo, null);
+        }
+
+        private static void PrepareFileSystem(TemporaryDirectory tempDir,
+                                              out string inputMduFilePath,
+                                              out string outputMduFilePath)
+        {
+            string inputPath = Path.Combine(tempDir.Path, input);
+            FileUtils.CreateDirectoryIfNotExists(inputPath);
+            inputMduFilePath = Path.Combine(inputPath, mduFileName);
+
+            CopyInputData(inputPath);
+
+            string outputPath = Path.Combine(tempDir.Path, output);
+            FileUtils.CreateDirectoryIfNotExists(outputPath);
+            outputMduFilePath = Path.Combine(outputPath, mduFileName);
+        }
+
+        private static void CreateDummyInputCacheFileForMdu(string mduPath)
+        {
+            string dummyCacheFilePath = Path.ChangeExtension(mduPath, FileConstants.CachingFileExtension);
+            using (FileStream _ = File.Create(dummyCacheFilePath)) {}
+        }
+
+        private static void Run(WaterFlowFMModel model)
+        {
+            ActivityRunner.RunActivity(model);
+            Assert.That(model.Status, Is.EqualTo(ActivityStatus.Cleaned), "Model run has failed, status was:");
+        }
+
+        private static void Export(WaterFlowFMModel model, string exportPath, bool switchTo = true)
+        {
+            model.ExportTo(exportPath, switchTo);
         }
     }
 }

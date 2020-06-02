@@ -16,23 +16,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Editors
     [TestFixture]
     public class FlowBoundaryConditionEditorControllerTest
     {
-        [TestCase("WaterLevel", FlowBoundaryQuantityType.WaterLevel, "Water level")]
-        [TestCase("Riemann", FlowBoundaryQuantityType.Riemann, "Riemann invariant")]
-        [TestCase("Tracer1", FlowBoundaryQuantityType.Tracer, "Tracer1")]
-        [TestCase("WaterLevel", FlowBoundaryQuantityType.Tracer, "WaterLevel")]
-        [TestCase("Riemann", FlowBoundaryQuantityType.Tracer, "Riemann")]
-        [TestCase("Fraction1", FlowBoundaryQuantityType.SedimentConcentration, "Fraction1")]
-        [TestCase("WaterLevel", FlowBoundaryQuantityType.SedimentConcentration, "WaterLevel")]
-        [TestCase("3", FlowBoundaryQuantityType.SedimentConcentration, "3")]
-        [TestCase("999", FlowBoundaryQuantityType.SedimentConcentration, "999")]
-        public void TestGetVariableDescription_CorrectlyHandlesTracersAndFractionNames(string variable, FlowBoundaryQuantityType quantityType, string expectedDescription)
-        {
-            var category = quantityType.GetDescription();
-            var returnedDescription = new FlowBoundaryConditionEditorController().GetVariableDescription(variable, category);
-
-            Assert.AreEqual(expectedDescription, returnedDescription);
-        }
-
         [Test]
         public void ChangeInSalinityUpdatesCategories()
         {
@@ -67,10 +50,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Editors
             var model = new WaterFlowFMModel();
             model.ModelDefinition.GetModelProperty(KnownProperties.UseSalinity).Value = true;
 
-            var controller = new FlowBoundaryConditionEditorController
-            {
-                Model = model
-            };
+            var controller = new FlowBoundaryConditionEditorController {Model = model};
 
             Assert.AreEqual(1, controller.GetVariablesForProcess("Salinity").Count());
 
@@ -85,10 +65,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Editors
             var model = new WaterFlowFMModel();
             model.ModelDefinition.GetModelProperty(KnownProperties.UseSalinity).Value = true;
 
-            var controller = new FlowBoundaryConditionEditorController
-            {
-                Model = model
-            };
+            var controller = new FlowBoundaryConditionEditorController {Model = model};
 
             Assert.AreEqual(3, controller.SupportedProcessNames.Count());
 
@@ -131,10 +108,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Editors
             var model = new WaterFlowFMModel();
             model.ModelDefinition.UseMorphologySediment = true;
 
-            var controller = new FlowBoundaryConditionEditorController
-            {
-                Model = model
-            };
+            var controller = new FlowBoundaryConditionEditorController {Model = model};
 
             /**
              * Default: Flow, Tracer
@@ -155,29 +129,51 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Editors
             var model = new WaterFlowFMModel();
             model.ModelDefinition.UseMorphologySediment = true;
 
-            var controller = new FlowBoundaryConditionEditorController{ Model = model };
+            var controller = new FlowBoundaryConditionEditorController {Model = model};
 
             var sandFraction = new SedimentFraction() {Name = "sandFraction"};
             sandFraction.CurrentSedimentType = sandFraction.AvailableSedimentTypes.FirstOrDefault(st => st.Name == "Sand");
             Assert.NotNull(sandFraction.CurrentSedimentType);
 
-            var mudFraction = new SedimentFraction() { Name = "mudFraction" };
+            var mudFraction = new SedimentFraction() {Name = "mudFraction"};
             mudFraction.CurrentSedimentType = mudFraction.AvailableSedimentTypes.FirstOrDefault(st => st.Name == "Mud");
             Assert.NotNull(mudFraction.CurrentSedimentType);
 
-            var bedloadFraction = new SedimentFraction() { Name = "bedloadFraction" };
+            var bedloadFraction = new SedimentFraction() {Name = "bedloadFraction"};
             bedloadFraction.CurrentSedimentType = bedloadFraction.AvailableSedimentTypes.FirstOrDefault(st => st.Name == "Bed-load");
             Assert.NotNull(bedloadFraction.CurrentSedimentType);
 
-            model.SedimentFractions.AddRange(new List<ISedimentFraction> {sandFraction, mudFraction, bedloadFraction});
+            model.SedimentFractions.AddRange(new List<ISedimentFraction>
+            {
+                sandFraction,
+                mudFraction,
+                bedloadFraction
+            });
 
             // call GetAllowedVariables
-            var allowedVariables = controller.GetAllowedVariablesFor("Sediment concentration", new BoundaryConditionSet()).ToList();
+            List<string> allowedVariables = controller.GetAllowedVariablesFor("Sediment concentration", new BoundaryConditionSet()).ToList();
 
             // Assert bed-load fractions are not allowed
             Assert.IsTrue(allowedVariables.Contains(sandFraction.Name));
             Assert.IsTrue(allowedVariables.Contains(mudFraction.Name));
             Assert.IsFalse(allowedVariables.Contains(bedloadFraction.Name));
+        }
+
+        [TestCase("WaterLevel", FlowBoundaryQuantityType.WaterLevel, "Water level")]
+        [TestCase("Riemann", FlowBoundaryQuantityType.Riemann, "Riemann invariant")]
+        [TestCase("Tracer1", FlowBoundaryQuantityType.Tracer, "Tracer1")]
+        [TestCase("WaterLevel", FlowBoundaryQuantityType.Tracer, "WaterLevel")]
+        [TestCase("Riemann", FlowBoundaryQuantityType.Tracer, "Riemann")]
+        [TestCase("Fraction1", FlowBoundaryQuantityType.SedimentConcentration, "Fraction1")]
+        [TestCase("WaterLevel", FlowBoundaryQuantityType.SedimentConcentration, "WaterLevel")]
+        [TestCase("3", FlowBoundaryQuantityType.SedimentConcentration, "3")]
+        [TestCase("999", FlowBoundaryQuantityType.SedimentConcentration, "999")]
+        public void TestGetVariableDescription_CorrectlyHandlesTracersAndFractionNames(string variable, FlowBoundaryQuantityType quantityType, string expectedDescription)
+        {
+            string category = quantityType.GetDescription();
+            string returnedDescription = new FlowBoundaryConditionEditorController().GetVariableDescription(variable, category);
+
+            Assert.AreEqual(expectedDescription, returnedDescription);
         }
     }
 }

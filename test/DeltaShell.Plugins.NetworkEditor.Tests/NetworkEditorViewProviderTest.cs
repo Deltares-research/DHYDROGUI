@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using DelftTools.Controls;
+using DelftTools.Hydro;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Gui;
@@ -33,7 +35,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
 
             gui.Expect(g => g.DocumentViewsResolver).Return(viewResolver).Repeat.Any();
             gui.Expect(g => g.DocumentViews).Return(viewList).Repeat.Any();
-            gui.Expect(g => g.Plugins).Return(new List<GuiPlugin> { plugin }).Repeat.Any();
+            gui.Expect(g => g.Plugins).Return(new List<GuiPlugin> {plugin}).Repeat.Any();
             gui.Expect(g => g.SelectedModel).Return(null).Repeat.Any();
             gui.Expect(g => g.SelectionChanged += Arg<EventHandler<SelectedItemChangedEventArgs>>.Is.Anything).Repeat.Any();
 
@@ -42,12 +44,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
             //setup a pump with a parent
             var pump = new Pump();
             var compositeBranchStructure = new CompositeBranchStructure();
-            var network = HydroNetworkHelper.GetSnakeHydroNetwork(1);
+            IHydroNetwork network = HydroNetworkHelper.GetSnakeHydroNetwork(1);
             NetworkHelper.AddBranchFeatureToBranch(compositeBranchStructure, network.Branches[0], 50);
             HydroNetworkHelper.AddStructureToComposite(compositeBranchStructure, pump);
 
             viewResolver.OpenViewForData(pump);
-            var view = viewList.ActiveView;
+            IView view = viewList.ActiveView;
 
             //should return a composite structure view with the parent structure of the pump inside
             Assert.AreEqual(typeof(CompositeStructureView), view.GetType());

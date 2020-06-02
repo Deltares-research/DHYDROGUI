@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.TestUtils;
@@ -14,8 +15,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         public void TestReadValidationCsv()
         {
             var validationCsv = new WaqProcessesRules();
-            var testFilePath = TestHelper.GetTestFilePath(@"WaqValidationCsv");
-            var rules = validationCsv.ReadValidationCsv(testFilePath);
+            string testFilePath = TestHelper.GetTestFilePath(@"WaqValidationCsv");
+            IList<WaqProcessValidationRule> rules = validationCsv.ReadValidationCsv(testFilePath);
 
             Assert.IsNotNull(rules);
             Assert.IsTrue(rules.Any());
@@ -25,7 +26,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         public void TestReadValidationCsv_FileNotFound_DoesNotThrow()
         {
             var validationCsv = new WaqProcessesRules();
-            Assert.DoesNotThrow( () => validationCsv.ReadValidationCsv(null));
+            Assert.DoesNotThrow(() => validationCsv.ReadValidationCsv(null));
         }
 
         [Test]
@@ -43,15 +44,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         public void Test_ReadValidationCsv_Values_GetCorrectType(string processName, Type processType)
         {
             var validationCsv = new WaqProcessesRules();
-            var testFilePath = TestHelper.GetTestFilePath(@"WaqValidationCsv");
-            var rules = validationCsv.ReadValidationCsv(testFilePath);
+            string testFilePath = TestHelper.GetTestFilePath(@"WaqValidationCsv");
+            IList<WaqProcessValidationRule> rules = validationCsv.ReadValidationCsv(testFilePath);
 
             Assert.IsNotNull(rules);
             Assert.IsTrue(rules.Any());
 
-            var process = rules.FirstOrDefault(r => 
-                r.ProcessName.ToLowerInvariant()
-                .Equals(processName.ToLowerInvariant()));
+            WaqProcessValidationRule process = rules.FirstOrDefault(r =>
+                                                                        r.ProcessName.ToLowerInvariant()
+                                                                         .Equals(processName.ToLowerInvariant()));
             Assert.IsNotNull(process);
             Assert.AreEqual(process.ValueType, processType);
         }
@@ -62,14 +63,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         public void ReadValidationCsv_LogsMessage_WhenInsuffienctColumns(string line)
         {
             var validationCsv = new WaqProcessesRules();
-            var testFilePath = TestHelper.GetTestFilePath(@"WaqValidationCsv\DWAQ_allowed_values.csv");
-            
-            var expectedColumns = 6;
-            var readColumns = line.Split(',').Length;
-            var filePath = testFilePath;
-            var expectedMssg = $"Skipped line {line} due to incorrect number of columns (expected {expectedColumns}, read {readColumns}) from {filePath}.";
+            string testFilePath = TestHelper.GetTestFilePath(@"WaqValidationCsv\DWAQ_allowed_values.csv");
 
-            TestHelper.AssertAtLeastOneLogMessagesContains( 
+            var expectedColumns = 6;
+            int readColumns = line.Split(',').Length;
+            string filePath = testFilePath;
+            string expectedMssg = $"Skipped line {line} due to incorrect number of columns (expected {expectedColumns}, read {readColumns}) from {filePath}.";
+
+            TestHelper.AssertAtLeastOneLogMessagesContains(
                 () => validationCsv.ReadValidationCsv(Path.GetDirectoryName(testFilePath)),
                 expectedMssg);
         }

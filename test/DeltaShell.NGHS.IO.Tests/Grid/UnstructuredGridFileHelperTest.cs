@@ -1,9 +1,13 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.NetCdf;
 using DeltaShell.NGHS.IO.Grid;
+using DeltaShell.NGHS.IO.Properties;
+using GeoAPI.Extensions.CoordinateSystems;
+using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Grids;
 using NUnit.Framework;
 using SharpMap.Extensions.CoordinateSystems;
@@ -19,10 +23,10 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         [TestCase(@"nonUgrid\TAK3_net.nc", true)]
         public void TestLoadFromFile(string filePath, bool gridShouldLoad)
         {
-            var testFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), filePath);
+            string testFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), filePath);
             Assert.AreEqual(gridShouldLoad, File.Exists(testFilePath));
 
-            var grid = UnstructuredGridFileHelper.LoadFromFile(testFilePath);
+            UnstructuredGrid grid = UnstructuredGridFileHelper.LoadFromFile(testFilePath);
             Assert.AreEqual(gridShouldLoad, grid != null);
         }
 
@@ -35,10 +39,10 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         [TestCase(@"ugrid\BedLevelValues_NodesAndFaces.nc", UnstructuredGridFileHelper.BedLevelLocation.NodesMeanLev)]
         public void TestReadZValues(string filePath, UnstructuredGridFileHelper.BedLevelLocation location)
         {
-            var testFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), filePath);
+            string testFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), filePath);
             Assert.IsTrue(File.Exists(testFilePath));
 
-            var zValues = UnstructuredGridFileHelper.ReadZValues(testFilePath, location);
+            double[] zValues = UnstructuredGridFileHelper.ReadZValues(testFilePath, location);
             Assert.IsTrue(zValues.Length > 0);
             Assert.IsTrue(zValues.All(v => v > 0.0));
         }
@@ -46,24 +50,24 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         [Test]
         public void TestReadZValues_DoesNotThrowForNoZValuesInFile()
         {
-            var testFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), @"ugrid\Custom_Ugrid.nc");
+            string testFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), @"ugrid\Custom_Ugrid.nc");
             Assert.IsTrue(File.Exists(testFilePath));
 
-            var zValues = UnstructuredGridFileHelper.ReadZValues(testFilePath, UnstructuredGridFileHelper.BedLevelLocation.Faces);
+            double[] zValues = UnstructuredGridFileHelper.ReadZValues(testFilePath, UnstructuredGridFileHelper.BedLevelLocation.Faces);
             Assert.AreEqual(0, zValues.Length);
         }
 
         [Test]
         public void TestReadZValues_GivesWarningForEdgeLocations()
         {
-            var testFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), @"ugrid\BedLevelValues_NodesAndFaces.nc");
+            string testFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), @"ugrid\BedLevelValues_NodesAndFaces.nc");
             Assert.IsTrue(File.Exists(testFilePath));
 
             var zValues = new double[0];
 
-            TestHelper.AssertAtLeastOneLogMessagesContains(() => 
-                zValues = UnstructuredGridFileHelper.ReadZValues(testFilePath, UnstructuredGridFileHelper.BedLevelLocation.CellEdges),
-                Properties.Resources.UnstructuredGridFileHelper_ReadZValues_Unable_to_read_z_values_at_this_location__CellEdges_are_not_currently_supported);
+            TestHelper.AssertAtLeastOneLogMessagesContains(() =>
+                                                               zValues = UnstructuredGridFileHelper.ReadZValues(testFilePath, UnstructuredGridFileHelper.BedLevelLocation.CellEdges),
+                                                           Resources.UnstructuredGridFileHelper_ReadZValues_Unable_to_read_z_values_at_this_location__CellEdges_are_not_currently_supported);
 
             Assert.AreEqual(0, zValues.Length);
         }
@@ -71,14 +75,14 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         [Test]
         public void TestReadZValues_GivesWarningForNonUgridFiles()
         {
-            var testFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), @"nonUgrid\TAK3_net.nc");
+            string testFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), @"nonUgrid\TAK3_net.nc");
             Assert.IsTrue(File.Exists(testFilePath));
 
             var zValues = new double[0];
 
             TestHelper.AssertAtLeastOneLogMessagesContains(() =>
-                zValues = UnstructuredGridFileHelper.ReadZValues(testFilePath, UnstructuredGridFileHelper.BedLevelLocation.CellEdges),
-                string.Format(Properties.Resources.UnstructuredGridFileHelper_ReadZValues_Unable_to_read_z_values_from_file___0___file_is_not_UGrid_convention, testFilePath));
+                                                               zValues = UnstructuredGridFileHelper.ReadZValues(testFilePath, UnstructuredGridFileHelper.BedLevelLocation.CellEdges),
+                                                           string.Format(Resources.UnstructuredGridFileHelper_ReadZValues_Unable_to_read_z_values_from_file___0___file_is_not_UGrid_convention, testFilePath));
 
             Assert.AreEqual(0, zValues.Length);
         }
@@ -92,11 +96,11 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         [TestCase(@"nonUgrid\TAK3_net.nc", UnstructuredGridFileHelper.BedLevelLocation.NodesMeanLev)]
         public void TestWriteZValues_DoesNotThrowForSupportedLocations(string filePath, UnstructuredGridFileHelper.BedLevelLocation location)
         {
-            var testFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), filePath);
+            string testFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), filePath);
             Assert.IsTrue(File.Exists(testFilePath));
 
-            var localtestFile = TestHelper.CreateLocalCopy(testFilePath);
-            var grid = UnstructuredGridFileHelper.LoadFromFile(localtestFile);
+            string localtestFile = TestHelper.CreateLocalCopy(testFilePath);
+            UnstructuredGrid grid = UnstructuredGridFileHelper.LoadFromFile(localtestFile);
 
             var zValues = new double[0];
 
@@ -112,7 +116,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                     zValues = Enumerable.Repeat(123.456, grid.Vertices.Count).ToArray();
                     break;
             }
-            
+
             UnstructuredGridFileHelper.WriteZValues(localtestFile, location, zValues);
             FileUtils.DeleteIfExists(localtestFile);
         }
@@ -120,31 +124,31 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         [Test]
         public void TestWriteZValues_GivesWarningForEdgeLocations()
         {
-            var testFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), @"ugrid\Custom_Ugrid.nc");
+            string testFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), @"ugrid\Custom_Ugrid.nc");
             Assert.IsTrue(File.Exists(testFilePath));
 
-            var localtestFile = TestHelper.CreateLocalCopy(testFilePath);
-            var grid = UnstructuredGridFileHelper.LoadFromFile(localtestFile);
+            string localtestFile = TestHelper.CreateLocalCopy(testFilePath);
+            UnstructuredGrid grid = UnstructuredGridFileHelper.LoadFromFile(localtestFile);
 
             var location = UnstructuredGridFileHelper.BedLevelLocation.CellEdges;
-            var zValues = Enumerable.Repeat(123.456, grid.Edges.Count).ToArray();
-            
-            TestHelper.AssertAtLeastOneLogMessagesContains(()=> UnstructuredGridFileHelper.WriteZValues(localtestFile, location, zValues),
-                Properties.Resources.UnstructuredGridFileHelper_WriteZValues_Unable_to_write_z_values_at_this_location__CellEdges_are_not_currently_supported);
+            double[] zValues = Enumerable.Repeat(123.456, grid.Edges.Count).ToArray();
+
+            TestHelper.AssertAtLeastOneLogMessagesContains(() => UnstructuredGridFileHelper.WriteZValues(localtestFile, location, zValues),
+                                                           Resources.UnstructuredGridFileHelper_WriteZValues_Unable_to_write_z_values_at_this_location__CellEdges_are_not_currently_supported);
 
             FileUtils.DeleteIfExists(localtestFile);
         }
 
         [Test]
         [TestCase("fileDoesNotExist.nc", false, null)]
-        [TestCase(@"ugrid\Custom_Ugrid.nc", true, 4326L)] // WGS84
+        [TestCase(@"ugrid\Custom_Ugrid.nc", true, 4326L)]  // WGS84
         [TestCase(@"nonUgrid\small_net.nc", true, 28992L)] // Amersfoort / RD New
         public void TestGetCoordinateSystem(string filePath, bool testFileExists, long? expectedResult)
         {
-            var testFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), filePath);
+            string testFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), filePath);
             Assert.AreEqual(testFileExists, File.Exists(testFilePath));
-            
-            var coordinateSystemAuthorityCode = UnstructuredGridFileHelper.GetCoordinateSystem(testFilePath)?.AuthorityCode;
+
+            long? coordinateSystemAuthorityCode = UnstructuredGridFileHelper.GetCoordinateSystem(testFilePath)?.AuthorityCode;
             Assert.AreEqual(expectedResult, coordinateSystemAuthorityCode);
         }
 
@@ -153,13 +157,13 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         [TestCase(@"nonUgrid\TAK3_net.nc")]
         public void TestSetCoordinateSystem(string filePath)
         {
-            var testFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), filePath);
+            string testFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), filePath);
             Assert.IsTrue(File.Exists(testFilePath));
 
-            var localtestFile = TestHelper.CreateLocalCopy(testFilePath);
+            string localtestFile = TestHelper.CreateLocalCopy(testFilePath);
             var coordinateSystemFactory = new OgrCoordinateSystemFactory();
 
-            var coordinateSystem = coordinateSystemFactory.CreateFromEPSG(28992); // Amersfoort / RD New
+            ICoordinateSystem coordinateSystem = coordinateSystemFactory.CreateFromEPSG(28992); // Amersfoort / RD New
             UnstructuredGridFileHelper.SetCoordinateSystem(localtestFile, coordinateSystem);
 
             coordinateSystem = coordinateSystemFactory.CreateFromEPSG(4326); // WGS84
@@ -171,10 +175,10 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         [Test]
         public void TestWriteGridToFile_DoesNotThrowForExistingFile()
         {
-            var testFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), @"nonUgrid\TAK3_net.nc");
+            string testFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), @"nonUgrid\TAK3_net.nc");
             Assert.IsTrue(File.Exists(testFilePath));
 
-            var localtestFile = TestHelper.CreateLocalCopy(testFilePath);
+            string localtestFile = TestHelper.CreateLocalCopy(testFilePath);
             UnstructuredGridFileHelper.WriteGridToFile(localtestFile, new UnstructuredGrid());
 
             FileUtils.DeleteIfExists(localtestFile);
@@ -183,10 +187,10 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         [Test]
         public void TestWriteGridToFile_CreateNewFileForNonExistingFile()
         {
-            var testFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), "fileDoesNotExist.nc");
+            string testFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), "fileDoesNotExist.nc");
             Assert.IsFalse(File.Exists(testFilePath));
 
-            var localtestFile = TestHelper.CreateLocalCopy(testFilePath);
+            string localtestFile = TestHelper.CreateLocalCopy(testFilePath);
             Assert.IsFalse(File.Exists(testFilePath));
 
             UnstructuredGridFileHelper.WriteGridToFile(localtestFile, new UnstructuredGrid());
@@ -200,13 +204,13 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         [TestCase(@"nonUgrid\TAK3_net.nc")]
         public void TestRewriteGridCoordinates(string filePath)
         {
-            var testFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), filePath);
+            string testFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), filePath);
             Assert.IsTrue(File.Exists(testFilePath));
 
-            var localtestFile = TestHelper.CreateLocalCopy(testFilePath);
-            var grid = UnstructuredGridFileHelper.LoadFromFile(localtestFile);
+            string localtestFile = TestHelper.CreateLocalCopy(testFilePath);
+            UnstructuredGrid grid = UnstructuredGridFileHelper.LoadFromFile(localtestFile);
 
-            foreach (var coordinate in grid.Vertices)
+            foreach (Coordinate coordinate in grid.Vertices)
             {
                 coordinate.X += 1.0;
                 coordinate.Y -= 1.0;
@@ -222,7 +226,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         [TestCase(@"nonUgrid\TAK3_net.nc", 0)]
         public void TestDoIfUgrid(string filePath, int expectedCounter)
         {
-            var testFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), filePath);
+            string testFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), filePath);
             Assert.IsTrue(File.Exists(testFilePath));
 
             var counter = 0;
@@ -230,15 +234,14 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             Assert.AreEqual(expectedCounter, counter);
         }
 
-
         /// <summary>
         /// GIVEN
-        ///   An UnstructuredGridFileHelper AND
-        ///   A Path
+        /// An UnstructuredGridFileHelper AND
+        /// A Path
         /// WHEN
-        ///   UnstructuredGridFileHelper.WriteEmptyUnstructuredGridFile is called with Path
+        /// UnstructuredGridFileHelper.WriteEmptyUnstructuredGridFile is called with Path
         /// Then
-        ///   An empty Unstructured Grid file is created.
+        /// An empty Unstructured Grid file is created.
         /// </summary>
         [Test]
         [Category(TestCategory.DataAccess)]
@@ -248,13 +251,13 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             TestHelper.PerformActionInTemporaryDirectory(tempDir =>
             {
                 // Given
-                var path = Path.Combine(tempDir, fileName);
+                string path = Path.Combine(tempDir, fileName);
 
                 // When
                 UnstructuredGridFileHelper.WriteEmptyUnstructuredGridFile(path);
 
                 // Then
-                using (var uGrid = new UGrid(path, mode: GridApiDataSet.NetcdfOpenMode.nf90_nowrite))
+                using (var uGrid = new UGrid(path, GridApiDataSet.NetcdfOpenMode.nf90_nowrite))
                 {
                     uGrid.Initialize();
                     Assert.That(uGrid.IsValid());
@@ -263,15 +266,14 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             });
         }
 
-
         /// <summary>
         /// GIVEN
-        ///   An Empty Unstructured Grid File AND
-        ///   A Null Coordinate System
+        /// An Empty Unstructured Grid File AND
+        /// A Null Coordinate System
         /// WHEN
-        ///   This Coordinate System is written to this file
+        /// This Coordinate System is written to this file
         /// THEN
-        ///   The Unstructured Grid File should contain the Null Coordinate System
+        /// The Unstructured Grid File should contain the Null Coordinate System
         /// </summary>
         [Test]
         [Category(TestCategory.DataAccess)]
@@ -282,7 +284,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
             TestHelper.PerformActionInTemporaryDirectory(tempDir =>
             {
-                var path = Path.Combine(tempDir, fileName);
+                string path = Path.Combine(tempDir, fileName);
 
                 // Construct empty file.
                 UnstructuredGridFileHelper.WriteEmptyUnstructuredGridFile(path);
@@ -291,7 +293,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                 UnstructuredGridFileHelper.WriteCoordinateSystemToFile(path, null, true);
 
                 // Then
-                using (var uGrid = new UGrid(path, mode: GridApiDataSet.NetcdfOpenMode.nf90_nowrite))
+                using (var uGrid = new UGrid(path, GridApiDataSet.NetcdfOpenMode.nf90_nowrite))
                 {
                     uGrid.Initialize();
                     Assert.That(uGrid.IsValid());
@@ -304,55 +306,12 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
         /// <summary>
         /// GIVEN
-        ///   An Empty Unstructured Grid File AND
-        ///   A Coordinate System with Authority code {epsg}
+        /// An Unstructured Grid File containing a cartesian coordinate system AND
+        /// A cartesian Coordinate System with a different AuthorityCode
         /// WHEN
-        ///   This Coordinate System is written to this file
+        /// This Coordinate System is written to this file
         /// THEN
-        ///   The Unstructured Grid File should contain the Coordinate System
-        /// </summary>
-        [TestCase(4326,  TestName = "GivenAnEmptyUnstructuredGridFileAndASphericalCoordinateSystem_WhenThisCoordinateSystemIsWrittenToThisFile_ThenThisCoordinateSystemShouldBeWrittenCorrectly")]
-        [TestCase(28992, TestName = "GivenAnEmptyUnstructuredGridFileAndACartesianCoordinateSystem_WhenThisCoordinateSystemIsWrittenToThisFile_ThenThisCoordinateSystemShouldBeWrittenCorrectly")]
-        [Category(TestCategory.DataAccess)]
-        [Category(TestCategory.Slow)]
-        public void GivenAnEmptyUnstructuredGridFileAndACoordinateSystem_WhenThisCoordinateSystemIsWrittenToThisFile_ThenTheUnstructuredGridFileShouldContainTheCoordinateSystem(int epsg)
-        {
-            const string fileName = "unstructured_grid_file_net.nc";
-
-            // Given
-            var coordinateSystemFactory = new OgrCoordinateSystemFactory();
-            var coordinateSystem = coordinateSystemFactory.CreateFromEPSG(epsg);
-
-            TestHelper.PerformActionInTemporaryDirectory(tempDir =>
-            {
-                var path = Path.Combine(tempDir, fileName);
-
-                // Construct empty file.
-                UnstructuredGridFileHelper.WriteEmptyUnstructuredGridFile(path);
-
-                // When
-                UnstructuredGridFileHelper.WriteCoordinateSystemToFile(path, coordinateSystem, true);
-
-                // Then
-                using (var uGrid = new UGrid(path, mode: GridApiDataSet.NetcdfOpenMode.nf90_nowrite))
-                {
-                    uGrid.Initialize();
-                    Assert.That(uGrid.IsValid());
-                    Assert.That(uGrid.GetNumberOfNetworks(), Is.EqualTo(0));
-                    Assert.That(uGrid.CoordinateSystem, Is.Not.Null);
-                    Assert.That(uGrid.CoordinateSystem.AuthorityCode, Is.EqualTo(coordinateSystem.AuthorityCode));
-                }
-            });
-        }
-
-        /// <summary>
-        /// GIVEN
-        ///   An Unstructured Grid File containing a cartesian coordinate system AND
-        ///   A cartesian Coordinate System with a different AuthorityCode
-        /// WHEN
-        ///   This Coordinate System is written to this file
-        /// THEN
-        ///   The Unstructured Grid File should contain the new Coordinate System
+        /// The Unstructured Grid File should contain the new Coordinate System
         /// </summary>
         [Test]
         [Category(TestCategory.DataAccess)]
@@ -363,19 +322,19 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             const string fileName = "unstructured_grid_file_net.nc";
 
             var coordinateSystemFactory = new OgrCoordinateSystemFactory();
-            var originalCoordinateSystem = coordinateSystemFactory.CreateFromEPSG(0);
-            var newCoordinateSystem = coordinateSystemFactory.CreateFromEPSG(28992);
+            ICoordinateSystem originalCoordinateSystem = coordinateSystemFactory.CreateFromEPSG(0);
+            ICoordinateSystem newCoordinateSystem = coordinateSystemFactory.CreateFromEPSG(28992);
 
             TestHelper.PerformActionInTemporaryDirectory(tempDir =>
             {
-                var path = Path.Combine(tempDir, fileName);
+                string path = Path.Combine(tempDir, fileName);
 
                 // Construct non empty file
                 UnstructuredGridFileHelper.WriteEmptyUnstructuredGridFile(path);
                 UnstructuredGridFileHelper.WriteCoordinateSystemToFile(path, originalCoordinateSystem, true);
 
                 // ensure Given file is correct.
-                using (var uGrid = new UGrid(path, mode: GridApiDataSet.NetcdfOpenMode.nf90_nowrite))
+                using (var uGrid = new UGrid(path, GridApiDataSet.NetcdfOpenMode.nf90_nowrite))
                 {
                     uGrid.Initialize();
                     Assert.That(uGrid.IsValid());
@@ -388,7 +347,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                 UnstructuredGridFileHelper.WriteCoordinateSystemToFile(path, newCoordinateSystem, true);
 
                 // Then
-                using (var uGrid = new UGrid(path, mode: GridApiDataSet.NetcdfOpenMode.nf90_nowrite))
+                using (var uGrid = new UGrid(path, GridApiDataSet.NetcdfOpenMode.nf90_nowrite))
                 {
                     uGrid.Initialize();
                     Assert.That(uGrid.IsValid());
@@ -401,35 +360,35 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
         /// <summary>
         /// GIVEN
-        ///   An Unstructured Grid File Containing A Coordinate System AND
+        /// An Unstructured Grid File Containing A Coordinate System AND
         /// WHEN
-        ///   The same coordinate system is written to the Unstructured Grid File
+        /// The same coordinate system is written to the Unstructured Grid File
         /// THEN
-        ///   The Unstructured Grid File should still contain the same Coordinate System
+        /// The Unstructured Grid File should still contain the same Coordinate System
         /// </summary>
         [Test]
-        [TestCase(4326,  TestName = "GivenAnUnstructuredGridFileContainingACartesianCoordinateSystem_WhenTheSameCoordinateSystemIsWrittenToThisFile_ThenTheFileShouldContainTheCorrectCoordinateSystem")]
+        [TestCase(4326, TestName = "GivenAnUnstructuredGridFileContainingACartesianCoordinateSystem_WhenTheSameCoordinateSystemIsWrittenToThisFile_ThenTheFileShouldContainTheCorrectCoordinateSystem")]
         [TestCase(28992, TestName = "GivenAnUnstructuredGridFileContainingASphericalCoordinateSystem_WhenTheSameCoordinateSystemIsWrittenToThisFile_ThenTheFileShouldContainTheCorrectCoordinateSystem")]
         [Category(TestCategory.DataAccess)]
         public void GivenAnUnstructuredGridFileContainingACoordinateSystem_WhenTheSameCoordinateSystemIsWrittenToThisFile_ThenTheFileShouldContainTheCorrectCoordinateSystem(
-                int epsg)
+            int epsg)
         {
             // Given
             const string fileName = "unstructured_grid_file_net.nc";
 
             var coordinateSystemFactory = new OgrCoordinateSystemFactory();
-            var coordinateSystem = coordinateSystemFactory.CreateFromEPSG(epsg);
+            ICoordinateSystem coordinateSystem = coordinateSystemFactory.CreateFromEPSG(epsg);
 
             TestHelper.PerformActionInTemporaryDirectory(tempDir =>
             {
-                var path = Path.Combine(tempDir, fileName);
+                string path = Path.Combine(tempDir, fileName);
 
                 // Construct non empty file
                 UnstructuredGridFileHelper.WriteEmptyUnstructuredGridFile(path);
                 UnstructuredGridFileHelper.WriteCoordinateSystemToFile(path, coordinateSystem, true);
 
                 // ensure Given file is correct.
-                using (var uGrid = new UGrid(path, mode: GridApiDataSet.NetcdfOpenMode.nf90_nowrite))
+                using (var uGrid = new UGrid(path, GridApiDataSet.NetcdfOpenMode.nf90_nowrite))
                 {
                     uGrid.Initialize();
                     Assert.That(uGrid.IsValid());
@@ -442,7 +401,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                 UnstructuredGridFileHelper.WriteCoordinateSystemToFile(path, coordinateSystem, true);
 
                 // Then
-                using (var uGrid = new UGrid(path, mode: GridApiDataSet.NetcdfOpenMode.nf90_nowrite))
+                using (var uGrid = new UGrid(path, GridApiDataSet.NetcdfOpenMode.nf90_nowrite))
                 {
                     uGrid.Initialize();
                     Assert.That(uGrid.IsValid());
@@ -455,11 +414,11 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
         /// <summary>
         /// GIVEN
-        ///   An Unstructured Grid File containing a null coordinate system.
+        /// An Unstructured Grid File containing a null coordinate system.
         /// WHEN
-        ///   A null coordinate system is written to this Unstructured Grid File
+        /// A null coordinate system is written to this Unstructured Grid File
         /// THEN
-        ///   The Unstructured Grid File should still contain a null coordinate system.
+        /// The Unstructured Grid File should still contain a null coordinate system.
         /// </summary>
         [Test]
         [Category(TestCategory.DataAccess)]
@@ -470,30 +429,31 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             const string fileName = "unstructured_grid_file_net.nc";
 
             var coordinateSystemFactory = new OgrCoordinateSystemFactory();
-            var coordinateSystem = coordinateSystemFactory.CreateFromEPSG(0);
+            ICoordinateSystem coordinateSystem = coordinateSystemFactory.CreateFromEPSG(0);
 
             TestHelper.PerformActionInTemporaryDirectory(tempDir =>
             {
-                var path = Path.Combine(tempDir, fileName);
+                string path = Path.Combine(tempDir, fileName);
 
                 // Construct non empty file
                 UnstructuredGridFileHelper.WriteEmptyUnstructuredGridFile(path);
                 UnstructuredGridFileHelper.WriteCoordinateSystemToFile(path, coordinateSystem, true);
 
                 // ensure Given file is correct.
-                using (var uGrid = new UGrid(path, mode: GridApiDataSet.NetcdfOpenMode.nf90_nowrite))
+                using (var uGrid = new UGrid(path, GridApiDataSet.NetcdfOpenMode.nf90_nowrite))
                 {
                     uGrid.Initialize();
                     Assert.That(uGrid.IsValid());
                     Assert.That(uGrid.GetNumberOfNetworks(), Is.EqualTo(0));
                 }
+
                 AssertFileContainsNullCoordinateSystem(path);
 
                 // When
                 UnstructuredGridFileHelper.WriteCoordinateSystemToFile(path, coordinateSystem, true);
 
                 // Then
-                using (var uGrid = new UGrid(path, mode: GridApiDataSet.NetcdfOpenMode.nf90_nowrite))
+                using (var uGrid = new UGrid(path, GridApiDataSet.NetcdfOpenMode.nf90_nowrite))
                 {
                     uGrid.Initialize();
                     Assert.That(uGrid.IsValid());
@@ -510,12 +470,12 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         // same ESPG coordinate system.
         /// <summary>
         /// GIVEN
-        ///   An unstructured grid file containing a coordinate system of type A AND
-        ///   A coordinate system of type B
+        /// An unstructured grid file containing a coordinate system of type A AND
+        /// A coordinate system of type B
         /// WHEN
-        ///   The coordinate system of type B is written to the Unstructured Grid File is written to file
+        /// The coordinate system of type B is written to the Unstructured Grid File is written to file
         /// THEN
-        ///   Both variables should contain the Authority Code of coordinate system of type B
+        /// Both variables should contain the Authority Code of coordinate system of type B
         /// </summary>
         [Test]
         [TestCase(4326, 28992)]
@@ -529,19 +489,19 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             const string fileName = "unstructured_grid_file_net.nc";
 
             var coordinateSystemFactory = new OgrCoordinateSystemFactory();
-            var originalCoordinateSystem = coordinateSystemFactory.CreateFromEPSG(originalEpsg);
-            var newCoordinateSystem = coordinateSystemFactory.CreateFromEPSG(newEpsg);
+            ICoordinateSystem originalCoordinateSystem = coordinateSystemFactory.CreateFromEPSG(originalEpsg);
+            ICoordinateSystem newCoordinateSystem = coordinateSystemFactory.CreateFromEPSG(newEpsg);
 
             TestHelper.PerformActionInTemporaryDirectory(tempDir =>
             {
-                var path = Path.Combine(tempDir, fileName);
+                string path = Path.Combine(tempDir, fileName);
 
                 // Construct non empty file
                 UnstructuredGridFileHelper.WriteEmptyUnstructuredGridFile(path);
                 UnstructuredGridFileHelper.WriteCoordinateSystemToFile(path, originalCoordinateSystem, true);
 
                 // ensure Given file is correct.
-                using (var uGrid = new UGrid(path, mode: GridApiDataSet.NetcdfOpenMode.nf90_nowrite))
+                using (var uGrid = new UGrid(path, GridApiDataSet.NetcdfOpenMode.nf90_nowrite))
                 {
                     uGrid.Initialize();
                     Assert.That(uGrid.IsValid());
@@ -554,7 +514,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                 UnstructuredGridFileHelper.WriteCoordinateSystemToFile(path, newCoordinateSystem, true);
 
                 // Then
-                using (var uGrid = new UGrid(path, mode: GridApiDataSet.NetcdfOpenMode.nf90_nowrite))
+                using (var uGrid = new UGrid(path, GridApiDataSet.NetcdfOpenMode.nf90_nowrite))
                 {
                     uGrid.Initialize();
                     Assert.That(uGrid.IsValid());
@@ -568,17 +528,17 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                 try
                 {
                     netCdfFile = NetCdfFile.OpenExisting(path);
-                    var projectedCoordinateSystemVariable = netCdfFile.GetVariableByName("projected_coordinate_system");
+                    NetCdfVariable projectedCoordinateSystemVariable = netCdfFile.GetVariableByName("projected_coordinate_system");
                     Assert.That(projectedCoordinateSystemVariable, Is.Not.Null);
-                    var pcsVarAttributes = netCdfFile.GetAttributes(projectedCoordinateSystemVariable);
+                    Dictionary<string, object> pcsVarAttributes = netCdfFile.GetAttributes(projectedCoordinateSystemVariable);
                     Assert.That(pcsVarAttributes.Keys.Contains("epsg"));
-                    Assert.That((int) pcsVarAttributes["epsg"], Is.EqualTo((int)newCoordinateSystem.AuthorityCode));
+                    Assert.That((int) pcsVarAttributes["epsg"], Is.EqualTo((int) newCoordinateSystem.AuthorityCode));
 
-                    var wgs84Variable = netCdfFile.GetVariableByName("wgs84");
+                    NetCdfVariable wgs84Variable = netCdfFile.GetVariableByName("wgs84");
                     Assert.That(wgs84Variable, Is.Not.Null);
-                    var wgsVarAttributes = netCdfFile.GetAttributes(wgs84Variable);
+                    Dictionary<string, object> wgsVarAttributes = netCdfFile.GetAttributes(wgs84Variable);
                     Assert.That(wgsVarAttributes.Keys.Contains("epsg"));
-                    Assert.That((int) wgsVarAttributes["epsg"], Is.EqualTo((int)newCoordinateSystem.AuthorityCode));
+                    Assert.That((int) wgsVarAttributes["epsg"], Is.EqualTo((int) newCoordinateSystem.AuthorityCode));
                 }
                 finally
                 {
@@ -587,6 +547,48 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             });
         }
 
+        /// <summary>
+        /// GIVEN
+        /// An Empty Unstructured Grid File AND
+        /// A Coordinate System with Authority code {epsg}
+        /// WHEN
+        /// This Coordinate System is written to this file
+        /// THEN
+        /// The Unstructured Grid File should contain the Coordinate System
+        /// </summary>
+        [TestCase(4326, TestName = "GivenAnEmptyUnstructuredGridFileAndASphericalCoordinateSystem_WhenThisCoordinateSystemIsWrittenToThisFile_ThenThisCoordinateSystemShouldBeWrittenCorrectly")]
+        [TestCase(28992, TestName = "GivenAnEmptyUnstructuredGridFileAndACartesianCoordinateSystem_WhenThisCoordinateSystemIsWrittenToThisFile_ThenThisCoordinateSystemShouldBeWrittenCorrectly")]
+        [Category(TestCategory.DataAccess)]
+        [Category(TestCategory.Slow)]
+        public void GivenAnEmptyUnstructuredGridFileAndACoordinateSystem_WhenThisCoordinateSystemIsWrittenToThisFile_ThenTheUnstructuredGridFileShouldContainTheCoordinateSystem(int epsg)
+        {
+            const string fileName = "unstructured_grid_file_net.nc";
+
+            // Given
+            var coordinateSystemFactory = new OgrCoordinateSystemFactory();
+            ICoordinateSystem coordinateSystem = coordinateSystemFactory.CreateFromEPSG(epsg);
+
+            TestHelper.PerformActionInTemporaryDirectory(tempDir =>
+            {
+                string path = Path.Combine(tempDir, fileName);
+
+                // Construct empty file.
+                UnstructuredGridFileHelper.WriteEmptyUnstructuredGridFile(path);
+
+                // When
+                UnstructuredGridFileHelper.WriteCoordinateSystemToFile(path, coordinateSystem, true);
+
+                // Then
+                using (var uGrid = new UGrid(path, GridApiDataSet.NetcdfOpenMode.nf90_nowrite))
+                {
+                    uGrid.Initialize();
+                    Assert.That(uGrid.IsValid());
+                    Assert.That(uGrid.GetNumberOfNetworks(), Is.EqualTo(0));
+                    Assert.That(uGrid.CoordinateSystem, Is.Not.Null);
+                    Assert.That(uGrid.CoordinateSystem.AuthorityCode, Is.EqualTo(coordinateSystem.AuthorityCode));
+                }
+            });
+        }
 
         /// <summary>
         /// Assert the Unstructured Grid File located at <paramref name="path"/>
@@ -602,7 +604,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
                 Assert.That(netCdfFile.GetVariableByName("wgs84"), Is.Null);
 
-                var projectedCoordinateSystemVariable =
+                NetCdfVariable projectedCoordinateSystemVariable =
                     netCdfFile.GetVariableByName("projected_coordinate_system");
                 Assert.That(projectedCoordinateSystemVariable, Is.Not.Null);
                 Assert.That(netCdfFile.GetAttributeValue(projectedCoordinateSystemVariable, "epsg"), Is.EqualTo("0"));

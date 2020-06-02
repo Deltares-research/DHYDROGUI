@@ -6,7 +6,7 @@ using NUnit.Framework;
 namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors
 {
     [TestFixture]
-    class WaveBoundaryConditionDataViewTest
+    internal class WaveBoundaryConditionDataViewTest
     {
         [Test]
         public void GivenAWaveModel_WhenGettingTheStartAndStopTimeForTimeSeriesDialog_ThenStartTimeIsEqualToModelReferenceDate()
@@ -14,11 +14,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors
             var view = new WaveBoundaryConditionDataView();
             view.Model = new WaveModel();
 
-            var startTime = TypeUtils.GetPropertyValue(view, "StartTime");
-            var stopTime = TypeUtils.GetPropertyValue(view, "StopTime");
+            object startTime = TypeUtils.GetPropertyValue(view, "StartTime");
+            object stopTime = TypeUtils.GetPropertyValue(view, "StopTime");
 
             Assert.AreEqual(startTime, view.Model.ModelDefinition.ModelReferenceDateTime);
-            Assert.AreEqual(stopTime, ((DateTime)startTime).AddDays(1));
+            Assert.AreEqual(stopTime, ((DateTime) startTime).AddDays(1));
         }
     }
 }

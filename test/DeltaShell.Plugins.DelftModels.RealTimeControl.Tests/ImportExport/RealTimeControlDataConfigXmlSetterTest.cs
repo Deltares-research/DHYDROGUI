@@ -13,16 +13,16 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
     [TestFixture]
     public class RealTimeControlDataConfigXmlSetterTest
     {
-        private RealTimeControlDataConfigXmlSetter dataConfigSetter;
-        private ILogHandler logHandler;
-        private IControlGroup controlGroup;
         private const string InputName = "input_name";
         private const string ComponentName = "component_name";
         private const string ControlGroupName = "control_group_name";
-        private readonly TimeSpan timeStep = new TimeSpan(0, 1, 0, 0);
 
         private const string AssertMessage_CollectedLogMessagesDidNotContainExpectedMessage = "The collected log messages did not contain the expected message.";
         private const string AssertMessage_NumberOfLoggedMessagesWasExpectedToBeZero = "Number of logged messages was expected to be zero.";
+        private RealTimeControlDataConfigXmlSetter dataConfigSetter;
+        private ILogHandler logHandler;
+        private IControlGroup controlGroup;
+        private readonly TimeSpan timeStep = new TimeSpan(0, 1, 0, 0);
 
         [SetUp]
         public void SetUp()
@@ -40,40 +40,20 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
             controlGroup = null;
         }
 
-        [TestCase(PIInterpolationOptionEnumStringType.BLOCK, InterpolationType.Constant, PIExtrapolationOptionEnumStringType.BLOCK, ExtrapolationType.Constant)]
-        [TestCase(PIInterpolationOptionEnumStringType.LINEAR, InterpolationType.Linear, PIExtrapolationOptionEnumStringType.PERIODIC, ExtrapolationType.Periodic)]
-        public void GivenATimeRuleElementWithInterpolationAndExtrapolationAndAMatchingRuleInControlGroup_WhenSetInterpolationAndExtrapolationRtcComponentsIsCalled_CorrectInterpolationAndExtrapolationIsSetOnRule(
-            PIInterpolationOptionEnumStringType interpolationType, InterpolationType expectedInterpolation,
-            PIExtrapolationOptionEnumStringType extrapolationType, ExtrapolationType expectedExtrapolation)
-        {
-            // Given
-            var timeSeriesElement = CreateTimeSeriesElement(RtcXmlTag.TimeRule, interpolationType, extrapolationType);
-            var rule = new TimeRule(ComponentName);
-            controlGroup.Rules.Add(rule);
-
-            // When
-            dataConfigSetter.SetInterpolationAndExtrapolationRtcComponents(
-                new[] {timeSeriesElement},
-                new[] {controlGroup});
-
-            // Then
-            Assert.AreEqual(expectedInterpolation, rule.InterpolationOptionsTime, 
-                $"Interpolation for time rule was expected to be '{expectedInterpolation.ToString()}'");
-            Assert.AreEqual(expectedExtrapolation, rule.Periodicity, 
-                $"Extrapolation for time rule was expected to be '{expectedExtrapolation.ToString()}'");
-        }
-
         [Test]
         public void GivenANullParameterAsElements_WhenSetInterpolationAndExtrapolationRtcComponentsIsCalled_ThenNothingHappensAndMethodIsReturned()
         {
             Assert.DoesNotThrow(
                 () => dataConfigSetter.SetInterpolationAndExtrapolationRtcComponents(
                     null,
-                    new[] {controlGroup}),
+                    new[]
+                    {
+                        controlGroup
+                    }),
                 "Method throws an unexpected exception when parameter 'elements' is null.");
 
-            Assert.AreEqual(0, logHandler.LogMessagesTable.Count, 
-                AssertMessage_NumberOfLoggedMessagesWasExpectedToBeZero);
+            Assert.AreEqual(0, logHandler.LogMessagesTable.Count,
+                            AssertMessage_NumberOfLoggedMessagesWasExpectedToBeZero);
         }
 
         [Test]
@@ -81,12 +61,146 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
         {
             Assert.DoesNotThrow(
                 () => dataConfigSetter.SetInterpolationAndExtrapolationRtcComponents(
-                    new[] {new PITimeSeriesXML()},
+                    new[]
+                    {
+                        new PITimeSeriesXML()
+                    },
                     null),
                 "Method throws an unexpected exception when parameter 'controlGroups' is null.");
 
             Assert.AreEqual(0, logHandler.LogMessagesTable.Count,
-                AssertMessage_NumberOfLoggedMessagesWasExpectedToBeZero);
+                            AssertMessage_NumberOfLoggedMessagesWasExpectedToBeZero);
+        }
+
+        [Test]
+        public void GivenNullGivenAsParameters_WhenSetInterpolationAndExtrapolationRtcComponentsIsCalled_NothingHappens()
+        {
+            // When
+            dataConfigSetter.SetInterpolationAndExtrapolationRtcComponents(null, null);
+
+            // Then
+            Assert.AreEqual(0, logHandler.LogMessagesTable.Count,
+                            AssertMessage_NumberOfLoggedMessagesWasExpectedToBeZero);
+        }
+
+        [Test]
+        public void GivenAnHydraulicRuleWithoutInputs_WhenSetTimeLagOnHydraulicRulesIsCalled_ThenExpectedLogMessageIsGiven()
+        {
+            // Given
+            var timeSeriesElement = new RTCTimeSeriesXML();
+            var hydraulicRule = new HydraulicRule();
+
+            string expectedMessage = string.Format(
+                Resources.RealTimeControlDataConfigXmlSetter_SetTimeLagOnHydraulicRules_Hydraulic_rule___0___must_have_an_input__Please_check_file____1___,
+                hydraulicRule.Name, RealTimeControlXMLFiles.XmlTools);
+
+            // When
+            dataConfigSetter.SetTimeLagOnHydraulicRules(
+                new[]
+                {
+                    timeSeriesElement
+                },
+                new[]
+                {
+                    hydraulicRule
+                },
+                timeStep);
+
+            // Then
+            Assert.IsTrue(logHandler.LogMessagesTable.AllMessages.Contains(expectedMessage),
+                          AssertMessage_CollectedLogMessagesDidNotContainExpectedMessage);
+            Assert.AreEqual(0, hydraulicRule.TimeLag,
+                            "Expected time lag for hydraulic rule was expected to be 0.");
+        }
+
+        [Test]
+        public void GivenAnHydraulicRuleAndWithoutAMatchingInputElement_WhenSetTimeLagOnHydraulicRulesIsCalled_ThenTimeLagIsUnchanged()
+        {
+            // Given
+            var timeSeriesElement = new RTCTimeSeriesXML {vectorLength = 2};
+            var hydraulicRule = new HydraulicRule
+            {
+                Inputs = {new Input {Name = InputName}},
+                TimeLag = 0
+            };
+
+            // When
+            dataConfigSetter.SetTimeLagOnHydraulicRules(
+                new[]
+                {
+                    timeSeriesElement
+                },
+                new[]
+                {
+                    hydraulicRule
+                },
+                timeStep);
+
+            // Then
+            Assert.That(hydraulicRule.TimeLag, Is.EqualTo(0)); // Time lag of hydraulic rule is unchanged (0)
+        }
+
+        [Test]
+        public void GivenANullParameterAsElements_WhenSetTimeLagOnHydraulicRulesIsCalled_ThenNothingHappensAndMethodIsReturned()
+        {
+            Assert.DoesNotThrow(
+                () => dataConfigSetter.SetTimeLagOnHydraulicRules(
+                    null,
+                    new[]
+                    {
+                        new HydraulicRule()
+                    },
+                    new TimeSpan()),
+                "Method throws an unexpected exception when parameter 'elements' is null");
+
+            Assert.AreEqual(0, logHandler.LogMessagesTable.Count,
+                            AssertMessage_NumberOfLoggedMessagesWasExpectedToBeZero);
+        }
+
+        [Test]
+        public void GivenANullParameterAsControlGroups_WhenSetTimeLagOnHydraulicRulesIsCalled_ThenNothingHappensAndMethodIsReturned()
+        {
+            Assert.DoesNotThrow(
+                () => dataConfigSetter.SetTimeLagOnHydraulicRules(
+                    new[]
+                    {
+                        new RTCTimeSeriesXML()
+                    },
+                    null,
+                    timeStep),
+                "Method throws an unexpected exception when parameter 'controlGroups' is null.");
+
+            Assert.AreEqual(0, logHandler.LogMessagesTable.Count,
+                            AssertMessage_NumberOfLoggedMessagesWasExpectedToBeZero);
+        }
+
+        [TestCase(PIInterpolationOptionEnumStringType.BLOCK, InterpolationType.Constant, PIExtrapolationOptionEnumStringType.BLOCK, ExtrapolationType.Constant)]
+        [TestCase(PIInterpolationOptionEnumStringType.LINEAR, InterpolationType.Linear, PIExtrapolationOptionEnumStringType.PERIODIC, ExtrapolationType.Periodic)]
+        public void GivenATimeRuleElementWithInterpolationAndExtrapolationAndAMatchingRuleInControlGroup_WhenSetInterpolationAndExtrapolationRtcComponentsIsCalled_CorrectInterpolationAndExtrapolationIsSetOnRule(
+            PIInterpolationOptionEnumStringType interpolationType, InterpolationType expectedInterpolation,
+            PIExtrapolationOptionEnumStringType extrapolationType, ExtrapolationType expectedExtrapolation)
+        {
+            // Given
+            PITimeSeriesXML timeSeriesElement = CreateTimeSeriesElement(RtcXmlTag.TimeRule, interpolationType, extrapolationType);
+            var rule = new TimeRule(ComponentName);
+            controlGroup.Rules.Add(rule);
+
+            // When
+            dataConfigSetter.SetInterpolationAndExtrapolationRtcComponents(
+                new[]
+                {
+                    timeSeriesElement
+                },
+                new[]
+                {
+                    controlGroup
+                });
+
+            // Then
+            Assert.AreEqual(expectedInterpolation, rule.InterpolationOptionsTime,
+                            $"Interpolation for time rule was expected to be '{expectedInterpolation.ToString()}'");
+            Assert.AreEqual(expectedExtrapolation, rule.Periodicity,
+                            $"Extrapolation for time rule was expected to be '{expectedExtrapolation.ToString()}'");
         }
 
         [TestCase(PIInterpolationOptionEnumStringType.BLOCK, InterpolationType.Constant)]
@@ -95,18 +209,24 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
             PIInterpolationOptionEnumStringType interpolationType, InterpolationType expectedInterpolation)
         {
             // Given
-            var timeSeriesElement = CreateTimeSeriesElement(RtcXmlTag.RelativeTimeRule, interpolationType);
+            PITimeSeriesXML timeSeriesElement = CreateTimeSeriesElement(RtcXmlTag.RelativeTimeRule, interpolationType);
             var rule = new RelativeTimeRule {Name = ComponentName};
             controlGroup.Rules.Add(rule);
 
             // When
             dataConfigSetter.SetInterpolationAndExtrapolationRtcComponents(
-                new[] {timeSeriesElement},
-                new[] {controlGroup});
+                new[]
+                {
+                    timeSeriesElement
+                },
+                new[]
+                {
+                    controlGroup
+                });
 
             // Then
-            Assert.AreEqual(expectedInterpolation, rule.Interpolation, 
-                $"Interpolation for relative time rule was expected to be '{expectedInterpolation.ToString()}'");
+            Assert.AreEqual(expectedInterpolation, rule.Interpolation,
+                            $"Interpolation for relative time rule was expected to be '{expectedInterpolation.ToString()}'");
         }
 
         [TestCase(PIInterpolationOptionEnumStringType.BLOCK, InterpolationType.Constant, PIExtrapolationOptionEnumStringType.BLOCK, ExtrapolationType.Constant)]
@@ -116,20 +236,26 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
             PIExtrapolationOptionEnumStringType extrapolationType, ExtrapolationType expectedExtrapolation)
         {
             // Given
-            var timeSeriesElement = CreateTimeSeriesElement(RtcXmlTag.PIDRule, interpolationType, extrapolationType);
+            PITimeSeriesXML timeSeriesElement = CreateTimeSeriesElement(RtcXmlTag.PIDRule, interpolationType, extrapolationType);
             var rule = new PIDRule(ComponentName);
             controlGroup.Rules.Add(rule);
 
             // When
             dataConfigSetter.SetInterpolationAndExtrapolationRtcComponents(
-                new[] {timeSeriesElement},
-                new[] {controlGroup});
+                new[]
+                {
+                    timeSeriesElement
+                },
+                new[]
+                {
+                    controlGroup
+                });
 
             // Then
-            Assert.AreEqual(expectedInterpolation, rule.InterpolationOptionsTime, 
-                $"Interpolation for pid rule was expected to be '{expectedInterpolation.ToString()}'");
-            Assert.AreEqual(expectedExtrapolation, rule.ExtrapolationOptionsTime, 
-                $"Extrapolation for pid rule was expected to be '{expectedExtrapolation.ToString()}'");
+            Assert.AreEqual(expectedInterpolation, rule.InterpolationOptionsTime,
+                            $"Interpolation for pid rule was expected to be '{expectedInterpolation.ToString()}'");
+            Assert.AreEqual(expectedExtrapolation, rule.ExtrapolationOptionsTime,
+                            $"Extrapolation for pid rule was expected to be '{expectedExtrapolation.ToString()}'");
         }
 
         [TestCase(PIInterpolationOptionEnumStringType.BLOCK, InterpolationType.Constant, PIExtrapolationOptionEnumStringType.BLOCK, ExtrapolationType.Constant)]
@@ -139,20 +265,26 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
             PIExtrapolationOptionEnumStringType extrapolationType, ExtrapolationType expectedExtrapolation)
         {
             // Given
-            var timeSeriesElement = CreateTimeSeriesElement(RtcXmlTag.IntervalRule, interpolationType, extrapolationType);
+            PITimeSeriesXML timeSeriesElement = CreateTimeSeriesElement(RtcXmlTag.IntervalRule, interpolationType, extrapolationType);
             var rule = new IntervalRule(ComponentName);
             controlGroup.Rules.Add(rule);
 
             // When
             dataConfigSetter.SetInterpolationAndExtrapolationRtcComponents(
-                new[] {timeSeriesElement},
-                new[] {controlGroup});
+                new[]
+                {
+                    timeSeriesElement
+                },
+                new[]
+                {
+                    controlGroup
+                });
 
             // Then
-            Assert.AreEqual(expectedInterpolation, rule.InterpolationOptionsTime, 
-                $"Interpolation for interval rule was expected to be '{expectedInterpolation.ToString()}'");
-            Assert.AreEqual(expectedExtrapolation, rule.Extrapolation, 
-                $"Extrapolation for interval rule was expected to be '{expectedExtrapolation.ToString()}'");
+            Assert.AreEqual(expectedInterpolation, rule.InterpolationOptionsTime,
+                            $"Interpolation for interval rule was expected to be '{expectedInterpolation.ToString()}'");
+            Assert.AreEqual(expectedExtrapolation, rule.Extrapolation,
+                            $"Extrapolation for interval rule was expected to be '{expectedExtrapolation.ToString()}'");
         }
 
         [TestCase(PIInterpolationOptionEnumStringType.BLOCK, InterpolationType.Constant, PIExtrapolationOptionEnumStringType.BLOCK, ExtrapolationType.Constant)]
@@ -162,20 +294,26 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
             PIExtrapolationOptionEnumStringType extrapolationType, ExtrapolationType expectedExtrapolation)
         {
             // Given
-            var timeSeriesElement = CreateTimeSeriesElement(RtcXmlTag.TimeCondition, interpolationType, extrapolationType);
+            PITimeSeriesXML timeSeriesElement = CreateTimeSeriesElement(RtcXmlTag.TimeCondition, interpolationType, extrapolationType);
             var condition = new TimeCondition {Name = ComponentName};
             controlGroup.Conditions.Add(condition);
 
             // When
             dataConfigSetter.SetInterpolationAndExtrapolationRtcComponents(
-                new[] {timeSeriesElement},
-                new[] {controlGroup});
+                new[]
+                {
+                    timeSeriesElement
+                },
+                new[]
+                {
+                    controlGroup
+                });
 
             // Then
-            Assert.AreEqual(expectedInterpolation, condition.InterpolationOptionsTime, 
-                $"Interpolation for time condition was expected to be '{expectedInterpolation.ToString()}'");
-            Assert.AreEqual(expectedExtrapolation, condition.Extrapolation, 
-                $"Extrapolation for time condition was expected to be '{expectedExtrapolation.ToString()}'");
+            Assert.AreEqual(expectedInterpolation, condition.InterpolationOptionsTime,
+                            $"Interpolation for time condition was expected to be '{expectedInterpolation.ToString()}'");
+            Assert.AreEqual(expectedExtrapolation, condition.Extrapolation,
+                            $"Extrapolation for time condition was expected to be '{expectedExtrapolation.ToString()}'");
         }
 
         [TestCase(RtcXmlTag.Input, PIInterpolationOptionEnumStringType.BLOCK, PIExtrapolationOptionEnumStringType.BLOCK)]
@@ -192,30 +330,25 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
             var rule = new TimeRule(ComponentName);
             controlGroup.Rules.Add(rule);
 
-            var defaultInterpolation = rule.InterpolationOptionsTime;
-            var defaultExtrapolation = rule.Periodicity;
+            InterpolationType defaultInterpolation = rule.InterpolationOptionsTime;
+            ExtrapolationType defaultExtrapolation = rule.Periodicity;
 
             // When
             dataConfigSetter.SetInterpolationAndExtrapolationRtcComponents(
-                new[] {timeSeriesElement},
-                new[] {controlGroup});
+                new[]
+                {
+                    timeSeriesElement
+                },
+                new[]
+                {
+                    controlGroup
+                });
 
             // Then
-            Assert.AreEqual(defaultInterpolation, rule.InterpolationOptionsTime, 
-                $"Interpolation for rule was expected to be '{defaultInterpolation.ToString()}'");
-            Assert.AreEqual(defaultExtrapolation, rule.Periodicity, 
-                $"Extrapolation for rule was expected to be '{defaultExtrapolation.ToString()}'");
-        }
-
-        [Test]
-        public void GivenNullGivenAsParameters_WhenSetInterpolationAndExtrapolationRtcComponentsIsCalled_NothingHappens()
-        {
-            // When
-            dataConfigSetter.SetInterpolationAndExtrapolationRtcComponents(null, null);
-
-            // Then
-            Assert.AreEqual(0, logHandler.LogMessagesTable.Count, 
-                AssertMessage_NumberOfLoggedMessagesWasExpectedToBeZero);
+            Assert.AreEqual(defaultInterpolation, rule.InterpolationOptionsTime,
+                            $"Interpolation for rule was expected to be '{defaultInterpolation.ToString()}'");
+            Assert.AreEqual(defaultExtrapolation, rule.Periodicity,
+                            $"Extrapolation for rule was expected to be '{defaultExtrapolation.ToString()}'");
         }
 
         [TestCase(-2, 0)]
@@ -236,89 +369,19 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
 
             // When
             dataConfigSetter.SetTimeLagOnHydraulicRules(
-                new[] {timeSeriesElement},
-                new[] {hydraulicRule},
+                new[]
+                {
+                    timeSeriesElement
+                },
+                new[]
+                {
+                    hydraulicRule
+                },
                 timeStep);
 
             // Then
             Assert.AreEqual(expectedTimeLag, hydraulicRule.TimeLag,
-                $"Expected time lag for hydraulic rule was expected to be {expectedTimeLag}.");
-        }
-
-        [Test]
-        public void GivenAnHydraulicRuleWithoutInputs_WhenSetTimeLagOnHydraulicRulesIsCalled_ThenExpectedLogMessageIsGiven()
-        {
-            // Given
-            var timeSeriesElement = new RTCTimeSeriesXML();
-            var hydraulicRule = new HydraulicRule();
-
-            var expectedMessage = string.Format(
-                Resources.RealTimeControlDataConfigXmlSetter_SetTimeLagOnHydraulicRules_Hydraulic_rule___0___must_have_an_input__Please_check_file____1___,
-                hydraulicRule.Name, RealTimeControlXMLFiles.XmlTools);
-
-            // When
-            dataConfigSetter.SetTimeLagOnHydraulicRules(
-                new[] {timeSeriesElement},
-                new[] {hydraulicRule},
-                timeStep);
-
-            // Then
-            Assert.IsTrue(logHandler.LogMessagesTable.AllMessages.Contains(expectedMessage), 
-                AssertMessage_CollectedLogMessagesDidNotContainExpectedMessage);
-            Assert.AreEqual(0, hydraulicRule.TimeLag, 
-                "Expected time lag for hydraulic rule was expected to be 0.");
-        }
-
-        [Test]
-        public void GivenAnHydraulicRuleAndWithoutAMatchingInputElement_WhenSetTimeLagOnHydraulicRulesIsCalled_ThenTimeLagIsUnchanged()
-        {
-            // Given
-            var timeSeriesElement = new RTCTimeSeriesXML
-            {
-                vectorLength = 2
-            };
-            var hydraulicRule = new HydraulicRule
-            {
-                Inputs = {new Input {Name = InputName}},
-                TimeLag = 0
-            };
-           
-            // When
-            dataConfigSetter.SetTimeLagOnHydraulicRules(
-                new[] {timeSeriesElement},
-                new[] {hydraulicRule},
-                timeStep);
-
-            // Then
-            Assert.That(hydraulicRule.TimeLag, Is.EqualTo(0)); // Time lag of hydraulic rule is unchanged (0)
-        }
-
-        [Test]
-        public void GivenANullParameterAsElements_WhenSetTimeLagOnHydraulicRulesIsCalled_ThenNothingHappensAndMethodIsReturned()
-        {
-            Assert.DoesNotThrow(
-                () => dataConfigSetter.SetTimeLagOnHydraulicRules(
-                    null,
-                    new[] {new HydraulicRule()},
-                    new TimeSpan()),
-                "Method throws an unexpected exception when parameter 'elements' is null");
-
-            Assert.AreEqual(0, logHandler.LogMessagesTable.Count,
-                AssertMessage_NumberOfLoggedMessagesWasExpectedToBeZero);
-        }
-
-        [Test]
-        public void GivenANullParameterAsControlGroups_WhenSetTimeLagOnHydraulicRulesIsCalled_ThenNothingHappensAndMethodIsReturned()
-        {
-            Assert.DoesNotThrow(
-                () => dataConfigSetter.SetTimeLagOnHydraulicRules(
-                    new[] {new RTCTimeSeriesXML()},
-                    null,
-                    timeStep),
-                "Method throws an unexpected exception when parameter 'controlGroups' is null.");
-
-            Assert.AreEqual(0, logHandler.LogMessagesTable.Count,
-                AssertMessage_NumberOfLoggedMessagesWasExpectedToBeZero);
+                            $"Expected time lag for hydraulic rule was expected to be {expectedTimeLag}.");
         }
 
         private static PITimeSeriesXML CreateTimeSeriesElement(

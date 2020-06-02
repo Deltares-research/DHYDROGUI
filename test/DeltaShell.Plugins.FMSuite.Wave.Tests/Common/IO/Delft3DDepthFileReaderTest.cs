@@ -12,11 +12,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Common.IO
         [Category(TestCategory.DataAccess)]
         public void ImportDepthFileTest()
         {
-            
-            var depthFilePath = TestHelper.GetTestFilePath(@"wave_timespacevarbnd\outer.dep");
-            var values = Delft3DDepthFileReader.Read(depthFilePath, 121, 236).ToArray();
+            string depthFilePath = TestHelper.GetTestFilePath(@"wave_timespacevarbnd\outer.dep");
+            double[] values = Delft3DDepthFileReader.Read(depthFilePath, 121, 236).ToArray();
 
-            Assert.AreEqual(236*121,values.Length);
+            Assert.AreEqual(236 * 121, values.Length);
             Assert.AreEqual(58.46, values[0], 0.01);
         }
     }

@@ -1,6 +1,9 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
+using DelftTools.Functions;
 using DelftTools.TestUtils;
 using DeltaShell.Plugins.FMSuite.Wave.IO;
+using GeoAPI.Geometries;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
@@ -11,15 +14,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
         [Test]
         public void ReadCoordinatesFromSp2File()
         {
-            var sp2Path = TestHelper.GetTestFilePath(@"boundaryFromSp2\Nest002.sp2");
+            string sp2Path = TestHelper.GetTestFilePath(@"boundaryFromSp2\Nest002.sp2");
 
             var sp2File = new Sp2File();
-            var data = sp2File.Read(sp2Path);
+            IDictionary<Coordinate, IFunction> data = sp2File.Read(sp2Path);
 
-            var coordinates = data.Keys.ToList();
+            List<Coordinate> coordinates = data.Keys.ToList();
 
             Assert.AreEqual(212, coordinates.Count, "number of coordinates in sp2 file");
-            Assert.AreEqual(150260.2969, coordinates[3].X);   
+            Assert.AreEqual(150260.2969, coordinates[3].X);
             Assert.AreEqual(614724.2500, coordinates[3].Y);
         }
     }

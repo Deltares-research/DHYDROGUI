@@ -2,6 +2,7 @@
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
+using DeltaShell.Plugins.FMSuite.FlowFM.Sediment;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Editors
@@ -13,9 +14,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Editors
         [Test]
         public void ShowUserControl()
         {
-            var sedimentFractions = SedimentFractionsEditorTestHelper.GetExampleSedimentFractions(3);
+            IEventedList<ISedimentFraction> sedimentFractions = SedimentFractionsEditorTestHelper.GetExampleSedimentFractions(3);
             WpfTestHelper.ShowModal(new SedimentFractionsEditor(sedimentFractions, new EventedList<ISedimentProperty>()));
         }
     }
-
 }

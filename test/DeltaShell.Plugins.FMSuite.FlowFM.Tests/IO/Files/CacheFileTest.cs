@@ -21,6 +21,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files
         private TemporaryDirectory temporaryDirectory;
         private WaterFlowFMModel model;
 
+        [SetUp]
+        public void ContinuousSetUp()
+        {
+            model.ModelDefinition.GetModelProperty(KnownProperties.UseCaching).Value = true;
+        }
+
         [TestFixtureSetUp]
         public void OneTimeSetUp()
         {
@@ -33,23 +39,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files
             GenerateDummyCacheFile(mduFilePath);
         }
 
-        private static void GenerateDummyCacheFile(string mduFile)
-        {
-            string cachePath = Path.ChangeExtension(mduFile, FileConstants.CachingFileExtension);
-            using (File.Create(cachePath)) { }
-        }
-
         [TestFixtureTearDown]
         public void OneTimeTearDown()
         {
             ((IDisposable) temporaryDirectory).Dispose();
             model.Dispose();
-        }
-
-        [SetUp]
-        public void ContinuousSetUp()
-        {
-            model.ModelDefinition.GetModelProperty(KnownProperties.UseCaching).Value = true;
         }
 
         [Test]
@@ -59,9 +53,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files
             void Call() => new CacheFile(null, Substitute.For<ICopyHandler>());
 
             // Assert
-            var exception = 
+            var exception =
                 Assert.Throws<ArgumentNullException>(Call, "Expected an ArgumentNullException to be thrown:");
-            Assert.That(exception.ParamName, Is.EqualTo("model"), 
+            Assert.That(exception.ParamName, Is.EqualTo("model"),
                         "Expected a different ParamName:");
         }
 
@@ -72,9 +66,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files
             void Call() => new CacheFile(model, null);
 
             // Assert
-            var exception = 
+            var exception =
                 Assert.Throws<ArgumentNullException>(Call, "Expected an ArgumentNullException to be thrown:");
-            Assert.That(exception.ParamName, Is.EqualTo("copyHandler"), 
+            Assert.That(exception.ParamName, Is.EqualTo("copyHandler"),
                         "Expected a different ParamName:");
         }
 
@@ -88,9 +82,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files
             void Call() => cacheFile.Export(null);
 
             // Assert
-            var exception = 
+            var exception =
                 Assert.Throws<ArgumentNullException>(Call, "Expected an ArgumentNullException to be thrown:");
-            Assert.That(exception.ParamName, Is.EqualTo("exportMduPath"), 
+            Assert.That(exception.ParamName, Is.EqualTo("exportMduPath"),
                         "Expected a different ParamName:");
         }
 
@@ -158,15 +152,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files
 
             // Then
             copyHandler.Received(1).Copy(
-                Arg.Is<string>(srcPath => IsSamePath(srcPath, cacheFile.Path)), 
+                Arg.Is<string>(srcPath => IsSamePath(srcPath, cacheFile.Path)),
                 Arg.Is<string>(targetPath => IsSamePath(targetPath, expectedTargetPath)));
-        }
-
-        private static bool IsSamePath(string actual, string expected)
-        {
-            return string.Equals(Path.GetFullPath(actual), 
-                                 Path.GetFullPath(expected),
-                                 StringComparison.InvariantCultureIgnoreCase);
         }
 
         [Test]
@@ -181,28 +168,27 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files
 
             copyHandler.WhenForAnyArgs(x => x.Copy(null, null))
                        .Do(_ =>
-                           throw new FileCopyException("message", new PathTooLongException()));
+                               throw new FileCopyException("message", new PathTooLongException()));
 
             var logHandler = Substitute.For<ILogHandler>();
 
             // When
             cacheFile.Export(mduPath, logHandler);
-            
+
             // Then
             logHandler.Received(1)
-                      .ReportWarningFormat(Arg.Is<string>(x => string.Equals(x, Resources.CacheFile_CopyInternally_Could_not_copy__0__to__1__due_to___2_ )), 
-                                           Arg.Is<string>(srcPath => IsSamePath(srcPath, cacheFile.Path)), 
-                                           Arg.Is<string>(targetPath => IsSamePath(targetPath, expectedTargetPath)), 
+                      .ReportWarningFormat(Arg.Is<string>(x => string.Equals(x, Resources.CacheFile_CopyInternally_Could_not_copy__0__to__1__due_to___2_)),
+                                           Arg.Is<string>(srcPath => IsSamePath(srcPath, cacheFile.Path)),
+                                           Arg.Is<string>(targetPath => IsSamePath(targetPath, expectedTargetPath)),
                                            Arg.Is<string>(s => string.Equals(s, "message")));
             logHandler.Received(1).LogReport();
         }
-
 
         [Test]
         [TestCase(null, null)]
         [TestCase("somePath.mdu", "somePath.cache")]
         public void UpdatePathToMduLocation_SetsCorrectPath(string newMduFilePath,
-                                                                            string expectedPath)
+                                                            string expectedPath)
         {
             // Given
             var copyHandler = Substitute.For<ICopyHandler>();
@@ -254,8 +240,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files
             model.ModelDefinition.GetModelProperty(KnownProperties.UseCaching).Value = expectedValue;
 
             // When | Then
-            Assert.That(cacheFile.UseCaching, Is.EqualTo(expectedValue), 
+            Assert.That(cacheFile.UseCaching, Is.EqualTo(expectedValue),
                         "Expected a different value for UseCaching:");
+        }
+
+        private static void GenerateDummyCacheFile(string mduFile)
+        {
+            string cachePath = Path.ChangeExtension(mduFile, FileConstants.CachingFileExtension);
+            using (File.Create(cachePath)) {}
+        }
+
+        private static bool IsSamePath(string actual, string expected)
+        {
+            return string.Equals(Path.GetFullPath(actual),
+                                 Path.GetFullPath(expected),
+                                 StringComparison.InvariantCultureIgnoreCase);
         }
     }
 }

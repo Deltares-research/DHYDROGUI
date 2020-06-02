@@ -1,4 +1,7 @@
-﻿using DelftTools.Functions;
+﻿using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.IO;
+using DelftTools.Functions;
 using DelftTools.TestUtils;
 using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects;
@@ -6,9 +9,6 @@ using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.BoundaryData;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.SubstanceProcessLibrary;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Model;
 using NUnit.Framework;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.IO;
 
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Model
 {

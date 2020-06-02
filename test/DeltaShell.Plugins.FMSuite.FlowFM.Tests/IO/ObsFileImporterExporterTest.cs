@@ -13,34 +13,15 @@ using NUnit.Framework;
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 {
     [TestFixture]
-    class ObsFileImporterExporterTest
+    internal class ObsFileImporterExporterTest
     {
-        private List<T> CreateObservationPoints<T>(int numberOfPoints) where T : Feature2DPoint, new()
-        {
-            var rnd = new Random();
-            var list = new List<T>();
-
-            for (int i = 0; i < numberOfPoints; ++i)
-            {
-                list.Add(
-                    new T
-                    {
-                        Geometry = new Point(rnd.Next(0, 1000), rnd.Next(0, 1000)),
-                        Name = "ObservationPoint" + i,
-                    }
-                );
-            }
-
-            return list;
-        }
-
         [Test]
         public void ObsFileExportImportForGroupableFeaturesTest()
         {
-            var filePath = string.Concat(Path.GetTempFileName(), ".xyn");
-            var groupName = Path.GetFileName(filePath);
+            string filePath = string.Concat(Path.GetTempFileName(), ".xyn");
+            string groupName = Path.GetFileName(filePath);
 
-            var points = CreateObservationPoints<GroupableFeature2DPoint>(10);
+            List<GroupableFeature2DPoint> points = CreateObservationPoints<GroupableFeature2DPoint>(10);
 
             var obsFileImporterExporter = new ObsFileImporterExporter<GroupableFeature2DPoint>();
 
@@ -51,7 +32,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
                 Assert.AreEqual(points.Count, importedPoints.Count);
 
-                for (int i = 0; i < importedPoints.Count; ++i)
+                for (var i = 0; i < importedPoints.Count; ++i)
                 {
                     Assert.AreEqual(points[i].Name, importedPoints[i].Name);
                     Assert.AreEqual(points[i].Geometry, importedPoints[i].Geometry);
@@ -67,9 +48,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [Test]
         public void ObsFileExportImportFeaturePoint2DTest()
         {
-            var filePath = string.Concat(Path.GetTempFileName(), ".xyn");
+            string filePath = string.Concat(Path.GetTempFileName(), ".xyn");
 
-            var points = CreateObservationPoints<Feature2DPoint>(10);
+            List<Feature2DPoint> points = CreateObservationPoints<Feature2DPoint>(10);
 
             var obsFileImporterExporter = new ObsFileImporterExporter<Feature2DPoint>();
 
@@ -80,7 +61,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
                 Assert.AreEqual(points.Count, importedPoints.Count);
 
-                for (int i = 0; i < importedPoints.Count; ++i)
+                for (var i = 0; i < importedPoints.Count; ++i)
                 {
                     Assert.AreEqual(points[i].Name, importedPoints[i].Name);
                     Assert.AreEqual(points[i].Geometry, importedPoints[i].Geometry);
@@ -98,24 +79,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var groupA = "GroupA.xyn";
             var groupB = "GroupB.xyn";
 
-            var filePathGroupA = TestHelper.GetTestFilePath("observationpointGroups\\GroupA.xyn");
+            string filePathGroupA = TestHelper.GetTestFilePath("observationpointGroups\\GroupA.xyn");
             Assert.NotNull(filePathGroupA);
             Assert.IsTrue(File.Exists(filePathGroupA));
-            var obsFileGroupA = TestHelper.CreateLocalCopy(filePathGroupA).Replace(@"\","/");
+            string obsFileGroupA = TestHelper.CreateLocalCopy(filePathGroupA).Replace(@"\", "/");
 
-            var filePathGroupB = TestHelper.GetTestFilePath("observationpointGroups\\GroupB.xyn");
+            string filePathGroupB = TestHelper.GetTestFilePath("observationpointGroups\\GroupB.xyn");
             Assert.NotNull(filePathGroupB);
             Assert.IsTrue(File.Exists(filePathGroupB));
-            var obsFileGroupB = TestHelper.CreateLocalCopy(filePathGroupB).Replace(@"\", "/");
+            string obsFileGroupB = TestHelper.CreateLocalCopy(filePathGroupB).Replace(@"\", "/");
 
-            var pointsGroupA = CreateObservationPoints<GroupableFeature2DPoint>(5);
-            foreach (var point in pointsGroupA)
+            List<GroupableFeature2DPoint> pointsGroupA = CreateObservationPoints<GroupableFeature2DPoint>(5);
+            foreach (GroupableFeature2DPoint point in pointsGroupA)
             {
                 point.GroupName = obsFileGroupA;
             }
 
-            var pointsGroupB = CreateObservationPoints<GroupableFeature2DPoint>(5);
-            foreach (var point in pointsGroupB)
+            List<GroupableFeature2DPoint> pointsGroupB = CreateObservationPoints<GroupableFeature2DPoint>(5);
+            foreach (GroupableFeature2DPoint point in pointsGroupB)
             {
                 point.GroupName = obsFileGroupB;
             }
@@ -123,7 +104,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var allPoints = new List<GroupableFeature2DPoint>();
             allPoints.AddRange(pointsGroupA);
             allPoints.AddRange(pointsGroupB);
-            
+
             var obsFileImporterExporter = new ObsFileImporterExporter<GroupableFeature2DPoint>()
             {
                 EqualityComparer = new GroupableFeatureComparer<GroupableFeature2DPoint>(),
@@ -148,6 +129,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 FileUtils.DeleteIfExists(obsFileGroupA);
                 FileUtils.DeleteIfExists(obsFileGroupB);
             }
+        }
+
+        private List<T> CreateObservationPoints<T>(int numberOfPoints) where T : Feature2DPoint, new()
+        {
+            var rnd = new Random();
+            var list = new List<T>();
+
+            for (var i = 0; i < numberOfPoints; ++i)
+            {
+                list.Add(
+                    new T
+                    {
+                        Geometry = new Point(rnd.Next(0, 1000), rnd.Next(0, 1000)),
+                        Name = "ObservationPoint" + i,
+                    }
+                );
+            }
+
+            return list;
         }
     }
 }

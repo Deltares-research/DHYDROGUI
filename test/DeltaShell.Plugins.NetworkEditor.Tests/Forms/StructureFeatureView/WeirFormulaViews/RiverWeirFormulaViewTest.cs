@@ -13,10 +13,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView.Weir
         public void ShowRiverWeirFormulaView()
         {
             var riverWeirFormula = new RiverWeirFormula();
-            var riverWeirFormulaView = new RiverWeirFormulaView
-                                           {
-                                               Data = riverWeirFormula
-                                           };
+            var riverWeirFormulaView = new RiverWeirFormulaView {Data = riverWeirFormula};
 
             WindowsFormsTestHelper.ShowModal(riverWeirFormulaView);
         }

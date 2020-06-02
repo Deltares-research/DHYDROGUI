@@ -8,10 +8,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms.Properties
     [TestFixture]
     public class StandardConditionPropertiesTest
     {
-        [Test, Category(TestCategory.WindowsForms)]
+        [Test]
+        [Category(TestCategory.WindowsForms)]
         public void ShowProperties()
         {
-            WindowsFormsTestHelper.ShowPropertyGridForObject(new StandardConditionProperties { Data = new StandardCondition() });
+            WindowsFormsTestHelper.ShowPropertyGridForObject(new StandardConditionProperties {Data = new StandardCondition()});
         }
     }
 }

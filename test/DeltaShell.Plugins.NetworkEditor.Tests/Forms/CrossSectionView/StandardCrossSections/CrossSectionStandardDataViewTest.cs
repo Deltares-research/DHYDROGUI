@@ -15,12 +15,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CrossSectionView.Standard
         {
             var data = new CrossSectionDefinitionStandard();
 
-            var view = new CrossSectionStandardDataView
-                           {
-                               Data = data
-                           };
+            var view = new CrossSectionStandardDataView {Data = data};
 
-            ((INotifyPropertyChanged)data).PropertyChanged += (s,e)=>view.RefreshView();
+            ((INotifyPropertyChanged) data).PropertyChanged += (s, e) => view.RefreshView();
 
             WindowsFormsTestHelper.ShowModal(view);
         }

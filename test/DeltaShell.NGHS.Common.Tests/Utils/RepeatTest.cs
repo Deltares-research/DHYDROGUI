@@ -1,6 +1,6 @@
-﻿using DeltaShell.NGHS.Common.Utils;
+﻿using System;
+using DeltaShell.NGHS.Common.Utils;
 using NUnit.Framework;
-using System;
 
 namespace DeltaShell.NGHS.Common.Tests.Utils
 {

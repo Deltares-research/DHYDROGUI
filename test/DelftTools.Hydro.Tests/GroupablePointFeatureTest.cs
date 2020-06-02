@@ -16,7 +16,7 @@ namespace DelftTools.Hydro.Tests
                 Geometry = new Point(new Coordinate(0, 100))
             };
 
-            var clonedDryPoint = (GroupablePointFeature)dryPoint.Clone();
+            var clonedDryPoint = (GroupablePointFeature) dryPoint.Clone();
 
             Assert.AreEqual(dryPoint.Geometry, clonedDryPoint.Geometry);
             Assert.AreEqual(dryPoint.Attributes, clonedDryPoint.Attributes);

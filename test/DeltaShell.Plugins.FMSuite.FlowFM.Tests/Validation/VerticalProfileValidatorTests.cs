@@ -16,7 +16,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             var profile = new VerticalProfileDefinition(VerticalProfileType.PercentageFromSurface, 100);
 
             // act
-            var issues = VerticalProfileValidator.ValidateVerticalProfile("", profile, null, "").ToArray();
+            ValidationIssue[] issues = VerticalProfileValidator.ValidateVerticalProfile("", profile, null, "").ToArray();
 
             // assert
             Assert.AreEqual(0, issues.Length);
@@ -32,8 +32,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             profile.PointDepths.Add(0.0);
 
             // act
-            var issues = VerticalProfileValidator.ValidateVerticalProfile("bc01", profile, null, "bc01_001").ToArray();
-            
+            ValidationIssue[] issues = VerticalProfileValidator.ValidateVerticalProfile("bc01", profile, null, "bc01_001").ToArray();
+
             // assert
             Assert.AreEqual(1, issues.Length);
             Assert.AreEqual("Duplicate profile depths detected for bc01 at bc01_001", issues[0].Message);
@@ -51,7 +51,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             profile.PointDepths.Add(101.0);
 
             // act
-            var issues = VerticalProfileValidator.ValidateVerticalProfile("bc01", profile, null, "bc01_001").ToArray();
+            ValidationIssue[] issues = VerticalProfileValidator.ValidateVerticalProfile("bc01", profile, null, "bc01_001").ToArray();
 
             // assert
             Assert.AreEqual(2, issues.Length);
@@ -71,7 +71,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             profile.PointDepths.Add(-1.0);
 
             // act
-            var issues = VerticalProfileValidator.ValidateVerticalProfile("bc01", profile, null, "bc01_001").ToArray();
+            ValidationIssue[] issues = VerticalProfileValidator.ValidateVerticalProfile("bc01", profile, null, "bc01_001").ToArray();
 
             // assert
             Assert.AreEqual(1, issues.Length);

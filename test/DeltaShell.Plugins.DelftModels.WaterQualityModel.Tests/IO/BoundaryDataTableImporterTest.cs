@@ -51,7 +51,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             // Setup
             var importer = new BoundaryDataTableImporter();
 
-            var targetObject = new DataTableManager { Name = "UnsupportedName" };
+            var targetObject = new DataTableManager {Name = "UnsupportedName"};
 
             // Call
             bool result = importer.CanImportOn(targetObject);
@@ -66,7 +66,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             // Setup
             var importer = new BoundaryDataTableImporter();
 
-            var targetObject = new DataTableManager { Name = "Boundary Data" };
+            var targetObject = new DataTableManager {Name = "Boundary Data"};
 
             // Call
             bool result = importer.CanImportOn(targetObject);

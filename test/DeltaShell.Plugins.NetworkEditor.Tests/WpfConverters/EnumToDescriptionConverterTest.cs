@@ -7,14 +7,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.WpfConverters
     [TestFixture]
     public class EnumToDescriptionConverterTest
     {
-        private enum TestingEnum
-        {
-            [System.ComponentModel.Description("Testing description one")]
-            One,
-            [System.ComponentModel.Description("Testing description two")]
-            Two
-        }
-
         [Test]
         public void ConvertExpectedResultTest()
         {
@@ -35,6 +27,15 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.WpfConverters
         {
             var converter = new EnumToDescriptionConverter();
             Assert.AreEqual(null, converter.ConvertBack("Testing description one", null, null, null));
+        }
+
+        private enum TestingEnum
+        {
+            [System.ComponentModel.Description("Testing description one")]
+            One,
+
+            [System.ComponentModel.Description("Testing description two")]
+            Two
         }
     }
 }

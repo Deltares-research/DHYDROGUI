@@ -18,11 +18,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO.HydFileEleme
         }
 
         [Test]
-        [TestCase("10:12:13,08-01-2015",  2015, 01, 08, 10, 12, 13)]
+        [TestCase("10:12:13,08-01-2015", 2015, 01, 08, 10, 12, 13)]
         [TestCase("10:12:13, 08-01-2015", 2015, 01, 08, 10, 12, 13)]
         public void ParseValueFromDutchTimeDateStringSetsValueToThatDate(string textToParse,
-            int expectedYear, int expectedMonth, int expectedDay,
-            int expectedHour, int expectedMinute, int expectedSecond)
+                                                                         int expectedYear, int expectedMonth, int expectedDay,
+                                                                         int expectedHour, int expectedMinute, int expectedSecond)
         {
             var expected = new DateTime(expectedYear, expectedMonth, expectedDay, expectedHour, expectedMinute, expectedSecond);
             Assert.AreEqual(expected, HydFileStringValueParser.Parse<DateTime>(textToParse));
@@ -32,12 +32,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO.HydFileEleme
         [TestCase("'19991216000000'", 1999, 12, 16, 00, 00, 00)]
         [TestCase("'19991218123456'", 1999, 12, 18, 12, 34, 56)]
         public void ParseValueFromCustomTimeDateStringSetsValueToThatDate(string textToParse,
-            int expectedYear, int expectedMonth, int expectedDay,
-            int expectedHour, int expectedMinute, int expectedSecond)
+                                                                          int expectedYear, int expectedMonth, int expectedDay,
+                                                                          int expectedHour, int expectedMinute, int expectedSecond)
         {
-            
-            var expected = new DateTime(expectedYear, expectedMonth, expectedDay,expectedHour, expectedMinute, expectedSecond);
-            Assert.AreEqual(expected, HydFileStringValueParser.Parse<DateTime>(textToParse));            
+            var expected = new DateTime(expectedYear, expectedMonth, expectedDay, expectedHour, expectedMinute, expectedSecond);
+            Assert.AreEqual(expected, HydFileStringValueParser.Parse<DateTime>(textToParse));
         }
 
         [Test]
@@ -45,9 +44,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO.HydFileEleme
         {
             // setup
             const string textToParse = "Definitely not a date nor time!";
-            
+
             // call
-            TestDelegate call = ()=> HydFileStringValueParser.Parse<DateTime>(textToParse);
+            TestDelegate call = () => HydFileStringValueParser.Parse<DateTime>(textToParse);
 
             // assert
             Assert.Throws<FormatException>(call);
@@ -57,10 +56,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO.HydFileEleme
         [TestCase("10:12:13,08-01-2015", 2015, 1, 8, 10, 12, 13)]
         [TestCase("'19991218123456'", 1999, 12, 18, 12, 34, 56)]
         public void SetDataToHydFileWithParsedValueUpdatesHydFileDataToParsedDateTime(string textToParse,
-            int expectedYear, int expectedMonth, int expectedDay,
-            int expectedHour, int expectedMinute, int expectedSecond)
+                                                                                      int expectedYear, int expectedMonth, int expectedDay,
+                                                                                      int expectedHour, int expectedMinute, int expectedSecond)
         {
-            var dateTime = new DateTime(expectedYear, expectedMonth, expectedDay,expectedHour, expectedMinute, expectedSecond);
+            var dateTime = new DateTime(expectedYear, expectedMonth, expectedDay, expectedHour, expectedMinute, expectedSecond);
             Assert.AreEqual(dateTime, HydFileStringValueParser.Parse<DateTime>(textToParse));
         }
 
@@ -74,11 +73,36 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO.HydFileEleme
         }
 
         [Test]
-        [TestCase("0", new[] { 0.0 })]
-        [TestCase("1 3", new[] { 1.0, 3.0 })]
-        [TestCase("1.0 2.1 3.2 4.34", new[] { 1.0, 2.1, 3.2, 4.34 })]
-        [TestCase("6\t7.1\t8.2", new[] { 6.0, 7.1, 8.2 })]
-        [TestCase("9\n10\n11.1\n12\n13", new[] { 9.0, 10.0, 11.1, 12.0, 13.0 })]
+        [TestCase("0", new[]
+        {
+            0.0
+        })]
+        [TestCase("1 3", new[]
+        {
+            1.0,
+            3.0
+        })]
+        [TestCase("1.0 2.1 3.2 4.34", new[]
+        {
+            1.0,
+            2.1,
+            3.2,
+            4.34
+        })]
+        [TestCase("6\t7.1\t8.2", new[]
+        {
+            6.0,
+            7.1,
+            8.2
+        })]
+        [TestCase("9\n10\n11.1\n12\n13", new[]
+        {
+            9.0,
+            10.0,
+            11.1,
+            12.0,
+            13.0
+        })]
         public void ParseValueFromDoubleArrayStringSetsValueToThatValue(string textToParse, double[] expectedValue)
         {
             Assert.AreEqual(expectedValue, HydFileStringValueParser.Parse<double[]>(textToParse));
@@ -97,13 +121,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO.HydFileEleme
         [Test]
         public void ParseTooLargeDoubleThrowsFormatException()
         {
-            var textToParse = String.Format("9{0}", double.MaxValue);
+            string textToParse = string.Format("9{0}", double.MaxValue);
             TestDelegate call = () => HydFileStringValueParser.Parse<double[]>(textToParse);
 
             // assert
             var exception = Assert.Throws<FormatException>(call);
 
-            Assert.AreEqual(String.Format("Value ({0}) must fall within the range [{1}, {2}].", textToParse, double.MinValue, double.MaxValue), exception.Message);
+            Assert.AreEqual(string.Format("Value ({0}) must fall within the range [{1}, {2}].", textToParse, double.MinValue, double.MaxValue), exception.Message);
         }
 
         [Test]
@@ -130,7 +154,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO.HydFileEleme
         {
             // setup
             const string textToParse = "Definitely not a filename value";
-         
+
             // call
             TestDelegate call = () => HydFileStringValueParser.Parse<string>(textToParse);
 
@@ -180,7 +204,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO.HydFileEleme
                 "finite-elements",
                 "network"
             };
-            foreach (var geometryType in geometryTypes)
+            foreach (string geometryType in geometryTypes)
             {
                 Assert.AreEqual(expectedValue, HydFileStringValueParser.Parse<LayerType>(geometryType + textToParse));
             }
@@ -204,15 +228,42 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO.HydFileEleme
         [TestCase("     ")]
         public void ParseValueFromEmptyStringSetsEmptyIntCollection(string textToParse)
         {
-           Assert.IsEmpty(HydFileStringValueParser.Parse<int[]>(textToParse));
+            Assert.IsEmpty(HydFileStringValueParser.Parse<int[]>(textToParse));
         }
 
         [Test]
-        [TestCase("0", new[] { 0 })]
-        [TestCase("1 2 3 4", new[] { 1, 2, 3, 4 })]
-        [TestCase("1.0 2.0 3.0 4.00", new[] { 1, 2, 3, 4 })]
-        [TestCase("6\t7\t8", new[] { 6, 7, 8 })]
-        [TestCase("9\n10\n11\n12\n13", new[] { 9, 10, 11, 12, 13 })]
+        [TestCase("0", new[]
+        {
+            0
+        })]
+        [TestCase("1 2 3 4", new[]
+        {
+            1,
+            2,
+            3,
+            4
+        })]
+        [TestCase("1.0 2.0 3.0 4.00", new[]
+        {
+            1,
+            2,
+            3,
+            4
+        })]
+        [TestCase("6\t7\t8", new[]
+        {
+            6,
+            7,
+            8
+        })]
+        [TestCase("9\n10\n11\n12\n13", new[]
+        {
+            9,
+            10,
+            11,
+            12,
+            13
+        })]
         public void ParseValueFromIntegerArrayStringSetsValueToThatValue(string textToParse, int[] expectedValue)
         {
             Assert.AreEqual(expectedValue, HydFileStringValueParser.Parse<int[]>(textToParse));
@@ -232,14 +283,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO.HydFileEleme
         public void ParseTooLargeIntegerThrowsFormatException()
         {
             // setup
-            string textToParse = String.Format("{0}9", int.MaxValue);
-            
+            string textToParse = string.Format("{0}9", int.MaxValue);
+
             // call
             TestDelegate call = () => HydFileStringValueParser.Parse<int[]>(textToParse);
 
             // assert
             var exception = Assert.Throws<FormatException>(call);
-            Assert.AreEqual(String.Format("Value ({0}) must fall within the range [{1}, {2}].", textToParse, int.MinValue, int.MaxValue), exception.Message);
+            Assert.AreEqual(string.Format("Value ({0}) must fall within the range [{1}, {2}].", textToParse, int.MinValue, int.MaxValue), exception.Message);
         }
 
         [Test]
@@ -247,7 +298,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO.HydFileEleme
         {
             // setup
             const string textToParse = "1.2 3.4 5.6";
-            
+
             // call
             TestDelegate call = () => HydFileStringValueParser.Parse<int[]>(textToParse);
 
@@ -287,7 +338,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO.HydFileEleme
         [TestCase("'10675199024805'", 10675199, 2, 48, 05)]
         [TestCase("'10675198123456'", 10675198, 12, 34, 56)]
         public void ParseValueFromCustomTimeDateStringSetsValueToThatTimeSpan(string textToParse,
-            int expectedDay, int expectedHour, int expectedMinute, int expectedSecond)
+                                                                              int expectedDay, int expectedHour, int expectedMinute, int expectedSecond)
         {
             var expected = new TimeSpan(expectedDay, expectedHour, expectedMinute, expectedSecond);
             Assert.AreEqual(expected, HydFileStringValueParser.Parse<TimeSpan>(textToParse));
@@ -321,7 +372,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO.HydFileEleme
 
             Assert.AreEqual("Timespan must be smaller or equal to value '10675199024805'.", exception.Message);
             Assert.IsInstanceOf<ArgumentOutOfRangeException>(exception.InnerException,
-                "Should capture ArgumentOfOfRangeException and wrap it into FormatException.");
+                                                             "Should capture ArgumentOfOfRangeException and wrap it into FormatException.");
         }
     }
 }

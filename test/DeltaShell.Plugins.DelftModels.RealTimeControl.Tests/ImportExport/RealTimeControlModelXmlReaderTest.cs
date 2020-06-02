@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
+using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Properties;
@@ -38,8 +40,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
 
             // When
             TestHelper.AssertAtLeastOneLogMessagesContains(() => rtcModel = RealTimeControlModelXmlReader.Read(invalidPath),
-                string.Format(Resources.RealTimeControlModelXmlReader_Read_Directory___0___does_not_exist_,
-                    invalidPath));
+                                                           string.Format(Resources.RealTimeControlModelXmlReader_Read_Directory___0___does_not_exist_,
+                                                                         invalidPath));
 
             // Then
             Assert.IsNull(rtcModel);
@@ -70,10 +72,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
             rtcModel = RealTimeControlModelXmlReader.Read(directoryPath);
 
             // Then
-            Assert.NotNull(rtcModel, 
-                "Returned model was not expected to be null after reading from an existing path.");
-            Assert.AreEqual(true, rtcModel.LimitMemory, 
-                "Option 'limit memory' was expected to be true.");
+            Assert.NotNull(rtcModel,
+                           "Returned model was not expected to be null after reading from an existing path.");
+            Assert.AreEqual(true, rtcModel.LimitMemory,
+                            "Option 'limit memory' was expected to be true.");
 
             CheckSimpleModelTimeSettings(rtcModel);
             CheckSimpleModelControlGroupValidity(rtcModel);
@@ -85,11 +87,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
         {
             // When
             Assert.DoesNotThrow(() => rtcModel = RealTimeControlModelXmlReader.Read(directoryPath),
-                "While reading from a existing path, an unexpected exception was thrown");
+                                "While reading from a existing path, an unexpected exception was thrown");
 
             // Then
-            Assert.NotNull(rtcModel, 
-                "Returned model was not expected to be null after reading from an existing path.");
+            Assert.NotNull(rtcModel,
+                           "Returned model was not expected to be null after reading from an existing path.");
         }
 
         [Test]
@@ -101,8 +103,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
 
             // Then
             TestHelper.AssertAtLeastOneLogMessagesContains(() => rtcModel = RealTimeControlModelXmlReader.Read(directoryPath),
-                string.Format(Resources.RealTimeControlModelXmlReader_Please_note_that_Use_Restart_option_in_D_RTC_is_set_to_False,
-                    directoryPath));
+                                                           string.Format(Resources.RealTimeControlModelXmlReader_Please_note_that_Use_Restart_option_in_D_RTC_is_set_to_False,
+                                                                         directoryPath));
         }
 
         private static void CheckSimpleModelTimeSettings(ITimeDependentModel rtcModel)
@@ -116,41 +118,41 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
         {
             Assert.AreEqual(1, rtcModel.ControlGroups.Count, "Number of control groups was expected to be 1.");
 
-            var controlGroup = rtcModel.ControlGroups[0];
+            ControlGroup controlGroup = rtcModel.ControlGroups[0];
 
             Assert.AreEqual("control_group", controlGroup.Name);
 
-            var inputs = controlGroup.Inputs;
+            IEventedList<Input> inputs = controlGroup.Inputs;
             Assert.AreEqual(1, inputs.Count, "Number of inputs was expected to be 1.");
             Assert.AreEqual("[Input]parameter/quantity", inputs.First().Name);
 
-            var outputs = controlGroup.Outputs;
+            IEventedList<Output> outputs = controlGroup.Outputs;
             Assert.AreEqual(1, outputs.Count, "Number of outputs was expected to be 1.");
             Assert.AreEqual("[Output]parameter/quantity", outputs.First().Name);
 
-            var conditions = controlGroup.Conditions;
+            IEventedList<ConditionBase> conditions = controlGroup.Conditions;
             Assert.AreEqual(2, conditions.Count, "Number of conditions was expected to be 2.");
 
-            var timeCondition = conditions.OfType<TimeCondition>().ToList();
+            List<TimeCondition> timeCondition = conditions.OfType<TimeCondition>().ToList();
             Assert.NotNull(timeCondition);
             Assert.AreEqual(1, timeCondition.Count, "Number of time conditions was expected to be 1.");
             Assert.AreEqual("time_condition", timeCondition.First().Name);
 
-            var standardConditions = conditions.OfType<StandardCondition>()
-                .Where(c => c.GetType() != typeof(TimeCondition)).ToList();
+            List<StandardCondition> standardConditions = conditions.OfType<StandardCondition>()
+                                                                   .Where(c => c.GetType() != typeof(TimeCondition)).ToList();
             Assert.NotNull(standardConditions);
             Assert.AreEqual(1, standardConditions.Count, "Number of standard conditions was expected to be 1.");
             Assert.AreEqual("standard_condition", standardConditions.First().Name);
 
-            var rules = controlGroup.Rules;
+            IEventedList<RuleBase> rules = controlGroup.Rules;
             Assert.AreEqual(2, rules.Count, "Number of rules was expected to be 2.");
 
-            var timeRules = rules.OfType<TimeRule>().ToList();
+            List<TimeRule> timeRules = rules.OfType<TimeRule>().ToList();
             Assert.NotNull(timeRules);
             Assert.AreEqual(1, timeRules.Count, "Number of time rules was expected to be 1.");
             Assert.AreEqual("time_rule", timeRules.First().Name);
 
-            var relativeTimeRules = rules.OfType<RelativeTimeRule>().ToList();
+            List<RelativeTimeRule> relativeTimeRules = rules.OfType<RelativeTimeRule>().ToList();
             Assert.NotNull(relativeTimeRules);
             Assert.AreEqual(1, relativeTimeRules.Count, "Number of relative time rules was expected to be 1.");
             Assert.AreEqual("relative_time_rule", relativeTimeRules.First().Name);

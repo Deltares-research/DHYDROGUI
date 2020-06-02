@@ -10,7 +10,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
     [TestFixture]
     public class WeirViewWpfTest
     {
-        [Test, Category(TestCategory.WindowsForms)]
+        [Test]
+        [Category(TestCategory.WindowsForms)]
         public void Show()
         {
             var view = new WeirViewWpf();
@@ -19,20 +20,19 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
                 WeirFormula = new SimpleWeirFormula(),
             };
 
-            WpfTestHelper.ShowModal(view, () =>
-            {
-                view.Data = weir;
-            });
+            WpfTestHelper.ShowModal(view, () => { view.Data = weir; });
         }
 
-        [Test, Category(TestCategory.WindowsForms)]
+        [Test]
+        [Category(TestCategory.WindowsForms)]
         public void ShowSimpleWeirFormulaViewWpf()
         {
             var view = new SimpleWeirFormulaViewWpf();
             WpfTestHelper.ShowModal(view);
         }
 
-        [Test, Category(TestCategory.WindowsForms)]
+        [Test]
+        [Category(TestCategory.WindowsForms)]
         public void ShowGeneralStructureWeirFormulaViewWpf()
         {
             var view = new GeneralStructureWeirFormulaViewWpf();

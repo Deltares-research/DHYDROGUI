@@ -9,41 +9,52 @@ namespace DelftTools.Hydro.Tests.TestObjects
     /// <summary>
     /// Provides a dummy subclass of crossection
     /// </summary>
-    public class TestCrossSectionDefinition:CrossSectionDefinition
+    public class TestCrossSectionDefinition : CrossSectionDefinition
     {
         private IEnumerable<Coordinate> profile;
-        public TestCrossSectionDefinition()
-        {
-            
-        }
-        public TestCrossSectionDefinition(string name, double offset) : base(name)
-        {
-        }
-        
+
+        public TestCrossSectionDefinition() {}
+
+        public TestCrossSectionDefinition(string name, double offset) : base(name) {}
+
         public override bool GeometryBased
         {
-            get { throw new NotImplementedException(); }
+            get
+            {
+                throw new NotImplementedException();
+            }
         }
 
         public override IEnumerable<Coordinate> FlowProfile
         {
-            get { return profile ?? new List<Coordinate>(); }
+            get
+            {
+                return profile ?? new List<Coordinate>();
+            }
         }
 
-        
         public override CrossSectionType CrossSectionType
         {
-            get { throw new NotImplementedException(); }
+            get
+            {
+                throw new NotImplementedException();
+            }
         }
 
         public override LightDataTable RawData
         {
-            get { return null; }
+            get
+            {
+                return null;
+            }
         }
 
         public override IEnumerable<Coordinate> Profile
         {
-            get { return profile ?? new List<Coordinate>(); }
+            get
+            {
+                return profile ?? new List<Coordinate>();
+            }
         }
 
         public override void ShiftLevel(double delta)
@@ -68,8 +79,8 @@ namespace DelftTools.Hydro.Tests.TestObjects
 
         public override object Clone()
         {
-            var clone = (TestCrossSectionDefinition)base.Clone();
-            clone.profile = this.profile;
+            var clone = (TestCrossSectionDefinition) base.Clone();
+            clone.profile = profile;
 
             return clone;
         }

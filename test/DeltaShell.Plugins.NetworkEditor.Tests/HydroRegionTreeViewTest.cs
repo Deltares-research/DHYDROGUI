@@ -20,6 +20,7 @@ using NetTopologySuite.Extensions.Networks;
 using NUnit.Framework;
 using Rhino.Mocks;
 using Control = System.Windows.Controls.Control;
+using MessageBox = DelftTools.Controls.Swf.MessageBox;
 
 namespace DeltaShell.Plugins.NetworkEditor.Tests
 {
@@ -34,9 +35,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
         {
             var pluginGui = mocks.Stub<GuiPlugin>();
             var gui = mocks.Stub<IGui>();
-            
+
             pluginGui.Gui = gui;
-            
+
             var network = new HydroNetwork();
             var networkTreeView = new HydroRegionTreeView(pluginGui) {Dock = DockStyle.Fill};
 
@@ -45,11 +46,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
             var crossSection2 = new CrossSectionDefinitionXYZ("Nummer 2");
             HydroNetworkHelper.AddCrossSectionDefinitionToBranch(branch, crossSection, 400);
             HydroNetworkHelper.AddCrossSectionDefinitionToBranch(branch, crossSection2, 0);
-            
+
             network.Branches.Add(branch);
             networkTreeView.Region = network;
 
-            WindowsFormsTestHelper.ShowModal(new Form { Controls = { networkTreeView } });
+            WindowsFormsTestHelper.ShowModal(new Form {Controls = {networkTreeView}});
         }
 
         [Test]
@@ -62,14 +63,26 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
             pluginGui.Gui = gui;
 
             var branch = new Channel();
-            var network = new HydroNetwork {Name = "network", Branches = {branch}};
-            var region = new HydroRegion {Name = "region", SubRegions = {network, new DrainageBasin()}};
+            var network = new HydroNetwork
+            {
+                Name = "network",
+                Branches = {branch}
+            };
+            var region = new HydroRegion
+            {
+                Name = "region",
+                SubRegions =
+                {
+                    network,
+                    new DrainageBasin()
+                }
+            };
 
-            var networkTreeView = new HydroRegionTreeView(pluginGui) { Dock = DockStyle.Fill };
+            var networkTreeView = new HydroRegionTreeView(pluginGui) {Dock = DockStyle.Fill};
 
             networkTreeView.Region = region;
 
-            WindowsFormsTestHelper.ShowModal(new Form { Controls = { networkTreeView } });
+            WindowsFormsTestHelper.ShowModal(new Form {Controls = {networkTreeView}});
         }
 
         [Test]
@@ -82,12 +95,16 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
             pluginGui.Gui = gui;
 
             var basin = new DrainageBasin
-                {
-                    Catchments = {new Catchment {Name = "c1"}},
-                    WasteWaterTreatmentPlants = {new WasteWaterTreatmentPlant {Name = "wwtp1"}}
-                };
+            {
+                Catchments = {new Catchment {Name = "c1"}},
+                WasteWaterTreatmentPlants = {new WasteWaterTreatmentPlant {Name = "wwtp1"}}
+            };
 
-            var networkTreeView = new HydroRegionTreeView(pluginGui) {Dock = DockStyle.Fill, Region = basin};
+            var networkTreeView = new HydroRegionTreeView(pluginGui)
+            {
+                Dock = DockStyle.Fill,
+                Region = basin
+            };
 
             WindowsFormsTestHelper.ShowModal(new Form {Controls = {networkTreeView}});
         }
@@ -102,18 +119,15 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
                 gui.Run();
 
                 var basin = new DrainageBasin
-                    {
-                        Catchments = {new Catchment {Name = "c1"}},
-                        WasteWaterTreatmentPlants = {new WasteWaterTreatmentPlant {Name = "wwtp1"}}
-                    };
+                {
+                    Catchments = {new Catchment {Name = "c1"}},
+                    WasteWaterTreatmentPlants = {new WasteWaterTreatmentPlant {Name = "wwtp1"}}
+                };
 
-                var hydroRegionTreeView = gui.ToolWindowViews.OfType<HydroRegionTreeView>().First();
+                HydroRegionTreeView hydroRegionTreeView = gui.ToolWindowViews.OfType<HydroRegionTreeView>().First();
                 WindowsFormsTestHelper.ShowModal(
-                    new Form {Controls = {hydroRegionTreeView}}, f =>
-                        {
-                            hydroRegionTreeView.Region = basin;
-                        }
-                    );
+                    new Form {Controls = {hydroRegionTreeView}}, f => { hydroRegionTreeView.Region = basin; }
+                );
             }
         }
 
@@ -127,25 +141,25 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
             pluginGui.Gui = gui;
 
             var network = new HydroNetwork();
-            var networkTreeView = new HydroRegionTreeView(pluginGui) { Dock = DockStyle.Fill };
+            var networkTreeView = new HydroRegionTreeView(pluginGui) {Dock = DockStyle.Fill};
 
             var branch = new Channel();
             var crossSectionDef = new CrossSectionDefinitionYZ("Nummer 1");
             var proxyDef = new CrossSectionDefinitionProxy(crossSectionDef);
-            var cs = HydroNetworkHelper.AddCrossSectionDefinitionToBranch(branch, proxyDef, 10.0);
+            ICrossSection cs = HydroNetworkHelper.AddCrossSectionDefinitionToBranch(branch, proxyDef, 10.0);
 
             network.SharedCrossSectionDefinitions.Add(crossSectionDef);
             network.Branches.Add(branch);
 
             networkTreeView.Dock = DockStyle.Fill;
             networkTreeView.Region = network;
-            
-            var definitionNodePresenter = networkTreeView.TreeView.GetTreeViewNodePresenter(crossSectionDef, null);
+
+            ITreeNodePresenter definitionNodePresenter = networkTreeView.TreeView.GetTreeViewNodePresenter(crossSectionDef, null);
 
             var customMessageBox = mocks.StrictMock<IMessageBox>();
-            DelftTools.Controls.Swf.MessageBox.CustomMessageBox = customMessageBox;
+            MessageBox.CustomMessageBox = customMessageBox;
 
-            int callcount = 0;
+            var callcount = 0;
 
             //select definition to remove
             networkTreeView.TreeView.SelectedNode = GetSharedDefinitionsRootNode(networkTreeView).Nodes[0];
@@ -154,7 +168,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
                 DialogResult.Cancel).Repeat.Any().WhenCalled(m => callcount++);
 
             customMessageBox.Replay();
-            
+
             definitionNodePresenter.RemoveNodeData(null, crossSectionDef);
             Assert.AreEqual(1, callcount); //make sure a messagebox was shown
 
@@ -176,15 +190,15 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
             pluginGui.Gui = gui;
 
             var network = new HydroNetwork();
-            var networkTreeView = new HydroRegionTreeView(pluginGui) { Dock = DockStyle.Fill };
+            var networkTreeView = new HydroRegionTreeView(pluginGui) {Dock = DockStyle.Fill};
 
             var branch = new Channel();
             var crossSectionDef = new CrossSectionDefinitionYZ("Nummer 1");
 
-            var cs = HydroNetworkHelper.AddCrossSectionDefinitionToBranch(branch, new CrossSectionDefinitionProxy(crossSectionDef), 10.0);
+            ICrossSection cs = HydroNetworkHelper.AddCrossSectionDefinitionToBranch(branch, new CrossSectionDefinitionProxy(crossSectionDef), 10.0);
             cs.Name = "test1";
 
-            var cs2 = HydroNetworkHelper.AddCrossSectionDefinitionToBranch(branch, new CrossSectionDefinitionProxy(crossSectionDef), 10.0);
+            ICrossSection cs2 = HydroNetworkHelper.AddCrossSectionDefinitionToBranch(branch, new CrossSectionDefinitionProxy(crossSectionDef), 10.0);
             cs2.Name = "test2";
 
             network.SharedCrossSectionDefinitions.Add(crossSectionDef);
@@ -193,17 +207,17 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
             networkTreeView.Dock = DockStyle.Fill;
             networkTreeView.Region = network;
 
-            var definitionNodePresenter = networkTreeView.TreeView.GetTreeViewNodePresenter(crossSectionDef, null);
+            ITreeNodePresenter definitionNodePresenter = networkTreeView.TreeView.GetTreeViewNodePresenter(crossSectionDef, null);
 
             var customMessageBox = mocks.StrictMock<IMessageBox>();
-            DelftTools.Controls.Swf.MessageBox.CustomMessageBox = customMessageBox;
-            
+            MessageBox.CustomMessageBox = customMessageBox;
+
             //select definition to remove
             networkTreeView.TreeView.SelectedNode = GetSharedDefinitionsRootNode(networkTreeView).Nodes[0];
 
             customMessageBox.Expect(mb => mb.Show(null, null, MessageBoxButtons.OKCancel)).IgnoreArguments().Return(
                 DialogResult.OK).Repeat.AtLeastOnce().WhenCalled(m =>
-                                                                 Assert.AreEqual("The cross section definition you are trying to delete is being used. If you continue, the definition will be replaced by local copies in each cross section. Are you sure you want to continue?\n\nThe following cross sections use this definition:\ntest1\ntest2", m.Arguments[0]));
+                                                                     Assert.AreEqual("The cross section definition you are trying to delete is being used. If you continue, the definition will be replaced by local copies in each cross section. Are you sure you want to continue?\n\nThe following cross sections use this definition:\ntest1\ntest2", m.Arguments[0]));
 
             customMessageBox.Replay();
 
@@ -216,11 +230,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
             customMessageBox.VerifyAllExpectations();
         }
 
-        private static ITreeNode GetSharedDefinitionsRootNode(HydroRegionTreeView hydroRegionTreeView)
-        {
-            return hydroRegionTreeView.TreeView.Nodes[0].Nodes[1];
-        }
-
         [Test]
         [Category(TestCategory.WindowsForms)]
         public void ShowTreeViewWithSharedCrossSectionDefinitions()
@@ -229,9 +238,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
             var gui = mocks.Stub<IGui>();
 
             pluginGui.Gui = gui;
-            
+
             var network = new HydroNetwork();
-            var networkTreeView = new HydroRegionTreeView(pluginGui) { Dock = DockStyle.Fill };
+            var networkTreeView = new HydroRegionTreeView(pluginGui) {Dock = DockStyle.Fill};
 
             var branch = new Channel();
             var crossSectionDef1 = new CrossSectionDefinitionYZ("Nummer 1");
@@ -239,10 +248,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
 
             network.SharedCrossSectionDefinitions.Add(crossSectionDef1);
             network.SharedCrossSectionDefinitions.Add(crossSectionDef2);
-            
+
             networkTreeView.Dock = DockStyle.Fill;
             networkTreeView.Region = network;
-            
+
             var f = new Form();
             f.Controls.Add(networkTreeView);
 
@@ -264,16 +273,16 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
             pluginGui.Gui = gui;
 
             var network = new HydroNetwork();
-            var networkTreeView = new HydroRegionTreeView(pluginGui) { Dock = DockStyle.Fill };
-            
+            var networkTreeView = new HydroRegionTreeView(pluginGui) {Dock = DockStyle.Fill};
+
             var testName = "route1";
-            
+
             var branch = new Channel();
             var route = new Route {Name = testName};
 
-            var postFix = route.Locations.Values.Count == 0 ? " (empty)" : "";
+            string postFix = route.Locations.Values.Count == 0 ? " (empty)" : "";
             postFix = route.Locations.Values.Count == 1 ? " (one node)" : postFix;
-            
+
             network.Routes.Add(route);
 
             networkTreeView.Dock = DockStyle.Fill;
@@ -301,7 +310,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
             pluginGui.Gui = gui;
 
             var basin = new DrainageBasin();
-            var networkTreeView = new HydroRegionTreeView(pluginGui) { Dock = DockStyle.Fill };
+            var networkTreeView = new HydroRegionTreeView(pluginGui) {Dock = DockStyle.Fill};
 
             basin.Catchments.Add(Catchment.CreateDefault());
             basin.Catchments.Add(Catchment.CreateDefault());
@@ -314,7 +323,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
 
             var f = new Form();
             f.Controls.Add(networkTreeView);
-            
+
             //enforce ordering
             Assert.AreEqual("Catchments", networkTreeView.TreeView.Nodes[0].Nodes[1].Text);
             Assert.AreEqual("testName (Unpaved)", networkTreeView.TreeView.Nodes[0].Nodes[1].Nodes[0].Text);
@@ -332,7 +341,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
             pluginGui.Gui = gui;
 
             var basin = new DrainageBasin();
-            var networkTreeView = new HydroRegionTreeView(pluginGui) { Dock = DockStyle.Fill };
+            var networkTreeView = new HydroRegionTreeView(pluginGui) {Dock = DockStyle.Fill};
 
             basin.WasteWaterTreatmentPlants.Add(WasteWaterTreatmentPlant.CreateDefault());
             basin.WasteWaterTreatmentPlants.Add(WasteWaterTreatmentPlant.CreateDefault());
@@ -361,9 +370,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
             var gui = mocks.Stub<IGui>();
 
             pluginGui.Gui = gui;
-            
+
             var network = new HydroNetwork();
-            var networkTreeView = new HydroRegionTreeView(pluginGui) { Dock = DockStyle.Fill };
+            var networkTreeView = new HydroRegionTreeView(pluginGui) {Dock = DockStyle.Fill};
 
             WindowsFormsTestHelper.Show(networkTreeView);
 
@@ -372,12 +381,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
 
             networkTreeView.Region = network;
 
-            var sharedList = GetSharedDefinitionsRootNode(networkTreeView);
+            ITreeNode sharedList = GetSharedDefinitionsRootNode(networkTreeView);
 
             Assert.AreEqual(1, sharedList.Nodes.Count);
 
             var crossSectionDef2 = new CrossSectionDefinitionYZ("Nummer 2");
-            network.SharedCrossSectionDefinitions.Add(crossSectionDef2); 
+            network.SharedCrossSectionDefinitions.Add(crossSectionDef2);
             networkTreeView.WaitUntilAllEventsAreProcessed();
 
             Assert.AreEqual(2, sharedList.Nodes.Count);
@@ -400,11 +409,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
             pluginGui.Gui = gui;
 
             var network = new HydroNetwork();
-            var networkTreeView = new HydroRegionTreeView(pluginGui) { Dock = DockStyle.Fill };
+            var networkTreeView = new HydroRegionTreeView(pluginGui) {Dock = DockStyle.Fill};
 
             var branch = new Channel();
             var observation1 = new ObservationPoint() {Chainage = 42.0};
-            var observation2 = new ObservationPoint() { Chainage = 88.33 }; 
+            var observation2 = new ObservationPoint() {Chainage = 88.33};
             NetworkHelper.AddBranchFeatureToBranch(observation1, branch, observation1.Chainage);
             NetworkHelper.AddBranchFeatureToBranch(observation2, branch, observation2.Chainage);
             network.Branches.Add(branch);
@@ -427,16 +436,16 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
                 app.UserSettings["autosaveWindowLayout"] = false;
 
                 // add networkeditor plugin
-                var networkEditorPlugin = new NetworkEditorApplicationPlugin { Application = app };
+                var networkEditorPlugin = new NetworkEditorApplicationPlugin {Application = app};
                 app.Plugins.Add(networkEditorPlugin);
-                
+
                 // run delta shell
                 gui.Run();
 
                 WpfTestHelper.ShowModal((Control) gui.MainWindow);
             }
         }
-        
+
         [Test]
         public void CheckCrossSectionSort()
         {
@@ -446,10 +455,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
             var childNode2 = mocks.Stub<ITreeNode>();
             var pluginGui = mocks.Stub<GuiPlugin>();
             var treeView = mocks.Stub<ITreeView>();
-            
+
             var nodes = new List<ITreeNode>();
-            var cs1 = new CrossSection(new CrossSectionDefinitionXYZ("100")){Chainage = 100};
-            var cs2 = new CrossSection(new CrossSectionDefinitionXYZ("200")){Chainage = 200};
+            var cs1 = new CrossSection(new CrossSectionDefinitionXYZ("100")) {Chainage = 100};
+            var cs2 = new CrossSection(new CrossSectionDefinitionXYZ("200")) {Chainage = 200};
             var channel = new Channel();
             childNode1.Tag = cs1;
             childNode2.Tag = cs2;
@@ -464,7 +473,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
             mocks.ReplayAll();
             parentNode.Nodes.Add(childNode2);
             parentNode.Nodes.Add(childNode1);
-            
+
             //actual test, presenter should change the order of nodes
             Assert.AreEqual(nodes[0].Tag, cs2); //before sort
             channelpresenter.UpdateNode(null, parentNode, channel);
@@ -474,7 +483,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
             cs1.Chainage = 300;
             channelpresenter.UpdateNode(null, parentNode, channel);
             Assert.AreEqual(nodes[0].Tag, cs2); //after second sort
-
         }
 
         [Test]
@@ -482,15 +490,17 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
         {
             var network = new HydroNetwork();
             //register to collectionchanged of network
-            int callCount = 0;
-            ((INotifyCollectionChange)(network)).CollectionChanged +=
-                delegate
-                    {
-                    callCount++;
-                };
+            var callCount = 0;
+            ((INotifyCollectionChange) network).CollectionChanged +=
+                delegate { callCount++; };
             //add a new section type results in only one call!
-            network.CrossSectionSectionTypes.Add(new CrossSectionSectionType(){Name = "test"});
+            network.CrossSectionSectionTypes.Add(new CrossSectionSectionType() {Name = "test"});
             Assert.AreEqual(1, callCount);
+        }
+
+        private static ITreeNode GetSharedDefinitionsRootNode(HydroRegionTreeView hydroRegionTreeView)
+        {
+            return hydroRegionTreeView.TreeView.Nodes[0].Nodes[1];
         }
     }
 }

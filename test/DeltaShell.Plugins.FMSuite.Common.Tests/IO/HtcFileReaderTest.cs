@@ -46,8 +46,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
 
         private static string ReadGridFileFromHtcFile(string filePath)
         {
-                var htcReader = new HtcFileReader(filePath);
-                return htcReader.ReadGridFileNameWithExtension();
+            var htcReader = new HtcFileReader(filePath);
+            return htcReader.ReadGridFileNameWithExtension();
         }
     }
 }

@@ -24,23 +24,20 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             string mduPath = TestHelper.GetTestFilePath(@"waveFlowFM\fm\te0.mdu");
             string localFmPath = TestHelper.CreateLocalCopy(mduPath);
             var fmModel = new WaterFlowFMModel(localFmPath);
-            fmModel.StopTime = fmModel.StartTime + new TimeSpan(20*fmModel.TimeStep.Ticks);
+            fmModel.StopTime = fmModel.StartTime + new TimeSpan(20 * fmModel.TimeStep.Ticks);
             ValidationReport fmReport = fmModel.Validate();
             Assert.AreEqual(0, fmReport.ErrorCount);
 
             string mdwPath = TestHelper.GetTestFilePath(@"waveFlowFM\wave\te0.mdw");
             string localWavePath = TestHelper.CreateLocalCopy(mdwPath);
-            var waveModel = new WaveModel(localWavePath)
-            {
-                Owner = Substitute.For<ICompositeActivity>()
-            };
-            var waveReport = new WaveModelValidator().Validate(waveModel);
-            Assert.AreEqual(1, waveReport.ErrorCount);//if not in an integrated model Coupling error should occur!
+            var waveModel = new WaveModel(localWavePath) {Owner = Substitute.For<ICompositeActivity>()};
+            ValidationReport waveReport = new WaveModelValidator().Validate(waveModel);
+            Assert.AreEqual(1, waveReport.ErrorCount); //if not in an integrated model Coupling error should occur!
             Assert.IsTrue(
                 waveReport.GetAllIssuesRecursive()
-                    .Any(
-                        i =>
-                            i.Severity == ValidationSeverity.Error && i.Message == Resources.WaveCouplingValidator_Validate_Coupled_wave_model_must_use_COM_file));
+                          .Any(
+                              i =>
+                                  i.Severity == ValidationSeverity.Error && i.Message == Resources.WaveCouplingValidator_Validate_Coupled_wave_model_must_use_COM_file));
 
             HydroModel hydroModel = new HydroModelBuilder().BuildModel(ModelGroup.All);
             hydroModel.Activities.Clear();
@@ -48,14 +45,21 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             hydroModel.Activities.Add(fmModel);
             hydroModel.Activities.Add(waveModel);
             waveReport = new WaveModelValidator().Validate(waveModel);
-            Assert.AreEqual(0, waveReport.ErrorCount);//if in an integrated model Coupling error should NOT occur!
+            Assert.AreEqual(0, waveReport.ErrorCount); //if in an integrated model Coupling error should NOT occur!
 
             hydroModel.StartTime = fmModel.StartTime;
             hydroModel.StopTime = fmModel.StopTime;
             hydroModel.TimeStep = fmModel.TimeStep;
 
-            hydroModel.CurrentWorkflow = new ParallelActivity { Activities = { new ActivityWrapper(waveModel), new ActivityWrapper(fmModel) } };
-            
+            hydroModel.CurrentWorkflow = new ParallelActivity
+            {
+                Activities =
+                {
+                    new ActivityWrapper(waveModel),
+                    new ActivityWrapper(fmModel)
+                }
+            };
+
             ActivityRunner.RunActivity(hydroModel);
 
             Assert.AreEqual(ActivityStatus.Cleaned, hydroModel.Status);

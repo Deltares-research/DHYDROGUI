@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.Functions;
+using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
@@ -22,6 +22,7 @@ using GeoAPI.Extensions.Coverages;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Features;
+using NetTopologySuite.Extensions.Grids;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using SharpMap;
@@ -41,8 +42,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         public void ReadPolygonForcings()
         {
             var def = new WaterFlowFMModelDefinition();
-            var extPath = TestHelper.GetTestFilePath(@"harlingen\001.ext");
-            var extSubFilesReferenceFilePath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
+            string extPath = TestHelper.GetTestFilePath(@"harlingen\001.ext");
+            string extSubFilesReferenceFilePath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
 
             var extForceFile = new ExtForceFile();
             extForceFile.Read(extPath, def, extSubFilesReferenceFilePath);
@@ -54,7 +55,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             Assert.IsNull(def.GetSpatialOperations(WaterFlowFMModelDefinition.InitialWaterLevelDataItemName));
             Assert.AreEqual(2, def.GetSpatialOperations(WaterFlowFMModelDefinition.InitialSalinityDataItemName).Count);
 
-            var roughnessOperations = def.GetSpatialOperations(WaterFlowFMModelDefinition.RoughnessDataItemName);
+            IList<ISpatialOperation> roughnessOperations = def.GetSpatialOperations(WaterFlowFMModelDefinition.RoughnessDataItemName);
             Assert.IsNotNull(roughnessOperations);
             Assert.AreEqual(1, roughnessOperations.Count);
 
@@ -73,8 +74,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         public void ReadSampleForcings()
         {
             var def = new WaterFlowFMModelDefinition();
-            var extPath = TestHelper.GetTestFilePath(@"chezy_samples\chezy.ext");
-            var extSubFilesReferenceFilePath = TestHelper.GetTestFilePath(@"chezy_samples\chezy.mdu");
+            string extPath = TestHelper.GetTestFilePath(@"chezy_samples\chezy.ext");
+            string extSubFilesReferenceFilePath = TestHelper.GetTestFilePath(@"chezy_samples\chezy.mdu");
 
             var extForceFile = new ExtForceFile();
             extForceFile.Read(extPath, def, extSubFilesReferenceFilePath);
@@ -96,9 +97,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         public void GivenAnExtForceFileWithUnknownSpatiallyVaryingProperties_WhenRead_ThenCorrectWarningMessageIsGiven()
         {
             // Given
-            var extPath = TestHelper.GetTestFilePath(@"SpatialVaryingPrefix\incorrect_prefix.ext");
+            string extPath = TestHelper.GetTestFilePath(@"SpatialVaryingPrefix\incorrect_prefix.ext");
             extPath = TestHelper.CreateLocalCopy(extPath);
-            var extSubFilesReferenceFilePath = Path.Combine(Path.GetDirectoryName(extPath), "incorrect_prefix.mdu");
+            string extSubFilesReferenceFilePath = Path.Combine(Path.GetDirectoryName(extPath), "incorrect_prefix.mdu");
             Assert.IsTrue(File.Exists(extPath));
 
             // When, Then
@@ -114,14 +115,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         public void ReadExtFileWithUnknownQuantityShowsLogMessage()
         {
             var def = new WaterFlowFMModelDefinition();
-            var extPath = TestHelper.GetTestFilePath(@"ExtFileTest\withOnlyUnknownQuantity.ext");
-            var extSubFilesReferenceFilePath = Path.Combine(Path.GetDirectoryName(extPath), "withOnlyUnknownQuantity.mdu");
+            string extPath = TestHelper.GetTestFilePath(@"ExtFileTest\withOnlyUnknownQuantity.ext");
+            string extSubFilesReferenceFilePath = Path.Combine(Path.GetDirectoryName(extPath), "withOnlyUnknownQuantity.mdu");
             Assert.IsTrue(File.Exists(extPath));
 
             extPath = TestHelper.CreateLocalCopy(extPath);
             Assert.IsTrue(File.Exists(extPath));
 
-            var expectedMessage = string.Format(Resources.ExtForceFile_StoreUnknownQuantities_Quantity___0___detected_in_the_external_force_file_and_will_be_passed_to_the_computational_core__This_may_affect_your_simulation_, "generalstructure");
+            string expectedMessage = string.Format(Resources.ExtForceFile_StoreUnknownQuantities_Quantity___0___detected_in_the_external_force_file_and_will_be_passed_to_the_computational_core__This_may_affect_your_simulation_, "generalstructure");
             var extForceFile = new ExtForceFile();
             TestHelper.AssertAtLeastOneLogMessagesContains(() => extForceFile.Read(extPath, def, extSubFilesReferenceFilePath), expectedMessage);
         }
@@ -130,14 +131,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         public void ReadExtFileWithUnknownQuantityImportsTheOtherQuantities()
         {
             var def = new WaterFlowFMModelDefinition();
-            var extPath = TestHelper.GetTestFilePath(@"ExtFileTest\withUnknownAndKnownQuantities.ext");
-            var extSubFilesReferenceFilePath = Path.Combine(Path.GetDirectoryName(extPath), "withUnknownAndKnownQuantities.mdu");
+            string extPath = TestHelper.GetTestFilePath(@"ExtFileTest\withUnknownAndKnownQuantities.ext");
+            string extSubFilesReferenceFilePath = Path.Combine(Path.GetDirectoryName(extPath), "withUnknownAndKnownQuantities.mdu");
             Assert.IsTrue(File.Exists(extPath));
 
             extPath = TestHelper.CreateLocalCopy(extPath);
             Assert.IsTrue(File.Exists(extPath));
 
-            var expectedMessage = string.Format(Resources.ExtForceFile_StoreUnknownQuantities_Quantity___0___detected_in_the_external_force_file_and_will_be_passed_to_the_computational_core__This_may_affect_your_simulation_, "generalstructure");
+            string expectedMessage = string.Format(Resources.ExtForceFile_StoreUnknownQuantities_Quantity___0___detected_in_the_external_force_file_and_will_be_passed_to_the_computational_core__This_may_affect_your_simulation_, "generalstructure");
             var extForceFile = new ExtForceFile();
 
             Assert.IsFalse(def.BoundaryConditions.Any());
@@ -145,7 +146,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             Assert.IsTrue(def.BoundaryConditions.Any());
 
             /* Just check the boundary has been imported. */
-            var boundaryCondition = def.BoundaryConditions.First();
+            IBoundaryCondition boundaryCondition = def.BoundaryConditions.First();
             Assert.AreEqual("WaterLevel", boundaryCondition.VariableName);
             Assert.AreEqual("OB_001_orgsize-Water level", boundaryCondition.Name);
         }
@@ -154,15 +155,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         public void GivenAnExtFileWithAnUnknownQuantity_WhenImportingItAndExportingIt_ThenThisQuantityShouldBeReadAndWritten()
         {
             var def = new WaterFlowFMModelDefinition();
-            var extPath = TestHelper.GetTestFilePath(@"ExtFileTest\withKnownAndUnknownQuantities.ext");
-            var extSubFilesReferenceFilePath = Path.Combine(Path.GetDirectoryName(extPath), "withKnownAndUnknownQuantities.mdu");
+            string extPath = TestHelper.GetTestFilePath(@"ExtFileTest\withKnownAndUnknownQuantities.ext");
+            string extSubFilesReferenceFilePath = Path.Combine(Path.GetDirectoryName(extPath), "withKnownAndUnknownQuantities.mdu");
             Assert.IsTrue(File.Exists(extPath));
 
             extPath = TestHelper.CreateLocalCopy(extPath);
             Assert.IsTrue(File.Exists(extPath));
 
             var extForceFile = new ExtForceFile();
-            var expectedMessage =
+            string expectedMessage =
                 string.Format(Resources.ExtForceFile_StoreUnknownQuantities_Quantity___0___detected_in_the_external_force_file_and_will_be_passed_to_the_computational_core__This_may_affect_your_simulation_, "internaltidesfrictioncoefficient");
 
             Assert.IsFalse(def.BoundaryConditions.Any());
@@ -170,7 +171,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             Assert.IsTrue(def.BoundaryConditions.Any());
 
             /* Just check the boundary has been imported. */
-            var boundaryCondition = def.BoundaryConditions.First();
+            IBoundaryCondition boundaryCondition = def.BoundaryConditions.First();
             Assert.AreEqual("WaterLevel", boundaryCondition.VariableName);
             Assert.AreEqual("OB_001_orgsize-Water level", boundaryCondition.Name);
 
@@ -179,7 +180,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             Assert.That(File.Exists(Path.Combine(Path.GetDirectoryName(extPath), def.UnsupportedFileBasedExtForceFileItems[0].UnsupportedExtForceFileItem.FileName)));
 
             string newPath = Path.Combine(Path.GetDirectoryName(extPath), "NewExtFileDirectory", "NewExtFile");
-            var newExtSubFilesReferenceFilePath = Path.Combine(Path.GetDirectoryName(extPath), "NewExtFileDirectory", "NewMduFile");
+            string newExtSubFilesReferenceFilePath = Path.Combine(Path.GetDirectoryName(extPath), "NewExtFileDirectory", "NewMduFile");
 
             extForceFile.Write(newPath, def); // write loaded definition to new location
 
@@ -198,16 +199,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         {
             // Given
             var modelDefinition = new WaterFlowFMModelDefinition();
-            var extPath =
+            string extPath =
                 TestHelper.GetTestFilePath(@"ExtFileTest\ExtFileWithInternalTidesFrictionCoefficientAndMissingFile\withKnownAndUnknownQuantities.ext");
-            var extSubFilesReferenceFilePath = Path.Combine(Path.GetDirectoryName(extPath), "withKnownAndUnknownQuantities.mdu");
+            string extSubFilesReferenceFilePath = Path.Combine(Path.GetDirectoryName(extPath), "withKnownAndUnknownQuantities.mdu");
             Assert.IsTrue(File.Exists(extPath));
 
             extPath = TestHelper.CreateLocalCopy(extPath);
             Assert.IsTrue(File.Exists(extPath));
 
             var extForceFile = new ExtForceFile();
-            var expectedMessage = string.Format(Resources.ExtForceFile_StoreUnknownQuantities_Quantity___0___detected_in_the_external_force_file_and_will_be_passed_to_the_computational_core__This_may_affect_your_simulation_, "internaltidesfrictioncoefficient");
+            string expectedMessage = string.Format(Resources.ExtForceFile_StoreUnknownQuantities_Quantity___0___detected_in_the_external_force_file_and_will_be_passed_to_the_computational_core__This_may_affect_your_simulation_, "internaltidesfrictioncoefficient");
 
             Assert.IsFalse(modelDefinition.BoundaryConditions.Any());
 
@@ -217,7 +218,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             // Then
             ValidateUnknownQuantities(modelDefinition);
             Assert.IsTrue(modelDefinition.BoundaryConditions.Any());
-            var boundaryCondition = modelDefinition.BoundaryConditions.First();
+            IBoundaryCondition boundaryCondition = modelDefinition.BoundaryConditions.First();
             Assert.AreEqual("WaterLevel", boundaryCondition.VariableName);
             Assert.AreEqual("OB_001_orgsize-Water level", boundaryCondition.Name);
         }
@@ -227,8 +228,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         {
             //LogHelper.ConfigureLogging(|Level);
             var def = new WaterFlowFMModelDefinition();
-            var extPath = TestHelper.GetTestFilePath(@"SpatialVaryingPrefix\correct_prefix.ext");
-            var extSubFilesReferenceFilePath = Path.Combine(Path.GetDirectoryName(extPath), "correct_prefix.mdu");
+            string extPath = TestHelper.GetTestFilePath(@"SpatialVaryingPrefix\correct_prefix.ext");
+            string extSubFilesReferenceFilePath = Path.Combine(Path.GetDirectoryName(extPath), "correct_prefix.mdu");
             var extForceFile = new ExtForceFile();
             TestHelper.AssertLogMessagesCount(() => extForceFile.Read(extPath, def, extSubFilesReferenceFilePath), 0);
         }
@@ -238,31 +239,30 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         public void ExtFileDoesNotSaveSedimentSpatiallyVaryingOperationsButSedConc()
         {
             //define model
-            var sedFile = Path.GetTempFileName();
-            var extForceFile = Path.Combine(Path.GetDirectoryName(sedFile), "extForceFileTest.ext");
-            var sedConcXyzFile = Path.Combine(Path.GetDirectoryName(sedFile), "mysedimentName_SedConc." + XyzFile.Extension);
-            var customPropXyzFile = Path.Combine(Path.GetDirectoryName(sedFile), "mysedimentName_IniSedThick." + XyzFile.Extension);
+            string sedFile = Path.GetTempFileName();
+            string extForceFile = Path.Combine(Path.GetDirectoryName(sedFile), "extForceFileTest.ext");
+            string sedConcXyzFile = Path.Combine(Path.GetDirectoryName(sedFile), "mysedimentName_SedConc." + XyzFile.Extension);
+            string customPropXyzFile = Path.Combine(Path.GetDirectoryName(sedFile), "mysedimentName_IniSedThick." + XyzFile.Extension);
             var fileCopyName = string.Empty;
             try
             {
                 /* Define new model */
                 var fmModel = new WaterFlowFMModel(sedFile)
                 {
-                    ModelDefinition =
-                    {
-                        UseMorphologySediment = true
-                    },
+                    ModelDefinition = {UseMorphologySediment = true},
                     Grid = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 2, 2)
                 };
 
                 /* Define test properties */
                 var doubleSpatProp = new SpatiallyVaryingSedimentProperty<double>("SedConc", 0, 0, false, 0, true, "cc", "mydoubledescription", true, false)
                 {
-                    SpatiallyVaryingName = "mysedimentName_SedConc", Value = 12.3
+                    SpatiallyVaryingName = "mysedimentName_SedConc",
+                    Value = 12.3
                 };
                 var thickProp = new SpatiallyVaryingSedimentProperty<double>("IniSedThick", 5, 0, false, 0, true, "cc", "mydoubledescription", true, false)
                 {
-                    SpatiallyVaryingName = "mysedimentName_IniSedThick", Value = 12.3
+                    SpatiallyVaryingName = "mysedimentName_IniSedThick",
+                    Value = 12.3
                 };
                 thickProp.IsSpatiallyVarying = true;
 
@@ -272,24 +272,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                     Key = "sand",
                     Properties = new EventedList<ISedimentProperty>
                     {
-                        doubleSpatProp, thickProp
+                        doubleSpatProp,
+                        thickProp
                     }
                 };
 
-                var overallProp = new SedimentProperty<double>("Cref", 0, 0, true, 0, false, "km", "myoveralldescription", false)
-                {
-                    Value = 80.1
-                };
+                var overallProp = new SedimentProperty<double>("Cref", 0, 0, true, 0, false, "km", "myoveralldescription", false) {Value = 80.1};
 
-                fmModel.SedimentOverallProperties = new EventedList<ISedimentProperty>
-                {
-                    overallProp
-                };
+                fmModel.SedimentOverallProperties = new EventedList<ISedimentProperty> {overallProp};
 
                 /*Add the fraction to the model*/
                 var fraction = new SedimentFraction
                 {
-                    Name = "mysedimentName", CurrentSedimentType = testSedimentType
+                    Name = "mysedimentName",
+                    CurrentSedimentType = testSedimentType
                 };
 
                 fileCopyName = TestHelper.CreateLocalCopy(TestHelper.GetTestFilePath(@"harlingen_model_3d\har_V3.xyz"));
@@ -299,10 +295,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 fmModel.SedimentFractions.Add(fraction);
 
                 /* Coverage for SedConc */
-                var dataItem = fmModel.AllDataItems.FirstOrDefault(di => di.Name == "mysedimentName_SedConc");
+                IDataItem dataItem = fmModel.AllDataItems.FirstOrDefault(di => di.Name == "mysedimentName_SedConc");
 
                 // retrieve / create value converter for mysedimentName_SedConc dataitem
-                var valueConverter = SpatialOperationValueConverterFactory.GetOrCreateSpatialOperationValueConverter(dataItem, "mysedimentName_SedConc");
+                SpatialOperationSetValueConverter valueConverter = SpatialOperationValueConverterFactory.GetOrCreateSpatialOperationValueConverter(dataItem, "mysedimentName_SedConc");
                 var samplesSedConc = new AddSamplesOperation(false);
                 samplesSedConc.SetInputData(AddSamplesOperation.SamplesInputName, new PointCloudFeatureProvider
                 {
@@ -312,15 +308,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                         {
                             new PointValue
                             {
-                                X = fmModel.Grid.Cells[0].CenterX, Y = fmModel.Grid.Cells[0].CenterY, Value = 12
+                                X = fmModel.Grid.Cells[0].CenterX,
+                                Y = fmModel.Grid.Cells[0].CenterY,
+                                Value = 12
                             },
                             new PointValue
                             {
-                                X = fmModel.Grid.Cells[1].CenterX, Y = fmModel.Grid.Cells[1].CenterY, Value = 30
+                                X = fmModel.Grid.Cells[1].CenterX,
+                                Y = fmModel.Grid.Cells[1].CenterY,
+                                Value = 30
                             },
                             new PointValue
                             {
-                                X = fmModel.Grid.Cells[2].CenterX, Y = fmModel.Grid.Cells[2].CenterY, Value = 31
+                                X = fmModel.Grid.Cells[2].CenterX,
+                                Y = fmModel.Grid.Cells[2].CenterY,
+                                Value = 31
                             }
                         }
                     }
@@ -329,10 +331,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 valueConverter.SpatialOperationSet.Execute();
 
                 /* Create coverage for CustomProp */
-                var thickDataItem = fmModel.AllDataItems.FirstOrDefault(di => di.Name == "mysedimentName_IniSedThick");
+                IDataItem thickDataItem = fmModel.AllDataItems.FirstOrDefault(di => di.Name == "mysedimentName_IniSedThick");
 
                 // retrieve / create value converter for mysedimentName_SedConc data item
-                var valueConvertThick = SpatialOperationValueConverterFactory.GetOrCreateSpatialOperationValueConverter(thickDataItem, "mysedimentName_IniSedThick");
+                SpatialOperationSetValueConverter valueConvertThick = SpatialOperationValueConverterFactory.GetOrCreateSpatialOperationValueConverter(thickDataItem, "mysedimentName_IniSedThick");
                 var samplesThick = new AddSamplesOperation(false);
                 samplesThick.SetInputData(AddSamplesOperation.SamplesInputName, new PointCloudFeatureProvider
                 {
@@ -342,15 +344,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                         {
                             new PointValue
                             {
-                                X = fmModel.Grid.Cells[0].CenterX, Y = fmModel.Grid.Cells[0].CenterY, Value = 2
+                                X = fmModel.Grid.Cells[0].CenterX,
+                                Y = fmModel.Grid.Cells[0].CenterY,
+                                Value = 2
                             },
                             new PointValue
                             {
-                                X = fmModel.Grid.Cells[1].CenterX, Y = fmModel.Grid.Cells[1].CenterY, Value = 15
+                                X = fmModel.Grid.Cells[1].CenterX,
+                                Y = fmModel.Grid.Cells[1].CenterY,
+                                Value = 15
                             },
                             new PointValue
                             {
-                                X = fmModel.Grid.Cells[2].CenterX, Y = fmModel.Grid.Cells[2].CenterY, Value = 28
+                                X = fmModel.Grid.Cells[2].CenterX,
+                                Y = fmModel.Grid.Cells[2].CenterY,
+                                Value = 28
                             }
                         }
                     }
@@ -361,7 +369,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 // update model definition (called during export)
                 var initialSpatialOps = new List<string>
                 {
-                    doubleSpatProp.SpatiallyVaryingName, thickProp.SpatiallyVaryingName
+                    doubleSpatProp.SpatiallyVaryingName,
+                    thickProp.SpatiallyVaryingName
                 };
                 fmModel.ModelDefinition.SelectSpatialOperations(fmModel.DataItems, fmModel.TracerDefinitions, initialSpatialOps);
 
@@ -383,7 +392,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
                 /* Check SedConc has generated only one Xyz File and one entry in the Ext file
                  * for SedConc but not for CustomProp.       */
-                var extWritten = File.ReadAllText(extForceFile);
+                string extWritten = File.ReadAllText(extForceFile);
                 Assert.That(extWritten, Is.StringContaining("QUANTITY=initialsedfracmysedimentName"));
                 Assert.That(extWritten, Is.StringContaining("FILENAME=mysedimentName_SedConc.xyz"));
                 /* Nothing related to the customProp */
@@ -411,27 +420,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [Category(TestCategory.Slow)]
         public void SaveExtFileWithSpatiallyVaryingSedConcButNoOperationsGeneratesWarningMessage()
         {
-            var sedFile = Path.GetTempFileName();
-            var generatedXyzFile = Path.Combine(Path.GetDirectoryName(sedFile), "mysedimentName_SedConc." + XyzFile.Extension);
-            var extForceFile = Path.Combine(Path.GetDirectoryName(sedFile), "extForceFileTest.ext");
+            string sedFile = Path.GetTempFileName();
+            string generatedXyzFile = Path.Combine(Path.GetDirectoryName(sedFile), "mysedimentName_SedConc." + XyzFile.Extension);
+            string extForceFile = Path.Combine(Path.GetDirectoryName(sedFile), "extForceFileTest.ext");
 
             try
             {
                 /* Define new model */
-                var grid = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 2, 2);
+                UnstructuredGrid grid = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 2, 2);
                 var fmModel = new WaterFlowFMModel(sedFile)
                 {
-                    ModelDefinition =
-                    {
-                        UseMorphologySediment = true
-                    },
+                    ModelDefinition = {UseMorphologySediment = true},
                     Grid = grid
                 };
 
-                var fraction = new SedimentFraction
-                {
-                    Name = "Frac1"
-                };
+                var fraction = new SedimentFraction {Name = "Frac1"};
                 fmModel.SedimentFractions.Add(fraction);
 
                 /* Save ext file */
@@ -440,24 +443,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 TestHelper.AssertLogMessagesCount(() => extFile.Write(extForceFile, fmModel.ModelDefinition), 0);
 
                 //Update model , we need to force it as we are not saving directly from the model but from the ModelDefinition
-                var sedConcProp = fraction.CurrentSedimentType.Properties.OfType<ISpatiallyVaryingSedimentProperty>().FirstOrDefault(p => p.Name == "SedConc");
-                var initialSpatialOps = new List<string>
-                {
-                    sedConcProp.SpatiallyVaryingName
-                };
+                ISpatiallyVaryingSedimentProperty sedConcProp = fraction.CurrentSedimentType.Properties.OfType<ISpatiallyVaryingSedimentProperty>().FirstOrDefault(p => p.Name == "SedConc");
+                var initialSpatialOps = new List<string> {sedConcProp.SpatiallyVaryingName};
                 //Add another spatially varying prop -> Warning should be given.
                 fmModel.ModelDefinition.SelectSpatialOperations(fmModel.DataItems, fmModel.TracerDefinitions, initialSpatialOps);
                 TestHelper.AssertAtLeastOneLogMessagesContains(
                     () => extFile.Write(extForceFile, fmModel.ModelDefinition),
-                    String.Format(
+                    string.Format(
                         Resources.SedimentFile_WriteSpatiallyVaryingSedimentPropertySubFiles_No_spatial_operations_of_type_Import__Add_or_Value_found_for_spatially_varying_property__0___Remember_to_interpolate_them_to_generate_the_xyz_file__Otherwise_the_model_might_not_run_as_expected_,
                         sedConcProp.SpatiallyVaryingName));
 
                 //Add a 'value' operation, another warning should be given.
-                var dataItem = fmModel.AllDataItems.FirstOrDefault(di => di.Name == sedConcProp.SpatiallyVaryingName);
+                IDataItem dataItem = fmModel.AllDataItems.FirstOrDefault(di => di.Name == sedConcProp.SpatiallyVaryingName);
 
                 // retrieve / create value converter for mysedimentName_SedConc dataitem
-                var valueConverter = SpatialOperationValueConverterFactory.GetOrCreateSpatialOperationValueConverter(dataItem, sedConcProp.SpatiallyVaryingName);
+                SpatialOperationSetValueConverter valueConverter = SpatialOperationValueConverterFactory.GetOrCreateSpatialOperationValueConverter(dataItem, sedConcProp.SpatiallyVaryingName);
                 var samples = new SetValueOperation();
                 samples.SetInputData(SpatialOperation.MainInputName, new PointCloudFeatureProvider
                 {
@@ -467,15 +467,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                         {
                             new PointValue
                             {
-                                X = fmModel.Grid.Cells[0].CenterX, Y = fmModel.Grid.Cells[0].CenterY, Value = 12
+                                X = fmModel.Grid.Cells[0].CenterX,
+                                Y = fmModel.Grid.Cells[0].CenterY,
+                                Value = 12
                             },
                             new PointValue
                             {
-                                X = fmModel.Grid.Cells[1].CenterX, Y = fmModel.Grid.Cells[1].CenterY, Value = 30
+                                X = fmModel.Grid.Cells[1].CenterX,
+                                Y = fmModel.Grid.Cells[1].CenterY,
+                                Value = 30
                             },
                             new PointValue
                             {
-                                X = fmModel.Grid.Cells[2].CenterX, Y = fmModel.Grid.Cells[2].CenterY, Value = 31
+                                X = fmModel.Grid.Cells[2].CenterX,
+                                Y = fmModel.Grid.Cells[2].CenterY,
+                                Value = 31
                             }
                         }
                     }
@@ -488,7 +494,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 //New warning should be given.
                 TestHelper.AssertAtLeastOneLogMessagesContains(
                     () => extFile.Write(extForceFile, fmModel.ModelDefinition),
-                    String.Format(
+                    string.Format(
                         Resources.SedimentFile_WriteSpatiallyVaryingSedimentPropertySubFiles_Cannot_create_xyz_file_for_spatial_varying_initial_condition__0__because_it_is_a_value_spatial_operation__please_interpolate_the_operation_to_the_grid_or,
                         sedConcProp.SpatiallyVaryingName));
             }
@@ -504,8 +510,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         public void CheckReadWriteOfSampleForcingsWithAOperator()
         {
             var def = new WaterFlowFMModelDefinition();
-            var extPath = TestHelper.GetTestFilePath(@"chezy_samples\chezy_A.ext");
-            var extSubFilesReferenceFilePath = Path.Combine(Path.GetDirectoryName(extPath), "chezy_A.mdu");
+            string extPath = TestHelper.GetTestFilePath(@"chezy_samples\chezy_A.ext");
+            string extSubFilesReferenceFilePath = Path.Combine(Path.GetDirectoryName(extPath), "chezy_A.mdu");
 
             var extForceFile = new ExtForceFile();
             extForceFile.Read(extPath, def, extSubFilesReferenceFilePath);
@@ -515,7 +521,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             Assert.IsNull(def.GetSpatialOperations(WaterFlowFMModelDefinition.InitialWaterLevelDataItemName));
             Assert.IsNotNull(def.GetSpatialOperations(WaterFlowFMModelDefinition.RoughnessDataItemName));
 
-            var roughnessOperations = def.GetSpatialOperations(WaterFlowFMModelDefinition.RoughnessDataItemName);
+            IList<ISpatialOperation> roughnessOperations = def.GetSpatialOperations(WaterFlowFMModelDefinition.RoughnessDataItemName);
             Assert.AreEqual(2, roughnessOperations.Count);
 
             var samplesOperation = (ImportSamplesOperation) roughnessOperations[1];
@@ -523,14 +529,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             Assert.AreEqual(4, samplesOperation.GetPoints().Count());
 
             const string newPath = "local.ext";
-            var newExtSubFilesReferenceFilePath = Path.Combine(Path.GetDirectoryName(newPath), "chezy_A.mdu");
+            string newExtSubFilesReferenceFilePath = Path.Combine(Path.GetDirectoryName(newPath), "chezy_A.mdu");
             extForceFile.Write(newPath, def); // write loaded definition to new location
 
             var newExtFile = new ExtForceFile();
             var newDef = new WaterFlowFMModelDefinition();
 
             newExtFile.Read(newPath, newDef, newExtSubFilesReferenceFilePath); // load written definition back
-            var newRoughnessOperations = newDef.GetSpatialOperations(WaterFlowFMModelDefinition.RoughnessDataItemName);
+            IList<ISpatialOperation> newRoughnessOperations = newDef.GetSpatialOperations(WaterFlowFMModelDefinition.RoughnessDataItemName);
             Assert.AreEqual(4, ((ImportSamplesOperation) newRoughnessOperations[1]).GetPoints().Count());
         }
 
@@ -538,11 +544,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         public void ReadWriteSampleForcingsWaterLevel()
         {
             var def = new WaterFlowFMModelDefinition();
-            var extPath = TestHelper.GetTestFilePath(@"chezy_samples\waterlevel.ext");
-            var extSubFilesReferenceFilePath = Path.Combine(Path.GetDirectoryName(extPath), "waterlevel.mdu");
+            string extPath = TestHelper.GetTestFilePath(@"chezy_samples\waterlevel.ext");
+            string extSubFilesReferenceFilePath = Path.Combine(Path.GetDirectoryName(extPath), "waterlevel.mdu");
 
             var extForceFile = new ExtForceFile();
-            extForceFile.Read(extPath, def,extSubFilesReferenceFilePath);
+            extForceFile.Read(extPath, def, extSubFilesReferenceFilePath);
 
             Assert.AreEqual(1, def.GetSpatialOperations(WaterFlowFMModelDefinition.InitialWaterLevelDataItemName).Count);
 
@@ -555,18 +561,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 new Coordinate(-125, -200),
                 new Coordinate(-135, -105)
             }));
-            var f = new Feature
-            {
-                Geometry = geometry
-            };
+            var f = new Feature {Geometry = geometry};
             var maskCollection = new FeatureCollection(new[]
             {
                 f
             }, typeof(Feature));
-            var operation = new SetValueOperation
-            {
-                Name = "poly"
-            };
+            var operation = new SetValueOperation {Name = "poly"};
             operation.SetInputData(SpatialOperation.MaskInputName, maskCollection);
             def.GetSpatialOperations(WaterFlowFMModelDefinition.InitialWaterLevelDataItemName).Add(operation);
 
@@ -580,15 +580,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                     {
                         new PointValue
                         {
-                            X = 5, Y = 5, Value = 12
+                            X = 5,
+                            Y = 5,
+                            Value = 12
                         },
                         new PointValue
                         {
-                            X = 10, Y = 10, Value = 30
+                            X = 10,
+                            Y = 10,
+                            Value = 30
                         },
                         new PointValue
                         {
-                            X = 20, Y = 10, Value = 31
+                            X = 20,
+                            Y = 10,
+                            Value = 31
                         }
                     }
                 }
@@ -597,7 +603,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             def.GetSpatialOperations(WaterFlowFMModelDefinition.InitialWaterLevelDataItemName).Add(samples);
 
             const string newExtPath = "test.ext";
-            var newExtSubFilesReferenceFilePath = Path.Combine(Path.GetDirectoryName(newExtPath), "test.mdu");
+            string newExtSubFilesReferenceFilePath = Path.Combine(Path.GetDirectoryName(newExtPath), "test.mdu");
 
             extForceFile.Write(newExtPath, def);
 
@@ -633,11 +639,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var bc1 = new FlowBoundaryCondition(FlowBoundaryQuantityType.WaterLevel,
                                                 BoundaryConditionDataType.AstroComponents)
             {
-                Feature = feature, Offset = -0.3, Factor = 2.5
+                Feature = feature,
+                Offset = -0.3,
+                Factor = 2.5
             };
 
             bc1.AddPoint(1);
-            var data = bc1.GetDataAtPoint(1);
+            IFunction data = bc1.GetDataAtPoint(1);
             data["M1"] = new[]
             {
                 0.5,
@@ -653,22 +661,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             };
             AddBoundaryCondition(model, bc1);
 
-            var mduPath = Path.GetFullPath(@"exportbc.mdu");
+            string mduPath = Path.GetFullPath(@"exportbc.mdu");
 
             model.ExportTo(mduPath);
 
             var importedModel = new WaterFlowFMModel(mduPath);
-            var boundaries = importedModel.Boundaries;
+            IEventedList<Feature2D> boundaries = importedModel.Boundaries;
             Assert.AreEqual(1, boundaries.Count);
             Assert.AreEqual(feature.Geometry, boundaries.First().Geometry);
 
-            var boundaryConditions = importedModel.BoundaryConditions.ToList();
+            List<IBoundaryCondition> boundaryConditions = importedModel.BoundaryConditions.ToList();
             Assert.AreEqual(1, boundaryConditions.Count);
 
             Assert.AreEqual(-0.3, ((FlowBoundaryCondition) boundaryConditions[0]).Offset);
             Assert.AreEqual(2.5, ((FlowBoundaryCondition) boundaryConditions[0]).Factor);
 
-            var pointData1 = ((BoundaryCondition) boundaryConditions[0]).GetDataAtPoint(1);
+            IFunction pointData1 = ((BoundaryCondition) boundaryConditions[0]).GetDataAtPoint(1);
             Assert.AreEqual(pointData1.Arguments[0].Values.OfType<string>().ToArray(), new[]
             {
                 "M1"
@@ -682,7 +690,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 120
             });
 
-            var pointData2 = ((BoundaryCondition) boundaryConditions[0]).GetDataAtPoint(2);
+            IFunction pointData2 = ((BoundaryCondition) boundaryConditions[0]).GetDataAtPoint(2);
             Assert.AreEqual(pointData2.Arguments[0].Values.OfType<string>().ToArray(), new[]
             {
                 "M2"
@@ -714,141 +722,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                     })
             };
 
-            var bc1 = new FlowBoundaryCondition(FlowBoundaryQuantityType.WaterLevel, BoundaryConditionDataType.AstroComponents)
-            {
-                Feature = feature
-            };
-
-            bc1.AddPoint(1);
-            var data = bc1.GetDataAtPoint(1);
-            data["M1"] = new[]
-            {
-                0.5,
-                120
-            };
-
-            bc1.AddPoint(2);
-            data = bc1.GetDataAtPoint(2);
-            data["M2"] = new[]
-            {
-                0.7,
-                60
-            };
-            AddBoundaryCondition(model, bc1);
-
-            var bc2 = new FlowBoundaryCondition(FlowBoundaryQuantityType.NormalVelocity, BoundaryConditionDataType.AstroComponents)
-            {
-                Feature = feature
-            };
-            bc2.AddPoint(1);
-            data = bc2.GetDataAtPoint(1);
-            data["M1"] = new[]
-            {
-                0.6,
-                0
-            };
-            bc2.AddPoint(2);
-            data = bc2.GetDataAtPoint(2);
-            data["M2"] = new[]
-            {
-                0.8,
-                30
-            };
-            AddBoundaryCondition(model, bc2);
-
-            var mduPath = Path.GetFullPath(@"exportbcs.mdu");
-
-            model.ExportTo(mduPath);
-
-            var importedModel = new WaterFlowFMModel(mduPath);
-            var boundaries = importedModel.Boundaries;
-            Assert.AreEqual(1, boundaries.Count);
-            Assert.AreEqual(feature.Geometry, boundaries.First().Geometry);
-
-            var boundaryConditions = importedModel.BoundaryConditions.ToList();
-            Assert.AreEqual(2, boundaryConditions.Count);
-
-            var pointData1 = ((BoundaryCondition) boundaryConditions[0]).GetDataAtPoint(1);
-            Assert.AreEqual(pointData1.Arguments[0].Values.OfType<string>().ToArray(), new[]
-            {
-                "M1"
-            });
-            Assert.AreEqual(pointData1.Components[0].Values.OfType<double>().ToArray(), new[]
-            {
-                0.5
-            });
-            Assert.AreEqual(pointData1.Components[1].Values.OfType<double>().ToArray(), new[]
-            {
-                120
-            });
-
-            var pointData2 = ((BoundaryCondition) boundaryConditions[0]).GetDataAtPoint(2);
-            Assert.AreEqual(pointData2.Arguments[0].Values.OfType<string>().ToArray(), new[]
-            {
-                "M2"
-            });
-            Assert.AreEqual(pointData2.Components[0].Values.OfType<double>().ToArray(), new[]
-            {
-                0.7
-            });
-            Assert.AreEqual(pointData2.Components[1].Values.OfType<double>().ToArray(), new[]
-            {
-                60
-            });
-
-            var pointData3 = ((BoundaryCondition) boundaryConditions[1]).GetDataAtPoint(1);
-            Assert.AreEqual(pointData3.Arguments[0].Values.OfType<string>().ToArray(), new[]
-            {
-                "M1"
-            });
-            Assert.AreEqual(pointData3.Components[0].Values.OfType<double>().ToArray(), new[]
-            {
-                0.6
-            });
-            Assert.AreEqual(pointData3.Components[1].Values.OfType<double>().ToArray(), new[]
-            {
-                0
-            });
-
-            var pointData4 = ((BoundaryCondition) boundaryConditions[1]).GetDataAtPoint(2);
-            Assert.AreEqual(pointData4.Arguments[0].Values.OfType<string>().ToArray(), new[]
-            {
-                "M2"
-            });
-            Assert.AreEqual(pointData4.Components[0].Values.OfType<double>().ToArray(), new[]
-            {
-                0.8
-            });
-            Assert.AreEqual(pointData4.Components[1].Values.OfType<double>().ToArray(), new[]
-            {
-                30
-            });
-        }
-
-        [Test]
-        public void ExportImportSummedWaterLevelsOnSameFeature()
-        {
-            var model = new WaterFlowFMModel
-            {
-                Name = "test"
-            };
-
-            var feature = new Feature2D
-            {
-                Name = "boundary",
-                Geometry =
-                    new LineString(new[]
-                    {
-                        new Coordinate(0, 0),
-                        new Coordinate(1, 0),
-                        new Coordinate(2, 0)
-                    })
-            };
-
-            var bc1 = new FlowBoundaryCondition(FlowBoundaryQuantityType.WaterLevel, BoundaryConditionDataType.AstroComponents)
-            {
-                Feature = feature
-            };
+            var bc1 = new FlowBoundaryCondition(FlowBoundaryQuantityType.WaterLevel, BoundaryConditionDataType.AstroComponents) {Feature = feature};
 
             bc1.AddPoint(1);
             IFunction data = bc1.GetDataAtPoint(1);
@@ -867,10 +741,129 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             };
             AddBoundaryCondition(model, bc1);
 
-            var bc2 = new FlowBoundaryCondition(FlowBoundaryQuantityType.WaterLevel, BoundaryConditionDataType.Harmonics)
+            var bc2 = new FlowBoundaryCondition(FlowBoundaryQuantityType.NormalVelocity, BoundaryConditionDataType.AstroComponents) {Feature = feature};
+            bc2.AddPoint(1);
+            data = bc2.GetDataAtPoint(1);
+            data["M1"] = new[]
             {
-                Feature = feature
+                0.6,
+                0
             };
+            bc2.AddPoint(2);
+            data = bc2.GetDataAtPoint(2);
+            data["M2"] = new[]
+            {
+                0.8,
+                30
+            };
+            AddBoundaryCondition(model, bc2);
+
+            string mduPath = Path.GetFullPath(@"exportbcs.mdu");
+
+            model.ExportTo(mduPath);
+
+            var importedModel = new WaterFlowFMModel(mduPath);
+            IEventedList<Feature2D> boundaries = importedModel.Boundaries;
+            Assert.AreEqual(1, boundaries.Count);
+            Assert.AreEqual(feature.Geometry, boundaries.First().Geometry);
+
+            List<IBoundaryCondition> boundaryConditions = importedModel.BoundaryConditions.ToList();
+            Assert.AreEqual(2, boundaryConditions.Count);
+
+            IFunction pointData1 = ((BoundaryCondition) boundaryConditions[0]).GetDataAtPoint(1);
+            Assert.AreEqual(pointData1.Arguments[0].Values.OfType<string>().ToArray(), new[]
+            {
+                "M1"
+            });
+            Assert.AreEqual(pointData1.Components[0].Values.OfType<double>().ToArray(), new[]
+            {
+                0.5
+            });
+            Assert.AreEqual(pointData1.Components[1].Values.OfType<double>().ToArray(), new[]
+            {
+                120
+            });
+
+            IFunction pointData2 = ((BoundaryCondition) boundaryConditions[0]).GetDataAtPoint(2);
+            Assert.AreEqual(pointData2.Arguments[0].Values.OfType<string>().ToArray(), new[]
+            {
+                "M2"
+            });
+            Assert.AreEqual(pointData2.Components[0].Values.OfType<double>().ToArray(), new[]
+            {
+                0.7
+            });
+            Assert.AreEqual(pointData2.Components[1].Values.OfType<double>().ToArray(), new[]
+            {
+                60
+            });
+
+            IFunction pointData3 = ((BoundaryCondition) boundaryConditions[1]).GetDataAtPoint(1);
+            Assert.AreEqual(pointData3.Arguments[0].Values.OfType<string>().ToArray(), new[]
+            {
+                "M1"
+            });
+            Assert.AreEqual(pointData3.Components[0].Values.OfType<double>().ToArray(), new[]
+            {
+                0.6
+            });
+            Assert.AreEqual(pointData3.Components[1].Values.OfType<double>().ToArray(), new[]
+            {
+                0
+            });
+
+            IFunction pointData4 = ((BoundaryCondition) boundaryConditions[1]).GetDataAtPoint(2);
+            Assert.AreEqual(pointData4.Arguments[0].Values.OfType<string>().ToArray(), new[]
+            {
+                "M2"
+            });
+            Assert.AreEqual(pointData4.Components[0].Values.OfType<double>().ToArray(), new[]
+            {
+                0.8
+            });
+            Assert.AreEqual(pointData4.Components[1].Values.OfType<double>().ToArray(), new[]
+            {
+                30
+            });
+        }
+
+        [Test]
+        public void ExportImportSummedWaterLevelsOnSameFeature()
+        {
+            var model = new WaterFlowFMModel {Name = "test"};
+
+            var feature = new Feature2D
+            {
+                Name = "boundary",
+                Geometry =
+                    new LineString(new[]
+                    {
+                        new Coordinate(0, 0),
+                        new Coordinate(1, 0),
+                        new Coordinate(2, 0)
+                    })
+            };
+
+            var bc1 = new FlowBoundaryCondition(FlowBoundaryQuantityType.WaterLevel, BoundaryConditionDataType.AstroComponents) {Feature = feature};
+
+            bc1.AddPoint(1);
+            IFunction data = bc1.GetDataAtPoint(1);
+            data["M1"] = new[]
+            {
+                0.5,
+                120
+            };
+
+            bc1.AddPoint(2);
+            data = bc1.GetDataAtPoint(2);
+            data["M2"] = new[]
+            {
+                0.7,
+                60
+            };
+            AddBoundaryCondition(model, bc1);
+
+            var bc2 = new FlowBoundaryCondition(FlowBoundaryQuantityType.WaterLevel, BoundaryConditionDataType.Harmonics) {Feature = feature};
             bc2.AddPoint(1);
             data = bc2.GetDataAtPoint(1);
             data[250.0] = new[]
@@ -897,6 +890,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             {
                 blocks = new DelftIniReader().ReadDelftIniFile(fileStream, path);
             }
+
             Assert.AreEqual(2, blocks.Count);
         }
 
@@ -905,8 +899,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         {
             var def = new WaterFlowFMModelDefinition();
 
-            var extPath = TestHelper.GetTestFilePath(@"c070_sourcesink_2D\sourcesink_2D.ext");
-            var extSubFilesReferenceFilePath = Path.Combine(Path.GetDirectoryName(extPath), "sourcesink_2D.mdu");
+            string extPath = TestHelper.GetTestFilePath(@"c070_sourcesink_2D\sourcesink_2D.ext");
+            string extSubFilesReferenceFilePath = Path.Combine(Path.GetDirectoryName(extPath), "sourcesink_2D.mdu");
 
             var extForceFile = new ExtForceFile();
             extForceFile.Read(extPath, def, extSubFilesReferenceFilePath);
@@ -932,7 +926,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             // Given
             using (var temp = new TemporaryDirectory())
             {
-               List<string> copiesInTempFilePaths =  temp.CopyAllTestDataToTempDirectory(relativeTestDataFilePaths);
+                List<string> copiesInTempFilePaths = temp.CopyAllTestDataToTempDirectory(relativeTestDataFilePaths);
 
                 string copyInTempOfExtFilePath = copiesInTempFilePaths[0];
 
@@ -961,13 +955,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
                 var saveLocations = new List<string>();
 
-                foreach (var relativeFilePath in relativeTestDataFilePaths)
+                foreach (string relativeFilePath in relativeTestDataFilePaths)
                 {
                     string fileName = Path.GetFileName(relativeFilePath);
                     string saveFilePath = Path.Combine(absoluteSaveFolderInTempPath, fileName);
                     saveLocations.Add(saveFilePath);
                 }
-                
+
                 string savedExtFile = saveLocations[0];
 
                 string saveDirectory = Path.GetDirectoryName(savedExtFile);
@@ -1071,8 +1065,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
         private static void AddBoundaryCondition(WaterFlowFMModel model, FlowBoundaryCondition bc)
         {
-            var modelDefinition = model.ModelDefinition;
-            var set =
+            WaterFlowFMModelDefinition modelDefinition = model.ModelDefinition;
+            BoundaryConditionSet set =
                 modelDefinition.BoundaryConditionSets.FirstOrDefault(
                     bcs => bcs.Feature == ((IBoundaryCondition) bc).Feature);
             if (set != null)
@@ -1084,10 +1078,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 modelDefinition.BoundaryConditionSets.Add(new BoundaryConditionSet
                 {
                     Feature = ((IBoundaryCondition) bc).Feature as Feature2D,
-                    BoundaryConditions = new EventedList<IBoundaryCondition>
-                    {
-                        bc
-                    }
+                    BoundaryConditions = new EventedList<IBoundaryCondition> {bc}
                 });
             }
         }

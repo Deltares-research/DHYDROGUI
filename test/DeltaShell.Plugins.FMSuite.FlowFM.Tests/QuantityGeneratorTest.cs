@@ -23,8 +23,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var pump = mocks.Stub<IPump>();
 
             // When
-            var quantities = QuantityGenerator.GetQuantitiesForFeature(pump, useSalinity).ToArray();
-            
+            string[] quantities = QuantityGenerator.GetQuantitiesForFeature(pump, useSalinity).ToArray();
+
             // Then
             Assert.That(quantities.Length, Is.EqualTo(1));
             Assert.That(quantities.Contains(KnownStructureProperties.Capacity));
@@ -35,10 +35,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         public void GivenSimpleWeir_WhenGettingQuantitiesForSimpleWeir_ThenExpectedQuantitiesAreReturned(bool useSalinity)
         {
             // Given
-            var weir = GetWeirStubWithWeirFormulaType<SimpleWeirFormula>();
+            IWeir weir = GetWeirStubWithWeirFormulaType<SimpleWeirFormula>();
 
             // When
-            var quantities = QuantityGenerator.GetQuantitiesForFeature(weir, useSalinity).ToArray();
+            string[] quantities = QuantityGenerator.GetQuantitiesForFeature(weir, useSalinity).ToArray();
 
             // Then
             Assert.That(quantities.Length, Is.EqualTo(1));
@@ -50,10 +50,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         public void GivenGeneralStructure_WhenGettingQuantitiesForGeneralStructure_ThenExpectedQuantitiesAreReturned(bool useSalinity)
         {
             // Given
-            var generalStructure = GetWeirStubWithWeirFormulaType<GeneralStructureWeirFormula>();
+            IWeir generalStructure = GetWeirStubWithWeirFormulaType<GeneralStructureWeirFormula>();
 
             // When
-            var quantities = QuantityGenerator.GetQuantitiesForFeature(generalStructure, useSalinity).ToArray();
+            string[] quantities = QuantityGenerator.GetQuantitiesForFeature(generalStructure, useSalinity).ToArray();
 
             // Then
             Assert.That(quantities.Length, Is.EqualTo(3));
@@ -67,10 +67,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         public void GivenGate_WhenGettingQuantitiesForGate_ThenExpectedQuantitiesAreReturned(bool useSalinity)
         {
             // Given
-            var gate = GetWeirStubWithWeirFormulaType<GatedWeirFormula>();
+            IWeir gate = GetWeirStubWithWeirFormulaType<GatedWeirFormula>();
 
             // When
-            var quantities = QuantityGenerator.GetQuantitiesForFeature(gate, useSalinity).ToArray();
+            string[] quantities = QuantityGenerator.GetQuantitiesForFeature(gate, useSalinity).ToArray();
 
             // Then
             Assert.That(quantities.Length, Is.EqualTo(3));
@@ -88,11 +88,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var groupableFeature2DPoint = new GroupableFeature2DPoint();
 
             // When
-            var quantities = QuantityGenerator.GetQuantitiesForFeature(groupableFeature2DPoint, useSalinity).ToArray();
+            string[] quantities = QuantityGenerator.GetQuantitiesForFeature(groupableFeature2DPoint, useSalinity).ToArray();
 
             // Then
             Assert.That(quantities.Length, Is.EqualTo(expectedQuantities.Length));
-            foreach (var quantity in expectedQuantities)
+            foreach (string quantity in expectedQuantities)
             {
                 Assert.That(quantities.Contains(quantity));
             }
@@ -106,7 +106,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var observationCrossSection2D = new ObservationCrossSection2D();
 
             // When
-            var quantities = QuantityGenerator.GetQuantitiesForFeature(observationCrossSection2D, useSalinity).ToArray();
+            string[] quantities = QuantityGenerator.GetQuantitiesForFeature(observationCrossSection2D, useSalinity).ToArray();
 
             // Then
             Assert.That(quantities.Length, Is.EqualTo(4));
@@ -116,7 +116,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.That(quantities.Contains("velocity"));
         }
 
-        private IWeir GetWeirStubWithWeirFormulaType<TWeirFormulaType>() 
+        private IWeir GetWeirStubWithWeirFormulaType<TWeirFormulaType>()
             where TWeirFormulaType : IWeirFormula, new()
         {
             var weir = mocks.Stub<IWeir>();

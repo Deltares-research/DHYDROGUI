@@ -1,5 +1,7 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using DelftTools.Hydro;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
@@ -14,14 +16,14 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
         public void ReadGroupableFeatureLdbFileAssignsGroupName()
         {
             var groupName = "LdbGroup1.ldb";
-            var filePath = TestHelper.GetTestFilePath(Path.Combine(@"HydroAreaCollection", groupName));
+            string filePath = TestHelper.GetTestFilePath(Path.Combine(@"HydroAreaCollection", groupName));
             Assert.IsTrue(File.Exists(filePath));
             filePath = TestHelper.CreateLocalCopy(filePath);
             try
             {
                 var ldbFile = new LdbFile();
-                var readObjects = ldbFile.Read(filePath);
-                var groups = readObjects.GroupBy(g => g.GroupName).ToList();
+                IList<LandBoundary2D> readObjects = ldbFile.Read(filePath);
+                List<IGrouping<string, LandBoundary2D>> groups = readObjects.GroupBy(g => g.GroupName).ToList();
                 Assert.That(groups.Count, Is.EqualTo(1));
                 Assert.IsNull(groups.First().Key);
             }

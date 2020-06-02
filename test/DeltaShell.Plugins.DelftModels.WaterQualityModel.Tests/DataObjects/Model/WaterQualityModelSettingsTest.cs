@@ -46,36 +46,36 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.DataObjects.Mod
         public void TestClone()
         {
             var waterQualityModel1DSettings = new WaterQualityModelSettings
-                {
-                    HisStartTime = new DateTime(2010, 1, 1),
-                    HisStopTime = new DateTime(2010, 1, 2),
-                    HisTimeStep = new TimeSpan(1, 1, 1),
-                    MapStartTime = new DateTime(2011, 1, 1),
-                    MapStopTime = new DateTime(2011, 1, 2),
-                    MapTimeStep = new TimeSpan(2, 2, 2),
-                    BalanceStartTime = new DateTime(2012, 1, 1),
-                    BalanceStopTime = new DateTime(2012, 1, 2),
-                    BalanceTimeStep = new TimeSpan(3, 3, 3),
-                    NumericalScheme = NumericalScheme.Scheme1,
-                    NoDispersionIfFlowIsZero = true,
-                    NoDispersionOverOpenBoundaries = true,
-                    UseFirstOrder = false,
-                    UseForesterFilter = true,
-                    UseAnticreepFilter = true,
-                    Balance = true,
-                    LumpProcesses = false,
-                    LumpTransport = false,
-                    LumpLoads = false,
-                    SuppressSpace = false,
-                    SuppressTime = false,
-                    BalanceUnit = BalanceUnit.Gram,
-                    ProcessesActive = true,
-                    MonitoringOutputLevel = MonitoringOutputLevel.PointsAndAreas,
-                    CorrectForEvaporation = false,
-                    Id = 2,
-                    OutputDirectory = "output_directory",
-                    WorkingOutputDirectory = "working_output_directory"
-                };
+            {
+                HisStartTime = new DateTime(2010, 1, 1),
+                HisStopTime = new DateTime(2010, 1, 2),
+                HisTimeStep = new TimeSpan(1, 1, 1),
+                MapStartTime = new DateTime(2011, 1, 1),
+                MapStopTime = new DateTime(2011, 1, 2),
+                MapTimeStep = new TimeSpan(2, 2, 2),
+                BalanceStartTime = new DateTime(2012, 1, 1),
+                BalanceStopTime = new DateTime(2012, 1, 2),
+                BalanceTimeStep = new TimeSpan(3, 3, 3),
+                NumericalScheme = NumericalScheme.Scheme1,
+                NoDispersionIfFlowIsZero = true,
+                NoDispersionOverOpenBoundaries = true,
+                UseFirstOrder = false,
+                UseForesterFilter = true,
+                UseAnticreepFilter = true,
+                Balance = true,
+                LumpProcesses = false,
+                LumpTransport = false,
+                LumpLoads = false,
+                SuppressSpace = false,
+                SuppressTime = false,
+                BalanceUnit = BalanceUnit.Gram,
+                ProcessesActive = true,
+                MonitoringOutputLevel = MonitoringOutputLevel.PointsAndAreas,
+                CorrectForEvaporation = false,
+                Id = 2,
+                OutputDirectory = "output_directory",
+                WorkingOutputDirectory = "working_output_directory"
+            };
 
             var waterQualityModel1DSettingsClone = waterQualityModel1DSettings.Clone() as WaterQualityModelSettings;
 
@@ -128,7 +128,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.DataObjects.Mod
         public void WorkDirectoryFunctionDefaultTest()
         {
             var modelSettings = new WaterQualityModelSettings();
-          
+
             Assert.AreEqual(Path.Combine(Path.GetTempPath(), "DeltaShell_Working_Directory", "Water_Quality"), modelSettings.WorkDirectory);
         }
     }

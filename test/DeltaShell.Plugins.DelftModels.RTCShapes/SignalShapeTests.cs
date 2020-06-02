@@ -37,7 +37,7 @@ namespace DeltaShell.Plugins.DelftModels.RTCShapes.Tests
         {
             var signalShape = new SignalShape();
             var rectangle = new RectangleF(0, 0, 60, 40);
-            var shapeColor = Color.WhiteSmoke;
+            Color shapeColor = Color.WhiteSmoke;
             Assert.AreEqual(rectangle, signalShape.Rectangle);
             Assert.AreEqual(shapeColor, signalShape.ShapeColor);
         }

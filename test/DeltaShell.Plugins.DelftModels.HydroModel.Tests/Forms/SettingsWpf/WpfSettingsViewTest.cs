@@ -37,10 +37,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.SettingsWpf
         {
             // Given
             const string propertyName = "PropertyName";
-            var property = new WpfGuiProperty(new FieldUIDescription(null, (o, v) => { })
-            {
-                Name = propertyName
-            });
+            var property = new WpfGuiProperty(new FieldUIDescription(null, (o, v) => {}) {Name = propertyName});
 
             var isPropertyChangedEventFired = false;
             var category = new WpfGuiCategory(string.Empty, null);
@@ -51,7 +48,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.SettingsWpf
             var view = new WpfSettingsView
             {
                 Data = model,
-                SettingsCategories = new ObservableCollection<WpfGuiCategory>(new []
+                SettingsCategories = new ObservableCollection<WpfGuiCategory>(new[]
                 {
                     category
                 }),
@@ -79,23 +76,14 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.SettingsWpf
             // Given
             var category = new WpfGuiCategory("category", new[]
             {
-                new FieldUIDescription(null, (o, v) => {})
-                {
-                    ValueType = typeof(object)
-                }
-            })
-            {
-                CategoryVisibility = () => true
-            };
+                new FieldUIDescription(null, (o, v) => {}) {ValueType = typeof(object)}
+            }) {CategoryVisibility = () => true};
             IEnumerable<WpfGuiCategory> categories = new[]
             {
                 category
             };
 
-            var view = new WpfSettingsView
-            {
-                SettingsCategories = new ObservableCollection<WpfGuiCategory>(categories)
-            };
+            var view = new WpfSettingsView {SettingsCategories = new ObservableCollection<WpfGuiCategory>(categories)};
 
             // Precondition
             WpfGuiProperty property = category.Properties.Single(); // Cache the property as with a proper disposal, the category will clear its properties

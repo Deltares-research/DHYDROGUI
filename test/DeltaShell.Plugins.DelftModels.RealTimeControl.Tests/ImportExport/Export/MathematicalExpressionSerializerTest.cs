@@ -28,13 +28,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport.Expo
             Assert.AreEqual(mathematicalExpression.Name, xmlName);
         }
 
-        [TestCase("A+B", "+")]
-        [TestCase("A-B", "-")]
-        [TestCase("A*B", "*")]
-        [TestCase("A/B", "/")]
-        [TestCase("min(A,B)", "min")]
-        [TestCase("max(A,B)", "max")]
-        public void ToXml_ForMathematicalExpressionsUsing2Parameters(string expression, string operatorAsString)
+        [Test]
+        public void ToXml_ForMathematicalExpressionWithConstantValueAsInput()
         {
             // Arrange
             var mathematicalExpression = new MathematicalExpression {Name = "f1"};
@@ -44,58 +39,16 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport.Expo
                 ParameterName = "waterlevel",
                 Feature = new RtcTestFeature {Name = "feature1"}
             };
-            
-            var input2 = new Input
-            {
-                ParameterName = "waterlevel",
-                Feature = new RtcTestFeature {Name = "feature2"}
-            };
-
-            mathematicalExpression.Inputs.Add(input1);
-            mathematicalExpression.Inputs.Add(input2);
-
-            mathematicalExpression.Expression = expression;
-
-            var serializer = new MathematicalExpressionSerializer(mathematicalExpression);
-            string prefix = "Control Group 1/";
-
-            // Act
-            string returnedXmlCode = serializer.ToXml(fns, prefix).Single().ToString(SaveOptions.DisableFormatting);
-            
-            // Assert
-            string expectedXmlCode = "<trigger xmlns=\"http://www.wldelft.nl/fews\">" +
-                                     "<expression id=\"Control Group 1/f1\">" +
-                                     "<x1Series ref=\"IMPLICIT\">[Input]feature1/waterlevel</x1Series>" +
-                                     "<mathematicalOperator>"+ operatorAsString + "</mathematicalOperator>" +
-                                     "<x2Series ref=\"IMPLICIT\">[Input]feature2/waterlevel</x2Series>" +
-                                     "<y>f1</y>" +
-                                     "</expression>" +
-                                     "</trigger>";
-
-            Assert.AreEqual(expectedXmlCode, returnedXmlCode );
-        }
-        
-        [Test]
-        public void ToXml_ForMathematicalExpressionWithConstantValueAsInput()
-        {
-            // Arrange
-            var mathematicalExpression = new MathematicalExpression { Name = "f1" };
-
-            var input1 = new Input
-            {
-                ParameterName = "waterlevel",
-                Feature = new RtcTestFeature { Name = "feature1" }
-            };
 
             mathematicalExpression.Inputs.Add(input1);
 
             mathematicalExpression.Expression = "A+6";
 
             var serializer = new MathematicalExpressionSerializer(mathematicalExpression);
-            string prefix = "Control Group 1/";
+            var prefix = "Control Group 1/";
 
             // Act
-            string returnedXmlCode = serializer.ToXml(fns, prefix).Single().ToString(SaveOptions.DisableFormatting);
+            var returnedXmlCode = serializer.ToXml(fns, prefix).Single().ToString(SaveOptions.DisableFormatting);
 
             // Assert
             string expectedXmlCode = "<trigger xmlns=\"http://www.wldelft.nl/fews\">" +
@@ -107,7 +60,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport.Expo
                                      "</expression>" +
                                      "</trigger>";
 
-
             Assert.AreEqual(expectedXmlCode, returnedXmlCode);
         }
 
@@ -115,24 +67,24 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport.Expo
         public void ToXml_MathematicalExpressionUsing3Parameters()
         {
             // Arrange
-            var mathematicalExpression = new MathematicalExpression { Name = "f1" };
+            var mathematicalExpression = new MathematicalExpression {Name = "f1"};
 
             var input1 = new Input
             {
                 ParameterName = "waterlevel",
-                Feature = new RtcTestFeature { Name = "feature1" }
+                Feature = new RtcTestFeature {Name = "feature1"}
             };
 
             var input2 = new Input
             {
                 ParameterName = "waterlevel",
-                Feature = new RtcTestFeature { Name = "feature2" }
+                Feature = new RtcTestFeature {Name = "feature2"}
             };
 
             var input3 = new Input
             {
                 ParameterName = "waterlevel",
-                Feature = new RtcTestFeature { Name = "feature3" }
+                Feature = new RtcTestFeature {Name = "feature3"}
             };
 
             mathematicalExpression.Inputs.Add(input1);
@@ -142,12 +94,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport.Expo
             mathematicalExpression.Expression = "A+B+C";
 
             var serializer = new MathematicalExpressionSerializer(mathematicalExpression);
-            string prefix = "Control Group 1/";
+            var prefix = "Control Group 1/";
 
             // Act
             IEnumerable<XElement> expressionsList = serializer.ToXml(fns, prefix);
-            string returnedXmlCode1 = expressionsList.First().ToString(SaveOptions.DisableFormatting);
-            string returnedXmlCode2 = expressionsList.Last().ToString(SaveOptions.DisableFormatting);
+            var returnedXmlCode1 = expressionsList.First().ToString(SaveOptions.DisableFormatting);
+            var returnedXmlCode2 = expressionsList.Last().ToString(SaveOptions.DisableFormatting);
 
             // Assert
             string expectedXmlCode1 = "<trigger xmlns=\"http://www.wldelft.nl/fews\">" +
@@ -159,7 +111,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport.Expo
                                       "</expression>" +
                                       "</trigger>";
 
-
             string expectedXmlCode2 = "<trigger xmlns=\"http://www.wldelft.nl/fews\">" +
                                       "<expression id=\"Control Group 1/f1/([Input]feature1/waterlevel + [Input]feature2/waterlevel)\">" +
                                       "<x1Series ref=\"IMPLICIT\">[Input]feature1/waterlevel</x1Series>" +
@@ -169,23 +120,22 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport.Expo
                                       "</expression>" +
                                       "</trigger>";
 
-
             Assert.AreEqual(expectedXmlCode1, returnedXmlCode1);
             Assert.AreEqual(expectedXmlCode2, returnedXmlCode2);
         }
-        
+
         [Test]
         public void ToXml_MathematicalExpressionUsing2ParametersFromWhichOneIsAnotherMathematicalExpression()
         {
             // Arrange
-            var mathematicalExpression = new MathematicalExpression { Name = "f1" };
+            var mathematicalExpression = new MathematicalExpression {Name = "f1"};
 
             var input1 = new MathematicalExpression {Name = "f2"};
-            
+
             var input2 = new Input
             {
                 ParameterName = "waterlevel",
-                Feature = new RtcTestFeature { Name = "feature2" }
+                Feature = new RtcTestFeature {Name = "feature2"}
             };
 
             mathematicalExpression.Inputs.Add(input1);
@@ -194,10 +144,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport.Expo
             mathematicalExpression.Expression = "A+B";
 
             var serializer = new MathematicalExpressionSerializer(mathematicalExpression);
-            string prefix = "Control Group 1/";
+            var prefix = "Control Group 1/";
 
             // Act
-            string returnedXmlCode = serializer.ToXml(fns, prefix).Single().ToString(SaveOptions.DisableFormatting);
+            var returnedXmlCode = serializer.ToXml(fns, prefix).Single().ToString(SaveOptions.DisableFormatting);
 
             // Assert
             string expectedXmlCode = "<trigger xmlns=\"http://www.wldelft.nl/fews\">" +
@@ -216,20 +166,20 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport.Expo
         public void ToXml_MathematicalExpressionUsing3ParametersFromWhichOneIsAnotherMathematicalExpression()
         {
             // Arrange
-            var mathematicalExpression = new MathematicalExpression { Name = "f1" };
+            var mathematicalExpression = new MathematicalExpression {Name = "f1"};
 
-            var input1 = new MathematicalExpression { Name = "f2" };
+            var input1 = new MathematicalExpression {Name = "f2"};
 
             var input2 = new Input
             {
                 ParameterName = "waterlevel",
-                Feature = new RtcTestFeature { Name = "feature2" }
+                Feature = new RtcTestFeature {Name = "feature2"}
             };
 
             var input3 = new Input
             {
                 ParameterName = "waterlevel",
-                Feature = new RtcTestFeature { Name = "feature3" }
+                Feature = new RtcTestFeature {Name = "feature3"}
             };
 
             mathematicalExpression.Inputs.Add(input1);
@@ -239,12 +189,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport.Expo
             mathematicalExpression.Expression = "A+B+C";
 
             var serializer = new MathematicalExpressionSerializer(mathematicalExpression);
-            string prefix = "Control Group 1/";
+            var prefix = "Control Group 1/";
 
             // Act
             IEnumerable<XElement> expressionsList = serializer.ToXml(fns, prefix);
-            string returnedXmlCode1 = expressionsList.First().ToString(SaveOptions.DisableFormatting);
-            string returnedXmlCode2 = expressionsList.Last().ToString(SaveOptions.DisableFormatting);
+            var returnedXmlCode1 = expressionsList.First().ToString(SaveOptions.DisableFormatting);
+            var returnedXmlCode2 = expressionsList.Last().ToString(SaveOptions.DisableFormatting);
 
             // Assert
             string expectedXmlCode1 = "<trigger xmlns=\"http://www.wldelft.nl/fews\">" +
@@ -256,8 +206,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport.Expo
                                       "</expression>" +
                                       "</trigger>";
 
-
-
             string expectedXmlCode2 = "<trigger xmlns=\"http://www.wldelft.nl/fews\">" +
                                       "<expression id=\"Control Group 1/f1/(f2 + [Input]feature2/waterlevel)\">" +
                                       "<x1Series ref=\"IMPLICIT\">f2</x1Series>" +
@@ -267,8 +215,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport.Expo
                                       "</expression>" +
                                       "</trigger>";
 
-
-
             Assert.AreEqual(expectedXmlCode1, returnedXmlCode1);
             Assert.AreEqual(expectedXmlCode2, returnedXmlCode2);
         }
@@ -277,12 +223,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport.Expo
         public void ToXml_WhenMathematicalExpressionContainsExpressionWithOneElement()
         {
             // Arrange
-            var mathematicalExpression = new MathematicalExpression { Name = "f1" };
+            var mathematicalExpression = new MathematicalExpression {Name = "f1"};
 
             var input1 = new Input
             {
                 ParameterName = "waterlevel",
-                Feature = new RtcTestFeature { Name = "feature1" }
+                Feature = new RtcTestFeature {Name = "feature1"}
             };
 
             mathematicalExpression.Inputs.Add(input1);
@@ -290,7 +236,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport.Expo
             mathematicalExpression.Expression = "A";
 
             var serializer = new MathematicalExpressionSerializer(mathematicalExpression);
-            string prefix = "Control Group 1/";
+            var prefix = "Control Group 1/";
 
             // Act and Assert
             var exception = Assert.Throws<InvalidOperationException>(() => serializer.ToXml(fns, prefix).ToList());
@@ -306,7 +252,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport.Expo
             mathematicalExpression.Expression = "test";
 
             var serializer = new MathematicalExpressionSerializer(mathematicalExpression);
-            string prefix = "Control Group 1/";
+            var prefix = "Control Group 1/";
 
             // Act and Assert
             var exception = Assert.Throws<ArgumentException>(() => serializer.ToXml(fns, prefix).ToList());
@@ -319,7 +265,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport.Expo
         public void GetDataConfigXmlElements_ForMathematicalExpressionsUsing2Parameters()
         {
             // Arrange
-            var mathematicalExpression = new MathematicalExpression { Name = "f1" };
+            var mathematicalExpression = new MathematicalExpression {Name = "f1"};
 
             var input1 = new Input();
             var input2 = new Input();
@@ -332,10 +278,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport.Expo
             var serializer = new MathematicalExpressionSerializer(mathematicalExpression);
 
             // Act
-            string returnedXmlCode = serializer.GetDataConfigXmlElements(fns).Single().ToString(SaveOptions.DisableFormatting);
+            var returnedXmlCode = serializer.GetDataConfigXmlElements(fns).Single().ToString(SaveOptions.DisableFormatting);
 
             // Assert
-            string expectedXmlCode = "<timeSeries id=\"f1\" xmlns=\"http://www.wldelft.nl/fews\" />";
+            var expectedXmlCode = "<timeSeries id=\"f1\" xmlns=\"http://www.wldelft.nl/fews\" />";
 
             Assert.AreEqual(expectedXmlCode, returnedXmlCode);
         }
@@ -344,12 +290,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport.Expo
         public void GetDataConfigXmlElements_ForMathematicalExpressionsUsing3Parameters()
         {
             // Arrange
-            var mathematicalExpression = new MathematicalExpression { Name = "f1" };
+            var mathematicalExpression = new MathematicalExpression {Name = "f1"};
 
             var input1 = new Input
             {
                 ParameterName = "waterlevel",
-                Feature = new RtcTestFeature { Name = "feature1" }
+                Feature = new RtcTestFeature {Name = "feature1"}
             };
 
             mathematicalExpression.Inputs.Add(input1);
@@ -363,14 +309,61 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport.Expo
 
             // Assert
             Assert.AreEqual(2, dataConfigXmlElements.Count());
-            string returnedXmlCode1 = dataConfigXmlElements.First().ToString(SaveOptions.DisableFormatting);
-            string returnedXmlCode2 = dataConfigXmlElements.Last().ToString(SaveOptions.DisableFormatting);
+            var returnedXmlCode1 = dataConfigXmlElements.First().ToString(SaveOptions.DisableFormatting);
+            var returnedXmlCode2 = dataConfigXmlElements.Last().ToString(SaveOptions.DisableFormatting);
 
-            string expectedXmlCode1 = "<timeSeries id=\"f1\" xmlns=\"http://www.wldelft.nl/fews\" />";
-            string expectedXmlCode2 = "<timeSeries id=\"f1/([Input]feature1/waterlevel + 2)\" xmlns=\"http://www.wldelft.nl/fews\" />";
+            var expectedXmlCode1 = "<timeSeries id=\"f1\" xmlns=\"http://www.wldelft.nl/fews\" />";
+            var expectedXmlCode2 = "<timeSeries id=\"f1/([Input]feature1/waterlevel + 2)\" xmlns=\"http://www.wldelft.nl/fews\" />";
 
             Assert.AreEqual(expectedXmlCode1, returnedXmlCode1);
             Assert.AreEqual(expectedXmlCode2, returnedXmlCode2);
+        }
+
+        [TestCase("A+B", "+")]
+        [TestCase("A-B", "-")]
+        [TestCase("A*B", "*")]
+        [TestCase("A/B", "/")]
+        [TestCase("min(A,B)", "min")]
+        [TestCase("max(A,B)", "max")]
+        public void ToXml_ForMathematicalExpressionsUsing2Parameters(string expression, string operatorAsString)
+        {
+            // Arrange
+            var mathematicalExpression = new MathematicalExpression {Name = "f1"};
+
+            var input1 = new Input
+            {
+                ParameterName = "waterlevel",
+                Feature = new RtcTestFeature {Name = "feature1"}
+            };
+
+            var input2 = new Input
+            {
+                ParameterName = "waterlevel",
+                Feature = new RtcTestFeature {Name = "feature2"}
+            };
+
+            mathematicalExpression.Inputs.Add(input1);
+            mathematicalExpression.Inputs.Add(input2);
+
+            mathematicalExpression.Expression = expression;
+
+            var serializer = new MathematicalExpressionSerializer(mathematicalExpression);
+            var prefix = "Control Group 1/";
+
+            // Act
+            var returnedXmlCode = serializer.ToXml(fns, prefix).Single().ToString(SaveOptions.DisableFormatting);
+
+            // Assert
+            string expectedXmlCode = "<trigger xmlns=\"http://www.wldelft.nl/fews\">" +
+                                     "<expression id=\"Control Group 1/f1\">" +
+                                     "<x1Series ref=\"IMPLICIT\">[Input]feature1/waterlevel</x1Series>" +
+                                     "<mathematicalOperator>" + operatorAsString + "</mathematicalOperator>" +
+                                     "<x2Series ref=\"IMPLICIT\">[Input]feature2/waterlevel</x2Series>" +
+                                     "<y>f1</y>" +
+                                     "</expression>" +
+                                     "</trigger>";
+
+            Assert.AreEqual(expectedXmlCode, returnedXmlCode);
         }
     }
 }

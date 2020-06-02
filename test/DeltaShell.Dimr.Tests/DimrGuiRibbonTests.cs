@@ -8,12 +8,15 @@ namespace DeltaShell.Dimr.Gui.Tests
 {
     public class TestDimrGuiPlugin : DimrGuiPlugin
     {
-        public bool TestValue { get; set; }
-
         public override bool IsOnlyDimrModelSelected
         {
-            get { return TestValue; }
+            get
+            {
+                return TestValue;
+            }
         }
+
+        public bool TestValue { get; set; }
     }
 
     [TestFixture()]
@@ -23,11 +26,11 @@ namespace DeltaShell.Dimr.Gui.Tests
         public void TestRibbon()
         {
             var ribbon = new Ribbon();
-            var configContextualGroup = (RibbonContextualTabGroup)TypeUtils.GetField(ribbon, "configContextualGroup");
-            var tabDimr = (RibbonTabItem)TypeUtils.GetField(ribbon, "tabDimr");
+            var configContextualGroup = (RibbonContextualTabGroup) TypeUtils.GetField(ribbon, "configContextualGroup");
+            var tabDimr = (RibbonTabItem) TypeUtils.GetField(ribbon, "tabDimr");
             Assert.AreEqual(configContextualGroup, tabDimr.Group);
             Assert.AreEqual(0, ribbon.Commands.Count());
-            ribbon.ValidateItems();//hmm does nothing now...
+            ribbon.ValidateItems(); //hmm does nothing now...
         }
 
         [Test]
@@ -35,13 +38,13 @@ namespace DeltaShell.Dimr.Gui.Tests
         public void TestIsContextualTabVisible()
         {
             var ribbon = new Ribbon();
-            var configContextualGroup = (RibbonContextualTabGroup)TypeUtils.GetField(ribbon, "configContextualGroup");
-            var tabDimr = (RibbonTabItem)TypeUtils.GetField(ribbon, "tabDimr");
+            var configContextualGroup = (RibbonContextualTabGroup) TypeUtils.GetField(ribbon, "configContextualGroup");
+            var tabDimr = (RibbonTabItem) TypeUtils.GetField(ribbon, "tabDimr");
             var dimrGuiPlugin = new TestDimrGuiPlugin();
             dimrGuiPlugin.TestValue = true;
             Assert.True(ribbon.IsContextualTabVisible(configContextualGroup.Name, tabDimr.Name));
         }
-        
+
         [Test]
         public void TestGetRibbonControl()
         {

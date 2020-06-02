@@ -22,15 +22,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
         [Test]
         public void TestCopyValuesFromFileToSourceAndSinkAttributes()
         {
-            var sourceAndSink = GenerateSourceAndSink();
+            SourceAndSink sourceAndSink = GenerateSourceAndSink();
             // First import
             var numVariablesInFunction = 5;
             var numValues = 8;
-            var function = GenerateSimpleFunction(numVariablesInFunction, numValues); // simulate reading *.tim file
+            Function function = GenerateSimpleFunction(numVariablesInFunction, numValues); // simulate reading *.tim file
 
             sourceAndSink.CopyValuesFromFileToSourceAndSinkAttributes(function);
 
-            var sourceAndSinkAttributes = sourceAndSink.Feature.Attributes.Where(a => a.Key.StartsWith(SourceAndSinkImportExtensions.TimFileColumnAttributePrefix)).ToList();
+            List<KeyValuePair<string, object>> sourceAndSinkAttributes = sourceAndSink.Feature.Attributes.Where(a => a.Key.StartsWith(SourceAndSinkImportExtensions.TimFileColumnAttributePrefix)).ToList();
             Assert.AreEqual(numVariablesInFunction, sourceAndSinkAttributes.Count);
             Assert.True(sourceAndSinkAttributes.Select(a => a.Value).OfType<MultiDimensionalArray<double>>().All(v => v.Count == numValues));
 
@@ -52,23 +52,23 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             const int numVariablesInFunction = 5;
             const int numValues = 8;
 
-            var sourceAndSink = GenerateSourceAndSink(GenerateAttributes(numVariablesInFunction, numValues));
+            SourceAndSink sourceAndSink = GenerateSourceAndSink(GenerateAttributes(numVariablesInFunction, numValues));
             sourceAndSink.Data = GenerateSimpleFunction(numVariablesInFunction, 0);
-            
+
             sourceAndSink.PopulateFunctionValuesFromAttributes(null);
 
-            var sourceAndSinkArgumentValues = sourceAndSink.Function.Arguments
-                .OfType<IVariable<DateTime>>()
-                .SelectMany(v => v.Values)
-                .ToList();
+            List<DateTime> sourceAndSinkArgumentValues = sourceAndSink.Function.Arguments
+                                                                      .OfType<IVariable<DateTime>>()
+                                                                      .SelectMany(v => v.Values)
+                                                                      .ToList();
 
             Assert.AreEqual(numValues, sourceAndSinkArgumentValues.Count);
             Assert.True(sourceAndSinkArgumentValues.HasUniqueValues());
 
-            var sourceAndSinkComponentValues = sourceAndSink.Function.Components
-                .OfType<IVariable<double>>()
-                .SelectMany(v => v.Values)
-                .ToList();
+            List<double> sourceAndSinkComponentValues = sourceAndSink.Function.Components
+                                                                     .OfType<IVariable<double>>()
+                                                                     .SelectMany(v => v.Values)
+                                                                     .ToList();
 
             Assert.AreEqual(numValues * (numVariablesInFunction - 1), sourceAndSinkComponentValues.Count);
             Assert.True(sourceAndSinkComponentValues.HasUniqueValues());
@@ -80,7 +80,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             const int numVariablesInFunction = 5;
             const int numValues = 8;
 
-            var sourceAndSink = GenerateSourceAndSink(GenerateAttributes(numVariablesInFunction, numValues));
+            SourceAndSink sourceAndSink = GenerateSourceAndSink(GenerateAttributes(numVariablesInFunction, numValues));
             sourceAndSink.Data = GenerateSimpleFunction(numVariablesInFunction, 0);
 
             var componentSettings = new Dictionary<string, bool>();
@@ -93,23 +93,26 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
 
             sourceAndSink.PopulateFunctionValuesFromAttributes(componentSettings);
 
-            var sourceAndSinkArgumentValues = sourceAndSink.Function.Arguments
-                .OfType<IVariable<DateTime>>()
-                .SelectMany(v => v.Values)
-                .ToList();
+            List<DateTime> sourceAndSinkArgumentValues = sourceAndSink.Function.Arguments
+                                                                      .OfType<IVariable<DateTime>>()
+                                                                      .SelectMany(v => v.Values)
+                                                                      .ToList();
 
             Assert.AreEqual(numValues, sourceAndSinkArgumentValues.Count);
             Assert.True(sourceAndSinkArgumentValues.HasUniqueValues());
 
-            var sourceAndSinkComponents = sourceAndSink.Function.Components
-                .OfType<IVariable<double>>()
-                .ToList();
+            List<IVariable<double>> sourceAndSinkComponents = sourceAndSink.Function.Components
+                                                                           .OfType<IVariable<double>>()
+                                                                           .ToList();
 
-            foreach (var component in sourceAndSinkComponents)
+            foreach (IVariable<double> component in sourceAndSinkComponents)
             {
                 Assert.AreEqual(numValues, component.Values.Count);
                 bool componentIsActive;
-                if (!componentSettings.TryGetValue(component.Name, out componentIsActive)) componentIsActive = true;
+                if (!componentSettings.TryGetValue(component.Name, out componentIsActive))
+                {
+                    componentIsActive = true;
+                }
 
                 Assert.AreEqual(componentIsActive, component.Values.HasUniqueValues());
             }
@@ -121,11 +124,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             const int numAttributes = 5;
             const int numValues = 8;
 
-            var sourceAndSink = GenerateSourceAndSink(GenerateAttributes(numAttributes, numValues));
+            SourceAndSink sourceAndSink = GenerateSourceAndSink(GenerateAttributes(numAttributes, numValues));
             sourceAndSink.Data = GenerateSimpleFunction(numAttributes - 1, 0);
 
             TestHelper.AssertAtLeastOneLogMessagesContains(() => sourceAndSink.PopulateFunctionValuesFromAttributes(null),
-                string.Format(Resources.SourceAndSinkImportExtensions_GenerateFunctionFromAttributes_There_were_more_columns_in_the___tim_file_for__0__than_expected, sourceAndSink.Name));
+                                                           string.Format(Resources.SourceAndSinkImportExtensions_GenerateFunctionFromAttributes_There_were_more_columns_in_the___tim_file_for__0__than_expected, sourceAndSink.Name));
         }
 
         [Test]
@@ -134,11 +137,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             const int numAttributes = 5;
             const int numValues = 8;
 
-            var sourceAndSink = GenerateSourceAndSink(GenerateAttributes(numAttributes, numValues));
+            SourceAndSink sourceAndSink = GenerateSourceAndSink(GenerateAttributes(numAttributes, numValues));
             sourceAndSink.Data = GenerateSimpleFunction(numAttributes + 1, 0);
 
             TestHelper.AssertAtLeastOneLogMessagesContains(() => sourceAndSink.PopulateFunctionValuesFromAttributes(null),
-                string.Format(Resources.SourceAndSinkImportExtensions_GenerateFunctionFromAttributes_There_were_less_columns_in_the___tim_file_for__0__than_expected, sourceAndSink.Name));
+                                                           string.Format(Resources.SourceAndSinkImportExtensions_GenerateFunctionFromAttributes_There_were_less_columns_in_the___tim_file_for__0__than_expected, sourceAndSink.Name));
         }
 
         [Test]
@@ -147,7 +150,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             const int numAttributes = 5;
             const int numValues = 8;
 
-            var sourceAndSink = GenerateSourceAndSink(GenerateAttributes(numAttributes, numValues));
+            SourceAndSink sourceAndSink = GenerateSourceAndSink(GenerateAttributes(numAttributes, numValues));
             sourceAndSink.Data = GenerateSimpleFunction(numAttributes + 1, 0);
 
             Assert.True(sourceAndSink.Feature.Attributes.Any(a => a.Key.StartsWith(SourceAndSinkImportExtensions.TimFileColumnAttributePrefix)));
@@ -179,9 +182,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
         private Function GenerateSimpleFunction(int numVariables, int numValues)
         {
             var function = new Function();
-            if (numVariables < 1) return function;
+            if (numVariables < 1)
+            {
+                return function;
+            }
 
-            var t0 = DateTime.Now;
+            DateTime t0 = DateTime.Now;
             function.Arguments = new EventedList<IVariable>()
             {
                 new Variable<DateTime>()
@@ -206,9 +212,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
         private DictionaryFeatureAttributeCollection GenerateAttributes(int numAttributes, int numValues)
         {
             var attributes = new DictionaryFeatureAttributeCollection();
-            if (numAttributes < 1) return attributes;
+            if (numAttributes < 1)
+            {
+                return attributes;
+            }
 
-            var t0 = DateTime.Now;
+            DateTime t0 = DateTime.Now;
             attributes.Add(SourceAndSinkImportExtensions.TimFileColumnAttributePrefix + "0", GenerateValues(numValues, t0));
 
             for (var i = 1; i < numAttributes; i++)
@@ -235,11 +244,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             var values = new MultiDimensionalArray<double>();
             for (var i = 0; i < numValues; i++)
             {
-                values.Add(baseValue + i * 0.001);
+                values.Add(baseValue + (i * 0.001));
             }
 
             return values;
         }
-        
     }
 }

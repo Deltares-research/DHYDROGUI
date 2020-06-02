@@ -8,11 +8,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils
 {
     public class RtcFeature : BranchFeature, IFeature, INameable
     {
-        public object Clone()
-        {
-            throw new NotImplementedException();
-        }
-
         public IGeometry Geometry { get; set; }
         public IFeatureAttributeCollection Attributes { get; set; }
 
@@ -21,6 +16,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils
         public override string ToString()
         {
             return Name;
+        }
+
+        public object Clone()
+        {
+            throw new NotImplementedException();
         }
     }
 }

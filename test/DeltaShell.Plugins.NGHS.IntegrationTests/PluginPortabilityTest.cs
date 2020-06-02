@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using DelftTools.Functions;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
@@ -15,6 +17,7 @@ using DeltaShell.Plugins.DelftModels.RealTimeControl;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects;
+using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.SubstanceProcessLibrary;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.IO;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.ObservationAreas;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests;
@@ -31,8 +34,10 @@ using DeltaShell.Plugins.SharpMapGis.SpatialOperations;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Features;
+using NetTopologySuite.Extensions.Grids;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
+using SharpMap.Api.SpatialOperations;
 using SharpMap.Data.Providers;
 using SharpMap.SpatialOperations;
 using SharpMapTestUtils;
@@ -44,22 +49,37 @@ namespace DeltaShell.Plugins.NGHS.IntegrationTests
     /// So we are testing the plugin configurations here.
     /// 1. We create a model in a certain plugin configuration
     /// 2. We save this and close the project and the DSApp
-    /// 3. We open a new DSApp with another more elaborate plugin configuration (NEVER WITH LESS PLUGINS!!) 
+    /// 3. We open a new DSApp with another more elaborate plugin configuration (NEVER WITH LESS PLUGINS!!)
     /// 4. We verify and validate if the model is still in the project
     /// 5. We save the model in the new plugin configuration and close the project
     /// 6. We open the project again in the same plugin configuration
-    /// 7. We verify and validate if the model is still in the project 
+    /// 7. We verify and validate if the model is still in the project
     /// </summary>
     [TestFixture]
     public class PluginPortabilityTest
     {
         private static readonly DateTime fmModelStartTime = new DateTime(2000, 1, 1);
-        private static readonly Coordinate[] coordinates = { new Coordinate(60, 60), new Coordinate(60, 80), new Coordinate(80, 60), new Coordinate(60, 60) };
+
+        private static readonly Coordinate[] coordinates =
+        {
+            new Coordinate(60, 60),
+            new Coordinate(60, 80),
+            new Coordinate(80, 60),
+            new Coordinate(60, 60)
+        };
+
         private static readonly Polygon myPolygon = new Polygon(
-                new LinearRing(new [] { new Coordinate(50, 10), new Coordinate(30, 20), new Coordinate(70, 20), new Coordinate(50, 10) }));
+            new LinearRing(new[]
+            {
+                new Coordinate(50, 10),
+                new Coordinate(30, 20),
+                new Coordinate(70, 20),
+                new Coordinate(50, 10)
+            }));
 
         // BART TEST ID : 7
-        /// /// <summary>
+        /// ///
+        /// <summary>
         /// Test if an FM model can be saved in an environment with FM and RTC plugins.
         /// Then read it in an environment that contains FM, RTC, WAQ and Wave.
         /// Simple model, FM minimal -> FM maximal
@@ -72,7 +92,7 @@ namespace DeltaShell.Plugins.NGHS.IntegrationTests
         [Category(TestCategory.WorkInProgress)]
         public void ReadSimpleFlowFmModelWithRtcWithoutAndWithWaqandWavePluginsConfiguration()
         {
-            string dsprojName = "FMRTC_FMRTCWAQWAVE.dsproj";
+            var dsprojName = "FMRTC_FMRTCWAQWAVE.dsproj";
             using (var app = new DeltaShellApplication())
             {
                 //apps : common
@@ -88,7 +108,7 @@ namespace DeltaShell.Plugins.NGHS.IntegrationTests
                 app.Run();
                 app.SaveProjectAs(dsprojName); // save to initialize file repository..
 
-                var fmModel = MyWaterFlowFmModel();
+                WaterFlowFMModel fmModel = MyWaterFlowFmModel();
 
                 app.Project.RootFolder.Add(fmModel);
 
@@ -97,7 +117,6 @@ namespace DeltaShell.Plugins.NGHS.IntegrationTests
                 app.SaveProject();
                 app.CloseProject();
             }
-
 
             using (var app = new DeltaShellApplication())
             {
@@ -119,7 +138,7 @@ namespace DeltaShell.Plugins.NGHS.IntegrationTests
 
                 app.OpenProject(dsprojName);
 
-                var savedFmModel = app.Project.RootFolder.Models.OfType<WaterFlowFMModel>().FirstOrDefault();
+                WaterFlowFMModel savedFmModel = app.Project.RootFolder.Models.OfType<WaterFlowFMModel>().FirstOrDefault();
                 Assert.NotNull(savedFmModel);
                 ValidateModel(savedFmModel);
 
@@ -132,13 +151,14 @@ namespace DeltaShell.Plugins.NGHS.IntegrationTests
                 ValidateModel(savedFmModel);
 
                 app.CloseProject();
-
             }
         }
 
         // BART TEST ID : 9
-        /// /// <summary>
-        /// Test if an integrated hydro model with a FM model and a RTC model can be saved in an environment with FM and RTC plugins.
+        /// ///
+        /// <summary>
+        /// Test if an integrated hydro model with a FM model and a RTC model can be saved in an environment with FM and RTC
+        /// plugins.
         /// Then read it in an environment that contains FM, RTC, WAQ and Wave.
         /// Complex / Integrated model, FM minimal -> FM maximal
         /// TOOLS-22951
@@ -150,7 +170,7 @@ namespace DeltaShell.Plugins.NGHS.IntegrationTests
         [Category(TestCategory.WorkInProgress)]
         public void ReadIntegratedlowFmModelWithRtcWithoutAndWithWaqandWavePluginsConfiguration()
         {
-            string dsprojName = "IM_FMRTC_FMRTCWAQWAVE.dsproj";
+            var dsprojName = "IM_FMRTC_FMRTCWAQWAVE.dsproj";
             using (var app = new DeltaShellApplication())
             {
                 //apps : common
@@ -158,10 +178,10 @@ namespace DeltaShell.Plugins.NGHS.IntegrationTests
                 app.Plugins.Add(new CommonToolsApplicationPlugin());
                 app.Plugins.Add(new SharpMapGisApplicationPlugin());
                 app.Plugins.Add(new NetworkEditorApplicationPlugin());
-                
+
                 //apps : helper
                 app.Plugins.Add(new ScriptingApplicationPlugin());
-                
+
                 //apps : FM+RTC
                 app.Plugins.Add(new FlowFMApplicationPlugin());
                 app.Plugins.Add(new RealTimeControlApplicationPlugin());
@@ -171,18 +191,18 @@ namespace DeltaShell.Plugins.NGHS.IntegrationTests
                 app.SaveProjectAs(dsprojName); // save to initialize file repository..
 
                 //create a hydromodel with fm, rtc it (FM Integrated model)
-                var hydroModel = MyFmRtcHydroModel();
+                HydroModel hydroModel = MyFmRtcHydroModel();
 
                 app.Project.RootFolder.Add(hydroModel);
-                var fmModel = hydroModel.Models.OfType<WaterFlowFMModel>().FirstOrDefault();
+                WaterFlowFMModel fmModel = hydroModel.Models.OfType<WaterFlowFMModel>().FirstOrDefault();
                 if (fmModel != null)
                 {
-                    NetFile.Write(fmModel.NetFilePath,fmModel.Grid);
+                    NetFile.Write(fmModel.NetFilePath, fmModel.Grid);
                 }
+
                 app.SaveProject();
                 app.CloseProject();
             }
-
 
             using (var app = new DeltaShellApplication())
             {
@@ -205,15 +225,15 @@ namespace DeltaShell.Plugins.NGHS.IntegrationTests
 
                 app.OpenProject(dsprojName);
 
-                var savedHydroModel = app.Project.RootFolder.Models.OfType<HydroModel>().FirstOrDefault();
+                HydroModel savedHydroModel = app.Project.RootFolder.Models.OfType<HydroModel>().FirstOrDefault();
                 Assert.NotNull(savedHydroModel);
                 ValidateMinimalHydroFmModel(savedHydroModel);
 
-                var fmModel = savedHydroModel.Models.OfType<WaterFlowFMModel>().FirstOrDefault();
+                WaterFlowFMModel fmModel = savedHydroModel.Models.OfType<WaterFlowFMModel>().FirstOrDefault();
                 Assert.NotNull(fmModel);
                 ValidateModel(fmModel);
 
-                var rtcModel = savedHydroModel.Models.OfType<RealTimeControlModel>().FirstOrDefault();
+                RealTimeControlModel rtcModel = savedHydroModel.Models.OfType<RealTimeControlModel>().FirstOrDefault();
                 Assert.NotNull(rtcModel);
                 ValidateModel(rtcModel);
 
@@ -234,7 +254,6 @@ namespace DeltaShell.Plugins.NGHS.IntegrationTests
                 ValidateModel(rtcModel);
 
                 app.CloseProject();
-
             }
         }
 
@@ -253,7 +272,7 @@ namespace DeltaShell.Plugins.NGHS.IntegrationTests
         [Category(TestCategory.WorkInProgress)]
         public void ReadSimpleWaqModelWithoutAndWithFmAndRtcAndWaqAndWavePluginsConfiguration()
         {
-            string dsprojName = "WAQ_FMRTCWAQWAVE.dsproj";
+            var dsprojName = "WAQ_FMRTCWAQWAVE.dsproj";
             using (var app = new DeltaShellApplication())
             {
                 //apps : common
@@ -269,7 +288,7 @@ namespace DeltaShell.Plugins.NGHS.IntegrationTests
                 app.SaveProjectAs(dsprojName); // save to initialize file repository..
 
                 //create only a WAQ model
-                var waterQualityModel = MyWaqModel();
+                WaterQualityModel waterQualityModel = MyWaqModel();
                 app.Project.RootFolder.Add(waterQualityModel);
                 waterQualityModel.BoundaryDataManager.CreateNewDataTable("A", "B", "C.d", "E");
                 waterQualityModel.LoadsDataManager.CreateNewDataTable("F", "G", "H.i", "J");
@@ -277,7 +296,6 @@ namespace DeltaShell.Plugins.NGHS.IntegrationTests
                 app.SaveProject();
                 app.CloseProject();
             }
-
 
             using (var app = new DeltaShellApplication())
             {
@@ -299,7 +317,7 @@ namespace DeltaShell.Plugins.NGHS.IntegrationTests
 
                 app.OpenProject(dsprojName);
 
-                var savedWaqModel = app.Project.RootFolder.Models.OfType<WaterQualityModel>().FirstOrDefault();
+                WaterQualityModel savedWaqModel = app.Project.RootFolder.Models.OfType<WaterQualityModel>().FirstOrDefault();
                 Assert.NotNull(savedWaqModel);
                 ValidateModel(savedWaqModel);
 
@@ -313,19 +331,18 @@ namespace DeltaShell.Plugins.NGHS.IntegrationTests
                 ValidateModel(savedWaqModel);
 
                 app.CloseProject();
-
             }
         }
 
         private static HydroModel MyFmRtcHydroModel()
         {
             //create a hydromodel with fm and rtc (FM minimal)
-            var fmModel = MyWaterFlowFmModel();
-            var rtcModel = MyRealTimeControlModel(fmModel);
+            WaterFlowFMModel fmModel = MyWaterFlowFmModel();
+            RealTimeControlModel rtcModel = MyRealTimeControlModel(fmModel);
 
             var hydroModel = new HydroModel
             {
-                Activities = { rtcModel },
+                Activities = {rtcModel},
                 OverrideStartTime = false,
                 OverrideStopTime = false,
                 OverrideTimeStep = false
@@ -339,7 +356,6 @@ namespace DeltaShell.Plugins.NGHS.IntegrationTests
                     new ActivityWrapper {Activity = fmModel},
                     new ActivityWrapper {Activity = rtcModel}
                 }
-
             };
             hydroModel.Workflows.Add(workflow);
             return hydroModel;
@@ -348,13 +364,13 @@ namespace DeltaShell.Plugins.NGHS.IntegrationTests
         private void ValidateModel(WaterQualityModel waqModel)
         {
             Assert.Greater((int) waqModel.SubstanceProcessLibrary.Substances.Count, 0);
-            var oxy = waqModel.SubstanceProcessLibrary.Substances.FirstOrDefault(s => s.Name == "OXY");
+            WaterQualitySubstance oxy = waqModel.SubstanceProcessLibrary.Substances.FirstOrDefault(s => s.Name == "OXY");
             Assert.NotNull(oxy);
             Assert.AreEqual((double) 1.23d, (double) oxy.InitialValue, 0.01d);
 
             Assert.Greater((int) waqModel.ProcessCoefficients.Count, 0);
 
-            var procCoof = waqModel.ProcessCoefficients.FirstOrDefault(p => p.Name == "fTEWOROXY");
+            IFunction procCoof = waqModel.ProcessCoefficients.FirstOrDefault(p => p.Name == "fTEWOROXY");
             Assert.NotNull(procCoof);
             Assert.AreEqual((int) 1, (int) procCoof.Components.Count);
             Assert.AreEqual("gO2/m3/d", procCoof.Components[0].Unit.Name);
@@ -366,8 +382,8 @@ namespace DeltaShell.Plugins.NGHS.IntegrationTests
             Assert.AreEqual((double) 3.3d, (double) waqModel.ObservationPoints.First().Z, 0.1d);
             Assert.AreEqual((double) 4.4d, (double) waqModel.ObservationPoints.Last().Z, 0.1d);
 
-            var boundaryDataFolder = waqModel.BoundaryDataManager.FolderPath;
-            var loadsDataFolder = waqModel.LoadsDataManager.FolderPath;
+            string boundaryDataFolder = waqModel.BoundaryDataManager.FolderPath;
+            string loadsDataFolder = waqModel.LoadsDataManager.FolderPath;
 
             Assert.IsTrue(Directory.Exists(boundaryDataFolder));
             Assert.AreEqual(2, Directory.GetFiles(boundaryDataFolder).Length);
@@ -381,7 +397,7 @@ namespace DeltaShell.Plugins.NGHS.IntegrationTests
             Assert.AreEqual((int) 121, (int) fmModel.Grid.Vertices.Count());
             Assert.AreEqual((int) 220, (int) fmModel.Grid.Edges.Count());
             Assert.AreEqual((int) 2, (int) fmModel.Area.Pumps.Count());
-            var pump1 = fmModel.Area.Pumps.FirstOrDefault();
+            Pump2D pump1 = fmModel.Area.Pumps.FirstOrDefault();
             Assert.NotNull(pump1);
             Assert.AreEqual((int) 2, (int) pump1.Geometry.Coordinates.Count());
             Assert.AreEqual((object) new Coordinate(20, 20), pump1.Geometry.Coordinates.First());
@@ -389,36 +405,36 @@ namespace DeltaShell.Plugins.NGHS.IntegrationTests
             Assert.AreEqual((double) 100.0d, (double) pump1.Capacity, 0.1d);
             Assert.AreEqual(false, pump1.UseCapacityTimeSeries);
 
-            var pump2 = fmModel.Area.Pumps.LastOrDefault();
+            Pump2D pump2 = fmModel.Area.Pumps.LastOrDefault();
             Assert.NotNull(pump2);
             Assert.AreEqual((int) 2, (int) pump2.Geometry.Coordinates.Count());
             Assert.AreEqual((object) new Coordinate(20, 30), pump2.Geometry.Coordinates.First());
             Assert.AreEqual((object) new Coordinate(30, 40), pump2.Geometry.Coordinates.Last());
             Assert.AreEqual(true, pump2.UseCapacityTimeSeries);
-            Assert.AreEqual(7.8d, (double)pump2.CapacityTimeSeries[fmModelStartTime], 0.1d);
+            Assert.AreEqual(7.8d, (double) pump2.CapacityTimeSeries[fmModelStartTime], 0.1d);
 
             Assert.AreEqual((int) 2, (int) fmModel.Area.ObservationPoints.Count());
             Assert.AreEqual((object) new Point(15, 15), fmModel.Area.ObservationPoints.First().Geometry);
             Assert.AreEqual((object) new Point(40, 40), fmModel.Area.ObservationPoints.Last().Geometry);
 
-            var coverageSpatialOperationValueConverters = fmModel.AllDataItems.Select(di => di.ValueConverter).OfType<CoverageSpatialOperationValueConverter>().ToList();
+            List<CoverageSpatialOperationValueConverter> coverageSpatialOperationValueConverters = fmModel.AllDataItems.Select(di => di.ValueConverter).OfType<CoverageSpatialOperationValueConverter>().ToList();
             Assert.AreEqual((int) 1, (int) coverageSpatialOperationValueConverters.Count());
-            var spatialCov = coverageSpatialOperationValueConverters.First();
+            CoverageSpatialOperationValueConverter spatialCov = coverageSpatialOperationValueConverters.First();
             Assert.AreEqual(typeof(ICoverage), spatialCov.OperationDataType);
             Assert.AreEqual((object) fmModel.Bathymetry, spatialCov.ConvertedValue);
 
-            var spatialOperation = spatialCov.SpatialOperationSet.Operations[0];
+            ISpatialOperation spatialOperation = spatialCov.SpatialOperationSet.Operations[0];
             Assert.AreEqual(typeof(SetValueOperation), spatialOperation.GetType());
             Assert.AreEqual((int) 2, (int) spatialOperation.Inputs.Count());
             Assert.AreEqual(typeof(FeatureCollection), spatialOperation.Inputs[1].Provider.GetType());
             Assert.AreEqual(typeof(Feature), spatialOperation.Inputs[1].Provider.FeatureType);
             Assert.AreEqual((int) 1, (int) spatialOperation.Inputs[1].Provider.Features.Count);
-            Assert.AreEqual((object) myPolygon, ((Feature)spatialOperation.Inputs[1].Provider.Features[0]).Geometry);
+            Assert.AreEqual((object) myPolygon, ((Feature) spatialOperation.Inputs[1].Provider.Features[0]).Geometry);
 
-            var setValueOperation = ((SetValueOperation) (spatialOperation));
-            Assert.AreEqual((double) 100.0d, (double) setValueOperation.Value,0.1d);
+            var setValueOperation = (SetValueOperation) spatialOperation;
+            Assert.AreEqual((double) 100.0d, (double) setValueOperation.Value, 0.1d);
             Assert.AreEqual((object) PointwiseOperationType.Overwrite, setValueOperation.OperationType);
-                
+
             Assert.AreEqual((int) 1, (int) fmModel.Area.Weirs.Count());
             Assert.AreEqual((int) 1, (int) fmModel.Area.ThinDams.Count());
             Assert.AreEqual((int) 1, (int) fmModel.Area.FixedWeirs.Count());
@@ -428,16 +444,16 @@ namespace DeltaShell.Plugins.NGHS.IntegrationTests
 
             //Can't check drypoints and dryareas at the same time.... info is saved in same file, is a feature of comp core
 //            Assert.AreEqual(1, fmModel.Area.DryPoints.Count());
-            Assert.AreEqual((int) 1,(int) fmModel.SourcesAndSinks.Count);
+            Assert.AreEqual((int) 1, (int) fmModel.SourcesAndSinks.Count);
         }
 
         private void ValidateModel(RealTimeControlModel rtcModel)
         {
             Assert.AreEqual((int) 1, (int) rtcModel.ControlGroups.Count());
-            var controlGroup = rtcModel.ControlGroups[0];
+            ControlGroup controlGroup = rtcModel.ControlGroups[0];
             Assert.AreEqual((int) 2, (int) controlGroup.Inputs.Count());
             Assert.AreEqual((int) 1, (int) controlGroup.Outputs.Count());
-            var hydraulicRule1A = (HydraulicRule)controlGroup.Rules[0];
+            var hydraulicRule1A = (HydraulicRule) controlGroup.Rules[0];
             Assert.AreEqual(1.0, hydraulicRule1A.Function[0.0]);
         }
 
@@ -458,7 +474,7 @@ namespace DeltaShell.Plugins.NGHS.IntegrationTests
 
             // - with 2 activities, FM and RTC (in this order) :
             Assert.AreEqual((int) 2, (int) hydroModel.CurrentWorkflow.Activities.Count);
-            var activities = hydroModel.CurrentWorkflow.Activities.OfType<ActivityWrapper>().Select(a => a.Activity).ToList();
+            List<IActivity> activities = hydroModel.CurrentWorkflow.Activities.OfType<ActivityWrapper>().Select(a => a.Activity).ToList();
             Assert.NotNull(activities.OfType<WaterFlowFMModel>().FirstOrDefault());
             Assert.NotNull(activities.OfType<RealTimeControlModel>().FirstOrDefault());
             Assert.AreEqual(typeof(RealTimeControlModel), activities[0].GetEntityType());
@@ -468,80 +484,85 @@ namespace DeltaShell.Plugins.NGHS.IntegrationTests
         private static WaterQualityModel MyWaqModel()
         {
             //copied from DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.WaterQualityModelWorkDirectoryTest.CreateWaqModelWithData()
-            var dataDir = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(WaterQualityModelApplicationPluginTest).Assembly);
-            var squareHydFile = Path.Combine(dataDir, "IO", "square", "square.hyd");
+            string dataDir = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(WaterQualityModelApplicationPluginTest).Assembly);
+            string squareHydFile = Path.Combine(dataDir, "IO", "square", "square.hyd");
 
-            var hydFile = squareHydFile;
+            string hydFile = squareHydFile;
 
-            var data = HydFileReader.ReadAll(new FileInfo(hydFile));
+            HydFileData data = HydFileReader.ReadAll(new FileInfo(hydFile));
 
             var model = new WaterQualityModel();
             model.ImportHydroData(data);
 
-            var subFilePath = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(WaterQualityModelApplicationPluginTest).Assembly, @"IO\03d_Tewor2003.sub");
+            string subFilePath = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(WaterQualityModelApplicationPluginTest).Assembly, @"IO\03d_Tewor2003.sub");
             new SubFileImporter().Import(model.SubstanceProcessLibrary, subFilePath);
-            var oxy = model.SubstanceProcessLibrary.Substances.FirstOrDefault(s => s.Name == "OXY");
+            WaterQualitySubstance oxy = model.SubstanceProcessLibrary.Substances.FirstOrDefault(s => s.Name == "OXY");
             Assert.NotNull(oxy);
             oxy.InitialValue = 1.23d;
 
-            var procCoof = model.ProcessCoefficients.FirstOrDefault(p => p.Name == "fTEWOROXY");
+            IFunction procCoof = model.ProcessCoefficients.FirstOrDefault(p => p.Name == "fTEWOROXY");
             Assert.NotNull(procCoof);
             Assert.AreEqual((int) 1, (int) procCoof.Components.Count);
             Assert.AreEqual("gO2/m3/d", procCoof.Components[0].Unit.Name);
-            
+
             model.Loads.AddRange(new[]
             {
-                new WaterQualityLoad
-                {
-                    Z = 1.1
-                },
-                new WaterQualityLoad
-                {
-                    Z = 2.2
-                }
+                new WaterQualityLoad {Z = 1.1},
+                new WaterQualityLoad {Z = 2.2}
             });
 
             model.ObservationPoints.AddRange(new[]
             {
-                new WaterQualityObservationPoint
-                {
-                    Z = 3.3
-                },
-                new WaterQualityObservationPoint
-                {
-                    Z = 4.4
-                }
+                new WaterQualityObservationPoint {Z = 3.3},
+                new WaterQualityObservationPoint {Z = 4.4}
             });
             return model;
         }
 
         private static WaterFlowFMModel MyWaterFlowFmModel()
         {
-            var grid = UnstructuredGridTestHelper.GenerateRegularGrid(10, 10, 100, 100);
+            UnstructuredGrid grid = UnstructuredGridTestHelper.GenerateRegularGrid(10, 10, 100, 100);
             var area = new HydroArea();
             area.Pumps.Add(new Pump2D("Pump1")
             {
-                Geometry = new LineString(new [] {new Coordinate(20, 20), new Coordinate(30, 30)}),
+                Geometry = new LineString(new[]
+                {
+                    new Coordinate(20, 20),
+                    new Coordinate(30, 30)
+                }),
                 UseCapacityTimeSeries = false,
                 Capacity = 100.0
-               
             });
             var pump2 = new Pump2D("Pump2", true)
             {
-                Geometry = new LineString(new [] { new Coordinate(20, 30), new Coordinate(30, 40) }),
+                Geometry = new LineString(new[]
+                {
+                    new Coordinate(20, 30),
+                    new Coordinate(30, 40)
+                }),
                 UseCapacityTimeSeries = true
-
             };
-            
 
             pump2.CapacityTimeSeries[fmModelStartTime] = 7.8;
             area.Pumps.Add(pump2);
-            
 
-            area.ObservationPoints.Add(new GroupableFeature2DPoint(){Name = "ObservationPoint1" , Geometry = new Point(15, 15)});
-            area.ObservationPoints.Add(new GroupableFeature2DPoint(){Name = "ObservationPoint2", Geometry = new Point(40, 40)});
-            area.Weirs.Add(new Weir2D("weir1"){
-                Geometry = new LineString(new [] { new Coordinate(25, 20), new Coordinate(30, 30) }),
+            area.ObservationPoints.Add(new GroupableFeature2DPoint()
+            {
+                Name = "ObservationPoint1",
+                Geometry = new Point(15, 15)
+            });
+            area.ObservationPoints.Add(new GroupableFeature2DPoint()
+            {
+                Name = "ObservationPoint2",
+                Geometry = new Point(40, 40)
+            });
+            area.Weirs.Add(new Weir2D("weir1")
+            {
+                Geometry = new LineString(new[]
+                {
+                    new Coordinate(25, 20),
+                    new Coordinate(30, 30)
+                }),
                 OffsetY = 150,
                 CrestWidth = 10.0,
                 CrestLevel = 6.0,
@@ -552,15 +573,35 @@ namespace DeltaShell.Plugins.NGHS.IntegrationTests
                     DischargeCoefficient = 1.0
                 }
             });
-            var lineString = new LineString(new []{new Coordinate(0,0), new Coordinate(1,1)});            
-            area.ThinDams.Add(new ThinDam2D(){Name = "thin", Geometry = lineString});
-            area.FixedWeirs.Add(new FixedWeir(){Name ="fixedweir", Geometry = lineString});
-            area.ObservationCrossSections.Add(new ObservationCrossSection2D(){Name="ObsCS", Geometry = lineString});
-            area.DryAreas.Add(new GroupableFeature2DPolygon { Name="dryarea", Geometry = new Polygon(new LinearRing(coordinates)) });
+            var lineString = new LineString(new[]
+            {
+                new Coordinate(0, 0),
+                new Coordinate(1, 1)
+            });
+            area.ThinDams.Add(new ThinDam2D()
+            {
+                Name = "thin",
+                Geometry = lineString
+            });
+            area.FixedWeirs.Add(new FixedWeir()
+            {
+                Name = "fixedweir",
+                Geometry = lineString
+            });
+            area.ObservationCrossSections.Add(new ObservationCrossSection2D()
+            {
+                Name = "ObsCS",
+                Geometry = lineString
+            });
+            area.DryAreas.Add(new GroupableFeature2DPolygon
+            {
+                Name = "dryarea",
+                Geometry = new Polygon(new LinearRing(coordinates))
+            });
 
             //Can't check drypoints and dryareas at the same time.... info is saved in same file, is a feature of comp core
             //area.DryPoints.Add(new PointFeature() { Geometry = new Point(5, 5) });
-            
+
             var model = new WaterFlowFMModel
             {
                 TimeStep = new TimeSpan(0, 0, 1, 0),
@@ -574,29 +615,32 @@ namespace DeltaShell.Plugins.NGHS.IntegrationTests
                     Edges = grid.Edges
                 },
                 Area = area
-                
-
             };
-            model.SourcesAndSinks.Add(new SourceAndSink(){Feature = new Feature2D(){Name="test", Geometry = lineString}});
-            
+            model.SourcesAndSinks.Add(new SourceAndSink()
+            {
+                Feature = new Feature2D()
+                {
+                    Name = "test",
+                    Geometry = lineString
+                }
+            });
 
             model.ModelDefinition.GetModelProperty(KnownProperties.RefDate).Value = new DateTime(2000, 1, 1);
 
             ICoverage coverage = model.Bathymetry;
             SetValueOnCoverage(((IModel) model).GetDataItemByValue(coverage), myPolygon, 100.0d);
-            
+
             return model;
-            
         }
 
         private static void SetValueOnCoverage(IDataItem coverageDataItem, Polygon polygon, double value)
         {
             if (coverageDataItem.ValueConverter == null)
             {
-                coverageDataItem.ValueConverter = SpatialOperationValueConverterFactory.Create(coverageDataItem.Value, coverageDataItem.ValueType); 
+                coverageDataItem.ValueConverter = SpatialOperationValueConverterFactory.Create(coverageDataItem.Value, coverageDataItem.ValueType);
             }
 
-            var spatialOperationSet = ((SpatialOperationSetValueConverter)coverageDataItem.ValueConverter).SpatialOperationSet;
+            ISpatialOperationSet spatialOperationSet = ((SpatialOperationSetValueConverter) coverageDataItem.ValueConverter).SpatialOperationSet;
 
             var operation = new SetValueOperation
             {
@@ -604,7 +648,10 @@ namespace DeltaShell.Plugins.NGHS.IntegrationTests
                 OperationType = PointwiseOperationType.Overwrite,
                 Name = "SetValue"
             };
-            operation.SetInputData(SpatialOperation.MaskInputName,new FeatureCollection(new []{new Feature(){Geometry = polygon}},typeof(Feature)));
+            operation.SetInputData(SpatialOperation.MaskInputName, new FeatureCollection(new[]
+            {
+                new Feature() {Geometry = polygon}
+            }, typeof(Feature)));
             spatialOperationSet.AddOperation(operation);
             spatialOperationSet.Execute();
         }
@@ -614,7 +661,7 @@ namespace DeltaShell.Plugins.NGHS.IntegrationTests
             var rtcModel = new RealTimeControlModel();
 
 #pragma warning disable 618
-            var controlGroup1 = RealTimeControlModelHelper.CreateGroupHydraulicRule(true);
+            ControlGroup controlGroup1 = RealTimeControlModelHelper.CreateGroupHydraulicRule(true);
 #pragma warning restore 618
             controlGroup1.Name = "controlGroup1";
 
@@ -624,7 +671,7 @@ namespace DeltaShell.Plugins.NGHS.IntegrationTests
             controlGroup1.Inputs[1].ParameterName = "test";
             controlGroup1.Outputs[0].Feature = fmModel.Area.Pumps.First();
             controlGroup1.Outputs[0].ParameterName = "test";
-            var hydraulicRule1A = (HydraulicRule)controlGroup1.Rules[0];
+            var hydraulicRule1A = (HydraulicRule) controlGroup1.Rules[0];
             hydraulicRule1A.Function[0.0] = 1.0;
             rtcModel.ControlGroups.Add(controlGroup1);
             return rtcModel;

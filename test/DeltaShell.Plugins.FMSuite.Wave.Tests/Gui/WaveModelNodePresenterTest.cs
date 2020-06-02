@@ -22,12 +22,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
         [Category(TestCategory.WindowsForms)]
         public void ShowWaveProjectExplorer()
         {
-            var mdwPath = TestHelper.GetTestFilePath(@"wave_timespacevarbnd\tst.mdw");
+            string mdwPath = TestHelper.GetTestFilePath(@"wave_timespacevarbnd\tst.mdw");
             var model = new WaveModel(mdwPath);
 
             using (var gui = new DeltaShellGui())
             {
-                var app = gui.Application;
+                IApplication app = gui.Application;
                 app.Plugins.Add(new SharpMapGisApplicationPlugin());
                 app.Plugins.Add(new NetworkEditorApplicationPlugin());
                 gui.Plugins.Add(new ProjectExplorerGuiPlugin());
@@ -39,7 +39,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
 
                 Action mainWindowShown = delegate
                 {
-                    var project = app.Project;
+                    Project project = app.Project;
                     project.RootFolder.Add(model);
                 };
 
@@ -51,12 +51,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
         [Category(TestCategory.WindowsForms)]
         public void FmModelShouldBeReplacedWhenImportedInRootFolder()
         {
-            var mdwPath = TestHelper.GetTestFilePath(@"wave_timespacevarbnd\tst.mdw");
+            string mdwPath = TestHelper.GetTestFilePath(@"wave_timespacevarbnd\tst.mdw");
             mdwPath = TestHelper.CreateLocalCopy(mdwPath);
 
             using (var gui = new DeltaShellGui())
             {
-                var app = gui.Application;
+                IApplication app = gui.Application;
                 app.Plugins.Add(new SharpMapGisApplicationPlugin());
                 app.Plugins.Add(new WaveApplicationPlugin());
                 gui.Plugins.Add(new ProjectExplorerGuiPlugin());
@@ -68,16 +68,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
                 Action mainWindowShown = delegate
                 {
                     // Add water flow model to project
-                    var project = app.Project;
+                    Project project = app.Project;
                     project.RootFolder.Add(new WaveModel());
 
                     // Check model name
-                    var targetModel = project.RootFolder.Models.OfType<WaveModel>().FirstOrDefault();
+                    WaveModel targetModel = project.RootFolder.Models.OfType<WaveModel>().FirstOrDefault();
                     Assert.IsNotNull(targetModel);
                     Assert.That(targetModel.Name, Is.StringContaining("Waves"));
 
                     // Import new water flow model
-                    var importer = app.FileImporters.OfType<WaveModelFileImporter>().FirstOrDefault();
+                    WaveModelFileImporter importer = app.FileImporters.OfType<WaveModelFileImporter>().FirstOrDefault();
                     Assert.IsNotNull(importer);
                     importer.ImportItem(mdwPath, targetModel);
 
@@ -86,7 +86,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
                     Assert.IsNotNull(targetModel);
                     Assert.That(targetModel.Name, Is.StringContaining("tst"));
                 };
-                WpfTestHelper.ShowModal((Control)gui.MainWindow, mainWindowShown);
+                WpfTestHelper.ShowModal((Control) gui.MainWindow, mainWindowShown);
             }
         }
 
@@ -94,12 +94,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
         [Category(TestCategory.WindowsForms)]
         public void FmModelShouldBeReplacedWhenImportedInFolder()
         {
-            var mdwPath = TestHelper.GetTestFilePath(@"wave_timespacevarbnd\tst.mdw");
+            string mdwPath = TestHelper.GetTestFilePath(@"wave_timespacevarbnd\tst.mdw");
             mdwPath = TestHelper.CreateLocalCopy(mdwPath);
 
             using (var gui = new DeltaShellGui())
             {
-                var app = gui.Application;
+                IApplication app = gui.Application;
                 app.Plugins.Add(new SharpMapGisApplicationPlugin());
                 app.Plugins.Add(new WaveApplicationPlugin());
                 gui.Plugins.Add(new ProjectExplorerGuiPlugin());
@@ -111,23 +111,23 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
                 Action mainWindowShown = delegate
                 {
                     // Add new folder to project
-                    var project = app.Project;
+                    Project project = app.Project;
                     project.RootFolder.Add(new Folder("Test Folder"));
 
                     // Check folder name
-                    var testFolder = project.RootFolder.Folders.FirstOrDefault();
+                    Folder testFolder = project.RootFolder.Folders.FirstOrDefault();
                     Assert.IsNotNull(testFolder);
                     Assert.That(testFolder.Name, Is.StringContaining("Test Folder"));
 
                     // Add new water flow model to the new folder and check its name
                     testFolder.Add(new WaveModel());
-                    var targetModel =
+                    WaveModel targetModel =
                         testFolder.Models.OfType<WaveModel>().FirstOrDefault();
                     Assert.IsNotNull(targetModel);
                     Assert.That(targetModel.Name, Is.StringContaining("Waves"));
 
                     // Import new water flow model
-                    var importer = app.FileImporters.OfType<WaveModelFileImporter>().FirstOrDefault();
+                    WaveModelFileImporter importer = app.FileImporters.OfType<WaveModelFileImporter>().FirstOrDefault();
                     Assert.IsNotNull(importer);
                     importer.ImportItem(mdwPath, targetModel);
 
@@ -136,7 +136,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
                     Assert.IsNotNull(targetModel);
                     Assert.That(targetModel.Name, Is.StringContaining("tst"));
                 };
-                WpfTestHelper.ShowModal((Control)gui.MainWindow, mainWindowShown);
+                WpfTestHelper.ShowModal((Control) gui.MainWindow, mainWindowShown);
             }
         }
     }

@@ -22,7 +22,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO.SubFileImpor
                                     .With.Message.EqualTo(expectedMessage));
         }
 
-
         [Test]
         [TestCase(null)]
         [TestCase("    ")]

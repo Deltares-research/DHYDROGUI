@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using DelftTools.TestUtils;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessObjects;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
 using NUnit.Framework;
 
@@ -30,15 +32,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             boundaryConditionSet2.BoundaryConditions.Add(new FlowBoundaryCondition(FlowBoundaryQuantityType.Tracer, BoundaryConditionDataType.TimeSeries));
             boundaryConditionSet2.BoundaryConditions.Add(new FlowBoundaryCondition(FlowBoundaryQuantityType.WaterLevel, BoundaryConditionDataType.TimeSeries));
 
+            var boundaryConditions = new List<BoundaryConditionSet>()
+            {
+                boundaryConditionSet1,
+                boundaryConditionSet2
+            };
 
-            var boundaryConditions = new List<BoundaryConditionSet>(){boundaryConditionSet1, boundaryConditionSet2};
-            
             // group boundary conditions
             var bcFile = new BcFile();
-            var groupings = bcFile.GroupBoundaryConditions(boundaryConditions).ToList();
+            List<IGrouping<string, Tuple<IBoundaryCondition, BoundaryConditionSet>>> groupings = bcFile.GroupBoundaryConditions(boundaryConditions).ToList();
 
             // check that morphology related boundary conditions are filtered out
-            var groupedBoundaryConditions = groupings.SelectMany(g => g).Select(g => g.Item1).OfType<FlowBoundaryCondition>().ToList();
+            List<FlowBoundaryCondition> groupedBoundaryConditions = groupings.SelectMany(g => g).Select(g => g.Item1).OfType<FlowBoundaryCondition>().ToList();
             Assert.AreEqual(8, groupedBoundaryConditions.Count);
 
             Assert.AreEqual(0, groupedBoundaryConditions.Count(bc => bc.FlowQuantity == FlowBoundaryQuantityType.MorphologyBedLevelPrescribed));
@@ -53,39 +58,50 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [Category(TestCategory.DataAccess)]
         public void ReadTwoAstroWaterLevelBoundaryConditions()
         {
-            var filePath = TestHelper.GetTestFilePath(@"BcFiles\TwoAstroWaterLevels.bc");
+            string filePath = TestHelper.GetTestFilePath(@"BcFiles\TwoAstroWaterLevels.bc");
             var fileReader = new BcFile();
-            var dataBlocks = fileReader.Read(filePath).ToList();
+            List<BcBlockData> dataBlocks = fileReader.Read(filePath).ToList();
             Assert.AreEqual(2, dataBlocks.Count());
 
-            var firstBlock = dataBlocks.First();
+            BcBlockData firstBlock = dataBlocks.First();
             Assert.AreEqual("pli1_0001", firstBlock.SupportPoint);
             Assert.AreEqual("astronomic", firstBlock.FunctionType);
             Assert.AreEqual(3, firstBlock.Quantities.Count);
 
-            var quantity = firstBlock.Quantities[0];
-            
+            BcQuantityData quantity = firstBlock.Quantities[0];
+
             Assert.AreEqual("astronomic component", quantity.QuantityName);
             Assert.AreEqual("-", quantity.Unit);
             Assert.AreEqual(null, quantity.VerticalPosition);
-            Assert.AreEqual(new[] {"M2", "S2"}, quantity.Values);
+            Assert.AreEqual(new[]
+            {
+                "M2",
+                "S2"
+            }, quantity.Values);
 
             quantity = firstBlock.Quantities[1];
 
             Assert.AreEqual("waterlevelbnd amplitude", quantity.QuantityName);
             Assert.AreEqual("m", quantity.Unit);
             Assert.AreEqual(null, quantity.VerticalPosition);
-            Assert.AreEqual(new[] { "0.9", "0.95" }, quantity.Values);
+            Assert.AreEqual(new[]
+            {
+                "0.9",
+                "0.95"
+            }, quantity.Values);
 
             quantity = firstBlock.Quantities[2];
 
-            Assert.AreEqual("waterlevelbnd phase" , quantity.QuantityName);
+            Assert.AreEqual("waterlevelbnd phase", quantity.QuantityName);
             Assert.AreEqual("rad/deg/minutes", quantity.Unit);
             Assert.AreEqual(null, quantity.VerticalPosition);
-            Assert.AreEqual(new[] { "10", "-7.5" }, quantity.Values);
+            Assert.AreEqual(new[]
+            {
+                "10",
+                "-7.5"
+            }, quantity.Values);
 
-
-            var secondBlock = dataBlocks.ElementAt(1);
+            BcBlockData secondBlock = dataBlocks.ElementAt(1);
             Assert.AreEqual("pli1_0002", secondBlock.SupportPoint);
             Assert.AreEqual("astronomic", secondBlock.FunctionType);
             Assert.AreEqual(3, secondBlock.Quantities.Count);
@@ -95,64 +111,92 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             Assert.AreEqual("astronomic component", quantity.QuantityName);
             Assert.AreEqual("-", quantity.Unit);
             Assert.AreEqual(null, quantity.VerticalPosition);
-            Assert.AreEqual(new[] { "M2", "S2" }, quantity.Values);
+            Assert.AreEqual(new[]
+            {
+                "M2",
+                "S2"
+            }, quantity.Values);
 
             quantity = secondBlock.Quantities[1];
 
             Assert.AreEqual("waterlevelbnd amplitude", quantity.QuantityName);
             Assert.AreEqual("m", quantity.Unit);
             Assert.AreEqual(null, quantity.VerticalPosition);
-            Assert.AreEqual(new[] { "0.8", "1.1" }, quantity.Values);
+            Assert.AreEqual(new[]
+            {
+                "0.8",
+                "1.1"
+            }, quantity.Values);
 
             quantity = secondBlock.Quantities[2];
 
             Assert.AreEqual("waterlevelbnd phase", quantity.QuantityName);
             Assert.AreEqual("rad/deg/minutes", quantity.Unit);
             Assert.AreEqual(null, quantity.VerticalPosition);
-            Assert.AreEqual(new[] { "20", "-11.5" }, quantity.Values);
+            Assert.AreEqual(new[]
+            {
+                "20",
+                "-11.5"
+            }, quantity.Values);
         }
 
         [Test]
         [Category(TestCategory.DataAccess)]
         public void ReadWaterLevelAndSalinityLayersConditions()
         {
-            var filePath = TestHelper.GetTestFilePath(@"BcFiles\WaterLevelAndSalinityLayers.bc");
+            string filePath = TestHelper.GetTestFilePath(@"BcFiles\WaterLevelAndSalinityLayers.bc");
             var fileReader = new BcFile();
-            var dataBlocks = fileReader.Read(filePath).ToList();
+            List<BcBlockData> dataBlocks = fileReader.Read(filePath).ToList();
             Assert.AreEqual(1, dataBlocks.Count());
 
-            var firstBlock = dataBlocks.First();
+            BcBlockData firstBlock = dataBlocks.First();
             Assert.AreEqual("pli1_0001", firstBlock.SupportPoint);
             Assert.AreEqual("timeseries", firstBlock.FunctionType);
             Assert.AreEqual(4, firstBlock.Quantities.Count);
 
-            var quantity = firstBlock.Quantities[0];
+            BcQuantityData quantity = firstBlock.Quantities[0];
 
             Assert.AreEqual("time", quantity.QuantityName);
             Assert.AreEqual("minutes since 2013-01-01", quantity.Unit);
             Assert.AreEqual(null, quantity.VerticalPosition);
-            Assert.AreEqual(new[] { "0", "1440" }, quantity.Values);
+            Assert.AreEqual(new[]
+            {
+                "0",
+                "1440"
+            }, quantity.Values);
 
             quantity = firstBlock.Quantities[1];
 
             Assert.AreEqual("waterlevelbnd", quantity.QuantityName);
             Assert.AreEqual("m", quantity.Unit);
             Assert.AreEqual(null, quantity.VerticalPosition);
-            Assert.AreEqual(new[] { "0.5", "0.65" }, quantity.Values);
+            Assert.AreEqual(new[]
+            {
+                "0.5",
+                "0.65"
+            }, quantity.Values);
 
             quantity = firstBlock.Quantities[2];
 
             Assert.AreEqual("salinitybnd", quantity.QuantityName);
             Assert.AreEqual("ppt", quantity.Unit);
             Assert.AreEqual("1", quantity.VerticalPosition);
-            Assert.AreEqual(new[] { "22", "30" }, quantity.Values);
+            Assert.AreEqual(new[]
+            {
+                "22",
+                "30"
+            }, quantity.Values);
 
             quantity = firstBlock.Quantities[3];
 
             Assert.AreEqual("salinitybnd", quantity.QuantityName);
             Assert.AreEqual("ppt", quantity.Unit);
             Assert.AreEqual("2", quantity.VerticalPosition);
-            Assert.AreEqual(new[] { "0", "0" }, quantity.Values);
+            Assert.AreEqual(new[]
+            {
+                "0",
+                "0"
+            }, quantity.Values);
         }
     }
 }

@@ -14,7 +14,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Test]
         public void SetDefinitionUniformOnceTest()
         {
-            CoverageDepthLayersList list = new CoverageDepthLayersList(CreateUnstructuredGridVertexCoverage);
+            var list = new CoverageDepthLayersList(CreateUnstructuredGridVertexCoverage);
 
             Assert.AreEqual(0, list.Coverages.Count);
 
@@ -26,7 +26,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Test]
         public void ChangeDefinitionUniformToTopBottomTest()
         {
-            CoverageDepthLayersList list = new CoverageDepthLayersList(CreateUnstructuredGridVertexCoverage);
+            var list = new CoverageDepthLayersList(CreateUnstructuredGridVertexCoverage);
             list.VerticalProfile = new VerticalProfileDefinition(VerticalProfileType.Uniform);
 
             Assert.AreEqual(1, list.Coverages.Count);
@@ -39,7 +39,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Test]
         public void ChangeDefinitionTopBottomToUniformTest()
         {
-            CoverageDepthLayersList list = new CoverageDepthLayersList(CreateUnstructuredGridVertexCoverage);
+            var list = new CoverageDepthLayersList(CreateUnstructuredGridVertexCoverage);
             list.VerticalProfile = new VerticalProfileDefinition(VerticalProfileType.TopBottom);
 
             Assert.AreEqual(2, list.Coverages.Count);
@@ -58,21 +58,46 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             // 1 +-----+ 4
 
             IList<Coordinate> vertices = new[]
-                {
-                    new Coordinate(0, 0),
-                    new Coordinate(0, 10),
-                    new Coordinate(10, 10),
-                    new Coordinate(10, 0)
-                };
+            {
+                new Coordinate(0, 0),
+                new Coordinate(0, 10),
+                new Coordinate(10, 10),
+                new Coordinate(10, 0)
+            };
 
             var edges = new[,]
+            {
                 {
-                    {1, 2}, {2, 3}, {3, 4}, {4, 1}, {1, 3}
-                };
+                    1,
+                    2
+                },
+                {
+                    2,
+                    3
+                },
+                {
+                    3,
+                    4
+                },
+                {
+                    4,
+                    1
+                },
+                {
+                    1,
+                    3
+                }
+            };
 
-            var grid = UnstructuredGridFactory.CreateFromVertexAndEdgeList(vertices, edges);
+            UnstructuredGrid grid = UnstructuredGridFactory.CreateFromVertexAndEdgeList(vertices, edges);
             var coverage = new UnstructuredGridVertexCoverage(grid, false) {Name = name};
-            coverage.SetValues(new[] { 1.0, 2.0, 3.0, 4.0 });
+            coverage.SetValues(new[]
+            {
+                1.0,
+                2.0,
+                3.0,
+                4.0
+            });
             coverage.Components[0].NoDataValue = -999.0;
 
             return coverage;

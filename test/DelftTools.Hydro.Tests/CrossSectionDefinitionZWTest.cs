@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.TestUtils;
+using GeoAPI.Geometries;
 using NUnit.Framework;
 
 namespace DelftTools.Hydro.Tests
@@ -15,8 +17,8 @@ namespace DelftTools.Hydro.Tests
         {
             var crossSection = new CrossSectionDefinitionZW();
 
-            var profile = crossSection.Profile;
-            var flowProfile = crossSection.FlowProfile;
+            IEnumerable<Coordinate> profile = crossSection.Profile;
+            IEnumerable<Coordinate> flowProfile = crossSection.FlowProfile;
 
             Assert.AreEqual(0, profile.Count());
             Assert.AreEqual(0, flowProfile.Count());
@@ -25,10 +27,10 @@ namespace DelftTools.Hydro.Tests
         [Test]
         public void CheckEvents()
         {
-            int callCount = 0;
+            var callCount = 0;
             var crossSection = new CrossSectionDefinitionZW();
 
-            ((INotifyPropertyChanged)crossSection).PropertyChanged += (s, e) => callCount++;
+            ((INotifyPropertyChanged) crossSection).PropertyChanged += (s, e) => callCount++;
 
             crossSection.ZWDataTable.AddCrossSectionZWRow(0.0, 0.0, 0.0);
 
@@ -45,7 +47,7 @@ namespace DelftTools.Hydro.Tests
             crossSection.ZWDataTable.AddCrossSectionZWRow(0, 0, 0);
 
             //level shift it by -4...this makes two rows 6 causing a unique constraint exception
-         
+
             crossSection.ShiftLevel(-4);
         }
 
@@ -64,7 +66,6 @@ namespace DelftTools.Hydro.Tests
 
             //change the first row to 6..this should cause a constraint exception
             crossSection.ZWDataTable[0].Z = 6;
-
         }
 
         [Test]
@@ -76,18 +77,46 @@ namespace DelftTools.Hydro.Tests
             crossSection.ZWDataTable.AddCrossSectionZWRow(6, 50, 40);
             crossSection.ZWDataTable.AddCrossSectionZWRow(0, 0, 0);
 
-            var profileY = new double[] { -50, -25, 0, 25, 50 };
-            var profileZ = new double[] {10, 6, 0, 6, 10};
+            var profileY = new double[]
+            {
+                -50,
+                -25,
+                0,
+                25,
+                50
+            };
+            var profileZ = new double[]
+            {
+                10,
+                6,
+                0,
+                6,
+                10
+            };
 
-            var flowProfileY = new double[] { -30, -5, 0, 5, 30 };
-            var flowProfileZ = new double[] { 10, 6, 0, 6, 10 };
+            var flowProfileY = new double[]
+            {
+                -30,
+                -5,
+                0,
+                5,
+                30
+            };
+            var flowProfileZ = new double[]
+            {
+                10,
+                6,
+                0,
+                6,
+                10
+            };
 
             Assert.AreEqual(profileY, crossSection.Profile.Select(c => c.X).ToArray());
             Assert.AreEqual(profileZ, crossSection.Profile.Select(c => c.Y).ToArray());
             Assert.AreEqual(flowProfileY, crossSection.FlowProfile.Select(c => c.X).ToArray());
             Assert.AreEqual(flowProfileZ, crossSection.FlowProfile.Select(c => c.Y).ToArray());
         }
-        
+
         [Test]
         [ExpectedException(typeof(ArgumentException), ExpectedMessage = "Storage Width cannot exceed Total Width.")]
         public void StorageWidthMustBeLessThanNormalWidthAdd()
@@ -116,11 +145,10 @@ namespace DelftTools.Hydro.Tests
         {
             var crossSection = new CrossSectionDefinitionZW();
             crossSection.SetWithHfswData(new[]
-                                             {
-                                                 new HeightFlowStorageWidth(0, 10.0, 10.0),
-                                                 new HeightFlowStorageWidth(10, 100.0, 100.0)
-                                             });
-
+            {
+                new HeightFlowStorageWidth(0, 10.0, 10.0),
+                new HeightFlowStorageWidth(10, 100.0, 100.0)
+            });
 
             Assert.AreEqual(0.0, crossSection.LowestPoint, 1.0e-6);
             Assert.AreEqual(10.0, crossSection.HighestPoint, 1.0e-6);
@@ -149,7 +177,7 @@ namespace DelftTools.Hydro.Tests
             };
             crossSection.ZWDataTable.AddCrossSectionZWRow(4, 5, 2);
 
-            var clone = (CrossSectionDefinitionZW)crossSection.Clone();
+            var clone = (CrossSectionDefinitionZW) crossSection.Clone();
 
             ReflectionTestHelper.AssertPublicPropertiesAreEqual(crossSection.SummerDike, clone.SummerDike);
             Assert.AreNotSame(crossSection.SummerDike, clone.SummerDike);
@@ -164,12 +192,12 @@ namespace DelftTools.Hydro.Tests
             {
                 Thalweg = 5.0,
                 SummerDike = new SummerDike
-                                {
-                                    CrestLevel = 1,
-                                    FloodSurface = 2,
-                                    TotalSurface = 3,
-                                    FloodPlainLevel = 4
-                                }
+                {
+                    CrestLevel = 1,
+                    FloodSurface = 2,
+                    TotalSurface = 3,
+                    FloodPlainLevel = 4
+                }
             };
             crossSection.ZWDataTable.AddCrossSectionZWRow(4, 5, 2);
 
@@ -197,21 +225,18 @@ namespace DelftTools.Hydro.Tests
         [Test]
         public void RemoveInvalidSections()
         {
-            var mainType = new CrossSectionSectionType
-                               {
-                                   Name = "Main"
-                               };
+            var mainType = new CrossSectionSectionType {Name = "Main"};
 
             var crossSection = new CrossSectionDefinitionZW();
             crossSection.Sections.Add(new CrossSectionSection {SectionType = mainType});
 
-            Assert.AreEqual(1,crossSection.Sections.Count);
+            Assert.AreEqual(1, crossSection.Sections.Count);
 
             //now rename the type and call 
             mainType.Name = "newName";
             crossSection.RemoveInvalidSections();
 
-            Assert.AreEqual(0,crossSection.Sections.Count);
+            Assert.AreEqual(0, crossSection.Sections.Count);
         }
 
         [Test]
@@ -224,27 +249,27 @@ namespace DelftTools.Hydro.Tests
             crossSection.ZWDataTable.AddCrossSectionZWRow(0, 0, 0);
 
             // Setting Z:
-            var validationResult = crossSection.ValidateCellValue(0, 0, 0.0);
+            Utils.Tuple<string, bool> validationResult = crossSection.ValidateCellValue(0, 0, 0.0);
             Assert.IsFalse(validationResult.Second,
-                "Z=0 already defined");
+                           "Z=0 already defined");
             Assert.AreEqual("Z must be unique.", validationResult.First);
 
             // NaN not allowed:
             validationResult = crossSection.ValidateCellValue(0, 0, double.NaN);
             Assert.IsFalse(validationResult.Second,
-                "NaN values should not accepted");
+                           "NaN values should not accepted");
             Assert.AreEqual("Value must be a number.", validationResult.First);
 
             // Values using strings:
             validationResult = crossSection.ValidateCellValue(0, 0, "1.0");
             Assert.IsTrue(validationResult.Second,
-                "Using strings representing numbers should be accepted");
+                          "Using strings representing numbers should be accepted");
             Assert.AreEqual("", validationResult.First);
 
             // Non-number strings:
             validationResult = crossSection.ValidateCellValue(0, 0, "test");
             Assert.IsFalse(validationResult.Second,
-                "Using strings representing non-numbers should not be accepted");
+                           "Using strings representing non-numbers should not be accepted");
             Assert.AreEqual("Value must be a number.", validationResult.First);
 
             // Setting Width (valid):
@@ -272,6 +297,5 @@ namespace DelftTools.Hydro.Tests
             Assert.IsFalse(validationResult.Second);
             Assert.AreEqual("Storage Width cannot exceed Total Width.", validationResult.First);
         }
-
     }
 }

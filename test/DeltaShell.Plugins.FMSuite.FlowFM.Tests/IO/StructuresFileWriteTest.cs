@@ -12,6 +12,7 @@ using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.IO.DelftIniObjects;
 using DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures;
+using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
 using DeltaShell.Plugins.FMSuite.Common.Tests.IO;
 using NUnit.Framework;
 
@@ -35,24 +36,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                     WidthStructureCentre = 3.0,
                     WidthStructureRightSide = 4.0,
                     WidthRightSideOfStructure = 5.0,
-
                     BedLevelLeftSideOfStructure = 6.0,
                     BedLevelLeftSideStructure = 7.0,
                     BedLevelStructureCentre = 8.0,
                     BedLevelRightSideStructure = 9.0,
                     BedLevelRightSideOfStructure = 10.0,
-
                     DoorHeight = 11.0,
-
                     HorizontalDoorOpeningWidth = 30.0,
                     LowerEdgeLevel = 31.0,
-
                     PositiveFreeGateFlow = 12.0,
                     PositiveDrownedGateFlow = 13.0,
                     PositiveFreeWeirFlow = 14.0,
                     PositiveDrownedWeirFlow = 15.0,
                     PositiveContractionCoefficient = 16.0,
-
                     NegativeFreeGateFlow = 17.0,
                     NegativeDrownedGateFlow = 18.0,
                     NegativeFreeWeirFlow = 19.0,
@@ -63,21 +59,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             };
             structs.Add(generalStructureWeir);
 
-            var simpleWeir = new Weir2D("weir02",true)
+            var simpleWeir = new Weir2D("weir02", true)
             {
                 CrestWidth = 5.0,
                 WeirFormula = new SimpleWeirFormula()
             };
             structs.Add(simpleWeir);
 
-            var schema = new StructureSchemaCsvFile().ReadStructureSchema(StructureSchemaCsvFileTest.ApplicationStructuresSchemaCsvFilePath);
+            StructureSchema<ModelPropertyDefinition> schema = new StructureSchemaCsvFile().ReadStructureSchema(StructureSchemaCsvFileTest.ApplicationStructuresSchemaCsvFilePath);
 
             var structuresFile = new StructuresFile()
             {
                 StructureSchema = schema,
             };
 
-            var exportFilePath = TestHelper.GetCurrentMethodName() + ".ini";
+            string exportFilePath = TestHelper.GetCurrentMethodName() + ".ini";
             FileUtils.DeleteIfExists(exportFilePath);
 
             try
@@ -86,44 +82,44 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 structuresFile.Write(exportFilePath, structs);
 
                 // read
-                var fileContents = File.ReadAllText(exportFilePath);
+                string fileContents = File.ReadAllText(exportFilePath);
 
                 // compare
                 Assert.AreEqual(
-                "[structure]" + Environment.NewLine +
-                "    type                  = generalstructure    \t# Type of structure" + Environment.NewLine +
-                "    id                    = weir01              \t# Name of the structure" + Environment.NewLine +
-                "    Upstream2Width        = 1                   \t# Width left side of structure (m)" + Environment.NewLine +
-                "    Upstream1Width        = 2                   \t# Width structure left side (m)" + Environment.NewLine +
-                "    CrestWidth            = 3                   \t# Width structure centre (m)" + Environment.NewLine +
-                "    Downstream1Width      = 4                   \t# Width structure right side (m)" + Environment.NewLine +
-                "    Downstream2Width      = 5                   \t# Width right side of structure (m)" + Environment.NewLine +
-                "    Upstream2Level        = 6                   \t# Bed level left side of structure (m AD)" + Environment.NewLine +
-                "    Upstream1Level        = 7                   \t# Bed level left side structure (m AD)" + Environment.NewLine +
-                "    CrestLevel            = 8                   \t# Bed level at centre of structure (m AD)" + Environment.NewLine +
-                "    Downstream1Level      = 9                   \t# Bed level right side structure (m AD)" + Environment.NewLine +
-                "    Downstream2Level      = 10                  \t# Bed level right side of structure (m AD)" + Environment.NewLine +
-                "    GateLowerEdgeLevel    = 31                  \t# Gate lower edge level (m AD)" + Environment.NewLine +
-                "    pos_freegateflowcoeff = 12                  \t# Positive free gate flow (-)" + Environment.NewLine +
-                "    pos_drowngateflowcoeff= 13                  \t# Positive drowned gate flow (-)" + Environment.NewLine +
-                "    pos_freeweirflowcoeff = 14                  \t# Positive free weir flow (-)" + Environment.NewLine +
-                "    pos_drownweirflowcoeff= 15                  \t# Positive drowned weir flow (-)" + Environment.NewLine +
-                "    pos_contrcoeffreegate = 16                  \t# Positive flow contraction coefficient (-)" + Environment.NewLine +
-                "    neg_freegateflowcoeff = 17                  \t# Negative free gate flow (-)" + Environment.NewLine +
-                "    neg_drowngateflowcoeff= 18                  \t# Negative drowned gate flow (-)" + Environment.NewLine +
-                "    neg_freeweirflowcoeff = 19                  \t# Negative free weir flow (-)" + Environment.NewLine +
-                "    neg_drownweirflowcoeff= 20                  \t# Negative drowned weir flow (-)" + Environment.NewLine +
-                "    neg_contrcoeffreegate = 21                  \t# Negative flow contraction coefficient (-)" + Environment.NewLine +
-                "    extraresistance       = 22                  \t# Extra resistance (-)" + Environment.NewLine +
-                "    GateHeight            = 11                  \t# Vertical gate door height (m)" + Environment.NewLine +
-                "    GateOpeningWidth      = 30                  \t# Horizontal opening width between the doors (m)" + Environment.NewLine +
-                "    GateOpeningHorizontalDirection= symmetric           \t# Horizontal direction of the opening doors" + Environment.NewLine +
-                "[structure]" + Environment.NewLine +
-                "    type                  = weir                \t# Type of structure" + Environment.NewLine +
-                "    id                    = weir02              \t# Name of the structure" + Environment.NewLine +
-                "    CrestLevel            = 0                   \t# Weir crest height (in [m])" + Environment.NewLine +
-                "    CrestWidth            = 5                   \t# Weir crest width (in [m])" + Environment.NewLine +
-                "    lat_contr_coeff       = 1                   \t# Lateral contraction coefficient" + Environment.NewLine, fileContents);
+                    "[structure]" + Environment.NewLine +
+                    "    type                  = generalstructure    \t# Type of structure" + Environment.NewLine +
+                    "    id                    = weir01              \t# Name of the structure" + Environment.NewLine +
+                    "    Upstream2Width        = 1                   \t# Width left side of structure (m)" + Environment.NewLine +
+                    "    Upstream1Width        = 2                   \t# Width structure left side (m)" + Environment.NewLine +
+                    "    CrestWidth            = 3                   \t# Width structure centre (m)" + Environment.NewLine +
+                    "    Downstream1Width      = 4                   \t# Width structure right side (m)" + Environment.NewLine +
+                    "    Downstream2Width      = 5                   \t# Width right side of structure (m)" + Environment.NewLine +
+                    "    Upstream2Level        = 6                   \t# Bed level left side of structure (m AD)" + Environment.NewLine +
+                    "    Upstream1Level        = 7                   \t# Bed level left side structure (m AD)" + Environment.NewLine +
+                    "    CrestLevel            = 8                   \t# Bed level at centre of structure (m AD)" + Environment.NewLine +
+                    "    Downstream1Level      = 9                   \t# Bed level right side structure (m AD)" + Environment.NewLine +
+                    "    Downstream2Level      = 10                  \t# Bed level right side of structure (m AD)" + Environment.NewLine +
+                    "    GateLowerEdgeLevel    = 31                  \t# Gate lower edge level (m AD)" + Environment.NewLine +
+                    "    pos_freegateflowcoeff = 12                  \t# Positive free gate flow (-)" + Environment.NewLine +
+                    "    pos_drowngateflowcoeff= 13                  \t# Positive drowned gate flow (-)" + Environment.NewLine +
+                    "    pos_freeweirflowcoeff = 14                  \t# Positive free weir flow (-)" + Environment.NewLine +
+                    "    pos_drownweirflowcoeff= 15                  \t# Positive drowned weir flow (-)" + Environment.NewLine +
+                    "    pos_contrcoeffreegate = 16                  \t# Positive flow contraction coefficient (-)" + Environment.NewLine +
+                    "    neg_freegateflowcoeff = 17                  \t# Negative free gate flow (-)" + Environment.NewLine +
+                    "    neg_drowngateflowcoeff= 18                  \t# Negative drowned gate flow (-)" + Environment.NewLine +
+                    "    neg_freeweirflowcoeff = 19                  \t# Negative free weir flow (-)" + Environment.NewLine +
+                    "    neg_drownweirflowcoeff= 20                  \t# Negative drowned weir flow (-)" + Environment.NewLine +
+                    "    neg_contrcoeffreegate = 21                  \t# Negative flow contraction coefficient (-)" + Environment.NewLine +
+                    "    extraresistance       = 22                  \t# Extra resistance (-)" + Environment.NewLine +
+                    "    GateHeight            = 11                  \t# Vertical gate door height (m)" + Environment.NewLine +
+                    "    GateOpeningWidth      = 30                  \t# Horizontal opening width between the doors (m)" + Environment.NewLine +
+                    "    GateOpeningHorizontalDirection= symmetric           \t# Horizontal direction of the opening doors" + Environment.NewLine +
+                    "[structure]" + Environment.NewLine +
+                    "    type                  = weir                \t# Type of structure" + Environment.NewLine +
+                    "    id                    = weir02              \t# Name of the structure" + Environment.NewLine +
+                    "    CrestLevel            = 0                   \t# Weir crest height (in [m])" + Environment.NewLine +
+                    "    CrestWidth            = 5                   \t# Weir crest width (in [m])" + Environment.NewLine +
+                    "    lat_contr_coeff       = 1                   \t# Lateral contraction coefficient" + Environment.NewLine, fileContents);
             }
             finally
             {
@@ -133,10 +129,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
         /// <summary>
         /// GIVEN a structures file
-        ///   AND a simple weir with an empty crest width
+        /// AND a simple weir with an empty crest width
         /// WHEN these structures are exported
         /// THEN no exceptions are thrown
-        ///  AND the corresponding width fields are empty
+        /// AND the corresponding width fields are empty
         /// </summary>
         [Test]
         [Category(TestCategory.DataAccess)]
@@ -144,7 +140,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         {
             // Given
             // - structures file
-            var structuresFile = GetStructuresFile();
+            StructuresFile structuresFile = GetStructuresFile();
 
             // - simple weir with an empty crest width
             var simpleWeir = new Weir2D("Its weir-d")
@@ -158,12 +154,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             // When | Then
             TestHelper.PerformActionInTemporaryDirectory(tempDir =>
             {
-                var exportFilePath = Path.Combine(tempDir, "FlowFM_structures.ini");
+                string exportFilePath = Path.Combine(tempDir, "FlowFM_structures.ini");
 
-                Assert.DoesNotThrow(() =>
-                {
-                    structuresFile.Write(exportFilePath, structures);
-                });
+                Assert.DoesNotThrow(() => { structuresFile.Write(exportFilePath, structures); });
 
                 // Read file with ini reader again.
                 DelftIniCategory category = AssertThatStructureCategoryExistsInFileAndReturn(exportFilePath);
@@ -173,10 +166,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
         /// <summary>
         /// GIVEN a structures file
-        ///   AND a gated weir with an empty crest width
+        /// AND a gated weir with an empty crest width
         /// WHEN these structures are exported
         /// THEN no exceptions are thrown
-        ///  AND the corresponding width fields are empty
+        /// AND the corresponding width fields are empty
         /// </summary>
         [Test]
         [Category(TestCategory.DataAccess)]
@@ -184,7 +177,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         {
             // Given
             // - structures file
-            var structuresFile = GetStructuresFile();
+            StructuresFile structuresFile = GetStructuresFile();
 
             // - simple weir with an empty crest width
             var gatedWeir = new Weir2D("Its weir-d")
@@ -193,30 +186,27 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 CrestWidth = double.NaN
             };
 
-            var structures = new List<IStructure>() { gatedWeir };
+            var structures = new List<IStructure>() {gatedWeir};
 
             // When | Then
             TestHelper.PerformActionInTemporaryDirectory(tempDir =>
             {
-                var exportFilePath = Path.Combine(tempDir, "FlowFM_structures.ini");
+                string exportFilePath = Path.Combine(tempDir, "FlowFM_structures.ini");
 
-                Assert.DoesNotThrow(() =>
-                {
-                    structuresFile.Write(exportFilePath, structures);
-                });
+                Assert.DoesNotThrow(() => { structuresFile.Write(exportFilePath, structures); });
 
                 // Read file with ini reader again.
-                var category = AssertThatStructureCategoryExistsInFileAndReturn(exportFilePath);
+                DelftIniCategory category = AssertThatStructureCategoryExistsInFileAndReturn(exportFilePath);
                 AssertThatPropertyExistsAndIsEmpty(category, KnownStructureProperties.CrestWidth);
             });
         }
 
         /// <summary>
         /// GIVEN a structures file
-        ///   AND a general structure with empty width fields
+        /// AND a general structure with empty width fields
         /// WHEN these structures are exported
         /// THEN no exceptions are thrown
-        ///  AND the corresponding width fields are empty
+        /// AND the corresponding width fields are empty
         /// </summary>
         [Test]
         [Category(TestCategory.DataAccess)]
@@ -224,7 +214,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         {
             // Given
             // - structures file
-            var structuresFile = GetStructuresFile();
+            StructuresFile structuresFile = GetStructuresFile();
 
             // - simple weir with an empty crest width
             var generalStructureFormula = new GeneralStructureWeirFormula()
@@ -242,20 +232,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 CrestWidth = double.NaN
             };
 
-            var structures = new List<IStructure>() { generalWeir };
+            var structures = new List<IStructure>() {generalWeir};
 
             // When | Then
             TestHelper.PerformActionInTemporaryDirectory(tempDir =>
             {
-                var exportFilePath = Path.Combine(tempDir, "FlowFM_structures.ini");
+                string exportFilePath = Path.Combine(tempDir, "FlowFM_structures.ini");
 
-                Assert.DoesNotThrow(() =>
-                {
-                    structuresFile.Write(exportFilePath, structures);
-                });
+                Assert.DoesNotThrow(() => { structuresFile.Write(exportFilePath, structures); });
 
                 // Read file with ini reader again.
-                var category = AssertThatStructureCategoryExistsInFileAndReturn(exportFilePath);
+                DelftIniCategory category = AssertThatStructureCategoryExistsInFileAndReturn(exportFilePath);
 
                 AssertThatPropertyExistsAndIsEmpty(category, GetName(KnownGeneralStructureProperties.Upstream2Width));
                 AssertThatPropertyExistsAndIsEmpty(category, GetName(KnownGeneralStructureProperties.Upstream1Width));
@@ -278,7 +265,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         /// <returns> A new StructuresFile with the a default schema.</returns>
         private static StructuresFile GetStructuresFile()
         {
-            var schema = new StructureSchemaCsvFile().ReadStructureSchema(
+            StructureSchema<ModelPropertyDefinition> schema = new StructureSchemaCsvFile().ReadStructureSchema(
                 StructureSchemaCsvFileTest.ApplicationStructuresSchemaCsvFilePath);
 
             var structuresFile = new StructuresFile()
@@ -295,6 +282,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             {
                 categories = new DelftIniReader().ReadDelftIniFile(fileStream, filePath);
             }
+
             DelftIniCategory category = categories.Single();
 
             Assert.That(category.Name, Is.EqualTo("structure")
@@ -312,12 +300,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         {
             Assert.That(category.Properties, Is.Not.Null
                         , "The Properties of the structure category should not be null.");
-            var obtainedProperties = category.Properties.Where(p => p.Name == propertyName);
+            IEnumerable<DelftIniProperty> obtainedProperties = category.Properties.Where(p => p.Name == propertyName);
             Assert.That(obtainedProperties.Count()
                         , Is.EqualTo(1)
                         , "Expected a single crest_width element in structure properties:");
 
-            var prop = obtainedProperties.First();
+            DelftIniProperty prop = obtainedProperties.First();
             Assert.That(prop.Value, Is.EqualTo(string.Empty), "crest_width value does not meet expectation:");
         }
 

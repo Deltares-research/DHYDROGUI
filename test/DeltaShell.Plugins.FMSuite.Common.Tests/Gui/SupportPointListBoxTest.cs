@@ -30,7 +30,11 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.Gui
             supportPointListBox.Items.AddRange(
                 Enumerable.Range(0, 20).Select(i => i.ToString()).Cast<object>().ToArray());
 
-            supportPointListBox.ContextMenuItems = new[] { new ToolStripMenuItem("Edit..."), new ToolStripMenuItem("Properties...") };
+            supportPointListBox.ContextMenuItems = new[]
+            {
+                new ToolStripMenuItem("Edit..."),
+                new ToolStripMenuItem("Properties...")
+            };
 
             WindowsFormsTestHelper.ShowModal(supportPointListBox);
         }

@@ -20,7 +20,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
             var listener = new WaterQualityModelDataAccessListener();
 
             // call
-            var clone = listener.Clone();
+            object clone = listener.Clone();
 
             // assert
             Assert.IsInstanceOf<WaterQualityModelDataAccessListener>(clone);
@@ -48,10 +48,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
         public void DoPrePersistCallAndAssertProjectDataDirSubstitution(Func<WaterQualityModelDataAccessListener, object, object[], string[], bool> prePersistMethod)
         {
             // setup
-            var repoPath = Path.Combine(Directory.GetCurrentDirectory(), "A");
-            var listener = CreateWaterQualityModelDataAcessListenerWithMockedProjectRepository(repoPath);
+            string repoPath = Path.Combine(Directory.GetCurrentDirectory(), "A");
+            WaterQualityModelDataAccessListener listener = CreateWaterQualityModelDataAcessListenerWithMockedProjectRepository(repoPath);
 
-            var waqModel = new WaterQualityModel { ModelDataDirectory = Path.Combine(repoPath+"_data", "test", "foo", "bar") };
+            var waqModel = new WaterQualityModel {ModelDataDirectory = Path.Combine(repoPath + "_data", "test", "foo", "bar")};
 
             var stateArray = new object[]
             {
@@ -60,7 +60,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
                 "hihi",
                 double.NaN
             };
-            var propertyNamesArray = new[]
+            string[] propertyNamesArray = new[]
             {
                 "hihi",
                 nameof(WaterQualityModel.ModelDataDirectory),
@@ -81,10 +81,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
         public void DoPrePersistCallForDataTableManagerAndAssertProjectDataDirSubstitution(Func<WaterQualityModelDataAccessListener, object, object[], string[], bool> prePersistMethod)
         {
             // setup
-            var repoPath = Path.Combine(Directory.GetCurrentDirectory(), "A");
-            var listener = CreateWaterQualityModelDataAcessListenerWithMockedProjectRepository(repoPath);
+            string repoPath = Path.Combine(Directory.GetCurrentDirectory(), "A");
+            WaterQualityModelDataAccessListener listener = CreateWaterQualityModelDataAcessListenerWithMockedProjectRepository(repoPath);
 
-            var manager = new DataTableManager { FolderPath = Path.Combine(repoPath + "_data", "foo", "bar") };
+            var manager = new DataTableManager {FolderPath = Path.Combine(repoPath + "_data", "foo", "bar")};
 
             var stateArray = new object[]
             {
@@ -92,7 +92,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
                 manager.FolderPath,
                 "hihi"
             };
-            var propertyNamesArray = new[]
+            string[] propertyNamesArray = new[]
             {
                 "hihi",
                 nameof(DataTableManager.FolderPath),
@@ -112,10 +112,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
         public void DoPrePersistCallForWaterQualityModel1DSettingsAndAssertProjectDataDirSubstitution(Func<WaterQualityModelDataAccessListener, object, object[], string[], bool> prePersistMethod)
         {
             // setup
-            var repoPath = Path.Combine(Directory.GetCurrentDirectory(), "A");
-            var listener = CreateWaterQualityModelDataAcessListenerWithMockedProjectRepository(repoPath);
+            string repoPath = Path.Combine(Directory.GetCurrentDirectory(), "A");
+            WaterQualityModelDataAccessListener listener = CreateWaterQualityModelDataAcessListenerWithMockedProjectRepository(repoPath);
 
-            var settings = new WaterQualityModelSettings { OutputDirectory = Path.Combine(repoPath + "_data", "foo", "bar") };
+            var settings = new WaterQualityModelSettings {OutputDirectory = Path.Combine(repoPath + "_data", "foo", "bar")};
 
             var stateArray = new object[]
             {
@@ -123,7 +123,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
                 "haha",
                 "hihi"
             };
-            var propertyNamesArray = new[]
+            string[] propertyNamesArray = new[]
             {
                 nameof(WaterQualityModelSettings.OutputDirectory),
                 "hihi",
@@ -143,10 +143,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
         public static void DoPostPersistCallOnModelAndRestoreProjectDataDirectoryPaths(Action<WaterQualityModelDataAccessListener, object, object[], string[]> postPersistMethod)
         {
             // setup
-            var repoPath = Path.Combine(Directory.GetCurrentDirectory(), "A");
-            var listener = CreateWaterQualityModelDataAcessListenerWithMockedProjectRepository(repoPath);
+            string repoPath = Path.Combine(Directory.GetCurrentDirectory(), "A");
+            WaterQualityModelDataAccessListener listener = CreateWaterQualityModelDataAcessListenerWithMockedProjectRepository(repoPath);
 
-            var waqModel = new WaterQualityModel { ModelDataDirectory = @"$data$.\test\foo\bar" };
+            var waqModel = new WaterQualityModel {ModelDataDirectory = @"$data$.\test\foo\bar"};
 
             var stateArray = new object[]
             {
@@ -155,7 +155,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
                 waqModel.ModelDataDirectory,
                 double.NaN
             };
-            var propertyNames = new[]
+            string[] propertyNames = new[]
             {
                 "hihi",
                 "number",
@@ -175,10 +175,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
         public static void DoPostPersistCallOnDataTableManagerAndRestoreProjectDataDirectoryPaths(Action<WaterQualityModelDataAccessListener, object, object[], string[]> postPersistMethod)
         {
             // setup
-            var repoPath = Path.Combine(Directory.GetCurrentDirectory(), "A");
-            var listener = CreateWaterQualityModelDataAcessListenerWithMockedProjectRepository(repoPath);
+            string repoPath = Path.Combine(Directory.GetCurrentDirectory(), "A");
+            WaterQualityModelDataAccessListener listener = CreateWaterQualityModelDataAcessListenerWithMockedProjectRepository(repoPath);
 
-            var manager = new DataTableManager { FolderPath = @"$data$.\foo\bar" };
+            var manager = new DataTableManager {FolderPath = @"$data$.\foo\bar"};
 
             var stateArray = new object[]
             {
@@ -186,7 +186,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
                 manager.FolderPath,
                 double.NaN
             };
-            var propertyNames = new[]
+            string[] propertyNames = new[]
             {
                 "hihi",
                 nameof(DataTableManager.FolderPath),
@@ -205,10 +205,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
         public static void DoPostPersistCallOnWaterQualityModel1DSettingsAndRestoreProjectDataDirectoryPaths(Action<WaterQualityModelDataAccessListener, object, object[], string[]> postPersistMethod)
         {
             // setup
-            var repoPath = Path.Combine(Directory.GetCurrentDirectory(), "A");
-            var listener = CreateWaterQualityModelDataAcessListenerWithMockedProjectRepository(repoPath);
+            string repoPath = Path.Combine(Directory.GetCurrentDirectory(), "A");
+            WaterQualityModelDataAccessListener listener = CreateWaterQualityModelDataAcessListenerWithMockedProjectRepository(repoPath);
 
-            var settings = new WaterQualityModelSettings { OutputDirectory = @"$data$.\foo\bar" };
+            var settings = new WaterQualityModelSettings {OutputDirectory = @"$data$.\foo\bar"};
 
             var stateArray = new object[]
             {
@@ -216,7 +216,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
                 double.NaN,
                 settings.OutputDirectory
             };
-            var propertyNames = new[]
+            string[] propertyNames = new[]
             {
                 "hihi",
                 "not a number",
@@ -252,7 +252,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
             var projectRepoMock = mocks.Stub<IProjectRepository>();
             projectRepoMock.Stub(pr => pr.Path).Return(repoPath);
             mocks.ReplayAll();
-            var listener = new WaterQualityModelDataAccessListener { ProjectRepository = projectRepoMock };
+            var listener = new WaterQualityModelDataAccessListener {ProjectRepository = projectRepoMock};
             return listener;
         }
     }

@@ -18,15 +18,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             // pump,            nrstages,       Number of stages,   Integer,    1,          1,      ,       FALSE,              Number of pump stages
             // gate,            CrestLevel,     Sill level,         Double,     ,           ,       ,       FALSE,              Sill level in [m]
 
-            var filePath = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(WaterFlowFMModelTest).Assembly,
-                                                      @"structures\structure-properties_TEST.csv");
+            string filePath = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(WaterFlowFMModelTest).Assembly,
+                                                                             @"structures\structure-properties_TEST.csv");
             var structFile = new StructureFMPropertiesFile();
             structFile.ReadProperties(filePath);
 
             Assert.AreEqual(4, StructurePropertyDefinition.StructurePropertyGroups.Count);
 
-            var supportedStructures = new[] {"structure", "weir", "gate", "pump"};
-            foreach (var supportedStructure in supportedStructures)
+            var supportedStructures = new[]
+            {
+                "structure",
+                "weir",
+                "gate",
+                "pump"
+            };
+            foreach (string supportedStructure in supportedStructures)
             {
                 Assert.Contains(supportedStructure, StructurePropertyDefinition.StructurePropertyGroups.Keys);
                 Assert.AreEqual(1, StructurePropertyDefinition.StructurePropertyGroups[supportedStructure].PropertyDefinitions.Count);

@@ -17,9 +17,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         [Test]
         public void CheckNodeConstructor()
         {
-            var parentDirectory = Environment.CurrentDirectory;
+            string parentDirectory = Environment.CurrentDirectory;
             const string parentFile = "parentFile.txt";
-            var fullParentPath = Path.Combine(parentDirectory, parentFile);
+            string fullParentPath = Path.Combine(parentDirectory, parentFile);
             var parentNode = new FileBasedModelItem("parent", fullParentPath);
 
             Assert.AreEqual(fullParentPath, parentNode.FilePath);
@@ -33,16 +33,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         [Test]
         public void CheckChildNodeConstruction()
         {
-            var parentDirectory = Environment.CurrentDirectory;
+            string parentDirectory = Environment.CurrentDirectory;
             const string parentFile = "parentFile.txt";
-            var fullParentPath = Path.Combine(parentDirectory, parentFile);
+            string fullParentPath = Path.Combine(parentDirectory, parentFile);
             var parentNode = new FileBasedModelItem("parent", fullParentPath);
 
             const string subDirectory = "childDirectory";
             const string childFile = "childFile.txt";
-            var relativePath = Path.Combine(subDirectory, childFile);
+            string relativePath = Path.Combine(subDirectory, childFile);
 
-            var childItem = parentNode.AddChildItem("child", relativePath);
+            FileBasedModelItem childItem = parentNode.AddChildItem("child", relativePath);
 
             Assert.IsNotNull(childItem);
             Assert.AreEqual(childItem, parentNode.DirectChildren.FirstOrDefault());
@@ -61,7 +61,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             var node = new FileBasedModelItem("parent", "parentFile.txt");
             node.AddChildItem("childFile1.txt", "child1");
             node.AddChildItem("childFile2.txt", "child2");
-            var thirdChild = node.AddChildItem("childFile3.txt", "child3");
+            FileBasedModelItem thirdChild = node.AddChildItem("childFile3.txt", "child3");
             thirdChild.AddChildItem("grandChildFile", "grandChild");
             treeView.Data = node;
             WindowsFormsTestHelper.ShowModal(treeView);
@@ -71,7 +71,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         [Category(TestCategory.WindowsForms)]
         public void ShowHarlingenFileStructure()
         {
-            var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
+            string mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
             mduPath = TestHelper.CreateLocalCopy(mduPath);
             var model = new WaterFlowFMModel(mduPath);
             var view = new WaterFlowFMFileStructureView {Data = model};

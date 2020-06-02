@@ -1,9 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using DelftTools.Hydro;
+using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.KnownStructureProperties;
+using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Remoting;
+using DelftTools.Utils.Validation;
 using DeltaShell.Dimr;
 using DeltaShell.Plugins.FMSuite.FlowFM.Api;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
@@ -27,16 +32,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
             // The problem is that platform toolsets (vc++ runtime dependencies) of 110 & higher (eg above 100) 
             // aren't xp compatible. This appears the default on VS2012 and up. If you encounter this problem, 
             // rebuild the dll using a toolset compatible with xp (eg 100, or 110_xp).
-            
+
             // We use a hacky but effective way to check if the current dll is xp compatible, namely we check
             // for the occurance of 'GetTickCount64' in the dll imports. This method is only available on Vista
             // and above.
-            var dllVersion = Path.Combine(DimrApiDataSet.DFlowFmDllPath, FlexibleMeshModelDll.DFLOWFM_DLL_NAME);
-            
-            foreach (var line in File.ReadLines(dllVersion))
+            string dllVersion = Path.Combine(DimrApiDataSet.DFlowFmDllPath, FlexibleMeshModelDll.DFLOWFM_DLL_NAME);
+
+            foreach (string line in File.ReadLines(dllVersion))
             {
                 if (line.Contains("GetTickCount64"))
+                {
                     Assert.Fail("Current " + FlexibleMeshModelDll.DFLOWFM_DLL_NAME + " is not compatible with XP: " + dllVersion);
+                }
             }
         }
 
@@ -58,8 +65,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
         [Test]
         public void TestDimrRunLogIsRetrieved()
         {
-            var mduPath = TestHelper.GetTestFilePath(@"structures_all_types\har.mdu");
-            var localCopy = TestHelper.CreateLocalCopy(mduPath);
+            string mduPath = TestHelper.GetTestFilePath(@"structures_all_types\har.mdu");
+            string localCopy = TestHelper.CreateLocalCopy(mduPath);
 
             using (var model = new WaterFlowFMModel(localCopy))
             {
@@ -67,13 +74,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                 // This is due to the structures file (har_structures.ini) not containing values for Crest Width.
                 // The Gui will initialize the Crest Width with a default value of 0.0, whilst the computational core will initialize with the default length of the structure.
                 // Since this test is not meant to test the CrestWidth getting and setting, we place a hack here to set all the Crest Widths to any positive value.
-                model.Area.Weirs.Select(c => { c.CrestWidth = 1.0; return c; }).ToList();
+                model.Area.Weirs.Select(c =>
+                {
+                    c.CrestWidth = 1.0;
+                    return c;
+                }).ToList();
                 model.Initialize();
                 model.Execute();
                 model.Finish();
                 model.Cleanup();
 
-                var dimrLogDataItem = model.DataItems.FirstOrDefault(di => di.Tag == DimrRunner.DimrRunLogfileDataItemTag);
+                IDataItem dimrLogDataItem = model.DataItems.FirstOrDefault(di => di.Tag == DimrRunner.DimrRunLogfileDataItemTag);
                 Assert.NotNull(dimrLogDataItem, "DimrRunLog not retrieved after model run, check DimrRunner.DIMR_RUN_LOGFILE_NAME");
                 Assert.NotNull(dimrLogDataItem.Value, "DimrRunLog not retrieved after model run, check DimrRunner.DIMR_RUN_LOGFILE_NAME");
             }
@@ -82,22 +93,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
         [Test]
         public void TestCallGetVariableNames()
         {
-            var mduPath =
+            string mduPath =
                 TestHelper.GetTestFilePath(@"structures_all_types\har.mdu");
-            var localCopy = TestHelper.CreateLocalCopy(mduPath);
+            string localCopy = TestHelper.CreateLocalCopy(mduPath);
 
             var model = new WaterFlowFMModel(localCopy);
 
-            using (var api = FlexibleMeshModelApiFactory.CreateNew())
+            using (IFlexibleMeshModelApi api = FlexibleMeshModelApiFactory.CreateNew())
             {
                 api.Initialize(model.MduFilePath);
 
-                var variableNames1 = api.VariableNames;
+                string[] variableNames1 = api.VariableNames;
                 Assert.NotNull(variableNames1, "FlexibleMeshModelApi should return an array of names");
 
                 api.Update();
 
-                var variableNames2 = api.VariableNames;
+                string[] variableNames2 = api.VariableNames;
                 Assert.NotNull(variableNames2, "FlexibleMeshModelApi should return an array of names");
 
                 Assert.AreEqual(variableNames1.Length, variableNames2.Length, "FlexibleMeshModelApi should return the same array of names for each call");
@@ -111,33 +122,36 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
         [Test]
         public void TestCallGetVariableLocations()
         {
-            var mduPath =
+            string mduPath =
                 TestHelper.GetTestFilePath(@"structures_all_types\har.mdu");
-            var localCopy = TestHelper.CreateLocalCopy(mduPath);
+            string localCopy = TestHelper.CreateLocalCopy(mduPath);
 
             var model = new WaterFlowFMModel(localCopy);
 
-            using (var api = FlexibleMeshModelApiFactory.CreateNew())
+            using (IFlexibleMeshModelApi api = FlexibleMeshModelApiFactory.CreateNew())
             {
                 api.Initialize(model.MduFilePath);
 
-                var variableNames = api.VariableNames;
+                string[] variableNames = api.VariableNames;
                 Assert.NotNull(variableNames, "FlexibleMeshModelApi should return an array of names");
                 Assert.IsTrue(variableNames.Length > 0);
 
-                Dictionary<string, string> namesAndLocations = new Dictionary<string, string>();
-                foreach (var variable in variableNames)
+                var namesAndLocations = new Dictionary<string, string>();
+                foreach (string variable in variableNames)
                 {
-                    var location = api.GetVariableLocation(variable);
+                    string location = api.GetVariableLocation(variable);
                     Assert.NotNull(location, string.Format("FlexibleMeshModelApi should return a location for Variable {0}", variable));
-                    if(location != "") namesAndLocations.Add(variable, location); // ignore those variables without a location
+                    if (location != "")
+                    {
+                        namesAndLocations.Add(variable, location); // ignore those variables without a location
+                    }
                 }
 
                 api.Update();
 
-                foreach (var variableNameAndLocation in namesAndLocations)
+                foreach (KeyValuePair<string, string> variableNameAndLocation in namesAndLocations)
                 {
-                    var location = api.GetVariableLocation(variableNameAndLocation.Key);
+                    string location = api.GetVariableLocation(variableNameAndLocation.Key);
                     Assert.AreEqual(variableNameAndLocation.Value, location, "FlexibleMeshModelApi should return the same Variable location for each call");
                 }
             }
@@ -146,9 +160,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
         [Test]
         public void TestCallGetValuePumpCapacity()
         {
-            var mduPath =
+            string mduPath =
                 TestHelper.GetTestFilePath(@"structures_all_types\har.mdu");
-            var localCopy = TestHelper.CreateLocalCopy(mduPath);
+            string localCopy = TestHelper.CreateLocalCopy(mduPath);
 
             var model = new WaterFlowFMModel(localCopy);
 
@@ -158,12 +172,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                 // This is due to the structures file (har_structures.ini) not containing values for Crest Width.
                 // The Gui will initialize the Crest Width with a default value of 0.0, whilst the computational core will initialize with the default length of the structure.
                 // Since this test is not meant to test the CrestWidth getting and setting, we place a hack here to set all the Crest Widths to any positive value.
-                model.Area.Weirs.Select(c => { c.CrestWidth = 1.0; return c; }).ToList();
+                model.Area.Weirs.Select(c =>
+                {
+                    c.CrestWidth = 1.0;
+                    return c;
+                }).ToList();
                 model.Initialize();
-                var pump = model.Area.Pumps.First(o => o.Name == "pump01");
+                Pump2D pump = model.Area.Pumps.First(o => o.Name == "pump01");
 
-                var cat = model.GetFeatureCategory(pump);
-                var result = model.GetVar(cat, pump.Name, "capacity");
+                string cat = model.GetFeatureCategory(pump);
+                Array result = model.GetVar(cat, pump.Name, "capacity");
 
                 Assert.AreEqual(100.0, ((double[]) result)[0]);
 
@@ -176,14 +194,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                 model.Cleanup();
                 model.Dispose();
             }
-
         }
 
         [Test]
         public void TestCallSetValueWeirCrestLevel()
         {
-            var mduPath = TestHelper.GetTestFilePath(@"structures_all_types\har.mdu");
-            var localCopy = TestHelper.CreateLocalCopy(mduPath);
+            string mduPath = TestHelper.GetTestFilePath(@"structures_all_types\har.mdu");
+            string localCopy = TestHelper.CreateLocalCopy(mduPath);
 
             var model = new WaterFlowFMModel(localCopy);
 
@@ -193,20 +210,26 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                 // This is due to the structures file (har_structures.ini) not containing values for Crest Width.
                 // The Gui will initialize the Crest Width with a default value of 0.0, whilst the computational core will initialize with the default length of the structure.
                 // Since this test is not meant to test the CrestWidth getting and setting, we place a hack here to set all the Crest Widths to any positive value.
-                model.Area.Weirs.Select(c => { c.CrestWidth = 1.0; return c; }).ToList();
+                model.Area.Weirs.Select(c =>
+                {
+                    c.CrestWidth = 1.0;
+                    return c;
+                }).ToList();
                 model.Initialize();
                 // get weir02
-                var weir = model.Area.Weirs.First(o => o.Name == "weir02");
+                Weir2D weir = model.Area.Weirs.First(o => o.Name == "weir02");
 
-                var cat = model.GetFeatureCategory(weir);
-                var result = model.GetVar(cat, weir.Name, KnownStructureProperties.CrestLevel);
+                string cat = model.GetFeatureCategory(weir);
+                Array result = model.GetVar(cat, weir.Name, KnownStructureProperties.CrestLevel);
 
-                Assert.AreEqual(3.0, ((double[])result)[0]);
+                Assert.AreEqual(3.0, ((double[]) result)[0]);
 
-                model.SetVar(new[] { -3.0 }, cat, weir.Name, KnownStructureProperties.CrestLevel);
+                model.SetVar(new[]
+                {
+                    -3.0
+                }, cat, weir.Name, KnownStructureProperties.CrestLevel);
                 result = model.GetVar(cat, weir.Name, KnownStructureProperties.CrestLevel);
-                Assert.AreEqual(-3.0, ((double[])result)[0]);
-
+                Assert.AreEqual(-3.0, ((double[]) result)[0]);
             }
             finally
             {
@@ -214,12 +237,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                 model.Dispose();
             }
         }
-        
+
         [Test]
         public void TestCallGetValuesWaterLevelsCount()
         {
-            var mduPath = TestHelper.GetTestFilePath(@"structures_all_types\har.mdu");
-            var localCopy = TestHelper.CreateLocalCopy(mduPath);
+            string mduPath = TestHelper.GetTestFilePath(@"structures_all_types\har.mdu");
+            string localCopy = TestHelper.CreateLocalCopy(mduPath);
 
             var model = new WaterFlowFMModel(localCopy);
 
@@ -244,8 +267,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
         [Test]
         public void TestCallSetValuesWaterLevels()
         {
-            var mduPath = TestHelper.GetTestFilePath(@"structures_all_types\har.mdu");
-            var localCopy = TestHelper.CreateLocalCopy(mduPath);
+            string mduPath = TestHelper.GetTestFilePath(@"structures_all_types\har.mdu");
+            string localCopy = TestHelper.CreateLocalCopy(mduPath);
 
             var model = new WaterFlowFMModel(localCopy);
 
@@ -257,7 +280,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
 
                 Assert.IsNotNull(waterLevels);
 
-                var newWaterLevels = waterLevels.Select(s => 1.5 * (s + 1)).ToArray();
+                double[] newWaterLevels = waterLevels.Select(s => 1.5 * (s + 1)).ToArray();
 
                 model.SetVar(newWaterLevels, "s0");
 
@@ -277,8 +300,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
         [Test]
         public void TestCallGetNonExistingValues()
         {
-            var mduPath = TestHelper.GetTestFilePath(@"structures_all_types\har.mdu");
-            var localCopy = TestHelper.CreateLocalCopy(mduPath);
+            string mduPath = TestHelper.GetTestFilePath(@"structures_all_types\har.mdu");
+            string localCopy = TestHelper.CreateLocalCopy(mduPath);
 
             var model = new WaterFlowFMModel(localCopy);
 
@@ -294,8 +317,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                     return c;
                 }).ToList();
                 model.Initialize();
-                Assert.AreEqual(Dimr.DimrApiDataSet.DimrFillValue,
-                    ((double[]) model.GetVar("party", "at", "myplace"))[0], 0.01d);
+                Assert.AreEqual(DimrApiDataSet.DimrFillValue,
+                                ((double[]) model.GetVar("party", "at", "myplace"))[0], 0.01d);
             }
             finally
             {
@@ -307,19 +330,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
         [Test]
         public void TestGetObservationPointWaterLevel()
         {
-            var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
+            string mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
 
-            var localCopy = TestHelper.CreateLocalCopy(mduPath);
+            string localCopy = TestHelper.CreateLocalCopy(mduPath);
             var model = new WaterFlowFMModel(localCopy);
 
             try
             {
                 model.Initialize();
                 // get 13
-                var pump = model.Area.ObservationPoints.First(o => o.Name == "13");
+                GroupableFeature2DPoint pump = model.Area.ObservationPoints.First(o => o.Name == "13");
 
-                var cat = model.GetFeatureCategory(pump);
-                var result = model.GetVar(cat, pump.Name, "water_level");
+                string cat = model.GetFeatureCategory(pump);
+                Array result = model.GetVar(cat, pump.Name, "water_level");
 
                 // the water level should be found on an observation point, so it is not NaN
                 Assert.AreEqual(0.0, ((double[]) result)[0]);
@@ -367,32 +390,60 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                 Coordinate center = gridExtent.Centre;
                 IGeometry snappedPoint = model.GetGridSnappedGeometry(UnstrucGridOperationApi.ObsPoint, new Point(center));
                 IGeometry snappedThinDam = model.GetGridSnappedGeometry(UnstrucGridOperationApi.ThinDams,
-                    new LineString(new[] {center.CoordinateValue, new Coordinate(center.X + 100.0, center.Y + 100.0)}));
+                                                                        new LineString(new[]
+                                                                        {
+                                                                            center.CoordinateValue,
+                                                                            new Coordinate(center.X + 100.0, center.Y + 100.0)
+                                                                        }));
                 IGeometry snappedFixedWeir = model.GetGridSnappedGeometry(UnstrucGridOperationApi.FixedWeir,
-                    new LineString(new[] { center.CoordinateValue, new Coordinate(center.X + 100.0, center.Y + 100.0) }));
+                                                                          new LineString(new[]
+                                                                          {
+                                                                              center.CoordinateValue,
+                                                                              new Coordinate(center.X + 100.0, center.Y + 100.0)
+                                                                          }));
                 IGeometry snappedCrossSection = model.GetGridSnappedGeometry(UnstrucGridOperationApi.ObsCrossSection,
-                    new LineString(new[] { center.CoordinateValue, new Coordinate(center.X + 100.0, center.Y + 100.0) }));
+                                                                             new LineString(new[]
+                                                                             {
+                                                                                 center.CoordinateValue,
+                                                                                 new Coordinate(center.X + 100.0, center.Y + 100.0)
+                                                                             }));
                 IGeometry snappedWeir = model.GetGridSnappedGeometry(UnstrucGridOperationApi.Weir,
-                    new LineString(new[] { center.CoordinateValue, new Coordinate(center.X + 100.0, center.Y + 100.0) }));
+                                                                     new LineString(new[]
+                                                                     {
+                                                                         center.CoordinateValue,
+                                                                         new Coordinate(center.X + 100.0, center.Y + 100.0)
+                                                                     }));
                 IGeometry snappedGate = model.GetGridSnappedGeometry(UnstrucGridOperationApi.Gate,
-                    new LineString(new[] { center.CoordinateValue, new Coordinate(center.X + 100.0, center.Y + 100.0) }));
+                                                                     new LineString(new[]
+                                                                     {
+                                                                         center.CoordinateValue,
+                                                                         new Coordinate(center.X + 100.0, center.Y + 100.0)
+                                                                     }));
                 IGeometry snappedPump = model.GetGridSnappedGeometry(UnstrucGridOperationApi.Pump,
-                    new LineString(new[] { center.CoordinateValue, new Coordinate(center.X + 100.0, center.Y + 100.0) }));
+                                                                     new LineString(new[]
+                                                                     {
+                                                                         center.CoordinateValue,
+                                                                         new Coordinate(center.X + 100.0, center.Y + 100.0)
+                                                                     }));
                 IGeometry snappedEmbankment = model.GetGridSnappedGeometry(UnstrucGridOperationApi.Embankment,
-                    new LineString(new[] { center.CoordinateValue, new Coordinate(center.X + 100.0, center.Y + 100.0) }));
+                                                                           new LineString(new[]
+                                                                           {
+                                                                               center.CoordinateValue,
+                                                                               new Coordinate(center.X + 100.0, center.Y + 100.0)
+                                                                           }));
 
                 IGeometry snappedWaterLevelBnd =
                     model.GetGridSnappedGeometry(UnstrucGridOperationApi.WaterLevelBnd,
-                        model.BoundaryConditions.OfType<FlowBoundaryCondition>()
-                            .First(bc => bc.FlowQuantity == FlowBoundaryQuantityType.WaterLevel).Feature.Geometry);
+                                                 model.BoundaryConditions.OfType<FlowBoundaryCondition>()
+                                                      .First(bc => bc.FlowQuantity == FlowBoundaryQuantityType.WaterLevel).Feature.Geometry);
                 IGeometry snappedVelocityBnd =
                     model.GetGridSnappedGeometry(UnstrucGridOperationApi.VelocityBnd,
-                        model.BoundaryConditions.OfType<FlowBoundaryCondition>()
-                            .First(bc => bc.FlowQuantity == FlowBoundaryQuantityType.WaterLevel).Feature.Geometry);
+                                                 model.BoundaryConditions.OfType<FlowBoundaryCondition>()
+                                                      .First(bc => bc.FlowQuantity == FlowBoundaryQuantityType.WaterLevel).Feature.Geometry);
                 IGeometry snappedDischargeBnd =
                     model.GetGridSnappedGeometry(UnstrucGridOperationApi.DischargeBnd,
-                        model.BoundaryConditions.OfType<FlowBoundaryCondition>()
-                            .First(bc => bc.FlowQuantity == FlowBoundaryQuantityType.WaterLevel).Feature.Geometry);
+                                                 model.BoundaryConditions.OfType<FlowBoundaryCondition>()
+                                                      .First(bc => bc.FlowQuantity == FlowBoundaryQuantityType.WaterLevel).Feature.Geometry);
 
                 Assert.IsTrue(snappedPoint.SnapsToFlowFmGrid(model.GridExtent));
                 Assert.IsTrue(snappedThinDam.SnapsToFlowFmGrid(model.GridExtent));
@@ -411,21 +462,27 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
         [Test]
         public void TestGetSnappedFeaturesWorksAfterFailure()
         {
-            var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
-            var localCopy = TestHelper.CreateLocalCopy(mduPath);
-            MockRepository mocks = new MockRepository();
+            string mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
+            string localCopy = TestHelper.CreateLocalCopy(mduPath);
+            var mocks = new MockRepository();
 
             var model = new WaterFlowFMModel(localCopy);
 
             try
             {
-                var gridExtent = model.GridExtent;
-                var center = gridExtent.Centre;
+                Envelope gridExtent = model.GridExtent;
+                Coordinate center = gridExtent.Centre;
                 // Defined test geometries
                 var thinDamGeom1 = new LineString(new[]
-                    {center.CoordinateValue, new Coordinate(center.X + 100.0, center.Y + 100.0)});
+                {
+                    center.CoordinateValue,
+                    new Coordinate(center.X + 100.0, center.Y + 100.0)
+                });
                 var thinDamGeom2 = new LineString(new[]
-                    {center.CoordinateValue, new Coordinate(center.X + 10.0, center.Y + 10.0)});
+                {
+                    center.CoordinateValue,
+                    new Coordinate(center.X + 10.0, center.Y + 10.0)
+                });
 
                 // Snap a feature first to ensure it works.
                 /* Preparation for mocking */
@@ -433,9 +490,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                 var yin = new List<double>();
                 double[] xout = new double[0], yout = new double[0];
                 double MissingValue = -999.0;
-                int[] featureIds = new int[0];
+                var featureIds = new int[0];
                 //Set the mockup so the first geometry will return an error but not the second one.
-                foreach (var coord in thinDamGeom1.Coordinates)
+                foreach (Coordinate coord in thinDamGeom1.Coordinates)
                 {
                     xin.Add(coord.X);
                     yin.Add(coord.Y);
@@ -452,16 +509,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                 fmModelApi
                     .Expect(
                         fma => fma.GetSnappedFeature(UnstrucGridOperationApi.ThinDams, xin.ToArray(), yin.ToArray(),
-                            ref xout, ref yout, ref featureIds))
+                                                     ref xout, ref yout, ref featureIds))
                     .Return(false).Repeat.Any();
                 //The inner calls will trigger the mocked api
                 var mockedUgridApi = mocks.StrictMock<UnstrucGridOperationApi>(fmModelApi);
                 mocks.ReplayAll();
 
                 // Try to snap with a 'failed' mocked process.
-                var snappedThinDamGeometries = mockedUgridApi
-                    .GetGridSnappedGeometry(UnstrucGridOperationApi.ThinDams, new[] {thinDamGeom1, thinDamGeom2})
-                    .ToList();
+                List<IGeometry> snappedThinDamGeometries = mockedUgridApi
+                                                           .GetGridSnappedGeometry(UnstrucGridOperationApi.ThinDams, new[]
+                                                           {
+                                                               thinDamGeom1,
+                                                               thinDamGeom2
+                                                           })
+                                                           .ToList();
 
                 //If it returns the same geometry means nothing has actually been snapped.
                 Assert.AreEqual(thinDamGeom1, snappedThinDamGeometries.First());
@@ -491,8 +552,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
 
                 Coordinate center = gridExtent.Centre;
                 IGeometry snappedThinDam = model.GetGridSnappedGeometry(UnstrucGridOperationApi.ThinDams,
-                    new LineString(new[] { center.CoordinateValue, new Coordinate(center.X + 100.0, center.Y + 100.0) }));
-                
+                                                                        new LineString(new[]
+                                                                        {
+                                                                            center.CoordinateValue,
+                                                                            new Coordinate(center.X + 100.0, center.Y + 100.0)
+                                                                        }));
+
                 Assert.IsTrue(snappedThinDam.SnapsToFlowFmGrid(model.GridExtent));
             }
         }
@@ -514,7 +579,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
 
                 Coordinate center = gridExtent.Centre;
                 IGeometry snappedFixedWeir = model.GetGridSnappedGeometry(UnstrucGridOperationApi.FixedWeir,
-                    new LineString(new[] { center.CoordinateValue, new Coordinate(center.X + 100.0, center.Y + 100.0) }));
+                                                                          new LineString(new[]
+                                                                          {
+                                                                              center.CoordinateValue,
+                                                                              new Coordinate(center.X + 100.0, center.Y + 100.0)
+                                                                          }));
 
                 Assert.IsTrue(snappedFixedWeir.SnapsToFlowFmGrid(model.GridExtent));
             }
@@ -537,7 +606,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
 
                 Coordinate center = gridExtent.Centre;
                 IGeometry snappedCrossSection = model.GetGridSnappedGeometry(UnstrucGridOperationApi.ObsCrossSection,
-                    new LineString(new[] { center.CoordinateValue, new Coordinate(center.X + 100.0, center.Y + 100.0) }));
+                                                                             new LineString(new[]
+                                                                             {
+                                                                                 center.CoordinateValue,
+                                                                                 new Coordinate(center.X + 100.0, center.Y + 100.0)
+                                                                             }));
 
                 Assert.IsTrue(snappedCrossSection.SnapsToFlowFmGrid(model.GridExtent));
             }
@@ -560,7 +633,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
 
                 Coordinate center = gridExtent.Centre;
                 IGeometry snappedWeir = model.GetGridSnappedGeometry(UnstrucGridOperationApi.Weir,
-                    new LineString(new[] { center.CoordinateValue, new Coordinate(center.X + 100.0, center.Y + 100.0) }));
+                                                                     new LineString(new[]
+                                                                     {
+                                                                         center.CoordinateValue,
+                                                                         new Coordinate(center.X + 100.0, center.Y + 100.0)
+                                                                     }));
 
                 Assert.IsTrue(snappedWeir.SnapsToFlowFmGrid(model.GridExtent));
             }
@@ -583,7 +660,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
 
                 Coordinate center = gridExtent.Centre;
                 IGeometry snappedGate = model.GetGridSnappedGeometry(UnstrucGridOperationApi.Gate,
-                    new LineString(new[] { center.CoordinateValue, new Coordinate(center.X + 100.0, center.Y + 100.0) }));
+                                                                     new LineString(new[]
+                                                                     {
+                                                                         center.CoordinateValue,
+                                                                         new Coordinate(center.X + 100.0, center.Y + 100.0)
+                                                                     }));
 
                 Assert.IsTrue(snappedGate.SnapsToFlowFmGrid(model.GridExtent));
             }
@@ -606,7 +687,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
 
                 Coordinate center = gridExtent.Centre;
                 IGeometry snappedPump = model.GetGridSnappedGeometry(UnstrucGridOperationApi.Pump,
-                    new LineString(new[] { center.CoordinateValue, new Coordinate(center.X + 100.0, center.Y + 100.0) }));
+                                                                     new LineString(new[]
+                                                                     {
+                                                                         center.CoordinateValue,
+                                                                         new Coordinate(center.X + 100.0, center.Y + 100.0)
+                                                                     }));
 
                 Assert.IsTrue(snappedPump.SnapsToFlowFmGrid(model.GridExtent));
             }
@@ -630,7 +715,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
 
                 Coordinate center = gridExtent.Centre;
                 IGeometry snappedEmbankment = model.GetGridSnappedGeometry(UnstrucGridOperationApi.Embankment,
-                    new LineString(new[] { center.CoordinateValue, new Coordinate(center.X + 100.0, center.Y + 100.0) }));
+                                                                           new LineString(new[]
+                                                                           {
+                                                                               center.CoordinateValue,
+                                                                               new Coordinate(center.X + 100.0, center.Y + 100.0)
+                                                                           }));
 
                 Assert.IsTrue(snappedEmbankment.SnapsToFlowFmGrid(model.GridExtent));
             }
@@ -670,11 +759,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
             using (var remoteApi = new RemoteFlexibleMeshModelApi(api))
             {
                 remoteApi.Initialize(model.MduFilePath);
-                
+
                 IGeometry snappedWaterLevelBnd =
                     model.GetGridSnappedGeometry(UnstrucGridOperationApi.WaterLevelBnd,
-                        model.BoundaryConditions.OfType<FlowBoundaryCondition>()
-                            .First(bc => bc.FlowQuantity == FlowBoundaryQuantityType.WaterLevel).Feature.Geometry);
+                                                 model.BoundaryConditions.OfType<FlowBoundaryCondition>()
+                                                      .First(bc => bc.FlowQuantity == FlowBoundaryQuantityType.WaterLevel).Feature.Geometry);
 
                 Assert.IsTrue(snappedWaterLevelBnd.SnapsToFlowFmGrid(model.GridExtent));
             }
@@ -695,8 +784,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
 
                 IGeometry snappedVelocityBnd =
                     model.GetGridSnappedGeometry(UnstrucGridOperationApi.VelocityBnd,
-                        model.BoundaryConditions.OfType<FlowBoundaryCondition>()
-                            .First(bc => bc.FlowQuantity == FlowBoundaryQuantityType.WaterLevel).Feature.Geometry);
+                                                 model.BoundaryConditions.OfType<FlowBoundaryCondition>()
+                                                      .First(bc => bc.FlowQuantity == FlowBoundaryQuantityType.WaterLevel).Feature.Geometry);
 
                 Assert.IsTrue(snappedVelocityBnd.SnapsToFlowFmGrid(model.GridExtent));
             }
@@ -714,11 +803,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
             using (var remoteApi = new RemoteFlexibleMeshModelApi(api))
             {
                 remoteApi.Initialize(model.MduFilePath);
-                
+
                 IGeometry snappedDischargeBnd =
                     model.GetGridSnappedGeometry(UnstrucGridOperationApi.DischargeBnd,
-                        model.BoundaryConditions.OfType<FlowBoundaryCondition>()
-                            .First(bc => bc.FlowQuantity == FlowBoundaryQuantityType.WaterLevel).Feature.Geometry);
+                                                 model.BoundaryConditions.OfType<FlowBoundaryCondition>()
+                                                      .First(bc => bc.FlowQuantity == FlowBoundaryQuantityType.WaterLevel).Feature.Geometry);
 
                 Assert.IsTrue(snappedDischargeBnd.SnapsToFlowFmGrid(model.GridExtent));
             }
@@ -744,11 +833,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                     model.Grid.Cells.Last().Center
                 });
 
-                model.SourcesAndSinks.Add(new SourceAndSink { Feature = new Feature2D { Geometry = geometry } });
+                model.SourcesAndSinks.Add(new SourceAndSink {Feature = new Feature2D {Geometry = geometry}});
 
                 IGeometry snappedSourceAndSink =
                     model.GetGridSnappedGeometry(UnstrucGridOperationApi.SourceSink,
-                        model.SourcesAndSinks.First().Feature.Geometry);
+                                                 model.SourcesAndSinks.First().Feature.Geometry);
 
                 Assert.IsTrue(snappedSourceAndSink.SnapsToFlowFmGrid(model.GridExtent));
             }
@@ -764,8 +853,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
         [Test]
         public void TestRunHarlingen()
         {
-            var mduPath = TestHelper.GetTestFilePath(@"structures_all_types\har.mdu");
-            var localCopy = TestHelper.CreateLocalCopy(mduPath);
+            string mduPath = TestHelper.GetTestFilePath(@"structures_all_types\har.mdu");
+            string localCopy = TestHelper.CreateLocalCopy(mduPath);
 
             var model = new WaterFlowFMModel(localCopy);
 
@@ -780,23 +869,23 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                     c.CrestWidth = 1.0;
                     return c;
                 }).ToList();
-                var obsSeg9 = model.Area.ObservationPoints.First(o => o.Name == "9_040.seg_9");
-                var obCrWeir02 = model.Area.ObservationCrossSections.First(o => o.Name == "weir02");
+                GroupableFeature2DPoint obsSeg9 = model.Area.ObservationPoints.First(o => o.Name == "9_040.seg_9");
+                ObservationCrossSection2D obCrWeir02 = model.Area.ObservationCrossSections.First(o => o.Name == "weir02");
 
-                var obsPointCat = model.GetFeatureCategory(obsSeg9);
-                var obsCrossCat = model.GetFeatureCategory(obCrWeir02);
+                string obsPointCat = model.GetFeatureCategory(obsSeg9);
+                string obsCrossCat = model.GetFeatureCategory(obCrWeir02);
 
-                var report = model.Validate();
+                ValidationReport report = model.Validate();
 
                 var errorReport = report.ToString();
 
                 Assert.AreEqual(0, report.ErrorCount, errorReport);
                 model.Initialize();
 
-                var startTime = model.BMIEngine.StartTime;
-                var currentTime = model.BMIEngine.CurrentTime;
+                DateTime startTime = model.BMIEngine.StartTime;
+                DateTime currentTime = model.BMIEngine.CurrentTime;
 
-                var diffTime = currentTime - startTime;
+                TimeSpan diffTime = currentTime - startTime;
 
                 var threeMinutesChecked = false;
 
@@ -808,16 +897,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                     if (diffTime.TotalMinutes >= 4.5)
                     {
                         Assert.GreaterOrEqual(0.01,
-                            ((double[]) model.GetVar(obsPointCat, obsSeg9.Name, "water_level"))[0]);
+                                              ((double[]) model.GetVar(obsPointCat, obsSeg9.Name, "water_level"))[0]);
                         Assert.GreaterOrEqual(70,
-                            ((double[]) model.GetVar(obsCrossCat, obCrWeir02.Name, "discharge"))[0]);
+                                              ((double[]) model.GetVar(obsCrossCat, obCrWeir02.Name, "discharge"))[0]);
                         break;
                     }
                     else if (!threeMinutesChecked && diffTime.TotalMinutes >= 3)
                     {
-                        var waterLevel = ((double[]) model.GetVar(obsPointCat, obsSeg9.Name, "water_level"))[0];
+                        double waterLevel = ((double[]) model.GetVar(obsPointCat, obsSeg9.Name, "water_level"))[0];
                         Assert.AreEqual(0.0, waterLevel);
-                        var discharge = ((double[]) model.GetVar(obsCrossCat, obCrWeir02.Name, "discharge"))[0];
+                        double discharge = ((double[]) model.GetVar(obsCrossCat, obCrWeir02.Name, "discharge"))[0];
                         Assert.AreEqual(0.0, discharge);
 
                         threeMinutesChecked = true;

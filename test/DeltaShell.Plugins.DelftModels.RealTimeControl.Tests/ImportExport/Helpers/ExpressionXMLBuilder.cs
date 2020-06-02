@@ -5,7 +5,7 @@ using DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd;
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport.Helpers
 {
     /// <summary>
-    /// Helper for building a <see cref="ExpressionXML" />
+    /// Helper for building a <see cref="ExpressionXML"/>
     /// </summary>
     public class ExpressionXMLBuilder
     {

@@ -18,30 +18,28 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
         {
             var editor = new WaveBoundaryConditionEditor();
             editor.BoundaryConditionEditor.BoundaryConditionFactory = new WaveBoundaryConditionFactory();
-            var controller = new WaveBoundaryConditionEditorController
-            {
-                ImportIntoModelDirectory = null
-            };
+            var controller = new WaveBoundaryConditionEditorController {ImportIntoModelDirectory = null};
             editor.BoundaryConditionEditor.Controller = controller;
-            editor.BoundaryConditionEditor.BoundaryConditionPropertiesControl = new WaveBoundaryConditionPropertiesControl
-            {
-                Controller = controller
-            };
+            editor.BoundaryConditionEditor.BoundaryConditionPropertiesControl = new WaveBoundaryConditionPropertiesControl {Controller = controller};
             editor.BoundaryConditionEditor.ShowSupportPointChainages = true;
 
-            var waveBoundaryCondition = CreateWaveBoundaryCondition();
+            WaveBoundaryCondition waveBoundaryCondition = CreateWaveBoundaryCondition();
             editor.Data = waveBoundaryCondition;
-            
+
             WindowsFormsTestHelper.ShowModal(editor);
         }
 
         private static WaveBoundaryCondition CreateWaveBoundaryCondition()
         {
             var feature2D = new Feature2D
+            {
+                Name = "f",
+                Geometry = new LineString(new[]
                 {
-                    Name = "f",
-                    Geometry = new LineString(new [] {new Coordinate(0, 0), new Coordinate(1, 0)})
-                };
+                    new Coordinate(0, 0),
+                    new Coordinate(1, 0)
+                })
+            };
             var fac = new WaveBoundaryConditionFactory();
             var waveBoundaryCondition =
                 (WaveBoundaryCondition) fac.CreateBoundaryCondition(feature2D, WaveBoundaryCondition.WaveQuantityName,

@@ -29,7 +29,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
 
             // update through list
             list.AddNew();
-            var row = list[0];
+            FunctionBindingListRow row = list[0];
             row[0] = 10;
             row[1] = 4;
             row.EndEdit();
@@ -47,13 +47,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
             row.EndEdit();
 
             Assert.AreEqual(f1.Arguments[0].Values, f2.Arguments[0].Values);
-            
+
             // vice versa
             f2[20] = 99;
             f2[30] = 130;
 
             Assert.AreEqual(f1.Arguments[0].Values, f2.Arguments[0].Values);
         }
-
     }
 }

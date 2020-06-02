@@ -15,8 +15,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         /// <param name="config"> The configuration. </param>
         public static void ExportEmptyLogFile(AcceptanceModelExportResultConfig config)
         {
-            string content = config.HasValidated ? "No .dia file found for this run."
-                                                 : "** ERROR : Failed to validate the model, no .dia file has been produced.";
+            string content = config.HasValidated
+                                 ? "No .dia file found for this run."
+                                 : "** ERROR : Failed to validate the model, no .dia file has been produced.";
 
             File.WriteAllText(Path.Combine(AcceptanceModelExportResultConfig.Delft3DfmExportDirectory,
                                            $"{config.OutputName}.dia"),

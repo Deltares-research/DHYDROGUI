@@ -16,30 +16,38 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
         {
             var view = new WaveObstacleListView();
 
-            var g1 = new LineString(new [] {new Coordinate(0, 0), new Coordinate(1, 1)});
-            var g2 = new LineString(new [] {new Coordinate(10, 0), new Coordinate(1, 11)});
+            var g1 = new LineString(new[]
+            {
+                new Coordinate(0, 0),
+                new Coordinate(1, 1)
+            });
+            var g2 = new LineString(new[]
+            {
+                new Coordinate(10, 0),
+                new Coordinate(1, 11)
+            });
 
             view.Data = new List<WaveObstacle>
+            {
+                new WaveObstacle
                 {
-                    new WaveObstacle
-                        {
-                            Name = "obs1",
-                            Type = ObstacleType.Dam,
-                            Alpha = 1.0,
-                            Beta = 2.0,
-                            Height = 10.0,
-                            Geometry = g1
-                        },
-                    new WaveObstacle
-                        {
-                            Name = "obs2",
-                            Type = ObstacleType.Sheet,
-                            TransmissionCoefficient = 0.21,
-                            ReflectionType = ReflectionType.Diffuse,
-                            ReflectionCoefficient = 0.01,
-                            Geometry = g2
-                        }
-                };
+                    Name = "obs1",
+                    Type = ObstacleType.Dam,
+                    Alpha = 1.0,
+                    Beta = 2.0,
+                    Height = 10.0,
+                    Geometry = g1
+                },
+                new WaveObstacle
+                {
+                    Name = "obs2",
+                    Type = ObstacleType.Sheet,
+                    TransmissionCoefficient = 0.21,
+                    ReflectionType = ReflectionType.Diffuse,
+                    ReflectionCoefficient = 0.01,
+                    Geometry = g2
+                }
+            };
 
             WindowsFormsTestHelper.ShowModal(view);
         }

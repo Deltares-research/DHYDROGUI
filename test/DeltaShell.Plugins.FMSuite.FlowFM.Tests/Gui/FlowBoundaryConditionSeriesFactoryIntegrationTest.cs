@@ -26,7 +26,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             const int expectedBackgroundFunctions = 3;
             const int supportPoint = 1;
             const bool useLayers = true;
-            FlowBoundaryQuantityType expectedBoundaryQuantyType = FlowBoundaryQuantityType.MorphologyBedLoadTransport;
+            var expectedBoundaryQuantyType = FlowBoundaryQuantityType.MorphologyBedLoadTransport;
             FlowBoundaryConditionSeriesFactory factory = null;
 
             using (var tempDirectory = new TemporaryDirectory())
@@ -35,7 +35,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                 string mduPath = TestHelper.GetTestFilePath(@"ExBedLoadTransportBoundary\FlowFM.mdu");
                 mduPath = tempDirectory.CopyTestDataFileAndDirectoryToTempDirectory(mduPath);
                 var model = new WaterFlowFMModel(mduPath);
-                FlowBoundaryCondition boundaryCondition = model.ModelDefinition.BoundaryConditions.ElementAt(0) as FlowBoundaryCondition;
+                var boundaryCondition = model.ModelDefinition.BoundaryConditions.ElementAt(0) as FlowBoundaryCondition;
                 Assert.That(boundaryCondition, Is.Not.Null);
 
                 //When
@@ -44,10 +44,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                 Func<FlowBoundaryConditionPointData> createPointData = () =>
                     new FlowBoundaryConditionPointData(boundaryCondition, supportPoint, useLayers);
                 IEnumerable<FlowBoundaryConditionPointData> flowBoundaryConditions = Enumerable.Repeat(createPointData.Invoke(), 3);
-                factory = new FlowBoundaryConditionSeriesFactory
-                {
-                    BackgroundFunctions = new EventedList<FlowBoundaryConditionPointData>(flowBoundaryConditions)
-                };
+                factory = new FlowBoundaryConditionSeriesFactory {BackgroundFunctions = new EventedList<FlowBoundaryConditionPointData>(flowBoundaryConditions)};
             }
 
             //Then
@@ -70,6 +67,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         }
 
         #region Helper methods
+
         private static FlowBoundaryCondition ChangeFlowBoundaryConditionToBedLoadTransportQuantityType(Feature2D feature)
         {
             var flowBoundaryCondition = new FlowBoundaryCondition(FlowBoundaryQuantityType.MorphologyBedLoadTransport,
@@ -101,6 +99,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             };
             return feature;
         }
+
         #endregion
     }
 }

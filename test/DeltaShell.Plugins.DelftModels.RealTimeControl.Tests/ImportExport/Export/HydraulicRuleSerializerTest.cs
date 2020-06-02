@@ -16,13 +16,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport.Expo
     [TestFixture]
     public class HydraulicRuleSerializerTest
     {
-        private static readonly XNamespace fns = "http://www.wldelft.nl/fews";
-
         private const string ruleName = "hydraulic rule name";
         private const string inputName = "Maxau";
         private const string inputParameterName = "QIn";
         private const string outputName = "Iffezheim";
         private const string outputParameterName = "HSP";
+        private static readonly XNamespace fns = "http://www.wldelft.nl/fews";
         private int nTimeSteps;
 
         private Function tableFunction;

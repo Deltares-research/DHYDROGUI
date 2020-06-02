@@ -51,7 +51,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
         {
             // Given
             WaveBoundaryCondition waveBoundaryCondition = GetWaveBoundaryCondition(dataType);
-            
+
             // When
             DelftIniCategory category = WaveDelftIniCategoryCreator.CreateBoundaryConditionCategory(waveBoundaryCondition);
 
@@ -73,7 +73,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
         [TestCase(WaveSpectrumShapeType.Jonswap, "jonswap")]
         [TestCase(WaveSpectrumShapeType.PiersonMoskowitz, "pierson-moskowitz")]
         public void GivenBoundaryConditionWithShapeType_WhenCreatingDelftIniCategory_ThenCategoryWithExpectedShapeTypeIsReturned(
-                WaveSpectrumShapeType shapeType, string expectedValue)
+            WaveSpectrumShapeType shapeType, string expectedValue)
         {
             // Given
             WaveBoundaryCondition waveBoundaryCondition = GetWaveBoundaryCondition(BoundaryConditionDataType.Constant);
@@ -91,7 +91,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
         [TestCase(WavePeriodType.Mean, "mean")]
         [TestCase(WavePeriodType.Peak, "peak")]
         public void GivenBoundaryConditionWithPeriodType_WhenCreatingDelftIniCategory_ThenCategoryWithExpectedPeriodTypeIsReturned(
-                WavePeriodType periodType, string expectedValue)
+            WavePeriodType periodType, string expectedValue)
         {
             // Given
             WaveBoundaryCondition waveBoundaryCondition = GetWaveBoundaryCondition(BoundaryConditionDataType.Constant);
@@ -109,7 +109,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
         [TestCase(WaveDirectionalSpreadingType.Degrees, "degrees")]
         [TestCase(WaveDirectionalSpreadingType.Power, "power")]
         public void GivenBoundaryConditionWithDirectionalSpreadingType_WhenCreatingDelftIniCategory_ThenCategoryWithExpectedDirectionalSpreadingTypeIsReturned(
-                WaveDirectionalSpreadingType directionalSpreadingType, string expectedValue)
+            WaveDirectionalSpreadingType directionalSpreadingType, string expectedValue)
         {
             // Given
             WaveBoundaryCondition waveBoundaryCondition = GetWaveBoundaryCondition(BoundaryConditionDataType.Constant);

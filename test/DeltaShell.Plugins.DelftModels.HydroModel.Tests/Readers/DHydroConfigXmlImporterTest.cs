@@ -20,13 +20,13 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
         [Test]
         public void ImportTestWithoutActivities()
         {
-            var dimrXmlPath = TestHelper.GetTestFilePath(Path.Combine("FileReader", "dimr.xml"));
+            string dimrXmlPath = TestHelper.GetTestFilePath(Path.Combine("FileReader", "dimr.xml"));
 
             var mocks = new MockRepository();
-            var importers = mocks.DynamicMock(typeof(Func<List<IDimrModelFileImporter>>));
+            object importers = mocks.DynamicMock(typeof(Func<List<IDimrModelFileImporter>>));
             var importer = mocks.DynamicMock<DHydroConfigXmlImporter>(importers);
-       
-            var model = importer.ImportItem(dimrXmlPath);
+
+            object model = importer.ImportItem(dimrXmlPath);
 
             Assert.IsNotNull(model);
             Assert.That(model, Is.TypeOf<HydroModel>());
@@ -44,7 +44,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
             var importer = new DHydroConfigXmlImporter(() => importers);
 
             // When
-            var result = importer.SupportedItemTypes.ToList();
+            List<Type> result = importer.SupportedItemTypes.ToList();
 
             // Then
             Assert.That(result, Is.Not.Null, "Expected the retrieved item types not to be null:");
@@ -65,7 +65,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
             var importer = new DHydroConfigXmlImporter(() => importers);
 
             // When
-            var result = importer.CanImportOnRootLevel;
+            bool result = importer.CanImportOnRootLevel;
 
             // Then
             Assert.That(result, Is.False);
@@ -73,7 +73,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
 
         /// <summary>
         /// GIVEN a DimrModelFileImporter that cannot import on root level
-        ///   AND an importer containing this importer
+        /// AND an importer containing this importer
         /// WHEN CanImportOnRootLevel is called
         /// THEN False is returned
         /// </summary>
@@ -84,11 +84,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
             var cannotImportRootLevelImporter = MockRepository.GenerateStrictMock<IDimrModelFileImporter>();
             cannotImportRootLevelImporter.Expect(imp => imp.CanImportOnRootLevel).Return(false).Repeat.Any();
 
-            var importers = new List<IDimrModelFileImporter>() { cannotImportRootLevelImporter };
+            var importers = new List<IDimrModelFileImporter>() {cannotImportRootLevelImporter};
             var importer = new DHydroConfigXmlImporter(() => importers);
 
             // When
-            var result = importer.CanImportOnRootLevel;
+            bool result = importer.CanImportOnRootLevel;
 
             // Then
             cannotImportRootLevelImporter.VerifyAllExpectations();
@@ -97,7 +97,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
 
         /// <summary>
         /// GIVEN a DimrModelFileImporter that can import on root level
-        ///   AND an importer containing this importer
+        /// AND an importer containing this importer
         /// WHEN CanImportOnRootLevel is called
         /// THEN True is returned
         /// </summary>
@@ -108,11 +108,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
             var canImportRootLevelImporter = MockRepository.GenerateStrictMock<IDimrModelFileImporter>();
             canImportRootLevelImporter.Expect(imp => imp.CanImportOnRootLevel).Return(true).Repeat.Any();
 
-            var importers = new List<IDimrModelFileImporter>() { canImportRootLevelImporter };
+            var importers = new List<IDimrModelFileImporter>() {canImportRootLevelImporter};
             var importer = new DHydroConfigXmlImporter(() => importers);
 
             // When
-            var result = importer.CanImportOnRootLevel;
+            bool result = importer.CanImportOnRootLevel;
 
             // Then
             canImportRootLevelImporter.VerifyAllExpectations();
@@ -121,7 +121,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
 
         /// <summary>
         /// GIVEN a set of DimrModelFileImporter that can and cannot import on root level
-        ///   AND an importer containing these importers
+        /// AND an importer containing these importers
         /// WHEN CanImportOnRootLevel is called
         /// THEN True is returned
         /// </summary>
@@ -150,7 +150,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
             var importer = new DHydroConfigXmlImporter(() => importers);
 
             // When
-            var result = importer.CanImportOnRootLevel;
+            bool result = importer.CanImportOnRootLevel;
 
             // Then
             canImportRootLevelImporter1.VerifyAllExpectations();
@@ -176,7 +176,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
             var importer = new DHydroConfigXmlImporter(() => importers);
 
             // When
-            var result = importer.CanImportOn(project);
+            bool result = importer.CanImportOn(project);
 
             // Then
             Assert.That(result, Is.False);
@@ -184,8 +184,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
 
         /// <summary>
         /// GIVEN a project
-        ///   AND a subimporter that can import on this project
-        ///   AND an importer containing this importer
+        /// AND a subimporter that can import on this project
+        /// AND an importer containing this importer
         /// WHEN CanImportOn is called on this project
         /// THEN True is returned
         /// </summary>
@@ -198,11 +198,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
             var canImportOnImporter = MockRepository.GenerateStrictMock<IDimrModelFileImporter>();
             canImportOnImporter.Expect(imp => imp.CanImportOn(Arg<Project>.Is.Equal(project))).Return(true).Repeat.AtLeastOnce();
 
-            var importers = new List<IDimrModelFileImporter>() { canImportOnImporter };
+            var importers = new List<IDimrModelFileImporter>() {canImportOnImporter};
             var importer = new DHydroConfigXmlImporter(() => importers);
 
             // When
-            var result = importer.CanImportOn(project);
+            bool result = importer.CanImportOn(project);
 
             // Then
             canImportOnImporter.VerifyAllExpectations();
@@ -211,8 +211,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
 
         /// <summary>
         /// GIVEN a project
-        ///   AND a subimporter that cannot import on this project
-        ///   AND an importer containing this importer
+        /// AND a subimporter that cannot import on this project
+        /// AND an importer containing this importer
         /// WHEN CanImportOn is called on this project
         /// THEN False is returned
         /// </summary>
@@ -225,11 +225,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
             var cannotImportOnImporter = MockRepository.GenerateStrictMock<IDimrModelFileImporter>();
             cannotImportOnImporter.Expect(imp => imp.CanImportOn(Arg<Project>.Is.Equal(project))).Return(false).Repeat.AtLeastOnce();
 
-            var importers = new List<IDimrModelFileImporter>() { cannotImportOnImporter };
+            var importers = new List<IDimrModelFileImporter>() {cannotImportOnImporter};
             var importer = new DHydroConfigXmlImporter(() => importers);
 
             // When
-            var result = importer.CanImportOn(project);
+            bool result = importer.CanImportOn(project);
 
             // Then
             cannotImportOnImporter.VerifyAllExpectations();
@@ -238,8 +238,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
 
         /// <summary>
         /// GIVEN a project
-        ///   AND a set of subimporters that can and cannot import on this project
-        ///   AND an importer containing this importer
+        /// AND a set of subimporters that can and cannot import on this project
+        /// AND an importer containing this importer
         /// WHEN CanImportOn is called on this project
         /// THEN True is returned
         /// </summary>
@@ -271,7 +271,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
             var importer = new DHydroConfigXmlImporter(() => importers);
 
             // When
-            var result = importer.CanImportOn(project);
+            bool result = importer.CanImportOn(project);
 
             // Then
             canImportImporter1.VerifyAllExpectations();
@@ -294,7 +294,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
             var importer = new DHydroConfigXmlImporter(() => new List<IDimrModelFileImporter>());
 
             // When
-            var result = importer.FileFilter;
+            string result = importer.FileFilter;
 
             // Then
             Assert.That(result, Is.EqualTo(expectedValue), "Expected a different FileFilter:");
@@ -311,18 +311,19 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
             var importer = new DHydroConfigXmlImporter(() => new List<IDimrModelFileImporter>());
 
             // When
-            var result = importer.OpenViewAfterImport;
+            bool result = importer.OpenViewAfterImport;
 
             // Then
             Assert.That(result, Is.True);
         }
 
         #region ImportItem Tests
+
         /// <summary>
         /// WHEN ImportItem is called
-        ///  AND an expected error is thrown
+        /// AND an expected error is thrown
         /// THEN a message is logged
-        ///  AND null is returned
+        /// AND null is returned
         /// </summary>
         [TestCase(typeof(ArgumentException))]
         [TestCase(typeof(PathTooLongException))]
@@ -339,9 +340,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
                 MockRepository.GenerateStrictMock<Func<string, IList<IDimrModelFileImporter>, HydroModel>>();
             readFunc.Expect(f => f.Invoke(null, null))
                     .IgnoreArguments()
-                    .Throw((Exception)Activator.CreateInstance(exceptionType))
+                    .Throw((Exception) Activator.CreateInstance(exceptionType))
                     .Repeat.Any();
-
 
             var importer = new DHydroConfigXmlImporter(readFunc,
                                                        () => new List<IDimrModelFileImporter>());
@@ -349,10 +349,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
             // When | Then
 
             HydroModel result = null;
-            TestHelper.AssertLogMessageIsGenerated(() =>
-            {
-                result = (HydroModel)importer.ImportItem(path);
-            }, string.Format(Resources.DHydroConfigXmlImporter_ImportItem_An_error_occurred_while_trying_to_import_a__0__, importer.Name), 1);
+            TestHelper.AssertLogMessageIsGenerated(() => { result = (HydroModel) importer.ImportItem(path); }, string.Format(Resources.DHydroConfigXmlImporter_ImportItem_An_error_occurred_while_trying_to_import_a__0__, importer.Name), 1);
 
             readFunc.VerifyAllExpectations();
             Assert.That(result, Is.Null, "Expected ImportItem to file upon reading and return null:");
@@ -360,7 +357,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
 
         /// <summary>
         /// WHEN ImportItem is called
-        ///  AND an unexpected error is thrown
+        /// AND an unexpected error is thrown
         /// THEN this error is propagated
         /// </summary>
         [Test]
@@ -386,10 +383,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
 
         /// <summary>
         /// GIVEN a HydroModel
-        ///   AND some path
-        ///   AND a null target
+        /// AND some path
+        /// AND a null target
         /// WHEN ImportItem is called with these parameters
-        ///  AND this model is read
+        /// AND this model is read
         /// THEN this model is returned
         /// </summary>
         [Test]
@@ -400,7 +397,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
 
             const string path = "somePath";
 
-            var readFunc = 
+            var readFunc =
                 MockRepository.GenerateStrictMock<Func<string, IList<IDimrModelFileImporter>, HydroModel>>();
 
             readFunc.Expect(f => f.Invoke(null, null))
@@ -408,11 +405,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
                     .Return(model)
                     .Repeat.Once();
 
-            var importer = new DHydroConfigXmlImporter(readFunc, 
+            var importer = new DHydroConfigXmlImporter(readFunc,
                                                        () => new List<IDimrModelFileImporter>());
 
             // When
-            var result = importer.ImportItem(path, null);
+            object result = importer.ImportItem(path, null);
 
             // Then
             readFunc.VerifyAllExpectations();
@@ -422,12 +419,12 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
 
         /// <summary>
         /// GIVEN a HydroModel
-        ///   AND some path
-        ///   AND some target folder
+        /// AND some path
+        /// AND some target folder
         /// WHEN ImportItem is called with these parameters
-        ///  AND this new model is read
+        /// AND this new model is read
         /// THEN this new model is returned
-        ///  AND the folder contains the model
+        /// AND the folder contains the model
         /// </summary>
         [Test]
         public void GivenSomePathAndSomeTargetFolder_WhenImportItemIsCalledWithTheseParameters_ThenThisNewModelIsReturnedAndTheFolderContainsTheModel()
@@ -450,7 +447,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
                                                        () => new List<IDimrModelFileImporter>());
 
             // When
-            var result = (HydroModel)importer.ImportItem(path, folder);
+            var result = (HydroModel) importer.ImportItem(path, folder);
 
             // Then
             readFunc.VerifyAllExpectations();
@@ -462,12 +459,12 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
 
         /// <summary>
         /// GIVEN a HydroModel
-        ///   AND some path
-        ///   AND some target HydroModel with a folder owner
+        /// AND some path
+        /// AND some target HydroModel with a folder owner
         /// WHEN ImportItem is called with these parameters
-        ///  AND this new model is read
+        /// AND this new model is read
         /// THEN this new model is returned
-        ///  AND the target model has been replaced in the folder
+        /// AND the target model has been replaced in the folder
         /// </summary>
         [Test]
         public void GivenSomePathAndSomeTargetHydroModelWithAFolderOwner_WhenImportItemIsCalledWithTheseParameters_ThenThisNewModelIsReturnedAndTheTargetModelHasBeenReplacedInTheFolder()
@@ -493,7 +490,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
                                                        () => new List<IDimrModelFileImporter>());
 
             // When
-            var result = (HydroModel)importer.ImportItem(path, prevModel);
+            var result = (HydroModel) importer.ImportItem(path, prevModel);
 
             // Then
             readFunc.VerifyAllExpectations();
@@ -506,9 +503,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
 
         /// <summary>
         /// GIVEN a HydroModel
-        ///   AND some path
+        /// AND some path
         /// WHEN ShouldCancel is set
-        ///  AND ImportItem is called with these parameters
+        /// AND ImportItem is called with these parameters
         /// THEN null is returned
         /// </summary>
         [Test]
@@ -528,19 +525,17 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
                     .Repeat.Once();
 
             var importer = new DHydroConfigXmlImporter(readFunc,
-                                                       () => new List<IDimrModelFileImporter>())
-            {
-                ShouldCancel = true
-            };
+                                                       () => new List<IDimrModelFileImporter>()) {ShouldCancel = true};
 
             // When
-            var result = importer.ImportItem(path, null);
+            object result = importer.ImportItem(path, null);
 
             // Then
             readFunc.VerifyAllExpectations();
 
             Assert.That(result, Is.EqualTo(null), "Expected returned model to be null:");
         }
+
         #endregion
     }
 }

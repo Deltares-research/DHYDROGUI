@@ -1,4 +1,5 @@
 ﻿using System;
+using DelftTools.Functions;
 using DelftTools.Functions.Generic;
 using NUnit.Framework;
 
@@ -10,14 +11,14 @@ namespace DelftTools.Hydro.Tests
         [Test]
         public void CanCreateWaterLevelSeries()
         {
-            var waterLevelSeries = HydroTimeSeriesFactory.CreateWaterLevelTimeSeries();
+            TimeSeries waterLevelSeries = HydroTimeSeriesFactory.CreateWaterLevelTimeSeries();
             Assert.AreEqual("m AD", waterLevelSeries.Components[0].Unit.Symbol);
         }
 
         [Test]
         public void CreateTimeSeries()
         {
-            var timeSeries = HydroTimeSeriesFactory.CreateTimeSeries("Series name", "Component name", "unit");
+            TimeSeries timeSeries = HydroTimeSeriesFactory.CreateTimeSeries("Series name", "Component name", "unit");
 
             Assert.AreEqual("Series name", timeSeries.Name);
             Assert.AreEqual(new DateTime(2000, 1, 1), timeSeries.Time.DefaultValue);

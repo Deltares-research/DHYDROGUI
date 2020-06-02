@@ -13,40 +13,50 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
         public TestModelWithHydroNetwork()
         {
             //name is essential here
-            WaterLevel = new NetworkCoverage("water level",false);
+            WaterLevel = new NetworkCoverage("water level", false);
         }
 
-        public override IEnumerable<object> GetDirectChildren()
+        public IList<ModelDataItem> UsedByModelDataItems
         {
-            /*foreach (var item in HydroNetwork.GetAllItemsRecursive())
+            get
             {
-                yield return item;
-            }*/
-            yield return HydroNetwork;
-            yield return WaterLevel;//should return it to be found by sideviewcommand
-            
+                throw new NotImplementedException();
+            }
+            set
+            {
+                throw new NotImplementedException();
+            }
         }
 
-        protected override void OnInitialize()
-        {
-        }
+        public HydroNetwork HydroNetwork { get; set; }
 
-        protected override void OnExecute()
-        {
-            Status = ActivityStatus.Done;
-        }
+        public INetworkCoverage WaterLevel { get; set; }
 
         public bool OutputOutOfSync
         {
-            get { throw new NotImplementedException(); }
-            set { throw new NotImplementedException(); }
+            get
+            {
+                throw new NotImplementedException();
+            }
+            set
+            {
+                throw new NotImplementedException();
+            }
         }
 
         public string ExplicitWorkingDirectory
         {
-            get { throw new NotImplementedException(); }
-            set { throw new NotImplementedException(); }
+            get
+            {
+                throw new NotImplementedException();
+            }
+            set
+            {
+                throw new NotImplementedException();
+            }
         }
+
+        public bool SuspendClearOutputOnInputChange { get; set; }
 
         public void LoadDataFromDirectory(string path)
         {
@@ -54,11 +64,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
         }
 
         public void SaveDataToDirectory(string path)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void UpdateLink(object data)
         {
             throw new NotImplementedException();
         }
@@ -73,25 +78,36 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
             throw new NotImplementedException();
         }
 
-        public IDataItem GetDataItemByValue(object value)
+        public override IEnumerable<object> GetDirectChildren()
+        {
+            /*foreach (var item in HydroNetwork.GetAllItemsRecursive())
+            {
+                yield return item;
+            }*/
+            yield return HydroNetwork;
+            yield return WaterLevel; //should return it to be found by sideviewcommand
+        }
+
+        public void UpdateLink(object data)
         {
             throw new NotImplementedException();
         }
 
-        public bool SuspendClearOutputOnInputChange { get; set; }
+        public IDataItem GetDataItemByValue(object value)
+        {
+            throw new NotImplementedException();
+        }
 
         public void ClearOutput()
         {
             throw new NotImplementedException();
         }
 
-        public IList<ModelDataItem> UsedByModelDataItems
-        {
-            get { throw new NotImplementedException(); }
-            set { throw new NotImplementedException(); }
-        }
-        public HydroNetwork HydroNetwork { get; set; }
+        protected override void OnInitialize() {}
 
-        public INetworkCoverage WaterLevel { get; set; }
+        protected override void OnExecute()
+        {
+            Status = ActivityStatus.Done;
+        }
     }
 }

@@ -18,42 +18,42 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Editors.ModelFeatureCoordinate
         {
             var lineGeomery = new LineString(new[]
             {
-                new Coordinate(0,0),
-                new Coordinate(10,10),
+                new Coordinate(0, 0),
+                new Coordinate(10, 10),
                 new Coordinate(10, 0),
                 new Coordinate(0, 0)
             });
 
             var mocks = new MockRepository();
-            var feature = (IFeature)mocks.StrictMultiMock(typeof(IFeature), typeof(INotifyPropertyChanged));
+            var feature = (IFeature) mocks.StrictMultiMock(typeof(IFeature), typeof(INotifyPropertyChanged));
 
             feature.Expect(f => f.Geometry).Return(lineGeomery).Repeat.Any();
-            ((INotifyPropertyChanged)feature).Expect(f => f.PropertyChanged += null).IgnoreArguments().Repeat.Times(2);
+            ((INotifyPropertyChanged) feature).Expect(f => f.PropertyChanged += null).IgnoreArguments().Repeat.Times(2);
 
             mocks.ReplayAll();
 
             var dataColumn = new DataColumn<double>
             {
                 Name = "Test",
-                ValueList = { 1.4, 2.4, 4.6, 74 },
+                ValueList =
+                {
+                    1.4,
+                    2.4,
+                    4.6,
+                    74
+                },
                 DefaultValue = -1,
                 IsActive = true
             };
 
-            var modelFeatureCoordinateData = new ModelFeatureCoordinateData<IFeature>
-            {
-                Feature = feature
-            };
+            var modelFeatureCoordinateData = new ModelFeatureCoordinateData<IFeature> {Feature = feature};
 
             modelFeatureCoordinateData.DataColumns.Add(dataColumn);
 
             var rowIndex = 1;
             var columnIndex = 0;
 
-            var row = new CoordinateDataRow(modelFeatureCoordinateData, rowIndex, new List<PropertyDescriptor>
-            {
-                new CoordinateDataRowPropertyDescriptor(dataColumn.Name, dataColumn.Name, dataColumn.DataType, columnIndex)
-            });
+            var row = new CoordinateDataRow(modelFeatureCoordinateData, rowIndex, new List<PropertyDescriptor> {new CoordinateDataRowPropertyDescriptor(dataColumn.Name, dataColumn.Name, dataColumn.DataType, columnIndex)});
 
             Assert.AreEqual(2.4, row.GetDataValue(columnIndex));
 
@@ -71,41 +71,29 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Editors.ModelFeatureCoordinate
         {
             var lineGeomery = new LineString(new[]
             {
-                new Coordinate(0,0),
-                new Coordinate(10,10),
+                new Coordinate(0, 0),
+                new Coordinate(10, 10),
                 new Coordinate(10, 0),
                 new Coordinate(0, 0)
             });
 
             var mocks = new MockRepository();
-            var feature = (IFeature)mocks.StrictMultiMock(typeof(IFeature), typeof(INotifyPropertyChanged));
+            var feature = (IFeature) mocks.StrictMultiMock(typeof(IFeature), typeof(INotifyPropertyChanged));
 
             feature.Expect(f => f.Geometry).Return(lineGeomery).Repeat.Any();
-            ((INotifyPropertyChanged)feature).Expect(f => f.PropertyChanged += null).IgnoreArguments().Repeat.Times(2);
+            ((INotifyPropertyChanged) feature).Expect(f => f.PropertyChanged += null).IgnoreArguments().Repeat.Times(2);
 
             mocks.ReplayAll();
 
-            var modelFeatureCoordinateData = new ModelFeatureCoordinateData<IFeature>
-            {
-                Feature = feature
-            };
+            var modelFeatureCoordinateData = new ModelFeatureCoordinateData<IFeature> {Feature = feature};
 
             var rowIndex = 1;
 
-            var descriptorX = new CoordinateDataRowGeometryPropertyDescriptor("X")
-            {
-                Type = GeometryPropertyDescriptorType.XValue
-            };
+            var descriptorX = new CoordinateDataRowGeometryPropertyDescriptor("X") {Type = GeometryPropertyDescriptorType.XValue};
 
-            var descriptorY = new CoordinateDataRowGeometryPropertyDescriptor("Y")
-            {
-                Type = GeometryPropertyDescriptorType.YValue
-            };
+            var descriptorY = new CoordinateDataRowGeometryPropertyDescriptor("Y") {Type = GeometryPropertyDescriptorType.YValue};
 
-            var descriptorZ = new CoordinateDataRowGeometryPropertyDescriptor("Z")
-            {
-                Type = GeometryPropertyDescriptorType.ZValue
-            };
+            var descriptorZ = new CoordinateDataRowGeometryPropertyDescriptor("Z") {Type = GeometryPropertyDescriptorType.ZValue};
 
             var row = new CoordinateDataRow(modelFeatureCoordinateData, rowIndex, new List<PropertyDescriptor>
             {
@@ -114,8 +102,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Editors.ModelFeatureCoordinate
                 descriptorZ
             });
 
-            Assert.AreEqual(10, descriptorX.GetValue(row)); // X value of second coordinate (rowIndex 1)
-            Assert.AreEqual(10, descriptorY.GetValue(row)); // Y value of second coordinate (rowIndex 1)
+            Assert.AreEqual(10, descriptorX.GetValue(row));   // X value of second coordinate (rowIndex 1)
+            Assert.AreEqual(10, descriptorY.GetValue(row));   // Y value of second coordinate (rowIndex 1)
             Assert.IsNaN((double) descriptorZ.GetValue(row)); // Z value of second coordinate (rowIndex 1)
 
             mocks.VerifyAll();

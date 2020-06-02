@@ -15,11 +15,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport.Expo
     [TestFixture]
     public class LookupSignalSerializerTest
     {
-        private static readonly XNamespace Fns = "http://www.wldelft.nl/fews";
-
         private const string signalName = "lookup signal name";
         private const string inputName = "Lobith";
         private const string inputParameterName = "H-Lobith";
+        private static readonly XNamespace Fns = "http://www.wldelft.nl/fews";
 
         private Function tableFunction;
         private Input input;

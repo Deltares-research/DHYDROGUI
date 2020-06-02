@@ -16,7 +16,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
         {
             string filePath = TestHelper.GetTestFilePath(@"GeneralStructures\BasicModel\FlowFM_structures2.ini");
 
-            var iniPath = Path.GetFullPath(filePath);
+            string iniPath = Path.GetFullPath(filePath);
 
             if (!File.Exists(iniPath))
             {
@@ -24,9 +24,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             }
 
             // Setup 
-            HydroArea targetArea = new HydroArea();
+            var targetArea = new HydroArea();
             var flowFmModel = new WaterFlowFMModel();
-            Area2DStructuresImporter importer = new Area2DStructuresImporter();
+            var importer = new Area2DStructuresImporter();
             importer.GetModelForArea = area => flowFmModel;
             object hydroArea = null;
 

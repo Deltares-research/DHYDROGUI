@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro;
-using DelftTools.Hydro.Helpers;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
@@ -28,7 +27,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             var hydroModel = new HydroModel();
             hydroModel.CurrentWorkflow = null;
 
-            var result = hydroModel.Validate();
+            ValidationReport result = hydroModel.Validate();
             Assert.AreEqual(1, result.ErrorCount);
         }
 
@@ -48,7 +47,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             hydroModel.Workflows.Add(hydroModelWorkFlow);
 
             Assert.NotNull(hydroModelWorkFlow.HydroModel);
-            
+
             hydroModel.Workflows.Remove(hydroModelWorkFlow);
             Assert.IsNull(hydroModelWorkFlow.HydroModel);
         }
@@ -65,10 +64,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
             // asserts
             hydroModel.GetDataItemByValue(hydroModel.Region).Children.Count
-                .Should().Be.EqualTo(1);
+                      .Should().Be.EqualTo(1);
 
             hydroModel.GetDataItemByValue(hydroModel.Region).Children.First().Value
-                .Should().Be.EqualTo(subRegion);
+                      .Should().Be.EqualTo(subRegion);
         }
 
         [Test]
@@ -79,32 +78,20 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             var childModel = new SimpleHydroModel();
 
             var network = new HydroNetwork();
-            var region = new HydroRegion { SubRegions = { network } };
-            var hydroModel = new HydroModel { Region = region, Activities = { childModel } };
+            var region = new HydroRegion {SubRegions = {network}};
+            var hydroModel = new HydroModel
+            {
+                Region = region,
+                Activities = {childModel}
+            };
 
-            var target = childModel.GetDataItemByValue(childModel.Region);
-            var source = hydroModel.GetDataItemByValue(network);
+            IDataItem target = childModel.GetDataItemByValue(childModel.Region);
+            IDataItem source = hydroModel.GetDataItemByValue(network);
             target.LinkTo(source);
 
             hydroModel.Activities.Clear();
 
             source.LinkedBy.Count.Should().Be.EqualTo(0);
-        }
-
-        private class TimeDepModel : TimeDependentModelBase
-        {
-            protected override void OnInitialize()
-            {
-            }
-
-            protected override void OnExecute()
-            {
-                CurrentTime += TimeStep;
-                if (CurrentTime >= StopTime)
-                {
-                    Status = ActivityStatus.Done;
-                }
-            }
         }
 
         [Test]
@@ -125,7 +112,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             Assert.IsFalse(hydroModel.OutputIsEmpty, "1 model with output");
             //Submodel should also have output.
             Assert.IsFalse(simpleModel.OutputIsEmpty, "1 model with output");
-            
+
             // Add child model without output:
             hydroModel.Activities.Add(new SimpleModel());
             Assert.IsFalse(hydroModel.OutputIsEmpty, "1 empty model and 1 model with output, so Integrated model has output");
@@ -183,15 +170,34 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         {
             var sharedNameOfModels = "SimpleModel";
 
-            var m1 = new SimpleModel { Input = 1, Name = sharedNameOfModels };
-            var m2 = new SimpleModel { Input = 2, Name = sharedNameOfModels };
+            var m1 = new SimpleModel
+            {
+                Input = 1,
+                Name = sharedNameOfModels
+            };
+            var m2 = new SimpleModel
+            {
+                Input = 2,
+                Name = sharedNameOfModels
+            };
 
-            var workflow = new ParallelActivity { Activities = { new ActivityWrapper { Activity = m1 }, new ActivityWrapper { Activity = m2 } } };
+            var workflow = new ParallelActivity
+            {
+                Activities =
+                {
+                    new ActivityWrapper {Activity = m1},
+                    new ActivityWrapper {Activity = m2}
+                }
+            };
 
             var hydroModel = new HydroModel
             {
-                Activities = { m1, m2 },
-                Workflows = { workflow },
+                Activities =
+                {
+                    m1,
+                    m2
+                },
+                Workflows = {workflow},
                 CurrentWorkflow = workflow
             };
 
@@ -205,15 +211,34 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         [Category(TestCategory.Slow)]
         public void RunUsingSimpleModel2()
         {
-            var m1 = new SimpleModel { Input = 1, Name = "SimpleModel1"};
-            var m2 = new SimpleModel { Input = 2, Name = "SimpleModel2"};
+            var m1 = new SimpleModel
+            {
+                Input = 1,
+                Name = "SimpleModel1"
+            };
+            var m2 = new SimpleModel
+            {
+                Input = 2,
+                Name = "SimpleModel2"
+            };
 
-            var workflow = new ParallelActivity { Activities = { new ActivityWrapper { Activity = m1 }, new ActivityWrapper { Activity = m2 } } };
+            var workflow = new ParallelActivity
+            {
+                Activities =
+                {
+                    new ActivityWrapper {Activity = m1},
+                    new ActivityWrapper {Activity = m2}
+                }
+            };
 
             var hydroModel = new HydroModel
             {
-                Activities = { m1, m2 },
-                Workflows = { workflow },
+                Activities =
+                {
+                    m1,
+                    m2
+                },
+                Workflows = {workflow},
                 CurrentWorkflow = workflow
             };
 
@@ -258,35 +283,48 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
             var hydroModel = new HydroModel();
             var workFlow = new SequentialActivity
+            {
+                Activities =
                 {
-                    Activities =
+                    hydroModelWorkFlow1,
+                    new ParallelActivity
+                    {
+                        Activities =
                         {
-                            hydroModelWorkFlow1,
-                            new ParallelActivity
-                                {
-                                    Activities =
-                                        {
-                                            hydroModelWorkFlow2,
-                                            hydroModelWorkFlow3,
-                                            new SequentialActivity
-                                                {
-                                                    Activities = {hydroModelWorkFlow4}
-                                                }
-                                        }
-                                }
+                            hydroModelWorkFlow2,
+                            hydroModelWorkFlow3,
+                            new SequentialActivity {Activities = {hydroModelWorkFlow4}}
                         }
-                };
+                    }
+                }
+            };
 
             hydroModel.Workflows.Add(workFlow);
             hydroModel.CurrentWorkflow = workFlow;
 
-            var lookUp = hydroModel.CurrentWorkFlowData.HydroModelWorkFlowDataLookUp;
+            IDictionary<IHydroModelWorkFlowData, IList<int>> lookUp = hydroModel.CurrentWorkFlowData.HydroModelWorkFlowDataLookUp;
 
             Assert.AreEqual(4, lookUp.Count);
-            Assert.AreEqual(new[] { 0 }, lookUp[hydroModelWorkFlowData1]);
-            Assert.AreEqual(new[] { 1, 0 }, lookUp[hydroModelWorkFlowData2]);
-            Assert.AreEqual(new[] { 1, 1 }, lookUp[hydroModelWorkFlowData3]);
-            Assert.AreEqual(new[] { 1, 2, 0 }, lookUp[hydroModelWorkFlowData4]);
+            Assert.AreEqual(new[]
+            {
+                0
+            }, lookUp[hydroModelWorkFlowData1]);
+            Assert.AreEqual(new[]
+            {
+                1,
+                0
+            }, lookUp[hydroModelWorkFlowData2]);
+            Assert.AreEqual(new[]
+            {
+                1,
+                1
+            }, lookUp[hydroModelWorkFlowData3]);
+            Assert.AreEqual(new[]
+            {
+                1,
+                2,
+                0
+            }, lookUp[hydroModelWorkFlowData4]);
         }
 
         [Test]
@@ -316,21 +354,18 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             var workFlow = new SequentialActivity
             {
                 Activities =
+                {
+                    hydroModelWorkFlow1,
+                    new ParallelActivity
+                    {
+                        Activities =
                         {
-                            hydroModelWorkFlow1,
-                            new ParallelActivity
-                                {
-                                    Activities =
-                                        {
-                                            hydroModelWorkFlow2,
-                                            hydroModelWorkFlow3,
-                                            new SequentialActivity
-                                                {
-                                                    Activities = {hydroModelWorkFlow4}
-                                                }
-                                        }
-                                }
+                            hydroModelWorkFlow2,
+                            hydroModelWorkFlow3,
+                            new SequentialActivity {Activities = {hydroModelWorkFlow4}}
                         }
+                    }
+                }
             };
 
             hydroModel.Workflows.Add(workFlow);
@@ -342,15 +377,39 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             Assert.IsNull(hydroModelWorkFlow4.Data);
 
             var compositeHydroModelWorkFlowData = new CompositeHydroModelWorkFlowData
+            {
+                HydroModelWorkFlowDataLookUp = new Dictionary<IHydroModelWorkFlowData, IList<int>>
                 {
-                    HydroModelWorkFlowDataLookUp = new Dictionary<IHydroModelWorkFlowData, IList<int>>
+                    {
+                        hydroModelWorkFlowData1, new List<int>(new[]
                         {
-                            {hydroModelWorkFlowData1, new List<int>(new[] {0})},
-                            {hydroModelWorkFlowData2, new List<int>(new[] {1, 0})},
-                            {hydroModelWorkFlowData3, new List<int>(new[] {1, 1})},
-                            {hydroModelWorkFlowData4, new List<int>(new[] {1, 2, 0})}
-                        }
-                };
+                            0
+                        })
+                    },
+                    {
+                        hydroModelWorkFlowData2, new List<int>(new[]
+                        {
+                            1,
+                            0
+                        })
+                    },
+                    {
+                        hydroModelWorkFlowData3, new List<int>(new[]
+                        {
+                            1,
+                            1
+                        })
+                    },
+                    {
+                        hydroModelWorkFlowData4, new List<int>(new[]
+                        {
+                            1,
+                            2,
+                            0
+                        })
+                    }
+                }
+            };
 
             hydroModel.CurrentWorkFlowData = compositeHydroModelWorkFlowData;
 
@@ -364,10 +423,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         public void GivenAHydroModel_WhenOnInitializeIsCalled_ThenThePrepareForIntegratedModelRunIsCalled()
         {
             // Given
-            var activity = Substitute.For<IActivity, IDimrModel>();
+            IActivity activity = Substitute.For<IActivity, IDimrModel>();
             ((IDimrModel) activity).Validate().Returns(new ValidationReport("", new List<ValidationIssue>()));
 
-            var workflow = new SequentialActivity {Activities = { activity }};
+            var workflow = new SequentialActivity {Activities = {activity}};
 
             using (var hydroModel = new HydroModel())
             {
@@ -382,6 +441,20 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             }
         }
 
+        private class TimeDepModel : TimeDependentModelBase
+        {
+            protected override void OnInitialize() {}
+
+            protected override void OnExecute()
+            {
+                CurrentTime += TimeStep;
+                if (CurrentTime >= StopTime)
+                {
+                    Status = ActivityStatus.Done;
+                }
+            }
+        }
+
         public class SimpleHydroModel : ModelBase, IHydroModel
         {
             public SimpleHydroModel()
@@ -389,18 +462,28 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 DataItems.Add(new DataItem(new HydroNetwork(), "network", SupportedRegionType, DataItemRole.Input, "network"));
             }
 
-            protected override void OnInitialize()
+            public Type SupportedRegionType
             {
+                get
+                {
+                    return typeof(HydroNetwork);
+                }
             }
+
+            public IHydroRegion Region
+            {
+                get
+                {
+                    return (IHydroRegion) DataItems.First(di => di.ValueType == SupportedRegionType).Value;
+                }
+            }
+
+            protected override void OnInitialize() {}
 
             protected override void OnExecute()
             {
                 Status = ActivityStatus.Done;
             }
-
-            public IHydroRegion Region { get { return (IHydroRegion) DataItems.First(di => di.ValueType == SupportedRegionType).Value; } }
-
-            public Type SupportedRegionType { get { return typeof (HydroNetwork); } }
         }
 
         public class SimpleModel : TimeDependentModelBase

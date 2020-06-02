@@ -13,6 +13,22 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport.Expo
     {
         private readonly Random random = new Random();
 
+        [Test]
+        public void TryParse_ExpressionValid_ReturnsTrue()
+        {
+            // Setup
+            int depth = random.Next(1, 5);
+            string expressionStr = GetRandomExpression(depth);
+
+            // Call
+            bool result = ExpressionParser.TryParse(expressionStr, out IExpressionNode rootNode, out string errorMessage);
+
+            // Assert
+            Assert.That(result, Is.True);
+            Assert.That(rootNode, Is.Not.Null);
+            Assert.That(errorMessage, Is.Null);
+        }
+
         [TestCase("a * b")]
         [TestCase("(A * B")]
         [TestCase("Min(A,B)")]
@@ -32,22 +48,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport.Expo
             Assert.That(result, Is.False);
             Assert.That(rootNode, Is.Null);
             Assert.That(errorMessage, Is.Not.Null);
-        }
-
-        [Test]
-        public void TryParse_ExpressionValid_ReturnsTrue()
-        {
-            // Setup
-            int depth = random.Next(1, 5);
-            string expressionStr = GetRandomExpression(depth);
-
-            // Call
-            bool result = ExpressionParser.TryParse(expressionStr, out IExpressionNode rootNode, out string errorMessage);
-
-            // Assert
-            Assert.That(result, Is.True);
-            Assert.That(rootNode, Is.Not.Null);
-            Assert.That(errorMessage, Is.Null);
         }
 
         [TestCase(Operator.Add)]

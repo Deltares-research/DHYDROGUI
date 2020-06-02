@@ -12,12 +12,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView.Weir
         [Category(TestCategory.WindowsForms)]
         public void Show()
         {
-            var view = new GeneralStructureWeirFormulaView
-                           {
-                               Data = new GeneralStructureWeirFormula()
-                           };
+            var view = new GeneralStructureWeirFormulaView {Data = new GeneralStructureWeirFormula()};
             WindowsFormsTestHelper.ShowModal(view);
         }
-
     }
 }

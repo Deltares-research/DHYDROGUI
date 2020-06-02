@@ -8,10 +8,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms.Properties
     [TestFixture]
     public class FactorRulePropertiesTest
     {
-        [Test, Category(TestCategory.WindowsForms)]
+        [Test]
+        [Category(TestCategory.WindowsForms)]
         public void ShowProperties()
         {
-            WindowsFormsTestHelper.ShowPropertyGridForObject(new FactorRuleProperties { Data = new FactorRule() });
+            WindowsFormsTestHelper.ShowPropertyGridForObject(new FactorRuleProperties {Data = new FactorRule()});
         }
     }
 }

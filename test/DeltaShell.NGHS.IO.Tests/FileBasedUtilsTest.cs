@@ -34,7 +34,7 @@ namespace DeltaShell.NGHS.IO.Tests
                 var projectDataDirectoryInfo = new DirectoryInfo(Path.Combine(testDir, "project_data"));
                 FileUtils.CreateDirectoryIfNotExists(projectDataDirectoryInfo.FullName);
 
-                var compositeModelDir = Path.Combine(projectDataDirectoryInfo.FullName, compositeModel.Name);
+                string compositeModelDir = Path.Combine(projectDataDirectoryInfo.FullName, compositeModel.Name);
                 FileUtils.CreateDirectoryIfNotExists(compositeModelDir);
 
                 CreateStandardDirectoriesForActivity(projectDataDirectoryInfo.FullName, compositeModel);
@@ -59,7 +59,7 @@ namespace DeltaShell.NGHS.IO.Tests
                 var projectDataDirectoryInfo = new DirectoryInfo(Path.Combine(testDir, "project_data"));
                 FileUtils.CreateDirectoryIfNotExists(projectDataDirectoryInfo.FullName);
 
-                var standaloneModelDir = Path.Combine(projectDataDirectoryInfo.FullName, standaloneModel.Name);
+                string standaloneModelDir = Path.Combine(projectDataDirectoryInfo.FullName, standaloneModel.Name);
                 FileUtils.CreateDirectoryIfNotExists(standaloneModelDir);
 
                 CreateStandardDirectoriesForActivity(projectDataDirectoryInfo.FullName, standaloneModel);
@@ -75,7 +75,7 @@ namespace DeltaShell.NGHS.IO.Tests
 
         private static void DoInTemperaryDirectory(Action<string> action)
         {
-            var testDir = FileUtils.CreateTempDirectory();
+            string testDir = FileUtils.CreateTempDirectory();
             try
             {
                 action.Invoke(testDir);
@@ -92,17 +92,17 @@ namespace DeltaShell.NGHS.IO.Tests
             var compositeActivity = activity as ICompositeActivity;
             if (compositeActivity != null)
             {
-                var compositeActivityDirectory = Path.Combine(rootDir, compositeActivity.Name);
+                string compositeActivityDirectory = Path.Combine(rootDir, compositeActivity.Name);
                 FileUtils.CreateDirectoryIfNotExists(compositeActivityDirectory);
 
-                foreach (var subActivity in compositeActivity.Activities)
+                foreach (IActivity subActivity in compositeActivity.Activities)
                 {
                     CreateStandardDirectoriesForActivity(compositeActivityDirectory, subActivity);
                 }
             }
             else
             {
-                var activityDirectory = Path.Combine(rootDir, activity.Name);
+                string activityDirectory = Path.Combine(rootDir, activity.Name);
                 FileUtils.CreateDirectoryIfNotExists(activityDirectory);
                 FileUtils.CreateDirectoryIfNotExists(Path.Combine(activityDirectory, "input"));
                 FileUtils.CreateDirectoryIfNotExists(Path.Combine(activityDirectory, "output"));
@@ -112,14 +112,17 @@ namespace DeltaShell.NGHS.IO.Tests
         private static void RecursivelyAddNoiseToDirectories(DirectoryInfo rootDirectoryInfo)
         {
             FileUtils.CreateDirectoryIfNotExists(rootDirectoryInfo.FullName);
-            var subDirectories = rootDirectoryInfo.GetDirectories("*", SearchOption.AllDirectories);
+            DirectoryInfo[] subDirectories = rootDirectoryInfo.GetDirectories("*", SearchOption.AllDirectories);
 
-            foreach (var directory in subDirectories)
+            foreach (DirectoryInfo directory in subDirectories)
             {
-                if (directory.Name == "input" || directory.Name == "output") continue;
+                if (directory.Name == "input" || directory.Name == "output")
+                {
+                    continue;
+                }
 
                 Directory.CreateDirectory(Path.Combine(directory.FullName, "blarg"));
-                using (File.Create(Path.Combine(directory.FullName, "blarg.txt"))) { } // dispose of FileStream
+                using (File.Create(Path.Combine(directory.FullName, "blarg.txt"))) {} // dispose of FileStream
             }
         }
 
@@ -129,63 +132,119 @@ namespace DeltaShell.NGHS.IO.Tests
             if (compositeActivity != null)
             {
                 var compositeActivityDirectoryInfo = new DirectoryInfo(Path.Combine(rootDir, compositeActivity.Name));
-                if (!compositeActivityDirectoryInfo.Exists) return false;
-
-                var subDirectoryNames = compositeActivityDirectoryInfo.GetDirectories().Select(di => di.Name).ToList();
-                if (subDirectoryNames.Count != compositeActivity.Activities.Count) return false;
-                
-                foreach (var subActivity in compositeActivity.Activities)
+                if (!compositeActivityDirectoryInfo.Exists)
                 {
-                    if (!subDirectoryNames.Contains(subActivity.Name)) return false;
-                    if (!VerifyStandardDirectoriesForActivity(compositeActivityDirectoryInfo.FullName, subActivity)) return false;
+                    return false;
+                }
+
+                List<string> subDirectoryNames = compositeActivityDirectoryInfo.GetDirectories().Select(di => di.Name).ToList();
+                if (subDirectoryNames.Count != compositeActivity.Activities.Count)
+                {
+                    return false;
+                }
+
+                foreach (IActivity subActivity in compositeActivity.Activities)
+                {
+                    if (!subDirectoryNames.Contains(subActivity.Name))
+                    {
+                        return false;
+                    }
+
+                    if (!VerifyStandardDirectoriesForActivity(compositeActivityDirectoryInfo.FullName, subActivity))
+                    {
+                        return false;
+                    }
                 }
             }
             else
             {
                 var modelDirectoryInfo = new DirectoryInfo(Path.Combine(rootDir, activity.Name));
-                if (!modelDirectoryInfo.Exists) return false;
+                if (!modelDirectoryInfo.Exists)
+                {
+                    return false;
+                }
 
-                var subDirectoryNames = modelDirectoryInfo.GetDirectories().Select(di => di.Name).ToList();
-                if (subDirectoryNames.Count != 2) return false;
+                List<string> subDirectoryNames = modelDirectoryInfo.GetDirectories().Select(di => di.Name).ToList();
+                if (subDirectoryNames.Count != 2)
+                {
+                    return false;
+                }
 
-                if (!(subDirectoryNames.Contains("input") && subDirectoryNames.Contains("output"))) return false;
+                if (!(subDirectoryNames.Contains("input") && subDirectoryNames.Contains("output")))
+                {
+                    return false;
+                }
 
-                var filesInDirectory = modelDirectoryInfo.GetFiles();
-                if (filesInDirectory.Length > 0) return false;
+                FileInfo[] filesInDirectory = modelDirectoryInfo.GetFiles();
+                if (filesInDirectory.Length > 0)
+                {
+                    return false;
+                }
             }
+
             return true;
         }
 
         private class TestCompositeActivity : CompositeActivity, IHydroModel
         {
             #region CompositeActivity implementation
-            protected override void OnInitialize() { }
 
-            protected override void OnExecute() { }
+            protected override void OnInitialize() {}
+
+            protected override void OnExecute() {}
+
             #endregion
 
             #region IHydroModel implementation
-            public bool CanRename(IDataItem item) { return false; }
 
-            public bool CanRemove(IDataItem item) { return false; }
-            
-            public bool CanCopy(IDataItem item) { return false; }
-            
-            public bool IsDataItemActive(IDataItem dataItem) { return false; }
-            
-            public bool IsDataItemValid(IDataItem dataItem) { return false; }
-            
-            public bool IsLinkAllowed(IDataItem source, IDataItem target) { return false; }
-            
-            public IEnumerable<IFeature> GetChildDataItemLocations(DataItemRole role) { return Enumerable.Empty<IFeature>(); }
-            
-            public IEnumerable<IDataItem> GetChildDataItems(IFeature location) { return Enumerable.Empty<IDataItem>(); }
+            public bool CanRename(IDataItem item)
+            {
+                return false;
+            }
 
-            public void UpdateLink(object data) { }
+            public bool CanRemove(IDataItem item)
+            {
+                return false;
+            }
 
-            public IDataItem GetDataItemByValue(object value) { return null; }
-        
-            public void ClearOutput() { }
+            public bool CanCopy(IDataItem item)
+            {
+                return false;
+            }
+
+            public bool IsDataItemActive(IDataItem dataItem)
+            {
+                return false;
+            }
+
+            public bool IsDataItemValid(IDataItem dataItem)
+            {
+                return false;
+            }
+
+            public bool IsLinkAllowed(IDataItem source, IDataItem target)
+            {
+                return false;
+            }
+
+            public IEnumerable<IFeature> GetChildDataItemLocations(DataItemRole role)
+            {
+                return Enumerable.Empty<IFeature>();
+            }
+
+            public IEnumerable<IDataItem> GetChildDataItems(IFeature location)
+            {
+                return Enumerable.Empty<IDataItem>();
+            }
+
+            public void UpdateLink(object data) {}
+
+            public IDataItem GetDataItemByValue(object value)
+            {
+                return null;
+            }
+
+            public void ClearOutput() {}
 
             public IEventedList<IDataItem> DataItems { get; set; }
             public IEnumerable<IDataItem> AllDataItems { get; }
@@ -196,47 +255,78 @@ namespace DeltaShell.NGHS.IO.Tests
             public string ExplicitWorkingDirectory { get; set; }
             public bool SuspendClearOutputOnInputChange { get; set; }
             public IHydroRegion Region { get; }
+
             #endregion
         }
 
         private class TestActivity : Activity, IHydroModel
         {
             #region Activity implementation
-            protected override void OnInitialize() { }
 
-            protected override void OnExecute() { }
+            protected override void OnInitialize() {}
 
-            protected override void OnCancel() { }
+            protected override void OnExecute() {}
 
-            protected override void OnCleanUp() { }
+            protected override void OnCancel() {}
 
-            protected override void OnFinish() { }
+            protected override void OnCleanUp() {}
+
+            protected override void OnFinish() {}
+
             #endregion
 
             #region IHydroModel implementation
-            public bool CanRename(IDataItem item) { return false; }
 
-            public bool CanRemove(IDataItem item) { return false; }
+            public bool CanRename(IDataItem item)
+            {
+                return false;
+            }
 
-            public bool CanCopy(IDataItem item) { return false; }
+            public bool CanRemove(IDataItem item)
+            {
+                return false;
+            }
+
+            public bool CanCopy(IDataItem item)
+            {
+                return false;
+            }
 
             public bool ReadOnly { get; set; }
 
-            public bool IsDataItemActive(IDataItem dataItem) { return false; }
+            public bool IsDataItemActive(IDataItem dataItem)
+            {
+                return false;
+            }
 
-            public bool IsDataItemValid(IDataItem dataItem) { return false; }
+            public bool IsDataItemValid(IDataItem dataItem)
+            {
+                return false;
+            }
 
-            public bool IsLinkAllowed(IDataItem source, IDataItem target) { return false; }
+            public bool IsLinkAllowed(IDataItem source, IDataItem target)
+            {
+                return false;
+            }
 
-            public IEnumerable<IFeature> GetChildDataItemLocations(DataItemRole role) { return Enumerable.Empty<IFeature>(); }
+            public IEnumerable<IFeature> GetChildDataItemLocations(DataItemRole role)
+            {
+                return Enumerable.Empty<IFeature>();
+            }
 
-            public IEnumerable<IDataItem> GetChildDataItems(IFeature location) { return Enumerable.Empty<IDataItem>(); }
+            public IEnumerable<IDataItem> GetChildDataItems(IFeature location)
+            {
+                return Enumerable.Empty<IDataItem>();
+            }
 
-            public void UpdateLink(object data) { }
+            public void UpdateLink(object data) {}
 
-            public IDataItem GetDataItemByValue(object value) { return null; }
+            public IDataItem GetDataItemByValue(object value)
+            {
+                return null;
+            }
 
-            public void ClearOutput() { }
+            public void ClearOutput() {}
 
             public IEventedList<IDataItem> DataItems { get; set; }
             public IEnumerable<IDataItem> AllDataItems { get; }
@@ -247,8 +337,8 @@ namespace DeltaShell.NGHS.IO.Tests
             public string ExplicitWorkingDirectory { get; set; }
             public bool SuspendClearOutputOnInputChange { get; set; }
             public IHydroRegion Region { get; }
+
             #endregion
         }
-
     }
 }

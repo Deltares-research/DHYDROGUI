@@ -20,22 +20,22 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
             {
                 gui.Run();
                 var controlGroup = new ControlGroup();
-                controlGroup.Rules.Add(new PIDRule{Name ="testRule"});
+                controlGroup.Rules.Add(new PIDRule {Name = "testRule"});
 
                 // ControlGroupEditor is composed in CompositeView (ControlGroupGraphView)
                 // :: ControlGroupEditorViewContext.ViewType should return type of View, not CompositeParent, but this doesn't work yet.
                 // var view = new ControlGroupEditor { Data = controlGroup };
 
-                var model = new RealTimeControlModel { ControlGroups = { controlGroup } };
+                var model = new RealTimeControlModel {ControlGroups = {controlGroup}};
                 var view = new ControlGroupGraphView
-                    {
-                        Data = controlGroup,
-                        Model = model
-                    };
+                {
+                    Data = controlGroup,
+                    Model = model
+                };
 
                 gui.DocumentViews.Add(view);
 
-                var shape = view.ControlGroupEditor.GraphControl.GetShapes<Shape>().First();
+                Shape shape = view.ControlGroupEditor.GraphControl.GetShapes<Shape>().First();
                 ControlGroupEditorController.MoveShape(shape, 10, 20);
                 Assert.IsNotNull(shape.Tag);
                 Assert.AreEqual(10, shape.X);
@@ -43,10 +43,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
 
                 gui.DocumentViews.Remove(view);
                 var newView = new ControlGroupGraphView
-                    {
-                        Data = controlGroup,
-                        Model = model
-                    };
+                {
+                    Data = controlGroup,
+                    Model = model
+                };
                 gui.DocumentViews.Add(newView);
 
                 shape = newView.ControlGroupEditor.GraphControl.GetShapes<Shape>().First();
@@ -62,10 +62,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                 gui.DocumentViews.Remove(view);
 
                 var newerView = new ControlGroupGraphView
-                    {
-                        Data = controlGroup,
-                        Model = model
-                    };
+                {
+                    Data = controlGroup,
+                    Model = model
+                };
                 gui.DocumentViews.Add(newerView);
 
                 shape = newerView.ControlGroupEditor.GraphControl.GetShapes<Shape>().First();

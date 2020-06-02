@@ -29,7 +29,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             TestHelper.AssertLogMessageIsGenerated(() => inputFileExporter.Export(waqModel, ""), "Water quality model is not valid. Please check the validation report.");
 
             // Make model valid by adding a substance to the SubstanceProcessLibrary (at least one needs to be present)
-            waqModel.SubstanceProcessLibrary.Substances.Add(new WaterQualitySubstance { Name = "Test substance" });
+            waqModel.SubstanceProcessLibrary.Substances.Add(new WaterQualitySubstance {Name = "Test substance"});
 
             using (var tempDirectory = new TemporaryDirectory())
             {

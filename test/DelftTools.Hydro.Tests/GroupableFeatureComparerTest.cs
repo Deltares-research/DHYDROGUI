@@ -9,11 +9,6 @@ namespace DelftTools.Hydro.Tests
     {
         private readonly MockRepository mock = new MockRepository();
 
-        public interface ITestGroupableNameableFeature : IGroupableFeature, INameable
-        {
-            
-        }
-
         [Test]
         [TestCase(null, null, null, null, true)]
         [TestCase("name", "groupName", "name", "groupName", true)]
@@ -46,7 +41,6 @@ namespace DelftTools.Hydro.Tests
 
             currentItem.Expect(c => c.GroupName).Return("TheGreatestGroup").Repeat.Any();
 
-
             var importedItem = mock.DynamicMock<ITestGroupableNameableFeature>();
             importedItem.Expect(c => c.GroupName).Return("TheNotSoGreatGroup").Repeat.Any();
 
@@ -64,15 +58,17 @@ namespace DelftTools.Hydro.Tests
 
             mock.ReplayAll();
 
-            var shouldReplace = new GroupableFeatureComparer<ITestGroupableNameableFeature>().Equals(null, importedItem);
+            bool shouldReplace = new GroupableFeatureComparer<ITestGroupableNameableFeature>().Equals(null, importedItem);
             Assert.IsFalse(shouldReplace);
         }
 
         [Test]
         public void NotReplaceWhileTwoFeaturesAreNullGroupableTest()
         {
-            var shouldReplace = new GroupableFeatureComparer<ITestGroupableNameableFeature>().Equals(null, null);
+            bool shouldReplace = new GroupableFeatureComparer<ITestGroupableNameableFeature>().Equals(null, null);
             Assert.IsTrue(shouldReplace);
         }
+
+        public interface ITestGroupableNameableFeature : IGroupableFeature, INameable {}
     }
 }

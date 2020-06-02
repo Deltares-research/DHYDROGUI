@@ -69,10 +69,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.SettingsWpf
                 return message;
             };
 
-            var fieldDescription = new FieldUIDescription(null, null)
-            {
-                ValidationMethod = validationFunc
-            };
+            var fieldDescription = new FieldUIDescription(null, null) {ValidationMethod = validationFunc};
 
             // Call
             FieldUIDescription newDescription = FieldUIDescriptionHelper.CreateFieldDescription(fieldDescription, null, null);
@@ -80,7 +77,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.SettingsWpf
             var dataArgument = new object();
             var valueArgument = new object();
             newDescription.Validate(dataArgument, valueArgument, out string validationMessage);
-            
+
             // Assert
             Assert.That(dataFunctionArgument, Is.SameAs(dataArgument));
             Assert.That(valueFunctionArgument, Is.SameAs(valueArgument));
@@ -99,10 +96,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.SettingsWpf
                 return isVisible;
             };
 
-            var fieldDescription = new FieldUIDescription(null, null)
-            {
-                VisibilityMethod = isVisibleFunc
-            };
+            var fieldDescription = new FieldUIDescription(null, null) {VisibilityMethod = isVisibleFunc};
 
             // Call
             FieldUIDescription newDescription = FieldUIDescriptionHelper.CreateFieldDescription(fieldDescription, null, null);
@@ -196,11 +190,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.SettingsWpf
 
             // Call
             FieldUIDescription newDescription = FieldUIDescriptionHelper.CreateFieldDescription(fieldDescription, null, newSetValueAction);
-            
+
             var dataArgument = new object();
             var valueArgument = new object();
             newDescription.SetValue(dataArgument, valueArgument);
-            
+
             // Assert
             Assert.That(originalDataArgument, Is.Null);
             Assert.That(originalValueArgument, Is.Null);

@@ -22,8 +22,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
             var timeSeries = new TimeSeries();
             timeSeries.Arguments[0].DefaultValue = new DateTime(2000, 1, 1);
             timeSeries.Components.Add(new Variable<double>("someThing"));
-            timeSeries.Time.ExtrapolationType = ExtrapolationType.Constant; 
-            var time = DateTime.Now;
+            timeSeries.Time.ExtrapolationType = ExtrapolationType.Constant;
+            DateTime time = DateTime.Now;
             timeSeries[time] = 1.0;
             source.TimeSeries = timeSeries;
             var newRule = new TimeRule();
@@ -33,12 +33,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
             Assert.AreEqual(source.Name, newRule.Name);
             Assert.AreEqual(source.InterpolationOptionsTime, newRule.InterpolationOptionsTime);
             Assert.AreEqual(source.Periodicity, newRule.Periodicity);
-            for (int i = 0; i < source.TimeSeries.Arguments[0].Values.Count; i++)
+            for (var i = 0; i < source.TimeSeries.Arguments[0].Values.Count; i++)
             {
                 Assert.AreEqual(source.TimeSeries.Arguments[0].Values[i], newRule.TimeSeries.Arguments[0].Values[i]);
                 Assert.AreEqual(source.TimeSeries.Components[0].Values[i], newRule.TimeSeries.Components[0].Values[i]);
             }
-            var clone = (TimeRule)source.Clone();
+
+            var clone = (TimeRule) source.Clone();
             Assert.IsFalse(ReferenceEquals(source, clone));
             Assert.AreEqual(source.Name, clone.Name);
         }
@@ -67,5 +68,4 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
             };
         }
     }
-
 }

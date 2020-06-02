@@ -13,10 +13,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
         [Test]
         public void ConstructEmptyHydroModel()
         {
-            var dimrPath = TestHelper.GetTestFilePath(Path.Combine("FileReader", "dimr.xml"));
+            string dimrPath = TestHelper.GetTestFilePath(Path.Combine("FileReader", "dimr.xml"));
             var list = new List<IDimrModelFileImporter>();
 
-            var hydroModel = HydroModelReader.Read(dimrPath, list);
+            HydroModel hydroModel = HydroModelReader.Read(dimrPath, list);
 
             Assert.NotNull(hydroModel);
             Assert.That(hydroModel.Activities.Count, Is.EqualTo(0));

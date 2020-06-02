@@ -10,6 +10,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
     [TestFixture]
     public class RealTimeControlModelImporterTest
     {
+        private RealTimeControlModelImporter importer;
+
         [TestFixtureSetUp]
         public void SetUp()
         {
@@ -22,15 +24,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
             importer = null;
         }
 
-        private RealTimeControlModelImporter importer;
-
         [Test]
         public void GivenAnInvalidRtcDirectoryPath_WhenReading_ThenNoExceptionIsThrownAndNullIsReturned()
         {
             // Given
-            var directoryPath = TestHelper.GetTestFilePath(Path.Combine("ImportExport", "Invalid"));
-            Assert.That(!Directory.Exists(directoryPath), 
-                $"Directory path '{directoryPath}' was expected to exist.");
+            string directoryPath = TestHelper.GetTestFilePath(Path.Combine("ImportExport", "Invalid"));
+            Assert.That(!Directory.Exists(directoryPath),
+                        $"Directory path '{directoryPath}' was expected to exist.");
 
             object modelObject = null;
 
@@ -77,7 +77,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport
         {
             Assert.AreEqual(false, importer.OpenViewAfterImport);
         }
-        
+
         [Test]
         public void GivenARealTimeControlModelImporter_WhenSupportedItemTypesIsCalled_ThenExpectedIsReturned()
         {

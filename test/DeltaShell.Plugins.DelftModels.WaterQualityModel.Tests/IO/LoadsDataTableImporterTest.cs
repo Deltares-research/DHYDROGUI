@@ -50,7 +50,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             // Setup
             var importer = new LoadsDataTableImporter();
 
-            var targetObject = new DataTableManager { Name = "UnsupportedName" };
+            var targetObject = new DataTableManager {Name = "UnsupportedName"};
 
             // Call
             bool result = importer.CanImportOn(targetObject);
@@ -65,7 +65,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             // Setup
             var importer = new LoadsDataTableImporter();
 
-            var targetObject = new DataTableManager { Name = "Loads Data" };
+            var targetObject = new DataTableManager {Name = "Loads Data"};
 
             // Call
             bool result = importer.CanImportOn(targetObject);

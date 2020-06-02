@@ -26,17 +26,23 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
     {
         private const string ErrorMessageMissingSnappedGeometriesPointSource =
             "Due to an error during grid snapping of point sources, not every point source is snapped";
+
         private const string ErrorMessageEqualGeometriesPointSource =
             "Due to an exception, the original geometry of a point source is returned instead of the snapped geometry";
+
         private const string ErrorMessageDifferentGeometryValuesPointSource = "Expected another value from the kernel for the snapped geometry of a point source";
+
         private const string ErrorMessageAmountOfCoordinatesPointSource =
             "Due to an error during grid snapping of a point source, the amount of coordinates of the snapped geometry is not correct";
 
         private const string ErrorMessageMissingSnappedGeometriesSourceAndSink =
             "Due to an error during grid snapping of sources and sinks , not every source and sink is snapped";
+
         private const string ErrorMessageEqualGeometriesSourceAndSink =
             "Due to an exception, the original geometry of a source and sink is returned instead of the snapped geometry";
+
         private const string ErrorMessageDifferentGeometryValuesSourceAndSink = "Expected another value from the kernel for the snapped geometry of a source and sink";
+
         private const string ErrorMessageAmountOfCoordinatesSourceAndSink =
             "Due to an error during grid snapping of a source and sink, the amount of coordinates of the snapped geometry is not correct";
 
@@ -44,10 +50,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
         [Category(TestCategory.Slow)]
         public void GivenModelWithTrachytopes_WhenGridSnappingIsCalled_ThenTrachytopesShouldBeRemovedFromSmallExport()
         {
-            var netFile = TestHelper.GetTestFilePath(@"basicGrid\basicGrid_net.nc");
+            string netFile = TestHelper.GetTestFilePath(@"basicGrid\basicGrid_net.nc");
             netFile = TestHelper.CreateLocalCopy(netFile);
             Assert.IsTrue(File.Exists(netFile));
-            var tempFolder = FileUtils.CreateTempDirectory();
+            string tempFolder = FileUtils.CreateTempDirectory();
 
             try
             {
@@ -60,14 +66,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                 model.ModelDefinition.GetModelProperty(KnownProperties.TrtRou).SetValueAsString("Y");
 
                 var api = new UnstrucGridOperationApi(model, false);
-                var tempMduPath = (string)TypeUtils.GetField<UnstrucGridOperationApi, string>(api, "mduFilePath");
+                var tempMduPath = (string) TypeUtils.GetField<UnstrucGridOperationApi, string>(api, "mduFilePath");
 
-                var mduFileDir = Path.GetDirectoryName(tempMduPath);
+                string mduFileDir = Path.GetDirectoryName(tempMduPath);
                 var fmModelUsedByApi = new WaterFlowFMModel(Path.Combine(mduFileDir, tempMduPath));
 
-                var trtRouUsedInOriginalFMModel = model.ModelDefinition.GetModelProperty(KnownProperties.TrtRou).GetValueAsString();
+                string trtRouUsedInOriginalFMModel = model.ModelDefinition.GetModelProperty(KnownProperties.TrtRou).GetValueAsString();
                 Assert.That(trtRouUsedInOriginalFMModel, Is.EqualTo("Y"));
-                var trtRouUsedInFMModelByApi = fmModelUsedByApi.ModelDefinition.GetModelProperty(KnownProperties.TrtRou).GetValueAsString();
+                string trtRouUsedInFMModelByApi = fmModelUsedByApi.ModelDefinition.GetModelProperty(KnownProperties.TrtRou).GetValueAsString();
                 Assert.That(trtRouUsedInFMModelByApi, Is.EqualTo("N"));
             }
             finally
@@ -86,11 +92,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
         [Category(TestCategory.Slow)]
         public void GivenAnFMModelWithAMorphologyBoundary_WhenGridSnappingIsCalled_ThenMorphologyShouldBeRemovedFromSmallExport()
         {
-            var srcNetFile = TestHelper.GetTestFilePath(@"basicGrid\basicGrid_net.nc");
+            string srcNetFile = TestHelper.GetTestFilePath(@"basicGrid\basicGrid_net.nc");
 
             TestHelper.PerformActionInTemporaryDirectory(tempDir =>
             {
-                var mduPath = Path.Combine(tempDir, "morph_test.mdu");
+                string mduPath = Path.Combine(tempDir, "morph_test.mdu");
                 using (var model = new WaterFlowFMModel())
                 {
                     // Given
@@ -104,17 +110,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                     string tempMduPath = null;
 
                     Assert.DoesNotThrow(() =>
-                        {
-                            using (var api = new UnstrucGridOperationApi(model, false))
-                            {
-                                tempMduPath = TypeUtils.GetField<UnstrucGridOperationApi, string>(api, "mduFilePath");
-                            }
-                        }
-                    , "Expected no exception while constructing UnstrucGRidOperationApi.");
+                                        {
+                                            using (var api = new UnstrucGridOperationApi(model, false))
+                                            {
+                                                tempMduPath = TypeUtils.GetField<UnstrucGridOperationApi, string>(api, "mduFilePath");
+                                            }
+                                        }
+                                        , "Expected no exception while constructing UnstrucGRidOperationApi.");
 
                     Assert.That(tempMduPath, Is.Not.Null,
                                 "Expected the API to return a mdu path.");
-                    var mduFileDir = Path.GetDirectoryName(tempMduPath);
+                    string mduFileDir = Path.GetDirectoryName(tempMduPath);
                     var fmModelUsedByApi = new WaterFlowFMModel(Path.Combine(mduFileDir, tempMduPath));
 
                     Assert.That(fmModelUsedByApi.UseMorSed, Is.False,
@@ -131,14 +137,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
         {
             // Morphology
             model.ModelDefinition.GetModelProperty(GuiProperties.UseMorSed).Value = true;
-            var cellsValue = ((int)UnstructuredGridFileHelper.BedLevelLocation.Faces).ToString();
+            var cellsValue = ((int) UnstructuredGridFileHelper.BedLevelLocation.Faces).ToString();
             model.ModelDefinition.GetModelProperty(KnownProperties.BedlevType).SetValueAsString(cellsValue);
 
             // Sediment
-            model.SedimentFractions = new EventedList<ISedimentFraction>
-            {
-                new SedimentFraction {Name = "gloomy_sediment"}
-            };
+            model.SedimentFractions = new EventedList<ISedimentFraction> {new SedimentFraction {Name = "gloomy_sediment"}};
         }
 
         /// <summary>
@@ -150,7 +153,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
             var feature = new Feature2D
             {
                 Name = "Boundary2",
-                Geometry = new LineString(new[] { new Coordinate(1, 0), new Coordinate(0, 1) })
+                Geometry = new LineString(new[]
+                {
+                    new Coordinate(1, 0),
+                    new Coordinate(0, 1)
+                })
             };
 
             var morphologyBoundaryCondition = new FlowBoundaryCondition(
@@ -158,26 +165,31 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                 BoundaryConditionDataType.TimeSeries)
             {
                 Feature = feature,
-                SedimentFractionNames = new List<string> { "Frick_Freck_and_Frack" }
+                SedimentFractionNames = new List<string> {"Frick_Freck_and_Frack"}
             };
 
             morphologyBoundaryCondition.AddPoint(0);
-            morphologyBoundaryCondition.PointData[0].Arguments[0].SetValues(new[] { model.StartTime, model.StopTime });
+            morphologyBoundaryCondition.PointData[0].Arguments[0].SetValues(new[]
+            {
+                model.StartTime,
+                model.StopTime
+            });
             morphologyBoundaryCondition.PointData[0][model.StartTime] = 0.5;
             morphologyBoundaryCondition.PointData[0][model.StopTime] = 0.6;
 
             var flowBoundaryCondition = new FlowBoundaryCondition(FlowBoundaryQuantityType.WaterLevel,
-                                                                  BoundaryConditionDataType.TimeSeries)
-            {
-                Feature = feature
-            };
+                                                                  BoundaryConditionDataType.TimeSeries) {Feature = feature};
 
             flowBoundaryCondition.AddPoint(0);
-            flowBoundaryCondition.PointData[0].Arguments[0].SetValues(new[] { model.StartTime, model.StopTime });
+            flowBoundaryCondition.PointData[0].Arguments[0].SetValues(new[]
+            {
+                model.StartTime,
+                model.StopTime
+            });
             flowBoundaryCondition.PointData[0][model.StartTime] = 0.5;
             flowBoundaryCondition.PointData[0][model.StopTime] = 0.6;
 
-            var set = new BoundaryConditionSet { Feature = feature };
+            var set = new BoundaryConditionSet {Feature = feature};
             set.BoundaryConditions.Add(flowBoundaryCondition);
             set.BoundaryConditions.Add(morphologyBoundaryCondition);
 
@@ -223,22 +235,23 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
         }
 
         #region Point Sources
+
         [Test]
         public void GivenAModelWithPointSources_WhenGridSnappingIsCalled_ThenTheSnappedGeometriesShouldBeReturnedAndNotTheGeometriesOfThePointSources()
         {
             //Grid X-axis 0-5000, Y-axis 0-5000, steps of 100, Origin bottom left side. Point sources will snap to the cell center.
-            var netFile = TestHelper.GetTestFilePath(@"basicGrid\basicGrid_net.nc");
+            string netFile = TestHelper.GetTestFilePath(@"basicGrid\basicGrid_net.nc");
             netFile = TestHelper.CreateLocalCopy(netFile);
             Assert.IsTrue(File.Exists(netFile));
-            var tempFolder = FileUtils.CreateTempDirectory();
+            string tempFolder = FileUtils.CreateTempDirectory();
             try
             {
                 var model = new WaterFlowFMModel();
                 model.ExportTo(Path.Combine(tempFolder, TestHelper.GetCurrentMethodName() + ".mdu"), true, false,
-                    false);
+                               false);
                 File.Copy(netFile, model.NetFilePath, true);
                 model.ModelDefinition.GetModelProperty(KnownProperties.NetFile)
-                    .SetValueAsString(Path.GetFileName(model.NetFilePath));
+                     .SetValueAsString(Path.GetFileName(model.NetFilePath));
 
                 var api = new UnstrucGridOperationApi(model, false);
 
@@ -251,7 +264,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
 
                 const string featureType = UnstrucGridOperationApi.SourceSink;
 
-                var snappedGeometries = api.GetGridSnappedGeometry(featureType, geometries).ToList();
+                List<IGeometry> snappedGeometries = api.GetGridSnappedGeometry(featureType, geometries).ToList();
 
                 Assert.AreEqual(2, snappedGeometries.Count, ErrorMessageMissingSnappedGeometriesPointSource);
 
@@ -282,18 +295,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
         public void GivenAModelWithPointSourcesOutsideTheGrid_WhenGridSnappingIsCalled_ThenOnlyTheGeometriesOfThePointsInsideTheGridWillBeSnapped()
         {
             //Grid X-axis 0-5000, Y-axis 0-5000, steps of 100, Origin bottom left side. Point sources will snap to the cell center.
-            var netFile = TestHelper.GetTestFilePath(@"basicGrid\basicGrid_net.nc");
+            string netFile = TestHelper.GetTestFilePath(@"basicGrid\basicGrid_net.nc");
             netFile = TestHelper.CreateLocalCopy(netFile);
             Assert.IsTrue(File.Exists(netFile));
-            var tempFolder = FileUtils.CreateTempDirectory();
+            string tempFolder = FileUtils.CreateTempDirectory();
             try
             {
                 var model = new WaterFlowFMModel();
                 model.ExportTo(Path.Combine(tempFolder, TestHelper.GetCurrentMethodName() + ".mdu"), true, false,
-                    false);
+                               false);
                 File.Copy(netFile, model.NetFilePath, true);
                 model.ModelDefinition.GetModelProperty(KnownProperties.NetFile)
-                    .SetValueAsString(Path.GetFileName(model.NetFilePath));
+                     .SetValueAsString(Path.GetFileName(model.NetFilePath));
 
                 var api = new UnstrucGridOperationApi(model, false);
 
@@ -308,7 +321,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
 
                 const string featureType = UnstrucGridOperationApi.SourceSink;
 
-                var snappedGeometries = api.GetGridSnappedGeometry(featureType, geometries).ToList();
+                List<IGeometry> snappedGeometries = api.GetGridSnappedGeometry(featureType, geometries).ToList();
 
                 Assert.AreEqual(2, snappedGeometries.Count, ErrorMessageMissingSnappedGeometriesPointSource);
 
@@ -328,25 +341,27 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                 FileUtils.DeleteIfExists(tempFolder);
             }
         }
+
         #endregion
 
         #region Source And Sinks
+
         [Test]
         public void GivenAModelWithSourcesAndSinks_WhenGridSnappingIsCalled_ThenTheSnappedGeometriesShouldBeReturnedAndNotTheGeometriesOfTheSourcesAndSinks()
         {
             //Grid X-axis 0-5000, Y-axis 0-5000, steps of 100, Origin bottom left side. Sources And Sinks will snap to the cell centers of the first and last coordinates.
-            var netFile = TestHelper.GetTestFilePath(@"basicGrid\basicGrid_net.nc");
+            string netFile = TestHelper.GetTestFilePath(@"basicGrid\basicGrid_net.nc");
             netFile = TestHelper.CreateLocalCopy(netFile);
             Assert.IsTrue(File.Exists(netFile));
-            var tempFolder = FileUtils.CreateTempDirectory();
+            string tempFolder = FileUtils.CreateTempDirectory();
             try
             {
                 var model = new WaterFlowFMModel();
                 model.ExportTo(Path.Combine(tempFolder, TestHelper.GetCurrentMethodName() + ".mdu"), true, false,
-                    false);
+                               false);
                 File.Copy(netFile, model.NetFilePath, true);
                 model.ModelDefinition.GetModelProperty(KnownProperties.NetFile)
-                    .SetValueAsString(Path.GetFileName(model.NetFilePath));
+                     .SetValueAsString(Path.GetFileName(model.NetFilePath));
 
                 var api = new UnstrucGridOperationApi(model, false);
 
@@ -363,7 +378,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                 {
                     new Coordinate(1999, 1999, 0),
                     new Coordinate(2099, 2099, 0)
-
                 });
 
                 var geometries = new List<IGeometry>();
@@ -372,7 +386,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
 
                 const string featureType = UnstrucGridOperationApi.SourceSink;
 
-                var snappedGeometries = api.GetGridSnappedGeometry(featureType, geometries).ToList();
+                List<IGeometry> snappedGeometries = api.GetGridSnappedGeometry(featureType, geometries).ToList();
 
                 Assert.AreEqual(2, snappedGeometries.Count, ErrorMessageMissingSnappedGeometriesSourceAndSink);
 
@@ -411,18 +425,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
         public void GivenAModelWithSourcesAndSinkPointsOutsideTheGrid_WhenGridSnappingIsCalled_ThenOnlyTheGeometriesOfThePointsInsideTheGridWillBeSnapped()
         {
             //Grid X-axis 0-5000, Y-axis 0-5000, steps of 100, Origin bottom left side. Sources And Sinks will snap to the cell centers of the first and last coordinates.
-            var netFile = TestHelper.GetTestFilePath(@"basicGrid\basicGrid_net.nc");
+            string netFile = TestHelper.GetTestFilePath(@"basicGrid\basicGrid_net.nc");
             netFile = TestHelper.CreateLocalCopy(netFile);
             Assert.IsTrue(File.Exists(netFile));
-            var tempFolder = FileUtils.CreateTempDirectory();
+            string tempFolder = FileUtils.CreateTempDirectory();
             try
             {
                 var model = new WaterFlowFMModel();
                 model.ExportTo(Path.Combine(tempFolder, TestHelper.GetCurrentMethodName() + ".mdu"), true, false,
-                    false);
+                               false);
                 File.Copy(netFile, model.NetFilePath, true);
                 model.ModelDefinition.GetModelProperty(KnownProperties.NetFile)
-                    .SetValueAsString(Path.GetFileName(model.NetFilePath));
+                     .SetValueAsString(Path.GetFileName(model.NetFilePath));
 
                 var api = new UnstrucGridOperationApi(model, false);
 
@@ -456,7 +470,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
 
                 const string featureType = UnstrucGridOperationApi.SourceSink;
 
-                var snappedGeometries = api.GetGridSnappedGeometry(featureType, geometries).ToList();
+                List<IGeometry> snappedGeometries = api.GetGridSnappedGeometry(featureType, geometries).ToList();
 
                 Assert.AreEqual(3, snappedGeometries.Count, ErrorMessageMissingSnappedGeometriesSourceAndSink);
 
@@ -483,8 +497,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                 FileUtils.DeleteIfExists(tempFolder);
             }
         }
+
         #endregion
     }
 }
-
-

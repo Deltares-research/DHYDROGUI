@@ -11,7 +11,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
         [Test]
         public void OpenWavmFileAndCheckGridAndFunctions()
         {
-            var wavmPath = TestHelper.GetTestFilePath("output_wavm/wavm-wave.nc");
+            string wavmPath = TestHelper.GetTestFilePath("output_wavm/wavm-wave.nc");
             var store = new WavmFileFunctionStore(wavmPath);
             Assert.AreEqual(63, store.Grid.Size2);
             Assert.AreEqual(28, store.Grid.Size1);

@@ -70,10 +70,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
             const string featureString = "Feature";
             var feature = new TestFeature(featureString);
 
-            var point = new TestConnectionPoint
-            {
-                Feature = feature
-            };
+            var point = new TestConnectionPoint {Feature = feature};
 
             // Call
             point.ParameterName = parameterName;
@@ -113,10 +110,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
             var geometry = Substitute.For<IGeometry>();
 
             var feature = new TestFeature("Feature");
-            var point = new TestConnectionPoint
-            {
-                Feature = feature
-            };
+            var point = new TestConnectionPoint {Feature = feature};
 
             // When
             point.Geometry = geometry;
@@ -124,7 +118,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
             // Then
             Assert.That(feature.Geometry, Is.SameAs(geometry));
         }
-        
+
         [Test]
         public void GivenConnectionPointWithFeature_WhenSettingAttributes_ThenFeatureGeometrySet()
         {
@@ -132,10 +126,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
             var attributes = Substitute.For<IFeatureAttributeCollection>();
 
             var feature = new TestFeature("Feature");
-            var point = new TestConnectionPoint
-            {
-                Feature = feature
-            };
+            var point = new TestConnectionPoint {Feature = feature};
 
             // When
             point.Attributes = attributes;
@@ -276,10 +267,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
         public void GivenConnectionPointWithFeature_WhenFeatureUpdates_NameUpdates()
         {
             // Given
-            var feature = new RtcTestFeature
-            {
-                Name = "f"
-            };
+            var feature = new RtcTestFeature {Name = "f"};
 
             const string parameterName = "ParameterName";
             var point = new TestConnectionPoint
@@ -314,16 +302,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
                 this.name = name;
             }
 
-            public Type GetEntityType()
-            {
-                throw new NotImplementedException();
-            }
-
             public long Id { get; set; }
-            public object Clone()
-            {
-                throw new NotImplementedException();
-            }
 
             public IGeometry Geometry { get; set; }
             public IFeatureAttributeCollection Attributes { get; set; }
@@ -331,6 +310,16 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
             public override string ToString()
             {
                 return name;
+            }
+
+            public Type GetEntityType()
+            {
+                throw new NotImplementedException();
+            }
+
+            public object Clone()
+            {
+                throw new NotImplementedException();
             }
         }
     }

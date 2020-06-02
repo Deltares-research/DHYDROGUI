@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using DelftTools.Controls.Swf.DataEditorGenerator.Metadata;
 using DelftTools.TestUtils;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
@@ -16,20 +17,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             var model = new WaterFlowFMModel();
 
             var extractor = new WaterFlowFMGuiPropertyExtractor(model);
-            var objectDescription = extractor.ExtractObjectDescription(new string[0]);
+            ObjectUIDescription objectDescription = extractor.ExtractObjectDescription(new string[0]);
 
             Assert.Greater(objectDescription.FieldDescriptions.Count, 65);
             Assert.IsNotNull(objectDescription.FieldDescriptions.FirstOrDefault(f => f.Name == "Icgsolver"));
             Assert.IsNotNull(objectDescription.FieldDescriptions.FirstOrDefault(f => f.Label == "Sediment/Morphology"));
         }
-        
+
         [Test]
         public void CheckTooltips()
         {
             var model = new WaterFlowFMModel();
 
             var extractor = new WaterFlowFMGuiPropertyExtractor(model);
-            var objectDescription = extractor.ExtractObjectDescription(new string[0]);
+            ObjectUIDescription objectDescription = extractor.ExtractObjectDescription(new string[0]);
 
             Assert.Greater(objectDescription.FieldDescriptions.Count, 65);
             string bedLevelTooltip = objectDescription.FieldDescriptions.First(f => f.Name == "Bedlevuni").ToolTip;

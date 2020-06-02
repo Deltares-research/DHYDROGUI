@@ -1,6 +1,4 @@
-﻿using DeltaShell.NGHS.TestUtils.AssertConstraints;
-
-namespace DeltaShell.NGHS.TestUtils.AssertConstraints
+﻿namespace DeltaShell.NGHS.TestUtils.AssertConstraints
 {
     /// <summary>
     /// Contains constraints for collections

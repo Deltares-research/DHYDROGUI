@@ -15,8 +15,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Editors
         {
             var map = new Map {Size = new Size(1000, 1000)};
             var hydroLink = new HydroLink();
-            var hydroLinkInteractor = new HydroLinkInteractor(new VectorLayer { Map = map }, hydroLink, null, null);
-            
+            var hydroLinkInteractor = new HydroLinkInteractor(new VectorLayer {Map = map}, hydroLink, null, null);
+
             Assert.AreEqual(true, hydroLinkInteractor.AllowDeletion());
             Assert.AreEqual(false, hydroLinkInteractor.AllowMove());
         }

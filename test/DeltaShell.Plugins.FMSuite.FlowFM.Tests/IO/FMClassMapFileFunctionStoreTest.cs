@@ -1,6 +1,6 @@
-﻿using System;
-using DelftTools.Functions;
+﻿using DelftTools.Functions;
 using DelftTools.TestUtils;
+using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Grids;
@@ -11,23 +11,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
     [TestFixture]
     public class FMClassMapFileFunctionStoreTest
     {
-        [Test, Category(TestCategory.DataAccess)]
+        [Test]
+        [Category(TestCategory.DataAccess)]
         public void GivenAClassMapFilePath_WhenCreatingFMClassMapFileFunctionStoreWithThisPath_ThenCorrectGridAndFunctionsAreConstructed()
         {
             // Given
-            var classMapFilePath = TestHelper.GetTestFilePath("output_classmapfiles\\harlingen_clm.nc");
+            string classMapFilePath = TestHelper.GetTestFilePath("output_classmapfiles\\harlingen_clm.nc");
 
             // When
             var classMapFileFunctionStore = new FMClassMapFileFunctionStore(classMapFilePath);
 
             // Then
-            var functions = classMapFileFunctionStore.Functions;
+            IEventedList<IFunction> functions = classMapFileFunctionStore.Functions;
             Assert.AreEqual(2, functions.Count);
 
             AssertCorrectFunctionData(functions[0], "Water level (mesh2d_s1)", "mesh2d_s1", "nmesh2d_face");
             AssertCorrectFunctionData(functions[1], "Water depth at pressure points (mesh2d_waterdepth)", "mesh2d_waterdepth", "nmesh2d_face");
 
-            var grid = classMapFileFunctionStore.Grid;
+            UnstructuredGrid grid = classMapFileFunctionStore.Grid;
             Assert.AreEqual(16597, grid.Cells.Count);
             Assert.AreEqual(typeof(UnstructuredGrid), grid.GetType());
         }
@@ -39,11 +40,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             Assert.AreEqual(2406565, function.GetValues().Count);
 
             Assert.AreEqual(1, function.Components.Count);
-            var component = function.Components[0];
+            IVariable component = function.Components[0];
             Assert.AreEqual(componentName, component.Name);
-            Assert.AreEqual(typeof(Byte), component.ValueType);
+            Assert.AreEqual(typeof(byte), component.ValueType);
 
-            var arguments = function.Arguments;
+            IEventedList<IVariable> arguments = function.Arguments;
             Assert.AreEqual(2, arguments.Count);
             Assert.AreEqual("Time", arguments[0].Name);
             Assert.AreEqual(argumentName, arguments[1].Name);

@@ -22,23 +22,33 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Editors.Snapping
             var hydroLinkingTarget1 = mocks.StrictMock<IHydroObject>();
             var hydroLinkingTarget1Geometry = new Point(0, 0);
             hydroLinkingTarget1.Expect(hlt1 => hlt1.Geometry).Return(hydroLinkingTarget1Geometry).Repeat.Twice();
-            
+
             var hydroLinkingTarget1Layer = mocks.StrictMock<ILayer>();
 
             var hydroLinkingSource1 = mocks.StrictMock<IHydroObject>();
             hydroLinkingSource1.Expect(hsl1 => hsl1.Links).Return(new EventedList<HydroLink>()); // No hydro links
             hydroLinkingSource1.Expect(hsl1 => hsl1.CanLinkTo(hydroLinkingTarget1)).Return(true);
-            
+
             hydroLinkingTarget1Layer.Expect(l => l.CoordinateTransformation).Return(null).Repeat.Any();
 
             var hydroLinkingSource2 = mocks.StrictMock<IHydroObject>();
-            hydroLinkingSource2.Expect(hsl2 => hsl2.Links).Return(new EventedList<HydroLink> { new HydroLink() {Source = hydroLinkingSource2, Target = hydroLinkingTarget1} }); // Has hydro links
+            hydroLinkingSource2.Expect(hsl2 => hsl2.Links).Return(new EventedList<HydroLink>
+            {
+                new HydroLink()
+                {
+                    Source = hydroLinkingSource2,
+                    Target = hydroLinkingTarget1
+                }
+            }); // Has hydro links
 
             mocks.ReplayAll();
 
-            var candidates = new[] { new Tuple<IFeature, ILayer>(hydroLinkingTarget1, hydroLinkingTarget1Layer) };
+            var candidates = new[]
+            {
+                new Tuple<IFeature, ILayer>(hydroLinkingTarget1, hydroLinkingTarget1Layer)
+            };
             var hydrolinkSnapTool = new HydroLinkSnapRule();
-            var snapResult = hydrolinkSnapTool.Execute(hydroLinkingSource1, candidates, null, null, null, null, -1);
+            SnapResult snapResult = hydrolinkSnapTool.Execute(hydroLinkingSource1, candidates, null, null, null, null, -1);
             var expectedSnapResult = new SnapResult(hydroLinkingTarget1Geometry.Coordinate, hydroLinkingTarget1,
                                                     hydroLinkingTarget1Layer, hydroLinkingTarget1Geometry, 0, 0);
             AssertSnapResult(expectedSnapResult, snapResult);
@@ -55,7 +65,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Editors.Snapping
         /// <remarks>TODO: Remove when <see cref="SnapResult"/> implements Equals.</remarks>
         private static void AssertSnapResult(SnapResult expected, SnapResult actual)
         {
-            if (expected == null && actual == null) return; // both null: ok
+            if (expected == null && actual == null)
+            {
+                return; // both null: ok
+            }
+
             if (expected == null || actual == null)
             {
                 Assert.Fail("Expected {0}, but was {1}.", expected, actual); // Either null, not ok

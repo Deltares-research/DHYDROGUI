@@ -6,7 +6,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 {
     [TestFixture]
     [Category(TestCategory.WindowsForms)]
-    class SupportPointSelectionFormTest
+    internal class SupportPointSelectionFormTest
     {
         [Test]
         public void ShowWithAstroControl()

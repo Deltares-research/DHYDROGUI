@@ -44,9 +44,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         public void SaveLoadHydroModelWithSeveralSubActivities()
         {
             var hydroModelBuilder = new HydroModelBuilder();
-            var hydroModel = hydroModelBuilder.BuildModel(ModelGroup.All);
+            HydroModel hydroModel = hydroModelBuilder.BuildModel(ModelGroup.All);
 
-            var retrievedHydroModel = SaveAndRetrieveObject(hydroModel);
+            HydroModel retrievedHydroModel = SaveAndRetrieveObject(hydroModel);
 
             Assert.That(retrievedHydroModel.Activities, Has.Count.EqualTo(3),
                         "3 activities (fm, waves, rtc) were expected in hydro model");
@@ -58,59 +58,60 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         public void SaveLoadHydroModelWithCurrentWorkflowData()
         {
             var hydroModelBuilder = new HydroModelBuilder();
-            var hydroModel = hydroModelBuilder.BuildModel(ModelGroup.FMWaveRtcModels);
+            HydroModel hydroModel = hydroModelBuilder.BuildModel(ModelGroup.FMWaveRtcModels);
 
-            var activities = hydroModel.CurrentWorkflow.Activities;
+            IEventedList<IActivity> activities = hydroModel.CurrentWorkflow.Activities;
             ValidateWorkflow(activities);
 
-            var retrievedHydroModel = SaveAndRetrieveObject(hydroModel);
+            HydroModel retrievedHydroModel = SaveAndRetrieveObject(hydroModel);
 
-            var retrievedWorkflowActivities = retrievedHydroModel.CurrentWorkflow.Activities;
+            IEventedList<IActivity> retrievedWorkflowActivities = retrievedHydroModel.CurrentWorkflow.Activities;
             ValidateWorkflow(retrievedWorkflowActivities);
-        }
-
-        private static void ValidateWorkflow(IEventedList<IActivity> activities)
-        {
-            Assert.That(activities, Has.Count.EqualTo(2),
-                        "2 activities were expected in the current workflow of the hydro model.");
-            var rtcModel = (activities.First() as ActivityWrapper)?.Activity as RealTimeControlModel;
-            Assert.That(rtcModel, Is.Not.Null,
-                        "Real time control model was expected to be in the current workflow of the hydro model");
-            var fmModel = (activities.Last() as ActivityWrapper)?.Activity as WaterFlowFMModel;
-            Assert.That(fmModel, Is.Not.Null,
-                        "WaterFlow FM model was expected to be in the current workflow of the hydro model");
         }
 
         [Test]
         public void SaveLoadAndReSaveCompositeHydroModelWorkFlowData()
         {
             var compositeHydroModelWorkFlowData = new CompositeHydroModelWorkFlowData
+            {
+                HydroModelWorkFlowDataLookUp = new Dictionary<IHydroModelWorkFlowData, IList<int>>
                 {
-                    HydroModelWorkFlowDataLookUp = new Dictionary<IHydroModelWorkFlowData, IList<int>>
+                    {
+                        new CompositeHydroModelWorkFlowData(), new List<int>(new[]
                         {
-                            {new CompositeHydroModelWorkFlowData(), new List<int>(new[]{1,4,7,2})}
-                        }
-                };
+                            1,
+                            4,
+                            7,
+                            2
+                        })
+                    }
+                }
+            };
 
-            var retrievedcompositeHydroModelWorkFlowData = SaveAndRetrieveObject(compositeHydroModelWorkFlowData);
-            var innerCompositeHydroModelWorkFlowData = (CompositeHydroModelWorkFlowData)retrievedcompositeHydroModelWorkFlowData.WorkFlowDatas.First();
-
+            CompositeHydroModelWorkFlowData retrievedcompositeHydroModelWorkFlowData = SaveAndRetrieveObject(compositeHydroModelWorkFlowData);
+            var innerCompositeHydroModelWorkFlowData = (CompositeHydroModelWorkFlowData) retrievedcompositeHydroModelWorkFlowData.WorkFlowDatas.First();
 
             // resave
             ProjectRepository.SaveOrUpdate(ProjectRepository.GetProject());
 
-            Assert.AreEqual(new List<int>(new[] { 1, 4, 7, 2 }), retrievedcompositeHydroModelWorkFlowData.HydroModelWorkFlowDataLookUp[innerCompositeHydroModelWorkFlowData]);
+            Assert.AreEqual(new List<int>(new[]
+            {
+                1,
+                4,
+                7,
+                2
+            }), retrievedcompositeHydroModelWorkFlowData.HydroModelWorkFlowDataLookUp[innerCompositeHydroModelWorkFlowData]);
         }
 
         [Test]
         public void SaveLoadHydroModelWithCurrentWorkflow()
         {
             var hydroModelBuilder = new HydroModelBuilder();
-            var hydroModel = hydroModelBuilder.BuildModel(ModelGroup.All);
+            HydroModel hydroModel = hydroModelBuilder.BuildModel(ModelGroup.All);
 
             hydroModel.CurrentWorkflow = hydroModel.Workflows.ElementAt(2);
 
-            var retrievedHydroModel = SaveAndRetrieveObject(hydroModel);
+            HydroModel retrievedHydroModel = SaveAndRetrieveObject(hydroModel);
             Assert.AreEqual(2, retrievedHydroModel.Workflows.IndexOf(retrievedHydroModel.CurrentWorkflow));
         }
 
@@ -118,11 +119,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         public void SaveHydroModelDoesNotCausePropertyChangeOnWorkflowTools9667()
         {
             var hydroModelBuilder = new HydroModelBuilder();
-            var hydroModel = hydroModelBuilder.BuildModel(ModelGroup.All);
+            HydroModel hydroModel = hydroModelBuilder.BuildModel(ModelGroup.All);
 
             hydroModel.CurrentWorkflow = hydroModel.Workflows.ElementAt(2);
 
-            var path = TestHelper.GetCurrentMethodName() + "1.dsproj";
+            string path = TestHelper.GetCurrentMethodName() + "1.dsproj";
             var project = new Project();
             project.RootFolder.Add(hydroModel);
 
@@ -130,9 +131,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
             try
             {
-                var workFlowBefore = hydroModel.CurrentWorkflow;
+                ICompositeActivity workFlowBefore = hydroModel.CurrentWorkflow;
                 ProjectRepository.SaveOrUpdate(project);
-                var workFlowAfter = hydroModel.CurrentWorkflow;
+                ICompositeActivity workFlowAfter = hydroModel.CurrentWorkflow;
 
                 Assert.AreSame(workFlowBefore, workFlowAfter);
             }
@@ -148,21 +149,28 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             var converter = new HydroRegionFeatureCoverageFromNetworkCoverageValueConverter
             {
                 OriginalValue =
-                    new FeatureCoverage { Arguments = { new Variable<DateTime>(), new Variable<IFeature>() } },
+                    new FeatureCoverage
+                    {
+                        Arguments =
+                        {
+                            new Variable<DateTime>(),
+                            new Variable<IFeature>()
+                        }
+                    },
                 ConvertedValue = new NetworkCoverage("b", true),
                 HydroRegion = new HydroRegion()
             };
 
             var dataItem = new DataItem
-                {
-                    ValueType = typeof (INetworkCoverage),
-                    ValueConverter = converter
-                };
+            {
+                ValueType = typeof(INetworkCoverage),
+                ValueConverter = converter
+            };
             var folder = new Folder();
             folder.Items.Add(dataItem);
 
-            var folderAfterLoad = SaveAndRetrieveObject(folder); //cannot use test method with dataitem directly
-            var dataItemAfterLoad = folderAfterLoad.DataItems.First();
+            Folder folderAfterLoad = SaveAndRetrieveObject(folder); //cannot use test method with dataitem directly
+            IDataItem dataItemAfterLoad = folderAfterLoad.DataItems.First();
             var converterAfterLoad = dataItemAfterLoad.ValueConverter as HydroRegionFeatureCoverageFromNetworkCoverageValueConverter;
 
             converterAfterLoad.OriginalValue.Should().Not.Be.Null();
@@ -174,14 +182,21 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         public void SaveLoadHydroRegionFeatureCoverageFromNetworkCoverageValueConverter()
         {
             var converter = new HydroRegionFeatureCoverageFromNetworkCoverageValueConverter
-                {
-                    OriginalValue =
-                        new FeatureCoverage {Arguments = {new Variable<DateTime>(), new Variable<IFeature>()}},
-                    ConvertedValue = new NetworkCoverage("b", true),
-                    HydroRegion = new HydroRegion()
-                };
+            {
+                OriginalValue =
+                    new FeatureCoverage
+                    {
+                        Arguments =
+                        {
+                            new Variable<DateTime>(),
+                            new Variable<IFeature>()
+                        }
+                    },
+                ConvertedValue = new NetworkCoverage("b", true),
+                HydroRegion = new HydroRegion()
+            };
 
-            var converterAfterLoad = SaveAndRetrieveObject(converter);
+            HydroRegionFeatureCoverageFromNetworkCoverageValueConverter converterAfterLoad = SaveAndRetrieveObject(converter);
 
             converterAfterLoad.OriginalValue.Should().Not.Be.Null();
             converterAfterLoad.ConvertedValue.Should().Not.Be.Null();
@@ -193,16 +208,42 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         {
             var converter = new HydroLinksFeatureCoverageValueConverter
             {
-                OriginalValue = new FeatureCoverage { Arguments = { new Variable<DateTime>(), new Variable<IFeature>() } },
-                ConvertedValue = new FeatureCoverage { Arguments = { new Variable<DateTime>(), new Variable<IFeature>() } },
+                OriginalValue = new FeatureCoverage
+                {
+                    Arguments =
+                    {
+                        new Variable<DateTime>(),
+                        new Variable<IFeature>()
+                    }
+                },
+                ConvertedValue = new FeatureCoverage
+                {
+                    Arguments =
+                    {
+                        new Variable<DateTime>(),
+                        new Variable<IFeature>()
+                    }
+                },
                 HydroRegion = new HydroRegion()
             };
 
-            var converterAfterLoad = SaveAndRetrieveObject(converter);
+            HydroLinksFeatureCoverageValueConverter converterAfterLoad = SaveAndRetrieveObject(converter);
 
             converterAfterLoad.OriginalValue.Should().Not.Be.Null();
             converterAfterLoad.ConvertedValue.Should().Not.Be.Null();
             converterAfterLoad.HydroRegion.Should().Not.Be.Null();
+        }
+
+        private static void ValidateWorkflow(IEventedList<IActivity> activities)
+        {
+            Assert.That(activities, Has.Count.EqualTo(2),
+                        "2 activities were expected in the current workflow of the hydro model.");
+            var rtcModel = (activities.First() as ActivityWrapper)?.Activity as RealTimeControlModel;
+            Assert.That(rtcModel, Is.Not.Null,
+                        "Real time control model was expected to be in the current workflow of the hydro model");
+            var fmModel = (activities.Last() as ActivityWrapper)?.Activity as WaterFlowFMModel;
+            Assert.That(fmModel, Is.Not.Null,
+                        "WaterFlow FM model was expected to be in the current workflow of the hydro model");
         }
     }
 }

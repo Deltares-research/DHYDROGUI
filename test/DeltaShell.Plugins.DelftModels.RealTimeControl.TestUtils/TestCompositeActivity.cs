@@ -17,9 +17,38 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils
             Activities = new EventedList<IActivity>();
         }
 
+        public IEventedList<CompositeActivity> Workflows { get; set; }
+
+        public IEventedList<IActivity> Activities
+        {
+            get
+            {
+                return activities;
+            }
+            set
+            {
+                if (activities != null)
+                {
+                    activities.CollectionChanged -= OnActivitiesCollectionChanged;
+                }
+
+                activities = value;
+
+                if (activities != null)
+                {
+                    activities.CollectionChanged += OnActivitiesCollectionChanged;
+                }
+            }
+        }
+
+        [Aggregation]
+        public ICompositeActivity CurrentWorkflow { get; set; }
+
+        public bool ReadOnly { get; set; }
+
         protected override void OnInitialize()
         {
-            foreach (var activity in Activities)
+            foreach (IActivity activity in Activities)
             {
                 activity.Initialize();
 
@@ -35,7 +64,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils
         {
             var allModelsFinished = true;
 
-            foreach (var model in Activities)
+            foreach (IActivity model in Activities)
             {
                 if (model.Status != ActivityStatus.Done)
                 {
@@ -44,7 +73,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils
                     if (model.Status == ActivityStatus.Failed)
                     {
                         throw new InvalidOperationException(string.Format("Model run has failed: {0}.{1}", this,
-                                                                            model));
+                                                                          model));
                     }
                 }
 
@@ -60,42 +89,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils
             }
         }
 
-        protected override void OnCancel()
-        {
-        }
+        protected override void OnCancel() {}
 
-        protected override void OnCleanUp()
-        {
-        }
-        
-        protected override void OnFinish()
-        {
-        }
+        protected override void OnCleanUp() {}
 
-        public IEventedList<IActivity> Activities
-        {
-            get { return activities; }
-            set
-            {
-                if (activities != null)
-                {
-                    activities.CollectionChanged -= OnActivitiesCollectionChanged;
-                }
-                activities = value;
-
-                if (activities != null)
-                {
-                    activities.CollectionChanged += OnActivitiesCollectionChanged;
-                }
-            }
-        }
-
-        public IEventedList<CompositeActivity> Workflows { get; set; }
-        
-        [Aggregation]
-        public ICompositeActivity CurrentWorkflow { get; set; }
-        
-        public bool ReadOnly { get; set; }
+        protected override void OnFinish() {}
 
         [EditAction]
         private void OnActivitiesCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -105,7 +103,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils
                 return;
             }
 
-            var model = (IModel)e.GetRemovedOrAddedItem();
+            var model = (IModel) e.GetRemovedOrAddedItem();
             if (model != null)
             {
                 switch (e.Action)

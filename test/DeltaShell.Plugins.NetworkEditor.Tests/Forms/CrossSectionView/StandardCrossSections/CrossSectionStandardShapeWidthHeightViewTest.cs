@@ -14,10 +14,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CrossSectionView.Standard
         {
             var data = new CrossSectionStandardShapeEgg {Width = 2};
 
-            var view = new CrossSectionStandardShapeWidthHeightView()
-                           {
-                               Data = data
-                           };
+            var view = new CrossSectionStandardShapeWidthHeightView() {Data = data};
 
             WindowsFormsTestHelper.ShowModal(view);
         }
@@ -28,10 +25,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CrossSectionView.Standard
         {
             var data = CrossSectionStandardShapeCunette.CreateDefault();
 
-            var view = new CrossSectionStandardShapeWidthHeightView
-            {
-                Data = data
-            };
+            var view = new CrossSectionStandardShapeWidthHeightView {Data = data};
 
             WindowsFormsTestHelper.ShowModal(view);
         }

@@ -33,20 +33,24 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Editors
         {
             network = new HydroNetwork();
 
-            node1 = new HydroNode { Geometry = new Point(0, 0) };
-            node2 = new HydroNode { Geometry = new Point(50, 0) };
+            node1 = new HydroNode {Geometry = new Point(0, 0)};
+            node2 = new HydroNode {Geometry = new Point(50, 0)};
 
             branch1 = new Channel
-                          {
-                              Geometry =
-                                  new LineString(new[]
-                                                     {
-                                                         new Coordinate(0, 0), new Coordinate(10, 0), new Coordinate(20, 0),
-                                                         new Coordinate(30, 0), new Coordinate(40, 0), new Coordinate(50, 0)
-                                                     }),
-                              Source = node1,
-                              Target = node2,
-                          };
+            {
+                Geometry =
+                    new LineString(new[]
+                    {
+                        new Coordinate(0, 0),
+                        new Coordinate(10, 0),
+                        new Coordinate(20, 0),
+                        new Coordinate(30, 0),
+                        new Coordinate(40, 0),
+                        new Coordinate(50, 0)
+                    }),
+                Source = node1,
+                Target = node2,
+            };
 
             network.Nodes.Add(node1);
             network.Nodes.Add(node2);
@@ -94,27 +98,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Editors
             Assert.AreEqual(0, branch1.Geometry.Coordinates[5].Y);
         }
 
-        private ICrossSection AddCrossSection(out ChannelInteractor interactor)
-        {
-            var crossSection = new CrossSectionDefinitionYZ();
-            crossSection.YZDataTable.AddCrossSectionYZRow(0, 0, 0);
-            crossSection.YZDataTable.AddCrossSectionYZRow(2,-2, 0);
-            crossSection.YZDataTable.AddCrossSectionYZRow(4, 0, 0);
-
-            //CrossSectionHelper.CalculateYZProfileFromGeometry(crossSection.Profile, crossSection.Geometry);
-            var crossSectionBranchFeature = HydroNetworkHelper.AddCrossSectionDefinitionToBranch(branch1, crossSection, 25.0);
-            
-            interactor = new ChannelInteractor(null, branch1, null, null);
-            
-            return crossSectionBranchFeature;
-        }
-
         /// <summary>
         /// Create branch of length 50 and add cross section at position 25
-        /// 
         /// O------x------x--CS--x------x------x
         /// 0     10     20  25 30     40     50
-        /// 
         /// if tracker at 10 is moved expect CS not to move
         /// </summary>
         [Test]
@@ -122,7 +109,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Editors
         public void MoveBranchWithCrossSectionTestNoFallOffPolicyAt10()
         {
             ChannelInteractor interactor;
-            var crossSection = AddCrossSection(out interactor);
+            ICrossSection crossSection = AddCrossSection(out interactor);
             interactor.Network = network;
             interactor.Start();
             interactor.SetTrackerSelection(interactor.Trackers[1], true);
@@ -135,10 +122,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Editors
 
         /// <summary>
         /// Create branch of length 50 and add cross section at position 25
-        /// 
         /// O------x------x--CS--x------x------x
         /// 0     10     20  25 30     40     50
-        /// 
         /// if tracker at 20 is moved expect CS to move within subsection (20-30) -> X constant, y changes
         /// </summary>
         [Test]
@@ -146,7 +131,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Editors
         public void MoveBranchWithCrossSectionTestNoFallOffPolicyAt20()
         {
             ChannelInteractor interactor;
-            var crossSection = AddCrossSection(out interactor);
+            ICrossSection crossSection = AddCrossSection(out interactor);
             interactor.Network = network;
             interactor.Start();
             interactor.SetTrackerSelection(interactor.Trackers[2], true);
@@ -159,10 +144,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Editors
 
         /// <summary>
         /// Create branch of length 50 and add cross section at position 25
-        /// 
         /// O------x------x--CS--x------x------x
         /// 0     10     20  25 30     40     50
-        /// 
         /// if tracker at 30 is moved expect CS to move within subsection (20-30) -> X constant, y changes
         /// </summary>
         [Test]
@@ -170,7 +153,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Editors
         public void MoveBranchWithCrossSectionTestNoFallOffPolicyAt30()
         {
             ChannelInteractor interactor;
-            var crossSection = AddCrossSection(out interactor);
+            ICrossSection crossSection = AddCrossSection(out interactor);
             interactor.Network = network;
             interactor.Start();
             interactor.SetTrackerSelection(interactor.Trackers[3], true);
@@ -181,13 +164,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Editors
             Assert.AreEqual(25, crossSection.Geometry.Coordinates[0].X);
         }
 
-
         /// <summary>
         /// Create branch of length 50 and add cross section at position 25
-        /// 
         /// O------x------x--CS--x------x------x
         /// 0     10     20  25 30     40     50
-        /// 
         /// if tracker at 40 is moved expect CS not to move
         /// </summary>
         [Test]
@@ -195,7 +175,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Editors
         public void MoveBranchWithCrossSectionTestNoFallOffPolicyAt40()
         {
             ChannelInteractor interactor;
-            var crossSection = AddCrossSection(out interactor);
+            ICrossSection crossSection = AddCrossSection(out interactor);
             interactor.Network = network;
             interactor.Start();
             interactor.SetTrackerSelection(interactor.Trackers[4], true);
@@ -206,15 +186,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Editors
             Assert.AreEqual(25, crossSection.Geometry.Coordinates[0].X);
         }
 
-
         [Test]
         [Category(TestCategory.Integration)]
         public void MoveBranchWithStructureFeatureTest()
         {
-            var compositeStructure = new CompositeBranchStructure
-            {
-                Geometry = new Point(new Coordinate(10, 0))
-            };
+            var compositeStructure = new CompositeBranchStructure {Geometry = new Point(new Coordinate(10, 0))};
 
             branch1.BranchFeatures.Add(compositeStructure);
             // NB structureFeature.Branch will be automatically set
@@ -246,11 +222,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Editors
         [Category(TestCategory.Integration)]
         public void MoveBranchWithStructureFeatureTestLinearFallOffPolicy()
         {
-            var compositeStructure = new CompositeBranchStructure
-            {
-                Geometry = new Point(new Coordinate(10, 0))
-            };
-
+            var compositeStructure = new CompositeBranchStructure {Geometry = new Point(new Coordinate(10, 0))};
 
             branch1.BranchFeatures.Add(compositeStructure);
             // NB structureFeature.Branch will be automatically set
@@ -277,7 +249,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Editors
             Assert.AreEqual(20, compositeStructure.Geometry.Coordinates[0].X);
         }
 
-
         //[Test]
         //[Category(TestCategory.Integration)]
         //public void MoveBranchWithDiscretisationNoFallOfPolicy()
@@ -293,7 +264,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Editors
 
             Assert.AreEqual(1, network.Branches.Count);
             Assert.AreEqual(2, network.Nodes.Count);
-            
+
             interactor.Start();
             interactor.SetTrackerSelection(interactor.Trackers[0], true);
             interactor.Delete();
@@ -309,7 +280,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Editors
         {
             var interactor = new ChannelInteractor(null, branch1, null, null);
             interactor.Network = network;
-            interactor.BranchNodeTopology = new BranchNodeTopology(){ AllowRemoveUnusedNodes = false };
+            interactor.BranchNodeTopology = new BranchNodeTopology() {AllowRemoveUnusedNodes = false};
 
             Assert.AreEqual(1, network.Branches.Count);
             Assert.AreEqual(2, network.Nodes.Count);
@@ -329,19 +300,31 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Editors
         {
             INetwork hydroNetwork = new HydroNetwork();
 
-            IHydroNode hydroNode1 = new HydroNode { Name = "Node1", Geometry = new Point(0, 0) };
-            IHydroNode hydroNode2 = new HydroNode { Name = "Node2", Geometry = new Point(50, 0) };
+            IHydroNode hydroNode1 = new HydroNode
+            {
+                Name = "Node1",
+                Geometry = new Point(0, 0)
+            };
+            IHydroNode hydroNode2 = new HydroNode
+            {
+                Name = "Node2",
+                Geometry = new Point(50, 0)
+            };
             hydroNetwork.Nodes.Add(hydroNode1);
             hydroNetwork.Nodes.Add(hydroNode2);
 
             IChannel channel = new Channel
             {
-                Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(50, 0) }),
+                Geometry = new LineString(new[]
+                {
+                    new Coordinate(0, 0),
+                    new Coordinate(50, 0)
+                }),
             };
 
             var interactor = new ChannelInteractor(null, channel, null, null);
             interactor.Network = hydroNetwork;
-            interactor.BranchNodeTopology = new BranchNodeTopology() { AllowReUseNodes = false };
+            interactor.BranchNodeTopology = new BranchNodeTopology() {AllowReUseNodes = false};
             interactor.Add(channel);
 
             Assert.AreEqual(2, hydroNetwork.Nodes.Count);
@@ -357,14 +340,26 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Editors
             // AllowReUseNodes = true, AllowRemoveUnusedNodes = true
             INetwork hydroNetwork = new HydroNetwork();
 
-            IHydroNode hydroNode1 = new HydroNode { Name = "Node1", Geometry = new Point(0, 0) };
-            IHydroNode hydroNode2 = new HydroNode { Name = "Node1", Geometry = new Point(50, 0) };
+            IHydroNode hydroNode1 = new HydroNode
+            {
+                Name = "Node1",
+                Geometry = new Point(0, 0)
+            };
+            IHydroNode hydroNode2 = new HydroNode
+            {
+                Name = "Node1",
+                Geometry = new Point(50, 0)
+            };
             hydroNetwork.Nodes.Add(hydroNode1);
             hydroNetwork.Nodes.Add(hydroNode2);
 
             IChannel channel1 = new Channel
             {
-                Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(50, 0) }),
+                Geometry = new LineString(new[]
+                {
+                    new Coordinate(0, 0),
+                    new Coordinate(50, 0)
+                }),
                 Source = hydroNode1,
                 Target = hydroNode2,
             };
@@ -375,20 +370,36 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Editors
             Assert.AreEqual(hydroNode1, hydroNetwork.Branches[0].Source);
             Assert.AreEqual(hydroNode2, hydroNetwork.Branches[0].Target);
 
-            IHydroNode hydroNode3 = new HydroNode { Name = "Node3", Geometry = new Point(50, 50) };
-            IHydroNode hydroNode2b = new HydroNode { Name = "Node2b", Geometry = new Point(50, 0) };
+            IHydroNode hydroNode3 = new HydroNode
+            {
+                Name = "Node3",
+                Geometry = new Point(50, 50)
+            };
+            IHydroNode hydroNode2b = new HydroNode
+            {
+                Name = "Node2b",
+                Geometry = new Point(50, 0)
+            };
             hydroNetwork.Nodes.Add(hydroNode3);
             hydroNetwork.Nodes.Add(hydroNode2b);
             IChannel channel2 = new Channel
             {
-                Geometry = new LineString(new[] { new Coordinate(50, 50), new Coordinate(50, 0) }),
+                Geometry = new LineString(new[]
+                {
+                    new Coordinate(50, 50),
+                    new Coordinate(50, 0)
+                }),
                 Source = hydroNode3,
                 Target = hydroNode2b,
             };
 
             var interactor = new ChannelInteractor(null, channel2, null, null);
             interactor.Network = hydroNetwork;
-            interactor.BranchNodeTopology = new BranchNodeTopology() { AllowReUseNodes = true, AllowRemoveUnusedNodes = true };
+            interactor.BranchNodeTopology = new BranchNodeTopology()
+            {
+                AllowReUseNodes = true,
+                AllowRemoveUnusedNodes = true
+            };
             interactor.Add(channel2);
 
             // hydroNode2 is reused eventhough hydroNode2b was set as Target before adding the branch
@@ -404,39 +415,58 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Editors
         {
             var mocks = new MockRepository();
             var network = mocks.StrictMock<IHydroNetwork>();
-            var channel = new Channel() { Geometry = GeometryFromWKT.Parse("LINESTRING (0 0, 50 0)"), GeodeticLength = 150 };
+            var channel = new Channel()
+            {
+                Geometry = GeometryFromWKT.Parse("LINESTRING (0 0, 50 0)"),
+                GeodeticLength = 150
+            };
             network.Expect(n => n.CoordinateSystem).Return(new OgrCoordinateSystemFactory().CreateFromEPSG(28992)).Repeat.Twice(); // Amersfoort / RD New
             network.Expect(n => n.Branches).PropertyBehavior();
             network.Branches = new EventedList<IBranch>();
-            network.Expect(n => n.Nodes).Return(new EventedList<INode> {node1, node2}).Repeat.Times(4);
+            network.Expect(n => n.Nodes).Return(new EventedList<INode>
+            {
+                node1,
+                node2
+            }).Repeat.Times(4);
             var interactor = new ChannelInteractor(null, channel, null, null);
             interactor.Network = network;
             channel.Network = network;
             mocks.ReplayAll();
             if (Map.CoordinateSystemFactory == null)
+            {
                 Map.CoordinateSystemFactory = new OgrCoordinateSystemFactory();
+            }
+
             Assert.That(channel.GeodeticLength, Is.EqualTo(150).Within(0.1));
             interactor.Add(channel);
             Assert.That(channel.GeodeticLength, Is.EqualTo(channel.Length).Within(0.1));
             Assert.That(channel.GeodeticLength, Is.Not.EqualTo(150).Within(0.1));
             mocks.VerifyAll();
         }
+
         [Test]
         public void AddBranchWithoutCoordinateSystem()
         {
             var mocks = new MockRepository();
             var network = mocks.StrictMock<IHydroNetwork>();
-            var channel = new Channel() { Geometry = GeometryFromWKT.Parse("LINESTRING (0 0, 50 0)") };
+            var channel = new Channel() {Geometry = GeometryFromWKT.Parse("LINESTRING (0 0, 50 0)")};
             network.Expect(n => n.CoordinateSystem).Return(null).Repeat.Once();
             network.Expect(n => n.Branches).PropertyBehavior();
             network.Branches = new EventedList<IBranch>();
-            network.Expect(n => n.Nodes).Return(new EventedList<INode> {node1, node2}).Repeat.Times(4);
+            network.Expect(n => n.Nodes).Return(new EventedList<INode>
+            {
+                node1,
+                node2
+            }).Repeat.Times(4);
             var interactor = new ChannelInteractor(null, channel, null, null);
             interactor.Network = network;
             channel.Network = network;
             mocks.ReplayAll();
             if (Map.CoordinateSystemFactory == null)
+            {
                 Map.CoordinateSystemFactory = new OgrCoordinateSystemFactory();
+            }
+
             Assert.That(channel.GeodeticLength, Is.NaN);
             Assert.That(channel.Length, Is.EqualTo(50).Within(0.1));
             interactor.Add(channel);
@@ -452,14 +482,26 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Editors
             // AllowReUseNodes = false, AllowRemoveUnusedNodes = false
             INetwork hydroNetwork = new HydroNetwork();
 
-            IHydroNode hydroNode1 = new HydroNode { Name = "Node1", Geometry = new Point(0, 0) };
-            IHydroNode hydroNode2 = new HydroNode { Name = "Node1", Geometry = new Point(50, 0) };
+            IHydroNode hydroNode1 = new HydroNode
+            {
+                Name = "Node1",
+                Geometry = new Point(0, 0)
+            };
+            IHydroNode hydroNode2 = new HydroNode
+            {
+                Name = "Node1",
+                Geometry = new Point(50, 0)
+            };
             hydroNetwork.Nodes.Add(hydroNode1);
             hydroNetwork.Nodes.Add(hydroNode2);
 
             IChannel channel1 = new Channel
             {
-                Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(50, 0) }),
+                Geometry = new LineString(new[]
+                {
+                    new Coordinate(0, 0),
+                    new Coordinate(50, 0)
+                }),
                 Source = hydroNode1,
                 Target = hydroNode2,
             };
@@ -470,22 +512,42 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Editors
             Assert.AreEqual(hydroNode1, hydroNetwork.Branches[0].Source);
             Assert.AreEqual(hydroNode2, hydroNetwork.Branches[0].Target);
 
-            IHydroNode hydroNode3 = new HydroNode { Name = "Node3", Geometry = new Point(50, 50) };
-            IHydroNode hydroNode2b = new HydroNode { Name = "Node2b", Geometry = new Point(50, 0) };
+            IHydroNode hydroNode3 = new HydroNode
+            {
+                Name = "Node3",
+                Geometry = new Point(50, 50)
+            };
+            IHydroNode hydroNode2b = new HydroNode
+            {
+                Name = "Node2b",
+                Geometry = new Point(50, 0)
+            };
             hydroNetwork.Nodes.Add(hydroNode3);
             hydroNetwork.Nodes.Add(hydroNode2b);
             IChannel channel2 = new Channel
             {
-                Geometry = new LineString(new[] { new Coordinate(50, 50), new Coordinate(50, 0) }),
+                Geometry = new LineString(new[]
+                {
+                    new Coordinate(50, 50),
+                    new Coordinate(50, 0)
+                }),
                 Source = hydroNode3,
                 Target = hydroNode2b,
             };
-            IHydroNode hydroNode4 = new HydroNode { Name = "Node4", Geometry = new Point(150, 0) };
+            IHydroNode hydroNode4 = new HydroNode
+            {
+                Name = "Node4",
+                Geometry = new Point(150, 0)
+            };
             hydroNetwork.Nodes.Add(hydroNode4);
 
             var interactor = new ChannelInteractor(null, channel2, null, null);
             interactor.Network = hydroNetwork;
-            interactor.BranchNodeTopology = new BranchNodeTopology() { AllowReUseNodes = false, AllowRemoveUnusedNodes = false };
+            interactor.BranchNodeTopology = new BranchNodeTopology()
+            {
+                AllowReUseNodes = false,
+                AllowRemoveUnusedNodes = false
+            };
             interactor.Add(channel2);
 
             // hydroNode2 is NOT reused
@@ -496,5 +558,19 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Editors
             Assert.AreEqual(hydroNode2b, hydroNetwork.Branches[1].Target);
         }
 
+        private ICrossSection AddCrossSection(out ChannelInteractor interactor)
+        {
+            var crossSection = new CrossSectionDefinitionYZ();
+            crossSection.YZDataTable.AddCrossSectionYZRow(0, 0, 0);
+            crossSection.YZDataTable.AddCrossSectionYZRow(2, -2, 0);
+            crossSection.YZDataTable.AddCrossSectionYZRow(4, 0, 0);
+
+            //CrossSectionHelper.CalculateYZProfileFromGeometry(crossSection.Profile, crossSection.Geometry);
+            ICrossSection crossSectionBranchFeature = HydroNetworkHelper.AddCrossSectionDefinitionToBranch(branch1, crossSection, 25.0);
+
+            interactor = new ChannelInteractor(null, branch1, null, null);
+
+            return crossSectionBranchFeature;
+        }
     }
 }

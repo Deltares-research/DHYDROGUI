@@ -299,7 +299,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
             input.Name = inputName;
 
             // Call
-            mathematicalExpression.Inputs = new EventedList<IInput>(new[]{input});
+            mathematicalExpression.Inputs = new EventedList<IInput>(new[]
+            {
+                input
+            });
 
             // Assert
             Assert.That(mathematicalExpression.InputMapping, Has.Count.EqualTo(1));
@@ -389,7 +392,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
             {
                 Name = name,
                 LongName = longName,
-                Expression =  expression
+                Expression = expression
             };
 
             // Call

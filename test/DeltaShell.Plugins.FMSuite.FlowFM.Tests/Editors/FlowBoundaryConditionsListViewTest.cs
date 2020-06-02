@@ -18,24 +18,32 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Editors
             var feature = new Feature2D {Name = "aap"};
 
             var bc1 = new FlowBoundaryCondition(FlowBoundaryQuantityType.Salinity,
-                                                BoundaryConditionDataType.AstroComponents) { Feature = feature };
+                                                BoundaryConditionDataType.AstroComponents) {Feature = feature};
 
             var bc2 = new FlowBoundaryCondition(FlowBoundaryQuantityType.WaterLevel,
-                                                BoundaryConditionDataType.TimeSeries) { Feature = feature };
+                                                BoundaryConditionDataType.TimeSeries) {Feature = feature};
 
             var bc3 = new FlowBoundaryCondition(FlowBoundaryQuantityType.VelocityVector,
                                                 BoundaryConditionDataType.Harmonics) {Feature = feature};
 
             var bcSet = new BoundaryConditionSet
+            {
+                Feature = feature,
+                BoundaryConditions = new EventedList<IBoundaryCondition>(new[]
                 {
-                    Feature = feature,
-                    BoundaryConditions = new EventedList<IBoundaryCondition>(new[] {bc1, bc2, bc3})
-                };
+                    bc1,
+                    bc2,
+                    bc3
+                })
+            };
 
             var view = new BoundaryConditionListView
+            {
+                Data = new EventedList<BoundaryConditionSet>(new[]
                 {
-                    Data = new EventedList<BoundaryConditionSet>(new[] {bcSet})
-                };
+                    bcSet
+                })
+            };
 
             WindowsFormsTestHelper.ShowModal(view);
         }

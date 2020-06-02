@@ -24,6 +24,118 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.DomainSpecificDataEd
             Assert.That(viewModel.DomainName, Is.EqualTo("domain_name"));
         }
 
+        [Test]
+        public void SetDirectionalSpaceSettings_WithSameValue_PropertyChangedIsNotFired()
+        {
+            // Setup
+            DirectionalSpaceSettingsViewModel settings = viewModel.DirectionalSpaceSettings;
+
+            // Call
+            void Call() => viewModel.DirectionalSpaceSettings = settings;
+
+            // Assert
+            TestHelper.AssertPropertyChangedIsFired(viewModel, 0, Call);
+            Assert.That(viewModel.DirectionalSpaceSettings, Is.EqualTo(settings));
+        }
+
+        [Test]
+        public void SetDirectionalSpaceSettings_WithNewValue_ThenPropertyIsSetCorrectlyAndPropertyChangedIsFiredOnce()
+        {
+            // Setup
+            var settings = new DirectionalSpaceSettingsViewModel(null);
+
+            // Call
+            void Call() => viewModel.DirectionalSpaceSettings = settings;
+
+            // Assert
+            TestHelper.AssertPropertyChangedIsFired(viewModel, 1, Call);
+            Assert.That(viewModel.DirectionalSpaceSettings, Is.EqualTo(settings));
+        }
+
+        [Test]
+        public void SetFrequencySpaceSettings_WithSameValue_PropertyChangedIsNotFired()
+        {
+            // Setup
+            FrequencySpaceSettingsViewModel settings = viewModel.FrequencySpaceSettings;
+
+            // Call
+            void Call() => viewModel.FrequencySpaceSettings = settings;
+
+            // Assert
+            TestHelper.AssertPropertyChangedIsFired(viewModel, 0, Call);
+            Assert.That(viewModel.FrequencySpaceSettings, Is.EqualTo(settings));
+        }
+
+        [Test]
+        public void SetFrequencySpaceSettings_WithNewValue_ThenPropertyIsSetCorrectlyAndPropertyChangedIsFiredOnce()
+        {
+            // Setup
+            var settings = new FrequencySpaceSettingsViewModel(null);
+
+            // Call
+            void Call() => viewModel.FrequencySpaceSettings = settings;
+
+            // Assert
+            TestHelper.AssertPropertyChangedIsFired(viewModel, 1, Call);
+            Assert.That(viewModel.FrequencySpaceSettings, Is.EqualTo(settings));
+        }
+
+        [Test]
+        public void SetHydroDynamicsSettings_WithSameValue_PropertyChangedIsNotFired()
+        {
+            // Setup
+            HydroDynamicsSettingsViewModel settings = viewModel.HydroDynamicsSettings;
+
+            // Call
+            void Call() => viewModel.HydroDynamicsSettings = settings;
+
+            // Assert
+            TestHelper.AssertPropertyChangedIsFired(viewModel, 0, Call);
+            Assert.That(viewModel.HydroDynamicsSettings, Is.EqualTo(settings));
+        }
+
+        [Test]
+        public void SetHydroDynamicsSettings_WithNewValue_ThenPropertyIsSetCorrectlyAndPropertyChangedIsFiredOnce()
+        {
+            // Setup
+            var settings = new HydroDynamicsSettingsViewModel(null);
+
+            // Call
+            void Call() => viewModel.HydroDynamicsSettings = settings;
+
+            // Assert
+            TestHelper.AssertPropertyChangedIsFired(viewModel, 1, Call);
+            Assert.That(viewModel.HydroDynamicsSettings, Is.EqualTo(settings));
+        }
+
+        [Test]
+        public void SetWindSettings_WithSameValue_PropertyChangedIsNotFired()
+        {
+            // Setup
+            WindSettingsViewModel settings = viewModel.WindSettings;
+
+            // Call
+            void Call() => viewModel.WindSettings = settings;
+
+            // Assert
+            TestHelper.AssertPropertyChangedIsFired(viewModel, 0, Call);
+            Assert.That(viewModel.WindSettings, Is.EqualTo(settings));
+        }
+
+        [Test]
+        public void SetWindSettings_WithNewValue_ThenPropertyIsSetCorrectlyAndPropertyChangedIsFiredOnce()
+        {
+            // Setup
+            var settings = new WindSettingsViewModel(null);
+
+            // Call
+            void Call() => viewModel.WindSettings = settings;
+
+            // Assert
+            TestHelper.AssertPropertyChangedIsFired(viewModel, 1, Call);
+            Assert.That(viewModel.WindSettings, Is.EqualTo(settings));
+        }
+
         [TestCase(true)]
         [TestCase(false)]
         public void GetUseCustomDirectionalSpaceSettings_ReturnsCorrectValue(bool value)
@@ -150,118 +262,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.DomainSpecificDataEd
             int propertyChangedCount = viewModel.CountPropertyChangedFired(Call, nameof(viewModel.UseCustomWindSettings));
             Assert.That(propertyChangedCount, Is.EqualTo(expectedPropertyChangedCount));
             Assert.That(domainData.UseGlobalMeteoData, Is.EqualTo(!setValue));
-        }
-
-        [Test]
-        public void SetDirectionalSpaceSettings_WithSameValue_PropertyChangedIsNotFired()
-        {
-            // Setup
-            DirectionalSpaceSettingsViewModel settings = viewModel.DirectionalSpaceSettings;
-
-            // Call
-            void Call() => viewModel.DirectionalSpaceSettings = settings;
-
-            // Assert
-            TestHelper.AssertPropertyChangedIsFired(viewModel, 0, Call);
-            Assert.That(viewModel.DirectionalSpaceSettings, Is.EqualTo(settings));
-        }
-
-        [Test]
-        public void SetDirectionalSpaceSettings_WithNewValue_ThenPropertyIsSetCorrectlyAndPropertyChangedIsFiredOnce()
-        {
-            // Setup
-            var settings = new DirectionalSpaceSettingsViewModel(null);
-
-            // Call
-            void Call() => viewModel.DirectionalSpaceSettings = settings;
-
-            // Assert
-            TestHelper.AssertPropertyChangedIsFired(viewModel, 1, Call);
-            Assert.That(viewModel.DirectionalSpaceSettings, Is.EqualTo(settings));
-        }
-
-        [Test]
-        public void SetFrequencySpaceSettings_WithSameValue_PropertyChangedIsNotFired()
-        {
-            // Setup
-            FrequencySpaceSettingsViewModel settings = viewModel.FrequencySpaceSettings;
-
-            // Call
-            void Call() => viewModel.FrequencySpaceSettings = settings;
-
-            // Assert
-            TestHelper.AssertPropertyChangedIsFired(viewModel, 0, Call);
-            Assert.That(viewModel.FrequencySpaceSettings, Is.EqualTo(settings));
-        }
-
-        [Test]
-        public void SetFrequencySpaceSettings_WithNewValue_ThenPropertyIsSetCorrectlyAndPropertyChangedIsFiredOnce()
-        {
-            // Setup
-            var settings = new FrequencySpaceSettingsViewModel(null);
-
-            // Call
-            void Call() => viewModel.FrequencySpaceSettings = settings;
-
-            // Assert
-            TestHelper.AssertPropertyChangedIsFired(viewModel, 1, Call);
-            Assert.That(viewModel.FrequencySpaceSettings, Is.EqualTo(settings));
-        }
-
-        [Test]
-        public void SetHydroDynamicsSettings_WithSameValue_PropertyChangedIsNotFired()
-        {
-            // Setup
-            HydroDynamicsSettingsViewModel settings = viewModel.HydroDynamicsSettings;
-
-            // Call
-            void Call() => viewModel.HydroDynamicsSettings = settings;
-
-            // Assert
-            TestHelper.AssertPropertyChangedIsFired(viewModel, 0, Call);
-            Assert.That(viewModel.HydroDynamicsSettings, Is.EqualTo(settings));
-        }
-
-        [Test]
-        public void SetHydroDynamicsSettings_WithNewValue_ThenPropertyIsSetCorrectlyAndPropertyChangedIsFiredOnce()
-        {
-            // Setup
-            var settings = new HydroDynamicsSettingsViewModel(null);
-
-            // Call
-            void Call() => viewModel.HydroDynamicsSettings = settings;
-
-            // Assert
-            TestHelper.AssertPropertyChangedIsFired(viewModel, 1, Call);
-            Assert.That(viewModel.HydroDynamicsSettings, Is.EqualTo(settings));
-        }
-
-        [Test]
-        public void SetWindSettings_WithSameValue_PropertyChangedIsNotFired()
-        {
-            // Setup
-            WindSettingsViewModel settings = viewModel.WindSettings;
-
-            // Call
-            void Call() => viewModel.WindSettings = settings;
-
-            // Assert
-            TestHelper.AssertPropertyChangedIsFired(viewModel, 0, Call);
-            Assert.That(viewModel.WindSettings, Is.EqualTo(settings));
-        }
-
-        [Test]
-        public void SetWindSettings_WithNewValue_ThenPropertyIsSetCorrectlyAndPropertyChangedIsFiredOnce()
-        {
-            // Setup
-            var settings = new WindSettingsViewModel(null);
-
-            // Call
-            void Call() => viewModel.WindSettings = settings;
-
-            // Assert
-            TestHelper.AssertPropertyChangedIsFired(viewModel, 1, Call);
-            Assert.That(viewModel.WindSettings, Is.EqualTo(settings));
         }
     }
 }

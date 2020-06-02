@@ -16,10 +16,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             var bc = new FlowBoundaryCondition(FlowBoundaryQuantityType.WaterLevel, BoundaryConditionDataType.TimeSeries);
 
             var view = new FlowBoundaryConditionPropertiesControl
-                {
-                    Controller = new FlowBoundaryConditionEditorController(),
-                    BoundaryCondition = bc
-                };
+            {
+                Controller = new FlowBoundaryConditionEditorController(),
+                BoundaryCondition = bc
+            };
 
             WindowsFormsTestHelper.ShowModal(view);
         }
@@ -30,11 +30,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             var bc = new FlowBoundaryCondition(FlowBoundaryQuantityType.Velocity, BoundaryConditionDataType.TimeSeries);
 
             var view = new FlowBoundaryConditionPropertiesControl
-                {
-                    
-                    Controller = new FlowBoundaryConditionEditorController(),
-                    BoundaryCondition = bc
-                };
+            {
+                Controller = new FlowBoundaryConditionEditorController(),
+                BoundaryCondition = bc
+            };
 
             WindowsFormsTestHelper.ShowModal(view);
         }
@@ -45,10 +44,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             var bc = new FlowBoundaryCondition(FlowBoundaryQuantityType.Riemann, BoundaryConditionDataType.TimeSeries);
 
             var view = new FlowBoundaryConditionPropertiesControl
-                {
-                    Controller = new FlowBoundaryConditionEditorController(),
-                    BoundaryCondition = bc
-                };
+            {
+                Controller = new FlowBoundaryConditionEditorController(),
+                BoundaryCondition = bc
+            };
 
             WindowsFormsTestHelper.ShowModal(view);
         }
@@ -59,11 +58,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             var bc = new FlowBoundaryCondition(FlowBoundaryQuantityType.Discharge, BoundaryConditionDataType.TimeSeries);
 
             var view = new FlowBoundaryConditionPropertiesControl
-                {
-                    
-                    Controller = new FlowBoundaryConditionEditorController(),
-                    BoundaryCondition = bc
-                };
+            {
+                Controller = new FlowBoundaryConditionEditorController(),
+                BoundaryCondition = bc
+            };
 
             WindowsFormsTestHelper.ShowModal(view);
         }
@@ -74,10 +72,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             var bc = new FlowBoundaryCondition(FlowBoundaryQuantityType.Salinity, BoundaryConditionDataType.TimeSeries);
 
             var view = new FlowBoundaryConditionPropertiesControl
-                {
-                    Controller = new FlowBoundaryConditionEditorController(),
-                    BoundaryCondition = bc
-                };
+            {
+                Controller = new FlowBoundaryConditionEditorController(),
+                BoundaryCondition = bc
+            };
 
             WindowsFormsTestHelper.ShowModal(view);
         }

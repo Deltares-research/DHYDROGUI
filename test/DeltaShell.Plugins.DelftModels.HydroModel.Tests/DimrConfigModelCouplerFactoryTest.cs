@@ -34,61 +34,69 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             dataItemOutput.Expect(di => di.LinkedTo).Return(null).Repeat.Any();
             dataItemInput.Expect(di => di.LinkedTo).Return(dataItemOutput).Repeat.Any();
 
-            IModel source1 = mocks1.StrictMultiMock<IModel>(typeof(IDimrModel), typeof(IActivity));
-            var sourceDataItems = new List<IDataItem> { dataItemOutput };
+            var source1 = mocks1.StrictMultiMock<IModel>(typeof(IDimrModel), typeof(IActivity));
+            var sourceDataItems = new List<IDataItem> {dataItemOutput};
             source1.Expect(m => m.AllDataItems).Return(sourceDataItems).Repeat.Any();
             source1.Expect(m => m.StatusChanged += null).IgnoreArguments().Repeat.Any();
             source1.Expect(m => m.ProgressChanged += null).IgnoreArguments().Repeat.Any();
-            ((IDimrModel)source1).Expect(m => m.Name).Return(sourcemodelText).Repeat.Any();
-            ((IDimrModel)source1).Expect(dm => dm.GetItemString(dataItemOutput)).Return(sourceDataitemText).Repeat.Any();
+            ((IDimrModel) source1).Expect(m => m.Name).Return(sourcemodelText).Repeat.Any();
+            ((IDimrModel) source1).Expect(dm => dm.GetItemString(dataItemOutput)).Return(sourceDataitemText).Repeat.Any();
 
-            IModel extraSource1 = mocks1.StrictMultiMock<IModel>(typeof(IDimrModel), typeof(IActivity));
-            var extraSourceDataItems = new List<IDataItem> { dataItemOutput };
+            var extraSource1 = mocks1.StrictMultiMock<IModel>(typeof(IDimrModel), typeof(IActivity));
+            var extraSourceDataItems = new List<IDataItem> {dataItemOutput};
             extraSource1.Expect(m => m.AllDataItems).Return(extraSourceDataItems).Repeat.Any();
             extraSource1.Expect(m => m.StatusChanged += null).IgnoreArguments().Repeat.Any();
             extraSource1.Expect(m => m.ProgressChanged += null).IgnoreArguments().Repeat.Any();
 
             extraSource1.Expect(m => m.Name).Return(otherSourceModelText).Repeat.Any();
-            ((IDimrModel)extraSource1).Expect(dm => dm.GetItemString(dataItemOutput)).Return(sourceDataitemText).Repeat.Any();
+            ((IDimrModel) extraSource1).Expect(dm => dm.GetItemString(dataItemOutput)).Return(sourceDataitemText).Repeat.Any();
 
-            IModel target1 = mocks1.StrictMultiMock<IModel>(typeof(IDimrModel));
-            var targetDataItems = new List<IDataItem> { dataItemInput };
+            var target1 = mocks1.StrictMultiMock<IModel>(typeof(IDimrModel));
+            var targetDataItems = new List<IDataItem> {dataItemInput};
             target1.Expect(m => m.AllDataItems).Return(targetDataItems).Repeat.Any();
             target1.Expect(m => m.Owner).Return(null).Repeat.Any();
             target1.Expect(dm => dm.Name).Return(target_couplerText).Repeat.Any();
             target1.Expect(m => m.StatusChanged += null).IgnoreArguments().Repeat.Any();
             target1.Expect(m => m.ProgressChanged += null).IgnoreArguments().Repeat.Any();
-            ((IDimrModel)target1).Expect(dm => dm.ShortName).Return(target_couplerText).Repeat.Any();
-            ((IDimrModel)target1).Expect(dm => dm.GetItemString(dataItemInput)).Return(targetDataitemText).Repeat.Any();
+            ((IDimrModel) target1).Expect(dm => dm.ShortName).Return(target_couplerText).Repeat.Any();
+            ((IDimrModel) target1).Expect(dm => dm.GetItemString(dataItemInput)).Return(targetDataitemText).Repeat.Any();
 
             var subWFActivities = new EventedList<IActivity>();
-            var subWF = mocks1.StrictMultiMock<ICompositeActivity>(typeof(IDimrModel));// similar to iterative1d2dCoupler
+            var subWF = mocks1.StrictMultiMock<ICompositeActivity>(typeof(IDimrModel)); // similar to iterative1d2dCoupler
             subWF.Expect(wf => wf.Activities).Return(subWFActivities).Repeat.Any();
             subWF.Expect(m => m.StatusChanged += null).IgnoreArguments().Repeat.Any();
             subWF.Expect(m => m.ProgressChanged += null).IgnoreArguments().Repeat.Any();
-            ((IDimrModel)subWF).Expect(dm => dm.IsMasterTimeStep).Return(true).Repeat.Any();
+            ((IDimrModel) subWF).Expect(dm => dm.IsMasterTimeStep).Return(true).Repeat.Any();
 
             var workflowActivities = new EventedList<IActivity>();
             var workflow = mocks1.StrictMock<ICompositeActivity>(); // similar to rtc + {fm + f1d} workflow
             workflow.Expect(wf => wf.Activities).Return(workflowActivities).Repeat.Any();
 
-            ICompositeActivity sourceCoupler1 = mocks1.StrictMultiMock<ICompositeActivity>(typeof(IDimrModel));
+            var sourceCoupler1 = mocks1.StrictMultiMock<ICompositeActivity>(typeof(IDimrModel));
             sourceCoupler1.Expect(c => c.CurrentWorkflow).Return(workflow).Repeat.Any();
-            ((IDimrModel)sourceCoupler1).Expect(dm => dm.IsMasterTimeStep).Return(false).Repeat.Any();
-            ((IDimrModel)sourceCoupler1).Expect(dm => dm.ShortName).Return(source_couplerText).Repeat.Any();
-            ((IDimrModel)sourceCoupler1).Expect(dm => dm.Name).Return(source_couplerText).Repeat.Any();
+            ((IDimrModel) sourceCoupler1).Expect(dm => dm.IsMasterTimeStep).Return(false).Repeat.Any();
+            ((IDimrModel) sourceCoupler1).Expect(dm => dm.ShortName).Return(source_couplerText).Repeat.Any();
+            ((IDimrModel) sourceCoupler1).Expect(dm => dm.Name).Return(source_couplerText).Repeat.Any();
 
             source1.Expect(m => m.Owner).Return(sourceCoupler1).Repeat.Any();
             extraSource1.Expect(m => m.Owner).Return(sourceCoupler1).Repeat.Any();
 
             mocks1.ReplayAll();
 
-            subWFActivities.AddRange(new List<IActivity> {source1, new ActivityWrapper(extraSource1)});
-            workflowActivities.AddRange(new List<IActivity> {new ActivityWrapper(target1), new ActivityWrapper(subWF)});
+            subWFActivities.AddRange(new List<IActivity>
+            {
+                source1,
+                new ActivityWrapper(extraSource1)
+            });
+            workflowActivities.AddRange(new List<IActivity>
+            {
+                new ActivityWrapper(target1),
+                new ActivityWrapper(subWF)
+            });
 
-            var expectedCouperName = ((IDimrModel)sourceCoupler1).ShortName + DimrConfigModelCouplerFactory.COUPLER_NAME_COMBINER + ((IDimrModel)target1).ShortName;
+            string expectedCouperName = ((IDimrModel) sourceCoupler1).ShortName + DimrConfigModelCouplerFactory.COUPLER_NAME_COMBINER + ((IDimrModel) target1).ShortName;
 
-            var modelCoupler = DimrConfigModelCouplerFactory.GetCouplerForModels(source1, target1, sourceCoupler1, null);
+            IDimrConfigModelCoupler modelCoupler = DimrConfigModelCouplerFactory.GetCouplerForModels(source1, target1, sourceCoupler1, null);
 
             Assert.That(modelCoupler.Name, Is.EqualTo(expectedCouperName));
             Assert.That(modelCoupler.CoupleInfos.Count(), Is.EqualTo(1));

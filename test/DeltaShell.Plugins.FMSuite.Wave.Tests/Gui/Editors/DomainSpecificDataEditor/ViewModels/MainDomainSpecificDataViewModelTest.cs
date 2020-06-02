@@ -24,7 +24,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.DomainSpecificDataEd
             Assert.AreEqual("test", viewModelsList[0].DomainName);
             Assert.AreEqual("subdomain", viewModelsList[1].DomainName);
         }
-        
+
         [Test]
         public void ConstructorShouldSelectTheFirstSubViewModel()
         {
@@ -51,7 +51,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.DomainSpecificDataEd
         {
             // Arrange
             WaveDomainData rootWaveDomainData = CreateMainDomainSpecificDataViewModelWithOneSubDomain(out MainDomainSpecificDataViewModel mainDomainSpecificDataViewModel);
-            
+
             // Act
             AddSubDomainTo(rootWaveDomainData);
 
@@ -69,9 +69,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.DomainSpecificDataEd
             // Arrange
             var waveDomainData = new WaveDomainData("test");
             WaveDomainData subDomain = AddSubDomainTo(waveDomainData);
-           
+
             var mainDomainSpecificDataViewModel = new MainDomainSpecificDataViewModel(waveDomainData);
-            
+
             // Act
             AddSubDomainTo(subDomain);
 
@@ -88,7 +88,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.DomainSpecificDataEd
         {
             // Arrange
             WaveDomainData rootWaveDomainData = CreateMainDomainSpecificDataViewModelWithOneSubDomain(out MainDomainSpecificDataViewModel mainDomainSpecificDataViewModel);
-            
+
             // Act
             AddExteriorWaveDomainTo(rootWaveDomainData);
 
@@ -123,7 +123,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.DomainSpecificDataEd
 
             // Act
             rootWaveDomainData.SubDomains[0].SuperDomain = null;
-            
+
             // Assert
             ObservableCollection<DomainSpecificSettingsViewModel> viewModelsList = mainDomainSpecificDataViewModel.DomainSpecificDataViewModelsList;
             Assert.AreEqual(1, viewModelsList.Count);
@@ -159,9 +159,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.DomainSpecificDataEd
             AddExteriorWaveDomainTo(rootWaveDomainData);
 
             // Assert
-            Assert.AreEqual(mainDomainSpecificDataViewModel.DomainSpecificDataViewModelsList[2],mainDomainSpecificDataViewModel.SelectedViewModel);
+            Assert.AreEqual(mainDomainSpecificDataViewModel.DomainSpecificDataViewModelsList[2], mainDomainSpecificDataViewModel.SelectedViewModel);
         }
-        
+
         [Test]
         public void GivenAMainViewModel_WhenDeletingASelectedSubDomain_ThenTheRootViewModelShouldBeSelected()
         {
@@ -218,10 +218,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.DomainSpecificDataEd
             WaveDomainData newExteriorDomain1 = AddExteriorWaveDomainTo(rootWaveDomainData);
 
             // Act
-            var newExteriorDomain2 = new WaveDomainData("exterior2")
-            {
-                SubDomains = { newExteriorDomain1 }
-            };
+            var newExteriorDomain2 = new WaveDomainData("exterior2") {SubDomains = {newExteriorDomain1}};
             newExteriorDomain1.SuperDomain = newExteriorDomain2;
 
             ObservableCollection<DomainSpecificSettingsViewModel> viewModelsListAfter = mainDomainSpecificDataViewModel.DomainSpecificDataViewModelsList;
@@ -258,10 +255,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.DomainSpecificDataEd
             newExteriorDomain1.SuperDomain = null;
 
             // Act
-            var newExteriorDomain2 = new WaveDomainData("exterior2")
-            {
-                SubDomains = { newExteriorDomain1 }
-            };
+            var newExteriorDomain2 = new WaveDomainData("exterior2") {SubDomains = {newExteriorDomain1}};
             newExteriorDomain1.SuperDomain = newExteriorDomain2;
 
             ObservableCollection<DomainSpecificSettingsViewModel> viewModelsListAfter = mainDomainSpecificDataViewModel.DomainSpecificDataViewModelsList;
@@ -300,17 +294,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.DomainSpecificDataEd
 
         private static WaveDomainData AddSubDomainTo(IWaveDomainData waveDomainData)
         {
-            var subWaveDomainData = new WaveDomainData("subdomain") { SuperDomain = waveDomainData };
+            var subWaveDomainData = new WaveDomainData("subdomain") {SuperDomain = waveDomainData};
             waveDomainData.SubDomains.Add(subWaveDomainData);
             return subWaveDomainData;
         }
 
         private static WaveDomainData AddExteriorWaveDomainTo(WaveDomainData waveDomainData)
         {
-            var exteriorWaveDomainData = new WaveDomainData("exterior")
-            {
-                SubDomains = {waveDomainData}
-            };
+            var exteriorWaveDomainData = new WaveDomainData("exterior") {SubDomains = {waveDomainData}};
             waveDomainData.SuperDomain = exteriorWaveDomainData;
             return exteriorWaveDomainData;
         }

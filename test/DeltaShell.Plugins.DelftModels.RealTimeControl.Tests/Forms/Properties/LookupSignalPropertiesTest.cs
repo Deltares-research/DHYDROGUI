@@ -8,10 +8,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms.Properties
     [TestFixture]
     public class LookupSignalPropertiesTest
     {
-        [Test, Category(TestCategory.WindowsForms)]
+        [Test]
+        [Category(TestCategory.WindowsForms)]
         public void ShowProperties()
         {
-            WindowsFormsTestHelper.ShowPropertyGridForObject(new LookupSignalProperties { Data = new LookupSignal() });
+            WindowsFormsTestHelper.ShowPropertyGridForObject(new LookupSignalProperties {Data = new LookupSignal()});
         }
     }
 }

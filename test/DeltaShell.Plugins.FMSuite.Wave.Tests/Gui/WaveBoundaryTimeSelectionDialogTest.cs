@@ -18,17 +18,46 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
         public void ShowTest()
         {
             var start = new DateTime(1990, 1, 1, 12, 30, 0);
-            var times = new[] {start, start.AddDays(1), start.AddDays(2), start.AddDays(3), start.AddDays(4), start.AddDays(5)};
+            DateTime[] times = new[]
+            {
+                start,
+                start.AddDays(1),
+                start.AddDays(2),
+                start.AddDays(3),
+                start.AddDays(4),
+                start.AddDays(5)
+            };
             start = start.AddHours(6);
-            var times1 = new[] {start, start.AddDays(1), start.AddDays(2), start.AddDays(3), start.AddDays(4), start.AddDays(5)};
+            DateTime[] times1 = new[]
+            {
+                start,
+                start.AddDays(1),
+                start.AddDays(2),
+                start.AddDays(3),
+                start.AddDays(4),
+                start.AddDays(5)
+            };
             start = start.AddMinutes(45);
-            var times2 = new[] {start, start.AddDays(1), start.AddDays(2), start.AddDays(3), start.AddDays(4), start.AddDays(5)};
+            DateTime[] times2 = new[]
+            {
+                start,
+                start.AddDays(1),
+                start.AddDays(2),
+                start.AddDays(3),
+                start.AddDays(4),
+                start.AddDays(5)
+            };
 
             var f1 = new Feature2D
             {
                 Name = "boundaryA",
                 Geometry =
-                    new LineString(new [] { new Coordinate(0, 0), new Coordinate(1, 0), new Coordinate(2, 0) })
+                    new LineString(new[]
+                    {
+                        new Coordinate(0, 0),
+                        new Coordinate(1, 0),
+                        new Coordinate(2, 0)
+                    })
             };
 
             var bc1 = new WaveBoundaryCondition(BoundaryConditionDataType.ParameterizedSpectrumTimeseries)
@@ -38,7 +67,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
             };
             bc1.AddPoint(0);
             bc1.GetDataAtPoint(0).Arguments[0].SetValues(times);
-            
+
             bc1.AddPoint(2);
             bc1.GetDataAtPoint(2).Arguments[0].SetValues(times1);
 
@@ -46,7 +75,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
             {
                 Name = "boundaryB",
                 Geometry =
-                    new LineString(new [] { new Coordinate(0, 0), new Coordinate(1, 0) })
+                    new LineString(new[]
+                    {
+                        new Coordinate(0, 0),
+                        new Coordinate(1, 0)
+                    })
             };
 
             var bc2 = new WaveBoundaryCondition(BoundaryConditionDataType.ParameterizedSpectrumTimeseries)
@@ -62,7 +95,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
             var f3 = new Feature2D
             {
                 Name = "boundaryC",
-                Geometry = new LineString(new [] {new Coordinate(0, 0), new Coordinate(-1, 0)})
+                Geometry = new LineString(new[]
+                {
+                    new Coordinate(0, 0),
+                    new Coordinate(-1, 0)
+                })
             };
 
             var bc3 = new WaveBoundaryCondition(BoundaryConditionDataType.ParameterizedSpectrumConstant)
@@ -73,7 +110,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
 
             var selectionControl = new WaveBoundaryTimeSelectionDialog()
             {
-                Data = new[]{bc1, bc2, bc3},
+                Data = new[]
+                {
+                    bc1,
+                    bc2,
+                    bc3
+                },
                 Dock = DockStyle.Fill
             };
 

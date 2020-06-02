@@ -1,9 +1,10 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
 using DeltaShell.Plugins.FMSuite.Common.IO.Files;
+using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
 using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
 using NUnit.Framework;
 
@@ -17,7 +18,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
         public void Read_WaveModelSchema_DoesNotSplitCommentWithCommas()
         {
             //01. Load test file
-            var csvTestFile = TestHelper.GetTestFilePath(@"CsvFile\properties_test.csv");
+            string csvTestFile = TestHelper.GetTestFilePath(@"CsvFile\properties_test.csv");
             Assert.IsNotNull(csvTestFile);
             Assert.IsTrue(File.Exists(csvTestFile));
 
@@ -31,10 +32,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             var expectedUnit = "dummyUnit";
 
             //04. Load CSV into properties.
-            var modelPropertySchema = new ModelSchemaCsvFile().ReadModelSchema<WaveModelPropertyDefinition>(csvTestFile, "MdwGroup");
+            ModelPropertySchema<WaveModelPropertyDefinition> modelPropertySchema = new ModelSchemaCsvFile().ReadModelSchema<WaveModelPropertyDefinition>(csvTestFile, "MdwGroup");
 
             //05. Find property, and check description.
-            var testProp = modelPropertySchema.PropertyDefinitions.FirstOrDefault(pd => pd.Value.FilePropertyName == testPropName);
+            KeyValuePair<string, WaveModelPropertyDefinition> testProp = modelPropertySchema.PropertyDefinitions.FirstOrDefault(pd => pd.Value.FilePropertyName == testPropName);
             Assert.IsNotNull(testProp);
             Assert.AreEqual(expectedDescription, testProp.Value.Description);
             Assert.AreEqual(expectedUnit, testProp.Value.Unit);
@@ -48,7 +49,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
         public void Read_WaveModelSchema_LoadsUnits()
         {
             //01. Load test file
-            var csvTestFile = TestHelper.GetTestFilePath(@"CsvFile\properties_test.csv");
+            string csvTestFile = TestHelper.GetTestFilePath(@"CsvFile\properties_test.csv");
             Assert.IsNotNull(csvTestFile);
             Assert.IsTrue(File.Exists(csvTestFile));
             //02. Create local copy
@@ -56,7 +57,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             Assert.IsTrue(File.Exists(csvTestFile));
 
             //03. Load CSV into properties.
-            var modelPropertySchema = new ModelSchemaCsvFile().ReadModelSchema<WaveModelPropertyDefinition>(csvTestFile, "MdwGroup");
+            ModelPropertySchema<WaveModelPropertyDefinition> modelPropertySchema = new ModelSchemaCsvFile().ReadModelSchema<WaveModelPropertyDefinition>(csvTestFile, "MdwGroup");
 
             //04. Check units have been loaded
             Assert.IsTrue(modelPropertySchema.PropertyDefinitions.Any(pd => !string.IsNullOrEmpty(pd.Value.Unit)));
@@ -66,24 +67,29 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
             FileUtils.DeleteIfExists(csvTestFile);
         }
 
-
         [Test]
         [Category(TestCategory.DataAccess)]
         public void GivenADwavePropertiesCsvWithPropertiesUsingMultipleDefaultValues_WhenReadingThisFile_ThenThePropertyDefinitionShouldBeSetCorrectly()
         {
-            var modelPropertySchema =
+            ModelPropertySchema<WaveModelPropertyDefinition> modelPropertySchema =
                 new ModelSchemaCsvFile().ReadModelSchema<WaveModelPropertyDefinition>(
                     "plugins\\DeltaShell.Plugins.FMSuite.Wave\\dwave-properties.csv", "MdwGroup");
             Assert.AreEqual(75, modelPropertySchema.PropertyDefinitions.Count);
             Assert.AreEqual(6, modelPropertySchema.ModelDefinitionCategory.Count);
 
-            var propertyDefinitionBedFrictionCoef =
+            KeyValuePair<string, WaveModelPropertyDefinition> propertyDefinitionBedFrictionCoef =
                 modelPropertySchema.PropertyDefinitions.FirstOrDefault(pd =>
-                    pd.Value.FilePropertyName == KnownWaveProperties.BedFrictionCoef);
-            
+                                                                           pd.Value.FilePropertyName == KnownWaveProperties.BedFrictionCoef);
+
             Assert.IsTrue(propertyDefinitionBedFrictionCoef.Value.MultipleDefaultValuesAvailable);
             Assert.AreEqual(KnownWaveProperties.BedFriction, propertyDefinitionBedFrictionCoef.Value.DefaultValueDependentOn);
-            var expectedDefaultValues = new String[] {"0","0.038","0.015","0.05"};
+            var expectedDefaultValues = new string[]
+            {
+                "0",
+                "0.038",
+                "0.015",
+                "0.05"
+            };
             Assert.AreEqual(expectedDefaultValues, propertyDefinitionBedFrictionCoef.Value.MultipleDefaultValues);
             Assert.AreEqual("BedFriction:0|0.038|0.015|0.05", propertyDefinitionBedFrictionCoef.Value.DefaultValueAsString);
         }
@@ -92,21 +98,20 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
         [Category(TestCategory.DataAccess)]
         public void GivenADwavePropertiesCsvWithPropertiesUsingOneDefaultValue_WhenReadingThisFile_ThenThePropertyDefinitionShouldBeSetCorrectly()
         {
-            var modelPropertySchema =
+            ModelPropertySchema<WaveModelPropertyDefinition> modelPropertySchema =
                 new ModelSchemaCsvFile().ReadModelSchema<WaveModelPropertyDefinition>(
                     "plugins\\DeltaShell.Plugins.FMSuite.Wave\\dwave-properties.csv", "MdwGroup");
             Assert.AreEqual(75, modelPropertySchema.PropertyDefinitions.Count);
             Assert.AreEqual(6, modelPropertySchema.ModelDefinitionCategory.Count);
 
-            var propertyDefinitionBedFriction =
+            KeyValuePair<string, WaveModelPropertyDefinition> propertyDefinitionBedFriction =
                 modelPropertySchema.PropertyDefinitions.FirstOrDefault(pd =>
-                    pd.Value.FilePropertyName == KnownWaveProperties.BedFriction);
+                                                                           pd.Value.FilePropertyName == KnownWaveProperties.BedFriction);
 
             Assert.IsFalse(propertyDefinitionBedFriction.Value.MultipleDefaultValuesAvailable);
             Assert.IsNull(propertyDefinitionBedFriction.Value.DefaultValueDependentOn);
             Assert.IsNull(propertyDefinitionBedFriction.Value.MultipleDefaultValues);
             Assert.AreEqual("jonswap", propertyDefinitionBedFriction.Value.DefaultValueAsString);
         }
-
     }
 }

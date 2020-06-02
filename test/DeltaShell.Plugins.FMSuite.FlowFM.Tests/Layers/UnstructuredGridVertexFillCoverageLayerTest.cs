@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using DelftTools.TestUtils;
@@ -23,20 +24,40 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Layers
         [Category(TestCategory.WindowsForms)]
         public void ShowEmptyVertexFillCoverageLayer()
         {
-            var mduPath = TestHelper.GetTestFilePath(@"data\f04_bottomfriction\c016_2DConveyance_bend\input\bendprof.mdu");
+            string mduPath = TestHelper.GetTestFilePath(@"data\f04_bottomfriction\c016_2DConveyance_bend\input\bendprof.mdu");
             mduPath = TestHelper.CreateLocalCopy(mduPath);
-            var grid = MapFileImporter.Import(mduPath, "bendprof_map.nc");
+            UnstructuredGrid grid = MapFileImporter.Import(mduPath, "bendprof_map.nc");
 
             // build coverage and show on map
             var bathymetry = new UnstructuredGridVertexCoverage(grid, false);
 
-            var gridLayer = new UnstructuredGridLayer { Grid = grid };
-            var coverageLayer = new UnstructuredGridVertexCoverageLayer { Coverage = bathymetry, RenderMode = RenderModeVertex.FillSmooth };
+            var gridLayer = new UnstructuredGridLayer {Grid = grid};
+            var coverageLayer = new UnstructuredGridVertexCoverageLayer
+            {
+                Coverage = bathymetry,
+                RenderMode = RenderModeVertex.FillSmooth
+            };
 
-            var map = new Map { Layers = { gridLayer, coverageLayer }, Size = new Size { Width = 800, Height = 800 } };
+            var map = new Map
+            {
+                Layers =
+                {
+                    gridLayer,
+                    coverageLayer
+                },
+                Size = new Size
+                {
+                    Width = 800,
+                    Height = 800
+                }
+            };
             map.ZoomToExtents();
 
-            var mapControl = new MapControl { Map = map, Dock = DockStyle.Fill };
+            var mapControl = new MapControl
+            {
+                Map = map,
+                Dock = DockStyle.Fill
+            };
 
             mapControl.GetToolByType<LegendTool>().Visible = true;
 
@@ -47,27 +68,43 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Layers
         [Category(TestCategory.WindowsForms)]
         public void ShowVertexFillCoverageLayer()
         {
-            var mduPath = TestHelper.GetTestFilePath(@"data\f04_bottomfriction\c016_2DConveyance_bend\input\bendprof.mdu");
+            string mduPath = TestHelper.GetTestFilePath(@"data\f04_bottomfriction\c016_2DConveyance_bend\input\bendprof.mdu");
             mduPath = TestHelper.CreateLocalCopy(mduPath);
-            var grid = MapFileImporter.Import(mduPath, "bendprof_map.nc");
+            UnstructuredGrid grid = MapFileImporter.Import(mduPath, "bendprof_map.nc");
 
-            var values = grid.Vertices.Select(v => v.Z);
+            IEnumerable<double> values = grid.Vertices.Select(v => v.Z);
 
             // build coverage and show on map
             var bathymetry = new UnstructuredGridVertexCoverage(grid, false);
             bathymetry.SetValues(values);
 
-            var gridLayer = new UnstructuredGridLayer { Grid = grid };
+            var gridLayer = new UnstructuredGridLayer {Grid = grid};
             var coverageLayer = new UnstructuredGridVertexCoverageLayer
-                {
-                    Coverage = bathymetry,
-                    RenderMode = RenderModeVertex.FillSmooth,
-                };
+            {
+                Coverage = bathymetry,
+                RenderMode = RenderModeVertex.FillSmooth,
+            };
 
-            var map = new Map { Layers = {gridLayer, coverageLayer }, Size = new Size { Width = 800, Height = 800 } };
+            var map = new Map
+            {
+                Layers =
+                {
+                    gridLayer,
+                    coverageLayer
+                },
+                Size = new Size
+                {
+                    Width = 800,
+                    Height = 800
+                }
+            };
             map.ZoomToExtents();
 
-            var mapControl = new MapControl { Map = map, Dock = DockStyle.Fill };
+            var mapControl = new MapControl
+            {
+                Map = map,
+                Dock = DockStyle.Fill
+            };
 
             mapControl.GetToolByType<LegendTool>().Visible = true;
 
@@ -82,29 +119,69 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Layers
             var coord2 = new Coordinate(0, 10.5, 2);
             var coord3 = new Coordinate(10.5, 10, 3);
             var coord4 = new Coordinate(10, 0, 4);
-            var vertices = new[] {coord1, coord2, coord3, coord4};
+            Coordinate[] vertices = new[]
+            {
+                coord1,
+                coord2,
+                coord3,
+                coord4
+            };
 
-            var edges = new int[,] { {1, 2}, {2, 3}, {3, 4}, {4, 1}, {1, 3} };
+            var edges = new int[,]
+            {
+                {
+                    1,
+                    2
+                },
+                {
+                    2,
+                    3
+                },
+                {
+                    3,
+                    4
+                },
+                {
+                    4,
+                    1
+                },
+                {
+                    1,
+                    3
+                }
+            };
 
-            var grid = UnstructuredGridFactory.CreateFromVertexAndEdgeList(vertices, edges);
+            UnstructuredGrid grid = UnstructuredGridFactory.CreateFromVertexAndEdgeList(vertices, edges);
 
-            var values = grid.Vertices.Select(v => v.Z);
+            IEnumerable<double> values = grid.Vertices.Select(v => v.Z);
 
             // build coverage and show on map
             var bathymetry = new UnstructuredGridVertexCoverage(grid, false);
             bathymetry.SetValues(values);
 
-            var gridLayer = new UnstructuredGridLayer { Grid = grid };
+            var gridLayer = new UnstructuredGridLayer {Grid = grid};
             var coverageLayer = new UnstructuredGridVertexCoverageLayer
             {
                 Coverage = bathymetry,
                 RenderMode = RenderModeVertex.FillSmooth,
             };
             //gridLayer, 
-            var map = new Map { Layers = { coverageLayer }, Size = new Size { Width = 800, Height = 800 } };
+            var map = new Map
+            {
+                Layers = {coverageLayer},
+                Size = new Size
+                {
+                    Width = 800,
+                    Height = 800
+                }
+            };
             map.ZoomToExtents();
 
-            var mapControl = new MapControl { Map = map, Dock = DockStyle.Fill };
+            var mapControl = new MapControl
+            {
+                Map = map,
+                Dock = DockStyle.Fill
+            };
 
             mapControl.GetToolByType<LegendTool>().Visible = true;
 
@@ -115,27 +192,39 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Layers
         [Category(TestCategory.WindowsForms)]
         public void ShowVertexFillCoverageLayerPensioen()
         {
-            var mduPath = TestHelper.GetTestFilePath(@"data\pensioen\pensioen.mdu");
+            string mduPath = TestHelper.GetTestFilePath(@"data\pensioen\pensioen.mdu");
             mduPath = TestHelper.CreateLocalCopy(mduPath);
-            var grid = MapFileImporter.Import(mduPath, "pensioen_map.nc");
+            UnstructuredGrid grid = MapFileImporter.Import(mduPath, "pensioen_map.nc");
 
-            var values = grid.Vertices.Select(v => v.Z);
+            IEnumerable<double> values = grid.Vertices.Select(v => v.Z);
 
             // build coverage and show on map
             var bathymetry = new UnstructuredGridVertexCoverage(grid, false);
             bathymetry.SetValues(values);
 
-            var gridLayer = new UnstructuredGridLayer { Grid = grid };
+            var gridLayer = new UnstructuredGridLayer {Grid = grid};
             var coverageLayer = new UnstructuredGridVertexCoverageLayer
             {
                 Coverage = bathymetry,
                 RenderMode = RenderModeVertex.FillSmooth,
             };
             //gridLayer, 
-            var map = new Map { Layers = { coverageLayer }, Size = new Size { Width = 800, Height = 800 } };
+            var map = new Map
+            {
+                Layers = {coverageLayer},
+                Size = new Size
+                {
+                    Width = 800,
+                    Height = 800
+                }
+            };
             map.ZoomToExtents();
 
-            var mapControl = new MapControl { Map = map, Dock = DockStyle.Fill };
+            var mapControl = new MapControl
+            {
+                Map = map,
+                Dock = DockStyle.Fill
+            };
 
             mapControl.GetToolByType<LegendTool>().Visible = true;
 
@@ -146,7 +235,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Layers
         [Category(TestCategory.Performance)]
         public void VerifySmoothFilledBathymetryIsFast()
         {
-            var netFilePath = TestHelper.GetTestFilePath(@"harlingen\fm_003_net.nc");
+            string netFilePath = TestHelper.GetTestFilePath(@"harlingen\fm_003_net.nc");
             netFilePath = TestHelper.CreateLocalCopySingleFile(netFilePath);
 
             UnstructuredGrid grid;
@@ -154,9 +243,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Layers
             {
                 grid = uGridAdaptor.GetUnstructuredGridFromUGridMeshId(1);
             }
+
             Assert.NotNull(grid);
 
-            var values = grid.Vertices.Select(v => v.Z);
+            IEnumerable<double> values = grid.Vertices.Select(v => v.Z);
 
             // build coverage and show on map
             var bathymetry = new UnstructuredGridVertexCoverage(grid, false);
@@ -167,7 +257,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Layers
                 Coverage = bathymetry,
                 RenderMode = RenderModeVertex.FillSmooth,
             };
-            var map = new Map { Layers = { coverageLayer }, Size = new Size { Width = 1000, Height = 1000 } };
+            var map = new Map
+            {
+                Layers = {coverageLayer},
+                Size = new Size
+                {
+                    Width = 1000,
+                    Height = 1000
+                }
+            };
             map.ZoomToExtents();
             map.Render(); //warmup
             coverageLayer.RenderRequired = true;
@@ -179,7 +277,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Layers
         [Category(TestCategory.Performance)]
         public void VerifyPointFilledBathymetryIsFast()
         {
-            var netFilePath = TestHelper.GetTestFilePath(@"harlingen\fm_003_net.nc");
+            string netFilePath = TestHelper.GetTestFilePath(@"harlingen\fm_003_net.nc");
             netFilePath = TestHelper.CreateLocalCopySingleFile(netFilePath);
 
             UnstructuredGrid grid;
@@ -187,9 +285,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Layers
             {
                 grid = uGridAdaptor.GetUnstructuredGridFromUGridMeshId(1);
             }
+
             Assert.NotNull(grid);
 
-            var values = grid.Vertices.Select(v => v.Z);
+            IEnumerable<double> values = grid.Vertices.Select(v => v.Z);
 
             // build coverage and show on map
             var bathymetry = new UnstructuredGridVertexCoverage(grid, false);
@@ -201,7 +300,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Layers
                 RenderTechnology = PrimitivesRenderer.Software,
                 RenderMode = RenderModeVertex.Point,
             };
-            var map = new Map { Layers = { coverageLayer }, Size = new Size { Width = 1000, Height = 1000 } };
+            var map = new Map
+            {
+                Layers = {coverageLayer},
+                Size = new Size
+                {
+                    Width = 1000,
+                    Height = 1000
+                }
+            };
             map.ZoomToExtents();
             map.Render(); //warmup
             coverageLayer.RenderRequired = true;

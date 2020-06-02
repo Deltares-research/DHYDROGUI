@@ -25,22 +25,47 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             // 1 +-----+ 4
 
             IList<Coordinate> vertices = new[]
-                {
-                    new Coordinate(0, 0),
-                    new Coordinate(0, 10),
-                    new Coordinate(10, 10),
-                    new Coordinate(10, 0)
-                };
+            {
+                new Coordinate(0, 0),
+                new Coordinate(0, 10),
+                new Coordinate(10, 10),
+                new Coordinate(10, 0)
+            };
 
             var edges = new[,]
+            {
                 {
-                    {1, 2}, {2, 3}, {3, 4}, {4, 1}, {1, 3}
-                };
+                    1,
+                    2
+                },
+                {
+                    2,
+                    3
+                },
+                {
+                    3,
+                    4
+                },
+                {
+                    4,
+                    1
+                },
+                {
+                    1,
+                    3
+                }
+            };
 
-            var grid = UnstructuredGridFactory.CreateFromVertexAndEdgeList(vertices, edges);
+            UnstructuredGrid grid = UnstructuredGridFactory.CreateFromVertexAndEdgeList(vertices, edges);
 
             var coverage = new UnstructuredGridVertexCoverage(grid, false);
-            coverage.SetValues(new[] { 1.0, 2.0, 3.0, 4.0 });
+            coverage.SetValues(new[]
+            {
+                1.0,
+                2.0,
+                3.0,
+                4.0
+            });
             coverage.Components[0].NoDataValue = -999.0;
 
             IPointCloud cloud = coverage.ToPointCloud();
@@ -52,9 +77,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         {
             int[,] edges;
             int[,] cellIndices;
-            var vertices = TwoTrianglesInASquareUnstructuredGrid(out edges, out cellIndices);
+            IList<Coordinate> vertices = TwoTrianglesInASquareUnstructuredGrid(out edges, out cellIndices);
 
-            var grid = UnstructuredGridFactory.CreateFromVertexAndEdgeList(vertices, edges, cellIndices);
+            UnstructuredGrid grid = UnstructuredGridFactory.CreateFromVertexAndEdgeList(vertices, edges, cellIndices);
             var coverage = new UnstructuredGridCellCoverage(grid, false);
             coverage[0] = 1.0;
             coverage[1] = 2.0;
@@ -68,42 +93,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.AreEqual(coverage.Coordinates.Last(), new Coordinate(cloud.PointValues[1].X, cloud.PointValues[1].Y));
         }
 
-        private static IList<Coordinate> TwoTrianglesInASquareUnstructuredGrid(out int[,] edges, out int[,] cellIndices)
-        {
-            // unstructured grid: two triangles in a square
-            // 2 +-----+ 3
-            //   |   / |
-            //   | /   |
-            // 1 +-----+ 4
-
-            IList<Coordinate> vertices = new[]
-            {
-                new Coordinate(0, 0),
-                new Coordinate(0, 10),
-                new Coordinate(10, 10),
-                new Coordinate(10, 0),
-            };
-
-            edges = new[,]
-            {
-                {1, 2}, {2, 3}, {3, 4}, {4, 1}, {1, 3},
-            };
-
-            cellIndices = new[,]
-            {
-                {1, 2, 3}, {1, 3, 4},
-            };
-            return vertices;
-        }
-
         [Test]
         public void ConvertingTimeDependentSpatialDataToSamplesIsNotSupportedTest()
         {
             int[,] edges;
             int[,] cellIndices;
-            var vertices = TwoTrianglesInASquareUnstructuredGrid(out edges, out cellIndices);
+            IList<Coordinate> vertices = TwoTrianglesInASquareUnstructuredGrid(out edges, out cellIndices);
 
-            var grid = UnstructuredGridFactory.CreateFromVertexAndEdgeList(vertices, edges, cellIndices);
+            UnstructuredGrid grid = UnstructuredGridFactory.CreateFromVertexAndEdgeList(vertices, edges, cellIndices);
             var coverage = new UnstructuredGridCellCoverage(grid, true);
             try
             {
@@ -128,8 +125,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         {
             int[,] edges;
             int[,] cellIndices;
-            var vertices = TwoTrianglesInASquareUnstructuredGrid(out edges, out cellIndices);
-            var grid = UnstructuredGridFactory.CreateFromVertexAndEdgeList(vertices, edges, cellIndices);
+            IList<Coordinate> vertices = TwoTrianglesInASquareUnstructuredGrid(out edges, out cellIndices);
+            UnstructuredGrid grid = UnstructuredGridFactory.CreateFromVertexAndEdgeList(vertices, edges, cellIndices);
 
             var coverage = new UnstructuredGridCellCoverage(grid, false);
             coverage.Components.RemoveAt(0);
@@ -157,9 +154,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         {
             int[,] edges;
             int[,] cellIndices;
-            var vertices = TwoTrianglesInASquareUnstructuredGrid(out edges, out cellIndices);
+            IList<Coordinate> vertices = TwoTrianglesInASquareUnstructuredGrid(out edges, out cellIndices);
 
-            var grid = UnstructuredGridFactory.CreateFromVertexAndEdgeList(vertices, edges, cellIndices);
+            UnstructuredGrid grid = UnstructuredGridFactory.CreateFromVertexAndEdgeList(vertices, edges, cellIndices);
             var coverage = new UnstructuredGridCellCoverage(grid, false);
             coverage.Components[0].NoDataValue = -999.0;
             coverage.Components[0].Values.RemoveAt(0);
@@ -180,6 +177,62 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             {
                 Assert.Fail("An unexpected exception was given: {0}", e.Message);
             }
+        }
+
+        private static IList<Coordinate> TwoTrianglesInASquareUnstructuredGrid(out int[,] edges, out int[,] cellIndices)
+        {
+            // unstructured grid: two triangles in a square
+            // 2 +-----+ 3
+            //   |   / |
+            //   | /   |
+            // 1 +-----+ 4
+
+            IList<Coordinate> vertices = new[]
+            {
+                new Coordinate(0, 0),
+                new Coordinate(0, 10),
+                new Coordinate(10, 10),
+                new Coordinate(10, 0),
+            };
+
+            edges = new[,]
+            {
+                {
+                    1,
+                    2
+                },
+                {
+                    2,
+                    3
+                },
+                {
+                    3,
+                    4
+                },
+                {
+                    4,
+                    1
+                },
+                {
+                    1,
+                    3
+                },
+            };
+
+            cellIndices = new[,]
+            {
+                {
+                    1,
+                    2,
+                    3
+                },
+                {
+                    1,
+                    3,
+                    4
+                },
+            };
+            return vertices;
         }
     }
 }

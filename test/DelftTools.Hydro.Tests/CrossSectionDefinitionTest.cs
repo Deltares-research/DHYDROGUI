@@ -13,13 +13,13 @@ namespace DelftTools.Hydro.Tests
         public void GivenCrossSectionWithSections_WhenGettingSectionWidthByName_ThenCorrectSectionWidthIsReturned()
         {
             var csDef = new TestCrossSectionDefinition();
-            csDef.AddSection(new CrossSectionSectionType { Name = CrossSectionDefinition.MainSectionName }, 60.0);
-            csDef.AddSection(new CrossSectionSectionType { Name = CrossSectionDefinitionZW.Floodplain1SectionTypeName }, 16.0);
+            csDef.AddSection(new CrossSectionSectionType {Name = CrossSectionDefinition.MainSectionName}, 60.0);
+            csDef.AddSection(new CrossSectionSectionType {Name = CrossSectionDefinitionZW.Floodplain1SectionTypeName}, 16.0);
 
-            var mainSectionWidth = csDef.GetSectionWidth(CrossSectionDefinition.MainSectionName);
+            double mainSectionWidth = csDef.GetSectionWidth(CrossSectionDefinition.MainSectionName);
             Assert.That(mainSectionWidth, Is.EqualTo(60.0));
 
-            var fp1SectionWidth = csDef.GetSectionWidth(CrossSectionDefinitionZW.Floodplain1SectionTypeName);
+            double fp1SectionWidth = csDef.GetSectionWidth(CrossSectionDefinitionZW.Floodplain1SectionTypeName);
             Assert.That(fp1SectionWidth, Is.EqualTo(16.0));
         }
 
@@ -27,11 +27,10 @@ namespace DelftTools.Hydro.Tests
         public void GivenCrossSectionWithSections_WhenGettingSectionWidthByNameWithUnexistingName_ThenZeroIsReturned()
         {
             var csDef = new TestCrossSectionDefinition();
-            var width = csDef.GetSectionWidth("NoExistingSectionTypeName");
+            double width = csDef.GetSectionWidth("NoExistingSectionTypeName");
             Assert.That(width, Is.EqualTo(0.0));
         }
 
         #endregion
-
     }
 }

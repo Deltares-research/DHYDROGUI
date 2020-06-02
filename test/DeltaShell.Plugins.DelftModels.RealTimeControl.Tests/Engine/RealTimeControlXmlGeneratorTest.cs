@@ -18,6 +18,39 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
     [TestFixture]
     public class RealTimeControlXmlGeneratorTest
     {
+        private const string FewsXmlheader = " xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"" +
+                                             " xmlns:rtc=\"http://www.wldelft.nl/fews\"" +
+                                             " xmlns=\"http://www.wldelft.nl/fews\"" +
+                                             " xsi:schemaLocation=\"" +
+                                             @"http://www.wldelft.nl/fews "; //\xsd\";
+
+        private const string PiXmlheader = " xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"" +
+                                           // no rtc namespace necessary
+                                           " xmlns=\"http://www.wldelft.nl/fews/PI\"" +
+                                           " xsi:schemaLocation=\"" +
+                                           @"http://www.wldelft.nl/fews/PI "; //\xsd\";
+
+        private RealTimeControlModel realTimeControlModel;
+        private ControlGroup controlGroup;
+        private Input input;
+        private Output output;
+        private PIDRule pidRule;
+        private LookupSignal lookupSignal;
+        private IntervalRule intervalRule;
+        private StandardCondition condition;
+        private StandardCondition condition2;
+        private StandardCondition condition3;
+
+        private string XsdPath => DimrApiDataSet.RtcToolsDllPath;
+
+        private string RtcToolsConfigxsd => XsdPath + Path.DirectorySeparatorChar + "rtcToolsConfig.xsd\"";
+
+        private string RtcDataConfigxsd => XsdPath + Path.DirectorySeparatorChar + "rtcDataConfig.xsd\"";
+
+        private string RtcRuntimeConfigxsd => XsdPath + Path.DirectorySeparatorChar + "rtcRuntimeConfig.xsd\"";
+
+        private string PiTimeSeriesxsd => XsdPath + Path.DirectorySeparatorChar + "pi_timeseries.xsd\"";
+
         [SetUp]
         public void Setup()
         {
@@ -84,287 +117,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
                 },
                 Value = 0.5
             };
-        }
-
-        private RealTimeControlModel realTimeControlModel;
-        private ControlGroup controlGroup;
-        private Input input;
-        private Output output;
-        private PIDRule pidRule;
-        private LookupSignal lookupSignal;
-        private IntervalRule intervalRule;
-        private StandardCondition condition;
-        private StandardCondition condition2;
-        private StandardCondition condition3;
-
-        private string XsdPath => DimrApiDataSet.RtcToolsDllPath;
-
-        private const string FewsXmlheader = " xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"" +
-                                             " xmlns:rtc=\"http://www.wldelft.nl/fews\"" +
-                                             " xmlns=\"http://www.wldelft.nl/fews\"" +
-                                             " xsi:schemaLocation=\"" +
-                                             @"http://www.wldelft.nl/fews "; //\xsd\";
-
-        private const string PiXmlheader = " xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"" +
-                                           // no rtc namespace necessary
-                                           " xmlns=\"http://www.wldelft.nl/fews/PI\"" +
-                                           " xsi:schemaLocation=\"" +
-                                           @"http://www.wldelft.nl/fews/PI "; //\xsd\";
-
-        private string RtcToolsConfigxsd => XsdPath + Path.DirectorySeparatorChar + "rtcToolsConfig.xsd\"";
-
-        private string RtcDataConfigxsd => XsdPath + Path.DirectorySeparatorChar + "rtcDataConfig.xsd\"";
-
-        private string RtcRuntimeConfigxsd => XsdPath + Path.DirectorySeparatorChar + "rtcRuntimeConfig.xsd\"";
-
-        private string PiTimeSeriesxsd => XsdPath + Path.DirectorySeparatorChar + "pi_timeseries.xsd\"";
-
-        private void SetUpGlobalPidRuleForGlobalControlGroup()
-        {
-            pidRule = GetNewSetUpPIDRule("PIDRule Test", input, output);
-
-            controlGroup.Rules.Add(pidRule);
-            condition.TrueOutputs.Add(pidRule);
-            condition.FalseOutputs.Add(pidRule);
-
-            controlGroup.Inputs.Add(input);
-            controlGroup.Outputs.Add(output);
-        }
-
-        private void SetUpTwoPidRulesSameOutput()
-        {
-            pidRule = GetNewSetUpPIDRule("PIDRule Test", input, output);
-            controlGroup.Rules.Add(pidRule);
-
-            PIDRule pidRule2 = GetNewSetUpPIDRule("PIDRule2 Test", input, output);
-            controlGroup.Rules.Add(pidRule2);
-
-            condition.TrueOutputs.Add(pidRule);
-            condition.FalseOutputs.Add(pidRule2);
-
-            controlGroup.Inputs.Add(input);
-            controlGroup.Outputs.Add(output);
-        }
-
-        private void SetUpIntervalRule()
-        {
-            intervalRule = new IntervalRule("Interval Test");
-            intervalRule.Inputs.Add(input);
-            intervalRule.Outputs.Add(output);
-
-            intervalRule.DeadbandAroundSetpoint = 0.1;
-            intervalRule.Setting = new Setting
-            {
-                Below = 0.2,
-                Above = 0.3,
-                MaxSpeed = 0.7
-            };
-            intervalRule.TimeSeries[new DateTime(2010, 1, 19, 12, 0, 0)] = 3.0;
-            intervalRule.TimeSeries[new DateTime(2010, 1, 20, 12, 0, 0)] = 4.0;
-            intervalRule.TimeSeries[new DateTime(2010, 1, 21, 12, 0, 0)] = 5.0;
-            intervalRule.ConstantValue = 6;
-
-            controlGroup.Rules.Add(intervalRule);
-
-            controlGroup.Inputs.Add(input);
-            controlGroup.Outputs.Add(output);
-        }
-
-        private void SetUpLookupSignalForPidRule()
-        {
-            var input2 = new Input
-            {
-                ParameterName = "Discharge",
-                Feature = new RtcTestFeature {Name = "MeasureStationB"}
-            };
-
-            lookupSignal = new LookupSignal("SetPointForPID");
-            lookupSignal.Inputs.Add(input2);
-            lookupSignal.RuleBases.Add(pidRule);
-
-            lookupSignal.Function[10.0] = 3.0;
-            lookupSignal.Function[100.0] = 6.0;
-            lookupSignal.Interpolation = InterpolationType.Linear;
-            lookupSignal.Extrapolation = ExtrapolationType.Constant;
-
-            controlGroup.Signals.Add(lookupSignal);
-        }
-
-        private void SetUpLookupSignalForIntervalRule()
-        {
-            var input2 = new Input
-            {
-                ParameterName = "Discharge",
-                Feature = new RtcTestFeature {Name = "MeasureStationB"}
-            };
-
-            lookupSignal = new LookupSignal("SetPointForIntervalRule");
-            lookupSignal.Inputs.Add(input2);
-            lookupSignal.RuleBases.Add(intervalRule);
-
-            lookupSignal.Function[10.0] = 3.0;
-            lookupSignal.Function[100.0] = 6.0;
-            lookupSignal.Interpolation = InterpolationType.Linear;
-            lookupSignal.Extrapolation = ExtrapolationType.Constant;
-
-            controlGroup.Signals.Add(lookupSignal);
-        }
-
-        private ControlGroup GetNewControlGroupWithNewPidRule(string pidRuleName)
-        {
-            var newInput = new Input();
-            var newOutput = new Output();
-            PIDRule newPidRule = GetNewSetUpPIDRule(pidRuleName, newInput, newOutput);
-
-            var newCondition = new StandardCondition();
-            newCondition.TrueOutputs.Add(newPidRule);
-            newCondition.FalseOutputs.Add(newPidRule);
-
-            var newControlGroup = new ControlGroup();
-            newControlGroup.Rules.Add(newPidRule);
-            newControlGroup.Inputs.Add(newInput);
-            newControlGroup.Outputs.Add(newOutput);
-
-            return newControlGroup;
-        }
-
-        private PIDRule GetNewSetUpPIDRule(string pidRuleName, Input inputForRule, Output outputForRule)
-        {
-            var newPidRule = new PIDRule(pidRuleName);
-            newPidRule.Inputs.Add(inputForRule);
-            newPidRule.Outputs.Add(outputForRule);
-
-            newPidRule.Kd = 0.1;
-            newPidRule.Ki = 0.2;
-            newPidRule.Kp = 0.3;
-            newPidRule.Setting = new Setting
-            {
-                Min = 1.1,
-                Max = 1.2,
-                MaxSpeed = 1.3
-            };
-            newPidRule.PidRuleSetpointType = PIDRule.PIDRuleSetpointType.TimeSeries;
-            newPidRule.TimeSeries[new DateTime(2000, 1, 1, 0, 15, 30)] = 3.0;
-            newPidRule.TimeSeries[new DateTime(2001, 2, 3, 4, 15, 45)] = 4.0;
-            newPidRule.TimeSeries[new DateTime(2002, 3, 4, 5, 16, 0)] = 5.0;
-            newPidRule.TimeSeries.Time.InterpolationType = InterpolationType.Linear;
-
-            return newPidRule;
-        }
-
-        private HydraulicRule GetHydraulicRuleWithTimeLagAddedToControlGroup()
-        {
-            var hydraulicRule = new HydraulicRule();
-            hydraulicRule.Name = "HydraulicRule";
-            hydraulicRule.TimeLag = 2000;
-            hydraulicRule.SetTimeLagToTimeSteps(new TimeSpan(0, 0, 200));
-            hydraulicRule.Function[0.0] = 0.0;
-
-            //reset some values
-            input.SetPoint = "";
-            output.IntegralPart = "";
-
-            hydraulicRule.Inputs.Add(input);
-            hydraulicRule.Outputs.Add(output);
-
-            condition.TrueOutputs.Add(hydraulicRule);
-            condition.FalseOutputs.Add(hydraulicRule);
-
-            controlGroup.Rules.Add(hydraulicRule);
-            controlGroup.Outputs.Add(output);
-            controlGroup.Inputs.Add(input);
-
-            return hydraulicRule;
-        }
-
-        private string DataResultXml(Input testInput, Output testOutput, bool addLookupSignal)
-        {
-            var inputSerializer = new InputSerializer(input);
-            var outputSerializer = new OutputSerializer(testOutput);
-            string result = "<rtcDataConfig" + FewsXmlheader + RtcDataConfigxsd + ">";
-            result += "<importSeries>";
-            result += "<timeSeries id=\"" + inputSerializer.GetXmlName() + "\">" +
-                      "<OpenMIExchangeItem>" +
-                      "<elementId>" + testInput.LocationName + "</elementId>" +
-                      "<quantityId>" + input.ParameterName + "</quantityId>" +
-                      "<unit>" + "m" + "</unit>" +
-                      "</OpenMIExchangeItem>" +
-                      "</timeSeries>" +
-                      $"<timeSeries id=\"{AppendDefaultControlGroupName(RtcXmlTag.SP)}/PIDRule Test\">" +
-                      "<PITimeSeries>" +
-                      $"<locationId>{AppendDefaultControlGroupName(RtcXmlTag.PIDRule)}/PIDRule Test</locationId>" +
-                      "<parameterId>SP</parameterId>" +
-                      "<interpolationOption>LINEAR</interpolationOption>" +
-                      "<extrapolationOption>BLOCK</extrapolationOption>" +
-                      "</PITimeSeries>" +
-                      "</timeSeries>";
-            result += "</importSeries>";
-            result += "<exportSeries>";
-            result +=
-                "<CSVTimeSeriesFile decimalSeparator=\".\" delimiter=\",\" adjointOutput=\"false\">" +
-                "</CSVTimeSeriesFile>";
-            result += "<PITimeSeriesFile>" +
-                      "<timeSeriesFile>timeseries_export.xml</timeSeriesFile>" +
-                      "<useBinFile>false</useBinFile>" +
-                      "</PITimeSeriesFile>";
-            result += "<timeSeries id=\"" + outputSerializer.GetXmlName() + "\">" +
-                      "<OpenMIExchangeItem>" +
-                      "<elementId>" + testOutput.LocationName + "</elementId>" +
-                      "<quantityId>" + output.ParameterName + "</quantityId>" +
-                      "<unit>" + "m" + "</unit>" +
-                      "</OpenMIExchangeItem>" +
-                      "</timeSeries>" +
-                      $"<timeSeries id=\"{AppendDefaultControlGroupName(RtcXmlTag.Status)}/{condition.Name}" +
-                      "\" />" +
-                      //"<timeSeries id=\"" + pidRule.IntegralPart + "\" />" +
-                      $"<timeSeries id=\"{AppendDefaultControlGroupName(RtcXmlTag.IP)}/PIDRule Test\" />" +
-                      $"<timeSeries id=\"{AppendDefaultControlGroupName(RtcXmlTag.DP)}/PIDRule Test\" />";
-            if (addLookupSignal)
-            {
-                result += $"<timeSeries id=\"{AppendDefaultControlGroupName(RtcXmlTag.Signal)}/SetPointForPID\" />";
-            }
-
-            result += "</exportSeries>";
-            result += "</rtcDataConfig>";
-            return result;
-        }
-
-        private List<XElement> GetxDocumentDescendantsForControlGroupListTimeSeries(string descendantsLocalName,
-                                                                                    List<ControlGroup> controlGroupList)
-        {
-            XDocument xDocument;
-            xDocument = RealTimeControlXmlWriter.GetTimeSeriesXml(XsdPath, realTimeControlModel, controlGroupList);
-            Assert.IsNotNull(xDocument);
-
-            List<XElement> descendantsWithLocalName =
-                xDocument.Descendants().Where(d => d.Name.LocalName == descendantsLocalName).ToList();
-            Assert.IsNotNull(descendantsWithLocalName);
-
-            return descendantsWithLocalName;
-        }
-
-        private static IList<ControlGroup> CreateModelWithDuplicateInputOutputItems()
-        {
-            var controlGroups = new List<ControlGroup>();
-            var controlledModel = new ControlledTestModel();
-            ControlGroup controlGroup1 = RealTimeControlModelHelper.CreateGroupHydraulicRule(true);
-            ((HydraulicRule) controlGroup1.Rules[0]).Function[0.0] = -1.0; // empy lookupTable is not allowed
-            controlGroup1.Rules[0].Name = "Rule1";
-            controlGroup1.Conditions[0].Name = "Condition1";
-            RealTimeControlTestHelper.AddDummyLinksToGroup(controlledModel, controlGroup1);
-            controlGroups.Add(controlGroup1);
-
-            ControlGroup controlGroup2 = RealTimeControlModelHelper.CreateGroupHydraulicRule(true);
-            ((HydraulicRule) controlGroup2.Rules[0]).Function[0.0] = -1.0; // empy lookupTable is not allowed
-            controlGroup2.Rules[0].Name = "Rule2";
-            controlGroup2.Conditions[0].Name = "Condition2";
-            RealTimeControlTestHelper.AddDummyLinksToGroup(controlledModel, controlGroup2);
-            controlGroups.Add(controlGroup2);
-
-            // all rules and condition now have as input an input item linked to: location Waterlevel
-            // total of 4 input items, these 4 input items will result in only 1 exchange item (RTC)
-            // all rules now have as output an output item: locationCrest level : 2 output items
-            return controlGroups;
         }
 
         /// <summary>
@@ -932,47 +684,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
             Assert.AreEqual(piTimeSeries, xDocument.ToString(SaveOptions.DisableFormatting));
         }
 
-        [Category(TestCategory.Integration)]
-        [TestCase(IntervalRule.IntervalRuleIntervalType.Variable)]
-        [TestCase(IntervalRule.IntervalRuleIntervalType.Fixed)]
-        public void GivenAnIntervalRuleWithAVariableOrFixedSetPoint_WhenAskingForDataConfigFile_ThenAReferenceToATimeSerieShouldBeWritten(IntervalRule.IntervalRuleIntervalType intervalRuleIntervalType)
-        {
-            // Given
-            SetUpIntervalRule();
-            condition.TrueOutputs.Add(intervalRule);
-            condition.FalseOutputs.Add(intervalRule);
-            intervalRule.IntervalType = intervalRuleIntervalType;
-            var controlGroupList = new List<ControlGroup> {controlGroup};
-            var timeSeriesFileName = "timeseries_import.xml";
-
-            // When
-            XDocument xDocument = RealTimeControlXmlWriter.GetDataConfigXml(XsdPath, realTimeControlModel, controlGroupList, timeSeriesFileName);
-
-            // Then
-            Assert.IsNotNull(xDocument);
-
-            string header = "<rtcDataConfig" + FewsXmlheader + RtcDataConfigxsd + ">";
-            string strIntervalRule =
-                header +
-                $"<importSeries><PITimeSeriesFile><timeSeriesFile>{timeSeriesFileName}</timeSeriesFile><useBinFile>false</useBinFile></PITimeSeriesFile>" +
-                "<timeSeries id=\"[Input]MeasureStationA/Water level\"><OpenMIExchangeItem><elementId>MeasureStationA</elementId><quantityId>Water level</quantityId><unit>m</unit>" +
-                "</OpenMIExchangeItem>" +
-                "</timeSeries>" +
-                $"<timeSeries id=\"{AppendDefaultControlGroupName(RtcXmlTag.SP)}/{intervalRule.Name}\"><PITimeSeries><locationId>{AppendDefaultControlGroupName(RtcXmlTag.IntervalRule)}/{intervalRule.Name}</locationId><parameterId>SP</parameterId>" +
-                "<interpolationOption>BLOCK</interpolationOption><extrapolationOption>BLOCK</extrapolationOption>" +
-                "</PITimeSeries>" +
-                "</timeSeries>" +
-                "</importSeries>" +
-                "<exportSeries><CSVTimeSeriesFile decimalSeparator=\".\" delimiter=\",\" adjointOutput=\"false\">" +
-                "</CSVTimeSeriesFile><PITimeSeriesFile><timeSeriesFile>timeseries_export.xml</timeSeriesFile><useBinFile>false</useBinFile>" +
-                "</PITimeSeriesFile><timeSeries id=\"[Output]WeirdWeir/Crest level\"><OpenMIExchangeItem><elementId>WeirdWeir</elementId><quantityId>Crest level</quantityId><unit>m</unit>" +
-                "</OpenMIExchangeItem>" +
-                $"</timeSeries><timeSeries id=\"{AppendDefaultControlGroupName(RtcXmlTag.Status)}/Trigger31\" /><timeSeries id=\"{AppendDefaultControlGroupName(RtcXmlTag.Status)}/{intervalRule.Name}\" />" +
-                "</exportSeries>" +
-                "</rtcDataConfig>";
-            Assert.AreEqual(strIntervalRule, xDocument.ToString(SaveOptions.DisableFormatting));
-        }
-
         [Test]
         public void GetToolsDataXml_OnePIDRuleOneLookupSignal()
         {
@@ -1228,11 +939,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
             Assert.AreEqual(strPid, xDocument.ToString(SaveOptions.DisableFormatting));
         }
 
-        private static string AppendDefaultControlGroupName(string tag)
-        {
-            return $"{tag}Control Group";
-        }
-
         /// <summary>
         /// Check if duplicate input items are handled well in the xml for dataconfig
         /// note timeseries.xml will be empty
@@ -1243,8 +949,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
         {
             IList<ControlGroup> controlGroups = CreateModelWithDuplicateInputOutputItems();
 
-            string dataconfig = RealTimeControlXmlWriter
-                                .GetDataConfigXml(XsdPath, realTimeControlModel, controlGroups, null).ToString();
+            var dataconfig = RealTimeControlXmlWriter
+                             .GetDataConfigXml(XsdPath, realTimeControlModel, controlGroups, null).ToString();
             // generate the xml for dataconfig
             XElement dataconfigXML = XElement.Parse(dataconfig);
             // parse the generated xml and check the number of input and output items
@@ -1394,6 +1100,300 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
             RealTimeControlXmlWriter.GetDataConfigXml(XsdPath, realTimeControlModel,
                                                       new List<ControlGroup> {controlGroup},
                                                       null);
+        }
+
+        private void SetUpGlobalPidRuleForGlobalControlGroup()
+        {
+            pidRule = GetNewSetUpPIDRule("PIDRule Test", input, output);
+
+            controlGroup.Rules.Add(pidRule);
+            condition.TrueOutputs.Add(pidRule);
+            condition.FalseOutputs.Add(pidRule);
+
+            controlGroup.Inputs.Add(input);
+            controlGroup.Outputs.Add(output);
+        }
+
+        private void SetUpTwoPidRulesSameOutput()
+        {
+            pidRule = GetNewSetUpPIDRule("PIDRule Test", input, output);
+            controlGroup.Rules.Add(pidRule);
+
+            PIDRule pidRule2 = GetNewSetUpPIDRule("PIDRule2 Test", input, output);
+            controlGroup.Rules.Add(pidRule2);
+
+            condition.TrueOutputs.Add(pidRule);
+            condition.FalseOutputs.Add(pidRule2);
+
+            controlGroup.Inputs.Add(input);
+            controlGroup.Outputs.Add(output);
+        }
+
+        private void SetUpIntervalRule()
+        {
+            intervalRule = new IntervalRule("Interval Test");
+            intervalRule.Inputs.Add(input);
+            intervalRule.Outputs.Add(output);
+
+            intervalRule.DeadbandAroundSetpoint = 0.1;
+            intervalRule.Setting = new Setting
+            {
+                Below = 0.2,
+                Above = 0.3,
+                MaxSpeed = 0.7
+            };
+            intervalRule.TimeSeries[new DateTime(2010, 1, 19, 12, 0, 0)] = 3.0;
+            intervalRule.TimeSeries[new DateTime(2010, 1, 20, 12, 0, 0)] = 4.0;
+            intervalRule.TimeSeries[new DateTime(2010, 1, 21, 12, 0, 0)] = 5.0;
+            intervalRule.ConstantValue = 6;
+
+            controlGroup.Rules.Add(intervalRule);
+
+            controlGroup.Inputs.Add(input);
+            controlGroup.Outputs.Add(output);
+        }
+
+        private void SetUpLookupSignalForPidRule()
+        {
+            var input2 = new Input
+            {
+                ParameterName = "Discharge",
+                Feature = new RtcTestFeature {Name = "MeasureStationB"}
+            };
+
+            lookupSignal = new LookupSignal("SetPointForPID");
+            lookupSignal.Inputs.Add(input2);
+            lookupSignal.RuleBases.Add(pidRule);
+
+            lookupSignal.Function[10.0] = 3.0;
+            lookupSignal.Function[100.0] = 6.0;
+            lookupSignal.Interpolation = InterpolationType.Linear;
+            lookupSignal.Extrapolation = ExtrapolationType.Constant;
+
+            controlGroup.Signals.Add(lookupSignal);
+        }
+
+        private void SetUpLookupSignalForIntervalRule()
+        {
+            var input2 = new Input
+            {
+                ParameterName = "Discharge",
+                Feature = new RtcTestFeature {Name = "MeasureStationB"}
+            };
+
+            lookupSignal = new LookupSignal("SetPointForIntervalRule");
+            lookupSignal.Inputs.Add(input2);
+            lookupSignal.RuleBases.Add(intervalRule);
+
+            lookupSignal.Function[10.0] = 3.0;
+            lookupSignal.Function[100.0] = 6.0;
+            lookupSignal.Interpolation = InterpolationType.Linear;
+            lookupSignal.Extrapolation = ExtrapolationType.Constant;
+
+            controlGroup.Signals.Add(lookupSignal);
+        }
+
+        private ControlGroup GetNewControlGroupWithNewPidRule(string pidRuleName)
+        {
+            var newInput = new Input();
+            var newOutput = new Output();
+            PIDRule newPidRule = GetNewSetUpPIDRule(pidRuleName, newInput, newOutput);
+
+            var newCondition = new StandardCondition();
+            newCondition.TrueOutputs.Add(newPidRule);
+            newCondition.FalseOutputs.Add(newPidRule);
+
+            var newControlGroup = new ControlGroup();
+            newControlGroup.Rules.Add(newPidRule);
+            newControlGroup.Inputs.Add(newInput);
+            newControlGroup.Outputs.Add(newOutput);
+
+            return newControlGroup;
+        }
+
+        private PIDRule GetNewSetUpPIDRule(string pidRuleName, Input inputForRule, Output outputForRule)
+        {
+            var newPidRule = new PIDRule(pidRuleName);
+            newPidRule.Inputs.Add(inputForRule);
+            newPidRule.Outputs.Add(outputForRule);
+
+            newPidRule.Kd = 0.1;
+            newPidRule.Ki = 0.2;
+            newPidRule.Kp = 0.3;
+            newPidRule.Setting = new Setting
+            {
+                Min = 1.1,
+                Max = 1.2,
+                MaxSpeed = 1.3
+            };
+            newPidRule.PidRuleSetpointType = PIDRule.PIDRuleSetpointType.TimeSeries;
+            newPidRule.TimeSeries[new DateTime(2000, 1, 1, 0, 15, 30)] = 3.0;
+            newPidRule.TimeSeries[new DateTime(2001, 2, 3, 4, 15, 45)] = 4.0;
+            newPidRule.TimeSeries[new DateTime(2002, 3, 4, 5, 16, 0)] = 5.0;
+            newPidRule.TimeSeries.Time.InterpolationType = InterpolationType.Linear;
+
+            return newPidRule;
+        }
+
+        private HydraulicRule GetHydraulicRuleWithTimeLagAddedToControlGroup()
+        {
+            var hydraulicRule = new HydraulicRule();
+            hydraulicRule.Name = "HydraulicRule";
+            hydraulicRule.TimeLag = 2000;
+            hydraulicRule.SetTimeLagToTimeSteps(new TimeSpan(0, 0, 200));
+            hydraulicRule.Function[0.0] = 0.0;
+
+            //reset some values
+            input.SetPoint = "";
+            output.IntegralPart = "";
+
+            hydraulicRule.Inputs.Add(input);
+            hydraulicRule.Outputs.Add(output);
+
+            condition.TrueOutputs.Add(hydraulicRule);
+            condition.FalseOutputs.Add(hydraulicRule);
+
+            controlGroup.Rules.Add(hydraulicRule);
+            controlGroup.Outputs.Add(output);
+            controlGroup.Inputs.Add(input);
+
+            return hydraulicRule;
+        }
+
+        private string DataResultXml(Input testInput, Output testOutput, bool addLookupSignal)
+        {
+            var inputSerializer = new InputSerializer(input);
+            var outputSerializer = new OutputSerializer(testOutput);
+            string result = "<rtcDataConfig" + FewsXmlheader + RtcDataConfigxsd + ">";
+            result += "<importSeries>";
+            result += "<timeSeries id=\"" + inputSerializer.GetXmlName() + "\">" +
+                      "<OpenMIExchangeItem>" +
+                      "<elementId>" + testInput.LocationName + "</elementId>" +
+                      "<quantityId>" + input.ParameterName + "</quantityId>" +
+                      "<unit>" + "m" + "</unit>" +
+                      "</OpenMIExchangeItem>" +
+                      "</timeSeries>" +
+                      $"<timeSeries id=\"{AppendDefaultControlGroupName(RtcXmlTag.SP)}/PIDRule Test\">" +
+                      "<PITimeSeries>" +
+                      $"<locationId>{AppendDefaultControlGroupName(RtcXmlTag.PIDRule)}/PIDRule Test</locationId>" +
+                      "<parameterId>SP</parameterId>" +
+                      "<interpolationOption>LINEAR</interpolationOption>" +
+                      "<extrapolationOption>BLOCK</extrapolationOption>" +
+                      "</PITimeSeries>" +
+                      "</timeSeries>";
+            result += "</importSeries>";
+            result += "<exportSeries>";
+            result +=
+                "<CSVTimeSeriesFile decimalSeparator=\".\" delimiter=\",\" adjointOutput=\"false\">" +
+                "</CSVTimeSeriesFile>";
+            result += "<PITimeSeriesFile>" +
+                      "<timeSeriesFile>timeseries_export.xml</timeSeriesFile>" +
+                      "<useBinFile>false</useBinFile>" +
+                      "</PITimeSeriesFile>";
+            result += "<timeSeries id=\"" + outputSerializer.GetXmlName() + "\">" +
+                      "<OpenMIExchangeItem>" +
+                      "<elementId>" + testOutput.LocationName + "</elementId>" +
+                      "<quantityId>" + output.ParameterName + "</quantityId>" +
+                      "<unit>" + "m" + "</unit>" +
+                      "</OpenMIExchangeItem>" +
+                      "</timeSeries>" +
+                      $"<timeSeries id=\"{AppendDefaultControlGroupName(RtcXmlTag.Status)}/{condition.Name}" +
+                      "\" />" +
+                      //"<timeSeries id=\"" + pidRule.IntegralPart + "\" />" +
+                      $"<timeSeries id=\"{AppendDefaultControlGroupName(RtcXmlTag.IP)}/PIDRule Test\" />" +
+                      $"<timeSeries id=\"{AppendDefaultControlGroupName(RtcXmlTag.DP)}/PIDRule Test\" />";
+            if (addLookupSignal)
+            {
+                result += $"<timeSeries id=\"{AppendDefaultControlGroupName(RtcXmlTag.Signal)}/SetPointForPID\" />";
+            }
+
+            result += "</exportSeries>";
+            result += "</rtcDataConfig>";
+            return result;
+        }
+
+        private List<XElement> GetxDocumentDescendantsForControlGroupListTimeSeries(string descendantsLocalName,
+                                                                                    List<ControlGroup> controlGroupList)
+        {
+            XDocument xDocument;
+            xDocument = RealTimeControlXmlWriter.GetTimeSeriesXml(XsdPath, realTimeControlModel, controlGroupList);
+            Assert.IsNotNull(xDocument);
+
+            List<XElement> descendantsWithLocalName =
+                xDocument.Descendants().Where(d => d.Name.LocalName == descendantsLocalName).ToList();
+            Assert.IsNotNull(descendantsWithLocalName);
+
+            return descendantsWithLocalName;
+        }
+
+        private static IList<ControlGroup> CreateModelWithDuplicateInputOutputItems()
+        {
+            var controlGroups = new List<ControlGroup>();
+            var controlledModel = new ControlledTestModel();
+            ControlGroup controlGroup1 = RealTimeControlModelHelper.CreateGroupHydraulicRule(true);
+            ((HydraulicRule) controlGroup1.Rules[0]).Function[0.0] = -1.0; // empy lookupTable is not allowed
+            controlGroup1.Rules[0].Name = "Rule1";
+            controlGroup1.Conditions[0].Name = "Condition1";
+            RealTimeControlTestHelper.AddDummyLinksToGroup(controlledModel, controlGroup1);
+            controlGroups.Add(controlGroup1);
+
+            ControlGroup controlGroup2 = RealTimeControlModelHelper.CreateGroupHydraulicRule(true);
+            ((HydraulicRule) controlGroup2.Rules[0]).Function[0.0] = -1.0; // empy lookupTable is not allowed
+            controlGroup2.Rules[0].Name = "Rule2";
+            controlGroup2.Conditions[0].Name = "Condition2";
+            RealTimeControlTestHelper.AddDummyLinksToGroup(controlledModel, controlGroup2);
+            controlGroups.Add(controlGroup2);
+
+            // all rules and condition now have as input an input item linked to: location Waterlevel
+            // total of 4 input items, these 4 input items will result in only 1 exchange item (RTC)
+            // all rules now have as output an output item: locationCrest level : 2 output items
+            return controlGroups;
+        }
+
+        [Category(TestCategory.Integration)]
+        [TestCase(IntervalRule.IntervalRuleIntervalType.Variable)]
+        [TestCase(IntervalRule.IntervalRuleIntervalType.Fixed)]
+        public void GivenAnIntervalRuleWithAVariableOrFixedSetPoint_WhenAskingForDataConfigFile_ThenAReferenceToATimeSerieShouldBeWritten(IntervalRule.IntervalRuleIntervalType intervalRuleIntervalType)
+        {
+            // Given
+            SetUpIntervalRule();
+            condition.TrueOutputs.Add(intervalRule);
+            condition.FalseOutputs.Add(intervalRule);
+            intervalRule.IntervalType = intervalRuleIntervalType;
+            var controlGroupList = new List<ControlGroup> {controlGroup};
+            var timeSeriesFileName = "timeseries_import.xml";
+
+            // When
+            XDocument xDocument = RealTimeControlXmlWriter.GetDataConfigXml(XsdPath, realTimeControlModel, controlGroupList, timeSeriesFileName);
+
+            // Then
+            Assert.IsNotNull(xDocument);
+
+            string header = "<rtcDataConfig" + FewsXmlheader + RtcDataConfigxsd + ">";
+            string strIntervalRule =
+                header +
+                $"<importSeries><PITimeSeriesFile><timeSeriesFile>{timeSeriesFileName}</timeSeriesFile><useBinFile>false</useBinFile></PITimeSeriesFile>" +
+                "<timeSeries id=\"[Input]MeasureStationA/Water level\"><OpenMIExchangeItem><elementId>MeasureStationA</elementId><quantityId>Water level</quantityId><unit>m</unit>" +
+                "</OpenMIExchangeItem>" +
+                "</timeSeries>" +
+                $"<timeSeries id=\"{AppendDefaultControlGroupName(RtcXmlTag.SP)}/{intervalRule.Name}\"><PITimeSeries><locationId>{AppendDefaultControlGroupName(RtcXmlTag.IntervalRule)}/{intervalRule.Name}</locationId><parameterId>SP</parameterId>" +
+                "<interpolationOption>BLOCK</interpolationOption><extrapolationOption>BLOCK</extrapolationOption>" +
+                "</PITimeSeries>" +
+                "</timeSeries>" +
+                "</importSeries>" +
+                "<exportSeries><CSVTimeSeriesFile decimalSeparator=\".\" delimiter=\",\" adjointOutput=\"false\">" +
+                "</CSVTimeSeriesFile><PITimeSeriesFile><timeSeriesFile>timeseries_export.xml</timeSeriesFile><useBinFile>false</useBinFile>" +
+                "</PITimeSeriesFile><timeSeries id=\"[Output]WeirdWeir/Crest level\"><OpenMIExchangeItem><elementId>WeirdWeir</elementId><quantityId>Crest level</quantityId><unit>m</unit>" +
+                "</OpenMIExchangeItem>" +
+                $"</timeSeries><timeSeries id=\"{AppendDefaultControlGroupName(RtcXmlTag.Status)}/Trigger31\" /><timeSeries id=\"{AppendDefaultControlGroupName(RtcXmlTag.Status)}/{intervalRule.Name}\" />" +
+                "</exportSeries>" +
+                "</rtcDataConfig>";
+            Assert.AreEqual(strIntervalRule, xDocument.ToString(SaveOptions.DisableFormatting));
+        }
+
+        private static string AppendDefaultControlGroupName(string tag)
+        {
+            return $"{tag}Control Group";
         }
     }
 }

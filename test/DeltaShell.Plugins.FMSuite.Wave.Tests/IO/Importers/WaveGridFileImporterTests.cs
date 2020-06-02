@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using DelftTools.Shell.Core;
 using DelftTools.TestUtils;
 using DelftTools.Utils;
 using DelftTools.Utils.IO;
@@ -27,13 +28,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Importers
         [Category(TestCategory.DataAccess)]
         public void GivenAGridFileWithASphericalCoordinateSystemWhenImportingThenCoordinateSystemOnTheModelIsSpherical()
         {
-            var waveGridFileFilePath = TestHelper.GetTestFilePath(@"importers\Grid_001.grd");
+            string waveGridFileFilePath = TestHelper.GetTestFilePath(@"importers\Grid_001.grd");
             var waveModel = new WaveModel();
-            var tempWorkingDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+            string tempWorkingDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
             try
             {
                 waveModel.MdwFile.MdwFilePath = tempWorkingDirectory;
-                var waveGridFileImporter = new WaveGridFileImporter("my test", () => new[] { waveModel });
+                var waveGridFileImporter = new WaveGridFileImporter("my test", () => new[]
+                {
+                    waveModel
+                });
                 waveModel.OuterDomain.Grid.Attributes[CurvilinearGrid.CoordinateSystemKey] = "Test";
                 Assert.That(waveModel.OuterDomain.Grid.CoordinateSystem, Is.Null);
                 waveGridFileImporter.ImportItem(waveGridFileFilePath, waveModel.OuterDomain.Grid);
@@ -52,13 +56,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Importers
         [Category(TestCategory.DataAccess)]
         public void GivenAGridFileWithACartesianCoordinateSystemWhenImportingThenCoordinateSystemOnTheModelIsCartesian()
         {
-            var waveGridFileFilePath = TestHelper.GetTestFilePath(@"importers\Grid_002.grd");
+            string waveGridFileFilePath = TestHelper.GetTestFilePath(@"importers\Grid_002.grd");
             var waveModel = new WaveModel();
-            var tempWorkingDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+            string tempWorkingDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
             try
             {
                 waveModel.MdwFile.MdwFilePath = tempWorkingDirectory;
-                var waveGridFileImporter = new WaveGridFileImporter("my test", () => new[] { waveModel });
+                var waveGridFileImporter = new WaveGridFileImporter("my test", () => new[]
+                {
+                    waveModel
+                });
                 waveModel.OuterDomain.Grid.Attributes[CurvilinearGrid.CoordinateSystemKey] = "Test";
                 Assert.That(waveModel.OuterDomain.Grid.CoordinateSystem, Is.Null);
                 waveGridFileImporter.ImportItem(waveGridFileFilePath, waveModel.OuterDomain.Grid);
@@ -76,19 +83,22 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Importers
         public void
             GivenWaveModelWithOuterDomainWithDifferentCartesianCoordinateSystemSetWhenImportingCartesianShouldImportedGridGetSameCoordinateSystemAsModelCoordinateSystem()
         {
-            var waveGridFileFilePath = TestHelper.GetTestFilePath(@"importers\Grid_002.grd");
+            string waveGridFileFilePath = TestHelper.GetTestFilePath(@"importers\Grid_002.grd");
             var waveModel = new WaveModel();
-            var tempWorkingDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+            string tempWorkingDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
             try
             {
                 waveModel.MdwFile.MdwFilePath = tempWorkingDirectory;
-                var waveGridFileImporter = new WaveGridFileImporter("my test", () => new[] { waveModel });
+                var waveGridFileImporter = new WaveGridFileImporter("my test", () => new[]
+                {
+                    waveModel
+                });
                 waveModel.OuterDomain.Grid.Attributes[CurvilinearGrid.CoordinateSystemKey] = "Test";
                 waveModel.CoordinateSystem = new OgrCoordinateSystemFactory().CreateFromEPSG(3857);
                 TestHelper.AssertLogMessageIsGenerated(
                     () => waveGridFileImporter.ImportItem(waveGridFileFilePath, waveModel.OuterDomain.Grid),
                     string.Format(Resources.WaveModel_OnOuterDomainPropertyChanged_Grid_is_set_in_project_but_doesn_t_contain_a_coordinate_system__The_model_has_co_ordinate_system__0___setting_grid_to_this_co_oordinate_system_type_,
-                        waveModel.CoordinateSystem));
+                                  waveModel.CoordinateSystem));
                 Assert.That(waveModel.CoordinateSystem, Is.Null);
                 Assert.That(waveModel.OuterDomain.Grid.CoordinateSystem, Is.Null);
             }
@@ -97,17 +107,21 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Importers
                 FileUtils.DeleteIfExists(tempWorkingDirectory);
             }
         }
+
         [Test]
         public void
             GivenWaveModelWithOuterDomainWithDifferentCoordinateSystemSetWhenAddingSphericalDomainShouldModelShouldTransFormAndGetSameCoordinateSystem()
         {
-            var waveGridFileFilePath = TestHelper.GetTestFilePath(@"importers\Grid_001.grd");
+            string waveGridFileFilePath = TestHelper.GetTestFilePath(@"importers\Grid_001.grd");
             var waveModel = new WaveModel();
-            var tempWorkingDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+            string tempWorkingDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
             try
             {
                 waveModel.MdwFile.MdwFilePath = tempWorkingDirectory;
-                var waveGridFileImporter = new WaveGridFileImporter("my test", () => new[] { waveModel });
+                var waveGridFileImporter = new WaveGridFileImporter("my test", () => new[]
+                {
+                    waveModel
+                });
                 waveModel.OuterDomain.Grid.Attributes[CurvilinearGrid.CoordinateSystemKey] = "Test";
                 waveModel.CoordinateSystem = new OgrCoordinateSystemFactory().CreateFromEPSG(3857);
                 waveGridFileImporter.ImportItem(waveGridFileFilePath, waveModel.OuterDomain.Grid);
@@ -121,23 +135,26 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Importers
                 FileUtils.DeleteIfExists(tempWorkingDirectory);
             }
         }
-       
+
         [Test]
         public void
             GivenWaveModelWithOuterDomainWithSameCoordinateSystemSetWhenAddingSphericalDomainShouldModelShouldNotChangeCoordinateSystem()
         {
-            var waveGridFileFilePath = TestHelper.GetTestFilePath(@"importers\Grid_001.grd");
+            string waveGridFileFilePath = TestHelper.GetTestFilePath(@"importers\Grid_001.grd");
             var waveModel = new WaveModel();
-            var tempWorkingDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+            string tempWorkingDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
             try
             {
                 waveModel.MdwFile.MdwFilePath = tempWorkingDirectory;
-                var waveGridFileImporter = new WaveGridFileImporter("my test", () => new[] { waveModel });
+                var waveGridFileImporter = new WaveGridFileImporter("my test", () => new[]
+                {
+                    waveModel
+                });
                 waveModel.CoordinateSystem = new OgrCoordinateSystemFactory().CreateFromEPSG(4326);
                 TestHelper.AssertLogMessageIsNotGenerated(
                     () => waveGridFileImporter.ImportItem(waveGridFileFilePath, waveModel.OuterDomain.Grid),
                     string.Format(Resources.WaveModel_OnOuterDomainPropertyChanged_Grid_is_set_in_project_but_doesn_t_contain_a_coordinate_system__The_model_has_co_ordinate_system__0___setting_grid_to_this_co_oordinate_system_type_,
-                        waveModel.CoordinateSystem));
+                                  waveModel.CoordinateSystem));
                 Assert.That(waveModel.CoordinateSystem, Is.Not.Null);
                 Assert.That(waveModel.CoordinateSystem.AuthorityCode, Is.EqualTo(4326));
                 Assert.That(waveModel.OuterDomain.Grid.CoordinateSystem, Is.Not.Null);
@@ -168,7 +185,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Importers
         [Test]
         public void SupportedItemTypesTypesPropertyTest()
         {
-            var expected = new List<Type> { typeof(CurvilinearGrid) };
+            var expected = new List<Type> {typeof(CurvilinearGrid)};
             importer = new WaveGridFileImporter("Waves Model", null);
             Assert.AreEqual(expected, importer.SupportedItemTypes);
         }
@@ -209,22 +226,22 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Importers
         [Category(TestCategory.DataAccess)]
         public void ImportItemTest_GridIsCorrectlyImported()
         {
-            var saveDirPath = FileUtils.CreateTempDirectory();
+            string saveDirPath = FileUtils.CreateTempDirectory();
             var projectName = "MyProject";
-            var savePath = Path.Combine(saveDirPath, projectName + ".dsproj");
+            string savePath = Path.Combine(saveDirPath, projectName + ".dsproj");
             var size = 3;
-            var oldGrid = CreateCurvilinearGrid(size, size);
+            CurvilinearGrid oldGrid = CreateCurvilinearGrid(size, size);
             string grdFilePath = Path.Combine(saveDirPath, projectName + ".dsproj_data", "Outer.grd");
 
             try
             {
-                using (var app = GetRunningApplication(savePath))
+                using (DeltaShellApplication app = GetRunningApplication(savePath))
                 {
                     importer = new WaveGridFileImporter("Waves Model", () => app.Project.RootFolder.GetAllItemsRecursive().OfType<WaveModel>());
 
                     using (var model = new WaveModel())
                     {
-                        var project = app.Project;
+                        Project project = app.Project;
                         project.RootFolder.Add(model);
 
                         model.OuterDomain.Grid = oldGrid;
@@ -232,13 +249,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Importers
 
                         Delft3DGridFileWriter.Write(model.OuterDomain.Grid, grdFilePath);
                         Assert.IsNotNullOrEmpty(grdFilePath, "There was no .grd file created.");
-                     
-                        model.OuterDomain.Grid = new CurvilinearGrid(0,0,null,null, string.Empty);
+
+                        model.OuterDomain.Grid = new CurvilinearGrid(0, 0, null, null, string.Empty);
                         Assert.AreEqual(0, model.OuterDomain.Grid.Size1);
 
                         importer.ImportItem(grdFilePath, model.OuterDomain.Grid);
 
-                        var importedGrid = model.OuterDomain.Grid;
+                        CurvilinearGrid importedGrid = model.OuterDomain.Grid;
 
                         Assert.AreEqual(oldGrid.Size1, importedGrid.Size1);
                         Assert.AreEqual(oldGrid.GetValues().Count, importedGrid.GetValues().Count);
@@ -255,15 +272,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Importers
         [Test]
         public void TargetDataDirectory()
         {
-            string targetDataDirectory = "dir";
-            importer = new WaveGridFileImporter("Waves Model", null) { TargetDataDirectory = targetDataDirectory };
+            var targetDataDirectory = "dir";
+            importer = new WaveGridFileImporter("Waves Model", null) {TargetDataDirectory = targetDataDirectory};
             Assert.AreEqual(targetDataDirectory, importer.TargetDataDirectory);
         }
 
         [Test]
         public void ShouldCancelTest()
         {
-            importer = new WaveGridFileImporter("Waves Model", null) { ShouldCancel = true };
+            importer = new WaveGridFileImporter("Waves Model", null) {ShouldCancel = true};
             Assert.AreEqual(true, importer.ShouldCancel);
             importer.ShouldCancel = false;
             Assert.AreEqual(false, importer.ShouldCancel);
@@ -273,7 +290,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Importers
         public void ProgressChangedTest()
         {
             importer = new WaveGridFileImporter("Waves Model", null);
-            bool succes = false;
+            var succes = false;
             importer.ProgressChanged = (name, current, total) => { succes = true; };
             importer.ProgressChanged("Importing depth file...", 1, 2);
             Assert.IsTrue(succes);
@@ -281,7 +298,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Importers
 
         private static DeltaShellApplication GetRunningApplication(string savePath)
         {
-            var app = new DeltaShellApplication { IsProjectCreatedInTemporaryDirectory = true };
+            var app = new DeltaShellApplication {IsProjectCreatedInTemporaryDirectory = true};
             app.Plugins.Add(new NHibernateDaoApplicationPlugin());
             app.Plugins.Add(new CommonToolsApplicationPlugin());
             app.Plugins.Add(new SharpMapGisApplicationPlugin());
@@ -297,12 +314,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO.Importers
             var x = new double[size];
             var y = new double[size];
             var values = new double[size];
-            for (int i = 0; i < size; i++)
+            for (var i = 0; i < size; i++)
             {
                 x[i] = i;
                 y[i] = i;
                 values[i] = i;
             }
+
             var grid = new CurvilinearGrid(length, width, x, y, WaveModel.CoordinateSystemType.Cartesian);
             grid.CoordinateSystem = new OgrCoordinateSystemFactory().CreateFromEPSG(28992);
             grid.IsTimeDependent = false;

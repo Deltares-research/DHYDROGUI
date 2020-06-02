@@ -13,7 +13,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         [Test]
         public void ReadFromMultiDimentionalArrayAdapter()
         {
-            var values = new List<int>{2,4,6,7,8};
+            var values = new List<int>
+            {
+                2,
+                4,
+                6,
+                7,
+                8
+            };
             var mda = new MultiDimentionalArrayAdapter<int>(values);
 
             var mdaCollection = (ICollection) mda;
@@ -21,7 +28,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             var mdaTyped = (IMultiDimensionalArray<int>) mda;
             var mdaGeneral = (IMultiDimensionalArray) mda;
             var mdaList = (IList) mda;
-            var mdaTypedList = (IList<int>)mda;
+            var mdaTypedList = (IList<int>) mda;
 
             Assert.AreEqual(5, mdaCollection.Count);
             Assert.AreEqual(5, mdaCollectionTyped.Count);
@@ -32,12 +39,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             Assert.IsTrue(mdaCollectionTyped.IsReadOnly);
             Assert.IsTrue(mdaGeneral.IsReadOnly);
             Assert.IsTrue(mdaList.IsReadOnly);
-            
+
             Assert.AreEqual(2, mda.MinValue);
             Assert.AreEqual(8, mda.MaxValue);
-            
+
             Assert.AreEqual(2, mda.IndexOf(6));
-            Assert.AreEqual(2, mda.IndexOf((object)6));
+            Assert.AreEqual(2, mda.IndexOf((object) 6));
 
             Assert.AreEqual(6, mdaTyped[2]);
             Assert.AreEqual(6, mdaGeneral[2]);
@@ -45,7 +52,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             Assert.AreEqual(6, mdaTypedList[2]);
 
             Assert.True(mda.Contains(7));
-            Assert.True(mda.Contains((object)7));
-        } 
+            Assert.True(mda.Contains((object) 7));
+        }
     }
 }

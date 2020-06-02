@@ -8,10 +8,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms.Properties
     [TestFixture]
     public class TimeConditionPropertiesTest
     {
-        [Test, Category(TestCategory.WindowsForms)]
+        [Test]
+        [Category(TestCategory.WindowsForms)]
         public void ShowProperties()
         {
-            WindowsFormsTestHelper.ShowPropertyGridForObject(new TimeConditionProperties { Data = new TimeCondition() });
+            WindowsFormsTestHelper.ShowPropertyGridForObject(new TimeConditionProperties {Data = new TimeCondition()});
         }
     }
 }

@@ -19,7 +19,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Editors
     [TestFixture]
     public class BoundaryConditionExtensionsTest
     {
-
         [Test]
         public void ApplyForSupportPointModeTest()
         {
@@ -30,47 +29,98 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Editors
             bcFeatGeometry.Expect(bcfg => bcfg.Coordinates).Return(new Coordinate[3]);
             var bcFeature = mocks.DynamicMock<IFeature>();
             bcFeature.Expect(bcf => bcf.Geometry).Return(bcFeatGeometry).Repeat.Times(4);
-            
+
             var boundaryCondition = mocks.DynamicMock<IBoundaryCondition>();
             boundaryCondition.Expect(bc => bc.BeginEdit(Arg<IEditAction>.Is.Anything)).IgnoreArguments().Repeat.Once();
             boundaryCondition.Expect(bc => bc.EndEdit()).IgnoreArguments().Repeat.Once();
             boundaryCondition.Expect(bc => bc.Feature).Return(bcFeature).Repeat.Times(4);
             boundaryCondition.Expect(bc => bc.DataPointIndices).Return(bcDataPointIndices).Repeat.Times(6);
 
-            double[] array = new[] {10.0, 5, 2.5};
-            double[] array2 = new[] {20.0, 10, 5};
-            double[] array3 = new[] {30.0, 15, 7.5};
-            double[] array4 = new[] {40.0, 20, 10};
-           
-            var function1 = new Function { Name = "HarmonicTestFunction" };
+            double[] array = new[]
+            {
+                10.0,
+                5,
+                2.5
+            };
+            double[] array2 = new[]
+            {
+                20.0,
+                10,
+                5
+            };
+            double[] array3 = new[]
+            {
+                30.0,
+                15,
+                7.5
+            };
+            double[] array4 = new[]
+            {
+                40.0,
+                20,
+                10
+            };
+
+            var function1 = new Function {Name = "HarmonicTestFunction"};
             function1.Arguments.Add(new Variable<double>("Arg1", new Unit("Arg1", "a1")));
-            function1.Arguments[0].SetValues(new[] { 0.0 });
+            function1.Arguments[0].SetValues(new[]
+            {
+                0.0
+            });
             function1.Components.Add(new Variable<double>("TestComp1", new Unit("Comp1", "c1")));
-            function1.Components[0].SetValues(new[] { 0.0 });
+            function1.Components[0].SetValues(new[]
+            {
+                0.0
+            });
             function1.Components.Add(new Variable<double>("TestComp2", new Unit("Comp2", "c2")));
-            function1.Components[1].SetValues(new[] { 0.0 });
+            function1.Components[1].SetValues(new[]
+            {
+                0.0
+            });
 
-            var function2 = new Function { Name = "HarmonicTestFunction2" };
+            var function2 = new Function {Name = "HarmonicTestFunction2"};
             function2.Arguments.Add(new Variable<double>("Arg1", new Unit("Arg1", "a1")));
-            function2.Arguments[0].SetValues(new[] { 0.0 });
+            function2.Arguments[0].SetValues(new[]
+            {
+                0.0
+            });
             function2.Components.Add(new Variable<double>("TestComp1", new Unit("Comp1", "c1")));
-            function2.Components[0].SetValues(new[] { 0.0 });
+            function2.Components[0].SetValues(new[]
+            {
+                0.0
+            });
             function2.Components.Add(new Variable<double>("TestComp2", new Unit("Comp2", "c2")));
-            function2.Components[1].SetValues(new[] { 0.0 });
+            function2.Components[1].SetValues(new[]
+            {
+                0.0
+            });
 
-            var function3 = new Function { Name = "HarmonicTestFunction3" };
+            var function3 = new Function {Name = "HarmonicTestFunction3"};
             function3.Arguments.Add(new Variable<double>("Arg1", new Unit("Arg1", "a1")));
-            function3.Arguments[0].SetValues(new[] { 0.0 });
+            function3.Arguments[0].SetValues(new[]
+            {
+                0.0
+            });
             function3.Components.Add(new Variable<double>("TestComp1", new Unit("Comp1", "c1")));
-            function3.Components[0].SetValues(new[] { 0.0 });
+            function3.Components[0].SetValues(new[]
+            {
+                0.0
+            });
             function3.Components.Add(new Variable<double>("TestComp2", new Unit("Comp2", "c2")));
-            function3.Components[1].SetValues(new[] { 0.0 });
+            function3.Components[1].SetValues(new[]
+            {
+                0.0
+            });
 
             boundaryCondition.Expect(bc => bc.GetDataAtPoint(0)).Return(function1).Repeat.Times(4);
             boundaryCondition.Expect(bc => bc.GetDataAtPoint(1)).Return(function3).Repeat.Times(2);
             boundaryCondition.Expect(bc => bc.GetDataAtPoint(2)).Return(function3).Repeat.Times(2);
-            boundaryCondition.Expect(bc => bc.PointData).Return(new EventedList<IFunction>() { function1, function3 }).Repeat.Once();
-            
+            boundaryCondition.Expect(bc => bc.PointData).Return(new EventedList<IFunction>()
+            {
+                function1,
+                function3
+            }).Repeat.Once();
+
             Func<IEnumerable<double>, IFunction, bool> applyToFunction1 = (a, f) =>
             {
                 Assert.That(a.ElementAt(0), Is.EqualTo(10.0).Within(0.01));
@@ -116,6 +166,5 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Editors
             boundaryCondition.ApplyForSupportPointMode(SupportPointMode.AllPoints, array4, applyToFunction4, "", 0);
             mocks.VerifyAll();
         }
-
     }
 }

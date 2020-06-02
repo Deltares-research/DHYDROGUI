@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using System.Linq;
+using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
@@ -22,6 +24,7 @@ using DeltaShell.Plugins.SharpMapGis;
 using DeltaShell.Plugins.SharpMapGis.Gui;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using NUnit.Framework;
+using SharpMap.Api.Layers;
 using SharpMap.Extensions.CoordinateSystems;
 using SharpMap.Layers;
 
@@ -38,13 +41,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         [Category(TestCategory.WindowsForms)]
         public void CheckFMOutputSnappedFeaturesGroupLayerDataAllowsRerunWithASecondModelInTheProject()
         {
-            var filePath = TestHelper.GetTestFilePath(@"outputSnappedFeatures\outputSnappedFeatures.dsproj");
+            string filePath = TestHelper.GetTestFilePath(@"outputSnappedFeatures\outputSnappedFeatures.dsproj");
             filePath = TestHelper.CreateLocalCopy(filePath);
             using (var gui = new DeltaShellGui())
             {
                 var fmGuiPlugin = new FlowFMGuiPlugin();
 
-                var app = gui.Application;
+                IApplication app = gui.Application;
                 app.Plugins.Add(new NHibernateDaoApplicationPlugin());
                 app.Plugins.Add(new CommonToolsApplicationPlugin());
                 app.Plugins.Add(new SharpMapGisApplicationPlugin());
@@ -58,16 +61,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
                 gui.Run();
                 app.OpenProject(filePath); // save to initialize file repository..
-                var model = (WaterFlowFMModel)app.Project.RootFolder.Items[0];
+                var model = (WaterFlowFMModel) app.Project.RootFolder.Items[0];
                 Assert.NotNull(model);
 
                 var secondModel = new WaterFlowFMModel();
                 app.Project.RootFolder.Add(secondModel);
-                
+
                 //Open view
                 gui.CommandHandler.OpenView(secondModel, typeof(ProjectItemMapView));
                 ActivityRunner.RunActivity(model);
             }
+
             try
             {
                 FileUtils.DeleteIfExists(filePath);
@@ -85,11 +89,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         [Category(TestCategory.Slow)]
         public void CheckFMOutputSnappedFeaturesGroupLayerDataIsCreatedWhenThereIsData()
         {
-            var filePath = TestHelper.GetTestFilePath(@"outputSnappedFeatures\outputSnappedFeatures.dsproj");
+            string filePath = TestHelper.GetTestFilePath(@"outputSnappedFeatures\outputSnappedFeatures.dsproj");
             filePath = TestHelper.CreateLocalCopy(filePath);
             using (var gui = new DeltaShellGui())
             {
-                var app = gui.Application;
+                IApplication app = gui.Application;
                 app.Plugins.Add(new NHibernateDaoApplicationPlugin());
                 app.Plugins.Add(new CommonToolsApplicationPlugin());
                 app.Plugins.Add(new SharpMapGisApplicationPlugin());
@@ -104,33 +108,36 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                 gui.Run();
 
                 app.OpenProject(filePath); // save to initialize file repository..
-                var loadedModel = (WaterFlowFMModel)app.Project.RootFolder.Items[0];
+                var loadedModel = (WaterFlowFMModel) app.Project.RootFolder.Items[0];
 
                 // In order for this test to succeed, we need to manually set the Crest Width to anything greater than 0.
                 // This is due to the structures file (har_structures.ini) not containing values for Crest Width.
                 // The Gui will initialize the Crest Width with a default value of 0.0, whilst the computational core will initialize with the default length of the structure.
                 // Since this test is not meant to test the CrestWidth getting and setting, we place a hack here to set all the Crest Widths to any positive value.
-                loadedModel.Area.Weirs.Select(c => { c.CrestWidth = 1.0; return c; }).ToList();
+                loadedModel.Area.Weirs.Select(c =>
+                {
+                    c.CrestWidth = 1.0;
+                    return c;
+                }).ToList();
 
                 // Should re-run activity since this project may be migrated (clears output)
                 app.RunActivity(loadedModel);
 
                 gui.CommandHandler.OpenView(loadedModel, typeof(ProjectItemMapView));
-                var mapView = gui.DocumentViews.OfType<ProjectItemMapView>().FirstOrDefault();
-                var modelLayer = (GroupLayer)mapView.MapView.GetLayerForData(loadedModel);
+                ProjectItemMapView mapView = gui.DocumentViews.OfType<ProjectItemMapView>().FirstOrDefault();
+                var modelLayer = (GroupLayer) mapView.MapView.GetLayerForData(loadedModel);
 
                 //No layer should be found.
                 loadedModel.ModelDefinition.WriteSnappedFeatures = false;
                 var snappedOutputLayer = modelLayer.Layers.FirstOrDefault(l => l.Name == FlowFMMapLayerProvider.OutputSnappedFeaturesLayerName) as GroupLayer;
                 Assert.IsNull(snappedOutputLayer);
-                    
+
                 /* Only added as a child to the map layer if WriteOutputSnappeData is true and there are available layers.*/
                 loadedModel.ModelDefinition.WriteSnappedFeatures = true;
                 snappedOutputLayer = modelLayer.Layers.FirstOrDefault(l => l.Name == FlowFMMapLayerProvider.OutputSnappedFeaturesLayerName) as GroupLayer;
                 Assert.IsNotNull(snappedOutputLayer);
-
-
             }
+
             try
             {
                 FileUtils.DeleteIfExists(filePath);
@@ -148,13 +155,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         [Category(TestCategory.Slow)]
         public void FMOutputSnappedFeaturesGetDefaultCoordinates()
         {
-            var filePath = TestHelper.GetTestFilePath(@"outputSnappedFeatures\outputSnappedFeatures.dsproj");
+            string filePath = TestHelper.GetTestFilePath(@"outputSnappedFeatures\outputSnappedFeatures.dsproj");
             filePath = TestHelper.CreateLocalCopy(filePath);
             using (var gui = new DeltaShellGui())
             {
                 var fmGuiPlugin = new FlowFMGuiPlugin();
 
-                var app = gui.Application;
+                IApplication app = gui.Application;
                 app.Plugins.Add(new NHibernateDaoApplicationPlugin());
                 app.Plugins.Add(new CommonToolsApplicationPlugin());
                 app.Plugins.Add(new SharpMapGisApplicationPlugin());
@@ -171,22 +178,26 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
                 app.OpenProject(filePath); // save to initialize file repository..
                 app.SaveProject();
-                var loadedModel = (WaterFlowFMModel)app.Project.RootFolder.Items[0];
+                var loadedModel = (WaterFlowFMModel) app.Project.RootFolder.Items[0];
 
                 // In order for this test to succeed, we need to manually set the Crest Width to anything greater than 0.
                 // This is due to the structures file (har_structures.ini) not containing values for Crest Width.
                 // The Gui will initialize the Crest Width with a default value of 0.0, whilst the computational core will initialize with the default length of the structure.
                 // Since this test is not meant to test the CrestWidth getting and setting, we place a hack here to set all the Crest Widths to any positive value.
-                loadedModel.Area.Weirs.Select(c => { c.CrestWidth = 1.0; return c; }).ToList();
+                loadedModel.Area.Weirs.Select(c =>
+                {
+                    c.CrestWidth = 1.0;
+                    return c;
+                }).ToList();
 
                 gui.CommandHandler.OpenView(loadedModel, typeof(ProjectItemMapView));
-                var mapView = gui.DocumentViews.OfType<ProjectItemMapView>().FirstOrDefault();
-                var modelLayer = (GroupLayer)mapView.MapView.GetLayerForData(loadedModel);
+                ProjectItemMapView mapView = gui.DocumentViews.OfType<ProjectItemMapView>().FirstOrDefault();
+                var modelLayer = (GroupLayer) mapView.MapView.GetLayerForData(loadedModel);
 
                 try
                 {
                     ActivityRunner.RunActivity(loadedModel);
-                        
+
                     //Set coordinate system for model (and ensure it was set)
                     loadedModel.CoordinateSystem = new OgrCoordinateSystemFactory().CreateFromEPSG(4326); //wgs84
                     Assert.IsNotNull(loadedModel.CoordinateSystem);
@@ -198,7 +209,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
                 var snappedOutputGroup = modelLayer.Layers.FirstOrDefault(l => l.Name == FlowFMMapLayerProvider.OutputSnappedFeaturesLayerName) as GroupLayer;
                 Assert.NotNull(snappedOutputGroup);
-                var outputSnappedLayers = snappedOutputGroup.Layers.ToList();
+                List<ILayer> outputSnappedLayers = snappedOutputGroup.Layers.ToList();
                 Assert.IsNotEmpty(outputSnappedLayers);
 
                 Assert.IsFalse(outputSnappedLayers.Any(osl => osl.CoordinateSystem == null));
@@ -213,8 +224,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                 Assert.IsNotEmpty(outputSnappedLayers);
                 Assert.IsFalse(outputSnappedLayers.Any(osl => osl.CoordinateSystem == null));
                 Assert.IsFalse(outputSnappedLayers.Any(osl => osl.CoordinateSystem != loadedModel.CoordinateSystem));
-
             }
+
             try
             {
                 FileUtils.DeleteIfExists(filePath);
@@ -245,12 +256,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         [Category(TestCategory.Slow)]
         public void RerunModelGeneratesNewSnappedFeatures(bool saving)
         {
-            var filePath = TestHelper.GetTestFilePath(@"outputSnappedFeatures\outputSnappedFeatures.dsproj");
-            var newSavePath = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+            string filePath = TestHelper.GetTestFilePath(@"outputSnappedFeatures\outputSnappedFeatures.dsproj");
+            string newSavePath = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
             filePath = TestHelper.CreateLocalCopy(filePath);
-            
-            var workingDirectoryPath = Path.Combine(Path.GetTempPath(), "DeltaShell_Working_Directory");
-            var application =
+
+            string workingDirectoryPath = Path.Combine(Path.GetTempPath(), "DeltaShell_Working_Directory");
+            ApplicationSettingsBase application =
                 ApplicationTestHelper.GetMockedApplicationSettingsBase(workingDirectoryPath);
 
             using (var app = new DeltaShellApplication
@@ -272,7 +283,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                 {
                     app.SaveProjectAs(newSavePath);
                 }
-                var loadedModel = (WaterFlowFMModel)app.Project.RootFolder.Items[0];
+
+                var loadedModel = (WaterFlowFMModel) app.Project.RootFolder.Items[0];
 
                 try
                 {
@@ -285,7 +297,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
                 var groupLayerData = new FMOutputSnappedFeaturesGroupLayerData(loadedModel);
                 //Let's try to pull it up to 10.
-                var outputSnappedLayers = groupLayerData.CreateLayers().ToList();
+                List<ILayer> outputSnappedLayers = groupLayerData.CreateLayers().ToList();
                 try
                 {
                     ActivityRunner.RunActivity(loadedModel);
@@ -294,10 +306,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                 {
                     Assert.Fail("Fail to run model: {0}", e.Message);
                 }
+
                 outputSnappedLayers.ForEach(l => l.Dispose());
 
                 app.CloseProject();
             }
+
             try
             {
                 FileUtils.DeleteIfExists(filePath);
@@ -305,14 +319,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                 FileUtils.DeleteIfExists(Path.GetDirectoryName(filePath));
                 FileUtils.DeleteIfExists(newSavePath);
                 FileUtils.DeleteIfExists(newSavePath + "_data");
-
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
             }
         }
-
 
         [Test]
         [TestCase(true)]
@@ -321,12 +333,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         [Category(TestCategory.Slow)]
         public void OpenProjectThenRunItThenCheckSnappedFeaturesWereGenerated(bool saving)
         {
-            var filePath = TestHelper.GetTestFilePath(@"outputSnappedFeatures\outputSnappedFeatures.dsproj");
-            var newSavePath = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+            string filePath = TestHelper.GetTestFilePath(@"outputSnappedFeatures\outputSnappedFeatures.dsproj");
+            string newSavePath = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
             filePath = TestHelper.CreateLocalCopy(filePath);
 
-            var workingDirectoryPath = Path.Combine(Path.GetTempPath(), "DeltaShell_Working_Directory");
-            var application =
+            string workingDirectoryPath = Path.Combine(Path.GetTempPath(), "DeltaShell_Working_Directory");
+            ApplicationSettingsBase application =
                 ApplicationTestHelper.GetMockedApplicationSettingsBase(workingDirectoryPath);
 
             using (var app = new DeltaShellApplication
@@ -334,7 +346,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                 UserSettings = application,
                 IsProjectCreatedInTemporaryDirectory = true
             })
-            { 
+            {
                 app.Plugins.Add(new NHibernateDaoApplicationPlugin());
                 app.Plugins.Add(new CommonToolsApplicationPlugin());
                 app.Plugins.Add(new SharpMapGisApplicationPlugin());
@@ -348,12 +360,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                 {
                     app.SaveProjectAs(newSavePath);
                 }
-                var loadedModel = (WaterFlowFMModel)app.Project.RootFolder.Items[0];
+
+                var loadedModel = (WaterFlowFMModel) app.Project.RootFolder.Items[0];
                 // In order for this test to succeed, we need to manually set the Crest Width to anything greater than 0.
                 // This is due to the structures file (har_structures.ini) not containing values for Crest Width.
                 // The Gui will initialize the Crest Width with a default value of 0.0, whilst the computational core will initialize with the default length of the structure.
                 // Since this test is not meant to test the CrestWidth getting and setting, we place a hack here to set all the Crest Widths to any positive value.
-                loadedModel.Area.Weirs.Select(c => { c.CrestWidth = 1.0; return c; }).ToList();
+                loadedModel.Area.Weirs.Select(c =>
+                {
+                    c.CrestWidth = 1.0;
+                    return c;
+                }).ToList();
 
                 try
                 {
@@ -366,9 +383,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
                 var groupLayerData = new FMOutputSnappedFeaturesGroupLayerData(loadedModel);
                 //Let's try to pull it up to 10.
-                var outputSnappedLayers = groupLayerData.CreateLayers().ToList();
+                List<ILayer> outputSnappedLayers = groupLayerData.CreateLayers().ToList();
 
-                var outputSnappedLayerNames = outputSnappedLayers.Select(osl => osl.Name).ToList();
+                List<string> outputSnappedLayerNames = outputSnappedLayers.Select(osl => osl.Name).ToList();
                 Assert.IsTrue(outputSnappedLayerNames.Contains("Cross Sections"));
                 Assert.IsTrue(outputSnappedLayerNames.Contains("Weirs"));
                 Assert.IsTrue(outputSnappedLayerNames.Contains("Gates"));
@@ -386,6 +403,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
                 app.CloseProject();
             }
+
             try
             {
                 FileUtils.DeleteIfExists(filePath);
@@ -393,7 +411,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                 FileUtils.DeleteIfExists(Path.GetDirectoryName(filePath));
                 FileUtils.DeleteIfExists(newSavePath);
                 FileUtils.DeleteIfExists(newSavePath + "_data");
-
             }
             catch (Exception e)
             {
@@ -410,11 +427,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         {
             /* Because this test loads the output snapped features directly without running, we can use
              * it to check whether the folder location is correct as well as the generation of layers. */
-            var filePath = TestHelper.GetTestFilePath(@"outputSnappedFeatures\outputSnappedFeatures.dsproj");
+            string filePath = TestHelper.GetTestFilePath(@"outputSnappedFeatures\outputSnappedFeatures.dsproj");
             filePath = TestHelper.CreateLocalCopy(filePath);
 
-            var workingDirectoryPath = Path.Combine(Path.GetTempPath(), "DeltaShell_Working_Directory");
-            var application =
+            string workingDirectoryPath = Path.Combine(Path.GetTempPath(), "DeltaShell_Working_Directory");
+            ApplicationSettingsBase application =
                 ApplicationTestHelper.GetMockedApplicationSettingsBase(workingDirectoryPath);
 
             using (var app = new DeltaShellApplication
@@ -431,21 +448,27 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                 app.Run();
 
                 app.OpenProject(filePath); // save to initialize file repository..
-                if( initialize)
+                if (initialize)
+                {
                     app.SaveProject();
+                }
 
-                var loadedModel = (WaterFlowFMModel)app.Project.RootFolder.Items[0];
+                var loadedModel = (WaterFlowFMModel) app.Project.RootFolder.Items[0];
                 // In order for this test to succeed, we need to manually set the Crest Width to anything greater than 0.
                 // This is due to the structures file (har_structures.ini) not containing values for Crest Width.
                 // The Gui will initialize the Crest Width with a default value of 0.0, whilst the computational core will initialize with the default length of the structure.
                 // Since this test is not meant to test the CrestWidth getting and setting, we place a hack here to set all the Crest Widths to any positive value.
-                loadedModel.Area.Weirs.Select(c => { c.CrestWidth = 1.0; return c; }).ToList();
+                loadedModel.Area.Weirs.Select(c =>
+                {
+                    c.CrestWidth = 1.0;
+                    return c;
+                }).ToList();
 
                 // Should re-run activity since this project may be migrated (clears output)
                 app.RunActivity(loadedModel);
 
                 var groupLayerData = new FMOutputSnappedFeaturesGroupLayerData(loadedModel);
-                var outputSnappedLayers = groupLayerData.CreateLayers().ToList();
+                List<ILayer> outputSnappedLayers = groupLayerData.CreateLayers().ToList();
 
                 //For the moment we have only 6 shapes in the example given.
                 Assert.AreEqual(7, outputSnappedLayers.Count);
@@ -460,7 +483,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                     "Embankments",
                     "Dry areas"
                 };
-                foreach (var ol in outputSnappedLayers)
+                foreach (ILayer ol in outputSnappedLayers)
                 {
                     Assert.IsTrue(expectedLayers.Contains(ol.Name), string.Format("ExpectedLayers list does not contain, or has repeated, created layer {0}", ol.Name));
                     expectedLayers.Remove(ol.Name);
@@ -471,6 +494,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
                 app.CloseProject();
             }
+
             try
             {
                 FileUtils.DeleteIfExists(filePath);

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
@@ -6,6 +7,7 @@ using DelftTools.Functions.Generic;
 using DelftTools.TestUtils;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers;
 using NetTopologySuite.Extensions.Coverages;
+using NetTopologySuite.Extensions.Grids;
 using NUnit.Framework;
 using SharpMap;
 using SharpMap.Layers;
@@ -21,21 +23,37 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Layers
         [Category(TestCategory.WindowsForms)]
         public void ShowEmptyCellVectorCoverageLayer()
         {
-            var mduPath = TestHelper.GetTestFilePath(@"data\f04_bottomfriction\c016_2DConveyance_bend\input\bendprof.mdu");
+            string mduPath = TestHelper.GetTestFilePath(@"data\f04_bottomfriction\c016_2DConveyance_bend\input\bendprof.mdu");
             mduPath = TestHelper.CreateLocalCopy(mduPath);
-            var grid = MapFileImporter.Import(mduPath, "bendprof_map.nc");
+            UnstructuredGrid grid = MapFileImporter.Import(mduPath, "bendprof_map.nc");
 
             // build coverage and show on map
             var coverage = new UnstructuredGridCellCoverage(grid, true);
             coverage.Components.Add(new Variable<double>());
 
-            var gridLayer = new UnstructuredGridLayer { Grid = grid };
-            var coverageLayer = new UnstructuredGridCellVectorCoverageLayer { Coverage = coverage };
+            var gridLayer = new UnstructuredGridLayer {Grid = grid};
+            var coverageLayer = new UnstructuredGridCellVectorCoverageLayer {Coverage = coverage};
 
-            var map = new Map { Layers = { gridLayer, coverageLayer }, Size = new Size { Width = 800, Height = 800 } };
+            var map = new Map
+            {
+                Layers =
+                {
+                    gridLayer,
+                    coverageLayer
+                },
+                Size = new Size
+                {
+                    Width = 800,
+                    Height = 800
+                }
+            };
             map.ZoomToExtents();
 
-            var mapControl = new MapControl { Map = map, Dock = DockStyle.Fill };
+            var mapControl = new MapControl
+            {
+                Map = map,
+                Dock = DockStyle.Fill
+            };
 
             mapControl.GetToolByType<LegendTool>().Visible = true;
 
@@ -48,26 +66,42 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Layers
         {
             var r = new Random();
 
-            var mduPath = TestHelper.GetTestFilePath(@"data\f04_bottomfriction\c016_2DConveyance_bend\input\bendprof.mdu");
+            string mduPath = TestHelper.GetTestFilePath(@"data\f04_bottomfriction\c016_2DConveyance_bend\input\bendprof.mdu");
             mduPath = TestHelper.CreateLocalCopy(mduPath);
-            var grid = MapFileImporter.Import(mduPath, "bendprof_map.nc");
+            UnstructuredGrid grid = MapFileImporter.Import(mduPath, "bendprof_map.nc");
 
-            var valuesX = Enumerable.Range(0, grid.Cells.Count).Select(i => (double)r.Next(20));
-            var valuesY = Enumerable.Range(0, grid.Cells.Count).Select(i => (double)r.Next(20));
-            
+            IEnumerable<double> valuesX = Enumerable.Range(0, grid.Cells.Count).Select(i => (double) r.Next(20));
+            IEnumerable<double> valuesY = Enumerable.Range(0, grid.Cells.Count).Select(i => (double) r.Next(20));
+
             // build coverage and show on map
             var coverage = new UnstructuredGridCellCoverage(grid, false);
             coverage.Components.Add(new Variable<double>());
             coverage.Components[0].SetValues(valuesX);
             coverage.Components[1].SetValues(valuesY);
 
-            var gridLayer = new UnstructuredGridLayer { Grid = grid };
-            var coverageLayer = new UnstructuredGridCellVectorCoverageLayer { Coverage = coverage };
+            var gridLayer = new UnstructuredGridLayer {Grid = grid};
+            var coverageLayer = new UnstructuredGridCellVectorCoverageLayer {Coverage = coverage};
 
-            var map = new Map { Layers = { gridLayer, coverageLayer }, Size = new Size { Width = 800, Height = 800 } };
+            var map = new Map
+            {
+                Layers =
+                {
+                    gridLayer,
+                    coverageLayer
+                },
+                Size = new Size
+                {
+                    Width = 800,
+                    Height = 800
+                }
+            };
             map.ZoomToExtents();
 
-            var mapControl = new MapControl { Map = map, Dock = DockStyle.Fill };
+            var mapControl = new MapControl
+            {
+                Map = map,
+                Dock = DockStyle.Fill
+            };
 
             mapControl.GetToolByType<LegendTool>().Visible = true;
 

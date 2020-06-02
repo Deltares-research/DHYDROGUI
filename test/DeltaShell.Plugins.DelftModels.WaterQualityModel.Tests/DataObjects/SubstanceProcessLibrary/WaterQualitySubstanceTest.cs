@@ -10,15 +10,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.DataObjects.Sub
         public void TestClone()
         {
             var waterQualitySubstance = new WaterQualitySubstance
-                {
-                    Id = 2,
-                    Name = "Name",
-                    Description = "Description",
-                    Active = true,
-                    InitialValue = 1.4,
-                    ConcentrationUnit = "Concentration unit",
-                    WasteLoadUnit = "Waste load unit"
-                };
+            {
+                Id = 2,
+                Name = "Name",
+                Description = "Description",
+                Active = true,
+                InitialValue = 1.4,
+                ConcentrationUnit = "Concentration unit",
+                WasteLoadUnit = "Waste load unit"
+            };
 
             var waterQualitySubstanceClone = waterQualitySubstance.Clone() as WaterQualitySubstance;
 
@@ -36,10 +36,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.DataObjects.Sub
         [Test]
         public void TestCompareTo()
         {
-            var waterQualitySubstance1 = new WaterQualitySubstance { Name = "a" };
-            var waterQualitySubstance2 = new WaterQualitySubstance { Name = "b" };
-            var waterQualitySubstance3 = new WaterQualitySubstance { Name = "a" };
-            
+            var waterQualitySubstance1 = new WaterQualitySubstance {Name = "a"};
+            var waterQualitySubstance2 = new WaterQualitySubstance {Name = "b"};
+            var waterQualitySubstance3 = new WaterQualitySubstance {Name = "a"};
+
             Assert.AreEqual(1, waterQualitySubstance2.CompareTo(waterQualitySubstance1));
             Assert.AreEqual(-1, waterQualitySubstance1.CompareTo(waterQualitySubstance2));
             Assert.AreEqual(0, waterQualitySubstance1.CompareTo(waterQualitySubstance3));

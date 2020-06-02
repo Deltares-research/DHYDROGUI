@@ -20,8 +20,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
         [Test]
         public void GivenBcmFileImporterWhenBoundaryConditionHasInCorrectQuantityTypeThenValidateFalse()
         {
-            FlowBoundaryCondition flowBoundaryCondition = new FlowBoundaryCondition(FlowBoundaryQuantityType.MorphologyBedLevelPrescribed, BoundaryConditionDataType.TimeSeries);
-            var result = importer.CanImportOnBoundaryCondition(flowBoundaryCondition);
+            var flowBoundaryCondition = new FlowBoundaryCondition(FlowBoundaryQuantityType.MorphologyBedLevelPrescribed, BoundaryConditionDataType.TimeSeries);
+            bool result = importer.CanImportOnBoundaryCondition(flowBoundaryCondition);
 
             Assert.IsFalse(result);
         }
@@ -29,8 +29,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
         [Test]
         public void GivenBcmFileImporterWhenBoundaryConditionHasInCorrectDataTypeThenValidateFalse()
         {
-            FlowBoundaryCondition flowBoundaryCondition = new FlowBoundaryCondition(FlowBoundaryQuantityType.WaterLevel, BoundaryConditionDataType.Empty);
-            var result = importer.CanImportOnBoundaryCondition(flowBoundaryCondition);
+            var flowBoundaryCondition = new FlowBoundaryCondition(FlowBoundaryQuantityType.WaterLevel, BoundaryConditionDataType.Empty);
+            bool result = importer.CanImportOnBoundaryCondition(flowBoundaryCondition);
 
             Assert.IsFalse(result);
         }
@@ -41,8 +41,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
         [TestCase(BoundaryConditionDataType.AstroCorrection)]
         public void GivenBcmFileImporterWhenBoundaryConditionHasCorrectDataTypeThenValidateTrue(BoundaryConditionDataType boundaryConditionDataType)
         {
-            FlowBoundaryCondition flowBoundaryCondition = new FlowBoundaryCondition(FlowBoundaryQuantityType.WaterLevel, boundaryConditionDataType);
-            var result = importer.CanImportOnBoundaryCondition(flowBoundaryCondition);
+            var flowBoundaryCondition = new FlowBoundaryCondition(FlowBoundaryQuantityType.WaterLevel, boundaryConditionDataType);
+            bool result = importer.CanImportOnBoundaryCondition(flowBoundaryCondition);
 
             Assert.IsTrue(result, "The flowboundary quantity type is incorrect");
         }

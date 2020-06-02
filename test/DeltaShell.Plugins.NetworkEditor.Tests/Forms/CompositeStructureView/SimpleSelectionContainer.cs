@@ -6,19 +6,29 @@ using log4net;
 
 namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CompositeStructureView
 {
-    public class SimpleSelectionContainer:ISelectionContainer
+    public class SimpleSelectionContainer : ISelectionContainer
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(ISelectionContainer));
         private object selection;
         private int count;
+
+        public event EventHandler<SelectedItemChangedEventArgs> SelectionChanged;
+
+        public bool Logging { get; set; }
+
         public object Selection
         {
-            get { return selection; }
+            get
+            {
+                return selection;
+            }
             set
             {
                 //this is needed otherwise we get an event loop in CompositeStructureView for example
-                if (selection == value) 
+                if (selection == value)
+                {
                     return;
+                }
 
                 selection = value;
 
@@ -28,34 +38,21 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CompositeStructureView
                     {
                         if (value != null)
                         {
-                            log.DebugFormat("{0} Sending changed event for {1}", count++,value.ToString());        
+                            log.DebugFormat("{0} Sending changed event for {1}", count++, value.ToString());
                         }
                         else
                         {
-                            log.DebugFormat("{0} Sending changed event for null", count++);        
+                            log.DebugFormat("{0} Sending changed event for null", count++);
                         }
                     }
-                    
+
                     SelectionChanged(this, new SelectedItemChangedEventArgs(value));
                 }
             }
         }
 
-        public bool Logging
-        {
-            get; set;
-        }
+        public IModel SelectedModel { get; set; }
 
-        public event EventHandler<SelectedItemChangedEventArgs> SelectionChanged;
-
-        public IModel SelectedModel
-        {
-            get; set;
-        }
-
-        public IProjectItem SelectedProjectItem
-        {
-            get; set;
-        }
+        public IProjectItem SelectedProjectItem { get; set; }
     }
 }

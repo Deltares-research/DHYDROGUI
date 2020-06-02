@@ -7,7 +7,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO.BackwardCompatibility
     [TestFixture]
     public abstract class IDelftIniBackwardsCompatibilityConfigurationValuesTestFixture
     {
-        protected abstract IDelftIniBackwardsCompatibilityConfigurationValues GetConfigurationValues();
         protected abstract IEnumerable<string> ObsoleteProperties { get; }
         protected abstract IEnumerable<KeyValuePair<string, string>> LegacyPropertyMapping { get; }
         protected abstract IEnumerable<KeyValuePair<string, string>> LegacyCategoryMapping { get; }
@@ -23,5 +22,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO.BackwardCompatibility
             Assert.That(configurationValues.LegacyPropertyMapping, Is.EquivalentTo(LegacyPropertyMapping));
             Assert.That(configurationValues.LegacyCategoryMapping, Is.EquivalentTo(LegacyCategoryMapping));
         }
+
+        protected abstract IDelftIniBackwardsCompatibilityConfigurationValues GetConfigurationValues();
     }
 }

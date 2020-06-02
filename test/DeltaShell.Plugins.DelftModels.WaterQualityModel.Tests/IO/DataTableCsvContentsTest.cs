@@ -26,22 +26,22 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         public void GetSubstanceUseforFileNameTest()
         {
             // setup
-            var dataTableFileContents = new DataTableCsvContents { Name = "test" };
+            var dataTableFileContents = new DataTableCsvContents {Name = "test"};
 
             // call
-            var fileName = dataTableFileContents.GetSubstanceUseforFileName();
+            string fileName = dataTableFileContents.GetSubstanceUseforFileName();
 
             // assert
             Assert.AreEqual("test.usefors", fileName);
         }
-        
+
         [Test]
         [TestCase(DataTableInterpolationType.Linear)]
         [TestCase(DataTableInterpolationType.Block)]
         public void CreateDataTableDelwaqFormat_LinearData_CreateText(DataTableInterpolationType type)
         {
             // setup
-            var useforIncludeFolderPath = Path.Combine("test", "hihi");
+            string useforIncludeFolderPath = Path.Combine("test", "hihi");
             var dataTableFileContents = new DataTableCsvContents
             {
                 Name = "Some file name",
@@ -49,38 +49,32 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
                 UseforIncludeFolderPath = useforIncludeFolderPath
             };
 
-            var locationA = new LocationData
-            {
-                Name = "A"
-            };
+            var locationA = new LocationData {Name = "A"};
             locationA.TimeDependentSubstanceData[new DateTime(2015, 3, 25, 10, 10, 0)] = new Dictionary<string, string>
             {
-                { "foo", "1.1" },
-                { "test", "3.3" }
+                {"foo", "1.1"},
+                {"test", "3.3"}
             };
             locationA.TimeDependentSubstanceData[new DateTime(2015, 3, 25, 10, 14, 0)] = new Dictionary<string, string>
             {
-                { "bar", "4.4" },
-                { "test", "5.5" }
+                {"bar", "4.4"},
+                {"test", "5.5"}
             };
             dataTableFileContents.DataRows.Add(locationA);
 
-            var locationB = new LocationData
-            {
-                Name = "B"
-            };
+            var locationB = new LocationData {Name = "B"};
             locationB.TimeDependentSubstanceData[new DateTime(2015, 3, 25, 10, 33, 0)] = new Dictionary<string, string>
             {
-                { "Not_in_SubstancesInFile", "1.1" },
+                {"Not_in_SubstancesInFile", "1.1"},
             };
             dataTableFileContents.DataRows.Add(locationB);
 
             // call
-            var delwaqFormattedFileContents = dataTableFileContents.CreateDataTableDelwaqFormat();
+            string delwaqFormattedFileContents = dataTableFileContents.CreateDataTableDelwaqFormat();
 
             // assert
-            var expectedUseforsFilePath = Path.Combine(useforIncludeFolderPath, "Some file name.usefors");
-            var expectedText =
+            string expectedUseforsFilePath = Path.Combine(useforIncludeFolderPath, "Some file name.usefors");
+            string expectedText =
                 "DATA_ITEM" + Environment.NewLine +
                 "'A'" + Environment.NewLine +
                 "CONCENTRATIONS" + Environment.NewLine +
@@ -104,7 +98,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         [Test]
         public void SubstanceDataShouldBeSortedByDatetime()
         {
-            var useforIncludeFolderPath = Path.Combine("test", "hihi");
+            string useforIncludeFolderPath = Path.Combine("test", "hihi");
             var type = DataTableInterpolationType.Linear;
             var dataTableFileContents = new DataTableCsvContents
             {
@@ -113,25 +107,37 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
                 UseforIncludeFolderPath = useforIncludeFolderPath
             };
 
-            var locationA = new LocationData{ Name = "A" };
-            locationA.TimeDependentSubstanceData[new DateTime(2015, 3, 25, 10, 10, 0)] = new Dictionary<string, string>{ { "foo", "1.1" }, { "test", "3.3" } };
-            locationA.TimeDependentSubstanceData[new DateTime(2015, 3, 24, 10, 10, 0)] = new Dictionary<string, string>{ { "bar", "4.4" }, { "test", "5.5" } };
-            locationA.TimeDependentSubstanceData[new DateTime(2015, 3, 26, 10, 10, 0)] = new Dictionary<string, string> { { "foo", "7.7" }, { "bar", "8.8" } };
+            var locationA = new LocationData {Name = "A"};
+            locationA.TimeDependentSubstanceData[new DateTime(2015, 3, 25, 10, 10, 0)] = new Dictionary<string, string>
+            {
+                {"foo", "1.1"},
+                {"test", "3.3"}
+            };
+            locationA.TimeDependentSubstanceData[new DateTime(2015, 3, 24, 10, 10, 0)] = new Dictionary<string, string>
+            {
+                {"bar", "4.4"},
+                {"test", "5.5"}
+            };
+            locationA.TimeDependentSubstanceData[new DateTime(2015, 3, 26, 10, 10, 0)] = new Dictionary<string, string>
+            {
+                {"foo", "7.7"},
+                {"bar", "8.8"}
+            };
             dataTableFileContents.DataRows.Add(locationA);
 
-            var locationB = new LocationData{ Name = "B" };
-            locationB.TimeDependentSubstanceData[new DateTime(2015, 3, 25, 10, 33, 0)] = new Dictionary<string, string>{ { "Not_in_SubstancesInFile", "1.1" } };
-            locationB.TimeDependentSubstanceData[new DateTime(2015, 3, 24, 10, 33, 0)] = new Dictionary<string, string>{ { "Not_in_SubstancesInFile", "2.2" } };
-            locationB.TimeDependentSubstanceData[new DateTime(2015, 3, 26, 10, 33, 0)] = new Dictionary<string, string> { { "Not_in_SubstancesInFile", "3.3" } };
+            var locationB = new LocationData {Name = "B"};
+            locationB.TimeDependentSubstanceData[new DateTime(2015, 3, 25, 10, 33, 0)] = new Dictionary<string, string> {{"Not_in_SubstancesInFile", "1.1"}};
+            locationB.TimeDependentSubstanceData[new DateTime(2015, 3, 24, 10, 33, 0)] = new Dictionary<string, string> {{"Not_in_SubstancesInFile", "2.2"}};
+            locationB.TimeDependentSubstanceData[new DateTime(2015, 3, 26, 10, 33, 0)] = new Dictionary<string, string> {{"Not_in_SubstancesInFile", "3.3"}};
             dataTableFileContents.DataRows.Add(locationB);
 
             // call
-            var delwaqFormattedFileContents = dataTableFileContents.CreateDataTableDelwaqFormat();
+            string delwaqFormattedFileContents = dataTableFileContents.CreateDataTableDelwaqFormat();
 
             // assert
-            var expectedUseforsFilePath = Path.Combine(useforIncludeFolderPath, "Some file name.usefors");
+            string expectedUseforsFilePath = Path.Combine(useforIncludeFolderPath, "Some file name.usefors");
 
-            var expectedText = string.Format(
+            string expectedText = string.Format(
                 "DATA_ITEM{0}'A'{0}CONCENTRATIONS{0}INCLUDE '{1}'{0}TIME {2} DATA{0}" +
                 "'bar' 'test' 'foo'{0}" +
                 "2015/03/24-10:10:00 4.4 5.5 -999{0}" +
@@ -143,7 +149,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
                 "2015/03/25-10:33:00 1.1{0}" +
                 "2015/03/26-10:33:00 3.3{0}{0}",
                 Environment.NewLine, expectedUseforsFilePath, type.ToString().ToUpper());
-                
+
             Assert.AreEqual(expectedText, delwaqFormattedFileContents);
         }
 
@@ -152,37 +158,31 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         {
             // setup
             var dataTableFileContents = new DataTableCsvContents();
-            var locationA = new LocationData
-            {
-                Name = "A"
-            };
+            var locationA = new LocationData {Name = "A"};
             locationA.TimeDependentSubstanceData[new DateTime(2015, 3, 25, 10, 10, 0)] = new Dictionary<string, string>
             {
-                { "foo", "1.1" },
-                { "test", "3.3" }
+                {"foo", "1.1"},
+                {"test", "3.3"}
             };
             locationA.TimeDependentSubstanceData[new DateTime(2015, 3, 25, 10, 14, 0)] = new Dictionary<string, string>
             {
-                { "bar", "4.4" },
-                { "test", "5.5" }
+                {"bar", "4.4"},
+                {"test", "5.5"}
             };
             dataTableFileContents.DataRows.Add(locationA);
 
-            var locationB = new LocationData
-            {
-                Name = "B"
-            };
+            var locationB = new LocationData {Name = "B"};
             locationB.TimeDependentSubstanceData[new DateTime(2015, 3, 25, 10, 33, 0)] = new Dictionary<string, string>
             {
-                { "haha", "1.1" },
+                {"haha", "1.1"},
             };
             dataTableFileContents.DataRows.Add(locationB);
 
             // call
-            var fileContents = dataTableFileContents.CreateDefaultSubstanceUseforContents();
+            string fileContents = dataTableFileContents.CreateDefaultSubstanceUseforContents();
 
             // assert
-            var expected =
+            string expected =
                 "USEFOR 'foo' 'foo'" + Environment.NewLine +
                 "USEFOR 'test' 'test'" + Environment.NewLine +
                 "USEFOR 'bar' 'bar'" + Environment.NewLine +
@@ -206,18 +206,21 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
 
             // add one timeslot
             locationData.TimeDependentSubstanceData.Add(new DateTime(1999, 12, 16, 0, 0, 0),
-                new Dictionary<string, string>() {{"NH4", "10"},});
+                                                        new Dictionary<string, string>()
+                                                        {
+                                                            {"NH4", "10"},
+                                                        });
             dataTableFileContents.DataRows.Add(locationData);
 
             string content = dataTableFileContents.CreateDataTableDelwaqFormat();
 
-            string expected = "DATA_ITEM" + Environment.NewLine + 
-                "'loc 1'" + Environment.NewLine + 
-                "CONCENTRATIONS" + Environment.NewLine + 
-                "INCLUDE 'lala\\first.usefors'" + Environment.NewLine + 
-                "TIME LINEAR DATA" + Environment.NewLine + 
-                "'NH4'" + Environment.NewLine +
-                "1999/12/16-00:00:00 10" + Environment.NewLine + Environment.NewLine;
+            string expected = "DATA_ITEM" + Environment.NewLine +
+                              "'loc 1'" + Environment.NewLine +
+                              "CONCENTRATIONS" + Environment.NewLine +
+                              "INCLUDE 'lala\\first.usefors'" + Environment.NewLine +
+                              "TIME LINEAR DATA" + Environment.NewLine +
+                              "'NH4'" + Environment.NewLine +
+                              "1999/12/16-00:00:00 10" + Environment.NewLine + Environment.NewLine;
 
             Assert.AreEqual(expected, content);
         }

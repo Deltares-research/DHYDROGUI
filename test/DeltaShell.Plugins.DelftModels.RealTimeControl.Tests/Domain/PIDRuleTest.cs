@@ -31,17 +31,22 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
         [SetUp]
         public void SetUp()
         {
-            setting = new Setting { Min = SMin, Max = SMax, MaxSpeed = SMaxSpeed };
+            setting = new Setting
+            {
+                Min = SMin,
+                Max = SMax,
+                MaxSpeed = SMaxSpeed
+            };
             input = new Input
-                        {
-                            ParameterName = IffezheimHin2,
-                            Feature = new RtcTestFeature { Name = IffezheimHin1 },
-                            SetPoint = IffezheimHsp
-                        };
+            {
+                ParameterName = IffezheimHin2,
+                Feature = new RtcTestFeature {Name = IffezheimHin1},
+                SetPoint = IffezheimHsp
+            };
             output = new Output
             {
                 ParameterName = IffezheimSout2,
-                Feature = new RtcTestFeature { Name = IffezheimSout1 },
+                Feature = new RtcTestFeature {Name = IffezheimSout1},
                 IntegralPart = IffezheimKi,
                 DifferentialPart = DifferentialPart
             };
@@ -57,9 +62,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
                 Ki = Ki,
                 Kd = Kd,
                 Setting = setting,
-                Outputs = new EventedList<Output> { output }
+                Outputs = new EventedList<Output> {output}
             };
-            var validationResult = pidRule.Validate(); // ValidationAspects call
+            ValidationResult validationResult = pidRule.Validate(); // ValidationAspects call
             Assert.IsFalse(validationResult.IsValid);
         }
 
@@ -75,11 +80,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
                 Ki = Ki,
                 Kd = Kd,
                 Setting = setting,
-                Inputs = new EventedList<IInput> { input },
-                Outputs = new EventedList<Output> { output }
+                Inputs = new EventedList<IInput> {input},
+                Outputs = new EventedList<Output> {output}
             };
 
-            var clone = (PIDRule)pidRule.Clone();
+            var clone = (PIDRule) pidRule.Clone();
 
             Assert.AreEqual(pidRule.Name, clone.Name);
             //Assert.AreEqual(pidRule.IsAConstant, clone.IsAConstant);
@@ -96,32 +101,29 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
             clone.Ki = -1;
             clone.Kd = -1;
 
-
             Assert.AreNotEqual(pidRule.Name, clone.Name);
             //Assert.AreNotEqual(pidRule.IsAConstant, clone.IsAConstant);
             //Assert.AreNotEqual(pidRule.ConstantValue, clone.ConstantValue);
             Assert.AreNotEqual(pidRule.Kp, clone.Kp);
             Assert.AreNotEqual(pidRule.Ki, clone.Ki);
             Assert.AreNotEqual(pidRule.Kd, clone.Kd);
-
-
         }
 
         [Test]
         public void CopyFrom()
         {
             var pidRuleSource = new PIDRule
-              {
-                  Name = RuleName,
-                  //IsAConstant = true,
-                  //ConstantValue = 1.0,
-                  Kp = Kp,
-                  Ki = Ki,
-                  Kd = Kd,
-                  Setting = setting,
-                  Inputs = new EventedList<IInput> {input},
-                  Outputs = new EventedList<Output> {output}
-              };
+            {
+                Name = RuleName,
+                //IsAConstant = true,
+                //ConstantValue = 1.0,
+                Kp = Kp,
+                Ki = Ki,
+                Kd = Kd,
+                Setting = setting,
+                Inputs = new EventedList<IInput> {input},
+                Outputs = new EventedList<Output> {output}
+            };
 
             var pidRule = new PIDRule();
 
@@ -130,12 +132,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
             Assert.AreEqual(RuleName, pidRule.Name);
             //Assert.AreEqual(true,pidRule.IsAConstant);
             //Assert.AreEqual(1.0d,pidRule.ConstantValue);
-            Assert.AreEqual(Kp,pidRule.Kp);
-            Assert.AreEqual(Ki,pidRule.Ki);
-            Assert.AreEqual(Kd,pidRule.Kd);
-            Assert.AreEqual(setting.Min,pidRule.Setting.Min);
-            Assert.AreEqual(setting.Max,pidRule.Setting.Max); 
-            Assert.AreEqual(setting.MaxSpeed,pidRule.Setting.MaxSpeed);
+            Assert.AreEqual(Kp, pidRule.Kp);
+            Assert.AreEqual(Ki, pidRule.Ki);
+            Assert.AreEqual(Kd, pidRule.Kd);
+            Assert.AreEqual(setting.Min, pidRule.Setting.Min);
+            Assert.AreEqual(setting.Max, pidRule.Setting.Max);
+            Assert.AreEqual(setting.MaxSpeed, pidRule.Setting.MaxSpeed);
         }
 
         [Test]
@@ -148,8 +150,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
                 Ki = Ki,
                 Kd = Kd,
                 Setting = setting,
-                Inputs = new EventedList<IInput> { input },
-                Outputs = new EventedList<Output> { output }
+                Inputs = new EventedList<IInput> {input},
+                Outputs = new EventedList<Output> {output}
             };
 
             var newRule = new PIDRule();
@@ -163,7 +165,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
             Assert.AreEqual(setting.Max, newRule.Setting.Max);
             Assert.AreEqual(setting.MaxSpeed, newRule.Setting.MaxSpeed);
 
-            var clone = (PIDRule)source.Clone();
+            var clone = (PIDRule) source.Clone();
             Assert.IsFalse(ReferenceEquals(source, clone));
             Assert.AreEqual(source.Name, clone.Name);
         }

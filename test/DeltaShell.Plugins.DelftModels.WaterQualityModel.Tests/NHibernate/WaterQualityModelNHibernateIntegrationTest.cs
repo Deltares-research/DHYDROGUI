@@ -4,6 +4,7 @@ using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
@@ -13,8 +14,8 @@ using DelftTools.Utils.IO;
 using DelftTools.Utils.Validation;
 using DeltaShell.Core;
 using DeltaShell.Gui;
-using DeltaShell.NGHS.TestUtils;
 using DeltaShell.NGHS.IO.TestUtils;
+using DeltaShell.NGHS.TestUtils;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.CommonTools.Gui;
 using DeltaShell.Plugins.Data.NHibernate;
@@ -41,7 +42,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
         [Test]
         public void ReadWaterQualityModelWithDifferentPluginConfiguration()
         {
-            string dsprojName = "WAQ_Only.dsproj";
+            var dsprojName = "WAQ_Only.dsproj";
             // the temporary project is required in order to set the path on the model. Else, it saves null in the Path property of the waq model.
             using (var app = new DeltaShellApplication() {IsProjectCreatedInTemporaryDirectory = true})
             {
@@ -75,11 +76,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
         [Test]
         public void ReadWaterQualityModelWithDifferentPluginConfigurationGui()
         {
-            var dir = Path.GetDirectoryName(Assembly.GetAssembly(typeof(WaterQualityModelNHibernateIntegrationTest)).Location);
+            string dir = Path.GetDirectoryName(Assembly.GetAssembly(typeof(WaterQualityModelNHibernateIntegrationTest)).Location);
             string dsprojName = Path.Combine(dir, "WAQ_Only.dsproj");
             using (var gui = new DeltaShellGui())
             {
-                var app = gui.Application;
+                IApplication app = gui.Application;
                 app.Plugins.Add(new NHibernateDaoApplicationPlugin());
                 app.Plugins.Add(new CommonToolsApplicationPlugin());
                 app.Plugins.Add(new SharpMapGisApplicationPlugin());
@@ -101,7 +102,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
 
             using (var gui = new DeltaShellGui())
             {
-                var app = gui.Application;
+                IApplication app = gui.Application;
                 app.Plugins.Add(new NHibernateDaoApplicationPlugin());
                 app.Plugins.Add(new CommonToolsApplicationPlugin());
                 app.Plugins.Add(new SharpMapGisApplicationPlugin());
@@ -115,7 +116,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
 
                 gui.Plugins.Add(new NetworkEditorGuiPlugin());
 
-
                 gui.Run();
 
                 app.OpenProject(dsprojName);
@@ -125,20 +125,20 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
         [Test]
         public void GivenValidWaqModel_WhenRunningWithInvalidData_SavingProject_OpeningProject_CorrectData_ThenRunningModelIsSuccessFull()
         {
-            var testDir = FileUtils.CreateTempDirectory();
-            var originalDir = TestHelper.GetTestFilePath("WaterQualityDataFiles");
+            string testDir = FileUtils.CreateTempDirectory();
+            string originalDir = TestHelper.GetTestFilePath("WaterQualityDataFiles");
             FileUtils.CopyAll(new DirectoryInfo(originalDir), new DirectoryInfo(testDir), string.Empty);
 
-            var modelFilePath = Path.Combine(testDir, "myWaqModel.dsproj");
-            var hydFilePath = Path.Combine(testDir, "flow-model", "westernscheldt01.hyd");
-            var subFilePath = Path.Combine(testDir, "waq", "sub-files", "bacteria.sub");
-            var boundaryConditionsFilePath = Path.Combine(testDir, "waq", "boundary-conditions", "bacteria.csv");
+            string modelFilePath = Path.Combine(testDir, "myWaqModel.dsproj");
+            string hydFilePath = Path.Combine(testDir, "flow-model", "westernscheldt01.hyd");
+            string subFilePath = Path.Combine(testDir, "waq", "sub-files", "bacteria.sub");
+            string boundaryConditionsFilePath = Path.Combine(testDir, "waq", "boundary-conditions", "bacteria.csv");
 
             Func<IDataItem, bool> isWaqOutputFileDataItem = di => di.Role == DataItemRole.Output &&
                                                                   di.ValueType == typeof(TextDocument) &&
                                                                   di.Tag != WaterQualityModel.ListFileDataItemMetaData.Tag;
 
-            var workingDirectoryPath = Path.Combine(Path.GetTempPath(), "DeltaShell_Working_Directory");
+            string workingDirectoryPath = Path.Combine(Path.GetTempPath(), "DeltaShell_Working_Directory");
             ApplicationSettingsBase userSettings =
                 ApplicationTestHelper.GetMockedApplicationSettingsBase(workingDirectoryPath);
             try
@@ -164,7 +164,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
                     Assert.IsEmpty(waqModel.DataItems.Where(di => isWaqOutputFileDataItem(di)));
 
                     // Put incorrect data in the boundary conditions file
-                    var dataFile = waqModel.BoundaryDataManager.DataTables.FirstOrDefault()?.DataFile;
+                    TextDocumentFromFile dataFile = waqModel.BoundaryDataManager.DataTables.FirstOrDefault()?.DataFile;
                     Assert.IsNotNull(dataFile);
                     dataFile.Content = dataFile.Content.Replace("2014/01/01-00:00:00 0.1", "2014/01/01-00:00:00 wrongValue");
 
@@ -268,52 +268,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
             }
         }
 
-        [TestCase(false)]
-        [TestCase(true)]
-        public void GivenAProjectWithAModelAndOutput_WhenOpeningThisProjectAndClosingWithOrWithoutClearModelOutput_TheOutputFilesShouldNotBeRemoved(bool performClearModelOutput)
-        {
-            // Setup
-            using (var tempDirectory = new TemporaryDirectory())
-            using (DeltaShellApplication app = CreateRunningApplication(tempDirectory.Path))
-            using (WaterQualityModel model = CreateValidWaqModel())
-            {
-                model.SetWorkingDirectoryInModelSettings(() => app.WorkDirectory);
-                app.Project.RootFolder.Add(model);
-
-                // Run
-                IEnumerable<string> outputFilesAfterRun = RunModelAndGetOutputFiles(model);
-
-                const string savedProjectFileName = "SavedProject.dsproj";
-                string savedProjectPath = Path.Combine(tempDirectory.Path, savedProjectFileName);
-
-                // Save 
-                app.SaveProjectAs(savedProjectPath);
-                string outputFolderAfterSavePath = model.OutputFolder.FullPath;
-
-                Assert.AreEqual(outputFilesAfterRun, GetAllFileNames(outputFolderAfterSavePath));
-                
-                // Close
-                app.CloseProject();
-
-                // Open
-                app.OpenProject(savedProjectPath);
-
-                // Optionally, clear model output
-                if (performClearModelOutput)
-                {
-                    model.ClearOutput();
-                }
-
-                // Close
-                app.CloseProject();
-
-                string errorMessage = performClearModelOutput
-                                       ? "After opening, clear model output and closing a project, all output files that were saved in the project should still be there"
-                                       : "After opening and closing a project, all output files that were saved in the project should still be there";
-                Assert.AreEqual(outputFilesAfterRun, GetAllFileNames(outputFolderAfterSavePath), errorMessage);
-            }
-        }
-
         [Test]
         public void GivenAProjectWithAModel_WhenDoingVariousSubsequentActions_ThenOutputIsAlwaysPlacedCorrectly()
         {
@@ -354,7 +308,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
 
                     Assert.That(outputFolderAfterSaveAs1Path.Contains(saveAs1ProjectFileName),
                                 "After saving as after model run, output folder should be switched to correct location.");
-                    Assert.That(!outputFilesAfterRun.Except(outputFilesAfterSaveAs1).Any(), 
+                    Assert.That(!outputFilesAfterRun.Except(outputFilesAfterSaveAs1).Any(),
                                 "After saving as after model run, all output files that were in the working directory should be in the save directory.");
                     Assert.That(!outputFilesAfterSave1.Except(GetAllFileNames(outputFolderAfterSave1Path)).Any(),
                                 "After saving as after model run, all output files that were saved in the previous project should still be there.");
@@ -402,6 +356,52 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
                 {
                     app.CloseProject();
                 }
+            }
+        }
+
+        [TestCase(false)]
+        [TestCase(true)]
+        public void GivenAProjectWithAModelAndOutput_WhenOpeningThisProjectAndClosingWithOrWithoutClearModelOutput_TheOutputFilesShouldNotBeRemoved(bool performClearModelOutput)
+        {
+            // Setup
+            using (var tempDirectory = new TemporaryDirectory())
+            using (DeltaShellApplication app = CreateRunningApplication(tempDirectory.Path))
+            using (WaterQualityModel model = CreateValidWaqModel())
+            {
+                model.SetWorkingDirectoryInModelSettings(() => app.WorkDirectory);
+                app.Project.RootFolder.Add(model);
+
+                // Run
+                IEnumerable<string> outputFilesAfterRun = RunModelAndGetOutputFiles(model);
+
+                const string savedProjectFileName = "SavedProject.dsproj";
+                string savedProjectPath = Path.Combine(tempDirectory.Path, savedProjectFileName);
+
+                // Save 
+                app.SaveProjectAs(savedProjectPath);
+                string outputFolderAfterSavePath = model.OutputFolder.FullPath;
+
+                Assert.AreEqual(outputFilesAfterRun, GetAllFileNames(outputFolderAfterSavePath));
+
+                // Close
+                app.CloseProject();
+
+                // Open
+                app.OpenProject(savedProjectPath);
+
+                // Optionally, clear model output
+                if (performClearModelOutput)
+                {
+                    model.ClearOutput();
+                }
+
+                // Close
+                app.CloseProject();
+
+                string errorMessage = performClearModelOutput
+                                          ? "After opening, clear model output and closing a project, all output files that were saved in the project should still be there"
+                                          : "After opening and closing a project, all output files that were saved in the project should still be there";
+                Assert.AreEqual(outputFilesAfterRun, GetAllFileNames(outputFolderAfterSavePath), errorMessage);
             }
         }
 

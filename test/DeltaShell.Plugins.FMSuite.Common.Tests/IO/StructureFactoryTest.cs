@@ -27,6 +27,12 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
         private Dictionary<string, string> timeSeriesLookUpTable;
         private Dictionary<string, Dictionary<string, string>> propertyNameMap;
 
+        [SetUp]
+        public void Setup()
+        {
+            mocks = new MockRepository();
+        }
+
         [TestFixtureSetUp]
         public void SetupFixture()
         {
@@ -38,27 +44,22 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                 [KnownStructureProperties.GateOpeningWidth] = 8.0,
                 [KnownStructureProperties.GateLowerEdgeLevel] = 16.0,
                 [KnownStructureProperties.GateHeight] = 32.0,
-
-                [KnownGeneralStructureProperties.Upstream2Width.GetDescription()]    = 64.0,
-                [KnownGeneralStructureProperties.Upstream1Width.GetDescription()]  = 128.0,
+                [KnownGeneralStructureProperties.Upstream2Width.GetDescription()] = 64.0,
+                [KnownGeneralStructureProperties.Upstream1Width.GetDescription()] = 128.0,
                 [KnownGeneralStructureProperties.Downstream1Width.GetDescription()] = 256.0,
-                [KnownGeneralStructureProperties.Downstream2Width.GetDescription()]   = 512.0,
-
-                [KnownGeneralStructureProperties.Upstream2Level.GetDescription()]   = 1024.0,
-                [KnownGeneralStructureProperties.Upstream1Level.GetDescription()]  = 2048.0,
+                [KnownGeneralStructureProperties.Downstream2Width.GetDescription()] = 512.0,
+                [KnownGeneralStructureProperties.Upstream2Level.GetDescription()] = 1024.0,
+                [KnownGeneralStructureProperties.Upstream1Level.GetDescription()] = 2048.0,
                 [KnownGeneralStructureProperties.Downstream1Level.GetDescription()] = 4096.0,
-                [KnownGeneralStructureProperties.Downstream2Level.GetDescription()]  = 8192.0,
-
-                [KnownGeneralStructureProperties.PositiveFreeGateFlowCoefficient.GetDescription()]  = 16384.0,
+                [KnownGeneralStructureProperties.Downstream2Level.GetDescription()] = 8192.0,
+                [KnownGeneralStructureProperties.PositiveFreeGateFlowCoefficient.GetDescription()] = 16384.0,
                 [KnownGeneralStructureProperties.PositiveDrownGateFlowCoefficient.GetDescription()] = 32768.0,
-                [KnownGeneralStructureProperties.PositiveFreeWeirFlowCoefficient.GetDescription()]  = 65536.0,
+                [KnownGeneralStructureProperties.PositiveFreeWeirFlowCoefficient.GetDescription()] = 65536.0,
                 [KnownGeneralStructureProperties.PositiveDrownWeirFlowCoefficient.GetDescription()] = 131072.0,
-
-                [KnownGeneralStructureProperties.NegativeFreeGateFlowCoefficient.GetDescription()]  = 262144.0,
+                [KnownGeneralStructureProperties.NegativeFreeGateFlowCoefficient.GetDescription()] = 262144.0,
                 [KnownGeneralStructureProperties.NegativeDrownGateFlowCoefficient.GetDescription()] = 524288.0,
-                [KnownGeneralStructureProperties.NegativeFreeWeirFlowCoefficient.GetDescription()]  = 1048576.0,
+                [KnownGeneralStructureProperties.NegativeFreeWeirFlowCoefficient.GetDescription()] = 1048576.0,
                 [KnownGeneralStructureProperties.NegativeDrownWeirFlowCoefficient.GetDescription()] = 2097152.0,
-
                 [KnownGeneralStructureProperties.ExtraResistance.GetDescription()] = 41927.0,
             };
 
@@ -78,34 +79,27 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                 },
                 [StructureRegion.StructureTypeName.Gate] = new Dictionary<string, string>()
                 {
-                    [KnownStructureProperties.CrestLevel]         = KnownStructureProperties.CrestLevel,
-                    [KnownStructureProperties.CrestWidth]         = KnownStructureProperties.CrestWidth,
-                    [KnownStructureProperties.GateOpeningWidth]   = KnownStructureProperties.GateOpeningWidth,
+                    [KnownStructureProperties.CrestLevel] = KnownStructureProperties.CrestLevel,
+                    [KnownStructureProperties.CrestWidth] = KnownStructureProperties.CrestWidth,
+                    [KnownStructureProperties.GateOpeningWidth] = KnownStructureProperties.GateOpeningWidth,
                     [KnownStructureProperties.GateLowerEdgeLevel] = KnownStructureProperties.GateLowerEdgeLevel,
-                    [KnownStructureProperties.GateHeight]     = KnownStructureProperties.GateHeight,
-                    [KnownStructureProperties.GateOpeningHorizontalDirection] = 
+                    [KnownStructureProperties.GateHeight] = KnownStructureProperties.GateHeight,
+                    [KnownStructureProperties.GateOpeningHorizontalDirection] =
                         KnownStructureProperties.GateOpeningHorizontalDirection,
                 },
                 [StructureRegion.StructureTypeName.GeneralStructure] = new Dictionary<string, string>()
                 {
-
-                    [KnownStructureProperties.CrestLevel]         = KnownGeneralStructureProperties.CrestLevel.GetDescription(),
-                    [KnownStructureProperties.CrestWidth]         = KnownGeneralStructureProperties.CrestWidth.GetDescription(),
-                    [KnownStructureProperties.GateOpeningWidth]   = KnownGeneralStructureProperties.GateOpeningWidth.GetDescription(),
+                    [KnownStructureProperties.CrestLevel] = KnownGeneralStructureProperties.CrestLevel.GetDescription(),
+                    [KnownStructureProperties.CrestWidth] = KnownGeneralStructureProperties.CrestWidth.GetDescription(),
+                    [KnownStructureProperties.GateOpeningWidth] = KnownGeneralStructureProperties.GateOpeningWidth.GetDescription(),
                     [KnownStructureProperties.GateLowerEdgeLevel] = KnownGeneralStructureProperties.GateLowerEdgeLevel.GetDescription(),
-                    [KnownStructureProperties.GateHeight]     = KnownGeneralStructureProperties.GateHeight.GetDescription(),
+                    [KnownStructureProperties.GateHeight] = KnownGeneralStructureProperties.GateHeight.GetDescription(),
                     [KnownStructureProperties.GateOpeningHorizontalDirection] = KnownGeneralStructureProperties.GateOpeningHorizontalDirection.GetDescription(),
                 }
             };
 
             refDate = DateTime.MinValue;
             structuresPath = TestHelper.GetTestFilePath(@"structures/nonExistentFile_structures.ini");
-        }
-
-        [SetUp]
-        public void Setup()
-        {
-            mocks = new MockRepository();
         }
 
         [TearDown]
@@ -126,9 +120,9 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             structure.AddProperty(KnownStructureProperties.Y, typeof(double), "360");
             structure.AddProperty(KnownStructureProperties.Capacity, typeof(Steerable), "2");
 
-            var dummyPath = TestHelper.GetTestFilePath(@"structures/nonExistentFile_structures.ini");
+            string dummyPath = TestHelper.GetTestFilePath(@"structures/nonExistentFile_structures.ini");
 
-            var pump = StructureFactory.CreatePump(structure, dummyPath, new DateTime());
+            IPump pump = StructureFactory.CreatePump(structure, dummyPath, new DateTime());
             Assert.AreEqual("pump01", pump.Name);
             Assert.IsTrue(pump.CanBeTimedependent);
             Assert.IsNull(pump.LongName);
@@ -150,15 +144,20 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             structure.AddProperty(KnownStructureProperties.PolylineFile, typeof(string), "pump05.pli");
             structure.AddProperty(KnownStructureProperties.Capacity, typeof(Steerable), "pump05_capacity.tim");
 
-            var dummyPath = TestHelper.GetTestFilePath(@"structures/nonExistentFile_structures.ini");
+            string dummyPath = TestHelper.GetTestFilePath(@"structures/nonExistentFile_structures.ini");
 
-            var pump = StructureFactory.CreatePump(structure, dummyPath, new DateTime(2013, 1, 1));
+            IPump pump = StructureFactory.CreatePump(structure, dummyPath, new DateTime(2013, 1, 1));
             Assert.AreEqual("pump05", pump.Name);
             Assert.IsTrue(pump.CanBeTimedependent);
             Assert.IsNull(pump.LongName);
             Assert.IsNull(pump.Branch);
             Assert.IsNaN(pump.Chainage);
-            Assert.AreEqual(new LineString(new [] { new Coordinate(1, 2), new Coordinate(3, 4), new Coordinate(6, 7) }), pump.Geometry);
+            Assert.AreEqual(new LineString(new[]
+            {
+                new Coordinate(1, 2),
+                new Coordinate(3, 4),
+                new Coordinate(6, 7)
+            }), pump.Geometry);
 
             Assert.IsTrue(pump.UseCapacityTimeSeries);
             Assert.AreEqual(1.0, pump.Capacity);
@@ -182,7 +181,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
         public void GivenGeneralStructureAsStructure2D_WhenCreatingStructure_ThenTypeIsWeir()
         {
             var generalStructure = new Structure2D(StructureRegion.StructureTypeName.GeneralStructure);
-            var result = StructureFactory.CreateStructure(generalStructure, null, new DateTime());
+            IStructure1D result = StructureFactory.CreateStructure(generalStructure, null, new DateTime());
             Assert.IsTrue(result is IWeir);
         }
 
@@ -190,18 +189,18 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
         public void GivenGeneralStructureAsStructure2D_WhenCreatingStructure_ThenWeirFormulaIsAGeneralStructureWeirFormula()
         {
             var generalStructure = new Structure2D(StructureRegion.StructureTypeName.GeneralStructure);
-            var result = StructureFactory.CreateStructure(generalStructure, null, new DateTime());
+            IStructure1D result = StructureFactory.CreateStructure(generalStructure, null, new DateTime());
             Assert.IsTrue(result is IWeir);
 
             var weir = (Weir) result;
-            Assert.That(weir.WeirFormula is GeneralStructureWeirFormula); 
+            Assert.That(weir.WeirFormula is GeneralStructureWeirFormula);
         }
 
         [Test]
         public void GivenGeneralStructureAsStructure2DWithKnownPropertyUnequalToZero_WhenCreatingStructure_ThenWeirAdaptsProperty()
         {
-            var knownProperties = Enum.GetValues(typeof(KnownGeneralStructureProperties));
-            foreach (var knownProperty in knownProperties)
+            Array knownProperties = Enum.GetValues(typeof(KnownGeneralStructureProperties));
+            foreach (object knownProperty in knownProperties)
             {
                 var property = (KnownGeneralStructureProperties) knownProperty;
 
@@ -217,16 +216,16 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                 {
                     continue;
                 }
-                else 
+                else
                 {
                     generalStructure.AddProperty(property.GetDescription(), typeof(double), "12.34");
                 }
-                
-                var resultingStructure = StructureFactory.CreateStructure(generalStructure, null, new DateTime());
+
+                IStructure1D resultingStructure = StructureFactory.CreateStructure(generalStructure, null, new DateTime());
                 var weir = resultingStructure as Weir;
                 Assert.NotNull(weir);
-            
-                var weirFormulaValueDictionary = ConstructWeirFormulaValueDictionary(weir);
+
+                Dictionary<KnownGeneralStructureProperties, object> weirFormulaValueDictionary = ConstructWeirFormulaValueDictionary(weir);
                 Assert.That(weirFormulaValueDictionary[property], Is.EqualTo(12.34), property.GetDescription());
             }
         }
@@ -237,7 +236,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             var generalStructure = new Structure2D(StructureRegion.StructureTypeName.GeneralStructure);
             generalStructure.AddProperty(KnownGeneralStructureProperties.ExtraResistance.GetDescription(), typeof(double), "0.0");
 
-            var resultingStructure = StructureFactory.CreateStructure(generalStructure, null, new DateTime());
+            IStructure1D resultingStructure = StructureFactory.CreateStructure(generalStructure, null, new DateTime());
             var weir = resultingStructure as Weir;
             Assert.NotNull(weir);
 
@@ -255,14 +254,14 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             {
                 {KnownGeneralStructureProperties.Upstream2Width, weirFormula.WidthLeftSideOfStructure},
                 {KnownGeneralStructureProperties.Upstream1Width, weirFormula.WidthStructureLeftSide},
-                {KnownGeneralStructureProperties.CrestWidth, weirFormula.WidthStructureCentre },
+                {KnownGeneralStructureProperties.CrestWidth, weirFormula.WidthStructureCentre},
                 {KnownGeneralStructureProperties.Downstream1Width, weirFormula.WidthStructureRightSide},
                 {KnownGeneralStructureProperties.Downstream2Width, weirFormula.WidthRightSideOfStructure},
                 {KnownGeneralStructureProperties.Upstream2Level, weirFormula.BedLevelLeftSideOfStructure},
-                {KnownGeneralStructureProperties.Upstream1Level, weirFormula.BedLevelLeftSideStructure },
-                {KnownGeneralStructureProperties.CrestLevel, weirFormula.BedLevelStructureCentre },
-                {KnownGeneralStructureProperties.Downstream1Level, weirFormula.BedLevelRightSideStructure },
-                {KnownGeneralStructureProperties.Downstream2Level, weirFormula.BedLevelRightSideOfStructure },
+                {KnownGeneralStructureProperties.Upstream1Level, weirFormula.BedLevelLeftSideStructure},
+                {KnownGeneralStructureProperties.CrestLevel, weirFormula.BedLevelStructureCentre},
+                {KnownGeneralStructureProperties.Downstream1Level, weirFormula.BedLevelRightSideStructure},
+                {KnownGeneralStructureProperties.Downstream2Level, weirFormula.BedLevelRightSideOfStructure},
                 {KnownGeneralStructureProperties.GateHeight, weirFormula.DoorHeight},
                 {KnownGeneralStructureProperties.PositiveFreeGateFlowCoefficient, weirFormula.PositiveFreeGateFlow},
                 {KnownGeneralStructureProperties.PositiveDrownGateFlowCoefficient, weirFormula.PositiveDrownedGateFlow},
@@ -303,9 +302,9 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             structure.AddProperty(KnownStructureProperties.CrestLevel, typeof(Steerable), "2");
             structure.AddProperty(KnownStructureProperties.LateralContractionCoefficient, typeof(double), "0.7");
 
-            var dummyPath = TestHelper.GetTestFilePath(@"structures/nonExistentFile_structures.ini");
+            string dummyPath = TestHelper.GetTestFilePath(@"structures/nonExistentFile_structures.ini");
 
-            var weir = StructureFactory.CreateWeir(structure, dummyPath, new DateTime());
+            IWeir weir = StructureFactory.CreateWeir(structure, dummyPath, new DateTime());
             Assert.AreEqual("Weir_down", weir.Name);
             Assert.IsTrue(weir.CanBeTimedependent);
             Assert.IsNull(weir.LongName);
@@ -321,7 +320,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             Assert.AreEqual(0.7, simpleWeirFormula.LateralContraction);
         }
 
-
         [Test]
         public void CreateWeirWithCrestLevelTimeSeries()
         {
@@ -331,12 +329,12 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             structure.AddProperty(KnownStructureProperties.X, typeof(double), "680");
             structure.AddProperty(KnownStructureProperties.Y, typeof(double), "360");
             structure.AddProperty(KnownStructureProperties.CrestLevel, typeof(Steerable), "weir_CrestLevel.tim");
-            structure.AddProperty(KnownStructureProperties.CrestWidth, typeof (double), "23.5");
+            structure.AddProperty(KnownStructureProperties.CrestWidth, typeof(double), "23.5");
             structure.AddProperty(KnownStructureProperties.LateralContractionCoefficient, typeof(double), "0.7");
 
-            var dummyPath = TestHelper.GetTestFilePath(@"structures/nonExistentFile_structures.ini");
+            string dummyPath = TestHelper.GetTestFilePath(@"structures/nonExistentFile_structures.ini");
 
-            var weir = StructureFactory.CreateWeir(structure, dummyPath, new DateTime(2013, 1, 1));
+            IWeir weir = StructureFactory.CreateWeir(structure, dummyPath, new DateTime(2013, 1, 1));
             Assert.AreEqual("Weir_moving", weir.Name);
             Assert.IsTrue(weir.CanBeTimedependent);
             Assert.IsNull(weir.LongName);
@@ -349,34 +347,35 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             Assert.AreEqual(5.6, weir.CrestLevelTimeSeries[new DateTime(2013, 1, 1, 0, 0, 0)]);
             Assert.AreEqual(11.12, weir.CrestLevelTimeSeries[new DateTime(2013, 1, 1, 1, 2, 0)]);
             Assert.IsInstanceOf<SimpleWeirFormula>(weir.WeirFormula);
-            var simpleWeirFormula = (SimpleWeirFormula)weir.WeirFormula;
+            var simpleWeirFormula = (SimpleWeirFormula) weir.WeirFormula;
             Assert.AreEqual(0.7, simpleWeirFormula.LateralContraction);
         }
 
         #endregion
+
         #region Gate
 
         [Test]
         public void CreateGateWithConstantPropertiesTest()
         {
-            var schema = new StructureSchemaCsvFile().ReadStructureSchema(StructureSchemaCsvFileTest.ApplicationStructuresSchemaCsvFilePath);
-            var openingDirectionDefinition = schema.GetDefinition("gate", KnownGeneralStructureProperties.GateOpeningHorizontalDirection.GetDescription());
-            
+            StructureSchema<ModelPropertyDefinition> schema = new StructureSchemaCsvFile().ReadStructureSchema(StructureSchemaCsvFileTest.ApplicationStructuresSchemaCsvFilePath);
+            ModelPropertyDefinition openingDirectionDefinition = schema.GetDefinition("gate", KnownGeneralStructureProperties.GateOpeningHorizontalDirection.GetDescription());
+
             var structure = new Structure2D("gate");
             structure.AddProperty(KnownStructureProperties.Type, typeof(string), "gate");
             structure.AddProperty(KnownStructureProperties.Name, typeof(string), "Gate01");
             structure.AddProperty(KnownStructureProperties.X, typeof(double), "500");
             structure.AddProperty(KnownStructureProperties.Y, typeof(double), "360");
             structure.AddProperty(KnownStructureProperties.CrestLevel, typeof(Steerable), "2");
-            structure.AddProperty(KnownStructureProperties.CrestWidth,typeof(double),"55.7");
+            structure.AddProperty(KnownStructureProperties.CrestWidth, typeof(double), "55.7");
             structure.AddProperty(KnownStructureProperties.GateOpeningWidth, typeof(Steerable), "1");
             structure.AddProperty(KnownStructureProperties.GateLowerEdgeLevel, typeof(Steerable), "2.8");
             structure.AddProperty(KnownStructureProperties.GateHeight, typeof(double), "10");
             structure.AddProperty(KnownStructureProperties.GateOpeningHorizontalDirection, openingDirectionDefinition.DataType, "from_right");
 
-            var dummyPath = TestHelper.GetTestFilePath(@"structures/nonExistentFile_structures.ini");
+            string dummyPath = TestHelper.GetTestFilePath(@"structures/nonExistentFile_structures.ini");
 
-            var gate = StructureFactory.CreateGate(structure, dummyPath, new DateTime());
+            IWeir gate = StructureFactory.CreateGate(structure, dummyPath, new DateTime());
             var gateWeirFormula = gate.WeirFormula as IGatedWeirFormula;
 
             Assert.NotNull(gateWeirFormula);
@@ -402,10 +401,10 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
         [Category(TestCategory.DataAccess)]
         public void CreateGateWithTimeSeriesTest()
         {
-            var schema =
+            StructureSchema<ModelPropertyDefinition> schema =
                 new StructureSchemaCsvFile().ReadStructureSchema(
                     StructureSchemaCsvFileTest.ApplicationStructuresSchemaCsvFilePath);
-            var openingDirectionDefinition = schema.GetDefinition("gate", KnownGeneralStructureProperties.GateOpeningHorizontalDirection.GetDescription());
+            ModelPropertyDefinition openingDirectionDefinition = schema.GetDefinition("gate", KnownGeneralStructureProperties.GateOpeningHorizontalDirection.GetDescription());
 
             var structure = new Structure2D("gate");
             structure.AddProperty(KnownStructureProperties.Type, typeof(string), "gate");
@@ -421,9 +420,9 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             structure.AddProperty(KnownStructureProperties.GateOpeningHorizontalDirection,
                                   openingDirectionDefinition.DataType, "from_right");
 
-            var dummyPath = TestHelper.GetTestFilePath(@"structures/nonExistentFile_structures.ini");
+            string dummyPath = TestHelper.GetTestFilePath(@"structures/nonExistentFile_structures.ini");
 
-            var gate = StructureFactory.CreateGate(structure, dummyPath, new DateTime(2013, 1, 1));
+            IWeir gate = StructureFactory.CreateGate(structure, dummyPath, new DateTime(2013, 1, 1));
             var gateWeirFormula = gate.WeirFormula as IGatedWeirFormula;
 
             Assert.NotNull(gateWeirFormula);
@@ -431,7 +430,12 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             Assert.IsNull(gate.LongName);
             Assert.IsNull(gate.Branch);
             Assert.IsNaN(gate.Chainage);
-            Assert.AreEqual(new LineString(new[] {new Coordinate(1, 2), new Coordinate(3, 4), new Coordinate(6, 7)}),
+            Assert.AreEqual(new LineString(new[]
+                            {
+                                new Coordinate(1, 2),
+                                new Coordinate(3, 4),
+                                new Coordinate(6, 7)
+                            }),
                             gate.Geometry);
             Assert.IsTrue(gate.UseCrestLevelTimeSeries);
             Assert.AreEqual(2, gate.CrestLevelTimeSeries.Time.Values.Count);
@@ -457,6 +461,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
         #endregion Gate
 
         #region CreateStructureWeir
+
         /// <summary>
         /// GIVEN a simple weir Structure2D
         /// WHEN CreateStructure is called
@@ -468,10 +473,10 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
         public void GivenASimpleWeirStructure2D_WhenCreateStructureIsCalled_ThenTheCorrespondingSimpleWeirIsReturned(bool isConstCrestLevel)
         {
             // Given
-            var simpleWeirPrecursor = ComposeSimpleWeir(isConstCrestLevel);
+            Structure2D simpleWeirPrecursor = ComposeSimpleWeir(isConstCrestLevel);
 
             // When
-            var result = StructureFactory.CreateStructure(simpleWeirPrecursor, structuresPath, refDate);
+            IStructure1D result = StructureFactory.CreateStructure(simpleWeirPrecursor, structuresPath, refDate);
 
             // Then
             VerifySimpleWeir(result, isConstCrestLevel);
@@ -483,25 +488,25 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
         /// THEN the corresponding gated weir is returned
         /// </summary>
         [TestCase(false, false, false)]
-        [TestCase(true,  false, false)]
-        [TestCase(false, true,  false)]
-        [TestCase(true,  true,  false)]
+        [TestCase(true, false, false)]
+        [TestCase(false, true, false)]
+        [TestCase(true, true, false)]
         [TestCase(false, false, true)]
-        [TestCase(true,  false, true)]
-        [TestCase(false, true,  true)]
-        [TestCase(true,  true,  true)]
+        [TestCase(true, false, true)]
+        [TestCase(false, true, true)]
+        [TestCase(true, true, true)]
         [Category(TestCategory.DataAccess)]
-        public void GivenAGatedWeirStructure2D_WhenCreateStructureIsCalled_ThenTheCorrespondingGatedWeirIsReturned(bool isConstCrestLevel, 
+        public void GivenAGatedWeirStructure2D_WhenCreateStructureIsCalled_ThenTheCorrespondingGatedWeirIsReturned(bool isConstCrestLevel,
                                                                                                                    bool isConstLowerEdgeLevel,
                                                                                                                    bool isConstHorizontalOpeningWidth)
         {
             // Given
-            var gatedWeirPrecursor = ComposeGatedWeir(isConstCrestLevel,
-                                                      isConstLowerEdgeLevel, 
-                                                      isConstHorizontalOpeningWidth);
+            Structure2D gatedWeirPrecursor = ComposeGatedWeir(isConstCrestLevel,
+                                                              isConstLowerEdgeLevel,
+                                                              isConstHorizontalOpeningWidth);
 
             // When
-            var result = StructureFactory.CreateStructure(gatedWeirPrecursor, structuresPath, refDate);
+            IStructure1D result = StructureFactory.CreateStructure(gatedWeirPrecursor, structuresPath, refDate);
 
             // Then
             VerifyGatedWeir(result, isConstCrestLevel, isConstLowerEdgeLevel, isConstHorizontalOpeningWidth);
@@ -541,36 +546,38 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
         /// THEN the corresponding general structure is returned
         /// </summary>
         [TestCase(false, false, false)]
-        [TestCase(true,  false, false)]
-        [TestCase(false, true,  false)]
-        [TestCase(true,  true,  false)]
+        [TestCase(true, false, false)]
+        [TestCase(false, true, false)]
+        [TestCase(true, true, false)]
         [TestCase(false, false, true)]
-        [TestCase(true,  false, true)]
-        [TestCase(false, true,  true)]
-        [TestCase(true,  true,  true)]
+        [TestCase(true, false, true)]
+        [TestCase(false, true, true)]
+        [TestCase(true, true, true)]
         [Category(TestCategory.DataAccess)]
         public void GivenAGeneralStructureStructure2D_WhenCreateStructureIsCalled_ThenTheCorrespondingGeneralStructureIsReturned(bool isConstCrestLevel,
                                                                                                                                  bool isConstLowerEdgeLevel,
                                                                                                                                  bool isConstHorizontalOpeningWidth)
         {
             // Given
-            var generalStructurePrecursor = ComposeGeneralStructure(isConstCrestLevel,
-                                                                    isConstLowerEdgeLevel,
-                                                                    isConstHorizontalOpeningWidth);
+            Structure2D generalStructurePrecursor = ComposeGeneralStructure(isConstCrestLevel,
+                                                                            isConstLowerEdgeLevel,
+                                                                            isConstHorizontalOpeningWidth);
 
             // When
-            var result = StructureFactory.CreateStructure(generalStructurePrecursor, structuresPath, refDate);
+            IStructure1D result = StructureFactory.CreateStructure(generalStructurePrecursor, structuresPath, refDate);
 
             // Then
             VerifyGeneralStructure(result, isConstCrestLevel, isConstLowerEdgeLevel, isConstHorizontalOpeningWidth);
         }
+
         #endregion
 
         #region CreateStructure
+
         private Structure2D ComposeSimpleWeir(bool isConstCrestLevel)
         {
             const string t = StructureRegion.StructureTypeName.Weir;
-            var result = ComposeCommon(t, isConstCrestLevel);
+            Structure2D result = ComposeCommon(t, isConstCrestLevel);
 
             // SimpleWeir specific
             const string contractionCoefficientProperty = KnownStructureProperties.LateralContractionCoefficient;
@@ -587,7 +594,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                                              bool isConstHorizontalOpeningWidth)
         {
             const string t = StructureRegion.StructureTypeName.Gate;
-            var result = ComposeCommon(t, isConstCrestLevel);
+            Structure2D result = ComposeCommon(t, isConstCrestLevel);
             AddGatedProperties(result, t, isConstLowerEdgeLevel, isConstHorizontalOpeningWidth);
 
             return result;
@@ -598,7 +605,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                                                     bool isConstHorizontalOpeningWidth)
         {
             const string t = StructureRegion.StructureTypeName.GeneralStructure;
-            var result = ComposeCommon(t, isConstCrestLevel);
+            Structure2D result = ComposeCommon(t, isConstCrestLevel);
             AddGatedProperties(result, t, isConstLowerEdgeLevel, isConstHorizontalOpeningWidth);
 
             // GeneralStructure specific
@@ -608,26 +615,22 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                 KnownGeneralStructureProperties.Upstream1Width.GetDescription(),
                 KnownGeneralStructureProperties.Downstream1Width.GetDescription(),
                 KnownGeneralStructureProperties.Downstream2Width.GetDescription(),
-
                 KnownGeneralStructureProperties.Upstream2Level.GetDescription(),
                 KnownGeneralStructureProperties.Upstream1Level.GetDescription(),
                 KnownGeneralStructureProperties.Downstream1Level.GetDescription(),
                 KnownGeneralStructureProperties.Downstream2Level.GetDescription(),
-
                 KnownGeneralStructureProperties.PositiveFreeGateFlowCoefficient.GetDescription(),
                 KnownGeneralStructureProperties.PositiveDrownGateFlowCoefficient.GetDescription(),
                 KnownGeneralStructureProperties.PositiveFreeWeirFlowCoefficient.GetDescription(),
                 KnownGeneralStructureProperties.PositiveDrownWeirFlowCoefficient.GetDescription(),
-
                 KnownGeneralStructureProperties.NegativeFreeGateFlowCoefficient.GetDescription(),
                 KnownGeneralStructureProperties.NegativeDrownGateFlowCoefficient.GetDescription(),
                 KnownGeneralStructureProperties.NegativeFreeWeirFlowCoefficient.GetDescription(),
                 KnownGeneralStructureProperties.NegativeDrownWeirFlowCoefficient.GetDescription(),
-
                 KnownGeneralStructureProperties.ExtraResistance.GetDescription(),
             };
 
-            foreach (var generalStructureProperty in generalStructureProperties)
+            foreach (string generalStructureProperty in generalStructureProperties)
             {
                 result.AddProperty(generalStructureProperty, typeof(double), constValLookUpTable[generalStructureProperty].ToString());
             }
@@ -647,16 +650,17 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             result.AddProperty(KnownStructureProperties.Y, typeof(double), "360");
 
             // Crest level
-            var crestLevelProperty =
+            string crestLevelProperty =
                 propertyNameMap[structureType][KnownStructureProperties.CrestLevel];
-            var crestLevelValue =
-                isConstCrestLevel ? constValLookUpTable[KnownStructureProperties.CrestLevel].ToString()
+            string crestLevelValue =
+                isConstCrestLevel
+                    ? constValLookUpTable[KnownStructureProperties.CrestLevel].ToString()
                     : timeSeriesLookUpTable[KnownStructureProperties.CrestLevel];
 
             result.AddProperty(crestLevelProperty, typeof(Steerable), crestLevelValue);
 
             // Crest width
-            var crestWidthProperty =
+            string crestWidthProperty =
                 propertyNameMap[structureType][KnownStructureProperties.CrestWidth];
             var crestWidthValue = constValLookUpTable[KnownStructureProperties.CrestWidth].ToString();
 
@@ -671,9 +675,9 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                                         bool isConstHorizontalOpeningWidth)
         {
             // LowerEdgeLevel
-            var lowerEdgeLevelProperty =
+            string lowerEdgeLevelProperty =
                 propertyNameMap[structureType][KnownStructureProperties.GateLowerEdgeLevel];
-            var lowerEdgeLevelValue =
+            string lowerEdgeLevelValue =
                 isConstLowerEdgeLevel
                     ? constValLookUpTable[KnownStructureProperties.GateLowerEdgeLevel].ToString()
                     : timeSeriesLookUpTable[KnownStructureProperties.GateLowerEdgeLevel];
@@ -681,9 +685,9 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             result.AddProperty(lowerEdgeLevelProperty, typeof(Steerable), lowerEdgeLevelValue);
 
             // Horizontal door opening width
-            var horizontalDoorOpeningWidthProperty =
+            string horizontalDoorOpeningWidthProperty =
                 propertyNameMap[structureType][KnownStructureProperties.GateOpeningWidth];
-            var horizontalDoorOpeningWidthValue =
+            string horizontalDoorOpeningWidthValue =
                 isConstHorizontalOpeningWidth
                     ? constValLookUpTable[KnownStructureProperties.GateOpeningWidth].ToString()
                     : timeSeriesLookUpTable[KnownStructureProperties.GateOpeningWidth];
@@ -693,21 +697,22 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                                horizontalDoorOpeningWidthValue);
 
             // Opening direction
-            var schema = new StructureSchemaCsvFile().ReadStructureSchema(StructureSchemaCsvFileTest.ApplicationStructuresSchemaCsvFilePath);
-            var openingDirectionDefinition = schema.GetDefinition(structureType, KnownGeneralStructureProperties.GateOpeningHorizontalDirection.GetDescription());
+            StructureSchema<ModelPropertyDefinition> schema = new StructureSchemaCsvFile().ReadStructureSchema(StructureSchemaCsvFileTest.ApplicationStructuresSchemaCsvFilePath);
+            ModelPropertyDefinition openingDirectionDefinition = schema.GetDefinition(structureType, KnownGeneralStructureProperties.GateOpeningHorizontalDirection.GetDescription());
             result.AddProperty(KnownStructureProperties.GateOpeningHorizontalDirection, openingDirectionDefinition.DataType, "symmetric");
 
             // door height
-            var gateDoorHeightProperty =
+            string gateDoorHeightProperty =
                 propertyNameMap[structureType][KnownStructureProperties.GateHeight];
             var gateDoorHeightValue =
                 constValLookUpTable[KnownStructureProperties.GateHeight].ToString();
             result.AddProperty(gateDoorHeightProperty, typeof(double), gateDoorHeightValue);
         }
+
         #endregion
 
-
         #region VerifyStructure
+
         private void VerifySimpleWeir(IStructure1D structure, bool isConstCrestLevel)
         {
             var weir = structure as Weir2D;
@@ -730,7 +735,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
 
             VerifyCommon(weir, isConstCrestLevel);
             VerifyGated(weir, isConstLowerEdgeLevel, isConstHorizontalOpeningWidth);
-
         }
 
         private void VerifyGeneralStructure(IStructure1D structure,
@@ -747,26 +751,29 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             var generalStructureFormula = weir.WeirFormula as GeneralStructureWeirFormula;
             Assert.That(generalStructureFormula, Is.Not.Null, "Expected the weir formula to be a general structure:");
 
-            Assert.That(generalStructureFormula.WidthLeftSideOfStructure,  Is.EqualTo(constValLookUpTable[KnownGeneralStructureProperties.Upstream2Width.GetDescription()]    ));
-            Assert.That(generalStructureFormula.WidthStructureLeftSide,    Is.EqualTo(constValLookUpTable[KnownGeneralStructureProperties.Upstream1Width.GetDescription()]  ));
-            Assert.That(generalStructureFormula.WidthStructureRightSide,   Is.EqualTo(constValLookUpTable[KnownGeneralStructureProperties.Downstream1Width.GetDescription()] ));
-            Assert.That(generalStructureFormula.WidthRightSideOfStructure, Is.EqualTo(constValLookUpTable[KnownGeneralStructureProperties.Downstream2Width.GetDescription()]   ));
+            Assert.That(generalStructureFormula.WidthLeftSideOfStructure, Is.EqualTo(constValLookUpTable[KnownGeneralStructureProperties.Upstream2Width.GetDescription()]));
+            Assert.That(generalStructureFormula.WidthStructureLeftSide, Is.EqualTo(constValLookUpTable[KnownGeneralStructureProperties.Upstream1Width.GetDescription()]));
+            Assert.That(generalStructureFormula.WidthStructureRightSide, Is.EqualTo(constValLookUpTable[KnownGeneralStructureProperties.Downstream1Width.GetDescription()]));
+            Assert.That(generalStructureFormula.WidthRightSideOfStructure, Is.EqualTo(constValLookUpTable[KnownGeneralStructureProperties.Downstream2Width.GetDescription()]));
 
-            Assert.That(generalStructureFormula.BedLevelLeftSideOfStructure,  Is.EqualTo(constValLookUpTable[KnownGeneralStructureProperties.Upstream2Level.GetDescription()]   ));
-            Assert.That(generalStructureFormula.BedLevelLeftSideStructure,    Is.EqualTo(constValLookUpTable[KnownGeneralStructureProperties.Upstream1Level.GetDescription()]  ));
-            Assert.That(generalStructureFormula.BedLevelRightSideStructure,   Is.EqualTo(constValLookUpTable[KnownGeneralStructureProperties.Downstream1Level.GetDescription()] ));
-            Assert.That(generalStructureFormula.BedLevelRightSideOfStructure, Is.EqualTo(constValLookUpTable[KnownGeneralStructureProperties.Downstream2Level.GetDescription()]  ));
+            Assert.That(generalStructureFormula.BedLevelLeftSideOfStructure, Is.EqualTo(constValLookUpTable[KnownGeneralStructureProperties.Upstream2Level.GetDescription()]));
+            Assert.That(generalStructureFormula.BedLevelLeftSideStructure, Is.EqualTo(constValLookUpTable[KnownGeneralStructureProperties.Upstream1Level.GetDescription()]));
+            Assert.That(generalStructureFormula.BedLevelRightSideStructure, Is.EqualTo(constValLookUpTable[KnownGeneralStructureProperties.Downstream1Level.GetDescription()]));
+            Assert.That(generalStructureFormula.BedLevelRightSideOfStructure, Is.EqualTo(constValLookUpTable[KnownGeneralStructureProperties.Downstream2Level.GetDescription()]));
 
-            Assert.That(generalStructureFormula.PositiveFreeGateFlow,    Is.EqualTo(constValLookUpTable[KnownGeneralStructureProperties.PositiveFreeGateFlowCoefficient.GetDescription()]   ));
-            Assert.That(generalStructureFormula.PositiveDrownedGateFlow, Is.EqualTo(constValLookUpTable[KnownGeneralStructureProperties.PositiveDrownGateFlowCoefficient.GetDescription()]  ));
+            Assert.That(generalStructureFormula.PositiveFreeGateFlow, Is.EqualTo(constValLookUpTable[KnownGeneralStructureProperties.PositiveFreeGateFlowCoefficient.GetDescription()]));
+            Assert.That(generalStructureFormula.PositiveDrownedGateFlow, Is.EqualTo(constValLookUpTable[KnownGeneralStructureProperties.PositiveDrownGateFlowCoefficient.GetDescription()]));
             if (constValLookUpTable.ContainsKey(KnownGeneralStructureProperties.PositiveFreeWeirFlowCoefficient.GetDescription()))
-                Assert.That(generalStructureFormula.PositiveFreeWeirFlow,    Is.EqualTo(constValLookUpTable[KnownGeneralStructureProperties.PositiveFreeWeirFlowCoefficient.GetDescription()]   ));
-            Assert.That(generalStructureFormula.PositiveDrownedWeirFlow, Is.EqualTo(constValLookUpTable[KnownGeneralStructureProperties.PositiveDrownWeirFlowCoefficient.GetDescription()]  ));
+            {
+                Assert.That(generalStructureFormula.PositiveFreeWeirFlow, Is.EqualTo(constValLookUpTable[KnownGeneralStructureProperties.PositiveFreeWeirFlowCoefficient.GetDescription()]));
+            }
 
-            Assert.That(generalStructureFormula.NegativeFreeGateFlow,    Is.EqualTo(constValLookUpTable[KnownGeneralStructureProperties.NegativeFreeGateFlowCoefficient.GetDescription()]   ));
-            Assert.That(generalStructureFormula.NegativeDrownedGateFlow, Is.EqualTo(constValLookUpTable[KnownGeneralStructureProperties.NegativeDrownGateFlowCoefficient.GetDescription()]  ));
-            Assert.That(generalStructureFormula.NegativeFreeWeirFlow,    Is.EqualTo(constValLookUpTable[KnownGeneralStructureProperties.NegativeFreeWeirFlowCoefficient.GetDescription()]   ));
-            Assert.That(generalStructureFormula.NegativeDrownedWeirFlow, Is.EqualTo(constValLookUpTable[KnownGeneralStructureProperties.NegativeDrownWeirFlowCoefficient.GetDescription()]  ));
+            Assert.That(generalStructureFormula.PositiveDrownedWeirFlow, Is.EqualTo(constValLookUpTable[KnownGeneralStructureProperties.PositiveDrownWeirFlowCoefficient.GetDescription()]));
+
+            Assert.That(generalStructureFormula.NegativeFreeGateFlow, Is.EqualTo(constValLookUpTable[KnownGeneralStructureProperties.NegativeFreeGateFlowCoefficient.GetDescription()]));
+            Assert.That(generalStructureFormula.NegativeDrownedGateFlow, Is.EqualTo(constValLookUpTable[KnownGeneralStructureProperties.NegativeDrownGateFlowCoefficient.GetDescription()]));
+            Assert.That(generalStructureFormula.NegativeFreeWeirFlow, Is.EqualTo(constValLookUpTable[KnownGeneralStructureProperties.NegativeFreeWeirFlowCoefficient.GetDescription()]));
+            Assert.That(generalStructureFormula.NegativeDrownedWeirFlow, Is.EqualTo(constValLookUpTable[KnownGeneralStructureProperties.NegativeDrownWeirFlowCoefficient.GetDescription()]));
 
             Assert.That(generalStructureFormula.ExtraResistance, Is.EqualTo(constValLookUpTable[KnownGeneralStructureProperties.ExtraResistance.GetDescription()]));
         }
@@ -832,28 +839,33 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             Assert.That(isActive, Is.True, $"Expected use {timeSeriesName} to be true.");
             Assert.That(timeSeries, Is.Not.Null, $"Expected {timeSeriesName} to not be null:");
 
-            Assert.That(timeSeries.Arguments.Count,  Is.EqualTo(1), $"Expected a single argument in the {timeSeriesName}");
+            Assert.That(timeSeries.Arguments.Count, Is.EqualTo(1), $"Expected a single argument in the {timeSeriesName}");
             Assert.That(timeSeries.Components.Count, Is.EqualTo(1), $"Expected a single component in the {timeSeriesName}");
 
             var reader = new TimFile();
-            var refTimeSeries = HydroTimeSeriesFactory.CreateTimeSeries("argument", "component", "unit");
+            TimeSeries refTimeSeries = HydroTimeSeriesFactory.CreateTimeSeries("argument", "component", "unit");
 
             reader.Read(TestHelper.GetTestFilePath($"structures/{timeSeriesLookUpTable[timeSeriesName]}"), refTimeSeries, refDate);
 
-            var argumentValues = timeSeries.Arguments[0];
+            IVariable argumentValues = timeSeries.Arguments[0];
 
             Assert.That(argumentValues, Is.Not.Null, "Expected argument values not to be null:");
             Assert.That(argumentValues.Values.Count, Is.EqualTo(refTimeSeries.Arguments[0].Values.Count), "Expected the number of argument values to be different:");
             for (var i = 0; i < argumentValues.Values.Count; i++)
+            {
                 Assert.That(argumentValues.Values[i], Is.EqualTo(refTimeSeries.Arguments[0].Values[i]), $"Expected argument {i} of the {timeSeriesName} to be different:");
+            }
 
-            var componentValues = timeSeries.Components[0];
+            IVariable componentValues = timeSeries.Components[0];
 
             Assert.That(componentValues, Is.Not.Null, "Expected argument values not to be null:");
             Assert.That(componentValues.Values.Count, Is.EqualTo(refTimeSeries.Components[0].Values.Count), "Expected the number of argument values to be different:");
             for (var i = 0; i < componentValues.Values.Count; i++)
+            {
                 Assert.That(componentValues.Values[i], Is.EqualTo(refTimeSeries.Components[0].Values[i]), $"Expected components {i} of the {timeSeriesName} to be different:");
+            }
         }
+
         #endregion
     }
 }

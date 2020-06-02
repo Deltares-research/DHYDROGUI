@@ -15,13 +15,13 @@ namespace DelftTools.Hydro.Tests
             var currentItem = mock.DynamicMock<INameable>();
 
             currentItem.Expect(c => c.Name).Return(null).Repeat.Once();
-            
+
             var importedItem = mock.DynamicMock<INameable>();
             importedItem.Expect(c => c.Name).Return(null).Repeat.Once();
 
             mock.ReplayAll();
 
-            var shouldReplace = new NameableFeatureComparer<INameable>().Equals(currentItem, importedItem);
+            bool shouldReplace = new NameableFeatureComparer<INameable>().Equals(currentItem, importedItem);
             Assert.IsTrue(shouldReplace);
         }
 
@@ -37,7 +37,7 @@ namespace DelftTools.Hydro.Tests
 
             mock.ReplayAll();
 
-            var shouldReplace = new NameableFeatureComparer<INameable>().Equals(currentItem, importedItem);
+            bool shouldReplace = new NameableFeatureComparer<INameable>().Equals(currentItem, importedItem);
             Assert.IsTrue(shouldReplace);
         }
 
@@ -53,7 +53,7 @@ namespace DelftTools.Hydro.Tests
 
             mock.ReplayAll();
 
-            var shouldReplace = new NameableFeatureComparer<INameable>().Equals(currentItem, importedItem);
+            bool shouldReplace = new NameableFeatureComparer<INameable>().Equals(currentItem, importedItem);
             Assert.IsFalse(shouldReplace);
         }
 
@@ -64,16 +64,15 @@ namespace DelftTools.Hydro.Tests
 
             mock.ReplayAll();
 
-            var shouldReplace = new NameableFeatureComparer<INameable>().Equals(null, importedItem);
+            bool shouldReplace = new NameableFeatureComparer<INameable>().Equals(null, importedItem);
             Assert.IsFalse(shouldReplace);
         }
 
         [Test]
         public void NotReplaceWhileTwoFeaturesAreNullTest()
         {
-            var shouldReplace = new NameableFeatureComparer<INameable>().Equals(null, null);
+            bool shouldReplace = new NameableFeatureComparer<INameable>().Equals(null, null);
             Assert.IsTrue(shouldReplace);
         }
-
     }
 }

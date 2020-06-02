@@ -25,6 +25,67 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
     [TestFixture]
     public class PlizFileImporterExporterTest
     {
+        #region Import BridgePillars
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        [Category(TestCategory.Slow)]
+        public void Test_PliFileImporterExporter_ImportBridgePillars()
+        {
+            string importPath = TestHelper.GetTestFilePath(@"BridgePillarsImport\bridge-1.pliz");
+            importPath = TestHelper.CreateLocalCopy(importPath);
+            Assert.IsTrue(File.Exists(importPath));
+
+            using (var app = new DeltaShellApplication {IsProjectCreatedInTemporaryDirectory = true})
+            {
+                //We need to initialize the application as the PlizFile requires to have the custom delegate
+                //methods for the bridge pillars in the Importer/Exporter.
+
+                app.Plugins.Add(new SharpMapGisApplicationPlugin());
+                app.Plugins.Add(new NetworkEditorApplicationPlugin());
+                app.Plugins.Add(new FlowFMApplicationPlugin());
+                app.Plugins.Add(new CommonToolsApplicationPlugin());
+                app.Plugins.Add(new NHibernateDaoApplicationPlugin());
+                app.Run();
+
+                //Setup new model and pillars.
+                var model = new WaterFlowFMModel();
+                app.Project.RootFolder.Add(model);
+
+                var importer =
+                    app.FileImporters.First(fi => fi is PlizFileImporterExporter<BridgePillar, BridgePillar>) as
+                        PlizFileImporterExporter<BridgePillar, BridgePillar>;
+
+                importer.ImportItem(importPath, model.Area.BridgePillars);
+                Assert.IsNotNull(model.Area.BridgePillars);
+                //check content
+                BridgePillar bp = model.Area.BridgePillars.First();
+                Assert.IsNotNull(bp);
+
+                var diameterList = new List<double>
+                {
+                    555,
+                    555,
+                    555,
+                    555
+                };
+                var coeffList = new List<double>
+                {
+                    323,
+                    323,
+                    323,
+                    323
+                };
+
+                /* Check contents of the Bridge Pillar */
+                ModelFeatureCoordinateData<BridgePillar> loadedBpDataModel = model.BridgePillarsDataModel[0];
+
+                Assert.AreEqual(diameterList, loadedBpDataModel.DataColumns[0].ValueList);
+                Assert.AreEqual(coeffList, loadedBpDataModel.DataColumns[1].ValueList);
+            }
+        }
+
+        #endregion
 
         #region Basic properties tests
 
@@ -40,7 +101,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         public void Test_PlizFileImporterExporter_Category()
         {
             var expectedText = "Feature geometries";
-            var plizIE = GetImporterExporter<BridgePillar>();
+            PlizFileImporterExporter<BridgePillar, BridgePillar> plizIE = GetImporterExporter<BridgePillar>();
             Assert.AreEqual(expectedText, plizIE.Category);
         }
 
@@ -48,21 +109,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         public void Test_PlizFileImporterExporter_FileFilter()
         {
             var expectedText = "Feature polyline-z files (*.pliz)|*.pliz";
-            var plizIE = GetImporterExporter<BridgePillar>();
+            PlizFileImporterExporter<BridgePillar, BridgePillar> plizIE = GetImporterExporter<BridgePillar>();
             Assert.AreEqual(expectedText, plizIE.FileFilter);
         }
 
         [Test]
         public void Test_PlizFileImporterExporter_Image()
         {
-            var plizIE = GetImporterExporter<BridgePillar>();
+            PlizFileImporterExporter<BridgePillar, BridgePillar> plizIE = GetImporterExporter<BridgePillar>();
             Assert.IsNotNull(plizIE);
         }
 
         [Test]
         public void Test_PlizFileImporterExporter_SourceTypes()
         {
-            var plizIE = GetImporterExporter<BridgePillar>();
+            PlizFileImporterExporter<BridgePillar, BridgePillar> plizIE = GetImporterExporter<BridgePillar>();
             Assert.IsTrue(plizIE.SourceTypes().Contains(typeof(BridgePillar)));
             Assert.IsTrue(plizIE.SourceTypes().Contains(typeof(IList<BridgePillar>)));
         }
@@ -70,7 +131,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [Test]
         public void Test_PlizFileImporterExporter_SupportedItemTypes()
         {
-            var plizIE = GetImporterExporter<BridgePillar>();
+            PlizFileImporterExporter<BridgePillar, BridgePillar> plizIE = GetImporterExporter<BridgePillar>();
             Assert.IsTrue(plizIE.SupportedItemTypes.Contains(typeof(IList<BridgePillar>)));
         }
 
@@ -81,16 +142,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [Test]
         public void Test_PlizFileImporterExporter_Export_PathNull_Returns_False()
         {
-            var plizIE = GetImporterExporter<BridgePillar>();
+            PlizFileImporterExporter<BridgePillar, BridgePillar> plizIE = GetImporterExporter<BridgePillar>();
             Assert.IsFalse(plizIE.Export(null, null));
         }
 
         [Test]
         public void Test_PlizFileImporterExporter_Export_PathNull_ButhPathsDefined_Exports()
         {
-            var plizIE = GetImporterExporter<BridgePillar>();
+            PlizFileImporterExporter<BridgePillar, BridgePillar> plizIE = GetImporterExporter<BridgePillar>();
             var testfilePliz = "testFile.pliz";
-            plizIE.Files = new[] {testfilePliz};
+            plizIE.Files = new[]
+            {
+                testfilePliz
+            };
             Assert.IsTrue(plizIE.Files.Contains(testfilePliz));
 
             var pillar = new BridgePillar()
@@ -105,7 +169,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                         new Coordinate(260.0, 0.0, 3.0)
                     }),
             };
-            
+
             //Checking the content of the file is an integration test done later on.
             Assert.IsTrue(plizIE.Export(pillar, null));
         }
@@ -113,9 +177,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [Test]
         public void Test_PlizFileImporterExporter_Export_ObjectList_Exports()
         {
-            var plizIE = GetImporterExporter<BridgePillar>();
+            PlizFileImporterExporter<BridgePillar, BridgePillar> plizIE = GetImporterExporter<BridgePillar>();
             var testfilePliz = "testFile.pliz";
-            plizIE.Files = new[] {testfilePliz};
+            plizIE.Files = new[]
+            {
+                testfilePliz
+            };
             Assert.IsTrue(plizIE.Files.Contains(testfilePliz));
 
             var pillar = new BridgePillar()
@@ -144,7 +211,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [Category(TestCategory.Slow)]
         public void Test_PlizFileImporterExporter_ExportBridgePillar()
         {
-            var exportPath = TestHelper.GetTestFilePath("bridgePillars\\testBridgePillars.pliz");
+            string exportPath = TestHelper.GetTestFilePath("bridgePillars\\testBridgePillars.pliz");
             FileUtils.DeleteIfExists(exportPath);
 
             using (var app = new DeltaShellApplication() {IsProjectCreatedInTemporaryDirectory = true})
@@ -181,22 +248,33 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
                 //Set the BridgePillars values.
                 /* Set data model */
-                var modelFeatureCoordinateDatas = model.BridgePillarsDataModel;
+                IList<ModelFeatureCoordinateData<BridgePillar>> modelFeatureCoordinateDatas = model.BridgePillarsDataModel;
                 modelFeatureCoordinateDatas.Clear();
 
-                var modelFeatureCoordinateData = new ModelFeatureCoordinateData<BridgePillar>() { Feature = pillar };
+                var modelFeatureCoordinateData = new ModelFeatureCoordinateData<BridgePillar>() {Feature = pillar};
                 modelFeatureCoordinateData.UpdateDataColumns();
                 //Diameters
-                modelFeatureCoordinateData.DataColumns[0].ValueList = new List<double> { 1.0, 2.5, 5.0, 10.0 };
+                modelFeatureCoordinateData.DataColumns[0].ValueList = new List<double>
+                {
+                    1.0,
+                    2.5,
+                    5.0,
+                    10.0
+                };
                 //DragCoefficient
-                modelFeatureCoordinateData.DataColumns[1].ValueList = new List<double> { 10.0, 5.0, 2.5, 1.0 };
+                modelFeatureCoordinateData.DataColumns[1].ValueList = new List<double>
+                {
+                    10.0,
+                    5.0,
+                    2.5,
+                    1.0
+                };
 
                 modelFeatureCoordinateDatas.Add(modelFeatureCoordinateData);
                 MduFile.SetBridgePillarAttributes(model.Area.BridgePillars, modelFeatureCoordinateDatas);
                 /* Done only for testing purposes. 
                  * Please do not attempt to do this without the supervision of another adult. */
                 TypeUtils.SetPrivatePropertyValue(model, "BridgePillarsDataModel", modelFeatureCoordinateDatas);
-
 
                 //Export BridgePillars to PLIZ file.
                 var exporter = app.FileExporters.First(fi => fi is PlizFileImporterExporter<BridgePillar, BridgePillar>) as PlizFileImporterExporter<BridgePillar, BridgePillar>;
@@ -208,7 +286,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 //The reason why we check the hardcoded lines it's because we are not meant to test the import on this test.
                 //Thus we just check exactly what we expect.
                 Assert.IsTrue(File.Exists(exportPath));
-                var textLines = File.ReadLines(exportPath);
+                IEnumerable<string> textLines = File.ReadLines(exportPath);
                 var expectedLines = new List<string>()
                 {
                     "BridgePillarTest",
@@ -220,13 +298,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 };
 
                 var idx = 0;
-                foreach (var textLine in textLines)
+                foreach (string textLine in textLines)
                 {
-                    var expectedLine = expectedLines[idx];
+                    string expectedLine = expectedLines[idx];
                     Assert.AreEqual(expectedLine, textLine);
                     idx++;
                 }
             }
+
             FileUtils.DeleteIfExists(exportPath);
         }
 
@@ -235,10 +314,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [Category(TestCategory.Slow)]
         public void Test_PlizFileImporterExporter_ExportListOfBridgePillars()
         {
-            var exportPath = TestHelper.GetTestFilePath("bridgePillars\\testBridgePillars.pliz");
+            string exportPath = TestHelper.GetTestFilePath("bridgePillars\\testBridgePillars.pliz");
             FileUtils.DeleteIfExists(exportPath);
 
-            using (var app = new DeltaShellApplication() { IsProjectCreatedInTemporaryDirectory = true })
+            using (var app = new DeltaShellApplication() {IsProjectCreatedInTemporaryDirectory = true})
             {
                 //We need to initialize the application as the PlizFile requires to have the custom delegate
                 //methods for the bridgepillars in the Importer/Exporter.
@@ -286,22 +365,46 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
                 /*Set values to the Bridge Pillar data model*/
                 //Set the BridgePillars values.
-                var modelFeatureCoordinateDatas = model.BridgePillarsDataModel;
+                IList<ModelFeatureCoordinateData<BridgePillar>> modelFeatureCoordinateDatas = model.BridgePillarsDataModel;
                 modelFeatureCoordinateDatas.Clear();
 
-                var mfPillar1 = new ModelFeatureCoordinateData<BridgePillar>() { Feature = pillar1 };
+                var mfPillar1 = new ModelFeatureCoordinateData<BridgePillar>() {Feature = pillar1};
                 mfPillar1.UpdateDataColumns();
                 //Diameters
-                mfPillar1.DataColumns[0].ValueList = new List<double> { 1.0, 2.5, 5.0, 10.0 };
+                mfPillar1.DataColumns[0].ValueList = new List<double>
+                {
+                    1.0,
+                    2.5,
+                    5.0,
+                    10.0
+                };
                 //DragCoefficient
-                mfPillar1.DataColumns[1].ValueList = new List<double> { 10.0, 5.0, 2.5, 1.0 };
+                mfPillar1.DataColumns[1].ValueList = new List<double>
+                {
+                    10.0,
+                    5.0,
+                    2.5,
+                    1.0
+                };
 
-                var mfPillar2= new ModelFeatureCoordinateData<BridgePillar>() { Feature = pillar2 };
+                var mfPillar2 = new ModelFeatureCoordinateData<BridgePillar>() {Feature = pillar2};
                 mfPillar2.UpdateDataColumns();
                 //Diameters
-                mfPillar2.DataColumns[0].ValueList = new List<double> { 0, 25, 50, 100 };
+                mfPillar2.DataColumns[0].ValueList = new List<double>
+                {
+                    0,
+                    25,
+                    50,
+                    100
+                };
                 //DragCoefficient
-                mfPillar2.DataColumns[1].ValueList = new List<double> { 1.0, 50, 25, 10 };
+                mfPillar2.DataColumns[1].ValueList = new List<double>
+                {
+                    1.0,
+                    50,
+                    25,
+                    10
+                };
 
                 modelFeatureCoordinateDatas.Add(mfPillar1);
                 modelFeatureCoordinateDatas.Add(mfPillar2);
@@ -321,7 +424,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 //The reason why we check the hardcoded lines it's because we are not meant to test the import on this test.
                 //Thus we just check exactly what we expect.
                 Assert.IsTrue(File.Exists(exportPath));
-                var textLines = File.ReadLines(exportPath);
+                IEnumerable<string> textLines = File.ReadLines(exportPath);
                 var expectedLines = new List<string>()
                 {
                     "BridgePillarTest",
@@ -339,9 +442,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 };
 
                 var idx = 0;
-                foreach (var textLine in textLines)
+                foreach (string textLine in textLines)
                 {
-                    var expectedLine = expectedLines[idx];
+                    string expectedLine = expectedLines[idx];
                     Assert.AreEqual(expectedLine, textLine);
                     idx++;
                 }
@@ -350,56 +453,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             FileUtils.DeleteIfExists(exportPath);
         }
 
-        #endregion
-
-        #region Import BridgePillars
-
-        [Test]
-        [Category(TestCategory.DataAccess)]
-        [Category(TestCategory.Slow)]
-        public void Test_PliFileImporterExporter_ImportBridgePillars()
-        {
-            var importPath = TestHelper.GetTestFilePath(@"BridgePillarsImport\bridge-1.pliz");
-            importPath = TestHelper.CreateLocalCopy(importPath);
-            Assert.IsTrue(File.Exists(importPath));
-
-            using (var app = new DeltaShellApplication {IsProjectCreatedInTemporaryDirectory = true})
-            {
-                //We need to initialize the application as the PlizFile requires to have the custom delegate
-                //methods for the bridge pillars in the Importer/Exporter.
-
-                app.Plugins.Add(new SharpMapGisApplicationPlugin());
-                app.Plugins.Add(new NetworkEditorApplicationPlugin());
-                app.Plugins.Add(new FlowFMApplicationPlugin());
-                app.Plugins.Add(new CommonToolsApplicationPlugin());
-                app.Plugins.Add(new NHibernateDaoApplicationPlugin());
-                app.Run();
-
-                //Setup new model and pillars.
-                var model = new WaterFlowFMModel();
-                app.Project.RootFolder.Add(model);
-
-                var importer =
-                    app.FileImporters.First(fi => fi is PlizFileImporterExporter<BridgePillar, BridgePillar>) as
-                        PlizFileImporterExporter<BridgePillar, BridgePillar>;
-
-                importer.ImportItem(importPath, model.Area.BridgePillars);
-                Assert.IsNotNull(model.Area.BridgePillars);
-                //check content
-                var bp = model.Area.BridgePillars.First();
-                Assert.IsNotNull(bp);
-
-                var diameterList = new List<double> { 555, 555, 555, 555 };
-                var coeffList = new List<double> { 323, 323, 323, 323 };
-
-                /* Check contents of the Bridge Pillar */
-                var loadedBpDataModel = model.BridgePillarsDataModel[0];
-                
-                Assert.AreEqual(diameterList, loadedBpDataModel.DataColumns[0].ValueList);
-                Assert.AreEqual(coeffList, loadedBpDataModel.DataColumns[1].ValueList);
-            }
-        }
-        
         #endregion
     }
 }

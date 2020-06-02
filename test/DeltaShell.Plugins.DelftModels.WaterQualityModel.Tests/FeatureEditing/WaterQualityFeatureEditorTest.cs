@@ -7,6 +7,8 @@ using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using Rhino.Mocks;
+using SharpMap.Api.Editors;
+using SharpMap.Api.Layers;
 using SharpMap.Editors.Interactors;
 using SharpMap.Layers;
 
@@ -31,17 +33,17 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.FeatureEditing
         {
             // setup
             var model = new WaterQualityModel();
-            var loadLayer = new WaterQualityModelMapLayerProvider().CreateLayer(model.Loads, model);
+            ILayer loadLayer = new WaterQualityModelMapLayerProvider().CreateLayer(model.Loads, model);
             var editor = new WaterQualityFeatureEditor();
 
             var geometry = new Point(1.2, 3.4, 0.0); // Simulates map-clicked point
 
             // call
-            var loadFeature = editor.AddNewFeatureByGeometry(loadLayer, geometry);
+            IFeature loadFeature = editor.AddNewFeatureByGeometry(loadLayer, geometry);
 
             // assert
             Assert.IsInstanceOf<WaterQualityLoad>(loadFeature);
-            var load = (WaterQualityLoad)loadFeature;
+            var load = (WaterQualityLoad) loadFeature;
             Assert.AreEqual(geometry.X, load.X);
             Assert.AreEqual(geometry.Y, load.Y);
             Assert.IsNaN(load.Z);
@@ -54,24 +56,24 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.FeatureEditing
         {
             // setup
             var model = new WaterQualityModel();
-            var observationPointLayer = new WaterQualityModelMapLayerProvider().CreateLayer(model.ObservationPoints, model);
+            ILayer observationPointLayer = new WaterQualityModelMapLayerProvider().CreateLayer(model.ObservationPoints, model);
             var editor = new WaterQualityFeatureEditor();
 
             var geometry = new Point(1.2, 3.4, 0.0); // Simulates map-clicked point
 
             // call
-            var observationPointFeature = editor.AddNewFeatureByGeometry(observationPointLayer, geometry);
+            IFeature observationPointFeature = editor.AddNewFeatureByGeometry(observationPointLayer, geometry);
 
             // assert
             Assert.IsInstanceOf<WaterQualityObservationPoint>(observationPointFeature);
-            var observationPoint = (WaterQualityObservationPoint)observationPointFeature;
+            var observationPoint = (WaterQualityObservationPoint) observationPointFeature;
             Assert.AreEqual(geometry.X, observationPoint.X);
             Assert.AreEqual(geometry.Y, observationPoint.Y);
             Assert.IsNaN(observationPoint.Z);
             Assert.AreEqual(string.Empty, observationPoint.Name);
             Assert.AreEqual(ObservationPointType.SinglePoint, observationPoint.ObservationPointType);
         }
-        
+
         [Test]
         public void TestCreateInteractorForPointGeometryVectorLayer()
         {
@@ -83,21 +85,22 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.FeatureEditing
             var coordinate = mocks.Stub<Coordinate>();
             var geometry = mocks.Stub<IPoint>();
             geometry.Stub(g => g.Coordinate).Return(coordinate);
-            geometry.Stub(g => g.Coordinates).Return(new[] { coordinate });
+            geometry.Stub(g => g.Coordinates).Return(new[]
+            {
+                coordinate
+            });
             featureStub.Geometry = geometry;
             mocks.ReplayAll();
 
             var editor = new WaterQualityFeatureEditor();
 
             // call
-            var interactor = editor.CreateInteractor(layerStub, featureStub);
+            IFeatureInteractor interactor = editor.CreateInteractor(layerStub, featureStub);
 
             // assert
             Assert.IsInstanceOf<FeaturePointInteractor>(interactor);
             Assert.AreSame(layerStub, interactor.Layer);
             Assert.AreSame(featureStub, interactor.SourceFeature);
         }
-        
-        
     }
 }

@@ -13,8 +13,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         public void AddSedimentPropertyTest()
         {
             var category = new DelftIniCategory("category");
-            category.AddSedimentProperty(SedimentFile.Name.Key,"MyValue","","");
-            var addedProperty = category.Properties.FirstOrDefault();
+            category.AddSedimentProperty(SedimentFile.Name.Key, "MyValue", "", "");
+            DelftIniProperty addedProperty = category.Properties.FirstOrDefault();
             Assert.IsNotNull(addedProperty);
             Assert.That(addedProperty.Value, Is.Not.StringContaining("#")); // Don't automatically add hashes, responsibility of caller!
             Assert.AreEqual("MyValue", addedProperty.Value);

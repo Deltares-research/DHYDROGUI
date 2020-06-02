@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.Windows.Forms;
 using DelftTools.TestUtils;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
@@ -20,12 +21,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             {
                 foreach (FlowBoundaryQuantityType qt in Enum.GetValues(typeof(FlowBoundaryQuantityType)))
                 {
-                    var symbol = BoundaryDataMapSymbols.GetSymbol(qt, forcing);
+                    Bitmap symbol = BoundaryDataMapSymbols.GetSymbol(qt, forcing);
                     var pb = new PictureBox {Image = symbol};
                     flowPanel.Controls.Add(pb);
                 }
             }
+
             WindowsFormsTestHelper.ShowModal(flowPanel);
-        } 
+        }
     }
 }

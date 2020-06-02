@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.Functions;
+using DelftTools.Functions.Generic;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
@@ -68,17 +69,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [Test]
         public void GivenAnMduWithMorphologyFileWithUnknownProperties_WhenReadingAndWriting_ThenTheCorrectPropertiesAreCreatedAndCorrectlyWrittenToTheFile()
         {
-            #region Load 
+            #region Load
 
             // Given
-            var mduFilePath = TestHelper.GetTestFilePath(@"sedmor\FlowFMCustomProperties\FlowFMCustomPropertiesSedMor.mdu");
+            string mduFilePath = TestHelper.GetTestFilePath(@"sedmor\FlowFMCustomProperties\FlowFMCustomPropertiesSedMor.mdu");
 
             // When
             var importedModel = new WaterFlowFMModel(mduFilePath);
 
             // Then
             Assert.NotNull(importedModel, "Model was not imported.");
-            var modelDefinition = importedModel.ModelDefinition;
+            WaterFlowFMModelDefinition modelDefinition = importedModel.ModelDefinition;
             ValidateAllUnknownProperties(modelDefinition);
 
             #endregion
@@ -129,9 +130,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             IEventedList<WaterFlowFMProperty> properties = modelDefinition.Properties;
             List<WaterFlowFMProperty> propertiesMorphologyCategory =
                 properties.Where(p => p.PropertyDefinition.Category.Equals(MorphologyFile.Header)
-                                   && p.PropertyDefinition.UnknownPropertySource.Equals(PropertySource.MorphologyFile))
+                                      && p.PropertyDefinition.UnknownPropertySource.Equals(PropertySource.MorphologyFile))
                           .ToList();
-
 
             Assert.AreEqual(0, propertiesMorphologyCategory.Count);
         }
@@ -158,45 +158,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             AssertMessageContainsWarningForEachUnknownProperty(logMessages[0]);
         }
 
-        private static void ValidateAllUnknownProperties(WaterFlowFMModelDefinition modelDefinition)
-        {
-            IEventedList<WaterFlowFMProperty> properties = modelDefinition.Properties;
-
-            List<WaterFlowFMProperty> propertiesMorphologyCategory = 
-                properties.Where(p => p.PropertyDefinition.Category.Equals(MorphologyFile.Header)
-                                   && p.PropertyDefinition.UnknownPropertySource.Equals(PropertySource.MorphologyFile))
-                          .ToList();
-
-            Assert.AreEqual(4, propertiesMorphologyCategory.Count);
-            ValidatePropertiesCategory(propertiesMorphologyCategory, MorphologyFile.Header, KnownProperties.morphology);
-
-            const string customCategoryName = "CustomCategory";
-            List<WaterFlowFMProperty> propertiesUnknownCategory = 
-                properties.Where(p => p.PropertyDefinition.FileCategoryName.Equals(customCategoryName)).ToList();
-            ValidatePropertiesCategory(propertiesUnknownCategory, customCategoryName, customCategoryName);
-        }
-
-        private static void ValidatePropertiesCategory(List<WaterFlowFMProperty> properties, 
-                                                       string categoryName,
-                                                       string fileCategoryName)
-        {
-            Assert.IsTrue(properties.All(p => p.PropertyDefinition.UnknownPropertySource.Equals(PropertySource.MorphologyFile)));
-            Assert.IsTrue(properties.All(p => p.PropertyDefinition.FileCategoryName.Equals(fileCategoryName)));
-            Assert.IsTrue(properties.All(p => p.PropertyDefinition.Category.Equals(categoryName)));
-
-            ValidateProperty(properties, "CustomStringProp", "\"777\"");
-            ValidateProperty(properties, "CustomBoolProp", "1");
-            ValidateProperty(properties, "CustomDoubleProp", "7.77");
-            ValidateProperty(properties, "CustomIntProp", "777");
-        }
-
-        private static void ValidateProperty(List<WaterFlowFMProperty> properties, string propertyName, string propertyValue)
-        {
-            var customStringProperty = properties.FirstOrDefault(p => p.PropertyDefinition.FilePropertyName.Equals(propertyName));
-            Assert.NotNull(customStringProperty);
-            Assert.AreEqual(propertyValue, customStringProperty.Value);
-        }
-
         [Test]
         public void GivenAModelDefinitionWithTwoUnknownPropertiesAndOneUnknownCategory_WhenWriting_ThenExpectedLinesAreWrittenToFile()
         {
@@ -209,7 +170,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 const string value1 = "123";
                 const string value2 = "456";
 
-                WaterFlowFMModelDefinition modelDefinition = 
+                WaterFlowFMModelDefinition modelDefinition =
                     CreateModelDefinitionWithCustomCategoryAndProperties(customPropertyName, customCategoryName, value1, value2);
 
                 // When
@@ -233,10 +194,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 // Create the actual .mor file.
                 var modelDefinitionWrite = new WaterFlowFMModelDefinition();
 
-                string fileContent = "[Morphology]"  + Environment.NewLine + 
-                                     "NeuBcSand = 1" + Environment.NewLine + 
-                                     "NeuBcMud  = 1" + Environment.NewLine + 
-                                     "EqmBc = 1"     + Environment.NewLine;
+                string fileContent = "[Morphology]" + Environment.NewLine +
+                                     "NeuBcSand = 1" + Environment.NewLine +
+                                     "NeuBcMud  = 1" + Environment.NewLine +
+                                     "EqmBc = 1" + Environment.NewLine;
 
                 string morFilePath = Path.Combine(tempDir.Path, "morfile.mor");
                 File.WriteAllText(morFilePath, fileContent);
@@ -249,7 +210,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 modelDefinitionRead.GetModelProperty(KnownProperties.MorFile).Value = morFilePath;
 
                 // When
-                List<string> logMessages = 
+                List<string> logMessages =
                     TestHelper.GetAllRenderedMessages(() => MorphologyFile.Read(mduFilePath, modelDefinitionRead),
                                                       Level.Warn)
                               .ToList();
@@ -274,43 +235,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             }
         }
 
-        private static WaterFlowFMProperty CreateProperty(string name, string value)
-        {
-            WaterFlowFMPropertyDefinition propertyDefinition = 
-                WaterFlowFMPropertyDefinitionCreator.CreateForCustomProperty(
-                    KnownProperties.morphology,
-                    name,
-                    "",
-                    PropertySource.MorphologyFile);
-
-            return new WaterFlowFMProperty(propertyDefinition, value);
-        } 
-
-        private static WaterFlowFMModelDefinition CreateModelDefinitionWithCustomCategoryAndProperties(string customPropertyName, string customCategoryName, string value1, string value2)
-        {
-            var modelDefinition = new WaterFlowFMModelDefinition();
-
-            WaterFlowFMPropertyDefinition propertyDefinitionMorphologyCategory =
-                WaterFlowFMPropertyDefinitionCreator.CreateForCustomProperty(KnownProperties.morphology,
-                                                                              customPropertyName,
-                                                                              "",
-                                                                              PropertySource.MorphologyFile);
-
-            WaterFlowFMPropertyDefinition propertyDefinitionCustomCategory =
-                WaterFlowFMPropertyDefinitionCreator.CreateForCustomProperty(customCategoryName,
-                                                                              customPropertyName,
-                                                                              "",
-                                                                              PropertySource.MorphologyFile);
-
-            var customPropertyMorphologyCategory = new WaterFlowFMProperty(propertyDefinitionMorphologyCategory, value1);
-            var customPropertyCustomCategory = new WaterFlowFMProperty(propertyDefinitionCustomCategory, value2);
-
-            modelDefinition.AddProperty(customPropertyMorphologyCategory);
-            modelDefinition.AddProperty(customPropertyCustomCategory);
-
-            return modelDefinition;
-        }
-
         [Test]
         public void SaveMorWithBoundaryConditionsFile()
         {
@@ -326,37 +250,40 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                     Geometry = new LineString(Enumerable.Range(0, 10).Select(i => new Coordinate(0, 10.0 * i)).ToArray())
                 };
 
-                modelDefinition.Boundaries.AddRange(new[] { boundary });
+                modelDefinition.Boundaries.AddRange(new[]
+                {
+                    boundary
+                });
                 modelDefinition.BoundaryConditionSets.AddRange(new[]
                 {
                     new BoundaryConditionSet {Feature = boundary}
                 });
 
                 var morbc1 = new FlowBoundaryCondition(FlowBoundaryQuantityType.MorphologyBedLevelPrescribed,
-                                                       BoundaryConditionDataType.TimeSeries)
-                {
-                    Feature = modelDefinition.Boundaries[0]
-                };
+                                                       BoundaryConditionDataType.TimeSeries) {Feature = modelDefinition.Boundaries[0]};
 
-                var startTime = (DateTime)modelDefinition.GetModelProperty(GuiProperties.StartTime).Value;
-                var stopTime = (DateTime)modelDefinition.GetModelProperty(GuiProperties.StopTime).Value;
+                var startTime = (DateTime) modelDefinition.GetModelProperty(GuiProperties.StartTime).Value;
+                var stopTime = (DateTime) modelDefinition.GetModelProperty(GuiProperties.StopTime).Value;
 
                 morbc1.AddPoint(0);
-                var data = morbc1.GetDataAtPoint(0);
+                IFunction data = morbc1.GetDataAtPoint(0);
                 FillTimeSeries(data, i => 0.75 * Math.Sin(0.6 * Math.PI * i), startTime, stopTime, 7);
 
-                modelDefinition.BoundaryConditionSets[0].BoundaryConditions.AddRange(new[] { morbc1 });
+                modelDefinition.BoundaryConditionSets[0].BoundaryConditions.AddRange(new[]
+                {
+                    morbc1
+                });
 
                 WaterFlowFMPropertyDefinition def =
                     WaterFlowFMPropertyDefinitionCreator.CreateForCustomProperty(KnownProperties.morphology,
-                                                                                  "myprop",
-                                                                                  string.Empty);
+                                                                                 "myprop",
+                                                                                 string.Empty);
                 var prop = new WaterFlowFMProperty(def, "801");
                 modelDefinition.AddProperty(prop);
 
                 MorphologyFile.Save(morFile, modelDefinition);
 
-                var morWritten = File.ReadAllText(morFile);
+                string morWritten = File.ReadAllText(morFile);
                 Assert.That(morWritten, Is.StringContaining("[" + MorphologyFile.GeneralHeader + "]"));
                 Assert.That(morWritten, Is.StringContaining("[" + MorphologyFile.Header + "]"));
                 Assert.That(morWritten, Is.StringContaining("myprop"));
@@ -368,7 +295,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 Assert.That(morWritten, Is.StringContaining(MorphologyFile.BoundaryName));
                 Assert.That(morWritten, Is.StringContaining(boundary.Name));
                 Assert.That(morWritten, Is.StringContaining(MorphologyFile.BoundaryBedCondition));
-                Assert.That(morWritten, Is.StringContaining("= " + (int)BoundaryConditionQuantityTypeConverter.ConvertFlowBoundaryConditionQuantityTypeToMorphologyBoundaryConditionQuantityType(FlowBoundaryQuantityType.MorphologyBedLevelPrescribed)));
+                Assert.That(morWritten, Is.StringContaining("= " + (int) BoundaryConditionQuantityTypeConverter.ConvertFlowBoundaryConditionQuantityTypeToMorphologyBoundaryConditionQuantityType(FlowBoundaryQuantityType.MorphologyBedLevelPrescribed)));
             }
             finally
             {
@@ -391,26 +318,31 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                     Geometry = new LineString(
                         Enumerable.Range(0, 10).Select(i => new Coordinate(0, 10.0 * i)).ToArray())
                 };
-                modelDefinition.Boundaries.AddRange(new[] {boundary});
+                modelDefinition.Boundaries.AddRange(new[]
+                {
+                    boundary
+                });
                 modelDefinition.BoundaryConditionSets.AddRange(new[]
                 {
                     new BoundaryConditionSet {Feature = boundary}
                 });
 
                 var morbc1 = new FlowBoundaryCondition(FlowBoundaryQuantityType.MorphologyBedLevelPrescribed,
-                        BoundaryConditionDataType.TimeSeries)
-                    {Feature = modelDefinition.Boundaries[0]};
+                                                       BoundaryConditionDataType.TimeSeries) {Feature = modelDefinition.Boundaries[0]};
                 var startTime = (DateTime) modelDefinition.GetModelProperty(GuiProperties.StartTime).Value;
                 var stopTime = (DateTime) modelDefinition.GetModelProperty(GuiProperties.StopTime).Value;
 
                 morbc1.AddPoint(0);
-                var data = morbc1.GetDataAtPoint(0);
+                IFunction data = morbc1.GetDataAtPoint(0);
                 FillTimeSeries(data, i => 0.75 * Math.Sin(0.6 * Math.PI * i), startTime, stopTime, 7);
 
-                modelDefinition.BoundaryConditionSets[0].BoundaryConditions.AddRange(new[] {morbc1});
+                modelDefinition.BoundaryConditionSets[0].BoundaryConditions.AddRange(new[]
+                {
+                    morbc1
+                });
 
-                var def = WaterFlowFMPropertyDefinitionCreator.CreateForCustomProperty(KnownProperties.morphology,
-                                                                                        "myprop", string.Empty);
+                WaterFlowFMPropertyDefinition def = WaterFlowFMPropertyDefinitionCreator.CreateForCustomProperty(KnownProperties.morphology,
+                                                                                                                 "myprop", string.Empty);
                 var prop = new WaterFlowFMProperty(def, "801");
                 modelDefinition.AddProperty(prop);
 
@@ -423,25 +355,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
                 /* Write bcm file seperately, is not responsibility of MorphologyFile */
                 var bcmFile = new BcmFile();
-                var bcmFileName = Path.Combine(Path.GetDirectoryName(morFile), modelDefinition.ModelName + BcmFile.Extension);
+                string bcmFileName = Path.Combine(Path.GetDirectoryName(morFile), modelDefinition.ModelName + BcmFile.Extension);
                 bcmFile.Write(modelDefinition.BoundaryConditionSets, bcmFileName, new BcmFileFlowBoundaryDataBuilder());
 
                 var newDefinition = new WaterFlowFMModelDefinition();
                 newDefinition.GetModelProperty(KnownProperties.MorFile).Value = morFile;
                 newDefinition.GetModelProperty(KnownProperties.SedimentModelNumber).SetValueAsString("4");
                 MorphologyFile.Read(morFile, newDefinition);
-                var readBoundaryConditionSet = newDefinition.BoundaryConditionSets.FirstOrDefault();
+                BoundaryConditionSet readBoundaryConditionSet = newDefinition.BoundaryConditionSets.FirstOrDefault();
                 Assert.IsNotNull(readBoundaryConditionSet);
                 Assert.That(boundary.Name, Is.EqualTo(readBoundaryConditionSet.Feature.Name));
                 var readMorbc = readBoundaryConditionSet.BoundaryConditions.FirstOrDefault() as FlowBoundaryCondition;
                 Assert.IsNotNull(readMorbc);
                 Assert.That(morbc1.FlowQuantity, Is.EqualTo(readMorbc.FlowQuantity));
                 Assert.That(morbc1.DataType, Is.EqualTo(readMorbc.DataType));
-                var readData = readMorbc.GetDataAtPoint(0);
-                var valuesBefore = data.Components[0].GetValues<double>();
-                var valuesRead = readData.Components[0].GetValues<double>();
+                IFunction readData = readMorbc.GetDataAtPoint(0);
+                IMultiDimensionalArray<double> valuesBefore = data.Components[0].GetValues<double>();
+                IMultiDimensionalArray<double> valuesRead = readData.Components[0].GetValues<double>();
                 Assert.That(valuesBefore.Count, Is.EqualTo(valuesRead.Count));
-                for (int i = 0; i < valuesBefore.Count; i++)
+                for (var i = 0; i < valuesBefore.Count; i++)
                 {
                     Assert.That(valuesBefore[i], Is.EqualTo(valuesRead[i]).Within(0.000001));
                 }
@@ -450,6 +382,82 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             {
                 FileUtils.DeleteIfExists(morFile);
             }
+        }
+
+        private static void ValidateAllUnknownProperties(WaterFlowFMModelDefinition modelDefinition)
+        {
+            IEventedList<WaterFlowFMProperty> properties = modelDefinition.Properties;
+
+            List<WaterFlowFMProperty> propertiesMorphologyCategory =
+                properties.Where(p => p.PropertyDefinition.Category.Equals(MorphologyFile.Header)
+                                      && p.PropertyDefinition.UnknownPropertySource.Equals(PropertySource.MorphologyFile))
+                          .ToList();
+
+            Assert.AreEqual(4, propertiesMorphologyCategory.Count);
+            ValidatePropertiesCategory(propertiesMorphologyCategory, MorphologyFile.Header, KnownProperties.morphology);
+
+            const string customCategoryName = "CustomCategory";
+            List<WaterFlowFMProperty> propertiesUnknownCategory =
+                properties.Where(p => p.PropertyDefinition.FileCategoryName.Equals(customCategoryName)).ToList();
+            ValidatePropertiesCategory(propertiesUnknownCategory, customCategoryName, customCategoryName);
+        }
+
+        private static void ValidatePropertiesCategory(List<WaterFlowFMProperty> properties,
+                                                       string categoryName,
+                                                       string fileCategoryName)
+        {
+            Assert.IsTrue(properties.All(p => p.PropertyDefinition.UnknownPropertySource.Equals(PropertySource.MorphologyFile)));
+            Assert.IsTrue(properties.All(p => p.PropertyDefinition.FileCategoryName.Equals(fileCategoryName)));
+            Assert.IsTrue(properties.All(p => p.PropertyDefinition.Category.Equals(categoryName)));
+
+            ValidateProperty(properties, "CustomStringProp", "\"777\"");
+            ValidateProperty(properties, "CustomBoolProp", "1");
+            ValidateProperty(properties, "CustomDoubleProp", "7.77");
+            ValidateProperty(properties, "CustomIntProp", "777");
+        }
+
+        private static void ValidateProperty(List<WaterFlowFMProperty> properties, string propertyName, string propertyValue)
+        {
+            WaterFlowFMProperty customStringProperty = properties.FirstOrDefault(p => p.PropertyDefinition.FilePropertyName.Equals(propertyName));
+            Assert.NotNull(customStringProperty);
+            Assert.AreEqual(propertyValue, customStringProperty.Value);
+        }
+
+        private static WaterFlowFMProperty CreateProperty(string name, string value)
+        {
+            WaterFlowFMPropertyDefinition propertyDefinition =
+                WaterFlowFMPropertyDefinitionCreator.CreateForCustomProperty(
+                    KnownProperties.morphology,
+                    name,
+                    "",
+                    PropertySource.MorphologyFile);
+
+            return new WaterFlowFMProperty(propertyDefinition, value);
+        }
+
+        private static WaterFlowFMModelDefinition CreateModelDefinitionWithCustomCategoryAndProperties(string customPropertyName, string customCategoryName, string value1, string value2)
+        {
+            var modelDefinition = new WaterFlowFMModelDefinition();
+
+            WaterFlowFMPropertyDefinition propertyDefinitionMorphologyCategory =
+                WaterFlowFMPropertyDefinitionCreator.CreateForCustomProperty(KnownProperties.morphology,
+                                                                             customPropertyName,
+                                                                             "",
+                                                                             PropertySource.MorphologyFile);
+
+            WaterFlowFMPropertyDefinition propertyDefinitionCustomCategory =
+                WaterFlowFMPropertyDefinitionCreator.CreateForCustomProperty(customCategoryName,
+                                                                             customPropertyName,
+                                                                             "",
+                                                                             PropertySource.MorphologyFile);
+
+            var customPropertyMorphologyCategory = new WaterFlowFMProperty(propertyDefinitionMorphologyCategory, value1);
+            var customPropertyCustomCategory = new WaterFlowFMProperty(propertyDefinitionCustomCategory, value2);
+
+            modelDefinition.AddProperty(customPropertyMorphologyCategory);
+            modelDefinition.AddProperty(customPropertyCustomCategory);
+
+            return modelDefinition;
         }
 
         private static void FillTimeSeries(IFunction function, Func<int, double> mapping, DateTime start, DateTime stop, int steps)
@@ -472,14 +480,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             AssertMessageContainsWarningForProperty(message, "CustomBoolProp", 41);
             AssertMessageContainsWarningForProperty(message, "CustomDoubleProp", 42);
             AssertMessageContainsWarningForProperty(message, "CustomIntProp", 43);
-
         }
 
         private static void AssertMessageContainsWarningForProperty(string message, string propertyName, int lineNumber)
         {
             string expectedMessage = string.Format(
                 Resources.MorphologySediment_ReadCategoryProperties_Unsupported_keyword___0___at_line___1___detected_and_will_be_passed_to_the_computational_core__Note_that_some_data_or_the_connection_to_linked_files_may_be_lost_,
-                propertyName, 
+                propertyName,
                 lineNumber);
             Assert.IsTrue(message.Contains(expectedMessage), $"The following warning is missing: <{expectedMessage}>");
         }
@@ -488,7 +495,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         {
             string expectedMessage = string.Format(
                 Common.Properties.Resources
-                    .Parameter__0__is_not_supported_by_our_computational_core_and_will_be_removed_from_your_input_file,
+                      .Parameter__0__is_not_supported_by_our_computational_core_and_will_be_removed_from_your_input_file,
                 propertyName);
             Assert.That(message.Contains(expectedMessage), $"Expected the warning, <{expectedMessage}>, to be contained in the log report, {message}");
         }

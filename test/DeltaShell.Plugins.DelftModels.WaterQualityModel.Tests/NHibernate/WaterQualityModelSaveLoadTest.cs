@@ -7,17 +7,21 @@ using System.Linq;
 using DelftTools.Shell.Core;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Extensions;
+using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
 using DeltaShell.Core;
 using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.NGHS.TestUtils;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.Data.NHibernate;
+using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.BoundaryData;
+using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.SubstanceProcessLibrary;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Extensions;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.IO;
 using DeltaShell.Plugins.NetworkEditor;
 using DeltaShell.Plugins.SharpMapGis;
+using NetTopologySuite.Extensions.Grids;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
@@ -30,18 +34,18 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
         public void SaveModel_DeleteDataTablePostSave_RemoveDataTableFilesFromDisk()
         {
             // setup
-            var currentDirectory = Directory.GetCurrentDirectory();
+            string currentDirectory = Directory.GetCurrentDirectory();
 
             const string projectSaveName = "test.dsproj";
-            var saveFolderPath = Path.Combine(currentDirectory, "A");
+            string saveFolderPath = Path.Combine(currentDirectory, "A");
             FileUtils.DeleteIfExists(saveFolderPath);
             Directory.CreateDirectory(saveFolderPath);
 
-            var saveLocation = Path.Combine(saveFolderPath, projectSaveName);
+            string saveLocation = Path.Combine(saveFolderPath, projectSaveName);
 
             try
             {
-                using (var app = new DeltaShellApplication { IsProjectCreatedInTemporaryDirectory = true })
+                using (var app = new DeltaShellApplication {IsProjectCreatedInTemporaryDirectory = true})
                 {
                     app.Plugins.Add(new NHibernateDaoApplicationPlugin());
                     app.Plugins.Add(new CommonToolsApplicationPlugin());
@@ -62,37 +66,37 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
                     app.SaveProjectAs(saveLocation);
 
                     Assert.IsTrue(Directory.Exists(model.BoundaryDataManager.FolderPath),
-                        "Test Precondition: The boundary data folder should exist post-save.");
+                                  "Test Precondition: The boundary data folder should exist post-save.");
                     Assert.AreEqual(4, Directory.GetFiles(model.BoundaryDataManager.FolderPath).Length,
-                        "Test precondition: The boundary data folder should contain 4 files post-save.");
+                                    "Test precondition: The boundary data folder should contain 4 files post-save.");
 
                     Assert.IsTrue(Directory.Exists(model.LoadsDataManager.FolderPath),
-                        "Test Precondition: the loads data folder should exist post-save.");
+                                  "Test Precondition: the loads data folder should exist post-save.");
                     Assert.AreEqual(4, Directory.GetFiles(model.LoadsDataManager.FolderPath).Length,
-                        "Test Precondition: the loads data folder should contain 4 files post-save.");
+                                    "Test Precondition: the loads data folder should contain 4 files post-save.");
 
                     #region Call & Assert: remove 1st data table -> 1 remains for manager.
 
                     // call (Fake user deleting the first DataTable in both boundaries and loads in TableView)
-                    ((IList<DataTable>)model.BoundaryDataManager.DataTables).RemoveAt(0);
-                    ((IList<DataTable>)model.LoadsDataManager.DataTables).RemoveAt(0);
+                    ((IList<DataTable>) model.BoundaryDataManager.DataTables).RemoveAt(0);
+                    ((IList<DataTable>) model.LoadsDataManager.DataTables).RemoveAt(0);
 
                     // assert
                     Assert.IsTrue(Directory.Exists(model.BoundaryDataManager.FolderPath),
-                        "The boundary data folder should still exist.");
-                    var filesInBoundaryDataFolder =
+                                  "The boundary data folder should still exist.");
+                    string[] filesInBoundaryDataFolder =
                         Directory.GetFiles(model.BoundaryDataManager.FolderPath).Select(Path.GetFileName).ToArray();
                     Assert.AreEqual(2, filesInBoundaryDataFolder.Length,
-                        "The boundary data folder should contain 2 files remaining.");
+                                    "The boundary data folder should contain 2 files remaining.");
                     CollectionAssert.Contains(filesInBoundaryDataFolder, "F.tbl");
                     CollectionAssert.Contains(filesInBoundaryDataFolder, "H.i");
 
                     Assert.IsTrue(Directory.Exists(model.LoadsDataManager.FolderPath),
-                        "The loads data folder should still exist.");
-                    var filesInLoadsDataFolder =
+                                  "The loads data folder should still exist.");
+                    string[] filesInLoadsDataFolder =
                         Directory.GetFiles(model.LoadsDataManager.FolderPath).Select(Path.GetFileName).ToArray();
                     Assert.AreEqual(2, filesInLoadsDataFolder.Length,
-                        "The loads data folder should contain 2 files remaining.");
+                                    "The loads data folder should contain 2 files remaining.");
                     CollectionAssert.Contains(filesInLoadsDataFolder, "Q.tbl");
                     CollectionAssert.Contains(filesInLoadsDataFolder, "S.t");
 
@@ -101,14 +105,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
                     #region Call & Assert: remove last data table -> no data tables remain in manager.
 
                     // call (Fake user deleting the first DataTable in both boundaries and loads in TableView)
-                    ((IList<DataTable>)model.BoundaryDataManager.DataTables).RemoveAt(0);
-                    ((IList<DataTable>)model.LoadsDataManager.DataTables).RemoveAt(0);
+                    ((IList<DataTable>) model.BoundaryDataManager.DataTables).RemoveAt(0);
+                    ((IList<DataTable>) model.LoadsDataManager.DataTables).RemoveAt(0);
 
                     // assert
                     Assert.IsFalse(Directory.Exists(model.BoundaryDataManager.FolderPath),
-                        "The boundary data folder should now be deleted as all DataTables have been removed.");
+                                   "The boundary data folder should now be deleted as all DataTables have been removed.");
                     Assert.IsFalse(Directory.Exists(model.LoadsDataManager.FolderPath),
-                        "The loads data folder should now be deleted as all DataTables have been removed.");
+                                   "The loads data folder should now be deleted as all DataTables have been removed.");
 
                     #endregion
                 }
@@ -118,7 +122,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
                 FileUtils.DeleteIfExists(saveFolderPath);
             }
         }
-        
+
         [Test]
         public void SaveModel_WithDataTables_DataTablesShouldBeMovedFromTempToSavedLocation()
         {
@@ -142,7 +146,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
                     UserSettings = userSettings,
                     IsProjectCreatedInTemporaryDirectory = true
                 })
-                { 
+                {
                     app.IsProjectCreatedInTemporaryDirectory = true;
                     app.Plugins.Add(new NHibernateDaoApplicationPlugin());
                     app.Plugins.Add(new CommonToolsApplicationPlugin());
@@ -158,8 +162,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
                     model.BoundaryDataManager.CreateNewDataTable("A", "B", "C.d", "E");
                     model.LoadsDataManager.CreateNewDataTable("F", "G", "H.i", "j");
 
-                    var originalBoundaryDataFolder = model.BoundaryDataManager.FolderPath;
-                    var originalLoadsDataFolder = model.LoadsDataManager.FolderPath;
+                    string originalBoundaryDataFolder = model.BoundaryDataManager.FolderPath;
+                    string originalLoadsDataFolder = model.LoadsDataManager.FolderPath;
 
                     Assert.IsTrue(Directory.Exists(originalBoundaryDataFolder));
                     Assert.AreEqual(2, Directory.GetFiles(originalBoundaryDataFolder).Length);
@@ -171,17 +175,17 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
                     app.SaveProjectAs(saveLocation);
 
                     // assert
-                    var projectDataDirectory = saveLocation+"_data";
+                    string projectDataDirectory = saveLocation + "_data";
                     Assert.AreEqual(Path.Combine(projectDataDirectory, model.Name.Replace(" ", "_")), model.ModelDataDirectory);
                     Assert.AreEqual(Path.Combine(model.ModelDataDirectory, "output"), model.ModelSettings.OutputDirectory);
 
-                    Assert.IsFalse(Directory.Exists(originalBoundaryDataFolder), 
-                        "Original data table folder should have been moved to new location.");
+                    Assert.IsFalse(Directory.Exists(originalBoundaryDataFolder),
+                                   "Original data table folder should have been moved to new location.");
                     Assert.IsFalse(Directory.Exists(originalLoadsDataFolder),
-                        "Original data table folder should have been moved to new location.");
+                                   "Original data table folder should have been moved to new location.");
 
-                    var postSaveBoundaryDataFolder = model.BoundaryDataManager.FolderPath;
-                    var postSaveLoadsDataFolder = model.LoadsDataManager.FolderPath;
+                    string postSaveBoundaryDataFolder = model.BoundaryDataManager.FolderPath;
+                    string postSaveLoadsDataFolder = model.LoadsDataManager.FolderPath;
 
                     Assert.IsTrue(Directory.Exists(postSaveBoundaryDataFolder));
                     Assert.AreEqual(2, Directory.GetFiles(postSaveBoundaryDataFolder).Length);
@@ -195,7 +199,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
                 FileUtils.DeleteIfExists(saveFolderPath);
             }
         }
-        
+
         [Test]
         [Category(TestCategory.Slow)]
         public void SaveLoadModelTest()
@@ -234,9 +238,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
                     model.BoundaryDataManager.CreateNewDataTable("A", "B", "C.d", "E");
                     model.LoadsDataManager.CreateNewDataTable("F", "G", "H.i", "j");
 
-                    var originalBoundaryDataFolder = model.BoundaryDataManager.FolderPath;
+                    string originalBoundaryDataFolder = model.BoundaryDataManager.FolderPath;
                     Assert.IsTrue(Directory.Exists(originalBoundaryDataFolder));
-                    var originalLoadDataFolder = model.LoadsDataManager.FolderPath;
+                    string originalLoadDataFolder = model.LoadsDataManager.FolderPath;
                     Assert.IsTrue(Directory.Exists(originalLoadDataFolder));
 
                     // call
@@ -246,24 +250,24 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
                     app.OpenProject(saveLocation);
 
                     // assert
-                    var models = app.Project.RootFolder.Models.OfType<WaterQualityModel>().ToList();
+                    List<WaterQualityModel> models = app.Project.RootFolder.Models.OfType<WaterQualityModel>().ToList();
 
                     Assert.AreEqual(1, models.Count);
 
-                    var retrievedModel = models[0];
+                    WaterQualityModel retrievedModel = models[0];
 
-                    var projectDataDir = app.HybridProjectRepository.ProjectDataDirectory;
+                    string projectDataDir = app.HybridProjectRepository.ProjectDataDirectory;
 
                     StringAssert.StartsWith(saveLocation, projectDataDir);
                     StringAssert.StartsWith(projectDataDir, retrievedModel.ModelSettings.OutputDirectory);
 
                     StringAssert.StartsWith(projectDataDir, retrievedModel.BoundaryDataManager.FolderPath);
-                    var boundaryDataTable = retrievedModel.BoundaryDataManager.DataTables.First();
+                    DataTable boundaryDataTable = retrievedModel.BoundaryDataManager.DataTables.First();
                     StringAssert.StartsWith(projectDataDir, boundaryDataTable.DataFile.Path);
                     StringAssert.StartsWith(projectDataDir, boundaryDataTable.SubstanceUseforFile.Path);
 
                     StringAssert.StartsWith(projectDataDir, retrievedModel.LoadsDataManager.FolderPath);
-                    var loadsDataTable = retrievedModel.LoadsDataManager.DataTables.First();
+                    DataTable loadsDataTable = retrievedModel.LoadsDataManager.DataTables.First();
                     StringAssert.StartsWith(projectDataDir, loadsDataTable.DataFile.Path);
                     StringAssert.StartsWith(projectDataDir, loadsDataTable.SubstanceUseforFile.Path);
                 }
@@ -273,32 +277,29 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
                 FileUtils.DeleteIfExists(saveFolderPath);
             }
         }
-        
+
         [Test]
         [Category(TestCategory.Slow)]
         public void SaveModel_RemoveHydFile_LoadModel_FiresHydNotFound()
         {
             // copy hyd file and related files
-            var dataDir = TestHelper.GetTestDataDirectory();
-            var squareHydFile = Path.Combine(dataDir, "IO", "square", "square.hyd");
-            var localHydFile = TestHelper.CreateLocalCopy(squareHydFile);
+            string dataDir = TestHelper.GetTestDataDirectory();
+            string squareHydFile = Path.Combine(dataDir, "IO", "square", "square.hyd");
+            string localHydFile = TestHelper.CreateLocalCopy(squareHydFile);
 
             try
             {
                 // start deltashell
-                using (var app = new DeltaShellApplication { IsProjectCreatedInTemporaryDirectory = true })
+                using (var app = new DeltaShellApplication {IsProjectCreatedInTemporaryDirectory = true})
                 {
                     app.Plugins.Add(new NHibernateDaoApplicationPlugin());
                     app.Plugins.Add(new CommonToolsApplicationPlugin());
                     app.Plugins.Add(new NetworkEditorApplicationPlugin());
                     app.Plugins.Add(new SharpMapGisApplicationPlugin());
 
-                    bool notFoundWasFired = false;
+                    var notFoundWasFired = false;
                     var waqPlugin = new WaterQualityModelApplicationPlugin();
-                    waqPlugin.HydFileNotFoundGuiHandler = delegate
-                    {
-                        notFoundWasFired = true;
-                    };
+                    waqPlugin.HydFileNotFoundGuiHandler = delegate { notFoundWasFired = true; };
                     app.Plugins.Add(waqPlugin);
 
                     app.Run();
@@ -312,7 +313,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
 
                     // save it
                     string savePath = Path.Combine(Path.GetDirectoryName(localHydFile), "savedProject",
-                        "project1.dsproj");
+                                                   "project1.dsproj");
                     app.SaveProjectAs(savePath);
                     app.CloseProject();
 
@@ -322,11 +323,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
                     // load the model, what should the hyd file do?
                     app.OpenProject(savePath);
 
-                    var models = app.Project.RootFolder.Models.OfType<WaterQualityModel>().ToList();
+                    List<WaterQualityModel> models = app.Project.RootFolder.Models.OfType<WaterQualityModel>().ToList();
 
                     Assert.AreEqual(1, models.Count);
 
-                    var waqModel = models[0];
+                    WaterQualityModel waqModel = models[0];
 
                     Assert.IsTrue(waqModel.HasEverImportedHydroData);
                     Assert.IsFalse(waqModel.HasHydroDataImported);
@@ -347,21 +348,21 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
         public void SaveLoad_MoveProjectAndProjectData_FilePathsShouldBeUpdated()
         {
             // setup
-            var currentDirectory = Directory.GetCurrentDirectory();
+            string currentDirectory = Directory.GetCurrentDirectory();
 
             const string projectSaveName = "test.dsproj";
-            var saveFolderPath = Path.Combine(currentDirectory, "A");
+            string saveFolderPath = Path.Combine(currentDirectory, "A");
             FileUtils.DeleteIfExists(saveFolderPath);
             Directory.CreateDirectory(saveFolderPath);
-            var saveLocation = Path.Combine(saveFolderPath, projectSaveName);
+            string saveLocation = Path.Combine(saveFolderPath, projectSaveName);
 
-            var moveFolderPath = Path.Combine(currentDirectory, "B");
+            string moveFolderPath = Path.Combine(currentDirectory, "B");
             FileUtils.DeleteIfExists(moveFolderPath);
             Directory.CreateDirectory(moveFolderPath);
-            var moveLocation = Path.Combine(moveFolderPath, projectSaveName);
+            string moveLocation = Path.Combine(moveFolderPath, projectSaveName);
 
-            var workingDirectoryPath = Path.Combine(Path.GetTempPath(), "DeltaShell_Working_Directory");
-            var application =
+            string workingDirectoryPath = Path.Combine(Path.GetTempPath(), "DeltaShell_Working_Directory");
+            ApplicationSettingsBase application =
                 ApplicationTestHelper.GetMockedApplicationSettingsBase(workingDirectoryPath);
             try
             {
@@ -396,24 +397,24 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
                     app.OpenProject(moveLocation);
 
                     // assert
-                    var models = app.Project.RootFolder.Models.OfType<WaterQualityModel>().ToList();
+                    List<WaterQualityModel> models = app.Project.RootFolder.Models.OfType<WaterQualityModel>().ToList();
 
                     Assert.AreEqual(1, models.Count);
 
-                    var retrievedModel = models[0];
+                    WaterQualityModel retrievedModel = models[0];
 
-                    var projectDataDir = app.HybridProjectRepository.ProjectDataDirectory;
+                    string projectDataDir = app.HybridProjectRepository.ProjectDataDirectory;
 
                     StringAssert.StartsWith(moveLocation, projectDataDir);
                     StringAssert.StartsWith(projectDataDir, retrievedModel.ModelSettings.OutputDirectory);
 
                     StringAssert.StartsWith(projectDataDir, retrievedModel.BoundaryDataManager.FolderPath);
-                    var boundaryDataTable = retrievedModel.BoundaryDataManager.DataTables.First();
+                    DataTable boundaryDataTable = retrievedModel.BoundaryDataManager.DataTables.First();
                     StringAssert.StartsWith(projectDataDir, boundaryDataTable.DataFile.Path);
                     StringAssert.StartsWith(projectDataDir, boundaryDataTable.SubstanceUseforFile.Path);
 
                     StringAssert.StartsWith(projectDataDir, retrievedModel.LoadsDataManager.FolderPath);
-                    var loadsDataTable = retrievedModel.LoadsDataManager.DataTables.First();
+                    DataTable loadsDataTable = retrievedModel.LoadsDataManager.DataTables.First();
                     StringAssert.StartsWith(projectDataDir, loadsDataTable.DataFile.Path);
                     StringAssert.StartsWith(projectDataDir, loadsDataTable.SubstanceUseforFile.Path);
                 }
@@ -432,7 +433,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
             // copy hyd file and related files
             string dataDir = TestHelper.GetTestDataDirectory();
             string squareHydFile = Path.Combine(dataDir, "IO", "real", "uni3d.hyd");
-            
+
             using (var tempDirectory = new TemporaryDirectory())
             {
                 string workingDirectoryPath = Path.Combine(tempDirectory.Path, "DeltaShell_Working_Directory");
@@ -454,7 +455,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
 
                     string hydFileDirectoryInTemp = tempDirectory.CopyDirectoryToTempDirectory(Path.GetDirectoryName(squareHydFile));
                     string hydFileInTemp = Path.Combine(hydFileDirectoryInTemp, "uni3d.hyd");
-                    string localHydFileOtherTimestep = Path.Combine(hydFileDirectoryInTemp, 
+                    string localHydFileOtherTimestep = Path.Combine(hydFileDirectoryInTemp,
                                                                     "uni3d_otherTimestep.hyd");
 
                     // create a model
@@ -485,11 +486,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
                     // load the model, what should the hyd file do?
                     app.OpenProject(savePath);
 
-                    var models = app.Project.RootFolder.Models.OfType<WaterQualityModel>().ToList();
+                    List<WaterQualityModel> models = app.Project.RootFolder.Models.OfType<WaterQualityModel>().ToList();
 
                     Assert.AreEqual(1, models.Count);
 
-                    var waqModel = models[0];
+                    WaterQualityModel waqModel = models[0];
 
                     Assert.IsTrue(waqModel.HasEverImportedHydroData);
                     Assert.IsTrue(waqModel.HasHydroDataImported);
@@ -506,14 +507,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
         public void SaveLoadModelWithBoundaryAliases()
         {
             // copy hyd file and related files
-            var dataDir = TestHelper.GetTestDataDirectory();
-            var squareHydFile = Path.Combine(dataDir, "IO", "real", "uni3d.hyd");
-            var localHydFile = TestHelper.CreateLocalCopy(squareHydFile);
+            string dataDir = TestHelper.GetTestDataDirectory();
+            string squareHydFile = Path.Combine(dataDir, "IO", "real", "uni3d.hyd");
+            string localHydFile = TestHelper.CreateLocalCopy(squareHydFile);
 
             try
             {
                 // start deltashell
-                using (var app = new DeltaShellApplication { IsProjectCreatedInTemporaryDirectory = true })
+                using (var app = new DeltaShellApplication {IsProjectCreatedInTemporaryDirectory = true})
                 {
                     app.Plugins.Add(new NHibernateDaoApplicationPlugin());
                     app.Plugins.Add(new CommonToolsApplicationPlugin());
@@ -534,18 +535,18 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
 
                     // save it
                     string savePath = Path.Combine(Path.GetDirectoryName(localHydFile), "savedProject",
-                        "project1.dsproj");
+                                                   "project1.dsproj");
                     app.SaveProjectAs(savePath);
                     app.CloseProject();
 
                     // load the model, what should the hyd file do?
                     app.OpenProject(savePath);
 
-                    var models = app.Project.RootFolder.Models.OfType<WaterQualityModel>().ToList();
+                    List<WaterQualityModel> models = app.Project.RootFolder.Models.OfType<WaterQualityModel>().ToList();
 
                     Assert.AreEqual(1, models.Count);
 
-                    var waqModel = models[0];
+                    WaterQualityModel waqModel = models[0];
 
                     Assert.AreEqual(locationAliases, waqModel.Boundaries[0].LocationAliases);
                 }
@@ -563,14 +564,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
         public void Check_That_Property_ImportedSubstanceFilePath_Persists_After_SaveLoad_Model()
         {
             // copy hyd file and related files
-            var dataDir = TestHelper.GetTestDataDirectory();
-            var squareHydFile = Path.Combine(dataDir, "IO", "real", "uni3d.hyd");
-            var localHydFile = TestHelper.CreateLocalCopy(squareHydFile);
+            string dataDir = TestHelper.GetTestDataDirectory();
+            string squareHydFile = Path.Combine(dataDir, "IO", "real", "uni3d.hyd");
+            string localHydFile = TestHelper.CreateLocalCopy(squareHydFile);
 
             try
             {
                 // start deltashell
-                using (var app = new DeltaShellApplication { IsProjectCreatedInTemporaryDirectory = true })
+                using (var app = new DeltaShellApplication {IsProjectCreatedInTemporaryDirectory = true})
                 {
                     app.Plugins.Add(new NHibernateDaoApplicationPlugin());
                     app.Plugins.Add(new CommonToolsApplicationPlugin());
@@ -586,23 +587,23 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
                     // add to project
                     app.Project.RootFolder.Items.Add(originalWaqModel);
 
-                    var library = originalWaqModel.SubstanceProcessLibrary;
+                    SubstanceProcessLibrary library = originalWaqModel.SubstanceProcessLibrary;
                     library.ImportedSubstanceFilePath = null;
-                    
+
                     //Import 
                     new SubFileImporter().Import(library, Path.Combine(TestHelper.GetTestDataDirectory(), "ValidWaqModels", "Eutrof_simple_sobek.sub"));
 
                     // save it and close
-                    var savePath = Path.Combine(Path.GetDirectoryName(localHydFile), "savedProject", "project1.dsproj");
+                    string savePath = Path.Combine(Path.GetDirectoryName(localHydFile), "savedProject", "project1.dsproj");
                     app.SaveProjectAs(savePath);
                     app.CloseProject();
-                    
+
                     // load the model
                     app.OpenProject(savePath);
-                    
-                    var reopenedWaqModel = app.Project.RootFolder.Models.OfType<WaterQualityModel>().FirstOrDefault();
+
+                    WaterQualityModel reopenedWaqModel = app.Project.RootFolder.Models.OfType<WaterQualityModel>().FirstOrDefault();
                     Assert.NotNull(reopenedWaqModel);
-                    
+
                     // Expect that the ImportedSubstanceFilePath is not null
                     Assert.IsNotNull(reopenedWaqModel.SubstanceProcessLibrary.ImportedSubstanceFilePath);
                 }
@@ -613,7 +614,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
                 string dir = Path.GetDirectoryName(localHydFile);
                 FileUtils.DeleteIfExists(dir);
             }
-
         }
 
         [Test]
@@ -621,14 +621,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
         public void OnProjectOpenedTestWaqModelWithHydFileShouldReimportThatFile()
         {
             // copy hyd file and related files
-            var dataDir = TestHelper.GetTestDataDirectory();
-            var squareHydFile = Path.Combine(dataDir, "IO", "real", "uni3d.hyd");
-            var localHydFile = TestHelper.CreateLocalCopy(squareHydFile);
+            string dataDir = TestHelper.GetTestDataDirectory();
+            string squareHydFile = Path.Combine(dataDir, "IO", "real", "uni3d.hyd");
+            string localHydFile = TestHelper.CreateLocalCopy(squareHydFile);
 
             try
             {
                 // start deltashell
-                using (var app = new DeltaShellApplication { IsProjectCreatedInTemporaryDirectory = true })
+                using (var app = new DeltaShellApplication {IsProjectCreatedInTemporaryDirectory = true})
                 {
                     app.Plugins.Add(new NHibernateDaoApplicationPlugin());
                     app.Plugins.Add(new CommonToolsApplicationPlugin());
@@ -657,15 +657,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
 
                     // check if private method ReimportHydFileForWaterQualityModel is called!
 
-                    var models = app.Project.RootFolder.Models.OfType<WaterQualityModel>().ToList();
+                    List<WaterQualityModel> models = app.Project.RootFolder.Models.OfType<WaterQualityModel>().ToList();
 
                     Assert.AreEqual(1, models.Count);
 
-                    var waqModel = models[0];
+                    WaterQualityModel waqModel = models[0];
 
                     Assert.AreEqual(locationAliases, waqModel.Boundaries[0].LocationAliases);
                     // assert
-                    var grid = waqModel.Grid;
+                    UnstructuredGrid grid = waqModel.Grid;
                     Assert.IsFalse(grid.IsEmpty);
                     Assert.AreEqual(619190.8086686889d, grid.Vertices[grid.Cells[0].VertexIndices[0]].X);
                     Assert.AreEqual(4212559.096632215d, grid.Vertices[grid.Cells[0].VertexIndices[0]].Y);
@@ -683,7 +683,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
                     Assert.AreEqual("uni3d.poi", waqModel.PointersRelativeFilePath);
                     Assert.AreEqual("uni3d.len", waqModel.LengthsRelativeFilePath);
                     Assert.AreEqual("uni3d.sal", waqModel.SalinityRelativeFilePath);
-                    Assert.AreEqual(String.Empty, waqModel.TemperatureRelativeFilePath);
+                    Assert.AreEqual(string.Empty, waqModel.TemperatureRelativeFilePath);
                     Assert.AreEqual("uni3d.vdf", waqModel.VerticalDiffusionRelativeFilePath);
                     Assert.AreEqual("uni3d.srf", waqModel.SurfacesRelativeFilePath);
                     Assert.AreEqual("uni3d.tau", waqModel.ShearStressesRelativeFilePath);
@@ -694,21 +694,33 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
                     Assert.AreEqual(63814, waqModel.NumberOfDelwaqSegmentsPerHydrodynamicLayer);
                     Assert.AreEqual(7, waqModel.NumberOfWaqSegmentLayers);
 
-                    var boundaries = waqModel.Boundaries;
+                    IEventedList<WaterQualityBoundary> boundaries = waqModel.Boundaries;
                     Assert.AreEqual(6, boundaries.Count);
                     var expectedBoundaries = new[]
-            {
-                "sea_002.pli", "sacra_001.pli", "sanjoa_001.pli",
-                "yolo_001.pli", "CC.pli", "tracy.pli"
-            };
+                    {
+                        "sea_002.pli",
+                        "sacra_001.pli",
+                        "sanjoa_001.pli",
+                        "yolo_001.pli",
+                        "CC.pli",
+                        "tracy.pli"
+                    };
                     CollectionAssert.AreEqual(expectedBoundaries, boundaries.Select(b => b.Name).ToArray());
 
-                    var boundaryNodeIds = waqModel.BoundaryNodeIds;
+                    IDictionary<WaterQualityBoundary, int[]> boundaryNodeIds = waqModel.BoundaryNodeIds;
                     Assert.AreEqual(boundaries.Count, boundaryNodeIds.Count);
-                    var expectedNumberOfBoundaryNodeIds = new[] { 105, 4, 3, 24, 1, 1 };
-                    for (int i = 0; i < boundaries.Count; i++)
+                    var expectedNumberOfBoundaryNodeIds = new[]
                     {
-                        var ids = boundaryNodeIds[boundaries[i]];
+                        105,
+                        4,
+                        3,
+                        24,
+                        1,
+                        1
+                    };
+                    for (var i = 0; i < boundaries.Count; i++)
+                    {
+                        int[] ids = boundaryNodeIds[boundaries[i]];
                         Assert.AreEqual(expectedNumberOfBoundaryNodeIds[i], ids.Length);
                     }
                 }
@@ -729,7 +741,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
             try
             {
                 // start deltashell
-                using (var app = new DeltaShellApplication { IsProjectCreatedInTemporaryDirectory = true })
+                using (var app = new DeltaShellApplication {IsProjectCreatedInTemporaryDirectory = true})
                 {
                     app.Plugins.Add(new NHibernateDaoApplicationPlugin());
                     app.Plugins.Add(new CommonToolsApplicationPlugin());
@@ -739,11 +751,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
                     app.Run();
 
                     // create a model
-                    var waqModel = WaterQualityModelWorkDirectoryTest.CreateWaqModelWithData();
+                    WaterQualityModel waqModel = WaterQualityModelWorkDirectoryTest.CreateWaqModelWithData();
                     app.Project.RootFolder.Add(waqModel);
 
                     waqModel.OutputOutOfSync = false;
-                    
+
                     // save it
                     app.SaveProjectAs(savePath);
                     Assert.That(waqModel.OutputOutOfSync, Is.False);
@@ -751,7 +763,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
 
                     // load the model & and check if output is in sync
                     app.OpenProject(savePath);
-                    
+
                     waqModel = app.Project.RootFolder.Models.OfType<WaterQualityModel>().FirstOrDefault();
                     Assert.That(waqModel, Is.Not.Null);
                     Assert.That(waqModel.OutputOutOfSync, Is.False);
@@ -764,66 +776,67 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
                 FileUtils.DeleteIfExists(dir);
             }
         }
-        
+
         [Test]
         [Category(TestCategory.Slow)]
         public void GivenLegacyPre350WAQModelWhenOpenAndMigrateThenModelIsMigrated()
         {
             // open arjans's legacymodel
-            var projectPath = TestHelper.GetTestFilePath(@"BackwardsCompatibility\demo-test1.dsproj");
-            var projectFileName = TestHelper.CopyProjectToLocalDirectory(projectPath);
+            string projectPath = TestHelper.GetTestFilePath(@"BackwardsCompatibility\demo-test1.dsproj");
+            string projectFileName = TestHelper.CopyProjectToLocalDirectory(projectPath);
             Assert.That(NrOfDataItemsInProject(projectFileName), Is.EqualTo(152), "The legacy model is changed!");
             Assert.That(DataItemNameExistInDsProj(projectFileName, "OutputSubstancesTag"), Is.False, "The legacy model is already migrated, it contains the DataItem for the substances dataitem set");
             Assert.That(DataItemNameExistInDsProj(projectFileName, "OutputParametersTag"), Is.False, "The legacy model is already migrated, it contains the DataItem for the output parameters dataitem set");
             Assert.That(WAQ350MigrationDoneInDsProj(projectFileName), Is.False, "The legacy model is already migrated");
 
-            var currentDirectory = Directory.GetCurrentDirectory();
+            string currentDirectory = Directory.GetCurrentDirectory();
             const string projectSaveName = "test.dsproj";
-            var saveFolderPath = Path.Combine(currentDirectory, "A");
+            string saveFolderPath = Path.Combine(currentDirectory, "A");
             FileUtils.DeleteIfExists(saveFolderPath);
             Directory.CreateDirectory(saveFolderPath);
-            var saveLocation = Path.Combine(saveFolderPath, projectSaveName);
+            string saveLocation = Path.Combine(saveFolderPath, projectSaveName);
 
             // call
             string savePath = Path.Combine(saveLocation);
 
-                using (var app = new DeltaShellApplication { IsProjectCreatedInTemporaryDirectory = true })
-                {
-                    app.Plugins.AddRange(GetPlugins());
+            using (var app = new DeltaShellApplication {IsProjectCreatedInTemporaryDirectory = true})
+            {
+                app.Plugins.AddRange(GetPlugins());
 
-                    app.Run();
+                app.Run();
 
-                    app.OpenProject(projectFileName);
-                    Assert.That(app.Project.IsMigrated, Is.True);
+                app.OpenProject(projectFileName);
+                Assert.That(app.Project.IsMigrated, Is.True);
 
-                    // assert
-                    var models = app.Project.RootFolder.Models.OfType<WaterQualityModel>().ToList();
+                // assert
+                List<WaterQualityModel> models = app.Project.RootFolder.Models.OfType<WaterQualityModel>().ToList();
 
-                    Assert.AreEqual(1, models.Count);
+                Assert.AreEqual(1, models.Count);
 
-                    //check some validation on model?
-                    var retrievedModel = models[0];
+                //check some validation on model?
+                WaterQualityModel retrievedModel = models[0];
 
-                    app.SaveProjectAs(savePath);
-                    app.CloseProject();
-                }
+                app.SaveProjectAs(savePath);
+                app.CloseProject();
+            }
+
             try
             {
                 Assert.That(NrOfDataItemsInProject(savePath), Is.GreaterThanOrEqualTo(154),
-                    "Original legacy model contained 152 data items, we need to have at least 2 more now...");
+                            "Original legacy model contained 152 data items, we need to have at least 2 more now...");
                 Assert.That(DataItemNameExistInDsProj(savePath, "OutputSubstancesTag"), Is.True,
-                    "Migration from legacy WAQ to 3.5.1 has failed");
+                            "Migration from legacy WAQ to 3.5.1 has failed");
                 Assert.That(DataItemNameExistInDsProj(savePath, "OutputParametersTag"), Is.True,
-                    "Migration from legacy WAQ to 3.5.1 has failed");
+                            "Migration from legacy WAQ to 3.5.1 has failed");
                 Assert.That(WAQ350MigrationDoneInDsProj(savePath), Is.True,
-                    "Migration from legacy WAQ to 3.5.1 has failed");
+                            "Migration from legacy WAQ to 3.5.1 has failed");
             }
             finally
             {
-                FileUtils.DeleteIfExists(projectFileName);    
-                FileUtils.DeleteIfExists(projectFileName+"_data");    
-                FileUtils.DeleteIfExists(saveFolderPath);    
-            }    
+                FileUtils.DeleteIfExists(projectFileName);
+                FileUtils.DeleteIfExists(projectFileName + "_data");
+                FileUtils.DeleteIfExists(saveFolderPath);
+            }
         }
 
         private bool WAQ350MigrationDoneInDsProj(string projectFileName)
@@ -836,18 +849,18 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
             {
                 connection.Open();
 
-                using (var cmd = connection.CreateCommand())
+                using (SQLiteCommand cmd = connection.CreateCommand())
                 {
                     try
                     {
-                        string substancesDataSetIdQuery =
+                        var substancesDataSetIdQuery =
                             "SELECT `project_item_id` FROM `IDataItem` WHERE `role` = 'Output'  AND `Name` = 'Substances' ";
                         cmd.CommandText = substancesDataSetIdQuery;
 
-                        var result = cmd.ExecuteScalar();
-                        var substancesDataSetId = (result == null || DBNull.Value == result)
-                            ? -1
-                            : int.Parse(result.ToString());
+                        object result = cmd.ExecuteScalar();
+                        int substancesDataSetId = result == null || DBNull.Value == result
+                                                      ? -1
+                                                      : int.Parse(result.ToString());
 
                         var substancesMigratedQuery =
                             "SELECT COUNT(*) FROM (SELECT `_rowid_`,* FROM `IDataItem` WHERE `dataitemset_id` LIKE '{0}')";
@@ -855,26 +868,26 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
 
                         cmd.CommandText = substancesMigratedQuery;
                         result = cmd.ExecuteScalar();
-                        var substancesMigrated = (result != null && DBNull.Value != result) &&
-                                                 int.Parse(result.ToString()) > 0;
+                        bool substancesMigrated = result != null && DBNull.Value != result &&
+                                                  int.Parse(result.ToString()) > 0;
 
-                        string outputParametersDataSetIdQuery =
+                        var outputParametersDataSetIdQuery =
                             "SELECT `project_item_id` FROM `IDataItem` WHERE `role` = 'Output'  AND `Name` = 'Output parameters' ";
                         cmd.CommandText = outputParametersDataSetIdQuery;
                         result = cmd.ExecuteScalar();
-                        var outputParametersDataSetId = (result == null || DBNull.Value == result)
-                            ? -1
-                            : int.Parse(result.ToString());
+                        int outputParametersDataSetId = result == null || DBNull.Value == result
+                                                            ? -1
+                                                            : int.Parse(result.ToString());
 
                         var outpurParametersMigratedQuery =
                             "SELECT COUNT(*) FROM (SELECT `_rowid_`,* FROM `IDataItem` WHERE `dataitemset_id` LIKE '{0}')";
                         outpurParametersMigratedQuery = string.Format(outpurParametersMigratedQuery,
-                            outputParametersDataSetId);
+                                                                      outputParametersDataSetId);
 
                         cmd.CommandText = outpurParametersMigratedQuery;
                         result = cmd.ExecuteScalar();
-                        var outputParametersMigrated = (result != null && DBNull.Value != result) &&
-                                                       int.Parse(result.ToString()) > 0;
+                        bool outputParametersMigrated = result != null && DBNull.Value != result &&
+                                                        int.Parse(result.ToString()) > 0;
 
                         migrated = substancesMigrated && outputParametersMigrated;
                     }
@@ -883,8 +896,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
                         return false;
                     }
                 }
+
                 connection.Close();
             }
+
             return migrated;
         }
 
@@ -896,17 +911,18 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
                     new SQLiteConnection(string.Format(@"data source={0};read only=true", projectFileName)))
             {
                 connection.Open();
-                using (var cmd = connection.CreateCommand())
+                using (SQLiteCommand cmd = connection.CreateCommand())
                 {
-                    string query = "SELECT COUNT(*) FROM (SELECT `_rowid_`,* FROM `DataItem` WHERE `Tag` LIKE '{0}' ORDER BY `_rowid_` ASC)";
+                    var query = "SELECT COUNT(*) FROM (SELECT `_rowid_`,* FROM `DataItem` WHERE `Tag` LIKE '{0}' ORDER BY `_rowid_` ASC)";
                     query = string.Format(query, dataItemName);
                     cmd.CommandText = query;
-                    var nrOfDataItemsInProject = cmd.ExecuteScalar();
-                    item = (nrOfDataItemsInProject != null && DBNull.Value != nrOfDataItemsInProject) && int.Parse(nrOfDataItemsInProject.ToString()) > 0;
+                    object nrOfDataItemsInProject = cmd.ExecuteScalar();
+                    item = nrOfDataItemsInProject != null && DBNull.Value != nrOfDataItemsInProject && int.Parse(nrOfDataItemsInProject.ToString()) > 0;
                 }
+
                 connection.Close();
-                
             }
+
             return item;
         }
 
@@ -919,20 +935,22 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
             {
                 connection.Open();
 
-                using (var cmd = connection.CreateCommand())
+                using (SQLiteCommand cmd = connection.CreateCommand())
                 {
-                    string query = "SELECT COUNT(*) FROM (SELECT `_rowid_`,* FROM `DataItem`  ORDER BY `_rowid_` ASC)";
+                    var query = "SELECT COUNT(*) FROM (SELECT `_rowid_`,* FROM `DataItem`  ORDER BY `_rowid_` ASC)";
                     cmd.CommandText = query;
                     nrOfDataItemsInProject = cmd.ExecuteScalar();
                 }
+
                 connection.Close();
             }
+
             return nrOfDataItemsInProject;
         }
 
         private IEnumerable<ApplicationPlugin> GetPlugins()
         {
-            return new List<ApplicationPlugin> 
+            return new List<ApplicationPlugin>
             {
                 new NHibernateDaoApplicationPlugin(),
                 new CommonToolsApplicationPlugin(),
@@ -942,5 +960,4 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
             };
         }
     }
-    
 }

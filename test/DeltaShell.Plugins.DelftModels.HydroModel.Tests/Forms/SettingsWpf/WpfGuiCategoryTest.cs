@@ -151,10 +151,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.SettingsWpf
         {
             // Setup
             IDisposable customControl = Substitute.For<IDisposable, FrameworkElement>();
-            var category = new WpfGuiCategory("category_name", new List<FieldUIDescription>())
-            {
-                CustomControl = (FrameworkElement) customControl
-            };
+            var category = new WpfGuiCategory("category_name", new List<FieldUIDescription>()) {CustomControl = (FrameworkElement) customControl};
 
             // Call
             category.Dispose();
@@ -167,16 +164,16 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.SettingsWpf
         public void GivenCategoryWithProperties_WhenDisposedAndNotifyPropertyChangedEventFired_ThenCategoryNotNotified()
         {
             // Given
-            var guiProperty = new WpfGuiProperty(new FieldUIDescription(null, (o, v) => { }));
+            var guiProperty = new WpfGuiProperty(new FieldUIDescription(null, (o, v) => {}));
 
             var isPropertyChangedEventFired = false;
             var category = new WpfGuiCategory(string.Empty, null);
             category.PropertyChanged += (sender, args) => isPropertyChangedEventFired = true;
             category.AddWpfGuiProperty(guiProperty);
-            
+
             // Precondition
             Assert.That(category.Properties.Single(), Is.SameAs(guiProperty));
-            
+
             // When
             category.Dispose();
             guiProperty.RaisePropertyChangedEvents(); // Trigger PropertyChangedEvent

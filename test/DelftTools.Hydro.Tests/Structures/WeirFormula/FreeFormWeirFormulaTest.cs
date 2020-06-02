@@ -13,17 +13,24 @@ namespace DelftTools.Hydro.Tests.Structures.WeirFormula
         public void DefaultValues()
         {
             var formula = new FreeFormWeirFormula();
-            Assert.AreEqual(2,formula.Y.Count());
+            Assert.AreEqual(2, formula.Y.Count());
             Assert.That(formula.DischargeCoefficient, Is.EqualTo(1.0).Within(0.0001));
         }
-
 
         [Test]
         public void SetShape()
         {
             var formula = new FreeFormWeirFormula();
-            var yValues = new[] {1.0, 20.0};
-            var zValues = new[] {3.0, 4.0};
+            var yValues = new[]
+            {
+                1.0,
+                20.0
+            };
+            var zValues = new[]
+            {
+                3.0,
+                4.0
+            };
             formula.SetShape(yValues, zValues);
             Assert.AreEqual(yValues[0], formula.Y.ToArray()[0], 1.0e-6);
             Assert.AreEqual(yValues[1], formula.Y.ToArray()[1], 1.0e-6);
@@ -35,8 +42,16 @@ namespace DelftTools.Hydro.Tests.Structures.WeirFormula
         public void CrestLevel()
         {
             var formula = new FreeFormWeirFormula();
-            var yValues = new[] { 1.0, 20.0 };
-            var zValues = new[] { 3.0, 4.0 };
+            var yValues = new[]
+            {
+                1.0,
+                20.0
+            };
+            var zValues = new[]
+            {
+                3.0,
+                4.0
+            };
             formula.SetShape(yValues, zValues);
             Assert.AreEqual(formula.CrestLevel, 3, 1.0e-6);
         }
@@ -44,14 +59,10 @@ namespace DelftTools.Hydro.Tests.Structures.WeirFormula
         [Test]
         public void CheckCrestForFreeFormWeirFormulaWithEmptyLineStringShape()
         {
-            var formula = new FreeFormWeirFormula
-                              {
-                                  Shape = new LineString(new Coordinate[0])
-                              };
+            var formula = new FreeFormWeirFormula {Shape = new LineString(new Coordinate[0])};
 
             Assert.AreEqual(0, formula.CrestLevel);
             Assert.AreEqual(0, formula.CrestWidth);
         }
-
     }
 }

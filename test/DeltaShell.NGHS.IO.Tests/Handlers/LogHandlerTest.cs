@@ -9,11 +9,17 @@ namespace DeltaShell.NGHS.IO.Tests.Handlers
     [TestFixture]
     public class LogHandlerTest
     {
-        private LogHandler logHandler;
         private const string ActivityName = "some_activity";
         private const string LogMessage = "some_log_message";
         private const string Format = "{0}_{1}_{2}";
-        private readonly object[] formatArgs = {"some", "log", "message"};
+        private LogHandler logHandler;
+
+        private readonly object[] formatArgs =
+        {
+            "some",
+            "log",
+            "message"
+        };
 
         [SetUp]
         public void SetUp()
@@ -135,7 +141,7 @@ namespace DeltaShell.NGHS.IO.Tests.Handlers
             logHandler.ReportError(errorMessage2);
 
             Assert.AreEqual(6, logHandler.LogMessagesTable.Count,
-                "Exactly 6 log messages were expected to be collected by the log handler.");
+                            "Exactly 6 log messages were expected to be collected by the log handler.");
 
             void LogReportAction() => logHandler.LogReport();
 
@@ -149,13 +155,13 @@ namespace DeltaShell.NGHS.IO.Tests.Handlers
         public void AssertMessageWithCorrectSeverity(string message, LogSeverity logSeverity)
         {
             Assert.AreEqual(1, logHandler.LogMessagesTable.Count,
-                "Exactly 1 log message was expected to be collected by the log handler.");
+                            "Exactly 1 log message was expected to be collected by the log handler.");
 
-            var messageSeverityPair = logHandler.LogMessagesTable
-                .FirstOrDefault(t => t.Item1.Equals(message) && t.Item2.Equals(logSeverity));
+            Tuple<string, LogSeverity> messageSeverityPair = logHandler.LogMessagesTable
+                                                                       .FirstOrDefault(t => t.Item1.Equals(message) && t.Item2.Equals(logSeverity));
 
             Assert.NotNull(messageSeverityPair,
-                $"Expected log message '{message}' with expected severity '{logSeverity.ToString()}' was not added to the list.");
+                           $"Expected log message '{message}' with expected severity '{logSeverity.ToString()}' was not added to the list.");
         }
 
         private static string CreateExpectedLogMessage(string header, string message1, string message2)

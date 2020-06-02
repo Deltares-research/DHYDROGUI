@@ -3,6 +3,7 @@ using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
 using DeltaShell.NGHS.IO.Adapters;
 using DeltaShell.NGHS.IO.Grid;
+using NetTopologySuite.Extensions.Grids;
 using NUnit.Framework;
 
 namespace DeltaShell.NGHS.IO.Tests.Adaptors
@@ -12,18 +13,18 @@ namespace DeltaShell.NGHS.IO.Tests.Adaptors
     {
         [Test]
         [Category(TestCategory.DataAccess)]
-		public void GivenNcGridFileWhenGetUgridForFMThenNoException()
+        public void GivenNcGridFileWhenGetUgridForFMThenNoException()
         {
-            var testFile = TestHelper.GetTestFilePath(@"ugrid\Custom_Ugrid.nc");
+            string testFile = TestHelper.GetTestFilePath(@"ugrid\Custom_Ugrid.nc");
             Assert.IsTrue(File.Exists(testFile));
 
-            var localCopyOfTestFile = TestHelper.CreateLocalCopy(testFile);
+            string localCopyOfTestFile = TestHelper.CreateLocalCopy(testFile);
 
             try
             {
                 using (var fmUGridAdaptor = new UGridToUnstructuredGridAdapter(localCopyOfTestFile))
                 {
-                    var unstructuredGrid = fmUGridAdaptor.GetUnstructuredGridFromUGridMeshId(1);
+                    UnstructuredGrid unstructuredGrid = fmUGridAdaptor.GetUnstructuredGridFromUGridMeshId(1);
                     Assert.That(unstructuredGrid, Is.Not.Null);
                 }
             }
@@ -31,24 +32,24 @@ namespace DeltaShell.NGHS.IO.Tests.Adaptors
             {
                 FileUtils.DeleteIfExists(localCopyOfTestFile);
             }
-		}
+        }
 
         [Test]
         [Category(TestCategory.DataAccess)]
         public void TestGetUnstructuredGridFromUGridMeshId_WithExportedNetGeomFile()
         {
-            var testDir = FileUtils.CreateTempDirectory();
-            var localCopyOfTestFile = Path.Combine(testDir, "Custom_Ugrid.nc");
-            using (var gridApi = GridApiFactory.CreateNew())
+            string testDir = FileUtils.CreateTempDirectory();
+            string localCopyOfTestFile = Path.Combine(testDir, "Custom_Ugrid.nc");
+            using (IUGridApi gridApi = GridApiFactory.CreateNew())
             {
                 gridApi.write_geom_ugrid(localCopyOfTestFile);
             }
-            
+
             try
             {
                 using (var fmUGridAdaptor = new UGridToUnstructuredGridAdapter(localCopyOfTestFile))
                 {
-                    var unstructuredGrid = fmUGridAdaptor.GetUnstructuredGridFromUGridMeshId(1, true);
+                    UnstructuredGrid unstructuredGrid = fmUGridAdaptor.GetUnstructuredGridFromUGridMeshId(1, true);
                     Assert.That(unstructuredGrid, Is.Not.Null);
                 }
             }

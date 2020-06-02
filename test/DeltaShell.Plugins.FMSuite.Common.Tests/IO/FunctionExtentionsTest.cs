@@ -20,9 +20,11 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             var function = new Function();
             function.Components.AddRange(new List<IVariable>()
             {
-                variable1, variable2, variable3
+                variable1,
+                variable2,
+                variable3
             });
-            
+
             // verification
             Assert.IsTrue(function.Components.Contains(variable1));
             Assert.IsTrue(function.Components.Contains(variable2));
@@ -35,7 +37,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             Assert.IsFalse(function.Components.Contains(variable1));
             Assert.IsTrue(function.Components.Contains(variable2));
             Assert.IsTrue(function.Components.Contains(variable3));
-            
+
             // remove non-existing component
             function.RemoveComponentByName("Var4");
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
@@ -16,7 +17,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Category(TestCategory.Slow)]
         public void WaterFlowFMModelRestartCoverageTest()
         {
-            var model = LoadBendProfModelWithWriteRestart();
+            WaterFlowFMModel model = LoadBendProfModelWithWriteRestart();
             ActivityRunner.RunActivity(model);
             Assert.AreEqual(1, model.GetRestartOutputStates().Count());
 
@@ -24,16 +25,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             model.SaveStateStopTime = model.StopTime;
             model.SaveStateTimeStep = new TimeSpan(0, 1, 0);
 
-            var restartOutputStates = model.GetRestartOutputStates().ToList();
+            List<FileBasedRestartState> restartOutputStates = model.GetRestartOutputStates().ToList();
             Assert.IsNotEmpty(restartOutputStates);
 
-            model.RestartInput = (FileBasedRestartState)restartOutputStates.First().Clone();
+            model.RestartInput = (FileBasedRestartState) restartOutputStates.First().Clone();
             Assert.NotNull(model.RestartInput);
         }
 
         private static WaterFlowFMModel LoadBendProfModelWithWriteRestart()
         {
-            var mduPath = TestHelper.GetTestFilePath(@"data\f04_bottomfriction\c016_2DConveyance_bend\input\bendprof.mdu");
+            string mduPath = TestHelper.GetTestFilePath(@"data\f04_bottomfriction\c016_2DConveyance_bend\input\bendprof.mdu");
             mduPath = TestHelper.CreateLocalCopy(mduPath);
             var model = new WaterFlowFMModel(mduPath)
             {

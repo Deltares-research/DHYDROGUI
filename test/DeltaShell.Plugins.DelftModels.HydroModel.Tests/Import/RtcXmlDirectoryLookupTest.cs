@@ -13,8 +13,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Import
         [Category(TestCategory.DataAccess)]
         public void ConvertJsonFileToObject()
         {
-            var pathToFile = Path.Combine(TestHelper.GetTestDataDirectory(), "JsonConvert", "settings.json");
-            var file = File.ReadAllText(pathToFile);
+            string pathToFile = Path.Combine(TestHelper.GetTestDataDirectory(), "JsonConvert", "settings.json");
+            string file = File.ReadAllText(pathToFile);
             var fileObject = JsonConvert.DeserializeObject<RtcXmlDirectoryLookup>(file);
 
             Assert.That(fileObject, Is.TypeOf<RtcXmlDirectoryLookup>());

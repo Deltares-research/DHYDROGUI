@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.TestUtils;
@@ -15,8 +16,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         [Category(TestCategory.DataAccess)]
         public void TestHisFileReaderRead()
         {
-            var hisFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), "IO", "deltashell.his");
-            var delwaqBinaryFileVariableDataList = DelwaqHistoryFileReader.Read(hisFilePath);
+            string hisFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), "IO", "deltashell.his");
+            DelwaqHisFileData[] delwaqBinaryFileVariableDataList = DelwaqHistoryFileReader.Read(hisFilePath);
 
             Assert.AreEqual(4, delwaqBinaryFileVariableDataList.Length);
             Assert.AreEqual("O1", delwaqBinaryFileVariableDataList[0].ObservationVariable);
@@ -24,7 +25,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             Assert.AreEqual("O3", delwaqBinaryFileVariableDataList[2].ObservationVariable);
             Assert.AreEqual("ALL SEGMENTS", delwaqBinaryFileVariableDataList[3].ObservationVariable);
 
-            var substances = delwaqBinaryFileVariableDataList[0].OutputVariables;
+            string[] substances = delwaqBinaryFileVariableDataList[0].OutputVariables;
             Assert.AreEqual(5, substances.Count());
             Assert.AreEqual("cTR1", substances[0]);
             Assert.AreEqual("cTR2", substances[1]);
@@ -33,8 +34,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             Assert.AreEqual("Continuity", substances[4]);
 
             // Check the timestep data for two random substances
-            var timeStepsO1 = delwaqBinaryFileVariableDataList[0].TimeSteps;
-            var timeStepsO3 = delwaqBinaryFileVariableDataList[2].TimeSteps;
+            IEnumerable<DateTime> timeStepsO1 = delwaqBinaryFileVariableDataList[0].TimeSteps;
+            IEnumerable<DateTime> timeStepsO3 = delwaqBinaryFileVariableDataList[2].TimeSteps;
             Assert.AreEqual(865, timeStepsO1.Count());
             Assert.AreEqual(new DateTime(2010, 1, 1, 0, 1, 30), timeStepsO1.ElementAt(0));
             Assert.AreEqual(865, timeStepsO3.Count());
@@ -42,8 +43,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             Assert.AreEqual(new DateTime(2010, 1, 1, 4, 10, 0), timeStepsO1.ElementAt(25));
 
             // Check the values of the first time step for two random observation variables
-            var valuesO1 = delwaqBinaryFileVariableDataList[0].GetValuesForTimeStep(timeStepsO1.ElementAt(0));
-            var valuesO3 = delwaqBinaryFileVariableDataList[2].GetValuesForTimeStep(timeStepsO3.ElementAt(0));
+            List<double> valuesO1 = delwaqBinaryFileVariableDataList[0].GetValuesForTimeStep(timeStepsO1.ElementAt(0));
+            List<double> valuesO3 = delwaqBinaryFileVariableDataList[2].GetValuesForTimeStep(timeStepsO3.ElementAt(0));
             Assert.AreEqual(5, valuesO1.Count);
             Assert.AreEqual(20.0, valuesO1[0]);
             Assert.AreEqual(0.0, valuesO1[1]);
@@ -94,7 +95,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         [Category(TestCategory.DataAccess)]
         public void TestHisFileReaderReadWithNonExistingFile()
         {
-            var delwaqBinaryFileVariableDataList = DelwaqHistoryFileReader.Read("NonExisting.his");
+            DelwaqHisFileData[] delwaqBinaryFileVariableDataList = DelwaqHistoryFileReader.Read("NonExisting.his");
 
             Assert.AreEqual(0, delwaqBinaryFileVariableDataList.Length);
         }
@@ -103,12 +104,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         [Category(TestCategory.DataAccess)]
         public void TestHisFileReaderReadWithEmptyFile()
         {
-            var hisFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), "IO", "EmptyHisFile.his");
+            string hisFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), "IO", "EmptyHisFile.his");
 
             var fileStream = new FileStream(hisFilePath, FileMode.OpenOrCreate);
             fileStream.Close();
 
-            var delwaqBinaryFileVariableDataList = DelwaqHistoryFileReader.Read(hisFilePath);
+            DelwaqHisFileData[] delwaqBinaryFileVariableDataList = DelwaqHistoryFileReader.Read(hisFilePath);
 
             Assert.AreEqual(0, delwaqBinaryFileVariableDataList.Length);
 

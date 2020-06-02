@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
@@ -30,7 +32,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
         [Test]
         public void GivenANonIBoundaryConditionWhenExportingThenReturnFalse()
         {
-            var exportResult = exporter.Export("TheString", Arg<string>.Is.Anything);
+            bool exportResult = exporter.Export("TheString", Arg<string>.Is.Anything);
             Assert.IsFalse(exportResult);
         }
 
@@ -48,7 +50,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
             boundaryCondition.Expect(bc => bc.DataType).Return(type).Repeat.Any();
             mocks.ReplayAll();
 
-            var exportResult = exporter.Export(boundaryCondition, Arg<string>.Is.Anything);
+            bool exportResult = exporter.Export(boundaryCondition, Arg<string>.Is.Anything);
             Assert.IsFalse(exportResult);
         }
 
@@ -63,34 +65,34 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
             boundaryCondition.Expect(bc => bc.DataType).Return(type).Repeat.Any();
             mocks.ReplayAll();
 
-            var exportResult = exporter.Export(boundaryCondition, null);
+            bool exportResult = exporter.Export(boundaryCondition, null);
             Assert.IsFalse(exportResult);
         }
 
         [Test]
         public void GivenABoundaryConditionWhenExportingWithValidFilePathThenWritesCmpFileAndReturnFalse()
         {
-            var dummyFilePath = TestHelper.GetTestFilePath(Path.Combine("cmpFiles", "dummy.cmp"));
+            string dummyFilePath = TestHelper.GetTestFilePath(Path.Combine("cmpFiles", "dummy.cmp"));
 
             var boundaryCondition = mocks.DynamicMock<IBoundaryCondition>();
             boundaryCondition.Expect(bc => bc.DataType).Return(BoundaryConditionDataType.AstroComponents).Repeat.Any();
             mocks.ReplayAll();
 
-            var exportResult = exporter.Export(boundaryCondition, dummyFilePath);
+            bool exportResult = exporter.Export(boundaryCondition, dummyFilePath);
             Assert.IsTrue(exportResult);
         }
 
         [Test]
         public void GivenCmpFileExporterWhenGettingSourceTypesThenReturnEmptyCollection()
         {
-            var sourceTypes = exporter.SourceTypes().AsList();
+            IList<Type> sourceTypes = exporter.SourceTypes().AsList();
             Assert.IsEmpty(sourceTypes);
         }
 
         [Test]
         public void GivenCmpFileExporterWhenRequestingFileFilterThenReturnStringThatEndsWithCmp()
         {
-            var filter = exporter.FileFilter;
+            string filter = exporter.FileFilter;
             Assert.That(filter.EndsWith("*.cmp"), Is.True);
         }
     }

@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Forms;
 using DelftTools.Hydro;
 using DelftTools.Shell.Core;
+using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Reflection;
 using DeltaShell.Gui;
@@ -17,13 +19,16 @@ using DeltaShell.Plugins.NetworkEditor.MapLayers.Editors;
 using DeltaShell.Plugins.SharpMapGis;
 using DeltaShell.Plugins.SharpMapGis.Gui;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
+using Fluent;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
+using SharpMap.Api.Layers;
 using SharpMap.Layers;
 using SharpMap.UI.Tools;
 using ComboBox = System.Windows.Controls.ComboBox;
+using Ribbon = Fluent.Ribbon;
 
 namespace DeltaShell.Plugins.NetworkEditor.Tests
 {
@@ -46,12 +51,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
         public void SetUp()
         {
             gui = new DeltaShellGui();
-            var app = gui.Application;
+            IApplication app = gui.Application;
 
             app.Plugins.Add(new CommonToolsApplicationPlugin());
             app.Plugins.Add(new SharpMapGisApplicationPlugin());
             app.Plugins.Add(new NetworkEditorApplicationPlugin());
-            
 
             gui.Plugins.Add(new SharpMapGisGuiPlugin());
             gui.Plugins.Add(new NetworkEditorGuiPlugin());
@@ -64,17 +68,25 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
 
             network = new HydroNetwork();
             basin = new DrainageBasin();
-            region = new HydroRegion { Name = "hr", SubRegions = { network, basin } };
+            region = new HydroRegion
+            {
+                Name = "hr",
+                SubRegions =
+                {
+                    network,
+                    basin
+                }
+            };
 
             project.RootFolder.Add(region);
 
             // show gui main window
-            mainWindow = (Window)gui.MainWindow;
+            mainWindow = (Window) gui.MainWindow;
 
             // wait until gui starts
             mainWindowShown = delegate
             {
-                var regionDataItem = project.RootFolder.DataItems.First();
+                IDataItem regionDataItem = project.RootFolder.DataItems.First();
                 gui.CommandHandler.OpenView(regionDataItem, typeof(ProjectItemMapView));
 
                 regionEditor = gui.DocumentViews.OfType<ProjectItemMapView>().First();
@@ -98,22 +110,26 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
             mainWindow = null;
             GC.Collect();
         }
-        
+
         [Test]
         [Category(TestCategory.WindowsForms)]
         public void LinkCatchmentToBoundaryNode()
         {
             onMainWindowShown = () =>
+            {
+                IChannel b1 = AddBranch(new[]
                 {
-                    var b1 = AddBranch(new[] { new Coordinate(0, 0, 0), new Coordinate(1000, 0, 0) });
-                    var c1 = AddCatchment(new Coordinate(500, 1000, 0), CatchmentType.Unpaved);
+                    new Coordinate(0, 0, 0),
+                    new Coordinate(1000, 0, 0)
+                });
+                Catchment c1 = AddCatchment(new Coordinate(500, 1000, 0), CatchmentType.Unpaved);
 
-                    var link = AddLink(c1.InteriorPoint.Coordinate, new Coordinate(0, 0, 0));
+                HydroLink link = AddLink(c1.InteriorPoint.Coordinate, new Coordinate(0, 0, 0));
 
-                    Assert.AreEqual(1, c1.Links.Count);
-                    Assert.AreEqual(c1, link.Source);
-                    Assert.AreEqual(b1.Source, link.Target);
-                };
+                Assert.AreEqual(1, c1.Links.Count);
+                Assert.AreEqual(c1, link.Source);
+                Assert.AreEqual(b1.Source, link.Target);
+            };
 
             WpfTestHelper.ShowModal(mainWindow, mainWindowShown);
         }
@@ -124,9 +140,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
         {
             onMainWindowShown = () =>
             {
-                var c1 = AddCatchment(new Coordinate(500, 1000, 0), CatchmentType.Unpaved);
-                var b1 = AddBranch(new[] { new Coordinate(0, 0, 0), new Coordinate(1000, 0, 0) });
-                var link = AddLink(c1.InteriorPoint.Coordinate, new Coordinate(0, 0, 0));
+                Catchment c1 = AddCatchment(new Coordinate(500, 1000, 0), CatchmentType.Unpaved);
+                IChannel b1 = AddBranch(new[]
+                {
+                    new Coordinate(0, 0, 0),
+                    new Coordinate(1000, 0, 0)
+                });
+                HydroLink link = AddLink(c1.InteriorPoint.Coordinate, new Coordinate(0, 0, 0));
 
                 Assert.IsTrue(link.Geometry.Coordinates.All(c => c.Z == 0.0));
             };
@@ -145,25 +165,29 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
             onMainWindowShown = () =>
             {
                 /* get the coverages combo box from te ribbon */
-                var ribbon = (Fluent.Ribbon)TypeUtils.GetField(gui.MainWindow, "MainWindowRibbon");
-                var tab = ribbon.Tabs.First(t => t.Header.Equals("Map"));
-                var group = tab.Groups.First(g => g.Name.Equals("NetworkCoverage"));
-                var wrapPanel = group.Items.OfType<WrapPanel>().First();
-                var comboBox = wrapPanel.Children.OfType<ComboBox>().First(c => c.Name == "ComboBoxSelectNetworkCoverage");
-                
+                var ribbon = (Ribbon) TypeUtils.GetField(gui.MainWindow, "MainWindowRibbon");
+                RibbonTabItem tab = ribbon.Tabs.First(t => t.Header.Equals("Map"));
+                RibbonGroupBox group = tab.Groups.First(g => g.Name.Equals("NetworkCoverage"));
+                WrapPanel wrapPanel = group.Items.OfType<WrapPanel>().First();
+                ComboBox comboBox = wrapPanel.Children.OfType<ComboBox>().First(c => c.Name == "ComboBoxSelectNetworkCoverage");
+
                 Assert.NotNull(comboBox);
 
                 /* attach event to see how many times the selected item attibute is set */
                 var count = 0;
-                comboBox.SelectionChanged += (s, e) => {  count++; };
+                comboBox.SelectionChanged += (s, e) => { count++; };
 
                 /* check if combobox is still empty! */
                 Assert.IsFalse(comboBox.HasItems);
 
                 /* add simple branch and add a route to the hydroregion */
-                var b1 = AddBranch(new[] { new Coordinate(0, 0, 0), new Coordinate(1000, 0, 0) });
+                IChannel b1 = AddBranch(new[]
+                {
+                    new Coordinate(0, 0, 0),
+                    new Coordinate(1000, 0, 0)
+                });
                 new AddNewNetworkRouteCommand().Execute();
-                
+
                 /* check if the route (route_1) is added to the combobox as ONLY one */
                 Assert.AreEqual(1, count);
                 Assert.IsTrue(comboBox.HasItems);
@@ -177,14 +201,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
                 Assert.IsNotNull(selected);
                 Assert.AreEqual("route_1", selected.Name);
             };
-            
+
             WpfTestHelper.ShowModal(mainWindow, mainWindowShown);
         }
 
-
         private HydroLink AddLink(Coordinate start, Coordinate end)
         {
-            var newLinkTool = regionEditor.MapView.MapControl.Tools.OfType<NewArrowLineTool>().First(
+            NewArrowLineTool newLinkTool = regionEditor.MapView.MapControl.Tools.OfType<NewArrowLineTool>().First(
                 t => t.Name == HydroRegionEditorMapTool.AddHydroLinkToolName);
 
             newLinkTool.OnMouseDown(start, args);
@@ -194,27 +217,27 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
             newLinkTool.OnMouseMove(end, args);
             newLinkTool.OnMouseUp(end, args);
 
-            return (HydroLink)newLinkTool.Layers.Last().DataSource.Features.Cast<IFeature>().Last();
+            return (HydroLink) newLinkTool.Layers.Last().DataSource.Features.Cast<IFeature>().Last();
         }
 
         private IChannel AddBranch(Coordinate[] coordinates)
         {
-            var vectorLayers = regionEditor.MapView.Map.GetAllLayers(true).OfType<VectorLayer>();
-            var branchLayer = vectorLayers.First(l => l.DataSource.FeatureType == typeof (Channel));
+            IEnumerable<VectorLayer> vectorLayers = regionEditor.MapView.Map.GetAllLayers(true).OfType<VectorLayer>();
+            VectorLayer branchLayer = vectorLayers.First(l => l.DataSource.FeatureType == typeof(Channel));
 
             var branchGeom = new LineString(coordinates);
 
-            return (IChannel)branchLayer.DataSource.Add(branchGeom);
+            return (IChannel) branchLayer.DataSource.Add(branchGeom);
         }
 
         private Catchment AddCatchment(Coordinate center, CatchmentType catchmentType)
         {
             const int offset = 400;
 
-            var newCatchmentTool =
+            NewLineTool newCatchmentTool =
                 regionEditor.MapView.MapControl.Tools.OfType<NewLineTool>().First(
                     t => t.Name == HydroRegionEditorMapTool.AddCatchmentToolName);
-            var catchmentLayer = newCatchmentTool.Layers.First();
+            ILayer catchmentLayer = newCatchmentTool.Layers.First();
 
             ((CatchmentFeatureEditor) catchmentLayer.FeatureEditor).NewCatchmentType = catchmentType;
 
@@ -228,7 +251,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
             newCatchmentTool.OnMouseMove(x1, args);
             newCatchmentTool.OnMouseMove(x2, args);
             newCatchmentTool.OnMouseUp(x3, args);
-            
+
             return (Catchment) catchmentLayer.DataSource.Features.Cast<IFeature>().Last();
         }
     }

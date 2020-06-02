@@ -9,28 +9,38 @@ using NUnit.Framework;
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 {
     [TestFixture]
-    class EmbankmentMergerTest
+    internal class EmbankmentMergerTest
     {
-
-        private static Embankment createEmbankment(string name, Coordinate[] lstCoordinates)
-        {
-            return new Embankment()
-            {
-                Name = name,
-                Geometry = new LineString(lstCoordinates)
-            };
-        }
-
         [Test]
         public void MergeDoubleIntersectingTest()
         {
             var pointList1 = new List<Coordinate>
             {
-                new Coordinate {X = 110, Y = 140},
-                new Coordinate {X = 90, Y = 110},
-                new Coordinate {X = 70, Y = 100},
-                new Coordinate {X = 110, Y = 65},
-                new Coordinate {X = 175, Y = 75},
+                new Coordinate
+                {
+                    X = 110,
+                    Y = 140
+                },
+                new Coordinate
+                {
+                    X = 90,
+                    Y = 110
+                },
+                new Coordinate
+                {
+                    X = 70,
+                    Y = 100
+                },
+                new Coordinate
+                {
+                    X = 110,
+                    Y = 65
+                },
+                new Coordinate
+                {
+                    X = 175,
+                    Y = 75
+                },
             };
 
             var testEmbankment1 = new Embankment
@@ -41,11 +51,31 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             var pointList2 = new List<Coordinate>
             {
-                new Coordinate {X = 145, Y = 50},
-                new Coordinate {X = 60, Y = 100},
-                new Coordinate {X = 130, Y = 130},
-                new Coordinate {X = 100, Y = 120},
-                new Coordinate {X = 80, Y = 130},
+                new Coordinate
+                {
+                    X = 145,
+                    Y = 50
+                },
+                new Coordinate
+                {
+                    X = 60,
+                    Y = 100
+                },
+                new Coordinate
+                {
+                    X = 130,
+                    Y = 130
+                },
+                new Coordinate
+                {
+                    X = 100,
+                    Y = 120
+                },
+                new Coordinate
+                {
+                    X = 80,
+                    Y = 130
+                },
             };
 
             var testEmbankment2 = new Embankment
@@ -58,7 +88,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             embankmentDefinitions.Add(testEmbankment1);
             embankmentDefinitions.Add(testEmbankment2);
 
-            var result = EmbankmentMerger.MergeSelectedEmbankments(embankmentDefinitions, testEmbankment1, testEmbankment2);
+            Embankment result = EmbankmentMerger.MergeSelectedEmbankments(embankmentDefinitions, testEmbankment1, testEmbankment2);
 
             Assert.Null(result);
         }
@@ -66,20 +96,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Test]
         public void EmbankmentMergeNoIntersectionTest()
         {
-
-            var embankment1 = createEmbankment("Embankment01", new[]
+            Embankment embankment1 = createEmbankment("Embankment01", new[]
             {
                 new Coordinate(10, 20),
                 new Coordinate(10, 100)
             });
 
-            var embankment2 = createEmbankment("Embankment02", new[]
+            Embankment embankment2 = createEmbankment("Embankment02", new[]
             {
                 new Coordinate(20, 10),
                 new Coordinate(100, 10)
             });
 
-            var embankment3 = createEmbankment("Embankment03", new[]
+            Embankment embankment3 = createEmbankment("Embankment03", new[]
             {
                 new Coordinate(0, 0),
                 new Coordinate(999, 999)
@@ -87,10 +116,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             var embankmentDefinitions = new List<Embankment>()
             {
-                embankment1, embankment2, embankment3
+                embankment1,
+                embankment2,
+                embankment3
             };
 
-            var mergedEmbankment = EmbankmentMerger.MergeSelectedEmbankments(embankmentDefinitions, embankment1, embankment2);
+            Embankment mergedEmbankment = EmbankmentMerger.MergeSelectedEmbankments(embankmentDefinitions, embankment1, embankment2);
 
             Assert.That(mergedEmbankment.Geometry.NumPoints == 4);
             Assert.That(mergedEmbankment.Geometry.Coordinates[0].Equals(new Coordinate(10, 100)));
@@ -102,20 +133,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Test]
         public void EmbankmentMergeNoIntersectionReversedLineStringTest()
         {
-
-            var embankment1 = createEmbankment("Embankment01", new[]
+            Embankment embankment1 = createEmbankment("Embankment01", new[]
             {
                 new Coordinate(10, 20),
                 new Coordinate(10, 100)
             });
 
-            var embankment2 = createEmbankment("Embankment02", new[]
+            Embankment embankment2 = createEmbankment("Embankment02", new[]
             {
                 new Coordinate(100, 10),
                 new Coordinate(20, 10)
             });
 
-            var embankment3 = createEmbankment("Embankment03", new[]
+            Embankment embankment3 = createEmbankment("Embankment03", new[]
             {
                 new Coordinate(0, 0),
                 new Coordinate(999, 999)
@@ -123,10 +153,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             var embankmentDefinitions = new List<Embankment>()
             {
-                embankment1, embankment2, embankment3
+                embankment1,
+                embankment2,
+                embankment3
             };
 
-            var mergedEmbankment = EmbankmentMerger.MergeSelectedEmbankments(embankmentDefinitions, embankment1, embankment2);
+            Embankment mergedEmbankment = EmbankmentMerger.MergeSelectedEmbankments(embankmentDefinitions, embankment1, embankment2);
 
             Assert.That(mergedEmbankment.Geometry.NumPoints == 4);
             Assert.That(mergedEmbankment.Geometry.Coordinates[0].Equals(new Coordinate(10, 100)));
@@ -138,20 +170,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Test]
         public void EmbankmentMergeOneIntersectionTest()
         {
-
-            var embankment1 = createEmbankment("Embankment01", new[]
+            Embankment embankment1 = createEmbankment("Embankment01", new[]
             {
                 new Coordinate(10, 0),
                 new Coordinate(10, 100)
             });
 
-            var embankment2 = createEmbankment("Embankment02", new[]
+            Embankment embankment2 = createEmbankment("Embankment02", new[]
             {
                 new Coordinate(0, 10),
                 new Coordinate(100, 10)
             });
 
-            var embankment3 = createEmbankment("Embankment03", new[]
+            Embankment embankment3 = createEmbankment("Embankment03", new[]
             {
                 new Coordinate(0, 0),
                 new Coordinate(999, 999)
@@ -159,35 +190,36 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             var embankmentDefinitions = new List<Embankment>()
             {
-                embankment1, embankment2, embankment3
+                embankment1,
+                embankment2,
+                embankment3
             };
 
-            var mergedEmbankment = EmbankmentMerger.MergeSelectedEmbankments(embankmentDefinitions, embankment1, embankment2);
+            Embankment mergedEmbankment = EmbankmentMerger.MergeSelectedEmbankments(embankmentDefinitions, embankment1, embankment2);
 
             Assert.That(mergedEmbankment.Geometry.NumPoints == 3);
             Assert.That(mergedEmbankment.Geometry.Coordinates[0].Equals(new Coordinate(10, 100)));
-            Assert.That(mergedEmbankment.Geometry.Coordinates[1].Equals(new Coordinate(10, 10)));  // The intersection
+            Assert.That(mergedEmbankment.Geometry.Coordinates[1].Equals(new Coordinate(10, 10))); // The intersection
             Assert.That(mergedEmbankment.Geometry.Coordinates[2].Equals(new Coordinate(100, 10)));
         }
 
         [Test]
         public void EmbankmentMergeOneIntersectionReversedLineStringTest()
         {
-
             // This embankment has different different direction that previous test. Should give exact same result. 
-            var embankment1 = createEmbankment("Embankment01", new[]
+            Embankment embankment1 = createEmbankment("Embankment01", new[]
             {
-                new Coordinate(10, 100),  
+                new Coordinate(10, 100),
                 new Coordinate(10, 0)
             });
 
-            var embankment2 = createEmbankment("Embankment02", new[]
+            Embankment embankment2 = createEmbankment("Embankment02", new[]
             {
                 new Coordinate(0, 10),
                 new Coordinate(100, 10)
             });
 
-            var embankment3 = createEmbankment("Embankment03", new[]
+            Embankment embankment3 = createEmbankment("Embankment03", new[]
             {
                 new Coordinate(0, 0),
                 new Coordinate(999, 999)
@@ -195,14 +227,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             var embankmentDefinitions = new List<Embankment>()
             {
-                embankment1, embankment2, embankment3
+                embankment1,
+                embankment2,
+                embankment3
             };
 
-            var mergedEmbankment = EmbankmentMerger.MergeSelectedEmbankments(embankmentDefinitions, embankment1, embankment2);
+            Embankment mergedEmbankment = EmbankmentMerger.MergeSelectedEmbankments(embankmentDefinitions, embankment1, embankment2);
 
             Assert.That(mergedEmbankment.Geometry.NumPoints == 3);
             Assert.That(mergedEmbankment.Geometry.Coordinates[0].Equals(new Coordinate(10, 100)));
-            Assert.That(mergedEmbankment.Geometry.Coordinates[1].Equals(new Coordinate(10, 10)));  // The intersection. 
+            Assert.That(mergedEmbankment.Geometry.Coordinates[1].Equals(new Coordinate(10, 10))); // The intersection. 
             Assert.That(mergedEmbankment.Geometry.Coordinates[2].Equals(new Coordinate(100, 10)));
         }
 
@@ -213,8 +247,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             var pointList1 = new List<Coordinate>
             {
-                new Coordinate {X = 10, Y = 20},
-                new Coordinate {X = 30, Y = 20}
+                new Coordinate
+                {
+                    X = 10,
+                    Y = 20
+                },
+                new Coordinate
+                {
+                    X = 30,
+                    Y = 20
+                }
             };
 
             var testEmbankment1 = new Embankment
@@ -225,8 +267,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             var pointList2 = new List<Coordinate>
             {
-                new Coordinate {X = 20, Y = 10},
-                new Coordinate {X = 20, Y = 30}
+                new Coordinate
+                {
+                    X = 20,
+                    Y = 10
+                },
+                new Coordinate
+                {
+                    X = 20,
+                    Y = 30
+                }
             };
 
             var testEmbankment2 = new Embankment
@@ -239,7 +289,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             embankmentDefinitions.Add(testEmbankment1);
             embankmentDefinitions.Add(testEmbankment2);
 
-            var result = EmbankmentMerger.MergeSelectedEmbankments(embankmentDefinitions, testEmbankment1, testEmbankment2);
+            Embankment result = EmbankmentMerger.MergeSelectedEmbankments(embankmentDefinitions, testEmbankment1, testEmbankment2);
 
             Assert.NotNull(result);
             Assert.AreEqual(3, result.Geometry.Coordinates.Count());
@@ -249,16 +299,31 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.AreEqual("MergedEmbankment01", result.Name);
         }
 
-
         [Test]
         public void MergeByAddingTest()
         {
             var pointList1 = new List<Coordinate>
             {
-                new Coordinate {X = 90, Y = 110},
-                new Coordinate {X = 70, Y = 100},
-                new Coordinate {X = 50, Y = 50},
-                new Coordinate {X = 20, Y = 20},
+                new Coordinate
+                {
+                    X = 90,
+                    Y = 110
+                },
+                new Coordinate
+                {
+                    X = 70,
+                    Y = 100
+                },
+                new Coordinate
+                {
+                    X = 50,
+                    Y = 50
+                },
+                new Coordinate
+                {
+                    X = 20,
+                    Y = 20
+                },
             };
 
             var testEmbankment1 = new Embankment
@@ -269,11 +334,31 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             var pointList2 = new List<Coordinate>
             {
-                new Coordinate {X = 240, Y = 60},
-                new Coordinate {X = 200, Y = 110},
-                new Coordinate {X = 190, Y = 140},
-                new Coordinate {X = 130, Y = 130},
-                new Coordinate {X = 100, Y = 120},
+                new Coordinate
+                {
+                    X = 240,
+                    Y = 60
+                },
+                new Coordinate
+                {
+                    X = 200,
+                    Y = 110
+                },
+                new Coordinate
+                {
+                    X = 190,
+                    Y = 140
+                },
+                new Coordinate
+                {
+                    X = 130,
+                    Y = 130
+                },
+                new Coordinate
+                {
+                    X = 100,
+                    Y = 120
+                },
             };
 
             var testEmbankment2 = new Embankment
@@ -286,7 +371,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             embankmentDefinitions.Add(testEmbankment1);
             embankmentDefinitions.Add(testEmbankment2);
 
-            var result = EmbankmentMerger.MergeSelectedEmbankments(embankmentDefinitions, testEmbankment1, testEmbankment2);
+            Embankment result = EmbankmentMerger.MergeSelectedEmbankments(embankmentDefinitions, testEmbankment1, testEmbankment2);
 
             Assert.NotNull(result);
             Assert.AreEqual(9, result.Geometry.Coordinates.Count());
@@ -318,12 +403,36 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         {
             var pointList1 = new List<Coordinate>
             {
-                new Coordinate {X = 130, Y = 150},
-                new Coordinate {X = 110, Y = 140},
-                new Coordinate {X = 90, Y = 110},
-                new Coordinate {X = 70, Y = 100},
-                new Coordinate {X = 50, Y = 50},
-                new Coordinate {X = 20, Y = 20},
+                new Coordinate
+                {
+                    X = 130,
+                    Y = 150
+                },
+                new Coordinate
+                {
+                    X = 110,
+                    Y = 140
+                },
+                new Coordinate
+                {
+                    X = 90,
+                    Y = 110
+                },
+                new Coordinate
+                {
+                    X = 70,
+                    Y = 100
+                },
+                new Coordinate
+                {
+                    X = 50,
+                    Y = 50
+                },
+                new Coordinate
+                {
+                    X = 20,
+                    Y = 20
+                },
             };
 
             var testEmbankment1 = new Embankment
@@ -334,13 +443,41 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             var pointList2 = new List<Coordinate>
             {
-                new Coordinate {X = 240, Y = 60},
-                new Coordinate {X = 200, Y = 110},
-                new Coordinate {X = 190, Y = 140},
-                new Coordinate {X = 130, Y = 130},
-                new Coordinate {X = 100, Y = 120},
-                new Coordinate {X = 80, Y = 130},
-                new Coordinate {X = 40, Y = 140},
+                new Coordinate
+                {
+                    X = 240,
+                    Y = 60
+                },
+                new Coordinate
+                {
+                    X = 200,
+                    Y = 110
+                },
+                new Coordinate
+                {
+                    X = 190,
+                    Y = 140
+                },
+                new Coordinate
+                {
+                    X = 130,
+                    Y = 130
+                },
+                new Coordinate
+                {
+                    X = 100,
+                    Y = 120
+                },
+                new Coordinate
+                {
+                    X = 80,
+                    Y = 130
+                },
+                new Coordinate
+                {
+                    X = 40,
+                    Y = 140
+                },
             };
 
             var testEmbankment2 = new Embankment
@@ -353,7 +490,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             embankmentDefinitions.Add(testEmbankment1);
             embankmentDefinitions.Add(testEmbankment2);
 
-            var result = EmbankmentMerger.MergeSelectedEmbankments(embankmentDefinitions, testEmbankment1, testEmbankment2);
+            Embankment result = EmbankmentMerger.MergeSelectedEmbankments(embankmentDefinitions, testEmbankment1, testEmbankment2);
 
             Assert.NotNull(result);
             Assert.AreEqual(10, result.Geometry.Coordinates.Count());
@@ -382,6 +519,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.AreEqual("MergedEmbankment01", result.Name);
         }
 
-
+        private static Embankment createEmbankment(string name, Coordinate[] lstCoordinates)
+        {
+            return new Embankment()
+            {
+                Name = name,
+                Geometry = new LineString(lstCoordinates)
+            };
+        }
     }
 }

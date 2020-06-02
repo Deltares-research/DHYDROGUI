@@ -26,19 +26,34 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Editors
         [SetUp]
         public void NetworkSetup()
         {
-            mapControl = new MapControl { Map = { Size = new Size(1000, 1000) } }; // enable coordinate conversions, default size is 100x100
+            mapControl = new MapControl {Map = {Size = new Size(1000, 1000)}}; // enable coordinate conversions, default size is 100x100
             HydroNetwork = new HydroNetwork();
 
-            branch1 = new Channel { Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(20, 0) }) };
+            branch1 = new Channel
+            {
+                Geometry = new LineString(new[]
+                {
+                    new Coordinate(0, 0),
+                    new Coordinate(20, 0)
+                })
+            };
             HydroNetwork.Branches.Add(branch1);
-            var node1 = new HydroNode { Geometry = new Point(0, 0) };
-            var node2 = new HydroNode { Geometry = new Point(20, 0) };
+            var node1 = new HydroNode {Geometry = new Point(0, 0)};
+            var node2 = new HydroNode {Geometry = new Point(20, 0)};
             HydroNetwork.Nodes.Add(node1);
             HydroNetwork.Nodes.Add(node2);
 
-            pump = new Pump {Network = HydroNetwork, Geometry = new Point(5, 0)};
+            pump = new Pump
+            {
+                Network = HydroNetwork,
+                Geometry = new Point(5, 0)
+            };
 
-            CompositeBranchStructure compositeBranchStructure = new CompositeBranchStructure { Network = HydroNetwork, Geometry = new Point(5, 0) };
+            var compositeBranchStructure = new CompositeBranchStructure
+            {
+                Network = HydroNetwork,
+                Geometry = new Point(5, 0)
+            };
             NetworkHelper.AddBranchFeatureToBranch(compositeBranchStructure, branch1, compositeBranchStructure.Chainage);
             HydroNetworkHelper.AddStructureToComposite(compositeBranchStructure, pump);
 
@@ -51,7 +66,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Editors
         [TearDown]
         public void TearDown()
         {
-            if(mapControl != null && !mapControl.IsDisposed)
+            if (mapControl != null && !mapControl.IsDisposed)
             {
                 mapControl.Dispose();
             }
@@ -60,17 +75,18 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Editors
         [Test]
         public void PropertyTest()
         {
-            var pumpEditor = new StructureInteractor<Pump>(new VectorLayer { Map = mapControl.Map }, pump,
-                                                       new VectorStyle { Symbol = new Bitmap(16, 16) }, null);
+            var pumpEditor = new StructureInteractor<Pump>(new VectorLayer {Map = mapControl.Map}, pump,
+                                                           new VectorStyle {Symbol = new Bitmap(16, 16)}, null);
             Assert.AreEqual(true, pumpEditor.AllowDeletion());
             Assert.AreEqual(true, pumpEditor.AllowMove());
             Assert.AreEqual(true, pumpEditor.AllowSingleClickAndMove());
         }
+
         [Test]
         public void MovePump()
         {
-            var pumpEditor = new StructureInteractor<Pump>(new VectorLayer { Map = mapControl.Map }, pump,
-                                                       new VectorStyle { Symbol = new Bitmap(16, 16) }, null);
+            var pumpEditor = new StructureInteractor<Pump>(new VectorLayer {Map = mapControl.Map}, pump,
+                                                           new VectorStyle {Symbol = new Bitmap(16, 16)}, null);
             const double deltaX = 5;
             const double deltaY = 0;
 

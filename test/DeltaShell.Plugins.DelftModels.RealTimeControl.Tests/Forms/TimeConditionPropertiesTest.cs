@@ -13,7 +13,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
         [Category(TestCategory.WindowsForms)]
         public void Show()
         {
-            WindowsFormsTestHelper.ShowModal(new PropertyGrid { SelectedObject = new TimeConditionProperties { Data = new TimeCondition() } });
+            WindowsFormsTestHelper.ShowModal(new PropertyGrid {SelectedObject = new TimeConditionProperties {Data = new TimeCondition()}});
         }
     }
 }

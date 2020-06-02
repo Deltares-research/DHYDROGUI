@@ -15,10 +15,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms.Properties
     [TestFixture]
     public class HydraulicRulePropertiesTest
     {
-        [Test, Category(TestCategory.WindowsForms)]
+        [Test]
+        [Category(TestCategory.WindowsForms)]
         public void ShowProperties()
         {
-            WindowsFormsTestHelper.ShowPropertyGridForObject(new HydraulicRuleProperties { Data = new HydraulicRule() });
+            WindowsFormsTestHelper.ShowPropertyGridForObject(new HydraulicRuleProperties {Data = new HydraulicRule()});
         }
 
         [Test]

@@ -17,8 +17,8 @@ namespace DeltaShell.NGHS.IO.Tests.FileConverters
         [Category(TestCategory.DataAccess)]
         public void ConvertDimr()
         {
-            var xmlFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), @"FileReaders\ConfigXmlReader", "dimr.xml");
-            using (var reader = File.OpenText(xmlFilePath))
+            string xmlFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), @"FileReaders\ConfigXmlReader", "dimr.xml");
+            using (StreamReader reader = File.OpenText(xmlFilePath))
             {
                 var dimrXml = DelftXmlFileConverter.Convert<dimrXML>(reader, new List<string>());
                 Assert.IsNotNull(dimrXml);
@@ -36,8 +36,8 @@ namespace DeltaShell.NGHS.IO.Tests.FileConverters
         [Category(TestCategory.DataAccess)]
         public void ConvertDimrWithExtraElementsOnRootLevel()
         {
-            var xmlFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), @"FileReaders\ConfigXmlReader", "dimrwithextrainfo.xml");
-            using (var reader = File.OpenText(xmlFilePath))
+            string xmlFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), @"FileReaders\ConfigXmlReader", "dimrwithextrainfo.xml");
+            using (StreamReader reader = File.OpenText(xmlFilePath))
             {
                 var dimrXml = DelftXmlFileConverter.Convert<dimrXML>(reader, new List<string>());
                 Assert.IsNotNull(dimrXml);
@@ -68,8 +68,8 @@ namespace DeltaShell.NGHS.IO.Tests.FileConverters
         [Category(TestCategory.DataAccess)]
         public void ValidateDimrFileWithNoAdditionalInformation()
         {
-            var dimrPath = TestHelper.GetTestFilePath(Path.Combine("FileReaders", "ConfigXmlReader", "dimr.xml"));
-            using (var reader = File.OpenText(dimrPath))
+            string dimrPath = TestHelper.GetTestFilePath(Path.Combine("FileReaders", "ConfigXmlReader", "dimr.xml"));
+            using (StreamReader reader = File.OpenText(dimrPath))
             {
                 var unsupportedFeatures = new List<string>();
 
@@ -83,8 +83,8 @@ namespace DeltaShell.NGHS.IO.Tests.FileConverters
         [Category(TestCategory.DataAccess)]
         public void ValidateDimrFileWithUnsupportedElementsAndAttribute()
         {
-            var dimrPath = TestHelper.GetTestFilePath(Path.Combine("FileReaders", "ConfigXmlReader", "dimrwithextrainfo.xml"));
-            using (var reader = File.OpenText(dimrPath))
+            string dimrPath = TestHelper.GetTestFilePath(Path.Combine("FileReaders", "ConfigXmlReader", "dimrwithextrainfo.xml"));
+            using (StreamReader reader = File.OpenText(dimrPath))
             {
                 var unsupportedFeatures = new List<string>();
                 DelftXmlFileConverter.Convert<dimrXML>(reader, unsupportedFeatures);

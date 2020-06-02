@@ -91,21 +91,21 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
             // see TOOLS-4373 RTC validation: valid connections
             // output condition: either input other condition or input rule
             var condition = new StandardCondition();
-            var validationResult = condition.Validate();
-            var noOutputexceptionCount = validationResult.Messages.Count();
+            ValidationResult validationResult = condition.Validate();
+            int noOutputexceptionCount = validationResult.Messages.Count();
             Assert.Greater(noOutputexceptionCount, 0);
 
             // add output and check result has less validation exceptions
             condition.TrueOutputs.Add(new StandardCondition());
             validationResult = condition.Validate();
-            var oneTrueOutputExceptionCount = validationResult.Messages.Count();
+            int oneTrueOutputExceptionCount = validationResult.Messages.Count();
             Assert.Less(oneTrueOutputExceptionCount, noOutputexceptionCount);
 
             // TOOLS-4371 RTC validation: a condition has maximum 1 True and/or 1 False output 
             // add another output and check result has more validation exceptions
             condition.TrueOutputs.Add(new StandardCondition());
             validationResult = condition.Validate();
-            var twoTrueOutputExceptionCount = validationResult.Messages.Count();
+            int twoTrueOutputExceptionCount = validationResult.Messages.Count();
             Assert.Greater(twoTrueOutputExceptionCount, oneTrueOutputExceptionCount);
 
             // do same check for False
@@ -114,11 +114,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
             Assert.Greater(noOutputexceptionCount, 0);
 
             condition.FalseOutputs.Add(new StandardCondition());
-            var oneFalseOutputExceptionCount = condition.Validate().Messages.Count();
+            int oneFalseOutputExceptionCount = condition.Validate().Messages.Count();
             Assert.Less(oneFalseOutputExceptionCount, noOutputexceptionCount);
 
             condition.FalseOutputs.Add(new StandardCondition());
-            var twoFalseOutputExceptionCount = condition.Validate().Messages.Count();
+            int twoFalseOutputExceptionCount = condition.Validate().Messages.Count();
             Assert.Greater(twoFalseOutputExceptionCount, oneFalseOutputExceptionCount);
         }
     }

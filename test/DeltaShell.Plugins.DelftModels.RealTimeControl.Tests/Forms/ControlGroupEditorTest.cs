@@ -7,6 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.Xml.Linq;
+using DelftTools.Controls;
+using DelftTools.Controls.Swf.Graph;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
@@ -51,12 +53,17 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
                 Kp = 0,
                 Ki = 0,
                 Kd = 0,
-                Setting = new Setting { Min = 0, Max = 0, MaxSpeed = 0 },
+                Setting = new Setting
+                {
+                    Min = 0,
+                    Max = 0,
+                    MaxSpeed = 0
+                },
             };
             var input = new Input
             {
                 ParameterName = "inputTestX",
-                Feature = new RtcTestFeature { Name = "Element" }
+                Feature = new RtcTestFeature {Name = "Element"}
             };
             rule.Inputs.Add(input);
 
@@ -64,25 +71,25 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
             var output = new Output
             {
                 ParameterName = "outputTestY",
-                Feature = new RtcTestFeature { Name = "Element" }
+                Feature = new RtcTestFeature {Name = "Element"}
             };
             rule.Outputs.Add(output);
 
             condition = new StandardCondition
+            {
+                Name = "test",
+                Reference = "testImplicit",
+                Input = new Input
                 {
-                    Name = "test",
-                    Reference = "testImplicit",
-                    Input = new Input
-                                {
-                                    ParameterName = "testInput",
-                                    Feature = new RtcTestFeature { Name = "Element" }
-                                }
-                };
+                    ParameterName = "testInput",
+                    Feature = new RtcTestFeature {Name = "Element"}
+                }
+            };
         }
 
         [Test]
         [TestCase(true, -1)] // RTC Inputs less than limit
-        [TestCase(true, 0)] // RTC Inputs equal to limit
+        [TestCase(true, 0)]  // RTC Inputs equal to limit
         [TestCase(false, 1)] // RTC Inputs greater than limit
         public void TestRtcInputsGenerateExpectedContextMenu(bool expectedResult, int additionalValues = 0)
         {
@@ -124,7 +131,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
                 var menuItems = new MenuItem[controlGroupEditor.GraphControl.ContextMenuItems.Count];
                 controlGroupEditor.GraphControl.ContextMenuItems.CopyTo(menuItems, 0);
 
-                var menuItemNames = menuItems.Select(b => b.Text).ToList();
+                List<string> menuItemNames = menuItems.Select(b => b.Text).ToList();
 
                 Assert.AreEqual(expectedResult, menuItemNames.Contains("Input locations"),
                                 "Context menu differs from what was expected");
@@ -138,7 +145,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
 
         [Test]
         [TestCase(true, -1)] // RTC Outputs less than limit
-        [TestCase(true,  0)] // RTC Outputs equal to limit
+        [TestCase(true, 0)]  // RTC Outputs equal to limit
         [TestCase(false, 1)] // RTC Outputs greater than limit
         public void TestRtcOutputsGenerateExpectedContextMenu(bool expectedResult, int additionalValues = 0)
         {
@@ -180,7 +187,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
                 var menuItems = new MenuItem[controlGroupEditor.GraphControl.ContextMenuItems.Count];
                 controlGroupEditor.GraphControl.ContextMenuItems.CopyTo(menuItems, 0);
 
-                var menuItemNames = menuItems.Select(b => b.Text).ToList();
+                List<string> menuItemNames = menuItems.Select(b => b.Text).ToList();
 
                 Assert.AreEqual(expectedResult, menuItemNames.Contains("Output locations"),
                                 "Context menu differs from what was expected");
@@ -196,7 +203,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
         [NUnit.Framework.Category(TestCategory.WindowsForms)]
         public void ShowControlGroupGraphView()
         {
-            var controlGroupEditor = new ControlGroupEditor { Data = new ControlGroup() };
+            var controlGroupEditor = new ControlGroupEditor {Data = new ControlGroup()};
             WindowsFormsTestHelper.ShowModal(controlGroupEditor);
         }
 
@@ -204,12 +211,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
         [NUnit.Framework.Category(TestCategory.WindowsForms)]
         public void EditorForGroup2Rules()
         {
-            var controlGroup = RealTimeControlTestHelper.CreateGroup2Rules();
+            ControlGroup controlGroup = RealTimeControlTestHelper.CreateGroup2Rules();
             controlGroup.Conditions[0].LongName = "LongName";
             controlGroup.Conditions[0].Value = 7.53;
 
-            var controlGroupEditor = new ControlGroupEditor { Data = controlGroup };
-            
+            var controlGroupEditor = new ControlGroupEditor {Data = controlGroup};
+
             WindowsFormsTestHelper.ShowModal(controlGroupEditor);
         }
 
@@ -217,12 +224,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
         [NUnit.Framework.Category(TestCategory.Integration)]
         public void DomainObject2ShapeTest()
         {
-            using (var controlGroupEditor = new ControlGroupEditor { Data = RealTimeControlTestHelper.CreateGroup2Rules() })
+            using (var controlGroupEditor = new ControlGroupEditor {Data = RealTimeControlTestHelper.CreateGroup2Rules()})
             {
                 //controlGroupEditor.BindObjectDataToGraph();
-                var graphControl = controlGroupEditor.GraphControl;
+                GraphControl graphControl = controlGroupEditor.GraphControl;
 
-                var shapes = graphControl.GetShapes<ShapeBase>().ToList();
+                List<ShapeBase> shapes = graphControl.GetShapes<ShapeBase>().ToList();
 
                 // 3 input shape, 1 condition shape, 2 rule shapes, 2 output shapes
                 Assert.AreEqual(8, shapes.Count);
@@ -239,25 +246,25 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
         [NUnit.Framework.Category(TestCategory.Integration)]
         public void DomainObject2ShapeConnectionTest()
         {
-            using (var controlGroupEditor = new ControlGroupEditor { Data = RealTimeControlTestHelper.CreateGroup2Rules() })
+            using (var controlGroupEditor = new ControlGroupEditor {Data = RealTimeControlTestHelper.CreateGroup2Rules()})
             {
-                var graphControl = controlGroupEditor.GraphControl;
+                GraphControl graphControl = controlGroupEditor.GraphControl;
                 // 3 input shape, 1 condition shape, 2 rule shapes, 2 output shapes
 
-                IList<ShapeBase> shapes = new List<ShapeBase>((graphControl.GetShapes<ShapeBase>()));
+                IList<ShapeBase> shapes = new List<ShapeBase>(graphControl.GetShapes<ShapeBase>());
                 // inputs connect a Bottom to a Top connector
-                var inputs = shapes.Where(s => s.Tag is Input);
+                IEnumerable<ShapeBase> inputs = shapes.Where(s => s.Tag is Input);
                 Assert.AreEqual(3, inputs.Count());
                 inputs.ForEach(
                     i =>
-                    Assert.IsTrue(
-                        i.Connectors.Count == 1 && i.Connectors[0].Name == "Bottom"
-                        && i.Connectors[0].Connections[0].To.Name == "Top"));
+                        Assert.IsTrue(
+                            i.Connectors.Count == 1 && i.Connectors[0].Name == "Bottom"
+                                                    && i.Connectors[0].Connections[0].To.Name == "Top"));
 
                 // rules connect right to output
-                var rules = shapes.Where(s => s.Tag is RuleBase);
+                IEnumerable<ShapeBase> rules = shapes.Where(s => s.Tag is RuleBase);
                 Assert.AreEqual(2, rules.Count());
-                var trueRuleShape = rules.FirstOrDefault();
+                ShapeBase trueRuleShape = rules.FirstOrDefault();
                 Assert.AreEqual(4, trueRuleShape.Connectors.Count);
                 // left : condition
                 Assert.AreEqual(1, trueRuleShape.Connectors[0].Connections.Count);
@@ -277,7 +284,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
                 Assert.AreEqual("Left", trueRuleShape.Connectors[2].Connections[0].To.Name);
                 Assert.AreEqual("Right", trueRuleShape.Connectors[2].Connections[0].From.Name);
 
-                var falseRuleShape = rules.LastOrDefault();
+                ShapeBase falseRuleShape = rules.LastOrDefault();
                 // left : condition
                 Assert.AreEqual(1, falseRuleShape.Connectors[0].Connections.Count);
                 Assert.AreEqual("Left", falseRuleShape.Connectors[0].Name);
@@ -285,8 +292,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
                 Assert.AreEqual("Left", falseRuleShape.Connectors[0].Connections[0].To.Name);
                 Assert.AreEqual("Bottom", falseRuleShape.Connectors[0].Connections[0].From.Name);
 
-                var conditions = shapes.Where(s => s.Tag is ConditionBase);
-                var conditionShape = conditions.FirstOrDefault();
+                IEnumerable<ShapeBase> conditions = shapes.Where(s => s.Tag is ConditionBase);
+                ShapeBase conditionShape = conditions.FirstOrDefault();
                 Assert.AreEqual(4, conditionShape.Connectors.Count);
                 // left : empty
                 Assert.AreEqual(0, conditionShape.Connectors[0].Connections.Count);
@@ -313,17 +320,17 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
         [Test]
         public void ClearFeatureResetsShapeText()
         {
-            var controlGroup = new ControlGroup { Inputs = { new Input { Feature = new RtcTestFeature() } } };
+            var controlGroup = new ControlGroup {Inputs = {new Input {Feature = new RtcTestFeature()}}};
 
             // init controls
-            using (var controlGroupEditor = new ControlGroupEditor { Data = controlGroup })
+            using (var controlGroupEditor = new ControlGroupEditor {Data = controlGroup})
             {
-                var graphControl = controlGroupEditor.GraphControl;
+                GraphControl graphControl = controlGroupEditor.GraphControl;
 
                 controlGroup.Inputs[0].Feature = null;
 
                 // check shape text
-                var inputShape = graphControl.GetShapes<ShapeBase>().First(s => s.Tag is Input);
+                ShapeBase inputShape = graphControl.GetShapes<ShapeBase>().First(s => s.Tag is Input);
                 Assert.AreEqual("[Not Set]", inputShape.Title);
             }
         }
@@ -331,18 +338,18 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
         [Test]
         public void SetFeatureUpdatesShapeText()
         {
-            var controlGroup = new ControlGroup { Inputs = { new Input() } };
+            var controlGroup = new ControlGroup {Inputs = {new Input()}};
 
             // init controls
-            using (var controlGroupEditor = new ControlGroupEditor { Data = controlGroup })
+            using (var controlGroupEditor = new ControlGroupEditor {Data = controlGroup})
             {
-                var graphControl = controlGroupEditor.GraphControl;
+                GraphControl graphControl = controlGroupEditor.GraphControl;
 
                 controlGroup.Inputs[0].ParameterName = "p";
-                controlGroup.Inputs[0].Feature = new RtcTestFeature { Name = "f" };
+                controlGroup.Inputs[0].Feature = new RtcTestFeature {Name = "f"};
 
                 // check shape text
-                var inputShape = graphControl.GetShapes<ShapeBase>().First(s => s.Tag is Input);
+                ShapeBase inputShape = graphControl.GetShapes<ShapeBase>().First(s => s.Tag is Input);
                 Assert.AreEqual("f_p", inputShape.Title);
             }
         }
@@ -350,13 +357,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
         [Test]
         public void DomainObject2ShapePropertyChangedTest()
         {
-            var controlGroup = RealTimeControlTestHelper.CreateGroup2Rules();
-            using (var controlGroupEditor = new ControlGroupEditor { Data = controlGroup })
+            ControlGroup controlGroup = RealTimeControlTestHelper.CreateGroup2Rules();
+            using (var controlGroupEditor = new ControlGroupEditor {Data = controlGroup})
             {
-                var graphControl = controlGroupEditor.GraphControl;
-                IList<ShapeBase> shapes = new List<ShapeBase>((graphControl.GetShapes<ShapeBase>()));
+                GraphControl graphControl = controlGroupEditor.GraphControl;
+                IList<ShapeBase> shapes = new List<ShapeBase>(graphControl.GetShapes<ShapeBase>());
 
-                foreach (var shape in shapes)
+                foreach (ShapeBase shape in shapes)
                 {
                     if (shape.Tag is INameable)
                     {
@@ -364,15 +371,15 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
                     }
                 }
 
-                var firstCondition = controlGroup.Conditions.FirstOrDefault();
+                ConditionBase firstCondition = controlGroup.Conditions.FirstOrDefault();
                 firstCondition.Name = "firstCondition";
-                var firstRule = controlGroup.Rules.FirstOrDefault();
+                RuleBase firstRule = controlGroup.Rules.FirstOrDefault();
                 firstRule.Name = "firstRule";
-                foreach (var shape in shapes)
+                foreach (ShapeBase shape in shapes)
                 {
                     if (shape.Tag is INameable)
                     {
-                        Assert.IsTrue(shape.Title == ((INameable)shape.Tag).Name);
+                        Assert.IsTrue(shape.Title == ((INameable) shape.Tag).Name);
                     }
                 }
             }
@@ -383,15 +390,15 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
         {
             var controlGroup = new ControlGroup();
             using (var clipboardMock = new ClipboardMock())
-            using (var controlGroupEditor = new ControlGroupEditor { Data = controlGroup })
+            using (var controlGroupEditor = new ControlGroupEditor {Data = controlGroup})
             {
                 clipboardMock.GetText_Returns_SetText();
 
-                var menuItem = new MenuItem { Tag = rule };
+                var menuItem = new MenuItem {Tag = rule};
                 controlGroupEditor.CopyXmlToClipboard(menuItem, null);
                 AssertCopyXmlToClipboard(rule, controlGroup.Name);
 
-                menuItem = new MenuItem { Tag = condition };
+                menuItem = new MenuItem {Tag = condition};
                 controlGroupEditor.CopyXmlToClipboard(menuItem, null);
                 AssertCopyXmlToClipboard(condition, controlGroup.Name);
             }
@@ -402,7 +409,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
         {
             var controlGroup = new ControlGroup();
             using (var clipboardMock = new ClipboardMock())
-            using (var controlGroupEditor = new ControlGroupEditor { Data = controlGroup })
+            using (var controlGroupEditor = new ControlGroupEditor {Data = controlGroup})
             {
                 clipboardMock.GetText_Returns_SetText();
 
@@ -459,52 +466,52 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
 
                 // setup mock model / control group
                 var controlGroup = new ControlGroup();
-                controlGroup.Rules.Add(new PIDRule{Name = "testRule"});
+                controlGroup.Rules.Add(new PIDRule {Name = "testRule"});
 
                 var model = mocks.StrictMultiMock<IRealTimeControlModel>(typeof(INotifyCollectionChanged), typeof(INotifyPropertyChanged));
 
-                ((INotifyCollectionChanged)model).CollectionChanged -= null;
+                ((INotifyCollectionChanged) model).CollectionChanged -= null;
                 LastCall.Repeat.Any().IgnoreArguments();
                 ((INotifyCollectionChanged) model).CollectionChanged += null;
                 LastCall.Repeat.Any().IgnoreArguments();
-                ((INotifyPropertyChanged)model).PropertyChanged -= null;
+                ((INotifyPropertyChanged) model).PropertyChanged -= null;
                 LastCall.Repeat.Any().IgnoreArguments();
-                ((INotifyPropertyChanged)model).PropertyChanged += null;
+                ((INotifyPropertyChanged) model).PropertyChanged += null;
                 LastCall.Repeat.Any().IgnoreArguments();
 
                 Expect.Call(model.GetChildDataItemLocationsFromControlledModels(DataItemRole.None)).IgnoreArguments().Return(Enumerable.Empty<IFeature>()).Repeat.AtLeastOnce();
-                model.ControlGroups = new EventedList<ControlGroup> { controlGroup };
+                model.ControlGroups = new EventedList<ControlGroup> {controlGroup};
                 model.Stub(m => m.ControlledModels).Return(new EventedList<IModel>());
                 mocks.ReplayAll();
 
                 // create view
                 var controlGroupGraphView = new ControlGroupGraphView
-                    {
-                        Data = controlGroup,
-                        Model = model
-                    };
+                {
+                    Data = controlGroup,
+                    Model = model
+                };
                 gui.DocumentViews.Add(controlGroupGraphView);
 
                 // change X of the first shape
-                var controller = (ControlGroupEditorController)TypeUtils.GetField(controlGroupGraphView.ControlGroupEditor, "controller");
+                var controller = (ControlGroupEditorController) TypeUtils.GetField(controlGroupGraphView.ControlGroupEditor, "controller");
                 controller.GraphControl.Shapes[0].X = 100;
 
                 // remove view (will keep view context containing layout of the shapes)
                 gui.DocumentViews.Remove(controlGroupGraphView);
 
-                var viewInfo = new RealTimeControlGuiPlugin().GetViewInfoObjects().FirstOrDefault(vi => vi.ViewType == typeof(ControlGroupGraphView));
+                ViewInfo viewInfo = new RealTimeControlGuiPlugin().GetViewInfoObjects().FirstOrDefault(vi => vi.ViewType == typeof(ControlGroupGraphView));
 
                 // re-create view (reloads view context)
                 var newControlGroupGraphView = new ControlGroupGraphView
-                    {
-                        Data = controlGroup,
-                        Model = model,
-                        ViewInfo = viewInfo
-                    };
+                {
+                    Data = controlGroup,
+                    Model = model,
+                    ViewInfo = viewInfo
+                };
                 gui.DocumentViews.Add(newControlGroupGraphView);
 
                 // check if coordinate is restored
-                controller = (ControlGroupEditorController)TypeUtils.GetField(newControlGroupGraphView.ControlGroupEditor, "controller");
+                controller = (ControlGroupEditorController) TypeUtils.GetField(newControlGroupGraphView.ControlGroupEditor, "controller");
                 Assert.AreEqual(100, controller.GraphControl.Shapes[0].X);
             }
         }
@@ -514,9 +521,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
         {
             var controlGroup = new ControlGroup();
 
-            using (var controlGroupEditor = new ControlGroupEditor { Data = controlGroup })
+            using (var controlGroupEditor = new ControlGroupEditor {Data = controlGroup})
             {
-                var graphControl = controlGroupEditor.GraphControl;
+                GraphControl graphControl = controlGroupEditor.GraphControl;
 
                 controlGroup.Inputs.Add(new Input());
                 controlGroup.Outputs.Add(new Output());
@@ -524,14 +531,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
                 controlGroup.Rules.Add(pidRule);
                 controlGroup.Conditions.Add(new StandardCondition());
 
-                var controller = controlGroupEditor.Controller;
-                    //new ControlGroupEditorController { ControlGroup = controlGroup, GraphControl = graphControl };
-                var shapeCollection = graphControl.GetShapes<ShapeBase>();
+                ControlGroupEditorController controller = controlGroupEditor.Controller;
+                //new ControlGroupEditorController { ControlGroup = controlGroup, GraphControl = graphControl };
+                IEnumerable<ShapeBase> shapeCollection = graphControl.GetShapes<ShapeBase>();
                 RealTimeControlModelCopyPasteHelper.CloneRtcObjectsFromClipBoardAndPlaceOnGraph(shapeCollection, controller, new Point(12, 13));
 
                 Assert.AreEqual(8, graphControl.GetShapes<ShapeBase>().Count());
             }
-
         }
 
         [Test]
@@ -543,16 +549,16 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
 
             mockOutputShape.Tag = new Output();
             mockInputDataItem.Role = DataItemRole.Input;
-            
+
             mockModel.Expect(m => m.GetDataItemByValue(null)).IgnoreArguments().Return(mockInputDataItem);
             mockModel.Expect(m => m.BeginEdit(null)).IgnoreArguments();
             mockModel.Expect(m => m.EndEdit()).IgnoreArguments();
             mockInputDataItem.Expect(i => i.LinkedBy).IgnoreArguments().Return(new EventedList<IDataItem>());
             mockInputDataItem.Expect(i => i.LinkTo(null)).IgnoreArguments().Return(true);
-            
+
             mocks.ReplayAll();
 
-            using (var control = new ControlGroupEditor { Model = mockModel })
+            using (var control = new ControlGroupEditor {Model = mockModel})
             {
                 control.Link(mockOutputShape, mockInputDataItem);
             }
@@ -567,18 +573,18 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
             var shape = mocks.Stub<Shape>();
             var dataItem = mocks.Stub<IDataItem>();
             var diLink = mocks.Stub<IDataItem>();
-            
+
             shape.Tag = new Input();
             dataItem.Role = DataItemRole.Output;
 
-            mockModel.Expect(m => m.GetDataItemByValue(null)).IgnoreArguments().Return(dataItem); 
+            mockModel.Expect(m => m.GetDataItemByValue(null)).IgnoreArguments().Return(dataItem);
             mockModel.Expect(m => m.BeginEdit(null)).IgnoreArguments();
             mockModel.Expect(m => m.EndEdit()).IgnoreArguments();
             dataItem.Expect(i => i.LinkTo(null)).IgnoreArguments().Return(true);
 
             mocks.ReplayAll();
-            
-            using(var control = new ControlGroupEditor { Model = mockModel })
+
+            using (var control = new ControlGroupEditor {Model = mockModel})
             {
                 control.Link(shape, dataItem);
             }
@@ -600,13 +606,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
             rtcModel.Expect(m => m.GetDataItemByValue(null)).IgnoreArguments().Return(flowDataItem);
             rtcModel.Expect(m => m.BeginEdit(null)).IgnoreArguments();
             rtcModel.Expect(m => m.EndEdit()).IgnoreArguments();
-            flowDataItem.Expect(i => i.LinkedBy).IgnoreArguments().Return(new EventedList<IDataItem> { existingLinkedDataItem });
+            flowDataItem.Expect(i => i.LinkedBy).IgnoreArguments().Return(new EventedList<IDataItem> {existingLinkedDataItem});
             existingLinkedDataItem.Expect(l => l.Unlink()).IgnoreArguments();
             flowDataItem.Expect(i => i.LinkTo(null)).IgnoreArguments().Return(true);
 
             mocks.ReplayAll();
 
-            using (var control = new ControlGroupEditor { Model = rtcModel })
+            using (var control = new ControlGroupEditor {Model = rtcModel})
             {
                 control.Link(shape, flowDataItem);
             }

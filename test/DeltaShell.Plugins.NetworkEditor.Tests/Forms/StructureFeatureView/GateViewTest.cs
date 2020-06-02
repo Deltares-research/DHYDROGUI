@@ -14,10 +14,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
         [Category(TestCategory.WindowsForms)]
         public void ShowEmpty()
         {
-            var view = new GateView
-                {
-                    Data = null
-                };
+            var view = new GateView {Data = null};
             WindowsFormsTestHelper.ShowModal(view);
         }
 
@@ -27,13 +24,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
         {
             var gate = new Gate("TestGate")
             {
-                Geometry = new LineString(new[] {new Coordinate(0, 0), new Coordinate(1, 1)})
+                Geometry = new LineString(new[]
+                {
+                    new Coordinate(0, 0),
+                    new Coordinate(1, 1)
+                })
             };
 
-            var gateView = new GateView
-                {
-                    Data = gate
-                };
+            var gateView = new GateView {Data = gate};
 
             WindowsFormsTestHelper.ShowModal(gateView);
         }
@@ -45,7 +43,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
             var gate = new Gate("TestGate")
             {
                 SillWidth = 100,
-                Geometry = new LineString(new[] {new Coordinate(0, 0), new Coordinate(1, 1)})
+                Geometry = new LineString(new[]
+                {
+                    new Coordinate(0, 0),
+                    new Coordinate(1, 1)
+                })
             };
 
             var gateView = new GateView {Data = gate};

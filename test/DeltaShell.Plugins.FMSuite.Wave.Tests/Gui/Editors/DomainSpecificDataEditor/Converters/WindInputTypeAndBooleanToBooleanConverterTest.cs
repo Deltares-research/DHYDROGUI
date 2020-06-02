@@ -18,16 +18,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.DomainSpecificDataEd
             converter = new WindInputTypeAndBooleanToBooleanConverter();
         }
 
-        [TestCaseSource(nameof(TestCaseData))]
-        public void Convert_ThenExpectedValueIsReturned(object value1, object value2, Type targetType, object expectedReturnValue)
-        {
-            // Call
-            object result = converter.Convert(new []{value1, value2}, targetType, null, null);
-
-            // Assert
-            Assert.That(result, Is.EqualTo(expectedReturnValue));
-        }
-
         [Test]
         public void ConvertBack_ThenNotSupportedExceptionIsThrown()
         {
@@ -36,6 +26,20 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.DomainSpecificDataEd
 
             // Assert
             Assert.That(Call, Throws.TypeOf<NotSupportedException>());
+        }
+
+        [TestCaseSource(nameof(TestCaseData))]
+        public void Convert_ThenExpectedValueIsReturned(object value1, object value2, Type targetType, object expectedReturnValue)
+        {
+            // Call
+            object result = converter.Convert(new[]
+            {
+                value1,
+                value2
+            }, targetType, null, null);
+
+            // Assert
+            Assert.That(result, Is.EqualTo(expectedReturnValue));
         }
 
         private static IEnumerable<TestCaseData> TestCaseData()

@@ -26,7 +26,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             IEventedList<WaterQualityLoad> loads = new EventedList<WaterQualityLoad>();
 
             string path = Path.Combine(TestHelper.GetTestDataDirectory(), "IO", "dry_loads_shp_file", "sfb_testlocationsinput.shp");
-            LoadsImporter importer = new LoadsImporter();
+            var importer = new LoadsImporter();
             importer.ImportItem(path, loads);
 
             Assert.AreEqual(3, loads.Count);
@@ -68,7 +68,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             IEventedList<WaterQualityLoad> loads = new EventedList<WaterQualityLoad>();
 
             string path = Path.Combine(TestHelper.GetTestDataDirectory(), "IO", "shape_files", "loads", "load.shp");
-            LoadsImporter importer = new LoadsImporter();
+            var importer = new LoadsImporter();
             importer.ImportItem(path, loads);
 
             Assert.AreEqual(5, loads.Count);
@@ -90,14 +90,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             Assert.AreEqual("Pipe (surface)", loads[3].LoadType);
             Assert.AreEqual("Pipe (surface)", loads[4].LoadType);
         }
-        
+
         [Test]
         public void ImportNonExistingFileTest()
         {
             IEventedList<WaterQualityLoad> loads = new EventedList<WaterQualityLoad>();
 
             string path = Path.Combine(TestHelper.GetTestDataDirectory(), "IO", "idontexist.shp");
-            LoadsImporter importer = new LoadsImporter();
+            var importer = new LoadsImporter();
             importer.ImportItem(path, loads);
 
             Assert.AreEqual(0, loads.Count);
@@ -120,7 +120,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
 
             waqModel.Grid.CoordinateSystem = new OgrCoordinateSystemFactory().CreateFromEPSG(3857);
 
-            modelService.Expect(ms => ms.GetAllModels(null)).IgnoreArguments().Return(new[] { waqModel }).Repeat.Any();
+            modelService.Expect(ms => ms.GetAllModels(null)).IgnoreArguments().Return(new[]
+            {
+                waqModel
+            }).Repeat.Any();
 
             app.ModelService = modelService;
             app.Expect(a => a.Project).Return(project).Repeat.Any();
@@ -130,7 +133,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             app.Expect(a => a.ProjectSaving += null).IgnoreArguments();
             app.Expect(a => a.ProjectSaved += null).IgnoreArguments();
             app.Expect(a => a.ProjectSaveFailed += null).IgnoreArguments();
-            app.Expect(a => a.GetAllModelsInProject()).Return(new[] { waqModel }).Repeat.Any();
+            app.Expect(a => a.GetAllModelsInProject()).Return(new[]
+            {
+                waqModel
+            }).Repeat.Any();
 
             var fileImportActivity = mocks.Stub<FileImportActivity>(loadsImporter, waqModel.Loads);
 
@@ -142,7 +148,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             Assert.AreEqual(loadsImporter.ModelCoordinateSystem, waqModel.Grid.CoordinateSystem);
             Assert.NotNull(loadsImporter.GetDefaultZValue);
 
-            Assert.AreEqual(LayerType.Undefined ,waqModel.LayerType);
+            Assert.AreEqual(LayerType.Undefined, waqModel.LayerType);
             Assert.AreEqual(double.NaN, loadsImporter.GetDefaultZValue());
 
             mocks.VerifyAll();

@@ -29,7 +29,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
             bridge.FrictionType = BridgeFrictionType.WhiteColebrook;
             bridge.Friction = 99.0;
             bridge.OffsetY = 10.0;
-            bridge.SetRectangleCrossSection(0.0,5.0,2.0);
+            bridge.SetRectangleCrossSection(0.0, 5.0, 2.0);
             bridge.OutletLossCoefficient = 0.5;
             bridge.InletLossCoefficient = 0.35;
             //ground layer stuff
@@ -58,34 +58,31 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
             var bridgeView = new BridgeView();
             bridgeView.Data = bridge;
             bridgeView.Load += delegate
-                                   {
-                                       var txtPillarBridge = bridgeView.Controls.Find("textBoxPillarWidth", true).FirstOrDefault() as TextBox;
-                                       var txtShapeFactor = bridgeView.Controls.Find("textBoxShapeFactor", true).FirstOrDefault() as TextBox;
-                                       Assert.IsNotNull(txtPillarBridge);
-                                       Assert.IsNotNull(txtShapeFactor);
-                                       Assert.IsTrue(txtPillarBridge.Text.StartsWith("84"));
-                                       Assert.IsTrue(txtShapeFactor.Text.StartsWith("1"));
-                                       Assert.IsTrue(txtPillarBridge.Enabled);
-                                       Assert.IsTrue(txtShapeFactor.Enabled);
-                                       bridge.BridgeType = BridgeType.Rectangle;
-                                       Assert.IsFalse(txtPillarBridge.Enabled, "test after type change");
-                                       Assert.IsFalse(txtShapeFactor.Enabled);
-                                   };
+            {
+                var txtPillarBridge = bridgeView.Controls.Find("textBoxPillarWidth", true).FirstOrDefault() as TextBox;
+                var txtShapeFactor = bridgeView.Controls.Find("textBoxShapeFactor", true).FirstOrDefault() as TextBox;
+                Assert.IsNotNull(txtPillarBridge);
+                Assert.IsNotNull(txtShapeFactor);
+                Assert.IsTrue(txtPillarBridge.Text.StartsWith("84"));
+                Assert.IsTrue(txtShapeFactor.Text.StartsWith("1"));
+                Assert.IsTrue(txtPillarBridge.Enabled);
+                Assert.IsTrue(txtShapeFactor.Enabled);
+                bridge.BridgeType = BridgeType.Rectangle;
+                Assert.IsFalse(txtPillarBridge.Enabled, "test after type change");
+                Assert.IsFalse(txtShapeFactor.Enabled);
+            };
             WindowsFormsTestHelper.ShowModal(bridgeView);
         }
 
         [Test]
         public void InputValidatorTest()
         {
-            var bridge = new Bridge
-                {
-                    BridgeType = BridgeType.Tabulated
-                };
+            var bridge = new Bridge {BridgeType = BridgeType.Tabulated};
             bridge.TabulatedCrossSectionDefinition.ZWDataTable.AddCrossSectionZWRow(0, 2, 0);
             bridge.TabulatedCrossSectionDefinition.ZWDataTable.AddCrossSectionZWRow(2, 2, 0);
 
-            var view = new BridgeView { Data = bridge };
-            var tableView = TypeUtils.GetField<BridgeView, TableView>(view, "tableViewTabulatedData");
+            var view = new BridgeView {Data = bridge};
+            TableView tableView = TypeUtils.GetField<BridgeView, TableView>(view, "tableViewTabulatedData");
             tableView.ExceptionMode = TableView.ValidationExceptionMode.NoAction;
 
             Assert.AreEqual(2.0, tableView.GetCellValue(0, 0));

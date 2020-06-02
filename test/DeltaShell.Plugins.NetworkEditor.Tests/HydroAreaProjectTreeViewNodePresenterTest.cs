@@ -1,4 +1,5 @@
-﻿using DelftTools.Hydro;
+﻿using System.Collections;
+using DelftTools.Hydro;
 using DeltaShell.Plugins.NetworkEditor.Gui.ProjectExplorer;
 using NUnit.Framework;
 
@@ -12,8 +13,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
         {
             var hydroArea = new HydroAreaProjectTreeViewNodePresenter();
 
-            var resultingHydroArea= new HydroArea();
-            var parentNodeData = hydroArea.GetChildNodeObjects(resultingHydroArea, null);
+            var resultingHydroArea = new HydroArea();
+            IEnumerable parentNodeData = hydroArea.GetChildNodeObjects(resultingHydroArea, null);
 
             Assert.IsNotNull(resultingHydroArea);
             CollectionAssert.Contains(parentNodeData, resultingHydroArea.BridgePillars);

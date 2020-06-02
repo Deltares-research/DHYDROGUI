@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.Functions;
+using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Shell.Core.Workflow;
@@ -25,7 +26,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
     [TestFixture]
     public class FMHisFileFunctionStoreTest
     {
-
         [Test]
         [Category(TestCategory.DataAccess)]
         public void OpenHisFileCheckFunctions()
@@ -40,7 +40,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         {
             var store = new FMHisFileFunctionStore(TestHelper.GetTestFilePath("output_hisfiles\\sfbay_his.nc"));
 
-            var waterLevelFunction = (FeatureCoverage)store.Functions.FirstOrDefault(f => f.Components[0].Name == "waterlevel");
+            var waterLevelFunction = (FeatureCoverage) store.Functions.FirstOrDefault(f => f.Components[0].Name == "waterlevel");
 
             Assert.IsNotNull(waterLevelFunction);
             Assert.AreEqual(37248, waterLevelFunction.GetValues().Count);
@@ -49,9 +49,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             Assert.AreEqual(new DateTime(1999, 12, 16), waterLevelFunction.Time.Values.First());
             Assert.AreEqual("(POR)", waterLevelFunction.Arguments[1].Values.OfType<Feature2D>().First().Name);
             Assert.AreEqual("(POR)", waterLevelFunction.Features.OfType<Feature2D>().First().Name);
-            Assert.AreEqual(1.5, (double)waterLevelFunction.Components[0].Values[0], 0.001);
+            Assert.AreEqual(1.5, (double) waterLevelFunction.Components[0].Values[0], 0.001);
             Assert.AreEqual("m", waterLevelFunction.Components[0].Unit.Symbol);
-
         }
 
         [Test]
@@ -73,10 +72,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             IFunction waterbalancetimeseries =
                 store.Functions.First(f => f.Components[0].Name == "WaterBalance_total_volume");
 
-            double[] expectedSeries = new[]
+            var expectedSeries = new[]
             {
-                0.0, 216117380.39221892, 213569886.88264033, 211512224.48981249, 209755740.84053218, 208179872.92569879,
-                206707387.47398412, 205320172.47705263, 204001444.64842579, 202735815.96192247, 201511154.33547282
+                0.0,
+                216117380.39221892,
+                213569886.88264033,
+                211512224.48981249,
+                209755740.84053218,
+                208179872.92569879,
+                206707387.47398412,
+                205320172.47705263,
+                204001444.64842579,
+                202735815.96192247,
+                201511154.33547282
             };
 
             CollectionAssert.AreEquivalent(expectedSeries, waterbalancetimeseries.GetValues<double>());
@@ -87,20 +95,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         public void OpenStationsWaterLevelTimeSeriesCheckWithStationFilter()
         {
             var store = new FMHisFileFunctionStore(TestHelper.GetTestFilePath("output_hisfiles\\sfbay_his.nc"));
-            var waterLevelFunction = (FeatureCoverage)store.Functions.FirstOrDefault(f => f.Components[0].Name == "waterlevel");
+            var waterLevelFunction = (FeatureCoverage) store.Functions.FirstOrDefault(f => f.Components[0].Name == "waterlevel");
 
-            var timeSeriesForPoint = waterLevelFunction.GetTimeSeries(waterLevelFunction.Features.Skip(1).First());
+            IFunction timeSeriesForPoint = waterLevelFunction.GetTimeSeries(waterLevelFunction.Features.Skip(1).First());
             Assert.AreEqual(388, timeSeriesForPoint.GetValues().Count);
             Assert.AreEqual(0.1957, (double) timeSeriesForPoint.GetValues()[50], 0.001);
         }
-        
+
         [Test]
         [Category(TestCategory.DataAccess)]
         public void OpenCrossSectionDischargeTimeSeries()
         {
             var store = new FMHisFileFunctionStore(TestHelper.GetTestFilePath("output_hisfiles\\sfbay_his.nc"));
 
-            var dischargeFunction = (FeatureCoverage)store.Functions.FirstOrDefault(f => f.Components[0].Name == "cross_section_discharge");
+            var dischargeFunction = (FeatureCoverage) store.Functions.FirstOrDefault(f => f.Components[0].Name == "cross_section_discharge");
 
             Assert.IsNotNull(dischargeFunction);
             Assert.AreEqual(16296, dischargeFunction.GetValues().Count);
@@ -111,14 +119,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             Assert.AreEqual(0.0d, (double) dischargeFunction.Components[0].Values[0], 0.001);
             Assert.AreEqual("m^3/s", dischargeFunction.Components[0].Unit.Symbol);
             Assert.AreEqual(
-                new LineString(new []
-                    {
-                        new Coordinate(544991.375, 4186662.5),
-                        new Coordinate(546229.875, 4184738.25)
-                    }),
+                new LineString(new[]
+                {
+                    new Coordinate(544991.375, 4186662.5),
+                    new Coordinate(546229.875, 4184738.25)
+                }),
                 dischargeFunction.Features.OfType<Feature2D>().First().Geometry);
         }
-
 
         [Test]
         [Category(TestCategory.DataAccess)]
@@ -127,7 +134,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var store = new FMHisFileFunctionStore(TestHelper.GetTestFilePath("output_hisfiles\\generalStructure_his.nc"));
 
             /* We use any of the components of general structure, just to check it has been created. */
-            var generalStructureFunction = (FeatureCoverage)store.Functions.FirstOrDefault(f => f.Components[0].Name == "general_structure_discharge");
+            var generalStructureFunction = (FeatureCoverage) store.Functions.FirstOrDefault(f => f.Components[0].Name == "general_structure_discharge");
 
             Assert.IsNotNull(generalStructureFunction);
         }
@@ -137,49 +144,48 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [Category(TestCategory.Slow)]
         public void OpenHisFileInModelContextAndExpectFeaturesToBeSameInstance()
         {
-            var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
-            var localMduFilePath = TestHelper.CreateLocalCopy(mduPath);
+            string mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
+            string localMduFilePath = TestHelper.CreateLocalCopy(mduPath);
 
             var model = new WaterFlowFMModel(localMduFilePath);
 
             ActivityRunner.RunActivity(model);
 
-            var waterLevelFunction = (FeatureCoverage)model.OutputHisFileStore.Functions.FirstOrDefault(f => f.Components[0].Name == "waterlevel");
+            var waterLevelFunction = (FeatureCoverage) model.OutputHisFileStore.Functions.FirstOrDefault(f => f.Components[0].Name == "waterlevel");
             Assert.IsNotNull(waterLevelFunction);
             Assert.AreSame(model.Area.ObservationPoints.First(),
                            waterLevelFunction.Arguments[1].Values.OfType<IFeature>().First(), "feature waterlevel1");
             Assert.AreSame(model.Area.ObservationPoints.First(),
                            waterLevelFunction.Features.First(), "feature waterlevel2");
 
-            var dischargeFunction = (FeatureCoverage)model.OutputHisFileStore.Functions.FirstOrDefault(f => f.Components[0].Name == "cross_section_discharge");
+            var dischargeFunction = (FeatureCoverage) model.OutputHisFileStore.Functions.FirstOrDefault(f => f.Components[0].Name == "cross_section_discharge");
             Assert.IsNotNull(dischargeFunction);
             Assert.AreSame(model.Area.ObservationCrossSections.First(),
-                           dischargeFunction.Arguments[1].Values.OfType<IFeature>().First(),"feat discharge1");
+                           dischargeFunction.Arguments[1].Values.OfType<IFeature>().First(), "feat discharge1");
             Assert.AreSame(model.Area.ObservationCrossSections.First(),
                            dischargeFunction.Features.First(), "feat discharge2");
         }
-
 
         [Test]
         [Category(TestCategory.Integration)]
         [Category(TestCategory.Slow)]
         public void RunModelDeleteObservationPointsRunAgain()
         {
-            var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
-            var localMduFilePath = TestHelper.CreateLocalCopy(mduPath);
+            string mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
+            string localMduFilePath = TestHelper.CreateLocalCopy(mduPath);
 
             var model = new WaterFlowFMModel(localMduFilePath);
 
             ActivityRunner.RunActivity(model);
 
-            var waterLevelFunction = (FeatureCoverage)model.OutputHisFileStore.Functions.FirstOrDefault(f => f.Components[0].Name == "waterlevel");
+            var waterLevelFunction = (FeatureCoverage) model.OutputHisFileStore.Functions.FirstOrDefault(f => f.Components[0].Name == "waterlevel");
             Assert.IsNotNull(waterLevelFunction);
             Assert.AreSame(model.Area.ObservationPoints.First(),
                            waterLevelFunction.Arguments[1].Values.OfType<IFeature>().First(), "feature waterlevel1");
             Assert.AreSame(model.Area.ObservationPoints.First(),
                            waterLevelFunction.Features.First(), "feature waterlevel2");
 
-            for (int i = 0; i < 100; ++i)
+            for (var i = 0; i < 100; ++i)
             {
                 model.Area.ObservationPoints.RemoveAt(0);
             }
@@ -188,39 +194,38 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
             waterLevelFunction =
                 (FeatureCoverage)
-                    model.OutputHisFileStore.Functions.FirstOrDefault(f => f.Components[0].Name == "waterlevel");
+                model.OutputHisFileStore.Functions.FirstOrDefault(f => f.Components[0].Name == "waterlevel");
             Assert.IsNotNull(waterLevelFunction);
             Assert.AreSame(model.Area.ObservationPoints.First(),
                            waterLevelFunction.FeatureVariable.Values.OfType<IFeature>().First(), "feature waterlevel1");
-            Assert.AreSame(model.Area.ObservationPoints.First(),waterLevelFunction.Features.First());
+            Assert.AreSame(model.Area.ObservationPoints.First(), waterLevelFunction.Features.First());
         }
-
 
         [Test]
         [Category(TestCategory.DataAccess)]
         [Category(TestCategory.Slow)]
         public void OpenHisFile()
         {
-            var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
-            var localMduFilePath = TestHelper.CreateLocalCopy(mduPath);
+            string mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
+            string localMduFilePath = TestHelper.CreateLocalCopy(mduPath);
 
             var model = new WaterFlowFMModel(localMduFilePath);
 
             ActivityRunner.RunActivity(model);
 
-            var observationPoint = model.Area.ObservationPoints[0];
+            GroupableFeature2DPoint observationPoint = model.Area.ObservationPoints[0];
 
-            var numEventsBefore = TestReferenceHelper.FindEventSubscriptions(observationPoint, true);
+            int numEventsBefore = TestReferenceHelper.FindEventSubscriptions(observationPoint, true);
 
             var waterLevelFunction = model.OutputHisFileStore.Functions.FirstOrDefault(f => f.Components[0].Name == "waterlevel") as FeatureCoverage;
             Assert.IsNotNull(waterLevelFunction);
 
             for (var i = 0; i < 5; ++i)
             {
-                var timeSeries = waterLevelFunction.Arguments[1].GetValues<IFeature>().ToList();
+                List<IFeature> timeSeries = waterLevelFunction.Arguments[1].GetValues<IFeature>().ToList();
             }
 
-            var numEventsAfter = TestReferenceHelper.FindEventSubscriptions(observationPoint, true);
+            int numEventsAfter = TestReferenceHelper.FindEventSubscriptions(observationPoint, true);
 
             Assert.IsTrue(numEventsAfter <= numEventsBefore + 2);
         }
@@ -230,12 +235,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [Category(TestCategory.Slow)]
         public void RunFMModelWithStructuresReadHisFile()
         {
-            var mduPath = TestHelper.GetTestFilePath(@"roughness\bendprof.mdu");
-            var localMduFilePath = TestHelper.CreateLocalCopy(mduPath);
+            string mduPath = TestHelper.GetTestFilePath(@"roughness\bendprof.mdu");
+            string localMduFilePath = TestHelper.CreateLocalCopy(mduPath);
 
             using (var model = new WaterFlowFMModel(localMduFilePath))
             {
-
                 var weir = new Weir2D("weir1", true)
                 {
                     Geometry = new LineString(new[]
@@ -335,7 +339,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             {
                 string mduFile = temporaryDirectory.CopyTestDataFileToTempDirectory(fileName);
                 Assert.That(File.Exists(mduFile), Is.True, $"MduFile {fileName} could not be found.");
-                Assert.DoesNotThrow( () => testAction.Invoke(mduFile));
+                Assert.DoesNotThrow(() => testAction.Invoke(mduFile));
             }
 
             // 4. Verify final expectations.
@@ -345,7 +349,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             Assert.That(functions, Is.Not.Null, errorMssgNoCoveragesFound);
             Assert.That(functions.Any(), Is.True, errorMssgNoCoveragesFound);
 
-            FileBasedFeatureCoverage featureFunction = functions.FirstOrDefault( f => f.FeatureVariable.Name.Equals(featureName));
+            FileBasedFeatureCoverage featureFunction = functions.FirstOrDefault(f => f.FeatureVariable.Name.Equals(featureName));
             string errorMssgNoFeaturesForCoverage = $"Features for {featureName} were not loaded from his file {fileName}";
             Assert.That(featureFunction, Is.Not.Null, errorMssgNoFeaturesForCoverage);
             Assert.That(featureFunction.Features, Is.Not.Null, errorMssgNoFeaturesForCoverage);

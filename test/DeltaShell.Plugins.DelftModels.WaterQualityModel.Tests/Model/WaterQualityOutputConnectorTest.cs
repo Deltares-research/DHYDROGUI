@@ -45,47 +45,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Model
             }
         }
 
-        [TestCase(null)]
-        [TestCase("this_path_does_not_exist")]
-        public void Connect_WhenOutputFolderPathDoesNotExist_ThenNoExceptionIsThrown(string outputFolderPath)
-        {
-            // Setup
-            using (var model = new WaterQualityModel())
-            {
-                model.OutputFolder = new FileBasedFolder(outputFolderPath);
-
-                // Call
-                void Call() => WaterQualityOutputConnector.Connect(model);
-
-                // Assert
-                Assert.DoesNotThrow(Call, $"No exception should be thrown when Path of {nameof(model.OutputFolder)} does not exist.");
-            }
-        }
-
-        [TestCase("deltashell.map")]
-        [TestCase("deltashell_map.nc")]
-        public void Connect_WithExistingMapFile_ThenModelIsConnectedToThisFile(string fileName)
-        {
-            // Set-up
-            using (var tempDir = new TemporaryDirectory())
-            {
-                string outputDirectory = tempDir.Path;
-                string filePath = tempDir.CopyTestDataFileToTempDirectory(Path.Combine("IO", fileName));
-
-                using (var model = new WaterQualityModel {ModelSettings = {WorkingOutputDirectory = outputDirectory}})
-                {
-                    model.OutputFolder = new FileBasedFolder(outputDirectory);
-
-                    // Call
-                    WaterQualityOutputConnector.Connect(model);
-
-                    // Assert
-                    Assert.That(model.MapFileFunctionStore.Path, Is.EqualTo(filePath),
-                                $"When connecting to the output, the model should be connected to the only existing map file {filePath}");
-                }
-            }
-        }
-
         [Test]
         public void Connect_WhenBothMapFilesExist_ThenModelIsConnectedToTheNetCdfFile()
         {
@@ -142,6 +101,84 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Model
                     Assert.That(model.MapFileFunctionStore.Path, Is.Null,
                                 "When connecting the output and the NetCdf map file has an unsupported convention, " +
                                 $"then the model's {nameof(model.MapFileFunctionStore)} path should be 'null'.");
+                }
+            }
+        }
+
+        [Test]
+        public void Connect_WhenBothHistoryFilesExist_ThenNetCdfFileIsConnected()
+        {
+            // Setup
+            WaterQualityObservationVariableOutput observationVariableOutputForNcFile = CreateObservationVariableOutput(true);
+            WaterQualityObservationVariableOutput observationVariableOutputForHisFile = CreateObservationVariableOutput(false);
+
+            using (var tempDirectory = new TemporaryDirectory())
+            {
+                tempDirectory.CopyAllTestDataToTempDirectory(
+                    Path.Combine("IO", "deltashell_his.nc"),
+                    Path.Combine("IO", "deltashell.his"));
+
+                using (var model = new WaterQualityModel())
+                {
+                    model.OutputFolder = new FileBasedFolder(tempDirectory.Path);
+                    model.ObservationVariableOutputs.Add(observationVariableOutputForNcFile);
+                    model.ObservationVariableOutputs.Add(observationVariableOutputForHisFile);
+
+                    // Preconditions
+                    Assert.That(observationVariableOutputForNcFile.TimeSeriesList, Has.None.Matches<TimeSeries>(IsTimeSeriesWithValues),
+                                "This test is unreliable when the time series data is not empty.");
+                    Assert.That(observationVariableOutputForHisFile.TimeSeriesList, Has.None.Matches<TimeSeries>(IsTimeSeriesWithValues),
+                                "This test is unreliable when the time series data is not empty.");
+
+                    // Call
+                    WaterQualityOutputConnector.Connect(model);
+
+                    // Assert
+                    Assert.That(observationVariableOutputForNcFile.TimeSeriesList, Has.All.Matches<TimeSeries>(IsTimeSeriesWithValues),
+                                "When connecting the output to and both history files (.nc, .his) exist, then the NetCdf file should be read.");
+                    Assert.That(observationVariableOutputForHisFile.TimeSeriesList, Has.None.Matches<TimeSeries>(IsTimeSeriesWithValues),
+                                "When connecting the output to and both history files (.nc, .his) exist, then the .his file should NOT be read.");
+                }
+            }
+        }
+
+        [TestCase(null)]
+        [TestCase("this_path_does_not_exist")]
+        public void Connect_WhenOutputFolderPathDoesNotExist_ThenNoExceptionIsThrown(string outputFolderPath)
+        {
+            // Setup
+            using (var model = new WaterQualityModel())
+            {
+                model.OutputFolder = new FileBasedFolder(outputFolderPath);
+
+                // Call
+                void Call() => WaterQualityOutputConnector.Connect(model);
+
+                // Assert
+                Assert.DoesNotThrow(Call, $"No exception should be thrown when Path of {nameof(model.OutputFolder)} does not exist.");
+            }
+        }
+
+        [TestCase("deltashell.map")]
+        [TestCase("deltashell_map.nc")]
+        public void Connect_WithExistingMapFile_ThenModelIsConnectedToThisFile(string fileName)
+        {
+            // Set-up
+            using (var tempDir = new TemporaryDirectory())
+            {
+                string outputDirectory = tempDir.Path;
+                string filePath = tempDir.CopyTestDataFileToTempDirectory(Path.Combine("IO", fileName));
+
+                using (var model = new WaterQualityModel {ModelSettings = {WorkingOutputDirectory = outputDirectory}})
+                {
+                    model.OutputFolder = new FileBasedFolder(outputDirectory);
+
+                    // Call
+                    WaterQualityOutputConnector.Connect(model);
+
+                    // Assert
+                    Assert.That(model.MapFileFunctionStore.Path, Is.EqualTo(filePath),
+                                $"When connecting to the output, the model should be connected to the only existing map file {filePath}");
                 }
             }
         }
@@ -205,43 +242,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.Model
                     // Assert
                     Assert.That(observationVariableOutput.TimeSeriesList, Has.All.Matches<TimeSeries>(IsTimeSeriesWithValues),
                                 "When connecting the output to a history file, then the time series data of the observation variable output should not be empty anymore.");
-                }
-            }
-        }
-
-        [Test]
-        public void Connect_WhenBothHistoryFilesExist_ThenNetCdfFileIsConnected()
-        {
-            // Setup
-            WaterQualityObservationVariableOutput observationVariableOutputForNcFile = CreateObservationVariableOutput(true);
-            WaterQualityObservationVariableOutput observationVariableOutputForHisFile = CreateObservationVariableOutput(false);
-
-            using (var tempDirectory = new TemporaryDirectory())
-            {
-                tempDirectory.CopyAllTestDataToTempDirectory(
-                    Path.Combine("IO", "deltashell_his.nc"),
-                    Path.Combine("IO", "deltashell.his"));
-
-                using (var model = new WaterQualityModel())
-                {
-                    model.OutputFolder = new FileBasedFolder(tempDirectory.Path);
-                    model.ObservationVariableOutputs.Add(observationVariableOutputForNcFile);
-                    model.ObservationVariableOutputs.Add(observationVariableOutputForHisFile);
-
-                    // Preconditions
-                    Assert.That(observationVariableOutputForNcFile.TimeSeriesList, Has.None.Matches<TimeSeries>(IsTimeSeriesWithValues),
-                                "This test is unreliable when the time series data is not empty.");
-                    Assert.That(observationVariableOutputForHisFile.TimeSeriesList, Has.None.Matches<TimeSeries>(IsTimeSeriesWithValues),
-                                "This test is unreliable when the time series data is not empty.");
-
-                    // Call
-                    WaterQualityOutputConnector.Connect(model);
-
-                    // Assert
-                    Assert.That(observationVariableOutputForNcFile.TimeSeriesList, Has.All.Matches<TimeSeries>(IsTimeSeriesWithValues),
-                                "When connecting the output to and both history files (.nc, .his) exist, then the NetCdf file should be read.");
-                    Assert.That(observationVariableOutputForHisFile.TimeSeriesList, Has.None.Matches<TimeSeries>(IsTimeSeriesWithValues),
-                                "When connecting the output to and both history files (.nc, .his) exist, then the .his file should NOT be read.");
                 }
             }
         }

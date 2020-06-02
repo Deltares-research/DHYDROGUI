@@ -27,7 +27,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             var validator = new WaterFlowFMModelTimersValidator();
 
             // call
-            var issues = validator.ValidateModelTimers(modelStub, new TimeSpan(0, 0, 1, 0)).ToArray();
+            ValidationIssue[] issues = validator.ValidateModelTimers(modelStub, new TimeSpan(0, 0, 1, 0)).ToArray();
 
             // assert
             Assert.IsEmpty(issues);
@@ -38,12 +38,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
         public void ValidatingWaterFlowFMModelWithValidTimersReturnsNoIssues()
         {
             // setup
-            using (var model = CreateWaterFlowFMModelWithValidTimers())
+            using (WaterFlowFMModel model = CreateWaterFlowFMModelWithValidTimers())
             {
                 var validator = new WaterFlowFMModelTimersValidator();
 
                 // call
-                var issues = validator.ValidateModelTimers(model, model.OutputTimeStep).ToArray();
+                ValidationIssue[] issues = validator.ValidateModelTimers(model, model.OutputTimeStep).ToArray();
 
                 // assert
                 Assert.IsEmpty(issues);
@@ -59,20 +59,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
         public void ValidatingWaterFlowFMModelWaqIntervalNotIntegerMultipleOfTimeStepReturnsOneError(double factor)
         {
             // setup
-            using (var model = CreateWaterFlowFMModelWithValidTimers())
+            using (WaterFlowFMModel model = CreateWaterFlowFMModelWithValidTimers())
             {
-                var newWaqInterval = new TimeSpan((long)(model.TimeStep.TotalMilliseconds * factor));
+                var newWaqInterval = new TimeSpan((long) (model.TimeStep.TotalMilliseconds * factor));
                 model.ModelDefinition.GetModelProperty(GuiProperties.WaqOutputDeltaT).Value = newWaqInterval;
 
                 var validator = new WaterFlowFMModelTimersValidator();
 
                 // call
-                var issues = validator.ValidateModelTimers(model, model.OutputTimeStep).ToArray();
+                ValidationIssue[] issues = validator.ValidateModelTimers(model, model.OutputTimeStep).ToArray();
 
                 // assert
                 Assert.AreEqual(1, issues.Length);
-                var validationIssue = issues[0];
-                var category = model.ModelDefinition.GetModelProperty(GuiProperties.WaqOutputDeltaT).PropertyDefinition.Category;
+                ValidationIssue validationIssue = issues[0];
+                string category = model.ModelDefinition.GetModelProperty(GuiProperties.WaqOutputDeltaT).PropertyDefinition.Category;
                 Assert.AreEqual(category, validationIssue.Subject);
                 Assert.AreEqual(ValidationSeverity.Error, validationIssue.Severity);
                 Assert.AreEqual("Waq output interval must be a multiple of the output timestep.", validationIssue.Message);
@@ -87,7 +87,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
         public void ValidatingWaterFlowFMModelWaqIntervalIsIntegerMultipleOfTimeStepReturnsNoIssues(int factor)
         {
             // setup
-            using (var model = CreateWaterFlowFMModelWithValidTimers())
+            using (WaterFlowFMModel model = CreateWaterFlowFMModelWithValidTimers())
             {
                 var newWaqInterval = new TimeSpan(model.TimeStep.Ticks * factor);
                 model.ModelDefinition.GetModelProperty(GuiProperties.WaqOutputDeltaT).Value = newWaqInterval;
@@ -95,7 +95,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
                 var validator = new WaterFlowFMModelTimersValidator();
 
                 // call
-                var issues = validator.ValidateModelTimers(model, model.OutputTimeStep).ToArray();
+                ValidationIssue[] issues = validator.ValidateModelTimers(model, model.OutputTimeStep).ToArray();
 
                 // assert
                 Assert.IsEmpty(issues);
@@ -106,7 +106,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
         public void ValidatingWaterFlowFMModelWaqIntervalIsIntegerMultipleOfTimeStepZeroTimeStep()
         {
             // this will return an issue, because you cannot devide by 0. So waq will not output.
-            using (var model = CreateWaterFlowFMModelWithValidTimers())
+            using (WaterFlowFMModel model = CreateWaterFlowFMModelWithValidTimers())
             {
                 model.TimeStep = new TimeSpan(0);
                 var newWaqInterval = new TimeSpan(500);
@@ -115,25 +115,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
                 var validator = new WaterFlowFMModelTimersValidator();
 
                 // call
-                var issues = validator.ValidateModelTimers(model, model.OutputTimeStep).ToArray();
+                ValidationIssue[] issues = validator.ValidateModelTimers(model, model.OutputTimeStep).ToArray();
 
                 // assert
                 Assert.AreEqual(4, issues.Length);
-                var validationIssue = issues[3];
-                var category = model.ModelDefinition.GetModelProperty(GuiProperties.WaqOutputDeltaT).PropertyDefinition.Category;
+                ValidationIssue validationIssue = issues[3];
+                string category = model.ModelDefinition.GetModelProperty(GuiProperties.WaqOutputDeltaT).PropertyDefinition.Category;
                 Assert.AreEqual(category, validationIssue.Subject);
                 Assert.AreEqual(ValidationSeverity.Error, validationIssue.Severity);
                 Assert.AreEqual("Waq output interval must be a multiple of the output timestep.", validationIssue.Message);
                 Assert.AreSame(model, validationIssue.ViewData);
             }
-
         }
 
         [Test]
         public void ValidatingWaterFlowFMModelUserTimeStep()
         {
             // setup
-            using (var model = CreateWaterFlowFMModelWithValidTimers())
+            using (WaterFlowFMModel model = CreateWaterFlowFMModelWithValidTimers())
             {
                 var validator = new WaterFlowFMModelTimersValidator();
                 Assert.AreEqual(new TimeSpan(0, 0, 5, 0), model.ModelDefinition.GetModelProperty(GuiProperties.HisOutputDeltaT).Value);
@@ -144,7 +143,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
                 model.TimeStep = new TimeSpan(0, 0, 7, 0);
 
                 // call
-                var issues = validator.ValidateModelTimers(model, model.OutputTimeStep).ToArray();
+                ValidationIssue[] issues = validator.ValidateModelTimers(model, model.OutputTimeStep).ToArray();
 
                 // assert
                 Assert.AreEqual(3, issues.Length);
@@ -166,7 +165,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
         [Test]
         public void ValidatingWaterFlowFMModelStopTimeSmallerThanStartTimeTest()
         {
-            using (var model = CreateWaterFlowFMModelWithValidTimers())
+            using (WaterFlowFMModel model = CreateWaterFlowFMModelWithValidTimers())
             {
                 // arrange
                 model.StopTime = new DateTime(2017, 8, 7);
@@ -174,8 +173,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
                 var validator = new WaterFlowFMModelTimersValidator();
 
                 // act
-                var issues = validator.ValidateModelTimers(model, model.OutputTimeStep).ToArray();
-                var issue = issues[0];
+                ValidationIssue[] issues = validator.ValidateModelTimers(model, model.OutputTimeStep).ToArray();
+                ValidationIssue issue = issues[0];
 
                 // assert
                 Assert.AreEqual(1, issues.Length);
@@ -188,14 +187,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
         public void GivenFmModelWithReferenceTimeGreaterThanStartTime_WhenValidatingTime_ThenValidationErrorIsReturnedWithExpectedViewData()
         {
             // Given
-            using (var model = CreateWaterFlowFMModelWithValidTimers())
+            using (WaterFlowFMModel model = CreateWaterFlowFMModelWithValidTimers())
             {
                 model.ReferenceTime = new DateTime(2027, 8, 7);
                 model.StartTime = new DateTime(2017, 8, 7);
                 var validator = new WaterFlowFMModelTimersValidator();
 
                 // When
-                var issues = validator.ValidateModelTimers(model, model.OutputTimeStep).ToArray();
+                ValidationIssue[] issues = validator.ValidateModelTimers(model, model.OutputTimeStep).ToArray();
 
                 // Then
                 Assert.That(issues.Length, Is.EqualTo(2));
@@ -214,7 +213,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
         [Test]
         public void ValidatingWaterFlowFMModelRestartIntervalFailsTest()
         {
-            using (var model = CreateWaterFlowFMModelWithValidTimers())
+            using (WaterFlowFMModel model = CreateWaterFlowFMModelWithValidTimers())
             {
                 // arrange
                 model.WriteRestart = true;
@@ -222,8 +221,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
                 var validator = new WaterFlowFMModelTimersValidator();
 
                 // act
-                var issues = validator.ValidateModelTimers(model, model.OutputTimeStep).ToArray();
-                var issue = issues[0];
+                ValidationIssue[] issues = validator.ValidateModelTimers(model, model.OutputTimeStep).ToArray();
+                ValidationIssue issue = issues[0];
 
                 // assert
                 Assert.AreEqual(1, issues.Length);

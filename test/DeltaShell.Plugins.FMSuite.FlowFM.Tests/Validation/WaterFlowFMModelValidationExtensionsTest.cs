@@ -9,6 +9,7 @@ using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Sediment;
 using NetTopologySuite.Extensions.Coverages;
+using NetTopologySuite.Extensions.Grids;
 using NUnit.Framework;
 using SharpMap.Extensions.CoordinateSystems;
 using SharpMapTestUtils;
@@ -23,93 +24,103 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
         {
             var model = new WaterFlowFMModel();
 
-            var report = model.Validate();
+            ValidationReport report = model.Validate();
 
             Assert.AreEqual(1,
-                report.GetAllIssuesRecursive()
-                    .Count(i => i.Severity == ValidationSeverity.Info && i.Message.Contains("coordinate system")));
+                            report.GetAllIssuesRecursive()
+                                  .Count(i => i.Severity == ValidationSeverity.Info && i.Message.Contains("coordinate system")));
         }
 
         [Test]
         public void CheckThatInitializingFmModelWithSalinityAndTemperatureEnabledNoWarningMessagesAreGiven()
         {
-
             var model = new WaterFlowFMModel();
             //Enable Salinity and Temperature checkboxes
-            var salinityProperty = model.ModelDefinition.GetModelProperty(KnownProperties.UseSalinity);
-            var temperatureProperty = model.ModelDefinition.GetModelProperty(KnownProperties.Temperature);
+            WaterFlowFMProperty salinityProperty = model.ModelDefinition.GetModelProperty(KnownProperties.UseSalinity);
+            WaterFlowFMProperty temperatureProperty = model.ModelDefinition.GetModelProperty(KnownProperties.Temperature);
             //Create a grid
             model.Grid = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 2, 2);
             model.UseRestart = true;
 
             //Validate model
-            var report = model.Validate();
+            ValidationReport report = model.Validate();
             salinityProperty.Value = true;
             temperatureProperty.SetValueAsString("1");
 
             Assert.AreEqual(0,
-                report.GetAllIssuesRecursive()
-                    .Count(i => i.Severity == ValidationSeverity.Warning && i.Message.Contains("Initial")));
+                            report.GetAllIssuesRecursive()
+                                  .Count(i => i.Severity == ValidationSeverity.Warning && i.Message.Contains("Initial")));
         }
-
 
         [Test]
         public void CheckPumpCapacityIsNotNegative()
         {
             var model = new WaterFlowFMModel();
-            model.Area.Pumps.Add(new Pump2D("A", true){ Capacity = -1.2, Branch = null});
+            model.Area.Pumps.Add(new Pump2D("A", true)
+            {
+                Capacity = -1.2,
+                Branch = null
+            });
 
-            var report = model.Validate();
+            ValidationReport report = model.Validate();
 
             Assert.AreEqual(1,
                             report.GetAllIssuesRecursive()
                                   .Count(i =>
-                                         i.Severity == ValidationSeverity.Error &&
-                                         i.Message.Contains("pump 'A': Capacity must be greater than or equal to 0.")));
+                                             i.Severity == ValidationSeverity.Error &&
+                                             i.Message.Contains("pump 'A': Capacity must be greater than or equal to 0.")));
         }
 
         [Test]
         public void CheckPumpCapacityTimeSeriesIsNotNegative()
         {
             var model = new WaterFlowFMModel();
-            var pump = new Pump2D("A", true) {Branch = null, UseCapacityTimeSeries = true};
+            var pump = new Pump2D("A", true)
+            {
+                Branch = null,
+                UseCapacityTimeSeries = true
+            };
             pump.CapacityTimeSeries[new DateTime(2000, 1, 2)] = -1.2;
             model.Area.Pumps.Add(pump);
 
-            var report = model.Validate();
+            ValidationReport report = model.Validate();
 
-            var issues = report.GetAllIssuesRecursive();
+            IList<ValidationIssue> issues = report.GetAllIssuesRecursive();
             Assert.AreEqual(1, issues.Count(i =>
-                i.Severity == ValidationSeverity.Error &&
-                i.Message.Contains("pump 'A': capacity time series values must be greater than or equal to 0.")));
+                                                i.Severity == ValidationSeverity.Error &&
+                                                i.Message.Contains("pump 'A': capacity time series values must be greater than or equal to 0.")));
             Assert.AreEqual(1, issues.Count(i =>
-                i.Severity == ValidationSeverity.Error &&
-                i.Message.Contains("pump 'A': capacity time series does not span the model run interval.")));
+                                                i.Severity == ValidationSeverity.Error &&
+                                                i.Message.Contains("pump 'A': capacity time series does not span the model run interval.")));
         }
 
         [Test]
         public void CheckPumpSuctionAndDeliverySideControl()
         {
             var model = new WaterFlowFMModel();
-            var pump = new Pump2D("A", true) { 
-                Branch = null, ControlDirection = PumpControlDirection.SuctionAndDeliverySideControl,
-                StartDelivery = 1.2, StopDelivery = -1.2,
-                StartSuction = -1.2, StopSuction = 1.2
+            var pump = new Pump2D("A", true)
+            {
+                Branch = null,
+                ControlDirection = PumpControlDirection.SuctionAndDeliverySideControl,
+                StartDelivery = 1.2,
+                StopDelivery = -1.2,
+                StartSuction = -1.2,
+                StopSuction = 1.2
             };
             model.Area.Pumps.Add(pump);
 
-            var report = model.Validate();
+            ValidationReport report = model.Validate();
 
             Assert.AreEqual(1,
                             report.GetAllIssuesRecursive()
                                   .Count(i =>
-                                         i.Severity == ValidationSeverity.Error &&
-                                         i.Message.Contains("pump 'A': Delivery start level must be less than or equal to delivery stop level.")));
+                                             i.Severity == ValidationSeverity.Error &&
+                                             i.Message.Contains("pump 'A': Delivery start level must be less than or equal to delivery stop level.")));
             Assert.AreEqual(1,
                             report.GetAllIssuesRecursive()
                                   .Count(i =>
-                                         i.Severity == ValidationSeverity.Error &&
-                                         i.Message.Contains("pump 'A': Suction start level must be greater than or equal to suction stop level.")));
+                                             i.Severity == ValidationSeverity.Error &&
+                                             i.Message.Contains("pump 'A': Suction start level must be greater than or equal to suction stop level.")));
         }
 
         [Test]
@@ -117,24 +128,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
         {
             var model = new WaterFlowFMModel {CoordinateSystem = new OgrCoordinateSystemFactory().CreateFromEPSG(3824)};
 
-            var report = model.Validate();
+            ValidationReport report = model.Validate();
 
             Assert.AreEqual(1,
-                report.GetAllIssuesRecursive()
-                    .Count(i => i.Severity == ValidationSeverity.Warning && i.Message.Contains("coordinate system")));
+                            report.GetAllIssuesRecursive()
+                                  .Count(i => i.Severity == ValidationSeverity.Warning && i.Message.Contains("coordinate system")));
         }
 
         [Test]
         public void CheckSolverTypeValidation()
         {
-            var model = new WaterFlowFMModel { CoordinateSystem = new OgrCoordinateSystemFactory().CreateFromEPSG(3824) };
+            var model = new WaterFlowFMModel {CoordinateSystem = new OgrCoordinateSystemFactory().CreateFromEPSG(3824)};
             model.ModelDefinition.GetModelProperty(KnownProperties.SolverType).SetValueAsString("7");
 
-            var report = model.Validate();
+            ValidationReport report = model.Validate();
 
             Assert.AreEqual(1,
-                report.GetAllIssuesRecursive()
-                    .Count(i => i.Severity == ValidationSeverity.Error && i.Message.Contains("parallel run")));
+                            report.GetAllIssuesRecursive()
+                                  .Count(i => i.Severity == ValidationSeverity.Error && i.Message.Contains("parallel run")));
         }
 
         [Test]
@@ -144,11 +155,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             model.Grid = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 2, 2);
             model.UseRestart = true;
 
-            var report = model.Validate();
+            ValidationReport report = model.Validate();
             Assert.AreEqual(1, report.ErrorCount);
             Assert.That(report.AllErrors.First(i => i.Severity == ValidationSeverity.Error).Message,
-                Is.EqualTo("Input restart state is empty; cannot restart."));
-            
+                        Is.EqualTo("Input restart state is empty; cannot restart."));
         }
 
         [Test]
@@ -160,12 +170,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             var model = new WaterFlowFMModel(TestHelper.GetTestFilePath(@"spatiallyVariantSediment\fullGridCoverage\FlowFM.mdu"));
 
             //Act
-            var report = model.Validate();
+            ValidationReport report = model.Validate();
 
             //Assert
             Assert.AreEqual(0,
-                report.GetAllIssuesRecursive()
-                    .Count(i => i.Severity == ValidationSeverity.Error && i.Message.Contains("SedimentThickness is not fully covering the grid, please cover entire grid")));
+                            report.GetAllIssuesRecursive()
+                                  .Count(i => i.Severity == ValidationSeverity.Error && i.Message.Contains("SedimentThickness is not fully covering the grid, please cover entire grid")));
         }
 
         [Test]
@@ -176,7 +186,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             var model = new WaterFlowFMModel(TestHelper.GetTestFilePath(@"spatiallyVariantSediment\fullGridCoverage\FlowFM.mdu"));
 
             //Act
-            var report = model.Validate();
+            ValidationReport report = model.Validate();
 
             //Assert
             Assert.IsEmpty(report.AllErrors);
@@ -189,7 +199,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             //Arrange
             var fmModel = new WaterFlowFMModel();
             fmModel.ModelDefinition.UseMorphologySediment = true;
-            var grid = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 2, 2);
+            UnstructuredGrid grid = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 2, 2);
             fmModel.Grid = grid;
             var thickProp = new SpatiallyVaryingSedimentProperty<double>("IniSedThick", 5, 0, false, 0, true, "cc", "mydoubledescription", true, false)
             {
@@ -197,16 +207,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
                 Value = 12.3
             };
             thickProp.IsSpatiallyVarying = true;
-           
+
             CreateSedimentFraction(thickProp, fmModel);
 
             var coverage = (UnstructuredGridCoverage) fmModel.DataItems.First(di => di.Name == thickProp.SpatiallyVaryingName).Value;
-            coverage.SetValues(new [] {1.0,2.0,3.0,4.0});
+            coverage.SetValues(new[]
+            {
+                1.0,
+                2.0,
+                3.0,
+                4.0
+            });
 
             //Act
-            var report = fmModel.Validate();
-            var recursive = report.GetAllIssuesRecursive();
-        
+            ValidationReport report = fmModel.Validate();
+            IList<ValidationIssue> recursive = report.GetAllIssuesRecursive();
+
             //Assert
             Assert.IsFalse(recursive.Any(m => m.Message.Contains($"SedimentThickness {thickProp.SpatiallyVaryingName} is not fully covering the grid, please cover entire grid")));
         }
@@ -218,7 +234,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             //Arrange
             var fmModel = new WaterFlowFMModel();
             fmModel.ModelDefinition.UseMorphologySediment = true;
-            var grid = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 2, 2);
+            UnstructuredGrid grid = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 2, 2);
             fmModel.Grid = grid;
             var thickProp = new SpatiallyVaryingSedimentProperty<double>("IniSedThick", 5, 0, false, 0, true, "cc", "mydoubledescription", true, false)
             {
@@ -229,16 +245,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
 
             CreateSedimentFraction(thickProp, fmModel);
 
-            var coverage = (UnstructuredGridCoverage)fmModel.DataItems.First(di => di.Name == thickProp.SpatiallyVaryingName).Value;
-            coverage.SetValues(new[] { -999.0, 2.0, 3.0, 4.0 });
+            var coverage = (UnstructuredGridCoverage) fmModel.DataItems.First(di => di.Name == thickProp.SpatiallyVaryingName).Value;
+            coverage.SetValues(new[]
+            {
+                -999.0,
+                2.0,
+                3.0,
+                4.0
+            });
 
             //Act
-            var report = fmModel.Validate();
-            var recursive = report.GetAllIssuesRecursive();
+            ValidationReport report = fmModel.Validate();
+            IList<ValidationIssue> recursive = report.GetAllIssuesRecursive();
 
             //Assert
             Assert.IsTrue(recursive.Any(m =>
-                m.Message.Contains($"SedimentThickness {thickProp.SpatiallyVaryingName} is not fully covering the grid, please cover entire grid")));
+                                            m.Message.Contains($"SedimentThickness {thickProp.SpatiallyVaryingName} is not fully covering the grid, please cover entire grid")));
         }
 
         [Test]
@@ -247,14 +269,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             //Arrange
             var fmModel = new WaterFlowFMModel();
             fmModel.ModelDefinition.UseMorphologySediment = true;
-            var grid = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 2, 2);
+            UnstructuredGrid grid = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 2, 2);
             fmModel.Grid = grid;
 
-            var thickProp = new SpatiallyVaryingSedimentProperty<double>("IniSedThick", 5, 0, true, 0, true, "cc", "mydoubledescription", false, true, sediment1=>true, sediment2=> true)
+            var thickProp = new SpatiallyVaryingSedimentProperty<double>("IniSedThick", 5, 0, true, 0, true, "cc", "mydoubledescription", false, true, sediment1 => true, sediment2 => true)
             {
                 SpatiallyVaryingName = "mysedimentName_IniSedThick",
                 Value = 12.3,
-                Name ="de",
+                Name = "de",
                 Description = "",
                 DefaultValue = 1,
                 IsEnabled = true,
@@ -264,8 +286,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             CreateSedimentFraction(thickProp, fmModel);
 
             //Act
-            var report = fmModel.Validate();
-            var recursive = report.GetAllIssuesRecursive();
+            ValidationReport report = fmModel.Validate();
+            IList<ValidationIssue> recursive = report.GetAllIssuesRecursive();
 
             //Assert
             Assert.IsFalse(recursive.Any(m => m.Message.Contains("SedimentThickness is not fully covering the grid, please cover entire grid")));
@@ -276,15 +298,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             var testSedimentType = new SedimentType
             {
                 Key = "sand",
-                Properties = new EventedList<ISedimentProperty> { thickProp }
+                Properties = new EventedList<ISedimentProperty> {thickProp}
             };
 
-            var overallProp = new SedimentProperty<double>("Cref", 0, 0, true, 0, false, "km", "myoveralldescription", false)
-            {
-                Value = 80.1
-            };
+            var overallProp = new SedimentProperty<double>("Cref", 0, 0, true, 0, false, "km", "myoveralldescription", false) {Value = 80.1};
 
-            fmModel.SedimentOverallProperties = new EventedList<ISedimentProperty>() { overallProp };
+            fmModel.SedimentOverallProperties = new EventedList<ISedimentProperty>() {overallProp};
 
             var fraction = new SedimentFraction
             {

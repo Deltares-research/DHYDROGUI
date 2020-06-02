@@ -18,6 +18,62 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.DomainSpecificDataEd
             viewModel = new WindSettingsViewModel(meteoData);
         }
 
+        [Test]
+        public void GetXComponentFilePath_ReturnsCorrectValue()
+        {
+            // Setup
+            const string value = "property_value";
+            meteoData.XComponentFilePath = value;
+
+            // Call
+            string resultedValue = viewModel.XComponentFilePath;
+
+            // Assert
+            Assert.That(resultedValue, Is.EqualTo(value));
+        }
+
+        [Test]
+        public void GetYComponentFilePath_ReturnsCorrectValue()
+        {
+            // Setup
+            const string value = "property_value";
+            meteoData.YComponentFilePath = value;
+
+            // Call
+            string resultedValue = viewModel.YComponentFilePath;
+
+            // Assert
+            Assert.That(resultedValue, Is.EqualTo(value));
+        }
+
+        [Test]
+        public void GetSpiderWebFilePath_ReturnsCorrectValue()
+        {
+            // Setup
+            const string value = "property_value";
+            meteoData.SpiderWebFilePath = value;
+
+            // Call
+            string resultedValue = viewModel.SpiderWebFilePath;
+
+            // Assert
+            Assert.That(resultedValue, Is.EqualTo(value));
+        }
+
+        [Test]
+        public void GetWindVelocityFilePath_ReturnsCorrectValue()
+        {
+            // Setup
+            const string value = "property_value";
+            meteoData.XYVectorFilePath = value;
+
+            // Call
+            string resultedValue = viewModel.WindVelocityFilePath;
+
+            // Assert
+            Assert.That(resultedValue, Is.EqualTo(value));
+        }
+
         [TestCase(WindDefinitionType.WindXY, WindInputType.WindVector)]
         [TestCase(WindDefinitionType.SpiderWebGrid, WindInputType.SpiderWebGrid)]
         [TestCase(WindDefinitionType.WindXWindY, WindInputType.XYComponents)]
@@ -61,20 +117,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.DomainSpecificDataEd
             Assert.That(meteoData.FileType, Is.EqualTo(expectedFileType));
         }
 
-        [Test]
-        public void GetXComponentFilePath_ReturnsCorrectValue()
-        {
-            // Setup
-            const string value = "property_value";
-            meteoData.XComponentFilePath = value;
-
-            // Call
-            string resultedValue = viewModel.XComponentFilePath;
-
-            // Assert
-            Assert.That(resultedValue, Is.EqualTo(value));
-        }
-
         [TestCase("original", 0)]
         [TestCase("new", 1)]
         public void SetXComponentFilePath_SetsCorrectPropertyValueOnModel(
@@ -90,20 +132,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.DomainSpecificDataEd
             int propertyChangedCount = viewModel.CountPropertyChangedFired(Call, nameof(viewModel.XComponentFilePath));
             Assert.That(propertyChangedCount, Is.EqualTo(expectedPropertyChangedCount));
             Assert.That(meteoData.XComponentFileName, Is.EqualTo(setValue));
-        }
-
-        [Test]
-        public void GetYComponentFilePath_ReturnsCorrectValue()
-        {
-            // Setup
-            const string value = "property_value";
-            meteoData.YComponentFilePath = value;
-
-            // Call
-            string resultedValue = viewModel.YComponentFilePath;
-
-            // Assert
-            Assert.That(resultedValue, Is.EqualTo(value));
         }
 
         [TestCase("original", 0)]
@@ -123,20 +151,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.DomainSpecificDataEd
             Assert.That(meteoData.YComponentFileName, Is.EqualTo(setValue));
         }
 
-        [Test]
-        public void GetSpiderWebFilePath_ReturnsCorrectValue()
-        {
-            // Setup
-            const string value = "property_value";
-            meteoData.SpiderWebFilePath = value;
-
-            // Call
-            string resultedValue = viewModel.SpiderWebFilePath;
-
-            // Assert
-            Assert.That(resultedValue, Is.EqualTo(value));
-        }
-
         [TestCase("original", 0)]
         [TestCase("new", 1)]
         public void SetSpiderWebFilePath_SetsCorrectPropertyValueOnModel(
@@ -152,20 +166,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.DomainSpecificDataEd
             int propertyChangedCount = viewModel.CountPropertyChangedFired(Call, nameof(viewModel.SpiderWebFilePath));
             Assert.That(propertyChangedCount, Is.EqualTo(expectedPropertyChangedCount));
             Assert.That(meteoData.SpiderWebFileName, Is.EqualTo(setValue));
-        }
-
-        [Test]
-        public void GetWindVelocityFilePath_ReturnsCorrectValue()
-        {
-            // Setup
-            const string value = "property_value";
-            meteoData.XYVectorFilePath = value;
-
-            // Call
-            string resultedValue = viewModel.WindVelocityFilePath;
-
-            // Assert
-            Assert.That(resultedValue, Is.EqualTo(value));
         }
 
         [TestCase("original", 0)]

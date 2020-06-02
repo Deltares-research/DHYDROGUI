@@ -10,10 +10,15 @@ namespace DelftTools.Hydro.Tests
         [Test]
         public void Clone()
         {
-            var boundary = new RunoffBoundary { Geometry = new Point(15, 15), Name = "aa", Basin = new DrainageBasin() };
+            var boundary = new RunoffBoundary
+            {
+                Geometry = new Point(15, 15),
+                Name = "aa",
+                Basin = new DrainageBasin()
+            };
             boundary.Attributes.Add("Milage", 15);
 
-            var clone = boundary.Clone();
+            object clone = boundary.Clone();
 
             ReflectionTestHelper.AssertPublicPropertiesAreEqual(boundary, clone);
         }

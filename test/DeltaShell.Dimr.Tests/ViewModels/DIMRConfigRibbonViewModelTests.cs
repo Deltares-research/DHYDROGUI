@@ -8,7 +8,6 @@ namespace DeltaShell.Dimr.Tests.ViewModels
     [TestFixture]
     public class DIMRConfigRibbonViewModelTests
     {
-        
         [Test]
         public void DIMRConfigRibbonViewModelSetDebuggerLevelsTest()
         {

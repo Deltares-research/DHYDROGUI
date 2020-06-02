@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using DelftTools.Hydro.Structures;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.Api;
@@ -17,13 +18,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
         [Test]
         public void GetEdgeCellsViaApi()
         {
-            var path = TestHelper.GetTestFilePath(@"developer1d2dmodel\dflow-fm.mdu");
+            string path = TestHelper.GetTestFilePath(@"developer1d2dmodel\dflow-fm.mdu");
             path = TestHelper.CreateLocalCopy(path);
 
             var model = new WaterFlowFMModel(path);
 
             IGridOperationApi api = new UnstrucGridOperationApi(model);
-            var result = api.GetLinkedCells();
+            int[] result = api.GetLinkedCells();
 
             Assert.IsNotNull(result);
             Assert.IsTrue(result.Any());
@@ -32,12 +33,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
         [Test]
         public void GetEdgeCellsViaIndirectApiCall()
         {
-            var path = TestHelper.GetTestFilePath(@"developer1d2dmodel\dflow-fm.mdu");
+            string path = TestHelper.GetTestFilePath(@"developer1d2dmodel\dflow-fm.mdu");
             path = TestHelper.CreateLocalCopy(path);
 
             var model = new WaterFlowFMModel(path);
 
-            var result = model.GetLinkedCells();
+            int[] result = model.GetLinkedCells();
 
             Assert.IsNotNull(result);
             Assert.IsTrue(result.Any());
@@ -46,7 +47,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
         [Test]
         public void InitializeUnstrucGridOperationApi_DoesNotWrite_StructureProperty()
         {
-            var mduPath = TestHelper.GetTestFilePath(@"GridOperationApi\FlowFM\FlowFM.mdu");
+            string mduPath = TestHelper.GetTestFilePath(@"GridOperationApi\FlowFM\FlowFM.mdu");
             mduPath = TestHelper.CreateLocalCopy(mduPath);
 
             var model = new WaterFlowFMModel(mduPath);
@@ -55,7 +56,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
             {
                 using (var api = new UnstrucGridOperationApi(model, false))
                 {
-                    var pump = model.Area.Pumps.FirstOrDefault();
+                    Pump2D pump = model.Area.Pumps.FirstOrDefault();
                     Assert.IsNotNull(pump);
                     try
                     {
@@ -71,7 +72,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
             {
                 Assert.Fail("It should have not thrown the following exception: {0}", e.Message);
             }
-            
 
             FileUtils.DeleteIfExists(mduPath);
         }

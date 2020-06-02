@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.TestUtils;
@@ -30,34 +29,34 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         public void TestDirectoryRestructuring_OutputIsMovedToTheCorrectLocation(string testCaseDir, string outputFMDirName)
         {
             var testDataDirInfo = new DirectoryInfo(TestHelper.GetTestFilePath(
-                Path.Combine(@"LegacyLoaderOutput", testCaseDir)));
+                                                        Path.Combine(@"LegacyLoaderOutput", testCaseDir)));
             Assert.That(testDataDirInfo.Exists);
 
             var testDirInfo = new DirectoryInfo(FileUtils.CreateTempDirectory());
             Assert.That(testDirInfo.Exists);
-            var testDirPath = testDirInfo.FullName;
+            string testDirPath = testDirInfo.FullName;
 
             var projectName = "TestProject";
             var modelName = "TestModel";
 
-            var projectDirName = projectName + ProjectDirExtension;
-            var projectFileName = projectName + ProjectFileExtension;
-            var modelDirName = modelName;
-            var outputWAQDirName = $"DFM_DELWAQ_{modelName}";
-            var mduFileName = modelName + ".mdu";
-            var explicitWorkingDirName = $"{modelName}_output";
+            string projectDirName = projectName + ProjectDirExtension;
+            string projectFileName = projectName + ProjectFileExtension;
+            string modelDirName = modelName;
+            string outputWAQDirName = $"DFM_DELWAQ_{modelName}";
+            string mduFileName = modelName + ".mdu";
+            string explicitWorkingDirName = $"{modelName}_output";
 
             // Set expected paths
-            var projectFilePath = Path.Combine(testDirPath, projectFileName);
-            var projectDirPath = Path.Combine(testDirPath, projectDirName);
-            var modelDirPath = Path.Combine(projectDirPath, modelDirName);
-            var outputDirPath = Path.Combine(modelDirPath, OutputDirName);
-            var outputWAQDirPath = Path.Combine(outputDirPath, outputWAQDirName);
+            string projectFilePath = Path.Combine(testDirPath, projectFileName);
+            string projectDirPath = Path.Combine(testDirPath, projectDirName);
+            string modelDirPath = Path.Combine(projectDirPath, modelDirName);
+            string outputDirPath = Path.Combine(modelDirPath, OutputDirName);
+            string outputWAQDirPath = Path.Combine(outputDirPath, outputWAQDirName);
 
             // To be removed paths
-            var explicitWorkingDirPath = Path.Combine(projectDirPath, explicitWorkingDirName);
-            var oldOutputFMDirPath = Path.Combine(modelDirPath, outputFMDirName);
-            var oldOutputWAQDirPath = Path.Combine(modelDirPath, outputWAQDirName);
+            string explicitWorkingDirPath = Path.Combine(projectDirPath, explicitWorkingDirName);
+            string oldOutputFMDirPath = Path.Combine(modelDirPath, outputFMDirName);
+            string oldOutputWAQDirPath = Path.Combine(modelDirPath, outputWAQDirName);
 
             var filtersOutput = new List<string>
             {
@@ -91,9 +90,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 ".vdf"
             };
 
-            var filters = filtersOutput
-                .Union(filtersOutputWAQ)
-                .ToList();
+            List<string> filters = filtersOutput
+                                   .Union(filtersOutputWAQ)
+                                   .ToList();
 
             try
             {
@@ -104,23 +103,23 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 Assert.That(Directory.Exists(oldOutputWAQDirPath));
 
                 // Get model for test
-                var mduFilePath = Path.Combine(modelDirPath, mduFileName);
+                string mduFilePath = Path.Combine(modelDirPath, mduFileName);
                 Assert.That(File.Exists(mduFilePath));
                 var model = new WaterFlowFMModel(mduFilePath);
 
                 // Get all output files in the model directory before migration
-                var outputFilesBeforeMigration = GetAllFilesByFilter(filters, modelDirPath);
+                List<string> outputFilesBeforeMigration = GetAllFilesByFilter(filters, modelDirPath);
 
                 // When there is no FM output folder, output is placed directly under "output" 
 
                 // Select for each folder all the files that should be there after migration
-                var filesForOutput = GetAllFilesByFilter(filtersOutput, modelDirPath);
-                var filesForOutputWAQ = GetAllFilesByFilter(filtersOutputWAQ, modelDirPath);
+                List<string> filesForOutput = GetAllFilesByFilter(filtersOutput, modelDirPath);
+                List<string> filesForOutputWAQ = GetAllFilesByFilter(filtersOutputWAQ, modelDirPath);
 
                 // Perform migration
                 TypeUtils.CallPrivateStaticMethod(typeof(WaterFlowFMModel110LegacyLoader),
-                    "PerformDirectoryRestructuring",
-                    model, explicitWorkingDirPath);
+                                                  "PerformDirectoryRestructuring",
+                                                  model, explicitWorkingDirPath);
 
                 // Assert every expected (output) folder exists
                 Assert.That(File.Exists(projectFilePath));
@@ -134,24 +133,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 }
 
                 // Get all output files in the model directory after migration
-                var outputFilesAfterMigration = filters
-                    .SelectMany(filter => Directory.GetFiles(outputDirPath, "*.*", SearchOption.AllDirectories)
-                        .Where(filePath => filePath.EndsWith(filter))
-                        .Select(filePath => Path.GetFileName(filePath)))
-                    .ToList();
+                List<string> outputFilesAfterMigration = filters
+                                                         .SelectMany(filter => Directory.GetFiles(outputDirPath, "*.*", SearchOption.AllDirectories)
+                                                                                        .Where(filePath => filePath.EndsWith(filter))
+                                                                                        .Select(filePath => Path.GetFileName(filePath)))
+                                                         .ToList();
 
                 // Assert there are no duplicate output files in output folder
                 Assert.IsTrue(outputFilesAfterMigration.HasUniqueValues());
 
                 // Assert that no extra files are created in the output folder after migration
-                var extraFiles = outputFilesAfterMigration.Except(outputFilesBeforeMigration).ToList();
+                List<string> extraFiles = outputFilesAfterMigration.Except(outputFilesBeforeMigration).ToList();
                 Assert.IsEmpty(extraFiles,
-                    $"The following files were added after migration: {String.Join(", ", extraFiles)}");
+                               $"The following files were added after migration: {string.Join(", ", extraFiles)}");
 
                 // Assert that no files are removed from the output folder after migration 
-                var missingFiles = outputFilesBeforeMigration.Except(outputFilesAfterMigration).ToList();
+                List<string> missingFiles = outputFilesBeforeMigration.Except(outputFilesAfterMigration).ToList();
                 Assert.IsEmpty(missingFiles,
-                    $"The following files are missing after migration: {String.Join(", ", missingFiles)}");
+                               $"The following files are missing after migration: {string.Join(", ", missingFiles)}");
 
                 // Assert every expected file is in destined directory
                 AssertNoMissingFilesAndDirectoryFilesInDirectory(outputDirPath, filesForOutput, SnappedDirectoryName);
@@ -168,37 +167,37 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         public void TestDirectoryRestructuring_OutputSubfoldersAreRemained(string testCaseDir, string outputFMDirName)
         {
             var testDataDirInfo = new DirectoryInfo(TestHelper.GetTestFilePath(
-                Path.Combine(@"LegacyLoaderOutput", testCaseDir)));
+                                                        Path.Combine(@"LegacyLoaderOutput", testCaseDir)));
             Assert.That(testDataDirInfo.Exists);
 
             var testDirInfo = new DirectoryInfo(FileUtils.CreateTempDirectory());
             Assert.That(testDirInfo.Exists);
-            var testDirPath = testDirInfo.FullName;
+            string testDirPath = testDirInfo.FullName;
 
             var projectName = "TestProject";
             var modelName = "TestModel";
 
-            var projectDirName = projectName + ProjectDirExtension;
-            var projectFileName = projectName + ProjectFileExtension;
-            var modelDirName = modelName;
-            var outputWAQDirName = $"DFM_DELWAQ_{modelName}";
-            var mduFileName = modelName + ".mdu";
-            var explicitWorkingDirName = $"{modelName}_output";
+            string projectDirName = projectName + ProjectDirExtension;
+            string projectFileName = projectName + ProjectFileExtension;
+            string modelDirName = modelName;
+            string outputWAQDirName = $"DFM_DELWAQ_{modelName}";
+            string mduFileName = modelName + ".mdu";
+            string explicitWorkingDirName = $"{modelName}_output";
 
             // Set expected default paths
-            var projectFilePath = Path.Combine(testDirPath, projectFileName);
-            var projectDirPath = Path.Combine(testDirPath, projectDirName);
-            var modelDirPath = Path.Combine(projectDirPath, modelDirName);
-            var outputDirPath = Path.Combine(modelDirPath, OutputDirName);
-            var outputWAQDirPath = Path.Combine(outputDirPath, outputWAQDirName);
+            string projectFilePath = Path.Combine(testDirPath, projectFileName);
+            string projectDirPath = Path.Combine(testDirPath, projectDirName);
+            string modelDirPath = Path.Combine(projectDirPath, modelDirName);
+            string outputDirPath = Path.Combine(modelDirPath, OutputDirName);
+            string outputWAQDirPath = Path.Combine(outputDirPath, outputWAQDirName);
 
             // Set expected extra output file/folder paths
-            var extraFolderB2_Path = Path.Combine(outputDirPath, "ExtraFolderB2");
-            var extraFileB2_Path = Path.Combine(outputDirPath, "ExtraFileB2.txt");
-            var extraFolderC2_Path = Path.Combine(outputWAQDirPath, "ExtraFolderC2");
-            var extraFileC2_Path = Path.Combine(outputWAQDirPath, "ExtraFileC2.txt");
-            var snappedDirectoryPath = Path.Combine(outputDirPath, SnappedDirectoryName);
-            var explicitWorkingDirPath = Path.Combine(projectDirPath, explicitWorkingDirName);
+            string extraFolderB2_Path = Path.Combine(outputDirPath, "ExtraFolderB2");
+            string extraFileB2_Path = Path.Combine(outputDirPath, "ExtraFileB2.txt");
+            string extraFolderC2_Path = Path.Combine(outputWAQDirPath, "ExtraFolderC2");
+            string extraFileC2_Path = Path.Combine(outputWAQDirPath, "ExtraFileC2.txt");
+            string snappedDirectoryPath = Path.Combine(outputDirPath, SnappedDirectoryName);
+            string explicitWorkingDirPath = Path.Combine(projectDirPath, explicitWorkingDirName);
 
             try
             {
@@ -206,14 +205,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 Assert.That(!FileUtils.IsDirectoryEmpty(testDirPath));
 
                 // Get model for test
-                var mduFilePath = Path.Combine(modelDirPath, mduFileName);
+                string mduFilePath = Path.Combine(modelDirPath, mduFileName);
                 Assert.That(File.Exists(mduFilePath));
                 var model = new WaterFlowFMModel(mduFilePath);
 
                 // Perform migration
                 TypeUtils.CallPrivateStaticMethod(typeof(WaterFlowFMModel110LegacyLoader),
-                    "PerformDirectoryRestructuring",
-                    model, explicitWorkingDirPath);
+                                                  "PerformDirectoryRestructuring",
+                                                  model, explicitWorkingDirPath);
 
                 // Assert every expected (output) folder exists
                 Assert.That(File.Exists(projectFilePath));
@@ -237,29 +236,32 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         private static List<string> GetAllFilesByFilter(List<string> filters, string dirPath, SearchOption searchOption = SearchOption.AllDirectories)
         {
             return filters
-                .SelectMany(filter => Directory.GetFiles(dirPath, "*.*", searchOption)
-                    .Where(filePath => filePath.EndsWith(filter))
-                    .Select(filePath => Path.GetFileName(filePath)))
-                .Distinct()
-                .ToList();
+                   .SelectMany(filter => Directory.GetFiles(dirPath, "*.*", searchOption)
+                                                  .Where(filePath => filePath.EndsWith(filter))
+                                                  .Select(filePath => Path.GetFileName(filePath)))
+                   .Distinct()
+                   .ToList();
         }
 
         private static void AssertNoMissingFilesAndDirectoryFilesInDirectory(string targetDirPath, List<string> filesForFolder, string directoryName = null)
         {
-            var missingFiles = filesForFolder
-                .Except(Directory.GetFiles(targetDirPath)
-                    .Select(filePath => Path.GetFileName(filePath))
-                    .ToList())
-                .ToList();
+            List<string> missingFiles = filesForFolder
+                                        .Except(Directory.GetFiles(targetDirPath)
+                                                         .Select(filePath => Path.GetFileName(filePath))
+                                                         .ToList())
+                                        .ToList();
 
             Assert.IsEmpty(missingFiles,
-                $"The following files are missing in '{new DirectoryInfo(targetDirPath).Name}': " +
-                $"{String.Join(", ", missingFiles)}");
+                           $"The following files are missing in '{new DirectoryInfo(targetDirPath).Name}': " +
+                           $"{string.Join(", ", missingFiles)}");
 
-            if (directoryName == null) return;
+            if (directoryName == null)
+            {
+                return;
+            }
 
-            var targetDirectory = Directory.GetDirectories(targetDirPath)
-                .FirstOrDefault(d => Path.GetFileName(d) == directoryName);
+            string targetDirectory = Directory.GetDirectories(targetDirPath)
+                                              .FirstOrDefault(d => Path.GetFileName(d) == directoryName);
             Assert.NotNull(targetDirectory, $"Directory '{directoryName}' does not exist in directory '{targetDirPath}', but was expected.");
         }
     }

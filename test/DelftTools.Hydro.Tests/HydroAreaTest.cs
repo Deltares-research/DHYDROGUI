@@ -29,7 +29,7 @@ namespace DelftTools.Hydro.Tests
         {
             CheckGroupableGroupNameSetting<Pump2D>(setterName, expectedValue);
         }
-        
+
         [Test]
         [TestCase("MyGroupName", "MyGroupName")]
         [TestCase(@"MyGroupName/MyFile", @"MyGroupName/MyFile")]
@@ -77,7 +77,7 @@ namespace DelftTools.Hydro.Tests
         {
             CheckGroupableGroupNameSetting<GroupablePointFeature>(setterName, expectedValue);
         }
-        
+
         [TestCase(true)]
         [TestCase(false)]
         public void GivenGroupableFeature2D_WhenCloning_ThenGroupableFeaturePropertiesAreTheSame(bool isDefaultGroupValue)
@@ -128,7 +128,7 @@ namespace DelftTools.Hydro.Tests
 
         private void CheckGroupableGroupNameSetting<T>(string setterName, string expectedValue) where T : IGroupableFeature, new()
         {
-            var feature2D = new T() { GroupName = setterName };
+            var feature2D = new T() {GroupName = setterName};
             Assert.That(feature2D.GroupName, Is.EqualTo(expectedValue));
         }
     }

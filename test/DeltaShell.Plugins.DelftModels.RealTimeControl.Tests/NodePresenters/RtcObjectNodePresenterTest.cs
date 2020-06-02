@@ -6,7 +6,7 @@ using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.NodePresenters;
 using NSubstitute;
 using NUnit.Framework;
 
-namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.NodePresenters 
+namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.NodePresenters
 {
     [TestFixture]
     public class RtcObjectNodePresenterTest
@@ -30,9 +30,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.NodePresenters
             var parentNode = Substitute.For<ITreeNode>();
             var node = Substitute.For<ITreeNode>();
 
-            var instance = (RtcBaseObject)Activator.CreateInstance(rtcType);
+            var instance = (RtcBaseObject) Activator.CreateInstance(rtcType);
             instance.Name = name;
-            
+
             var rtcObjectNodePresenter = new RtcObjectNodePresenter();
 
             // Act

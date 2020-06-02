@@ -21,14 +21,29 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             WindowsFormsTestHelper.ShowModal(view);
         }
 
+        [Test]
+        public void ShowWithData()
+        {
+            var view = new MultipleFunctionChart
+            {
+                AvailableFunctions =
+                    new Dictionary<string, Func<IEnumerable<IFunction>>>
+                    {
+                        {"linear", Create1},
+                        {"quadratic", Create2}
+                    }
+            };
+            WindowsFormsTestHelper.ShowModal(view);
+        }
+
         private static IEnumerable<IFunction> Create1()
         {
             var result = new Function("f1");
             result.Arguments.Add(new Variable<double>("x"));
             result.Components.Add(new Variable<double>("y"));
             result.BeginEdit(new DefaultEditAction("Filling variables"));
-            result.Arguments[0].Values.AddRange(Enumerable.Range(0, 10).Select(i => 0.1*i).ToList());
-            result.Components[0].SetValues(Enumerable.Range(0, 10).Select(i => 0.1*i).ToList());
+            result.Arguments[0].Values.AddRange(Enumerable.Range(0, 10).Select(i => 0.1 * i).ToList());
+            result.Components[0].SetValues(Enumerable.Range(0, 10).Select(i => 0.1 * i).ToList());
             yield return result;
         }
 
@@ -37,20 +52,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             var result = new Function("f2");
             result.Arguments.Add(new Variable<double>("x"));
             result.Components.Add(new Variable<double>("y"));
-            result.Arguments[0].Values.AddRange(Enumerable.Range(0, 10).Select(i => 0.1*i).ToList());
-            result.Components[0].SetValues(Enumerable.Range(0, 10).Select(i => 0.01*i*i).ToList());
+            result.Arguments[0].Values.AddRange(Enumerable.Range(0, 10).Select(i => 0.1 * i).ToList());
+            result.Components[0].SetValues(Enumerable.Range(0, 10).Select(i => 0.01 * i * i).ToList());
             yield return result;
-        }
-
-        [Test]
-        public void ShowWithData()
-        {
-            var view = new MultipleFunctionChart
-                {
-                    AvailableFunctions =
-                        new Dictionary<string, Func<IEnumerable<IFunction>>> {{"linear", Create1}, {"quadratic", Create2}}
-                };
-            WindowsFormsTestHelper.ShowModal(view);
         }
     }
 }

@@ -41,10 +41,10 @@ namespace DelftTools.Hydro.Tests.Structures
             var culvert = new Culvert();
             culvert.GeometryType = CulvertGeometryType.Tabulated;
             culvert.TabulatedCrossSectionDefinition.SetWithHfswData(new[]
-                                                              {
-                                                                  new HeightFlowStorageWidth(0, 20, 20),
-                                                                  new HeightFlowStorageWidth(10, 20, 20)
-                                                              });
+            {
+                new HeightFlowStorageWidth(0, 20, 20),
+                new HeightFlowStorageWidth(10, 20, 20)
+            });
             culvert.InletLevel = 5;
 
             //TODO: add a small spike on top of the crossection (for modelapi only)
@@ -72,16 +72,15 @@ namespace DelftTools.Hydro.Tests.Structures
             //since structureview only listens to changes in the structure itself a change in the crossection 
             //should cause a PC in the Culvert itself
 
-            int callCount = 0;
+            var callCount = 0;
             //use a default 
             var culvert = new Culvert();
             culvert.TabulatedCrossSectionDefinition.ZWDataTable.AddCrossSectionZWRow(0, 0, 0);
 
-            ((INotifyPropertyChanged)culvert).PropertyChanged += (s, e) =>
+            ((INotifyPropertyChanged) culvert).PropertyChanged += (s, e) =>
             {
                 Assert.AreEqual(
-                    culvert.TabulatedCrossSectionDefinition.
-                        ZWDataTable[0], s);
+                    culvert.TabulatedCrossSectionDefinition.ZWDataTable[0], s);
                 Assert.AreEqual("Width", e.PropertyName);
                 callCount++;
             };
@@ -94,9 +93,21 @@ namespace DelftTools.Hydro.Tests.Structures
         [Test]
         public void CopyInto()
         {
-            var siphon = new Culvert {CulvertType = CulvertType.Siphon, FlowDirection = FlowDirection.Positive};
-            var culvert = new Culvert {CulvertType = CulvertType.Culvert, FlowDirection = FlowDirection.Both};
-            var invertedSiphon = new Culvert { CulvertType = CulvertType.InvertedSiphon, FlowDirection = FlowDirection.Negative };
+            var siphon = new Culvert
+            {
+                CulvertType = CulvertType.Siphon,
+                FlowDirection = FlowDirection.Positive
+            };
+            var culvert = new Culvert
+            {
+                CulvertType = CulvertType.Culvert,
+                FlowDirection = FlowDirection.Both
+            };
+            var invertedSiphon = new Culvert
+            {
+                CulvertType = CulvertType.InvertedSiphon,
+                FlowDirection = FlowDirection.Negative
+            };
 
             var target = new Culvert();
 
@@ -118,34 +129,33 @@ namespace DelftTools.Hydro.Tests.Structures
         {
             var targetCulvert = new Culvert("target");
             var sourceCulvert = new Culvert("source")
-            
-                                    {
-                                        Diameter = 20.0,
-                                        FlowDirection = FlowDirection.Positive,
-                                        Friction = 3.0,
-                                        FrictionType = CulvertFrictionType.WhiteColebrook,
-                                        GateInitialOpening = 4.2,
-                                        //GateOpeningLossCoefficientFunction = ,
-                                        GeometryType = CulvertGeometryType.SteelCunette,
-                                        Height = 5.0,
-                                        InletLevel = 3.11,
-                                        InletLossCoefficient = 0.42,
-                                        IsGated = true,
-                                        CulvertType = CulvertType.Siphon,
-                                        OutletLevel = 0.42,
-                                        OutletLossCoefficient = 0.42,
-                                        Radius = 42.0,
-                                        Radius1 = 42.1,
-                                        Radius2 = 42.3,
-                                        Radius3 = 42.4,
-                                        SiphonOffLevel = 1.2,
-                                        SiphonOnLevel = 1.2,
-                                        TabulatedCrossSectionDefinition =
-                                            new CrossSectionDefinitionZW(),
-                                        Width = 14.0,
-                                        GroundLayerRoughness = 0.42,
-                                        GroundLayerThickness = 4.2
-                                    };
+            {
+                Diameter = 20.0,
+                FlowDirection = FlowDirection.Positive,
+                Friction = 3.0,
+                FrictionType = CulvertFrictionType.WhiteColebrook,
+                GateInitialOpening = 4.2,
+                //GateOpeningLossCoefficientFunction = ,
+                GeometryType = CulvertGeometryType.SteelCunette,
+                Height = 5.0,
+                InletLevel = 3.11,
+                InletLossCoefficient = 0.42,
+                IsGated = true,
+                CulvertType = CulvertType.Siphon,
+                OutletLevel = 0.42,
+                OutletLossCoefficient = 0.42,
+                Radius = 42.0,
+                Radius1 = 42.1,
+                Radius2 = 42.3,
+                Radius3 = 42.4,
+                SiphonOffLevel = 1.2,
+                SiphonOnLevel = 1.2,
+                TabulatedCrossSectionDefinition =
+                    new CrossSectionDefinitionZW(),
+                Width = 14.0,
+                GroundLayerRoughness = 0.42,
+                GroundLayerThickness = 4.2
+            };
             targetCulvert.CopyFrom(sourceCulvert);
             Assert.AreEqual(sourceCulvert.Diameter, targetCulvert.Diameter);
             Assert.AreEqual(sourceCulvert.FlowDirection, targetCulvert.FlowDirection);
@@ -164,6 +174,7 @@ namespace DelftTools.Hydro.Tests.Structures
             Assert.AreEqual(sourceCulvert.GroundLayerRoughness, targetCulvert.GroundLayerRoughness);
             Assert.AreNotEqual(sourceCulvert.Name, targetCulvert.Name);
         }
+
         [Test]
         public void NoNegativeFlowForSiphon()
         {
@@ -171,7 +182,6 @@ namespace DelftTools.Hydro.Tests.Structures
             Assert.IsTrue(culvert.AllowNegativeFlow);
             culvert.CulvertType = CulvertType.Siphon;
             Assert.IsFalse(culvert.AllowNegativeFlow);
-            
         }
 
         [Test]
@@ -201,10 +211,7 @@ namespace DelftTools.Hydro.Tests.Structures
         public void GivenCulvert_WhenChangingGeometryTypeWidthTypeShape_ThenHeightAFactorAsLarge(CulvertGeometryType geometryType, double heightFactor)
         {
             // Given
-            var culvert = new Culvert
-            {
-                Width = 10.0
-            };
+            var culvert = new Culvert {Width = 10.0};
 
             // When
             culvert.GeometryType = geometryType;

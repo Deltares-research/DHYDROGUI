@@ -10,11 +10,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.ImportExport.Expo
     [TestFixture]
     public class OutputSerializerTest
     {
-        private static readonly XNamespace fns = "http://www.wldelft.nl/fews";
-
         private const string elementName = "Weir";
         private const string parameterName = "CrestLevel";
         private const string integralPart = "integralPart";
+        private static readonly XNamespace fns = "http://www.wldelft.nl/fews";
 
         private Output output;
 

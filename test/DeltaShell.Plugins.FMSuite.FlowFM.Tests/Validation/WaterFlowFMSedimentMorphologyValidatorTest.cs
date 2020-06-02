@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
@@ -18,12 +19,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
     [TestFixture()]
     public class WaterFlowFMSedimentMorphologyValidatorTest
     {
-
         [Test]
         public void ValidateSedimentNameTest()
         {
             var validName = "Sediment_001";
-            var issue = WaterFlowFMSedimentMorphologyValidator.ValidateSedimentName(validName);
+            ValidationIssue issue = WaterFlowFMSedimentMorphologyValidator.ValidateSedimentName(validName);
             Assert.IsNull(issue);
             var invalidName = "Sediment#001";
             issue = WaterFlowFMSedimentMorphologyValidator.ValidateSedimentName(invalidName);
@@ -34,147 +34,126 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
         public void Test_ValidateMorphology_WithoutSediments_Returns_ValidationIssue_With_ExpectedMessage()
         {
             var model = new WaterFlowFMModel() {ModelDefinition = {UseMorphologySediment = true}};
-            var expectedMessage = Resources
+            string expectedMessage = Resources
                 .WaterFlowFMSedimentMorphologyValidator_ValidateAtLeastOneSedimentFractionInModel_At_least_one_sediment_fraction_is_required_when_using_morphology;
 
-            var validationReport = WaterFlowFMSedimentMorphologyValidator.ValidateMorphology(model);
-            var errorMessages = validationReport.AllErrors.Where(i => i.Message == expectedMessage).Select(i => i.Message);
+            ValidationReport validationReport = WaterFlowFMSedimentMorphologyValidator.ValidateMorphology(model);
+            IEnumerable<string> errorMessages = validationReport.AllErrors.Where(i => i.Message == expectedMessage).Select(i => i.Message);
             Assert.AreEqual(errorMessages.Count(), 1);
         }
 
         [Test]
         public void Test_ValidateMorphology_WithSediments_Returns_No_ValidationIssue()
         {
-            var model = new WaterFlowFMModel() { ModelDefinition = { UseMorphologySediment = true } };
-            var expectedMessage = Resources
+            var model = new WaterFlowFMModel() {ModelDefinition = {UseMorphologySediment = true}};
+            string expectedMessage = Resources
                 .WaterFlowFMSedimentMorphologyValidator_ValidateAtLeastOneSedimentFractionInModel_At_least_one_sediment_fraction_is_required_when_using_morphology;
 
-            model.SedimentFractions.Add(new SedimentFraction() { Name = "SedFrac" });
+            model.SedimentFractions.Add(new SedimentFraction() {Name = "SedFrac"});
 
-            var validationReport = WaterFlowFMSedimentMorphologyValidator.ValidateMorphology(model);
-            var errorMessages = validationReport.AllErrors.Where(i => i.Message == expectedMessage).Select(i => i.Message);
+            ValidationReport validationReport = WaterFlowFMSedimentMorphologyValidator.ValidateMorphology(model);
+            IEnumerable<string> errorMessages = validationReport.AllErrors.Where(i => i.Message == expectedMessage).Select(i => i.Message);
             Assert.AreEqual(errorMessages.Count(), 0);
         }
 
         [Test]
         public void TestValidateInitialSedimentThicknessOfSedimentFractionsInModel_WithNoSedimentFractions()
         {
-            var mduPath = TestHelper.GetTestFilePath(@"MyFmModel");
-            var fmModel = new WaterFlowFMModel(mduPath) { ModelDefinition = { UseMorphologySediment = true } };
-            var issues = GetValidationIssuesWithMessages(fmModel, new List<string>(){ Resources.WaterFlowFMSedimentMorphologyValidator_ValidateInitialSedimentThicknessOfSedimentFractionsInModel_At_least_one_sediment_fraction_should_have_a_positive_thickness});
+            string mduPath = TestHelper.GetTestFilePath(@"MyFmModel");
+            var fmModel = new WaterFlowFMModel(mduPath) {ModelDefinition = {UseMorphologySediment = true}};
+            IEnumerable<ValidationIssue> issues = GetValidationIssuesWithMessages(fmModel, new List<string>() {Resources.WaterFlowFMSedimentMorphologyValidator_ValidateInitialSedimentThicknessOfSedimentFractionsInModel_At_least_one_sediment_fraction_should_have_a_positive_thickness});
             Assert.AreEqual(0, issues.Count());
         }
-        
+
         [Test]
         public void TestValidateInitialSedimentThicknessOfSedimentFractionsInModel_WithSedimentFractionWithInitialSedimentThicknessGreaterThanZero()
         {
-            var fmModel = GetFMModelWithDefaultSandAndMudFractions();
+            WaterFlowFMModel fmModel = GetFMModelWithDefaultSandAndMudFractions();
             fmModel.SedimentFractions.ForEach(
                 sf => sf.CurrentSedimentType.Properties.OfType<SedimentProperty<double>>()
-                .First(p => p.Name == "IniSedThick").Value = 1);
+                        .First(p => p.Name == "IniSedThick").Value = 1);
 
-            var issues = GetValidationIssuesWithMessages(fmModel, new List<string>() { Resources.WaterFlowFMSedimentMorphologyValidator_ValidateInitialSedimentThicknessOfSedimentFractionsInModel_At_least_one_sediment_fraction_should_have_a_positive_thickness });
+            IEnumerable<ValidationIssue> issues = GetValidationIssuesWithMessages(fmModel, new List<string>() {Resources.WaterFlowFMSedimentMorphologyValidator_ValidateInitialSedimentThicknessOfSedimentFractionsInModel_At_least_one_sediment_fraction_should_have_a_positive_thickness});
             Assert.AreEqual(0, issues.Count());
         }
 
         [Test]
         public void TestValidateInitialSedimentThicknessOfSedimentFractionsInModel_WithOneOfTheSedimentFractionsWithInitialSedimentThicknessGreaterThanZero()
         {
-            var fmModel = GetFMModelWithDefaultSandAndMudFractions();
+            WaterFlowFMModel fmModel = GetFMModelWithDefaultSandAndMudFractions();
             Assert.AreEqual(2, fmModel.SedimentFractions.Count);
-            
+
             fmModel.SedimentFractions[0].CurrentSedimentType.Properties.OfType<SedimentProperty<double>>()
-                .First(p => p.Name == "IniSedThick").Value = 0;
+                   .First(p => p.Name == "IniSedThick").Value = 0;
 
             fmModel.SedimentFractions[1].CurrentSedimentType.Properties.OfType<SedimentProperty<double>>()
-                .First(p => p.Name == "IniSedThick").Value = 1;
+                   .First(p => p.Name == "IniSedThick").Value = 1;
 
-            var issues = GetValidationIssuesWithMessages(fmModel, new List<string>() { Resources.WaterFlowFMSedimentMorphologyValidator_ValidateInitialSedimentThicknessOfSedimentFractionsInModel_At_least_one_sediment_fraction_should_have_a_positive_thickness });
+            IEnumerable<ValidationIssue> issues = GetValidationIssuesWithMessages(fmModel, new List<string>() {Resources.WaterFlowFMSedimentMorphologyValidator_ValidateInitialSedimentThicknessOfSedimentFractionsInModel_At_least_one_sediment_fraction_should_have_a_positive_thickness});
             Assert.AreEqual(0, issues.Count());
         }
 
         [Test]
         public void TestValidateInitialSedimentThicknessOfSedimentFractionsInModel_WithNoSedimentFractionsWithInitialSedimentThicknessGreaterThanZero()
         {
-            var fmModel = GetFMModelWithDefaultSandAndMudFractions();
+            WaterFlowFMModel fmModel = GetFMModelWithDefaultSandAndMudFractions();
             fmModel.SedimentFractions.ForEach(
                 sf => sf.CurrentSedimentType.Properties.OfType<SedimentProperty<double>>()
-                .First(p => p.Name == "IniSedThick").Value = 0);
+                        .First(p => p.Name == "IniSedThick").Value = 0);
 
-            var issues = GetValidationIssuesWithMessages(fmModel, new List<string>() { Resources.WaterFlowFMSedimentMorphologyValidator_ValidateInitialSedimentThicknessOfSedimentFractionsInModel_At_least_one_sediment_fraction_should_have_a_positive_thickness });
+            IEnumerable<ValidationIssue> issues = GetValidationIssuesWithMessages(fmModel, new List<string>() {Resources.WaterFlowFMSedimentMorphologyValidator_ValidateInitialSedimentThicknessOfSedimentFractionsInModel_At_least_one_sediment_fraction_should_have_a_positive_thickness});
             Assert.AreEqual(1, issues.Count());
         }
 
         [Test]
         public void GivenAProjectWithNonInterpolatedInitialThicknessSediment_WhenValidating_ThenWarningMessageAppears()
         {
-            var spatiallyVaryingNames = new List<string>
-            {
-                "Sediment_sand_IniSedThick"
-            };
+            var spatiallyVaryingNames = new List<string> {"Sediment_sand_IniSedThick"};
 
-            var sedimentProperties = new EventedList<ISedimentProperty>()
-            {
-                new SpatiallyVaryingSedimentProperty<double>("IniSedThick", 0, 0, false, double.MaxValue, true, "m","Initial sediment layer thickness at bed", true, false)
-                {
-                    SpatiallyVaryingName = spatiallyVaryingNames[0]
-                }
-            };
-            var fmModel = GetFmModelWithSedimentFraction(sedimentProperties);
+            var sedimentProperties = new EventedList<ISedimentProperty>() {new SpatiallyVaryingSedimentProperty<double>("IniSedThick", 0, 0, false, double.MaxValue, true, "m", "Initial sediment layer thickness at bed", true, false) {SpatiallyVaryingName = spatiallyVaryingNames[0]}};
+            WaterFlowFMModel fmModel = GetFmModelWithSedimentFraction(sedimentProperties);
             SetDataItemValueConverters(fmModel, spatiallyVaryingNames);
 
-            var messages = spatiallyVaryingNames.Select(n => string.Format(
-                Resources.SedimentFile_WriteSpatiallyVaryingSedimentPropertySubFiles_Cannot_create_xyz_file_for_spatial_varying_initial_condition__0__because_it_is_a_value_spatial_operation__please_interpolate_the_operation_to_the_grid_or,
-                n)).ToList();
-            var issues = GetValidationIssuesWithMessages(fmModel, messages);
+            List<string> messages = spatiallyVaryingNames.Select(n => string.Format(
+                                                                     Resources.SedimentFile_WriteSpatiallyVaryingSedimentPropertySubFiles_Cannot_create_xyz_file_for_spatial_varying_initial_condition__0__because_it_is_a_value_spatial_operation__please_interpolate_the_operation_to_the_grid_or,
+                                                                     n)).ToList();
+            IEnumerable<ValidationIssue> issues = GetValidationIssuesWithMessages(fmModel, messages);
             Assert.That(issues.Count(), Is.EqualTo(1));
         }
 
         [Test]
         public void GivenAProjectWithSedimentConcentrationSedimentFraction_WhenValidating_ThenNoWarningMessageAppears()
         {
-            var spatiallyVaryingNames = new List<string>
-            {
-                "Sediment_sand_SedConc"
-            };
+            var spatiallyVaryingNames = new List<string> {"Sediment_sand_SedConc"};
 
             var sedimentProperties = new EventedList<ISedimentProperty>()
             {
                 new SpatiallyVaryingSedimentProperty<double>("SedConc", 0, 0, false, double.MaxValue, true, "kg/m³",
-                    "Initial Concentration", true, false, sediments => false)
-                {
-                    SpatiallyVaryingName = spatiallyVaryingNames[0]
-                }
+                                                             "Initial Concentration", true, false, sediments => false) {SpatiallyVaryingName = spatiallyVaryingNames[0]}
             };
-            var fmModel = GetFmModelWithSedimentFraction(sedimentProperties);
+            WaterFlowFMModel fmModel = GetFmModelWithSedimentFraction(sedimentProperties);
             SetDataItemValueConverters(fmModel, spatiallyVaryingNames);
 
-            var messages = spatiallyVaryingNames.Select(n => string.Format(
-                Resources.SedimentFile_WriteSpatiallyVaryingSedimentPropertySubFiles_Cannot_create_xyz_file_for_spatial_varying_initial_condition__0__because_it_is_a_value_spatial_operation__please_interpolate_the_operation_to_the_grid_or,
-                n)).ToList();
-            var issues = GetValidationIssuesWithMessages(fmModel, messages);
+            List<string> messages = spatiallyVaryingNames.Select(n => string.Format(
+                                                                     Resources.SedimentFile_WriteSpatiallyVaryingSedimentPropertySubFiles_Cannot_create_xyz_file_for_spatial_varying_initial_condition__0__because_it_is_a_value_spatial_operation__please_interpolate_the_operation_to_the_grid_or,
+                                                                     n)).ToList();
+            IEnumerable<ValidationIssue> issues = GetValidationIssuesWithMessages(fmModel, messages);
             Assert.That(issues.Count(), Is.EqualTo(0));
         }
 
         [Test]
         public void GivenAProjectWithnOSpatiallyVaryingSedimentProperties_WhenValidating_ThenWarningMessageAppears()
         {
-            var spatiallyVaryingNames = new List<string>
-            {
-                "Sediment_sand_IniSedThick"
-            };
+            var spatiallyVaryingNames = new List<string> {"Sediment_sand_IniSedThick"};
 
-            var sedimentProperties = new EventedList<ISedimentProperty>()
-            {
-                new SedimentProperty<double>("IniSedThick", 0, 0, false, double.MaxValue, true, "m","Initial sediment layer thickness at bed", false)
-            };
-            var fmModel = GetFmModelWithSedimentFraction(sedimentProperties);
+            var sedimentProperties = new EventedList<ISedimentProperty>() {new SedimentProperty<double>("IniSedThick", 0, 0, false, double.MaxValue, true, "m", "Initial sediment layer thickness at bed", false)};
+            WaterFlowFMModel fmModel = GetFmModelWithSedimentFraction(sedimentProperties);
             SetDataItemValueConverters(fmModel, spatiallyVaryingNames);
 
-            var messages = spatiallyVaryingNames.Select(n => string.Format(
-                Resources.SedimentFile_WriteSpatiallyVaryingSedimentPropertySubFiles_Cannot_create_xyz_file_for_spatial_varying_initial_condition__0__because_it_is_a_value_spatial_operation__please_interpolate_the_operation_to_the_grid_or,
-                n)).ToList();
-            var issues = GetValidationIssuesWithMessages(fmModel, messages);
+            List<string> messages = spatiallyVaryingNames.Select(n => string.Format(
+                                                                     Resources.SedimentFile_WriteSpatiallyVaryingSedimentPropertySubFiles_Cannot_create_xyz_file_for_spatial_varying_initial_condition__0__because_it_is_a_value_spatial_operation__please_interpolate_the_operation_to_the_grid_or,
+                                                                     n)).ToList();
+            IEnumerable<ValidationIssue> issues = GetValidationIssuesWithMessages(fmModel, messages);
             Assert.That(issues.Count(), Is.EqualTo(0));
         }
 
@@ -189,22 +168,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
 
             var sedimentProperties = new EventedList<ISedimentProperty>()
             {
-                new SpatiallyVaryingSedimentProperty<double>("IniSedThick", 0, 0, false, double.MaxValue, true, "m","Initial sediment layer thickness at bed", true, false)
-                {
-                    SpatiallyVaryingName = spatiallyVaryingNames[0]
-                },
-                new SpatiallyVaryingSedimentProperty<double>("IniSedThick2", 0, 0, false, double.MaxValue, true, "m","Initial sediment layer thickness at bed", true, false)
-                {
-                    SpatiallyVaryingName = spatiallyVaryingNames[1]
-                }
+                new SpatiallyVaryingSedimentProperty<double>("IniSedThick", 0, 0, false, double.MaxValue, true, "m", "Initial sediment layer thickness at bed", true, false) {SpatiallyVaryingName = spatiallyVaryingNames[0]},
+                new SpatiallyVaryingSedimentProperty<double>("IniSedThick2", 0, 0, false, double.MaxValue, true, "m", "Initial sediment layer thickness at bed", true, false) {SpatiallyVaryingName = spatiallyVaryingNames[1]}
             };
-            var fmModel = GetFmModelWithSedimentFraction(sedimentProperties);
+            WaterFlowFMModel fmModel = GetFmModelWithSedimentFraction(sedimentProperties);
             SetDataItemValueConverters(fmModel, spatiallyVaryingNames);
 
-            var messages = spatiallyVaryingNames.Select(n => string.Format(
-                Resources.SedimentFile_WriteSpatiallyVaryingSedimentPropertySubFiles_Cannot_create_xyz_file_for_spatial_varying_initial_condition__0__because_it_is_a_value_spatial_operation__please_interpolate_the_operation_to_the_grid_or,
-                n)).ToList();
-            var issues = GetValidationIssuesWithMessages(fmModel, messages);
+            List<string> messages = spatiallyVaryingNames.Select(n => string.Format(
+                                                                     Resources.SedimentFile_WriteSpatiallyVaryingSedimentPropertySubFiles_Cannot_create_xyz_file_for_spatial_varying_initial_condition__0__because_it_is_a_value_spatial_operation__please_interpolate_the_operation_to_the_grid_or,
+                                                                     n)).ToList();
+            IEnumerable<ValidationIssue> issues = GetValidationIssuesWithMessages(fmModel, messages);
             Assert.That(issues.Count(), Is.EqualTo(2));
         }
 
@@ -215,7 +188,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             var fmModel = new WaterFlowFMModel();
             string expectedErrMessage = Resources
                 .WaterFlowFMSedimentMorphologyValidator_ValidateAtLeastOneSedimentFractionInModel_At_least_one_sediment_fraction_is_required_when_using_morphology;
-            string expectedTabName = "Sediment";
+            var expectedTabName = "Sediment";
             string expectedSubject = expectedTabName;
             // 2. Verify initial expectations
             Assert.That(fmModel.ModelDefinition, Is.Not.Null);
@@ -241,12 +214,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
         }
 
         #region Test helper methods
+
         private static WaterFlowFMModel GetFMModelWithDefaultSandAndMudFractions()
         {
-            var mduPath = TestHelper.GetTestFilePath(@"MyFmModel");
+            string mduPath = TestHelper.GetTestFilePath(@"MyFmModel");
             var fmModel = new WaterFlowFMModel(mduPath)
             {
-                ModelDefinition = { UseMorphologySediment = true },
+                ModelDefinition = {UseMorphologySediment = true},
                 SedimentFractions = new EventedList<ISedimentFraction>()
                 {
                     new SedimentFraction
@@ -267,15 +241,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
 
         private static WaterFlowFMModel GetFmModelWithSedimentFraction(IEventedList<ISedimentProperty> sedimentProperties)
         {
-            var mduPath = TestHelper.GetTestFilePath(@"MyFmModel");
+            string mduPath = TestHelper.GetTestFilePath(@"MyFmModel");
             var fmModel = new WaterFlowFMModel(mduPath) {ModelDefinition = {UseMorphologySediment = true}};
             var sedimentFraction = new SedimentFraction
             {
                 Name = "Sand",
-                CurrentSedimentType = new SedimentType
-                {
-                    Properties = sedimentProperties
-                }
+                CurrentSedimentType = new SedimentType {Properties = sedimentProperties}
             };
             fmModel.SedimentFractions.Add(sedimentFraction);
             return fmModel;
@@ -283,10 +254,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
 
         private static void SetDataItemValueConverters(WaterFlowFMModel fmModel, List<string> spatiallyVaryingNames)
         {
-            var iniSedThickDataItems = fmModel.AllDataItems.Where(d => spatiallyVaryingNames.Contains(d.Name));
-            foreach (var iniSedThickDataItem in iniSedThickDataItems)
+            IEnumerable<IDataItem> iniSedThickDataItems = fmModel.AllDataItems.Where(d => spatiallyVaryingNames.Contains(d.Name));
+            foreach (IDataItem iniSedThickDataItem in iniSedThickDataItems)
             {
-                var valueConverter =
+                SpatialOperationSetValueConverter valueConverter =
                     SpatialOperationValueConverterFactory.GetOrCreateSpatialOperationValueConverter(iniSedThickDataItem);
                 valueConverter.SpatialOperationSet.AddOperation(new SetValueOperation());
             }
@@ -294,20 +265,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
 
         private static IEnumerable<ValidationIssue> GetValidationIssuesWithMessages(WaterFlowFMModel fmModel, List<string> messages)
         {
-            var validationReport = fmModel.Validate();
-            var morSedValidationReport =
+            ValidationReport validationReport = fmModel.Validate();
+            ValidationReport morSedValidationReport =
                 validationReport.SubReports.FirstOrDefault(r => r.Category == Resources.WaterFlowFMSedimentMorphologyValidator_ValidateMorphology_Morphology___Sediment);
             Assert.NotNull(morSedValidationReport);
 
             var issues = new List<ValidationIssue>();
-            foreach (var message in messages)
+            foreach (string message in messages)
             {
                 issues.AddRange(morSedValidationReport.Issues.Where(i => i.Message.Equals(message)));
             }
-            
+
             return issues;
         }
+
         #endregion
-        
     }
 }

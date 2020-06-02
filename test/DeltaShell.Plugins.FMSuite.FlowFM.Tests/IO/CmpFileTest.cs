@@ -15,11 +15,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         public void ReadWriteReadCmpTest()
         {
             var cmpFile = new CmpFile();
-            var cmpPath = TestHelper.GetTestFilePath(@"harlingen\FilesUsingOldFormat\071_03_0001.cmp");
+            string cmpPath = TestHelper.GetTestFilePath(@"harlingen\FilesUsingOldFormat\071_03_0001.cmp");
             var cmpPathExport = "017_03_0001_export.cmp";
-            var harmonicComponents = cmpFile.Read(cmpPath);
+            IList<HarmonicComponent> harmonicComponents = cmpFile.Read(cmpPath);
             cmpFile.Write(cmpPathExport, harmonicComponents);
-            var harmonicComponentsExport = cmpFile.Read(cmpPathExport);
+            IList<HarmonicComponent> harmonicComponentsExport = cmpFile.Read(cmpPathExport);
 
             Assert.AreEqual(harmonicComponents[0].Name, harmonicComponentsExport[0].Name);
             Assert.AreEqual(harmonicComponents[0].Frequency, harmonicComponentsExport[0].Frequency);
@@ -31,10 +31,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         public void ReadCmpFileWithUnknownKeyShowsLogMessage()
         {
             var cmpFile = new CmpFile();
-            var cmpPath = TestHelper.GetTestFilePath(@"CmpFileTest\cmpWithUnknownN41Key.cmp");
+            string cmpPath = TestHelper.GetTestFilePath(@"CmpFileTest\cmpWithUnknownN41Key.cmp");
             var returnObjc = new List<HarmonicComponent>();
-            var logMssg = string.Format(Resources.CmpFile_Read_Unknown_key__0__from_file__1___It_will_not_be_imported_, "N41", cmpPath);
-            TestHelper.AssertAtLeastOneLogMessagesContains( () => returnObjc = cmpFile.Read(cmpPath, BoundaryConditionDataType.AstroComponents).ToList(), logMssg);
+            string logMssg = string.Format(Resources.CmpFile_Read_Unknown_key__0__from_file__1___It_will_not_be_imported_, "N41", cmpPath);
+            TestHelper.AssertAtLeastOneLogMessagesContains(() => returnObjc = cmpFile.Read(cmpPath, BoundaryConditionDataType.AstroComponents).ToList(), logMssg);
             Assert.IsTrue(returnObjc.Any());
         }
     }

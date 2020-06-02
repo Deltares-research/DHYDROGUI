@@ -18,11 +18,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData
             data.UpdateDataColumns("Scheme8");
 
             Assert.AreEqual(3, data.DataColumns.Count);
-            Assert.AreEqual(FixedWeirFmModelFeatureCoordinateDataSyncExtensions.CrestLevelColumnName,data.DataColumns[0].Name);
+            Assert.AreEqual(FixedWeirFmModelFeatureCoordinateDataSyncExtensions.CrestLevelColumnName, data.DataColumns[0].Name);
             Assert.AreEqual(FixedWeirFmModelFeatureCoordinateDataSyncExtensions.SillUpColumnName, data.DataColumns[1].Name);
             Assert.AreEqual(FixedWeirFmModelFeatureCoordinateDataSyncExtensions.SillDownColumnName, data.DataColumns[2].Name);
-            
-            
+
             data.UpdateDataColumns("Scheme9");
             Assert.AreEqual(7, data.DataColumns.Count);
             Assert.AreEqual(FixedWeirFmModelFeatureCoordinateDataSyncExtensions.CrestLevelColumnName, data.DataColumns[0].Name);
@@ -33,7 +32,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData
             Assert.AreEqual(FixedWeirFmModelFeatureCoordinateDataSyncExtensions.TaludDownColumnName, data.DataColumns[5].Name);
             Assert.AreEqual(FixedWeirFmModelFeatureCoordinateDataSyncExtensions.VegetationCoefficientColumnName, data.DataColumns[6].Name);
             Assert.IsTrue(data.DataColumns.All(c => c.IsActive));
-            
+
             data.UpdateDataColumns("Scheme6");
             Assert.AreEqual(7, data.DataColumns.Count);
             Assert.AreEqual(FixedWeirFmModelFeatureCoordinateDataSyncExtensions.CrestLevelColumnName, data.DataColumns[0].Name);
@@ -70,8 +69,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData
         {
             ModelFeatureCoordinateData<FixedWeir> data = CreateModelFeatureCoordinateDataWithGeometry();
             data.UpdateDataColumns("Scheme9");
-            
-            Assert.AreEqual(0,data.DataColumns[0].ValueList[0]);
+
+            Assert.AreEqual(0, data.DataColumns[0].ValueList[0]);
             Assert.AreEqual(0, data.DataColumns[0].ValueList[1]);
 
             Assert.AreEqual(0, data.DataColumns[1].ValueList[0]);

@@ -39,22 +39,15 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CompositeStructureView
             network.Nodes.Add(node2);
             network.Nodes.Add(node3);
 
-            var branch1 = new Channel("branch1", node1, node2)
-                              {
-                                  Geometry = GeometryFromWKT.Parse("LINESTRING (0 0, 100 0)")
-                              };
+            var branch1 = new Channel("branch1", node1, node2) {Geometry = GeometryFromWKT.Parse("LINESTRING (0 0, 100 0)")};
             //var branch2 = new Channel("branch2", node1, node2)
             //{
             //    Geometry = GeometryFromWKT.Parse("LINESTRING (0 0, 100 0)")
             //};
-            var branch2 = new Channel("branch2", node2, node3)
-                              {
-                                  Geometry = GeometryFromWKT.Parse("LINESTRING (100 0, 100 100)")
-                              };
+            var branch2 = new Channel("branch2", node2, node3) {Geometry = GeometryFromWKT.Parse("LINESTRING (100 0, 100 100)")};
 
             //var branch1 = new Channel("branch1", node1, node2) { Geometry = GeometryFromWKT.Parse("LINESTRING (0 0, 100 0)") };
             //var branch2 = new Channel("branch2", node2, node3) { Geometry = GeometryFromWKT.Parse("LINESTRING (100 0, 300 0)") };
-
 
             network.Branches.Add(branch1);
             network.Branches.Add(branch2);
@@ -63,39 +56,40 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CompositeStructureView
             {
                 AddCrossSections(branch1, branch2);
             }
+
             return network;
         }
 
         public static void AddCrossSections(Channel branch1, Channel branch2)
         {
             CrossSectionHelper.AddXYZCrossSectionFromYZCoordinates(branch1, 20.0, new List<Coordinate>
-                                                                                      {
-                                                                                          new Coordinate(0.0, 18.0),
-                                                                                          new Coordinate(100.0, 18.0),
-                                                                                          new Coordinate(150.0, 10.0),
-                                                                                          new Coordinate(300.0, 10.0),
-                                                                                          new Coordinate(350.0, 18.0),
-                                                                                          new Coordinate(500.0, 18.0)
-                                                                                      });
+            {
+                new Coordinate(0.0, 18.0),
+                new Coordinate(100.0, 18.0),
+                new Coordinate(150.0, 10.0),
+                new Coordinate(300.0, 10.0),
+                new Coordinate(350.0, 18.0),
+                new Coordinate(500.0, 18.0)
+            });
             CrossSectionHelper.AddXYZCrossSectionFromYZCoordinates(branch1, 80.0, new List<Coordinate>
-                                                                                      {
-                                                                                          new Coordinate(0.0, 19.0),
-                                                                                          new Coordinate(100.0, 19.0),
-                                                                                          new Coordinate(150.0, 9.0),
-                                                                                          new Coordinate(300.0, 9.0),
-                                                                                          new Coordinate(350.0, 19.0),
-                                                                                          new Coordinate(500.0, 19.0)
-                                                                                      });
+            {
+                new Coordinate(0.0, 19.0),
+                new Coordinate(100.0, 19.0),
+                new Coordinate(150.0, 9.0),
+                new Coordinate(300.0, 9.0),
+                new Coordinate(350.0, 19.0),
+                new Coordinate(500.0, 19.0)
+            });
 
             CrossSectionHelper.AddXYZCrossSectionFromYZCoordinates(branch2, 50, new List<Coordinate>
-                                                                                    {
-                                                                                        new Coordinate(0.0, 14.0),
-                                                                                        new Coordinate(100.0, 14.0),
-                                                                                        new Coordinate(150.0, 8.0),
-                                                                                        new Coordinate(300.0, 8.0),
-                                                                                        new Coordinate(350.0, 14.0),
-                                                                                        new Coordinate(500.0, 14.0)
-                                                                                    });
+            {
+                new Coordinate(0.0, 14.0),
+                new Coordinate(100.0, 14.0),
+                new Coordinate(150.0, 8.0),
+                new Coordinate(300.0, 8.0),
+                new Coordinate(350.0, 14.0),
+                new Coordinate(500.0, 14.0)
+            });
         }
 
         public static CompositeBranchStructure AddCompositeBranchStructureForStructureAtLocation(IStructure1D bridge, NetworkLocation location)
@@ -110,10 +104,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CompositeStructureView
         {
             var bridge = new Bridge("bridge");
             bridge.TabulatedCrossSectionDefinition.SetWithHfswData(new[]
-                                                             {
-                                                                 new HeightFlowStorageWidth(10, 50, 50),
-                                                                 new HeightFlowStorageWidth(16, 100, 100)
-                                                             });
+            {
+                new HeightFlowStorageWidth(10, 50, 50),
+                new HeightFlowStorageWidth(16, 100, 100)
+            });
             bridge.OffsetY = 100;
             bridge.BottomLevel = 10;
             bridge.Width = 50;
@@ -127,16 +121,16 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CompositeStructureView
 
             NetworkHelper.AddBranchFeatureToBranch(compositeBranchStructure, network.Branches[0], 50);
 
-
             HydroNetworkHelper.AddStructureToComposite(compositeBranchStructure, structure);
-            ShowStructure(compositeBranchStructure,action);
+            ShowStructure(compositeBranchStructure, action);
         }
+
         public static void ShowStructureAtFirstBranch(IStructure1D structure, HydroNetwork network)
         {
-            ShowStructureAtFirstBranch(structure,network,null);
+            ShowStructureAtFirstBranch(structure, network, null);
         }
-        
-        public static void ShowStructure(ICompositeBranchStructure compositeBranchStructure,Action<Form> action)
+
+        public static void ShowStructure(ICompositeBranchStructure compositeBranchStructure, Action<Form> action)
         {
             var mocks = new MockRepository();
             var dockingManager = mocks.Stub<IDockingManager>();
@@ -152,10 +146,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CompositeStructureView
                         var viewList = new ViewList(dockingManager, ViewLocation.Document);
                         var viewResolver = new ViewResolver(viewList, plugin.GetViewInfoObjects());
                         return viewResolver.CreateViewForData(o, info =>
-                                info.CompositeViewType == typeof (Gui.Forms.CompositeStructureView.CompositeStructureView));
+                                                                  info.CompositeViewType == typeof(Gui.Forms.CompositeStructureView.CompositeStructureView));
                     }
                 },
-                SelectionContainer = new SimpleSelectionContainer { Logging = true }
+                SelectionContainer = new SimpleSelectionContainer {Logging = true}
             };
             var view = new Gui.Forms.CompositeStructureView.CompositeStructureView
             {
@@ -165,17 +159,17 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CompositeStructureView
 
             if (action != null)
             {
-                WindowsFormsTestHelper.ShowModal(view,action);    
+                WindowsFormsTestHelper.ShowModal(view, action);
             }
             else
             {
-                WindowsFormsTestHelper.ShowModal(view);    
+                WindowsFormsTestHelper.ShowModal(view);
             }
         }
 
         public static void ShowStructure(ICompositeBranchStructure compositeBranchStructure)
         {
-            ShowStructure(compositeBranchStructure,null);
+            ShowStructure(compositeBranchStructure, null);
         }
     }
 }

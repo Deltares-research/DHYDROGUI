@@ -21,7 +21,8 @@ using SharpMap.UI.Forms;
 namespace DeltaShell.Plugins.NetworkEditor.Tests.Helpers
 {
     /// <summary>
-    /// TODO : All these test use wkt to create network. Would be nicer to use HNH to create the network and then create a layer for it
+    /// TODO : All these test use wkt to create network. Would be nicer to use HNH to create the network and then create a
+    /// layer for it
     /// </summary>
     [TestFixture]
     public class HydroRegionEditorHelperTest
@@ -41,7 +42,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Helpers
         [SetUp]
         public void Initialize()
         {
-            MapControl = new MapControl { Map = { Size = new Size(1000, 1000) } };
+            MapControl = new MapControl {Map = {Size = new Size(1000, 1000)}};
             MapControl.Resize += delegate { MapControl.Refresh(); };
             MapControl.ActivateTool(MapControl.SelectTool);
 
@@ -67,7 +68,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Helpers
             channelLayer.DataSource.Add(GeometryFromWKT.Parse("LINESTRING (0 0, 100 0)"));
             Assert.AreEqual(1, channelLayer.DataSource.Features.Count);
             Assert.AreEqual(2, nodeLayer.DataSource.Features.Count);
-            var node = (INode)nodeLayer.DataSource.Features[1];
+            var node = (INode) nodeLayer.DataSource.Features[1];
             Assert.AreEqual(100, node.Geometry.Coordinates[0].X, 1.0e-6);
             Assert.AreEqual(0, node.Geometry.Coordinates[0].Y, 1.0e-6);
             HydroRegionEditorHelper.MoveNodeTo(node, 200, -200);
@@ -81,7 +82,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Helpers
         {
             // First add branch and implictly 2 nodes
             channelLayer.DataSource.Add(GeometryFromWKT.Parse("LINESTRING (0 0, 100 0)"));
-            var node = (INode)nodeLayer.DataSource.Features[0];
+            var node = (INode) nodeLayer.DataSource.Features[0];
             HydroRegionEditorHelper.MoveNodeTo(node, 100, 0);
         }
 
@@ -91,7 +92,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Helpers
         {
             // First add branch and implictly 2 nodes
             channelLayer.DataSource.Add(GeometryFromWKT.Parse("LINESTRING (0 0, 100 0)"));
-            var node = (INode)nodeLayer.DataSource.Features[1];
+            var node = (INode) nodeLayer.DataSource.Features[1];
             HydroRegionEditorHelper.MoveNodeTo(node, 0, 0);
         }
 
@@ -104,7 +105,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Helpers
             Assert.AreEqual(2, nodeLayer.DataSource.Features.Count);
 
             lateralSourceLayer.DataSource.Add(GeometryFromWKT.Parse("Point (20 0)"));
-            var lateralSource = (ILateralSource)lateralSourceLayer.DataSource.Features[0];
+            var lateralSource = (ILateralSource) lateralSourceLayer.DataSource.Features[0];
             Assert.AreEqual(20, lateralSource.Geometry.Coordinates[0].X, 1.0e-6);
             Assert.AreEqual(0, lateralSource.Geometry.Coordinates[0].Y, 1.0e-6);
             HydroRegionEditorHelper.MoveBranchFeatureTo(lateralSource, 40);
@@ -121,7 +122,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Helpers
             Assert.AreEqual(2, nodeLayer.DataSource.Features.Count);
 
             lateralSourceLayer.DataSource.Add(GeometryFromWKT.Parse("Point (20 0)"));
-            var lateralSource = (ILateralSource)lateralSourceLayer.DataSource.Features[0];
+            var lateralSource = (ILateralSource) lateralSourceLayer.DataSource.Features[0];
             HydroRegionEditorHelper.UpdateBranchFeatureGeometry(lateralSource, 5);
 
             Assert.AreEqual(20, lateralSource.Geometry.Coordinates[0].X, 1.0e-6);
@@ -139,24 +140,26 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Helpers
             Assert.AreEqual(40, lateralSource.Chainage);
         }
 
-        [Test, Category(TestCategory.Integration)]
+        [Test]
+        [Category(TestCategory.Integration)]
         public void CheckLateralSourceGeometryAfterChangingLength()
         {
             var network = new HydroNetwork();
-            var branch1 = new Channel(new HydroNode("n1"), new HydroNode("n1"))
-                              {
-                                  Geometry = GeometryFromWKT.Parse("LINESTRING (0 0, 100 0)")
-                              };
+            var branch1 = new Channel(new HydroNode("n1"), new HydroNode("n1")) {Geometry = GeometryFromWKT.Parse("LINESTRING (0 0, 100 0)")};
 
-            var lateralSource = new LateralSource { Name = "Source1", Chainage = 10 };
-            
+            var lateralSource = new LateralSource
+            {
+                Name = "Source1",
+                Chainage = 10
+            };
+
             network.Branches.Add(branch1);
             branch1.BranchFeatures.Add(lateralSource);
             lateralSource.Branch = branch1;
 
             HydroRegionEditorHelper.UpdateBranchFeatureGeometry(lateralSource, 40);
-            
-            var geometry = lateralSource.Geometry;
+
+            IGeometry geometry = lateralSource.Geometry;
 
             Assert.IsTrue(geometry is ILineString);
             Assert.AreEqual(40.0, lateralSource.Length);
@@ -170,7 +173,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Helpers
         public void AddChannelUsingGeometryAddsOneBranchAndTwoNodes()
         {
             channelLayer.DataSource.Add(GeometryFromWKT.Parse("LINESTRING (0 0, 100 0)"));
-            
+
             Assert.AreEqual(1, channelLayer.DataSource.Features.Count);
             Assert.AreEqual(2, nodeLayer.DataSource.Features.Count);
         }
@@ -181,8 +184,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Helpers
             channelLayer.DataSource.Add(GeometryFromWKT.Parse("LINESTRING (0 0, 100 0)"));
 
             lateralSourceLayer.DataSource.Add(GeometryFromWKT.Parse("Point (20 0)"));
-            var lateralSource = (ILateralSource)lateralSourceLayer.DataSource.Features[0];
-            
+            var lateralSource = (ILateralSource) lateralSourceLayer.DataSource.Features[0];
+
             Assert.AreEqual(20, lateralSource.Geometry.Coordinates[0].X, 1.0e-6);
             Assert.AreEqual(0, lateralSource.Geometry.Coordinates[0].Y, 1.0e-6);
         }
@@ -195,7 +198,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Helpers
             // preparation
             channelLayer.DataSource.Add(GeometryFromWKT.Parse("LINESTRING (0 0, 100 0)"));
             lateralSourceLayer.DataSource.Add(GeometryFromWKT.Parse("Point (20 0)"));
-            var lateralSource = (ILateralSource)lateralSourceLayer.DataSource.Features[0];
+            var lateralSource = (ILateralSource) lateralSourceLayer.DataSource.Features[0];
 
             // action
             HydroRegionEditorHelper.MoveBranchFeatureTo(lateralSource, newChainage);
@@ -208,10 +211,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Helpers
         [Test]
         public void MoveLateralOutOfRangeNetworkRemainsUncorrupted()
         {
-            int numExceptions = 0;
+            var numExceptions = 0;
             channelLayer.DataSource.Add(GeometryFromWKT.Parse("LINESTRING (0 0, 100 0)"));
             lateralSourceLayer.DataSource.Add(GeometryFromWKT.Parse("Point (20 0)"));
-            var lateralSource = (ILateralSource)lateralSourceLayer.DataSource.Features[0];
+            var lateralSource = (ILateralSource) lateralSourceLayer.DataSource.Features[0];
 
             HydroRegionEditorHelper.MoveBranchFeatureTo(lateralSource, -100);
             Assert.AreEqual(0, lateralSource.Chainage);
@@ -229,9 +232,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Helpers
         {
             // First add branch and implictly 2 nodes
             channelLayer.DataSource.Add(GeometryFromWKT.Parse("LINESTRING (0 0, 100 0)"));
-            crossSectionLayer.FeatureEditor.CreateNewFeature = (l => CrossSection.CreateDefault());
+            crossSectionLayer.FeatureEditor.CreateNewFeature = l => CrossSection.CreateDefault();
             crossSectionLayer.DataSource.Add(GeometryFromWKT.Parse("Point (20 0)"));
-            var crossSection = (ICrossSection)crossSectionLayer.DataSource.Features[0];
+            var crossSection = (ICrossSection) crossSectionLayer.DataSource.Features[0];
 
             HydroRegionEditorHelper.MoveBranchFeatureTo(crossSection, 40);
 
@@ -246,9 +249,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Helpers
             weirLayer.DataSource.Add(GeometryFromWKT.Parse("Point (30 0)"));
             weirLayer.DataSource.Add(GeometryFromWKT.Parse("Point (30 0)"));
 
-            var compositeBranchStructure = (ICompositeBranchStructure)compositeStructureLayer.DataSource.Features[0];
-            var weir0 = (IWeir)weirLayer.DataSource.Features[0];
-            var weir1 = (IWeir)weirLayer.DataSource.Features[1];
+            var compositeBranchStructure = (ICompositeBranchStructure) compositeStructureLayer.DataSource.Features[0];
+            var weir0 = (IWeir) weirLayer.DataSource.Features[0];
+            var weir1 = (IWeir) weirLayer.DataSource.Features[1];
 
             Assert.AreEqual(2, compositeBranchStructure.Structures.Count);
 
@@ -271,9 +274,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Helpers
             weirLayer.DataSource.Add(GeometryFromWKT.Parse("Point (30 0)"));
             weirLayer.DataSource.Add(GeometryFromWKT.Parse("Point (30 0)"));
 
-            var compositeBranchStructure = (ICompositeBranchStructure)compositeStructureLayer.DataSource.Features[0];
-            var weir0 = (IWeir)weirLayer.DataSource.Features[0];
-            var weir1 = (IWeir)weirLayer.DataSource.Features[1];
+            var compositeBranchStructure = (ICompositeBranchStructure) compositeStructureLayer.DataSource.Features[0];
+            var weir0 = (IWeir) weirLayer.DataSource.Features[0];
+            var weir1 = (IWeir) weirLayer.DataSource.Features[1];
 
             Assert.AreEqual(2, compositeBranchStructure.Structures.Count);
 
@@ -287,7 +290,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Helpers
 
             // fiirst is added to new compound
             Assert.AreEqual(2, compositeStructureLayer.DataSource.Features.Count);
-            var compositeBranchStructure1 = (ICompositeBranchStructure)compositeStructureLayer.DataSource.Features[1];
+            var compositeBranchStructure1 = (ICompositeBranchStructure) compositeStructureLayer.DataSource.Features[1];
             Assert.AreEqual(70, compositeBranchStructure1.Geometry.Coordinates[0].X, 1.0e-6);
             Assert.AreEqual(70, weir0.Geometry.Coordinates[0].X, 1.0e-6);
         }
@@ -298,8 +301,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Helpers
             // First add branch and implictly 2 nodes
             channelLayer.DataSource.Add(GeometryFromWKT.Parse("LINESTRING (0 0, 100 0)"));
             lateralSourceLayer.DataSource.Add(GeometryFromWKT.Parse("Point (20 0)"));
-            var branch = (IBranch)channelLayer.DataSource.Features[0];
-            var lateralSource = (ILateralSource)lateralSourceLayer.DataSource.Features[0];
+            var branch = (IBranch) channelLayer.DataSource.Features[0];
+            var lateralSource = (ILateralSource) lateralSourceLayer.DataSource.Features[0];
 
             branch.IsLengthCustom = true;
             branch.Length = 1000.0;
@@ -312,16 +315,16 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Helpers
         {
             channelLayer.DataSource.Add(GeometryFromWKT.Parse("LINESTRING (0 0, 100 0)"));
             channelLayer.DataSource.Add(GeometryFromWKT.Parse("LINESTRING (100 0, 100 100)"));
-            
-            pumpLayer.DataSource.Add(GeometryFromWKT.Parse("Point (100 50)"));
-            var pump = (Pump)pumpLayer.DataSource.Features[0];
 
-            var branch2 = ((IHydroNetwork)hydroNetworkMapLayer.Region).Branches.ElementAt(1);
-            Assert.AreEqual(branch2,pump.Branch);
+            pumpLayer.DataSource.Add(GeometryFromWKT.Parse("Point (100 50)"));
+            var pump = (Pump) pumpLayer.DataSource.Features[0];
+
+            IBranch branch2 = ((IHydroNetwork) hydroNetworkMapLayer.Region).Branches.ElementAt(1);
+            Assert.AreEqual(branch2, pump.Branch);
             HydroRegionEditorHelper.MoveBranchFeatureTo(pump, 0);
             //branch is same
             Assert.AreEqual(branch2, pump.Branch);
-            Assert.AreEqual(0,0, pump.Chainage);
+            Assert.AreEqual(0, 0, pump.Chainage);
         }
 
         [Test]
@@ -331,9 +334,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Helpers
             channelLayer.DataSource.Add(GeometryFromWKT.Parse("LINESTRING (100 0, 100 100)"));
 
             observationPointLayer.DataSource.Add(GeometryFromWKT.Parse("Point (100 50)"));
-            var obs = (ObservationPoint)observationPointLayer.DataSource.Features[0];
+            var obs = (ObservationPoint) observationPointLayer.DataSource.Features[0];
 
-            var branch2 = ((IHydroNetwork)hydroNetworkMapLayer.Region).Branches.ElementAt(1);
+            IBranch branch2 = ((IHydroNetwork) hydroNetworkMapLayer.Region).Branches.ElementAt(1);
             Assert.AreEqual(branch2, obs.Branch);
             HydroRegionEditorHelper.MoveBranchFeatureTo(obs, 0);
             //branch is same
@@ -348,10 +351,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Helpers
             // Problem does not occur with network branches that are specified by integer values for X and Y.
             channelLayer.DataSource.Add(GeometryFromWKT.Parse("LINESTRING (0 0, 987.36543219870009 183.27964499999996)"));
             observationPointLayer.DataSource.Add(GeometryFromWKT.Parse("Point (294.961350997529 54.7521818534439)"));
-            var obs = (ObservationPoint)observationPointLayer.DataSource.Features[0];
+            var obs = (ObservationPoint) observationPointLayer.DataSource.Features[0];
 
             HydroRegionEditorHelper.MoveBranchFeatureTo(obs, 200);
-            Assert.AreEqual(200,obs.Chainage,1E-15); //needs very small acceptance resolution as Properties pane can easily show 12 decimals
+            Assert.AreEqual(200, obs.Chainage, 1E-15); //needs very small acceptance resolution as Properties pane can easily show 12 decimals
         }
 
         [Test]
@@ -361,11 +364,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Helpers
             // Problem does not occur with network branches that are specified by integer values for X and Y.
             channelLayer.DataSource.Add(GeometryFromWKT.Parse("LINESTRING (0 0, 987.36543219870009 183.27964499999996)"));
             weirLayer.DataSource.Add(GeometryFromWKT.Parse("Point (294.961350997529 54.7521818534439)"));
-            var weir = (IWeir)weirLayer.DataSource.Features[0];
+            var weir = (IWeir) weirLayer.DataSource.Features[0];
 
             HydroRegionEditorHelper.MoveBranchFeatureTo(weir, 200);
-            Assert.AreEqual(200, weir.Chainage, 1E-15); //needs very small acceptance resolution as Properties pane can easily show 12 decimals
-            Assert.AreEqual(200, weir.ParentStructure.Chainage, 1E-15);//needs very small acceptance resolution as Properties pane can easily show 12 decimals
+            Assert.AreEqual(200, weir.Chainage, 1E-15);                 //needs very small acceptance resolution as Properties pane can easily show 12 decimals
+            Assert.AreEqual(200, weir.ParentStructure.Chainage, 1E-15); //needs very small acceptance resolution as Properties pane can easily show 12 decimals
         }
 
         [Test]
@@ -376,9 +379,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Helpers
             channelLayer.DataSource.Add(GeometryFromWKT.Parse("LINESTRING (0 0, 987.36543219870009 183.27964499999996)"));
             crossSectionLayer.DataSource.Add(GeometryFromWKT.Parse("Point (294.961350997529 54.7521818534439)"));
 
-            crossSectionLayer.FeatureEditor.CreateNewFeature = (l => CrossSection.CreateDefault());
+            crossSectionLayer.FeatureEditor.CreateNewFeature = l => CrossSection.CreateDefault();
 
-            var crossSection = (ICrossSection)crossSectionLayer.DataSource.Features[0];
+            var crossSection = (ICrossSection) crossSectionLayer.DataSource.Features[0];
 
             HydroRegionEditorHelper.MoveBranchFeatureTo(crossSection, 200);
             Assert.AreEqual(200, crossSection.Chainage, 1E-15); //needs very small acceptance resolution as Properties pane can easily show 12 decimals
@@ -393,15 +396,15 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Helpers
             weirLayer.DataSource.Add(GeometryFromWKT.Parse("Point (294.961350997529 54.7521818534439)"));
             weirLayer.DataSource.Add(GeometryFromWKT.Parse("Point (294.961350997529 54.7521818534439)"));
 
-            var compositeBranchStructure = (ICompositeBranchStructure)compositeStructureLayer.DataSource.Features[0];
-            var weir0 = (IWeir)weirLayer.DataSource.Features[0];
-            var weir1 = (IWeir)weirLayer.DataSource.Features[1];
+            var compositeBranchStructure = (ICompositeBranchStructure) compositeStructureLayer.DataSource.Features[0];
+            var weir0 = (IWeir) weirLayer.DataSource.Features[0];
+            var weir1 = (IWeir) weirLayer.DataSource.Features[1];
 
             HydroRegionEditorHelper.MoveBranchFeatureTo(compositeBranchStructure, 200);
 
             Assert.AreEqual(200, compositeBranchStructure.Chainage, 1E-15); //needs very small acceptance resolution as Properties pane can easily show 12 decimals
-            Assert.AreEqual(200, weir0.Chainage, 1E-15); //needs very small acceptance resolution as Properties pane can easily show 12 decimals
-            Assert.AreEqual(200, weir1.Chainage, 1E-15); //needs very small acceptance resolution as Properties pane can easily show 12 decimals
+            Assert.AreEqual(200, weir0.Chainage, 1E-15);                    //needs very small acceptance resolution as Properties pane can easily show 12 decimals
+            Assert.AreEqual(200, weir1.Chainage, 1E-15);                    //needs very small acceptance resolution as Properties pane can easily show 12 decimals
         }
     }
 }

@@ -16,17 +16,17 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
         [Category(TestCategory.DataAccess)]
         public void ReadTimeVaryingAndSpaceVarying()
         {
-            var bcwFilePath = TestHelper.GetTestFilePath(@"bcwTimeseries\timeseries.bcw");
+            string bcwFilePath = TestHelper.GetTestFilePath(@"bcwTimeseries\timeseries.bcw");
             var bcwFile = new BcwFile();
 
-            var bcwTimeseries = bcwFile.Read(bcwFilePath);
+            IDictionary<string, List<IFunction>> bcwTimeseries = bcwFile.Read(bcwFilePath);
 
             Assert.AreEqual("Boundary 1", bcwTimeseries.ElementAt(0).Key);
             Assert.AreEqual("Boundary 2", bcwTimeseries.ElementAt(1).Key);
 
-            var series = bcwTimeseries["Boundary 1"];
+            List<IFunction> series = bcwTimeseries["Boundary 1"];
             Assert.AreEqual(3, series.Count);
-            var values = series[1].GetAllComponentValues(new DateTime(2006, 1, 5).AddMinutes(120.0));
+            object[] values = series[1].GetAllComponentValues(new DateTime(2006, 1, 5).AddMinutes(120.0));
 
             Assert.AreEqual(2.0, values[0]);
             Assert.AreEqual(7.0, values[1]);
@@ -39,27 +39,27 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
         public void GivenABcwFileWithATimeVaryingAndUniformBoundaryWithEmptyTimeseries_WhenReadingThisFile_ThenACorrectDictionaryShouldBeBuild()
         {
             // Given
-            var bcwFilePath = TestHelper.GetTestFilePath(@"bcwTimeseries\timeseriesuniform.bcw");
-            var newBcwFilePath = WaveTestHelper.CreateLocalCopy(bcwFilePath);
+            string bcwFilePath = TestHelper.GetTestFilePath(@"bcwTimeseries\timeseriesuniform.bcw");
+            string newBcwFilePath = WaveTestHelper.CreateLocalCopy(bcwFilePath);
 
             var bcwFile = new BcwFile();
 
             // When
-            var bcwTimeseries = bcwFile.Read(newBcwFilePath);
-            
+            IDictionary<string, List<IFunction>> bcwTimeseries = bcwFile.Read(newBcwFilePath);
+
             // Then
             Assert.AreEqual("BoundaryCondition01", bcwTimeseries.ElementAt(0).Key, "The name of the boundary is different than expected");
 
-            var supportPoints = bcwTimeseries["BoundaryCondition01"];
+            List<IFunction> supportPoints = bcwTimeseries["BoundaryCondition01"];
             Assert.AreEqual(1, supportPoints.Count, "The imported boundary is not uniform");
 
-            var supportPoint = supportPoints[0];
+            IFunction supportPoint = supportPoints[0];
 
             Assert.AreEqual(3, supportPoint.Attributes.Count, "The number of attributes is different than expected");
             Assert.AreEqual(1, supportPoint.Arguments.Count, "The number of arguments is different than expected");
             Assert.AreEqual(4, supportPoint.Components.Count, "The number of components is different than expected");
 
-            foreach (var component in supportPoint.Components)
+            foreach (IVariable component in supportPoint.Components)
             {
                 Assert.AreEqual(0, component.Values.Count, "Time series data  has been imported while it was not written in the bcw file.");
             }
@@ -69,19 +69,19 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
         [Category(TestCategory.DataAccess)]
         public void ReadWriteAndCompare()
         {
-            var bcwFilePath = TestHelper.GetTestFilePath(@"expectedTimeseries.bcw");
+            string bcwFilePath = TestHelper.GetTestFilePath(@"expectedTimeseries.bcw");
             var bcwExportFilePath = "generatedTimeseries.bcw";
 
             var bcwFile = new BcwFile();
-            var result = bcwFile.Read(bcwFilePath);
+            IDictionary<string, List<IFunction>> result = bcwFile.Read(bcwFilePath);
             bcwFile.Write(result, bcwExportFilePath);
 
-            var originalLines = File.ReadAllLines(bcwFilePath);
-            var exportedLines = File.ReadAllLines(bcwExportFilePath);
+            string[] originalLines = File.ReadAllLines(bcwFilePath);
+            string[] exportedLines = File.ReadAllLines(bcwExportFilePath);
 
             // remove whitespace and empty lines
-            var original = originalLines.Where(l => l.Trim() != string.Empty).Select(l => l.Replace(" ", "")).ToList();
-            var export = exportedLines.Where(l => l.Trim() != string.Empty).Select(l => l.Replace(" ", "")).ToList();
+            List<string> original = originalLines.Where(l => l.Trim() != string.Empty).Select(l => l.Replace(" ", "")).ToList();
+            List<string> export = exportedLines.Where(l => l.Trim() != string.Empty).Select(l => l.Replace(" ", "")).ToList();
 
             Assert.AreEqual(original, export);
         }
@@ -92,27 +92,24 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
         {
             // Given
             const string boundaryConditionName = "boundary_condition";
-            var expectedLine = $"location             '{boundaryConditionName}'";
+            string expectedLine = $"location             '{boundaryConditionName}'";
             const string fileName = "Waves.bcw";
             var bcwFile = new BcwFile();
 
-            var boundaryConditionToFunctionsMappings = new Dictionary<string, List<IFunction>>
-            {
-                {boundaryConditionName, new List<IFunction>()}
-            };
+            var boundaryConditionToFunctionsMappings = new Dictionary<string, List<IFunction>> {{boundaryConditionName, new List<IFunction>()}};
 
             TestHelper.PerformActionInTemporaryDirectory(tempDirectory =>
             {
-                var filePath = Path.Combine(tempDirectory, fileName);
+                string filePath = Path.Combine(tempDirectory, fileName);
                 bcwFile.Write(boundaryConditionToFunctionsMappings, filePath);
 
                 Assert.That(File.Exists(filePath),
-                    "The .bcw file should exist after the Write method was called.");
-                var linesInFile = File.ReadAllLines(filePath);
+                            "The .bcw file should exist after the Write method was called.");
+                string[] linesInFile = File.ReadAllLines(filePath);
                 Assert.That(linesInFile.Length, Is.EqualTo(1),
-                    "When a boundary condition does not have any functions, only one line is expected to be written to the file.");
+                            "When a boundary condition does not have any functions, only one line is expected to be written to the file.");
                 Assert.AreEqual(expectedLine, linesInFile.First(),
-                    "When a boundary condition does not have any functions, the only line in the file is expected to describe the name of the boundary condition.");
+                                "When a boundary condition does not have any functions, the only line in the file is expected to describe the name of the boundary condition.");
             });
         }
 
@@ -127,20 +124,23 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.IO
 
             TestHelper.PerformActionInTemporaryDirectory(tempDirectory =>
             {
-                var filePath = Path.Combine(tempDirectory, fileName);
-                File.WriteAllLines(filePath, new[] {$@"location '{boundaryConditionName}'"});
+                string filePath = Path.Combine(tempDirectory, fileName);
+                File.WriteAllLines(filePath, new[]
+                {
+                    $@"location '{boundaryConditionName}'"
+                });
 
                 // When
-                var boundaryConditionToFunctionsMappings = bcwFile.Read(filePath);
+                IDictionary<string, List<IFunction>> boundaryConditionToFunctionsMappings = bcwFile.Read(filePath);
 
                 // Then
                 Assert.That(boundaryConditionToFunctionsMappings.Count, Is.EqualTo(1),
-                    "One boundary condition should have been read from the file.");
-                var boundaryConditionToFunctionsMapping = boundaryConditionToFunctionsMappings.First();
+                            "One boundary condition should have been read from the file.");
+                KeyValuePair<string, List<IFunction>> boundaryConditionToFunctionsMapping = boundaryConditionToFunctionsMappings.First();
                 Assert.That(boundaryConditionToFunctionsMapping.Key, Is.EqualTo(boundaryConditionName),
-                    $"The read boundary condition name from the file was expected to be {boundaryConditionName}.");
+                            $"The read boundary condition name from the file was expected to be {boundaryConditionName}.");
                 Assert.That(boundaryConditionToFunctionsMapping.Value, Is.EqualTo(new List<IFunction>()),
-                    "No functions should have been read from the file.");
+                            "No functions should have been read from the file.");
             });
         }
     }

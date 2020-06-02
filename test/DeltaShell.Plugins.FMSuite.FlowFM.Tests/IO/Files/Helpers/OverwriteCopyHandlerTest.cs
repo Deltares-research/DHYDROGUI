@@ -1,5 +1,4 @@
 ﻿using System;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers.CopyHandlers;
 using NUnit.Framework;
 
@@ -29,7 +28,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files.Helpers
 
             // Assert
             var exception = Assert.Throws<FileCopyException>(Call, "Expected an exception to be thrown.");
-            Assert.That(exception.Message, Is.EqualTo(exception.InnerException.Message), 
+            Assert.That(exception.Message, Is.EqualTo(exception.InnerException.Message),
                         "Expected the message to be equal to the inner message.");
             Assert.That(exception.InnerException, Is.InstanceOf<ArgumentNullException>());
         }

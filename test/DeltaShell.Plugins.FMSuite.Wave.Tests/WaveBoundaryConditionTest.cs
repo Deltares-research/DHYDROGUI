@@ -11,7 +11,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
     [TestFixture]
     public class WaveBoundaryConditionTest
     {
-        private readonly Feature2D featureWithTwoPoints = new Feature2D { Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(1, 0) }) };
+        private readonly Feature2D featureWithTwoPoints = new Feature2D
+        {
+            Geometry = new LineString(new[]
+            {
+                new Coordinate(0, 0),
+                new Coordinate(1, 0)
+            })
+        };
 
         [Test]
         public void WhenInstantiatingAWaveBoundaryCondition_ThenTheDefaultPeakEnhancementFactorValueIsEqualToExpectedValue()

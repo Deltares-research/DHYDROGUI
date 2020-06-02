@@ -16,6 +16,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
         private const string RuleName = "INTERVAL RULE";
         private const string parameterName = "parameter name";
         private const string inputFeatureName = "element name";
+        private const string outputFeatureName = "output";
         private Setting setting;
         private Input input;
         private Output output;
@@ -23,33 +24,37 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
         private static double SettingAbove = 1.0;
         private static double SettingMaxSpeed = 0.1;
         private static double DeadbandAroundSetpoint = 0.4;
-        private const string outputFeatureName = "output";
-        
+
         [SetUp]
         public void SetUp()
         {
-            setting = new Setting { Below = SettingBelow, Above = SettingAbove, MaxSpeed = SettingMaxSpeed};
+            setting = new Setting
+            {
+                Below = SettingBelow,
+                Above = SettingAbove,
+                MaxSpeed = SettingMaxSpeed
+            };
             input = new Input
             {
                 ParameterName = parameterName,
                 Feature = new RtcTestFeature {Name = inputFeatureName},
                 SetPoint = RtcXmlTag.SP + RuleName
             };
-            
+
             output = new Output
             {
                 ParameterName = parameterName,
-                Feature = new RtcTestFeature { Name = outputFeatureName }
+                Feature = new RtcTestFeature {Name = outputFeatureName}
             };
         }
 
         [Test]
         public void CopyFromAndClone()
         {
-            var source = CreateIntervalRule();
+            IntervalRule source = CreateIntervalRule();
             source.IntervalType = IntervalRule.IntervalRuleIntervalType.Fixed;
             source.DeadBandType = IntervalRule.IntervalRuleDeadBandType.PercentageDischarge;
-            
+
             var newRule = new IntervalRule();
 
             newRule.CopyFrom(source);
@@ -57,17 +62,18 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
             Assert.AreEqual(source.Name, newRule.Name);
             Assert.AreEqual(source.InterpolationOptionsTime, newRule.InterpolationOptionsTime);
             Assert.AreEqual(source.DeadbandAroundSetpoint, newRule.DeadbandAroundSetpoint);
-            for (int i = 0; i < source.TimeSeries.Arguments[0].Values.Count; i++)
+            for (var i = 0; i < source.TimeSeries.Arguments[0].Values.Count; i++)
             {
                 Assert.AreEqual(source.TimeSeries.Arguments[0].Values[i], newRule.TimeSeries.Arguments[0].Values[i]);
                 Assert.AreEqual(source.TimeSeries.Components[0].Values[i], newRule.TimeSeries.Components[0].Values[i]);
             }
+
             Assert.AreEqual(source.Setting, newRule.Setting);
             Assert.AreEqual(source.IntervalType, newRule.IntervalType);
             Assert.AreEqual(source.FixedInterval, newRule.FixedInterval);
             Assert.AreEqual(source.DeadBandType, newRule.DeadBandType);
 
-            var clone = (IntervalRule)source.Clone();
+            var clone = (IntervalRule) source.Clone();
             Assert.IsFalse(ReferenceEquals(source, clone));
             Assert.AreEqual(source.Name, clone.Name);
         }
@@ -81,12 +87,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
                 IntervalType = IntervalRule.IntervalRuleIntervalType.Variable
             };
 
-            var exception = Assert.Throws<ValidationContextException>(() =>
-            {
-                IntervalRule.Validate(intervalRule);
-            });
+            var exception = Assert.Throws<ValidationContextException>(() => { IntervalRule.Validate(intervalRule); });
 
-            var counter = exception.Exceptions.Count();
+            int counter = exception.Exceptions.Count();
 
             Assert.AreEqual(1, counter, $"{counter} exceptions are thrown instead of 1");
             Assert.AreEqual(string.Format(Resources.RealTimeControlModelIntervalRule_Interval_rule__0__has_empty_time_series, intervalRule.Name), exception.Message, "The exception message is different than expected");
@@ -95,17 +98,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
         [Test]
         public void GivenAnIntervalRuleWithNoInput_WhenCallingValidate_ThenAnExceptionShouldBeThrown()
         {
-            var intervalRule = new IntervalRule
-            {
-               IntervalType = IntervalRule.IntervalRuleIntervalType.Fixed
-            };
-            
-            var exception = Assert.Throws<ValidationContextException>(() =>
-            {
-                IntervalRule.Validate(intervalRule);
-            });
+            var intervalRule = new IntervalRule {IntervalType = IntervalRule.IntervalRuleIntervalType.Fixed};
 
-            var counter = exception.Exceptions.Count();
+            var exception = Assert.Throws<ValidationContextException>(() => { IntervalRule.Validate(intervalRule); });
+
+            int counter = exception.Exceptions.Count();
 
             Assert.AreEqual(1, counter, $"{counter} exceptions are thrown instead of 1");
             Assert.AreEqual(string.Format(Resources.RealTimeControlModelIntervalRule_Interval_rule__0__requires_1_input, intervalRule.Name), exception.Message, "The exception message is different than expected");
@@ -133,6 +130,4 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
             return intervalRule;
         }
     }
-
 }
-

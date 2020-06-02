@@ -21,6 +21,7 @@ using DeltaShell.Plugins.NetworkEditor.MapLayers;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms.CoverageViews;
 using GeoAPI.Extensions.Coverages;
+using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Geometries;
@@ -58,7 +59,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Tools
             mapControl = new MapControl();
 
             network = new HydroNetwork();
-            hydroNetworkLayer = (HydroRegionMapLayer) MapLayerProviderHelper.CreateLayersRecursive(network, null,new List<IMapLayerProvider> {new NetworkEditorMapLayerProvider()});
+            hydroNetworkLayer = (HydroRegionMapLayer) MapLayerProviderHelper.CreateLayersRecursive(network, null, new List<IMapLayerProvider> {new NetworkEditorMapLayerProvider()});
             channelLayer = hydroNetworkLayer.Layers.First(l => l.DataSource != null && l.DataSource.FeatureType == typeof(Channel));
             pumpLayer = hydroNetworkLayer.Layers.First(l => l.DataSource != null && l.DataSource.FeatureType == typeof(Pump));
             nodeLayer = hydroNetworkLayer.Layers.First(l => l.DataSource != null && l.DataSource.FeatureType == typeof(HydroNode));
@@ -72,17 +73,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Tools
         [TearDown]
         public void TearDown()
         {
-            if(mapControl != null && !mapControl.IsDisposed)
+            if (mapControl != null && !mapControl.IsDisposed)
             {
                 mapControl.Dispose();
             }
-        }
-
-        private void Add2BranchesUsingGeometry(HydroRegionMapLayer hydroNetworkLayer)
-        {
-            // Generate a simple network with 2 branches that have a common start node
-            channelLayer.DataSource.Add(GeometryFromWKT.Parse("LINESTRING (0 0, 30 40, 70 40, 100 100)"));
-            channelLayer.DataSource.Add(GeometryFromWKT.Parse("LINESTRING (0 0, 30 20, 70 30, 100 80)"));
         }
 
         [Test]
@@ -91,16 +85,16 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Tools
             SetUp();
             Add2BranchesUsingGeometry(hydroNetworkLayer);
 
-            var node = network.Nodes.First();
-            var branch2 = network.Branches.Skip(1).First();
-            var branchCoordinate = branch2.Geometry.Coordinates[2];
+            INode node = network.Nodes.First();
+            IBranch branch2 = network.Branches.Skip(1).First();
+            Coordinate branchCoordinate = branch2.Geometry.Coordinates[2];
             var coordinateNearBranch = new Coordinate(branchCoordinate.X, branchCoordinate.Y + 5);
-            
+
             var worldCoord = new Coordinate(0, 0);
-            var resultExistingNode = mapControl.GetToolByType<SnapTool>().ExecuteLayerSnapRules(nodeLayer, node, node.Geometry, worldCoord, 0);
+            SnapResult resultExistingNode = mapControl.GetToolByType<SnapTool>().ExecuteLayerSnapRules(nodeLayer, node, node.Geometry, worldCoord, 0);
             Assert.AreEqual(resultExistingNode.Location, worldCoord); //snap anywhere
 
-            var result = mapControl.GetToolByType<SnapTool>().ExecuteLayerSnapRules(nodeLayer, null, null, coordinateNearBranch, 0);
+            SnapResult result = mapControl.GetToolByType<SnapTool>().ExecuteLayerSnapRules(nodeLayer, null, null, coordinateNearBranch, 0);
             Assert.AreNotEqual(result.Location, coordinateNearBranch); //snap on branch
             Assert.IsTrue(branch2.Geometry.Distance(new Point(result.Location)) < 0.0001);
         }
@@ -110,7 +104,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Tools
         {
             SetUp();
             Add2BranchesUsingGeometry(hydroNetworkLayer);
-            
+
             Assert.AreEqual(2, network.Branches.Count);
 
             // 2 branches added and connected at 0 0; thus 1 node in common makes 3 nodes
@@ -125,16 +119,16 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Tools
             SetUp();
             Add2BranchesUsingGeometry(hydroNetworkLayer);
 
-            var hydroNetworkEditorMapTool = (HydroRegionEditorMapTool)mapControl.Tools.First(t => t is HydroRegionEditorMapTool);
+            var hydroNetworkEditorMapTool = (HydroRegionEditorMapTool) mapControl.Tools.First(t => t is HydroRegionEditorMapTool);
 
             // select branch
             mapControl.SelectTool.Select(network.Branches.First());
-            
+
             // build context menu
-            var items = hydroNetworkEditorMapTool.GetContextMenuItems(new Coordinate(10, 10));
+            IEnumerable<MapToolContextMenuItem> items = hydroNetworkEditorMapTool.GetContextMenuItems(new Coordinate(10, 10));
 
             // grab 'insert node' menu item
-            var insertNodeItem = items.Select(i => i.MenuItem).OfType<ToolStripItem>().FirstOrDefault(i => i.Text == "Insert Node");
+            ToolStripItem insertNodeItem = items.Select(i => i.MenuItem).OfType<ToolStripItem>().FirstOrDefault(i => i.Text == "Insert Node");
             Assert.IsNotNull(insertNodeItem);
 
             // click it
@@ -151,16 +145,22 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Tools
 
             var branch1 = new Channel
             {
-                Geometry = new LineString(new[]{new Coordinate(0, 0), new Coordinate(30, 40),new Coordinate(70, 40), new Coordinate(100, 100)})
+                Geometry = new LineString(new[]
+                {
+                    new Coordinate(0, 0),
+                    new Coordinate(30, 40),
+                    new Coordinate(70, 40),
+                    new Coordinate(100, 100)
+                })
             };
 
             network.Branches.Add(branch1);
 
             var discretisation = new Discretization
-                                     {
-                                         Network = network,
-                                         SegmentGenerationMethod = SegmentGenerationMethod.SegmentBetweenLocationsFullyCovered
-                                     };
+            {
+                Network = network,
+                SegmentGenerationMethod = SegmentGenerationMethod.SegmentBetweenLocationsFullyCovered
+            };
 
             var testLocation = new NetworkLocation(branch1, 5);
             discretisation[testLocation] = 0.0; //not fixed
@@ -170,17 +170,15 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Tools
 
             mapControl.Map.Layers.Add(discretisationGroupLayer);
 
-            var hydroNetworkEditorMapTool = (HydroRegionEditorMapTool)mapControl.Tools.First(t => t is HydroRegionEditorMapTool);
+            var hydroNetworkEditorMapTool = (HydroRegionEditorMapTool) mapControl.Tools.First(t => t is HydroRegionEditorMapTool);
 
             hydroNetworkEditorMapTool.ActiveNetworkCoverageGroupLayer = discretisationGroupLayer;
 
             Assert.IsNull(discretisationGroupLayer.SegmentLayer);
 
-            discretisation.RemoveValues(new VariableValueFilter<INetworkLocation>(discretisation.Locations,testLocation));
+            discretisation.RemoveValues(new VariableValueFilter<INetworkLocation>(discretisation.Locations, testLocation));
 
             Assert.AreEqual("No SegmentLayer is null exception", "No SegmentLayer is null exception");
-
-
         }
 
         [Test]
@@ -196,12 +194,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Tools
             Assert.AreEqual(network.Branches[0], network.CrossSections.First().Branch, "cross-section should be connected to the first branch");
 
             // Cleanup test. If Branch is deleted the connected cross section are also deleted.
-            var featureToDelete =channelLayer.DataSource.Features[0];
-           channelLayer.DataSource.Features.Remove(featureToDelete);
+            object featureToDelete = channelLayer.DataSource.Features[0];
+            channelLayer.DataSource.Features.Remove(featureToDelete);
             Assert.AreEqual(0, network.CrossSections.Count());
         }
 
-        [Test, ExpectedException(typeof(ArgumentException))]
+        [Test]
+        [ExpectedException(typeof(ArgumentException))]
         public void AddCrossSectionWithGeometryThatDoesNotOverlapWithBranch()
         {
             //CrossSection.ApplyDefaultValues() uses different component types in assignment hence error.
@@ -209,7 +208,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Tools
 
             // Add a second cross section but do not place it at a branch
             // expect exception, geometry doesn't fit, can't find branch
-            crossSectionLayer.DataSource.Add(GeometryFromWKT.Parse("LINESTRING(150 45, 150 55)")); 
+            crossSectionLayer.DataSource.Add(GeometryFromWKT.Parse("LINESTRING(150 45, 150 55)"));
         }
 
         [Test]
@@ -263,17 +262,18 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Tools
             foreach (IMapTool mapTool in mapControl.Tools)
             {
                 if (null != mapTool.Name)
+                {
                     listBoxTools.Items.Add(mapTool.Name);
+                }
             }
 
             mapControl.Map.ZoomToFit(new Envelope(500, 500, 500, 500));
             WindowsFormsTestHelper.ShowModal(geometryEditorForm);
             mapControl.Dispose();
-
         }
 
         [Test]
-        [NUnit.Framework.Category(TestCategory.WindowsForms)]
+        [Category(TestCategory.WindowsForms)]
         public void CreateWithUndoRedoHistoryControl()
         {
             // no default setup
@@ -284,9 +284,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Tools
                 network = new HydroNetwork();
 
                 // setup undo/redo
-                using(var undoRedoManager = new UndoRedoManager(network))
+                using (var undoRedoManager = new UndoRedoManager(network))
                 {
-
                     //mapControl.Map.Layers.Clear();
                     //mapControl.Tools.RemoveAllWhere(t => t is HydroNetworkEditorMapTool);
 
@@ -298,20 +297,84 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Tools
 
                     mapControl.Map.ZoomToFit(new Envelope(500, 500, 500, 500));
 
+                    var undoRedoHistoryControl = new UndoRedoHistoryControl {UndoRedoManager = undoRedoManager};
 
-                    var undoRedoHistoryControl = new UndoRedoHistoryControl { UndoRedoManager = undoRedoManager };
-
-                    int right = 0;
+                    var right = 0;
                     WindowsFormsTestHelper.Show(
                         geometryEditorForm,
                         f =>
-                            {
-                                f.Left = 0;
-                                right = f.Width;
-                            });
+                        {
+                            f.Left = 0;
+                            right = f.Width;
+                        });
                     WindowsFormsTestHelper.ShowModal(undoRedoHistoryControl, f => f.Left = right);
                 }
             }
+        }
+
+        [Test]
+        public void HydroNetworkMapLayerNetworkCanHaveNetworkNull()
+        {
+            //see https://issues.deltares.nl/browse/TOOLS-6566
+            using (var mapControl = new MapControl()) // do not use field, otherwise it will not be disposed!
+            {
+                hydroNetworkLayer.Region = null;
+                var tool = new HydroRegionEditorMapTool {MapControl = mapControl};
+            }
+        }
+
+        [Test]
+        [Category(TestCategory.Integration)]
+        public void BranchSetCustomLengthAndMoveCalculationPoint()
+        {
+            IHydroNetwork network = HydroNetworkHelper.GetSnakeHydroNetwork(new[]
+            {
+                new Point(0, 0),
+                new Point(100, 0)
+            });
+            INetworkCoverage coverage = new Discretization() {Network = network};
+
+            IBranch branch = network.Branches[0];
+            branch.IsLengthCustom = true;
+            branch.Length *= 2;
+
+            var networkLocation = new NetworkLocation(branch, 120);
+            coverage.Locations.AddValues(new[]
+            {
+                networkLocation
+            });
+            using (var coverageView = new CoverageView {Data = coverage})
+            {
+                MapView mapView = coverageView.ChildViews.OfType<MapView>().First();
+                ILayer networkLayer = MapLayerProviderHelper.CreateLayersRecursive(network, null, new List<IMapLayerProvider> {new NetworkEditorMapLayerProvider()});
+                networkLayer.ShowInLegend = false;
+                mapView.MapControl.Map.Layers.Add(networkLayer);
+                HydroRegionEditorHelper.AddHydroRegionEditorMapTool(mapView.MapControl);
+
+                WindowsFormsTestHelper.ShowModal(
+                    coverageView,
+                    f =>
+                    {
+                        mapView.MapControl.SelectTool.Select(networkLocation);
+
+                        MoveTool moveTool = mapView.MapControl.MoveTool;
+                        var args = new MouseEventArgs(MouseButtons.Left, 1, 0, 0, 0);
+                        moveTool.OnMouseDown(networkLocation.Geometry.Coordinate, args);
+                        moveTool.OnMouseMove(new Coordinate(50, 0), args);
+                        var newpos = new Coordinate(50, 0);
+                        moveTool.OnMouseUp(newpos, args);
+
+                        Assert.AreEqual(newpos, networkLocation.Geometry.Coordinate);
+                        Assert.AreEqual(100, networkLocation.Chainage);
+                    });
+            }
+        }
+
+        private void Add2BranchesUsingGeometry(HydroRegionMapLayer hydroNetworkLayer)
+        {
+            // Generate a simple network with 2 branches that have a common start node
+            channelLayer.DataSource.Add(GeometryFromWKT.Parse("LINESTRING (0 0, 30 40, 70 40, 100 100)"));
+            channelLayer.DataSource.Add(GeometryFromWKT.Parse("LINESTRING (0 0, 30 20, 70 30, 100 80)"));
         }
 
         private void InitializeFunctionEditorTestForm()
@@ -325,7 +388,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Tools
             functionEditorForm.Disposed += functionEditorForm_Disposed;
         }
 
-        void functionEditorForm_Disposed(object sender, EventArgs e)
+        private void functionEditorForm_Disposed(object sender, EventArgs e)
         {
             functionEditorForm = null;
         }
@@ -341,7 +404,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Tools
 
             geometryEditorForm.Size = new Size(800, 600);
 
-            Button buttonFunctionEdit = new Button();
+            var buttonFunctionEdit = new Button();
             buttonFunctionEdit.Text = "Function";
             //buttonFunctionEdit.Width = 100;
             //buttonFunctionEdit.Height = 30;
@@ -362,21 +425,21 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Tools
             selectionProperties.Width = 150;
 
             // create interactor and connect it to map control
-            
+
             mapControl.SelectedFeaturesChanged += MapControlSelectedFeaturesChanged;
-            
+
             //geometryEditor.SelectionChanged += new System.ComponentModel.PropertyChangedEventHandler(geometryEditor_SelectionChanged);
 
-            mapControl.Map.ZoomToFit(new Envelope(300,300,300,300));
+            mapControl.Map.ZoomToFit(new Envelope(300, 300, 300, 300));
 
             geometryEditorForm.Controls.Add(listBoxTools);
             geometryEditorForm.Controls.Add(selectionProperties);
             geometryEditorForm.Controls.Add(buttonFunctionEdit);
             geometryEditorForm.Controls.Add(mapControl);
             //geometryEditorForm.Size = new Size(800, 600);
-
         }
-        void MapControlSelectedFeaturesChanged(object sender, EventArgs e)
+
+        private void MapControlSelectedFeaturesChanged(object sender, EventArgs e)
         {
             if (null != mapControl.SelectedFeatures)
             {
@@ -386,6 +449,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Tools
                     return;
                 }
             }
+
             selectionProperties.SelectedObject = null;
         }
 
@@ -395,9 +459,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Tools
             {
                 IMapTool mapTool = mapControl.GetToolByName(listBoxTools.Items[listBoxTools.SelectedIndex].ToString());
                 if (mapTool.AlwaysActive)
+                {
                     mapTool.Execute();
+                }
                 else
+                {
                     mapControl.ActivateTool(mapTool);
+                }
             }
         }
 
@@ -407,61 +475,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Tools
             {
                 InitializeFunctionEditorTestForm();
             }
+
             //FeatureVariable update does not work wordt feature coverage
             //functionView.Data = initialFlow;
             //functionEditorForm.Show();
         }
-
-        [Test]
-        public void HydroNetworkMapLayerNetworkCanHaveNetworkNull()
-        {
-            //see https://issues.deltares.nl/browse/TOOLS-6566
-            using (var mapControl = new MapControl())  // do not use field, otherwise it will not be disposed!
-            {
-                hydroNetworkLayer.Region = null;
-                var tool = new HydroRegionEditorMapTool { MapControl = mapControl };
-            }
-        }
-
-        [Test]
-        [Category(TestCategory.Integration)]
-        public void BranchSetCustomLengthAndMoveCalculationPoint()
-        {
-            var network = HydroNetworkHelper.GetSnakeHydroNetwork(new[] { new Point(0, 0), new Point(100, 0) });
-            INetworkCoverage coverage = new Discretization() {Network = network};
-
-            var branch = network.Branches[0];
-            branch.IsLengthCustom = true;
-            branch.Length *= 2;
-
-            var networkLocation = new NetworkLocation(branch, 120);
-            coverage.Locations.AddValues(new[] { networkLocation });
-            using (var coverageView = new CoverageView { Data = coverage })
-            {
-                var mapView = coverageView.ChildViews.OfType<MapView>().First();
-                var networkLayer = MapLayerProviderHelper.CreateLayersRecursive(network, null, new List<IMapLayerProvider> {new NetworkEditorMapLayerProvider()});
-                networkLayer.ShowInLegend = false;
-                mapView.MapControl.Map.Layers.Add(networkLayer);
-                HydroRegionEditorHelper.AddHydroRegionEditorMapTool(mapView.MapControl);
-
-                WindowsFormsTestHelper.ShowModal(
-                    coverageView,
-                    f =>
-                        {
-                            mapView.MapControl.SelectTool.Select(networkLocation);
-
-                            var moveTool = mapView.MapControl.MoveTool;
-                            var args = new MouseEventArgs(MouseButtons.Left, 1, 0, 0, 0);
-                            moveTool.OnMouseDown(networkLocation.Geometry.Coordinate, args);
-                            moveTool.OnMouseMove(new Coordinate(50, 0), args);
-                            var newpos = new Coordinate(50, 0);
-                            moveTool.OnMouseUp(newpos, args);
-
-                            Assert.AreEqual(newpos, networkLocation.Geometry.Coordinate);
-                            Assert.AreEqual(100, networkLocation.Chainage);
-                        });
-            }
-        }
     }
 }
-

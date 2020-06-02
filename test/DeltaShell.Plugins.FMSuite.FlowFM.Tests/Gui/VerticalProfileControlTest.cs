@@ -7,7 +7,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 {
     [TestFixture]
     [Category(TestCategory.WindowsForms)]
-    class VerticalProfileControlTest
+    internal class VerticalProfileControlTest
     {
         [Test]
         public void Show()
@@ -19,10 +19,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         public void ShowWithSigmaDepthLayers()
         {
             var verticalProfileControl = new VerticalProfileControl
-                {
-                    ModelDepthLayerDefinition = new DepthLayerDefinition(DepthLayerType.Sigma, 0.6, 0.15,
-                                                                         0.25)
-                };
+            {
+                ModelDepthLayerDefinition = new DepthLayerDefinition(DepthLayerType.Sigma, 0.6, 0.15,
+                                                                     0.25)
+            };
             WindowsFormsTestHelper.ShowModal(verticalProfileControl);
         }
 
@@ -30,10 +30,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         public void ShowWithZDepthLayers()
         {
             var verticalProfileControl = new VerticalProfileControl
-                {
-                    ModelDepthLayerDefinition = new DepthLayerDefinition(DepthLayerType.Z, 2, 3,
-                                                                         1)
-                };
+            {
+                ModelDepthLayerDefinition = new DepthLayerDefinition(DepthLayerType.Z, 2, 3,
+                                                                     1)
+            };
             WindowsFormsTestHelper.ShowModal(verticalProfileControl);
         }
     }

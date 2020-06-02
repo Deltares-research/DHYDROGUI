@@ -15,17 +15,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Grid
     [TestFixture]
     public class UnstructuredGridNetCdfFileWriterTest
     {
-        [Test, Category(TestCategory.DataAccess)]
+        [Test]
+        [Category(TestCategory.DataAccess)]
         public void WriteRgfGridNetCdfFile()
         {
             var coordinateSystemFactory = new OgrCoordinateSystemFactory();
             var grid = new UnstructuredGrid
-                {
-                    CoordinateSystem = coordinateSystemFactory.CreateFromEPSG(3857) // WGS 84 / Pseudo-Mercator
-                };
-            
-            #region Create simple regular grid 
-            
+            {
+                CoordinateSystem = coordinateSystemFactory.CreateFromEPSG(3857) // WGS 84 / Pseudo-Mercator
+            };
+
+            #region Create simple regular grid
+
             // 3  4  5
             // +--+--+
             // |  |  |
@@ -51,8 +52,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Grid
 
             #endregion
 
-            var path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "netFile.nc") ;
-            
+            string path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "netFile.nc");
+
             NetFile.Write(path, grid);
 
             NetCdfFile netFile = null;
@@ -62,17 +63,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Grid
                 netFile = NetCdfFile.OpenExisting(path);
 
                 Assert.AreEqual(3, netFile.GetAllDimensions().Count()); // nNetNode, nNetLink, nNetLinkPts
-                Assert.AreEqual(6, netFile.GetVariables().Count()); // NetNode_x, NetNode_y, NetLinkType, NetLink, crs
+                Assert.AreEqual(6, netFile.GetVariables().Count());     // NetNode_x, NetNode_y, NetLinkType, NetLink, crs
 
                 Assert.AreEqual(grid.Vertices.Count, netFile.GetDimensionLength(netFile.GetDimension("nNetNode")));
                 Assert.AreEqual(grid.Edges.Count, netFile.GetDimensionLength(netFile.GetDimension("nNetLink")));
                 Assert.AreEqual(2, netFile.GetDimensionLength(netFile.GetDimension("nNetLinkPts")));
 
-                var netNodeX = netFile.GetVariableByName("NetNode_x");
-                var netNodeY = netFile.GetVariableByName("NetNode_y");
-                var netLinkType = netFile.GetVariableByName("NetLinkType");
-                var netLink = netFile.GetVariableByName("NetLink");
-                var crs = netFile.GetVariableByName("crs");
+                NetCdfVariable netNodeX = netFile.GetVariableByName("NetNode_x");
+                NetCdfVariable netNodeY = netFile.GetVariableByName("NetNode_y");
+                NetCdfVariable netLinkType = netFile.GetVariableByName("NetLinkType");
+                NetCdfVariable netLink = netFile.GetVariableByName("NetLink");
+                NetCdfVariable crs = netFile.GetVariableByName("crs");
 
                 Assert.NotNull(netNodeX);
                 Assert.NotNull(netNodeY);
@@ -87,15 +88,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Grid
                 Assert.AreEqual(grid.Vertices.Select(v => v.Y), netFile.Read(netNodeY));
 
                 var expectedLinkArray = new int[grid.Edges.Count, 2]; // 2 => from, to
-                
+
                 var edgeCount = 0;
                 grid.Edges.ForEach(e =>
-                    {
-                        // +1 because rgfGrid does not use zero based vertex indices
-                        expectedLinkArray[edgeCount, 0] = e.VertexFromIndex + 1;
-                        expectedLinkArray[edgeCount, 1] = e.VertexToIndex + 1;
-                        edgeCount++;
-                    });
+                {
+                    // +1 because rgfGrid does not use zero based vertex indices
+                    expectedLinkArray[edgeCount, 0] = e.VertexFromIndex + 1;
+                    expectedLinkArray[edgeCount, 1] = e.VertexToIndex + 1;
+                    edgeCount++;
+                });
 
                 Assert.AreEqual(expectedLinkArray, netFile.Read(netLink));
             }

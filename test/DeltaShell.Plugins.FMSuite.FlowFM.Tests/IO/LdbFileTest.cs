@@ -1,5 +1,7 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using DelftTools.Hydro;
 using DelftTools.TestUtils;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
 using NUnit.Framework;
@@ -14,16 +16,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         public void ReadWriteReadHarlingebLdbTest()
         {
             var ldbFile = new LdbFile();
-            var ldbPath = TestHelper.GetTestFilePath(@"harlingen\Harlingen_haven.ldb");
+            string ldbPath = TestHelper.GetTestFilePath(@"harlingen\Harlingen_haven.ldb");
 
-            var features = ldbFile.Read(ldbPath);
+            IList<LandBoundary2D> features = ldbFile.Read(ldbPath);
             Assert.IsNotNull(features);
 
             const string exportedFile = "Harlingen_haven_export.ldb";
             ldbFile.Write(exportedFile, features);
             Assert.IsTrue(File.Exists(exportedFile));
 
-            var featuresAfterExport = ldbFile.Read(exportedFile);
+            IList<LandBoundary2D> featuresAfterExport = ldbFile.Read(exportedFile);
             Assert.AreEqual(features.Count, featuresAfterExport.Count);
             Assert.AreEqual(features.Select(f => f.Name).ToList(), featuresAfterExport.Select(f => f.Name).ToList());
             Assert.AreEqual(features.Select(f => f.Geometry).ToList(),
@@ -36,16 +38,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         public void ReadWriteReadArabSeaLdbTest()
         {
             var ldbFile = new LdbFile();
-            var ldbPath = TestHelper.GetTestFilePath(@"landboundaries\ArabianSea.ldb");
+            string ldbPath = TestHelper.GetTestFilePath(@"landboundaries\ArabianSea.ldb");
 
-            var features = ldbFile.Read(ldbPath);
+            IList<LandBoundary2D> features = ldbFile.Read(ldbPath);
             Assert.IsNotNull(features);
 
             const string exportedFile = "ArabianSea_export.ldb";
             ldbFile.Write(exportedFile, features);
             Assert.IsTrue(File.Exists(exportedFile));
 
-            var featuresAfterExport = ldbFile.Read(exportedFile);
+            IList<LandBoundary2D> featuresAfterExport = ldbFile.Read(exportedFile);
             Assert.AreEqual(features.Count, featuresAfterExport.Count);
             Assert.AreEqual(features.Select(f => f.Name).ToList(), featuresAfterExport.Select(f => f.Name).ToList());
             Assert.AreEqual(features.Select(f => f.Geometry).ToList(),
@@ -58,9 +60,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         public void ReadWriteReadMississippiLdbTest()
         {
             var ldbFile = new LdbFile();
-            var ldbPath = TestHelper.GetTestFilePath(@"landboundaries\mississippiCoast_utm_new.ldb");
+            string ldbPath = TestHelper.GetTestFilePath(@"landboundaries\mississippiCoast_utm_new.ldb");
 
-            var features = ldbFile.Read(ldbPath);
+            IList<LandBoundary2D> features = ldbFile.Read(ldbPath);
             Assert.IsNotNull(features);
             Assert.AreEqual(851, features.Count);
 
@@ -68,7 +70,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             ldbFile.Write(exportedFile, features);
             Assert.IsTrue(File.Exists(exportedFile));
 
-            var featuresAfterExport = ldbFile.Read(exportedFile);
+            IList<LandBoundary2D> featuresAfterExport = ldbFile.Read(exportedFile);
             Assert.AreEqual(features.Count, featuresAfterExport.Count);
             Assert.AreEqual(features.Select(f => f.Name).ToList(), featuresAfterExport.Select(f => f.Name).ToList());
             Assert.AreEqual(features.Select(f => f.Geometry).ToList(),

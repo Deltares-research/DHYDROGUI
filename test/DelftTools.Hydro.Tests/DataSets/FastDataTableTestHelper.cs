@@ -16,10 +16,10 @@ namespace DelftTools.Hydro.Tests.DataSets
         /// <param name="maxMilliSeconds">Maximum allowed time for a serialization roundtrip</param>
         /// <param name="rowCount">Number of rows to add to the table</param>
         /// <param name="addRowAction">Action to add a new row to the table</param>
-        public static void TestSerializationIsFastAndCorrect<T>(int maxMilliSeconds,int rowCount, Action<T> addRowAction) where T : LightDataTable, new()
+        public static void TestSerializationIsFastAndCorrect<T>(int maxMilliSeconds, int rowCount, Action<T> addRowAction) where T : LightDataTable, new()
         {
-            var table = new T();//create the table
-            for (int i = 0; i < rowCount; i++)
+            var table = new T(); //create the table
+            for (var i = 0; i < rowCount; i++)
             {
                 addRowAction(table);
             }
@@ -30,15 +30,15 @@ namespace DelftTools.Hydro.Tests.DataSets
 
             Assert.IsTrue(table.ContentEquals(retrievedTable));
         }
-        
-        public static T SerializeAndDeserialize<T>(T obj) 
+
+        public static T SerializeAndDeserialize<T>(T obj)
         {
             var memoryStream = new MemoryStream();
             var binaryFormatter = new BinaryFormatter();
-            
+
             binaryFormatter.Serialize(memoryStream, obj);
-            
-            memoryStream.Seek(0,0);
+
+            memoryStream.Seek(0, 0);
             return (T) binaryFormatter.Deserialize(memoryStream);
         }
     }

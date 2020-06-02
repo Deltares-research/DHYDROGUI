@@ -1,7 +1,10 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using System.Text.RegularExpressions;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Utils.Reflection;
+using DeltaShell.Plugins.NetworkEditor.Properties;
 using NUnit.Framework;
 using Rhino.Mocks;
 
@@ -16,16 +19,16 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
             // Create an application plugin instance
             var applicationPlugin = new NetworkEditorApplicationPlugin();
             Assert.That(applicationPlugin.Name,
-                Is.EqualTo("Network"));
+                        Is.EqualTo("Network"));
             Assert.That(applicationPlugin.DisplayName,
-                Is.EqualTo(Properties.Resources.NetworkEditorApplicationPlugin_DisplayName_Hydro_Region_Plugin));
+                        Is.EqualTo(Resources.NetworkEditorApplicationPlugin_DisplayName_Hydro_Region_Plugin));
             Assert.That(applicationPlugin.Description,
-                Is.EqualTo(Properties.Resources.NetworkEditorApplicationPlugin_Description));
+                        Is.EqualTo(Resources.NetworkEditorApplicationPlugin_Description));
             Assert.That(applicationPlugin.Version,
-                Is.EqualTo(applicationPlugin.GetType().Assembly.GetName().Version.ToString()));
+                        Is.EqualTo(applicationPlugin.GetType().Assembly.GetName().Version.ToString()));
             Assert.IsTrue(new Regex(@"\d.\d.\d.\d").IsMatch(applicationPlugin.FileFormatVersion));
-            var persistentAssemblies = applicationPlugin.GetPersistentAssemblies();
-            var assemblies = persistentAssemblies.ToList();
+            IEnumerable<Assembly> persistentAssemblies = applicationPlugin.GetPersistentAssemblies();
+            List<Assembly> assemblies = persistentAssemblies.ToList();
             Assert.That(assemblies.Count, Is.EqualTo(3));
         }
 
@@ -37,7 +40,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
             dataItemWithoutRegion.Expect(d => d.Value).Return(null).Repeat.Once();
             mocks.ReplayAll();
             TypeUtils.CallPrivateStaticMethod(typeof(NetworkEditorApplicationPlugin), "AddChildRegionDataItems",
-                dataItemWithoutRegion);
+                                              dataItemWithoutRegion);
             mocks.VerifyAll();
         }
     }

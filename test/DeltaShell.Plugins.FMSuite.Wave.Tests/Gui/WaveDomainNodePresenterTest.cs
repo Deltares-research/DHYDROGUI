@@ -48,8 +48,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
 
                 // Call
                 object[] childNodes = nodePresenter.GetChildNodeObjects(waveDomainData, null)
-                                              .Cast<object>()
-                                              .ToArray();
+                                                   .Cast<object>()
+                                                   .ToArray();
 
                 // Assert
                 Assert.That(childNodes.Length, Is.EqualTo(4), "Amount of child nodes should be equal to the grid node + bathymetry node + the total of subdomains present in the parent node.");
@@ -60,7 +60,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
                 Assert.That(gridNode.WaveModel, Is.SameAs(model));
                 Assert.That(gridNode.Data, Is.SameAs(waveDomainGrid));
                 Assert.That(gridNode.ShortCutType, Is.EqualTo(ShortCutType.Grid));
-                
+
                 var bathymetryNode = childNodes[1] as WaveModelTreeShortcut;
                 Assert.That(bathymetryNode, Is.Not.Null);
                 Assert.That(bathymetryNode.Text, Is.EqualTo(waveDomainBathymetry.Name));

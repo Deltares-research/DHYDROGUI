@@ -15,7 +15,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files.Helpers
             var innerException = new Exception();
 
             // Call
-            var exception = new FileCopyException(message, 
+            var exception = new FileCopyException(message,
                                                   innerException);
 
             // Assert

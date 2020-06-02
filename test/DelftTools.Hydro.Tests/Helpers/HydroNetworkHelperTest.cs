@@ -10,6 +10,7 @@ using DelftTools.TestUtils;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections;
 using GeoAPI.Extensions.Coverages;
+using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Actions;
 using NetTopologySuite.Extensions.Coverages;
@@ -25,13 +26,13 @@ namespace DelftTools.Hydro.Tests.Helpers
         [Test]
         public void TestAddStructureToExistingCompositeStructureOrToANewOne_GeneratesUniqueNamesForCompositeBranchStructures()
         {
-            var network = HydroNetworkHelper.GetSnakeHydroNetwork(1);
-            var branch = network.Branches.First();
+            IHydroNetwork network = HydroNetworkHelper.GetSnakeHydroNetwork(1);
+            IBranch branch = network.Branches.First();
             Assert.NotNull(branch);
 
-            var weir1 = new Weir("weir1") { Chainage = branch.Length / 3 };
-            var weir2 = new Weir("weir2") { Chainage = branch.Length / 3 };
-            var weir3 = new Weir("weir3") { Chainage = branch.Length * 2 / 3 };
+            var weir1 = new Weir("weir1") {Chainage = branch.Length / 3};
+            var weir2 = new Weir("weir2") {Chainage = branch.Length / 3};
+            var weir3 = new Weir("weir3") {Chainage = (branch.Length * 2) / 3};
 
             HydroNetworkHelper.AddStructureToExistingCompositeStructureOrToANewOne(weir1, branch);
             Assert.AreEqual(1, network.CompositeBranchStructures.Count());
@@ -78,7 +79,7 @@ namespace DelftTools.Hydro.Tests.Helpers
         [Test]
         public void GenerateCalculationPointsShouldWorkWellWithFixedPointsTools8709()
         {
-            var network = CreateTestNetwork();
+            IHydroNetwork network = CreateTestNetwork();
 
             var computationalGrid = new Discretization
             {
@@ -86,17 +87,17 @@ namespace DelftTools.Hydro.Tests.Helpers
                 SegmentGenerationMethod = SegmentGenerationMethod.SegmentBetweenLocations
             };
             HydroNetworkHelper.GenerateDiscretization(computationalGrid, false, false, 1.0, false, 1.0, true, false, false, 10.0);
-            
-            var sampleLocation = computationalGrid.Locations.Values[1];
-            var countBefore = computationalGrid.Locations.Values.Count;
-            
+
+            INetworkLocation sampleLocation = computationalGrid.Locations.Values[1];
+            int countBefore = computationalGrid.Locations.Values.Count;
+
             // set one point to fixed
             computationalGrid[sampleLocation] = 1.0;
 
             // regenerate grid
             HydroNetworkHelper.GenerateDiscretization(computationalGrid, true, false, 1.0, false, 1.0, true, false, false, 10.0);
-            var countAfter = computationalGrid.Locations.Values.Count;
-            
+            int countAfter = computationalGrid.Locations.Values.Count;
+
             Assert.AreEqual(countBefore, countAfter);
             Assert.AreEqual(1.0, computationalGrid[sampleLocation]);
         }
@@ -104,7 +105,7 @@ namespace DelftTools.Hydro.Tests.Helpers
         [Test]
         public void GenerateCalculationPointsShouldWorkWellWithFixedPointsAtBeginOfBranchTools8709()
         {
-            var network = CreateTestNetwork();
+            IHydroNetwork network = CreateTestNetwork();
 
             var computationalGrid = new Discretization
             {
@@ -113,25 +114,26 @@ namespace DelftTools.Hydro.Tests.Helpers
             };
             HydroNetworkHelper.GenerateDiscretization(computationalGrid, false, false, 1.0, false, 1.0, true, false, false, 10.0);
 
-            var sampleLocation = computationalGrid.Locations.Values[0];
-            var countBefore = computationalGrid.Locations.Values.Count;
+            INetworkLocation sampleLocation = computationalGrid.Locations.Values[0];
+            int countBefore = computationalGrid.Locations.Values.Count;
 
             // set one point to fixed
             computationalGrid[sampleLocation] = 1.0;
 
             // regenerate grid
             HydroNetworkHelper.GenerateDiscretization(computationalGrid, true, false, 1.0, false, 1.0, true, false, false, 10.0);
-            var countAfter = computationalGrid.Locations.Values.Count;
+            int countAfter = computationalGrid.Locations.Values.Count;
 
             Assert.AreEqual(countBefore, countAfter);
             Assert.AreEqual(1.0, computationalGrid[sampleLocation]);
         }
+
         [Test]
         public void GenerateCalculationPointsOnCrossSectionsSkipsIfAlsoStructurePresent()
         {
-            var network = CreateTestNetwork();
+            IHydroNetwork network = CreateTestNetwork();
 
-            var cs1 = network.CrossSections.First();
+            ICrossSection cs1 = network.CrossSections.First();
 
             var branch = cs1.Branch as IChannel;
 
@@ -139,69 +141,20 @@ namespace DelftTools.Hydro.Tests.Helpers
             NetworkHelper.AddBranchFeatureToBranch(weir, branch, cs1.Chainage);
 
             IDiscretization computationalGrid = new Discretization
-                                                    {
-                                                        Network = network,
-                                                        SegmentGenerationMethod =
-                                                            SegmentGenerationMethod.SegmentBetweenLocations
-                                                    };
+            {
+                Network = network,
+                SegmentGenerationMethod =
+                    SegmentGenerationMethod.SegmentBetweenLocations
+            };
             HydroNetworkHelper.GenerateDiscretization(computationalGrid, false, false, 1.0, false, 1.0, true, false, false, 0.0);
 
             Assert.AreEqual(
                 new INetworkLocation[]
-                    {
-                        new NetworkLocation(branch, 0), new NetworkLocation(branch, 115),
-                        new NetworkLocation(branch, branch.Length)
-                    }, computationalGrid.Locations.Values);
-        }
-
-        /// <summary>
-        /// Creates a simple test network of 1 branch and 2 nodes. The branch has '3' parts, in the center of
-        /// the first and last is a cross section.
-        ///                 n
-        ///                /
-        ///               /
-        ///              cs
-        ///             /
-        ///     -------/
-        ///    /
-        ///   cs
-        ///  /
-        /// n
-        /// </summary>
-        /// <returns></returns>
-        private static IHydroNetwork CreateTestNetwork()
-        {
-            var network = new HydroNetwork();
-            var branch1 = new Channel
-                              {
-                                  Geometry = new LineString(new[]
-                                                                {
-                                                                    new Coordinate(0, 0), new Coordinate(30, 40),
-                                                                    new Coordinate(70, 40), new Coordinate(100, 100)
-                                                                })
-                              };
-
-            var node1 = new HydroNode { Network = network, Geometry = new Point(new Coordinate(0, 0)) };
-            var node2 = new HydroNode { Network = network, Geometry = new Point(new Coordinate(100, 100)) };
-
-            network.Branches.Add(branch1);
-            network.Nodes.Add(node1);
-            network.Nodes.Add(node2);
-
-            var crossSection1 = new CrossSectionDefinitionXYZ { Geometry = new LineString(new[] { new Coordinate(15, 20), new Coordinate(16, 20) }) };
-            double offset1 = Math.Sqrt(15 * 15 + 20 * 20);
-            var crossSectionBranchFeature1 = new CrossSection(crossSection1) {Chainage = offset1};
-
-            var crossSection2 = new CrossSectionDefinitionXYZ { Geometry = new LineString(new[] { new Coordinate(85, 70), new Coordinate(86, 70) }) };
-            double offset2 = Math.Sqrt(30 * 30 + 40 * 40) + 40 + Math.Sqrt(15 * 15 + 20 * 20);
-            var crossSectionBranchFeature2 = new CrossSection(crossSection2) { Chainage = offset2 };
-            
-            branch1.Source = node1;
-            branch1.Target = node2;
-            NetworkHelper.AddBranchFeatureToBranch(crossSectionBranchFeature1, branch1, crossSectionBranchFeature1.Chainage);
-            NetworkHelper.AddBranchFeatureToBranch(crossSectionBranchFeature2, branch1, crossSectionBranchFeature2.Chainage);
-
-            return network;
+                {
+                    new NetworkLocation(branch, 0),
+                    new NetworkLocation(branch, 115),
+                    new NetworkLocation(branch, branch.Length)
+                }, computationalGrid.Locations.Values);
         }
 
         /// <summary>
@@ -212,7 +165,7 @@ namespace DelftTools.Hydro.Tests.Helpers
         public void SplitBranchIn2()
         {
             IHydroNetwork network = CreateTestNetwork();
-            var branch1 = network.Channels.First();
+            IChannel branch1 = network.Channels.First();
             branch1.Name = "branch1";
             branch1.LongName = "maas";
             double length = branch1.Geometry.Length;
@@ -223,11 +176,11 @@ namespace DelftTools.Hydro.Tests.Helpers
             Assert.IsNull(network.CurrentEditAction);
             Assert.AreEqual(nodesCount + 1, network.Nodes.Count);
             Assert.AreNotEqual(-1, network.Nodes.IndexOf(hydroNode));
-            
-            Assert.AreEqual("branch1_A",branch1.Name);
+
+            Assert.AreEqual("branch1_A", branch1.Name);
             Assert.AreEqual("maas_A", branch1.LongName);
-            
-            var branch2 = network.Channels.ElementAt(1);
+
+            IChannel branch2 = network.Channels.ElementAt(1);
             Assert.AreEqual("branch1_B", branch2.Name);
             Assert.AreEqual("maas_B", branch2.LongName);
 
@@ -237,15 +190,15 @@ namespace DelftTools.Hydro.Tests.Helpers
         [Test]
         public void SplitBranchAndRemoveNode()
         {
-            var network = CreateTestNetwork();
-            var leftBranch = network.Channels.First();
-            var startNode = leftBranch.Source;
-            var endNode = leftBranch.Target;
+            IHydroNetwork network = CreateTestNetwork();
+            IChannel leftBranch = network.Channels.First();
+            INode startNode = leftBranch.Source;
+            INode endNode = leftBranch.Target;
 
             Assert.IsFalse(startNode.IsConnectedToMultipleBranches);
             Assert.IsFalse(endNode.IsConnectedToMultipleBranches);
 
-            var insertedNode = HydroNetworkHelper.SplitChannelAtNode(leftBranch, leftBranch.Geometry.Length / 2);
+            IHydroNode insertedNode = HydroNetworkHelper.SplitChannelAtNode(leftBranch, leftBranch.Geometry.Length / 2);
 
             Assert.IsFalse(startNode.IsConnectedToMultipleBranches);
             Assert.IsTrue(insertedNode.IsConnectedToMultipleBranches);
@@ -264,7 +217,7 @@ namespace DelftTools.Hydro.Tests.Helpers
         {
             //relates to issue 2477
             IHydroNetwork network = CreateTestNetwork();
-            var branch1 = network.Channels.First();
+            IChannel branch1 = network.Channels.First();
             double length = branch1.Geometry.Length;
 
             int nodesCount = network.Nodes.Count;
@@ -288,14 +241,14 @@ namespace DelftTools.Hydro.Tests.Helpers
         public void SplitBranchWithRouteIn2()
         {
             IHydroNetwork network = CreateTestNetwork();
-            var branch1 = network.Channels.First();
+            IChannel branch1 = network.Channels.First();
             double length = branch1.Geometry.Length;
 
             NetworkCoverage route = new Route
-                                        {
-                                            Network = network,
-                                            SegmentGenerationMethod = SegmentGenerationMethod.RouteBetweenLocations
-                                        };
+            {
+                Network = network,
+                SegmentGenerationMethod = SegmentGenerationMethod.RouteBetweenLocations
+            };
             route.Locations.Values.Add(new NetworkLocation(branch1, length / 12));
             route.Locations.Values.Add(new NetworkLocation(branch1, length / 8));
 
@@ -318,7 +271,7 @@ namespace DelftTools.Hydro.Tests.Helpers
         {
             IHydroNetwork network = CreateTestNetwork();
 
-            var branch1 = network.Channels.First();
+            IChannel branch1 = network.Channels.First();
             branch1.IsLengthCustom = true;
             double length = branch1.Geometry.Length;
 
@@ -326,15 +279,15 @@ namespace DelftTools.Hydro.Tests.Helpers
 
             Assert.IsNull(network.CurrentEditAction);
 
-            double offset1 = Math.Sqrt(15 * 15 + 20 * 20);
-            double offset2 = Math.Sqrt(30 * 30 + 40 * 40) + 40 + Math.Sqrt(15 * 15 + 20 * 20);
-            double length1 = Math.Sqrt(30 * 30 + 40 * 40) + 20;
-            double length2 = 20 + Math.Sqrt(30 * 30 + 60 * 60);
+            double offset1 = Math.Sqrt((15 * 15) + (20 * 20));
+            double offset2 = Math.Sqrt((30 * 30) + (40 * 40)) + 40 + Math.Sqrt((15 * 15) + (20 * 20));
+            double length1 = Math.Sqrt((30 * 30) + (40 * 40)) + 20;
+            double length2 = 20 + Math.Sqrt((30 * 30) + (60 * 60));
 
             Assert.AreEqual(length, length1 + length2);
 
             Assert.AreEqual(2, network.Branches.Count);
-            var branch2 = network.Channels.Skip(1).First();
+            IChannel branch2 = network.Channels.Skip(1).First();
             Assert.AreEqual(3, network.Nodes.Count);
             Assert.AreEqual(1, network.Nodes[0].OutgoingBranches.Count);
             Assert.AreEqual(1, network.Nodes[1].IncomingBranches.Count);
@@ -360,22 +313,22 @@ namespace DelftTools.Hydro.Tests.Helpers
         {
             IHydroNetwork network = CreateTestNetwork();
 
-            var branch1 = network.Channels.First();
+            IChannel branch1 = network.Channels.First();
             double length = branch1.Geometry.Length;
 
             HydroNetworkHelper.SplitChannelAtNode(branch1, new Coordinate(50, 40));
 
             Assert.IsNull(network.CurrentEditAction);
 
-            double offset1 = Math.Sqrt(15 * 15 + 20 * 20);
-            double offset2 = Math.Sqrt(30 * 30 + 40 * 40) + 40 + Math.Sqrt(15 * 15 + 20 * 20);
-            double length1 = Math.Sqrt(30 * 30 + 40 * 40) + 20;
-            double length2 = 20 + Math.Sqrt(30 * 30 + 60 * 60);
+            double offset1 = Math.Sqrt((15 * 15) + (20 * 20));
+            double offset2 = Math.Sqrt((30 * 30) + (40 * 40)) + 40 + Math.Sqrt((15 * 15) + (20 * 20));
+            double length1 = Math.Sqrt((30 * 30) + (40 * 40)) + 20;
+            double length2 = 20 + Math.Sqrt((30 * 30) + (60 * 60));
 
             Assert.AreEqual(length, length1 + length2);
 
             Assert.AreEqual(2, network.Branches.Count);
-            var branch2 = network.Channels.Skip(1).First();
+            IChannel branch2 = network.Channels.Skip(1).First();
             Assert.AreEqual(3, network.Nodes.Count);
             Assert.AreEqual(1, network.Nodes[0].OutgoingBranches.Count);
             Assert.AreEqual(1, network.Nodes[1].IncomingBranches.Count);
@@ -401,11 +354,11 @@ namespace DelftTools.Hydro.Tests.Helpers
         public void SplitBranchOnExistingNodeShouldNotWork()
         {
             IHydroNetwork network = CreateTestNetwork();
-            var numberOfChannels = network.Channels.Count();
-            var branch1 = network.Channels.First();
+            int numberOfChannels = network.Channels.Count();
+            IChannel branch1 = network.Channels.First();
             double length = branch1.Geometry.Length;
 
-            var result = HydroNetworkHelper.SplitChannelAtNode(branch1, length);
+            IHydroNode result = HydroNetworkHelper.SplitChannelAtNode(branch1, length);
             Assert.IsNull(result);
             Assert.IsNull(network.CurrentEditAction);
             Assert.AreEqual(numberOfChannels, network.Channels.Count());
@@ -415,18 +368,27 @@ namespace DelftTools.Hydro.Tests.Helpers
         public void SplitBranchWithCustomLengthTools9057()
         {
             var network = new HydroNetwork();
-            var node1 = new HydroNode { Network = network, Geometry = new Point(new Coordinate(0, 0)) };
-            var node2 = new HydroNode { Network = network, Geometry = new Point(new Coordinate(100, 0)) };
+            var node1 = new HydroNode
+            {
+                Network = network,
+                Geometry = new Point(new Coordinate(0, 0))
+            };
+            var node2 = new HydroNode
+            {
+                Network = network,
+                Geometry = new Point(new Coordinate(100, 0))
+            };
             var branch = new Channel
+            {
+                Source = node1,
+                Target = node2,
+                Geometry = new LineString(new[]
                 {
-                    Source = node1,
-                    Target = node2,
-                    Geometry = new LineString(new[]
-                        {
-                            new Coordinate(0, 0), new Coordinate(100, 0)
-                        })
-                };
-            
+                    new Coordinate(0, 0),
+                    new Coordinate(100, 0)
+                })
+            };
+
             network.Branches.Add(branch);
             network.Nodes.Add(node1);
             network.Nodes.Add(node2);
@@ -451,17 +413,17 @@ namespace DelftTools.Hydro.Tests.Helpers
         public void AfterSplitTheOrderIsEqualForResultingChannels()
         {
             IHydroNetwork network = CreateTestNetwork();
-            var channel = network.Channels.First();
-            var name = channel.Name;
+            IChannel channel = network.Channels.First();
+            string name = channel.Name;
             channel.OrderNumber = 7;
             double length = channel.Geometry.Length / 2.0;
 
-            var result = HydroNetworkHelper.SplitChannelAtNode(channel, length);
+            IHydroNode result = HydroNetworkHelper.SplitChannelAtNode(channel, length);
             Assert.IsNotNull(result);
             Assert.IsNull(network.CurrentEditAction);
 
-            var newChannelA = network.Channels.First(c => c.Name == name + "_A");
-            var newChannelB = network.Channels.First(c => c.Name == name + "_B");
+            IChannel newChannelA = network.Channels.First(c => c.Name == name + "_A");
+            IChannel newChannelB = network.Channels.First(c => c.Name == name + "_B");
             Assert.AreEqual(newChannelA.OrderNumber, newChannelB.OrderNumber);
         }
 
@@ -471,21 +433,27 @@ namespace DelftTools.Hydro.Tests.Helpers
             IHydroNetwork network = CreateTestNetwork();
 
             INetworkCoverage networkCoverage = new NetworkCoverage
-                                                   {
-                                                       Network = network,
-                                                       SegmentGenerationMethod =
-                                                           SegmentGenerationMethod.SegmentBetweenLocations
-                                                   };
-            var branch1 = network.Channels.First();
-            var length = branch1.Geometry.Length;
-            HydroNetworkHelper.GenerateDiscretization(networkCoverage, branch1, new[] { 0.0, length / 3, 2 * length / 3, length });
+            {
+                Network = network,
+                SegmentGenerationMethod =
+                    SegmentGenerationMethod.SegmentBetweenLocations
+            };
+            IChannel branch1 = network.Channels.First();
+            double length = branch1.Geometry.Length;
+            HydroNetworkHelper.GenerateDiscretization(networkCoverage, branch1, new[]
+            {
+                0.0,
+                length / 3,
+                (2 * length) / 3,
+                length
+            });
 
             Assert.AreEqual(4, networkCoverage.Locations.Values.Count);
             Assert.AreEqual(3, networkCoverage.Segments.Values.Count);
 
             Assert.AreEqual(0, networkCoverage.Locations.Values[0].Chainage, BranchFeature.Epsilon);
             Assert.AreEqual(length / 3, networkCoverage.Locations.Values[1].Chainage, BranchFeature.Epsilon);
-            Assert.AreEqual(2 * length / 3, networkCoverage.Locations.Values[2].Chainage, BranchFeature.Epsilon);
+            Assert.AreEqual((2 * length) / 3, networkCoverage.Locations.Values[2].Chainage, BranchFeature.Epsilon);
             Assert.AreEqual(length, networkCoverage.Locations.Values[3].Chainage, BranchFeature.Epsilon);
 
             Assert.AreEqual(0, networkCoverage.Segments.Values[0].Chainage, BranchFeature.Epsilon);
@@ -493,9 +461,9 @@ namespace DelftTools.Hydro.Tests.Helpers
             Assert.AreEqual(length / 3, networkCoverage.Segments.Values[0].Length, BranchFeature.Epsilon);
 
             Assert.AreEqual(length / 3, networkCoverage.Segments.Values[1].Chainage, BranchFeature.Epsilon);
-            Assert.AreEqual(2 * length / 3, networkCoverage.Segments.Values[1].EndChainage, BranchFeature.Epsilon);
+            Assert.AreEqual((2 * length) / 3, networkCoverage.Segments.Values[1].EndChainage, BranchFeature.Epsilon);
 
-            Assert.AreEqual(2 * length / 3, networkCoverage.Segments.Values[2].Chainage, BranchFeature.Epsilon);
+            Assert.AreEqual((2 * length) / 3, networkCoverage.Segments.Values[2].Chainage, BranchFeature.Epsilon);
             Assert.AreEqual(length, networkCoverage.Segments.Values[2].EndChainage, BranchFeature.Epsilon);
 
             Assert.AreEqual(length / 3, networkCoverage.Segments.Values[0].Length, BranchFeature.Epsilon);
@@ -509,15 +477,35 @@ namespace DelftTools.Hydro.Tests.Helpers
             var network = new HydroNetwork();
             var channel1 = new Channel
             {
-                Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(100, 0) })
+                Geometry = new LineString(new[]
+                {
+                    new Coordinate(0, 0),
+                    new Coordinate(100, 0)
+                })
             };
             var channel2 = new Channel
             {
-                Geometry = new LineString(new[] { new Coordinate(100, 0), new Coordinate(200, 0) })
+                Geometry = new LineString(new[]
+                {
+                    new Coordinate(100, 0),
+                    new Coordinate(200, 0)
+                })
             };
-            var node1 = new HydroNode { Network = network, Geometry = new Point(new Coordinate(0, 0)) };
-            var node2 = new HydroNode { Network = network, Geometry = new Point(new Coordinate(100, 0)) };
-            var node3 = new HydroNode { Network = network, Geometry = new Point(new Coordinate(200, 0)) };
+            var node1 = new HydroNode
+            {
+                Network = network,
+                Geometry = new Point(new Coordinate(0, 0))
+            };
+            var node2 = new HydroNode
+            {
+                Network = network,
+                Geometry = new Point(new Coordinate(100, 0))
+            };
+            var node3 = new HydroNode
+            {
+                Network = network,
+                Geometry = new Point(new Coordinate(200, 0))
+            };
 
             network.Branches.Add(channel1);
             network.Branches.Add(channel2);
@@ -530,21 +518,17 @@ namespace DelftTools.Hydro.Tests.Helpers
             channel2.Source = node2;
             channel2.Target = node3;
 
-
-            var discretization = new Discretization
-            {
-                Network = network
-            };
+            var discretization = new Discretization {Network = network};
 
             HydroNetworkHelper.GenerateDiscretization(discretization, true, false, 100.0, false, 0.0, false, false, true, 20.0, null);
             // 6 + 6
             Assert.AreEqual(12, discretization.Locations.Values.Count);
-            HydroNetworkHelper.GenerateDiscretization(discretization, true, false, 100.0, false, 0.0, false, false, 
-                                                      true, 10.0, new List<IChannel> { channel2 });
+            HydroNetworkHelper.GenerateDiscretization(discretization, true, false, 100.0, false, 0.0, false, false,
+                                                      true, 10.0, new List<IChannel> {channel2});
             // 11 + 6
             Assert.AreEqual(17, discretization.Locations.Values.Count);
-            HydroNetworkHelper.GenerateDiscretization(discretization, true, false, 100.0, false, 0.0, false, false, 
-                                                      true, 10.0, new List<IChannel> { channel1 });
+            HydroNetworkHelper.GenerateDiscretization(discretization, true, false, 100.0, false, 0.0, false, false,
+                                                      true, 10.0, new List<IChannel> {channel1});
             // 11 + 11
             Assert.AreEqual(22, discretization.Locations.Values.Count);
         }
@@ -556,20 +540,26 @@ namespace DelftTools.Hydro.Tests.Helpers
         public void SplitBranchWithBranchSegments()
         {
             IHydroNetwork network = CreateTestNetwork();
-            var branch1 = network.Channels.First();
+            IChannel branch1 = network.Channels.First();
             double length = branch1.Geometry.Length;
             // see also test GenerateDiscretization
             INetworkCoverage networkCoverage = new NetworkCoverage
-                                                   {
-                                                       Network = network,
-                                                       SegmentGenerationMethod = SegmentGenerationMethod.SegmentBetweenLocationsFullyCovered
-                                                   };
-            HydroNetworkHelper.GenerateDiscretization(networkCoverage, branch1, new[] { 0.0, length / 3, 2 * length / 3, length });
+            {
+                Network = network,
+                SegmentGenerationMethod = SegmentGenerationMethod.SegmentBetweenLocationsFullyCovered
+            };
+            HydroNetworkHelper.GenerateDiscretization(networkCoverage, branch1, new[]
+            {
+                0.0,
+                length / 3,
+                (2 * length) / 3,
+                length
+            });
 
             HydroNetworkHelper.SplitChannelAtNode(branch1, length / 2);
 
             Assert.IsNull(network.CurrentEditAction);
-            var branch2 = network.Channels.Skip(1).First();
+            IChannel branch2 = network.Channels.Skip(1).First();
 
             //4 segments are created...2 on branch 1 and 2 on branch 2
             Assert.AreEqual(4, networkCoverage.Segments.Values.Count);
@@ -583,15 +573,15 @@ namespace DelftTools.Hydro.Tests.Helpers
         [Test]
         public void MergeBranchWithCrossSections()
         {
-            var network = CreateTestNetwork();
-            var branch1 = network.Channels.First();
+            IHydroNetwork network = CreateTestNetwork();
+            IChannel branch1 = network.Channels.First();
 
-            var offset1 = Math.Sqrt(15 * 15 + 20 * 20);
-            var offset2 = Math.Sqrt(30 * 30 + 40 * 40) + 40 + Math.Sqrt(15 * 15 + 20 * 20);
-            var length1 = Math.Sqrt(30 * 30 + 40 * 40) + 20;
-            var length2 = 20 + Math.Sqrt(30 * 30 + 60 * 60);
+            double offset1 = Math.Sqrt((15 * 15) + (20 * 20));
+            double offset2 = Math.Sqrt((30 * 30) + (40 * 40)) + 40 + Math.Sqrt((15 * 15) + (20 * 20));
+            double length1 = Math.Sqrt((30 * 30) + (40 * 40)) + 20;
+            double length2 = 20 + Math.Sqrt((30 * 30) + (60 * 60));
 
-            var node = HydroNetworkHelper.SplitChannelAtNode(branch1, new Coordinate(50, 40));
+            IHydroNode node = HydroNetworkHelper.SplitChannelAtNode(branch1, new Coordinate(50, 40));
 
             // remove the newly added node
             NetworkHelper.MergeNodeBranches(node, network);
@@ -612,23 +602,28 @@ namespace DelftTools.Hydro.Tests.Helpers
         [Test]
         public void AddingToExistingChannelCopiesOrder()
         {
-            var network = CreateTestNetwork();
-            var channel1 = network.Channels.First();
+            IHydroNetwork network = CreateTestNetwork();
+            IChannel channel1 = network.Channels.First();
             channel1.OrderNumber = 7;
-            var node2 = channel1.Target; // at coordinate (100,100), see method CreateTestNetwork
-                
-            var node3 = new HydroNode { Network = network, Geometry = new Point(new Coordinate(200, 200)) };
+            INode node2 = channel1.Target; // at coordinate (100,100), see method CreateTestNetwork
+
+            var node3 = new HydroNode
+            {
+                Network = network,
+                Geometry = new Point(new Coordinate(200, 200))
+            };
             network.Nodes.Add(node3);
 
             var channel2 = new Channel
-                               {
-                                   Geometry = new LineString(new[]
-                                                                 {
-                                                                     new Coordinate(100, 100), new Coordinate(200, 200)
-                                                                 }),
-                                   Source = node2,
-                                   Target = node3
-                               };
+            {
+                Geometry = new LineString(new[]
+                {
+                    new Coordinate(100, 100),
+                    new Coordinate(200, 200)
+                }),
+                Source = node2,
+                Target = node3
+            };
 
             NetworkHelper.AddChannelToHydroNetwork(network, channel2);
             Assert.AreEqual(channel1.OrderNumber, channel2.OrderNumber);
@@ -650,42 +645,74 @@ namespace DelftTools.Hydro.Tests.Helpers
             //          (50,0) n4
 
             var network = new HydroNetwork();
-            var n1 = new HydroNode { Network = network, Geometry = new Point(new Coordinate(50, 50)), Name = "n1" };
-            var n2 = new HydroNode { Network = network, Geometry = new Point(new Coordinate(50, 100)), Name = "n2" };
-            var n3 = new HydroNode { Network = network, Geometry = new Point(new Coordinate(100, 50)), Name = "n3" };
-            var n4 = new HydroNode { Network = network, Geometry = new Point(new Coordinate(50, 0)), Name = "n4" };
+            var n1 = new HydroNode
+            {
+                Network = network,
+                Geometry = new Point(new Coordinate(50, 50)),
+                Name = "n1"
+            };
+            var n2 = new HydroNode
+            {
+                Network = network,
+                Geometry = new Point(new Coordinate(50, 100)),
+                Name = "n2"
+            };
+            var n3 = new HydroNode
+            {
+                Network = network,
+                Geometry = new Point(new Coordinate(100, 50)),
+                Name = "n3"
+            };
+            var n4 = new HydroNode
+            {
+                Network = network,
+                Geometry = new Point(new Coordinate(50, 0)),
+                Name = "n4"
+            };
             var channel1 = new Channel
-                            {
-                                Geometry = new LineString(new[] { new Coordinate(50, 50), new Coordinate(50, 100) }),
-                                Source = n1,
-                                Target = n2,
-                                Name = "channel1",
-                                OrderNumber = 7 // the order of the remaining channels will be computed when adding
-                                                // them to the network
-                            };
+            {
+                Geometry = new LineString(new[]
+                {
+                    new Coordinate(50, 50),
+                    new Coordinate(50, 100)
+                }),
+                Source = n1,
+                Target = n2,
+                Name = "channel1",
+                OrderNumber = 7 // the order of the remaining channels will be computed when adding
+                // them to the network
+            };
 
             network.Nodes.Add(n1);
             network.Nodes.Add(n2);
             NetworkHelper.AddChannelToHydroNetwork(network, channel1);
 
             var channel2 = new Channel
-                            {
-                                Geometry = new LineString(new[] { new Coordinate(50, 50), new Coordinate(100, 50) }),
-                                Source = n1,
-                                Target = n3,
-                                Name = "channel2"
-                            };
+            {
+                Geometry = new LineString(new[]
+                {
+                    new Coordinate(50, 50),
+                    new Coordinate(100, 50)
+                }),
+                Source = n1,
+                Target = n3,
+                Name = "channel2"
+            };
 
             network.Nodes.Add(n3);
             NetworkHelper.AddChannelToHydroNetwork(network, channel2);
 
             var channel3 = new Channel
-                            {
-                                Geometry = new LineString(new[] { new Coordinate(50, 50), new Coordinate(50, 0) }),
-                                Source = n1,
-                                Target = n4,
-                                Name = "channel3"
-                            };
+            {
+                Geometry = new LineString(new[]
+                {
+                    new Coordinate(50, 50),
+                    new Coordinate(50, 0)
+                }),
+                Source = n1,
+                Target = n4,
+                Name = "channel3"
+            };
 
             network.Nodes.Add(n4);
             NetworkHelper.AddChannelToHydroNetwork(network, channel3);
@@ -696,10 +723,18 @@ namespace DelftTools.Hydro.Tests.Helpers
             // Now add a new channel from n1 to a new node (n5) at location (0,50). The order assigned to this
             // channel should be equal to: ((the order of the existing channel with the highest order) + 1)
 
-            var n5 = new HydroNode { Network = network, Geometry = new Point(new Coordinate(0, 50)) };
+            var n5 = new HydroNode
+            {
+                Network = network,
+                Geometry = new Point(new Coordinate(0, 50))
+            };
             var channel4 = new Channel
             {
-                Geometry = new LineString(new[] { new Coordinate(50, 50), new Coordinate(0, 50) }),
+                Geometry = new LineString(new[]
+                {
+                    new Coordinate(50, 50),
+                    new Coordinate(0, 50)
+                }),
                 Source = n1,
                 Target = n5
             };
@@ -725,13 +760,37 @@ namespace DelftTools.Hydro.Tests.Helpers
             //          (50,0) n4
 
             var network = new HydroNetwork();
-            var n1 = new HydroNode { Network = network, Geometry = new Point(new Coordinate(50, 50)), Name = "n1" };
-            var n2 = new HydroNode { Network = network, Geometry = new Point(new Coordinate(50, 100)), Name = "n2" };
-            var n3 = new HydroNode { Network = network, Geometry = new Point(new Coordinate(100, 50)), Name = "n3" };
-            var n4 = new HydroNode { Network = network, Geometry = new Point(new Coordinate(50, 0)), Name = "n4" };
+            var n1 = new HydroNode
+            {
+                Network = network,
+                Geometry = new Point(new Coordinate(50, 50)),
+                Name = "n1"
+            };
+            var n2 = new HydroNode
+            {
+                Network = network,
+                Geometry = new Point(new Coordinate(50, 100)),
+                Name = "n2"
+            };
+            var n3 = new HydroNode
+            {
+                Network = network,
+                Geometry = new Point(new Coordinate(100, 50)),
+                Name = "n3"
+            };
+            var n4 = new HydroNode
+            {
+                Network = network,
+                Geometry = new Point(new Coordinate(50, 0)),
+                Name = "n4"
+            };
             var channel1 = new Channel
             {
-                Geometry = new LineString(new[] { new Coordinate(50, 50), new Coordinate(50, 100) }),
+                Geometry = new LineString(new[]
+                {
+                    new Coordinate(50, 50),
+                    new Coordinate(50, 100)
+                }),
                 Source = n1,
                 Target = n2,
                 Name = "channel1" // we don't specify OrderNumber so it will use default value
@@ -743,7 +802,11 @@ namespace DelftTools.Hydro.Tests.Helpers
 
             var channel2 = new Channel
             {
-                Geometry = new LineString(new[] { new Coordinate(50, 50), new Coordinate(100, 50) }),
+                Geometry = new LineString(new[]
+                {
+                    new Coordinate(50, 50),
+                    new Coordinate(100, 50)
+                }),
                 Source = n1,
                 Target = n3,
                 Name = "channel2"
@@ -754,7 +817,11 @@ namespace DelftTools.Hydro.Tests.Helpers
 
             var channel3 = new Channel
             {
-                Geometry = new LineString(new[] { new Coordinate(50, 50), new Coordinate(50, 0) }),
+                Geometry = new LineString(new[]
+                {
+                    new Coordinate(50, 50),
+                    new Coordinate(50, 0)
+                }),
                 Source = n1,
                 Target = n4,
                 Name = "channel3"
@@ -769,10 +836,18 @@ namespace DelftTools.Hydro.Tests.Helpers
             // Now add a new channel from n1 to a new node (n5) at location (0,50). The order assigned to this
             // channel should be equal to the default value (-1) since all channels have this default value as well
 
-            var n5 = new HydroNode { Network = network, Geometry = new Point(new Coordinate(0, 50)) };
+            var n5 = new HydroNode
+            {
+                Network = network,
+                Geometry = new Point(new Coordinate(0, 50))
+            };
             var channel4 = new Channel
             {
-                Geometry = new LineString(new[] { new Coordinate(50, 50), new Coordinate(0, 50) }),
+                Geometry = new LineString(new[]
+                {
+                    new Coordinate(50, 50),
+                    new Coordinate(0, 50)
+                }),
                 Source = n1,
                 Target = n5
             };
@@ -798,17 +873,41 @@ namespace DelftTools.Hydro.Tests.Helpers
             // order number.
 
             var network = new HydroNetwork();
-            var n1 = new HydroNode { Network = network, Geometry = new Point(new Coordinate(50, 0)), Name = "n1" };
-            var n2 = new HydroNode { Network = network, Geometry = new Point(new Coordinate(50, 50)), Name = "n2" };
-            var n3 = new HydroNode { Network = network, Geometry = new Point(new Coordinate(100, 0)), Name = "n3" };
-            var n4 = new HydroNode { Network = network, Geometry = new Point(new Coordinate(100, 50)), Name = "n4" };
+            var n1 = new HydroNode
+            {
+                Network = network,
+                Geometry = new Point(new Coordinate(50, 0)),
+                Name = "n1"
+            };
+            var n2 = new HydroNode
+            {
+                Network = network,
+                Geometry = new Point(new Coordinate(50, 50)),
+                Name = "n2"
+            };
+            var n3 = new HydroNode
+            {
+                Network = network,
+                Geometry = new Point(new Coordinate(100, 0)),
+                Name = "n3"
+            };
+            var n4 = new HydroNode
+            {
+                Network = network,
+                Geometry = new Point(new Coordinate(100, 50)),
+                Name = "n4"
+            };
             var channel1 = new Channel
             {
-                Geometry = new LineString(new[] { new Coordinate(50, 0), new Coordinate(50, 50) }),
+                Geometry = new LineString(new[]
+                {
+                    new Coordinate(50, 0),
+                    new Coordinate(50, 50)
+                }),
                 Source = n1,
                 Target = n2,
                 Name = "channel1",
-                OrderNumber =  1
+                OrderNumber = 1
             };
 
             network.Nodes.Add(n1);
@@ -817,7 +916,11 @@ namespace DelftTools.Hydro.Tests.Helpers
 
             var channel2 = new Channel
             {
-                Geometry = new LineString(new[] { new Coordinate(100, 0), new Coordinate(100, 50) }),
+                Geometry = new LineString(new[]
+                {
+                    new Coordinate(100, 0),
+                    new Coordinate(100, 50)
+                }),
                 Source = n3,
                 Target = n4,
                 Name = "channel2",
@@ -830,7 +933,11 @@ namespace DelftTools.Hydro.Tests.Helpers
 
             var channel3 = new Channel
             {
-                Geometry = new LineString(new[] { new Coordinate(50, 50), new Coordinate(100, 50) }),
+                Geometry = new LineString(new[]
+                {
+                    new Coordinate(50, 50),
+                    new Coordinate(100, 50)
+                }),
                 Source = n2,
                 Target = n4,
                 Name = "channel3"
@@ -847,11 +954,11 @@ namespace DelftTools.Hydro.Tests.Helpers
         [Test]
         public void ReverseBranchWithCrossSections()
         {
-            var network = CreateTestNetwork();
-            var branch1 = (IChannel)network.Branches[0];
+            IHydroNetwork network = CreateTestNetwork();
+            var branch1 = (IChannel) network.Branches[0];
 
-            var nodeFrom = branch1.Source;
-            var nodeTo = branch1.Target;
+            INode nodeFrom = branch1.Source;
+            INode nodeTo = branch1.Target;
 
             double offsetCrossSection1 = branch1.CrossSections.First().Chainage;
             double offsetCrossSection2 = branch1.CrossSections.Skip(1).First().Chainage;
@@ -868,11 +975,11 @@ namespace DelftTools.Hydro.Tests.Helpers
         [Test]
         public void ReverseBranchWithCrossSectionsForCustomLength()
         {
-            var network = CreateTestNetwork();
-            var branch1 = (IChannel)network.Branches[0];
+            IHydroNetwork network = CreateTestNetwork();
+            var branch1 = (IChannel) network.Branches[0];
 
-            var nodeFrom = branch1.Source;
-            var nodeTo = branch1.Target;
+            INode nodeFrom = branch1.Source;
+            INode nodeTo = branch1.Target;
 
             double offsetCrossSection1 = branch1.CrossSections.First().Chainage;
             double offsetCrossSection2 = branch1.CrossSections.Skip(1).First().Chainage;
@@ -886,98 +993,33 @@ namespace DelftTools.Hydro.Tests.Helpers
             Assert.IsNull(network.CurrentEditAction);
             Assert.AreEqual(nodeFrom, branch1.Target);
             Assert.AreEqual(nodeTo, branch1.Source);
-            Assert.AreEqual(customLength - offsetCrossSection2 * 4, branch1.CrossSections.First().Chainage, BranchFeature.Epsilon);
-            Assert.AreEqual(customLength - offsetCrossSection1 * 4, branch1.CrossSections.Skip(1).First().Chainage, BranchFeature.Epsilon);
-        }
-
-        /// <summary>
-        /// Creates a simple test network of 1 branch and 2 nodes. The branch has '3' parts, in the center of
-        /// the first and last is a cross section.
-        ///                 n
-        ///                /
-        ///               /
-        ///              cs
-        ///             /
-        ///     -------/
-        ///    /
-        ///   cs
-        ///  /
-        /// n
-        /// </summary>
-        /// <returns></returns>
-        private static IHydroNetwork CreateSegmentTestNetwork()
-        {
-            var network = new HydroNetwork();
-            var branch1 = new Channel
-                              {
-                                  Geometry = new LineString(new[]
-                                                                {
-                                                                    new Coordinate(0, 0), new Coordinate(0, 100),
-                                                                })
-                              };
-
-            var node1 = new HydroNode { Network = network, Geometry = new Point(new Coordinate(0, 0)) };
-            var node2 = new HydroNode { Network = network, Geometry = new Point(new Coordinate(100, 0)) };
-
-            network.Branches.Add(branch1);
-            network.Nodes.Add(node1);
-            network.Nodes.Add(node2);
-
-            branch1.Source = node1;
-            branch1.Target = node2;
-
-            return network;
-        }
-
-        private static void AddTestStructureAt(IHydroNetwork network, IChannel branch, double offset)
-        {
-            IWeir weir = new Weir { Chainage = offset };
-            var compositeBranchStructure = new CompositeBranchStructure
-                                                                    {
-                                                                        Network = network,
-                                                                        Geometry = new Point(offset, 0),
-                                                                        Chainage = offset
-                                                                    };
-            compositeBranchStructure.Structures.Add(weir);
-            branch.BranchFeatures.Add(compositeBranchStructure);
-        }
-
-        private static void AddTestCrossSectionAt(IChannel branch, double offset)
-        {
-            var crossSectionXyz = new CrossSectionDefinitionXYZ
-                                      {
-                                          Geometry =  new LineString(new[]
-                                                                 {
-                                                                     new Coordinate(offset - 1, 0),
-                                                                     new Coordinate(offset + 1, 0)
-                                                                 })
-                                      };
-            HydroNetworkHelper.AddCrossSectionDefinitionToBranch(branch, crossSectionXyz, offset);
+            Assert.AreEqual(customLength - (offsetCrossSection2 * 4), branch1.CrossSections.First().Chainage, BranchFeature.Epsilon);
+            Assert.AreEqual(customLength - (offsetCrossSection1 * 4), branch1.CrossSections.Skip(1).First().Chainage, BranchFeature.Epsilon);
         }
 
         [Test]
         public void CreateSegments1Structure()
         {
             IHydroNetwork network = CreateSegmentTestNetwork();
-            var branch1 = network.Channels.First();
+            IChannel branch1 = network.Channels.First();
 
             AddTestStructureAt(network, branch1, 10);
 
             var networkCoverage = new Discretization
-                                      {
-                                          Network = network,
-                                          SegmentGenerationMethod = SegmentGenerationMethod.SegmentBetweenLocations
-                                      };
+            {
+                Network = network,
+                SegmentGenerationMethod = SegmentGenerationMethod.SegmentBetweenLocations
+            };
 
             HydroNetworkHelper.GenerateDiscretization(networkCoverage, // networkCoverage
-                                                      branch1,  // branch
-                                                      0, // minimumDistance
-                                                      true,  // gridAtStructure
-                                                      0.5, // structureDistance
-                                                      false, // gridAtCrossSection
-                                                      false, // gridAtLateralSource
-                                                      false, // gridAtFixedLength
-                                                      -1); // fixedLength
+                                                      branch1,         // branch
+                                                      0,               // minimumDistance
+                                                      true,            // gridAtStructure
+                                                      0.5,             // structureDistance
+                                                      false,           // gridAtCrossSection
+                                                      false,           // gridAtLateralSource
+                                                      false,           // gridAtFixedLength
+                                                      -1);             // fixedLength
             Assert.AreEqual(4, networkCoverage.Locations.Values.Count);
             Assert.AreEqual(0.0, networkCoverage.Locations.Values[0].Chainage, BranchFeature.Epsilon);
             Assert.AreEqual(9.5, networkCoverage.Locations.Values[1].Chainage, BranchFeature.Epsilon);
@@ -989,27 +1031,27 @@ namespace DelftTools.Hydro.Tests.Helpers
         public void CreateSegmentsMultipleStructures()
         {
             IHydroNetwork network = CreateSegmentTestNetwork();
-            var branch1 = network.Channels.First();
+            IChannel branch1 = network.Channels.First();
 
             AddTestStructureAt(network, branch1, 20);
             AddTestStructureAt(network, branch1, 40);
             AddTestStructureAt(network, branch1, 60);
 
             var networkCoverage = new Discretization
-                                      {
-                                          Network = network,
-                                          SegmentGenerationMethod = SegmentGenerationMethod.SegmentBetweenLocations
-                                      };
+            {
+                Network = network,
+                SegmentGenerationMethod = SegmentGenerationMethod.SegmentBetweenLocations
+            };
 
             HydroNetworkHelper.GenerateDiscretization(networkCoverage, // networkCoverage
-                                                      branch1,  // branch
-                                                      0, // minimumDistance
-                                                      true,  // gridAtStructure
-                                                      0.5, // structureDistance
-                                                      false, // gridAtCrossSection
-                                                      false, // gridAtLateralSource
-                                                      false, // gridAtFixedLength
-                                                      -1); // fixedLength
+                                                      branch1,         // branch
+                                                      0,               // minimumDistance
+                                                      true,            // gridAtStructure
+                                                      0.5,             // structureDistance
+                                                      false,           // gridAtCrossSection
+                                                      false,           // gridAtLateralSource
+                                                      false,           // gridAtFixedLength
+                                                      -1);             // fixedLength
             Assert.AreEqual(8, networkCoverage.Locations.Values.Count);
             Assert.AreEqual(0.0, networkCoverage.Locations.Values[0].Chainage, BranchFeature.Epsilon);
             Assert.AreEqual(19.5, networkCoverage.Locations.Values[1].Chainage, BranchFeature.Epsilon);
@@ -1025,25 +1067,25 @@ namespace DelftTools.Hydro.Tests.Helpers
         public void CreateSegments1StructureAtMinimumBeginBranch()
         {
             IHydroNetwork network = CreateSegmentTestNetwork();
-            var branch1 = network.Channels.First();
+            IChannel branch1 = network.Channels.First();
 
             AddTestStructureAt(network, branch1, 0.4);
 
             var networkCoverage = new Discretization
-                                      {
-                                          Network = network,
-                                          SegmentGenerationMethod = SegmentGenerationMethod.SegmentBetweenLocations
-                                      };
+            {
+                Network = network,
+                SegmentGenerationMethod = SegmentGenerationMethod.SegmentBetweenLocations
+            };
 
             HydroNetworkHelper.GenerateDiscretization(networkCoverage, // networkCoverage
-                                                      branch1, // branch
-                                                      0.5, // minimumDistance
-                                                      true,  // gridAtStructure
-                                                      0.5, // structureDistance
-                                                      false, // gridAtCrossSection
-                                                      false, // gridAtLateralSource
-                                                      false, // gridAtFixedLength
-                                                      -1); // fixedLength
+                                                      branch1,         // branch
+                                                      0.5,             // minimumDistance
+                                                      true,            // gridAtStructure
+                                                      0.5,             // structureDistance
+                                                      false,           // gridAtCrossSection
+                                                      false,           // gridAtLateralSource
+                                                      false,           // gridAtFixedLength
+                                                      -1);             // fixedLength
 
             // structure at less than minimumdistance; expect 1 point left out
             // [----------------------
@@ -1060,25 +1102,25 @@ namespace DelftTools.Hydro.Tests.Helpers
         public void CreateSegments1StructureAtNearMinimumBeginBranch()
         {
             IHydroNetwork network = CreateSegmentTestNetwork();
-            var branch1 = network.Channels.First();
+            IChannel branch1 = network.Channels.First();
 
             AddTestStructureAt(network, branch1, 0.8);
 
             var networkCoverage = new Discretization
-                                      {
-                                          Network = network,
-                                          SegmentGenerationMethod = SegmentGenerationMethod.SegmentBetweenLocations
-                                      };
+            {
+                Network = network,
+                SegmentGenerationMethod = SegmentGenerationMethod.SegmentBetweenLocations
+            };
 
             HydroNetworkHelper.GenerateDiscretization(networkCoverage, // networkCoverage
-                                                      branch1, // branch
-                                                      0.5, // minimumDistance
-                                                      true,  // gridAtStructure
-                                                      0.5, // structureDistance
-                                                      false, // gridAtCrossSection
-                                                      false, // gridAtLateralSource
-                                                      false, // gridAtFixedLength
-                                                      -1); // fixedLength
+                                                      branch1,         // branch
+                                                      0.5,             // minimumDistance
+                                                      true,            // gridAtStructure
+                                                      0.5,             // structureDistance
+                                                      false,           // gridAtCrossSection
+                                                      false,           // gridAtLateralSource
+                                                      false,           // gridAtFixedLength
+                                                      -1);             // fixedLength
 
             // structure at near minimumdistance; expect point centered at 0.8 - 0.5 = 0.3 not created
             // [----------------------
@@ -1097,26 +1139,26 @@ namespace DelftTools.Hydro.Tests.Helpers
         public void CreateSegments2StructureAtNearMinimumBeginBranch()
         {
             IHydroNetwork network = CreateSegmentTestNetwork();
-            var branch1 = network.Channels.First();
+            IChannel branch1 = network.Channels.First();
 
             AddTestStructureAt(network, branch1, 0.8);
             AddTestStructureAt(network, branch1, 1.2);
 
             var networkCoverage = new Discretization
-                                      {
-                                          Network = network,
-                                          SegmentGenerationMethod = SegmentGenerationMethod.SegmentBetweenLocations
-                                      };
+            {
+                Network = network,
+                SegmentGenerationMethod = SegmentGenerationMethod.SegmentBetweenLocations
+            };
 
             HydroNetworkHelper.GenerateDiscretization(networkCoverage, // networkCoverage
-                                                      branch1, // branch
-                                                      0.001, // minimumDistance
-                                                      true,  // gridAtStructure
-                                                      0.5, // structureDistance
-                                                      false, // gridAtCrossSection
-                                                      false, // gridAtLateralSource
-                                                      false, // gridAtFixedLength
-                                                      -1); // fixedLength
+                                                      branch1,         // branch
+                                                      0.001,           // minimumDistance
+                                                      true,            // gridAtStructure
+                                                      0.5,             // structureDistance
+                                                      false,           // gridAtCrossSection
+                                                      false,           // gridAtLateralSource
+                                                      false,           // gridAtFixedLength
+                                                      -1);             // fixedLength
 
             // structure at near minimumdistance; expect 1 point centered at first segment
             // [----------------------
@@ -1134,14 +1176,14 @@ namespace DelftTools.Hydro.Tests.Helpers
 
             // repeat with minimumDistance set to 0.5
             HydroNetworkHelper.GenerateDiscretization(networkCoverage, // networkCoverage
-                                                      branch1, // branch
-                                                      0.5, // minimumDistance
-                                                      true,  // gridAtStructure
-                                                      0.5, // structureDistance
-                                                      false, // gridAtCrossSection
-                                                      false, // gridAtLateralSource
-                                                      false, // gridAtFixedLength
-                                                      -1); // fixedLength
+                                                      branch1,         // branch
+                                                      0.5,             // minimumDistance
+                                                      true,            // gridAtStructure
+                                                      0.5,             // structureDistance
+                                                      false,           // gridAtCrossSection
+                                                      false,           // gridAtLateralSource
+                                                      false,           // gridAtFixedLength
+                                                      -1);             // fixedLength
             // expect gridpoints at 0.3 eliminated
             Assert.AreEqual(4, networkCoverage.Locations.Values.Count);
             Assert.AreEqual(0.0, networkCoverage.Locations.Values[0].Chainage, BranchFeature.Epsilon);
@@ -1154,25 +1196,25 @@ namespace DelftTools.Hydro.Tests.Helpers
         public void CreateSegments1StructureAtMinimumEndBranch()
         {
             IHydroNetwork network = CreateSegmentTestNetwork();
-            var branch1 = network.Channels.First();
+            IChannel branch1 = network.Channels.First();
 
             AddTestStructureAt(network, branch1, 99.6);
 
             var networkCoverage = new Discretization
-                                      {
-                                          Network = network,
-                                          SegmentGenerationMethod = SegmentGenerationMethod.SegmentBetweenLocations
-                                      };
+            {
+                Network = network,
+                SegmentGenerationMethod = SegmentGenerationMethod.SegmentBetweenLocations
+            };
 
             HydroNetworkHelper.GenerateDiscretization(networkCoverage, // networkCoverage
-                                                      branch1, // branch
-                                                      0.5, // minimumDistance
-                                                      true,  // gridAtStructure
-                                                      0.5, // structureDistance
-                                                      false, // gridAtCrossSection
-                                                      false, // gridAtLateralSource
-                                                      false, // gridAtFixedLength
-                                                      -1); // fixedLength
+                                                      branch1,         // branch
+                                                      0.5,             // minimumDistance
+                                                      true,            // gridAtStructure
+                                                      0.5,             // structureDistance
+                                                      false,           // gridAtCrossSection
+                                                      false,           // gridAtLateralSource
+                                                      false,           // gridAtFixedLength
+                                                      -1);             // fixedLength
 
             // structure at less than minimumdistance; expect 1 point left out
             // [-----------------------------------------------------]
@@ -1189,26 +1231,26 @@ namespace DelftTools.Hydro.Tests.Helpers
         public void CreateSegments2StructureAtNearMinimumEndBranch()
         {
             IHydroNetwork network = CreateSegmentTestNetwork();
-            var branch1 = network.Channels.First();
+            IChannel branch1 = network.Channels.First();
 
             AddTestStructureAt(network, branch1, 99.2);
             AddTestStructureAt(network, branch1, 98.8);
 
             var networkCoverage = new Discretization
-                                      {
-                                          Network = network,
-                                          SegmentGenerationMethod = SegmentGenerationMethod.SegmentBetweenLocations
-                                      };
+            {
+                Network = network,
+                SegmentGenerationMethod = SegmentGenerationMethod.SegmentBetweenLocations
+            };
 
             HydroNetworkHelper.GenerateDiscretization(networkCoverage, // networkCoverage
-                                                      branch1, // branch
-                                                      0.5, // minimumDistance
-                                                      true,  // gridAtStructure
-                                                      0.5, // structureDistance
-                                                      false, // gridAtCrossSection
-                                                      false, // gridAtLateralSource
-                                                      false, // gridAtFixedLength
-                                                      -1); // fixedLength
+                                                      branch1,         // branch
+                                                      0.5,             // minimumDistance
+                                                      true,            // gridAtStructure
+                                                      0.5,             // structureDistance
+                                                      false,           // gridAtCrossSection
+                                                      false,           // gridAtLateralSource
+                                                      false,           // gridAtFixedLength
+                                                      -1);             // fixedLength
 
             // structure at near minimumdistance; expect 1 point centered at first segment
             // structure at less than minimumdistance; expect 1 point left out
@@ -1229,26 +1271,25 @@ namespace DelftTools.Hydro.Tests.Helpers
         public void CreateSegmentsCrossSection()
         {
             IHydroNetwork network = CreateSegmentTestNetwork();
-            var branch1 = network.Channels.First();
+            IChannel branch1 = network.Channels.First();
 
             AddTestCrossSectionAt(branch1, 50.0);
 
             var networkCoverage = new Discretization
-                                      {
-                                          Network = network,
-                                          SegmentGenerationMethod = SegmentGenerationMethod.SegmentBetweenLocations
-                                      };
+            {
+                Network = network,
+                SegmentGenerationMethod = SegmentGenerationMethod.SegmentBetweenLocations
+            };
 
             HydroNetworkHelper.GenerateDiscretization(networkCoverage, // networkCoverage
-                                                      branch1, // branch
-                                                      0.5, // minimumDistance
-                                                      false,  // gridAtStructure
-                                                      0.5, // structureDistance
-                                                      true, // gridAtCrossSection
-                                                      false, // gridAtLateralSource
-                                                      false, // gridAtFixedLength
-                                                      -1); // fixedLength
-
+                                                      branch1,         // branch
+                                                      0.5,             // minimumDistance
+                                                      false,           // gridAtStructure
+                                                      0.5,             // structureDistance
+                                                      true,            // gridAtCrossSection
+                                                      false,           // gridAtLateralSource
+                                                      false,           // gridAtFixedLength
+                                                      -1);             // fixedLength
 
             Assert.AreEqual(3, networkCoverage.Locations.Values.Count);
             Assert.AreEqual(50.0, networkCoverage.Locations.Values[1].Chainage, BranchFeature.Epsilon);
@@ -1258,22 +1299,22 @@ namespace DelftTools.Hydro.Tests.Helpers
         public void CreateSegmentsFixedLocations()
         {
             IHydroNetwork network = CreateSegmentTestNetwork();
-            var branch1 = network.Channels.First();
+            IChannel branch1 = network.Channels.First();
             var discretization = new Discretization
-                                        {
-                                            Network = network,
-                                            SegmentGenerationMethod = SegmentGenerationMethod.SegmentBetweenLocations
-                                        };
+            {
+                Network = network,
+                SegmentGenerationMethod = SegmentGenerationMethod.SegmentBetweenLocations
+            };
 
             HydroNetworkHelper.GenerateDiscretization(discretization, // networkCoverage
-                                                      branch1, // branch
-                                                      0.5, // minimumDistance
-                                                      false,  // gridAtStructure
-                                                      0.5, // structureDistance
-                                                      false, // gridAtCrossSection
-                                                      false, //gridAtLateralSource
-                                                      true, // gridAtFixedLength
-                                                      10); // fixedLength
+                                                      branch1,        // branch
+                                                      0.5,            // minimumDistance
+                                                      false,          // gridAtStructure
+                                                      0.5,            // structureDistance
+                                                      false,          // gridAtCrossSection
+                                                      false,          //gridAtLateralSource
+                                                      true,           // gridAtFixedLength
+                                                      10);            // fixedLength
             Assert.AreEqual(11, discretization.Locations.Values.Count);
             Assert.AreEqual(0.0, discretization.Locations.Values[0].Chainage, BranchFeature.Epsilon);
             Assert.AreEqual(50.0, discretization.Locations.Values[5].Chainage, BranchFeature.Epsilon);
@@ -1285,14 +1326,14 @@ namespace DelftTools.Hydro.Tests.Helpers
             //DiscretizationHelper.SetUserDefinedGridPoint(networkLocation, true);
 
             HydroNetworkHelper.GenerateDiscretization(discretization, // networkCoverage
-                                                      branch1, // branch
-                                                      0.5, // minimumDistance
-                                                      false,  // gridAtStructure
-                                                      0.5, // structureDistance
-                                                      false, // gridAtCrossSection
-                                                      false, //gridAtLateralSource
-                                                      true, // gridAtFixedLength
-                                                      40); // fixedLength
+                                                      branch1,        // branch
+                                                      0.5,            // minimumDistance
+                                                      false,          // gridAtStructure
+                                                      0.5,            // structureDistance
+                                                      false,          // gridAtCrossSection
+                                                      false,          //gridAtLateralSource
+                                                      true,           // gridAtFixedLength
+                                                      40);            // fixedLength
             // expect values at 
             // - 0 and 100 start and end
             // - 70 for fixed location
@@ -1308,38 +1349,38 @@ namespace DelftTools.Hydro.Tests.Helpers
         [Test]
         public void CreateSegmentsForChannelWithCustomLength()
         {
-            var network = CreateTestNetwork();
-            var firstBranch = (IChannel)network.Branches[0];
+            IHydroNetwork network = CreateTestNetwork();
+            var firstBranch = (IChannel) network.Branches[0];
 
             var networkCoverage = new Discretization
-                                        {
-                                            Network = network,
-                                            SegmentGenerationMethod = SegmentGenerationMethod.SegmentBetweenLocations
-                                        };
+            {
+                Network = network,
+                SegmentGenerationMethod = SegmentGenerationMethod.SegmentBetweenLocations
+            };
 
             HydroNetworkHelper.GenerateDiscretization(networkCoverage, // networkCoverage
-                                                      firstBranch, // branch
-                                                      5.0, // minimumDistance
-                                                      false,  // gridAtStructure
-                                                      0.5, // structureDistance
-                                                      false, // gridAtCrossSection
-                                                      false, //gridAtLateralSource
-                                                      false, // gridAtFixedLength
-                                                      -1); // fixedLength
+                                                      firstBranch,     // branch
+                                                      5.0,             // minimumDistance
+                                                      false,           // gridAtStructure
+                                                      0.5,             // structureDistance
+                                                      false,           // gridAtCrossSection
+                                                      false,           //gridAtLateralSource
+                                                      false,           // gridAtFixedLength
+                                                      -1);             // fixedLength
 
             Assert.AreEqual(2, networkCoverage.Locations.Values.Count);
             Assert.AreEqual(1, networkCoverage.Segments.Values.Count);
             firstBranch.Length = firstBranch.Length * 2;
             firstBranch.IsLengthCustom = true;
             HydroNetworkHelper.GenerateDiscretization(networkCoverage, // networkCoverage
-                                                      firstBranch, // branch
-                                                      5.0, // minimumDistance
-                                                      false,  // gridAtStructure
-                                                      0.5, // structureDistance
-                                                      false, // gridAtCrossSection
-                                                      false, //gridAtLateralSource
-                                                      false, // gridAtFixedLength
-                                                      -1); // fixedLength
+                                                      firstBranch,     // branch
+                                                      5.0,             // minimumDistance
+                                                      false,           // gridAtStructure
+                                                      0.5,             // structureDistance
+                                                      false,           // gridAtCrossSection
+                                                      false,           //gridAtLateralSource
+                                                      false,           // gridAtFixedLength
+                                                      -1);             // fixedLength
 
             Assert.AreEqual(2, networkCoverage.Locations.Values.Count);
             Assert.AreEqual(1, networkCoverage.Segments.Values.Count);
@@ -1349,25 +1390,25 @@ namespace DelftTools.Hydro.Tests.Helpers
         public void CreateSegmentsCrossSectionAndMinimumDistance()
         {
             IHydroNetwork network = CreateSegmentTestNetwork();
-            var branch1 = network.Channels.First();
+            IChannel branch1 = network.Channels.First();
 
             AddTestCrossSectionAt(branch1, 1.0);
 
             var networkCoverage = new Discretization
-                                      {
-                                          Network = network,
-                                          SegmentGenerationMethod = SegmentGenerationMethod.SegmentBetweenLocations
-                                      };
+            {
+                Network = network,
+                SegmentGenerationMethod = SegmentGenerationMethod.SegmentBetweenLocations
+            };
 
             HydroNetworkHelper.GenerateDiscretization(networkCoverage, // networkCoverage
-                                                      branch1, // branch
-                                                      5.0, // minimumDistance
-                                                      false,  // gridAtStructure
-                                                      0.5, // structureDistance
-                                                      true, // gridAtCrossSection
-                                                      false, //gridAtLateralSource
-                                                      false, // gridAtFixedLength
-                                                      -1); // fixedLength
+                                                      branch1,         // branch
+                                                      5.0,             // minimumDistance
+                                                      false,           // gridAtStructure
+                                                      0.5,             // structureDistance
+                                                      true,            // gridAtCrossSection
+                                                      false,           //gridAtLateralSource
+                                                      false,           // gridAtFixedLength
+                                                      -1);             // fixedLength
 
             Assert.AreEqual(2, networkCoverage.Locations.Values.Count);
             Assert.AreEqual(0.0, networkCoverage.Locations.Values[0].Chainage, BranchFeature.Epsilon);
@@ -1378,25 +1419,25 @@ namespace DelftTools.Hydro.Tests.Helpers
         public void CreateSegmentsCrossSectionAndMinimumDistanceNearEnd()
         {
             IHydroNetwork network = CreateSegmentTestNetwork();
-            var branch1 = network.Channels.First();
+            IChannel branch1 = network.Channels.First();
 
             AddTestCrossSectionAt(branch1, 99.0);
 
             var networkCoverage = new Discretization
-                                      {
-                                          Network = network,
-                                          SegmentGenerationMethod = SegmentGenerationMethod.SegmentBetweenLocations
-                                      };
+            {
+                Network = network,
+                SegmentGenerationMethod = SegmentGenerationMethod.SegmentBetweenLocations
+            };
 
             HydroNetworkHelper.GenerateDiscretization(networkCoverage, // networkCoverage
-                                                      branch1, // branch
-                                                      5.0, // minimumDistance
-                                                      false,  // gridAtStructure
-                                                      0.5, // structureDistance
-                                                      true, // gridAtCrossSection
-                                                      false, //gridAtLateralSource
-                                                      false, // gridAtFixedLength
-                                                      -1); // fixedLength
+                                                      branch1,         // branch
+                                                      5.0,             // minimumDistance
+                                                      false,           // gridAtStructure
+                                                      0.5,             // structureDistance
+                                                      true,            // gridAtCrossSection
+                                                      false,           //gridAtLateralSource
+                                                      false,           // gridAtFixedLength
+                                                      -1);             // fixedLength
 
             Assert.AreEqual(2, networkCoverage.Locations.Values.Count);
             Assert.AreEqual(0.0, networkCoverage.Locations.Values[0].Chainage, BranchFeature.Epsilon);
@@ -1407,7 +1448,7 @@ namespace DelftTools.Hydro.Tests.Helpers
         public void CreateSegmentsMultipleCrossSection()
         {
             IHydroNetwork network = CreateSegmentTestNetwork();
-            var branch1 = network.Channels.First();
+            IChannel branch1 = network.Channels.First();
 
             // add multiple cross sections and generate calculation points at the cross section locations
             // Grid cells too smal should not be generated.
@@ -1419,20 +1460,20 @@ namespace DelftTools.Hydro.Tests.Helpers
             AddTestCrossSectionAt(branch1, 60.0);
 
             var networkCoverage = new Discretization
-                                      {
-                                          Network = network,
-                                          SegmentGenerationMethod = SegmentGenerationMethod.SegmentBetweenLocations
-                                      };
+            {
+                Network = network,
+                SegmentGenerationMethod = SegmentGenerationMethod.SegmentBetweenLocations
+            };
 
             HydroNetworkHelper.GenerateDiscretization(networkCoverage, // networkCoverage
-                                                      branch1, // branch
-                                                      5.0, // minimumDistance
-                                                      false,  // gridAtStructure
-                                                      0.5, // structureDistance
-                                                      true, // gridAtCrossSection
-                                                      false, //gridAtLateralSource
-                                                      false, // gridAtFixedLength
-                                                      -1); // fixedLength
+                                                      branch1,         // branch
+                                                      5.0,             // minimumDistance
+                                                      false,           // gridAtStructure
+                                                      0.5,             // structureDistance
+                                                      true,            // gridAtCrossSection
+                                                      false,           //gridAtLateralSource
+                                                      false,           // gridAtFixedLength
+                                                      -1);             // fixedLength
 
             Assert.AreEqual(8, networkCoverage.Locations.Values.Count);
             Assert.AreEqual(0.0, networkCoverage.Locations.Values[0].Chainage, BranchFeature.Epsilon);
@@ -1449,7 +1490,7 @@ namespace DelftTools.Hydro.Tests.Helpers
         public void CreateSegmentsMultipleCrossSectionAndMinimumDistance()
         {
             IHydroNetwork network = CreateSegmentTestNetwork();
-            var branch1 = network.Channels.First();
+            IChannel branch1 = network.Channels.First();
 
             // add multiple cross sections and generate calculation points at the cross section locations
             // Grid cells too smal should not be generated.
@@ -1461,20 +1502,20 @@ namespace DelftTools.Hydro.Tests.Helpers
             AddTestCrossSectionAt(branch1, 6.0);
 
             var networkCoverage = new Discretization
-                                      {
-                                          Network = network,
-                                          SegmentGenerationMethod = SegmentGenerationMethod.SegmentBetweenLocations
-                                      };
+            {
+                Network = network,
+                SegmentGenerationMethod = SegmentGenerationMethod.SegmentBetweenLocations
+            };
 
             HydroNetworkHelper.GenerateDiscretization(networkCoverage, // networkCoverage
-                                                      branch1, // branch
-                                                      5.0, // minimumDistance
-                                                      false,  // gridAtStructure
-                                                      0.5, // structureDistance
-                                                      true, // gridAtCrossSection
-                                                      false, //gridAtLateralSource
-                                                      false, // gridAtFixedLength
-                                                      -1); // fixedLength
+                                                      branch1,         // branch
+                                                      5.0,             // minimumDistance
+                                                      false,           // gridAtStructure
+                                                      0.5,             // structureDistance
+                                                      true,            // gridAtCrossSection
+                                                      false,           //gridAtLateralSource
+                                                      false,           // gridAtFixedLength
+                                                      -1);             // fixedLength
 
             Assert.AreEqual(3, networkCoverage.Locations.Values.Count);
             Assert.AreEqual(0.0, networkCoverage.Locations.Values[0].Chainage, BranchFeature.Epsilon);
@@ -1486,7 +1527,7 @@ namespace DelftTools.Hydro.Tests.Helpers
         public void CreateSegmentsMultipleLateralsAndMinimumDistance()
         {
             IHydroNetwork network = CreateSegmentTestNetwork();
-            var branch1 = network.Channels.First();
+            IChannel branch1 = network.Channels.First();
 
             // add multiple cross sections and generate calculation points at the cross section locations
             // Grid cells too smal should not be generated.
@@ -1498,32 +1539,32 @@ namespace DelftTools.Hydro.Tests.Helpers
             AddLateralAt(branch1, 6.0);
 
             var networkCoverage = new Discretization
-                                        {
-                                            Network = network,
-                                            SegmentGenerationMethod = SegmentGenerationMethod.SegmentBetweenLocations
-                                        };
+            {
+                Network = network,
+                SegmentGenerationMethod = SegmentGenerationMethod.SegmentBetweenLocations
+            };
 
             HydroNetworkHelper.GenerateDiscretization(networkCoverage, // networkCoverage
-                                                      branch1, // branch
-                                                      5.0, // minimumDistance
-                                                      false,  // gridAtStructure
-                                                      0.5, // structureDistance
-                                                      false, // gridAtCrossSection
-                                                      true, //gridAtLateralSource
-                                                      false, // gridAtFixedLength
-                                                      -1); // fixedLength
+                                                      branch1,         // branch
+                                                      5.0,             // minimumDistance
+                                                      false,           // gridAtStructure
+                                                      0.5,             // structureDistance
+                                                      false,           // gridAtCrossSection
+                                                      true,            //gridAtLateralSource
+                                                      false,           // gridAtFixedLength
+                                                      -1);             // fixedLength
 
             Assert.AreEqual(3, networkCoverage.Locations.Values.Count);
             Assert.AreEqual(0.0, networkCoverage.Locations.Values[0].Chainage, BranchFeature.Epsilon);
             Assert.AreEqual(5.0, networkCoverage.Locations.Values[1].Chainage, BranchFeature.Epsilon);
             Assert.AreEqual(100.0, networkCoverage.Locations.Values[2].Chainage, BranchFeature.Epsilon);
         }
-        
+
         [Test]
         public void CreateSegmentsMultipleLaterals()
         {
             IHydroNetwork network = CreateSegmentTestNetwork();
-            var branch1 = network.Channels.First();
+            IChannel branch1 = network.Channels.First();
 
             // add multiple cross sections and generate calculation points at the cross section locations
             // Grid cells too smal should not be generated.
@@ -1535,20 +1576,20 @@ namespace DelftTools.Hydro.Tests.Helpers
             AddLateralAt(branch1, 6.0);
 
             var networkCoverage = new Discretization
-                                      {
-                                        Network = network,
-                                        SegmentGenerationMethod = SegmentGenerationMethod.SegmentBetweenLocations
-                                      };
+            {
+                Network = network,
+                SegmentGenerationMethod = SegmentGenerationMethod.SegmentBetweenLocations
+            };
 
             HydroNetworkHelper.GenerateDiscretization(networkCoverage, // networkCoverage
-                                                      branch1, // branch
-                                                      1.0, // minimumDistance
-                                                      false,  // gridAtStructure
-                                                      0.5, // structureDistance
-                                                      false, // gridAtCrossSection
-                                                      true, //gridAtLateralSource
-                                                      false, // gridAtFixedLength
-                                                      -1); // fixedLength
+                                                      branch1,         // branch
+                                                      1.0,             // minimumDistance
+                                                      false,           // gridAtStructure
+                                                      0.5,             // structureDistance
+                                                      false,           // gridAtCrossSection
+                                                      true,            //gridAtLateralSource
+                                                      false,           // gridAtFixedLength
+                                                      -1);             // fixedLength
 
             Assert.AreEqual(8, networkCoverage.Locations.Values.Count);
             Assert.AreEqual(0.0, networkCoverage.Locations.Values[0].Chainage, BranchFeature.Epsilon);
@@ -1560,7 +1601,7 @@ namespace DelftTools.Hydro.Tests.Helpers
         public void DoNotCreateSegmentsMultipleLateralsAndMinimumDistance()
         {
             IHydroNetwork network = CreateSegmentTestNetwork();
-            var branch1 = network.Channels.First();
+            IChannel branch1 = network.Channels.First();
 
             // add multiple cross sections and generate calculation points at the cross section locations
             // Grid cells too smal should not be generated.
@@ -1572,54 +1613,48 @@ namespace DelftTools.Hydro.Tests.Helpers
             AddLateralAt(branch1, 6.0);
 
             var networkCoverage = new Discretization
-                                        {
-                                            Network = network,
-                                            SegmentGenerationMethod = SegmentGenerationMethod.SegmentBetweenLocations
-                                        };
+            {
+                Network = network,
+                SegmentGenerationMethod = SegmentGenerationMethod.SegmentBetweenLocations
+            };
 
             HydroNetworkHelper.GenerateDiscretization(networkCoverage, // networkCoverage
-                                                      branch1, // branch
-                                                      5.0, // minimumDistance
-                                                      false,  // gridAtStructure
-                                                      0.5, // structureDistance
-                                                      false, // gridAtCrossSection
-                                                      false, //gridAtLateralSource
-                                                      false, // gridAtFixedLength
-                                                      -1); // fixedLength
+                                                      branch1,         // branch
+                                                      5.0,             // minimumDistance
+                                                      false,           // gridAtStructure
+                                                      0.5,             // structureDistance
+                                                      false,           // gridAtCrossSection
+                                                      false,           //gridAtLateralSource
+                                                      false,           // gridAtFixedLength
+                                                      -1);             // fixedLength
 
             Assert.AreEqual(2, networkCoverage.Locations.Values.Count);
             Assert.AreEqual(0.0, networkCoverage.Locations.Values[0].Chainage, BranchFeature.Epsilon);
             Assert.AreEqual(100.0, networkCoverage.Locations.Values[1].Chainage, BranchFeature.Epsilon);
         }
 
-        private static void AddLateralAt(IChannel branch, double offset)
-        {
-            NetworkHelper.AddBranchFeatureToBranch(new LateralSource(), branch, offset);
-        }
-
         [Test]
         public void CreateSegmentsMultipleCrossSectionsAndFixedPoint()
         {
             IHydroNetwork network = CreateSegmentTestNetwork();
-            var branch1 = network.Channels.First();
+            IChannel branch1 = network.Channels.First();
 
             var discretization = new Discretization
-                                     {
-                                          Network = network,
-                                          SegmentGenerationMethod = SegmentGenerationMethod.SegmentBetweenLocations
-                                      };
+            {
+                Network = network,
+                SegmentGenerationMethod = SegmentGenerationMethod.SegmentBetweenLocations
+            };
 
             HydroNetworkHelper.GenerateDiscretization(discretization, // networkCoverage
-                                                      branch1, // branch
-                                                      5.0, // minimumDistance
-                                                      false,  // gridAtStructure
-                                                      0.5, // structureDistance
-                                                      false, // gridAtCrossSection
-                                                      false, //gridAtLateralSource
-                                                      true, // gridAtFixedLength
-                                                      2); // fixedLength
+                                                      branch1,        // branch
+                                                      5.0,            // minimumDistance
+                                                      false,          // gridAtStructure
+                                                      0.5,            // structureDistance
+                                                      false,          // gridAtCrossSection
+                                                      false,          //gridAtLateralSource
+                                                      true,           // gridAtFixedLength
+                                                      2);             // fixedLength
             Assert.AreEqual(51, discretization.Locations.Values.Count);
-
 
             INetworkLocation networkLocation = discretization.Locations.Values.Where(nl => nl.Chainage == 8).First();
             discretization.ToggleFixedPoint(networkLocation);
@@ -1631,14 +1666,14 @@ namespace DelftTools.Hydro.Tests.Helpers
             AddTestCrossSectionAt(branch1, 30.0);
 
             HydroNetworkHelper.GenerateDiscretization(discretization, // networkCoverage
-                                                      branch1, // branch
-                                                      5.0, // minimumDistance
-                                                      false,  // gridAtStructure
-                                                      0.5, // structureDistance
-                                                      true, // gridAtCrossSection
-                                                      false, //gridAtLateralSource
-                                                      false, // gridAtFixedLength
-                                                      -1); // fixedLength
+                                                      branch1,        // branch
+                                                      5.0,            // minimumDistance
+                                                      false,          // gridAtStructure
+                                                      0.5,            // structureDistance
+                                                      true,           // gridAtCrossSection
+                                                      false,          //gridAtLateralSource
+                                                      false,          // gridAtFixedLength
+                                                      -1);            // fixedLength
             // expect gridpoints at:
             // begin and end 0 and 100
             // fixed locations 8 and 32.
@@ -1656,25 +1691,24 @@ namespace DelftTools.Hydro.Tests.Helpers
         public void CreateSegmentsMultipleStructuresAndFixedPoint()
         {
             IHydroNetwork network = CreateSegmentTestNetwork();
-            var branch1 = network.Channels.First();
+            IChannel branch1 = network.Channels.First();
 
             var discretization = new Discretization
-                                     {
-                                          Network = network,
-                                          SegmentGenerationMethod = SegmentGenerationMethod.SegmentBetweenLocations
-                                      };
+            {
+                Network = network,
+                SegmentGenerationMethod = SegmentGenerationMethod.SegmentBetweenLocations
+            };
 
             HydroNetworkHelper.GenerateDiscretization(discretization, // networkCoverage
-                                                      branch1, // branch
-                                                      5.0, // minimumDistance
-                                                      false,  // gridAtStructure
-                                                      0.5, // structureDistance
-                                                      false, // gridAtCrossSection
-                                                      false, //gridAtLateralSource
-                                                      true, // gridAtFixedLength
-                                                      2); // fixedLength
+                                                      branch1,        // branch
+                                                      5.0,            // minimumDistance
+                                                      false,          // gridAtStructure
+                                                      0.5,            // structureDistance
+                                                      false,          // gridAtCrossSection
+                                                      false,          //gridAtLateralSource
+                                                      true,           // gridAtFixedLength
+                                                      2);             // fixedLength
             Assert.AreEqual(51, discretization.Locations.Values.Count);
-
 
             INetworkLocation networkLocation = discretization.Locations.Values.Where(nl => nl.Chainage == 8).First();
             //DiscretizationHelper.SetUserDefinedGridPoint(networkLocation, true);
@@ -1688,14 +1722,14 @@ namespace DelftTools.Hydro.Tests.Helpers
             AddTestStructureAt(network, branch1, 30.0);
 
             HydroNetworkHelper.GenerateDiscretization(discretization, // networkCoverage
-                                                      branch1, // branch
-                                                      6.0, // minimumDistance
-                                                      true,  // gridAtStructure
-                                                      4.0, // structureDistance
-                                                      false, // gridAtCrossSection
-                                                      false, //gridAtLateralSource
-                                                      false, // gridAtFixedLength
-                                                      -1); // fixedLength
+                                                      branch1,        // branch
+                                                      6.0,            // minimumDistance
+                                                      true,           // gridAtStructure
+                                                      4.0,            // structureDistance
+                                                      false,          // gridAtCrossSection
+                                                      false,          //gridAtLateralSource
+                                                      false,          // gridAtFixedLength
+                                                      -1);            // fixedLength
             // expect gridpoints with no minimumDistance
             // 0  8 (6 14) (16 24) (26 34) 32 100 
             // 0  6 8 14 16 24 26 32 34 100
@@ -1748,12 +1782,21 @@ namespace DelftTools.Hydro.Tests.Helpers
             var channel = new Channel
             {
                 Geometry = new LineString(new[]
-                                    {
-                                        new Coordinate(0, 0), new Coordinate(1262.0, 0),
-                                    })
+                {
+                    new Coordinate(0, 0),
+                    new Coordinate(1262.0, 0),
+                })
             };
-            var node1 = new HydroNode { Network = network, Geometry = new Point(new Coordinate(0, 0)) };
-            var node2 = new HydroNode { Network = network, Geometry = new Point(new Coordinate(1262.0, 0)) };
+            var node1 = new HydroNode
+            {
+                Network = network,
+                Geometry = new Point(new Coordinate(0, 0))
+            };
+            var node2 = new HydroNode
+            {
+                Network = network,
+                Geometry = new Point(new Coordinate(1262.0, 0))
+            };
             network.Branches.Add(channel);
             network.Nodes.Add(node1);
             network.Nodes.Add(node2);
@@ -1778,14 +1821,14 @@ namespace DelftTools.Hydro.Tests.Helpers
             };
 
             HydroNetworkHelper.GenerateDiscretization(discretization, // networkCoverage
-                                                      channel, // branch
-                                                      0.5, // minimumDistance
-                                                      true,  // gridAtStructure
-                                                      1.0, // structureDistance
-                                                      true, // gridAtCrossSection
-                                                      false, //gridAtLateralSource
-                                                      false, // gridAtFixedLength
-                                                      -1); // fixedLength
+                                                      channel,        // branch
+                                                      0.5,            // minimumDistance
+                                                      true,           // gridAtStructure
+                                                      1.0,            // structureDistance
+                                                      true,           // gridAtCrossSection
+                                                      false,          //gridAtLateralSource
+                                                      false,          // gridAtFixedLength
+                                                      -1);            // fixedLength
 
             // expected at:
             //  0: 0 = start channel
@@ -1804,7 +1847,7 @@ namespace DelftTools.Hydro.Tests.Helpers
             // 13: 1262 = length channel
             // = skipped cross sections at 241.47 and 243.44
 
-            var gridPoints = discretization.Locations.Values;
+            IMultiDimensionalArray<INetworkLocation> gridPoints = discretization.Locations.Values;
             Assert.AreEqual(14, gridPoints.Count);
             Assert.AreEqual(0.0, gridPoints[0].Chainage, BranchFeature.Epsilon);
             Assert.AreEqual(1.0, gridPoints[1].Chainage, BranchFeature.Epsilon);
@@ -1820,43 +1863,33 @@ namespace DelftTools.Hydro.Tests.Helpers
             Assert.AreEqual(1254.95, gridPoints[11].Chainage, BranchFeature.Epsilon);
             Assert.AreEqual(1260.51, gridPoints[12].Chainage, BranchFeature.Epsilon);
             Assert.AreEqual(1262, gridPoints[13].Chainage, BranchFeature.Epsilon);
-
-        }
-
-        private static void AddCrossSection(Channel branch, double chainage)
-        {
-            var crossSection = new CrossSectionDefinitionXYZ
-                                   {
-                                       Geometry = new LineString(new[] { new Coordinate(chainage, 0), new Coordinate(chainage + 1, 0) }),
-                                   };
-            HydroNetworkHelper.AddCrossSectionDefinitionToBranch(branch, crossSection, chainage);
         }
 
         [Test]
         public void SendCustomActionForSplitBranch()
         {
-            var network = HydroNetworkHelper.GetSnakeHydroNetwork(new Point(0, 0), new Point(0, 100));
-            int callCount = 0;
+            IHydroNetwork network = HydroNetworkHelper.GetSnakeHydroNetwork(new Point(0, 0), new Point(0, 100));
+            var callCount = 0;
             IChannel channelToSplit = network.Channels.First();
-            ((INotifyPropertyChange)network).PropertyChanged += (s, e) =>
-                                                                     {
-                                                                         //finished editing
-                                                                         if ((e.PropertyName == "IsEditing") &&
-                                                                             (!network.IsEditing))
-                                                                         {
-                                                                             callCount++;
-                                                                             var editAction =
-                                                                                 (BranchSplitAction)
-                                                                                 network.CurrentEditAction;
-                                                                             Assert.AreEqual(channelToSplit,
-                                                                                             editAction.SplittedBranch);
-                                                                             Assert.AreEqual(50,
-                                                                                             editAction.SplittedBranch.Length);
-                                                                             Assert.AreEqual(
-                                                                                 network.Channels.ElementAt(1),
-                                                                                 editAction.NewBranch);
-                                                                         }
-                                                                     };
+            ((INotifyPropertyChange) network).PropertyChanged += (s, e) =>
+            {
+                //finished editing
+                if (e.PropertyName == "IsEditing" &&
+                    !network.IsEditing)
+                {
+                    callCount++;
+                    var editAction =
+                        (BranchSplitAction)
+                        network.CurrentEditAction;
+                    Assert.AreEqual(channelToSplit,
+                                    editAction.SplittedBranch);
+                    Assert.AreEqual(50,
+                                    editAction.SplittedBranch.Length);
+                    Assert.AreEqual(
+                        network.Channels.ElementAt(1),
+                        editAction.NewBranch);
+                }
+            };
 
             HydroNetworkHelper.SplitChannelAtNode(channelToSplit, 50);
             Assert.AreEqual(1, callCount);
@@ -1866,35 +1899,35 @@ namespace DelftTools.Hydro.Tests.Helpers
         [Test]
         public void ReverseBranchUsesEditAction()
         {
-            var network = HydroNetworkHelper.GetSnakeHydroNetwork(new Point(0, 0), new Point(0, 100));
+            IHydroNetwork network = HydroNetworkHelper.GetSnakeHydroNetwork(new Point(0, 0), new Point(0, 100));
 
             IChannel channelToReverse = network.Channels.First();
             channelToReverse.Name = "testChannel";
-            var testCoverage = new NetworkCoverage { Network = network };
+            var testCoverage = new NetworkCoverage {Network = network};
             testCoverage[new NetworkLocation(channelToReverse, 10)] = 1.1; // This value would map to offset 90, and should not generate issues (dictionary key duplication for example)
             testCoverage[new NetworkLocation(channelToReverse, 30)] = 2.2;
-            testCoverage[new NetworkLocation(channelToReverse, 90)] = 3.3; 
+            testCoverage[new NetworkLocation(channelToReverse, 90)] = 3.3;
 
-            int callCount = 0;
-            ((INotifyPropertyChange)network).PropertyChanged += (s, e) =>
-                                                                    {
-                                                                        //finished editing
-                                                                        if ((e.PropertyName == "IsEditing") &&
-                                                                            (!network.IsEditing))
-                                                                        {
-                                                                            callCount++;
-                                                                            Assert.IsTrue(network.CurrentEditAction is BranchReverseAction);
-                                                                            var editAction = (BranchReverseAction) network.CurrentEditAction;
-                                                                            Assert.AreEqual(channelToReverse, editAction.ReversedBranch);
-                                                                        }
-                                                                    };
+            var callCount = 0;
+            ((INotifyPropertyChange) network).PropertyChanged += (s, e) =>
+            {
+                //finished editing
+                if (e.PropertyName == "IsEditing" &&
+                    !network.IsEditing)
+                {
+                    callCount++;
+                    Assert.IsTrue(network.CurrentEditAction is BranchReverseAction);
+                    var editAction = (BranchReverseAction) network.CurrentEditAction;
+                    Assert.AreEqual(channelToReverse, editAction.ReversedBranch);
+                }
+            };
 
             HydroNetworkHelper.ReverseBranch(channelToReverse);
             Assert.AreEqual(1, callCount);
             Assert.IsNull(testCoverage.CurrentEditAction);
             Assert.IsNull(network.CurrentEditAction);
 
-            var locations = testCoverage.GetLocationsForBranch(channelToReverse);
+            IList<INetworkLocation> locations = testCoverage.GetLocationsForBranch(channelToReverse);
             Assert.AreEqual(10.0, locations[0].Chainage, BranchFeature.Epsilon);
             Assert.AreEqual(3.3, testCoverage[locations[0]]);
             Assert.AreEqual(70.0, locations[1].Chainage, BranchFeature.Epsilon);
@@ -1906,54 +1939,76 @@ namespace DelftTools.Hydro.Tests.Helpers
         [Test]
         public void ReverseBranchWithTimeDependentCoverage()
         {
-            var network = HydroNetworkHelper.GetSnakeHydroNetwork(new Point(0, 0), new Point(0, 100));
-            var testCoverage = new NetworkCoverage { Network = network, IsTimeDependent = true};
+            IHydroNetwork network = HydroNetworkHelper.GetSnakeHydroNetwork(new Point(0, 0), new Point(0, 100));
+            var testCoverage = new NetworkCoverage
+            {
+                Network = network,
+                IsTimeDependent = true
+            };
             IChannel channelToReverse = network.Channels.First();
 
             // Setup locations
-            var offsets = new[] {10, 30, 90};
-            var locations = from offset in offsets
-                            select new NetworkLocation(channelToReverse, offset);
+            var offsets = new[]
+            {
+                10,
+                30,
+                90
+            };
+            IEnumerable<NetworkLocation> locations = from offset in offsets
+                                                     select new NetworkLocation(channelToReverse, offset);
             testCoverage.Locations.FixedSize = 3;
             testCoverage.Locations.SetValues(locations.OrderBy(loc => loc));
-            
+
             // steup values
-            var values = new[] {1.1, 2.2, 3.3};
+            var values = new[]
+            {
+                1.1,
+                2.2,
+                3.3
+            };
 
             // setup time arguments
             var startTime = new DateTime(2000, 1, 1);
-            var times = from i in Enumerable.Range(1, 3)
-                        select startTime.AddDays(i);
+            IEnumerable<DateTime> times = from i in Enumerable.Range(1, 3)
+                                          select startTime.AddDays(i);
 
             // Set function values
-            int outputTimeStepIndex = 0;
-            foreach (var dateTime in times)
+            var outputTimeStepIndex = 0;
+            foreach (DateTime dateTime in times)
             {
                 var locationIndexFilter = new VariableIndexRangeFilter(testCoverage.Locations,
                                                                        0, testCoverage.Locations.FixedSize - 1);
                 var timeIndexFilter = new VariableIndexRangeFilter(testCoverage.Time, outputTimeStepIndex);
 
-                testCoverage.Time.AddValues(new[] {dateTime});
-                testCoverage.SetValues(values, new[]{locationIndexFilter,timeIndexFilter});
+                testCoverage.Time.AddValues(new[]
+                {
+                    dateTime
+                });
+                testCoverage.SetValues(values, new[]
+                {
+                    locationIndexFilter,
+                    timeIndexFilter
+                });
 
-                for (int i = 0; i < values.Length; i++)
+                for (var i = 0; i < values.Length; i++)
                 {
                     values[i]++;
                 }
+
                 outputTimeStepIndex++;
             }
 
             // Set up event listener
-            int callCount = 0;
-            ((INotifyPropertyChange)network).PropertyChanged += (s, e) =>
+            var callCount = 0;
+            ((INotifyPropertyChange) network).PropertyChanged += (s, e) =>
             {
                 //finished editing
-                if ((e.PropertyName == "IsEditing") &&
-                    (!network.IsEditing))
+                if (e.PropertyName == "IsEditing" &&
+                    !network.IsEditing)
                 {
                     callCount++;
                     Assert.IsTrue(network.CurrentEditAction is BranchReverseAction);
-                    var editAction = (BranchReverseAction)network.CurrentEditAction;
+                    var editAction = (BranchReverseAction) network.CurrentEditAction;
                     Assert.AreEqual(channelToReverse, editAction.ReversedBranch);
                 }
             };
@@ -1989,7 +2044,7 @@ namespace DelftTools.Hydro.Tests.Helpers
             Assert.IsNull(testCoverage.CurrentEditAction);
             Assert.IsNull(network.CurrentEditAction);
 
-            var postReversalLocations = testCoverage.GetLocationsForBranch(channelToReverse);
+            IList<INetworkLocation> postReversalLocations = testCoverage.GetLocationsForBranch(channelToReverse);
             // Assert correctness of L3 (now first in Locations)
             Assert.AreEqual(10.0, postReversalLocations[0].Chainage, BranchFeature.Epsilon);
             Assert.AreEqual(3.3, testCoverage.Evaluate(times.ElementAt(0), postReversalLocations[0]));
@@ -2010,45 +2065,94 @@ namespace DelftTools.Hydro.Tests.Helpers
         [Test]
         public void ReverseBranchWithMultipleArguments()
         {
-            var network = HydroNetworkHelper.GetSnakeHydroNetwork(new Point(0, 0), new Point(0, 100));
-            var testCoverage = new NetworkCoverage { Network = network };
+            IHydroNetwork network = HydroNetworkHelper.GetSnakeHydroNetwork(new Point(0, 0), new Point(0, 100));
+            var testCoverage = new NetworkCoverage {Network = network};
             IChannel channelToReverse = network.Channels.First();
 
             var argument1 = new Variable<double>();
-            argument1.SetValues(new[] { 1.0, 3.0 });
+            argument1.SetValues(new[]
+            {
+                1.0,
+                3.0
+            });
             var variable2 = new Variable<int>();
-            variable2.SetValues(new[] {5, 9});
+            variable2.SetValues(new[]
+            {
+                5,
+                9
+            });
 
             testCoverage.Arguments.Add(argument1);
 
             // Setup locations
-            var offsets = new[] { 10, 30, 90 };
-            var locations = from offset in offsets
-                            select new NetworkLocation(channelToReverse, offset);
+            var offsets = new[]
+            {
+                10,
+                30,
+                90
+            };
+            IEnumerable<NetworkLocation> locations = from offset in offsets
+                                                     select new NetworkLocation(channelToReverse, offset);
             testCoverage.Locations.FixedSize = 3;
             testCoverage.Locations.SetValues(locations.OrderBy(loc => loc));
 
             testCoverage.Arguments.Add(variable2);
 
-            int callCount = 0;
-            ((INotifyPropertyChange)network).PropertyChanged += (s, e) =>
+            var callCount = 0;
+            ((INotifyPropertyChange) network).PropertyChanged += (s, e) =>
             {
                 //finished editing
-                if ((e.PropertyName == "IsEditing") &&
-                    (!network.IsEditing))
+                if (e.PropertyName == "IsEditing" &&
+                    !network.IsEditing)
                 {
                     callCount++;
                     Assert.IsTrue(network.CurrentEditAction is BranchReverseAction);
-                    var editAction = (BranchReverseAction)network.CurrentEditAction;
+                    var editAction = (BranchReverseAction) network.CurrentEditAction;
                     Assert.AreEqual(channelToReverse, editAction.ReversedBranch);
                 }
             };
 
             // Assign values
-            testCoverage.SetValues(new[] { 11.1, 11.2, 11.3 }, new IVariableValueFilter[] { new VariableValueFilter<double>(argument1, 1.0), new VariableValueFilter<int>(variable2, 5) });
-            testCoverage.SetValues(new[] { 12.1, 12.2, 12.3 }, new IVariableValueFilter[] { new VariableValueFilter<double>(argument1, 1.0), new VariableValueFilter<int>(variable2, 9) });
-            testCoverage.SetValues(new[] { 21.1, 21.2, 21.3 }, new IVariableValueFilter[] { new VariableValueFilter<double>(argument1, 3.0), new VariableValueFilter<int>(variable2, 5) });
-            testCoverage.SetValues(new[] { 22.1, 22.2, 22.3 }, new IVariableValueFilter[] { new VariableValueFilter<double>(argument1, 3.0), new VariableValueFilter<int>(variable2, 9) });
+            testCoverage.SetValues(new[]
+            {
+                11.1,
+                11.2,
+                11.3
+            }, new IVariableValueFilter[]
+            {
+                new VariableValueFilter<double>(argument1, 1.0),
+                new VariableValueFilter<int>(variable2, 5)
+            });
+            testCoverage.SetValues(new[]
+            {
+                12.1,
+                12.2,
+                12.3
+            }, new IVariableValueFilter[]
+            {
+                new VariableValueFilter<double>(argument1, 1.0),
+                new VariableValueFilter<int>(variable2, 9)
+            });
+            testCoverage.SetValues(new[]
+            {
+                21.1,
+                21.2,
+                21.3
+            }, new IVariableValueFilter[]
+            {
+                new VariableValueFilter<double>(argument1, 3.0),
+                new VariableValueFilter<int>(variable2, 5)
+            });
+            testCoverage.SetValues(new[]
+            {
+                22.1,
+                22.2,
+                22.3
+            }, new IVariableValueFilter[]
+            {
+                new VariableValueFilter<double>(argument1, 3.0),
+                new VariableValueFilter<int>(variable2, 9)
+            });
 
             // Function at this time is:
             //                   L1            L2             L3
@@ -2086,7 +2190,7 @@ namespace DelftTools.Hydro.Tests.Helpers
             Assert.IsNull(testCoverage.CurrentEditAction);
             Assert.IsNull(network.CurrentEditAction);
 
-            var postReversallocations = testCoverage.GetLocationsForBranch(channelToReverse);
+            IList<INetworkLocation> postReversallocations = testCoverage.GetLocationsForBranch(channelToReverse);
             // For L3
             Assert.AreEqual(10.0, postReversallocations[0].Chainage, BranchFeature.Epsilon);
             Assert.AreEqual(11.3, testCoverage[postReversallocations[0], 1.0, 5]);
@@ -2110,24 +2214,24 @@ namespace DelftTools.Hydro.Tests.Helpers
         [Test]
         public void ReverseBranchUsesEditActionAndWorksProperlyForCustomLength()
         {
-            var network = HydroNetworkHelper.GetSnakeHydroNetwork(new Point(0, 0), new Point(0, 100));
+            IHydroNetwork network = HydroNetworkHelper.GetSnakeHydroNetwork(new Point(0, 0), new Point(0, 100));
             IChannel channelToReverse = network.Channels.First();
             channelToReverse.IsLengthCustom = true;
             channelToReverse.Length = 200;
-            var testCoverage = new NetworkCoverage { Network = network };
+            var testCoverage = new NetworkCoverage {Network = network};
             testCoverage[new NetworkLocation(channelToReverse, 10)] = 1.1;
             testCoverage[new NetworkLocation(channelToReverse, 30)] = 2.2;
 
-            int callCount = 0;
-            ((INotifyPropertyChange)network).PropertyChanged += (s, e) =>
+            var callCount = 0;
+            ((INotifyPropertyChange) network).PropertyChanged += (s, e) =>
             {
                 //finished editing
-                if ((e.PropertyName == "IsEditing") &&
-                    (!network.IsEditing))
+                if (e.PropertyName == "IsEditing" &&
+                    !network.IsEditing)
                 {
                     callCount++;
                     Assert.IsTrue(network.CurrentEditAction is BranchReverseAction);
-                    var editAction = (BranchReverseAction)network.CurrentEditAction;
+                    var editAction = (BranchReverseAction) network.CurrentEditAction;
                     Assert.AreEqual(channelToReverse, editAction.ReversedBranch);
                 }
             };
@@ -2137,7 +2241,7 @@ namespace DelftTools.Hydro.Tests.Helpers
             Assert.IsNull(testCoverage.CurrentEditAction);
             Assert.IsNull(network.CurrentEditAction);
 
-            var locations = testCoverage.GetLocationsForBranch(channelToReverse);
+            IList<INetworkLocation> locations = testCoverage.GetLocationsForBranch(channelToReverse);
             Assert.AreEqual(170.0, locations[0].Chainage, BranchFeature.Epsilon);
             Assert.AreEqual(2.2, testCoverage[locations[0]]);
             Assert.AreEqual(190.0, locations[1].Chainage, BranchFeature.Epsilon);
@@ -2149,21 +2253,38 @@ namespace DelftTools.Hydro.Tests.Helpers
         {
             var from = new Node();
             var to = new Node();
-            var branch = new Branch { Source = from, Target = to, Geometry = new LineString(new Coordinate[] { new Coordinate(0, 0), new Coordinate(0, 100.987654321) }) };
-            var network = new Network { Nodes = { from, to }, Branches = { branch } };
+            var branch = new Branch
+            {
+                Source = from,
+                Target = to,
+                Geometry = new LineString(new Coordinate[]
+                {
+                    new Coordinate(0, 0),
+                    new Coordinate(0, 100.987654321)
+                })
+            };
+            var network = new Network
+            {
+                Nodes =
+                {
+                    from,
+                    to
+                },
+                Branches = {branch}
+            };
 
-            var testCoverage = new NetworkCoverage { Network = network };
+            var testCoverage = new NetworkCoverage {Network = network};
             testCoverage[new NetworkLocation(branch, 10)] = 1.1;
             testCoverage[new NetworkLocation(branch, 30)] = 2.2;
 
             // reverse number of times
-            for (var i = 0; i < 30; i++ )
+            for (var i = 0; i < 30; i++)
             {
                 HydroNetworkHelper.ReverseBranch(branch);
             }
 
             // check if locations do not move due to rounding errors
-            var locations = testCoverage.Locations.Values;
+            IMultiDimensionalArray<INetworkLocation> locations = testCoverage.Locations.Values;
 
             Assert.AreEqual(10.0, locations[0].Chainage, BranchFeature.Epsilon);
             Assert.AreEqual(1.1, testCoverage[locations[0]]);
@@ -2174,28 +2295,28 @@ namespace DelftTools.Hydro.Tests.Helpers
         [Test]
         public void BranchReverseFollowedByResizeShouldWorkAsExpected()
         {
-            var network = HydroNetworkHelper.GetSnakeHydroNetwork(new Point(0, 0), new Point(0, 100));
+            IHydroNetwork network = HydroNetworkHelper.GetSnakeHydroNetwork(new Point(0, 0), new Point(0, 100));
 
             IChannel channelToReverse = network.Channels.First();
             channelToReverse.IsLengthCustom = true;
             channelToReverse.Length = 100;
 
             channelToReverse.Name = "testChannel";
-            var testCoverage = new NetworkCoverage { Network = network };
+            var testCoverage = new NetworkCoverage {Network = network};
             testCoverage[new NetworkLocation(channelToReverse, 10)] = 1.1; // This value would map to offset 90, and should not generate issues (dictionary key duplication for example)
             testCoverage[new NetworkLocation(channelToReverse, 30)] = 2.2;
             testCoverage[new NetworkLocation(channelToReverse, 90)] = 3.3;
 
-            int callCount = 0;
-            ((INotifyPropertyChange)network).PropertyChanged += (s, e) =>
+            var callCount = 0;
+            ((INotifyPropertyChange) network).PropertyChanged += (s, e) =>
             {
                 //finished editing
-                if ((e.PropertyName == "IsEditing") &&
-                    (!network.IsEditing))
+                if (e.PropertyName == "IsEditing" &&
+                    !network.IsEditing)
                 {
                     callCount++;
                     Assert.IsTrue(network.CurrentEditAction is BranchReverseAction);
-                    var editAction = (BranchReverseAction)network.CurrentEditAction;
+                    var editAction = (BranchReverseAction) network.CurrentEditAction;
                     Assert.AreEqual(channelToReverse, editAction.ReversedBranch);
                 }
             };
@@ -2205,7 +2326,7 @@ namespace DelftTools.Hydro.Tests.Helpers
             Assert.IsNull(testCoverage.CurrentEditAction);
             Assert.IsNull(network.CurrentEditAction);
 
-            var locations = testCoverage.GetLocationsForBranch(channelToReverse);
+            IList<INetworkLocation> locations = testCoverage.GetLocationsForBranch(channelToReverse);
             Assert.AreEqual(10.0, locations[0].Chainage, BranchFeature.Epsilon);
             Assert.AreEqual(3.3, testCoverage[locations[0]]);
             Assert.AreEqual(70.0, locations[1].Chainage, BranchFeature.Epsilon);
@@ -2236,7 +2357,7 @@ namespace DelftTools.Hydro.Tests.Helpers
             region.Links.Add(link);
             var subRegion = new HydroRegion() {Parent = region};
 
-            var name = HydroNetworkHelper.GetUniqueFeatureName(region, new HydroLink());
+            string name = HydroNetworkHelper.GetUniqueFeatureName(region, new HydroLink());
 
             Assert.AreNotEqual(link.Name, name);
         }
@@ -2245,16 +2366,15 @@ namespace DelftTools.Hydro.Tests.Helpers
         public void KeepHydroObjectNameIfUniqueHydroObjectNameDoesntExitsInNetworkObject()
         {
             const string uniquehydrolinkName1 = "UniqueHydroLink1";
-            const string uniquehydrolinkName2 = "UniqueHydroLink2"; 
+            const string uniquehydrolinkName2 = "UniqueHydroLink2";
             var sourceObject = new HydroNode("source");
             var targetObject = new HydroNode("target");
-            var link = new HydroLink(sourceObject, targetObject) { Name = uniquehydrolinkName1 };
+            var link = new HydroLink(sourceObject, targetObject) {Name = uniquehydrolinkName1};
 
             var region = new HydroRegion();
             region.Links.Add(link);
 
-
-            var name = HydroNetworkHelper.GetUniqueFeatureName(region, new HydroLink() { Name = uniquehydrolinkName2 }, true);
+            string name = HydroNetworkHelper.GetUniqueFeatureName(region, new HydroLink() {Name = uniquehydrolinkName2}, true);
             Assert.That(name, Is.EqualTo(uniquehydrolinkName2));
         }
 
@@ -2265,12 +2385,12 @@ namespace DelftTools.Hydro.Tests.Helpers
 
             var sourceObject = new HydroNode("source");
             var targetObject = new HydroNode("target");
-            var link = new HydroLink(sourceObject, targetObject) { Name = uniquehydrolinkName };
+            var link = new HydroLink(sourceObject, targetObject) {Name = uniquehydrolinkName};
 
             var region = new HydroRegion();
             region.Links.Add(link);
-            
-            var nameAlreadyExistCreateNew = HydroNetworkHelper.GetUniqueFeatureName(region, new HydroLink() { Name = uniquehydrolinkName }, true);
+
+            string nameAlreadyExistCreateNew = HydroNetworkHelper.GetUniqueFeatureName(region, new HydroLink() {Name = uniquehydrolinkName}, true);
             Assert.That(nameAlreadyExistCreateNew, Is.Not.EqualTo(uniquehydrolinkName));
         }
 
@@ -2281,12 +2401,12 @@ namespace DelftTools.Hydro.Tests.Helpers
 
             var sourceObject = new HydroNode("source");
             var targetObject = new HydroNode("target");
-            var link = new HydroLink(sourceObject, targetObject) { Name = uniquehydrolinkName };
+            var link = new HydroLink(sourceObject, targetObject) {Name = uniquehydrolinkName};
 
             var region = new HydroRegion();
             region.Links.Add(link);
 
-            var nameAlreadyExistCreateNew = HydroNetworkHelper.GetUniqueFeatureName(region, new HydroLink() { Name = null }, true);
+            string nameAlreadyExistCreateNew = HydroNetworkHelper.GetUniqueFeatureName(region, new HydroLink() {Name = null}, true);
             Assert.That(nameAlreadyExistCreateNew, Is.Not.Null);
             Assert.That(nameAlreadyExistCreateNew, Is.Not.EqualTo(link.Name));
         }
@@ -2296,6 +2416,172 @@ namespace DelftTools.Hydro.Tests.Helpers
         {
             var weir = new Weir();
             Assert.DoesNotThrow(() => HydroNetworkHelper.RemoveStructure(weir));
+        }
+
+        /// <summary>
+        /// Creates a simple test network of 1 branch and 2 nodes. The branch has '3' parts, in the center of
+        /// the first and last is a cross section.
+        /// n
+        /// /
+        /// /
+        /// cs
+        /// /
+        /// -------/
+        /// /
+        /// cs
+        /// /
+        /// n
+        /// </summary>
+        /// <returns></returns>
+        private static IHydroNetwork CreateTestNetwork()
+        {
+            var network = new HydroNetwork();
+            var branch1 = new Channel
+            {
+                Geometry = new LineString(new[]
+                {
+                    new Coordinate(0, 0),
+                    new Coordinate(30, 40),
+                    new Coordinate(70, 40),
+                    new Coordinate(100, 100)
+                })
+            };
+
+            var node1 = new HydroNode
+            {
+                Network = network,
+                Geometry = new Point(new Coordinate(0, 0))
+            };
+            var node2 = new HydroNode
+            {
+                Network = network,
+                Geometry = new Point(new Coordinate(100, 100))
+            };
+
+            network.Branches.Add(branch1);
+            network.Nodes.Add(node1);
+            network.Nodes.Add(node2);
+
+            var crossSection1 = new CrossSectionDefinitionXYZ
+            {
+                Geometry = new LineString(new[]
+                {
+                    new Coordinate(15, 20),
+                    new Coordinate(16, 20)
+                })
+            };
+            double offset1 = Math.Sqrt((15 * 15) + (20 * 20));
+            var crossSectionBranchFeature1 = new CrossSection(crossSection1) {Chainage = offset1};
+
+            var crossSection2 = new CrossSectionDefinitionXYZ
+            {
+                Geometry = new LineString(new[]
+                {
+                    new Coordinate(85, 70),
+                    new Coordinate(86, 70)
+                })
+            };
+            double offset2 = Math.Sqrt((30 * 30) + (40 * 40)) + 40 + Math.Sqrt((15 * 15) + (20 * 20));
+            var crossSectionBranchFeature2 = new CrossSection(crossSection2) {Chainage = offset2};
+
+            branch1.Source = node1;
+            branch1.Target = node2;
+            NetworkHelper.AddBranchFeatureToBranch(crossSectionBranchFeature1, branch1, crossSectionBranchFeature1.Chainage);
+            NetworkHelper.AddBranchFeatureToBranch(crossSectionBranchFeature2, branch1, crossSectionBranchFeature2.Chainage);
+
+            return network;
+        }
+
+        /// <summary>
+        /// Creates a simple test network of 1 branch and 2 nodes. The branch has '3' parts, in the center of
+        /// the first and last is a cross section.
+        /// n
+        /// /
+        /// /
+        /// cs
+        /// /
+        /// -------/
+        /// /
+        /// cs
+        /// /
+        /// n
+        /// </summary>
+        /// <returns></returns>
+        private static IHydroNetwork CreateSegmentTestNetwork()
+        {
+            var network = new HydroNetwork();
+            var branch1 = new Channel
+            {
+                Geometry = new LineString(new[]
+                {
+                    new Coordinate(0, 0),
+                    new Coordinate(0, 100),
+                })
+            };
+
+            var node1 = new HydroNode
+            {
+                Network = network,
+                Geometry = new Point(new Coordinate(0, 0))
+            };
+            var node2 = new HydroNode
+            {
+                Network = network,
+                Geometry = new Point(new Coordinate(100, 0))
+            };
+
+            network.Branches.Add(branch1);
+            network.Nodes.Add(node1);
+            network.Nodes.Add(node2);
+
+            branch1.Source = node1;
+            branch1.Target = node2;
+
+            return network;
+        }
+
+        private static void AddTestStructureAt(IHydroNetwork network, IChannel branch, double offset)
+        {
+            IWeir weir = new Weir {Chainage = offset};
+            var compositeBranchStructure = new CompositeBranchStructure
+            {
+                Network = network,
+                Geometry = new Point(offset, 0),
+                Chainage = offset
+            };
+            compositeBranchStructure.Structures.Add(weir);
+            branch.BranchFeatures.Add(compositeBranchStructure);
+        }
+
+        private static void AddTestCrossSectionAt(IChannel branch, double offset)
+        {
+            var crossSectionXyz = new CrossSectionDefinitionXYZ
+            {
+                Geometry = new LineString(new[]
+                {
+                    new Coordinate(offset - 1, 0),
+                    new Coordinate(offset + 1, 0)
+                })
+            };
+            HydroNetworkHelper.AddCrossSectionDefinitionToBranch(branch, crossSectionXyz, offset);
+        }
+
+        private static void AddLateralAt(IChannel branch, double offset)
+        {
+            NetworkHelper.AddBranchFeatureToBranch(new LateralSource(), branch, offset);
+        }
+
+        private static void AddCrossSection(Channel branch, double chainage)
+        {
+            var crossSection = new CrossSectionDefinitionXYZ
+            {
+                Geometry = new LineString(new[]
+                {
+                    new Coordinate(chainage, 0),
+                    new Coordinate(chainage + 1, 0)
+                }),
+            };
+            HydroNetworkHelper.AddCrossSectionDefinitionToBranch(branch, crossSection, chainage);
         }
     }
 }

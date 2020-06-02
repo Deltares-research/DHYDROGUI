@@ -23,9 +23,16 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Editors
         {
             network = new HydroNetwork();
 
-            branch1 = new Channel { Geometry = new LineString(new [] { new Coordinate(0, 0), new Coordinate(20, 0) }) };
-            node1 = new HydroNode { Geometry = new Point(0, 0)};
-            node2 = new HydroNode { Geometry = new Point(20, 0) };
+            branch1 = new Channel
+            {
+                Geometry = new LineString(new[]
+                {
+                    new Coordinate(0, 0),
+                    new Coordinate(20, 0)
+                })
+            };
+            node1 = new HydroNode {Geometry = new Point(0, 0)};
+            node2 = new HydroNode {Geometry = new Point(20, 0)};
 
             network.Nodes.Add(node1);
             network.Nodes.Add(node2);
@@ -54,7 +61,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Editors
             const double deltaY = 5;
             //nodeEditor.Move(node1, deltaX, deltaY);
             // start
-            int count = 0;
+            var count = 0;
             interactor.WorkerFeatureCreated += delegate { count++; };
             interactor.Start();
             Assert.AreEqual(1, count);
@@ -144,9 +151,16 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Editors
         [Test]
         public void MoveNodeOntoNodeOfOtherBranchShouldResultInAMerge()
         {
-            var branch2 = new Channel { Geometry = new LineString(new[] { new Coordinate(40, 0), new Coordinate(60, 0) }) };
-            var node3 = new HydroNode { Geometry = new Point(40, 0) };
-            var node4 = new HydroNode { Geometry = new Point(60, 0) };
+            var branch2 = new Channel
+            {
+                Geometry = new LineString(new[]
+                {
+                    new Coordinate(40, 0),
+                    new Coordinate(60, 0)
+                })
+            };
+            var node3 = new HydroNode {Geometry = new Point(40, 0)};
+            var node4 = new HydroNode {Geometry = new Point(60, 0)};
 
             network.Nodes.Add(node3);
             network.Nodes.Add(node4);
@@ -186,16 +200,16 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Editors
         {
             var crossSectionDef = new CrossSectionDefinitionYZ();
 
-            var crossSection = HydroNetworkHelper.AddCrossSectionDefinitionToBranch(branch1, crossSectionDef, 10);
+            ICrossSection crossSection = HydroNetworkHelper.AddCrossSectionDefinitionToBranch(branch1, crossSectionDef, 10);
 
             crossSectionDef.YZDataTable.AddCrossSectionYZRow(0, 0, 0);
             crossSectionDef.YZDataTable.AddCrossSectionYZRow(5, -5, 0);
             crossSectionDef.YZDataTable.AddCrossSectionYZRow(10, 0, 0);
-            
+
             var interactor = new HydroNodeInteractor(null, node2, null, null);
             const double deltaX = 20;
             const double deltaY = 0;
-            
+
             // start
             interactor.Start();
             interactor.MoveTracker(interactor.Trackers[0], deltaX, deltaY);
@@ -210,16 +224,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Editors
 
             Assert.AreEqual(20, crossSection.Geometry.Coordinates[0].X);
             Assert.AreEqual(0, crossSection.Geometry.Coordinates[0].Y);
-
         }
+
         [Test]
         [Category(TestCategory.Integration)]
         public void MoveNodeWithStuctureFeatureTest()
         {
-            var compositeStructure = new CompositeBranchStructure
-                                                    {
-                                                        Geometry = new Point(new Coordinate(10, 0))
-                                                    };
+            var compositeStructure = new CompositeBranchStructure {Geometry = new Point(new Coordinate(10, 0))};
 
             branch1.BranchFeatures.Add(compositeStructure);
             // NB structureFeature.Branch will be automatically set

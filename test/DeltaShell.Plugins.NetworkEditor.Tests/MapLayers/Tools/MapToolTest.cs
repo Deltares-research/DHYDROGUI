@@ -12,6 +12,7 @@ using NUnit.Framework;
 using SharpMap.Api.Layers;
 using SharpMap.Converters.WellKnownText;
 using SharpMap.UI.Forms;
+using SharpMap.UI.Tools;
 
 namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Tools
 {
@@ -26,7 +27,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Tools
         [SetUp]
         public void Initialize()
         {
-            mapControl = new MapControl { Map = { Size = new Size(1000, 1000) } };
+            mapControl = new MapControl {Map = {Size = new Size(1000, 1000)}};
             mapControl.Resize += delegate { mapControl.Refresh(); };
             mapControl.ActivateTool(mapControl.SelectTool);
 
@@ -45,7 +46,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Tools
         }
 
         /// <summary>
-        /// This test should ideally be in DeltaShell.Plugins.SharpMap.UI but this is difficult 
+        /// This test should ideally be in DeltaShell.Plugins.SharpMap.UI but this is difficult
         /// because in DeltaShell.Plugins.SharpMap.UI features are not available.
         /// </summary>
         [Test]
@@ -53,14 +54,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Tools
         {
             // Create a simple network and add 2 segments
             channelLayer.DataSource.Add(GeometryFromWKT.Parse("LINESTRING (0 0, 30 40, 70 40, 100 100)"));
-            
+
             //var branch = network.Channels[0];
 
             //HydroNetworkHelper.GenerateDiscretization(branch, new[] { 0, branch.Geometry.Length / 2, branch.Geometry.Length });
 
             // At location 0 0 there are the following features 
             // node, branch (start), /*segment, segment boundary,*/ boundary
-            var selectTool = mapControl.SelectTool;
+            SelectTool selectTool = mapControl.SelectTool;
             var selectedFeature = new Dictionary<IFeature, int>();
 
             ILayer outLayer;
@@ -82,8 +83,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Tools
         {
             // Create a simple network and add 2 segments
             channelLayer.DataSource.Add(GeometryFromWKT.Parse("LINESTRING (0 0, 30 40, 70 40, 100 100)"));
-            
-            var selectTool = mapControl.SelectTool;
+
+            SelectTool selectTool = mapControl.SelectTool;
             var selectedFeature = new Dictionary<IFeature, int>();
 
             ILayer outLayer;
@@ -93,7 +94,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Tools
             Assert.IsNotNull(nextFeature);
 
             networkMapLayer.Visible = false;
-            
+
             nextFeature = selectTool.GetNextFeatureAtPosition(new Coordinate(0, 0), 1, out outLayer, nextFeature, ol => ol.Visible);
             Assert.IsNull(nextFeature);
         }
@@ -104,11 +105,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Tools
             // Create a simple network and add 2 segments
             channelLayer.DataSource.Add(GeometryFromWKT.Parse("LINESTRING (0 0, 30 40, 70 40, 100 100)"));
 
-            var selectTool = mapControl.SelectTool;
+            SelectTool selectTool = mapControl.SelectTool;
 
             ILayer outLayer;
 
-            var feature = selectTool.FindNearestFeature(new Coordinate(0, 0), 1f, out outLayer, ol => ol.Visible);
+            IFeature feature = selectTool.FindNearestFeature(new Coordinate(0, 0), 1f, out outLayer, ol => ol.Visible);
             Assert.IsNotNull(feature);
 
             networkMapLayer.Visible = false;

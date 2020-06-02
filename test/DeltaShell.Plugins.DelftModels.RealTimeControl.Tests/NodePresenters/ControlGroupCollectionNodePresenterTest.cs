@@ -19,13 +19,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.NodePresenters
             // arrange
             var parentNode = Substitute.For<ITreeNode>();
             var node = Substitute.For<ITreeNode>();
-            var controlGroup = new ControlGroup ();
+            var controlGroup = new ControlGroup();
             var list = new EventedList<ControlGroup> {controlGroup};
 
             var controlGroupCollectionNodePresenter = new ControlGroupCollectionNodePresenter();
 
             // Act
-            controlGroupCollectionNodePresenter.UpdateNode(parentNode, node, list );
+            controlGroupCollectionNodePresenter.UpdateNode(parentNode, node, list);
 
             // Assert
             node.Received(1).Text = "Control Groups";
@@ -33,14 +33,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.NodePresenters
             node.Received(1).Image = Arg.Any<Bitmap>();
         }
 
-
         [Test]
         public void UpdateNode_GetChildNodeObjectsReturnsSameList()
         {
             // arrange
             var node = Substitute.For<ITreeNode>();
             var controlGroup = new ControlGroup();
-            var list = new EventedList<ControlGroup> { controlGroup };
+            var list = new EventedList<ControlGroup> {controlGroup};
 
             var controlGroupCollectionNodePresenter = new ControlGroupCollectionNodePresenter();
 

@@ -11,8 +11,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
         [Category(TestCategory.WindowsForms)]
         public void ShowEditor()
         {
-            var mdwFilePath = TestHelper.GetTestFilePath(@"bcwTimeseries\bcw.mdw");
-            var newFilePath = WaveTestHelper.CreateLocalCopy(mdwFilePath);
+            string mdwFilePath = TestHelper.GetTestFilePath(@"bcwTimeseries\bcw.mdw");
+            string newFilePath = WaveTestHelper.CreateLocalCopy(mdwFilePath);
             var model = new WaveModel(newFilePath)
             {
                 TimePointData =
@@ -23,13 +23,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
             };
 
             var view = new WaveTimePointEditor
-                {
-                    Data = model.TimePointData,
-                    ImportFileIntoModelDirectory = model.ImportIntoModelDirectory
-                };
+            {
+                Data = model.TimePointData,
+                ImportFileIntoModelDirectory = model.ImportIntoModelDirectory
+            };
 
             WindowsFormsTestHelper.ShowModal(view);
         }
-
     }
 }
