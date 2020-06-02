@@ -9,26 +9,41 @@
     <UserControl.DataContext>
         <local:PipeVisualisationViewModel x:Name="ViewModel"/>
     </UserControl.DataContext>
+    <UserControl.Resources>
+        <LinearGradientBrush x:Key="CompartmentBrush" 
+                             EndPoint="0.5,1" 
+                             StartPoint="0.5,0">
+            <GradientStop Color="WhiteSmoke" Offset="0"/>
+            <GradientStop Color="LightGray" Offset="1"/>
+        </LinearGradientBrush>
+    </UserControl.Resources>
     <Grid x:Name="ViewGrid" SizeChanged="ViewGrid_OnSizeChanged ">
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
         <Canvas x:Name="DrawingCanvas">
-            <Polyline Points="{Binding PipeBottomPoints}" Stroke="Black" StrokeThickness="2"/>
+            <Polygon Points="{Binding PipePolygonPoints}" Fill="#FFFFFBAE">
+                <Polygon.ToolTip>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="Pipe: "/>
+                        <TextBlock Text="{Binding Pipe.Name}"/>
+                    </StackPanel>
+                </Polygon.ToolTip>
+            </Polygon>
             <Polyline Points="{Binding PipeTopPoints}" Stroke="Black" StrokeThickness="2"/>
+            <Polyline Points="{Binding PipeBottomPoints}" Stroke="Black" StrokeThickness="2"/>
 
+            <Polygon Points="{Binding SourceCompartmentPoints}" Fill="{StaticResource CompartmentBrush}" 
+                     ToolTip="{Binding Pipe.SourceCompartment.Name}"/>
             <TextBlock x:Name="SourceBottom" Text="{Binding Pipe.SourceCompartment.BottomLevel, StringFormat={}{0:G3} m}" Margin="0,0,0,3"/>
-            <Polyline Points="{Binding SourceBottomLevelPoints}" Stroke="Green" StrokeThickness="2"/>
-
             <TextBlock x:Name="SourceSurface" Text="{Binding Pipe.SourceCompartment.SurfaceLevel, StringFormat={}{0:G3} m}" Margin="0,0,0,3"/>
-            <Polyline Points="{Binding SourceSurfaceLevelPoints}" Stroke="Green" StrokeThickness="2"/>
 
+            <Polygon Points="{Binding TargetCompartmentPoints}" Fill="{DynamicResource CompartmentBrush}" 
+                     ToolTip="{Binding Pipe.TargetCompartment.Name}"/>
             <TextBlock x:Name="TargetBottom" Text="{Binding Pipe.TargetCompartment.BottomLevel, StringFormat={}{0:G3} m}" Margin="0,0,0,3"/>
-            <Polyline Points="{Binding TargetBottomLevelPoints}" Stroke="Green" StrokeThickness="2"/>
-
             <TextBlock x:Name="TargetSurface" Text="{Binding Pipe.TargetCompartment.SurfaceLevel, StringFormat={}{0:G3} m}" Margin="0,0,0,3"/>
-            <Polyline Points="{Binding TargetSurfaceLevelPoints}" Stroke="Green" StrokeThickness="2"/>
+            <Polyline Points="{Binding TopLevelPoints}" Stroke="Green" StrokeThickness="2"/>
         </Canvas>
     </Grid>
 </UserControl>

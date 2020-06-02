@@ -43,19 +43,19 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
             }
         }
 
-        private Point sourceA;
-        private Point sourceB;
-        private Point sourceC;
-        private Point sourceD;
-        private Point sourceE;
-        private Point sourceF;
+        private Point sourceBottomLeft;
+        private Point sourceBottomRight;
+        private Point sourceBottomPipe;
+        private Point sourceTopPipe;
+        private Point sourceTopRight;
+        private Point sourceTopLeft;
 
-        private Point targetA;
-        private Point targetB;
-        private Point targetC;
-        private Point targetD;
-        private Point targetE;
-        private Point targetF;
+        private Point targetBottomRight;
+        private Point targetBottomLeft;
+        private Point targetBottomPipe;
+        private Point targetTopPipe;
+        private Point targetTopLeft;
+        private Point targetTopRight;
 
         private double minX;
         private double maxX;
@@ -112,19 +112,19 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
             minY -= heightMargin;
             maxY += heightMargin;
 
-            sourceA = NewScaledPoint(sourceLeft, sourceBottomLevel);
-            sourceB = NewScaledPoint(x0, sourceBottomLevel);
-            sourceC = NewScaledPoint(x0, y0);
-            sourceD = NewScaledPoint(x0, y0 + pipeDiameter);
-            sourceE = NewScaledPoint(x0, sourceSurfaceLevel);
-            sourceF = NewScaledPoint(sourceRight, sourceSurfaceLevel);
+            sourceBottomLeft = NewScaledPoint(sourceLeft, sourceBottomLevel);
+            sourceBottomRight = NewScaledPoint(x0, sourceBottomLevel);
+            sourceBottomPipe = NewScaledPoint(x0, y0);
+            sourceTopPipe = NewScaledPoint(x0, y0 + pipeDiameter);
+            sourceTopRight = NewScaledPoint(x0, sourceSurfaceLevel);
+            sourceTopLeft = NewScaledPoint(sourceLeft, sourceSurfaceLevel);
 
-            targetA = NewScaledPoint(targetRight, targetBottomLevel);
-            targetB = NewScaledPoint(xL, targetBottomLevel);
-            targetC = NewScaledPoint(xL, yL);
-            targetD = NewScaledPoint(xL, yL + pipeDiameter);
-            targetE = NewScaledPoint(xL, targetSurfaceLevel);
-            targetF = NewScaledPoint(targetLeft, targetSurfaceLevel);
+            targetBottomRight = NewScaledPoint(targetRight, targetBottomLevel);
+            targetBottomLeft = NewScaledPoint(xL, targetBottomLevel);
+            targetBottomPipe = NewScaledPoint(xL, yL);
+            targetTopPipe = NewScaledPoint(xL, yL + pipeDiameter);
+            targetTopLeft = NewScaledPoint(xL, targetSurfaceLevel);
+            targetTopRight = NewScaledPoint(targetRight, targetSurfaceLevel);
         }
 
         private void UpdateTextPositions()
@@ -132,25 +132,36 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
             var canvas = DrawingCanvas?.Invoke();
             if (canvas == null) return;
 
+            var marginX = 2;
             var textBlocks = canvas.Children.OfType<TextBlock>().ToList();
+
             var textBlockSourceBottom = textBlocks.FirstOrDefault(t => t.Name == "SourceBottom");
-            if (textBlockSourceBottom == null) return;
-            Canvas.SetLeft(textBlockSourceBottom, sourceA.X);
-            Canvas.SetTop(textBlockSourceBottom, sourceA.Y - textBlockSourceBottom.ActualHeight);
-
+            if (textBlockSourceBottom != null)
+            {
+                Canvas.SetLeft(textBlockSourceBottom, sourceBottomLeft.X + marginX);
+                Canvas.SetTop(textBlockSourceBottom, sourceBottomLeft.Y - textBlockSourceBottom.ActualHeight);
+            }
             var sourceSurface = textBlocks.FirstOrDefault(t => t.Name == "SourceSurface");
-            Canvas.SetLeft(sourceSurface, sourceF.X - sourceSurface.ActualWidth);
-            Canvas.SetTop(sourceSurface, sourceF.Y);
-
+            if (sourceSurface != null)
+            {
+                Canvas.SetLeft(sourceSurface, sourceBottomLeft.X + marginX);
+                Canvas.SetTop(sourceSurface, sourceTopLeft.Y);
+            }
+            
             var targetBottom = textBlocks.FirstOrDefault(t => t.Name == "TargetBottom");
-            Canvas.SetLeft(targetBottom, targetA.X - targetBottom.ActualWidth);
-            Canvas.SetTop(targetBottom, targetA.Y - targetBottom.ActualHeight);
+            if (targetBottom != null)
+            {
+                Canvas.SetLeft(targetBottom, targetBottomRight.X - targetBottom.ActualWidth - marginX);
+                Canvas.SetTop(targetBottom, targetBottomRight.Y - targetBottom.ActualHeight);
+            }
 
             var targetSurface = textBlocks.FirstOrDefault(t => t.Name == "TargetSurface");
-            Canvas.SetLeft(targetSurface, targetF.X);
-            Canvas.SetTop(targetSurface, targetF.Y);
+            if (targetSurface != null)
+            {
+                Canvas.SetLeft(targetSurface, targetTopRight.X - targetSurface.ActualWidth - marginX);
+                Canvas.SetTop(targetSurface, targetTopRight.Y);
+            }
         }
-
 
         private Point NewScaledPoint(double x, double y)
         {
@@ -159,22 +170,27 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
 
         private void CreatePointCollections()
         {
-            PipeBottomPoints = new PointCollection { sourceC, targetC };
-            PipeTopPoints = new PointCollection { sourceD, targetD };
+            PipeBottomPoints = new PointCollection { sourceBottomPipe, targetBottomPipe };
+            PipeTopPoints = new PointCollection { sourceTopPipe, targetTopPipe };
+            PipePolygonPoints = new PointCollection { sourceBottomPipe, targetBottomPipe, targetTopPipe, sourceTopPipe };
 
-            SourceBottomLevelPoints = new PointCollection { sourceA, sourceB, sourceC };
-            SourceSurfaceLevelPoints = new PointCollection { sourceD, sourceE, sourceF };
+            TopLevelPoints = new PointCollection{ sourceTopLeft, sourceTopRight, targetTopLeft, targetTopRight };
 
-            TargetBottomLevelPoints = new PointCollection { targetA, targetB, targetC };
-            TargetSurfaceLevelPoints = new PointCollection { targetD, targetE, targetF };
+            SourceCompartmentPoints = new PointCollection { sourceBottomLeft, sourceBottomRight, sourceTopRight, sourceTopLeft };
+            TargetCompartmentPoints = new PointCollection { targetBottomRight, targetBottomLeft, targetTopLeft, targetTopRight };
         }
 
-        public PointCollection TargetSurfaceLevelPoints { get; set; }
-        public PointCollection TargetBottomLevelPoints { get; set; }
-        public PointCollection SourceSurfaceLevelPoints { get; set; }
-        public PointCollection SourceBottomLevelPoints { get; set; }
         public PointCollection PipeTopPoints { get; set; }
+
         public PointCollection PipeBottomPoints { get; set; }
+
+        public PointCollection PipePolygonPoints { get; set; }
+
+        public PointCollection TopLevelPoints { get; set; }
+
+        public PointCollection SourceCompartmentPoints { get; set; }
+
+        public PointCollection TargetCompartmentPoints { get; set; }
 
         private double ScaleX(double x)
         {
