@@ -8,6 +8,7 @@ using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Gui;
 using DelftTools.Shell.Gui.Forms;
 using DelftTools.Utils.Collections.Generic;
+using DelftTools.Utils.Reflection;
 using Mono.Addins;
 
 namespace DeltaShell.Dimr.Gui
@@ -49,7 +50,7 @@ namespace DeltaShell.Dimr.Gui
         {
             get
             {
-                return GetType().Assembly.GetName().Version.ToString();
+                return AssemblyUtils.GetAssemblyInfo(GetType().Assembly).Version;
             }
         }
 

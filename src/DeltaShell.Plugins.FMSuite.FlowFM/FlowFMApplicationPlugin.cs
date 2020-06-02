@@ -13,6 +13,7 @@ using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections;
+using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.Common;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.IO.Files;
@@ -50,7 +51,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         public override string Description => Properties.Resources.FlowFMApplicationPlugin_Description;
 
-        public override string Version => GetType().Assembly.GetName().Version.ToString();
+        public override string Version => AssemblyUtils.GetAssemblyInfo(GetType().Assembly).Version;
 
         public override string FileFormatVersion => "1.2.0.0";
 

@@ -18,6 +18,7 @@ using DelftTools.Utils;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
+using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.CommonTools.Gui.Forms.Functions;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
@@ -96,7 +97,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
         {
             get
             {
-                return GetType().Assembly.GetName().Version.ToString();
+                return AssemblyUtils.GetAssemblyInfo(GetType().Assembly).Version;
             }
         }
 

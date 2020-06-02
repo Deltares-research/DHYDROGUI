@@ -65,7 +65,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui
         {
             get
             {
-                return GetType().Assembly.GetName().Version.ToString();
+                return AssemblyUtils.GetAssemblyInfo(GetType().Assembly).Version;
             }
         }
 

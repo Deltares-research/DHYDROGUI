@@ -9,6 +9,7 @@ using DelftTools.Shell.Core.Dao;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections;
+using DelftTools.Utils.Reflection;
 using DeltaShell.Dimr;
 using DeltaShell.NGHS.Common;
 using DeltaShell.Plugins.DelftModels.HydroModel.Export;
@@ -57,7 +58,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
         {
             get
             {
-                return GetType().Assembly.GetName().Version.ToString();
+                return AssemblyUtils.GetAssemblyInfo(GetType().Assembly).Version;
             }
         }
 

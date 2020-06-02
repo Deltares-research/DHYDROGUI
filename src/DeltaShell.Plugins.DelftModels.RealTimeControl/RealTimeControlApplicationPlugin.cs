@@ -9,6 +9,7 @@ using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Dao;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils.Guards;
+using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.Common;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport;
 using log4net;
@@ -49,7 +50,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         {
             get
             {
-                return GetType().Assembly.GetName().Version.ToString();
+                return AssemblyUtils.GetAssemblyInfo(GetType().Assembly).Version;
             }
         }
 

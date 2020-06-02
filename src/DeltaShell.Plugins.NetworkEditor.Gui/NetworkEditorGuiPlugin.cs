@@ -98,7 +98,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
         {
             get
             {
-                return GetType().Assembly.GetName().Version.ToString();
+                return AssemblyUtils.GetAssemblyInfo(GetType().Assembly).Version;
             }
         }
 

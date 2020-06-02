@@ -10,6 +10,7 @@ using DelftTools.Shell.Core.Workflow.DataItems.ValueConverters;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
+using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.IO.FunctionStores;
 using DeltaShell.Plugins.NetworkEditor.Import;
 using GeoAPI.Extensions.Feature;
@@ -48,7 +49,7 @@ namespace DeltaShell.Plugins.NetworkEditor
         {
             get
             {
-                return GetType().Assembly.GetName().Version.ToString();
+                return AssemblyUtils.GetAssemblyInfo(GetType().Assembly).Version;
             }
         }
 

@@ -22,6 +22,7 @@ using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Extensions;
 using DelftTools.Utils.Collections.Generic;
+using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.CommonTools.Gui.Forms;
 using DeltaShell.Plugins.CommonTools.Gui.Forms.Functions;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects;
@@ -85,7 +86,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui
         [ExcludeFromCodeCoverage]
         public override string Description => "Allows to simulate water quality in rivers and channels.";
 
-        public override string Version => GetType().Assembly.GetName().Version.ToString();
+        public override string Version => AssemblyUtils.GetAssemblyInfo(GetType().Assembly).Version;
 
         [ExcludeFromCodeCoverage]
         public override string FileFormatVersion => "1.1.0.0";

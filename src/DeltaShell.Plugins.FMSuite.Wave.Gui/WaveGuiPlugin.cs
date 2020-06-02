@@ -10,6 +10,7 @@ using DelftTools.Shell.Gui.Swf.Validation;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
+using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf;
 using DeltaShell.Plugins.FMSuite.Common.Gui;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
@@ -51,7 +52,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
 
         public override string Description => "A 2D/3D Waves module";
 
-        public override string Version => GetType().Assembly.GetName().Version.ToString();
+        public override string Version => AssemblyUtils.GetAssemblyInfo(GetType().Assembly).Version;
 
         public override string FileFormatVersion => "1.1.0.0";
 

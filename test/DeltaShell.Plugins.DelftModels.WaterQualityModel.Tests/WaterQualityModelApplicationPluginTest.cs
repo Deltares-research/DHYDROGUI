@@ -11,6 +11,7 @@ using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
 using DelftTools.Utils;
 using DelftTools.Utils.IO;
+using DelftTools.Utils.Reflection;
 using DeltaShell.Core;
 using DeltaShell.NGHS.Common.IO;
 using DeltaShell.NGHS.IO.TestUtils;
@@ -35,8 +36,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         [Test]
         public void DefaultConstructorExpectedValuesTest()
         {
-            // setup
-
             // call
             var appPlugin = new WaterQualityModelApplicationPlugin();
 
@@ -45,8 +44,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             Assert.AreEqual("Water quality model", appPlugin.Name,
                             "Name change detected, which impacts NHibernate persistency.");
             Assert.AreEqual("Allows to simulate water quality in rivers and channels.", appPlugin.Description);
-            var expectedVersionString = appPlugin.GetType().Assembly.GetName().Version.ToString();
-            Assert.AreEqual(expectedVersionString, appPlugin.Version);
+            Assert.AreEqual(AssemblyUtils.GetAssemblyInfo(appPlugin.GetType().Assembly).Version, appPlugin.Version);
         }
 
         [Test]
