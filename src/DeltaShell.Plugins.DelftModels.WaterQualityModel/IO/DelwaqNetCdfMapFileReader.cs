@@ -1,8 +1,8 @@
-﻿using DelftTools.Utils.NetCdf;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using DelftTools.Utils.NetCdf;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Properties;
 using log4net;
 
@@ -13,13 +13,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
     /// </summary>
     public static class DelwaqNetCdfMapFileReader
     {
-        private static readonly ILog log = LogManager.GetLogger(typeof(DelwaqNetCdfMapFileReader));
-
         private const string timeVariableName = "nmesh2d_dlwq_time";
         private const string timeDimensionName = "nmesh2d_dlwq_time";
         private const string substanceAttributeName = "delwaq_name";
         private const string mesh2dVariableName = "mesh2d";
         private const string faceDimensionAttributeName = "face_dimension";
+        private static readonly ILog log = LogManager.GetLogger(typeof(DelwaqNetCdfMapFileReader));
 
         /// <summary>
         /// Reads the meta data of the provided <paramref name="path"/>
@@ -40,16 +39,16 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         }
 
         /// <summary>
-        /// Gets the values for <paramref name="substanceName" /> at specified segment and time indices.
+        /// Gets the values for <paramref name="substanceName"/> at specified segment and time indices.
         /// </summary>
         /// <param name="path"> Path of the *_map.nc file. </param>
-        /// <param name="mapFileMeta"> Metadata for the map file (use <see cref="ReadMetaData" /> to get it initially) </param>
+        /// <param name="mapFileMeta"> Metadata for the map file (use <see cref="ReadMetaData"/> to get it initially) </param>
         /// <param name="timeStepIndex"> Time index (zero based) at which to get the values </param>
         /// <param name="substanceName"> Substance name </param>
         /// <param name="segmentIndex"> Segment index (zero based) at which to get the values (default -1: no filtering) </param>
         /// <returns>
-        /// A list of double values at the specified <paramref name="timeStepIndex" /> and
-        /// <paramref name="segmentIndex" />
+        /// A list of double values at the specified <paramref name="timeStepIndex"/> and
+        /// <paramref name="segmentIndex"/>
         /// </returns>
         /// <remarks>If <paramref name="path"/> does not exist, an empty list is returned.</remarks>
         public static List<double> GetTimeStepData(string path, MapFileMetaData mapFileMeta, int timeStepIndex, string substanceName, int segmentIndex = -1)
@@ -67,13 +66,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         }
 
         /// <summary>
-        /// Gets the values for <paramref name="substanceName" /> at the specified segment index for all time steps.
+        /// Gets the values for <paramref name="substanceName"/> at the specified segment index for all time steps.
         /// </summary>
         /// <param name="path"> Path of the *_map.nc file. </param>
-        /// <param name="mapFileMeta"> Metadata for the map file (use <see cref="ReadMetaData" /> to get it initially) </param>
+        /// <param name="mapFileMeta"> Metadata for the map file (use <see cref="ReadMetaData"/> to get it initially) </param>
         /// <param name="substanceName"> Substance name </param>
         /// <param name="segmentIndex"> Segment index (zero based) at which to get the values (default -1: no filtering) </param>
-        /// <returns> A list of double values at the specified  <paramref name="segmentIndex" /> for all time steps. </returns>
+        /// <returns> A list of double values at the specified  <paramref name="segmentIndex"/> for all time steps. </returns>
         /// <remarks>If <paramref name="path"/> does not exist, an empty list is returned.</remarks>
         public static List<double> GetTimeSeriesData(string path, MapFileMetaData mapFileMeta, string substanceName, int segmentIndex)
         {

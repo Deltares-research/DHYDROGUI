@@ -2,6 +2,7 @@ using DelftTools.Controls;
 using DelftTools.Hydro;
 using DelftTools.Shell.Gui.Swf;
 using DeltaShell.Plugins.NetworkEditor.Gui.Properties;
+using GeoAPI.Extensions.Feature;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.ProjectExplorer
 {
@@ -24,14 +25,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.ProjectExplorer
                 return DragOperations.Link;
             }
 
-            return (DragOperations.Link | DragOperations.Move);
+            return DragOperations.Link | DragOperations.Move;
         }
 
         protected override bool RemoveNodeData(object parentNodeData, IHydroNetwork nodeData)
         {
-            if(nodeData.Parent is IHydroRegion)
+            if (nodeData.Parent is IHydroRegion)
             {
-                var region = nodeData.Parent;
+                IRegion region = nodeData.Parent;
                 region.SubRegions.Remove(nodeData);
                 return true;
             }

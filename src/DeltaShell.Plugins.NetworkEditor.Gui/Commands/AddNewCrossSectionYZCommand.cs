@@ -12,12 +12,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Commands
     {
         protected override Cursor Cursor
         {
-            get { return MapCursors.CreateArrowOverlayCuror(Resources.CrossSectionSmall); }
-        }
-
-        protected override ICrossSection CreateDefault(ILayer layer)
-        {
-            return CrossSection.CreateDefault(CrossSectionType.YZ, null);
+            get
+            {
+                return MapCursors.CreateArrowOverlayCuror(Resources.CrossSectionSmall);
+            }
         }
 
         protected override IMapTool CurrentTool
@@ -26,6 +24,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Commands
             {
                 return MapView.MapControl.GetToolByName(HydroRegionEditorMapTool.AddPointCrossSectionToolName);
             }
+        }
+
+        protected override ICrossSection CreateDefault(ILayer layer)
+        {
+            return CrossSection.CreateDefault(CrossSectionType.YZ, null);
         }
     }
 }

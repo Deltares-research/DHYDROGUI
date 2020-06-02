@@ -4,7 +4,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
 {
     /// <summary>
     /// This class contains constants which represent all categories which can be returned during execution of
-    /// <see cref="WaterFlowFMModel.GetFeatureCategory" /> method.
+    /// <see cref="WaterFlowFMModel.GetFeatureCategory"/> method.
     /// </summary>
     public static class KnownFeatureCategories
     {

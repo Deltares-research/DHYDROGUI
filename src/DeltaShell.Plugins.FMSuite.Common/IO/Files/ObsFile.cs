@@ -10,11 +10,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files
 {
     public class ObsFile<T> : FMSuiteFileBase, IFeature2DFileBase<T> where T : Feature2DPoint, new()
     {
-        public void Write(string filePath, IEnumerable<T> features)
-        {
-            Write(filePath, features, true);
-        }
-
         public void Write(string obsFilePath, IEnumerable<T> observationPoints, bool includeName = true)
         {
             using (CultureUtils.SwitchToInvariantCulture())
@@ -42,11 +37,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files
                     CloseOutputFile();
                 }
             }
-        }
-
-        public IList<T> Read(string filePath)
-        {
-            return Read(filePath, true);
         }
 
         public IEventedList<T> Read(string obsFilePath, bool includeName = true)
@@ -90,6 +80,16 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files
             }
 
             return observationPoints;
+        }
+
+        public void Write(string filePath, IEnumerable<T> features)
+        {
+            Write(filePath, features, true);
+        }
+
+        public IList<T> Read(string filePath)
+        {
+            return Read(filePath, true);
         }
     }
 }

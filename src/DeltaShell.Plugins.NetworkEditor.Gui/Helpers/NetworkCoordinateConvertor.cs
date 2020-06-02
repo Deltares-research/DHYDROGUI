@@ -22,13 +22,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Helpers
                 return false;
             }
 
-            var dialog = new SelectCoordinateSystemDialog(Map.CoordinateSystemFactory.SupportedCoordinateSystems, Map.CoordinateSystemFactory.CustomCoordinateSystems)
-            {
-                SelectedCoordinateSystem = network.CoordinateSystem
-            };
+            var dialog = new SelectCoordinateSystemDialog(Map.CoordinateSystemFactory.SupportedCoordinateSystems, Map.CoordinateSystemFactory.CustomCoordinateSystems) {SelectedCoordinateSystem = network.CoordinateSystem};
 
             if (dialog.ShowDialog() != DialogResult.OK)
+            {
                 return false;
+            }
 
             if (dialog.SelectedCoordinateSystem == null)
             {

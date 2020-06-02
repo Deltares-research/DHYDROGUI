@@ -17,7 +17,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Ribbon
 {
     public class OverwriteLabelCommand : SpatialOperationCommandBase
     {
-        protected override IMapTool MapTool => MapControl?.GetToolByType<QueryTool>();
+        private Coordinate clickedCoordinate;
 
         public override bool Enabled
         {
@@ -34,6 +34,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Ribbon
             }
         }
 
+        protected override IMapTool MapTool => MapControl?.GetToolByType<QueryTool>();
+
         protected override void OnExecute(params object[] arguments)
         {
             if (MapTool != null)
@@ -44,23 +46,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Ribbon
             }
         }
 
-        private void OnMouseClick(Coordinate coordinate, MouseEventArgs e)
-        {
-            if (e.Button == MouseButtons.Left)
-            {
-                clickedCoordinate = coordinate;
-                base.OnExecute();
-                var queryTool = (QueryTool) MapTool;
-                queryTool.OnMouseClick = null;
-            }
-        }
-
         protected override string GetOperationPrefix()
         {
             return "Overwrite label";
         }
-
-        private Coordinate clickedCoordinate;
 
         protected override ISpatialOperation CreateSpatialOperation(ILayer targetLayer)
         {
@@ -99,6 +88,17 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Ribbon
         {
             return base.EnabledSelectedFeatures(polygons, polyLines, points) && !polygons.Any() && !polyLines.Any() &&
                    !points.Any();
+        }
+
+        private void OnMouseClick(Coordinate coordinate, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                clickedCoordinate = coordinate;
+                base.OnExecute();
+                var queryTool = (QueryTool) MapTool;
+                queryTool.OnMouseClick = null;
+            }
         }
 
         /// <summary>

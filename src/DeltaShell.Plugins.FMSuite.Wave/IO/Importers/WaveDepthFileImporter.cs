@@ -36,17 +36,22 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Importers
             }
         }
 
+        public bool CanImportOnRootLevel => false;
+
+        public string FileFilter => "Delft3D Depth File (*.dep)|*.dep|All Files (*.*)|*.*";
+
+        public string TargetDataDirectory { get; set; }
+        public bool ShouldCancel { get; set; }
+        public ImportProgressChangedDelegate ProgressChanged { get; set; }
+        public bool OpenViewAfterImport { get; private set; }
+
         public bool CanImportOn(object targetObject)
         {
             return true;
         }
 
-        public bool CanImportOnRootLevel => false;
-
-        public string FileFilter => "Delft3D Depth File (*.dep)|*.dep|All Files (*.*)|*.*";
-
         /// <summary>
-        /// Imports the Bathymetry data from the file at the path <paramref name="path" />.
+        /// Imports the Bathymetry data from the file at the path <paramref name="path"/>.
         /// </summary>
         /// <param name="path"> The path to the Delft3D Depth File. </param>
         /// <param name="target"> The target CurvilinearCoverage to which the specified file should be loaded. </param>
@@ -80,10 +85,5 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Importers
 
             return target;
         }
-
-        public string TargetDataDirectory { get; set; }
-        public bool ShouldCancel { get; set; }
-        public ImportProgressChangedDelegate ProgressChanged { get; set; }
-        public bool OpenViewAfterImport { get; private set; }
     }
 }

@@ -17,9 +17,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects
             Name = string.Empty;
         }
 
-        [FeatureAttribute(Order = 0)]
-        public virtual string Name { get; set; }
-
         public override IGeometry Geometry
         {
             get => base.Geometry;
@@ -54,6 +51,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects
             get => PointGeometry.Z;
             set => UpdatePointGeometry(PointGeometry.X, PointGeometry.Y, value);
         }
+
+        [FeatureAttribute(Order = 0)]
+        public virtual string Name { get; set; }
 
         private IPoint PointGeometry => Geometry as IPoint;
 

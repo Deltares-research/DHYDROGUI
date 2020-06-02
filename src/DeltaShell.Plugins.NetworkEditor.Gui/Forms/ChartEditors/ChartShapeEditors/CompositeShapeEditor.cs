@@ -14,9 +14,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapeEdit
         {
             var compositeShapeFeature = (CompositeShapeFeature) shapeFeature;
 
-            foreach (var simpleShapeFeature in compositeShapeFeature.ShapeFeatures)
+            foreach (IShapeFeature simpleShapeFeature in compositeShapeFeature.ShapeFeatures)
             {
-                var accessor = simpleShapeFeature.CreateShapeFeatureEditor(shapeEditMode);
+                IShapeFeatureEditor accessor = simpleShapeFeature.CreateShapeFeatureEditor(shapeEditMode);
                 if (accessor != null)
                 {
                     ShapeFeatureEditors.Add(accessor);
@@ -26,7 +26,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapeEdit
 
         public override bool MoveTracker(IPoint trackerFeature, Coordinate worldPosition, double deltaX, double deltaY)
         {
-            bool result = false;
+            var result = false;
             ShapeFeatureEditors.ForEach(e => result |= e.MoveTracker(trackerFeature, worldPosition, deltaX, deltaY));
             return result;
         }
@@ -35,7 +35,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapeEdit
         {
             Cursor cursor = Cursors.Default;
 
-            foreach (var shapeFeatureEditor in ShapeFeatureEditors)
+            foreach (IShapeFeatureEditor shapeFeatureEditor in ShapeFeatureEditors)
             {
                 cursor = shapeFeatureEditor.GetCursor(trackerFeature);
                 if (cursor != Cursors.Default)
@@ -43,6 +43,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapeEdit
                     return cursor;
                 }
             }
+
             return cursor;
         }
 
@@ -55,7 +56,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapeEdit
         {
             IPoint point = null;
 
-            foreach (var shapeFeatureEditor in ShapeFeatureEditors)
+            foreach (IShapeFeatureEditor shapeFeatureEditor in ShapeFeatureEditors)
             {
                 point = shapeFeatureEditor.GetTrackerAt(x, y, xMarge, yMarge);
                 if (point != null)
@@ -63,6 +64,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapeEdit
                     return point;
                 }
             }
+
             return point;
         }
     }

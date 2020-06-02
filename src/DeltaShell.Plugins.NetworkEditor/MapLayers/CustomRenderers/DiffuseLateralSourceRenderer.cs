@@ -17,14 +17,14 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.CustomRenderers
         public override IEnumerable<IFeature> GetFeatures(Envelope box, ILayer layer)
         {
             var vectorLayer = (VectorLayer) layer;
-            var symbol = vectorLayer.Style.Symbol;
-            var boxExpandedForImageSize = MapHelper.GetEnvelopeForImage(layer.Map, box.Centre, symbol.Width * 1.2, symbol.Height * 1.2);
-            var potentialDiffuse = base.GetFeatures(box, layer)
-                .OfType<ILateralSource>()
-                .Where(ls => ls.IsDiffuse).Cast<IFeature>();
-            var potentialNonDiffuse = base.GetFeatures(boxExpandedForImageSize, layer)
-                .OfType<ILateralSource>()
-                .Where(ls => !ls.IsDiffuse).Cast<IFeature>();
+            Bitmap symbol = vectorLayer.Style.Symbol;
+            Envelope boxExpandedForImageSize = MapHelper.GetEnvelopeForImage(layer.Map, box.Centre, symbol.Width * 1.2, symbol.Height * 1.2);
+            IEnumerable<IFeature> potentialDiffuse = base.GetFeatures(box, layer)
+                                                         .OfType<ILateralSource>()
+                                                         .Where(ls => ls.IsDiffuse).Cast<IFeature>();
+            IEnumerable<IFeature> potentialNonDiffuse = base.GetFeatures(boxExpandedForImageSize, layer)
+                                                            .OfType<ILateralSource>()
+                                                            .Where(ls => !ls.IsDiffuse).Cast<IFeature>();
 
             return potentialNonDiffuse.Concat(potentialDiffuse);
         }
@@ -48,27 +48,27 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.CustomRenderers
                 return false;
             }
 
-            var themeOn = vectorLayer.Theme != null;
-            var currentFeature = feature;
-            var currentGeometry = GetRenderedFeatureGeometry(currentFeature, vectorLayer);
+            bool themeOn = vectorLayer.Theme != null;
+            IFeature currentFeature = feature;
+            IGeometry currentGeometry = GetRenderedFeatureGeometry(currentFeature, vectorLayer);
 
-            var currentVectorStyle = themeOn
-                                         ? vectorLayer.Theme.GetStyle(currentFeature) as VectorStyle
-                                         : vectorLayer.Style;
+            VectorStyle currentVectorStyle = themeOn
+                                                 ? vectorLayer.Theme.GetStyle(currentFeature) as VectorStyle
+                                                 : vectorLayer.Style;
 
             if (null == currentVectorStyle)
             {
                 return false;
             }
-            
+
             currentVectorStyle.Outline.Color = Color.MediumVioletRed;
             currentVectorStyle.Outline.Width = 6;
             currentVectorStyle.Outline.DashStyle = DashStyle.Dash;
-            
+
             if (vectorLayer.Style.EnableOutline)
             {
                 // Draw background of all line-outlines first
-                if (!themeOn || (currentVectorStyle.Enabled && currentVectorStyle.EnableOutline))
+                if (!themeOn || currentVectorStyle.Enabled && currentVectorStyle.EnableOutline)
                 {
                     switch (currentGeometry.GeometryType)
                     {

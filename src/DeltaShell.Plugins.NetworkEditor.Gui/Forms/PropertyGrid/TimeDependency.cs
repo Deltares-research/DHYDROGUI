@@ -8,6 +8,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
     {
         [Description("Constant")]
         Constant,
+
         [Description("Time dependent")]
         TimeDependent
     }

@@ -22,35 +22,12 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Providers
         private bool isInitialized;
         private bool isDirty;
 
-        public virtual IHydroNetwork Network
-        {
-            get { return network; }
-            set
-            {
-                if (network != null)
-                {
-                    ((INotifyCollectionChanged)network).CollectionChanged -= HydroNetworkFeatureCollectionCollectionChanged;
-                    ((INotifyPropertyChanged)network).PropertyChanged -= OnNetworkPropertyChanged;
-                }   
-
-                network = value;
-
-                if (network != null)
-                {
-                    ((INotifyCollectionChanged)network).CollectionChanged += HydroNetworkFeatureCollectionCollectionChanged;
-                    ((INotifyPropertyChanged)network).PropertyChanged += OnNetworkPropertyChanged;
-                }
-
-                if (!isInitialized)
-                {
-                    InitializeFeatures();
-                }
-            }
-        }
-
         public override Type FeatureType
         {
-            get { return base.FeatureType; }
+            get
+            {
+                return base.FeatureType;
+            }
             set
             {
                 base.FeatureType = value;
@@ -59,149 +36,6 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Providers
                     InitializeFeatures();
                 }
             }
-        }
-
-        private void OnNetworkPropertyChanged(object sender, PropertyChangedEventArgs propertyChangedEventArgs)
-        {
-            envelope = null;
-
-            if (propertyChangedEventArgs.PropertyName == "CoordinateSystem")
-            {
-                CoordinateSystem = network.CoordinateSystem;
-                isDirty = true;
-            }
-
-			if (network.IsEditing)
-                return; // do nothing yet
-
-            if (isDirty) // if dirty and not editing, always fire event
-            {
-                FireFeaturesChanged();
-                isDirty = false;
-                return;
-            }
-
-            // else, only fire event on EndEdit
-            if (sender.Equals(network) && propertyChangedEventArgs.PropertyName == "IsEditing")
-                FireFeaturesChanged();
-        }
-
-        private void HydroNetworkFeatureCollectionCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            envelope = null;
-
-            var removedOrAddedItem = e.GetRemovedOrAddedItem();
-            if (removedOrAddedItem == null || (removedOrAddedItem.GetType() != FeatureType && (RefreshForChangedItem != null && !RefreshForChangedItem(removedOrAddedItem))))
-            {
-                return;
-            }
-            isDirty = true;
-        }
-
-        public virtual Func<object, bool> RefreshForChangedItem { get; set; }
-
-        private void InitializeFeatures()
-        {
-            ClearNetworkFeatures();
-
-            // create backing list wrapping enumerable
-            networkFeatures = GetNetworkFeatures();
-
-            var enumerableListCache = networkFeatures as IEnumerableListCache;
-            
-            if (enumerableListCache == null)
-            {
-                isInitialized = false;
-                return;
-            }
-            
-            enumerableListCache.CollectionChangeSource = (INotifyCollectionChange)Network;
-            enumerableListCache.PropertyChangeSource = (INotifyPropertyChange) Network;
-
-            isInitialized = true;
-        }
-
-        private void ClearNetworkFeatures()
-        {
-            var enumerableListCache = networkFeatures as IEnumerableListCache;
-            if (enumerableListCache != null)
-            {
-                enumerableListCache.CollectionChangeSource = null;
-                enumerableListCache.PropertyChangeSource = null;
-            }
-
-            networkFeatures = null;
-        }
-
-        private IList GetNetworkFeatures()
-        {
-            if (FeatureType == null || Network == null)
-            {
-                return null;
-            }
-            if (FeatureType == typeof(Channel))
-            {
-                return GetEnumerableList(Network.Channels.OfType<Channel>(), (INotifyCollectionChange)Network);
-            }
-            if (FeatureType == typeof(HydroNode))
-            {
-                return GetEnumerableList(Network.Nodes.OfType<HydroNode>(), (INotifyCollectionChange)Network);
-            }
-            if (FeatureType == typeof(CompositeBranchStructure))
-            {
-                return GetEnumerableList(Network.CompositeBranchStructures.OfType<CompositeBranchStructure>(), (INotifyCollectionChange)Network);
-            }
-            if (FeatureType == typeof(Pump))
-            {
-                return GetEnumerableList(Network.Pumps.OfType<Pump>(), (INotifyCollectionChange)Network);
-            }
-            if (FeatureType == typeof(Weir))
-            {
-                return GetEnumerableList(Network.Weirs.OfType<Weir>(), (INotifyCollectionChange)Network);
-            }
-            if (FeatureType == typeof (Gate))
-            {
-                return GetEnumerableList(Network.Gates.OfType<Gate>(), (INotifyCollectionChange) Network);
-            }
-            if (FeatureType == typeof(Culvert))
-            {
-                return GetEnumerableList(Network.Culverts.OfType<Culvert>(), (INotifyCollectionChange)Network);
-            }
-            if (FeatureType == typeof(Bridge))
-            {
-                return GetEnumerableList(Network.Bridges.OfType<Bridge>(), (INotifyCollectionChange)Network);
-            }
-            if (FeatureType == typeof(CrossSection))
-            {
-                return GetEnumerableList(Network.CrossSections.OfType<CrossSection>(), (INotifyCollectionChange)Network);
-            }
-            if (FeatureType == typeof(LateralSource))
-            {
-                return GetEnumerableList(Network.LateralSources.OfType<LateralSource>(), (INotifyCollectionChange)Network);
-            }
-            if (FeatureType == typeof(Retention))
-            {
-                return GetEnumerableList(Network.Retentions.OfType<Retention>(), (INotifyCollectionChange)Network);
-            }
-            if (FeatureType == typeof(ObservationPoint))
-            {
-                return GetEnumerableList(Network.ObservationPoints.OfType<ObservationPoint>(), (INotifyCollectionChange)Network);
-            }
-            if (FeatureType == typeof(ExtraResistance))
-            {
-                return GetEnumerableList(Network.ExtraResistances.OfType<ExtraResistance>(), (INotifyCollectionChange)Network);
-            }
-            throw new InvalidOperationException("Should never get here");
-        }
-
-        private IList GetEnumerableList<T>(IEnumerable<T> enumerable, INotifyCollectionChange notifyCollectionChange)
-        {
-            return new EnumerableList<T>
-                       {
-                           Enumerable = enumerable, 
-                           Editor = this,
-                           CollectionChangeSource = notifyCollectionChange
-                       };
         }
 
         public override IList Features
@@ -215,6 +49,45 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Providers
 
                 return networkFeatures;
             }
+        }
+
+        public virtual IHydroNetwork Network
+        {
+            get
+            {
+                return network;
+            }
+            set
+            {
+                if (network != null)
+                {
+                    ((INotifyCollectionChanged) network).CollectionChanged -= HydroNetworkFeatureCollectionCollectionChanged;
+                    ((INotifyPropertyChanged) network).PropertyChanged -= OnNetworkPropertyChanged;
+                }
+
+                network = value;
+
+                if (network != null)
+                {
+                    ((INotifyCollectionChanged) network).CollectionChanged += HydroNetworkFeatureCollectionCollectionChanged;
+                    ((INotifyPropertyChanged) network).PropertyChanged += OnNetworkPropertyChanged;
+                }
+
+                if (!isInitialized)
+                {
+                    InitializeFeatures();
+                }
+            }
+        }
+
+        public virtual Func<object, bool> RefreshForChangedItem { get; set; }
+
+        public override void Dispose()
+        {
+            ClearNetworkFeatures();
+
+            Network = null;
+            base.Dispose();
         }
 
         public virtual void OnInsert(int index, object o)
@@ -289,15 +162,15 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Providers
             }
             else if (typeof(IBranchFeature).IsAssignableFrom(FeatureType))
             {
-                var branchFeature = (IBranchFeature)o;
+                var branchFeature = (IBranchFeature) o;
                 lock (branchFeature.Branch.BranchFeatures)
                 {
-                    branchFeature.Branch.BranchFeatures.Remove(branchFeature); 
+                    branchFeature.Branch.BranchFeatures.Remove(branchFeature);
                 }
             }
             else if (typeof(INodeFeature).IsAssignableFrom(FeatureType))
             {
-                var nodeFeature = (INodeFeature)o;
+                var nodeFeature = (INodeFeature) o;
                 lock (nodeFeature.Node.NodeFeatures)
                 {
                     nodeFeature.Node.NodeFeatures.Remove(nodeFeature);
@@ -314,11 +187,11 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Providers
         {
             if (typeof(IBranch).IsAssignableFrom(FeatureType))
             {
-                network.Branches[index] = (IBranch)o;
+                network.Branches[index] = (IBranch) o;
             }
             else if (typeof(INode).IsAssignableFrom(FeatureType))
             {
-                network.Nodes[index] = (INode)o;
+                network.Nodes[index] = (INode) o;
             }
             else if (typeof(IBranchFeature).IsAssignableFrom(FeatureType))
             {
@@ -348,7 +221,7 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Providers
             }
             else if (typeof(IBranchFeature).IsAssignableFrom(FeatureType))
             {
-                foreach (var branch in network.Branches)
+                foreach (IBranch branch in network.Branches)
                 {
                     lock (branch.BranchFeatures)
                     {
@@ -358,7 +231,7 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Providers
             }
             else if (typeof(INodeFeature).IsAssignableFrom(FeatureType))
             {
-                foreach (var node in network.Nodes)
+                foreach (INode node in network.Nodes)
                 {
                     lock (node.NodeFeatures)
                     {
@@ -368,12 +241,164 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Providers
             }
         }
 
-        public override void Dispose()
+        private void OnNetworkPropertyChanged(object sender, PropertyChangedEventArgs propertyChangedEventArgs)
+        {
+            envelope = null;
+
+            if (propertyChangedEventArgs.PropertyName == "CoordinateSystem")
+            {
+                CoordinateSystem = network.CoordinateSystem;
+                isDirty = true;
+            }
+
+            if (network.IsEditing)
+            {
+                return; // do nothing yet
+            }
+
+            if (isDirty) // if dirty and not editing, always fire event
+            {
+                FireFeaturesChanged();
+                isDirty = false;
+                return;
+            }
+
+            // else, only fire event on EndEdit
+            if (sender.Equals(network) && propertyChangedEventArgs.PropertyName == "IsEditing")
+            {
+                FireFeaturesChanged();
+            }
+        }
+
+        private void HydroNetworkFeatureCollectionCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            envelope = null;
+
+            object removedOrAddedItem = e.GetRemovedOrAddedItem();
+            if (removedOrAddedItem == null || removedOrAddedItem.GetType() != FeatureType && RefreshForChangedItem != null && !RefreshForChangedItem(removedOrAddedItem))
+            {
+                return;
+            }
+
+            isDirty = true;
+        }
+
+        private void InitializeFeatures()
         {
             ClearNetworkFeatures();
 
-            Network = null;
-            base.Dispose();
+            // create backing list wrapping enumerable
+            networkFeatures = GetNetworkFeatures();
+
+            var enumerableListCache = networkFeatures as IEnumerableListCache;
+
+            if (enumerableListCache == null)
+            {
+                isInitialized = false;
+                return;
+            }
+
+            enumerableListCache.CollectionChangeSource = (INotifyCollectionChange) Network;
+            enumerableListCache.PropertyChangeSource = (INotifyPropertyChange) Network;
+
+            isInitialized = true;
+        }
+
+        private void ClearNetworkFeatures()
+        {
+            var enumerableListCache = networkFeatures as IEnumerableListCache;
+            if (enumerableListCache != null)
+            {
+                enumerableListCache.CollectionChangeSource = null;
+                enumerableListCache.PropertyChangeSource = null;
+            }
+
+            networkFeatures = null;
+        }
+
+        private IList GetNetworkFeatures()
+        {
+            if (FeatureType == null || Network == null)
+            {
+                return null;
+            }
+
+            if (FeatureType == typeof(Channel))
+            {
+                return GetEnumerableList(Network.Channels.OfType<Channel>(), (INotifyCollectionChange) Network);
+            }
+
+            if (FeatureType == typeof(HydroNode))
+            {
+                return GetEnumerableList(Network.Nodes.OfType<HydroNode>(), (INotifyCollectionChange) Network);
+            }
+
+            if (FeatureType == typeof(CompositeBranchStructure))
+            {
+                return GetEnumerableList(Network.CompositeBranchStructures.OfType<CompositeBranchStructure>(), (INotifyCollectionChange) Network);
+            }
+
+            if (FeatureType == typeof(Pump))
+            {
+                return GetEnumerableList(Network.Pumps.OfType<Pump>(), (INotifyCollectionChange) Network);
+            }
+
+            if (FeatureType == typeof(Weir))
+            {
+                return GetEnumerableList(Network.Weirs.OfType<Weir>(), (INotifyCollectionChange) Network);
+            }
+
+            if (FeatureType == typeof(Gate))
+            {
+                return GetEnumerableList(Network.Gates.OfType<Gate>(), (INotifyCollectionChange) Network);
+            }
+
+            if (FeatureType == typeof(Culvert))
+            {
+                return GetEnumerableList(Network.Culverts.OfType<Culvert>(), (INotifyCollectionChange) Network);
+            }
+
+            if (FeatureType == typeof(Bridge))
+            {
+                return GetEnumerableList(Network.Bridges.OfType<Bridge>(), (INotifyCollectionChange) Network);
+            }
+
+            if (FeatureType == typeof(CrossSection))
+            {
+                return GetEnumerableList(Network.CrossSections.OfType<CrossSection>(), (INotifyCollectionChange) Network);
+            }
+
+            if (FeatureType == typeof(LateralSource))
+            {
+                return GetEnumerableList(Network.LateralSources.OfType<LateralSource>(), (INotifyCollectionChange) Network);
+            }
+
+            if (FeatureType == typeof(Retention))
+            {
+                return GetEnumerableList(Network.Retentions.OfType<Retention>(), (INotifyCollectionChange) Network);
+            }
+
+            if (FeatureType == typeof(ObservationPoint))
+            {
+                return GetEnumerableList(Network.ObservationPoints.OfType<ObservationPoint>(), (INotifyCollectionChange) Network);
+            }
+
+            if (FeatureType == typeof(ExtraResistance))
+            {
+                return GetEnumerableList(Network.ExtraResistances.OfType<ExtraResistance>(), (INotifyCollectionChange) Network);
+            }
+
+            throw new InvalidOperationException("Should never get here");
+        }
+
+        private IList GetEnumerableList<T>(IEnumerable<T> enumerable, INotifyCollectionChange notifyCollectionChange)
+        {
+            return new EnumerableList<T>
+            {
+                Enumerable = enumerable,
+                Editor = this,
+                CollectionChangeSource = notifyCollectionChange
+            };
         }
     }
 }

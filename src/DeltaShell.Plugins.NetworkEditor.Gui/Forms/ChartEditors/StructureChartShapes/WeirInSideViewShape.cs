@@ -15,9 +15,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
             new StructureShapeStyleProvider();
 
         public WeirInSideViewShape(IChart chart, double offsetInSideView, IWeir structure)
-            : base(chart, offsetInSideView, structure)
-        {
-        }
+            : base(chart, offsetInSideView, structure) {}
 
         protected override void CreateStyles()
         {
@@ -45,15 +43,15 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
             double zMaxValue = ChartCoordinateService.ToWorldY(Chart, Chart.ChartBounds.Top);
             double minX = Chart.BottomAxis.Minimum;
             double maxX = Chart.BottomAxis.Maximum;
-            
+
             if (Structure.WeirFormula is IGatedWeirFormula)
             {
-                var formula = (IGatedWeirFormula)Structure.WeirFormula;
+                var formula = (IGatedWeirFormula) Structure.WeirFormula;
                 var gatedWeirShape = new GatedWeirShape(Chart, OffsetInSideView, Structure.CrestLevel,
                                                         16, Structure.CrestLevel + formula.GateOpening,
                                                         zMinValue,
                                                         zMaxValue, true, false);
-                
+
                 gatedWeirShape.WaterStyle = new VectorStyle
                 {
                     Fill = new SolidBrush(Color.LightCyan),
@@ -69,6 +67,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
                 // only river wier supports crest shape
                 crestShape = Structure.CrestShape;
             }
+
             if (crestShape == CrestShape.Round)
             {
                 double height = Structure.CrestLevel - zMinValue;
@@ -80,6 +79,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
                                                   16,
                                                   zMinValue, crestOffset);
             }
+
             if (crestShape == CrestShape.Triangular)
             {
                 double height = Structure.CrestLevel - zMinValue;
@@ -91,6 +91,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
                                                        16,
                                                        zMinValue, crestOffset);
             }
+
             if (crestShape == CrestShape.Broad)
             {
                 return new BroadCrestShapeFeature(Chart, OffsetInSideView,
@@ -98,16 +99,15 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
                                                   16,
                                                   zMinValue);
             }
+
             //it must be sharp
             if (crestShape == CrestShape.Sharp)
             {
-                var weirHeight = Math.Max(0, Structure.CrestLevel - zMinValue);
+                double weirHeight = Math.Max(0, Structure.CrestLevel - zMinValue);
                 return new FixedRectangleShapeFeature(Chart, OffsetInSideView, Structure.CrestLevel, 16,
-                                                      weirHeight, false, true)
-                           {
-                               HorizontalShapeAlignment = HorizontalShapeAlignment.Center
-                           };    
+                                                      weirHeight, false, true) {HorizontalShapeAlignment = HorizontalShapeAlignment.Center};
             }
+
             return null;
         }
     }

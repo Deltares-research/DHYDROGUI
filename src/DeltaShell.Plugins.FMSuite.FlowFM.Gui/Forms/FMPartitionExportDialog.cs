@@ -43,9 +43,43 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
 
         public string Extension { get; set; }
 
+        public int CoreCount
+        {
+            get
+            {
+                return numDomains;
+            }
+        }
+
+        public DelftDialogResult ShowPartitionModal()
+        {
+            return ShowDialog() == DialogResult.OK ? DelftDialogResult.OK : DelftDialogResult.Cancel;
+        }
+
+        public void ConfigurePartition(object model)
+        {
+            var exporter = model as FMPartitionExporterBase;
+            if (exporter != null)
+            {
+                exporter.NumDomains = numDomains;
+                exporter.IsContiguous = contiguousDomains;
+                exporter.PolygonFile = polFilePath;
+            }
+
+            if (exporter is FMModelPartitionExporter && EnableSolverSelection)
+            {
+                var selectedItem = (ParallelSolver) comboBoxSolverType.SelectedItem;
+                ((FMModelPartitionExporter) exporter).SolverType = (int) selectedItem;
+            }
+        }
+
         private void PolFileSelectButtonOnClick(object sender, EventArgs eventArgs)
         {
-            var selectFileDialog = new OpenFileDialog {Filter = "Polygon files (*.pol)|*.pol", Multiselect = false};
+            var selectFileDialog = new OpenFileDialog
+            {
+                Filter = "Polygon files (*.pol)|*.pol",
+                Multiselect = false
+            };
             if (selectFileDialog.ShowDialog(this) == DialogResult.OK)
             {
                 polFileTextBox.Text = selectFileDialog.FileName;
@@ -68,7 +102,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
             UpdateVisibilities();
         }
 
-
         private void UpdateVisibilities()
         {
             domainsTextBox.Enabled = metisRadioButton.Checked;
@@ -83,9 +116,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
             {
                 polFilePath = null;
 
-                if (!int.TryParse(domainsTextBox.Text, out numDomains)) return false;
+                if (!int.TryParse(domainsTextBox.Text, out numDomains))
+                {
+                    return false;
+                }
 
-                if (numDomains < 1) return false;
+                if (numDomains < 1)
+                {
+                    return false;
+                }
 
                 contiguousDomains = contiguousDomainCheckBox.Checked;
             }
@@ -95,13 +134,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
 
                 polFilePath = polFileTextBox.Text;
 
-                if (polFilePath == null) return false; 
+                if (polFilePath == null)
+                {
+                    return false;
+                }
 
-                if (!polFilePath.EndsWith(".pol")) return false;
+                if (!polFilePath.EndsWith(".pol"))
+                {
+                    return false;
+                }
 
-                if (!File.Exists(polFilePath)) return false;
+                if (!File.Exists(polFilePath))
+                {
+                    return false;
+                }
             }
-            
+
             return true;
         }
 
@@ -115,13 +163,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
             comboBoxSolverType.Visible = EnableSolverSelection;
             if (ShowDialog() == DialogResult.OK)
             {
-                var saveFileDialog = new SaveFileDialog {AddExtension = false, Filter = Extension};
+                var saveFileDialog = new SaveFileDialog
+                {
+                    AddExtension = false,
+                    Filter = Extension
+                };
                 if (saveFileDialog.ShowDialog(this) == DialogResult.OK)
                 {
                     filePath = saveFileDialog.FileName;
                     return DelftDialogResult.OK;
                 }
             }
+
             return DelftDialogResult.Cancel;
         }
 
@@ -147,36 +200,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
 
         public object Data { get; set; }
         public Image Image { get; set; }
-        public void EnsureVisible(object item)
-        {
-            
-        }
+
+        public void EnsureVisible(object item) {}
 
         public ViewInfo ViewInfo { get; set; }
 
         #endregion
-
-        public DelftDialogResult ShowPartitionModal()
-        {
-            return ShowDialog() == DialogResult.OK ? DelftDialogResult.OK : DelftDialogResult.Cancel;
-        }
-
-        public void ConfigurePartition(object model)
-        {
-            var exporter = model as FMPartitionExporterBase;
-            if (exporter != null)
-            {
-                exporter.NumDomains = numDomains;
-                exporter.IsContiguous = contiguousDomains;
-                exporter.PolygonFile = polFilePath;
-            }
-            if (exporter is FMModelPartitionExporter && EnableSolverSelection)
-            {
-                var selectedItem = (ParallelSolver)comboBoxSolverType.SelectedItem;
-                ((FMModelPartitionExporter) exporter).SolverType = (int) selectedItem;
-            }
-        }
-
-        public int CoreCount { get { return numDomains; } }
     }
 }

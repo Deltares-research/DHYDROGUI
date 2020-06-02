@@ -17,6 +17,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors
     {
         private readonly TableView dataTableView;
 
+        private WaveInputFieldData data;
+        public event EventHandler SelectedFeaturesChanged;
+
         public WaveTimePointEditor()
         {
             InitializeComponent();
@@ -49,18 +52,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors
         public Action ExportToBoundaryConditions { private get; set; }
         public Action ImportFromBoundaryCondition { private get; set; }
 
-        private void WindComboBoxOnSelectedValueChanged(object sender, EventArgs eventArgs)
-        {
-            RefreshPanels();
-        }
-
-        private void HydroComboBoxOnSelectedValueChanged(object sender, EventArgs eventArgs)
-        {
-            RefreshPanels();
-        }
-
-        private WaveInputFieldData data;
-
         public object Data
         {
             get => data;
@@ -89,6 +80,27 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors
                     RefreshPanels();
                 }
             }
+        }
+
+        public Image Image { get; set; }
+
+        public ViewInfo ViewInfo { get; set; }
+        public IEnumerable<IFeature> SelectedFeatures { get; set; }
+        public ILayer Layer { get; set; }
+        public void EnsureVisible(object item) {}
+
+        public void OnActivated() {}
+
+        public void OnDeactivated() {}
+
+        private void WindComboBoxOnSelectedValueChanged(object sender, EventArgs eventArgs)
+        {
+            RefreshPanels();
+        }
+
+        private void HydroComboBoxOnSelectedValueChanged(object sender, EventArgs eventArgs)
+        {
+            RefreshPanels();
         }
 
         private void RefreshPanels()
@@ -152,18 +164,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors
                                                               nameof(inputFieldData.WindDirectionConstant)));
             }
         }
-
-        public Image Image { get; set; }
-        public void EnsureVisible(object item) {}
-
-        public ViewInfo ViewInfo { get; set; }
-        public IEnumerable<IFeature> SelectedFeatures { get; set; }
-        public event EventHandler SelectedFeaturesChanged;
-        public ILayer Layer { get; set; }
-
-        public void OnActivated() {}
-
-        public void OnDeactivated() {}
 
         private void exportToBoundaryButton_Click(object sender, EventArgs e)
         {

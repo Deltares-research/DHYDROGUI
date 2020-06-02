@@ -20,36 +20,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters
             modelFunc = getModelFunc;
         }
 
-        protected override string GetNodeText(WaveBoundaryCondition data)
-        {
-            return data.Name;
-        }
-
-        protected override Image GetNodeImage(WaveBoundaryCondition data)
-        {
-            return BoundaryImage;
-        }
-
-        protected override bool CanRemove(WaveBoundaryCondition nodeData)
-        {
-            return true;
-        }
-
-        protected override bool RemoveNodeData(object parentNodeData, WaveBoundaryCondition nodeData)
-        {
-            return DeleteBoundary(nodeData);
-        }
-
-        private bool DeleteBoundary(WaveBoundaryCondition nodeData)
-        {
-            // remove the boundary from the wave model
-            WaveModel wm = modelFunc(nodeData);
-            return wm.Boundaries.Remove(nodeData.Feature);
-        }
-
         /// <summary>
         /// Override the context menu.
-        /// <see cref="WaveBoundaryCondition" /> only has a delete button and no importer, exporter and properties.
+        /// <see cref="WaveBoundaryCondition"/> only has a delete button and no importer, exporter and properties.
         /// </summary>
         /// <param name="sender"> </param>
         /// <param name="nodeData"> </param>
@@ -76,6 +49,33 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters
             {
                 return null;
             }
+        }
+
+        protected override string GetNodeText(WaveBoundaryCondition data)
+        {
+            return data.Name;
+        }
+
+        protected override Image GetNodeImage(WaveBoundaryCondition data)
+        {
+            return BoundaryImage;
+        }
+
+        protected override bool CanRemove(WaveBoundaryCondition nodeData)
+        {
+            return true;
+        }
+
+        protected override bool RemoveNodeData(object parentNodeData, WaveBoundaryCondition nodeData)
+        {
+            return DeleteBoundary(nodeData);
+        }
+
+        private bool DeleteBoundary(WaveBoundaryCondition nodeData)
+        {
+            // remove the boundary from the wave model
+            WaveModel wm = modelFunc(nodeData);
+            return wm.Boundaries.Remove(nodeData.Feature);
         }
     }
 }

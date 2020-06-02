@@ -8,32 +8,18 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
     {
         private static readonly Dictionary<string, string> backwardsCompatibilityMapping = new Dictionary<string, string>
         {
-            {
-                "levelcenter", KnownStructureProperties.CrestLevel
-            },
-            {
-                "sill_level", KnownStructureProperties.CrestLevel
-            },
-            {
-                "crest_level", KnownStructureProperties.CrestLevel
-            },
-            {
-                "gateheight", KnownStructureProperties.GateLowerEdgeLevel
-            },
-            {
-                "lower_edge_level", KnownStructureProperties.GateLowerEdgeLevel
-            },
-            {
-                "door_opening_width", KnownStructureProperties.GateOpeningWidth
-            },
-            {
-                "opening_width", KnownStructureProperties.GateOpeningWidth
-            }
+            {"levelcenter", KnownStructureProperties.CrestLevel},
+            {"sill_level", KnownStructureProperties.CrestLevel},
+            {"crest_level", KnownStructureProperties.CrestLevel},
+            {"gateheight", KnownStructureProperties.GateLowerEdgeLevel},
+            {"lower_edge_level", KnownStructureProperties.GateLowerEdgeLevel},
+            {"door_opening_width", KnownStructureProperties.GateOpeningWidth},
+            {"opening_width", KnownStructureProperties.GateOpeningWidth}
         };
 
         public static string UpdateOldNamesOfStructuresComponentsToNewNamesIfNeeded(string targetName)
         {
-            string [] partsTargetName = targetName.Split('.');
+            string[] partsTargetName = targetName.Split('.');
 
             if (partsTargetName.Length > 1 && backwardsCompatibilityMapping.TryGetValue(partsTargetName.Last(), out string newName))
             {

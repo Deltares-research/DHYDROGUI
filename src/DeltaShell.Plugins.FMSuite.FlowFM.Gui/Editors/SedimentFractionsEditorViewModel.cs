@@ -22,7 +22,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
 
         public IEventedList<ISedimentFraction> ObjectModelSedimentFractions
         {
-            get { return objectModelSedimentFractions; }
+            get
+            {
+                return objectModelSedimentFractions;
+            }
             set
             {
                 objectModelSedimentFractions = value;
@@ -36,7 +39,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
 
         public IEventedList<ISedimentProperty> ObjectModelSedimentOverallProperties
         {
-            get { return objectModelSedimentOverallProperties; }
+            get
+            {
+                return objectModelSedimentOverallProperties;
+            }
             set
             {
                 objectModelSedimentOverallProperties = value;
@@ -48,19 +54,29 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             }
         }
 
-        
         public ObservableCollection<ISedimentFraction> SedimentFractions
         {
-            get { return new ObservableCollection<ISedimentFraction>(ObjectModelSedimentFractions); }
+            get
+            {
+                return new ObservableCollection<ISedimentFraction>(ObjectModelSedimentFractions);
+            }
         }
 
         public ISedimentFraction CurrentSedimentFraction
         {
             get
             {
-                if (currentSedimentFraction != null) return currentSedimentFraction;
-                var firstSedimentFraction = SedimentFractions.FirstOrDefault();
-                if (firstSedimentFraction == null) return null;
+                if (currentSedimentFraction != null)
+                {
+                    return currentSedimentFraction;
+                }
+
+                ISedimentFraction firstSedimentFraction = SedimentFractions.FirstOrDefault();
+                if (firstSedimentFraction == null)
+                {
+                    return null;
+                }
+
                 CurrentSedimentFraction = firstSedimentFraction;
                 return currentSedimentFraction;
             }
@@ -68,7 +84,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             {
                 currentSedimentFraction = value;
                 if (currentSedimentFraction != null)
+                {
                     CurrentFractionName = currentSedimentFraction.Name;
+                }
 
                 OnPropertyChanged("CurrentFractionName");
                 OnPropertyChanged("CurrentSedimentFraction");
@@ -87,8 +105,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             get
             {
                 return CurrentSedimentFraction != null
-                    ? CurrentSedimentFraction.AvailableSedimentTypes
-                    : new List<ISedimentType>();
+                           ? CurrentSedimentFraction.AvailableSedimentTypes
+                           : new List<ISedimentType>();
             }
         }
 
@@ -97,12 +115,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             get
             {
                 return CurrentSedimentFraction != null
-                    ? CurrentSedimentFraction.CurrentSedimentType
-                    : SedimentTypes.FirstOrDefault();
+                           ? CurrentSedimentFraction.CurrentSedimentType
+                           : SedimentTypes.FirstOrDefault();
             }
             set
             {
-                if (CurrentSedimentFraction != null) CurrentSedimentFraction.CurrentSedimentType = value;
+                if (CurrentSedimentFraction != null)
+                {
+                    CurrentSedimentFraction.CurrentSedimentType = value;
+                }
+
                 OnPropertyChanged("CurrentSedimentType");
                 OnPropertyChanged("CurrentFormulaType");
                 OnPropertyChanged("FormulaTypes");
@@ -117,8 +139,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             get
             {
                 return CurrentSedimentType != null
-                    ? CurrentSedimentType.Properties.Where(p => p.IsVisible)
-                    : Enumerable.Empty<ISedimentProperty>();
+                           ? CurrentSedimentType.Properties.Where(p => p.IsVisible)
+                           : Enumerable.Empty<ISedimentProperty>();
             }
         }
 
@@ -127,8 +149,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             get
             {
                 return CurrentSedimentFraction != null
-                    ? CurrentSedimentFraction.SupportedFormulaTypes
-                    : new List<ISedimentFormulaType>();
+                           ? CurrentSedimentFraction.SupportedFormulaTypes
+                           : new List<ISedimentFormulaType>();
             }
         }
 
@@ -137,12 +159,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             get
             {
                 return CurrentSedimentFraction != null
-                    ? CurrentSedimentFraction.CurrentFormulaType
-                    : FormulaTypes.FirstOrDefault();
+                           ? CurrentSedimentFraction.CurrentFormulaType
+                           : FormulaTypes.FirstOrDefault();
             }
             set
             {
-                if (CurrentSedimentFraction != null) CurrentSedimentFraction.CurrentFormulaType = value;
+                if (CurrentSedimentFraction != null)
+                {
+                    CurrentSedimentFraction.CurrentFormulaType = value;
+                }
+
                 OnPropertyChanged("CurrentFormulaType");
                 OnPropertyChanged("CurrentFormulaGuiProperties");
             }
@@ -153,8 +179,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             get
             {
                 return CurrentFormulaType != null
-                    ? CurrentFormulaType.Properties.Where(p => p.IsVisible)
-                    : Enumerable.Empty<ISedimentProperty>();
+                           ? CurrentFormulaType.Properties.Where(p => p.IsVisible)
+                           : Enumerable.Empty<ISedimentProperty>();
             }
         }
 
@@ -168,48 +194,66 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
 
         private void OnPropertyChanged(string propertyName = null)
         {
-            if (PropertyChanged != null) PropertyChanged.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            if (PropertyChanged != null)
+            {
+                PropertyChanged.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            }
         }
 
         public Visibility FractionsVisible
         {
-            get { return SedimentFractions.Count == 0 ? Visibility.Hidden : Visibility.Visible; }
+            get
+            {
+                return SedimentFractions.Count == 0 ? Visibility.Hidden : Visibility.Visible;
+            }
         }
 
         public Visibility FormulasVisible
         {
-            get { return FormulaTypes.Count == 0 ? Visibility.Hidden : Visibility.Visible; }
+            get
+            {
+                return FormulaTypes.Count == 0 ? Visibility.Hidden : Visibility.Visible;
+            }
         }
 
         #endregion
-        
+
         #region Add / Remove Fractions
 
         public ICommand OnAddCommand
         {
-            get { return new SedimentFractionsEditorRelayCommand(AddFraction); }
+            get
+            {
+                return new SedimentFractionsEditorRelayCommand(AddFraction);
+            }
         }
 
         public ICommand OnRemoveCommand
         {
-            get { return new SedimentFractionsEditorRelayCommand(RemoveFraction); }
+            get
+            {
+                return new SedimentFractionsEditorRelayCommand(RemoveFraction);
+            }
         }
 
         private void AddFraction()
         {
-            if (string.IsNullOrEmpty(CurrentFractionName)) return;
+            if (string.IsNullOrEmpty(CurrentFractionName))
+            {
+                return;
+            }
 
-            var names = SedimentFractions.Select(l => l.Name).ToList();
+            List<string> names = SedimentFractions.Select(l => l.Name).ToList();
             if (names.Contains(CurrentFractionName))
             {
-                string pattern = @"\d+$";
-                string replacement = "";
-                Regex rgx = new Regex(pattern);
+                var pattern = @"\d+$";
+                var replacement = "";
+                var rgx = new Regex(pattern);
                 string result = rgx.Replace(CurrentFractionName, replacement);
                 CurrentFractionName = NamingHelper.GenerateUniqueNameFromList(result + "{0:D2}", true, names);
             }
-                                                                
-            var newFraction = new SedimentFraction() { Name = CurrentFractionName };
+
+            var newFraction = new SedimentFraction() {Name = CurrentFractionName};
             ObjectModelSedimentFractions.Add(newFraction);
 
             OnPropertyChanged("SedimentFractions");
@@ -221,7 +265,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
 
         private void RemoveFraction()
         {
-            if (CurrentSedimentFraction == null) return;
+            if (CurrentSedimentFraction == null)
+            {
+                return;
+            }
+
             ObjectModelSedimentFractions.Remove(CurrentSedimentFraction);
             CurrentFractionName = CurrentSedimentFraction == null ? string.Empty : CurrentSedimentFraction.Name;
 
@@ -233,6 +281,5 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
         }
 
         #endregion
-
     }
 }

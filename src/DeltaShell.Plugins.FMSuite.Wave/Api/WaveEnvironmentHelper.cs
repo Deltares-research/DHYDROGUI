@@ -11,7 +11,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Api
     /// and working directory are modified. Upon disposing, the environment and
     /// working directory are restored to their original state.
     /// </summary>
-    /// <seealso cref="IDisposable" />
+    /// <seealso cref="IDisposable"/>
     public sealed class WaveEnvironmentHelper : IDisposable
     {
         private readonly string previousPath;
@@ -24,9 +24,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Api
         /// Creates a new <see cref="WaveEnvironmentHelper"/>.
         /// </summary>
         /// <param name="workDir">The working directory to switch to.</param>
-        public WaveEnvironmentHelper(string workDir) : this(workDir, new SystemEnvironment())
-        {
-        }
+        public WaveEnvironmentHelper(string workDir) : this(workDir, new SystemEnvironment()) {}
 
         /// <summary>
         /// Creates a new <see cref="WaveEnvironmentHelper"/>.
@@ -45,18 +43,23 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Api
             UpdateWorkingDirectory(workDir);
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether [dimr run].
+        /// </summary>
+        public static bool DimrRun { get; set; } = false;
+
         private void UpdateEnvironment()
         {
-            string modifiedPath = string.Join(";", 
-                                              DimrApiDataSet.WaveExePath, 
+            string modifiedPath = string.Join(";",
+                                              DimrApiDataSet.WaveExePath,
                                               DimrApiDataSet.SwanExePath,
-                                              DimrApiDataSet.SwanScriptPath, 
+                                              DimrApiDataSet.SwanScriptPath,
                                               DimrApiDataSet.EsmfExePath,
-                                              DimrApiDataSet.EsmfScriptPath, 
+                                              DimrApiDataSet.EsmfScriptPath,
                                               previousPath);
 
             environment.SetVariable(EnvironmentConstants.PathKey, modifiedPath);
-            environment.SetVariable(WaveEnvironmentConstants.ArchKey, 
+            environment.SetVariable(WaveEnvironmentConstants.ArchKey,
                                     WaveEnvironmentConstants.ArchValue);
         }
 
@@ -68,15 +71,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Api
             }
         }
 
-        /// <summary>
-        /// Gets or sets a value indicating whether [dimr run].
-        /// </summary>
-        public static bool DimrRun { get; set; } = false;
-
         private void RestoreEnvironment()
         {
-            string archVariableKey = DimrRun ? WaveEnvironmentConstants.OldArchKey 
-                                             : WaveEnvironmentConstants.ArchKey;
+            string archVariableKey = DimrRun
+                                         ? WaveEnvironmentConstants.OldArchKey
+                                         : WaveEnvironmentConstants.ArchKey;
             environment.SetVariable(archVariableKey, previousArch);
             environment.SetVariable(EnvironmentConstants.PathKey, previousPath);
         }
@@ -90,6 +89,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Api
         }
 
         #region IDisposable
+
         ~WaveEnvironmentHelper()
         {
             Dispose(false);
@@ -118,6 +118,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Api
         }
 
         private bool isDisposed;
+
         #endregion
     }
 }

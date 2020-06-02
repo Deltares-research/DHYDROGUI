@@ -18,10 +18,10 @@ namespace DeltaShell.Plugins.FMSuite.Common.ModelSchema
         /// </summary>
         /// <param name="propertyDefinition"> Property definition for this property. </param>
         /// <param name="valueAsString"> String representing the initial value of this property. </param>
-        /// <exception cref="ArgumentNullException"> When <paramref name="propertyDefinition" /> is null. </exception>
+        /// <exception cref="ArgumentNullException"> When <paramref name="propertyDefinition"/> is null. </exception>
         /// <exception cref="FormatException">
-        /// When <paramref name="valueAsString" /> does not properly express the <see cref="ModelPropertyDefinition.DataType" />
-        /// specified in <see cref="PropertyDefinition" />. Check <see cref="System.Exception.InnerException" /> for underlying
+        /// When <paramref name="valueAsString"/> does not properly express the <see cref="ModelPropertyDefinition.DataType"/>
+        /// specified in <see cref="PropertyDefinition"/>. Check <see cref="System.Exception.InnerException"/> for underlying
         /// cause.
         /// </exception>
         protected ModelProperty(ModelPropertyDefinition propertyDefinition, string valueAsString)
@@ -49,7 +49,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.ModelSchema
         /// </summary>
         /// <exception cref="ArgumentException">
         /// When type of value does not conform to
-        /// <see cref="ModelPropertyDefinition.DataType" /> specified in <see cref="PropertyDefinition" />.
+        /// <see cref="ModelPropertyDefinition.DataType"/> specified in <see cref="PropertyDefinition"/>.
         /// </exception>
         public object Value
         {
@@ -66,7 +66,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.ModelSchema
         }
 
         /// <summary>
-        /// The minimum allowed value if defined (object type defined by <see cref="ModelPropertyDefinition.DataType" />)
+        /// The minimum allowed value if defined (object type defined by <see cref="ModelPropertyDefinition.DataType"/>)
         /// or null if not set.
         /// </summary>
         public object MinValue
@@ -83,7 +83,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.ModelSchema
         }
 
         /// <summary>
-        /// The maximum allowed value if defined (object type defined by <see cref="ModelPropertyDefinition.DataType" />)
+        /// The maximum allowed value if defined (object type defined by <see cref="ModelPropertyDefinition.DataType"/>)
         /// or null if not set.
         /// </summary>
         public object MaxValue
@@ -105,12 +105,12 @@ namespace DeltaShell.Plugins.FMSuite.Common.ModelSchema
         public ModelPropertyDefinition PropertyDefinition => propertyDefinition;
 
         /// <summary>
-        /// Sets <see cref="Value" /> using a string representation.
+        /// Sets <see cref="Value"/> using a string representation.
         /// </summary>
-        /// <param name="valueAsString"> String representation of the new <see cref="Value" />. </param>
+        /// <param name="valueAsString"> String representation of the new <see cref="Value"/>. </param>
         /// <exception cref="FormatException">
-        /// When <paramref name="valueAsString" /> does not properly express the <see cref="ModelPropertyDefinition.DataType" />
-        /// specified in <see cref="PropertyDefinition" />. Check <see cref="System.Exception.InnerException" /> for underlying
+        /// When <paramref name="valueAsString"/> does not properly express the <see cref="ModelPropertyDefinition.DataType"/>
+        /// specified in <see cref="PropertyDefinition"/>. Check <see cref="System.Exception.InnerException"/> for underlying
         /// cause.
         /// </exception>
         public void SetValueAsString(string valueAsString)
@@ -138,7 +138,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.ModelSchema
                 if (e is OverflowException)
                 {
                     throw new FormatException(string.Format("Value string \"{0}\" is too large/small for property \"{1}\"",
-                                                  valueAsString, PropertyDefinition.FilePropertyName),
+                                                            valueAsString, PropertyDefinition.FilePropertyName),
                                               e);
                 }
 
@@ -148,35 +148,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.ModelSchema
         }
 
         /// <summary>
-        /// Set value logic for when <see cref="Value" /> is of type <see cref="Steerable" />.
-        /// </summary>
-        /// <param name="valueAsString"> </param>
-        /// <exception cref="ArgumentException"> When <see cref="valueAsString" /> is an invalid file name. </exception>
-        private void SetValueAsStringForSteerable(string valueAsString)
-        {
-            var steerableValue = (Steerable) value;
-
-            if (valueAsString == "REALTIME") // It is then either driven externally...
-            {
-                steerableValue.Mode = SteerableMode.External;
-                return;
-            }
-
-            string fileName = Path.GetFileName(valueAsString);
-            if (FileUtils.IsValidFileName(fileName) && Path.GetExtension(fileName) == ".tim") // ... or a timeseries
-            {
-                steerableValue.TimeSeriesFilename = valueAsString;
-                steerableValue.Mode = SteerableMode.TimeSeries;
-                return;
-            }
-
-            var constantValue = FMParser.FromString<double>(valueAsString);
-            steerableValue.ConstantValue = constantValue;
-            steerableValue.Mode = SteerableMode.ConstantValue;
-        }
-
-        /// <summary>
-        /// Returns <see cref="Value" /> in string representation.
+        /// Returns <see cref="Value"/> in string representation.
         /// </summary>
         public virtual string GetValueAsString()
         {
@@ -184,31 +156,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.ModelSchema
         }
 
         /// <summary>
-        /// Precondition check to for checking if a value type corresponds to <see cref="ModelPropertyDefinition" />.
-        /// <see cref="ModelPropertyDefinition.DataType" />.
-        /// </summary>
-        /// <param name="type"> Type to be checked. </param>
-        /// <exception cref="ArgumentException"> When <paramref name="type" /> does not correspond. </exception>
-        private void ThrowIfTypesDontMatch(Type type)
-        {
-            if (type != propertyDefinition.DataType && !type.Implements(propertyDefinition.DataType))
-            {
-                throw new ArgumentException(string.Format("Invalid object type {0} (expecting {1}) for {2}",
-                                                          type, propertyDefinition.DataType,
-                                                          propertyDefinition.FilePropertyName));
-            }
-        }
-
-        public override string ToString()
-        {
-            return string.Format("{0}: {1} ({2})", PropertyDefinition.Caption, GetValueAsString(),
-                                 PropertyDefinition.Category);
-        }
-
-        public abstract object Clone();
-
-        /// <summary>
-        /// Checks if <see cref="Value" /> is valid.
+        /// Checks if <see cref="Value"/> is valid.
         /// </summary>
         /// <returns> True if valid; False otherwise. </returns>
         public bool Validate()
@@ -242,7 +190,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.ModelSchema
         /// <summary>
         /// Indicates if this property is enabled or not.
         /// </summary>
-        /// <param name="properties"> All available properties indexed on <see cref="ModelPropertyDefinition.FilePropertyName" />. </param>
+        /// <param name="properties"> All available properties indexed on <see cref="ModelPropertyDefinition.FilePropertyName"/>. </param>
         /// <returns> True if enabled; False otherwise. </returns>
         public bool IsEnabled(IEnumerable<ModelProperty> properties)
         {
@@ -252,6 +200,58 @@ namespace DeltaShell.Plugins.FMSuite.Common.ModelSchema
         public bool IsVisible(IEnumerable<ModelProperty> properties)
         {
             return propertyDefinition.IsVisible(properties);
+        }
+
+        public override string ToString()
+        {
+            return string.Format("{0}: {1} ({2})", PropertyDefinition.Caption, GetValueAsString(),
+                                 PropertyDefinition.Category);
+        }
+
+        public abstract object Clone();
+
+        /// <summary>
+        /// Set value logic for when <see cref="Value"/> is of type <see cref="Steerable"/>.
+        /// </summary>
+        /// <param name="valueAsString"> </param>
+        /// <exception cref="ArgumentException"> When <see cref="valueAsString"/> is an invalid file name. </exception>
+        private void SetValueAsStringForSteerable(string valueAsString)
+        {
+            var steerableValue = (Steerable) value;
+
+            if (valueAsString == "REALTIME") // It is then either driven externally...
+            {
+                steerableValue.Mode = SteerableMode.External;
+                return;
+            }
+
+            string fileName = Path.GetFileName(valueAsString);
+            if (FileUtils.IsValidFileName(fileName) && Path.GetExtension(fileName) == ".tim") // ... or a timeseries
+            {
+                steerableValue.TimeSeriesFilename = valueAsString;
+                steerableValue.Mode = SteerableMode.TimeSeries;
+                return;
+            }
+
+            var constantValue = FMParser.FromString<double>(valueAsString);
+            steerableValue.ConstantValue = constantValue;
+            steerableValue.Mode = SteerableMode.ConstantValue;
+        }
+
+        /// <summary>
+        /// Precondition check to for checking if a value type corresponds to <see cref="ModelPropertyDefinition"/>.
+        /// <see cref="ModelPropertyDefinition.DataType"/>.
+        /// </summary>
+        /// <param name="type"> Type to be checked. </param>
+        /// <exception cref="ArgumentException"> When <paramref name="type"/> does not correspond. </exception>
+        private void ThrowIfTypesDontMatch(Type type)
+        {
+            if (type != propertyDefinition.DataType && !type.Implements(propertyDefinition.DataType))
+            {
+                throw new ArgumentException(string.Format("Invalid object type {0} (expecting {1}) for {2}",
+                                                          type, propertyDefinition.DataType,
+                                                          propertyDefinition.FilePropertyName));
+            }
         }
     }
 }

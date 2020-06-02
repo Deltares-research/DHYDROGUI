@@ -6,19 +6,17 @@ using SharpMap.Styles;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChartShapes
 {
-    class ThalWegInStructureView : FixedRectangleShapeFeature
+    internal class ThalWegInStructureView : FixedRectangleShapeFeature
     {
-        private VectorStyle ThalWegStyle { get; set; }
-
         public ThalWegInStructureView(IChart chart)
             : base(chart)
         {
             ThalWegStyle = new VectorStyle
-                               {
-                                   //Fill = new HatchBrush(HatchStyle.Horizontal, Color.LightGray, Color.DodgerBlue),
-                                   Fill = Brushes.DodgerBlue,
-                                   Line = Pens.Transparent
-                               };
+            {
+                //Fill = new HatchBrush(HatchStyle.Horizontal, Color.LightGray, Color.DodgerBlue),
+                Fill = Brushes.DodgerBlue,
+                Line = Pens.Transparent
+            };
         }
 
         /// <summary>
@@ -28,23 +26,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
         public override void Paint(VectorStyle vectorStyle)
         {
             GetShape().Paint(ThalWegStyle);
-        }
-
-        private IShapeFeature GetShape()
-        {
-            double height = Chart.LeftAxis.Maximum - Chart.LeftAxis.Minimum;
-            double minZValue = Chart.LeftAxis.Minimum - height / 10;
-            double maxZValue = Chart.LeftAxis.Maximum + height / 10;
-            var thalWegShape = new FixedRectangleShapeFeature(Chart,
-                          0,
-                          maxZValue,
-                          4,
-                          ChartCoordinateService.ToDeviceHeight(Chart, maxZValue - minZValue),
-                          false,
-                          false);
-            thalWegShape.AddHover(new HoverText("Thalweg", null, thalWegShape, Color.DodgerBlue, HoverPosition.Left, ArrowHeadPosition.None)
-                                      {ShowLine = false});
-            return thalWegShape;
         }
 
         public override bool Contains(int x, int y)
@@ -59,12 +40,30 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
 
         public override void Hover(List<Rectangle> usedSpace, VectorStyle style, Graphics graphics)
         {
-            var shapeFeature = GetShape();
+            IShapeFeature shapeFeature = GetShape();
             var hover = shapeFeature as IHover;
             if (hover != null)
             {
                 hover.Hover(usedSpace, style, graphics);
             }
+        }
+
+        private VectorStyle ThalWegStyle { get; set; }
+
+        private IShapeFeature GetShape()
+        {
+            double height = Chart.LeftAxis.Maximum - Chart.LeftAxis.Minimum;
+            double minZValue = Chart.LeftAxis.Minimum - (height / 10);
+            double maxZValue = Chart.LeftAxis.Maximum + (height / 10);
+            var thalWegShape = new FixedRectangleShapeFeature(Chart,
+                                                              0,
+                                                              maxZValue,
+                                                              4,
+                                                              ChartCoordinateService.ToDeviceHeight(Chart, maxZValue - minZValue),
+                                                              false,
+                                                              false);
+            thalWegShape.AddHover(new HoverText("Thalweg", null, thalWegShape, Color.DodgerBlue, HoverPosition.Left, ArrowHeadPosition.None) {ShowLine = false});
+            return thalWegShape;
         }
     }
 }

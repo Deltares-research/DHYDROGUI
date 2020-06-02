@@ -8,6 +8,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO.HydFileElement
 {
     public static class HydFileStringValueParser
     {
+        /// <summary>
+        /// Describes the pattern "[some text][optional layer type post fix that is whitespace separated]".
+        /// </summary>
+        private const string geometryDefinitionRegex = @"(?<geometryDefinition>\S+)(\s+(?<layerType>\S+))?";
+
         private static readonly IDictionary<string, HydroDynamicModelType> HydFileGeometryDefinitionMapping =
             new Dictionary
                 <string, HydroDynamicModelType>
@@ -25,11 +30,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO.HydFileElement
                 {"sigma", LayerType.Sigma},
                 {"z-layers", LayerType.ZLayer},
             };
-
-        /// <summary>
-        /// Describes the pattern "[some text][optional layer type post fix that is whitespace separated]".
-        /// </summary>
-        private const string geometryDefinitionRegex = @"(?<geometryDefinition>\S+)(\s+(?<layerType>\S+))?";
 
         public static T Parse<T>(string textToParse, CultureInfo culture = null)
         {

@@ -67,8 +67,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
 
         private void SetTimeStep(ITimeDependentModel rtcModel, UserDefinedRuntimeXML settings)
         {
-            var timeStepElement = settings.timeStep;
-            var timeStep = GetTimeSpanFromTimeUnit(timeStepElement);
+            TimeStepXML timeStepElement = settings.timeStep;
+            TimeSpan timeStep = GetTimeSpanFromTimeUnit(timeStepElement);
             var timeMultiplier = Convert.ToInt32(timeStepElement.multiplier);
             var timeDivider = Convert.ToInt32(timeStepElement.divider);
 
@@ -77,7 +77,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
 
         private TimeSpan GetTimeSpanFromTimeUnit(TimeStepXML timeStepXml)
         {
-            var timeUnit = timeStepXml.unit;
+            timeStepUnitEnumStringType timeUnit = timeStepXml.unit;
             TimeSpan timeStep;
 
             switch (timeUnit)
@@ -106,45 +106,45 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
 
         private TimeSpan MultiplyAndDivideTimeStepBy(TimeSpan t, int multiplier, int divider)
         {
-            return new TimeSpan(t.Ticks * multiplier / divider);
+            return new TimeSpan((t.Ticks * multiplier) / divider);
         }
 
         private void SetStartTime(ITimeDependentModel rtcModel, UserDefinedRuntimeXML settings)
         {
-            var startDateElement = settings.startDate;
+            DateTimeXML startDateElement = settings.startDate;
             rtcModel.StartTime = CreateDateTimeFromDateAndTime(startDateElement.date, startDateElement.time);
         }
 
         private void SetStopTime(ITimeDependentModel rtcModel, UserDefinedRuntimeXML settings)
         {
-            var endDateElement = settings.endDate;
+            DateTimeXML endDateElement = settings.endDate;
             rtcModel.StopTime = CreateDateTimeFromDateAndTime(endDateElement.date, endDateElement.time);
         }
 
         private DateTime CreateDateTimeFromDateAndTime(DateTime dateDateTime, DateTime timeDateTime)
         {
-            var time = timeDateTime.TimeOfDay;
-            var date = dateDateTime.Date;
-            var dateTime = date.Add(time);
+            TimeSpan time = timeDateTime.TimeOfDay;
+            DateTime date = dateDateTime.Date;
+            DateTime dateTime = date.Add(time);
 
             return dateTime;
         }
 
         private void SetRestartStartTime(RealTimeControlModel rtcModel, UserDefinedStateExportXML settings)
         {
-            var startDateElement = settings.startDate;
+            DateTimeXML startDateElement = settings.startDate;
             rtcModel.SaveStateStartTime = CreateDateTimeFromDateAndTime(startDateElement.date, startDateElement.time);
         }
 
         private void SetRestartStopTime(RealTimeControlModel rtcModel, UserDefinedStateExportXML settings)
         {
-            var endDateElement = settings.endDate;
+            DateTimeXML endDateElement = settings.endDate;
             rtcModel.SaveStateStopTime = CreateDateTimeFromDateAndTime(endDateElement.date, endDateElement.time);
         }
 
         private void SetRestartTimeStep(RealTimeControlModel rtcModel, UserDefinedStateExportXML settings)
         {
-            var timeStepDouble = settings.stateTimeStep;
+            double timeStepDouble = settings.stateTimeStep;
             rtcModel.SaveStateTimeStep = TimeSpan.FromSeconds(timeStepDouble);
         }
     }

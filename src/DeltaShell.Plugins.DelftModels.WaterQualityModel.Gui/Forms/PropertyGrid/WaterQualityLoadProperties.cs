@@ -7,8 +7,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.PropertyGri
     [DisplayName("Load")]
     public class WaterQualityLoadProperties : NameblePointFeatureProperties
     {
-        private WaterQualityLoad WaterQualityLoad => (WaterQualityLoad) data;
-
         [Category("General")]
         [DisplayName("Load type")]
         [PropertyOrder(2)]
@@ -27,5 +25,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.PropertyGri
             get => WaterQualityLoad.LocationAliases;
             set => WaterQualityLoad.LocationAliases = value;
         }
+
+        private WaterQualityLoad WaterQualityLoad => (WaterQualityLoad) data;
     }
 }

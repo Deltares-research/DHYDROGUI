@@ -37,7 +37,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         public string UseforIncludeFolderPath { get; set; }
 
         /// <summary>
-        /// Gets the name of the substance usefor file used as include for <see cref="CreateDataTableDelwaqFormat" />.
+        /// Gets the name of the substance usefor file used as include for <see cref="CreateDataTableDelwaqFormat"/>.
         /// </summary>
         public string GetSubstanceUseforFileName()
         {
@@ -45,7 +45,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         }
 
         /// <summary>
-        /// Creates the default substance usefor file-contents used as include for <see cref="CreateDataTableDelwaqFormat" />.
+        /// Creates the default substance usefor file-contents used as include for <see cref="CreateDataTableDelwaqFormat"/>.
         /// </summary>
         public string CreateDefaultSubstanceUseforContents()
         {

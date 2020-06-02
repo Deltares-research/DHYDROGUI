@@ -6,18 +6,19 @@ using SharpMap.Styles;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChartShapes
 {
-    class StructureShapeStyleProvider
+    internal class StructureShapeStyleProvider
     {
         public VectorStyle GetNormalStyleForStructure(IStructure1D structure)
         {
             if (structure is IWeir)
             {
                 return new VectorStyle
-                           {
-                               Fill = Brushes.Transparent,  //Brushes.LightGray,
-                               Line = new Pen(Color.Black)
-                           };    
+                {
+                    Fill = Brushes.Transparent, //Brushes.LightGray,
+                    Line = new Pen(Color.Black)
+                };
             }
+
             throw new NotImplementedException();
         }
 
@@ -25,13 +26,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
         {
             if (structure is IWeir)
             {
-
                 return new VectorStyle
-                           {
-                               Fill = Brushes.Transparent,  //Brushes.LightGray,
-                               Line = new Pen(Color.Black, 3)
-                           };
+                {
+                    Fill = Brushes.Transparent, //Brushes.LightGray,
+                    Line = new Pen(Color.Black, 3)
+                };
             }
+
             throw new NotImplementedException();
         }
 
@@ -39,13 +40,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
         {
             if (structure is IWeir)
             {
-
                 return new VectorStyle
                 {
                     Fill = new SolidBrush(Color.FromArgb(50, Color.Black)),
                     Line = new Pen(Color.Black)
                 };
             }
+
             throw new NotImplementedException();
         }
     }

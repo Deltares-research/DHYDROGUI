@@ -14,9 +14,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
     /// <summary>
     /// Initializes a WPF Settings view for a generic IHydroModel that gets its properties from a CSV.
     /// </summary>
-    /// <seealso cref="System.Windows.Controls.UserControl" />
-    /// <seealso cref="System.Windows.Markup.IComponentConnector" />
-    /// <seealso cref="DelftTools.Controls.IView" />
+    /// <seealso cref="System.Windows.Controls.UserControl"/>
+    /// <seealso cref="System.Windows.Markup.IComponentConnector"/>
+    /// <seealso cref="DelftTools.Controls.IView"/>
     public sealed partial class WpfSettingsView : IAdditionalView
     {
         private bool disposed = false;
@@ -26,42 +26,49 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
             InitializeComponent();
         }
 
-        public string Text { get; set; }
-
         public bool Visible { get; }
+
+        public ObservableCollection<WpfGuiCategory> SettingsCategories
+        {
+            get
+            {
+                return ViewModel.SettingsCategories;
+            }
+            set
+            {
+                ViewModel.SettingsCategories = value;
+            }
+        }
+
+        public Func<object, string, string> GetChangedPropertyName { get; set; }
+
+        public string Text { get; set; }
 
         public object Data
         {
-            get { return ViewModel.DataModel; }
+            get
+            {
+                return ViewModel.DataModel;
+            }
             set
             {
                 if (ViewModel.DataModel != null)
                 {
-                    ((INotifyPropertyChanged)ViewModel.DataModel).PropertyChanged -= OnDataPropertyChanged;
+                    ((INotifyPropertyChanged) ViewModel.DataModel).PropertyChanged -= OnDataPropertyChanged;
                 }
 
-                ViewModel.DataModel = (IHydroModel)value;
+                ViewModel.DataModel = (IHydroModel) value;
 
                 if (ViewModel.DataModel != null)
                 {
-                    ((INotifyPropertyChanged)ViewModel.DataModel).PropertyChanged += OnDataPropertyChanged;
+                    ((INotifyPropertyChanged) ViewModel.DataModel).PropertyChanged += OnDataPropertyChanged;
                 }
             }
         }
 
-        public ObservableCollection<WpfGuiCategory> SettingsCategories
-        {
-            get { return ViewModel.SettingsCategories; }
-            set { ViewModel.SettingsCategories = value; }
-        }
+        public Image Image { get; set; }
 
-        public Image Image
-        {
-            get; set;
-        }
         public ViewInfo ViewInfo { get; set; }
-
-        public Func<object, string, string> GetChangedPropertyName { get; set; }
 
         /// <summary>
         /// Makes object visible in the view if possible
@@ -69,13 +76,13 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
         /// <param name="item"></param>
         public void EnsureVisible(object item)
         {
-            var settings = ((WpfSettingsViewModel)DataContext);
+            var settings = (WpfSettingsViewModel) DataContext;
             if (item is string && settings != null)
             {
-                var tabName = (item as string).ToLowerInvariant();
-                var selectedTab =
+                string tabName = (item as string).ToLowerInvariant();
+                int selectedTab =
                     settings.SettingsCategories.IndexOf(settings.SettingsCategories.FirstOrDefault(c => c.CategoryName
-                      .ToLowerInvariant().Equals(tabName)));
+                                                                                                         .ToLowerInvariant().Equals(tabName)));
                 MainTabControl.SelectedIndex = selectedTab;
             }
         }
@@ -99,6 +106,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
                 {
                     ((INotifyPropertyChanged) ViewModel.DataModel).PropertyChanged -= OnDataPropertyChanged;
                 }
+
                 ViewModel?.Dispose();
             }
 
@@ -107,8 +115,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
 
         private void OnDataPropertyChanged(object sender, PropertyChangedEventArgs propertyChangedEventArgs)
         {
-            var propertyName = GetChangedPropertyName(sender, propertyChangedEventArgs.PropertyName);
-            if (string.IsNullOrEmpty(propertyName)) return;
+            string propertyName = GetChangedPropertyName(sender, propertyChangedEventArgs.PropertyName);
+            if (string.IsNullOrEmpty(propertyName))
+            {
+                return;
+            }
 
             ViewModel.UpdatePropertyValue(propertyName);
         }

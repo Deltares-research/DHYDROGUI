@@ -18,7 +18,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Forms
             openFileDialog = new OpenFileDialog();
         }
 
+        public bool Visible { get; private set; }
+
         public string Title { get; set; }
+
+        public object Data { get; set; }
+        public string Text { get; set; }
+        public Image Image { get; set; }
+        public ViewInfo ViewInfo { get; set; }
 
         public DelftDialogResult ShowModal()
         {
@@ -46,13 +53,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Forms
             return ShowModal();
         }
 
-        public object Data { get; set; }
-
         public void Dispose() {}
-        public string Text { get; set; }
-        public Image Image { get; set; }
         public void EnsureVisible(object item) {}
-        public bool Visible { get; private set; }
-        public ViewInfo ViewInfo { get; set; }
     }
 }

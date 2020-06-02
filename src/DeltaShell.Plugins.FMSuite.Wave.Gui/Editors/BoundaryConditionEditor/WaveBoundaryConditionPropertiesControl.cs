@@ -8,6 +8,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.BoundaryConditionEditor
 {
     public partial class WaveBoundaryConditionPropertiesControl : BoundaryConditionPropertiesControl
     {
+        private WaveBoundaryCondition waveBoundaryCondition;
+
         public WaveBoundaryConditionPropertiesControl()
         {
             InitializeComponent();
@@ -16,13 +18,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.BoundaryConditionEditor
             uniformityBox.DisplayMember = "Value";
             uniformityBox.ValueMember = "Key";
         }
-
-        protected override IEnumerable<BoundaryConditionDataType> GetSupportedDataTypes(string variable)
-        {
-            return Controller.GetSupportedDataTypesForVariable(variable);
-        }
-
-        private WaveBoundaryCondition waveBoundaryCondition;
 
         public override IBoundaryCondition BoundaryCondition
         {
@@ -36,6 +31,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.BoundaryConditionEditor
                 waveBoundaryCondition = (WaveBoundaryCondition) BoundaryCondition;
                 UpdateBinding();
             }
+        }
+
+        protected override IEnumerable<BoundaryConditionDataType> GetSupportedDataTypes(string variable)
+        {
+            return Controller.GetSupportedDataTypesForVariable(variable);
         }
 
         private void UpdateBinding()

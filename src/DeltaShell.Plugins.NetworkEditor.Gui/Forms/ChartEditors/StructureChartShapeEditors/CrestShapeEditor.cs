@@ -14,40 +14,40 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
         public CrestShapeEditor(IShapeFeature shapeFeature, IChartCoordinateService chartCoordinateService,
                                 ShapeEditMode shapeEditMode) : base(shapeFeature, chartCoordinateService, shapeEditMode)
         {
-            if ((CanResize) || (CanMove))
+            if (CanResize || CanMove)
             {
                 points.Add(GeometryFactory.CreatePoint(0, 0));
             }
-            UpdateTrackers();
-        }
 
-        protected void UpdateTrackers()
-        {
-            CrestShapeFeature crestShapeFeature = (CrestShapeFeature)ShapeFeature;
-            // arch offset tracker
-            if (points.Count > 0)
-            {
-                points[0].X = crestShapeFeature.X;
-                points[0].Y = crestShapeFeature.Bottom;
-                points[0].GeometryChangedAction();    
-            }
-            
+            UpdateTrackers();
         }
 
         public override Cursor GetCursor(IPoint trackerFeature)
         {
-            return (trackerFeature != null) ? Cursors.SizeNS : Cursors.Default;
+            return trackerFeature != null ? Cursors.SizeNS : Cursors.Default;
         }
 
         public override bool MoveTracker(IPoint trackerFeature, Coordinate worldPosition, double deltaX, double deltaY)
         {
-            CrestShapeFeature feature = (CrestShapeFeature)ShapeFeature;
+            var feature = (CrestShapeFeature) ShapeFeature;
             feature.CrestOffset += deltaY;
             feature.Y += deltaY;
             GeometryHelper.MoveCoordinate(points[0], 0, 0, deltaY);
             points[0].GeometryChangedAction();
             UpdateTrackers();
             return true;
+        }
+
+        protected void UpdateTrackers()
+        {
+            var crestShapeFeature = (CrestShapeFeature) ShapeFeature;
+            // arch offset tracker
+            if (points.Count > 0)
+            {
+                points[0].X = crestShapeFeature.X;
+                points[0].Y = crestShapeFeature.Bottom;
+                points[0].GeometryChangedAction();
+            }
         }
     }
 }

@@ -19,6 +19,10 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.ImportExport.Exporters
 
         public string Description => string.Empty;
 
+        public string FileFilter => "Delft3D Depth File (*.dep)|*.dep";
+
+        public Bitmap Icon { get; private set; }
+
         public bool Export(object item, string path)
         {
             var bathy = item as CurvilinearCoverage;
@@ -44,10 +48,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.ImportExport.Exporters
         {
             yield return typeof(CurvilinearCoverage);
         }
-
-        public string FileFilter => "Delft3D Depth File (*.dep)|*.dep";
-
-        public Bitmap Icon { get; private set; }
 
         public bool CanExportFor(object item)
         {

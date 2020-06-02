@@ -11,13 +11,11 @@ using SharpMap.Styles;
 namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors
 {
     /// <summary>
-    /// Editor used for lateral sources that are diffuse 
+    /// Editor used for lateral sources that are diffuse
     /// </summary>
     public class LateralSourceInteractor : BranchFeatureInteractor<LateralSource>
     {
-        public LateralSourceInteractor(ILayer layer, IFeature feature, VectorStyle vectorStyle, IEditableObject editableObject) : base(layer, feature, vectorStyle, editableObject)
-        {
-        }
+        public LateralSourceInteractor(ILayer layer, IFeature feature, VectorStyle vectorStyle, IEditableObject editableObject) : base(layer, feature, vectorStyle, editableObject) {}
 
         public override IEnumerable<IFeatureRelationInteractor> GetFeatureRelationInteractors(IFeature feature)
         {
@@ -27,10 +25,10 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors
 
         public override void Delete()
         {
-            var lateralSource = (LateralSource)SourceFeature;
+            var lateralSource = (LateralSource) SourceFeature;
 
-            var links = lateralSource.Links.ToArray();
-            foreach (var link in links)
+            HydroLink[] links = lateralSource.Links.ToArray();
+            foreach (HydroLink link in links)
             {
                 HydroRegion.RemoveLink(link);
             }

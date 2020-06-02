@@ -18,8 +18,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.NHibernate
     {
         /// <summary>
         /// Called after project is migrated.
-        /// Sets the correct OutputFolder on every <see cref="WaterQualityModel" />
-        /// in the specified <paramref name="project" />.
+        /// Sets the correct OutputFolder on every <see cref="WaterQualityModel"/>
+        /// in the specified <paramref name="project"/>.
         /// </summary>
         /// <param name="project"> The project. </param>
         public override void OnAfterProjectMigrated(Project project)
@@ -45,7 +45,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.NHibernate
             {
                 return;
             }
-            
+
             if (!workDirDoesNotExistOrIsEmpty)
             {
                 var folder = new FileBasedFolder(previousExplicitWorkingDirectory);

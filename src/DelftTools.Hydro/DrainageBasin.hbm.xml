@@ -1,25 +1,26 @@
-<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8"?>
+
 <hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
   <subclass name="DelftTools.Hydro.DrainageBasin, DelftTools.Hydro" discriminator-value="drainage_basin" extends="DelftTools.Hydro.IHydroRegion, DelftTools.Hydro">
     <meta attribute="anyType">IValueConverter.OriginalValue</meta>
-    
+
     <list name="Catchments" cascade="all-delete-orphan" collection-type="DeltaShell.Plugins.Data.NHibernate.Collections.Generic.PersistentEventedListType`1[[DelftTools.Hydro.Catchment, DelftTools.Hydro]], DeltaShell.Plugins.Data.NHibernate">
-      <key column="network_id_catchment"/>
+      <key column="network_id_catchment" />
       <index column="network_list_index" />
-      <one-to-many class="DelftTools.Hydro.Catchment, DelftTools.Hydro"  />
+      <one-to-many class="DelftTools.Hydro.Catchment, DelftTools.Hydro" />
     </list>
 
     <list name="WasteWaterTreatmentPlants" cascade="all-delete-orphan" collection-type="DeltaShell.Plugins.Data.NHibernate.Collections.Generic.PersistentEventedListType`1[[DelftTools.Hydro.WasteWaterTreatmentPlant, DelftTools.Hydro]], DeltaShell.Plugins.Data.NHibernate">
-      <key column="network_id_wwtp"/>
+      <key column="network_id_wwtp" />
       <index column="network_list_index" />
-      <one-to-many class="DelftTools.Hydro.WasteWaterTreatmentPlant, DelftTools.Hydro"  />
+      <one-to-many class="DelftTools.Hydro.WasteWaterTreatmentPlant, DelftTools.Hydro" />
     </list>
 
     <list name="Boundaries" cascade="all-delete-orphan" collection-type="DeltaShell.Plugins.Data.NHibernate.Collections.Generic.PersistentEventedListType`1[[DelftTools.Hydro.RunoffBoundary, DelftTools.Hydro]], DeltaShell.Plugins.Data.NHibernate">
-      <key column="network_id_rbound"/>
+      <key column="network_id_rbound" />
       <index column="network_list_index" />
-      <one-to-many class="DelftTools.Hydro.RunoffBoundary, DelftTools.Hydro"  />
+      <one-to-many class="DelftTools.Hydro.RunoffBoundary, DelftTools.Hydro" />
     </list>
-    
+
   </subclass>
 </hibernate-mapping>

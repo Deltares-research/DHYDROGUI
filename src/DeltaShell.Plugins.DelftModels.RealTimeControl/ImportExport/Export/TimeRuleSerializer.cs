@@ -12,7 +12,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export
     /// <summary>
     /// Serializer for a <see cref="TimeRule"/>.
     /// </summary>
-    /// <seealso cref="RuleSerializerBase" />
+    /// <seealso cref="RuleSerializerBase"/>
     public class TimeRuleSerializer : RuleSerializerBase
     {
         private const string quantityId = "TimeSeries";
@@ -27,8 +27,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export
             this.timeRule = timeRule;
         }
 
-        protected override string XmlTag { get; } = RtcXmlTag.TimeRule;
-
         // Example of ToXmlInputReference:
         //  <timeAbsolute id = "[TimeRule]control_group_1/time_rule">
         //      <input>
@@ -40,12 +38,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export
         //  </timeAbsolute>
 
         /// <summary>
-        /// Converts the time rule to a collection of <see cref="XElement" />
+        /// Converts the time rule to a collection of <see cref="XElement"/>
         /// to be written to the tools config xml file.
         /// </summary>
         /// <param name="xNamespace"> The xml namespace. </param>
         /// <param name="prefix"> The prefix. </param>
-        /// <returns> The collection of <see cref="XElement" />. </returns>
+        /// <returns> The collection of <see cref="XElement"/>. </returns>
         public override IEnumerable<XElement> ToXml(XNamespace xNamespace, string prefix)
         {
             XElement result = base.ToXml(xNamespace, prefix).First();
@@ -68,7 +66,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export
         }
 
         /// <summary>
-        /// Converts the time rule to a collection of <see cref="XElement" />
+        /// Converts the time rule to a collection of <see cref="XElement"/>
         /// to be written to the import series in the data config xml file
         /// and the time series import xml file.
         /// </summary>
@@ -76,12 +74,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export
         /// <param name="start"> The start time of the model. </param>
         /// <param name="stop"> The stop time of the model. </param>
         /// <param name="step"> The time step of the model. </param>
-        /// <returns> The collection of <see cref="XElement" />. </returns>
+        /// <returns> The collection of <see cref="XElement"/>. </returns>
         public override IEnumerable<IXmlTimeSeries> XmlImportTimeSeries(string prefix, DateTime start, DateTime stop,
                                                                         TimeSpan step)
         {
             yield return GetTimeSeries(prefix, start, stop, step);
         }
+
+        protected override string XmlTag { get; } = RtcXmlTag.TimeRule;
 
         private IXmlTimeSeries GetTimeSeries(string prefix, DateTime start, DateTime stop, TimeSpan step)
         {

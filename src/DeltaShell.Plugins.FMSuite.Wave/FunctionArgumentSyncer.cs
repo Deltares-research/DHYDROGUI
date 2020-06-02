@@ -16,12 +16,24 @@ namespace DeltaShell.Plugins.FMSuite.Wave
     /// <typeparam name="T"> The type of the first argument </typeparam>
     public class FunctionArgumentSyncer<T> : IDisposable
     {
-        public IEventedList<IFunction> Functions { get; private set; }
+        private bool isRemoving;
+
+        private bool isAdding;
+
+        private bool isReplacing;
 
         public FunctionArgumentSyncer()
         {
             Functions = new EventedList<IFunction>();
             Functions.CollectionChanged += FunctionsOnCollectionChanged;
+        }
+
+        public IEventedList<IFunction> Functions { get; private set; }
+
+        public void Dispose()
+        {
+            Functions.CollectionChanged -= FunctionsOnCollectionChanged;
+            Functions.ForEach(f => f.ValuesChanged -= FunctionTimeValuesChanged);
         }
 
         private void FunctionsOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs args)
@@ -94,8 +106,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             addedFunction.Arguments[0].AddValues(referenceValues.Except(newValues).ToList());
         }
 
-        private bool isRemoving;
-
         private void OnRemoveValues(IList<T> values, IVariable fromVariable)
         {
             if (!values.Any())
@@ -122,8 +132,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
             isRemoving = false;
         }
-
-        private bool isAdding;
 
         private void OnAddValues(IList<T> values, IVariable fromVariable)
         {
@@ -152,8 +160,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             isAdding = false;
         }
 
-        private bool isReplacing;
-
         private void OnReplaceValues(IList<T> values, int startIndex, IVariable fromVariable)
         {
             if (!values.Any())
@@ -181,12 +187,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             }
 
             isReplacing = false;
-        }
-
-        public void Dispose()
-        {
-            Functions.CollectionChanged -= FunctionsOnCollectionChanged;
-            Functions.ForEach(f => f.ValuesChanged -= FunctionTimeValuesChanged);
         }
     }
 }

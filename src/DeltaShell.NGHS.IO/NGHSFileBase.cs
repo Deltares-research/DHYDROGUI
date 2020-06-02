@@ -10,18 +10,18 @@ namespace DeltaShell.NGHS.IO
 {
     public abstract class NGHSFileBase
     {
+        private const char MergeCharacter = '\'';
+        protected readonly Dictionary<string, List<string>> commentBlocks;
+
+        private readonly List<List<string>> headingCommentBlocks;
+        private readonly List<string> commentLineStartsToBeIgnored;
         protected StreamReader reader;
         protected StreamWriter writer;
-        private bool fileContentHasStarted;
         protected List<string> currentCommentBlock;
         protected string storedNextInputLine;
         protected string storedNextOutputLine;
+        private bool fileContentHasStarted;
         private CultureInfo storedCurrentCulture;
-
-        private readonly List<List<string>> headingCommentBlocks;
-        protected readonly Dictionary<string, List<string>> commentBlocks;
-        private readonly List<string> commentLineStartsToBeIgnored;
-        
 
         /// <summary>
         /// Constructor, not external forcings file by default.
@@ -37,7 +37,10 @@ namespace DeltaShell.NGHS.IO
         /// Retrieves the file path to another specified file that
         /// resides in the same folder as another.
         /// </summary>
-        /// <exception cref="ArgumentException"><paramref name="absolutePath"/> or <paramref name="relativePath"/> contains one or more of the invalid characters defined in <see cref="Path.GetInvalidPathChars"/></exception>
+        /// <exception cref="ArgumentException">
+        /// <paramref name="absolutePath"/> or <paramref name="relativePath"/> contains one or
+        /// more of the invalid characters defined in <see cref="Path.GetInvalidPathChars"/>
+        /// </exception>
         /// <exception cref="ArgumentNullException"><paramref name="absolutePath"/> or <paramref name="relativePath"/> is null.</exception>
         public static string GetOtherFilePathInSameDirectory(string absolutePath, string relativePath)
         {
@@ -45,6 +48,7 @@ namespace DeltaShell.NGHS.IO
             {
                 return Path.Combine(Path.GetDirectoryName(absolutePath), relativePath);
             }
+
             return relativePath;
         }
 
@@ -64,7 +68,10 @@ namespace DeltaShell.NGHS.IO
         /// <exception cref="ArgumentNullException"><paramref name="filePath"/> is null.</exception>
         /// <exception cref="FileNotFoundException">The file cannot be found.</exception>
         /// <exception cref="DirectoryNotFoundException">The specified path is invalid, such as being on an unmapped drive.</exception>
-        /// <exception cref="IOException"><paramref name="filePath"/> includes an incorrect or invalid syntax for file name, directory name, or volume label.</exception>
+        /// <exception cref="IOException">
+        /// <paramref name="filePath"/> includes an incorrect or invalid syntax for file name,
+        /// directory name, or volume label.
+        /// </exception>
         [Obsolete("2019-10-22: Please use the OpenInputFile(Stream stream).")]
         protected void OpenInputFile(string filePath)
         {
@@ -91,22 +98,33 @@ namespace DeltaShell.NGHS.IO
         /// </summary>
         /// <param name="filePath">File path to write to.</param>
         /// <exception cref="UnauthorizedAccessException">Access is denied</exception>
-        /// <exception cref="ArgumentException"><paramref name="filePath"/> is an empty string ("") or contains the name of a system device (com1, com2, and so on).</exception>
+        /// <exception cref="ArgumentException">
+        /// <paramref name="filePath"/> is an empty string ("") or contains the name of a
+        /// system device (com1, com2, and so on).
+        /// </exception>
         /// <exception cref="ArgumentNullException"><paramref name="filePath"/> is null.</exception>
         /// <exception cref="DirectoryNotFoundException">The specified path is invalid (for example, it is on an unmapped drive).</exception>
-        /// <exception cref="PathTooLongException">The specified path, file name, or both exceed the system-defined maximum length. For example, on Windows-based platforms, paths must not exceed 248 characters, and file names must not exceed 260 characters.</exception>
-        /// <exception cref="IOException">path includes an incorrect or invalid syntax for file name, directory name, or volume label syntax.</exception>
+        /// <exception cref="PathTooLongException">
+        /// The specified path, file name, or both exceed the system-defined maximum length.
+        /// For example, on Windows-based platforms, paths must not exceed 248 characters, and file names must not exceed 260
+        /// characters.
+        /// </exception>
+        /// <exception cref="IOException">
+        /// path includes an incorrect or invalid syntax for file name, directory name, or volume
+        /// label syntax.
+        /// </exception>
         /// <exception cref="SecurityException">The caller does not have the required permission.</exception>
         protected void OpenOutputFile(string filePath)
         {
             storedCurrentCulture = Thread.CurrentThread.CurrentCulture;
             Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
             OutputFilePath = filePath;
-            var directory = Path.GetDirectoryName(OutputFilePath);
-            if (!String.IsNullOrEmpty(directory) && !Directory.Exists(directory))
+            string directory = Path.GetDirectoryName(OutputFilePath);
+            if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
             {
                 Directory.CreateDirectory(directory);
             }
+
             writer = new StreamWriter(OutputFilePath);
             fileContentHasStarted = false;
             LineNumber = 0;
@@ -123,8 +141,8 @@ namespace DeltaShell.NGHS.IO
         /// </summary>
         /// <returns>The next data line, or null when at the end of the file.</returns>
         /// <remarks>
-        ///   This method does not necessarily return the actual next line in the file. 
-        ///   <see cref="LineNumber"/> is available to keep track of the actual line number.
+        /// This method does not necessarily return the actual next line in the file.
+        /// <see cref="LineNumber"/> is available to keep track of the actual line number.
         /// </remarks>
         /// <exception cref="InvalidOperationException">When file hasn't been opened yet.</exception>
         /// <exception cref="OutOfMemoryException">There is insufficient memory to allocate a buffer for the returned string.</exception>
@@ -138,7 +156,7 @@ namespace DeltaShell.NGHS.IO
 
             if (storedNextInputLine != null)
             {
-                var nextLine = storedNextInputLine;
+                string nextLine = storedNextInputLine;
                 storedNextInputLine = null;
                 return nextLine;
             }
@@ -148,7 +166,7 @@ namespace DeltaShell.NGHS.IO
 
             while (CurrentLine != null)
             {
-                var trimmedLine = CurrentLine.Trim();
+                string trimmedLine = CurrentLine.Trim();
 
                 if (CheckAndProcessCommentInputLine(CurrentLine, trimmedLine))
                 {
@@ -172,33 +190,37 @@ namespace DeltaShell.NGHS.IO
                         {
                             CreateCommonBlock();
                         }
+
                         currentCommentBlock = null;
                     }
+
                     fileContentHasStarted = true;
                     return nextLine;
                 }
             }
+
             return null;
         }
 
         protected virtual void CreateCommonBlock()
         {
-            var contentIdentifier = CreateContentIdentifier(CurrentLine);
+            string contentIdentifier = CreateContentIdentifier(CurrentLine);
             if (!commentBlocks.ContainsKey(contentIdentifier)) //TODO: A key does not have to be unique in the whole file!
             {
                 commentBlocks.Add(contentIdentifier, currentCommentBlock);
             }
         }
 
-        private const char MergeCharacter = '\'';
-
         protected static IEnumerable<string> SplitLine(string inputLine)
         {
-            if (inputLine == null) throw new ArgumentNullException("inputLine");
+            if (inputLine == null)
+            {
+                throw new ArgumentNullException("inputLine");
+            }
 
-            var trimmedInputLine = inputLine.Trim();
+            string trimmedInputLine = inputLine.Trim();
 
-            var endOfFieldIndex = GetEndOfFieldIndex(trimmedInputLine);
+            int endOfFieldIndex = GetEndOfFieldIndex(trimmedInputLine);
 
             while (endOfFieldIndex > 0)
             {
@@ -208,24 +230,6 @@ namespace DeltaShell.NGHS.IO
 
                 endOfFieldIndex = GetEndOfFieldIndex(trimmedInputLine);
             }
-        }
-
-        private static int GetEndOfFieldIndex(string line)
-        {
-            if (line.Length == 0) return 0;
-            if (line[0] == MergeCharacter)
-            {
-                for (var i = 1; i < line.Length; ++i)
-                {
-                    if (line[i] == MergeCharacter) return i + 1;
-                }
-                return line.Length;
-            }
-            for (var i = 0; i < line.Length; ++i)
-            {
-                if (Char.IsWhiteSpace(line, i)) return i;
-            }
-            return line.Length;
         }
 
         /// <summary>
@@ -238,11 +242,12 @@ namespace DeltaShell.NGHS.IO
         protected double GetDouble(string lineField, string errorMessageKey = null)
         {
             double x;
-            if (!Double.TryParse(lineField, NumberStyles.Any, CultureInfo.InvariantCulture.NumberFormat, out x))
+            if (!double.TryParse(lineField, NumberStyles.Any, CultureInfo.InvariantCulture.NumberFormat, out x))
             {
-                throw new FormatException(String.Format("Invalid {0} line {1} in file {2}", 
-                    errorMessageKey != null ? errorMessageKey + " on " : "", LineNumber, InputFilePath));
+                throw new FormatException(string.Format("Invalid {0} line {1} in file {2}",
+                                                        errorMessageKey != null ? errorMessageKey + " on " : "", LineNumber, InputFilePath));
             }
+
             return x;
         }
 
@@ -256,22 +261,24 @@ namespace DeltaShell.NGHS.IO
         protected int GetInt(string lineField, string errorMessageKey = null)
         {
             int xAsInt;
-            if (Int32.TryParse(lineField, out xAsInt))
+            if (int.TryParse(lineField, out xAsInt))
             {
                 return xAsInt;
             }
+
             double xAsDouble;
-            if (Double.TryParse(lineField, NumberStyles.Any, CultureInfo.InvariantCulture, out xAsDouble))
+            if (double.TryParse(lineField, NumberStyles.Any, CultureInfo.InvariantCulture, out xAsDouble))
             {
-                var xAsDoubleFloored = Math.Floor(xAsDouble);
-                if ((xAsDouble - xAsDoubleFloored) < 1e-12)
+                double xAsDoubleFloored = Math.Floor(xAsDouble);
+                if (xAsDouble - xAsDoubleFloored < 1e-12)
                 {
                     // valid int, (accidentally) written as double
                     return (int) xAsDoubleFloored;
                 }
             }
-            throw new FormatException(String.Format("Invalid {0} line {1} in file {2}",
-                errorMessageKey != null ? errorMessageKey + " on " : "", LineNumber, InputFilePath));
+
+            throw new FormatException(string.Format("Invalid {0} line {1} in file {2}",
+                                                    errorMessageKey != null ? errorMessageKey + " on " : "", LineNumber, InputFilePath));
         }
 
         /// <summary>
@@ -294,28 +301,105 @@ namespace DeltaShell.NGHS.IO
             }
         }
 
+        protected virtual bool WriteCommentBlock(string line, bool doWriteLine)
+        {
+            string contentIdentifier = CreateContentIdentifier(line);
+            if (commentBlocks.ContainsKey(contentIdentifier))
+            {
+                foreach (string commentLine in commentBlocks[contentIdentifier])
+                {
+                    writer.WriteLine(commentLine);
+                }
+            }
+
+            return doWriteLine;
+        }
+
+        protected virtual string CreateContentIdentifier(string line)
+        {
+            if (line == null)
+            {
+                return string.Empty;
+            }
+
+            var i = 0;
+            var contentIdentifier = new char[line.Length];
+            foreach (char c in line)
+            {
+                if (c == ' ' || c == '\t')
+                {
+                    continue;
+                }
+
+                if (c == '#' || c == '!' || c == '*')
+                {
+                    break;
+                }
+
+                contentIdentifier[i++] = c;
+            }
+
+            return new string(contentIdentifier, 0, i);
+        }
+
+        private static int GetEndOfFieldIndex(string line)
+        {
+            if (line.Length == 0)
+            {
+                return 0;
+            }
+
+            if (line[0] == MergeCharacter)
+            {
+                for (var i = 1; i < line.Length; ++i)
+                {
+                    if (line[i] == MergeCharacter)
+                    {
+                        return i + 1;
+                    }
+                }
+
+                return line.Length;
+            }
+
+            for (var i = 0; i < line.Length; ++i)
+            {
+                if (char.IsWhiteSpace(line, i))
+                {
+                    return i;
+                }
+            }
+
+            return line.Length;
+        }
+
         private bool CheckAndProcessCommentInputLine(string line, string trimmedLine)
         {
             if (trimmedLine.Length == 0)
+            {
                 return false;
+            }
 
-            var firstChar = trimmedLine[0];
+            char firstChar = trimmedLine[0];
             if (firstChar == '#' ||
                 firstChar == '!' ||
                 firstChar == '*' ||
-                firstChar == ':' ) // part of header in external forcings file
+                firstChar == ':') // part of header in external forcings file
             {
                 if (commentLineStartsToBeIgnored.Any(trimmedLine.StartsWith))
                 {
                     return true; // comment line indeed, but not to be stored
                 }
+
                 if (currentCommentBlock == null)
                 {
                     currentCommentBlock = new List<string>();
                 }
+
                 currentCommentBlock.Add(line);
                 return true;
             }
+
             return false;
         }
 
@@ -335,69 +419,39 @@ namespace DeltaShell.NGHS.IO
                         currentCommentBlock.Add(line);
                     }
                 }
+
                 return true;
             }
+
             return false;
         }
 
         private bool CheckAndProcessOutputCommentLines(string line)
         {
-            bool doWriteLine = true;
+            var doWriteLine = true;
             if (!fileContentHasStarted)
             {
-                foreach (var headingCommentBlock in headingCommentBlocks)
+                foreach (List<string> headingCommentBlock in headingCommentBlocks)
                 {
-                    foreach (var commentLine in headingCommentBlock)
+                    foreach (string commentLine in headingCommentBlock)
                     {
                         writer.WriteLine(commentLine);
                     }
-                    if (!String.IsNullOrEmpty(line))
+
+                    if (!string.IsNullOrEmpty(line))
                     {
                         writer.WriteLine("*");
                     }
                 }
+
                 fileContentHasStarted = true;
             }
             else
             {
                 doWriteLine = WriteCommentBlock(line, doWriteLine);
             }
+
             return doWriteLine;
-        }
-
-        protected virtual bool WriteCommentBlock(string line, bool doWriteLine)
-        {
-            var contentIdentifier = CreateContentIdentifier(line);
-            if (commentBlocks.ContainsKey(contentIdentifier))
-            {
-                foreach (var commentLine in commentBlocks[contentIdentifier])
-                {
-                    writer.WriteLine(commentLine);
-                }
-            }
-            return doWriteLine;
-        }
-
-        protected virtual string CreateContentIdentifier(string line)
-        {
-            if (line == null)
-            {
-                return string.Empty;
-            }
-
-            var i = 0;
-            var contentIdentifier = new char[line.Length];
-            foreach (char c in line)
-            {
-                if (c == ' ' || c == '\t')
-                    continue;
-                
-                if (c == '#' || c == '!' || c == '*')
-                    break;
-
-                contentIdentifier[i++] = c;
-            }
-            return new string(contentIdentifier, 0, i);
         }
     }
 }

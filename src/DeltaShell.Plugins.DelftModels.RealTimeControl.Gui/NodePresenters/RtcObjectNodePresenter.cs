@@ -9,7 +9,8 @@ using DeltaShell.Plugins.DelftModels.RealTimeControl.Properties;
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.NodePresenters
 {
     /// <summary>
-    /// This Node Presenter handles all Project Explorer presentation for all objects deriving from the <see cref="RtcBaseObject"/>.
+    /// This Node Presenter handles all Project Explorer presentation for all objects deriving from the
+    /// <see cref="RtcBaseObject"/>.
     /// </summary>
     public sealed class RtcObjectNodePresenter : TreeViewNodePresenterBaseForPluginGui<RtcBaseObject>
     {
@@ -33,7 +34,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.NodePresenters
             {typeof(MathematicalExpression), Resources.MathExpr}
         };
 
-        /// <inheritdoc />
+        /// <inheritdoc/>
         public override void UpdateNode(ITreeNode parentNode, ITreeNode node, RtcBaseObject nodeData)
         {
             node.Text = nodeData.Name;

@@ -18,9 +18,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.FunctionLis
 {
     public partial class BloomFunctionsTableView : UserControl, IView
     {
+        private readonly DelayedEventHandler<EventArgs> functionCollectionChangedDelayedEventHandler;
         private BloomInfo info;
         private IEventedList<IFunction> functions;
-        private readonly DelayedEventHandler<EventArgs> functionCollectionChangedDelayedEventHandler;
         private Dictionary<int, string> columnIndices;
         private int nameColumnIndex;
 
@@ -34,6 +34,65 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.FunctionLis
                     UpdateTableColumns();
                     UpdateTableView();
                 }) {SynchronizingObject = this};
+        }
+
+        public IGui Gui { get; set; }
+
+        public IEditableObject DataOwner { get; set; }
+
+        public BloomInfo BloomInfo
+        {
+            set
+            {
+                info = value;
+                InitializeTableView();
+            }
+        }
+
+        public object Data
+        {
+            get => functions;
+            set
+            {
+                if (functions != null)
+                {
+                    functions.CollectionChanged -= functionCollectionChangedDelayedEventHandler;
+                    ((INotifyPropertyChange) functions).PropertyChanged -= OnPropertyChanged;
+                }
+
+                functions = (IEventedList<IFunction>) value;
+
+                if (functions != null)
+                {
+                    functions.CollectionChanged += functionCollectionChangedDelayedEventHandler;
+                    ((INotifyPropertyChange) functions).PropertyChanged += OnPropertyChanged;
+                }
+
+                UpdateTableView();
+            }
+        }
+
+        public Image Image { get; set; }
+
+        public ViewInfo ViewInfo { get; set; }
+
+        public void EnsureVisible(object item) {}
+
+        /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing"> true if managed resources should be disposed; otherwise, false. </param>
+        protected override void Dispose(bool disposing)
+        {
+            functionCollectionChangedDelayedEventHandler.Enabled = false;
+            functionCollectionChangedDelayedEventHandler.Dispose();
+
+            if (disposing && components != null)
+            {
+                components.Dispose();
+            }
+
+            base.Dispose(disposing);
         }
 
         private void InitializeTableView()
@@ -127,33 +186,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.FunctionLis
             return null;
         }
 
-        public object Data
-        {
-            get => functions;
-            set
-            {
-                if (functions != null)
-                {
-                    functions.CollectionChanged -= functionCollectionChangedDelayedEventHandler;
-                    ((INotifyPropertyChange) functions).PropertyChanged -= OnPropertyChanged;
-                }
-
-                functions = (IEventedList<IFunction>) value;
-
-                if (functions != null)
-                {
-                    functions.CollectionChanged += functionCollectionChangedDelayedEventHandler;
-                    ((INotifyPropertyChange) functions).PropertyChanged += OnPropertyChanged;
-                }
-
-                UpdateTableView();
-            }
-        }
-
-        public IGui Gui { get; set; }
-
-        public IEditableObject DataOwner { get; set; }
-
         private void UpdateTableView()
         {
             if (functions != null && info != null)
@@ -186,38 +218,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.FunctionLis
         private void PerformTableViewDataRefresh()
         {
             tableView.RefreshData();
-        }
-
-        public Image Image { get; set; }
-
-        public void EnsureVisible(object item) {}
-
-        public ViewInfo ViewInfo { get; set; }
-
-        public BloomInfo BloomInfo
-        {
-            set
-            {
-                info = value;
-                InitializeTableView();
-            }
-        }
-
-        /// <summary>
-        /// Clean up any resources being used.
-        /// </summary>
-        /// <param name="disposing"> true if managed resources should be disposed; otherwise, false. </param>
-        protected override void Dispose(bool disposing)
-        {
-            functionCollectionChangedDelayedEventHandler.Enabled = false;
-            functionCollectionChangedDelayedEventHandler.Dispose();
-
-            if (disposing && components != null)
-            {
-                components.Dispose();
-            }
-
-            base.Dispose(disposing);
         }
     }
 }

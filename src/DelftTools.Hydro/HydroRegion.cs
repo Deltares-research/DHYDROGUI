@@ -26,11 +26,6 @@ namespace DelftTools.Hydro
             Initialize();
         }
 
-        private void Initialize()
-        {
-            Links = new EventedList<HydroLink>();
-        }
-
         public override IEventedList<IRegion> SubRegions
         {
             get => base.SubRegions;
@@ -80,25 +75,6 @@ namespace DelftTools.Hydro
                     links.CollectionChanged += OnLinksCollectionChanged;
                 }
             }
-        }
-
-        public override object Clone()
-        {
-            var clone = (HydroRegion) base.Clone();
-            clone.Initialize();
-            clone.Name = Name;
-            clone.Geometry = (IGeometry) (Geometry != null ? Geometry.Clone() : null);
-            clone.Attributes = (IFeatureAttributeCollection) (Attributes != null ? Attributes.Clone() : null);
-
-            clone.isCloning = true;
-            CloneAndAddLinks(this, clone);
-            clone.isCloning = false;
-            return clone;
-        }
-
-        public override IEnumerable<object> GetDirectChildren()
-        {
-            return SubRegions.Cast<object>().Union(Links.Cast<object>());
         }
 
         public static HydroLink AddNewLink(IHydroObject source, IHydroObject target)
@@ -181,7 +157,7 @@ namespace DelftTools.Hydro
         }
 
         /// <summary>
-        /// Adds links to the <paramref name="clone" /> region based on the links of <paramref name="original" /> region.
+        /// Adds links to the <paramref name="clone"/> region based on the links of <paramref name="original"/> region.
         /// </summary>
         public static void CloneAndAddLinks(IHydroRegion original, IHydroRegion clone)
         {
@@ -219,6 +195,45 @@ namespace DelftTools.Hydro
         public static void RemoveLink(HydroLink link)
         {
             RemoveLink(link.Source, link.Target);
+        }
+
+        public override object Clone()
+        {
+            var clone = (HydroRegion) base.Clone();
+            clone.Initialize();
+            clone.Name = Name;
+            clone.Geometry = (IGeometry) (Geometry != null ? Geometry.Clone() : null);
+            clone.Attributes = (IFeatureAttributeCollection) (Attributes != null ? Attributes.Clone() : null);
+
+            clone.isCloning = true;
+            CloneAndAddLinks(this, clone);
+            clone.isCloning = false;
+            return clone;
+        }
+
+        public override IEnumerable<object> GetDirectChildren()
+        {
+            return SubRegions.Cast<object>().Union(Links.Cast<object>());
+        }
+
+        void IHydroRegion.RemoveLink(IHydroObject source, IHydroObject target)
+        {
+            RemoveLink(source, target);
+        }
+
+        bool IHydroRegion.CanLinkTo(IHydroObject source, IHydroObject target)
+        {
+            return CanLinkTo(source, target);
+        }
+
+        HydroLink IHydroRegion.AddNewLink(IHydroObject source, IHydroObject target)
+        {
+            return AddNewLink(source, target);
+        }
+
+        private void Initialize()
+        {
+            Links = new EventedList<HydroLink>();
         }
 
         [EditAction]
@@ -274,21 +289,6 @@ namespace DelftTools.Hydro
             {
                 throw new NotSupportedException();
             }
-        }
-
-        void IHydroRegion.RemoveLink(IHydroObject source, IHydroObject target)
-        {
-            RemoveLink(source, target);
-        }
-
-        bool IHydroRegion.CanLinkTo(IHydroObject source, IHydroObject target)
-        {
-            return CanLinkTo(source, target);
-        }
-
-        HydroLink IHydroRegion.AddNewLink(IHydroObject source, IHydroObject target)
-        {
-            return AddNewLink(source, target);
         }
     }
 }

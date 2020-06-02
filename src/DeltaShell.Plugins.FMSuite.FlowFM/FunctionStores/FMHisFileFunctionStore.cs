@@ -25,7 +25,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
     /// <summary>
     /// Reads an Unstruct HIS file and acts as the backing store. The his files contains timeseries on stations and cross
     /// sections and general structures.
-    /// These correspond to observation points and obs. cross sections in the model as well as general structures. These features can either be generated
+    /// These correspond to observation points and obs. cross sections in the model as well as general structures. These
+    /// features can either be generated
     /// from
     /// the netcdf file (in case you import the HIS file standalone), or be inserted from the model, to ensure the instances
     /// are
@@ -37,51 +38,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
         private const string longNameAttribute = "long_name";
         private const string unitAttribute = "units";
 
-        #region Feature names and coverage helpers
-
-        private const string featureNameStations = "stations";
-        private const string featureNameCrossSection = "cross_section";
-        private const string featureNameGeneralStructures = "general_structures";
-        private const string featureNameWeirgens = "weirgens";
-        private const string featureNameGategens = "gategens";
-        private const string featureNamePumps = "pumps";
-
-        // Mapping dictionary used to relate under which name is an IFeature stored in the NetCdfFile.
-        private readonly Dictionary<string, IEnumerable<IFeature>> featuresDictionary =
-            new Dictionary<string, IEnumerable<IFeature>>()
-            {
-                {featureNameStations, null },
-                {featureNameCrossSection, null },
-                {featureNameGeneralStructures, null },
-                {featureNameWeirgens, null },
-                {featureNameGategens, null },
-                {featureNamePumps, null },
-            };
-
-        // Mapping dictionary used to relate under which name are Features stored in the Coverages.
-        private readonly IDictionary<string, IMultiDimensionalArray<IFeature>> cachedFeatures =
-            new Dictionary<string, IMultiDimensionalArray<IFeature>>()
-            {
-                {featureNameStations, null},
-                {featureNameCrossSection, null},
-                {featureNameGeneralStructures, null},
-                {featureNameWeirgens, null},
-                {featureNameGategens, null},
-                {featureNamePumps, null},
-            };
-
-        private readonly IList<KeyValuePair<string, string>> generalStuctures = new List<KeyValuePair<string, string>>()
-        {
-            new KeyValuePair<string, string>("general_structure_name", featureNameGeneralStructures),
-            new KeyValuePair<string, string>("weirgen_name", featureNameWeirgens),
-            new KeyValuePair<string, string>("gategen_name", featureNameGategens)
-        };
-
-        #endregion
-
-        public ICoordinateSystem CoordinateSystem { get; set; }
-        protected FMHisFileFunctionStore() { }
-
         public FMHisFileFunctionStore(string hisPath, ICoordinateSystem coordinateSystem = null, HydroArea area = null)
             : base(hisPath) //loads the actual functions
         {
@@ -89,15 +45,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
 
             using (ReconnectToMapFile())
             {
-                InitializeStationFeatures((area?.ObservationPoints as IEnumerable<Feature2D>) ?? new Feature2D[0]);
-                InitializeCrossSectionFeatures((area?.ObservationCrossSections as IEnumerable<Feature2D>) ?? new Feature2D[0]);
+                InitializeStationFeatures(area?.ObservationPoints as IEnumerable<Feature2D> ?? new Feature2D[0]);
+                InitializeCrossSectionFeatures(area?.ObservationCrossSections as IEnumerable<Feature2D> ?? new Feature2D[0]);
                 InitializePumpFeatures(area?.Pumps ?? Enumerable.Empty<Pump2D>());
-                InitializeGeneralStructuresFeatures((area?.Weirs as IEnumerable<Weir2D>) ?? new Weir2D[0]);
+                InitializeGeneralStructuresFeatures(area?.Weirs as IEnumerable<Weir2D> ?? new Weir2D[0]);
             }
 
             // initialize 'Features' collection of each coverage
             Functions?.OfType<IFeatureCoverage>().ForEach(InsertFeaturesInCoverage);
         }
+
+        protected FMHisFileFunctionStore() {}
+
+        public ICoordinateSystem CoordinateSystem { get; set; }
 
         protected override IEnumerable<IFunction> ConstructFunctions(IEnumerable<NetCdfVariableInfo> dataVariables)
         {
@@ -199,26 +159,70 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
                 {
                     List<IFeature> features = featuresDictionary[dimensionName].ToList();
                     int functionSize = GetSize(function);
-                    cachedArray = new MultiDimensionalArray<IFeature>(features, new[]{ functionSize });
+                    cachedArray = new MultiDimensionalArray<IFeature>(features, new[]
+                    {
+                        functionSize
+                    });
                     cachedFeatures[dimensionName] = cachedArray;
                 }
 
-                return (MultiDimensionalArray<T>)cachedArray;
+                return (MultiDimensionalArray<T>) cachedArray;
             }
 
             throw new ArgumentException(string.Format("Unexpected dimension name: {0}", dimensionName));
-
         }
 
         private void InsertFeaturesInCoverage(IFeatureCoverage coverage)
         {
-            var featureName = coverage.FeatureVariable.Attributes[NcNameAttribute];
+            string featureName = coverage.FeatureVariable.Attributes[NcNameAttribute];
             IEnumerable<IFeature> features;
             if (featuresDictionary.TryGetValue(featureName, out features) && features != null)
             {
-                coverage.Features= new EventedList<IFeature>(features);
+                coverage.Features = new EventedList<IFeature>(features);
             }
         }
+
+        #region Feature names and coverage helpers
+
+        private const string featureNameStations = "stations";
+        private const string featureNameCrossSection = "cross_section";
+        private const string featureNameGeneralStructures = "general_structures";
+        private const string featureNameWeirgens = "weirgens";
+        private const string featureNameGategens = "gategens";
+        private const string featureNamePumps = "pumps";
+
+        // Mapping dictionary used to relate under which name is an IFeature stored in the NetCdfFile.
+        private readonly Dictionary<string, IEnumerable<IFeature>> featuresDictionary =
+            new Dictionary<string, IEnumerable<IFeature>>()
+            {
+                {featureNameStations, null},
+                {featureNameCrossSection, null},
+                {featureNameGeneralStructures, null},
+                {featureNameWeirgens, null},
+                {featureNameGategens, null},
+                {featureNamePumps, null},
+            };
+
+        // Mapping dictionary used to relate under which name are Features stored in the Coverages.
+        private readonly IDictionary<string, IMultiDimensionalArray<IFeature>> cachedFeatures =
+            new Dictionary<string, IMultiDimensionalArray<IFeature>>()
+            {
+                {featureNameStations, null},
+                {featureNameCrossSection, null},
+                {featureNameGeneralStructures, null},
+                {featureNameWeirgens, null},
+                {featureNameGategens, null},
+                {featureNamePumps, null},
+            };
+
+        private readonly IList<KeyValuePair<string, string>> generalStuctures = new List<KeyValuePair<string, string>>()
+        {
+            new KeyValuePair<string, string>("general_structure_name", featureNameGeneralStructures),
+            new KeyValuePair<string, string>("weirgen_name", featureNameWeirgens),
+            new KeyValuePair<string, string>("gategen_name", featureNameGategens)
+        };
+
+        #endregion
 
         #region Feature Initialization
 
@@ -226,7 +230,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
         {
             // Extract all possible pumps for later pairing with features
             IList<string> pumpNames = GetNetCdfFeatureVariableNames("pump_name");
-            if (!pumpNames.Any()) return;
+            if (!pumpNames.Any())
+            {
+                return;
+            }
 
             var results = new List<IFeature>();
             foreach (string name in pumpNames)
@@ -254,7 +261,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
                 foreach (string name in names)
                 {
                     IWeir validFeature = modelGeneralStructures.OfType<IWeir>().FirstOrDefault(m => m.Name.Equals(name))
-                        ?? CreateGeneralStructureFromNetCdf(name);
+                                         ?? CreateGeneralStructureFromNetCdf(name);
                     results.Add(validFeature);
                 }
 
@@ -269,7 +276,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
         {
             // Extract all possible cross section names for later pairing with features
             IList<string> crossSectionNames = GetNetCdfFeatureVariableNames("cross_section_name");
-            if (!crossSectionNames.Any()) return;
+            if (!crossSectionNames.Any())
+            {
+                return;
+            }
 
             // Get all coordinates available.
             Array xs = GetNetCdfVariableArray("cross_section_x_coordinate");
@@ -287,6 +297,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
                     IGeometry geometry = CreateLineString(idx, xs, ys);
                     validFeature = CreateFeature2D(crossSectionName, geometry);
                 }
+
                 if (validFeature != null)
                 {
                     results.Add(validFeature);
@@ -299,10 +310,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
         private void InitializeStationFeatures(IEnumerable<Feature2D> modelObsPoints)
         {
             // Extract all possible station ids for later pairing with features
-            var stationIds = GetNetCdfFeatureVariableNames("station_id");
+            IList<string> stationIds = GetNetCdfFeatureVariableNames("station_id");
             if (!stationIds.Any())
+            {
                 return;
-            
+            }
+
             // Get all coordinates available.
             // TODO: xs and yx are now time dependent, evetually we will need to re-think this... for now, just take the 1st dimension
             double[] xs = GetNetCdfVariableIEnumerable<double>("station_x_coordinate").ToArray();
@@ -312,13 +325,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
             var results = new List<IFeature>();
             foreach (string stationId in stationIds)
             {
-                Feature2D validFeature = modelObsPoints.FirstOrDefault(m => m.Name.Equals(stationId)); 
-                if(validFeature == null)
+                Feature2D validFeature = modelObsPoints.FirstOrDefault(m => m.Name.Equals(stationId));
+                if (validFeature == null)
                 {
                     int idx = stationIds.IndexOf(stationId);
                     IGeometry point = CreatePoint(idx, xs, ys);
                     validFeature = CreateFeature2D(stationId, point);
                 }
+
                 if (validFeature != null)
                 {
                     results.Add(validFeature);
@@ -359,7 +373,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
             List<string> variableContent = variableArray?.Select(CharArrayToString).ToList();
 
             if (variableContent == null || !variableContent.Any())
+            {
                 return new List<string>();
+            }
 
             return variableContent;
         }
@@ -367,16 +383,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
         private Array GetNetCdfVariableArray(string variableName)
         {
             NetCdfVariable variableByName = netCdfFile.GetVariableByName(variableName);
-            return variableByName == null 
-                ? null
-                : netCdfFile.Read(variableByName);
+            return variableByName == null
+                       ? null
+                       : netCdfFile.Read(variableByName);
         }
 
         private IEnumerable<T> GetNetCdfVariableIEnumerable<T>(string variableName)
         {
             Array variableArray = GetNetCdfVariableArray(variableName);
             if (variableArray == null)
+            {
                 return Enumerable.Empty<T>();
+            }
+
             IEnumerable<T> variableArrayT = variableArray.Cast<T>();
             return variableArrayT;
         }
@@ -388,7 +407,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
         private static IGeometry CreateLineString(int i, Array xs, Array ys)
         {
             if (xs is null || ys is null)
+            {
                 return null;
+            }
 
             var coordinates = new List<Coordinate>();
             int arrayLength = xs.GetLength(1);
@@ -402,6 +423,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
                     coordinates.Add(new Coordinate(x, y));
                 }
             }
+
             var geometry = new LineString(coordinates.ToArray());
             return geometry;
         }
@@ -409,7 +431,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
         private static IGeometry CreatePoint(int i, Array xs, Array ys)
         {
             if (xs is null || ys is null)
+            {
                 return null;
+            }
 
             var xValue = (double) xs.GetValue(i);
             var yValue = (double) ys.GetValue(i);

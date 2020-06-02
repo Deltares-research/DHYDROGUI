@@ -4,12 +4,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.BoundaryConditionEditor
 {
     public partial class WaveConstantParametersEditor : UserControl
     {
+        private WaveBoundaryParameters data;
+
         public WaveConstantParametersEditor()
         {
             InitializeComponent();
         }
-
-        private WaveBoundaryParameters data;
 
         public WaveBoundaryParameters Data
         {

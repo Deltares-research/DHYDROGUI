@@ -1,5 +1,4 @@
-﻿using System;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
@@ -9,15 +8,26 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
     /// </summary>
     public partial class SingleTextBoxWithLabelAndUnitControl : UserControl
     {
+        public SingleTextBoxWithLabelAndUnitControl()
+        {
+            InitializeComponent();
+        }
+
         #region Label DP
 
         /// <summary>
         /// Gets or sets the Label which is displayed next to the field
         /// </summary>
-        public String Label
+        public string Label
         {
-            get { return (String)GetValue(LabelProperty); }
-            set { SetValue(LabelProperty, value); }
+            get
+            {
+                return (string) GetValue(LabelProperty);
+            }
+            set
+            {
+                SetValue(LabelProperty, value);
+            }
         }
 
         /// <summary>
@@ -25,7 +35,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
         /// </summary>
         public static readonly DependencyProperty LabelProperty =
             DependencyProperty.Register("Label", typeof(string),
-              typeof(SingleTextBoxWithLabelAndUnitControl), new PropertyMetadata(""));
+                                        typeof(SingleTextBoxWithLabelAndUnitControl), new PropertyMetadata(""));
 
         #endregion
 
@@ -34,10 +44,16 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
         /// <summary>
         /// Gets or sets the Label which is displayed next to the field
         /// </summary>
-        public String Unit
+        public string Unit
         {
-            get { return (String)GetValue(UnitProperty); }
-            set { SetValue(UnitProperty, value); }
+            get
+            {
+                return (string) GetValue(UnitProperty);
+            }
+            set
+            {
+                SetValue(UnitProperty, value);
+            }
         }
 
         /// <summary>
@@ -45,7 +61,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
         /// </summary>
         public static readonly DependencyProperty UnitProperty =
             DependencyProperty.Register("Unit", typeof(string),
-              typeof(SingleTextBoxWithLabelAndUnitControl), new PropertyMetadata(""));
+                                        typeof(SingleTextBoxWithLabelAndUnitControl), new PropertyMetadata(""));
 
         #endregion
 
@@ -56,8 +72,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
         /// </summary>
         public object Value
         {
-            get { return (object)GetValue(ValueProperty); }
-            set { SetValue(ValueProperty, value); }
+            get
+            {
+                return (object) GetValue(ValueProperty);
+            }
+            set
+            {
+                SetValue(ValueProperty, value);
+            }
         }
 
         /// <summary>
@@ -65,13 +87,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
         /// </summary>
         public static readonly DependencyProperty ValueProperty =
             DependencyProperty.Register("Value", typeof(object),
-              typeof(SingleTextBoxWithLabelAndUnitControl), new PropertyMetadata(null));
+                                        typeof(SingleTextBoxWithLabelAndUnitControl), new PropertyMetadata(null));
 
         #endregion
-
-        public SingleTextBoxWithLabelAndUnitControl()
-        {
-            InitializeComponent();
-        }
     }
 }

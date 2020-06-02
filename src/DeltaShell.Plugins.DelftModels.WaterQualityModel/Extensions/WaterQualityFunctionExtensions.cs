@@ -13,7 +13,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Extentions
     public static class WaterQualityFunctionExtensions
     {
         /// <summary>
-        /// Checks whether or not <paramref name="function" /> is a constant function (in the context of WaterQualityModel)
+        /// Checks whether or not <paramref name="function"/> is a constant function (in the context of WaterQualityModel)
         /// </summary>
         /// <param name="function"> The function to check </param>
         public static bool IsConst(this IFunction function)
@@ -22,7 +22,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Extentions
         }
 
         /// <summary>
-        /// Checks whether or not <paramref name="function" /> is a time series (in the context of WaterQualityModel)
+        /// Checks whether or not <paramref name="function"/> is a time series (in the context of WaterQualityModel)
         /// </summary>
         /// <param name="function"> The function to check </param>
         public static bool IsTimeSeries(this IFunction function)
@@ -31,7 +31,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Extentions
         }
 
         /// <summary>
-        /// Checks whether or not <paramref name="function" /> is a segment files (in the context of WaterQualityModel)
+        /// Checks whether or not <paramref name="function"/> is a segment files (in the context of WaterQualityModel)
         /// </summary>
         /// <param name="function"> The function to check </param>
         public static bool IsSegmentFile(this IFunction function)
@@ -41,7 +41,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Extentions
         }
 
         /// <summary>
-        /// Checks whether or not <paramref name="function" /> is a network coverage
+        /// Checks whether or not <paramref name="function"/> is a network coverage
         /// </summary>
         /// <param name="function"> The function to check </param>
         public static bool IsNetworkCoverage(this IFunction function)
@@ -50,7 +50,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Extentions
         }
 
         /// <summary>
-        /// Checks whether or not <paramref name="function" /> is a <see cref="UnstructuredGridCellCoverage" />.
+        /// Checks whether or not <paramref name="function"/> is a <see cref="UnstructuredGridCellCoverage"/>.
         /// </summary>
         /// <param name="function"> The function to check </param>
         public static bool IsUnstructuredGridCellCoverage(this IFunction function)
@@ -59,7 +59,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Extentions
         }
 
         /// <summary>
-        /// Determines whether or not <paramref name="function" /> is a <see cref="FunctionFromHydroDynamics" />.
+        /// Determines whether or not <paramref name="function"/> is a <see cref="FunctionFromHydroDynamics"/>.
         /// </summary>
         /// <param name="function"> The function to check. </param>
         public static bool IsFromHydroDynamics(this IFunction function)
@@ -80,7 +80,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Extentions
         /// <remarks>
         ///     <para> Setting the new grid causes the coverage to be cleared. </para>
         ///     <para>
-        ///     This method does not update <see cref="ISpatialOperation" /> instances
+        ///     This method does not update <see cref="ISpatialOperation"/> instances
         ///     that might be applied to this particular coverage.
         ///     </para>
         /// </remarks>
@@ -96,12 +96,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Extentions
 
         /// <summary>
         /// Performs a clear on a grid cell coverage. If the coverage is not a time-dependent
-        /// coverage, then the first component is set to <see cref="IVariable.NoDataValue" />
+        /// coverage, then the first component is set to <see cref="IVariable.NoDataValue"/>
         /// assigned to that component.
         /// </summary>
         /// <remarks>
         /// Events are disabled during the clear as performance optimization for
-        /// <see cref="MemoryFunctionStore" /> based coverages.
+        /// <see cref="MemoryFunctionStore"/> based coverages.
         /// </remarks>
         public static void ClearCoverage(this UnstructuredGridCellCoverage coverage)
         {

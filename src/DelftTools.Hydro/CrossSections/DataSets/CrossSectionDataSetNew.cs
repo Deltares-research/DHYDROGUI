@@ -11,23 +11,10 @@ namespace DelftTools.Hydro.CrossSections.DataSets
 {
     public class CrossSectionDataSet
     {
-        public class CrossSectionXYZRow : CrossSectionYZRow
-        {
-            public CrossSectionXYZRow()
-                : base(0.0, 0.0, 0.0) {}
-
-            public CrossSectionXYZRow(double yq, double z, double deltaZStorage) : base(yq, z, deltaZStorage) {}
-
-            [ReadOnly(true)]
-            public override double Yq
-            {
-                get => base.Yq;
-                set => base.Yq = value;
-            }
-        }
-
         public abstract class CrossSectionXYZDataTable : LightDataTable<CrossSectionXYZRow>
         {
+            public event LightDataValueChangeEventHandler ZValueChanged;
+
             public CrossSectionXYZDataTable()
             {
                 OnInitialize();
@@ -37,12 +24,6 @@ namespace DelftTools.Hydro.CrossSections.DataSets
                 : base(info, context)
             {
                 OnInitialize();
-            }
-
-            private void OnInitialize()
-            {
-                Rows.AllowNew = false;
-                Rows.AllowRemove = false;
             }
 
             public CrossSectionXYZRow AddCrossSectionXYZRow(double yq, double z, double deltaZStorage)
@@ -57,7 +38,17 @@ namespace DelftTools.Hydro.CrossSections.DataSets
                 return row;
             }
 
-            public event LightDataValueChangeEventHandler ZValueChanged;
+            protected override int NumColumns => 3;
+
+            protected override SortOrder GetSortOrder()
+            {
+                return SortOrder.Ascending;
+            }
+
+            protected override void AddByValues(double[] itemArray)
+            {
+                AddCrossSectionXYZRow(itemArray[0], itemArray[1], itemArray[2]);
+            }
 
             internal override void HandleRowChanged(LightDataRow row, double[] oldState, double[] newState)
             {
@@ -78,17 +69,76 @@ namespace DelftTools.Hydro.CrossSections.DataSets
                 }
             }
 
+            private void OnInitialize()
+            {
+                Rows.AllowNew = false;
+                Rows.AllowRemove = false;
+            }
+        }
+
+        public class CrossSectionXYZRow : CrossSectionYZRow
+        {
+            public CrossSectionXYZRow()
+                : base(0.0, 0.0, 0.0) {}
+
+            public CrossSectionXYZRow(double yq, double z, double deltaZStorage) : base(yq, z, deltaZStorage) {}
+
+            [ReadOnly(true)]
+            public override double Yq
+            {
+                get => base.Yq;
+                set => base.Yq = value;
+            }
+        }
+
+        public abstract class CrossSectionYZDataTable : LightDataTable<CrossSectionYZRow>
+        {
+            protected CrossSectionYZDataTable() {}
+
+            protected CrossSectionYZDataTable(SerializationInfo info, StreamingContext context)
+                : base(info, context) {}
+
+            public CrossSectionYZRow AddCrossSectionYZRow(double yq, double z, double zStorage)
+            {
+                var row = new CrossSectionYZRow(yq, z, zStorage);
+                Rows.Add(row);
+                return row;
+            }
+
+            public void RemoveCrossSectionYZRow(CrossSectionYZRow row)
+            {
+                Rows.Remove(row);
+            }
+
+            public void SetWithCoordinates(IEnumerable<Coordinate> coordinates)
+            {
+                Clear();
+                foreach (Coordinate c in coordinates)
+                {
+                    AddCrossSectionYZRow(c.X, c.Y, 0);
+                }
+            }
+
+            protected override int NumColumns => 3;
+
             protected override SortOrder GetSortOrder()
             {
                 return SortOrder.Ascending;
             }
 
-            protected override void AddByValues(double[] itemArray)
+            protected override void DoEnforceConstraints()
             {
-                AddCrossSectionXYZRow(itemArray[0], itemArray[1], itemArray[2]);
+                List<double> yValues = Rows.Select(r => r[0]).ToList();
+                if (yValues.Count != yValues.Distinct().Count())
+                {
+                    throw new ConstraintException("Y' must be unique.");
+                }
             }
 
-            protected override int NumColumns => 3;
+            protected override void AddByValues(double[] itemArray)
+            {
+                AddCrossSectionYZRow(itemArray[0], itemArray[1], itemArray[2]);
+            }
         }
 
         public class CrossSectionYZRow : LightDataRow
@@ -129,53 +179,44 @@ namespace DelftTools.Hydro.CrossSections.DataSets
             }
         }
 
-        public abstract class CrossSectionYZDataTable : LightDataTable<CrossSectionYZRow>
+        public abstract class CrossSectionZWDataTable : LightDataTable<CrossSectionZWRow>
         {
-            protected CrossSectionYZDataTable() {}
+            protected CrossSectionZWDataTable() {}
 
-            protected CrossSectionYZDataTable(SerializationInfo info, StreamingContext context)
+            protected CrossSectionZWDataTable(SerializationInfo info, StreamingContext context)
                 : base(info, context) {}
 
-            protected override int NumColumns => 3;
-
-            public CrossSectionYZRow AddCrossSectionYZRow(double yq, double z, double zStorage)
+            public CrossSectionZWRow AddCrossSectionZWRow(double z, double w, double storageWidth)
             {
-                var row = new CrossSectionYZRow(yq, z, zStorage);
+                var row = new CrossSectionZWRow(z, w, storageWidth);
                 Rows.Add(row);
                 return row;
             }
 
-            public void RemoveCrossSectionYZRow(CrossSectionYZRow row)
+            public void RemoveCrossSectionZWRow(CrossSectionZWRow row)
             {
                 Rows.Remove(row);
             }
 
-            public void SetWithCoordinates(IEnumerable<Coordinate> coordinates)
+            public void Set(IEnumerable<HeightFlowStorageWidth> hfswData)
             {
                 Clear();
-                foreach (Coordinate c in coordinates)
+                foreach (HeightFlowStorageWidth hfsw in hfswData)
                 {
-                    AddCrossSectionYZRow(c.X, c.Y, 0);
+                    AddCrossSectionZWRow(hfsw.Height, hfsw.TotalWidth, hfsw.StorageWidth);
                 }
             }
+
+            protected override int NumColumns => 3;
 
             protected override SortOrder GetSortOrder()
             {
-                return SortOrder.Ascending;
-            }
-
-            protected override void DoEnforceConstraints()
-            {
-                List<double> yValues = Rows.Select(r => r[0]).ToList();
-                if (yValues.Count != yValues.Distinct().Count())
-                {
-                    throw new ConstraintException("Y' must be unique.");
-                }
+                return SortOrder.Descending;
             }
 
             protected override void AddByValues(double[] itemArray)
             {
-                AddCrossSectionYZRow(itemArray[0], itemArray[1], itemArray[2]);
+                AddCrossSectionZWRow(itemArray[0], itemArray[1], itemArray[2]);
             }
         }
 
@@ -214,47 +255,6 @@ namespace DelftTools.Hydro.CrossSections.DataSets
             public override string ToString()
             {
                 return string.Format("ZW Row: Z = {0}, Width = {1}, Storage width = {2}", Z, Width, StorageWidth);
-            }
-        }
-
-        public abstract class CrossSectionZWDataTable : LightDataTable<CrossSectionZWRow>
-        {
-            protected CrossSectionZWDataTable() {}
-
-            protected CrossSectionZWDataTable(SerializationInfo info, StreamingContext context)
-                : base(info, context) {}
-
-            protected override int NumColumns => 3;
-
-            public CrossSectionZWRow AddCrossSectionZWRow(double z, double w, double storageWidth)
-            {
-                var row = new CrossSectionZWRow(z, w, storageWidth);
-                Rows.Add(row);
-                return row;
-            }
-
-            public void RemoveCrossSectionZWRow(CrossSectionZWRow row)
-            {
-                Rows.Remove(row);
-            }
-
-            protected override SortOrder GetSortOrder()
-            {
-                return SortOrder.Descending;
-            }
-
-            public void Set(IEnumerable<HeightFlowStorageWidth> hfswData)
-            {
-                Clear();
-                foreach (HeightFlowStorageWidth hfsw in hfswData)
-                {
-                    AddCrossSectionZWRow(hfsw.Height, hfsw.TotalWidth, hfsw.StorageWidth);
-                }
-            }
-
-            protected override void AddByValues(double[] itemArray)
-            {
-                AddCrossSectionZWRow(itemArray[0], itemArray[1], itemArray[2]);
             }
         }
     }

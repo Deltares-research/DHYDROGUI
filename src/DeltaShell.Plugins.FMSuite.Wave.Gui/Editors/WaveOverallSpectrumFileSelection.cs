@@ -6,6 +6,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors
 {
     public partial class WaveOverallSpectrumFileSelection : UserControl
     {
+        private WaveModel data;
+
         public WaveOverallSpectrumFileSelection()
         {
             InitializeComponent();
@@ -15,9 +17,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors
             openFileDialog1.Title = "Select SWAN spectrum file ...";
         }
 
-        private void SelectFileBtnOnClick(object sender, EventArgs eventArgs)
+        public WaveModel Data
         {
-            SelectSp2File();
+            get => data;
+            set
+            {
+                data = value;
+                UpdatePanel();
+            }
         }
 
         public DialogResult SelectSp2File()
@@ -33,16 +40,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors
             return dlgResult;
         }
 
-        private WaveModel data;
-
-        public WaveModel Data
+        private void SelectFileBtnOnClick(object sender, EventArgs eventArgs)
         {
-            get => data;
-            set
-            {
-                data = value;
-                UpdatePanel();
-            }
+            SelectSp2File();
         }
 
         private void UpdatePanel()

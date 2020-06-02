@@ -21,23 +21,64 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
             radioButtonPositive.CheckedChanged += RadioButtonPositiveCheckedChanged;
         }
 
-        void RadioButtonPositiveCheckedChanged(object sender, EventArgs e)
+        public IPump Data
         {
-            var expectedForRadioButtonNegative = !radioButtonPositive.Checked;
+            get
+            {
+                return pump;
+            }
+            set
+            {
+                if (pump != null)
+                {
+                    ((INotifyPropertyChanged) pump).PropertyChanged -= PumpPropertyChanged;
+                }
+
+                pump = value;
+
+                if (pump == null)
+                {
+                    return;
+                }
+
+                ipumpBindingSource.DataSource = (object) pump ?? typeof(IPump);
+
+                if (pump != null)
+                {
+                    SetSideCheckboxes(pump.ControlDirection);
+                    ((INotifyPropertyChanged) pump).PropertyChanged += PumpPropertyChanged;
+                }
+
+                ConfigureTimeDependentControls();
+                ConfigureVisibilityControls();
+            }
+        }
+
+        object IView.Data
+        {
+            get
+            {
+                return Data;
+            }
+            set
+            {
+                Data = (Pump) value;
+            }
+        }
+
+        public Image Image { get; set; }
+
+        public ViewInfo ViewInfo { get; set; }
+
+        public void EnsureVisible(object item) {}
+
+        private void RadioButtonPositiveCheckedChanged(object sender, EventArgs e)
+        {
+            bool expectedForRadioButtonNegative = !radioButtonPositive.Checked;
 
             if (radioButtonNegative.Checked != expectedForRadioButtonNegative)
             {
                 radioButtonNegative.Checked = expectedForRadioButtonNegative;
-            }
-        }
-
-
-        object IView.Data
-        {
-            get { return Data; }
-            set
-            {
-                Data = (Pump) value;
             }
         }
 
@@ -64,35 +105,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
             }
 
             settingCheckBoxes = false;
-        }
-
-        public IPump Data
-        {
-            get { return pump; }
-            set
-            {
-                if (pump != null)
-                {
-                    ((INotifyPropertyChanged)pump).PropertyChanged -= PumpPropertyChanged;
-                }
-
-                pump = value;
-
-                if(pump == null)
-                {
-                    return;
-                }
-
-                ipumpBindingSource.DataSource = (object)pump ?? typeof(IPump);
-
-                if (pump != null)
-                {
-                    SetSideCheckboxes(pump.ControlDirection);
-                    ((INotifyPropertyChanged)pump).PropertyChanged += PumpPropertyChanged;
-                }
-                ConfigureTimeDependentControls();
-                ConfigureVisibilityControls();
-            }
         }
 
         private void ConfigureVisibilityControls()
@@ -149,7 +161,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
             }
         }
 
-        void PumpPropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void PumpPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == nameof(pump.ControlDirection))
             {
@@ -157,22 +169,16 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
             }
         }
 
-        public Image Image
-        {
-            get; set;
-        }
-
-        public void EnsureVisible(object item) { }
-        public ViewInfo ViewInfo { get; set; }
-
-        private void CheckBoxCheckedChanged(object sender, System.EventArgs e)
+        private void CheckBoxCheckedChanged(object sender, EventArgs e)
         {
             if (settingCheckBoxes)
+            {
                 return;
+            }
 
-            var suctionSide = checkBoxSuction.Checked;
-            var deliverySide = checkBoxDelivery.Checked;
-            var bothSides = suctionSide && deliverySide;
+            bool suctionSide = checkBoxSuction.Checked;
+            bool deliverySide = checkBoxDelivery.Checked;
+            bool bothSides = suctionSide && deliverySide;
 
             if (!deliverySide && !suctionSide)
             {
@@ -212,7 +218,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
 
         private void buttonReduction_Click(object sender, EventArgs e)
         {
-            var dialogData = (IFunction)pump.ReductionTable.Clone();
+            var dialogData = (IFunction) pump.ReductionTable.Clone();
             var editFunctionDialog = new EditFunctionDialog
             {
                 Text = "Reduction curve for " + pump.Name,
@@ -236,7 +242,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
             double capacity;
             if (double.TryParse(textBoxCapacity.Text, out capacity))
             {
-                lblConvertedCapacaties.Text = String.Format("(= {0:0.###} m3/min, {1:0.##} m3/h)", capacity * 60.0,
+                lblConvertedCapacaties.Text = string.Format("(= {0:0.###} m3/min, {1:0.##} m3/h)", capacity * 60.0,
                                                             capacity * 3600.0);
             }
             else
@@ -247,11 +253,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
 
         private void OpenCapacityTimeSeriesButton_Click(object sender, EventArgs e)
         {
-            var dialogData = (TimeSeries)pump.CapacityTimeSeries.Clone();
+            var dialogData = (TimeSeries) pump.CapacityTimeSeries.Clone();
             var editFunctionDialog = new EditFunctionDialog
             {
                 Text = "Capacity time series for " + pump.Name,
-                ColumnNames = new[] 
+                ColumnNames = new[]
                 {
                     "Date time",
                     $"Capacity [{capacityUnitLabel.Text}]"

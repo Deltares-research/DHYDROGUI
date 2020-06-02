@@ -12,8 +12,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
     /// Generic property grid for objects which implement a name, long name and features.
     /// </summary>
     /// <typeparam name="T">The type of backing object.</typeparam>
-    /// <seealso cref="ObjectProperties{T}" />
-    public abstract class FeatureWithAttributeProperties<T> : ObjectProperties<T> where T: INameable, ILongNameable, IFeature
+    /// <seealso cref="ObjectProperties{T}"/>
+    public abstract class FeatureWithAttributeProperties<T> : ObjectProperties<T> where T : INameable, ILongNameable, IFeature
     {
         /// <summary>
         /// Gets or sets the name.
@@ -44,7 +44,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [Description("All the (custom) attributes for this object.")]
         [PropertyOrder(2)]
         [TypeConverter(typeof(AttributeArrayConverter<object>))]
-        public AttributeProperties<object>[] Attributes => 
+        public AttributeProperties<object>[] Attributes =>
             data.Attributes.Select(x => new AttributeProperties<object>(data.Attributes, x.Key)).ToArray();
 
         /// <summary>

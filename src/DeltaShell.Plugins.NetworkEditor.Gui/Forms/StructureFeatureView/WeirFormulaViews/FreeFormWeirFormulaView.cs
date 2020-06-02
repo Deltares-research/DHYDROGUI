@@ -21,11 +21,15 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView.WeirFo
         }
 
         /// <summary>
-        /// Gets or sets data shown by this view. Usually it is any object in the system which can be shown by some IView derived class.
+        /// Gets or sets data shown by this view. Usually it is any object in the system which can be shown by some IView derived
+        /// class.
         /// </summary>
         public object Data
         {
-            get { return data; }
+            get
+            {
+                return data;
+            }
             set
             {
                 data = (FreeFormWeirFormula) value;
@@ -36,20 +40,30 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView.WeirFo
             }
         }
 
-        void YZTableViewPropertyChanged(object sender, PropertyChangedEventArgs e)
+        /// <summary>
+        /// Sets or gets image set on the title of the view.
+        /// </summary>
+        public Image Image { get; set; }
+
+        public ViewInfo ViewInfo { get; set; }
+
+        public void EnsureVisible(object item) {}
+
+        private void YZTableViewPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             var coordinate = sender as Coordinate;
             if (null == coordinate)
             {
                 return;
             }
+
             if (e.PropertyName == "X" || e.PropertyName == "Y")
             {
                 SetTableToWeirFormula();
             }
         }
 
-        void YZTableViewCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private void YZTableViewCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             if (e.Action == NotifyCollectionChangedAction.Add || e.Action == NotifyCollectionChangedAction.Remove)
             {
@@ -63,18 +77,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView.WeirFo
             data.SetShape(yzData.Select(yz => yz.X).ToArray(), yzData.Select(yz => yz.Y).ToArray());
         }
 
-        void YZTableReBind()
+        private void YZTableReBind()
         {
             yzTableView.Data = new EventedList<Coordinate>(data.Shape.Coordinates.Cast<Coordinate>());
             yzTableView.EditableObject = data;
         }
-
-        /// <summary>
-        /// Sets or gets image set on the title of the view.
-        /// </summary>
-        public Image Image { get; set; }
-
-        public void EnsureVisible(object item) { }
-        public ViewInfo ViewInfo { get; set; }
     }
 }

@@ -14,16 +14,28 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [PropertyOrder(0)]
         public string Name
         {
-            get { return data.Name; }
-            set { data.Name = value; }
+            get
+            {
+                return data.Name;
+            }
+            set
+            {
+                data.Name = value;
+            }
         }
 
         [Category("General")]
         [PropertyOrder(1)]
         public string LongName
         {
-            get { return data.LongName; }
-            set { data.LongName = value; }
+            get
+            {
+                return data.LongName;
+            }
+            set
+            {
+                data.LongName = value;
+            }
         }
 
         [Description("Catchment area size.")]
@@ -33,7 +45,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [DynamicReadOnly]
         public double Area
         {
-            get { return data.AreaSize; }
+            get
+            {
+                return data.AreaSize;
+            }
             set
             {
                 if (data.IsGeometryDerivedFromAreaSize)
@@ -49,7 +64,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [PropertyOrder(4)]
         public bool IsDefaultGeometry
         {
-            get { return data.IsGeometryDerivedFromAreaSize; }
+            get
+            {
+                return data.IsGeometryDerivedFromAreaSize;
+            }
         }
 
         [DynamicReadOnlyValidationMethod]

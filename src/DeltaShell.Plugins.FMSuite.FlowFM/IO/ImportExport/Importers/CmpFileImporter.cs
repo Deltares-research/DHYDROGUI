@@ -17,6 +17,27 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
     {
         private static ILog Log = LogManager.GetLogger(typeof(CmpFileImporter));
 
+        public override IEnumerable<BoundaryConditionDataType> ForcingTypes
+        {
+            get
+            {
+                yield return BoundaryConditionDataType.AstroComponents;
+                yield return BoundaryConditionDataType.AstroCorrection;
+                yield return BoundaryConditionDataType.Harmonics;
+                yield return BoundaryConditionDataType.HarmonicCorrection;
+            }
+        }
+
+        public override void Import(string fileName, FlowBoundaryCondition boundaryCondition)
+        {
+            ImportItem(fileName, boundaryCondition);
+        }
+
+        public override bool CanImportOnBoundaryCondition(FlowBoundaryCondition boundaryCondition)
+        {
+            return ForcingTypes.Contains(boundaryCondition.DataType);
+        }
+
         #region IFileImporter
 
         public string Name => "Boundary data from .cmp file";
@@ -130,26 +151,5 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
         }
 
         #endregion
-
-        public override IEnumerable<BoundaryConditionDataType> ForcingTypes
-        {
-            get
-            {
-                yield return BoundaryConditionDataType.AstroComponents;
-                yield return BoundaryConditionDataType.AstroCorrection;
-                yield return BoundaryConditionDataType.Harmonics;
-                yield return BoundaryConditionDataType.HarmonicCorrection;
-            }
-        }
-
-        public override void Import(string fileName, FlowBoundaryCondition boundaryCondition)
-        {
-            ImportItem(fileName, boundaryCondition);
-        }
-
-        public override bool CanImportOnBoundaryCondition(FlowBoundaryCondition boundaryCondition)
-        {
-            return ForcingTypes.Contains(boundaryCondition.DataType);
-        }
     }
 }

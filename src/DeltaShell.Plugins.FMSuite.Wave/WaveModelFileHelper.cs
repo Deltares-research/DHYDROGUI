@@ -7,6 +7,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 {
     public static class WaveModelFileHelper
     {
+        private const string NameBasePattern = @"((?<base>.+)_(?<suffix>\d+))";
+
         public static string ImportIntoModelDirectory(string modelDir, string absolutePath)
         {
             string fileName = Path.GetFileName(absolutePath);
@@ -16,8 +18,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
             return uniqueFileName;
         }
-
-        private const string NameBasePattern = @"((?<base>.+)_(?<suffix>\d+))";
 
         private static string GetUniqueTargetFileName(string targetDirectory, string fileName)
         {

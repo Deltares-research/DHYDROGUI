@@ -20,13 +20,16 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
         /// <remarks>Parameter id is expected to not be <c>null</c>.</remarks>
         public static string GetComponentNameFromElementId(string id)
         {
-            var tags = GetAllTagsFromId(id).ToList();
+            List<string> tags = GetAllTagsFromId(id).ToList();
 
-            if (tags.Any(t => RtcXmlTag.ConnectionPointTags.Contains(t))) return null;
+            if (tags.Any(t => RtcXmlTag.ConnectionPointTags.Contains(t)))
+            {
+                return null;
+            }
 
             tags.ForEach(t => id = id.Replace(t, string.Empty));
 
-            var name = id.Split('/').LastOrDefault();
+            string name = id.Split('/').LastOrDefault();
 
             return name;
         }
@@ -50,14 +53,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
             return controlGroupName;
         }
 
-        private static string GetTag(string str)
-        {
-            var regex = new Regex(@"^\[.*?\]");
-            return regex.IsMatch(str)
-                       ? regex.Match(str).Value
-                       : null;
-        }
-
         /// <summary>
         /// Gets the control group name from the xml element id, provided that it does not belong to a connection point.
         /// </summary>
@@ -68,10 +63,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
         /// <remarks>Parameter id is expected to not be <c>null</c>.</remarks>
         public static IControlGroup GetControlGroupByElementId(this IEnumerable<IControlGroup> controlGroups, string id, ILogHandler logHandler)
         {
-            if (controlGroups == null) return null;
+            if (controlGroups == null)
+            {
+                return null;
+            }
 
-            var groupName = GetControlGroupNameFromElementId(id);
-            var controlGroup = controlGroups.FirstOrDefault(g => g.Name == groupName);
+            string groupName = GetControlGroupNameFromElementId(id);
+            IControlGroup controlGroup = controlGroups.FirstOrDefault(g => g.Name == groupName);
             if (controlGroup == null)
             {
                 logHandler?.ReportWarningFormat(Resources.RealTimeControlXmlReaderHelper_GetControlGroupByElementId_Could_not_find_the_controlgroup___0___that_is_referenced_in_id___1____The_group_needs_to_be_referenced_in_file___2___, groupName, id, RealTimeControlXMLFiles.XmlTools);
@@ -92,11 +90,16 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
         /// <remarks>Parameter name is expected to not be <c>null</c>.</remarks>
         public static T GetByName<T>(this IEnumerable<ConnectionPoint> connectionPoints, string name, ILogHandler logHandler) where T : ConnectionPoint
         {
-            if (connectionPoints == null) return null;
+            if (connectionPoints == null)
+            {
+                return null;
+            }
 
-            var correspondingConnectionPoint = connectionPoints.OfType<T>().FirstOrDefault(o => o.Name == name);
+            T correspondingConnectionPoint = connectionPoints.OfType<T>().FirstOrDefault(o => o.Name == name);
             if (correspondingConnectionPoint == null)
+            {
                 logHandler?.ReportWarningFormat(Resources.RealTimeControlXmlReaderHelper_GetConnectionPointByName_Could_not_find_the_input_output___0____The_input_output_needs_to_be_referenced_in_file___1___, name, RealTimeControlXMLFiles.XmlData);
+            }
 
             return correspondingConnectionPoint;
         }
@@ -112,13 +115,18 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
         /// <remarks>Parameter id is expected to not be <c>null</c>.</remarks>
         public static RuleBase GetRuleByElementId<T>(this IControlGroup controlGroup, string id, ILogHandler logHandler) where T : RuleBase
         {
-            if (controlGroup == null) return null;
+            if (controlGroup == null)
+            {
+                return null;
+            }
 
-            var ruleName = GetComponentNameFromElementId(id);
+            string ruleName = GetComponentNameFromElementId(id);
 
-            var correspondingRule = controlGroup.Rules.OfType<T>().FirstOrDefault(r => r.Name == ruleName);
+            T correspondingRule = controlGroup.Rules.OfType<T>().FirstOrDefault(r => r.Name == ruleName);
             if (correspondingRule == null)
+            {
                 logHandler?.ReportWarningFormat(Resources.RealTimeControlXmlReaderHelper_GetRuleByElementIdInControlGroup_Could_not_find_the_rule___0___that_is_referenced_in_id___1___The_rule_needs_to_be_referenced_in_file___2___, ruleName, id, RealTimeControlXMLFiles.XmlData);
+            }
 
             return correspondingRule;
         }
@@ -132,18 +140,23 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
         /// <param name="logHandler"> The log handler.</param>
         /// <returns> The corresponding signal. </returns>
         public static SignalBase GetSignalByElementId<T>(this IControlGroup controlGroup, string id,
-            ILogHandler logHandler) where T : SignalBase
+                                                         ILogHandler logHandler) where T : SignalBase
         {
-            if (controlGroup == null) return null;
+            if (controlGroup == null)
+            {
+                return null;
+            }
 
-            var signalName = GetComponentNameFromElementId(id);
+            string signalName = GetComponentNameFromElementId(id);
 
-            var correspondingSignal = controlGroup.Signals.OfType<T>().FirstOrDefault(r => r.Name == signalName);
+            T correspondingSignal = controlGroup.Signals.OfType<T>().FirstOrDefault(r => r.Name == signalName);
             if (correspondingSignal == null)
+            {
                 logHandler?.ReportWarningFormat(
                     Resources
                         .RealTimeControlXmlReaderHelper_GetSignalByElementIdInControlGroup_Could_not_find_the_signal___0___that_is_referenced_in_id___1___The_signal_needs_to_be_referenced_in_file___2___,
                     signalName, id, RealTimeControlXMLFiles.XmlData);
+            }
 
             return correspondingSignal;
         }
@@ -158,13 +171,18 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
         /// <remarks>Parameter id is expected to not be <c>null</c>.</remarks>
         public static RuleBase GetRuleByElementId(this IControlGroup controlGroup, string id, ILogHandler logHandler)
         {
-            if (controlGroup == null) return null;
+            if (controlGroup == null)
+            {
+                return null;
+            }
 
-            var ruleName = GetComponentNameFromElementId(id);
+            string ruleName = GetComponentNameFromElementId(id);
 
-            var correspondingRule = controlGroup.Rules.FirstOrDefault(r => r.Name == ruleName);
+            RuleBase correspondingRule = controlGroup.Rules.FirstOrDefault(r => r.Name == ruleName);
             if (correspondingRule == null)
+            {
                 logHandler?.ReportWarningFormat(Resources.RealTimeControlXmlReaderHelper_GetRuleByElementIdInControlGroup_Could_not_find_the_rule___0___that_is_referenced_in_id___1___The_rule_needs_to_be_referenced_in_file___2___, ruleName, id, RealTimeControlXMLFiles.XmlData);
+            }
 
             return correspondingRule;
         }
@@ -180,20 +198,24 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
         /// <remarks>Parameter id is expected to not be <c>null</c>.</remarks>
         public static T GetConditionByElementId<T>(this IControlGroup controlGroup, string id, ILogHandler logHandler) where T : ConditionBase
         {
-            if (controlGroup == null) return null;
+            if (controlGroup == null)
+            {
+                return null;
+            }
 
-            var conditionName = GetComponentNameFromElementId(id);
+            string conditionName = GetComponentNameFromElementId(id);
 
-            var condition = controlGroup.Conditions
-                .Where(c => c.GetType() == typeof(T))
-                .FirstOrDefault(r => r.Name == conditionName);
+            ConditionBase condition = controlGroup.Conditions
+                                                  .Where(c => c.GetType() == typeof(T))
+                                                  .FirstOrDefault(r => r.Name == conditionName);
 
             if (condition == null)
+            {
                 logHandler?.ReportWarningFormat(Resources.RealTimeControlXmlReaderHelper_GetConditionByElementIdInControlGroup_Could_not_find_the_condition___0____The_condition_needs_to_be_referenced_in_file___1___, conditionName, RealTimeControlXMLFiles.XmlData);
+            }
 
             return (T) condition;
         }
-
 
         /// <summary>
         /// Gets the tag of interest (connection points, rules, conditions) from the element identifier.
@@ -203,19 +225,27 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
         /// <remarks>Parameter id is expected to not be <c>null</c>.</remarks>
         public static string GetTagFromElementId(string id)
         {
-            var tags = GetAllTagsFromId(id);
+            IEnumerable<string> tags = GetAllTagsFromId(id);
 
-            var tag = tags.FirstOrDefault(t =>
-                RtcXmlTag.ComponentTags.Contains(t)
-                || RtcXmlTag.ConnectionPointTags.Contains(t));
+            string tag = tags.FirstOrDefault(t =>
+                                                 RtcXmlTag.ComponentTags.Contains(t)
+                                                 || RtcXmlTag.ConnectionPointTags.Contains(t));
 
             return tag;
+        }
+
+        private static string GetTag(string str)
+        {
+            var regex = new Regex(@"^\[.*?\]");
+            return regex.IsMatch(str)
+                       ? regex.Match(str).Value
+                       : null;
         }
 
         private static IEnumerable<string> GetAllTagsFromId(string id)
         {
             var regex = new Regex(@"\[.*?\]");
-            var matches = regex.Matches(id);
+            MatchCollection matches = regex.Matches(id);
 
             foreach (Match match in matches)
             {

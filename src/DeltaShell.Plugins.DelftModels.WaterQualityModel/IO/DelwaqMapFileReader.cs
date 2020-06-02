@@ -9,7 +9,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
     {
         /// <summary>
         /// Reads the meta data of the provided
-        /// <param name="delwaqOutputFile" />
+        /// <param name="delwaqOutputFile"/>
         /// </summary>
         /// <param name="delwaqOutputFile"> Path to the delwaq output map file </param>
         public static MapFileMetaData ReadMetaData(string delwaqOutputFile)
@@ -19,19 +19,20 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
 
         /// <summary>
         /// Gets the segmentValues for
-        /// <param name="substanceName" />
+        /// <param name="substanceName"/>
         /// and
-        /// <param name="timeStepIndex" />
+        /// <param name="timeStepIndex"/>
         /// </summary>
         /// <param name="delwaqOutputFile"> </param>
-        /// <param name="mapFileMeta"> Metadata for the map file (use <see cref="ReadMetaData" /> to get it initially) </param>
+        /// <param name="mapFileMeta"> Metadata for the map file (use <see cref="ReadMetaData"/> to get it initially) </param>
         /// <param name="timeStepIndex"> Timestep index (zero based) </param>
         /// <param name="substanceName"> Substances name </param>
         /// <param name="segmentIndex"> Filter on this segment index (default -1 - no filtering) </param>
-        /// <returns> Values for the chosen
-        /// <param name="timeStepIndex" />
+        /// <returns>
+        /// Values for the chosen
+        /// <param name="timeStepIndex"/>
         /// and
-        /// <param name="substanceName" />
+        /// <param name="substanceName"/>
         /// </returns>
         public static List<double> GetTimeStepData(string delwaqOutputFile, MapFileMetaData mapFileMeta,
                                                    int timeStepIndex, string substanceName, int segmentIndex = -1)

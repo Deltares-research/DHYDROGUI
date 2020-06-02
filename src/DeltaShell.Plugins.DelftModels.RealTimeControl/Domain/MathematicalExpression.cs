@@ -13,18 +13,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
     /// <summary>
     /// A mathematical expression that can have multiple inputs and a defined expression
     /// </summary>
-    /// <seealso cref="RtcBaseObject" />
-    /// <seealso cref="IInput" />
+    /// <seealso cref="RtcBaseObject"/>
+    /// <seealso cref="IInput"/>
     [Entity]
     public class MathematicalExpression : RtcBaseObject, IInput
     {
-        private IEventedList<IInput> inputs;
         private readonly Dictionary<char, string> inputMapping = new Dictionary<char, string>();
-
-        /// <summary>
-        /// Gets or sets the set point.
-        /// </summary>
-        public string SetPoint { get; set; }
+        private IEventedList<IInput> inputs;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MathematicalExpression"/> class.
@@ -79,6 +74,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
         /// Gets or sets the expression.
         /// </summary>
         public string Expression { get; set; }
+
+        /// <summary>
+        /// Gets or sets the set point.
+        /// </summary>
+        public string SetPoint { get; set; }
 
         public override object Clone()
         {

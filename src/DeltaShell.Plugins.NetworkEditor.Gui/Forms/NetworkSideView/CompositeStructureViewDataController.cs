@@ -9,7 +9,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
     /// <summary>
     /// CompositeStructureViewData is the same as 'normal' side view data but includes
     /// extra members for calculating min and max Y and selected structure
-    /// 
     /// </summary>
     public class CompositeStructureViewDataController : NetworkSideViewDataController, IStructureViewData
     {
@@ -29,15 +28,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
         {
             get
             {
-                return CompositeBranchStructure!= null ?
-                                                           (HydroNetwork) CompositeBranchStructure.Network:
-                                                                                                              null;
+                return CompositeBranchStructure != null ? (HydroNetwork) CompositeBranchStructure.Network : null;
             }
-            
         }
 
         #endregion
-
-      
     }
 }

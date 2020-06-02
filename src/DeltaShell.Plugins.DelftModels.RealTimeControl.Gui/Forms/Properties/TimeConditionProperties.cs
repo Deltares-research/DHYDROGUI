@@ -17,8 +17,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.Properties
         [ResourcesDescription(typeof(Resources), "Rule_Name_Description")]
         public string Name
         {
-            get { return data.Name; }
-            set { data.Name = value; }
+            get
+            {
+                return data.Name;
+            }
+            set
+            {
+                data.Name = value;
+            }
         }
 
         [ResourcesCategory(typeof(Resources), "Categories_General")]
@@ -26,27 +32,44 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.Properties
         [ResourcesDescription(typeof(Resources), "Rule_LongName_Description")]
         public string LongName
         {
-            get { return data.LongName; }
-            set { data.LongName = value; }
+            get
+            {
+                return data.LongName;
+            }
+            set
+            {
+                data.LongName = value;
+            }
         }
 
-        [Category("InterpolationExtrapolation"), Description("Interpolation of time component")]
+        [Category("InterpolationExtrapolation")]
+        [Description("Interpolation of time component")]
         [ResourcesCategory(typeof(Resources), "RTC_Category_InterpolationExtrapolation")]
         [ResourcesDisplayName(typeof(Resources), "RTC_Interpolation_DisplayName")]
         [ResourcesDescription(typeof(Resources), "RTC_Interpolation_Description")]
         public InterpolationType Interpolation
         {
-            get { return data.InterpolationOptionsTime; }
+            get
+            {
+                return data.InterpolationOptionsTime;
+            }
         }
 
-        [Category("InterpolationExtrapolation"), Description("Extrapolation of time component")]
+        [Category("InterpolationExtrapolation")]
+        [Description("Extrapolation of time component")]
         [ResourcesCategory(typeof(Resources), "RTC_Category_InterpolationExtrapolation")]
         [ResourcesDisplayName(typeof(Resources), "RTC_Extrapolation_DisplayName")]
         [ResourcesDescription(typeof(Resources), "TimeConditionProperties_Extrapolation_Description")]
         public ExtrapolationTimeSeriesType Extrapolation
         {
-            get { return data.Extrapolation == ExtrapolationType.Periodic ? ExtrapolationTimeSeriesType.Periodic : ExtrapolationTimeSeriesType.Constant; }
-            set { data.Extrapolation = (ExtrapolationType)value; }
+            get
+            {
+                return data.Extrapolation == ExtrapolationType.Periodic ? ExtrapolationTimeSeriesType.Periodic : ExtrapolationTimeSeriesType.Constant;
+            }
+            set
+            {
+                data.Extrapolation = (ExtrapolationType) value;
+            }
         }
 
         [Editor(typeof(ViewPropertyEditor), typeof(UITypeEditor))]
@@ -55,8 +78,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.Properties
         [ResourcesDescription(typeof(Resources), "TimeConditionProperties_TimeSeries_Description")]
         public TimeSeries TimeSeries
         {
-            get { return data.TimeSeries; }
-            set { data.TimeSeries = value; }
+            get
+            {
+                return data.TimeSeries;
+            }
+            set
+            {
+                data.TimeSeries = value;
+            }
         }
     }
 }

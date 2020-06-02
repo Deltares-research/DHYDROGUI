@@ -25,9 +25,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
     /// <remarks>
     /// This class should be constructed with <see cref="ShapeFileImporterFactory"/>.
     /// </remarks>
-    /// <seealso cref="MapFeaturesImporterBase" />
-    /// <seealso cref="IFeature2DImporterExporter" />
-    public class ShapeFileImporter<TGeometry, TFeature2D> : MapFeaturesImporterBase, 
+    /// <seealso cref="MapFeaturesImporterBase"/>
+    /// <seealso cref="IFeature2DImporterExporter"/>
+    public class ShapeFileImporter<TGeometry, TFeature2D> : MapFeaturesImporterBase,
                                                             IFeature2DImporterExporter where TGeometry : IGeometry
                                                                                        where TFeature2D : IFeature
     {
@@ -45,7 +45,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
         /// items. This function is executed after the creation of each element
         /// during the <see cref="OnImportItem"/>. It can be used to add
         /// additional data, or make modifications to the constructed feature.
-        /// 
         /// <see cref="ShapeFileImporterFactory.AfterFeatureCreateActions"/>
         /// describes a set of predefined AfterFeatureCreateActions
         /// </param>
@@ -66,7 +65,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
             Mode = Feature2DImportExportMode.Import;
         }
 
-        #region IFileImporter        
+        #region IFileImporter
+
         /// <summary>
         /// Get the name of this <see cref="ShapeFileImporter{TGeometry, TFeature2D}"/>.
         /// </summary>
@@ -239,6 +239,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
                                                                        CoordinateTransformation.MathTransform);
             }
         }
+
         #endregion
     }
 }

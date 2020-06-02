@@ -17,13 +17,21 @@ namespace DeltaShell.Plugins.FMSuite.Common.Dependency
     /// </summary>
     public class ValueGreaterOrLesserThanDependencyExpression : DependencyExpressionBase
     {
+        private enum ComparisonType
+        {
+            LessThen,
+            LessThenEqual,
+            GreaterThen,
+            GreaterThenEqual
+        }
+
         /// <summary>
         /// Matches the pattern: start with model property key, followed by any white space characters.
         /// </summary>
         private const string KeywordPart = @"^\w+\s*";
 
         /// <summary>
-        /// Matches the pattern: end with a non-scientific intiger or double in <see cref="CultureInfo.InvariantCulture" />.
+        /// Matches the pattern: end with a non-scientific intiger or double in <see cref="CultureInfo.InvariantCulture"/>.
         /// </summary>
         private const string ValuePart = @"\s*-?\d+(\.\d+)?$";
 
@@ -31,13 +39,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.Dependency
         /// Matches either &gt;, &gt;=, &lt; or &lt;= .
         /// </summary>
         private const string ComparisonTokenPart = @"(>=|>|<=|<)"; // Note: Order matters!
-
-        /// <summary>
-        /// Matches the pattern: start with model property key, followed by any white space characters,
-        /// followed by either &gt;, &gt;=, &lt; or &lt;=, followed by any white space characters and
-        /// ending with a non-scientific integer or double in <see cref="CultureInfo.InvariantCulture" />.
-        /// </summary>
-        protected override string Regex => KeywordPart + ComparisonTokenPart + ValuePart;
 
         protected internal override string OnValidate(ModelProperty evaluatedProperty,
                                                       IEnumerable<ModelProperty> allProperties,
@@ -86,6 +87,13 @@ namespace DeltaShell.Plugins.FMSuite.Common.Dependency
             };
         }
 
+        /// <summary>
+        /// Matches the pattern: start with model property key, followed by any white space characters,
+        /// followed by either &gt;, &gt;=, &lt; or &lt;=, followed by any white space characters and
+        /// ending with a non-scientific integer or double in <see cref="CultureInfo.InvariantCulture"/>.
+        /// </summary>
+        protected override string Regex => KeywordPart + ComparisonTokenPart + ValuePart;
+
         private static ComparisonType GetComparisonType(ModelProperty evaluatedProperty, string dependencyExpression)
         {
             string comparisonToken = RegularExpression.GetFirstMatch(ComparisonTokenPart, dependencyExpression).Value;
@@ -124,14 +132,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.Dependency
         private static string GetDependencyPropertyName(ModelProperty evaluatedProperty, string dependencyExpression)
         {
             return RegularExpression.GetFirstMatch(KeywordPart, dependencyExpression).Value.Trim();
-        }
-
-        private enum ComparisonType
-        {
-            LessThen,
-            LessThenEqual,
-            GreaterThen,
-            GreaterThenEqual
         }
     }
 }

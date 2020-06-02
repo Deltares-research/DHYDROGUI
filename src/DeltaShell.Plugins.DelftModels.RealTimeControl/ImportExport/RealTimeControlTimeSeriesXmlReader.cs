@@ -27,7 +27,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
         /// <remarks>If parameter controlGroups is NULL or timeSeriesFilePath does not exist, methods returns.</remarks>
         public void Read(string timeSeriesFilePath, IList<IControlGroup> controlGroups)
         {
-            if (string.IsNullOrEmpty(timeSeriesFilePath) || !File.Exists(timeSeriesFilePath) || controlGroups == null) return;
+            if (string.IsNullOrEmpty(timeSeriesFilePath) || !File.Exists(timeSeriesFilePath) || controlGroups == null)
+            {
+                return;
+            }
 
             var delftConfigXmlParser = new DelftConfigXmlFileParser(logHandler);
 

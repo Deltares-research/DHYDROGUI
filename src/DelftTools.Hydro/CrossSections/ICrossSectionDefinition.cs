@@ -83,6 +83,8 @@ namespace DelftTools.Hydro.CrossSections
         /// </summary>
         bool ForceSectionsSpanFullWidth { get; set; }
 
+        bool IsProxy { get; }
+
         /// <summary>
         /// Adds delta to all z-levels of the cross-section
         /// </summary>
@@ -93,8 +95,6 @@ namespace DelftTools.Hydro.CrossSections
         IGeometry GetGeometry(ICrossSection crossSection);
 
         void SetGeometry(IGeometry value);
-
-        bool IsProxy { get; }
 
         /// <summary>
         /// Clear the cached definition geometry

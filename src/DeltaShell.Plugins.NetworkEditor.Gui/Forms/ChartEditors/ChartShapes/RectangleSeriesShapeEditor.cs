@@ -12,13 +12,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapes
 {
     /// <summary>
     /// Implements a ShapeFeatureEditor to modify a RectangleSeriesShapeFeature
-    /// 
     /// </summary>
     public class RectangleSeriesShapeEditor : ShapeFeatureEditor
     {
-        private RectangleSeriesShapeFeature RectangleSeriesShapeFeature { get; set; }
-
-        public RectangleSeriesShapeEditor(IShapeFeature shapeFeature, IChartCoordinateService chartCoordinateService, ShapeEditMode shapeEditMode) 
+        public RectangleSeriesShapeEditor(IShapeFeature shapeFeature, IChartCoordinateService chartCoordinateService, ShapeEditMode shapeEditMode)
             : base(shapeFeature, chartCoordinateService, shapeEditMode)
         {
             RectangleSeriesShapeFeature = (RectangleSeriesShapeFeature) shapeFeature;
@@ -27,7 +24,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapes
                 Rectangle rectangle = borderShape.GetBounds();
                 double worldHeight = chartCoordinateService.ToWorldHeight(rectangle.Height);
                 //points.Add(GeometryFactory.CreatePoint(borderShape.X, RectangleSeriesShapeFeature.Y + RectangleSeriesShapeFeature.Height / 2));
-                points.Add(GeometryFactory.CreatePoint(borderShape.X, RectangleSeriesShapeFeature.Y + worldHeight / 2));
+                points.Add(GeometryFactory.CreatePoint(borderShape.X, RectangleSeriesShapeFeature.Y + (worldHeight / 2)));
             }
         }
 
@@ -37,26 +34,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapes
         }
 
         /// <summary>
-        /// do not use points.IndexOf(trackerFeature); it uses internally Equals ands will always return the first tracker in the
-        /// list that is in a identical position
-        /// see also GeometryHelper.IndexOfGeometry()
-        /// </summary>
-        /// <param name="tracker"></param>
-        /// <returns></returns>
-        private int GetTrackerIndex(IPoint tracker)
-        {
-            for (int i=0; i < points.Count; i++)
-            {
-                if (points[i] == tracker)
-                {
-                    return i;
-                }
-            }
-            return -1;
-        }
-
-        /// <summary>
-        /// Moves tracker trackerFeature to new position worldPosition. 
+        /// Moves tracker trackerFeature to new position worldPosition.
         /// see additional comments for extra restrictions
         /// </summary>
         /// <param name="trackerFeature"></param>
@@ -66,7 +44,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapes
         /// <returns></returns>
         public override bool MoveTracker(IPoint trackerFeature, Coordinate worldPosition, double deltaX, double deltaY)
         {
-            var current = GetTrackerIndex(trackerFeature);
+            int current = GetTrackerIndex(trackerFeature);
             GetTrackerIndex(trackerFeature);
             double min = RectangleSeriesShapeFeature.X;
             double max = RectangleSeriesShapeFeature.X + RectangleSeriesShapeFeature.Width;
@@ -75,13 +53,15 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapes
                 // the new minimum value is the X value of the previous rectangle
                 min = points[current - 1].X;
             }
+
             if (current < points.Count - 1)
             {
                 // the new maximum value is the X value of the next rectangle
                 max = points[current + 1].X;
             }
+
             double newX = worldPosition.X;
-            newX = Math.Min(max, newX);            
+            newX = Math.Min(max, newX);
             newX = Math.Max(min, newX);
             double limitedDelateX = newX - points[current].X;
             GeometryHelper.MoveCoordinate(points[current], 0, limitedDelateX, 0);
@@ -107,21 +87,24 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapes
                 // mouse is outside composite; ignore.
                 return null;
             }
-            if (y < (RectangleSeriesShapeFeature.Y - ChartCoordinateService.ToWorldHeight((int)RectangleSeriesShapeFeature.Height)))
+
+            if (y < RectangleSeriesShapeFeature.Y - ChartCoordinateService.ToWorldHeight((int) RectangleSeriesShapeFeature.Height))
             {
                 // mouse is outside composite; ignore.
                 return null;
             }
+
             // only check for x : vertical line
-            for (int i = 0; i <= points.Count - 1; i++)
+            for (var i = 0; i <= points.Count - 1; i++)
             {
                 // could be generalized with polygon geometry and contains but this is simpler
                 Coordinate coordinate = points[i].Coordinates[0];
-                if (((x >= (coordinate.X - xMarge)) && (x <= (coordinate.X + xMarge))))
+                if (x >= coordinate.X - xMarge && x <= coordinate.X + xMarge)
                 {
                     return points[i];
                 }
             }
+
             return ShapeFeature.Contains(x, y) ? CenterTracker : null;
         }
 
@@ -131,22 +114,46 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapes
             {
                 return;
             }
-            VectorStyle style = new VectorStyle
-                                    {
-                                        // style is not used; refactor ChartDrawingContext
-                                        Fill = new SolidBrush(Color.FromArgb(150, Color.Magenta)),
-                                        Line = new Pen(Color.Black)
-                                    };
+
+            var style = new VectorStyle
+            {
+                // style is not used; refactor ChartDrawingContext
+                Fill = new SolidBrush(Color.FromArgb(150, Color.Magenta)),
+                Line = new Pen(Color.Black)
+            };
             IChartDrawingContext chartDrawingContext = new ChartDrawingContext(g, style);
 
-            for (int i = 0; i < points.Count; i++)
+            for (var i = 0; i < points.Count; i++)
             {
                 g.BackColor = CurrentTracker == points[i] ? Color.FromArgb(255, Color.DarkMagenta) : Color.FromArgb(50, Color.DarkMagenta);
                 g.PenColor = CurrentTracker == points[i] ? Color.FromArgb(255, Color.DarkMagenta) : Color.FromArgb(50, Color.DarkMagenta);
                 // draw tracker not as a small circle (see base class) but as a rectangle/line.
                 g.Rectangle(RectangleSeriesShapeFeature.BorderShapes[i].GetBounds());
             }
+
             chartDrawingContext.Reset();
+        }
+
+        private RectangleSeriesShapeFeature RectangleSeriesShapeFeature { get; set; }
+
+        /// <summary>
+        /// do not use points.IndexOf(trackerFeature); it uses internally Equals ands will always return the first tracker in the
+        /// list that is in a identical position
+        /// see also GeometryHelper.IndexOfGeometry()
+        /// </summary>
+        /// <param name="tracker"></param>
+        /// <returns></returns>
+        private int GetTrackerIndex(IPoint tracker)
+        {
+            for (var i = 0; i < points.Count; i++)
+            {
+                if (points[i] == tracker)
+                {
+                    return i;
+                }
+            }
+
+            return -1;
         }
     }
 }

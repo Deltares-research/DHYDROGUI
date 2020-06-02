@@ -12,6 +12,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.DomainSpecificDataEditor.V
         private readonly SpectralDomainData spectralDomainData;
 
         /// <summary>
+        /// Occurs when [property changed].
+        /// </summary>
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="FrequencySpaceSettingsViewModel"/> class.
         /// </summary>
         /// <param name="spectralDomainData">The spectral domain data.</param>
@@ -76,11 +81,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.DomainSpecificDataEditor.V
                 }
             }
         }
-
-        /// <summary>
-        /// Occurs when [property changed].
-        /// </summary>
-        public event PropertyChangedEventHandler PropertyChanged;
 
         /// <summary>
         /// Called when [property changed].

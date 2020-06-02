@@ -9,18 +9,20 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapes
         Center,
         Right
     }
+
     public enum SymbolShapeFeatureVerticalAlignment
     {
         Top,
         Center,
         Bottom
     }
+
     public class SymbolShapeFeature : ShapeFeatureBase
     {
-        public SymbolShapeFeature(IChart chart, double x, double y, 
+        public SymbolShapeFeature(IChart chart, double x, double y,
                                   SymbolShapeFeatureHorizontalAlignment symbolShapeFeatureHorizontalAlignment,
                                   SymbolShapeFeatureVerticalAlignment symbolShapeFeatureVerticalAlignment
-            )
+        )
             : base(chart)
         {
             X = x;
@@ -29,7 +31,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapes
             SymbolShapeFeatureVerticalAlignment = symbolShapeFeatureVerticalAlignment;
         }
 
-        public Image Image{ get; set; }
+        public Image Image { get; set; }
         public double X { get; set; }
         public double Y { get; set; }
         public SymbolShapeFeatureHorizontalAlignment SymbolShapeFeatureHorizontalAlignment { get; set; }
@@ -45,7 +47,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapes
                         return X;
                     default:
                         //case SymbolShapeFeatureHorizontalAlignment.Center:
-                        return X - ChartCoordinateService.ToWorldWidth(Chart, Image.Width)/2;
+                        return X - (ChartCoordinateService.ToWorldWidth(Chart, Image.Width) / 2);
                     case SymbolShapeFeatureHorizontalAlignment.Right:
                         return X + ChartCoordinateService.ToWorldWidth(Chart, Image.Width);
                 }
@@ -61,36 +63,38 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapes
                 case SymbolShapeFeatureHorizontalAlignment.Left:
                     break;
                 case SymbolShapeFeatureHorizontalAlignment.Center:
-                    x -= (Image.Width / 2);
+                    x -= Image.Width / 2;
                     break;
                 case SymbolShapeFeatureHorizontalAlignment.Right:
                     x += Image.Width;
                     break;
             }
+
             switch (SymbolShapeFeatureVerticalAlignment)
             {
                 case SymbolShapeFeatureVerticalAlignment.Top:
                     break;
                 case SymbolShapeFeatureVerticalAlignment.Center:
-                    y -= (Image.Height/2);
+                    y -= Image.Height / 2;
                     break;
                 case SymbolShapeFeatureVerticalAlignment.Bottom:
                     y -= Image.Height;
                     break;
             }
-            Rectangle rectangle = new Rectangle
-                                      {
-                                          X = x,
-                                          Y = y,
-                                          Width = Image.Width,
-                                          Height = Image.Height
-                                      };
+
+            var rectangle = new Rectangle
+            {
+                X = x,
+                Y = y,
+                Width = Image.Width,
+                Height = Image.Height
+            };
             return rectangle;
         }
 
         public override void Paint(IChartDrawingContext chartDrawingContext)
         {
-            var g = (ChartGraphics)chartDrawingContext.Graphics;
+            var g = (ChartGraphics) chartDrawingContext.Graphics;
             if (!Active)
             {
                 g.Draw(GetBounds(), GetGraysImage(Image), false);
@@ -111,25 +115,24 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapes
 
         private static Image GetGraysImage(Image original)
         {
-            
             var originalBitmap = new Bitmap(original);
             //make an empty bitmap the same size as original
-            Bitmap newBitmap = new Bitmap(original.Width, original.Height);
-            
-            for (int i = 0; i < original.Width; i++)
+            var newBitmap = new Bitmap(original.Width, original.Height);
+
+            for (var i = 0; i < original.Width; i++)
             {
-                for (int j = 0; j < original.Height; j++)
+                for (var j = 0; j < original.Height; j++)
                 {
                     //get the pixel from the original image
                     Color originalColor = originalBitmap.GetPixel(i, j);
 
                     //create the grayscale version of the pixel
-                    int grayScale = (int)((originalColor.R * .3) + (originalColor.G * .59)
-                        + (originalColor.B * .11));
+                    var grayScale = (int) ((originalColor.R * .3) + (originalColor.G * .59)
+                                                                  + (originalColor.B * .11));
 
                     //create the color object
                     byte alpha;
-                    if (originalColor.A!= 0)
+                    if (originalColor.A != 0)
                     {
                         alpha = 80;
                     }
@@ -138,8 +141,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapes
                         alpha = originalColor.A;
                     }
 
-                    Color newColor = Color.FromArgb(alpha, grayScale, grayScale,grayScale);
-                    
+                    Color newColor = Color.FromArgb(alpha, grayScale, grayScale, grayScale);
+
                     //set the new image's pixel to the grayscale version
                     newBitmap.SetPixel(i, j, newColor);
                 }

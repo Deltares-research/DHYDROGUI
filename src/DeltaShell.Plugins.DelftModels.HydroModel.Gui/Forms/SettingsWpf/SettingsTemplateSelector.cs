@@ -8,7 +8,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
     /// <summary>
     /// Selector for selecting a data template for the Settings view.
     /// </summary>
-    /// <seealso cref="DataTemplateSelector" />
+    /// <seealso cref="DataTemplateSelector"/>
     public class SettingsTemplateSelector : DataTemplateSelector
     {
         private const string tabContentTemplateKey = "TabContentTemplate";
@@ -36,12 +36,12 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
         };
 
         /// <summary>
-        /// When overridden in a derived class, returns a <see cref="T:System.Windows.DataTemplate" /> based on custom logic.
+        /// When overridden in a derived class, returns a <see cref="T:System.Windows.DataTemplate"/> based on custom logic.
         /// </summary>
         /// <param name="item"> The data object for which to select the template. </param>
         /// <param name="container"> The data-bound object. </param>
         /// <returns>
-        /// Returns a <see cref="T:System.Windows.DataTemplate" /> or null. The default value is null.
+        /// Returns a <see cref="T:System.Windows.DataTemplate"/> or null. The default value is null.
         /// </returns>
         public override DataTemplate SelectTemplate(object item, DependencyObject container)
         {

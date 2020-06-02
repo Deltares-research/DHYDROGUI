@@ -10,82 +10,82 @@
 
     <UserControl.Resources>
 
-        <converters:EnumToDescriptionConverter x:Key="EnumToDescriptionConverter"></converters:EnumToDescriptionConverter>
+        <converters:EnumToDescriptionConverter x:Key="EnumToDescriptionConverter" />
 
         <ObjectDataProvider x:Key="UseParameterTypes"
                             MethodName="GetValues" ObjectType="{x:Type system:Enum}">
             <ObjectDataProvider.MethodParameters>
-                <x:Type TypeName="viewModels:HydroDynamicsUseParameterType"/>
+                <x:Type TypeName="viewModels:HydroDynamicsUseParameterType" />
             </ObjectDataProvider.MethodParameters>
         </ObjectDataProvider>
 
         <ObjectDataProvider x:Key="VelocityTypes"
                             MethodName="GetValues" ObjectType="{x:Type system:Enum}">
             <ObjectDataProvider.MethodParameters>
-                <x:Type TypeName="viewModels:VelocityType"/>
+                <x:Type TypeName="viewModels:VelocityType" />
             </ObjectDataProvider.MethodParameters>
         </ObjectDataProvider>
 
         <DataTemplate x:Key="EnumComboBoxTemplate">
-            <TextBlock Text="{Binding Converter={StaticResource EnumToDescriptionConverter}}"/>
+            <TextBlock Text="{Binding Converter={StaticResource EnumToDescriptionConverter}}" />
         </DataTemplate>
 
         <Style x:Key="HorizontalStackPanelStyle" TargetType="{x:Type StackPanel}">
-            <Setter Property="Margin" Value="0,0,0,5"></Setter>
-            <Setter Property="Orientation" Value="Horizontal"></Setter>
+            <Setter Property="Margin" Value="0,0,0,5" />
+            <Setter Property="Orientation" Value="Horizontal" />
         </Style>
 
         <Style x:Key="ComboBoxStyle" TargetType="{x:Type ComboBox}">
-            <Setter Property="Width" Value="120"></Setter>
+            <Setter Property="Width" Value="120" />
         </Style>
 
         <Style x:Key="TextBlockStyle" TargetType="{x:Type TextBlock}">
-            <Setter Property="Width" Value="70"></Setter>
+            <Setter Property="Width" Value="70" />
         </Style>
     </UserControl.Resources>
-  
-        <StackPanel Orientation="Vertical">
 
-            <StackPanel Style="{StaticResource HorizontalStackPanelStyle}">
-                <TextBlock Style="{StaticResource TextBlockStyle}">Bed level</TextBlock>
-                <ComboBox ItemsSource="{Binding Source={StaticResource UseParameterTypes}}" 
-                          SelectedItem="{Binding Path=BedLevelUsage}"
-                          Style="{StaticResource ComboBoxStyle}"
-                          ItemTemplate="{StaticResource EnumComboBoxTemplate}"/>
-            </StackPanel>
+    <StackPanel Orientation="Vertical">
 
-            <StackPanel Style="{StaticResource HorizontalStackPanelStyle}">
-                <TextBlock Style="{StaticResource TextBlockStyle}">Water level</TextBlock>
-                <ComboBox ItemsSource="{Binding Source={StaticResource UseParameterTypes}}" 
-                          SelectedItem="{Binding Path=WaterLevelUsage}" 
-                          Style="{StaticResource ComboBoxStyle}"
-                          ItemTemplate="{StaticResource EnumComboBoxTemplate}"/>
-            </StackPanel>
-
-            <StackPanel Style="{StaticResource HorizontalStackPanelStyle}">
-                <TextBlock Style="{StaticResource TextBlockStyle}">Velocity</TextBlock>
-                <ComboBox ItemsSource="{Binding Source={StaticResource UseParameterTypes}}" 
-                          SelectedItem="{Binding Path=VelocityUsage}"
-                          ItemTemplate="{StaticResource EnumComboBoxTemplate}"
-                          Style="{StaticResource ComboBoxStyle}"/>
-            </StackPanel>
-
-            <StackPanel Style="{StaticResource HorizontalStackPanelStyle}">
-                <TextBlock Style="{StaticResource TextBlockStyle}">Velocity type</TextBlock>
-                <ComboBox ItemsSource="{Binding Source={StaticResource VelocityTypes}}" 
-                          SelectedItem="{Binding Path=VelocityType}"
-                          ItemTemplate="{StaticResource EnumComboBoxTemplate}"
-                          Style="{StaticResource ComboBoxStyle}" />
-            </StackPanel>
-
-            <StackPanel Style="{StaticResource HorizontalStackPanelStyle}">
-                <TextBlock Style="{StaticResource TextBlockStyle}">Wind</TextBlock>
-                <ComboBox ItemsSource="{Binding Source={StaticResource UseParameterTypes}}" 
-                          SelectedItem="{Binding Path=WindUsage}" 
-                          Style="{StaticResource ComboBoxStyle}"
-                          ItemTemplate="{StaticResource EnumComboBoxTemplate}"/>
-            </StackPanel>
-
+        <StackPanel Style="{StaticResource HorizontalStackPanelStyle}">
+            <TextBlock Style="{StaticResource TextBlockStyle}">Bed level</TextBlock>
+            <ComboBox ItemsSource="{Binding Source={StaticResource UseParameterTypes}}"
+                      SelectedItem="{Binding Path=BedLevelUsage}"
+                      Style="{StaticResource ComboBoxStyle}"
+                      ItemTemplate="{StaticResource EnumComboBoxTemplate}" />
         </StackPanel>
+
+        <StackPanel Style="{StaticResource HorizontalStackPanelStyle}">
+            <TextBlock Style="{StaticResource TextBlockStyle}">Water level</TextBlock>
+            <ComboBox ItemsSource="{Binding Source={StaticResource UseParameterTypes}}"
+                      SelectedItem="{Binding Path=WaterLevelUsage}"
+                      Style="{StaticResource ComboBoxStyle}"
+                      ItemTemplate="{StaticResource EnumComboBoxTemplate}" />
+        </StackPanel>
+
+        <StackPanel Style="{StaticResource HorizontalStackPanelStyle}">
+            <TextBlock Style="{StaticResource TextBlockStyle}">Velocity</TextBlock>
+            <ComboBox ItemsSource="{Binding Source={StaticResource UseParameterTypes}}"
+                      SelectedItem="{Binding Path=VelocityUsage}"
+                      ItemTemplate="{StaticResource EnumComboBoxTemplate}"
+                      Style="{StaticResource ComboBoxStyle}" />
+        </StackPanel>
+
+        <StackPanel Style="{StaticResource HorizontalStackPanelStyle}">
+            <TextBlock Style="{StaticResource TextBlockStyle}">Velocity type</TextBlock>
+            <ComboBox ItemsSource="{Binding Source={StaticResource VelocityTypes}}"
+                      SelectedItem="{Binding Path=VelocityType}"
+                      ItemTemplate="{StaticResource EnumComboBoxTemplate}"
+                      Style="{StaticResource ComboBoxStyle}" />
+        </StackPanel>
+
+        <StackPanel Style="{StaticResource HorizontalStackPanelStyle}">
+            <TextBlock Style="{StaticResource TextBlockStyle}">Wind</TextBlock>
+            <ComboBox ItemsSource="{Binding Source={StaticResource UseParameterTypes}}"
+                      SelectedItem="{Binding Path=WindUsage}"
+                      Style="{StaticResource ComboBoxStyle}"
+                      ItemTemplate="{StaticResource EnumComboBoxTemplate}" />
+        </StackPanel>
+
+    </StackPanel>
 
 </UserControl>

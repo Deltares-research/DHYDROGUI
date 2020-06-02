@@ -13,6 +13,34 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Api
     {
         private string workingDirectory;
 
+        public DateTime StartTime
+        {
+            get
+            {
+                var t = 0.0;
+                WaveModelDll.get_start_time(ref t);
+                return ReferenceDateTime.AddSeconds(t);
+            }
+        }
+
+        public DateTime StopTime { get; set; }
+
+        public DateTime ReferenceDateTime { get; set; }
+
+        public DateTime CurrentTime
+        {
+            get
+            {
+                var t = 0.0;
+                WaveModelDll.get_current_time(ref t);
+                return ReferenceDateTime.AddSeconds(t);
+            }
+        }
+
+        public TimeSpan TimeStep { get; set; }
+        public string[] VariableNames { get; set; }
+        public Logger Logger { get; set; }
+
         /// <summary>
         /// Initializes the wave model, mdw file directory will be used to switch to
         /// </summary>
@@ -77,34 +105,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Api
         public void SetValues(string variable, int[] start, int[] count, Array values) {}
 
         public void SetValues(string variable, int[] index, Array values) {}
-
-        public DateTime StartTime
-        {
-            get
-            {
-                var t = 0.0;
-                WaveModelDll.get_start_time(ref t);
-                return ReferenceDateTime.AddSeconds(t);
-            }
-        }
-
-        public DateTime StopTime { get; set; }
-
-        public DateTime ReferenceDateTime { get; set; }
-
-        public DateTime CurrentTime
-        {
-            get
-            {
-                var t = 0.0;
-                WaveModelDll.get_current_time(ref t);
-                return ReferenceDateTime.AddSeconds(t);
-            }
-        }
-
-        public TimeSpan TimeStep { get; set; }
-        public string[] VariableNames { get; set; }
-        public Logger Logger { get; set; }
 
         public void Dispose() {}
 

@@ -21,8 +21,8 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Snapping
             var crossSection = sourceFeature as ICrossSection;
 
             return crossSection == null || crossSection.GeometryBased
-                ? new SnapResult(worldPos, null, null, null, -1, -1) {Rule = this}
-                : base.Execute(sourceFeature, candidates, sourceGeometry, snapTargets, worldPos, envelope, trackingIndex);
+                       ? new SnapResult(worldPos, null, null, null, -1, -1) {Rule = this}
+                       : base.Execute(sourceFeature, candidates, sourceGeometry, snapTargets, worldPos, envelope, trackingIndex);
         }
     }
 }

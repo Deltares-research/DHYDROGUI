@@ -8,7 +8,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.ProjectExplorer
 {
     public class HydroAreaProjectTreeViewNodePresenter : TreeViewNodePresenterBaseForPluginGui<HydroArea>
     {
-
         public override void UpdateNode(ITreeNode parentNode, ITreeNode node, HydroArea nodeData)
         {
             node.Image = Resources.hydroarea;
@@ -18,15 +17,15 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.ProjectExplorer
         {
             return new object[]
             {
-                parentNodeData.LandBoundaries, 
-                parentNodeData.DryPoints, 
+                parentNodeData.LandBoundaries,
+                parentNodeData.DryPoints,
                 parentNodeData.DryAreas,
-                parentNodeData.ThinDams, 
-                parentNodeData.FixedWeirs, 
+                parentNodeData.ThinDams,
+                parentNodeData.FixedWeirs,
                 parentNodeData.ObservationPoints,
                 parentNodeData.ObservationCrossSections,
                 parentNodeData.Pumps,
-                parentNodeData.Weirs, 
+                parentNodeData.Weirs,
                 parentNodeData.Embankments,
                 parentNodeData.Enclosures,
                 parentNodeData.BridgePillars,

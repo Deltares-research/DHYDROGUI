@@ -55,6 +55,9 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
             PointDepths.CollectionChanging += PointDepthsCollectionChanging;
         }
 
+        public VerticalProfileDefinition(VerticalProfileType type, params double[] values)
+            : this(type, values.AsEnumerable()) {}
+
         private VerticalProfileDefinition(VerticalProfileType type, IEnumerable<double> values)
         {
             Type = type;
@@ -89,8 +92,42 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
             PointDepths.CollectionChanging += PointDepthsCollectionChanging;
         }
 
-        public VerticalProfileDefinition(VerticalProfileType type, params double[] values)
-            : this(type, values.AsEnumerable()) {}
+        public int ProfilePoints => PointDepths.Count;
+
+        public IEnumerable<double> SortedPointDepths => SortDepths(PointDepths);
+
+        public IEnumerable<string> LayerNames
+        {
+            get
+            {
+                switch (Type)
+                {
+                    case VerticalProfileType.Uniform:
+                        return new[]
+                        {
+                            "single"
+                        };
+                    case VerticalProfileType.TopBottom:
+                        return new[]
+                        {
+                            "bed",
+                            "surface"
+                        };
+                    case VerticalProfileType.PercentageFromBed:
+                        return SortedPointDepths.Select(d => d.ToString() + "% above bed");
+                    case VerticalProfileType.PercentageFromSurface:
+                        return SortedPointDepths.Select(d => d.ToString() + "% below surface");
+                    case VerticalProfileType.ZFromBed:
+                        return SortedPointDepths.Select(d => d.ToString() + "m above bed");
+                    case VerticalProfileType.ZFromSurface:
+                        return SortedPointDepths.Select(d => d.ToString() + "m below surface");
+                    case VerticalProfileType.ZFromDatum:
+                        return SortedPointDepths.Select(d => d.ToString() + "m above datum");
+                    default:
+                        return Enumerable.Range(1, ProfilePoints + 1).Select(i => "Point " + i);
+                }
+            }
+        }
 
         public static VerticalProfileDefinition Create(VerticalProfileType type, IEnumerable<double> values)
         {
@@ -136,46 +173,9 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
             }
         }
 
-        public int ProfilePoints => PointDepths.Count;
-
-        public IEnumerable<double> SortedPointDepths => SortDepths(PointDepths);
-
         public IEnumerable<double> SortDepths(IEnumerable<double> depths)
         {
             return SortDepths(depths, Type);
-        }
-
-        public IEnumerable<string> LayerNames
-        {
-            get
-            {
-                switch (Type)
-                {
-                    case VerticalProfileType.Uniform:
-                        return new[]
-                        {
-                            "single"
-                        };
-                    case VerticalProfileType.TopBottom:
-                        return new[]
-                        {
-                            "bed",
-                            "surface"
-                        };
-                    case VerticalProfileType.PercentageFromBed:
-                        return SortedPointDepths.Select(d => d.ToString() + "% above bed");
-                    case VerticalProfileType.PercentageFromSurface:
-                        return SortedPointDepths.Select(d => d.ToString() + "% below surface");
-                    case VerticalProfileType.ZFromBed:
-                        return SortedPointDepths.Select(d => d.ToString() + "m above bed");
-                    case VerticalProfileType.ZFromSurface:
-                        return SortedPointDepths.Select(d => d.ToString() + "m below surface");
-                    case VerticalProfileType.ZFromDatum:
-                        return SortedPointDepths.Select(d => d.ToString() + "m above datum");
-                    default:
-                        return Enumerable.Range(1, ProfilePoints + 1).Select(i => "Point " + i);
-                }
-            }
         }
 
         public static IEnumerable<double> SortDepths(IEnumerable<double> depths, VerticalProfileType type)

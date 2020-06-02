@@ -11,6 +11,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.WaterQualit
     /// </summary>
     public abstract partial class CsvDataWizardPage : UserControl, IWizardPage
     {
+        /// <summary>
+        /// Gets the selected file path to read from.
+        /// </summary>
+        public string CsvFilePath { get; private set; }
+
         public bool CanDoNext()
         {
             return true;
@@ -53,10 +58,5 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.WaterQualit
                                 $"Details:\n\n{ex.StackTrace}");
             }
         }
-
-        /// <summary>
-        /// Gets the selected file path to read from.
-        /// </summary>
-        public string CsvFilePath { get; private set; }
     }
 }

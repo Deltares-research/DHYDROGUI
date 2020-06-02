@@ -28,11 +28,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
 
         public bool OpenViewAfterImport => false;
 
-        public bool CanImportOn(object targetObject)
-        {
-            return true;
-        }
-
         public bool CanImportOnRootLevel => true;
 
         public string FileFilter => $"FM His File|*{FileConstants.HisFileExtension}";
@@ -42,6 +37,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
         public bool ShouldCancel { get; set; }
 
         public ImportProgressChangedDelegate ProgressChanged { get; set; }
+
+        public bool CanImportOn(object targetObject)
+        {
+            return true;
+        }
 
         public object ImportItem(string path, object target = null)
         {

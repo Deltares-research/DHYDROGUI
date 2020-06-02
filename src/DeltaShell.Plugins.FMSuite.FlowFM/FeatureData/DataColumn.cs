@@ -19,13 +19,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
             IsActive = true;
         }
 
+        public T DefaultValue { get; set; }
+
+        public List<T> ValueList { get; private set; }
+
         public string Name { get; set; }
 
         public bool IsActive { get; set; }
 
         public Type DataType => typeof(T);
-
-        public T DefaultValue { get; set; }
 
         object IDataColumn.DefaultValue
         {
@@ -33,17 +35,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
             set => DefaultValue = (T) value;
         }
 
-        public List<T> ValueList { get; private set; }
-
-        public IList CreateDefaultValueList(int length)
-        {
-            return new List<T>(Enumerable.Repeat(DefaultValue, length));
-        }
-
         IList IDataColumn.ValueList
         {
             get => ValueList;
             set => ValueList = (List<T>) value;
+        }
+
+        public IList CreateDefaultValueList(int length)
+        {
+            return new List<T>(Enumerable.Repeat(DefaultValue, length));
         }
     }
 }

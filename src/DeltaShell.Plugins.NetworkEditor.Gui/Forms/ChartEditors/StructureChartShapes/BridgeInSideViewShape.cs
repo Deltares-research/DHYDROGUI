@@ -5,6 +5,7 @@ using System.Linq;
 using DelftTools.Controls.Swf.Charting;
 using DelftTools.Hydro.Structures;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapes;
+using DeltaShell.Plugins.NetworkEditor.Gui.Properties;
 using GeoAPI.Geometries;
 using SharpMap.Styles;
 
@@ -14,6 +15,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
     {
         private const int SurfaceHeight = 3;
         private const int SurfaceOverhang = 3;
+        private static readonly Bitmap BridgeSmallIcon = Resources.BridgeSmall;
 
         private VectorStyle selectedCrossSectionStyle;
         private VectorStyle normalCrossSectionStyle;
@@ -21,18 +23,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
         private VectorStyle selectedSurfaceStyle;
         private VectorStyle disableSurfaceStyle;
         private VectorStyle disabledCrossSectionStyle;
-        private static readonly Bitmap BridgeSmallIcon = Properties.Resources.BridgeSmall;
 
-
-        public BridgeInSideViewShape(IChart chart, double offset,IBridge bridge)
-            : base(chart,offset,bridge)
-        {
-        }
+        public BridgeInSideViewShape(IChart chart, double offset, IBridge bridge)
+            : base(chart, offset, bridge) {}
 
         protected override void CreateStyles()
         {
             const int alpha = 40;
-            
+
             normalCrossSectionStyle = new VectorStyle
             {
                 Fill = new SolidBrush(Color.FromArgb(alpha, Color.LightBlue)),
@@ -40,17 +38,17 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
             };
 
             selectedCrossSectionStyle = new VectorStyle
-                                          {
-                                              //solid black
-                                              Fill = new SolidBrush(Color.LightBlue),
-                                              Line = new Pen(Color.Black)
-                                          };
+            {
+                //solid black
+                Fill = new SolidBrush(Color.LightBlue),
+                Line = new Pen(Color.Black)
+            };
 
             normalSurfaceStyle = new VectorStyle
-                               {
-                                   Fill = new SolidBrush(Color.FromArgb(alpha, Color.Black)),
-                                   Line = new Pen(Color.FromArgb(alpha, Color.Black))
-                               };
+            {
+                Fill = new SolidBrush(Color.FromArgb(alpha, Color.Black)),
+                Line = new Pen(Color.FromArgb(alpha, Color.Black))
+            };
             selectedSurfaceStyle = new VectorStyle
             {
                 Fill = new SolidBrush(Color.Black),
@@ -74,30 +72,30 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
 
         /// <summary>
         /// delivery is left if we bridge along the branch and the axis is reversed
-        /// or we bridge against the branch and the axis was not reversed 
+        /// or we bridge against the branch and the axis was not reversed
         /// </summary>
         protected override IEnumerable<IShapeFeature> GetShapeFeatures()
         {
             if (Structure.IsPillar)
             {
                 //hack:
-                var y = (Chart.LeftAxis.Maximum - Chart.LeftAxis.Minimum) / 2.0 + Chart.LeftAxis.Minimum;
+                double y = ((Chart.LeftAxis.Maximum - Chart.LeftAxis.Minimum) / 2.0) + Chart.LeftAxis.Minimum;
 
                 yield return
                     new SymbolShapeFeature(Chart, OffsetInSideView, y,
                                            SymbolShapeFeatureHorizontalAlignment.Left,
-                                           SymbolShapeFeatureVerticalAlignment.Center)
-                        {Image = BridgeSmallIcon};
+                                           SymbolShapeFeatureVerticalAlignment.Center) {Image = BridgeSmallIcon};
             }
             else
             {
                 //keep selection
-                var crossSectionFeature = GetCrossSectionFeature();
-                var surfaceFeature = GetSurfaceFeature();
+                ShapeFeatureBase crossSectionFeature = GetCrossSectionFeature();
+                FixedRectangleShapeFeature surfaceFeature = GetSurfaceFeature();
                 if (surfaceFeature != null)
                 {
                     yield return surfaceFeature;
                 }
+
                 if (crossSectionFeature != null)
                 {
                     yield return crossSectionFeature;
@@ -109,17 +107,17 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
                 }
             }
         }
-        
+
         private IShapeFeature GetGroundLayerLine()
         {
             VectorStyle normalStyle = CulvertStyling.NormalInletStyle;
             VectorStyle selectedStyle = CulvertStyling.SelectedInletStyle;
 
-            var level = Structure.GroundLayerThickness + Structure.EffectiveCrossSectionDefinition.LowestPoint;
-            var x = OffsetInSideView - Structure.Length / 2;
-            var width = Structure.Length;
+            double level = Structure.GroundLayerThickness + Structure.EffectiveCrossSectionDefinition.LowestPoint;
+            double x = OffsetInSideView - (Structure.Length / 2);
+            double width = Structure.Length;
 
-            var thickness = Math.Max(0.1, Structure.GroundLayerThickness); //always show something when its enabled
+            double thickness = Math.Max(0.1, Structure.GroundLayerThickness); //always show something when its enabled
 
             var feature = new FixedRectangleShapeFeature(Chart, x, level, width, thickness, true, true)
             {
@@ -139,25 +137,27 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
             IBridge bridge = Structure;
 
             if (bridge.IsPillar)
+            {
                 return null;
+            }
 
             IList<Coordinate> yzValues = bridge.EffectiveCrossSectionDefinition.FlowProfile.ToList();
 
             if (yzValues.Count <= 2)
+            {
                 return null;
+            }
 
             //a rectange defined by min/max height of length around Offset
-            var minX = (OffsetInSideView - Structure.Length / 2) - GetWorldWidth(SurfaceOverhang);
-            var maxZ = yzValues.Select(x => x.Y).Max() + GetWorldHeigth(SurfaceHeight);
+            double minX = OffsetInSideView - (Structure.Length / 2) - GetWorldWidth(SurfaceOverhang);
+            double maxZ = yzValues.Select(x => x.Y).Max() + GetWorldHeigth(SurfaceHeight);
 
-
-            var feature = new FixedRectangleShapeFeature(Chart, minX, maxZ, Structure.Length + 2 * GetWorldWidth(SurfaceOverhang), SurfaceHeight, true, false)
-                              {
-                                  NormalStyle = normalSurfaceStyle,
-                                  SelectedStyle = selectedSurfaceStyle,
-                                  DisabledStyle = disableSurfaceStyle
-                              };
-
+            var feature = new FixedRectangleShapeFeature(Chart, minX, maxZ, Structure.Length + (2 * GetWorldWidth(SurfaceOverhang)), SurfaceHeight, true, false)
+            {
+                NormalStyle = normalSurfaceStyle,
+                SelectedStyle = selectedSurfaceStyle,
+                DisabledStyle = disableSurfaceStyle
+            };
 
             return feature;
         }
@@ -167,25 +167,28 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
             IBridge bridge = Structure;
 
             if (bridge.IsPillar)
+            {
                 return null;
+            }
 
             IList<Coordinate> yzValues = bridge.EffectiveCrossSectionDefinition.FlowProfile.ToList();
 
             if (yzValues.Count <= 2)
+            {
                 return null;
+            }
 
             //a rectange defined by min/max height of length around Offset
-            var minX = OffsetInSideView - Structure.Length / 2;
-            var minZ = yzValues.Select(x => x.Y).Min();
-            var maxZ = yzValues.Select(x => x.Y).Max();
-
+            double minX = OffsetInSideView - (Structure.Length / 2);
+            double minZ = yzValues.Select(x => x.Y).Min();
+            double maxZ = yzValues.Select(x => x.Y).Max();
 
             var feature = new FixedRectangleShapeFeature(Chart, minX, maxZ, Structure.Length, maxZ - minZ, true, true)
-                              {
-                                  NormalStyle = normalCrossSectionStyle,
-                                  SelectedStyle = selectedCrossSectionStyle,
-                                  DisabledStyle = disabledCrossSectionStyle
-                              };
+            {
+                NormalStyle = normalCrossSectionStyle,
+                SelectedStyle = selectedCrossSectionStyle,
+                DisabledStyle = disabledCrossSectionStyle
+            };
 
             return feature;
         }

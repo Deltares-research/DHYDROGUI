@@ -11,7 +11,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Commands
     /// <see cref="AddNewDrainageBasinFeatureCommand"/> provides the command to add features
     /// dependent on the provided map tool name.
     /// </summary>
-    /// <seealso cref="Command" />
+    /// <seealso cref="Command"/>
     public class AddNewDrainageBasinFeatureCommand : Command
     {
         private readonly string mapToolName;
@@ -25,17 +25,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Commands
             this.mapToolName = mapToolName;
         }
 
-        private IMapTool CurrentTool => MapView.MapControl.GetToolByName(mapToolName);
-
-        protected override void OnExecute(params object[] arguments)
-        {
-            var newLineTool = (NewPointFeatureTool)CurrentTool;
-            MapView.MapControl.ActivateTool(newLineTool);
-        }
-
         public override bool Checked => MapView != null && null != CurrentTool && CurrentTool.IsActive;
-
-        private static MapView MapView => NetworkEditorGuiPlugin.GetFocusedMapView();
 
         public override bool Enabled
         {
@@ -48,5 +38,15 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Commands
                        mapView.Map.GetAllVisibleLayers(true).OfType<HydroRegionMapLayer>().FirstOrDefault(l => l.Region is DrainageBasin) != null;
             }
         }
+
+        protected override void OnExecute(params object[] arguments)
+        {
+            var newLineTool = (NewPointFeatureTool) CurrentTool;
+            MapView.MapControl.ActivateTool(newLineTool);
+        }
+
+        private IMapTool CurrentTool => MapView.MapControl.GetToolByName(mapToolName);
+
+        private static MapView MapView => NetworkEditorGuiPlugin.GetFocusedMapView();
     }
 }

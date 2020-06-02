@@ -28,16 +28,20 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Importers
             }
         }
 
-        public bool CanImportOn(object targetObject)
-        {
-            return true;
-        }
-
         public bool CanImportOnRootLevel => false;
 
         public string FileFilter => "Wave Boundary Condition Files (*.bcw;*.sp2)|*.bcw;*.sp2";
 
         public bool OpenViewAfterImport => true;
+
+        public string TargetDataDirectory { get; set; }
+        public bool ShouldCancel { get; set; }
+        public ImportProgressChangedDelegate ProgressChanged { get; set; }
+
+        public bool CanImportOn(object targetObject)
+        {
+            return true;
+        }
 
         public object ImportItem(string path, object target = null)
         {
@@ -94,9 +98,5 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Importers
                 bc.SetTimeSeriesAtSupportPoint(index, functions[functionIndex++]);
             }
         }
-
-        public string TargetDataDirectory { get; set; }
-        public bool ShouldCancel { get; set; }
-        public ImportProgressChangedDelegate ProgressChanged { get; set; }
     }
 }

@@ -15,6 +15,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors.ModelFeatureCoordinateDa
     {
         private bool locked;
 
+        public event EventHandler LockedChanged;
+
         public ModelFeatureCoordinateDataView()
         {
             InitializeComponent();
@@ -22,7 +24,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors.ModelFeatureCoordinateDa
             // inject view logic in viewmodel
             ViewModel.AddColumn = (propertyName, columnHeader, isReadOnly, format) =>
             {
-                var bindingBase = new Binding{Path = new PropertyPath(propertyName)};
+                var bindingBase = new Binding {Path = new PropertyPath(propertyName)};
                 if (!string.IsNullOrEmpty(format))
                 {
                     bindingBase.StringFormat = format;
@@ -38,26 +40,38 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors.ModelFeatureCoordinateDa
             ViewModel.ClearColumns = () => DataGrid.Columns.Clear();
         }
 
+        public bool Visible
+        {
+            get
+            {
+                return IsVisible;
+            }
+        }
+
         public object Data
         {
-            get { return ViewModel.ModelFeatureCoordinateData; }
-            set { ViewModel.ModelFeatureCoordinateData = (IModelFeatureCoordinateData) value; }
+            get
+            {
+                return ViewModel.ModelFeatureCoordinateData;
+            }
+            set
+            {
+                ViewModel.ModelFeatureCoordinateData = (IModelFeatureCoordinateData) value;
+            }
         }
 
         public string Text { get; set; }
 
         public Image Image { get; set; }
 
-        public bool Visible
-        {
-            get { return IsVisible; }
-        }
-
         public ViewInfo ViewInfo { get; set; }
 
         public bool Locked
         {
-            get { return locked; }
+            get
+            {
+                return locked;
+            }
             set
             {
                 locked = value;
@@ -75,10 +89,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors.ModelFeatureCoordinateDa
             BoundaryGeometryPreview = null;
         }
 
-        public void EnsureVisible(object item)
-        {
-        }
-
-        public event EventHandler LockedChanged;
+        public void EnsureVisible(object item) {}
     }
 }

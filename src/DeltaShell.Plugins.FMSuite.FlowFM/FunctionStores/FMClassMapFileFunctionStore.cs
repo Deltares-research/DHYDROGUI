@@ -18,20 +18,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
     /// <summary>
     /// Function store for Class Map Files.
     /// </summary>
-    /// <seealso cref="FMNetCdfFileFunctionStore" />
+    /// <seealso cref="FMNetCdfFileFunctionStore"/>
     public class FMClassMapFileFunctionStore : FMNetCdfFileFunctionStore
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(FMMapFileFunctionStore));
-
         private const string LocationAttributeName = "location";
         private const string StandardNameAttributeName = "standard_name";
         private const string LongNameAttributeName = "long_name";
         private const string UnitsAttributeName = "units";
+        private static readonly ILog Log = LogManager.GetLogger(typeof(FMMapFileFunctionStore));
 
         private UnstructuredGrid grid;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="FMClassMapFileFunctionStore" /> class.
+        /// Initializes a new instance of the <see cref="FMClassMapFileFunctionStore"/> class.
         /// </summary>
         /// <param name="classMapFilePath"> The class map file path. </param>
         public FMClassMapFileFunctionStore(string classMapFilePath) : base(classMapFilePath) {}
@@ -58,6 +57,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
                 timeDepVariables.Select(CreateCoverageForTimeDependentVariable).Where(c => c != null);
 
             return functions;
+        }
+
+        /// <summary>
+        /// Gets the variable values.
+        /// </summary>
+        /// <typeparam name="T"> </typeparam>
+        /// <param name="function"> The function. </param>
+        /// <param name="filters"> The variable filters. </param>
+        /// <returns> </returns>
+        protected override IMultiDimensionalArray<T> GetVariableValuesCore<T>(
+            IVariable function, IVariableFilter[] filters)
+        {
+            if (function.Attributes[NcUseVariableSizeAttribute] == "false") // has no explicit variable
+            {
+                int size = GetSize(function);
+                return new MultiDimensionalArray<T>(Enumerable.Range(0, size).Cast<T>().ToList(), size);
+            }
+
+            return base.GetVariableValuesCore<T>(function, filters);
         }
 
         private UnstructuredGridCoverage CreateCoverageForTimeDependentVariable(
@@ -91,25 +109,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
             }
 
             return coverage;
-        }
-
-        /// <summary>
-        /// Gets the variable values.
-        /// </summary>
-        /// <typeparam name="T"> </typeparam>
-        /// <param name="function"> The function. </param>
-        /// <param name="filters"> The variable filters. </param>
-        /// <returns> </returns>
-        protected override IMultiDimensionalArray<T> GetVariableValuesCore<T>(
-            IVariable function, IVariableFilter[] filters)
-        {
-            if (function.Attributes[NcUseVariableSizeAttribute] == "false") // has no explicit variable
-            {
-                int size = GetSize(function);
-                return new MultiDimensionalArray<T>(Enumerable.Range(0, size).Cast<T>().ToList(), size);
-            }
-
-            return base.GetVariableValuesCore<T>(function, filters);
         }
 
         private UnstructuredGridCoverage CreateCoverage(string location, string coverageLongName, Type outputType)

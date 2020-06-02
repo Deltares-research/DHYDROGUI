@@ -4,6 +4,7 @@ using DelftTools.Controls;
 using DelftTools.Shell.Gui.Swf;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.Properties;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.NodePresenters
 {
@@ -15,9 +16,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.NodePresenters
         /// <summary>
         /// Icon used to represent a <see cref="ControlGroup"/> collection in the Project Explorer
         /// </summary>
-        private static readonly Bitmap folderIcon = RealTimeControl.Properties.Resources.folder;
+        private static readonly Bitmap folderIcon = Resources.folder;
 
-        /// <inheritdoc />
+        /// <inheritdoc/>
         public override void UpdateNode(ITreeNode parentNode, ITreeNode node, IEventedList<ControlGroup> nodeData)
         {
             node.Text = "Control Groups";
@@ -25,10 +26,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.NodePresenters
             node.Image = folderIcon;
         }
 
-        /// <inheritdoc />
+        /// <inheritdoc/>
         public override IEnumerable GetChildNodeObjects(IEventedList<ControlGroup> parentNodeData, ITreeNode node)
         {
-            foreach (var controlGroup in parentNodeData)
+            foreach (ControlGroup controlGroup in parentNodeData)
             {
                 yield return controlGroup;
             }

@@ -1,15 +1,15 @@
 ﻿<UserControl x:Class="DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors.TracerDefinitionsEditorWpf"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors"
              xmlns:system="clr-namespace:System;assembly=mscorlib"
              xmlns:gui="clr-namespace:DeltaShell.Plugins.FMSuite.FlowFM.Gui"
-             mc:Ignorable="d" 
+             mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.DataContext>
-        <local:TracerDefinitionsEditorWpfViewModel x:Name="ViewModel"/>
+        <local:TracerDefinitionsEditorWpfViewModel x:Name="ViewModel" />
     </UserControl.DataContext>
     <UserControl.Resources>
         <DrawingBrush x:Key="InvalidBrush">
@@ -58,27 +58,27 @@
         </DrawingBrush>
     </UserControl.Resources>
     <StackPanel>
-        <Grid Margin="5" >
+        <Grid Margin="5">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition />
-                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <TextBox Grid.Column="0" 
+            <TextBox Grid.Column="0"
                      VerticalAlignment="Center"
                      Height="20"
-                     x:Name="AddTextBox"/>
+                     x:Name="AddTextBox" />
 
             <Button x:Name="AddButton"
                     Grid.Column="1" Margin="5,5,0,5"
-                    Command="{Binding AddTracerCommand}" 
+                    Command="{Binding AddTracerCommand}"
                     CommandParameter="{Binding Text, ElementName=AddTextBox}"
                     ToolTipService.ShowOnDisabled="True">
                 <Button.Style>
                     <Style TargetType="Button">
                         <Setter Property="Content">
                             <Setter.Value>
-                                <Rectangle Width="24" Height="24" Fill="{StaticResource AddBrush}"/>
+                                <Rectangle Width="24" Height="24" Fill="{StaticResource AddBrush}" />
                             </Setter.Value>
                         </Setter>
                         <Style.Triggers>
@@ -91,14 +91,14 @@
                                                 <ColumnDefinition />
                                             </Grid.ColumnDefinitions>
 
-                                            <Rectangle Width="24" Height="24" 
+                                            <Rectangle Width="24" Height="24"
                                                        Grid.Column="0"
                                                        VerticalAlignment="Top"
                                                        Margin="5"
-                                                       Fill="{StaticResource InvalidBrush}"/>
-                                            <TextBlock Grid.Column="1" 
+                                                       Fill="{StaticResource InvalidBrush}" />
+                                            <TextBlock Grid.Column="1"
                                                        VerticalAlignment="Center"
-                                                       Text="{Binding CanAddMessage}"/>
+                                                       Text="{Binding CanAddMessage}" />
                                         </Grid>
                                     </Setter.Value>
                                 </Setter>
@@ -115,27 +115,27 @@
         </Grid>
 
         <ListBox x:Name="ListBox"
-                 Margin="5" 
-                 HorizontalContentAlignment="Stretch" 
+                 Margin="5"
+                 HorizontalContentAlignment="Stretch"
                  Height="200"
                  ItemsSource="{Binding Tracers}">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <Grid Margin="5">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
-                        <Button Grid.Column="0" 
+                        <Button Grid.Column="0"
                                 Command="{Binding DataContext.RemoveTracerCommand, ElementName=ListBox}"
                                 CommandParameter="{Binding}">
                             <Button.Template>
                                 <ControlTemplate>
-                                    <Rectangle Width="24" Height="24" Fill="{StaticResource RemoveBrush}"/>
+                                    <Rectangle Width="24" Height="24" Fill="{StaticResource RemoveBrush}" />
                                 </ControlTemplate>
                             </Button.Template>
                         </Button>
-                        <TextBlock Grid.Column="1" Text="{Binding}" Margin="5"/>
+                        <TextBlock Grid.Column="1" Text="{Binding}" Margin="5" />
                     </Grid>
                 </DataTemplate>
             </ListBox.ItemTemplate>

@@ -5,8 +5,8 @@ using System.ComponentModel;
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
 {
     /// <summary>
-    /// Class which synchronizes the updates between a <see cref="INotifyPropertyChanged" />
-    /// and <see cref="WpfGuiProperty" />.
+    /// Class which synchronizes the updates between a <see cref="INotifyPropertyChanged"/>
+    /// and <see cref="WpfGuiProperty"/>.
     /// </summary>
     public class NotifyPropertyChangedWpfGuiPropertySynchronizer : IDisposable
     {
@@ -14,10 +14,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
         private readonly List<PropertyChangedEventHandler> eventSubscribers;
 
         /// <summary>
-        /// Creates a new instance of <see cref="NotifyPropertyChangedWpfGuiPropertySynchronizer" />.
+        /// Creates a new instance of <see cref="NotifyPropertyChangedWpfGuiPropertySynchronizer"/>.
         /// </summary>
         /// <param name="observable">
-        /// The <see cref="INotifyPropertyChanged" /> to synchronize
+        /// The <see cref="INotifyPropertyChanged"/> to synchronize
         /// the updates with.
         /// </param>
         public NotifyPropertyChangedWpfGuiPropertySynchronizer(INotifyPropertyChanged observable)
@@ -32,12 +32,12 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
         }
 
         /// <summary>
-        /// Synchronizes a collection of <see cref="WpfGuiProperty" /> to the updates of the observable of this class.
+        /// Synchronizes a collection of <see cref="WpfGuiProperty"/> to the updates of the observable of this class.
         /// </summary>
         /// <param name="properties">
-        /// The collection of <see cref="WpfGuiProperty" /> to synchronize.
+        /// The collection of <see cref="WpfGuiProperty"/> to synchronize.
         /// </param>
-        /// <exception cref="ArgumentNullException"> Thrown when <paramref name="properties" /> is <c> null </c>. </exception>
+        /// <exception cref="ArgumentNullException"> Thrown when <paramref name="properties"/> is <c> null </c>. </exception>
         public void SynchronizeProperties(IEnumerable<WpfGuiProperty> properties)
         {
             if (properties == null)
@@ -47,10 +47,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
 
             foreach (WpfGuiProperty guiProperty in properties)
             {
-                PropertyChangedEventHandler eventHandler = (sender, args) =>
-                {
-                    guiProperty.RaisePropertyChangedEvents();
-                };
+                PropertyChangedEventHandler eventHandler = (sender, args) => { guiProperty.RaisePropertyChangedEvents(); };
                 observable.PropertyChanged += eventHandler;
                 eventSubscribers.Add(eventHandler);
             }

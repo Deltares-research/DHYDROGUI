@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 using DelftTools.Shell.Core.Workflow.DataItems;
+using DelftTools.Shell.Gui;
 using DeltaShell.Plugins.NetworkEditor.MapLayers;
 using GeoAPI.Geometries;
 using log4net;
@@ -11,7 +12,7 @@ using SharpMap.UI.Tools;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
 {
-    public class ImportCrossSectionsFromCsvMapTool: MapTool
+    public class ImportCrossSectionsFromCsvMapTool : MapTool
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(ImportCrossSectionsFromCsvMapTool));
 
@@ -20,27 +21,65 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
             LayerFilter = layerFilter;
         }
 
-        private HydroRegionMapLayer HydroNetworkMapLayer
-        {
-            get { return (HydroRegionMapLayer)Layers.FirstOrDefault(); }
-        }
-
         public override bool AlwaysActive
         {
-            get { return true; }
+            get
+            {
+                return true;
+            }
         }
 
-        public override bool Enabled { get { return HydroNetworkMapLayer != null; } }
+        public override bool Enabled
+        {
+            get
+            {
+                return HydroNetworkMapLayer != null;
+            }
+        }
 
         public override IEnumerable<MapToolContextMenuItem> GetContextMenuItems(Coordinate worldPosition)
         {
-            if (!Enabled) yield break;
+            if (!Enabled)
+            {
+                yield break;
+            }
 
             yield return new MapToolContextMenuItem
+            {
+                Priority = 5,
+                MenuItem = new ToolStripMenuItem("Import cross section(s) from csv", null, ImportCrossSectionsEventHandler)
+            };
+        }
+
+        public override void Execute()
+        {
+            Cursor cursor = MapControl.Cursor;
+            MapControl.Cursor = Cursors.WaitCursor;
+            try
+            {
+                var dataItem = new DataItem {Value = HydroNetworkMapLayer.Region};
+                IGui gui = NetworkEditorGuiPlugin.Instance.Gui;
+
+                gui.CommandHandler.ImportToDataItem(dataItem);
+                while (gui.Application.IsActivityRunning())
                 {
-                    Priority = 5,
-                    MenuItem = new ToolStripMenuItem("Import cross section(s) from csv", null, ImportCrossSectionsEventHandler)
-                };
+                    Application.DoEvents(); // wait until import finishes
+                }
+            }
+            finally
+            {
+                MapControl.Cursor = cursor;
+            }
+
+            MapControl.Refresh();
+        }
+
+        private HydroRegionMapLayer HydroNetworkMapLayer
+        {
+            get
+            {
+                return (HydroRegionMapLayer) Layers.FirstOrDefault();
+            }
         }
 
         private void ImportCrossSectionsEventHandler(object sender, EventArgs e)
@@ -53,29 +92,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
             {
                 MessageBox.Show(ee.Message, "Import failed", MessageBoxButtons.OK);
             }
-        }
-
-        public override void Execute()
-        {
-            var cursor = MapControl.Cursor;
-            MapControl.Cursor = Cursors.WaitCursor;
-            try
-            {
-                var dataItem = new DataItem { Value = HydroNetworkMapLayer.Region };
-                var gui = NetworkEditorGuiPlugin.Instance.Gui;
-
-                gui.CommandHandler.ImportToDataItem(dataItem);
-                while (gui.Application.IsActivityRunning())
-                {
-                    Application.DoEvents(); // wait until import finishes
-                }
-
-            }
-            finally
-            {
-                MapControl.Cursor = cursor;
-            }
-            MapControl.Refresh();
         }
     }
 }

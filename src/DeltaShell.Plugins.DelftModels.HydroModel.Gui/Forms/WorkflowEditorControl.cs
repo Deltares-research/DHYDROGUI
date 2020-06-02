@@ -19,6 +19,16 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms
         private IEventedList<ICompositeActivity> workflows;
         private ICompositeActivity currentWorkflow;
 
+        [Category("Property Changed")]
+        [Description("Indicates when 'CurrentWorkflow' property has changed due to user input.")]
+        [Browsable(true)]
+        public event EventHandler<EventArgs> CurrentWorkflowChanged;
+
+        [Category("Property Selected")]
+        [Description("Indicates when 'CurrentWorkflow' property has been selected by user.")]
+        [Browsable(true)]
+        public event EventHandler<EventArgs<IActivity>> SelectedActivityChanged;
+
         public WorkflowEditorControl()
         {
             InitializeComponent();
@@ -30,12 +40,18 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms
 
         public GraphControl GraphControl
         {
-            get { return graphControl.NetronGraph; }
+            get
+            {
+                return graphControl.NetronGraph;
+            }
         }
 
         public IEventedList<ICompositeActivity> Workflows
         {
-            get { return workflows; }
+            get
+            {
+                return workflows;
+            }
             set
             {
                 if (workflows != null)
@@ -65,7 +81,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms
 
         public ICompositeActivity CurrentWorkflow
         {
-            get { return currentWorkflow; }
+            get
+            {
+                return currentWorkflow;
+            }
             set
             {
                 // Allow the user to preset Current selected item:
@@ -80,10 +99,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms
 
                 if (currentWorkflow == value)
                 {
-                    if (currentWorkflow!= null && SelectedActivityChanged != null)
+                    if (currentWorkflow != null && SelectedActivityChanged != null)
                     {
                         SelectedActivityChanged(this, new EventArgs<IActivity>(currentWorkflow));
                     }
+
                     return;
                 }
 
@@ -93,7 +113,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms
 
                 if (currentWorkflow != null)
                 {
-                    var shape = ShapeFactory.CreateShapeFromActivity(currentWorkflow, graphControl.NetronGraph);
+                    ActivityShapeBase shape = ShapeFactory.CreateShapeFromActivity(currentWorkflow, graphControl.NetronGraph);
                     graphControl.NetronGraph.Shapes.Add(shape);
                 }
 
@@ -103,16 +123,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms
                 }
             }
         }
-
-        [Category("Property Changed")]
-        [Description("Indicates when 'CurrentWorkflow' property has changed due to user input.")]
-        [Browsable(true)]
-        public event EventHandler<EventArgs> CurrentWorkflowChanged;
-
-        [Category("Property Selected")]
-        [Description("Indicates when 'CurrentWorkflow' property has been selected by user.")]
-        [Browsable(true)]
-        public event EventHandler<EventArgs<IActivity>> SelectedActivityChanged;
 
         private void SetWorkflowSelectionListBoxItems()
         {
@@ -131,17 +141,23 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms
 
         private void WorkflowSelectionListBoxSelectedIndexChanged(object sender, EventArgs e)
         {
-            CurrentWorkflow = (ICompositeActivity)workflowSelectionListBox.SelectedItem;
+            CurrentWorkflow = (ICompositeActivity) workflowSelectionListBox.SelectedItem;
         }
 
         private void NetronGraphOnShowProperties(object sender, object[] props)
         {
-            if (SelectedActivityChanged == null || props.Length != 1) return;
+            if (SelectedActivityChanged == null || props.Length != 1)
+            {
+                return;
+            }
 
             var propertyBag = props[0] as PropertyBag;
-            if (propertyBag == null) return;
+            if (propertyBag == null)
+            {
+                return;
+            }
 
-            var activity = ((ActivityShapeBase)propertyBag.Owner).Activity;
+            IActivity activity = ((ActivityShapeBase) propertyBag.Owner).Activity;
             var wrapper = activity as ActivityWrapper;
             if (wrapper != null)
             {

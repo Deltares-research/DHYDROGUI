@@ -15,21 +15,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(WaveBoundaryImportHelper));
 
-        private static Coordinate Min(Coordinate coord1, Coordinate coord2)
-        {
-            return new Coordinate(coord1.X - coord2.X, coord1.Y - coord2.Y, coord1.Z - coord2.Z);
-        }
-
-        private static Coordinate Plus(Coordinate coord1, Coordinate coord2)
-        {
-            return new Coordinate(coord1.X + coord2.X, coord1.Y + coord2.Y, coord1.Z + coord2.Z);
-        }
-
-        private static Coordinate Times(Coordinate coord1, double d)
-        {
-            return new Coordinate(coord1.X * d, coord1.Y * d, coord1.Z * d);
-        }
-
         public static IGeometry CreateBoundaryGeometry(Coordinate startCoordinate, Coordinate endCoordinate,
                                                        IList<double> condSpecAtDists)
         {
@@ -145,6 +130,21 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             sides.Add(Enumerable.Range(0, grid.Size2).Select(m => new Coordinate(x[nMax, m], y[nMax, m])).ToList());
 
             return sides.Select(s => new Tuple<double, List<Coordinate>>(CalculateOrientation(s), s)).ToList();
+        }
+
+        private static Coordinate Min(Coordinate coord1, Coordinate coord2)
+        {
+            return new Coordinate(coord1.X - coord2.X, coord1.Y - coord2.Y, coord1.Z - coord2.Z);
+        }
+
+        private static Coordinate Plus(Coordinate coord1, Coordinate coord2)
+        {
+            return new Coordinate(coord1.X + coord2.X, coord1.Y + coord2.Y, coord1.Z + coord2.Z);
+        }
+
+        private static Coordinate Times(Coordinate coord1, double d)
+        {
+            return new Coordinate(coord1.X * d, coord1.Y * d, coord1.Z * d);
         }
 
         /// <summary>

@@ -23,15 +23,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
         /// <param name="filePath"> The history file path to parse the data from. </param>
         /// <param name="monitoringOutputLevel"> The monitoring output level. </param>
         /// <param name="observationVariableOutputs"> The observationVariableOutputs that are declared. </param>
-        /// <exception cref="ArgumentNullException"> Thrown when <paramref name="filePath" /> is null. </exception>
+        /// <exception cref="ArgumentNullException"> Thrown when <paramref name="filePath"/> is null. </exception>
         /// <remarks> An error message is provided if errors occur while reading data from <paramref name="filePath"/>.</remarks>
         /// <remarks>
-        /// The his data from <paramref name="filePath" /> is not parsed if:
+        /// The his data from <paramref name="filePath"/> is not parsed if:
         /// * The
-        /// <param name="monitoringOutputLevel" />
+        /// <param name="monitoringOutputLevel"/>
         /// equals "None"
         /// * The list
-        /// <param name="observationVariableOutputs" />
+        /// <param name="observationVariableOutputs"/>
         /// is empty
         /// </remarks>
         /// <exception cref="ArgumentNullException"> Thrown when <paramref name="filePath"/> is <c>null</c>.</exception>
@@ -82,20 +82,24 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
                                                                DelwaqHisFileData[] hisFileVariableDataList)
         {
             if (!observationVariableOutput.TimeSeriesList.Any())
+            {
                 return;
+            }
 
             DelwaqHisFileData hisFileVariableData = hisFileVariableDataList
                 .FirstOrDefault(data => string.Equals(data.ObservationVariable, observationVariableOutput.Name, StringComparison.OrdinalIgnoreCase));
 
             if (hisFileVariableData == null)
+            {
                 return;
+            }
 
             foreach (TimeSeries timeSeries in observationVariableOutput.TimeSeriesList)
             {
                 string timeSeriesName = timeSeries.Name;
                 double[] variableTimeSeriesValues = hisFileVariableData.GetValuesForKey(timeSeriesName).ToArray();
                 if (!variableTimeSeriesValues.Any() ||
-                        hisFileVariableData.TimeSteps.Count() != variableTimeSeriesValues.Length)
+                    hisFileVariableData.TimeSteps.Count() != variableTimeSeriesValues.Length)
                 {
                     Log.Error($"Time steps are inconsistent for the data related to variable {timeSeriesName}.");
                     continue;

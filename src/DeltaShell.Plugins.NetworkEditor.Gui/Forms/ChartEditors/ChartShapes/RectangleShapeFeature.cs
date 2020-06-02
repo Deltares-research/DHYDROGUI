@@ -9,13 +9,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapes
 {
     public class RectangleShapeFeature : ShapeFeatureBase
     {
-        public double Left { get; set; }
-        public double Right { get; set; }
-        public double Top { get; set; }
-        public double Bottom { get; set; }
-        public double Width { get { return Right - Left; } }
-        public double Height { get { return Top - Bottom; } }
-
         public RectangleShapeFeature(IChart chart, double left, double top, double right, double bottom) : base(chart)
         {
             Left = left;
@@ -24,22 +17,64 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapes
             Bottom = bottom;
         }
 
+        public override IGeometry Geometry
+        {
+            get
+            {
+                var vertices = new List<Coordinate>
+                {
+                    new Coordinate(Left, Bottom),
+                    new Coordinate(Right, Bottom),
+                    new Coordinate(Right, Top),
+                    new Coordinate(Left, Top)
+                };
+                vertices.Add((Coordinate) vertices[0].Clone());
+                ILinearRing newLinearRing = GeometryFactory.CreateLinearRing(vertices.ToArray());
+                return GeometryFactory.CreatePolygon(newLinearRing, null);
+            }
+            set
+            {
+                base.Geometry = value;
+            }
+        }
+
+        public double Left { get; set; }
+        public double Right { get; set; }
+        public double Top { get; set; }
+        public double Bottom { get; set; }
+
+        public double Width
+        {
+            get
+            {
+                return Right - Left;
+            }
+        }
+
+        public double Height
+        {
+            get
+            {
+                return Top - Bottom;
+            }
+        }
+
         public override Rectangle GetBounds()
         {
             var rectangle = new Rectangle
-                                {
-                                    X = ChartCoordinateService.ToDeviceX(Chart, Left),
-                                    Y = ChartCoordinateService.ToDeviceY(Chart, Top),
-                                    Width = ChartCoordinateService.ToDeviceWidth(Chart, Right - Left),
-                                    Height = ChartCoordinateService.ToDeviceHeight(Chart, Top - Bottom)
-                                };
+            {
+                X = ChartCoordinateService.ToDeviceX(Chart, Left),
+                Y = ChartCoordinateService.ToDeviceY(Chart, Top),
+                Width = ChartCoordinateService.ToDeviceWidth(Chart, Right - Left),
+                Height = ChartCoordinateService.ToDeviceHeight(Chart, Top - Bottom)
+            };
             return rectangle;
         }
 
         public override void Paint(IChartDrawingContext chartDrawingContext)
         {
             var g = (ChartGraphics) chartDrawingContext.Graphics;
-            var bounds = GetBounds();
+            Rectangle bounds = GetBounds();
             // FillRectangle causes crash? g.FillRectangle(Brushes.YellowGreen, bounds.X, bounds.Y, bounds.Width, bounds.Height);
             g.Rectangle(bounds);
         }
@@ -52,27 +87,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapes
         public override IShapeFeatureEditor CreateShapeFeatureEditor(ShapeEditMode shapeEditMode)
         {
             return new RectangleShapeEditor(this, new ChartCoordinateService(Chart), shapeEditMode);
-        }
-
-        public override IGeometry Geometry
-        {
-            get
-            {
-                var vertices = new List<Coordinate>
-                                   {
-                                       new Coordinate(Left, Bottom),
-                                       new Coordinate(Right, Bottom),
-                                       new Coordinate(Right, Top),
-                                       new Coordinate(Left, Top)
-                                   };
-                vertices.Add((Coordinate)vertices[0].Clone());
-                ILinearRing newLinearRing = GeometryFactory.CreateLinearRing(vertices.ToArray());
-                return GeometryFactory.CreatePolygon(newLinearRing, null);
-            }
-            set
-            {
-                base.Geometry = value;
-            }
         }
     }
 }

@@ -15,12 +15,6 @@ namespace DeltaShell.Dimr.Gui
             tabDimr.Group = configContextualGroup;
         }
 
-        public bool IsContextualTabVisible(string tabGroupName, string tabName)
-        {
-            return tabGroupName == configContextualGroup.Name && tabName == tabDimr.Name && DimrGuiPlugin.Instance != null && DimrGuiPlugin.Instance.IsOnlyDimrModelSelected;
-
-        }
-
         public IEnumerable<ICommand> Commands
         {
             get
@@ -29,10 +23,16 @@ namespace DeltaShell.Dimr.Gui
             }
         }
 
-        public void ValidateItems(){}
+        public bool IsContextualTabVisible(string tabGroupName, string tabName)
+        {
+            return tabGroupName == configContextualGroup.Name && tabName == tabDimr.Name && DimrGuiPlugin.Instance != null && DimrGuiPlugin.Instance.IsOnlyDimrModelSelected;
+        }
 
-        public object GetRibbonControl() { return RibbonControl; }
+        public void ValidateItems() {}
 
-        
+        public object GetRibbonControl()
+        {
+            return RibbonControl;
+        }
     }
 }

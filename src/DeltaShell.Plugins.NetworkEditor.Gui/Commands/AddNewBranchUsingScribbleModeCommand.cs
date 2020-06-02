@@ -8,6 +8,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Commands
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(AddNewBranchUsingScribbleModeCommand));
 
+        public override bool Checked
+        {
+            get
+            {
+                return null != MapView && null != CurrentTool && CurrentTool.IsActive;
+            }
+        }
+
         protected IMapTool CurrentTool
         {
             get
@@ -16,18 +24,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Commands
                 return MapView.MapControl.GetToolByName(HydroRegionEditorMapTool.AddChannelScribleToolName);
             }
         }
+
         protected override void OnExecute(object[] arguments)
         {
-            var newLineTool = (NewLineTool)CurrentTool;
+            var newLineTool = (NewLineTool) CurrentTool;
             MapView.MapControl.ActivateTool(newLineTool);
 
             Log.InfoFormat("New channel command: <{0}> remove last point, <{1}> toggle snapping, {2} decrease step, {3} increase step",
-                newLineTool.RemoveLastPointKey, newLineTool.SnapKey, newLineTool.DecreaseMinDistanceKey, newLineTool.IncreaseMinDistanceKey);
-        }
-
-        public override bool Checked
-        {
-            get { return (null != MapView) && (null != CurrentTool) && CurrentTool.IsActive; }
+                           newLineTool.RemoveLastPointKey, newLineTool.SnapKey, newLineTool.DecreaseMinDistanceKey, newLineTool.IncreaseMinDistanceKey);
         }
     }
 }

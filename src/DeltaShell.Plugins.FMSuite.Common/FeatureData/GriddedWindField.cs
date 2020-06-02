@@ -13,6 +13,40 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
         private static readonly ILog Log = LogManager.GetLogger(typeof(GriddedWindField));
         private WindQuantity quantity;
 
+        private GriddedWindField(string windFilePath)
+        {
+            WindFilePath = windFilePath;
+            GridFilePath = windFilePath;
+            SeparateGridFile = false;
+        }
+
+        private GriddedWindField(string windFilePath, string gridFilePath)
+        {
+            WindFilePath = windFilePath;
+            GridFilePath = gridFilePath;
+            SeparateGridFile = true;
+        }
+
+        public bool SeparateGridFile { get; private set; }
+
+        public string WindFilePath { get; set; }
+
+        public string GridFilePath { get; set; }
+
+        public WindQuantity Quantity
+        {
+            get => quantity;
+            private set
+            {
+                quantity = value;
+                UpdateName();
+            }
+        }
+
+        public IFunction Data => null;
+
+        public string Name { get; private set; }
+
         public static GriddedWindField CreateXField(string filePath)
         {
             return new GriddedWindField(filePath) {Quantity = WindQuantity.VelocityX};
@@ -33,18 +67,9 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
             return new GriddedWindField(filePath, gridFilePath) {Quantity = WindQuantity.VelocityVectorAirPressure};
         }
 
-        private GriddedWindField(string windFilePath)
+        public static string GetCorrespondingGridFilePath(string filePath)
         {
-            WindFilePath = windFilePath;
-            GridFilePath = windFilePath;
-            SeparateGridFile = false;
-        }
-
-        private GriddedWindField(string windFilePath, string gridFilePath)
-        {
-            WindFilePath = windFilePath;
-            GridFilePath = gridFilePath;
-            SeparateGridFile = true;
+            return WindFile.GetCorrespondingGridFilePath(filePath);
         }
 
         private static string CreateName(WindQuantity windQuantity)
@@ -66,30 +91,10 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
             }
         }
 
-        public bool SeparateGridFile { get; private set; }
-
-        public WindQuantity Quantity
-        {
-            get => quantity;
-            private set
-            {
-                quantity = value;
-                UpdateName();
-            }
-        }
-
         private void UpdateName()
         {
             Name = CreateName(Quantity);
         }
-
-        public IFunction Data => null;
-
-        public string Name { get; private set; }
-
-        public string WindFilePath { get; set; }
-
-        public string GridFilePath { get; set; }
 
         #region IFileBased
 
@@ -211,10 +216,5 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
         }
 
         #endregion
-
-        public static string GetCorrespondingGridFilePath(string filePath)
-        {
-            return WindFile.GetCorrespondingGridFilePath(filePath);
-        }
     }
 }

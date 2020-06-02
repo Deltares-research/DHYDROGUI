@@ -48,6 +48,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters
 
         private bool firstTimeCreate = true;
 
+        public WaveModelNodePresenter(GuiPlugin guiPlugin) : base(guiPlugin) {}
+
         public override void UpdateNode(ITreeNode parentNode, ITreeNode node, WaveModel model)
         {
             if (firstTimeCreate)
@@ -59,8 +61,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters
             node.Text = model.Name;
             node.Image = WaveImage;
         }
-
-        public WaveModelNodePresenter(GuiPlugin guiPlugin) : base(guiPlugin) {}
 
         public override DragOperations CanDrag(WaveModel nodeData)
         {
@@ -85,41 +85,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters
                                                    NumericalParametersName);
             yield return new WaveModelTreeShortcut(OutputParametersName, OutputParametersIcon, model, "Output");
             yield return new TreeFolder(model, GetOutputItems(model), "Output", FolderImageType.Output);
-        }
-
-        private static IEnumerable<object> GetArea2DItems(WaveModel model)
-        {
-            yield return new WaveModelTreeShortcut(ObstacleNodeName, ObstacleImage, model, model.Obstacles,
-                                                   ShortCutType.FeatureSet);
-            yield return new WaveModelTreeShortcut(ObsPointNodeName, ObsPointImage, model, model.ObservationPoints,
-                                                   ShortCutType.FeatureSet);
-            yield return new WaveModelTreeShortcut(ObsCurveNodeName, ObsCurveImage, model,
-                                                   model.ObservationCrossSections, ShortCutType.FeatureSet);
-        }
-
-        private static IEnumerable<object> GetOutputItems(WaveModel model)
-        {
-            IDataItem dataItem = model.GetDataItemByTag(WaveModel.SwanLogDataItemTag);
-            var swanLog = dataItem.Value as TextDocument;
-            if (swanLog != null && !string.IsNullOrEmpty(swanLog.Content))
-            {
-                yield return dataItem;
-            }
-
-            foreach (IWaveDomainData domain in WaveDomainHelper.GetAllDomains(model.OuterDomain))
-            {
-                IDataItem subDataItem = model.GetDataItemByTag(WaveModel.WavmStoreDataItemTag + domain.Name);
-                if (subDataItem == null)
-                {
-                    continue;
-                }
-
-                var functionStore = subDataItem.Value as WavmFileFunctionStore;
-                if (functionStore != null && functionStore.Functions.Any() && !string.IsNullOrEmpty(functionStore.Path))
-                {
-                    yield return subDataItem;
-                }
-            }
         }
 
         public override IMenuItem GetContextMenu(ITreeNode sender, object nodeData)
@@ -166,6 +131,41 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters
             }
 
             return menu;
+        }
+
+        private static IEnumerable<object> GetArea2DItems(WaveModel model)
+        {
+            yield return new WaveModelTreeShortcut(ObstacleNodeName, ObstacleImage, model, model.Obstacles,
+                                                   ShortCutType.FeatureSet);
+            yield return new WaveModelTreeShortcut(ObsPointNodeName, ObsPointImage, model, model.ObservationPoints,
+                                                   ShortCutType.FeatureSet);
+            yield return new WaveModelTreeShortcut(ObsCurveNodeName, ObsCurveImage, model,
+                                                   model.ObservationCrossSections, ShortCutType.FeatureSet);
+        }
+
+        private static IEnumerable<object> GetOutputItems(WaveModel model)
+        {
+            IDataItem dataItem = model.GetDataItemByTag(WaveModel.SwanLogDataItemTag);
+            var swanLog = dataItem.Value as TextDocument;
+            if (swanLog != null && !string.IsNullOrEmpty(swanLog.Content))
+            {
+                yield return dataItem;
+            }
+
+            foreach (IWaveDomainData domain in WaveDomainHelper.GetAllDomains(model.OuterDomain))
+            {
+                IDataItem subDataItem = model.GetDataItemByTag(WaveModel.WavmStoreDataItemTag + domain.Name);
+                if (subDataItem == null)
+                {
+                    continue;
+                }
+
+                var functionStore = subDataItem.Value as WavmFileFunctionStore;
+                if (functionStore != null && functionStore.Functions.Any() && !string.IsNullOrEmpty(functionStore.Path))
+                {
+                    yield return subDataItem;
+                }
+            }
         }
 
         private ClonableToolStripMenuItem CreateWpfSettingsMenuItem(WaveModel model)

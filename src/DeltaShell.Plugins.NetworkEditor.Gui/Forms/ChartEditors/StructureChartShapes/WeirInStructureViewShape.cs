@@ -28,106 +28,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
 
         public RectangleShapeFeature WeirShape
         {
-            get { return (RectangleShapeFeature) ShapeFeatures[0]; }
-        }
-
-        private void CalculateShapeFeatures()
-        {
-            var oldStatus = Selected;
-            ShapeFeatures.Clear();
-
-            IShapeFeature weirShape = GetWeirShape();
-
-            ShapeFeatures.Add(weirShape);
-
-            Selected = oldStatus;
-        }
-
-        private IShapeFeature GetWeirShape()
-        {
-            double minZValue = ChartCoordinateService.ToWorldY(chart, chart.ChartBounds.Bottom);
-            double maxZValue = ChartCoordinateService.ToWorldY(chart, chart.ChartBounds.Top);
-
-            IShapeFeature weirShape;
-            if (weir.IsGated)
+            get
             {
-                var gatedWeirFormula = (IGatedWeirFormula) weir.WeirFormula;
-                var gatedWeirShape = new GatedWeirShape(chart, weir.OffsetY, weir.CrestLevel,
-                                               weir.CrestWidth, weir.CrestLevel + gatedWeirFormula.GateOpening,
-                                               minZValue, maxZValue, false,true)
-                                {
-                                    NormalStyle = StructureShapeStyleProvider.GetNormalStyleForStructure(weir),
-                                    SelectedStyle = StructureShapeStyleProvider.GetSelectedStyleForStructure(weir)
-                                };
-                //gatedWeirShape.NormalStyle = StructureShapeStyleProvider.GetNormalStyleForStructure(weir);
-                //gatedWeirShape.SelectedStyle = StructureShapeStyleProvider.GetSelectedStyleForStructure(weir);
-                gatedWeirShape.WaterStyle = new VectorStyle
-                                                              {
-                                                                  Line = Pens.Transparent,
-                                                                  Fill = new SolidBrush(Color.FromArgb(100, Color.LightCyan)),
-                                                              };
-                gatedWeirShape.AddHover(new HoverText(GuiParameterNames.CrestLevel, string.Format("{0:f2}m.", weir.CrestLevel),
-                                                      gatedWeirShape.WeirShape, Color.Black, HoverPosition.Left,
-                                                      ArrowHeadPosition.Top));
-                gatedWeirShape.AddHover(new HoverText(GuiParameterNames.CrestWidth, string.Format("{0:f2}m.", weir.CrestWidth),
-                                                      gatedWeirShape.WeirShape, Color.Black, HoverPosition.Bottom,
-                                                      ArrowHeadPosition.LeftRight));
-                gatedWeirShape.AddHover(new HoverText(GuiParameterNames.GateLowerEdgeLevel,
-                                                      string.Format("{0:f2}m.", gatedWeirFormula.GateOpening),
-                                                      gatedWeirShape.WaterShape, Color.Black, HoverPosition.Left,
-                                                      ArrowHeadPosition.TopDown));
-                weirShape = gatedWeirShape;
+                return (RectangleShapeFeature) ShapeFeatures[0];
             }
-            else
-            {
-                if (weir.IsRectangle)
-                {
-                    var weirShapeFeature = new WeirShapeFeature(chart,
-                                                                weir.OffsetY,
-                                                                weir.CrestLevel,
-                                                                weir.OffsetY + weir.CrestWidth,
-                                                                minZValue, maxZValue)
-                                               {
-                                                   WeirShape =
-                                                       {
-                                                           NormalStyle = StructureShapeStyleProvider.GetNormalStyleForStructure(weir),
-                                                           SelectedStyle = StructureShapeStyleProvider.GetSelectedStyleForStructure(weir)
-                                                       },
-                                                   WaterStyle = new VectorStyle
-                                                                    {
-                                                                        Line = Pens.Transparent,
-                                                                        Fill = new SolidBrush(Color.FromArgb(100, Color.LightCyan)),
-                                                                    }
-                                               };
-
-                    weirShapeFeature.AddHover(new HoverText(GuiParameterNames.CrestWidth, string.Format("{0:f2}m.", weir.CrestWidth),
-                                                            weirShapeFeature.WaterShape, Color.Black, HoverPosition.Top,
-                                                            ArrowHeadPosition.LeftRight));
-                    weirShapeFeature.AddHover(new HoverText(GuiParameterNames.CrestLevel, string.Format("{0:f2}m.", weir.CrestLevel),
-                                                            weirShapeFeature.WeirShape, Color.Black, HoverPosition.Left,
-                                                            ArrowHeadPosition.Top));
-                    weirShape = weirShapeFeature;
-                }
-                else
-                {
-                    var freeFormWeirFormula = (FreeFormWeirFormula)weir.WeirFormula;
-                    var freeFormatWeirShapeFeature = new FreeFormatWeirShapeFeature(chart, weir, freeFormWeirFormula.Shape, minZValue, maxZValue);
-                    freeFormatWeirShapeFeature.PolygonShapeFeature.NormalStyle = StructureShapeStyleProvider.GetNormalStyleForStructure(weir);
-                    freeFormatWeirShapeFeature.PolygonShapeFeature.SelectedStyle = StructureShapeStyleProvider.GetSelectedStyleForStructure(weir);
-                    freeFormatWeirShapeFeature.WaterStyle = new VectorStyle
-                    {
-                        Fill = new SolidBrush(Color.FromArgb(100, Color.LightCyan)),
-                    };
-                    freeFormatWeirShapeFeature.AddHover(new HoverText(GuiParameterNames.CrestWidth,
-                                                                      string.Format("{0:f2}m.", weir.CrestWidth),
-                                                                      freeFormatWeirShapeFeature.WaterShape,
-                                                                      Color.Black, HoverPosition.Top,
-                                                                      ArrowHeadPosition.LeftRight));
-                    weirShape = freeFormatWeirShapeFeature;
-
-                }
-            }
-            return weirShape;
         }
 
         /// <summary>
@@ -151,11 +55,110 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
         public override void Hover(List<Rectangle> usedSpace, VectorStyle style, Graphics graphics)
         {
             IShapeFeature shapeFeature = GetWeirShape();
-            IHover hover = shapeFeature as IHover;
+            var hover = shapeFeature as IHover;
             if (hover != null)
             {
                 hover.Hover(usedSpace, style, graphics);
             }
+        }
+
+        private void CalculateShapeFeatures()
+        {
+            bool oldStatus = Selected;
+            ShapeFeatures.Clear();
+
+            IShapeFeature weirShape = GetWeirShape();
+
+            ShapeFeatures.Add(weirShape);
+
+            Selected = oldStatus;
+        }
+
+        private IShapeFeature GetWeirShape()
+        {
+            double minZValue = ChartCoordinateService.ToWorldY(chart, chart.ChartBounds.Bottom);
+            double maxZValue = ChartCoordinateService.ToWorldY(chart, chart.ChartBounds.Top);
+
+            IShapeFeature weirShape;
+            if (weir.IsGated)
+            {
+                var gatedWeirFormula = (IGatedWeirFormula) weir.WeirFormula;
+                var gatedWeirShape = new GatedWeirShape(chart, weir.OffsetY, weir.CrestLevel,
+                                                        weir.CrestWidth, weir.CrestLevel + gatedWeirFormula.GateOpening,
+                                                        minZValue, maxZValue, false, true)
+                {
+                    NormalStyle = StructureShapeStyleProvider.GetNormalStyleForStructure(weir),
+                    SelectedStyle = StructureShapeStyleProvider.GetSelectedStyleForStructure(weir)
+                };
+                //gatedWeirShape.NormalStyle = StructureShapeStyleProvider.GetNormalStyleForStructure(weir);
+                //gatedWeirShape.SelectedStyle = StructureShapeStyleProvider.GetSelectedStyleForStructure(weir);
+                gatedWeirShape.WaterStyle = new VectorStyle
+                {
+                    Line = Pens.Transparent,
+                    Fill = new SolidBrush(Color.FromArgb(100, Color.LightCyan)),
+                };
+                gatedWeirShape.AddHover(new HoverText(GuiParameterNames.CrestLevel, string.Format("{0:f2}m.", weir.CrestLevel),
+                                                      gatedWeirShape.WeirShape, Color.Black, HoverPosition.Left,
+                                                      ArrowHeadPosition.Top));
+                gatedWeirShape.AddHover(new HoverText(GuiParameterNames.CrestWidth, string.Format("{0:f2}m.", weir.CrestWidth),
+                                                      gatedWeirShape.WeirShape, Color.Black, HoverPosition.Bottom,
+                                                      ArrowHeadPosition.LeftRight));
+                gatedWeirShape.AddHover(new HoverText(GuiParameterNames.GateLowerEdgeLevel,
+                                                      string.Format("{0:f2}m.", gatedWeirFormula.GateOpening),
+                                                      gatedWeirShape.WaterShape, Color.Black, HoverPosition.Left,
+                                                      ArrowHeadPosition.TopDown));
+                weirShape = gatedWeirShape;
+            }
+            else
+            {
+                if (weir.IsRectangle)
+                {
+                    var weirShapeFeature = new WeirShapeFeature(chart,
+                                                                weir.OffsetY,
+                                                                weir.CrestLevel,
+                                                                weir.OffsetY + weir.CrestWidth,
+                                                                minZValue, maxZValue)
+                    {
+                        WeirShape =
+                        {
+                            NormalStyle = StructureShapeStyleProvider.GetNormalStyleForStructure(weir),
+                            SelectedStyle = StructureShapeStyleProvider.GetSelectedStyleForStructure(weir)
+                        },
+                        WaterStyle = new VectorStyle
+                        {
+                            Line = Pens.Transparent,
+                            Fill = new SolidBrush(Color.FromArgb(100, Color.LightCyan)),
+                        }
+                    };
+
+                    weirShapeFeature.AddHover(new HoverText(GuiParameterNames.CrestWidth, string.Format("{0:f2}m.", weir.CrestWidth),
+                                                            weirShapeFeature.WaterShape, Color.Black, HoverPosition.Top,
+                                                            ArrowHeadPosition.LeftRight));
+                    weirShapeFeature.AddHover(new HoverText(GuiParameterNames.CrestLevel, string.Format("{0:f2}m.", weir.CrestLevel),
+                                                            weirShapeFeature.WeirShape, Color.Black, HoverPosition.Left,
+                                                            ArrowHeadPosition.Top));
+                    weirShape = weirShapeFeature;
+                }
+                else
+                {
+                    var freeFormWeirFormula = (FreeFormWeirFormula) weir.WeirFormula;
+                    var freeFormatWeirShapeFeature = new FreeFormatWeirShapeFeature(chart, weir, freeFormWeirFormula.Shape, minZValue, maxZValue);
+                    freeFormatWeirShapeFeature.PolygonShapeFeature.NormalStyle = StructureShapeStyleProvider.GetNormalStyleForStructure(weir);
+                    freeFormatWeirShapeFeature.PolygonShapeFeature.SelectedStyle = StructureShapeStyleProvider.GetSelectedStyleForStructure(weir);
+                    freeFormatWeirShapeFeature.WaterStyle = new VectorStyle
+                    {
+                        Fill = new SolidBrush(Color.FromArgb(100, Color.LightCyan)),
+                    };
+                    freeFormatWeirShapeFeature.AddHover(new HoverText(GuiParameterNames.CrestWidth,
+                                                                      string.Format("{0:f2}m.", weir.CrestWidth),
+                                                                      freeFormatWeirShapeFeature.WaterShape,
+                                                                      Color.Black, HoverPosition.Top,
+                                                                      ArrowHeadPosition.LeftRight));
+                    weirShape = freeFormatWeirShapeFeature;
+                }
+            }
+
+            return weirShape;
         }
     }
 }

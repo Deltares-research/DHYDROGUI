@@ -29,26 +29,25 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Snapping
 
             if (StructureLayers == null)
             {
-                var layers = NewFeatureLayer.Map != null
-                                 ? NewFeatureLayer.Map.GetAllLayers(true).OfType<HydroRegionMapLayer>().Where(l => l.Region is IHydroNetwork)
-                                 : new List<HydroRegionMapLayer>();
-
+                IEnumerable<HydroRegionMapLayer> layers = NewFeatureLayer.Map != null
+                                                              ? NewFeatureLayer.Map.GetAllLayers(true).OfType<HydroRegionMapLayer>().Where(l => l.Region is IHydroNetwork)
+                                                              : new List<HydroRegionMapLayer>();
 
                 StructureLayers = layers.SelectMany(l => l.Layers)
                                         .OfType<VectorLayer>()
                                         .Where(l => l.DataSource != null &&
-                                                    l.DataSource.FeatureType.Implements(typeof (IStructure1D)) &&
+                                                    l.DataSource.FeatureType.Implements(typeof(IStructure1D)) &&
                                                     l.CustomRenderers.Any(r => r is StructureRenderer))
                                         .ToList();
             }
 
             // since we use rendered geometry - skip candidates and use rendered geometry
-            foreach (var layer in StructureLayers)
+            foreach (VectorLayer layer in StructureLayers)
             {
                 foreach (IStructure1D structure in layer.DataSource.Features)
                 {
-                    var renderer = (StructureRenderer)layer.CustomRenderers.FirstOrDefault();
-                    var renderedGeometry = renderer.GetRenderedFeatureGeometry(structure, layer);
+                    var renderer = (StructureRenderer) layer.CustomRenderers.FirstOrDefault();
+                    IGeometry renderedGeometry = renderer.GetRenderedFeatureGeometry(structure, layer);
 
                     if (!envelope.Intersects(renderedGeometry.EnvelopeInternal) || Equals(sourceFeature, structure))
                     {
@@ -64,7 +63,7 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Snapping
 
             // find index of snapped structure with a minimal distance
             var minDistance = double.MaxValue;
-            var minDistanceIndex = -1;
+            int minDistanceIndex = -1;
 
             for (var i = 0; i < structures.Count; i++)
             {
@@ -77,10 +76,10 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Snapping
 
             if (minDistanceIndex != -1)
             {
-                var structure = structures[minDistanceIndex];
-                var layer = structureLayers[minDistanceIndex];
-                var geometry = structureRenderedGeometries[minDistanceIndex];
-                var index = structure.ParentStructure.Structures.IndexOf(structure);
+                IStructure1D structure = structures[minDistanceIndex];
+                ILayer layer = structureLayers[minDistanceIndex];
+                IGeometry geometry = structureRenderedGeometries[minDistanceIndex];
+                int index = structure.ParentStructure.Structures.IndexOf(structure);
 
                 // In the event that the model's network has a different coordinate system to the map,
                 // transform the geometry of the retrieved structure from model coordinate system to map coordinate system before snapping
@@ -90,7 +89,8 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Snapping
                 {
                     transformedGeometry = GeometryTransform.TransformGeometry(structure.Geometry, layer.CoordinateTransformation.MathTransform);
                 }
-                var geometryToSnap = transformedGeometry != null ? transformedGeometry.EnvelopeInternal.Centre : structure.Geometry.EnvelopeInternal.Centre;
+
+                Coordinate geometryToSnap = transformedGeometry != null ? transformedGeometry.EnvelopeInternal.Centre : structure.Geometry.EnvelopeInternal.Centre;
 
                 return new SnapResult(geometryToSnap, structure, layer, null, index, index)
                 {

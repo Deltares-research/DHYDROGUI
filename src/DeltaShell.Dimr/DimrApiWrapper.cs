@@ -7,7 +7,7 @@ namespace DeltaShell.Dimr
     public static class DimrApiWrapper
     {
         [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-        public delegate void Message_Callback([MarshalAs(UnmanagedType.LPStr)]string time, [MarshalAs(UnmanagedType.LPStr)]string message, [MarshalAs(UnmanagedType.U4)]uint level);
+        public delegate void Message_Callback([MarshalAs(UnmanagedType.LPStr)] string time, [MarshalAs(UnmanagedType.LPStr)] string message, [MarshalAs(UnmanagedType.U4)] uint level);
 
         [DllImport(DimrApiDataSet.DimrDllName, EntryPoint = "set_logger_callback", CallingConvention = CallingConvention.Cdecl)]
         public static extern int set_logger_callback([MarshalAs(UnmanagedType.FunctionPtr)] Message_Callback c_message_callback);
@@ -41,6 +41,5 @@ namespace DeltaShell.Dimr
 
         [DllImport(DimrApiDataSet.DimrDllName, EntryPoint = "set_logger", CallingConvention = CallingConvention.Cdecl)]
         public static extern void set_logger(Logger logger);
-
     }
 }

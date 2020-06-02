@@ -31,30 +31,45 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
         public override string Name
         {
-            get { return "Hydro Model"; }
+            get
+            {
+                return "Hydro Model";
+            }
         }
 
         public override string DisplayName
         {
-            get { return DelftTools.Shell.Core.Properties.Resources.HydroModelApplicationPlugin_DisplayName_Hydro_Model_Plugin; }
+            get
+            {
+                return DelftTools.Shell.Core.Properties.Resources.HydroModelApplicationPlugin_DisplayName_Hydro_Model_Plugin;
+            }
         }
 
         public override string Description
         {
-            get { return Properties.Resources.HydroModelApplicationPlugin_Description; }
+            get
+            {
+                return Properties.Resources.HydroModelApplicationPlugin_Description;
+            }
         }
 
         public override string Version
         {
-            get { return GetType().Assembly.GetName().Version.ToString(); }
+            get
+            {
+                return GetType().Assembly.GetName().Version.ToString();
+            }
         }
 
         public override string FileFormatVersion
 
         {
-            get { return "1.1.1.0"; }
+            get
+            {
+                return "1.1.1.0";
+            }
         }
-        
+
         public override IApplication Application
         {
             get
@@ -85,6 +100,64 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                     Application.ProjectClosing += ApplicationProjectClosing;
                 }
             }
+        }
+
+        public override IEnumerable<ModelInfo> GetModelInfos()
+        {
+            var modelGroupNameLookUp = new Dictionary<ModelGroup, string>
+            {
+                {ModelGroup.Empty, DelftTools.Shell.Core.Properties.Resources.HydroModelApplicationPlugin_GetModelInfos_Empty_Integrated_Model},
+                {ModelGroup.FMWaveRtcModels, DelftTools.Shell.Core.Properties.Resources.HydroModelApplicationPlugin_GetModelInfos__2D_3D_Integrated_Model},
+            };
+
+            foreach (ModelGroup modelGroup in Enum.GetValues(typeof(ModelGroup)))
+            {
+                if (!HydroModel.CanBuildModel(modelGroup) || modelGroup == ModelGroup.All)
+                {
+                    continue;
+                }
+
+                yield return new ModelInfo
+                {
+                    Name = modelGroupNameLookUp[modelGroup],
+                    Category = DelftTools.Shell.Core.Properties.Resources.HydroModelApplicationPlugin_GetModelInfos__1D___2D___3D_Integrated_Models,
+                    GetParentProjectItem = owner =>
+                    {
+                        Folder rootFolder = Application?.Project?.RootFolder;
+                        return ApplicationPluginHelper.FindParentProjectItemInsideProject(rootFolder, owner) ?? rootFolder;
+                    },
+                    AdditionalOwnerCheck = owner => !(owner is ICompositeActivity), // Don't allow creation of sub-hydro models
+                    CreateModel = owner => HydroModel.BuildModel(modelGroup)
+                };
+            }
+        }
+
+        public override IEnumerable<Assembly> GetPersistentAssemblies()
+        {
+            yield return GetType().Assembly;
+        }
+
+        public override void Activate()
+        {
+            var initializeThread = new Thread(InitializeModelBuilder) {Priority = ThreadPriority.BelowNormal};
+            initializeThread.Start();
+
+            base.Activate();
+        }
+
+        public override IEnumerable<IFileExporter> GetFileExporters()
+        {
+            yield return new DHydroConfigXmlExporter();
+        }
+
+        public override IEnumerable<IFileImporter> GetFileImporters()
+        {
+            yield return new DHydroConfigXmlImporter(() => Application.FileImporters.OfType<IDimrModelFileImporter>().ToList());
+        }
+
+        public IEnumerable<IDataAccessListener> CreateDataAccessListeners()
+        {
+            return Enumerable.Empty<IDataAccessListener>();
         }
 
         private void ApplicationProjectClosing(Project project)
@@ -165,11 +238,14 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
         private void ApplicationProjectSaving(Project project)
         {
-            if (project == null || project.RootFolder == null) return;
+            if (project == null || project.RootFolder == null)
+            {
+                return;
+            }
 
             // go through all hydro models and unlink all objects that link between rtc and flowFM, 
             // because flow is not saved in the database.
-            foreach (var hydroModel in project.RootFolder.GetAllItemsRecursive().OfType<HydroModel>())
+            foreach (HydroModel hydroModel in project.RootFolder.GetAllItemsRecursive().OfType<HydroModel>())
             {
                 hydroModel.SaveLinks();
                 hydroModel.UnlinkAndRememberDataItems();
@@ -178,9 +254,12 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
         private void ApplicationProjectSavedOrFailed(Project project)
         {
-            if (project == null || project.RootFolder == null) return;
+            if (project == null || project.RootFolder == null)
+            {
+                return;
+            }
 
-            foreach (var hydroModel in project.RootFolder.GetAllItemsRecursive().OfType<HydroModel>())
+            foreach (HydroModel hydroModel in project.RootFolder.GetAllItemsRecursive().OfType<HydroModel>())
             {
                 hydroModel.RelinkDataItems();
             }
@@ -194,61 +273,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                 Log.Info(string.Format(DelftTools.Shell.Core.Properties.Resources.HydroModelApplicationPlugin_ActivityRunnerOnActivityStatusChanged_DeltaShell_version___0_, Application.Version));
                 Log.Info(Application.PluginVersions);
             }
-        }
-
-        public override IEnumerable<ModelInfo> GetModelInfos()
-        {
-            var modelGroupNameLookUp = new Dictionary<ModelGroup, string>
-                {
-                    {ModelGroup.Empty, DelftTools.Shell.Core.Properties.Resources.HydroModelApplicationPlugin_GetModelInfos_Empty_Integrated_Model},
-                    {ModelGroup.FMWaveRtcModels, DelftTools.Shell.Core.Properties.Resources.HydroModelApplicationPlugin_GetModelInfos__2D_3D_Integrated_Model},
-                };
-
-            foreach (ModelGroup modelGroup in Enum.GetValues(typeof(ModelGroup)))
-            {
-                if (!HydroModel.CanBuildModel(modelGroup) || modelGroup == ModelGroup.All) continue;
-
-                yield return new ModelInfo
-                {
-                    Name = modelGroupNameLookUp[modelGroup],
-                    Category = DelftTools.Shell.Core.Properties.Resources.HydroModelApplicationPlugin_GetModelInfos__1D___2D___3D_Integrated_Models,
-                    GetParentProjectItem = owner =>
-                    {
-                        Folder rootFolder = Application?.Project?.RootFolder;
-                        return ApplicationPluginHelper.FindParentProjectItemInsideProject(rootFolder, owner) ?? rootFolder;
-                    },
-                    AdditionalOwnerCheck = owner => !(owner is ICompositeActivity), // Don't allow creation of sub-hydro models
-                    CreateModel = owner => HydroModel.BuildModel(modelGroup)
-                };
-            }
-        }
-
-        public IEnumerable<IDataAccessListener> CreateDataAccessListeners()
-        {
-            return Enumerable.Empty<IDataAccessListener>();
-        }
-
-        public override IEnumerable<Assembly> GetPersistentAssemblies()
-        {
-            yield return GetType().Assembly;
-        }
-
-        public override void Activate()
-        {
-            var initializeThread = new Thread(InitializeModelBuilder) { Priority = ThreadPriority.BelowNormal };
-            initializeThread.Start();
-
-            base.Activate();
-        }
-
-        public override IEnumerable<IFileExporter> GetFileExporters()
-        {
-            yield return new DHydroConfigXmlExporter();
-        }
-
-        public override IEnumerable<IFileImporter> GetFileImporters()
-        {
-            yield return new DHydroConfigXmlImporter(() => Application.FileImporters.OfType<IDimrModelFileImporter>().ToList());
         }
 
         /// <summary>

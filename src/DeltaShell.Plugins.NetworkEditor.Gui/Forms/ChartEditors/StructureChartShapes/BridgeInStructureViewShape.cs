@@ -12,6 +12,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
 {
     public class BridgeInStructureViewShape : CompositeShapeFeature
     {
+        private const int SurfaceHeight = 3;
+        private const int SurfaceOverhang = 3;
         private readonly IBridge bridge;
 
         private VectorStyle selectedCrossSectionStyle;
@@ -19,49 +21,15 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
 
         private VectorStyle normalSurfaceStyle;
         private VectorStyle selectedSurfaceStyle;
-        private const int SurfaceHeight = 3;
-        private const int SurfaceOverhang = 3;
 
-        public BridgeInStructureViewShape(IChart chart, IBridge bridge):base(chart)
+        public BridgeInStructureViewShape(IChart chart, IBridge bridge) : base(chart)
         {
             this.bridge = bridge;
 
             CreateStyles();
-            
+
             CalculateShapeFeatures();
         }
-
-        private void CreateStyles()
-        {
-            var alpha = 40;
-
-            normalCrossSectionStyle = new VectorStyle
-            {
-                Fill = new SolidBrush(Color.FromArgb(alpha, Color.LightBlue)),
-                Line = new Pen(Color.FromArgb(alpha, Color.Black))
-            };
-
-            selectedCrossSectionStyle = new VectorStyle
-                                          {
-                                              //solid black
-                                              Fill = new SolidBrush(Color.LightBlue),
-                                              Line = new Pen(Color.Black)
-                                          };
-
-            normalSurfaceStyle = new VectorStyle
-                               {
-                                   Fill = new SolidBrush(Color.FromArgb(alpha, Color.Black)),
-                                   Line = new Pen(Color.FromArgb(alpha, Color.Black))
-                               };
-            selectedSurfaceStyle = new VectorStyle
-            {
-                Fill = new SolidBrush(Color.Black),
-                Line = new Pen(Color.Black)
-            };
-
-        }
-
-
 
         /// <summary>
         /// Custom paint method since x of level lines is dependend of zoom-level
@@ -82,6 +50,35 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
             //get current shapes
         }
 
+        private void CreateStyles()
+        {
+            var alpha = 40;
+
+            normalCrossSectionStyle = new VectorStyle
+            {
+                Fill = new SolidBrush(Color.FromArgb(alpha, Color.LightBlue)),
+                Line = new Pen(Color.FromArgb(alpha, Color.Black))
+            };
+
+            selectedCrossSectionStyle = new VectorStyle
+            {
+                //solid black
+                Fill = new SolidBrush(Color.LightBlue),
+                Line = new Pen(Color.Black)
+            };
+
+            normalSurfaceStyle = new VectorStyle
+            {
+                Fill = new SolidBrush(Color.FromArgb(alpha, Color.Black)),
+                Line = new Pen(Color.FromArgb(alpha, Color.Black))
+            };
+            selectedSurfaceStyle = new VectorStyle
+            {
+                Fill = new SolidBrush(Color.Black),
+                Line = new Pen(Color.Black)
+            };
+        }
+
         private double GetWorldWidth(int deviceWidth)
         {
             return ChartCoordinateService.ToWorldWidth(Chart, deviceWidth);
@@ -96,18 +93,18 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
         /// delivery is left if we bridge along the branch and the axis is reversed
         /// or we bridge against the branch and the axis was not reversed
         /// </summary>
-
         private void CalculateShapeFeatures()
         {
             //keep selection
-            var oldStatus = Selected;
+            bool oldStatus = Selected;
             ShapeFeatures.Clear();
             PolygonShapeFeature crossSectionFeature = GetCrossSectionFeature();
-            var surfaceFeature = GetSurfaceFeature();
+            FixedRectangleShapeFeature surfaceFeature = GetSurfaceFeature();
             if (surfaceFeature != null)
             {
                 ShapeFeatures.Add(surfaceFeature);
             }
+
             if (crossSectionFeature != null)
             {
                 ShapeFeatures.Add(crossSectionFeature);
@@ -126,10 +123,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
             VectorStyle normalStyle = CulvertStyling.NormalInletStyle;
             VectorStyle selectedStyle = CulvertStyling.SelectedInletStyle;
 
-            var level = bridge.GroundLayerThickness + bridge.EffectiveCrossSectionDefinition.LowestPoint;
+            double level = bridge.GroundLayerThickness + bridge.EffectiveCrossSectionDefinition.LowestPoint;
 
-            var worldWidth = bridge.EffectiveCrossSectionDefinition.Width;
-            var x = bridge.OffsetY;
+            double worldWidth = bridge.EffectiveCrossSectionDefinition.Width;
+            double x = bridge.OffsetY;
 
             var feature = new FixedRectangleShapeFeature(Chart, x, level, worldWidth, 3, true, false)
             {
@@ -147,28 +144,32 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
         private FixedRectangleShapeFeature GetSurfaceFeature()
         {
             if (bridge.IsPillar)
+            {
                 return null;
+            }
 
             IList<Coordinate> yzValues = bridge.EffectiveCrossSectionDefinition.FlowProfile.ToList();
 
             if (yzValues.Count <= 2)
+            {
                 return null;
+            }
 
-            var centerY = bridge.OffsetY + bridge.EffectiveCrossSectionDefinition.Width/2.0;
-            var maxY = yzValues.Select(x => x.X).Max() + GetWorldWidth(SurfaceOverhang);
-            var minY = yzValues.Select(x => x.X).Min() - GetWorldWidth(SurfaceOverhang);
-            var minZ = yzValues.Select(x => x.Y).Max();
+            double centerY = bridge.OffsetY + (bridge.EffectiveCrossSectionDefinition.Width / 2.0);
+            double maxY = yzValues.Select(x => x.X).Max() + GetWorldWidth(SurfaceOverhang);
+            double minY = yzValues.Select(x => x.X).Min() - GetWorldWidth(SurfaceOverhang);
+            double minZ = yzValues.Select(x => x.Y).Max();
 
             //draw a shape of 3 pixels height over spanning the points above 3 pixels left and right
 
-            var feature = new FixedRectangleShapeFeature(Chart, minY + centerY - GetWorldWidth(SurfaceOverhang),
+            var feature = new FixedRectangleShapeFeature(Chart, (minY + centerY) - GetWorldWidth(SurfaceOverhang),
                                                          minZ + GetWorldHeigth(SurfaceHeight),
-                                                         (maxY - minY) + GetWorldWidth(SurfaceOverhang*2), SurfaceHeight,
+                                                         (maxY - minY) + GetWorldWidth(SurfaceOverhang * 2), SurfaceHeight,
                                                          true, false)
-                              {
-                                  NormalStyle = normalSurfaceStyle,
-                                  SelectedStyle = selectedSurfaceStyle
-                              };
+            {
+                NormalStyle = normalSurfaceStyle,
+                SelectedStyle = selectedSurfaceStyle
+            };
 
             return feature;
         }
@@ -176,23 +177,28 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
         private PolygonShapeFeature GetCrossSectionFeature()
         {
             if (bridge.IsPillar)
+            {
                 return null;
+            }
 
             IList<Coordinate> coordinates = bridge.EffectiveCrossSectionDefinition.FlowProfile.ToList();
 
             if (coordinates.Count <= 2)
+            {
                 return null;
+            }
+
             double min = coordinates.Min(c => c.X);
             // calculation of offset in profile is done in structure view; bridge.OffsetY is the left most absolute value
-            var drawCoordinates =
-                coordinates.Select(c => new Coordinate(c.X + bridge.OffsetY - min, c.Y)).ToList();
+            List<Coordinate> drawCoordinates =
+                coordinates.Select(c => new Coordinate((c.X + bridge.OffsetY) - min, c.Y)).ToList();
             //add the first as the last so we get a closed ring
             drawCoordinates.Add(drawCoordinates.First());
 
             ILinearRing newLinearRing = GeometryFactory.CreateLinearRing(drawCoordinates.ToArray());
             IPolygon polygon = GeometryFactory.CreatePolygon(newLinearRing, null);
             var feature = new PolygonShapeFeature(Chart, polygon);
-            
+
             feature.NormalStyle = normalCrossSectionStyle;
             feature.SelectedStyle = selectedCrossSectionStyle;
             return feature;

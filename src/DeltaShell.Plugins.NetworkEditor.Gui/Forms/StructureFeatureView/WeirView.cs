@@ -18,9 +18,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
 {
     public partial class WeirView : UserControl, IView
     {
+        private const string NumberFormat = "{0:0.000}";
         private static readonly ILog Log = LogManager.GetLogger(typeof(WeirView));
 
-        private const string NumberFormat = "{0:0.000}";
+        private readonly WeirViewData weirViewData;
 
         private string useMaxFlowNegPropertyName;
         private string useMaxFlowPosPropertyName;
@@ -29,24 +30,38 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
         private string widthStructureCenterPropertyName;
         private string useLowerEdgeLevelTimeSeriesPropertyName;
 
-        private readonly WeirViewData weirViewData;
-        
         private bool handlingPropertyChanged;
         private IWeir data;
 
+        public WeirView() : this(null) {}
+
+        public WeirView(IEnumerable<IWeirFormula> supportedFormulas)
+        {
+            SetConstants();
+
+            weirViewData = new WeirViewData(supportedFormulas);
+            InitializeComponent();
+            FillCombobox(comboBoxWeirFormula, weirViewData.GetWeirFormulaTypes(), ComboBoxWeirFormulaSelectedIndexChanged);
+            FillCombobox(comboBoxCrestShape, weirViewData.GetCrestShapes(), ComboBoxCrestShapeSelectedIndexChanged);
+        }
+
         public object Data
         {
-            get { return data; }
+            get
+            {
+                return data;
+            }
             set
             {
                 if (data != null)
                 {
                     UnSubscribeToWeir();
                 }
-                data = (IWeir)value;
+
+                data = (IWeir) value;
 
                 //set formula etc in data class
-                bindingSourceWeir.DataSource = (object)Data ?? typeof(Weir);
+                bindingSourceWeir.DataSource = (object) Data ?? typeof(Weir);
 
                 if (value == null)
                 {
@@ -62,21 +77,19 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
                 {
                     SubscribeToWeir();
                 }
+
                 ConfigureTimeDependentControls();
             }
         }
 
-        public WeirView() : this(null){ }
+        /// <summary>
+        /// Sets or gets image set on the title of the view.
+        /// </summary>
+        public Image Image { get; set; }
 
-        public WeirView(IEnumerable<IWeirFormula> supportedFormulas)
-        {
-            SetConstants();
+        public ViewInfo ViewInfo { get; set; }
 
-            weirViewData = new WeirViewData(supportedFormulas);
-            InitializeComponent();
-            FillCombobox(comboBoxWeirFormula, weirViewData.GetWeirFormulaTypes(), ComboBoxWeirFormulaSelectedIndexChanged);
-            FillCombobox(comboBoxCrestShape, weirViewData.GetCrestShapes(), ComboBoxCrestShapeSelectedIndexChanged);
-        }
+        public void EnsureVisible(object item) {}
 
         private void SetConstants()
         {
@@ -109,14 +122,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
             }
         }
 
-        /// <summary>
-        /// Sets or gets image set on the title of the view.
-        /// </summary>
-        public Image Image { get; set; }
-
-        public void EnsureVisible(object item) { }
-        public ViewInfo ViewInfo { get; set; }
-
         private static void FillCombobox<T>(ComboBox comboBox, IDictionary<string, T> dictionary, EventHandler indexChangedEventHandler)
         {
             var bindingList = new ThreadsafeBindingList<string>(SynchronizationContext.Current, dictionary.Keys.ToList());
@@ -129,19 +134,22 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
 
         private void SubscribeToWeir()
         {
-            ((INotifyPropertyChanged)data).PropertyChanged += WeirPropertyChanged;
+            ((INotifyPropertyChanged) data).PropertyChanged += WeirPropertyChanged;
         }
 
         private void UnSubscribeToWeir()
         {
-            ((INotifyPropertyChanged)data).PropertyChanged -= WeirPropertyChanged;
+            ((INotifyPropertyChanged) data).PropertyChanged -= WeirPropertyChanged;
         }
 
         //TODO: get this in a weirviewcontroller? has pro's (Testabilility) and cons (view gets more complex,more players involved)
         //if view gets too complex move towards controller.
         private void WeirPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (handlingPropertyChanged) return;
+            if (handlingPropertyChanged)
+            {
+                return;
+            }
 
             handlingPropertyChanged = true;
 
@@ -153,7 +161,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
                 return;
             }
 
-            if (sender is IGatedWeirFormula && 
+            if (sender is IGatedWeirFormula &&
                 (e.PropertyName == gateOpeningPropertyName || e.PropertyName == useLowerEdgeLevelTimeSeriesPropertyName))
             {
                 RenderGateControls();
@@ -194,7 +202,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
         private void RenderGateControls()
         {
             var igatedWeirFormula = data.WeirFormula as IGatedWeirFormula;
-            groupBoxGate.Enabled = (igatedWeirFormula != null);
+            groupBoxGate.Enabled = igatedWeirFormula != null;
 
             if (igatedWeirFormula != null)
             {
@@ -222,7 +230,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
             }
         }
 
-        private void RenderControls()   
+        private void RenderControls()
         {
             RenderGateControls();
             RenderMaxFlowControls();
@@ -231,15 +239,15 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
             comboBoxCrestShape.SelectedItem = weirViewData.GetCrestShapeName(data.CrestShape);
             comboBoxCrestShape.Enabled = data.WeirFormula is RiverWeirFormula;
             labelCrestShape.Enabled = data.WeirFormula is RiverWeirFormula;
-            labelGeometry.Text = (data.WeirFormula is FreeFormWeirFormula) ? "Free Form" : "Rectangle";
+            labelGeometry.Text = data.WeirFormula is FreeFormWeirFormula ? "Free Form" : "Rectangle";
         }
 
         private void RenderMaxFlowControls()
         {
             var gatedWeirFormula = data.WeirFormula as GatedWeirFormula;
 
-            var activePos = data.AllowPositiveFlow && gatedWeirFormula != null;
-            var activeneg = data.AllowNegativeFlow && gatedWeirFormula != null;
+            bool activePos = data.AllowPositiveFlow && gatedWeirFormula != null;
+            bool activeneg = data.AllowNegativeFlow && gatedWeirFormula != null;
 
             checkBoxMaxPos.Enabled = activePos;
             checkBoxMaxNeg.Enabled = activeneg;
@@ -279,53 +287,58 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
 
         private void ComboBoxCrestShapeSelectedIndexChanged(object sender, EventArgs e)
         {
-            var crestShape = weirViewData.GetCrestShape((string) comboBoxCrestShape.SelectedItem);
+            CrestShape crestShape = weirViewData.GetCrestShape((string) comboBoxCrestShape.SelectedItem);
             if (crestShape == data.CrestShape)
             {
                 return;
             }
+
             data.CrestShape = crestShape;
-            if(data.WeirFormula is RiverWeirFormula)
+            if (data.WeirFormula is RiverWeirFormula)
             {
-                SetCorrectionCoefficientAndSubmergeLimit((RiverWeirFormula)data.WeirFormula, data.CrestShape);
+                SetCorrectionCoefficientAndSubmergeLimit((RiverWeirFormula) data.WeirFormula, data.CrestShape);
             }
+
             RenderFormulaControls();
         }
 
         private void ComboBoxWeirFormulaSelectedIndexChanged(object sender, EventArgs e)
-       {
-           var selectedFormulaType = weirViewData.GetWeirFormulaType((string) comboBoxWeirFormula.SelectedItem);
+        {
+            Type selectedFormulaType = weirViewData.GetWeirFormulaType((string) comboBoxWeirFormula.SelectedItem);
 
-           if (data.WeirFormula.GetType() == selectedFormulaType)
-           {
-               return;
-           }
-           data.WeirFormula = weirViewData.GetWeirCurrentFormula(selectedFormulaType);
-           if (data.WeirFormula is RiverWeirFormula)
-           {
-               SetCorrectionCoefficientAndSubmergeLimit((RiverWeirFormula) data.WeirFormula, data.CrestShape);
-           }
-       }
+            if (data.WeirFormula.GetType() == selectedFormulaType)
+            {
+                return;
+            }
+
+            data.WeirFormula = weirViewData.GetWeirCurrentFormula(selectedFormulaType);
+            if (data.WeirFormula is RiverWeirFormula)
+            {
+                SetCorrectionCoefficientAndSubmergeLimit((RiverWeirFormula) data.WeirFormula, data.CrestShape);
+            }
+        }
 
         private void RenderFormulaControls()
         {
-            foreach (var disposableControl in panelFormula.Controls.OfType<IDisposable>())
+            foreach (IDisposable disposableControl in panelFormula.Controls.OfType<IDisposable>())
             {
                 disposableControl.Dispose();
             }
+
             panelFormula.Controls.Clear();
 
-            var formulaControl = CreateWeirFormulaControl(data.WeirFormula);
+            Control formulaControl = CreateWeirFormulaControl(data.WeirFormula);
             if (formulaControl != null) // gated weir doesn't have formula
             {
                 groupBoxFormula.Visible = true;
                 panelFormula.Controls.Add(formulaControl);
                 panelFormula.MinimumSize = new Size(formulaControl.Width, formulaControl.Height);
             }
-            groupBoxFormula.Visible = (formulaControl != null);//don't show empty groupbox
+
+            groupBoxFormula.Visible = formulaControl != null; //don't show empty groupbox
             //only select flow direction if applicable for formula.
             labelFlowDirection.Enabled = data.WeirFormula.HasFlowDirection;
-            checkBoxAllowNegativeFlow.Enabled= data.WeirFormula.HasFlowDirection;
+            checkBoxAllowNegativeFlow.Enabled = data.WeirFormula.HasFlowDirection;
             checkBoxAllowPositiveFlow.Enabled = data.WeirFormula.HasFlowDirection;
         }
 
@@ -334,37 +347,37 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
             var simpleWeirFormula = weirFormula as SimpleWeirFormula;
             if (simpleWeirFormula != null)
             {
-                return new SimpleWeirFormulaView{Data = simpleWeirFormula};
+                return new SimpleWeirFormulaView {Data = simpleWeirFormula};
             }
 
             var riverWeirFormula = weirFormula as RiverWeirFormula;
             if (riverWeirFormula != null)
             {
-                return new RiverWeirFormulaView { Data = riverWeirFormula };
+                return new RiverWeirFormulaView {Data = riverWeirFormula};
             }
 
             var pierWeirFormula = weirFormula as PierWeirFormula;
             if (pierWeirFormula != null)
             {
-                return new PierWeirFormulaView { Data = pierWeirFormula };
+                return new PierWeirFormulaView {Data = pierWeirFormula};
             }
-            
+
             var freeFormWeirFormula = weirFormula as FreeFormWeirFormula;
             if (freeFormWeirFormula != null)
             {
-                return new FreeFormWeirFormulaView { Data = freeFormWeirFormula };
+                return new FreeFormWeirFormulaView {Data = freeFormWeirFormula};
             }
 
             var gatedWeirFormula = weirFormula as GatedWeirFormula;
             if (gatedWeirFormula != null)
             {
-                return new GatedWeirFormulaView { Data = gatedWeirFormula };
+                return new GatedWeirFormulaView {Data = gatedWeirFormula};
             }
 
             var generalStructureWeirFormula = weirFormula as GeneralStructureWeirFormula;
             if (generalStructureWeirFormula != null)
             {
-                return new GeneralStructureWeirFormulaView { Data = generalStructureWeirFormula };
+                return new GeneralStructureWeirFormulaView {Data = generalStructureWeirFormula};
             }
 
             return null;
@@ -377,9 +390,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
             {
                 return;
             }
-            
+
             double opening;
-            if (Double.TryParse(textBoxGateOpening.Text, out opening))
+            if (double.TryParse(textBoxGateOpening.Text, out opening))
             {
                 if (opening < 0)
                 {
@@ -400,22 +413,24 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
             {
                 return;
             }
+
             double lowerEdge;
-            if (Double.TryParse(textBoxLowerEdgeLevel.Text, out lowerEdge))
+            if (double.TryParse(textBoxLowerEdgeLevel.Text, out lowerEdge))
             {
                 if (lowerEdge < data.CrestLevel)
                 {
                     lowerEdge = data.CrestLevel;
                     Log.WarnFormat("Gate lower edge can not be smaller than crest level, lower edge is set to crest level");
                 }
+
                 gatedWeirFormula.GateOpening = lowerEdge - data.CrestLevel;
             }
         }
 
         private static void SetCorrectionCoefficientAndSubmergeLimit(RiverWeirFormula weirFormula, CrestShape crestShape)
         {
-            double correctionCoefficient = 0.0;
-            double submergeReductionLimit = 0.0;
+            var correctionCoefficient = 0.0;
+            var submergeReductionLimit = 0.0;
             IFunction submergeReduction = null;
 
             switch (crestShape)
@@ -440,23 +455,21 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
                     submergeReductionLimit = 0.67;
                     submergeReduction = RiverWeirFormula.CrestTriangularSubmergeReduction;
                     break;
-
             }
 
             weirFormula.CorrectionCoefficientPos = correctionCoefficient;
             weirFormula.CorrectionCoefficientNeg = correctionCoefficient;
             weirFormula.SubmergeLimitPos = submergeReductionLimit;
             weirFormula.SubmergeLimitNeg = submergeReductionLimit;
-            weirFormula.SubmergeReductionPos = submergeReduction; 
+            weirFormula.SubmergeReductionPos = submergeReduction;
             weirFormula.SubmergeReductionNeg = submergeReduction;
-            
         }
 
         private void TextBoxMaxPosValidated(object sender, EventArgs e)
         {
             double maxPos;
             var gatedWeirFormula = data.WeirFormula as GatedWeirFormula;
-            if ((Double.TryParse(textBoxMaxPos.Text, out maxPos)) && (gatedWeirFormula != null))
+            if (double.TryParse(textBoxMaxPos.Text, out maxPos) && gatedWeirFormula != null)
             {
                 gatedWeirFormula.MaxFlowPos = maxPos;
             }
@@ -466,15 +479,15 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
         {
             double maxNeg;
             var gatedWeirFormula = data.WeirFormula as GatedWeirFormula;
-            if ((Double.TryParse(textBoxMaxNeg.Text, out maxNeg)) && (gatedWeirFormula != null))
+            if (double.TryParse(textBoxMaxNeg.Text, out maxNeg) && gatedWeirFormula != null)
             {
-                gatedWeirFormula.MaxFlowNeg= maxNeg;
+                gatedWeirFormula.MaxFlowNeg = maxNeg;
             }
         }
 
         private void OpenCrestLevelTimeSeriesButton_Click(object sender, EventArgs e)
         {
-            var dialogData = (TimeSeries)data.CrestLevelTimeSeries.Clone();
+            var dialogData = (TimeSeries) data.CrestLevelTimeSeries.Clone();
             var editFunctionDialog = new EditFunctionDialog
             {
                 Text = "Time dependent crest level for Weir",
@@ -521,8 +534,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
         private void GateTimeDependentCheckBox_CheckedChanged(object sender, EventArgs e)
         {
             var gateTimeDependentCheckBox = (CheckBox) sender;
-           
-            var gatedWeirFormula = (GatedWeirFormula)data.WeirFormula;
+
+            var gatedWeirFormula = (GatedWeirFormula) data.WeirFormula;
             gatedWeirFormula.UseLowerEdgeLevelTimeSeries = gateTimeDependentCheckBox.Checked;
             ConfigureUseLowerEdgeLevelTimeSeries(gatedWeirFormula);
         }
@@ -553,7 +566,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
         private void OpenLowerEdgeLevelTimeSeriesButton_Click(object sender, EventArgs e)
         {
             TimeSeries lowerEdgeLevelTimeSeries = ((GatedWeirFormula) data.WeirFormula).LowerEdgeLevelTimeSeries;
-            var dialogData = (TimeSeries)lowerEdgeLevelTimeSeries.Clone(true);
+            var dialogData = (TimeSeries) lowerEdgeLevelTimeSeries.Clone(true);
             var editFunctionDialog = new EditFunctionDialog
             {
                 Text = "Time dependent lower edge level for Weir",
@@ -584,13 +597,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
             }
 
             TimeSeries lowerEdgeLevelTimeSeries = ((GatedWeirFormula) data.WeirFormula).LowerEdgeLevelTimeSeries;
-            var dialogData = (TimeSeries)lowerEdgeLevelTimeSeries.Clone(true);
+            var dialogData = (TimeSeries) lowerEdgeLevelTimeSeries.Clone(true);
             dialogData.Components[0].SetValues(dialogData.Components[0].Values.Cast<double>().Select(v => v - data.CrestLevel));
 
             var editFunctionDialog = new EditFunctionDialog
             {
                 Text = "Time dependent gate opening for Weir",
-                ColumnNames = new[] 
+                ColumnNames = new[]
                 {
                     "Date time",
                     $"Gate opening [{GateOpeningUnitLabel.Text}]"

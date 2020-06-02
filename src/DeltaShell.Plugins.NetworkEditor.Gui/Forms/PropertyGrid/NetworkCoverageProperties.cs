@@ -16,6 +16,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
     [ResourcesDisplayName(typeof(Resources), "NetworkCoverageProperties_DisplayName")]
     public class NetworkCoverageProperties : ObjectProperties<INetworkCoverage>
     {
+        public enum NetworkCoverageInterpolationType
+        {
+            Constant,
+            Linear
+        }
+
         private static readonly ILog Log = LogManager.GetLogger(typeof(NetworkCoverageProperties));
 
         [Category("General")]
@@ -23,15 +29,24 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [DynamicReadOnly]
         public string Name
         {
-            get { return data.Name; }
-            set { data.Name = value; }
+            get
+            {
+                return data.Name;
+            }
+            set
+            {
+                data.Name = value;
+            }
         }
 
         [Category("General")]
         [Description("Method used to generate segments from location")]
         public SegmentGenerationMethod SegmentMethod
         {
-            get { return data.SegmentGenerationMethod; }
+            get
+            {
+                return data.SegmentGenerationMethod;
+            }
         }
 
         [Category("General")]
@@ -39,21 +54,74 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [DynamicReadOnly]
         public double DefaultValue
         {
-            get { return data.DefaultValue; }
-            set { data.DefaultValue = value; }
+            get
+            {
+                return data.DefaultValue;
+            }
+            set
+            {
+                data.DefaultValue = value;
+            }
         }
 
         [Category("General")]
         [DisplayName("Unit")]
         public string Unit
         {
-            get { return data.Components[0].Unit.Symbol; }
+            get
+            {
+                return data.Components[0].Unit.Symbol;
+            }
         }
 
-        public enum NetworkCoverageInterpolationType
+        [Category("Approximation")]
+        public ExtrapolationType ExtrapolationType
         {
-            Constant,
-            Linear
+            get
+            {
+                return data.Locations.ExtrapolationType;
+            }
+        }
+
+        [Category("Approximation")]
+        [DynamicReadOnly]
+        public NetworkCoverageInterpolationType InterpolationType
+        {
+            get
+            {
+                return ToNetworkCoverageInterpolationType(data.Locations.InterpolationType);
+            }
+            set
+            {
+                if (data.Locations.AllowSetInterpolationType)
+                {
+                    data.Locations.InterpolationType = FromNetworkCoverageInterpolationType(value);
+                }
+                else
+                {
+                    Log.WarnFormat("Unable to set interpolation-type for locations, it is not allowed.");
+                }
+            }
+        }
+
+        [TypeConverter(typeof(CoordinateSystemStringTypeConverter))]
+        public ICoordinateSystem CoordinateSystem
+        {
+            get
+            {
+                return data.CoordinateSystem;
+            }
+        }
+
+        [DynamicReadOnlyValidationMethod]
+        public bool ValidateDynamicAttributes(string propertyName)
+        {
+            if (propertyName.Equals("Name") || propertyName.Equals("InterpolationType") || propertyName.Equals("DefaultValue"))
+            {
+                return !data.IsEditable;
+            }
+
+            return false;
         }
 
         private NetworkCoverageInterpolationType ToNetworkCoverageInterpolationType(InterpolationType type)
@@ -80,47 +148,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
                 default:
                     throw new NotSupportedException("Interpolation type: " + type + " is not supported.");
             }
-        }
-
-        [Category("Approximation")]
-        public ExtrapolationType ExtrapolationType
-        {
-            get { return data.Locations.ExtrapolationType; }
-        }
-
-        [Category("Approximation")]
-        [DynamicReadOnly]
-        public NetworkCoverageInterpolationType InterpolationType
-        {
-            get { return ToNetworkCoverageInterpolationType(data.Locations.InterpolationType); }
-            set
-            {
-                if (data.Locations.AllowSetInterpolationType)
-                {
-                    data.Locations.InterpolationType = FromNetworkCoverageInterpolationType(value);    
-                }
-                else
-                {
-                    Log.WarnFormat("Unable to set interpolation-type for locations, it is not allowed.");
-                }
-            }
-        }
-
-        [DynamicReadOnlyValidationMethod]
-        public bool ValidateDynamicAttributes(string propertyName)
-        {
-            if (propertyName.Equals("Name") || propertyName.Equals("InterpolationType") || propertyName.Equals("DefaultValue"))
-            {
-                return !data.IsEditable;
-            }
-
-            return false;
-        }
-
-        [TypeConverter(typeof(CoordinateSystemStringTypeConverter))]
-        public ICoordinateSystem CoordinateSystem
-        {
-            get { return data.CoordinateSystem; }
         }
     }
 }

@@ -6,6 +6,7 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Collections.Generic;
+using DeltaShell.Plugins.NetworkEditor.Gui.Properties;
 using GeoAPI.Geometries;
 using SharpMap.Api;
 using SharpMap.Rendering.Thematics;
@@ -15,124 +16,118 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
 {
     public static class NetworkLayerStyleFactory
     {
-        public static VectorStyle CreateStyle(IEnumerable networkObjects, bool alternativeStyle=false)
+        public static VectorStyle CreateStyle(IEnumerable networkObjects, bool alternativeStyle = false)
         {
             if (networkObjects is IEventedList<HydroLink>)
             {
-                var linkEndCap = new AdjustableArrowCap(5, 5, true) { BaseCap = LineCap.Triangle };
+                var linkEndCap = new AdjustableArrowCap(5, 5, true) {BaseCap = LineCap.Triangle};
                 return new VectorStyle
+                {
+                    GeometryType = typeof(ILineString),
+                    EnableOutline = false,
+                    Line = new Pen(new SolidBrush(Color.FromArgb(80,
+                                                                 alternativeStyle
+                                                                     ? Color.FromArgb(80, Color.DarkCyan)
+                                                                     : Color.Chocolate)), 4f)
                     {
-                        GeometryType = typeof (ILineString),
-                        EnableOutline = false,
-                        Line = new Pen(new SolidBrush(Color.FromArgb(80,
-                                                              alternativeStyle
-                                                                  ? Color.FromArgb(80, Color.DarkCyan)
-                                                                  : Color.Chocolate)), 4f)
-                                {
-                                    CustomEndCap = linkEndCap,
-                                    DashStyle = DashStyle.Dash
-                                }
-                    };
+                        CustomEndCap = linkEndCap,
+                        DashStyle = DashStyle.Dash
+                    }
+                };
             }
 
             if (networkObjects is IEventedList<WasteWaterTreatmentPlant>)
             {
                 return new VectorStyle
-                           {
-                               GeometryType = typeof (IPoint),
-                               Symbol = (Properties.Resources.wwtp)
-                           };
+                {
+                    GeometryType = typeof(IPoint),
+                    Symbol = Resources.wwtp
+                };
             }
 
             if (networkObjects is IEventedList<RunoffBoundary>)
             {
                 return new VectorStyle
-                           {
-                               GeometryType = typeof (IPoint),
-                               Symbol = (Properties.Resources.runoff)
-                           };
+                {
+                    GeometryType = typeof(IPoint),
+                    Symbol = Resources.runoff
+                };
             }
 
             if (networkObjects is IEventedList<Catchment>)
             {
                 return new VectorStyle
-                           {
-                               GeometryType = typeof (IPolygon),
-                               Fill = new SolidBrush(Color.FromArgb(50, Color.LightSkyBlue)),
-                               Outline = new Pen(Color.FromArgb(100, Color.DarkBlue), 2f),
-                           };
+                {
+                    GeometryType = typeof(IPolygon),
+                    Fill = new SolidBrush(Color.FromArgb(50, Color.LightSkyBlue)),
+                    Outline = new Pen(Color.FromArgb(100, Color.DarkBlue), 2f),
+                };
             }
 
             if (networkObjects is IEnumerable<ILateralSource>)
             {
-                return CreatePointStyle(Properties.Resources.LateralSourceMap);
+                return CreatePointStyle(Resources.LateralSourceMap);
             }
 
             if (networkObjects is IEnumerable<IRetention>)
             {
-                return CreatePointStyle(Properties.Resources.Retention);
+                return CreatePointStyle(Resources.Retention);
             }
 
             if (networkObjects is IEnumerable<IObservationPoint>)
             {
-                return CreatePointStyle(Properties.Resources.Observation);
+                return CreatePointStyle(Resources.Observation);
             }
 
             if (networkObjects is IEnumerable<IWeir>)
             {
-                return CreatePointStyle(Properties.Resources.WeirSmall);
+                return CreatePointStyle(Resources.WeirSmall);
             }
 
             if (networkObjects is IEnumerable<ICulvert>)
             {
-                return CreatePointStyle(Properties.Resources.CulvertSmall);
+                return CreatePointStyle(Resources.CulvertSmall);
             }
 
             if (networkObjects is IEnumerable<IBridge>)
             {
-                return CreatePointStyle(Properties.Resources.BridgeSmall);
+                return CreatePointStyle(Resources.BridgeSmall);
             }
 
             if (networkObjects is IEnumerable<IExtraResistance>)
             {
-                return CreatePointStyle(Properties.Resources.ExtraResistanceSmall);
+                return CreatePointStyle(Resources.ExtraResistanceSmall);
             }
 
             if (networkObjects is IEnumerable<ICompositeBranchStructure>)
             {
                 return new VectorStyle
-                    {
-                        Fill = new SolidBrush(Color.SpringGreen),
-                        Line = new Pen(Color.Black, 1),
-                        GeometryType = typeof (IPolygon)
-                    };
+                {
+                    Fill = new SolidBrush(Color.SpringGreen),
+                    Line = new Pen(Color.Black, 1),
+                    GeometryType = typeof(IPolygon)
+                };
             }
 
             if (networkObjects is IEnumerable<ICrossSection>)
             {
                 return new VectorStyle
-                           {
-                               GeometryType = typeof (ILineString),
-                               Fill = new SolidBrush(Color.Tomato),
-                               Line = new Pen(Color.Indigo, 2)
-                           };
+                {
+                    GeometryType = typeof(ILineString),
+                    Fill = new SolidBrush(Color.Tomato),
+                    Line = new Pen(Color.Indigo, 2)
+                };
             }
 
             var channels = networkObjects as IEnumerable<IChannel>;
             if (channels != null)
             {
                 return new VectorStyle
-                           {
-                               GeometryType = typeof (ILineString),
-                               Line = new Pen(Color.SteelBlue, 3)
-                                          {
-                                              CustomEndCap = new AdjustableArrowCap(5, 5, true)
-                                                                 {
-                                                                     BaseCap = LineCap.Triangle
-                                                                 }
-                                          },
-                               EnableOutline = false
-                           };
+                {
+                    GeometryType = typeof(ILineString),
+                    Line = new Pen(Color.SteelBlue, 3) {CustomEndCap = new AdjustableArrowCap(5, 5, true) {BaseCap = LineCap.Triangle}},
+                    EnableOutline = false
+                };
             }
 
             return null;
@@ -143,20 +138,19 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             var nodes = networkObjects as IEnumerable<IHydroNode>;
             if (nodes != null)
             {
-                var onSingleBranchesStyle = CreatePointStyle(Properties.Resources.NodeOnSingleBranch);
-                var onMultipleBranchesStyle = CreatePointStyle(Properties.Resources.NodeOnMultipleBranches);
+                VectorStyle onSingleBranchesStyle = CreatePointStyle(Resources.NodeOnSingleBranch);
+                VectorStyle onMultipleBranchesStyle = CreatePointStyle(Resources.NodeOnMultipleBranches);
                 return new CategorialTheme
-                           {
-                               AttributeName = "IsOnSingleBranch",
-                               DefaultStyle = onSingleBranchesStyle,
-                               ThemeItems = new EventedList<IThemeItem>
-                                                {
-                                                    new CategorialThemeItem("True", onSingleBranchesStyle, onSingleBranchesStyle.Symbol, true),
-                                                    new CategorialThemeItem("False", onMultipleBranchesStyle, onMultipleBranchesStyle.Symbol, false)
-                                                }
-                           };
+                {
+                    AttributeName = "IsOnSingleBranch",
+                    DefaultStyle = onSingleBranchesStyle,
+                    ThemeItems = new EventedList<IThemeItem>
+                    {
+                        new CategorialThemeItem("True", onSingleBranchesStyle, onSingleBranchesStyle.Symbol, true),
+                        new CategorialThemeItem("False", onMultipleBranchesStyle, onMultipleBranchesStyle.Symbol, false)
+                    }
+                };
             }
-
 
             var channels = networkObjects as IEnumerable<IChannel>;
             if (channels != null)
@@ -164,59 +158,46 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 var branchStyle = new VectorStyle
                 {
                     GeometryType = typeof(ILineString),
-                    Line = new Pen(Color.SteelBlue, 3)
-                               {
-                                   CustomEndCap = new AdjustableArrowCap(5, 5, true)
-                                                      {
-                                                          BaseCap = LineCap.Triangle
-                                                      }
-                               },
+                    Line = new Pen(Color.SteelBlue, 3) {CustomEndCap = new AdjustableArrowCap(5, 5, true) {BaseCap = LineCap.Triangle}},
                     EnableOutline = false
                 };
 
                 var customBranchStyle = new VectorStyle
                 {
                     GeometryType = typeof(ILineString),
-                    Line = new Pen(Color.PowderBlue, 5)
-                               {
-                                   CustomEndCap = new AdjustableArrowCap(4, 4, true)
-                                                      {
-                                                          BaseCap = LineCap.Triangle
-                                                      }
-                               },
+                    Line = new Pen(Color.PowderBlue, 5) {CustomEndCap = new AdjustableArrowCap(4, 4, true) {BaseCap = LineCap.Triangle}},
                     EnableOutline = false
                 };
 
                 return new CategorialTheme
-                           {
-                               AttributeName = "IsLengthCustom",
-                               DefaultStyle = branchStyle,
-                               ThemeItems = new EventedList<IThemeItem>
-                                                {
-                                                    new CategorialThemeItem("True", customBranchStyle, null, true),
-                                                    new CategorialThemeItem("False", branchStyle, null, false)
-                                                }
-                           };
+                {
+                    AttributeName = "IsLengthCustom",
+                    DefaultStyle = branchStyle,
+                    ThemeItems = new EventedList<IThemeItem>
+                    {
+                        new CategorialThemeItem("True", customBranchStyle, null, true),
+                        new CategorialThemeItem("False", branchStyle, null, false)
+                    }
+                };
             }
 
             var pumps = networkObjects as IEnumerable<IPump>;
             if (pumps != null)
             {
-                var pumpPositiveStyle = CreatePointStyle(Properties.Resources.PumpSmallPositive);
-                var pumpNegativeStyle = CreatePointStyle(Properties.Resources.PumpSmallNegative);
+                VectorStyle pumpPositiveStyle = CreatePointStyle(Resources.PumpSmallPositive);
+                VectorStyle pumpNegativeStyle = CreatePointStyle(Resources.PumpSmallNegative);
 
                 return new CategorialTheme
-                           {
-                               AttributeName = "DirectionIsPositive", 
-                               DefaultStyle = pumpNegativeStyle,
-                               ThemeItems = new EventedList<IThemeItem>
-                                                {
-                                                    new CategorialThemeItem("True", pumpPositiveStyle, pumpPositiveStyle.Symbol, true),
-                                                    new CategorialThemeItem("False", pumpNegativeStyle, pumpNegativeStyle.Symbol, false)
-                                                }
-                           };
+                {
+                    AttributeName = "DirectionIsPositive",
+                    DefaultStyle = pumpNegativeStyle,
+                    ThemeItems = new EventedList<IThemeItem>
+                    {
+                        new CategorialThemeItem("True", pumpPositiveStyle, pumpPositiveStyle.Symbol, true),
+                        new CategorialThemeItem("False", pumpNegativeStyle, pumpNegativeStyle.Symbol, false)
+                    }
+                };
             }
-
 
             return null;
         }
@@ -224,10 +205,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
         private static VectorStyle CreatePointStyle(Bitmap bitmap)
         {
             return new VectorStyle
-                       {
-                           GeometryType = typeof (IPoint),
-                           Symbol = bitmap
-                       };
+            {
+                GeometryType = typeof(IPoint),
+                Symbol = bitmap
+            };
         }
     }
 }

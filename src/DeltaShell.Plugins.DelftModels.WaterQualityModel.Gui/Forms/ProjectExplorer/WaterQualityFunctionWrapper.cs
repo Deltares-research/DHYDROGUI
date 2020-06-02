@@ -11,7 +11,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.ProjectExpl
 
         /// <summary>
         /// Creates a water quality function wrapper with
-        /// <param name="function" />
+        /// <param name="function"/>
         /// </summary>
         /// <param name="function"> The function that is wrapped by the water quality function wrapper </param>
         public WaterQualityFunctionWrapper(IFunction function)

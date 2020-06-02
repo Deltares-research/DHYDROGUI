@@ -77,21 +77,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 {BoundaryConditionDataType.Qh, QhFileExtension}
             };
 
-        public static class FileTypes
-        {
-            public const int Uniform = 1;
-            public const int UniMagDir = 2;
-            public const int SVWP = 3;
-            public const int ArcInfo = 4;
-            public const int SpiderWeb = 5;
-            public const int Curvi = 6;
-            public const int Triangulation = 7;
-            public const int TriangulationMagDir = 8;
-            public const int PolyTim = 9;
-            public const int InsidePolygon = 10;
-            public const int NCgrid = 11;
-        }
-
         // spatial operation operator mappings
         public static readonly IDictionary<PointwiseOperationType, Operator> OperatorMapping =
             new Dictionary<PointwiseOperationType, Operator>
@@ -111,22 +96,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 {Operator.Add, "+"},
                 {Operator.Multiply, "*"}
             };
-
-        public static PointwiseOperationType ParseOperationType(string operationString)
-        {
-            if (!OperatorToStringMapping.Values.Contains(operationString))
-            {
-                throw new ArgumentException("Cannot parse " + operationString + " into valid pointwise operator");
-            }
-
-            Operator spatialOperator = OperatorToStringMapping.First(kvp => kvp.Value == operationString).Key;
-            if (!OperatorMapping.Values.Contains(spatialOperator))
-            {
-                throw new ArgumentException("Cannot parse " + operationString + " into valid pointwise operator");
-            }
-
-            return OperatorMapping.First(kvp => kvp.Value == spatialOperator).Key;
-        }
 
         // wind quantities
         public static readonly IDictionary<WindQuantity, string> WindQuantityNames =
@@ -156,13 +125,26 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 {TemperatureAtBound, FlowBoundaryQuantityType.Temperature},
                 {ConcentrationAtBound, FlowBoundaryQuantityType.SedimentConcentration},
                 {BcmFileFlowBoundaryDataBuilder.BedLevelAtBound, FlowBoundaryQuantityType.MorphologyBedLevelPrescribed},
-                {
-                    BcmFileFlowBoundaryDataBuilder.BedLevelChangeAtBound,
-                    FlowBoundaryQuantityType.MorphologyBedLevelChangePrescribed
-                },
+                {BcmFileFlowBoundaryDataBuilder.BedLevelChangeAtBound, FlowBoundaryQuantityType.MorphologyBedLevelChangePrescribed},
                 {BcmFileFlowBoundaryDataBuilder.BedLoadAtBound, FlowBoundaryQuantityType.MorphologyBedLoadTransport},
                 {QhAtBound, FlowBoundaryQuantityType.WaterLevel}
             };
+
+        public static PointwiseOperationType ParseOperationType(string operationString)
+        {
+            if (!OperatorToStringMapping.Values.Contains(operationString))
+            {
+                throw new ArgumentException("Cannot parse " + operationString + " into valid pointwise operator");
+            }
+
+            Operator spatialOperator = OperatorToStringMapping.First(kvp => kvp.Value == operationString).Key;
+            if (!OperatorMapping.Values.Contains(spatialOperator))
+            {
+                throw new ArgumentException("Cannot parse " + operationString + " into valid pointwise operator");
+            }
+
+            return OperatorMapping.First(kvp => kvp.Value == spatialOperator).Key;
+        }
 
         /// <summary>
         /// Try to parse the quantity name and see if it is a boundary.
@@ -300,6 +282,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             }
 
             return string.Empty;
+        }
+
+        public static class FileTypes
+        {
+            public const int Uniform = 1;
+            public const int UniMagDir = 2;
+            public const int SVWP = 3;
+            public const int ArcInfo = 4;
+            public const int SpiderWeb = 5;
+            public const int Curvi = 6;
+            public const int Triangulation = 7;
+            public const int TriangulationMagDir = 8;
+            public const int PolyTim = 9;
+            public const int InsidePolygon = 10;
+            public const int NCgrid = 11;
         }
     }
 }

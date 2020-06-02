@@ -16,11 +16,36 @@ namespace DelftTools.Hydro.CrossSections
     public class CrossSectionDefinitionProxy : Unique<long>, ICrossSectionDefinition, ISummerDikeEnabledDefinition
     {
         private IGeometry geometry;
-        protected CrossSectionDefinitionProxy() {} //nhibernate
+
+        private ICrossSectionDefinition innerDefinition;
 
         public CrossSectionDefinitionProxy(ICrossSectionDefinition innerDefinition)
         {
             InnerDefinition = innerDefinition;
+        }
+
+        protected CrossSectionDefinitionProxy() {} //nhibernate
+
+        public virtual double LevelShift { get; set; }
+
+        [Aggregation]
+        public virtual ICrossSectionDefinition InnerDefinition
+        {
+            get => innerDefinition;
+            set
+            {
+                if (innerDefinition != null)
+                {
+                    ((INotifyPropertyChanged) innerDefinition).PropertyChanged -= InnerDefinitionProfileChanged;
+                }
+
+                innerDefinition = value;
+
+                if (innerDefinition != null)
+                {
+                    ((INotifyPropertyChanged) innerDefinition).PropertyChanged += InnerDefinitionProfileChanged;
+                }
+            }
         }
 
         public virtual bool GeometryBased => InnerDefinition.GeometryBased;
@@ -61,15 +86,37 @@ namespace DelftTools.Hydro.CrossSections
 
         public virtual bool IsProxy => true;
 
-        public void RefreshGeometry()
+        public virtual double Thalweg
         {
-            geometry = null;
+            get => InnerDefinition.Thalweg;
+            [EditAction]
+            set => throw new InvalidOperationException("Unable to set properties on proxy");
         }
 
-        public Utils.Tuple<string, bool> ValidateCellValue(int rowIndex, int columnIndex, object cellValue)
+        public virtual string Description
         {
-            return new Utils.Tuple<string, bool>("", true);
+            get => InnerDefinition.Description;
+            [EditAction]
+            set => throw new InvalidOperationException("Unable to set properties on proxy");
         }
+
+        public virtual string Name
+        {
+            get => InnerDefinition.Name;
+            set
+            {
+                //throw new InvalidOperationException("Unable to set properties on proxy");
+            }
+        }
+
+        [NoNotifyPropertyChange]
+        public bool ForceSectionsSpanFullWidth { get; set; }
+
+        public bool IsEditing => InnerDefinition.IsEditing;
+
+        public bool EditWasCancelled => InnerDefinition.EditWasCancelled;
+
+        public IEditAction CurrentEditAction => InnerDefinition.CurrentEditAction;
 
         /// this might be reason to have CanHaveSummerDike on ICrossSectionDefinition
         public virtual bool CanHaveSummerDike => InnerDefinition is ISummerDikeEnabledDefinition;
@@ -88,59 +135,26 @@ namespace DelftTools.Hydro.CrossSections
             }
         }
 
-        public virtual double LevelShift { get; set; }
-
-        public virtual double Thalweg
+        /// <summary>
+        /// Returns a shifted copy of the inner definition. As sent to modelApi etc
+        /// </summary>
+        /// <returns> </returns>
+        public virtual ICrossSectionDefinition GetUnProxiedDefinition()
         {
-            get => InnerDefinition.Thalweg;
-            [EditAction]
-            set => throw new InvalidOperationException("Unable to set properties on proxy");
+            //create a shifted copy
+            var localDefinition = (ICrossSectionDefinition) InnerDefinition.Clone();
+            localDefinition.ShiftLevel(LevelShift);
+            return localDefinition;
         }
 
-        public virtual string Description
+        public void RefreshGeometry()
         {
-            get => InnerDefinition.Description;
-            [EditAction]
-            set => throw new InvalidOperationException("Unable to set properties on proxy");
+            geometry = null;
         }
 
-        private ICrossSectionDefinition innerDefinition;
-
-        [Aggregation]
-        public virtual ICrossSectionDefinition InnerDefinition
+        public Utils.Tuple<string, bool> ValidateCellValue(int rowIndex, int columnIndex, object cellValue)
         {
-            get => innerDefinition;
-            set
-            {
-                if (innerDefinition != null)
-                {
-                    ((INotifyPropertyChanged) innerDefinition).PropertyChanged -= InnerDefinitionProfileChanged;
-                }
-
-                innerDefinition = value;
-
-                if (innerDefinition != null)
-                {
-                    ((INotifyPropertyChanged) innerDefinition).PropertyChanged += InnerDefinitionProfileChanged;
-                }
-            }
-        }
-
-        private void InnerDefinitionProfileChanged(object sender, PropertyChangedEventArgs e)
-        {
-            if (Equals(sender, innerDefinition) && e.PropertyName != "Name")
-            {
-                RefreshGeometry();
-            }
-        }
-
-        public virtual string Name
-        {
-            get => InnerDefinition.Name;
-            set
-            {
-                //throw new InvalidOperationException("Unable to set properties on proxy");
-            }
+            return new Utils.Tuple<string, bool>("", true);
         }
 
         public virtual object Clone()
@@ -152,9 +166,6 @@ namespace DelftTools.Hydro.CrossSections
         {
             InnerDefinition.CopyFrom(source);
         }
-
-        [NoNotifyPropertyChange]
-        public bool ForceSectionsSpanFullWidth { get; set; }
 
         public virtual void ShiftLevel(double delta)
         {
@@ -189,24 +200,6 @@ namespace DelftTools.Hydro.CrossSections
             //do nothing
         }
 
-        /// <summary>
-        /// Returns a shifted copy of the inner definition. As sent to modelApi etc
-        /// </summary>
-        /// <returns> </returns>
-        public virtual ICrossSectionDefinition GetUnProxiedDefinition()
-        {
-            //create a shifted copy
-            var localDefinition = (ICrossSectionDefinition) InnerDefinition.Clone();
-            localDefinition.ShiftLevel(LevelShift);
-            return localDefinition;
-        }
-
-        public bool IsEditing => InnerDefinition.IsEditing;
-
-        public bool EditWasCancelled => InnerDefinition.EditWasCancelled;
-
-        public IEditAction CurrentEditAction => InnerDefinition.CurrentEditAction;
-
         public void BeginEdit(IEditAction action)
         {
             InnerDefinition.BeginEdit(action);
@@ -220,6 +213,14 @@ namespace DelftTools.Hydro.CrossSections
         public void CancelEdit()
         {
             InnerDefinition.CancelEdit();
+        }
+
+        private void InnerDefinitionProfileChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (Equals(sender, innerDefinition) && e.PropertyName != "Name")
+            {
+                RefreshGeometry();
+            }
         }
     }
 }

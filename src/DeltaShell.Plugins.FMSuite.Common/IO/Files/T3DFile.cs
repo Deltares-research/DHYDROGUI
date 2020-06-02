@@ -12,11 +12,10 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files
 {
     public class T3DFile : FMSuiteFileBase
     {
-        private readonly ILog log = LogManager.GetLogger(typeof(T3DFile));
-
         private const string LayerTypeKey = "LAYER_TYPE";
         private const string LayersKey = "LAYERS";
         private const string TimeKey = "TIME";
+        private readonly ILog log = LogManager.GetLogger(typeof(T3DFile));
 
         public TimeSeries Read(string filePath, out VerticalProfileDefinition verticalProfileDefinition)
         {
@@ -140,7 +139,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files
                     for (var i = 0; i < timeArgument.Values.Count; i++)
                     {
                         double seconds = (timeArgument.Values[i] - refTime).TotalSeconds;
-                        string timeString = refTime.ToString("yyyy-MM-dd hh:mm:ss");
+                        var timeString = refTime.ToString("yyyy-MM-dd hh:mm:ss");
                         WriteLine(TimeKey + " = " + seconds + " seconds since " + timeString + " +00:00");
                         WriteLine(string.Join(" ", components.Select(c => c.Values[i])));
                     }

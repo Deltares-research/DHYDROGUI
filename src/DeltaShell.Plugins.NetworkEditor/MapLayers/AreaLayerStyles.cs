@@ -1,4 +1,5 @@
 using System.Drawing;
+using DeltaShell.Plugins.NetworkEditor.Properties;
 using GeoAPI.Geometries;
 using SharpMap.Styles;
 
@@ -11,10 +12,10 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers
             get
             {
                 return new VectorStyle
-                           {
-                               Line = new Pen(Color.Black, 1f),
-                               GeometryType = typeof (ILineString)
-                           };
+                {
+                    Line = new Pen(Color.Black, 1f),
+                    GeometryType = typeof(ILineString)
+                };
             }
         }
 
@@ -23,10 +24,10 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers
             get
             {
                 return new VectorStyle
-                           {
-                               Line = new Pen(Color.Red, 3f),
-                               GeometryType = typeof (ILineString)
-                           };
+                {
+                    Line = new Pen(Color.Red, 3f),
+                    GeometryType = typeof(ILineString)
+                };
             }
         }
 
@@ -35,10 +36,10 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers
             get
             {
                 return new VectorStyle
-                           {
-                               Line = new Pen(Color.Purple, 3f),
-                               GeometryType = typeof (ILineString)
-                           };
+                {
+                    Line = new Pen(Color.Purple, 3f),
+                    GeometryType = typeof(ILineString)
+                };
             }
         }
 
@@ -47,10 +48,10 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers
             get
             {
                 return new VectorStyle
-                           {
-                               GeometryType = typeof (IPoint),
-                               Symbol = Properties.Resources.Observation
-                           };
+                {
+                    GeometryType = typeof(IPoint),
+                    Symbol = Resources.Observation
+                };
             }
         }
 
@@ -59,10 +60,10 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers
             get
             {
                 return new VectorStyle
-                           {
-                               Line = new Pen(Color.DeepPink, 3f),
-                               GeometryType = typeof (ILineString)
-                           };
+                {
+                    Line = new Pen(Color.DeepPink, 3f),
+                    GeometryType = typeof(ILineString)
+                };
             }
         }
 
@@ -71,10 +72,10 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers
             get
             {
                 return new VectorStyle
-                           {
-                               Line = new Pen(Color.Aquamarine, 3f),
-                               GeometryType = typeof (ILineString)
-                           };
+                {
+                    Line = new Pen(Color.Aquamarine, 3f),
+                    GeometryType = typeof(ILineString)
+                };
             }
         }
 
@@ -83,10 +84,10 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers
             get
             {
                 return new VectorStyle
-                           {
-                               Line = new Pen(Color.LightSteelBlue, 3f),
-                               GeometryType = typeof (ILineString)
-                           };
+                {
+                    Line = new Pen(Color.LightSteelBlue, 3f),
+                    GeometryType = typeof(ILineString)
+                };
             }
         }
 
@@ -95,10 +96,10 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers
             get
             {
                 return new VectorStyle
-                           {
-                               Line = new Pen(Color.SteelBlue, 3f),
-                               GeometryType = typeof (ILineString)
-                           };
+                {
+                    Line = new Pen(Color.SteelBlue, 3f),
+                    GeometryType = typeof(ILineString)
+                };
             }
         }
 
@@ -107,10 +108,10 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers
             get
             {
                 return new VectorStyle
-                           {
-                               Line = new Pen(Color.DarkBlue, 3f),
-                               GeometryType = typeof (ILineString),
-                           };
+                {
+                    Line = new Pen(Color.DarkBlue, 3f),
+                    GeometryType = typeof(ILineString),
+                };
             }
         }
 
@@ -119,12 +120,12 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers
             get
             {
                 return new VectorStyle
-                    {
-                        Line = new Pen(Color.LightBlue, 3f),
-                        Fill = new SolidBrush(Color.DarkBlue),
-                        GeometryType = typeof (IPoint),
-                        ShapeSize = 8,
-                    };
+                {
+                    Line = new Pen(Color.LightBlue, 3f),
+                    Fill = new SolidBrush(Color.DarkBlue),
+                    GeometryType = typeof(IPoint),
+                    ShapeSize = 8,
+                };
             }
         }
 
@@ -133,12 +134,12 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers
             get
             {
                 return new VectorStyle
-                    {
-                        Line = new Pen(Color.IndianRed, 3f),
-                        Fill = new SolidBrush(Color.Red),
-                        GeometryType = typeof (IPoint),
-                        ShapeSize = 8,
-                    };
+                {
+                    Line = new Pen(Color.IndianRed, 3f),
+                    Fill = new SolidBrush(Color.Red),
+                    GeometryType = typeof(IPoint),
+                    ShapeSize = 8,
+                };
             }
         }
 
@@ -148,8 +149,8 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers
             {
                 return new VectorStyle
                 {
-                    GeometryType = typeof (IPoint),
-                    Symbol = Properties.Resources.dry_point
+                    GeometryType = typeof(IPoint),
+                    Symbol = Resources.dry_point
                 };
             }
         }
@@ -160,7 +161,7 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers
             {
                 return new VectorStyle
                 {
-                    GeometryType = typeof (IPolygon),
+                    GeometryType = typeof(IPolygon),
                     Fill = new SolidBrush(Color.FromArgb(50, Color.SandyBrown)),
                     Outline = new Pen(Color.FromArgb(100, Color.SaddleBrown), 2f),
                 };
@@ -175,7 +176,7 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers
                 {
                     Line = new Pen(Color.Tomato, 3f),
                     GeometryType = typeof(ILineString),
-                    Symbol = Properties.Resources.LateralSourceMap
+                    Symbol = Resources.LateralSourceMap
                 };
             }
         }

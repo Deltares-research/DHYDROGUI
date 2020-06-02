@@ -102,10 +102,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
                     : embankment2.Geometry.Coordinates.ToArray();
 
             // Step 2: merge embankments. 
-            var mergedEmbankment = new Embankment
-            {
-                Name = NetworkHelper.GetUniqueName("MergedEmbankment{0:D2}", embankmentDefinitions, "Embankment")
-            };
+            var mergedEmbankment = new Embankment {Name = NetworkHelper.GetUniqueName("MergedEmbankment{0:D2}", embankmentDefinitions, "Embankment")};
             var pointList = new List<Coordinate>();
 
             // One intersection: connect with Intersection Point

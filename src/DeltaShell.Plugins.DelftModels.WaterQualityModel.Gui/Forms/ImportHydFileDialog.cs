@@ -25,11 +25,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms
             buttonOkOrgLocation = buttonOk.Location;
         }
 
-        public void SetLabelMessage(string text)
-        {
-            labelMessage.Text = text;
-        }
-
         public bool ShowCancelButton
         {
             get => showCancelButton;
@@ -39,6 +34,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms
                 buttonCancel.Visible = ShowCancelButton;
                 buttonOk.Location = ShowCancelButton ? buttonOkOrgLocation : buttonCancel.Location;
             }
+        }
+
+        public void SetLabelMessage(string text)
+        {
+            labelMessage.Text = text;
         }
 
         private void buttonOk_Click(object sender, EventArgs e)

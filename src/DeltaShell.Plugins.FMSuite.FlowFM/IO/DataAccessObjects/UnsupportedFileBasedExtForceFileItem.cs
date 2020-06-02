@@ -13,6 +13,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessObjects
 
         public ExtForceFileItem UnsupportedExtForceFileItem { get; set; }
 
+        public string Path { get; set; }
+        public IEnumerable<string> Paths { get; }
+        public bool IsFileCritical => true;
+
+        public bool IsOpen => Path != null;
+
+        /// <summary>
+        /// Make a copy of the file if it is located in the DeltaShell working directory
+        /// </summary>
+        public bool CopyFromWorkingDirectory { get; }
+
         public void CreateNew(string path)
         {
             if (!File.Exists(path))
@@ -65,16 +76,5 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessObjects
 
             Path = null;
         }
-
-        public string Path { get; set; }
-        public IEnumerable<string> Paths { get; }
-        public bool IsFileCritical => true;
-
-        public bool IsOpen => Path != null;
-
-        /// <summary>
-        /// Make a copy of the file if it is located in the DeltaShell working directory
-        /// </summary>
-        public bool CopyFromWorkingDirectory { get; }
     }
 }

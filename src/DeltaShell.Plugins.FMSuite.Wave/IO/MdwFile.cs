@@ -28,6 +28,27 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
 {
     public class MdwFile : FMSuiteFileBase
     {
+        private enum WaveBoundaryImportDefinitionType
+        {
+            Orientation,
+            GridIndexBased,
+            CoordinateBased,
+            FromSp2File,
+            FromWaveWatchFile
+        }
+
+        /// <summary>
+        /// These mdw categories can have multiplicity greater than 1 (or gui only),
+        /// excluded them from the generic property treatment..
+        /// </summary>
+        public static readonly IList<string> ExcludedCategories = new List<string>
+        {
+            KnownWaveCategories.TimePointCategory,
+            KnownWaveCategories.DomainCategory,
+            KnownWaveCategories.BoundaryCategory,
+            KnownWaveCategories.GuiOnlyCategory
+        };
+
         private const string PolyfileName = "PolylineFile";
 
         private const string WaveObstaclePropertyName = "Name";
@@ -45,18 +66,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
         private const double WaveObstacleDefaultValueReflectionCoefficient = 0.0;
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(MdwFile));
-
-        /// <summary>
-        /// These mdw categories can have multiplicity greater than 1 (or gui only),
-        /// excluded them from the generic property treatment..
-        /// </summary>
-        public static readonly IList<string> ExcludedCategories = new List<string>
-        {
-            KnownWaveCategories.TimePointCategory,
-            KnownWaveCategories.DomainCategory,
-            KnownWaveCategories.BoundaryCategory,
-            KnownWaveCategories.GuiOnlyCategory
-        };
 
         public string MdwFilePath { get; set; }
 
@@ -113,7 +122,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             CreateTimePointCategories(modelDefinition, ref mdwCategories);
 
             IEnumerable<DelftIniCategory> boundaryConditionCategories = modelDefinition.BoundaryConditions
-                                                                        .Select(WaveDelftIniCategoryCreator.CreateBoundaryConditionCategory);
+                                                                                       .Select(WaveDelftIniCategoryCreator.CreateBoundaryConditionCategory);
             mdwCategories.AddRange(boundaryConditionCategories);
             SaveBoundaryConditions(modelDefinition, Path.Combine(targetDir, tSeriesFile),
                                    modelDefinition.ModelReferenceDateTime);
@@ -200,6 +209,75 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             {
                 MdwFilePath = mdwTargetFilePath;
             }
+        }
+
+        public WaveModelDefinition Load(string filePath)
+        {
+            MdwFilePath = filePath;
+
+            var modelDefinition = new WaveModelDefinition();
+
+            IList<DelftIniCategory> mdwCategories;
+            using (var fileStream = new FileStream(MdwFilePath, FileMode.Open, FileAccess.Read))
+            {
+                mdwCategories = new DelftIniReader().ReadDelftIniFile(fileStream, MdwFilePath);
+            }
+
+            string mdwDir = Path.GetDirectoryName(filePath);
+
+            ConvertMdwCategoriesToModelDefinitionProperties(modelDefinition, mdwCategories);
+
+            // domain(s) and nesting
+            List<WaveDomainData> allDomains = CreateWaveDomainData(mdwCategories).ToList();
+            foreach (WaveDomainData domain in allDomains)
+            {
+                if (domain.NestedInDomain == -1)
+                {
+                    modelDefinition.OuterDomain = domain;
+                }
+                else
+                {
+                    WaveDomainData superDomain = allDomains[domain.NestedInDomain - 1];
+                    superDomain.SubDomains.Add(domain);
+                    domain.SuperDomain = superDomain;
+                }
+            }
+
+            // time frame
+            IList<DateTime> times;
+            modelDefinition.TimePointData =
+                CreateTimePointData(mdwCategories, modelDefinition.ModelReferenceDateTime, out times);
+
+            List<WaveBoundaryCondition> allConditions = CreateWaveBoundaries(mdwCategories, modelDefinition).ToList();
+            List<WaveBoundaryCondition> orientedConditions = allConditions.Where(bc => bc.Feature.Attributes != null &&
+                                                                                       bc.Feature.Attributes
+                                                                                         .ContainsKey("orientation"))
+                                                                          .ToList();
+            modelDefinition.BoundaryConditions.AddRange(allConditions.Except(orientedConditions));
+            modelDefinition.OrientedBoundaryConditions.AddRange(orientedConditions);
+
+            modelDefinition.Obstacles.AddRange(
+                CreateObstacleData(
+                    mdwCategories.First(c => c.Name == KnownWaveCategories.GeneralCategory),
+                    modelDefinition));
+
+            string locFile = mdwCategories.First(c => c.Name == KnownWaveCategories.OutputCategory)
+                                          .GetPropertyValue(KnownWaveProperties.LocationFile);
+            if (locFile != null)
+            {
+                modelDefinition.ObservationPoints =
+                    new ObsFile<Feature2DPoint>().Read(Path.Combine(mdwDir, locFile), false);
+            }
+
+            string curveFile = mdwCategories.First(c => c.Name == KnownWaveCategories.OutputCategory)
+                                            .GetPropertyValue(KnownWaveProperties.CurveFile);
+            if (curveFile != null)
+            {
+                modelDefinition.ObservationCrossSections =
+                    new EventedList<Feature2D>(new PliFile<Feature2D>().Read(Path.Combine(mdwDir, curveFile)));
+            }
+
+            return modelDefinition;
         }
 
         private void SetConstantWindProperties(WaveModelDefinition modelDefinition)
@@ -574,74 +652,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             mdwCategories.InsertRange(afterGeneralIndex + 1, categories);
         }
 
-        public WaveModelDefinition Load(string filePath)
-        {
-            MdwFilePath = filePath;
-
-            var modelDefinition = new WaveModelDefinition();
-
-            IList<DelftIniCategory> mdwCategories;
-            using (var fileStream = new FileStream(MdwFilePath, FileMode.Open, FileAccess.Read))
-            {
-                mdwCategories = new DelftIniReader().ReadDelftIniFile(fileStream, MdwFilePath);
-            }
-            string mdwDir = Path.GetDirectoryName(filePath);
-
-            ConvertMdwCategoriesToModelDefinitionProperties(modelDefinition, mdwCategories);
-
-            // domain(s) and nesting
-            List<WaveDomainData> allDomains = CreateWaveDomainData(mdwCategories).ToList();
-            foreach (WaveDomainData domain in allDomains)
-            {
-                if (domain.NestedInDomain == -1)
-                {
-                    modelDefinition.OuterDomain = domain;
-                }
-                else
-                {
-                    WaveDomainData superDomain = allDomains[domain.NestedInDomain - 1];
-                    superDomain.SubDomains.Add(domain);
-                    domain.SuperDomain = superDomain;
-                }
-            }
-
-            // time frame
-            IList<DateTime> times;
-            modelDefinition.TimePointData =
-                CreateTimePointData(mdwCategories, modelDefinition.ModelReferenceDateTime, out times);
-
-            List<WaveBoundaryCondition> allConditions = CreateWaveBoundaries(mdwCategories, modelDefinition).ToList();
-            List<WaveBoundaryCondition> orientedConditions = allConditions.Where(bc => bc.Feature.Attributes != null &&
-                                                                                       bc.Feature.Attributes
-                                                                                         .ContainsKey("orientation"))
-                                                                          .ToList();
-            modelDefinition.BoundaryConditions.AddRange(allConditions.Except(orientedConditions));
-            modelDefinition.OrientedBoundaryConditions.AddRange(orientedConditions);
-
-            modelDefinition.Obstacles.AddRange(
-                CreateObstacleData(
-                    mdwCategories.First(c => c.Name == KnownWaveCategories.GeneralCategory),
-                    modelDefinition));
-
-            string locFile = mdwCategories.First(c => c.Name == KnownWaveCategories.OutputCategory)
-                                          .GetPropertyValue(KnownWaveProperties.LocationFile);
-            if (locFile != null)
-            {
-                modelDefinition.ObservationPoints =
-                    new ObsFile<Feature2DPoint>().Read(Path.Combine(mdwDir, locFile), false);
-            }
-
-            string curveFile = mdwCategories.First(c => c.Name == KnownWaveCategories.OutputCategory)
-                                            .GetPropertyValue(KnownWaveProperties.CurveFile);
-            if (curveFile != null)
-            {
-                modelDefinition.ObservationCrossSections =
-                    new EventedList<Feature2D>(new PliFile<Feature2D>().Read(Path.Combine(mdwDir, curveFile)));
-            }
-
-            return modelDefinition;
-        }
-
         /// <summary>
         /// Converting mdw categories to model definition properties.
         /// Second part is for linked properties, since the default value of a property can be dependent on another property value
@@ -655,7 +665,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                                                                      IEnumerable<DelftIniCategory> mdwCategories)
         {
             var logHandler = new LogHandler(Resources.MdwFile_ConvertMdwCategoriesToModelDefinitionProperties_reading_the_mdw_file, Log);
-            var backwardsCompatibilityHelper = 
+            var backwardsCompatibilityHelper =
                 new DelftIniBackwardsCompatibilityHelper(new MdwFileBackwardsCompatibilityConfigurationValues());
 
             foreach (DelftIniCategory category in mdwCategories)
@@ -689,9 +699,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                                 DataType = typeof(string),
                                 FileCategoryName = category.Name,
                                 FilePropertyName = mdwProperty.Name,
-                                Category = definedCategory.Name, 
+                                Category = definedCategory.Name,
                                 // default value as string should always be an empty string and not null.
-                                DefaultValueAsString = string.Empty, 
+                                DefaultValueAsString = string.Empty,
                             };
 
                     modelDefinition.SetModelProperty(category.Name, propName,
@@ -741,7 +751,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                     }
                 }
             }
-            
+
             logHandler.LogReport();
         }
 
@@ -1400,15 +1410,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                 default:
                     throw new ArgumentException($"Invalid spectral shape definition: {value}");
             }
-        }
-
-        private enum WaveBoundaryImportDefinitionType
-        {
-            Orientation,
-            GridIndexBased,
-            CoordinateBased,
-            FromSp2File,
-            FromWaveWatchFile
         }
     }
 }

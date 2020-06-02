@@ -22,18 +22,18 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
         public static bool RunCalculationGridWizard(IList<IChannel> selectedChannels, IDiscretization defaultDiscretization)
         {
             var calculationGridDialog = new ComputationalGridDialog
-                                            {
-                                                UpdateDiscretization = defaultDiscretization,
-                                                MinimumCellLength = CGDMinimumCellLength,
-                                                GridAtStructure = CGDGridAtStructure,
-                                                StructureDistance = CGDStructureDistance,
-                                                GridAtCrossSection = CGDGridAtCrossSection,
-                                                GridAtLateralSource = CGDGridAtLateral,
-                                                UseFixedLength = CGDUseFixedLength,
-                                                FixedLength = CGDFixedLength,
-                                                AllBranches = ((selectedChannels == null) || (selectedChannels.Count == 0)),
-                                                AllowSelectionCheck = (selectedChannels != null)
-                                            };
+            {
+                UpdateDiscretization = defaultDiscretization,
+                MinimumCellLength = CGDMinimumCellLength,
+                GridAtStructure = CGDGridAtStructure,
+                StructureDistance = CGDStructureDistance,
+                GridAtCrossSection = CGDGridAtCrossSection,
+                GridAtLateralSource = CGDGridAtLateral,
+                UseFixedLength = CGDUseFixedLength,
+                FixedLength = CGDFixedLength,
+                AllBranches = selectedChannels == null || selectedChannels.Count == 0,
+                AllowSelectionCheck = selectedChannels != null
+            };
 
             if (DialogResult.OK != calculationGridDialog.ShowDialog())
             {
@@ -42,7 +42,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
 
             UpdateDefaultCalculationParameters(calculationGridDialog);
 
-            var discretization = calculationGridDialog.UpdateDiscretization;
+            IDiscretization discretization = calculationGridDialog.UpdateDiscretization;
 
             var editable = discretization as IEditableObject;
 
@@ -50,6 +50,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
             {
                 editable.BeginEdit("Generate grid");
             }
+
             HydroNetworkHelper.GenerateDiscretization(discretization,
                                                       calculationGridDialog.OverwriteSegments,
                                                       calculationGridDialog.Erase,
@@ -65,6 +66,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
             {
                 editable.EndEdit();
             }
+
             return true;
         }
 

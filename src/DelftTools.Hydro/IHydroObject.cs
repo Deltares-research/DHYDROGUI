@@ -6,8 +6,8 @@ using GeoAPI.Extensions.Feature;
 namespace DelftTools.Hydro
 {
     /// <summary>
-    /// Hydro object is any object contained in the <see cref="IHydroRegion" />.
-    /// Some hydro object may be linked to each other using <see cref="HydroLink" />.
+    /// Hydro object is any object contained in the <see cref="IHydroRegion"/>.
+    /// Some hydro object may be linked to each other using <see cref="HydroLink"/>.
     /// The meaning of the link between two hydro objects in most cases is that it allows flow of water or other substance
     /// through them.
     /// Hydro objects can be linked to the hydro object of the same region or to the hydro objects of another region (only

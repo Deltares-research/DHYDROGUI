@@ -4,14 +4,14 @@ using System.Windows.Forms;
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms
 {
     /// <summary>
-    /// Form to allow the user to chose a grid cell ID in a <see cref="WaterQualityModel" />.
+    /// Form to allow the user to chose a grid cell ID in a <see cref="WaterQualityModel"/>.
     /// </summary>
     public partial class FindGridCellDialog : Form
     {
         private readonly int maximumGridCellId;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="FindGridCellDialog" /> class.
+        /// Initializes a new instance of the <see cref="FindGridCellDialog"/> class.
         /// </summary>
         /// <param name="maximumGridCell"> The highest grid cell index in the model. </param>
         /// <param name="initialValue"> The value filled in the text box at creation. </param>

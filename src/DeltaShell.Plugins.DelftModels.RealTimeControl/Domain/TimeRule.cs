@@ -17,12 +17,56 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(TimeRule));
 
+        private TimeSeries timeSeries;
+
+        public TimeRule() : this(null) {}
+
+        public TimeRule(string name)
+        {
+            if (name != null)
+            {
+                Name = name;
+            }
+
+            Reference = string.Empty; // = default EXPLICIT
+        }
+
         /// <summary>
         /// valid values are "EXPLICIT" "IMPLICIT"; default is EXPLICIT
         /// </summary>
         public string Reference { get; set; }
 
-        private TimeSeries timeSeries;
+        [NoNotifyPropertyChange]
+        public InterpolationType InterpolationOptionsTime
+        {
+            get
+            {
+                return TimeSeries.Time.InterpolationType;
+            }
+            set
+            {
+                TimeSeries.Time.InterpolationType = value;
+            }
+        }
+
+        [NoNotifyPropertyChange]
+        public ExtrapolationType Periodicity
+        {
+            get
+            {
+                return TimeSeries.Time.ExtrapolationType;
+            }
+            set
+            {
+                if (!Enum.IsDefined(typeof(ExtrapolationTimeSeriesType), (ExtrapolationTimeSeriesType) value))
+                {
+                    throw new ArgumentException(string.Format("Extrapolation for time rule does not support {0}", value));
+                }
+
+                TimeSeries.Time.ExtrapolationType = value;
+            }
+        }
+
         public TimeSeries TimeSeries
         {
             get
@@ -31,7 +75,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
                 if (timeSeries == null)
                 {
                     timeSeries = new TimeSeries();
-                    timeSeries.Components.Add(new Variable<double> { Name = "Value", NoDataValue = -999.0 });
+                    timeSeries.Components.Add(new Variable<double>
+                    {
+                        Name = "Value",
+                        NoDataValue = -999.0
+                    });
                     timeSeries.Components[0].Attributes[FunctionAttributes.StandardName] =
                         FunctionAttributes.StandardNames.RtcTimeRule;
                     timeSeries.Time.ExtrapolationType = ExtrapolationType.Constant;
@@ -41,35 +89,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
                 return timeSeries;
             }
 
-            set { timeSeries = value; }
-        }
-
-        public TimeRule(): this(null){}
-
-        public TimeRule(string name)
-        {
-            if (name != null) Name = name;
-            Reference = string.Empty; // = default EXPLICIT
-        }
-
-        [NoNotifyPropertyChange]
-        public InterpolationType InterpolationOptionsTime
-        { 
-            get { return TimeSeries.Time.InterpolationType; }
-            set { TimeSeries.Time.InterpolationType = value; }
-        }
-
-        [NoNotifyPropertyChange]
-        public ExtrapolationType Periodicity
-        {
-            get { return TimeSeries.Time.ExtrapolationType; }
             set
             {
-                if (!Enum.IsDefined(typeof(ExtrapolationTimeSeriesType), (ExtrapolationTimeSeriesType)value))
-                {
-                    throw new ArgumentException(string.Format("Extrapolation for time rule does not support {0}", value));
-                }
-                TimeSeries.Time.ExtrapolationType = value;
+                timeSeries = value;
             }
         }
 
@@ -112,7 +134,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
         public override IEnumerable<object> GetDirectChildren()
         {
             if (timeSeries != null)
+            {
                 yield return timeSeries;
+            }
         }
     }
 }

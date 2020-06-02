@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro.CrossSections;
+using DelftTools.Hydro.CrossSections.DataSets;
 using log4net;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView.ProfileMutators
@@ -14,22 +16,46 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView.ProfileMut
             CrossSectionDefinition = crossSectionDefinition;
         }
 
+        public override bool CanDelete
+        {
+            get
+            {
+                return true;
+            }
+        }
+
+        public override bool CanAdd
+        {
+            get
+            {
+                return true;
+            }
+        }
+
+        public override bool FixVertical
+        {
+            get
+            {
+                return false;
+            }
+        }
+
         public override void MovePoint(int index, double y, double z)
         {
             CrossSectionDefinition.BeginEdit(DelftTools.Hydro.CrossSections.CrossSectionDefinition.DefaultEditAction);
             try
             {
-                var row = GetRow(index);
+                CrossSectionDataSet.CrossSectionZWRow row = GetRow(index);
 
                 ThrowIfHeightChangeWouldChangeOrdering(row, z);
 
                 row.Z = z;
 
-                var lastRow = GetSortedRows().Last();
+                CrossSectionDataSet.CrossSectionZWRow lastRow = GetSortedRows().Last();
 
                 if (row != lastRow)
                 {
-                    var newWidth = Math.Max(0.1, Math.Abs(y)*2.0); //can't be zero if it's not the last row
+                    double newWidth = Math.Max(0.1, Math.Abs(y) * 2.0); //can't be zero if it's not the last row
 
                     if (row.StorageWidth > newWidth)
                     {
@@ -60,13 +86,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView.ProfileMut
                     // Use already defined storage:
                     suggestedStorageWidth = CrossSectionDefinition.ZWDataTable[0].StorageWidth;
                 }
-                var row = CrossSectionDefinition.ZWDataTable.AddCrossSectionZWRow(z, Math.Abs(y) * 2, suggestedStorageWidth);
+
+                CrossSectionDataSet.CrossSectionZWRow row = CrossSectionDefinition.ZWDataTable.AddCrossSectionZWRow(z, Math.Abs(y) * 2, suggestedStorageWidth);
 
                 // Correct storage after add to make use of sorting to find neighbors
                 if (CrossSectionDefinition.ZWDataTable.Count > 2)
                 {
-                    var sortedRows =  CrossSectionDefinition.ZWDataTable.OrderByDescending(r => r.Z).ToList();
-                    var rowIndex = sortedRows.IndexOf(row);
+                    List<CrossSectionDataSet.CrossSectionZWRow> sortedRows = CrossSectionDefinition.ZWDataTable.OrderByDescending(r => r.Z).ToList();
+                    int rowIndex = sortedRows.IndexOf(row);
 
                     double correctedStorageWidthValue;
                     if (rowIndex == 0)
@@ -79,17 +106,17 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView.ProfileMut
                     }
                     else
                     {
-                        var leftRow = sortedRows[rowIndex - 1];
-                        var rightRow = sortedRows[rowIndex + 1];
+                        CrossSectionDataSet.CrossSectionZWRow leftRow = sortedRows[rowIndex - 1];
+                        CrossSectionDataSet.CrossSectionZWRow rightRow = sortedRows[rowIndex + 1];
 
                         // Linearly interpolate:
-                        var z1 = leftRow.Z;
-                        var s1 = leftRow.StorageWidth;
+                        double z1 = leftRow.Z;
+                        double s1 = leftRow.StorageWidth;
 
-                        var z2 = rightRow.Z;
-                        var s2 = rightRow.StorageWidth;
+                        double z2 = rightRow.Z;
+                        double s2 = rightRow.StorageWidth;
 
-                        correctedStorageWidthValue = (s1 - s2) / (z1 - z2) * (z - z1) + s1;
+                        correctedStorageWidthValue = (((s1 - s2) / (z1 - z2)) * (z - z1)) + s1;
                     }
 
                     row.StorageWidth = correctedStorageWidthValue;
@@ -100,21 +127,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView.ProfileMut
         public override void DeletePoint(int index)
         {
             CrossSectionDefinition.ZWDataTable.RemoveCrossSectionZWRow(GetRow(index));
-        }
-
-        public override bool CanDelete
-        {
-            get { return true; }
-        }
-
-        public override bool CanAdd
-        {
-            get { return true; }
-        }
-
-        public override bool FixVertical
-        {
-            get { return false; }
         }
     }
 }

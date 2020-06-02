@@ -1,5 +1,4 @@
-﻿
-namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.DataAccess
+﻿namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.DataAccess
 {
     /// <summary>
     /// Mathematical operator used within mathematical expressions.

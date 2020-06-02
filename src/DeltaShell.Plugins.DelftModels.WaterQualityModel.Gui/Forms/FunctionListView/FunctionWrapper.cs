@@ -12,9 +12,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.FunctionLis
     [Entity]
     internal class FunctionWrapper
     {
-        private IFunction function;
         private readonly IEventedList<IFunction> functions;
         private readonly ICollection<IFunctionTypeCreator> functionTypes;
+        private IFunction function;
         private IEditableObject functionOwner;
 
         public FunctionWrapper(IFunction function, IEventedList<IFunction> functions, IEditableObject functionOwner,
@@ -154,7 +154,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.FunctionLis
         }
 
         /// <summary>
-        /// The owner of <see cref="Function" />
+        /// The owner of <see cref="Function"/>
         /// </summary>
         public IEditableObject FunctionOwner
         {

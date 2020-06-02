@@ -6,7 +6,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.ModelSchema
     /// <summary>
     /// A descriptor class for a property (key-value-comment pairs), mainly to be used in a Delft .ini formatted file.
     /// </summary>
-    /// <seealso cref="ModelProperty" />
+    /// <seealso cref="ModelProperty"/>
     public abstract class ModelPropertyDefinition
     {
         private Func<IEnumerable<ModelProperty>, bool> isEnabled;
@@ -19,19 +19,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.ModelSchema
         {
             isEnabled = IsTrue;
             isVisible = IsTrue;
-        }
-
-        /// <summary>
-        /// The default implementation of <see cref="IsEnabled" />.
-        /// </summary>
-        /// <param name="modelProperties">
-        /// A lookup with all available properties, indexed on their <see cref="FilePropertyName" />
-        /// .
-        /// </param>
-        /// <returns> True if this property is enabled; False when it's not. </returns>
-        private static bool IsTrue(IEnumerable<ModelProperty> modelProperties)
-        {
-            return true;
         }
 
         /// <summary>
@@ -122,8 +109,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.ModelSchema
         /// String expression of dependencies to enable this property.
         /// </summary>
         /// <remarks>
-        /// When setting this property, use <see cref="DeltaShell.Plugins.FMSuite.Common.Dependency.Dependencies" /> to
-        /// update <see cref="IsEnabled" />.
+        /// When setting this property, use <see cref="DeltaShell.Plugins.FMSuite.Common.Dependency.Dependencies"/> to
+        /// update <see cref="IsEnabled"/>.
         /// </remarks>
         public string EnabledDependencies { get; set; }
 
@@ -131,8 +118,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.ModelSchema
         /// String expression of dependencies make this property visible.
         /// </summary>
         /// <remarks>
-        /// When setting this property, use <see cref="DeltaShell.Plugins.FMSuite.Common.Dependency.Dependencies" /> to
-        /// update <see cref="IsVisible" />.
+        /// When setting this property, use <see cref="DeltaShell.Plugins.FMSuite.Common.Dependency.Dependencies"/> to
+        /// update <see cref="IsVisible"/>.
         /// </remarks>
         public string VisibleDependencies { get; set; }
 
@@ -157,5 +144,18 @@ namespace DeltaShell.Plugins.FMSuite.Common.ModelSchema
         public int FromRevision { get; set; }
 
         public int UntilRevision { get; set; }
+
+        /// <summary>
+        /// The default implementation of <see cref="IsEnabled"/>.
+        /// </summary>
+        /// <param name="modelProperties">
+        /// A lookup with all available properties, indexed on their <see cref="FilePropertyName"/>
+        /// .
+        /// </param>
+        /// <returns> True if this property is enabled; False when it's not. </returns>
+        private static bool IsTrue(IEnumerable<ModelProperty> modelProperties)
+        {
+            return true;
+        }
     }
 }

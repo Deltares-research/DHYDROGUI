@@ -8,8 +8,6 @@ namespace DelftTools.Hydro
 {
     public class CatchmentType : INameable, ICloneable
     {
-        private IList<CatchmentType> subCatchmentTypes;
-
         public const string PolderTypeName = "Polder";
         public const string GreenhouseTypeName = "Greenhouse";
         public const string OpenwaterTypeName = "OpenWater";
@@ -18,11 +16,6 @@ namespace DelftTools.Hydro
         public const string SacramentoTypeName = "Sacramento";
         public const string HbvTypeName = "HBV";
         public const string NoneTypeName = "";
-
-        protected CatchmentType() //you shouldn't create one yourself: use the static ones
-        {
-            subCatchmentTypes = new List<CatchmentType>();
-        }
 
         public static readonly CatchmentType GreenHouse = new CatchmentType
         {
@@ -75,14 +68,20 @@ namespace DelftTools.Hydro
         };
 
         public static readonly CatchmentType None = new CatchmentType {Name = NoneTypeName};
+        private IList<CatchmentType> subCatchmentTypes;
 
-        public virtual string Name { get; set; }
+        protected CatchmentType() //you shouldn't create one yourself: use the static ones
+        {
+            subCatchmentTypes = new List<CatchmentType>();
+        }
 
         public virtual Bitmap Icon { get; set; }
 
         public virtual Bitmap SoftIcon { get; set; }
 
         public IEnumerable<CatchmentType> SubCatchmentTypes => subCatchmentTypes;
+
+        public virtual string Name { get; set; }
 
         public static CatchmentType LoadFromString(string value)
         {
@@ -107,21 +106,6 @@ namespace DelftTools.Hydro
                 default:
                     throw new ArgumentException("Unknown catchment type");
             }
-        }
-
-        public object Clone()
-        {
-            return new CatchmentType
-            {
-                Name = Name,
-                Icon = Icon,
-                subCatchmentTypes = subCatchmentTypes
-            };
-        }
-
-        protected bool Equals(CatchmentType other)
-        {
-            return base.Equals(other) && string.Equals(Name, other.Name);
         }
 
         public override bool Equals(object obj)
@@ -155,6 +139,21 @@ namespace DelftTools.Hydro
         public override string ToString()
         {
             return Name;
+        }
+
+        public object Clone()
+        {
+            return new CatchmentType
+            {
+                Name = Name,
+                Icon = Icon,
+                subCatchmentTypes = subCatchmentTypes
+            };
+        }
+
+        protected bool Equals(CatchmentType other)
+        {
+            return base.Equals(other) && string.Equals(Name, other.Name);
         }
     }
 }

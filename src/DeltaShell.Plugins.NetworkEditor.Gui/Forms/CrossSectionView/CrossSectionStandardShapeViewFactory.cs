@@ -17,36 +17,21 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
                 case CrossSectionStandardShapeType.Egg: //wait for implemnetation closed branches
                 case CrossSectionStandardShapeType.Elliptical:
                 case CrossSectionStandardShapeType.Rectangle:
-                    return new CrossSectionStandardShapeWidthHeightView
-                               {
-                                   Data = (CrossSectionStandardShapeWidthHeightBase) standardShape
-                               };
-
+                    return new CrossSectionStandardShapeWidthHeightView {Data = (CrossSectionStandardShapeWidthHeightBase) standardShape};
 
                 case CrossSectionStandardShapeType.Round: //wait for implemnetation closed branches
-                    return new CrossSectionStandardShapeRoundView
-                               {
-                                   Data = (CrossSectionStandardShapeRound) standardShape
-                               };
+                    return new CrossSectionStandardShapeRoundView {Data = (CrossSectionStandardShapeRound) standardShape};
 
                 case CrossSectionStandardShapeType.Trapezium:
-                    return new CrossSectionStandardShapeTrapeziumView
-                    {
-                        Data = (CrossSectionStandardShapeTrapezium)standardShape
-                    };
+                    return new CrossSectionStandardShapeTrapeziumView {Data = (CrossSectionStandardShapeTrapezium) standardShape};
                 case CrossSectionStandardShapeType.Arch:
-                    return new CrossSectionStandardShapeArchView
-                               {
-                                   Data = (CrossSectionStandardShapeArch) standardShape
-                               };
+                    return new CrossSectionStandardShapeArchView {Data = (CrossSectionStandardShapeArch) standardShape};
                 case CrossSectionStandardShapeType.SteelCunette:
-                    return new CrossSectionStandardShapeSteelCunetteView
-                    {
-                        Data = (CrossSectionStandardShapeSteelCunette)standardShape
-                    };
+                    return new CrossSectionStandardShapeSteelCunetteView {Data = (CrossSectionStandardShapeSteelCunette) standardShape};
                 default:
                     throw new NotImplementedException();
             }
+
             throw new NotImplementedException();
         }
     }

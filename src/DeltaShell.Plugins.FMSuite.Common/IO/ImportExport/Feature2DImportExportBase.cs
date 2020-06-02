@@ -44,39 +44,12 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.ImportExport
         where TFeat : IFeature, INameable
     {
         /// <summary>
-        /// Gets the name of the exporter.
-        /// </summary>
-        /// <value>
-        /// The name of the exporter.
-        /// </value>
-        protected abstract string ExporterName { get; }
-
-        /// <summary>
-        /// Gets the name of the importer.
-        /// </summary>
-        /// <value>
-        /// The name of the importer.
-        /// </value>
-        protected abstract string ImporterName { get; }
-
-        public string[] Files { get; set; }
-
-        public Feature2DImportExportMode Mode { get; set; }
-
-        /// <summary>
-        /// Comparer used to determine if items are equal (most generate valid HashCodes)
-        /// </summary>
-        public IEqualityComparer EqualityComparer { get; set; }
-
-        public ICoordinateTransformation CoordinateTransformation { private get; set; }
-
-        /// <summary>
         /// Gets the editable object associated with the import action
         /// </summary>
         public Func<object, IEditableObject> GetEditableObject { get; set; }
 
         /// <summary>
-        /// Action to perform after creating the <see cref="TFeat" /> feature
+        /// Action to perform after creating the <see cref="TFeat"/> feature
         /// (before adding features to the target)
         /// </summary>
         public Action<object, TFeat> AfterCreateAction { get; set; }
@@ -97,11 +70,38 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.ImportExport
         /// </value>
         public Action<object> AfterExportActionDelegate { get; set; }
 
+        public string[] Files { get; set; }
+
+        public Feature2DImportExportMode Mode { get; set; }
+
+        /// <summary>
+        /// Comparer used to determine if items are equal (most generate valid HashCodes)
+        /// </summary>
+        public IEqualityComparer EqualityComparer { get; set; }
+
+        public ICoordinateTransformation CoordinateTransformation { private get; set; }
+
         /// <summary>
         /// Optional check for replacing duplicate features (return false to cancel)
         /// (object1 = current feature, object 2 = new feature to replace with)
         /// </summary>
         public Func<object, object, bool> ShouldReplace { get; set; }
+
+        /// <summary>
+        /// Gets the name of the exporter.
+        /// </summary>
+        /// <value>
+        /// The name of the exporter.
+        /// </value>
+        protected abstract string ExporterName { get; }
+
+        /// <summary>
+        /// Gets the name of the importer.
+        /// </summary>
+        /// <value>
+        /// The name of the importer.
+        /// </value>
+        protected abstract string ImporterName { get; }
 
         /// <summary>
         /// Imports the file at the specified path.
@@ -116,6 +116,57 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.ImportExport
         /// <param name="features">The features.</param>
         /// <param name="path">The path.</param>
         protected abstract void Export(IEnumerable<TFeat> features, string path);
+
+        [InvokeRequired]
+        protected void AddOrReplace<T>(IList<T> featureList, IEnumerable<T> featuresToAdd, IEqualityComparer comparer)
+            where T : INameable
+        {
+            List<T> featuresToAddList = featuresToAdd.ToList();
+
+            featuresToAdd.OfType<TFeat>().ForEach(f => AfterCreateAction?.Invoke(featureList, f));
+
+            GetEditableObject?.Invoke(featureList)
+                             .BeginEdit(new DefaultEditAction($"Importing features of type {typeof(T).Name}"));
+
+            IEqualityComparer<T> equalityComparer = comparer != null
+                                                        ? (IEqualityComparer<T>) comparer
+                                                        : new NameableFeatureComparer<T>();
+
+            Dictionary<int, int> hashListIndexLookup = featureList
+                                                       .Select((f, i) => new System.Tuple<int, int>(
+                                                                   equalityComparer.GetHashCode(f), i))
+                                                       .ToDictionary(t => t.Item1, t => t.Item2);
+
+            var hashSet = new HashSet<T>(featureList, equalityComparer);
+            var newItems = new List<T>();
+
+            for (var i = 0; i < featuresToAddList.Count; i++)
+            {
+                ProgressChanged?.Invoke("Adding features", i, featuresToAddList.Count);
+
+                T item = featuresToAddList[i];
+                if (hashSet.Contains(item))
+                {
+                    int hash = equalityComparer.GetHashCode(item);
+                    int index = hashListIndexLookup[hash];
+
+                    if (ShouldReplace != null && !ShouldReplace(featureList[index], item))
+                    {
+                        continue;
+                    }
+
+                    featureList[index] = item;
+                }
+                else
+                {
+                    newItems.Add(item);
+                }
+            }
+
+            featureList.AddRange(newItems);
+
+            GetEditableObject?.Invoke(featureList).EndEdit();
+        }
 
         #region IFileImporter
 
@@ -260,56 +311,5 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.ImportExport
         }
 
         #endregion
-
-        [InvokeRequired]
-        protected void AddOrReplace<T>(IList<T> featureList, IEnumerable<T> featuresToAdd, IEqualityComparer comparer)
-            where T : INameable
-        {
-            List<T> featuresToAddList = featuresToAdd.ToList();
-
-            featuresToAdd.OfType<TFeat>().ForEach(f => AfterCreateAction?.Invoke(featureList, f));
-
-            GetEditableObject?.Invoke(featureList)
-                             .BeginEdit(new DefaultEditAction($"Importing features of type {typeof(T).Name}"));
-
-            IEqualityComparer<T> equalityComparer = comparer != null
-                                                        ? (IEqualityComparer<T>) comparer
-                                                        : new NameableFeatureComparer<T>();
-
-            Dictionary<int, int> hashListIndexLookup = featureList
-                                                       .Select((f, i) => new System.Tuple<int, int>(
-                                                                   equalityComparer.GetHashCode(f), i))
-                                                       .ToDictionary(t => t.Item1, t => t.Item2);
-
-            var hashSet = new HashSet<T>(featureList, equalityComparer);
-            var newItems = new List<T>();
-
-            for (var i = 0; i < featuresToAddList.Count; i++)
-            {
-                ProgressChanged?.Invoke("Adding features", i, featuresToAddList.Count);
-
-                T item = featuresToAddList[i];
-                if (hashSet.Contains(item))
-                {
-                    int hash = equalityComparer.GetHashCode(item);
-                    int index = hashListIndexLookup[hash];
-
-                    if (ShouldReplace != null && !ShouldReplace(featureList[index], item))
-                    {
-                        continue;
-                    }
-
-                    featureList[index] = item;
-                }
-                else
-                {
-                    newItems.Add(item);
-                }
-            }
-
-            featureList.AddRange(newItems);
-
-            GetEditableObject?.Invoke(featureList).EndEdit();
-        }
     }
 }

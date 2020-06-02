@@ -24,23 +24,22 @@ namespace DeltaShell.Plugins.FMSuite.Common.Layers
 {
     public class SnappedFeatureCollection : FeatureCollection
     {
-        private VectorStyle OriginalFeaturesLayerStyle { get; set; }
-        private List<Feature2D> SnappedFeatures { get; set; }
+        private static readonly ILog Log = LogManager.GetLogger(typeof(SnappedFeatureCollection));
         private bool dirty;
 
-        private static readonly ILog Log = LogManager.GetLogger(typeof(SnappedFeatureCollection));
+        private IList originalFeatures;
 
         /// <summary>
-        /// A <see cref="FeatureCollection" /> for <see cref="IFeature" /> objects that are being
-        /// snapped with <see cref="IGridOperationApi" />.
+        /// A <see cref="FeatureCollection"/> for <see cref="IFeature"/> objects that are being
+        /// snapped with <see cref="IGridOperationApi"/>.
         /// </summary>
         /// <param name="operationApi"> snap api </param>
         /// <param name="originalFeatures">
-        /// Expected to be a collection of <see cref="IFeature" />, where collection implements
-        /// <see cref="INotifyCollectionChanged" /> and <see cref="INotifyPropertyChanged" />.
+        /// Expected to be a collection of <see cref="IFeature"/>, where collection implements
+        /// <see cref="INotifyCollectionChanged"/> and <see cref="INotifyPropertyChanged"/>.
         /// </param>
         /// <param name="originalFeaturesLayerStyle">
-        /// Style of the layer from which <paramref name="originalFeatures" /> are coming
+        /// Style of the layer from which <paramref name="originalFeatures"/> are coming
         /// from.
         /// </param>
         /// <param name="layerName"> Name of the layer. </param>
@@ -126,8 +125,20 @@ namespace DeltaShell.Plugins.FMSuite.Common.Layers
             }
         }
 
-        private IList originalFeatures;
         public IGridOperationApi OperationApi { get; set; }
+
+        public ILayer Layer { get; set; }
+
+        public override void Dispose()
+        {
+            Layer = null;
+            OriginalFeatures = null;
+
+            base.Dispose();
+        }
+
+        private VectorStyle OriginalFeaturesLayerStyle { get; set; }
+        private List<Feature2D> SnappedFeatures { get; set; }
 
         private IList OriginalFeatures
         {
@@ -151,8 +162,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.Layers
                 }
             }
         }
-
-        public ILayer Layer { get; set; }
 
         private bool LayerIsShown =>
             Layer != null && Layer.Map != null && Layer.Map.GetAllVisibleLayers(false).Contains(Layer);
@@ -350,14 +359,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.Layers
         private static Pen AdjustPenTransparency(Pen originalPen, int alpha)
         {
             return new Pen(Color.FromArgb(alpha, originalPen.Color), originalPen.Width);
-        }
-
-        public override void Dispose()
-        {
-            Layer = null;
-            OriginalFeatures = null;
-
-            base.Dispose();
         }
     }
 }

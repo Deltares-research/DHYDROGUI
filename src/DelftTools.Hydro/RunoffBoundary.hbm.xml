@@ -1,11 +1,12 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8"?>
+
 <hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
-  <subclass name="DelftTools.Hydro.RunoffBoundary, DelftTools.Hydro" 
-            discriminator-value="runoffboundary" 
+  <subclass name="DelftTools.Hydro.RunoffBoundary, DelftTools.Hydro"
+            discriminator-value="runoffboundary"
             extends="GeoAPI.Extensions.Feature.IFeature, GeoAPI.Extensions">
 
     <property name="Name" column="name" />
-    
+
     <property name="Description" column="description" />
 
     <many-to-one name="Basin" cascade="save-update" class="DelftTools.Hydro.DrainageBasin, DelftTools.Hydro" column="basin_id" />
@@ -15,9 +16,9 @@
           cascade="save-update"
           batch-size="25"
           collection-type="DeltaShell.Plugins.Data.NHibernate.Collections.Generic.PersistentEventedListType`1[[DelftTools.Hydro.HydroLink, DelftTools.Hydro]], DeltaShell.Plugins.Data.NHibernate">
-      <key column="hydro_link_wwtp_id"/>
-      <index column="wwtp_hydro_link_index"/>
-      <many-to-many class="DelftTools.Hydro.HydroLink, DelftTools.Hydro"/>
+      <key column="hydro_link_wwtp_id" />
+      <index column="wwtp_hydro_link_index" />
+      <many-to-many class="DelftTools.Hydro.HydroLink, DelftTools.Hydro" />
     </list>
 
   </subclass>

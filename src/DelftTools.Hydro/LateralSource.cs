@@ -17,6 +17,26 @@ namespace DelftTools.Hydro
             Links = new EventedList<HydroLink>();
         }
 
+        [DisplayName("Length [m]")]
+        [FeatureAttribute(Order = 6, ExportName = "Length")]
+        public virtual double DiffuseLateralLength => Length;
+
+        public virtual IHydroNetwork HydroNetwork => Network as IHydroNetwork;
+
+        [DisplayName("Long name")]
+        [FeatureAttribute(Order = 2)]
+        public virtual string LongName
+        {
+            get => Description;
+            set => SetLongNameToDescription(value);
+        }
+
+        [DisplayName("Diffuse lateral")]
+        [FeatureAttribute(Order = 5)]
+        public virtual bool IsDiffuse => Length != 0;
+
+        public override bool CanBeLinkTarget => true;
+
         public static LateralSource CreateDefault(IBranch branch)
         {
             var lateralSource = new LateralSource
@@ -38,30 +58,10 @@ namespace DelftTools.Hydro
             return clone;
         }
 
-        public virtual IHydroNetwork HydroNetwork => Network as IHydroNetwork;
-
-        [DisplayName("Long name")]
-        [FeatureAttribute(Order = 2)]
-        public virtual string LongName
-        {
-            get => Description;
-            set => SetLongNameToDescription(value);
-        }
-
         [EditAction]
         private void SetLongNameToDescription(string value)
         {
             Description = value;
         }
-
-        [DisplayName("Diffuse lateral")]
-        [FeatureAttribute(Order = 5)]
-        public virtual bool IsDiffuse => Length != 0;
-
-        [DisplayName("Length [m]")]
-        [FeatureAttribute(Order = 6, ExportName = "Length")]
-        public virtual double DiffuseLateralLength => Length;
-
-        public override bool CanBeLinkTarget => true;
     }
 }

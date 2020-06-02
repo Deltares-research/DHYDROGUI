@@ -13,18 +13,22 @@ namespace DelftTools.Hydro.CrossSections
     [Entity(FireOnCollectionChange = false)]
     public class CrossSectionDefinitionXYZ : CrossSectionDefinition
     {
-        private class Coordinate3DEqualityComparer : IEqualityComparer<Coordinate>
-        {
-            public bool Equals(Coordinate x, Coordinate y)
-            {
-                return x.Equals3D(y);
-            }
+        private bool isEditingDataTable;
 
-            public int GetHashCode(Coordinate obj)
-            {
-                return obj.GetHashCode();
-            }
-        }
+        /// <summary>
+        /// This field exists for the following reason. Geometry is not evented. Typically the usage pattern to notify
+        /// the cross section of a change is as follows:
+        /// cs.Geometry.Coordinates[2].X = 5; //the change
+        /// cs.Geometry = cs.Geometry; //the notification
+        /// Unfortunately as a result of this, when we come to set_Geometry, the old value and new value are the same. Yet
+        /// we need to know what has changed to update our XYZ table correctly. To resolve this, we make a clone of the
+        /// last set geometry and put it here. Then we use this as the last-known geometry whenever a new geometry is set.
+        /// </summary>
+        private IGeometry lastSetGeometry;
+
+        private IGeometry geometry;
+
+        private FastXYZDataTable xyzDataTable;
 
         public CrossSectionDefinitionXYZ()
             : this("") {}
@@ -32,16 +36,76 @@ namespace DelftTools.Hydro.CrossSections
         public CrossSectionDefinitionXYZ(string name)
             : base(name) {}
 
+        public override bool GeometryBased => true;
+
+        public override IEnumerable<Coordinate> Profile =>
+            CrossSectionHelper.CalculateYZProfileFromGeometry(Geometry).ToList();
+
+        public override IEnumerable<Coordinate> FlowProfile
+        {
+            get
+            {
+                //take coordinates from profile, but adjust Y (Z) values with storage. StorageMapping is based on Geometry 
+                //coordinates not profile coordinates, but indices match.
+
+                return Profile.Select((c, index) => new Coordinate(c.X, c.Y + xyzDataTable[index].DeltaZStorage, 0.0));
+            }
+        }
+
+        public override CrossSectionType CrossSectionType => CrossSectionType.GeometryBased;
+
+        public override LightDataTable RawData => XYZDataTable;
+
+        public virtual IGeometry Geometry
+        {
+            get => geometry;
+            set
+            {
+                if (!(value is ILineString) || value == null)
+                {
+                    throw new ArgumentException("Invalid Geometry for CrossSection XYZ");
+                }
+
+                geometry = value; //do actual replace
+
+                AfterGeometrySet();
+            }
+        }
+
+        public virtual FastXYZDataTable XYZDataTable
+        {
+            get
+            {
+                if (xyzDataTable == null)
+                {
+                    xyzDataTable = new FastXYZDataTable();
+                    SubscribeToDataTable();
+                }
+
+                return xyzDataTable;
+            }
+            protected set
+            {
+                if (xyzDataTable != null)
+                {
+                    xyzDataTable.ZValueChanged -= DataTableZValueChanged;
+                    xyzDataTable.RowChanging -= CrossSectionXYZRowChanging;
+                }
+
+                xyzDataTable = value;
+                SubscribeToDataTable();
+            }
+        }
+
+        public static CrossSectionDefinitionXYZ CreateDefault()
+        {
+            return new CrossSectionDefinitionXYZ {Name = "Default CrossSection"};
+        }
+
         public override void SetGeometry(IGeometry value)
         {
             base.SetGeometry(null); //clear cache internally
             OnAfterSetGeometry(value);
-        }
-
-        [EditAction]
-        private void OnAfterSetGeometry(IGeometry value)
-        {
-            Geometry = value;
         }
 
         public override Utils.Tuple<string, bool> ValidateCellValue(int rowIndex, int columnIndex, object cellValue)
@@ -81,7 +145,60 @@ namespace DelftTools.Hydro.CrossSections
             return new Utils.Tuple<string, bool>("", true);
         }
 
-        private bool isEditingDataTable;
+        public override object Clone()
+        {
+            var clone = (CrossSectionDefinitionXYZ) base.Clone();
+
+            clone.Geometry = (IGeometry) Geometry.Clone();
+            for (var i = 0; i < XYZDataTable.Rows.Count; i++)
+            {
+                clone.XYZDataTable[i].DeltaZStorage = XYZDataTable[i].DeltaZStorage;
+            }
+
+            return clone;
+        }
+
+        public override void CopyFrom(object source)
+        {
+            var crossSectionSource = (CrossSectionDefinitionXYZ) source;
+
+            CopyFrom(source, false);
+
+            //copy geometry
+            Geometry = crossSectionSource.Geometry;
+            for (var i = 0; i < XYZDataTable.Rows.Count; i++)
+            {
+                XYZDataTable[i].DeltaZStorage = crossSectionSource.XYZDataTable[i].DeltaZStorage;
+            }
+        }
+
+        public override void ShiftLevel(double delta)
+        {
+            BeginEdit(new DefaultEditAction("Shift level"));
+
+            foreach (Coordinate coordinate in Geometry.Coordinates)
+            {
+                coordinate.Z += delta;
+            }
+
+            EndEdit();
+        }
+
+        public override IGeometry CalculateGeometry(IGeometry branchGeometry, double mapChainage)
+        {
+            return Geometry;
+        }
+
+        public override int GetRawDataTableIndex(int profileIndex)
+        {
+            return profileIndex;
+        }
+
+        [EditAction]
+        private void OnAfterSetGeometry(IGeometry value)
+        {
+            Geometry = value;
+        }
 
         [EditAction]
         private void CrossSectionXYZRowChanging(object sender, LightDataRowChangeEventArgs e)
@@ -122,35 +239,6 @@ namespace DelftTools.Hydro.CrossSections
             if (!validationResult.Second)
             {
                 throw new ArgumentException(validationResult.First);
-            }
-        }
-
-        /// <summary>
-        /// This field exists for the following reason. Geometry is not evented. Typically the usage pattern to notify
-        /// the cross section of a change is as follows:
-        /// cs.Geometry.Coordinates[2].X = 5; //the change
-        /// cs.Geometry = cs.Geometry; //the notification
-        /// Unfortunately as a result of this, when we come to set_Geometry, the old value and new value are the same. Yet
-        /// we need to know what has changed to update our XYZ table correctly. To resolve this, we make a clone of the
-        /// last set geometry and put it here. Then we use this as the last-known geometry whenever a new geometry is set.
-        /// </summary>
-        private IGeometry lastSetGeometry;
-
-        private IGeometry geometry;
-
-        public virtual IGeometry Geometry
-        {
-            get => geometry;
-            set
-            {
-                if (!(value is ILineString) || value == null)
-                {
-                    throw new ArgumentException("Invalid Geometry for CrossSection XYZ");
-                }
-
-                geometry = value; //do actual replace
-
-                AfterGeometrySet();
             }
         }
 
@@ -278,100 +366,6 @@ namespace DelftTools.Hydro.CrossSections
             XYZDataTable.Rows.Insert(index, new CrossSectionDataSet.CrossSectionXYZRow(yQ, z, deltaZStorage));
         }
 
-        private FastXYZDataTable xyzDataTable;
-
-        public override bool GeometryBased => true;
-
-        public override IEnumerable<Coordinate> Profile =>
-            CrossSectionHelper.CalculateYZProfileFromGeometry(Geometry).ToList();
-
-        public override IEnumerable<Coordinate> FlowProfile
-        {
-            get
-            {
-                //take coordinates from profile, but adjust Y (Z) values with storage. StorageMapping is based on Geometry 
-                //coordinates not profile coordinates, but indices match.
-
-                return Profile.Select((c, index) => new Coordinate(c.X, c.Y + xyzDataTable[index].DeltaZStorage, 0.0));
-            }
-        }
-
-        public override object Clone()
-        {
-            var clone = (CrossSectionDefinitionXYZ) base.Clone();
-
-            clone.Geometry = (IGeometry) Geometry.Clone();
-            for (var i = 0; i < XYZDataTable.Rows.Count; i++)
-            {
-                clone.XYZDataTable[i].DeltaZStorage = XYZDataTable[i].DeltaZStorage;
-            }
-
-            return clone;
-        }
-
-        public override void CopyFrom(object source)
-        {
-            var crossSectionSource = (CrossSectionDefinitionXYZ) source;
-
-            CopyFrom(source, false);
-
-            //copy geometry
-            Geometry = crossSectionSource.Geometry;
-            for (var i = 0; i < XYZDataTable.Rows.Count; i++)
-            {
-                XYZDataTable[i].DeltaZStorage = crossSectionSource.XYZDataTable[i].DeltaZStorage;
-            }
-        }
-
-        public override CrossSectionType CrossSectionType => CrossSectionType.GeometryBased;
-
-        public override void ShiftLevel(double delta)
-        {
-            BeginEdit(new DefaultEditAction("Shift level"));
-
-            foreach (Coordinate coordinate in Geometry.Coordinates)
-            {
-                coordinate.Z += delta;
-            }
-
-            EndEdit();
-        }
-
-        public override IGeometry CalculateGeometry(IGeometry branchGeometry, double mapChainage)
-        {
-            return Geometry;
-        }
-
-        public override int GetRawDataTableIndex(int profileIndex)
-        {
-            return profileIndex;
-        }
-
-        public virtual FastXYZDataTable XYZDataTable
-        {
-            get
-            {
-                if (xyzDataTable == null)
-                {
-                    xyzDataTable = new FastXYZDataTable();
-                    SubscribeToDataTable();
-                }
-
-                return xyzDataTable;
-            }
-            protected set
-            {
-                if (xyzDataTable != null)
-                {
-                    xyzDataTable.ZValueChanged -= DataTableZValueChanged;
-                    xyzDataTable.RowChanging -= CrossSectionXYZRowChanging;
-                }
-
-                xyzDataTable = value;
-                SubscribeToDataTable();
-            }
-        }
-
         private void SubscribeToDataTable()
         {
             if (xyzDataTable != null)
@@ -387,11 +381,17 @@ namespace DelftTools.Hydro.CrossSections
                 e.ProposedValue;
         }
 
-        public override LightDataTable RawData => XYZDataTable;
-
-        public static CrossSectionDefinitionXYZ CreateDefault()
+        private class Coordinate3DEqualityComparer : IEqualityComparer<Coordinate>
         {
-            return new CrossSectionDefinitionXYZ {Name = "Default CrossSection"};
+            public bool Equals(Coordinate x, Coordinate y)
+            {
+                return x.Equals3D(y);
+            }
+
+            public int GetHashCode(Coordinate obj)
+            {
+                return obj.GetHashCode();
+            }
         }
     }
 }

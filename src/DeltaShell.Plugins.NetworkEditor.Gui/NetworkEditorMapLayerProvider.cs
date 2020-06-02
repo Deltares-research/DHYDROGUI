@@ -42,8 +42,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                    || data is IEventedList<Catchment>
                    || data is IEnumerable<IHydroNode>
                    || data is IEnumerable<IChannel>
-                   || (data is IEventedList<Pump2D> && parentObject is HydroArea)
-                   || (data is IEventedList<Weir2D> && parentObject is HydroArea)
+                   || data is IEventedList<Pump2D> && parentObject is HydroArea
+                   || data is IEventedList<Weir2D> && parentObject is HydroArea
                    || data is IEnumerable<IPump>
                    || data is IEnumerable<ILateralSource>
                    || data is IEnumerable<IRetention>
@@ -55,18 +55,18 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                    || data is IEnumerable<ICompositeBranchStructure>
                    || data is IEnumerable<ICrossSection>
                    || data is IEventedList<Route>
-                   || data is IEventedList<Feature2D> //area2d features & boundaries
+                   || data is IEventedList<Feature2D>          //area2d features & boundaries
                    || data is IEventedList<GroupableFeature2D> //area2d features & boundaries
                    || data is IEventedList<LandBoundary2D>
                    || data is IEventedList<ThinDam2D>
-                   || data is IEventedList<ObservationCrossSection2D> 
-                   || (data is IEventedList<Feature2DPoint> && parentObject is HydroArea) //obs points
-                   || (data is IEventedList<GroupableFeature2DPoint> && parentObject is HydroArea) //obs points
-                   || (data is IEventedList<GroupableFeature2DPolygon> && parentObject is HydroArea) // dry areas & enclosures
-                   || (data is IEventedList<GroupablePointFeature> && parentObject is HydroArea) // dry points
-                   || (data is IEventedList<FixedWeir> && parentObject is HydroArea) //fixed weirs
-                   || (data is IEventedList<Embankment> && parentObject is HydroArea)
-                   || (data is IEventedList<BridgePillar> && parentObject is HydroArea);
+                   || data is IEventedList<ObservationCrossSection2D>
+                   || data is IEventedList<Feature2DPoint> && parentObject is HydroArea            //obs points
+                   || data is IEventedList<GroupableFeature2DPoint> && parentObject is HydroArea   //obs points
+                   || data is IEventedList<GroupableFeature2DPolygon> && parentObject is HydroArea // dry areas & enclosures
+                   || data is IEventedList<GroupablePointFeature> && parentObject is HydroArea     // dry points
+                   || data is IEventedList<FixedWeir> && parentObject is HydroArea                 //fixed weirs
+                   || data is IEventedList<Embankment> && parentObject is HydroArea
+                   || data is IEventedList<BridgePillar> && parentObject is HydroArea;
         }
 
         public IEnumerable<object> ChildLayerObjects(object data)
@@ -74,7 +74,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             var hydroRegion = data as IHydroRegion;
             if (hydroRegion != null)
             {
-                foreach (var subRegion in hydroRegion.SubRegions)
+                foreach (IRegion subRegion in hydroRegion.SubRegions)
                 {
                     yield return subRegion;
                 }
@@ -82,7 +82,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 if (hydroRegion is HydroRegion)
                 {
                     // Two layers are created for HydroLinks: one is Basin and one in the HydroRegion itself. This is the latter. 
-                    yield return hydroRegion.Links; 
+                    yield return hydroRegion.Links;
                 }
 
                 var network = hydroRegion as IHydroNetwork;
@@ -129,13 +129,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                     yield return area2D.Enclosures;
                     yield return area2D.BridgePillars;
                 }
-
             }
 
             var routes = data as IEventedList<Route>;
             if (routes != null)
             {
-                foreach (var route in routes)
+                foreach (Route route in routes)
                 {
                     yield return route;
                 }
@@ -144,22 +143,29 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
 
         public ILayer CreateLayer(object data, object parentData)
         {
-
             var area2D = data as HydroArea;
             if (area2D != null)
             {
-                return new AreaLayer { HydroArea = area2D, NameIsReadOnly = true };
+                return new AreaLayer
+                {
+                    HydroArea = area2D,
+                    NameIsReadOnly = true
+                };
             }
 
             var hydroRegion = data as IHydroRegion;
             if (hydroRegion != null)
             {
-                return new HydroRegionMapLayer { Name = hydroRegion.Name, Region = hydroRegion, LayersReadOnly = true };
+                return new HydroRegionMapLayer
+                {
+                    Name = hydroRegion.Name,
+                    Region = hydroRegion,
+                    LayersReadOnly = true
+                };
             }
 
             var drainageBasin = parentData as DrainageBasin;
             var hydroNetwork = parentData as IHydroNetwork;
-            
 
             var links = data as IEventedList<HydroLink>;
             if (links != null && parentData is IHydroRegion)
@@ -167,17 +173,29 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 var region = (IHydroRegion) parentData;
 
                 return new VectorLayer("Links " + region.Name)
-                           {
-                               Visible = true,
-                               Style = NetworkLayerStyleFactory.CreateStyle(links, drainageBasin!=null),
-                               NameIsReadOnly = true,
-                               DataSource = new FeatureCollection { Features = (IList)region.Links, FeatureType = typeof(HydroLink), CoordinateSystem = region.CoordinateSystem },
-                               FeatureEditor = new HydroLinkFeatureEditor
-                                                   {
-                                                       SnapRules = {new HydroLinkSnapRule {Obligatory = true, PixelGravity = 40}},
-                                                       Region = region
-                                                   }
-                           };
+                {
+                    Visible = true,
+                    Style = NetworkLayerStyleFactory.CreateStyle(links, drainageBasin != null),
+                    NameIsReadOnly = true,
+                    DataSource = new FeatureCollection
+                    {
+                        Features = (IList) region.Links,
+                        FeatureType = typeof(HydroLink),
+                        CoordinateSystem = region.CoordinateSystem
+                    },
+                    FeatureEditor = new HydroLinkFeatureEditor
+                    {
+                        SnapRules =
+                        {
+                            new HydroLinkSnapRule
+                            {
+                                Obligatory = true,
+                                PixelGravity = 40
+                            }
+                        },
+                        Region = region
+                    }
+                };
             }
 
             if (parentData is IHydroRegion && parentData as HydroArea == null)
@@ -186,67 +204,65 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 if (wasteWaterTreatmentPlants != null && parentData is DrainageBasin)
                 {
                     return new VectorLayer("Wastewater Treatment Plants")
-                        {
-                            Style = NetworkLayerStyleFactory.CreateStyle(wasteWaterTreatmentPlants),
-                            NameIsReadOnly = true,
-                            DataSource =
-                                new FeatureCollection((IList) wasteWaterTreatmentPlants,
-                                                      typeof (WasteWaterTreatmentPlant))
-                                    {
-                                        CoordinateSystem = drainageBasin.CoordinateSystem
-                                    },
-                            FeatureEditor = new WasteWaterTreatmentPlantFeatureEditor {DrainageBasin = drainageBasin}
-                        };
+                    {
+                        Style = NetworkLayerStyleFactory.CreateStyle(wasteWaterTreatmentPlants),
+                        NameIsReadOnly = true,
+                        DataSource =
+                            new FeatureCollection((IList) wasteWaterTreatmentPlants,
+                                                  typeof(WasteWaterTreatmentPlant)) {CoordinateSystem = drainageBasin.CoordinateSystem},
+                        FeatureEditor = new WasteWaterTreatmentPlantFeatureEditor {DrainageBasin = drainageBasin}
+                    };
                 }
 
                 var runoffBoundaries = data as IEventedList<RunoffBoundary>;
                 if (runoffBoundaries != null && parentData is DrainageBasin)
                 {
                     return new VectorLayer("Runoff Boundaries")
-                        {
-                            Style = NetworkLayerStyleFactory.CreateStyle(runoffBoundaries),
-                            NameIsReadOnly = true,
-                            DataSource =
-                                new FeatureCollection((IList) runoffBoundaries, typeof (RunoffBoundary))
-                                    {
-                                        CoordinateSystem = drainageBasin.CoordinateSystem
-                                    },
-                            FeatureEditor = new RunoffBoundaryFeatureEditor {DrainageBasin = drainageBasin}
-                        };
+                    {
+                        Style = NetworkLayerStyleFactory.CreateStyle(runoffBoundaries),
+                        NameIsReadOnly = true,
+                        DataSource =
+                            new FeatureCollection((IList) runoffBoundaries, typeof(RunoffBoundary)) {CoordinateSystem = drainageBasin.CoordinateSystem},
+                        FeatureEditor = new RunoffBoundaryFeatureEditor {DrainageBasin = drainageBasin}
+                    };
                 }
 
                 var catchments = data as IEventedList<Catchment>;
                 if (catchments != null)
                 {
-                    var flattenedCatchments = catchments.SelectMany(c => new[] {c}.Concat(c.SubCatchments));
+                    IEnumerable<Catchment> flattenedCatchments = catchments.SelectMany(c => new[]
+                    {
+                        c
+                    }.Concat(c.SubCatchments));
 
                     var centerLayers = new VectorLayer
-                        {
-                            Name = "Catchments (centers)",
-                            DataSource =
-                                new FeatureCollection(
-                                    new WrappedEnumerableList<Catchment>(flattenedCatchments, catchments),
-                                    typeof (Catchment)) {CoordinateSystem = drainageBasin.CoordinateSystem},
-                            FeatureEditor = new CatchmentFeatureEditor {DrainageBasin = drainageBasin},
-                            CustomRenderers = {new CatchmentAnchorPointRenderer()},
-                            NameIsReadOnly = true,
-                            Selectable = false
-                        };
+                    {
+                        Name = "Catchments (centers)",
+                        DataSource =
+                            new FeatureCollection(
+                                new WrappedEnumerableList<Catchment>(flattenedCatchments, catchments),
+                                typeof(Catchment)) {CoordinateSystem = drainageBasin.CoordinateSystem},
+                        FeatureEditor = new CatchmentFeatureEditor {DrainageBasin = drainageBasin},
+                        CustomRenderers = {new CatchmentAnchorPointRenderer()},
+                        NameIsReadOnly = true,
+                        Selectable = false
+                    };
                     var catchmentLayer = new VectorLayer
-                        {
-                            Name = "Catchments (Polygons)",
-                            Style = NetworkLayerStyleFactory.CreateStyle(catchments),
-                            DataSource =
-                                new FeatureCollection((IList) catchments, typeof (Catchment))
-                                    {
-                                        CoordinateSystem = drainageBasin.CoordinateSystem
-                                    },
-                            FeatureEditor = new CatchmentFeatureEditor {DrainageBasin = drainageBasin},
-                            NameIsReadOnly = true
-                        };
+                    {
+                        Name = "Catchments (Polygons)",
+                        Style = NetworkLayerStyleFactory.CreateStyle(catchments),
+                        DataSource =
+                            new FeatureCollection((IList) catchments, typeof(Catchment)) {CoordinateSystem = drainageBasin.CoordinateSystem},
+                        FeatureEditor = new CatchmentFeatureEditor {DrainageBasin = drainageBasin},
+                        NameIsReadOnly = true
+                    };
 
                     var groupLayer = new GroupLayer("Catchments") {NameIsReadOnly = true};
-                    groupLayer.Layers.AddRange(new[] {centerLayers, catchmentLayer});
+                    groupLayer.Layers.AddRange(new[]
+                    {
+                        centerLayers,
+                        catchmentLayer
+                    });
                     groupLayer.LayersReadOnly = true;
 
                     return groupLayer;
@@ -276,9 +292,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 {
                     return CreateNetworkVectorLayer<LateralSource>(lateralSources, "Lateral Sources", hydroNetwork,
                                                                    o =>
-                                                                   o is Channel &&
-                                                                   ((Channel) o).BranchFeatures.OfType<LateralSource>()
-                                                                                .Any());
+                                                                       o is Channel &&
+                                                                       ((Channel) o).BranchFeatures.OfType<LateralSource>()
+                                                                                    .Any());
                 }
 
                 var retentions = data as IEnumerable<IRetention>;
@@ -286,8 +302,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 {
                     return CreateNetworkVectorLayer<Retention>(retentions, "Retentions", hydroNetwork,
                                                                o =>
-                                                               o is Channel &&
-                                                               ((Channel) o).BranchFeatures.OfType<Retention>().Any());
+                                                                   o is Channel &&
+                                                                   ((Channel) o).BranchFeatures.OfType<Retention>().Any());
                 }
 
                 var observationPoints = data as IEnumerable<IObservationPoint>;
@@ -296,8 +312,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                     return CreateNetworkVectorLayer<ObservationPoint>(observationPoints, "Observation Points",
                                                                       hydroNetwork,
                                                                       o =>
-                                                                      o is Channel &&
-                                                                      ((Channel) o).ObservationPoints.Any());
+                                                                          o is Channel &&
+                                                                          ((Channel) o).ObservationPoints.Any());
                 }
 
                 var weirs = data as IEnumerable<IWeir>;
@@ -333,9 +349,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 {
                     return CreateNetworkVectorLayer<ExtraResistance>(extraResistances, "Extra Resistances", hydroNetwork,
                                                                      o =>
-                                                                     o is Channel &&
-                                                                     ((Channel) o).BranchFeatures
-                                                                                  .OfType<ExtraResistance>().Any());
+                                                                         o is Channel &&
+                                                                         ((Channel) o).BranchFeatures
+                                                                                      .OfType<ExtraResistance>().Any());
                 }
 
                 var compositeBranchStructures = data as IEnumerable<ICompositeBranchStructure>;
@@ -345,8 +361,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                                                                               "Composite Structure",
                                                                               hydroNetwork,
                                                                               o =>
-                                                                              o is Channel &&
-                                                                              ((Channel) o).CrossSections.Any());
+                                                                                  o is Channel &&
+                                                                                  ((Channel) o).CrossSections.Any());
                 }
 
                 var crossSections = data as IEnumerable<ICrossSection>;
@@ -360,17 +376,17 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 if (routes != null)
                 {
                     return new GroupLayer("Routes")
-                        {
-                            Selectable = false,
-                            NameIsReadOnly = true,
-                            LayersReadOnly = true
-                        };
+                    {
+                        Selectable = false,
+                        NameIsReadOnly = true,
+                        LayersReadOnly = true
+                    };
                 }
             }
 
             const string modelName = "NetworkEditorModelName";
             var features = data as IEnumerable<IFeature>;
-            var area2DParent = parentData as HydroArea; 
+            var area2DParent = parentData as HydroArea;
             if (features != null && area2DParent != null)
             {
                 if (Equals(features, area2DParent.ObservationPoints))
@@ -380,7 +396,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                         NameIsReadOnly = true,
                         FeatureEditor = new Feature2DEditor(area2DParent),
                         Style = AreaLayerStyles.ObservationPointStyle,
-                        DataSource = new HydroAreaFeature2DCollection (area2DParent).Init(area2DParent.ObservationPoints, "ObservationPoint", modelName, area2DParent.CoordinateSystem)
+                        DataSource = new HydroAreaFeature2DCollection(area2DParent).Init(area2DParent.ObservationPoints, "ObservationPoint", modelName, area2DParent.CoordinateSystem)
                     };
                 }
 
@@ -395,17 +411,23 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                             new HydroAreaFeature2DCollection(area2DParent).Init(area2DParent.DryPoints, "DryPoint", modelName, area2DParent.CoordinateSystem)
                     };
                 }
+
                 if (Equals(features, area2DParent.DryAreas))
                 {
-                    var ds = new HydroAreaFeature2DCollection(area2DParent).Init(area2DParent.DryAreas, "DryArea", modelName, area2DParent.CoordinateSystem);
+                    Feature2DCollection ds = new HydroAreaFeature2DCollection(area2DParent).Init(area2DParent.DryAreas, "DryArea", modelName, area2DParent.CoordinateSystem);
                     ds.AddNewFeatureFromGeometryDelegate = (provider, geometry) =>
                     {
                         if (!(geometry is IPolygon))
                         {
-                            if (geometry.Coordinates.Count() < 4) return null;
+                            if (geometry.Coordinates.Count() < 4)
+                            {
+                                return null;
+                            }
+
                             geometry = new Polygon(new LinearRing(geometry.Coordinates));
                         }
-                        var newFeature = new GroupableFeature2DPolygon { Geometry = geometry };
+
+                        var newFeature = new GroupableFeature2DPolygon {Geometry = geometry};
                         ds.Features.Add(newFeature);
 
                         return newFeature;
@@ -431,35 +453,38 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                     Style = AreaLayerStyles.ObsCrossSectionStyle,
                     DataSource =
                         new HydroAreaFeature2DCollection(area2DParent).Init(area2DParent.ObservationCrossSections, "ObservationCrossSection",
-                                                       modelName, area2DParent.CoordinateSystem),
-                    CustomRenderers = new[] { new ArrowLineStringAdornerRenderer() }
+                                                                            modelName, area2DParent.CoordinateSystem),
+                    CustomRenderers = new[]
+                    {
+                        new ArrowLineStringAdornerRenderer()
+                    }
                 };
             }
 
             var pumps2d = data as IEventedList<Pump2D>;
             if (pumps2d != null && area2DParent != null && Equals(pumps2d, area2DParent.Pumps))
             {
-                var areaFeature2DCollection = new HydroAreaFeature2DCollection(area2DParent).Init(pumps2d, "pump", modelName,
-                    area2DParent.CoordinateSystem);
+                Feature2DCollection areaFeature2DCollection = new HydroAreaFeature2DCollection(area2DParent).Init(pumps2d, "pump", modelName,
+                                                                                                                  area2DParent.CoordinateSystem);
                 areaFeature2DCollection.FeatureType = typeof(Pump2D); // Override so we can use FeatureAttributes!
                 return new VectorLayer(HydroArea.PumpsPluralName)
                 {
                     NameIsReadOnly = true,
                     Style = AreaLayerStyles.PumpStyle,
                     DataSource = areaFeature2DCollection,
-                    FeatureEditor = new Feature2DEditor(area2DParent)
+                    FeatureEditor = new Feature2DEditor(area2DParent) {CreateNewFeature = layer => new Pump2D(true)},
+                    CustomRenderers = new[]
                     {
-                        CreateNewFeature = layer => new Pump2D(true)
-                    },
-                    CustomRenderers = new[] { new ArrowLineStringAdornerRenderer() }
+                        new ArrowLineStringAdornerRenderer()
+                    }
                 };
             }
 
             var weirs2d = data as IEventedList<Weir2D>;
             if (weirs2d != null && area2DParent != null && Equals(weirs2d, area2DParent.Weirs))
             {
-                var feature2DCollection = new HydroAreaFeature2DCollection(area2DParent).Init(weirs2d, "structure", modelName,
-                                                                         area2DParent.CoordinateSystem);
+                Feature2DCollection feature2DCollection = new HydroAreaFeature2DCollection(area2DParent).Init(weirs2d, "structure", modelName,
+                                                                                                              area2DParent.CoordinateSystem);
                 feature2DCollection.FeatureType = typeof(Weir2D); // Override so we can use FeatureAttributes!
                 return new VectorLayer(HydroArea.WeirsPluralName)
                 {
@@ -467,7 +492,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                     Style = AreaLayerStyles.WeirStyle,
                     DataSource = feature2DCollection,
                     FeatureEditor = new Feature2DEditor(area2DParent),
-                    CustomRenderers = new[] { new ArrowLineStringAdornerRenderer() }
+                    CustomRenderers = new[]
+                    {
+                        new ArrowLineStringAdornerRenderer()
+                    }
                 };
             }
 
@@ -481,7 +509,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                     Style = AreaLayerStyles.ThinDamStyle,
                     DataSource =
                         new HydroAreaFeature2DCollection(area2DParent).Init(area2DParent.ThinDams, "ThinDam", modelName,
-                                                       area2DParent.CoordinateSystem)
+                                                                            area2DParent.CoordinateSystem)
                 };
             }
 
@@ -495,9 +523,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                     Style = AreaLayerStyles.LandBoundaryStyle,
                     DataSource =
                         new HydroAreaFeature2DCollection(area2DParent).Init(area2DParent.LandBoundaries, "LandBoundary", modelName,
-                            area2DParent.CoordinateSystem)
+                                                                            area2DParent.CoordinateSystem)
                 };
             }
+
             var embankments = data as IEventedList<Embankment>;
             if (embankments != null && area2DParent != null && Equals(embankments, area2DParent.Embankments))
             {
@@ -509,22 +538,30 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                     Style = AreaLayerStyles.EmbankmentStyle,
                     DataSource =
                         new HydroAreaFeature2DCollection(area2DParent).Init(area2DParent.Embankments, "Embankment", modelName,
-                            area2DParent.CoordinateSystem),
-                    CustomRenderers = new List<IFeatureRenderer>(new [] {new EmbankmentRenderer()})
+                                                                            area2DParent.CoordinateSystem),
+                    CustomRenderers = new List<IFeatureRenderer>(new[]
+                    {
+                        new EmbankmentRenderer()
+                    })
                 };
             }
 
             if (Equals(features, area2DParent.Enclosures))
             {
-                var ds = new HydroAreaFeature2DCollection(area2DParent).Init(area2DParent.Enclosures, "Enclosure", modelName, area2DParent.CoordinateSystem);
+                Feature2DCollection ds = new HydroAreaFeature2DCollection(area2DParent).Init(area2DParent.Enclosures, "Enclosure", modelName, area2DParent.CoordinateSystem);
                 ds.AddNewFeatureFromGeometryDelegate = (provider, geometry) =>
                 {
                     if (!(geometry is IPolygon))
                     {
-                        if (geometry.Coordinates.Count() < 4) return null;
+                        if (geometry.Coordinates.Count() < 4)
+                        {
+                            return null;
+                        }
+
                         geometry = new Polygon(new LinearRing(geometry.Coordinates));
                     }
-                    var newFeature = new GroupableFeature2DPolygon() { Geometry = geometry };
+
+                    var newFeature = new GroupableFeature2DPolygon() {Geometry = geometry};
                     ds.Features.Add(newFeature);
 
                     return newFeature;
@@ -535,9 +572,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                     NameIsReadOnly = true,
                     FeatureEditor = new Feature2DEditor(area2DParent),
                     Opacity = (float) 0.25,
-                    Style = AreaLayerStyles.EnclosureStyle,                  
+                    Style = AreaLayerStyles.EnclosureStyle,
                     DataSource = ds,
-                    CustomRenderers = new List<IFeatureRenderer>(new[] { new EnclosureRenderer() })
+                    CustomRenderers = new List<IFeatureRenderer>(new[]
+                    {
+                        new EnclosureRenderer()
+                    })
                 };
             }
 
@@ -551,7 +591,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                     Style = AreaLayerStyles.FixedWeirStyle,
                     DataSource =
                         new HydroAreaFeature2DCollection(area2DParent).Init(area2DParent.FixedWeirs, "FixedWeir", modelName,
-                            area2DParent.CoordinateSystem)
+                                                                            area2DParent.CoordinateSystem)
                 };
             }
 
@@ -565,7 +605,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                     Style = AreaLayerStyles.BridgePillarStyle,
                     DataSource =
                         new HydroAreaFeature2DCollection(area2DParent).Init(area2DParent.BridgePillars, "BridgePillar", modelName,
-                            area2DParent.CoordinateSystem)
+                                                                            area2DParent.CoordinateSystem)
                 };
             }
 
@@ -575,128 +615,125 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
         private static VectorLayer CreateNetworkVectorLayer<TFeature>(IEnumerable<IFeature> networkItems, string name, IHydroNetwork hydroNetwork, Func<object, bool> refreshForChangedItem = null)
         {
             var layer = new VectorLayer(name)
-                            {
-                                Style = NetworkLayerStyleFactory.CreateStyle(networkItems),
-                                Theme = NetworkLayerStyleFactory.CreateTheme(networkItems),
-                                NameIsReadOnly = true,
-                                DataSource = new HydroNetworkFeatureCollection
-                                                 {
-                                                     FeatureType = typeof (TFeature),
-                                                     Network = hydroNetwork,
-                                                     RefreshForChangedItem = refreshForChangedItem,
-                                                     CoordinateSystem = hydroNetwork.CoordinateSystem
-                                                 },
-                                FeatureEditor = new HydroNetworkFeatureEditor(hydroNetwork)
-                                                    {
-                                                        CreateNewFeature = NewNetworkFeature<TFeature>()
-                                                    },
-                                CustomRenderers = GetCustomRenderer<TFeature>()
-                            };
+            {
+                Style = NetworkLayerStyleFactory.CreateStyle(networkItems),
+                Theme = NetworkLayerStyleFactory.CreateTheme(networkItems),
+                NameIsReadOnly = true,
+                DataSource = new HydroNetworkFeatureCollection
+                {
+                    FeatureType = typeof(TFeature),
+                    Network = hydroNetwork,
+                    RefreshForChangedItem = refreshForChangedItem,
+                    CoordinateSystem = hydroNetwork.CoordinateSystem
+                },
+                FeatureEditor = new HydroNetworkFeatureEditor(hydroNetwork) {CreateNewFeature = NewNetworkFeature<TFeature>()},
+                CustomRenderers = GetCustomRenderer<TFeature>()
+            };
 
-            var snapRules = GetSnapRule<TFeature>(layer);
+            IEnumerable<ISnapRule> snapRules = GetSnapRule<TFeature>(layer);
             if (snapRules != null)
             {
-                foreach (var snapRule in snapRules)
+                foreach (ISnapRule snapRule in snapRules)
                 {
                     layer.FeatureEditor.SnapRules.Add(snapRule);
                 }
             }
-            
+
             return layer;
         }
 
         private static IEnumerable<ISnapRule> GetSnapRule<T>(ILayer vectorLayer)
         {
-            var type = typeof(T);
-            if (type == typeof (Channel))
+            Type type = typeof(T);
+            if (type == typeof(Channel))
             {
                 return new List<ISnapRule>
-                           {
-                               new ChannelSnapRule
-                                   {
-                                       Criteria = (layer, feature) => feature is IHydroNode && layer.DataSource is HydroNetworkFeatureCollection &&
-                                                                      ((HydroNetworkFeatureCollection) layer.DataSource).Network ==
-                                                                      ((HydroNetworkFeatureCollection) vectorLayer.DataSource).Network,
-                                       NewFeatureLayer = vectorLayer,
-                                       SnapRole = SnapRole.AllTrackers,
-                                       Obligatory = false,
-                                       PixelGravity = 40
-                                   }
-                           };
+                {
+                    new ChannelSnapRule
+                    {
+                        Criteria = (layer, feature) => feature is IHydroNode && layer.DataSource is HydroNetworkFeatureCollection &&
+                                                       ((HydroNetworkFeatureCollection) layer.DataSource).Network ==
+                                                       ((HydroNetworkFeatureCollection) vectorLayer.DataSource).Network,
+                        NewFeatureLayer = vectorLayer,
+                        SnapRole = SnapRole.AllTrackers,
+                        Obligatory = false,
+                        PixelGravity = 40
+                    }
+                };
             }
 
-            if (type == typeof (CrossSection))
+            if (type == typeof(CrossSection))
             {
                 return new List<ISnapRule>
-                           {
-                               new CrossSectionSnapRule
-                                   {
-                                       Criteria = (layer, feature) => feature is Channel && layer.DataSource is HydroNetworkFeatureCollection &&
-                                                                      ((HydroNetworkFeatureCollection) layer.DataSource).Network ==
-                                                                      ((HydroNetworkFeatureCollection) vectorLayer.DataSource).Network,
-                                       NewFeatureLayer = vectorLayer,
-                                       SnapRole = SnapRole.FreeAtObject,
-                                       Obligatory = true,
-                                       PixelGravity = 40
-                                   }
-                           };
+                {
+                    new CrossSectionSnapRule
+                    {
+                        Criteria = (layer, feature) => feature is Channel && layer.DataSource is HydroNetworkFeatureCollection &&
+                                                       ((HydroNetworkFeatureCollection) layer.DataSource).Network ==
+                                                       ((HydroNetworkFeatureCollection) vectorLayer.DataSource).Network,
+                        NewFeatureLayer = vectorLayer,
+                        SnapRole = SnapRole.FreeAtObject,
+                        Obligatory = true,
+                        PixelGravity = 40
+                    }
+                };
             }
 
-            if (type == typeof (HydroNode))
+            if (type == typeof(HydroNode))
             {
                 return new List<ISnapRule>
-                           {
-                               new HydroNodeSnapRule
-                                   {
-                                       Criteria = (layer, feature) => feature is Channel && layer.DataSource is HydroNetworkFeatureCollection &&
-                                                                      ((HydroNetworkFeatureCollection) layer.DataSource).Network ==
-                                                                      ((HydroNetworkFeatureCollection) vectorLayer.DataSource).Network,
-                                       NewFeatureLayer = vectorLayer,
-                                       SnapRole = SnapRole.FreeAtObject,
-                                       Obligatory = true,
-                                       PixelGravity = 40
-                                   }
-                           };
+                {
+                    new HydroNodeSnapRule
+                    {
+                        Criteria = (layer, feature) => feature is Channel && layer.DataSource is HydroNetworkFeatureCollection &&
+                                                       ((HydroNetworkFeatureCollection) layer.DataSource).Network ==
+                                                       ((HydroNetworkFeatureCollection) vectorLayer.DataSource).Network,
+                        NewFeatureLayer = vectorLayer,
+                        SnapRole = SnapRole.FreeAtObject,
+                        Obligatory = true,
+                        PixelGravity = 40
+                    }
+                };
             }
 
             if (type == typeof(CompositeBranchStructure) || type == typeof(LateralSource) || type == typeof(Retention) || type == typeof(ObservationPoint))
             {
                 return new List<ISnapRule>
-                           {
-                               new SnapRule
-                                   {
-                                       Criteria = (layer, feature) => feature is Channel && layer.DataSource is HydroNetworkFeatureCollection &&
-                                                                      ((HydroNetworkFeatureCollection) layer.DataSource).Network ==
-                                                                      ((HydroNetworkFeatureCollection) vectorLayer.DataSource).Network,
-                                       NewFeatureLayer = vectorLayer,
-                                       SnapRole = SnapRole.FreeAtObject,
-                                       Obligatory = true,
-                                       PixelGravity = 40
-                                   }
-                           };
+                {
+                    new SnapRule
+                    {
+                        Criteria = (layer, feature) => feature is Channel && layer.DataSource is HydroNetworkFeatureCollection &&
+                                                       ((HydroNetworkFeatureCollection) layer.DataSource).Network ==
+                                                       ((HydroNetworkFeatureCollection) vectorLayer.DataSource).Network,
+                        NewFeatureLayer = vectorLayer,
+                        SnapRole = SnapRole.FreeAtObject,
+                        Obligatory = true,
+                        PixelGravity = 40
+                    }
+                };
             }
 
             if (type == typeof(Weir) || type == typeof(Pump) || type == typeof(Culvert) || type == typeof(Bridge) || type == typeof(ExtraResistance))
             {
                 return new List<ISnapRule>
-                           {
-                               new StructureSnapRule
-                                   {
-                                       // StructureSnapRule needs all structure layer for the custom geometry
-                                       NewFeatureLayer = vectorLayer,
-                                       PixelGravity = 40
-                                   },
-                               new SnapRule
-                                   {
-                                       Criteria = (layer, feature) => feature is Channel && layer.DataSource is HydroNetworkFeatureCollection &&
-                                                                      ((HydroNetworkFeatureCollection) layer.DataSource).Network ==
-                                                                      ((HydroNetworkFeatureCollection) vectorLayer.DataSource).Network,
-                                       NewFeatureLayer = vectorLayer,
-                                       SnapRole = SnapRole.FreeAtObject,
-                                       Obligatory = true,
-                                       PixelGravity = 40
-                                   }
-                           };
+                {
+                    new StructureSnapRule
+                    {
+                        // StructureSnapRule needs all structure layer for the custom geometry
+                        NewFeatureLayer = vectorLayer,
+                        PixelGravity = 40
+                    },
+                    new SnapRule
+                    {
+                        Criteria = (layer, feature) => feature is Channel && layer.DataSource is HydroNetworkFeatureCollection &&
+                                                       ((HydroNetworkFeatureCollection) layer.DataSource).Network ==
+                                                       ((HydroNetworkFeatureCollection) vectorLayer.DataSource).Network,
+                        NewFeatureLayer = vectorLayer,
+                        SnapRole = SnapRole.FreeAtObject,
+                        Obligatory = true,
+                        PixelGravity = 40
+                    }
+                };
             }
 
             return Enumerable.Empty<ISnapRule>();
@@ -704,22 +741,22 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
 
         private static IList<IFeatureRenderer> GetCustomRenderer<T>()
         {
-            var type = typeof(T);
+            Type type = typeof(T);
 
             if (type == typeof(CompositeBranchStructure))
             {
-                return new List<IFeatureRenderer>{new CompositeStructureRenderer(new StructureRenderer())};
+                return new List<IFeatureRenderer> {new CompositeStructureRenderer(new StructureRenderer())};
             }
 
-            if (type == typeof(Weir) || type == typeof(Pump) || type == typeof(Culvert) || 
+            if (type == typeof(Weir) || type == typeof(Pump) || type == typeof(Culvert) ||
                 type == typeof(Bridge) || type == typeof(ExtraResistance))
             {
-                return new List<IFeatureRenderer> { new StructureRenderer() };
+                return new List<IFeatureRenderer> {new StructureRenderer()};
             }
 
             if (type == typeof(CrossSection))
             {
-                 return new List<IFeatureRenderer> {new CrossSectionRenderer()};
+                return new List<IFeatureRenderer> {new CrossSectionRenderer()};
             }
 
             if (type == typeof(LateralSource))
@@ -732,7 +769,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
 
         private static Func<ILayer, IFeature> NewNetworkFeature<T>()
         {
-            var type = typeof (T);
+            Type type = typeof(T);
 
             if (type == typeof(Pump))
             {

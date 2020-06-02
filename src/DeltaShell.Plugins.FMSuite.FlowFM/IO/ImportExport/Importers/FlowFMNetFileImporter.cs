@@ -23,7 +23,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
 
         public Func<UnstructuredGrid, WaterFlowFMModel> GetModelForGrid { get; set; }
 
-        #region IFileImporter 
+        #region IFileImporter
 
         [ExcludeFromCodeCoverage]
         public string Name => "Unstructured Grid (UGRID)";

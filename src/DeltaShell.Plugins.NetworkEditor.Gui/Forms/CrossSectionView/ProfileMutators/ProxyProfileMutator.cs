@@ -7,10 +7,66 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView.ProfileMut
         private readonly CrossSectionDefinitionProxy crossSectionDefinition;
         private readonly ICrossSectionProfileMutator innerMutator;
 
-        public ProxyProfileMutator(CrossSectionDefinitionProxy crossSectionDefinition,ICrossSectionProfileMutator innerMutator)
+        public ProxyProfileMutator(CrossSectionDefinitionProxy crossSectionDefinition, ICrossSectionProfileMutator innerMutator)
         {
             this.crossSectionDefinition = crossSectionDefinition;
             this.innerMutator = innerMutator;
+        }
+
+        public bool CanDelete
+        {
+            get
+            {
+                return innerMutator.CanDelete;
+            }
+        }
+
+        public bool CanAdd
+        {
+            get
+            {
+                return innerMutator.CanAdd;
+            }
+        }
+
+        public bool CanMove
+        {
+            get
+            {
+                return innerMutator.CanMove;
+            }
+        }
+
+        public bool ClipHorizontal
+        {
+            get
+            {
+                return innerMutator.ClipHorizontal;
+            }
+        }
+
+        public bool ClipVertical
+        {
+            get
+            {
+                return innerMutator.ClipVertical;
+            }
+        }
+
+        public bool FixHorizontal
+        {
+            get
+            {
+                return innerMutator.FixHorizontal;
+            }
+        }
+
+        public bool FixVertical
+        {
+            get
+            {
+                return innerMutator.FixVertical;
+            }
         }
 
         public void MovePoint(int index, double y, double z)
@@ -27,43 +83,5 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView.ProfileMut
         {
             innerMutator.DeletePoint(index);
         }
-
-        public bool CanDelete
-        {
-            get { return innerMutator.CanDelete; }
-        }
-
-        public bool CanAdd
-        {
-            get { return innerMutator.CanAdd; }
-        }
-
-        public bool CanMove
-        {
-            get { return innerMutator.CanMove; }
-        }
-
-        public bool ClipHorizontal
-        {
-            get { return innerMutator.ClipHorizontal; }
-        }
-
-        public bool ClipVertical
-        {
-            get { return innerMutator.ClipVertical; }
-        }
-
-        public bool FixHorizontal
-        {
-            get { return innerMutator.FixHorizontal; }
-        }
-
-        public bool FixVertical
-        {
-            get { return innerMutator.FixVertical; }
-        }
-
-        
-        
     }
 }

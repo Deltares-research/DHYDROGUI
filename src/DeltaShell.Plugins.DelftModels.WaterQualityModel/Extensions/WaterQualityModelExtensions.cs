@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Utils;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataItemMetaData;
@@ -18,9 +16,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Extensions
 
         /// <summary>
         /// Adds a text document to the
-        /// <param name="model" />
+        /// <param name="model"/>
         /// output with the content of the file described by
-        /// <param name="filePath" />
+        /// <param name="filePath"/>
         /// </summary>
         /// <param name="model"> The water quality model to add the text document to </param>
         /// <param name="dataItemMetaData"> The metadata object that provides information about the data item to be created </param>

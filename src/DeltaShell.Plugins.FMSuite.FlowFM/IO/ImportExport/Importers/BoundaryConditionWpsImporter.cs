@@ -33,64 +33,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
 
         private TimeSpan timeStep;
 
-        #region IFileImporter
-
-        public string Name => "Boundary data from WPS";
-
-        public string Category => "Boundary data";
-
-        public string Description => string.Empty;
-
-        public Bitmap Image => Resources.down;
-
-        public IEnumerable<Type> SupportedItemTypes
+        public BoundaryConditionWpsImporter()
         {
-            get
-            {
-                yield return typeof(IList<BoundaryConditionSet>);
-                yield return typeof(BoundaryConditionSet);
-            }
+            Process = "tidal_predict";
+            SupportPointIndex = -1;
         }
-
-        public bool CanImportOn(object targetObject)
-        {
-            return true;
-        }
-
-        public bool CanImportOnRootLevel => false;
-
-        public string FileFilter => null;
-
-        public string TargetDataDirectory { get; set; }
-
-        public bool ShouldCancel { get; set; }
-
-        public ImportProgressChangedDelegate ProgressChanged { get; set; }
-
-        public bool OpenViewAfterImport { get; private set; }
-
-        public object ImportItem(string path, object target = null)
-        {
-            var boundaryConditionSets = target as IList<BoundaryConditionSet>;
-            if (boundaryConditionSets != null)
-            {
-                Import(boundaryConditionSets);
-                OpenViewAfterImport = false;
-                return boundaryConditionSets;
-            }
-
-            var boundaryConditionSet = target as BoundaryConditionSet;
-            if (boundaryConditionSet != null)
-            {
-                Import(boundaryConditionSet);
-                OpenViewAfterImport = true;
-                return boundaryConditionSet;
-            }
-
-            return null;
-        }
-
-        #endregion
 
         public DateTime StartDate { private get; set; }
 
@@ -114,6 +61,26 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
             }
         }
 
+        public string Frequency { get; set; }
+
+        public WpsClient Client { get; private set; }
+
+        public string Process { get; private set; }
+
+        public void InitializeClient()
+        {
+            if (Client == null)
+            {
+                Client = new WpsClient(new Uri("http://wps.openearth.nl/wps"));
+            }
+        }
+
+        public void Import(BoundaryConditionSet boundaryConditionSet)
+        {
+            var index = 0;
+            Import(boundaryConditionSet, ref index, 0);
+        }
+
         private void UpdateFrequency()
         {
             if (TimeStep.TotalMinutes < 1)
@@ -135,26 +102,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
             }
 
             Frequency = "DAILY";
-        }
-
-        public string Frequency { get; set; }
-
-        public WpsClient Client { get; private set; }
-
-        public string Process { get; private set; }
-
-        public BoundaryConditionWpsImporter()
-        {
-            Process = "tidal_predict";
-            SupportPointIndex = -1;
-        }
-
-        public void InitializeClient()
-        {
-            if (Client == null)
-            {
-                Client = new WpsClient(new Uri("http://wps.openearth.nl/wps"));
-            }
         }
 
         private string GetLocation(Coordinate coordinate)
@@ -238,12 +185,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
             }
         }
 
-        public void Import(BoundaryConditionSet boundaryConditionSet)
-        {
-            var index = 0;
-            Import(boundaryConditionSet, ref index, 0);
-        }
-
         private void Import(BoundaryConditionSet boundaryConditionSet, ref int fullIndex,
                             int totalSteps)
         {
@@ -258,10 +199,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
             if (CreateNewBoundaryConditions)
             {
                 boundaryCondition = new FlowBoundaryCondition(FlowBoundaryQuantityType.WaterLevel,
-                                                              BoundaryConditionDataType.TimeSeries)
-                {
-                    Feature = boundaryConditionSet.Feature
-                };
+                                                              BoundaryConditionDataType.TimeSeries) {Feature = boundaryConditionSet.Feature};
                 boundaryConditionSet.BoundaryConditions.Add(boundaryCondition);
 
                 if (ImportMode == SupportPointImportMode.Selected)
@@ -404,5 +342,64 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
                 }
             }
         }
+
+        #region IFileImporter
+
+        public string Name => "Boundary data from WPS";
+
+        public string Category => "Boundary data";
+
+        public string Description => string.Empty;
+
+        public Bitmap Image => Resources.down;
+
+        public IEnumerable<Type> SupportedItemTypes
+        {
+            get
+            {
+                yield return typeof(IList<BoundaryConditionSet>);
+                yield return typeof(BoundaryConditionSet);
+            }
+        }
+
+        public bool CanImportOn(object targetObject)
+        {
+            return true;
+        }
+
+        public bool CanImportOnRootLevel => false;
+
+        public string FileFilter => null;
+
+        public string TargetDataDirectory { get; set; }
+
+        public bool ShouldCancel { get; set; }
+
+        public ImportProgressChangedDelegate ProgressChanged { get; set; }
+
+        public bool OpenViewAfterImport { get; private set; }
+
+        public object ImportItem(string path, object target = null)
+        {
+            var boundaryConditionSets = target as IList<BoundaryConditionSet>;
+            if (boundaryConditionSets != null)
+            {
+                Import(boundaryConditionSets);
+                OpenViewAfterImport = false;
+                return boundaryConditionSets;
+            }
+
+            var boundaryConditionSet = target as BoundaryConditionSet;
+            if (boundaryConditionSet != null)
+            {
+                Import(boundaryConditionSet);
+                OpenViewAfterImport = true;
+                return boundaryConditionSet;
+            }
+
+            return null;
+        }
+
+        #endregion
     }
 }

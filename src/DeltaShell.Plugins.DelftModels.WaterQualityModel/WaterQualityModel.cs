@@ -41,12 +41,908 @@ using NetTopologySuite.Extensions.Grids;
 using SharpMap.Api.SpatialOperations;
 
 [assembly: InternalsVisibleTo(" DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests")]
+
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
 {
     [Entity]
     public class WaterQualityModel : TimeDependentModelBase, IStateAwareModelEngine, IDisposable
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(WaterQualityModel));
+
+        /// <summary>
+        /// Occures when the hydro data has changed (file has been edited) (async event)
+        /// </summary>
+        public virtual event EventHandler<EventArgs> HydroDataChanged;
+
+        public WaterQualityModel() : base("Water Quality")
+        {
+            modelSettings = new WaterQualityModelSettings {MonitoringOutputLevel = MonitoringOutputLevel.PointsAndAreas};
+
+            modelStateHandler = new ModelFileBasedStateHandler(Name,
+                                                               new List<DelftTools.Utils.Tuple<string, string>>
+                                                               {
+                                                                   new DelftTools.Utils.Tuple<string, string>(
+                                                                       FileConstants.RestartFileName,
+                                                                       FileConstants.RestartInFileName)
+                                                               });
+
+            InitializeInputDataItems();
+            InitializeWaqProcessesRules();
+
+            HydrodynamicLayerThicknesses = null;
+            NumberOfHydrodynamicLayersPerWaqLayer = null;
+
+            HorizontalDispersion = 1.0;
+            VerticalDispersion = 1e-7;
+            UseAdditionalHydrodynamicVerticalDiffusion = false;
+            Boundaries = new EventedList<WaterQualityBoundary>();
+            BoundaryNodeIds = new Dictionary<WaterQualityBoundary, int[]>();
+            Loads = new EventedList<WaterQualityLoad>();
+            ObservationPoints = new EventedList<WaterQualityObservationPoint>();
+
+            this.SetupModelDataFolderStructure(Path.Combine(Path.GetTempPath(), Path.GetRandomFileName()));
+
+            AddDataItemSet(new EventedList<UnstructuredGridCellCoverage>(), OutputSubstancesDataItemMetaData.Name,
+                           DataItemRole.Output, OutputSubstancesDataItemMetaData.Tag);
+            AddDataItemSet(new EventedList<UnstructuredGridCellCoverage>(), OutputParametersDataItemMetaData.Name,
+                           DataItemRole.Output, OutputParametersDataItemMetaData.Tag);
+
+            if (modelSettings.MonitoringOutputLevel != MonitoringOutputLevel.None)
+            {
+                AddDataItemSet(new EventedList<WaterQualityObservationVariableOutput>(),
+                               MonitoringOutputDataItemMetaData.Name, DataItemRole.Output,
+                               MonitoringOutputDataItemMetaData.Tag);
+            }
+
+            SubscribeToInternalEvents();
+            enableMarkOutputOutOfSync = true;
+        }
+
+        /// <summary>
+        /// Overriden to synchronize the StartTime and the output timers.
+        /// </summary>
+        public override DateTime StartTime
+        {
+            get => base.StartTime;
+            set
+            {
+                if (StartTime == value)
+                {
+                    return;
+                }
+
+                base.StartTime = value;
+
+                ModelSettings.BalanceStartTime = StartTime;
+                ModelSettings.MapStartTime = StartTime;
+                ModelSettings.HisStartTime = StartTime;
+                LogSynchronizedTimer("Start Time", StartTime);
+            }
+        }
+
+        /// <summary>
+        /// Overriden to synchronize the StopTime and the output timers.
+        /// </summary>
+        public override DateTime StopTime
+        {
+            get => base.StopTime;
+            set
+            {
+                if (StopTime == value)
+                {
+                    return;
+                }
+
+                base.StopTime = value;
+
+                ModelSettings.BalanceStopTime = StopTime;
+                ModelSettings.MapStopTime = StopTime;
+                ModelSettings.HisStopTime = StopTime;
+                LogSynchronizedTimer("Stop Time", StopTime);
+            }
+        }
+
+        /// <summary>
+        /// Imports the contents of a HydFile into the WAQ model.
+        /// </summary>
+        /// <param name="data"> Contents from a HydFile (or generated HydroData). </param>
+        /// <param name="importCoordinateSystem"> Optional parameter (default False). </param>
+        /// <param name="skipImportTimers"> Optional parameter (default False). </param>
+        /// <param name="markOutputOutOfSync"> Optional parameter (default True). </param>
+        public virtual void ImportHydroData(IHydroData data, bool importCoordinateSystem = false,
+                                            bool skipImportTimers = false, bool markOutputOutOfSync = true)
+        {
+            if (data == null)
+            {
+                HasHydroDataImported = false;
+                throw new ArgumentNullException("data", "No hydrodynamics data was specified.");
+            }
+
+            //As per issue D3DFMIQ-318, we should override the coordinate system with the imported one. 
+            bool coordinateSystemChanges = CoordinateSystem != data.Grid?.CoordinateSystem;
+            CoordinateSystem = data.Grid?.CoordinateSystem;
+            if (coordinateSystemChanges)
+            {
+                Log.Info(
+                    string.Format(
+                        Resources
+                            .WaterQualityModel_ImportHydroData_The_coordinate_system_of_the_model___0__has_been_set_to__1_,
+                        Name,
+                        data.Grid?.CoordinateSystem == null
+                            ? "<empty>"
+                            : data.Grid.CoordinateSystem.ToString()));
+            }
+
+            if (data.Equals(HydroData))
+            {
+                OverWriteModelTimersWithImportTimers(skipImportTimers, data);
+                OverWriteSegmentFunctions(data);
+                return;
+            }
+
+            HasHydroDataImported = false;
+
+            enableMarkOutputOutOfSync = markOutputOutOfSync;
+
+            bool schematizationRemainsUnchanged = data.HasSameSchematization(HydroData);
+
+            try
+            {
+                BeginEdit(new DefaultEditAction("Importing hydrodynamics data"));
+                HydroData = data;
+
+                importingHydroData = true;
+
+                SetImportProgress("Importing grid");
+                ModelType = HydroData.HydroDynamicModelType;
+                LayerType = HydroData.LayerType;
+                ZTop = HydroData.ZTop;
+                ZBot = HydroData.ZBot;
+                SetNewGrid(HydroData.Grid, schematizationRemainsUnchanged);
+
+                if (!schematizationRemainsUnchanged)
+                {
+                    ClearOutput();
+                }
+
+                //As of issue D3DFMIQ-329, the timers should be overriden when importing the hyd file again.
+                OverWriteModelTimersWithImportTimers(skipImportTimers, HydroData);
+
+                SetImportProgress("Importing file paths");
+                AreasRelativeFilePath = HydroData.AreasRelativePath;
+                VolumesRelativeFilePath = HydroData.VolumesRelativePath;
+                FlowsRelativeFilePath = HydroData.FlowsRelativePath;
+                PointersRelativeFilePath = HydroData.PointersRelativePath;
+                LengthsRelativeFilePath = HydroData.LengthsRelativePath;
+                VerticalDiffusionRelativeFilePath = HydroData.VerticalDiffusionRelativePath;
+                GridRelativeFilePath = HydroData.GridRelativePath;
+                AttributesRelativeFilePath = HydroData.AttributesRelativePath;
+                OverWriteSegmentFunctions(HydroData);
+
+                SetImportProgress("Importing exchanges and layer information");
+                NumberOfHorizontalExchanges = HydroData.NumberOfHorizontalExchanges;
+                NumberOfVerticalExchanges = HydroData.NumberOfVerticalExchanges;
+                NumberOfHydrodynamicLayers = HydroData.NumberOfHydrodynamicLayers;
+                NumberOfDelwaqSegmentsPerHydrodynamicLayer = HydroData.NumberOfDelwaqSegmentsPerHydrodynamicLayer;
+                NumberOfWaqSegmentLayers = HydroData.NumberOfWaqSegmentLayers;
+                HydrodynamicLayerThicknesses = HydroData.HydrodynamicLayerThicknesses;
+                NumberOfHydrodynamicLayersPerWaqLayer = HydroData.NumberOfHydrodynamicLayersPerWaqSegmentLayer;
+
+                SetImportProgress("Importing boundaries");
+                ResolveBoundaryImport(HydroData.GetBoundaries());
+                BoundaryNodeIds = HydroData.GetBoundaryNodeIds();
+
+                SetImportProgress("Importing attributes");
+                var fileInfo =
+                    new FileInfo(Path.Combine(Path.GetDirectoryName(HydroData.FilePath), AttributesRelativeFilePath));
+
+                attributeData =
+                    AttributesFileReader.ReadAll(NumberOfDelwaqSegmentsPerHydrodynamicLayer, NumberOfWaqSegmentLayers,
+                                                 fileInfo);
+                pointToGridCellMapper = SetUpPointToGridCellMapper();
+
+                HasHydroDataImported = true;
+            }
+            finally
+            {
+                importingHydroData = false;
+                EndEdit();
+                enableMarkOutputOutOfSync = true;
+            }
+        }
+
+        /// <summary>
+        /// Determines whether the model has data available in its hydro dynamics for a
+        /// specific function, process or substance.
+        /// </summary>
+        /// <param name="function"> The function. </param>
+        /// <returns> True if there is data defined in the hydro dynamics, false otherwise. </returns>
+        public virtual bool HasDataInHydroDynamics(IFunction function)
+        {
+            return function != null && HasDataInHydroDynamics(function.Name);
+        }
+
+        /// <summary>
+        /// Determines whether the model has data available in its hydro dynamics for a
+        /// specific function, process or substance.
+        /// </summary>
+        /// <param name="functionName"> The name of the function. </param>
+        /// <returns> True if there is data defined in the hydro dynamics, false otherwise. </returns>
+        public virtual bool HasDataInHydroDynamics(string functionName)
+        {
+            return HydroData != null && HydroData.HasDataFor(functionName);
+        }
+
+        /// <summary>
+        /// Gets the file path for a given function, process or substance when available
+        /// in the hydro dynamics.
+        /// </summary>
+        /// <param name="function"> The funcion. </param>
+        /// <returns>
+        /// The filepath for the given function if <see cref="HasDataInHydroDynamics(IFunction)"/>
+        /// returns true for <paramref name="function"/>.
+        /// </returns>
+        /// <exception cref="InvalidOperationException">
+        /// When <see cref="HasDataInHydroDynamics(IFunction)"/>
+        /// returns false for <paramref name="function"/>.
+        /// </exception>
+        public virtual string GetFilePathFromHydroDynamics(IFunction function)
+        {
+            if (HydroData == null || !HydroData.HasDataFor(function.Name))
+            {
+                throw new InvalidOperationException(
+                    string.Format("Function '{0}' is not available in the hydro data.", function.Name));
+            }
+
+            return HydroData.GetFilePathFor(function.Name);
+        }
+
+        /// <summary>
+        /// Determines whether the given coordinate falls within an active cell or not.
+        /// </summary>
+        /// <returns> True if the cell is active; false when it's inactive. </returns>
+        /// <exception cref="System.InvalidOperationException"> When no hydro data has been importer. </exception>
+        public virtual bool IsInsideActiveCell(Coordinate coordinate)
+        {
+            if (!HasHydroDataImported)
+            {
+                throw new InvalidOperationException(
+                    "Cannot determine if location is inside active cell as no hydro dynamic data was imported.");
+            }
+
+            int index = GetSegmentIndexForLocation(coordinate);
+            return attributeData.IsSegmentActive(index);
+        }
+
+        /// <summary>
+        /// Determines whether the given coordinate falls within an active cell or not.
+        /// </summary>
+        /// <returns> True if the cell is active; false when it's inactive. </returns>
+        /// <exception cref="System.InvalidOperationException"> When no hydro data has been importer. </exception>
+        public virtual bool IsInsideActiveCell2D(Coordinate coordinate)
+        {
+            if (!HasHydroDataImported)
+            {
+                throw new InvalidOperationException(
+                    "Cannot determine if location is inside active cell as no hydro dynamic data was imported.");
+            }
+
+            int index = GetSegmentIndexForLocation2D(coordinate);
+            return attributeData.IsSegmentActive(index);
+        }
+
+        /// <summary>
+        /// Returns the cell index for a given location.
+        /// </summary>
+        public virtual int GetSegmentIndexForLocation(Coordinate coordinate)
+        {
+            if (!HasHydroDataImported)
+            {
+                throw new InvalidOperationException(
+                    "Cannot determine grid cell index for location as no hydro dynamic data was imported.");
+            }
+
+            return pointToGridCellMapper.GetWaqSegmentIndex(coordinate.X, coordinate.Y, coordinate.Z);
+        }
+
+        /// <summary>
+        /// Returns the cell index for a given location in 2D plane.
+        /// So only the top layer.
+        /// </summary>
+        public virtual int GetSegmentIndexForLocation2D(Coordinate coordinate)
+        {
+            if (!HasHydroDataImported)
+            {
+                throw new InvalidOperationException(
+                    "Cannot determine grid cell index for location as no hydro dynamic data was imported.");
+            }
+
+            return pointToGridCellMapper.GetWaqSegmentIndex2D(coordinate.X, coordinate.Y);
+        }
+
+        public virtual double GetDefaultZ()
+        {
+            switch (LayerType)
+            {
+                case LayerType.Undefined:
+                    return double.NaN;
+                case LayerType.Sigma:
+                    return 0;
+                case LayerType.ZLayer:
+                    return ZTop;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+
+        public virtual void SetEnableMarkOutputOutOfSync(bool enableMarkOutputOutOfSyncValue)
+        {
+            enableMarkOutputOutOfSync = enableMarkOutputOutOfSyncValue;
+        }
+
+        public override IProjectItem DeepClone()
+        {
+            throw new NotSupportedException("WaterQualityModel does not support cloning.");
+        }
+
+        public override IEnumerable<object> GetDirectChildren()
+        {
+            foreach (object directChild in base.GetDirectChildren())
+            {
+                yield return directChild;
+            }
+
+            yield return InitialConditions;
+            yield return ProcessCoefficients;
+            yield return Dispersion;
+            yield return ObservationPoints;
+            yield return Loads;
+            yield return BoundaryDataManager;
+            yield return LoadsDataManager;
+            yield return OutputFolder;
+        }
+
+        public void Dispose()
+        {
+            HydroData = null;
+        }
+
+        /// <summary>
+        /// Method to connect the DeltaShell framework working directory to the ModelSettings.WorkingDirectory.
+        /// The model also adds a folder with the model name to the path.
+        /// <param name="WorkingDirectoryWithoutModelName"></param>
+        protected internal virtual void SetWorkingDirectoryInModelSettings(Func<string> WorkingDirectoryWithoutModelName)
+        {
+            modelSettings.WorkingDirectoryPathFuncWithModelName = () => Path.Combine(WorkingDirectoryWithoutModelName(), GetWaqDataFolderName());
+        }
+
+        [EditAction]
+        protected override void OnInputCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (!enableMarkOutputOutOfSync)
+            {
+                return;
+            }
+
+            this.InputCollectionChanged(sender, e);
+
+            MarkOutputOutOfSync();
+        }
+
+        [EditAction]
+        protected override void OnInputPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (!enableMarkOutputOutOfSync)
+            {
+                return;
+            }
+
+            this.InputPropertyChanged(sender, e);
+
+            MarkOutputOutOfSync();
+        }
+
+        private void OverWriteSegmentFunctions(IHydroData data)
+        {
+            SetImportProgress("Sync of segment functions");
+            SurfacesRelativeFilePath = data.SurfacesRelativePath;
+            VelocitiesFilePath = data.VelocitiesRelativePath;
+            WidthsFilePath = data.WidthsRelativePath;
+            ChezyCoefficientsFilePath = data.ChezyCoefficientsRelativePath;
+            SalinityRelativeFilePath = HydroData.SalinityRelativePath;
+            TemperatureRelativeFilePath = HydroData.TemperatureRelativePath;
+            ShearStressesRelativeFilePath = HydroData.ShearStressesRelativePath;
+        }
+
+        private void OverWriteModelTimersWithImportTimers(bool skipImportTimers, IHydroData dataToOverwrite)
+        {
+            if (skipImportTimers)
+            {
+                return;
+            }
+
+            SetImportProgress("Importing timers");
+            StartTime = dataToOverwrite.ConversionStartTime;
+            StopTime = dataToOverwrite.ConversionStopTime;
+            TimeStep = dataToOverwrite.ConversionTimeStep;
+            ReferenceTime = dataToOverwrite.ConversionReferenceTime;
+
+            //Sync of time step needs to be explicit.
+            ModelSettings.HisTimeStep = dataToOverwrite.ConversionTimeStep;
+            ModelSettings.MapTimeStep = dataToOverwrite.ConversionTimeStep;
+            ModelSettings.BalanceTimeStep = dataToOverwrite.ConversionTimeStep;
+            LogSynchronizedTimer("Time Step", TimeStep);
+        }
+
+        private void ResolveBoundaryImport(IEnumerable<WaterQualityBoundary> importedBoundaries)
+        {
+            var newBoundaries = new List<WaterQualityBoundary>();
+            if (importedBoundaries != null)
+            {
+                foreach (WaterQualityBoundary waterQualityBoundary in importedBoundaries)
+                {
+                    // find an already loaded boundary
+                    WaterQualityBoundary existingBoundary =
+                        Boundaries.FirstOrDefault(b => b.Name == waterQualityBoundary.Name);
+
+                    if (existingBoundary != null)
+                    {
+                        // copy the location aliases
+                        // TODO: extend this list if there is more to be mapped
+                        waterQualityBoundary.LocationAliases = existingBoundary.LocationAliases;
+                    }
+
+                    newBoundaries.Add(waterQualityBoundary);
+                }
+            }
+
+            Boundaries.Clear();
+            Boundaries.AddRange(newBoundaries);
+        }
+
+        private PointToGridCellMapper SetUpPointToGridCellMapper()
+        {
+            var mapper = new PointToGridCellMapper {Grid = Grid};
+            var waqRelativeThicknesses = new double[NumberOfWaqSegmentLayers];
+            var hydroIndex = 0;
+            for (var i = 0; i < NumberOfWaqSegmentLayers; i++)
+            {
+                var waqRelativeThickness = 0.0;
+                int addUptoHydroLayer = hydroIndex + NumberOfHydrodynamicLayersPerWaqLayer[i];
+                while (hydroIndex < addUptoHydroLayer)
+                {
+                    waqRelativeThickness += HydrodynamicLayerThicknesses[hydroIndex++];
+                }
+
+                waqRelativeThicknesses[i] = waqRelativeThickness;
+            }
+
+            if (LayerType == LayerType.Sigma)
+            {
+                mapper.SetSigmaLayers(waqRelativeThicknesses);
+            }
+            else if (LayerType == LayerType.ZLayer)
+            {
+                mapper.SetZLayers(waqRelativeThicknesses, ZTop, ZBot);
+            }
+
+            return mapper;
+        }
+
+        /// <summary>
+        /// Gets the PROJ4 string representation of the coordinate system.
+        /// </summary>
+        /// <param name="coordinateSystem">
+        /// The <see cref="ICoordinateSystem"/> to retrieve the string
+        /// representation for.
+        /// </param>
+        /// <returns>
+        /// A PROJ4 string representation, or an empty string when:
+        /// <list type="bullet">
+        ///     <item><paramref name="coordinateSystem"/> is <c>null</c>.</item>
+        ///     <item>No PROJ4 transformation is available.</item>
+        /// </list>
+        /// </returns>
+        private static string GetProj4CoordinateSystemString(ICoordinateSystem coordinateSystem)
+        {
+            if (coordinateSystem == null)
+            {
+                return string.Empty;
+            }
+
+            try
+            {
+                return coordinateSystem.PROJ4;
+            }
+            catch (Exception)
+            {
+                return string.Empty;
+            }
+        }
+
+        private void LogSynchronizedTimer(string timer, object value)
+        {
+            //For some info the test will only pass if the message is contained in the string.Format, but not in the Log.InfoFormat.
+            string message =
+                string.Format(
+                    Resources
+                        .WaterQualityModel_LogSynchronizedTimer_Output_timers___0___have_been_synchronized_to_match_the_Simulation__0____1___,
+                    timer, value);
+            Log.Info(message);
+        }
+
+        private void SetNewGrid(UnstructuredGrid value, bool schematizationRemainsUnchanged)
+        {
+            // never set grid to null (this creates invalid UnstructuredGridCellCoverages)
+            UnstructuredGrid gridToSet = value ?? new UnstructuredGrid();
+
+            if (overriddenCoordinateSystem != null)
+            {
+                gridToSet.CoordinateSystem = overriddenCoordinateSystem;
+            }
+
+            GetDataItemByTag(GridDataItemMetaData.Tag).Value = gridToSet;
+            Bathymetry = CreateAndFillBathymetryCoverage(gridToSet);
+
+            ReplaceGridOnUnstructuredGridCoveragesWithSpatialOperations(
+                GetDataItemSetByTag(InitialConditionsDataItemMetaData.Tag), schematizationRemainsUnchanged);
+            ReplaceGridOnUnstructuredGridCoveragesWithSpatialOperations(
+                GetDataItemSetByTag(ProcessCoefficientsDataItemMetaData.Tag), schematizationRemainsUnchanged);
+            ReplaceGridOnUnstructuredGridCoveragesWithSpatialOperations(
+                GetDataItemSetByTag(DispersionDataItemMetaData.Tag), schematizationRemainsUnchanged);
+            ReplaceGridOnUnstructuredGridCoverageWithSpatialOperations(
+                GetDataItemByTag(ObservationAreasDataItemMetaData.Tag), schematizationRemainsUnchanged);
+            ReplaceGridOnUnstructuredGridCoverages(this.GetOutputCoverages(), schematizationRemainsUnchanged);
+        }
+
+        private void SubscribeToInternalEvents()
+        {
+            // subscribe to evented lists that are not in the DataItems collection
+            if (Loads != null)
+            {
+                Loads.CollectionChanged += OnInputCollectionChanged;
+            }
+
+            if (ObservationPoints != null)
+            {
+                ObservationPoints.CollectionChanged += OnInputCollectionChanged;
+            }
+
+            if (ModelSettings != null)
+            {
+                ((INotifyPropertyChanged) ModelSettings).PropertyChanged += OnInputPropertyChanged;
+            }
+        }
+
+        private string GetWaqDataFolderName()
+        {
+            if (string.IsNullOrWhiteSpace(Name))
+            {
+                return "Water_Quality";
+            }
+
+            return Name.Replace(" ", "_");
+        }
+
+        [EditAction]
+        private void SetWaqPointHeights()
+        {
+            double defaultZ = GetDefaultZ();
+
+            foreach (WaterQualityLoad load in Loads)
+            {
+                load.Z = defaultZ;
+            }
+
+            foreach (WaterQualityObservationPoint observationPoint in ObservationPoints)
+            {
+                observationPoint.Z = defaultZ;
+            }
+        }
+
+        [EditAction]
+        private void SetHorizontalDispersion(double value)
+        {
+            WaterQualityFunctionFactory.SetDefaultValue(Dispersion[0], value);
+        }
+
+        private void ClearPreProcessorAndProcessor()
+        {
+            waqProcessor = null;
+
+            // clean the pre processor before setting it to null.
+            if (waqPreProcessor != null)
+            {
+                waqPreProcessor.Dispose();
+            }
+
+            waqPreProcessor = null;
+        }
+
+        private void InitializeInputDataItems()
+        {
+            AddDataItem(new TextDocument
+            {
+                Name = InputFileCommandLineDataItemMetaData.Name,
+                Content = Resources.TemplateInpFileNew
+            }, DataItemRole.Input, InputFileCommandLineDataItemMetaData.Tag);
+            AddDataItem(new TextDocument
+            {
+                Name = InputFileHybridDataItemMetaData.Name,
+                Content = Resources.TemplateInpFileHybrid
+            }, DataItemRole.Input, InputFileHybridDataItemMetaData.Tag);
+
+            AddDataItem(CreateSubstanceProcessLibrary(), SubstanceProcessLibraryDataItemMetaData.Name,
+                        DataItemRole.Input, SubstanceProcessLibraryDataItemMetaData.Tag);
+
+            var initialGrid = new UnstructuredGrid();
+            AddDataItem(initialGrid, GridDataItemMetaData.Name, DataItemRole.Input, GridDataItemMetaData.Tag);
+            AddDataItem(CreateAndFillBathymetryCoverage(initialGrid), BathymetryDataItemMetaData.Name,
+                        DataItemRole.Input, BathymetryDataItemMetaData.Tag);
+            AddDataItem(CreateObservationAreasCoverage(initialGrid), ObservationAreasDataItemMetaData.Name,
+                        DataItemRole.Input, ObservationAreasDataItemMetaData.Tag);
+            AddDataItem(new DataTableManager(), BoundaryDataDataItemMetaData.Name, DataItemRole.Input,
+                        BoundaryDataDataItemMetaData.Tag);
+            AddDataItem(new DataTableManager(), LoadsDataDataItemMetaData.Name, DataItemRole.Input,
+                        LoadsDataDataItemMetaData.Tag);
+
+            AddDataItemSet(new EventedList<IFunction>(), InitialConditionsDataItemMetaData.Name, DataItemRole.Input,
+                           InitialConditionsDataItemMetaData.Tag, true);
+            AddDataItemSet(new EventedList<IFunction>(), ProcessCoefficientsDataItemMetaData.Name, DataItemRole.Input,
+                           ProcessCoefficientsDataItemMetaData.Tag, true);
+            AddDataItemSet(new EventedList<IFunction>(CreateDispersionFunctions()), DispersionDataItemMetaData.Name,
+                           DataItemRole.Input, DispersionDataItemMetaData.Tag, true);
+        }
+
+        private void SetImportProgress(string progress)
+        {
+            importProgress = progress;
+            OnProgressChanged();
+        }
+
+        private void SetProgress(double progress)
+        {
+            progressPercentage = progress;
+            OnProgressChanged();
+        }
+
+        private static SubstanceProcessLibrary CreateSubstanceProcessLibrary()
+        {
+            return new SubstanceProcessLibrary
+            {
+                Name = "Process Library",
+                OutputParameters =
+                {
+                    new WaterQualityOutputParameter
+                    {
+                        Name = Resources.SubstanceProcessLibrary_OutputParameters_Volume,
+                        Description = Resources.SubstanceProcessLibrary_OutputParameters_Volume_description
+                    },
+                    new WaterQualityOutputParameter
+                    {
+                        Name = Resources.SubstanceProcessLibrary_OutputParameters_Surf,
+                        Description = Resources.SubstanceProcessLibrary_OutputParameters_Surf_description
+                    },
+                    new WaterQualityOutputParameter
+                    {
+                        Name = Resources.SubstanceProcessLibrary_OutputParameters_Temp,
+                        Description = Resources.SubstanceProcessLibrary_OutputParameters_Temp_description
+                    },
+                    new WaterQualityOutputParameter
+                    {
+                        Name = Resources.SubstanceProcessLibrary_OutputParameters_Rad,
+                        Description = Resources.SubstanceProcessLibrary_OutputParameters_Rad_description
+                    }
+                }
+            };
+        }
+
+        private static IEnumerable<IFunction> CreateDispersionFunctions()
+        {
+            return new EventedList<IFunction>
+            {
+                WaterQualityFunctionFactory.CreateConst("Dispersion", 0, "Dispersion", "m2/s",
+                                                        "Horizontal Dispersion")
+            };
+        }
+
+        private static UnstructuredGridVertexCoverage CreateAndFillBathymetryCoverage(UnstructuredGrid grid)
+        {
+            // create new bathymetry
+            var bathymetry = new UnstructuredGridVertexCoverage(grid, false)
+            {
+                Name = "Bed Level",
+                IsEditable = false,
+            };
+            bathymetry.Components[0].NoDataValue = -999.0;
+            bathymetry.Components[0].DefaultValue = bathymetry.Components[0].NoDataValue;
+
+            if (grid.Vertices.Count > 0)
+            {
+                bathymetry.SetValues(grid.Vertices.Select(v => v.Z));
+            }
+
+            return bathymetry;
+        }
+
+        private static WaterQualityObservationAreaCoverage CreateObservationAreasCoverage(UnstructuredGrid grid)
+        {
+            return new WaterQualityObservationAreaCoverage(grid);
+        }
+
+        /// <summary>
+        /// Replace the grid on a list of coverages.
+        /// This method does not look at spatial operations.
+        /// Use this method for output coverages for example.
+        /// </summary>
+        /// <param name="functions"> </param>
+        /// <param name="onlyUpdateGrid"> </param>
+        /// <seealso cref="ReplaceGridOnUnstructuredGridCoveragesWithSpatialOperations"/>
+        private void ReplaceGridOnUnstructuredGridCoverages(IEnumerable<IFunction> functions, bool onlyUpdateGrid)
+        {
+            foreach (IFunction function in functions)
+            {
+                var coverage = function as UnstructuredGridCellCoverage;
+                if (coverage != null)
+                {
+                    coverage.AssignNewGridToCoverage(Grid, !onlyUpdateGrid);
+                }
+            }
+        }
+
+        private void ReplaceGridOnUnstructuredGridCoverageWithSpatialOperations(IDataItem dataItem, bool onlyUpdateGrid)
+        {
+            ReplaceGridOnUnstructuredGridCoverages(new[]
+            {
+                (IFunction) dataItem.Value
+            }, onlyUpdateGrid);
+            SetGridAndExecuteSpatialOperation(dataItem);
+        }
+
+        /// <summary>
+        /// Replace grid on unstructured coverages, because the grid was replaced via the <see cref="Grid"/> property.
+        /// This method checks spatial operations.
+        /// Use this method for functions that require spatial operation input.
+        /// </summary>
+        /// <seealso cref="ReplaceGridOnUnstructuredGridCoverages"/>
+        /// .
+        private void ReplaceGridOnUnstructuredGridCoveragesWithSpatialOperations(
+            IDataItemSet dataItemSet, bool onlyUpdateGrid)
+        {
+            var functionListToReplace = new List<IFunction>();
+            foreach (IDataItem dataItem in dataItemSet.DataItems)
+            {
+                if (dataItem.Value != null)
+                {
+                    functionListToReplace.Add((IFunction) dataItem.Value);
+                }
+                else if (dataItem.ComposedValue != null)
+                {
+                    functionListToReplace.Add((IFunction) dataItem.ComposedValue);
+                }
+            }
+
+            ReplaceGridOnUnstructuredGridCoverages(functionListToReplace, onlyUpdateGrid);
+
+            foreach (IDataItem dataItem in dataItemSet.DataItems)
+            {
+                SetGridAndExecuteSpatialOperation(dataItem);
+            }
+        }
+
+        private void SetGridAndExecuteSpatialOperation(IDataItem dataItem)
+        {
+            // Existing input grid cell coverages often have a 'initial value' Spatial Operation, created due to WaterQualityModelSyncExtensions.
+            // We need to update the original coverage in order to have the Spatial Operations working with the new grid.
+            var valueConverter = dataItem.ValueConverter as SpatialOperationSetValueConverter;
+            if (valueConverter == null)
+            {
+                return;
+            }
+
+            var original = (UnstructuredGridCellCoverage) valueConverter.OriginalValue;
+            original.AssignNewGridToCoverage(Grid);
+
+            // set the grid extents as mask for the first operation, because it depends on the grid.
+            ISpatialOperation operation = valueConverter.SpatialOperationSet.Operations.FirstOrDefault(
+                o => o.Name == WaterQualityModelSyncExtensions
+                         .InitialValueOperationName);
+
+            if (operation != null)
+            {
+                WaterQualityModelSyncExtensions.SetGridExtentsAsInputMask(operation, original);
+            }
+
+            // execute the spatial operation set
+            // this call is not required during loading of the project,
+            // but it is required when the hyd file is re-imported in any other case.
+            // See TOOLS-22124 for more info
+            valueConverter.SpatialOperationSet.Execute();
+        }
+
+        private Dictionary<string, string> GetMetaDataRequirements(int version)
+        {
+            if (version != 1)
+            {
+                throw new NotImplementedException(string.Format(
+                                                      "Meta data version {0} for model type {1} is not supported",
+                                                      version, "WaterQualityModel"));
+            }
+
+            return new Dictionary<string, string> {{"CorrectForEvap", ModelSettings.CorrectForEvaporation.ToString()}};
+        }
+
+        private Dictionary<string, string> GetOptionalMetaDataRequirements(int version)
+        {
+            if (version != 1)
+            {
+                throw new NotImplementedException(string.Format(
+                                                      "Meta data version {0} for model type {1} is not supported",
+                                                      version, "WaterQualityModel"));
+            }
+
+            return new Dictionary<string, string> {{"NrOfActiveSubstances", SubstanceProcessLibrary.ActiveSubstances.Count().ToString(CultureInfo.InvariantCulture)}};
+        }
+
+        private void HandleNewHydroDynamicsFunctionDataSet(IDataItemSet functionCollection, string functionName)
+        {
+            IDataItem dataItem =
+                functionCollection.DataItems.FirstOrDefault(
+                    p => p.Name.ToLowerInvariant() == functionName.ToLowerInvariant());
+            if (dataItem == null || SubstanceProcessLibrary == null)
+            {
+                return;
+            }
+
+            IFunction function = GetFunctionForDataItem(dataItem);
+
+            bool hasDataInHydroDynamics = HasDataInHydroDynamics(functionName);
+            bool isFromHydroDynamics = function.IsFromHydroDynamics();
+
+            IFunctionTypeCreator creator;
+            if (hasDataInHydroDynamics
+            ) // if there is data and it is the first time, automatically set it to from hydrodynamics. 
+            {
+                creator = FunctionTypeCreatorFactory.CreateFunctionFromHydroDynamicsCreator(
+                    HasDataInHydroDynamics, GetFilePathFromHydroDynamics);
+            }
+            else if (isFromHydroDynamics
+            ) // if there is no data in the hydrodynamics, but it is set as such, set it back to constant
+            {
+                creator = FunctionTypeCreatorFactory.CreateConstantCreator();
+            }
+            else
+            {
+                return;
+            }
+
+            FunctionTypeCreator.ReplaceFunctionUsingCreator(functionCollection.AsEventedList<IFunction>(), function,
+                                                            creator, this);
+            Log.InfoFormat(
+                Resources
+                    .WaterQualityModel_HandleNewHydroDynamicsFunctionDataSet_The_process_coefficient__0__has_been_updated_with_the_latest_Hydrodynamic_data_file_,
+                function.Name);
+        }
+
+        private IFunction GetFunctionForDataItem(IDataItem dataItem)
+        {
+            IFunction function = dataItem.Value as IFunction ?? dataItem.ValueConverter.OriginalValue as IFunction;
+            Debug.Assert(function != null,
+                         "Assumption: If DataItem.Value should return null here, we are dealing with " +
+                         "an UnstructuredGridCellCoverage which uses ValueConverters and hasn't executed " +
+                         "yet such as during save/load cycle.");
+            return function;
+        }
+
+        private void HydroDataOnDataChanged(object sender, EventArgs<string> eventArgs)
+        {
+            if (HydroDataChanged == null)
+            {
+                return;
+            }
+
+            HydroDataChanged(this, eventArgs);
+        }
 
         #region Tags
 
@@ -146,53 +1042,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         private string velocitiesFilePath;
 
         #endregion
-        
-        public WaterQualityModel() : base("Water Quality")
-        {
-            modelSettings = new WaterQualityModelSettings
-            {
-                MonitoringOutputLevel = MonitoringOutputLevel.PointsAndAreas
-            };
-
-            modelStateHandler = new ModelFileBasedStateHandler(Name,
-                                                               new List<DelftTools.Utils.Tuple<string, string>>
-                                                               {
-                                                                   new DelftTools.Utils.Tuple<string, string>(
-                                                                       FileConstants.RestartFileName,
-                                                                       FileConstants.RestartInFileName)
-                                                               });
-
-            InitializeInputDataItems();
-            InitializeWaqProcessesRules();
-
-            HydrodynamicLayerThicknesses = null;
-            NumberOfHydrodynamicLayersPerWaqLayer = null;
-
-            HorizontalDispersion = 1.0;
-            VerticalDispersion = 1e-7;
-            UseAdditionalHydrodynamicVerticalDiffusion = false;
-            Boundaries = new EventedList<WaterQualityBoundary>();
-            BoundaryNodeIds = new Dictionary<WaterQualityBoundary, int[]>();
-            Loads = new EventedList<WaterQualityLoad>();
-            ObservationPoints = new EventedList<WaterQualityObservationPoint>();
-
-            this.SetupModelDataFolderStructure(Path.Combine(Path.GetTempPath(), Path.GetRandomFileName()));
-
-            AddDataItemSet(new EventedList<UnstructuredGridCellCoverage>(), OutputSubstancesDataItemMetaData.Name,
-                           DataItemRole.Output, OutputSubstancesDataItemMetaData.Tag);
-            AddDataItemSet(new EventedList<UnstructuredGridCellCoverage>(), OutputParametersDataItemMetaData.Name,
-                           DataItemRole.Output, OutputParametersDataItemMetaData.Tag);
-
-            if (modelSettings.MonitoringOutputLevel != MonitoringOutputLevel.None)
-            {
-                AddDataItemSet(new EventedList<WaterQualityObservationVariableOutput>(),
-                               MonitoringOutputDataItemMetaData.Name, DataItemRole.Output,
-                               MonitoringOutputDataItemMetaData.Tag);
-            }
-
-            SubscribeToInternalEvents();
-            enableMarkOutputOutOfSync = true;
-        }
 
         #region Public properties
 
@@ -465,7 +1314,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         }
 
         /// <summary>
-        /// Indicates if hydro dynamic data from <see cref="HydroData" /> has been
+        /// Indicates if hydro dynamic data from <see cref="HydroData"/> has been
         /// successfully imported or not.
         /// </summary>
         public virtual bool HasHydroDataImported
@@ -523,7 +1372,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         /// The areas file can be found in the *.hyd-file and
         /// is passed in the input file.
         /// *.are
-        /// <see cref="IHydroData.VolumesRelativePath" />
+        /// <see cref="IHydroData.VolumesRelativePath"/>
         /// </summary>
         public virtual string AreasRelativeFilePath { get; protected set; }
 
@@ -531,7 +1380,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         /// The volumes file can be found in the *.hyd-file and
         /// is passed in the input file.
         /// *.vol
-        /// <see cref="IHydroData.VolumesRelativePath" />
+        /// <see cref="IHydroData.VolumesRelativePath"/>
         /// </summary>
         public virtual string VolumesRelativeFilePath { get; protected set; }
 
@@ -539,7 +1388,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         /// The flows file can be found in the *.hyd-file and
         /// is passed in the input file.
         /// *.flo
-        /// <see cref="IHydroData.FlowsRelativePath" />
+        /// <see cref="IHydroData.FlowsRelativePath"/>
         /// </summary>
         public virtual string FlowsRelativeFilePath { get; protected set; }
 
@@ -547,7 +1396,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         /// The pointers file can be found in the *.hyd-file and
         /// is passed in the input file.
         /// *.poi
-        /// <see cref="IHydroData.GetPointersRelativeFilePath" />
+        /// <see cref="IHydroData.GetPointersRelativeFilePath"/>
         /// </summary>
         public virtual string PointersRelativeFilePath { get; protected set; }
 
@@ -555,13 +1404,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         /// The lenghts file can be found in the *.hyd-file and
         /// is passed in the input file.
         /// *.len
-        /// <see cref="IHydroData.GetLengthsRelativeFilePath" />
+        /// <see cref="IHydroData.GetLengthsRelativeFilePath"/>
         /// </summary>
         public virtual string LengthsRelativeFilePath { get; protected set; }
 
         /// <summary>
         /// Gets or sets the velocities file path.
-        /// <see cref="IHydroData.GetVelocitiesFilePath" />
+        /// <see cref="IHydroData.GetVelocitiesFilePath"/>
         /// </summary>
         /// <value>
         /// The velocities file path.
@@ -579,7 +1428,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
 
         /// <summary>
         /// Gets or sets the widths file path.
-        /// <see cref="IHydroData.GetWidthsFilePath" />
+        /// <see cref="IHydroData.GetWidthsFilePath"/>
         /// </summary>
         /// <value>
         /// The widths file path.
@@ -597,7 +1446,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
 
         /// <summary>
         /// Gets or sets the chezy coefficients file path.
-        /// <see cref="IHydroData.GetChezyCoefficientsFilePath" />
+        /// <see cref="IHydroData.GetChezyCoefficientsFilePath"/>
         /// </summary>
         /// <value>
         /// The chezy coefficients file path.
@@ -617,7 +1466,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         /// The vertical diffusion file can be found in the *.hyd-file and
         /// is passed in the input file.
         /// *.vdf
-        /// <see cref="IHydroData.VerticalDiffusionRelativePath" />
+        /// <see cref="IHydroData.VerticalDiffusionRelativePath"/>
         /// </summary>
         public virtual string VerticalDiffusionRelativeFilePath
         {
@@ -637,7 +1486,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         /// The surfaces file can be found in the *.hyd-file and
         /// is passed in the input file.
         /// *.srf
-        /// <see cref="IHydroData.GetSurfacesRelativeFilePath" />
+        /// <see cref="IHydroData.GetSurfacesRelativeFilePath"/>
         /// </summary>
         public virtual string SurfacesRelativeFilePath
         {
@@ -654,7 +1503,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         /// The salinity file can be found in the *.hyd-file and
         /// is passed in the input file.
         /// *.sal
-        /// <see cref="IHydroData.GetSalinityRelativeFilePath" />
+        /// <see cref="IHydroData.GetSalinityRelativeFilePath"/>
         /// </summary>
         public virtual string SalinityRelativeFilePath
         {
@@ -672,7 +1521,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         /// The temperature file can be found in the *.hyd-file and
         /// is passed in the input file.
         /// *.tmp?
-        /// <see cref="IHydroData.GetTemperatureRelativeFilePath" />
+        /// <see cref="IHydroData.GetTemperatureRelativeFilePath"/>
         /// </summary>
         public virtual string TemperatureRelativeFilePath
         {
@@ -690,7 +1539,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         /// The shear stress file can be found in the *.hyd-file and
         /// is passed in the input file.
         /// *.tau
-        /// <see cref="IHydroData.GetShearStressesRelativeFilePath" />
+        /// <see cref="IHydroData.GetShearStressesRelativeFilePath"/>
         /// </summary>
         public virtual string ShearStressesRelativeFilePath
         {
@@ -714,7 +1563,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
 
         /// <summary>
         /// The attributes file that will be included as INCLUDE in the input file.
-        /// <see cref="IHydroData.GetAttributesRelativeFilePath" />
+        /// <see cref="IHydroData.GetAttributesRelativeFilePath"/>
         /// </summary>
         public virtual string AttributesRelativeFilePath { get; protected set; }
 
@@ -766,7 +1615,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         public virtual DateTime SaveStateStopTime { get; set; }
 
         public virtual TimeSpan SaveStateTimeStep { get; set; }
-        
+
         /// <summary>
         /// Persistent model data folder within Project folder
         /// </summary>
@@ -883,385 +1732,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         }
 
         # endregion
-
-        public override IProjectItem DeepClone()
-        {
-            throw new NotSupportedException("WaterQualityModel does not support cloning.");
-        }
-
-        /// <summary>
-        /// Imports the contents of a HydFile into the WAQ model.
-        /// </summary>
-        /// <param name="data"> Contents from a HydFile (or generated HydroData). </param>
-        /// <param name="importCoordinateSystem"> Optional parameter (default False). </param>
-        /// <param name="skipImportTimers"> Optional parameter (default False). </param>
-        /// <param name="markOutputOutOfSync"> Optional parameter (default True). </param>
-        public virtual void ImportHydroData(IHydroData data, bool importCoordinateSystem = false,
-                                            bool skipImportTimers = false, bool markOutputOutOfSync = true)
-        {
-            if (data == null)
-            {
-                HasHydroDataImported = false;
-                throw new ArgumentNullException("data", "No hydrodynamics data was specified.");
-            }
-
-            //As per issue D3DFMIQ-318, we should override the coordinate system with the imported one. 
-            bool coordinateSystemChanges = CoordinateSystem != data.Grid?.CoordinateSystem;
-            CoordinateSystem = data.Grid?.CoordinateSystem;
-            if (coordinateSystemChanges)
-            {
-                Log.Info(
-                    string.Format(
-                        Resources
-                            .WaterQualityModel_ImportHydroData_The_coordinate_system_of_the_model___0__has_been_set_to__1_,
-                        Name,
-                        data.Grid?.CoordinateSystem == null
-                            ? "<empty>"
-                            : data.Grid.CoordinateSystem.ToString()));
-            }
-
-            if (data.Equals(HydroData))
-            {
-                OverWriteModelTimersWithImportTimers(skipImportTimers, data);
-                OverWriteSegmentFunctions(data);
-                return;
-            }
-
-            HasHydroDataImported = false;
-
-            enableMarkOutputOutOfSync = markOutputOutOfSync;
-
-            bool schematizationRemainsUnchanged = data.HasSameSchematization(HydroData);
-
-            try
-            {
-                BeginEdit(new DefaultEditAction("Importing hydrodynamics data"));
-                HydroData = data;
-
-                importingHydroData = true;
-
-                SetImportProgress("Importing grid");
-                ModelType = HydroData.HydroDynamicModelType;
-                LayerType = HydroData.LayerType;
-                ZTop = HydroData.ZTop;
-                ZBot = HydroData.ZBot;
-                SetNewGrid(HydroData.Grid, schematizationRemainsUnchanged);
-
-                if (!schematizationRemainsUnchanged)
-                {
-                    ClearOutput();
-                }
-
-                //As of issue D3DFMIQ-329, the timers should be overriden when importing the hyd file again.
-                OverWriteModelTimersWithImportTimers(skipImportTimers, HydroData);
-
-                SetImportProgress("Importing file paths");
-                AreasRelativeFilePath = HydroData.AreasRelativePath;
-                VolumesRelativeFilePath = HydroData.VolumesRelativePath;
-                FlowsRelativeFilePath = HydroData.FlowsRelativePath;
-                PointersRelativeFilePath = HydroData.PointersRelativePath;
-                LengthsRelativeFilePath = HydroData.LengthsRelativePath;
-                VerticalDiffusionRelativeFilePath = HydroData.VerticalDiffusionRelativePath;
-                GridRelativeFilePath = HydroData.GridRelativePath;
-                AttributesRelativeFilePath = HydroData.AttributesRelativePath;
-                OverWriteSegmentFunctions(HydroData);
-
-                SetImportProgress("Importing exchanges and layer information");
-                NumberOfHorizontalExchanges = HydroData.NumberOfHorizontalExchanges;
-                NumberOfVerticalExchanges = HydroData.NumberOfVerticalExchanges;
-                NumberOfHydrodynamicLayers = HydroData.NumberOfHydrodynamicLayers;
-                NumberOfDelwaqSegmentsPerHydrodynamicLayer = HydroData.NumberOfDelwaqSegmentsPerHydrodynamicLayer;
-                NumberOfWaqSegmentLayers = HydroData.NumberOfWaqSegmentLayers;
-                HydrodynamicLayerThicknesses = HydroData.HydrodynamicLayerThicknesses;
-                NumberOfHydrodynamicLayersPerWaqLayer = HydroData.NumberOfHydrodynamicLayersPerWaqSegmentLayer;
-
-                SetImportProgress("Importing boundaries");
-                ResolveBoundaryImport(HydroData.GetBoundaries());
-                BoundaryNodeIds = HydroData.GetBoundaryNodeIds();
-
-                SetImportProgress("Importing attributes");
-                var fileInfo =
-                    new FileInfo(Path.Combine(Path.GetDirectoryName(HydroData.FilePath), AttributesRelativeFilePath));
-
-                attributeData =
-                    AttributesFileReader.ReadAll(NumberOfDelwaqSegmentsPerHydrodynamicLayer, NumberOfWaqSegmentLayers,
-                                                 fileInfo);
-                pointToGridCellMapper = SetUpPointToGridCellMapper();
-
-                HasHydroDataImported = true;
-            }
-            finally
-            {
-                importingHydroData = false;
-                EndEdit();
-                enableMarkOutputOutOfSync = true;
-            }
-        }
-        
-        /// <summary>
-        /// Method to connect the DeltaShell framework working directory to the ModelSettings.WorkingDirectory.
-        /// The model also adds a folder with the model name to the path.
-        /// <param name="WorkingDirectoryWithoutModelName"></param>
-        protected internal virtual void SetWorkingDirectoryInModelSettings(Func<string> WorkingDirectoryWithoutModelName)
-        {
-            modelSettings.WorkingDirectoryPathFuncWithModelName = () => Path.Combine(WorkingDirectoryWithoutModelName(), GetWaqDataFolderName());
-        }
-
-        private void OverWriteSegmentFunctions(IHydroData data)
-        {
-            SetImportProgress("Sync of segment functions");
-            SurfacesRelativeFilePath = data.SurfacesRelativePath;
-            VelocitiesFilePath = data.VelocitiesRelativePath;
-            WidthsFilePath = data.WidthsRelativePath;
-            ChezyCoefficientsFilePath = data.ChezyCoefficientsRelativePath;
-            SalinityRelativeFilePath = HydroData.SalinityRelativePath;
-            TemperatureRelativeFilePath = HydroData.TemperatureRelativePath;
-            ShearStressesRelativeFilePath = HydroData.ShearStressesRelativePath;
-        }
-
-        private void OverWriteModelTimersWithImportTimers(bool skipImportTimers, IHydroData dataToOverwrite)
-        {
-            if (skipImportTimers)
-            {
-                return;
-            }
-
-            SetImportProgress("Importing timers");
-            StartTime = dataToOverwrite.ConversionStartTime;
-            StopTime = dataToOverwrite.ConversionStopTime;
-            TimeStep = dataToOverwrite.ConversionTimeStep;
-            ReferenceTime = dataToOverwrite.ConversionReferenceTime;
-
-            //Sync of time step needs to be explicit.
-            ModelSettings.HisTimeStep = dataToOverwrite.ConversionTimeStep;
-            ModelSettings.MapTimeStep = dataToOverwrite.ConversionTimeStep;
-            ModelSettings.BalanceTimeStep = dataToOverwrite.ConversionTimeStep;
-            LogSynchronizedTimer("Time Step", TimeStep);
-        }
-
-        private void ResolveBoundaryImport(IEnumerable<WaterQualityBoundary> importedBoundaries)
-        {
-            var newBoundaries = new List<WaterQualityBoundary>();
-            if (importedBoundaries != null)
-            {
-                foreach (WaterQualityBoundary waterQualityBoundary in importedBoundaries)
-                {
-                    // find an already loaded boundary
-                    WaterQualityBoundary existingBoundary =
-                        Boundaries.FirstOrDefault(b => b.Name == waterQualityBoundary.Name);
-
-                    if (existingBoundary != null)
-                    {
-                        // copy the location aliases
-                        // TODO: extend this list if there is more to be mapped
-                        waterQualityBoundary.LocationAliases = existingBoundary.LocationAliases;
-                    }
-
-                    newBoundaries.Add(waterQualityBoundary);
-                }
-            }
-
-            Boundaries.Clear();
-            Boundaries.AddRange(newBoundaries);
-        }
-
-        private PointToGridCellMapper SetUpPointToGridCellMapper()
-        {
-            var mapper = new PointToGridCellMapper {Grid = Grid};
-            var waqRelativeThicknesses = new double[NumberOfWaqSegmentLayers];
-            var hydroIndex = 0;
-            for (var i = 0; i < NumberOfWaqSegmentLayers; i++)
-            {
-                var waqRelativeThickness = 0.0;
-                int addUptoHydroLayer = hydroIndex + NumberOfHydrodynamicLayersPerWaqLayer[i];
-                while (hydroIndex < addUptoHydroLayer)
-                {
-                    waqRelativeThickness += HydrodynamicLayerThicknesses[hydroIndex++];
-                }
-
-                waqRelativeThicknesses[i] = waqRelativeThickness;
-            }
-
-            if (LayerType == LayerType.Sigma)
-            {
-                mapper.SetSigmaLayers(waqRelativeThicknesses);
-            }
-            else if (LayerType == LayerType.ZLayer)
-            {
-                mapper.SetZLayers(waqRelativeThicknesses, ZTop, ZBot);
-            }
-
-            return mapper;
-        }
-
-        /// <summary>
-        /// Gets the PROJ4 string representation of the coordinate system.
-        /// </summary>
-        /// <param name="coordinateSystem">The <see cref="ICoordinateSystem"/> to retrieve the string
-        /// representation for.</param>
-        /// <returns>A PROJ4 string representation, or an empty string when:
-        /// <list type="bullet">
-        /// <item><paramref name="coordinateSystem"/> is <c>null</c>.</item>
-        /// <item>No PROJ4 transformation is available.</item>
-        /// </list>
-        /// </returns>
-        private static string GetProj4CoordinateSystemString(ICoordinateSystem coordinateSystem)
-        {
-            if (coordinateSystem == null)
-            {
-                return string.Empty;
-            }
-
-            try
-            {
-                return coordinateSystem.PROJ4;
-            }
-            catch (Exception)
-            {
-                return string.Empty;
-            }
-        }
-
-        /// <summary>
-        /// Determines whether the model has data available in its hydro dynamics for a
-        /// specific function, process or substance.
-        /// </summary>
-        /// <param name="function"> The function. </param>
-        /// <returns> True if there is data defined in the hydro dynamics, false otherwise. </returns>
-        public virtual bool HasDataInHydroDynamics(IFunction function)
-        {
-            return function != null && HasDataInHydroDynamics(function.Name);
-        }
-
-        /// <summary>
-        /// Determines whether the model has data available in its hydro dynamics for a
-        /// specific function, process or substance.
-        /// </summary>
-        /// <param name="functionName"> The name of the function. </param>
-        /// <returns> True if there is data defined in the hydro dynamics, false otherwise. </returns>
-        public virtual bool HasDataInHydroDynamics(string functionName)
-        {
-            return HydroData != null && HydroData.HasDataFor(functionName);
-        }
-
-        /// <summary>
-        /// Gets the file path for a given function, process or substance when available
-        /// in the hydro dynamics.
-        /// </summary>
-        /// <param name="function"> The funcion. </param>
-        /// <returns>
-        /// The filepath for the given function if <see cref="HasDataInHydroDynamics(IFunction)" />
-        /// returns true for <paramref name="function" />.
-        /// </returns>
-        /// <exception cref="InvalidOperationException">
-        /// When <see cref="HasDataInHydroDynamics(IFunction)" />
-        /// returns false for <paramref name="function" />.
-        /// </exception>
-        public virtual string GetFilePathFromHydroDynamics(IFunction function)
-        {
-            if (HydroData == null || !HydroData.HasDataFor(function.Name))
-            {
-                throw new InvalidOperationException(
-                    string.Format("Function '{0}' is not available in the hydro data.", function.Name));
-            }
-
-            return HydroData.GetFilePathFor(function.Name);
-        }
-
-        /// <summary>
-        /// Determines whether the given coordinate falls within an active cell or not.
-        /// </summary>
-        /// <returns> True if the cell is active; false when it's inactive. </returns>
-        /// <exception cref="System.InvalidOperationException"> When no hydro data has been importer. </exception>
-        public virtual bool IsInsideActiveCell(Coordinate coordinate)
-        {
-            if (!HasHydroDataImported)
-            {
-                throw new InvalidOperationException(
-                    "Cannot determine if location is inside active cell as no hydro dynamic data was imported.");
-            }
-
-            int index = GetSegmentIndexForLocation(coordinate);
-            return attributeData.IsSegmentActive(index);
-        }
-
-        /// <summary>
-        /// Determines whether the given coordinate falls within an active cell or not.
-        /// </summary>
-        /// <returns> True if the cell is active; false when it's inactive. </returns>
-        /// <exception cref="System.InvalidOperationException"> When no hydro data has been importer. </exception>
-        public virtual bool IsInsideActiveCell2D(Coordinate coordinate)
-        {
-            if (!HasHydroDataImported)
-            {
-                throw new InvalidOperationException(
-                    "Cannot determine if location is inside active cell as no hydro dynamic data was imported.");
-            }
-
-            int index = GetSegmentIndexForLocation2D(coordinate);
-            return attributeData.IsSegmentActive(index);
-        }
-
-        /// <summary>
-        /// Returns the cell index for a given location.
-        /// </summary>
-        public virtual int GetSegmentIndexForLocation(Coordinate coordinate)
-        {
-            if (!HasHydroDataImported)
-            {
-                throw new InvalidOperationException(
-                    "Cannot determine grid cell index for location as no hydro dynamic data was imported.");
-            }
-
-            return pointToGridCellMapper.GetWaqSegmentIndex(coordinate.X, coordinate.Y, coordinate.Z);
-        }
-
-        /// <summary>
-        /// Returns the cell index for a given location in 2D plane.
-        /// So only the top layer.
-        /// </summary>
-        public virtual int GetSegmentIndexForLocation2D(Coordinate coordinate)
-        {
-            if (!HasHydroDataImported)
-            {
-                throw new InvalidOperationException(
-                    "Cannot determine grid cell index for location as no hydro dynamic data was imported.");
-            }
-
-            return pointToGridCellMapper.GetWaqSegmentIndex2D(coordinate.X, coordinate.Y);
-        }
-
-        public override IEnumerable<object> GetDirectChildren()
-        {
-            foreach (object directChild in base.GetDirectChildren())
-            {
-                yield return directChild;
-            }
-
-            yield return InitialConditions;
-            yield return ProcessCoefficients;
-            yield return Dispersion;
-            yield return ObservationPoints;
-            yield return Loads;
-            yield return BoundaryDataManager;
-            yield return LoadsDataManager;
-            yield return OutputFolder;
-        }
-
-        public virtual double GetDefaultZ()
-        {
-            switch (LayerType)
-            {
-                case LayerType.Undefined:
-                    return double.NaN;
-                case LayerType.Sigma:
-                    return 0;
-                case LayerType.ZLayer:
-                    return ZTop;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-        }
 
         #region Restart file
 
@@ -1387,7 +1857,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
 
             waqProcessor = new WaqFileBasedProcessor();
         }
-        
+
         protected override void OnExecute()
         {
             InvokeAndRestoreDirectory(OnExecuteCore);
@@ -1465,479 +1935,5 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         }
 
         # endregion
-
-        [EditAction]
-        protected override void OnInputCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            if (!enableMarkOutputOutOfSync)
-            {
-                return;
-            }
-
-            this.InputCollectionChanged(sender, e);
-
-            MarkOutputOutOfSync();
-        }
-
-        [EditAction]
-        protected override void OnInputPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            if (!enableMarkOutputOutOfSync)
-            {
-                return;
-            }
-
-            this.InputPropertyChanged(sender, e);
-
-            MarkOutputOutOfSync();
-        }
-
-        /// <summary>
-        /// Overriden to synchronize the StartTime and the output timers.
-        /// </summary>
-        public override DateTime StartTime
-        {
-            get => base.StartTime;
-            set
-            {
-                if (StartTime == value)
-                {
-                    return;
-                }
-
-                base.StartTime = value;
-
-                ModelSettings.BalanceStartTime = StartTime;
-                ModelSettings.MapStartTime = StartTime;
-                ModelSettings.HisStartTime = StartTime;
-                LogSynchronizedTimer("Start Time", StartTime);
-            }
-        }
-
-        /// <summary>
-        /// Overriden to synchronize the StopTime and the output timers.
-        /// </summary>
-        public override DateTime StopTime
-        {
-            get => base.StopTime;
-            set
-            {
-                if (StopTime == value)
-                {
-                    return;
-                }
-
-                base.StopTime = value;
-
-                ModelSettings.BalanceStopTime = StopTime;
-                ModelSettings.MapStopTime = StopTime;
-                ModelSettings.HisStopTime = StopTime;
-                LogSynchronizedTimer("Stop Time", StopTime);
-            }
-        }
-
-        private void LogSynchronizedTimer(string timer, object value)
-        {
-            //For some info the test will only pass if the message is contained in the string.Format, but not in the Log.InfoFormat.
-            string message =
-                string.Format(
-                    Resources
-                        .WaterQualityModel_LogSynchronizedTimer_Output_timers___0___have_been_synchronized_to_match_the_Simulation__0____1___,
-                    timer, value);
-            Log.Info(message);
-        }
-
-        /// <summary>
-        /// Occures when the hydro data has changed (file has been edited) (async event)
-        /// </summary>
-        public virtual event EventHandler<EventArgs> HydroDataChanged;
-
-        private void SetNewGrid(UnstructuredGrid value, bool schematizationRemainsUnchanged)
-        {
-            // never set grid to null (this creates invalid UnstructuredGridCellCoverages)
-            UnstructuredGrid gridToSet = value ?? new UnstructuredGrid();
-
-            if (overriddenCoordinateSystem != null)
-            {
-                gridToSet.CoordinateSystem = overriddenCoordinateSystem;
-            }
-
-            GetDataItemByTag(GridDataItemMetaData.Tag).Value = gridToSet;
-            Bathymetry = CreateAndFillBathymetryCoverage(gridToSet);
-
-            ReplaceGridOnUnstructuredGridCoveragesWithSpatialOperations(
-                GetDataItemSetByTag(InitialConditionsDataItemMetaData.Tag), schematizationRemainsUnchanged);
-            ReplaceGridOnUnstructuredGridCoveragesWithSpatialOperations(
-                GetDataItemSetByTag(ProcessCoefficientsDataItemMetaData.Tag), schematizationRemainsUnchanged);
-            ReplaceGridOnUnstructuredGridCoveragesWithSpatialOperations(
-                GetDataItemSetByTag(DispersionDataItemMetaData.Tag), schematizationRemainsUnchanged);
-            ReplaceGridOnUnstructuredGridCoverageWithSpatialOperations(
-                GetDataItemByTag(ObservationAreasDataItemMetaData.Tag), schematizationRemainsUnchanged);
-            ReplaceGridOnUnstructuredGridCoverages(this.GetOutputCoverages(), schematizationRemainsUnchanged);
-        }
-        
-        private void SubscribeToInternalEvents()
-        {
-            // subscribe to evented lists that are not in the DataItems collection
-            if (Loads != null)
-            {
-                Loads.CollectionChanged += OnInputCollectionChanged;
-            }
-
-            if (ObservationPoints != null)
-            {
-                ObservationPoints.CollectionChanged += OnInputCollectionChanged;
-            }
-
-            if (ModelSettings != null)
-            {
-                ((INotifyPropertyChanged) ModelSettings).PropertyChanged += OnInputPropertyChanged;
-            }
-        }
-
-        private string GetWaqDataFolderName()
-        {
-            if (string.IsNullOrWhiteSpace(Name))
-            {
-                return "Water_Quality";
-            }
-
-            return Name.Replace(" ", "_");
-        }
-        [EditAction]
-        private void SetWaqPointHeights()
-        {
-            double defaultZ = GetDefaultZ();
-
-            foreach (WaterQualityLoad load in Loads)
-            {
-                load.Z = defaultZ;
-            }
-
-            foreach (WaterQualityObservationPoint observationPoint in ObservationPoints)
-            {
-                observationPoint.Z = defaultZ;
-            }
-        }
-
-        [EditAction]
-        private void SetHorizontalDispersion(double value)
-        {
-            WaterQualityFunctionFactory.SetDefaultValue(Dispersion[0], value);
-        }
-
-        private void ClearPreProcessorAndProcessor()
-        {
-            waqProcessor = null;
-
-            // clean the pre processor before setting it to null.
-            if (waqPreProcessor != null)
-            {
-                waqPreProcessor.Dispose();
-            }
-
-            waqPreProcessor = null;
-        }
-
-        private void InitializeInputDataItems()
-        {
-            AddDataItem(new TextDocument
-            {
-                Name = InputFileCommandLineDataItemMetaData.Name,
-                Content = Resources.TemplateInpFileNew
-            }, DataItemRole.Input, InputFileCommandLineDataItemMetaData.Tag);
-            AddDataItem(new TextDocument
-            {
-                Name = InputFileHybridDataItemMetaData.Name,
-                Content = Resources.TemplateInpFileHybrid
-            }, DataItemRole.Input, InputFileHybridDataItemMetaData.Tag);
-
-            AddDataItem(CreateSubstanceProcessLibrary(), SubstanceProcessLibraryDataItemMetaData.Name,
-                        DataItemRole.Input, SubstanceProcessLibraryDataItemMetaData.Tag);
-
-            var initialGrid = new UnstructuredGrid();
-            AddDataItem(initialGrid, GridDataItemMetaData.Name, DataItemRole.Input, GridDataItemMetaData.Tag);
-            AddDataItem(CreateAndFillBathymetryCoverage(initialGrid), BathymetryDataItemMetaData.Name,
-                        DataItemRole.Input, BathymetryDataItemMetaData.Tag);
-            AddDataItem(CreateObservationAreasCoverage(initialGrid), ObservationAreasDataItemMetaData.Name,
-                        DataItemRole.Input, ObservationAreasDataItemMetaData.Tag);
-            AddDataItem(new DataTableManager(), BoundaryDataDataItemMetaData.Name, DataItemRole.Input,
-                        BoundaryDataDataItemMetaData.Tag);
-            AddDataItem(new DataTableManager(), LoadsDataDataItemMetaData.Name, DataItemRole.Input,
-                        LoadsDataDataItemMetaData.Tag);
-
-            AddDataItemSet(new EventedList<IFunction>(), InitialConditionsDataItemMetaData.Name, DataItemRole.Input,
-                           InitialConditionsDataItemMetaData.Tag, true);
-            AddDataItemSet(new EventedList<IFunction>(), ProcessCoefficientsDataItemMetaData.Name, DataItemRole.Input,
-                           ProcessCoefficientsDataItemMetaData.Tag, true);
-            AddDataItemSet(new EventedList<IFunction>(CreateDispersionFunctions()), DispersionDataItemMetaData.Name,
-                           DataItemRole.Input, DispersionDataItemMetaData.Tag, true);
-        }
-
-        private void SetImportProgress(string progress)
-        {
-            importProgress = progress;
-            OnProgressChanged();
-        }
-
-        private void SetProgress(double progress)
-        {
-            progressPercentage = progress;
-            OnProgressChanged();
-        }
-
-        private static SubstanceProcessLibrary CreateSubstanceProcessLibrary()
-        {
-            return new SubstanceProcessLibrary
-            {
-                Name = "Process Library",
-                OutputParameters =
-                {
-                    new WaterQualityOutputParameter
-                    {
-                        Name = Resources.SubstanceProcessLibrary_OutputParameters_Volume,
-                        Description = Resources.SubstanceProcessLibrary_OutputParameters_Volume_description
-                    },
-                    new WaterQualityOutputParameter
-                    {
-                        Name = Resources.SubstanceProcessLibrary_OutputParameters_Surf,
-                        Description = Resources.SubstanceProcessLibrary_OutputParameters_Surf_description
-                    },
-                    new WaterQualityOutputParameter
-                    {
-                        Name = Resources.SubstanceProcessLibrary_OutputParameters_Temp,
-                        Description = Resources.SubstanceProcessLibrary_OutputParameters_Temp_description
-                    },
-                    new WaterQualityOutputParameter
-                    {
-                        Name = Resources.SubstanceProcessLibrary_OutputParameters_Rad,
-                        Description = Resources.SubstanceProcessLibrary_OutputParameters_Rad_description
-                    }
-                }
-            };
-        }
-
-        private static IEnumerable<IFunction> CreateDispersionFunctions()
-        {
-            return new EventedList<IFunction>
-            {
-                WaterQualityFunctionFactory.CreateConst("Dispersion", 0, "Dispersion", "m2/s",
-                                                        "Horizontal Dispersion")
-            };
-        }
-
-        private static UnstructuredGridVertexCoverage CreateAndFillBathymetryCoverage(UnstructuredGrid grid)
-        {
-            // create new bathymetry
-            var bathymetry = new UnstructuredGridVertexCoverage(grid, false)
-            {
-                Name = "Bed Level",
-                IsEditable = false,
-            };
-            bathymetry.Components[0].NoDataValue = -999.0;
-            bathymetry.Components[0].DefaultValue = bathymetry.Components[0].NoDataValue;
-
-            if (grid.Vertices.Count > 0)
-            {
-                bathymetry.SetValues(grid.Vertices.Select(v => v.Z));
-            }
-
-            return bathymetry;
-        }
-
-        private static WaterQualityObservationAreaCoverage CreateObservationAreasCoverage(UnstructuredGrid grid)
-        {
-            return new WaterQualityObservationAreaCoverage(grid);
-        }
-        
-        /// <summary>
-        /// Replace the grid on a list of coverages.
-        /// This method does not look at spatial operations.
-        /// Use this method for output coverages for example.
-        /// </summary>
-        /// <param name="functions"> </param>
-        /// <param name="onlyUpdateGrid"> </param>
-        /// <seealso cref="ReplaceGridOnUnstructuredGridCoveragesWithSpatialOperations" />
-        private void ReplaceGridOnUnstructuredGridCoverages(IEnumerable<IFunction> functions, bool onlyUpdateGrid)
-        {
-            foreach (IFunction function in functions)
-            {
-                var coverage = function as UnstructuredGridCellCoverage;
-                if (coverage != null)
-                {
-                    coverage.AssignNewGridToCoverage(Grid, !onlyUpdateGrid);
-                }
-            }
-        }
-
-        private void ReplaceGridOnUnstructuredGridCoverageWithSpatialOperations(IDataItem dataItem, bool onlyUpdateGrid)
-        {
-            ReplaceGridOnUnstructuredGridCoverages(new[]
-            {
-                (IFunction) dataItem.Value
-            }, onlyUpdateGrid);
-            SetGridAndExecuteSpatialOperation(dataItem);
-        }
-
-        /// <summary>
-        /// Replace grid on unstructured coverages, because the grid was replaced via the <see cref="Grid" /> property.
-        /// This method checks spatial operations.
-        /// Use this method for functions that require spatial operation input.
-        /// </summary>
-        /// <seealso cref="ReplaceGridOnUnstructuredGridCoverages" />
-        /// .
-        private void ReplaceGridOnUnstructuredGridCoveragesWithSpatialOperations(
-            IDataItemSet dataItemSet, bool onlyUpdateGrid)
-        {
-            var functionListToReplace = new List<IFunction>();
-            foreach (IDataItem dataItem in dataItemSet.DataItems)
-            {
-                if (dataItem.Value != null)
-                {
-                    functionListToReplace.Add((IFunction) dataItem.Value);
-                }
-                else if (dataItem.ComposedValue != null)
-                {
-                    functionListToReplace.Add((IFunction) dataItem.ComposedValue);
-                }
-            }
-
-            ReplaceGridOnUnstructuredGridCoverages(functionListToReplace, onlyUpdateGrid);
-
-            foreach (IDataItem dataItem in dataItemSet.DataItems)
-            {
-                SetGridAndExecuteSpatialOperation(dataItem);
-            }
-        }
-
-        private void SetGridAndExecuteSpatialOperation(IDataItem dataItem)
-        {
-            // Existing input grid cell coverages often have a 'initial value' Spatial Operation, created due to WaterQualityModelSyncExtensions.
-            // We need to update the original coverage in order to have the Spatial Operations working with the new grid.
-            var valueConverter = dataItem.ValueConverter as SpatialOperationSetValueConverter;
-            if (valueConverter == null)
-            {
-                return;
-            }
-
-            var original = (UnstructuredGridCellCoverage) valueConverter.OriginalValue;
-            original.AssignNewGridToCoverage(Grid);
-
-            // set the grid extents as mask for the first operation, because it depends on the grid.
-            ISpatialOperation operation = valueConverter.SpatialOperationSet.Operations.FirstOrDefault(
-                o => o.Name == WaterQualityModelSyncExtensions
-                         .InitialValueOperationName);
-
-            if (operation != null)
-            {
-                WaterQualityModelSyncExtensions.SetGridExtentsAsInputMask(operation, original);
-            }
-
-            // execute the spatial operation set
-            // this call is not required during loading of the project,
-            // but it is required when the hyd file is re-imported in any other case.
-            // See TOOLS-22124 for more info
-            valueConverter.SpatialOperationSet.Execute();
-        }
-
-        private Dictionary<string, string> GetMetaDataRequirements(int version)
-        {
-            if (version != 1)
-            {
-                throw new NotImplementedException(string.Format(
-                                                      "Meta data version {0} for model type {1} is not supported",
-                                                      version, "WaterQualityModel"));
-            }
-
-            return new Dictionary<string, string> {{"CorrectForEvap", ModelSettings.CorrectForEvaporation.ToString()}};
-        }
-
-        private Dictionary<string, string> GetOptionalMetaDataRequirements(int version)
-        {
-            if (version != 1)
-            {
-                throw new NotImplementedException(string.Format(
-                                                      "Meta data version {0} for model type {1} is not supported",
-                                                      version, "WaterQualityModel"));
-            }
-
-            return new Dictionary<string, string>
-            {
-                {
-                    "NrOfActiveSubstances",
-                    SubstanceProcessLibrary.ActiveSubstances.Count().ToString(CultureInfo.InvariantCulture)
-                }
-            };
-        }
-
-        private void HandleNewHydroDynamicsFunctionDataSet(IDataItemSet functionCollection, string functionName)
-        {
-            IDataItem dataItem =
-                functionCollection.DataItems.FirstOrDefault(
-                    p => p.Name.ToLowerInvariant() == functionName.ToLowerInvariant());
-            if (dataItem == null || SubstanceProcessLibrary == null)
-            {
-                return;
-            }
-
-            IFunction function = GetFunctionForDataItem(dataItem);
-
-            bool hasDataInHydroDynamics = HasDataInHydroDynamics(functionName);
-            bool isFromHydroDynamics = function.IsFromHydroDynamics();
-
-            IFunctionTypeCreator creator;
-            if (hasDataInHydroDynamics
-            ) // if there is data and it is the first time, automatically set it to from hydrodynamics. 
-            {
-                creator = FunctionTypeCreatorFactory.CreateFunctionFromHydroDynamicsCreator(
-                    HasDataInHydroDynamics, GetFilePathFromHydroDynamics);
-            }
-            else if (isFromHydroDynamics
-            ) // if there is no data in the hydrodynamics, but it is set as such, set it back to constant
-            {
-                creator = FunctionTypeCreatorFactory.CreateConstantCreator();
-            }
-            else
-            {
-                return;
-            }
-
-            FunctionTypeCreator.ReplaceFunctionUsingCreator(functionCollection.AsEventedList<IFunction>(), function,
-                                                            creator, this);
-            Log.InfoFormat(
-                Resources
-                    .WaterQualityModel_HandleNewHydroDynamicsFunctionDataSet_The_process_coefficient__0__has_been_updated_with_the_latest_Hydrodynamic_data_file_,
-                function.Name);
-        }
-
-        private IFunction GetFunctionForDataItem(IDataItem dataItem)
-        {
-            IFunction function = dataItem.Value as IFunction ?? dataItem.ValueConverter.OriginalValue as IFunction;
-            Debug.Assert(function != null,
-                         "Assumption: If DataItem.Value should return null here, we are dealing with " +
-                         "an UnstructuredGridCellCoverage which uses ValueConverters and hasn't executed " +
-                         "yet such as during save/load cycle.");
-            return function;
-        }
-
-        private void HydroDataOnDataChanged(object sender, EventArgs<string> eventArgs)
-        {
-            if (HydroDataChanged == null)
-            {
-                return;
-            }
-
-            HydroDataChanged(this, eventArgs);
-        }
-
-        public void Dispose()
-        {
-            HydroData = null;
-        }
-
-        public virtual void SetEnableMarkOutputOutOfSync(bool enableMarkOutputOutOfSyncValue)
-        {
-            enableMarkOutputOutOfSync = enableMarkOutputOutOfSyncValue;
-        }
     }
 }

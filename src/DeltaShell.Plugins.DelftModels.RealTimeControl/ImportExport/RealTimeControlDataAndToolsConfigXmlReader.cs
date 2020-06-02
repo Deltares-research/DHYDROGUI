@@ -56,9 +56,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
             RuleXML[] ruleElements = toolsConfigObject.rules.ToArray();
             TriggerXML[] triggerElements = toolsConfigObject.triggers.ToArray();
 
-            var dataAccessObjects = RealTimeControlToolsConfigXmlConverter.ConvertToDataAccessObjects(ruleElements, triggerElements, logHandler);
+            IEnumerable<IRtcDataAccessObject<RtcBaseObject>> dataAccessObjects = RealTimeControlToolsConfigXmlConverter.ConvertToDataAccessObjects(ruleElements, triggerElements, logHandler);
 
-            var controlGroupGroups = dataAccessObjects.GroupBy(o => o.ControlGroupName).ToArray();
+            IGrouping<string, IRtcDataAccessObject<RtcBaseObject>>[] controlGroupGroups = dataAccessObjects.GroupBy(o => o.ControlGroupName).ToArray();
             if (!controlGroupGroups.Any())
             {
                 logHandler.ReportErrorFormat(Resources.RealTimeControlDataConfigXmlReader_Read_Could_not_read_control_groups_from_file___0___, toolsConfigFilePath);

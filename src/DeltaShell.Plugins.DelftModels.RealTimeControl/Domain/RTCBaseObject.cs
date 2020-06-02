@@ -5,11 +5,11 @@ using DelftTools.Utils.Data;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
 {
-    [Entity(FireOnCollectionChange=false)]
+    [Entity(FireOnCollectionChange = false)]
     public abstract class RtcBaseObject : Unique<long>, INameable, ICloneable, ICopyFrom
     {
-        public string Name { get; set; }
         public string LongName { get; set; }
+        public string Name { get; set; }
 
         public abstract object Clone();
 

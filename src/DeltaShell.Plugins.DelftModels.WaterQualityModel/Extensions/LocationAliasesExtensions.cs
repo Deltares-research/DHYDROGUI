@@ -7,7 +7,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Extentions
     public static class LocationAliasesExtensions
     {
         /// <summary>
-        /// Parse the location alias' <see cref="IHasLocationAliases.LocationAliases" />
+        /// Parse the location alias' <see cref="IHasLocationAliases.LocationAliases"/>
         /// property into a list of aliases that is was comma separated.
         /// Removes empty entries and whitespace entries.
         /// </summary>

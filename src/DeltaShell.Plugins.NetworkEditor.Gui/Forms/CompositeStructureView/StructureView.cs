@@ -19,6 +19,7 @@ using DelftTools.Utils.Collections;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapes;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChartShapes;
+using DeltaShell.Plugins.NetworkEditor.Gui.Properties;
 using GeoAPI.Geometries;
 using log4net;
 using NetTopologySuite.Extensions.Networks;
@@ -30,11 +31,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
 {
     public partial class StructureView : UserControl, IStructureView
     {
-        private const string XValuesDataMember = "X";
-        private const string YValuesDataMember = "Y";
-
-        public event EventHandler<SelectedItemChangedEventArgs> SelectionChanged;
-
         private enum StructureType
         {
             Weir,
@@ -45,17 +41,43 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
             Unknown
         }
 
+        private const string XValuesDataMember = "X";
+        private const string YValuesDataMember = "Y";
+
+        private static readonly ILog log = LogManager.GetLogger(typeof(StructureView));
+
+        private readonly StructurePresenter structurePresenter;
+
+        private readonly IChart chart;
+
+        private readonly IDictionary<IShapeFeature, IStructure1D> Shapes2Structures = new Dictionary<IShapeFeature, IStructure1D>();
+
+        private readonly IDictionary<IStructure1D, IShapeFeature> Structures2Shape = new Dictionary<IStructure1D, IShapeFeature>();
+        //private readonly IDictionary<IFunction, IStructure> Function2Structures = new Dictionary<IFunction, IStructure>();
+
+        private readonly VectorStyle selectStyle = new VectorStyle
+        {
+            Fill = new SolidBrush(Color.FromArgb(150, Color.Magenta)),
+            Line = new Pen(Color.Black)
+        };
+
+        private readonly VectorStyle defaultStyle = new VectorStyle
+        {
+            Fill = new SolidBrush(Color.FromArgb(100, Color.Gold)),
+            Line = new Pen(Color.Black)
+        };
+
+        private readonly VectorStyle errorStyle = new VectorStyle
+        {
+            Fill = new SolidBrush(Color.FromArgb(150, Color.DarkRed)),
+            Line = new Pen(Color.Black)
+        };
+
         private ICrossSectionDefinition predecessorCrossSectionDefinition;
         private ICrossSectionDefinition successorCrossSectionDefinition;
         private Envelope structuresBoundingRect;
 
-        private readonly StructurePresenter structurePresenter;
-
-        private static readonly ILog log = LogManager.GetLogger(typeof(StructureView));
-
         private ILineChartSeries crossSectionDefinitionSeries;
-
-        private readonly IChart chart;
 
         private ShapeModifyTool shapeModifyTool;
         //private ShapeModifyTool structureWallTool;
@@ -65,27 +87,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
         private double leftView = 0;
         private double rightView = 0;
 
-        private readonly IDictionary<IShapeFeature, IStructure1D> Shapes2Structures = new Dictionary<IShapeFeature, IStructure1D>();
-        private readonly IDictionary<IStructure1D, IShapeFeature> Structures2Shape = new Dictionary<IStructure1D, IShapeFeature>();
-        //private readonly IDictionary<IFunction, IStructure> Function2Structures = new Dictionary<IFunction, IStructure>();
-       
-        private readonly VectorStyle selectStyle = new VectorStyle
-                                                       {
-                                                           Fill = new SolidBrush(Color.FromArgb(150, Color.Magenta)), 
-                                                           Line = new Pen(Color.Black)
-                                                       };
-
-        private readonly VectorStyle defaultStyle = new VectorStyle
-                                                        {
-                                                            Fill = new SolidBrush(Color.FromArgb(100, Color.Gold)), 
-                                                            Line = new Pen(Color.Black)
-                                                        };
-
-        private readonly VectorStyle errorStyle = new VectorStyle
-                                                      {
-                                                          Fill = new SolidBrush(Color.FromArgb(150, Color.DarkRed)), 
-                                                          Line = new Pen(Color.Black)
-                                                      };
+        public event EventHandler<SelectedItemChangedEventArgs> SelectionChanged;
 
         public StructureView()
         {
@@ -105,29 +107,281 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
             structurePresenter = new StructurePresenter(shapeModifyTool);
         }
 
+        public object CommandReceiver
+        {
+            get
+            {
+                return structurePresenter;
+            }
+        }
+
+        [ValidationMethod]
+        public static void Validate(StructureView structureView)
+        {
+            foreach (IStructure1D structure in structureView.CompositeStructure.Structures)
+            {
+                ValidationResult result = structure.Validate();
+
+                structureView.shapeModifyTool.SelectStyle = structureView.selectStyle;
+                structureView.shapeModifyTool.SelectStyle = structureView.errorStyle;
+                if (!result.IsValid)
+                {
+                    log.Error(string.Join(", ", result.Messages.ToArray()));
+                }
+            }
+
+            structureView.chartView.Refresh();
+        }
+
+        public override void Refresh()
+        {
+            base.Refresh();
+            if (structureViewData != null)
+            {
+                structureViewData.ResetMinMaxZ();
+                RefreshViewData();
+            }
+        }
+
+        /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && components != null)
+            {
+                components.Dispose();
+            }
+
+            base.Dispose(disposing);
+
+            if (HydroNetwork == null)
+            {
+                return;
+            }
+
+            ((INotifyPropertyChanged) HydroNetwork).PropertyChanged -= NetworkPropertyChanged;
+        }
+
+        protected override void OnPaint(PaintEventArgs e)
+        {
+            //validate
+            foreach (IStructure1D s in Shapes2Structures.Values)
+            {
+                if (double.IsInfinity(s.OffsetY))
+                {
+                    log.Error("OffsetY in structure " + s.Name + " cannot be Infinity (type: " + StructureToStructureType(s) + "; chan: " +
+                              s.Channel.Name + ")");
+                }
+
+                if (double.IsNaN(s.OffsetY))
+                {
+                    log.Error("OffsetY in structure " + s.Name + " cannot be NaN of (type: " + StructureToStructureType(s) + "; chan: " +
+                              s.Channel.Name + ")");
+                }
+            }
+        }
+
         private static StructureType StructureToStructureType(IStructure1D structure)
         {
             if (structure is IWeir)
             {
                 return StructureType.Weir;
             }
+
             if (structure is IPump)
             {
                 return StructureType.Pump;
             }
+
             if (structure is IBridge)
             {
                 return StructureType.Bridge;
             }
+
             if (structure is ICulvert)
             {
                 return StructureType.Culvert;
             }
+
             if (structure is IExtraResistance)
             {
                 return StructureType.ExtraResistance;
             }
+
             return StructureType.Unknown;
+        }
+
+        private void UpdatePumpShapeWithPump(IPump pump)
+        {
+            RemoveShapeFeature(pump);
+            AddPumpShape(pump);
+            chartView.Invalidate();
+        }
+
+        private void UpdateWeirShapeWithWeir(IWeir weir)
+        {
+            RemoveShapeFeature(weir);
+            AddWeirShape(weir);
+            Validate(this);
+            chartView.Invalidate();
+        }
+
+        private void RefreshViewData()
+        {
+            Structures2Shape.Clear();
+            Shapes2Structures.Clear();
+            shapeModifyTool.Clear();
+            // Do not update when no necessary to avoid flashing, context loss (selection loss), etc
+            if (null == CompositeStructure ||
+                shapeModifyTool.ShapeFeatures.Count == CompositeStructure.Structures.Count)
+            {
+                return;
+            }
+
+            Text = CompositeStructure.Name;
+
+            if (null != HydroNetwork)
+            {
+                chartView.Chart.Series.Clear();
+                AddStructuresToChart(CompositeStructure);
+                AddCrossSectionsOrBoundingSeriesToChart();
+                //AddThalWayToChart(); //thalweg does nothing here
+                chartView.Invalidate();
+            }
+
+            UpdateLeftAxis();
+            UpdateBottomAxis();
+        }
+
+        private void UpdateBottomAxis()
+        {
+            double min, max;
+            //y is horizontal
+            GetYMinMax(out min, out max);
+
+            chartView.Chart.BottomAxis.MinimumOffset = 15;
+            chartView.Chart.BottomAxis.MaximumOffset = 15;
+            chartView.Chart.BottomAxis.Minimum = min;
+            chartView.Chart.BottomAxis.Maximum = max;
+            chartView.Chart.BottomAxis.Automatic = false;
+        }
+
+        private void GetYMinMax(out double min, out double max)
+        {
+            var profileMin = double.MaxValue;
+            var profileMax = double.MinValue;
+
+            if (predecessorCrossSectionDefinition != null)
+            {
+                IEnumerable<Coordinate> yz = predecessorCrossSectionDefinition.Profile;
+                profileMin = Math.Min(profileMin, yz.First().X);
+                profileMax = Math.Max(profileMax, yz.Last().X);
+            }
+
+            if (successorCrossSectionDefinition != null)
+            {
+                IEnumerable<Coordinate> yz = successorCrossSectionDefinition.Profile;
+                profileMin = Math.Min(profileMin, yz.First().X);
+                profileMax = Math.Max(profileMax, yz.Last().X);
+            }
+
+            Envelope rectangle = GetStructuresBoundingRect();
+
+            if (successorCrossSectionDefinition == null && predecessorCrossSectionDefinition == null)
+            {
+                min = rectangle.MinX - (rectangle.Width / 20);
+                max = rectangle.MaxX + (rectangle.Width / 20);
+            }
+            else
+            {
+                min = Math.Min(profileMin, ((profileMax - profileMin) / 2) - (rectangle.Width / 2));
+                max = Math.Max(profileMax, ((profileMax - profileMin) / 2) + (rectangle.Width / 2));
+            }
+        }
+
+        private void UpdateLeftAxis()
+        {
+            if (structureViewData == null)
+            {
+                return;
+            }
+
+            chartView.Chart.LeftAxis.MinimumOffset = 15;
+            chartView.Chart.LeftAxis.MaximumOffset = 15;
+            chartView.Chart.LeftAxis.Minimum = structureViewData.ZMinValue;
+            chartView.Chart.LeftAxis.Maximum = structureViewData.ZMaxValue;
+            chartView.Chart.LeftAxis.Automatic = false;
+        }
+
+        private void AddCrossSectionsOrBoundingSeriesToChart()
+        {
+            ICrossSection predecessor;
+            ICrossSection successor;
+
+            NetworkHelper.GetNeighboursOnBranch(CompositeStructure.Channel, CompositeStructure.Chainage,
+                                                out predecessor, out successor);
+
+            predecessorCrossSectionDefinition = predecessor != null && predecessor.Definition.Profile.Any()
+                                                    ? predecessor.Definition
+                                                    : null;
+            successorCrossSectionDefinition = successor != null && successor.Definition.Profile.Any()
+                                                  ? successor.Definition
+                                                  : null;
+
+            ILineChartSeries seriesToAdd;
+
+            leftView = double.MaxValue;
+            rightView = double.MinValue;
+
+            if (predecessorCrossSectionDefinition != null)
+            {
+                // Add crossSectionDefinition to chart as IChartSeries
+                seriesToAdd = MakeCrossSectionDefinitionSeries(predecessorCrossSectionDefinition);
+                seriesToAdd.PointerVisible = false;
+                seriesToAdd.Color = Color.Black;
+                seriesToAdd.DashStyle = DashStyle.Dot;
+                chartView.Chart.Series.Add(seriesToAdd);
+                leftView = Math.Min(predecessorCrossSectionDefinition.Left, leftView);
+                rightView = Math.Max(predecessorCrossSectionDefinition.Left + predecessorCrossSectionDefinition.Width, rightView);
+            }
+
+            if (successorCrossSectionDefinition != null)
+            {
+                // Add crossSectionDefinition to chart as IChartSeries
+                seriesToAdd = MakeCrossSectionDefinitionSeries(successorCrossSectionDefinition);
+                seriesToAdd.PointerVisible = false;
+                seriesToAdd.Color = Color.DarkGray;
+                seriesToAdd.DashStyle = DashStyle.Dot;
+                chartView.Chart.Series.Add(seriesToAdd);
+                leftView = Math.Min(successorCrossSectionDefinition.Left, leftView);
+                rightView = Math.Max(successorCrossSectionDefinition.Width + successorCrossSectionDefinition.Left,
+                                     rightView);
+            }
+
+            if (predecessorCrossSectionDefinition == null && successorCrossSectionDefinition == null)
+            {
+                seriesToAdd = GetSeriesThatContainsAllStuctures();
+                seriesToAdd.PointerVisible = false;
+                seriesToAdd.Color = Color.LightGray;
+                seriesToAdd.DashStyle = DashStyle.Solid;
+                chartView.Chart.Series.Add(seriesToAdd);
+                leftView = Math.Min(seriesToAdd.XValues[seriesToAdd.XValues.Count - 1], leftView);
+                rightView = Math.Max(seriesToAdd.XValues[0], rightView);
+            }
+        }
+
+        private VectorStyle ShapeModifyToolGetCustomStyle(object sender, IShapeFeature shapeFeature)
+        {
+            if (Shapes2Structures.ContainsKey(shapeFeature))
+            {
+                IStructure1D structure = Shapes2Structures[shapeFeature];
+                ValidationResult result = structure.Validate();
+                return result.IsValid ? shapeFeature.Selected ? selectStyle : defaultStyle : errorStyle;
+            }
+
+            return defaultStyle;
         }
 
         #region ChartTools
@@ -145,10 +399,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
         private ShapeModifyTool CreateShapeModifyTool()
         {
             var modifyTool = new ShapeModifyTool(chart)
-                                 {
-                                     // to enable graphical editing use next lines.
-                                     ShapeEditMode = (ShapeEditMode.ShapeSelect)
-                                 };
+            {
+                // to enable graphical editing use next lines.
+                ShapeEditMode = ShapeEditMode.ShapeSelect
+            };
 
             modifyTool.SelectionChanged += ShapeModifyToolSelectionChanged;
             modifyTool.GetCustomStyle += ShapeModifyToolGetCustomStyle;
@@ -161,12 +415,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
 
         private void NetworkCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            bool updateAxes = false;
+            var updateAxes = false;
             var crossSection = e.GetRemovedOrAddedItem() as ICrossSection;
             if (crossSection != null)
             {
-                var removedDefinition = crossSection.Definition;
-                if (CompareCrossSectionDefinitions(removedDefinition, predecessorCrossSectionDefinition) || 
+                ICrossSectionDefinition removedDefinition = crossSection.Definition;
+                if (CompareCrossSectionDefinitions(removedDefinition, predecessorCrossSectionDefinition) ||
                     CompareCrossSectionDefinitions(removedDefinition, successorCrossSectionDefinition))
                 {
                     crossSectionDefinitionSeries.Clear();
@@ -174,6 +428,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
                     updateAxes = true;
                 }
             }
+
             if (updateAxes)
             {
                 UpdateLeftAxis();
@@ -183,7 +438,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
 
         private void NetworkPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            bool updateAxes = false;
+            var updateAxes = false;
             IStructure1D selectedStructure = null;
             if (sender is IStructure1D)
             {
@@ -191,6 +446,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
                 {
                     return;
                 }
+
                 var structure = sender as IStructure1D;
 
                 // Try to maintain the selected structure in the shapeModifyTool
@@ -200,11 +456,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
                 {
                     return;
                 }
+
                 if (!Shapes2Structures.ContainsKey(shapeModifyTool.SelectedShape))
                 {
                     // this is occasionally detected after changing the weir formula
                     return;
                 }
+
                 selectedStructure = Shapes2Structures[shapeModifyTool.SelectedShape];
 
                 if (Structures2Shape.ContainsKey(structure))
@@ -213,14 +471,17 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
                     {
                         UpdateWeirShapeWithWeir(structure as IWeir);
                     }
+
                     if (structure is IPump)
                     {
                         UpdatePumpShapeWithPump(structure as IPump);
                     }
+
                     if (structure is IBridge)
                     {
                         UpdateBridgeShapeWithBridge(structure as IBridge);
                     }
+
                     updateAxes = true;
                     shapeModifyTool.ClearChache();
                     chartView.Invalidate();
@@ -231,38 +492,41 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
                 UpdateWeirShapeWithWeirFormula((IWeirFormula) sender);
                 updateAxes = true;
             }
-            else if(sender is ICrossSectionDefinition)
+            else if (sender is ICrossSectionDefinition)
             {
-                if(CompareCrossSectionDefinitions((ICrossSectionDefinition)sender, predecessorCrossSectionDefinition) || 
-                    CompareCrossSectionDefinitions((ICrossSectionDefinition)sender, successorCrossSectionDefinition))
+                if (CompareCrossSectionDefinitions((ICrossSectionDefinition) sender, predecessorCrossSectionDefinition) ||
+                    CompareCrossSectionDefinitions((ICrossSectionDefinition) sender, successorCrossSectionDefinition))
                 {
                     crossSectionDefinitionSeries.Clear();
                     Refresh();
                     updateAxes = true;
                 }
             }
-            else if(sender is ICrossSectionStandardShape)
+            else if (sender is ICrossSectionStandardShape)
             {
-                if (CompareCrossSectionShapes((ICrossSectionStandardShape)sender, predecessorCrossSectionDefinition) || 
-                    CompareCrossSectionShapes((ICrossSectionStandardShape)sender, successorCrossSectionDefinition))
+                if (CompareCrossSectionShapes((ICrossSectionStandardShape) sender, predecessorCrossSectionDefinition) ||
+                    CompareCrossSectionShapes((ICrossSectionStandardShape) sender, successorCrossSectionDefinition))
                 {
                     crossSectionDefinitionSeries.Clear();
                     Refresh();
                     updateAxes = true;
                 }
             }
-            if ((null != selectedStructure) && (Structures2Shape.ContainsKey(selectedStructure)))
+
+            if (null != selectedStructure && Structures2Shape.ContainsKey(selectedStructure))
             {
                 IShapeFeature shapeFeature = Structures2Shape[selectedStructure];
                 shapeModifyTool.ShapeSelectTool.SelectShape(shapeFeature);
             }
-            if ((sender is IHydroNetwork) && (e.PropertyName == "IsEditing"))
+
+            if (sender is IHydroNetwork && e.PropertyName == "IsEditing")
             {
                 if (!HydroNetwork.IsEditing)
                 {
                     updateAxes = true;
                 }
             }
+
             if (updateAxes)
             {
                 UpdateLeftAxis();
@@ -276,32 +540,36 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
             {
                 return true;
             }
+
             if (neighbor is CrossSectionDefinitionProxy)
             {
                 return Equals(sender, ((CrossSectionDefinitionProxy) neighbor).InnerDefinition);
             }
+
             return false;
         }
 
         private static bool CompareCrossSectionShapes(ICrossSectionStandardShape sender, ICrossSectionDefinition neighbor)
         {
-            if(neighbor is CrossSectionDefinitionStandard)
+            if (neighbor is CrossSectionDefinitionStandard)
             {
                 return Equals(sender, ((CrossSectionDefinitionStandard) neighbor).Shape);
             }
+
             if (neighbor is CrossSectionDefinitionProxy)
             {
-                if(((CrossSectionDefinitionProxy)neighbor).InnerDefinition is CrossSectionDefinitionStandard)
+                if (((CrossSectionDefinitionProxy) neighbor).InnerDefinition is CrossSectionDefinitionStandard)
                 {
                     var innerDefinition =
                         (CrossSectionDefinitionStandard) ((CrossSectionDefinitionProxy) neighbor).InnerDefinition;
                     return Equals(sender, innerDefinition.Shape);
                 }
             }
+
             return false;
         }
 
-        void ChartViewViewPortChanged(object sender, EventArgs e)
+        private void ChartViewViewPortChanged(object sender, EventArgs e)
         {
             UpdateStructureOffsetsY();
             shapeModifyTool.ClearChache();
@@ -309,19 +577,20 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
 
         private void UpdateWeirShapeWithWeirFormula(IWeirFormula weirFormula)
         {
-            var weir = structureViewData.CompositeBranchStructure.Structures.FirstOrDefault(s => s is IWeir && ((IWeir)s).WeirFormula == weirFormula) as IWeir;
-            
-            if (weir == null || (!(weir.WeirFormula is FreeFormWeirFormula)))
+            var weir = structureViewData.CompositeBranchStructure.Structures.FirstOrDefault(s => s is IWeir && ((IWeir) s).WeirFormula == weirFormula) as IWeir;
+
+            if (weir == null || !(weir.WeirFormula is FreeFormWeirFormula))
             {
                 return;
             }
 
             var freeFormWeirFormula = (FreeFormWeirFormula) weirFormula;
-            
+
             if (freeFormWeirFormula.Shape.Coordinates.Length < 2)
             {
                 freeFormWeirFormula.SetDefaultShape();
             }
+
             UpdateWeirShapeWithWeir(weir);
         }
 
@@ -336,17 +605,18 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
             chartView.Invalidate();
         }
 
-
         private void ShapeModifyToolSelectionChanged(object sender, ShapeEventArgs e)
         {
             if (null == e.ShapeFeature)
             {
                 return;
             }
+
             if (!Shapes2Structures.ContainsKey(e.ShapeFeature))
             {
                 return;
             }
+
             IStructure1D structure = Shapes2Structures[e.ShapeFeature];
             Validate(this);
             if (null != SelectionChanged)
@@ -354,23 +624,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
                 SelectionChanged(this, new SelectedItemChangedEventArgs(structure));
             }
         }
-        
+
         #endregion
-
-        private void UpdatePumpShapeWithPump(IPump pump)
-        {
-            RemoveShapeFeature(pump);
-            AddPumpShape(pump);
-            chartView.Invalidate();
-        }
-
-        private void UpdateWeirShapeWithWeir(IWeir weir)
-        {
-            RemoveShapeFeature(weir);
-            AddWeirShape(weir);
-            Validate(this);
-            chartView.Invalidate();
-        }
 
         #region Chart drawing / chart series
 
@@ -420,10 +675,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
             ILineChartSeries seriesToAdd = ChartSeriesFactory.CreateLineSeries();
 
             // Add ten percent for padding
-            var tenPercLeft = Math.Abs(boundingRect.MinX/10);
-            var tenPercRight = Math.Abs(boundingRect.MaxX/10);
-            var tenPercTop = Math.Abs(boundingRect.MaxY/10);
-            var tenPercBottom = Math.Abs(boundingRect.MinY/10);
+            double tenPercLeft = Math.Abs(boundingRect.MinX / 10);
+            double tenPercRight = Math.Abs(boundingRect.MaxX / 10);
+            double tenPercTop = Math.Abs(boundingRect.MaxY / 10);
+            double tenPercBottom = Math.Abs(boundingRect.MinY / 10);
 
             seriesToAdd.Add(boundingRect.MinX - tenPercLeft, boundingRect.MaxY + tenPercTop);
             seriesToAdd.Add(boundingRect.MinX - tenPercLeft, boundingRect.MinY - tenPercBottom);
@@ -432,8 +687,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
             return seriesToAdd;
         }
 
-
-        void ShapeModifyToolBeforeDraw(object sender, EventArgs e)
+        private void ShapeModifyToolBeforeDraw(object sender, EventArgs e)
         {
             UpdateStructureOffsetsY();
         }
@@ -444,21 +698,23 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
             {
                 return;
             }
-            IList<double> widths = new List<double>();
-            double totalWidth = 0.0;
 
-            double halluf = leftView + (rightView - leftView)/2;
+            IList<double> widths = new List<double>();
+            var totalWidth = 0.0;
+
+            double halluf = leftView + ((rightView - leftView) / 2);
             halluf = double.IsInfinity(halluf) || double.IsNaN(halluf) ? 0.0 : halluf;
-            
-            foreach (var structure in CompositeStructure.Structures)
+
+            foreach (IStructure1D structure in CompositeStructure.Structures)
             {
-                var structureBoundingRect = GetBoundingRectStructure(structure);
+                Envelope structureBoundingRect = GetBoundingRectStructure(structure);
                 totalWidth += structureBoundingRect.Width;
-                widths.Add(structureBoundingRect.Width); 
+                widths.Add(structureBoundingRect.Width);
             }
-            double offsetY = halluf - totalWidth / 2;
-            int i = 0;
-            foreach (var structure in CompositeStructure.Structures)
+
+            double offsetY = halluf - (totalWidth / 2);
+            var i = 0;
+            foreach (IStructure1D structure in CompositeStructure.Structures)
             {
                 structure.OffsetY = offsetY;
                 offsetY += widths[i++];
@@ -471,9 +727,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
 
             UpdateStructureOffsetsY();
 
-            foreach (var structure in CompositeStructure.Structures)
+            foreach (IStructure1D structure in CompositeStructure.Structures)
             {
-                var structureBoundingRect = GetBoundingRectStructure(structure);
+                Envelope structureBoundingRect = GetBoundingRectStructure(structure);
 
                 if (boundingRect == null)
                 {
@@ -484,29 +740,30 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
                     boundingRect.ExpandToInclude(structureBoundingRect);
                 }
             }
+
             return boundingRect;
         }
 
         private void AddStructuresToChart(ICompositeBranchStructure compositeStructure)
         {
-            foreach (var structure in compositeStructure.Structures)
+            foreach (IStructure1D structure in compositeStructure.Structures)
             {
                 switch (StructureToStructureType(structure))
                 {
                     case StructureType.Weir:
-                        AddWeirShape((IWeir)structure);
+                        AddWeirShape((IWeir) structure);
                         break;
                     case StructureType.Pump:
-                        AddPumpShape((IPump)structure);
+                        AddPumpShape((IPump) structure);
                         break;
                     case StructureType.Bridge:
-                        AddBridge((IBridge)structure);
+                        AddBridge((IBridge) structure);
                         break;
                     case StructureType.Culvert:
                         AddCulvert((ICulvert) structure);
                         break;
                     case StructureType.ExtraResistance:
-                        AddExtraResistanceShape((IExtraResistance)structure);
+                        AddExtraResistanceShape((IExtraResistance) structure);
                         break;
                 }
             }
@@ -518,7 +775,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
             shapeModifyTool.AddShape(line);
         }
 
-
         private void AddCulvert(ICulvert culvert)
         {
             var culvertShape = new CulvertInStructureViewShape(chart, culvert);
@@ -528,7 +784,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
         private void AddBridge(IBridge bridge)
         {
             var bridgeShape = new BridgeInStructureViewShape(chart, bridge);
-            AddStructureAndShape(bridge,bridgeShape);
+            AddStructureAndShape(bridge, bridgeShape);
         }
 
         private void AddPumpShape(IPump pump)
@@ -541,7 +797,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
         {
             var extraResistanceShape = new ExtraResistanceInStructureViewShape(chart, extraResistance);
             AddStructureAndShape(extraResistance, extraResistanceShape);
-            
         }
 
         private void AddStructureAndShape(IStructure1D structure, IShapeFeature shape)
@@ -561,8 +816,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
 
         private void RemoveShapeFeature(IStructure1D structure)
         {
-            if (!Structures2Shape.ContainsKey(structure)) 
+            if (!Structures2Shape.ContainsKey(structure))
+            {
                 return;
+            }
+
             IShapeFeature shapeFeature = Structures2Shape[structure];
             Structures2Shape.Remove(structure);
             Shapes2Structures.Remove(shapeFeature);
@@ -571,15 +829,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
 
         private Envelope GetBoundingRectStructure(IStructure1D structure)
         {
-            
             switch (StructureToStructureType(structure))
             {
-                case StructureType.Weir: return GetBoundingRectWeir((IWeir)structure);
+                case StructureType.Weir: return GetBoundingRectWeir((IWeir) structure);
                 case StructureType.Pump: return GetBoundingRectPump((IPump) structure);
-                    
-                case StructureType.Bridge: return GetBoundingRectBridge((IBridge)structure);
-                case StructureType.Culvert: return GetBoundingRectCulver((ICulvert)structure);
-                case StructureType.ExtraResistance: return GetBoundingRectExtraResistance((IExtraResistance)structure);
+
+                case StructureType.Bridge:          return GetBoundingRectBridge((IBridge) structure);
+                case StructureType.Culvert:         return GetBoundingRectCulver((ICulvert) structure);
+                case StructureType.ExtraResistance: return GetBoundingRectExtraResistance((IExtraResistance) structure);
                 default:
                     throw new NotImplementedException("Unsupported type");
             }
@@ -590,8 +847,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
             double left, top, right, bottom;
             if (weir.WeirFormula is FreeFormWeirFormula)
             {
-                FreeFormWeirFormula freeFormWeirFormula = (FreeFormWeirFormula) weir.WeirFormula;
-                var coordinates = freeFormWeirFormula.Shape.Coordinates.ToArray();
+                var freeFormWeirFormula = (FreeFormWeirFormula) weir.WeirFormula;
+                Coordinate[] coordinates = freeFormWeirFormula.Shape.Coordinates.ToArray();
 
                 left = coordinates[0].X;
                 top = coordinates.Max(c => c.Y);
@@ -612,9 +869,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
                     minZValue = bottom;
                 }
             }
+
             return GeometryFactory.CreateEnvelope(left, right, bottom, top);
         }
-        
+
         private static Envelope GetBoundingRectBridge(IBridge bridge)
         {
             IList<Coordinate> yzValues = bridge.EffectiveCrossSectionDefinition.FlowProfile.ToList();
@@ -627,8 +885,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
             {
                 return GeometryFactory.CreateEnvelope(0, 0, 0, 0);
             }
-            var yValues = yzValues.Select(yz => yz.X + offSetY);
-            var zValues = yzValues.Select(yz => yz.Y);
+
+            IEnumerable<double> yValues = yzValues.Select(yz => yz.X + offSetY);
+            IEnumerable<double> zValues = yzValues.Select(yz => yz.Y);
             return GeometryFactory.CreateEnvelope(yValues.Min(), yValues.Max(), zValues.Min(), zValues.Max());
         }
 
@@ -641,14 +900,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
         private Envelope GetBoundingRectPump(IPump pump)
         {
             //used in min max for axis
-            var zValues = new[]
-                              {
-                                  pump.OffsetZ,
-                                  pump.StartDelivery,
-                                  pump.StartSuction,
-                                  pump.StopDelivery,
-                                  pump.StopSuction
-                              };
+            double[] zValues = new[]
+            {
+                pump.OffsetZ,
+                pump.StartDelivery,
+                pump.StartSuction,
+                pump.StopDelivery,
+                pump.StopSuction
+            };
             double minY = zValues.Min();
             double maxY = zValues.Max();
             double width =
@@ -668,24 +927,25 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
             //                      pump.StopDelivery,
             //                      pump.StopSuction
             //                  };
-            double minY = 10;// zValues.Min();
-            double maxY = 10;// zValues.Max();
+            double minY = 10; // zValues.Min();
+            double maxY = 10; // zValues.Max();
             double width = chartView.ChartCoordinateService.ToWorldWidth(ExtraResistanceSmallIcon.Width);
             return GeometryFactory.CreateEnvelope(extraResistance.OffsetY, extraResistance.OffsetY + width, minY, maxY);
         }
+
         #endregion
 
         #region Public properties
 
         private IStructureViewData structureViewData;
-        private static readonly Bitmap PumpSmallIcon = Properties.Resources.PumpSmall;
-        private static readonly Bitmap ExtraResistanceSmallIcon = Properties.Resources.ExtraResistanceSmall;
+        private static readonly Bitmap PumpSmallIcon = Resources.PumpSmall;
+        private static readonly Bitmap ExtraResistanceSmallIcon = Resources.ExtraResistanceSmall;
 
         public object Data
         {
             get
-            { 
-                return structureViewData; 
+            {
+                return structureViewData;
             }
             set
             {
@@ -700,13 +960,15 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
         {
             if (null != HydroNetwork)
             {
-                ((INotifyPropertyChanged)HydroNetwork).PropertyChanged += NetworkPropertyChanged;
+                ((INotifyPropertyChanged) HydroNetwork).PropertyChanged += NetworkPropertyChanged;
                 ((INotifyCollectionChange) HydroNetwork).CollectionChanged += NetworkCollectionChanged;
             }
+
             if (CompositeStructure == null)
             {
                 return;
             }
+
             DataBindings.Add("Text", CompositeStructure, "Name", false, DataSourceUpdateMode.OnPropertyChanged);
             Text = CompositeStructure.Name;
         }
@@ -716,18 +978,21 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
             if (null != HydroNetwork)
             {
                 DataBindings.Clear();
-                ((INotifyPropertyChanged)HydroNetwork).PropertyChanged -= NetworkPropertyChanged;
-                ((INotifyCollectionChange)HydroNetwork).CollectionChanged -= NetworkCollectionChanged;
+                ((INotifyPropertyChanged) HydroNetwork).PropertyChanged -= NetworkPropertyChanged;
+                ((INotifyCollectionChange) HydroNetwork).CollectionChanged -= NetworkCollectionChanged;
             }
         }
 
         public Image Image
         {
-            get { return Properties.Resources.StructureFeatureSmall; }
-            set { }
+            get
+            {
+                return Resources.StructureFeatureSmall;
+            }
+            set {}
         }
 
-        public void EnsureVisible(object item) { }
+        public void EnsureVisible(object item) {}
         public ViewInfo ViewInfo { get; set; }
 
         public IStructure1D SelectedStructure
@@ -739,7 +1004,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
             set
             {
                 if (value is ICompositeBranchStructure)
+                {
                     return;
+                }
 
                 if (value == null)
                 {
@@ -748,249 +1015,34 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
                     shapeModifyTool.ShapeFeatureEditor = null;
                     shapeModifyTool.SelectionChanged += ShapeModifyToolSelectionChanged;
                 }
+
                 if (value != null && Structures2Shape.ContainsKey(value))
                 {
                     shapeModifyTool.SelectionChanged -= ShapeModifyToolSelectionChanged;
                     shapeModifyTool.SelectedShape = Structures2Shape[value];
                     shapeModifyTool.SelectionChanged += ShapeModifyToolSelectionChanged;
                 }
+
                 chartView.Refresh();
             }
         }
 
         private HydroNetwork HydroNetwork
         {
-            get { return structureViewData != null ? structureViewData.HydroNetwork : null; }
+            get
+            {
+                return structureViewData != null ? structureViewData.HydroNetwork : null;
+            }
         }
 
         private ICompositeBranchStructure CompositeStructure
         {
             get
             {
-                return structureViewData != null ? structureViewData.CompositeBranchStructure:null;
+                return structureViewData != null ? structureViewData.CompositeBranchStructure : null;
             }
         }
-        
+
         #endregion
-
-        public override void Refresh()
-        {
-            base.Refresh();
-            if (structureViewData != null)
-            {
-                structureViewData.ResetMinMaxZ();
-                RefreshViewData();
-            }
-        }
-
-        private void RefreshViewData()
-        {
-            Structures2Shape.Clear();
-            Shapes2Structures.Clear();
-            shapeModifyTool.Clear();
-            // Do not update when no necessary to avoid flashing, context loss (selection loss), etc
-            if (null == CompositeStructure ||
-                (shapeModifyTool.ShapeFeatures.Count == CompositeStructure.Structures.Count))
-            {
-                return;
-            }
-
-            Text = CompositeStructure.Name;
-
-            if (null != HydroNetwork)
-            {
-                chartView.Chart.Series.Clear();
-                AddStructuresToChart(CompositeStructure);
-                AddCrossSectionsOrBoundingSeriesToChart();
-                //AddThalWayToChart(); //thalweg does nothing here
-                chartView.Invalidate();
-            }
-            UpdateLeftAxis();
-            UpdateBottomAxis();
-        }
-
-        private void UpdateBottomAxis()
-        {
-            double min, max;
-            //y is horizontal
-            GetYMinMax(out min, out max);
-
-            chartView.Chart.BottomAxis.MinimumOffset = 15;
-            chartView.Chart.BottomAxis.MaximumOffset = 15;
-            chartView.Chart.BottomAxis.Minimum = min;
-            chartView.Chart.BottomAxis.Maximum = max;
-            chartView.Chart.BottomAxis.Automatic = false;
-        }
-
-        private void GetYMinMax(out double min, out double max)
-        {
-            double profileMin = double.MaxValue;
-            double profileMax = double.MinValue;
-
-            if (predecessorCrossSectionDefinition != null)
-            {
-                var yz = predecessorCrossSectionDefinition.Profile;
-                profileMin = Math.Min(profileMin, yz.First().X);
-                profileMax = Math.Max(profileMax, yz.Last().X);
-            }
-            if (successorCrossSectionDefinition != null)
-            {
-                var yz = successorCrossSectionDefinition.Profile;
-                profileMin = Math.Min(profileMin, yz.First().X);
-                profileMax = Math.Max(profileMax, yz.Last().X);
-            }
-
-            Envelope rectangle = GetStructuresBoundingRect();
-
-            if ((successorCrossSectionDefinition == null) && (predecessorCrossSectionDefinition == null))
-            {
-                min = rectangle.MinX - rectangle.Width / 20;
-                max = rectangle.MaxX + rectangle.Width / 20;
-            }
-            else
-            {
-                min = Math.Min(profileMin, (profileMax - profileMin) / 2 - rectangle.Width / 2);
-                max = Math.Max(profileMax, (profileMax - profileMin) / 2 + rectangle.Width / 2);
-            }
-        }
-
-        private void UpdateLeftAxis()
-        {
-            if (structureViewData == null)
-                return;
-            
-            chartView.Chart.LeftAxis.MinimumOffset = 15;
-            chartView.Chart.LeftAxis.MaximumOffset = 15;
-            chartView.Chart.LeftAxis.Minimum = structureViewData.ZMinValue;
-            chartView.Chart.LeftAxis.Maximum = structureViewData.ZMaxValue;
-            chartView.Chart.LeftAxis.Automatic = false;
-        }
-
-        private void AddCrossSectionsOrBoundingSeriesToChart()
-        {
-            ICrossSection predecessor;
-            ICrossSection successor;
-
-            NetworkHelper.GetNeighboursOnBranch(CompositeStructure.Channel, CompositeStructure.Chainage,
-                                                out predecessor, out successor);
-
-            predecessorCrossSectionDefinition = (predecessor != null && predecessor.Definition.Profile.Any())
-                                                    ? predecessor.Definition
-                                                    : null;
-            successorCrossSectionDefinition = (successor != null && successor.Definition.Profile.Any())
-                                                  ? successor.Definition
-                                                  : null;
-            
-            ILineChartSeries seriesToAdd;
-
-            leftView = double.MaxValue;
-            rightView = double.MinValue;
-
-            if (predecessorCrossSectionDefinition != null)
-            {
-                // Add crossSectionDefinition to chart as IChartSeries
-                seriesToAdd = MakeCrossSectionDefinitionSeries(predecessorCrossSectionDefinition);
-                seriesToAdd.PointerVisible = false;
-                seriesToAdd.Color = Color.Black;
-                seriesToAdd.DashStyle = DashStyle.Dot;
-                chartView.Chart.Series.Add(seriesToAdd);
-                leftView = Math.Min(predecessorCrossSectionDefinition.Left, leftView);
-                rightView = Math.Max(predecessorCrossSectionDefinition.Left + predecessorCrossSectionDefinition.Width, rightView);
-            }
-
-            if (successorCrossSectionDefinition != null)
-            {
-                // Add crossSectionDefinition to chart as IChartSeries
-                seriesToAdd = MakeCrossSectionDefinitionSeries(successorCrossSectionDefinition);
-                seriesToAdd.PointerVisible = false;
-                seriesToAdd.Color = Color.DarkGray;
-                seriesToAdd.DashStyle = DashStyle.Dot;
-                chartView.Chart.Series.Add(seriesToAdd);
-                leftView = Math.Min(successorCrossSectionDefinition.Left, leftView);
-                    rightView = Math.Max(successorCrossSectionDefinition.Width + successorCrossSectionDefinition.Left,
-                                         rightView);
-            }
-
-            if ((predecessorCrossSectionDefinition == null) && (successorCrossSectionDefinition == null))
-            {
-                seriesToAdd = GetSeriesThatContainsAllStuctures();
-                seriesToAdd.PointerVisible = false;
-                seriesToAdd.Color = Color.LightGray;
-                seriesToAdd.DashStyle = DashStyle.Solid;
-                chartView.Chart.Series.Add(seriesToAdd);
-                leftView = Math.Min(seriesToAdd.XValues[seriesToAdd.XValues.Count - 1], leftView);
-                rightView = Math.Max(seriesToAdd.XValues[0], rightView);
-            }
-        }
-
-        private VectorStyle ShapeModifyToolGetCustomStyle(object sender, IShapeFeature shapeFeature)
-        {
-            if (Shapes2Structures.ContainsKey(shapeFeature))
-            {
-                IStructure1D structure = Shapes2Structures[shapeFeature];
-                var result = structure.Validate();
-                return result.IsValid ? (shapeFeature.Selected ? selectStyle : defaultStyle) : errorStyle;
-            }
-            return defaultStyle;
-        }
-
-        [ValidationMethod]
-        public static void Validate(StructureView structureView)
-        {
-            foreach (var structure in structureView.CompositeStructure.Structures)
-            {
-                var result = structure.Validate();
-
-                structureView.shapeModifyTool.SelectStyle = structureView.selectStyle;
-                structureView.shapeModifyTool.SelectStyle = structureView.errorStyle;
-                if (!result.IsValid)
-                {
-                    log.Error(string.Join(", ", result.Messages.ToArray()));
-                }
-            }
-            structureView.chartView.Refresh();
-        }
-
-        public object CommandReceiver
-        {
-            get { return structurePresenter; }
-        }
-
-        /// <summary> 
-        /// Clean up any resources being used.
-        /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing && (components != null))
-            {
-                components.Dispose();
-            }
-            base.Dispose(disposing);
-
-            if (HydroNetwork == null)
-            {
-                return;
-            }
-            ((INotifyPropertyChanged)HydroNetwork).PropertyChanged -= NetworkPropertyChanged;
-        }
-
-        protected override void OnPaint(PaintEventArgs e)
-        {
-            //validate
-            foreach (IStructure1D s in Shapes2Structures.Values)
-            {
-                if (double.IsInfinity(s.OffsetY))
-                {
-                    log.Error("OffsetY in structure " + s.Name + " cannot be Infinity (type: " + StructureToStructureType(s) + "; chan: " +
-                              s.Channel.Name + ")");
-                }
-                if (double.IsNaN(s.OffsetY))
-                {
-                    log.Error("OffsetY in structure " + s.Name + " cannot be NaN of (type: " + StructureToStructureType(s) + "; chan: " +
-                              s.Channel.Name + ")");
-                }
-            }
-        }
     }
 }

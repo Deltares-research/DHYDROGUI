@@ -23,9 +23,6 @@ namespace DelftTools.Hydro
         }
 
         [FeatureAttribute]
-        public virtual string Name { get; set; }
-
-        [FeatureAttribute]
         [Aggregation]
         public virtual IHydroObject Source { get; set; }
 
@@ -33,18 +30,16 @@ namespace DelftTools.Hydro
         [Aggregation]
         public virtual IHydroObject Target { get; set; }
 
-        // TODO: remove and use <any> in mapping
-        protected virtual IFeature SourceFeature
-        {
-            get => Source;
-            set => Source = (IHydroObject) value;
-        }
+        public virtual IGeometry Geometry { get; set; }
 
-        // TODO: remove and use <any> in mapping
-        protected virtual IFeature TargetFeature
+        public virtual IFeatureAttributeCollection Attributes { get; set; }
+
+        [FeatureAttribute]
+        public virtual string Name { get; set; }
+
+        public override string ToString()
         {
-            get => Target;
-            set => Target = (IHydroObject) value;
+            return Name + " (" + Source + " -> " + Target + ")";
         }
 
         public virtual object Clone()
@@ -58,13 +53,18 @@ namespace DelftTools.Hydro
             };
         }
 
-        public virtual IGeometry Geometry { get; set; }
-
-        public virtual IFeatureAttributeCollection Attributes { get; set; }
-
-        public override string ToString()
+        // TODO: remove and use <any> in mapping
+        protected virtual IFeature SourceFeature
         {
-            return Name + " (" + Source + " -> " + Target + ")";
+            get => Source;
+            set => Source = (IHydroObject) value;
+        }
+
+        // TODO: remove and use <any> in mapping
+        protected virtual IFeature TargetFeature
+        {
+            get => Target;
+            set => Target = (IHydroObject) value;
         }
     }
 }

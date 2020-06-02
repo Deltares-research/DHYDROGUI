@@ -13,8 +13,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation.Area
         /// <summary>
         /// Validates the thin dams and return any issues encountered.
         /// </summary>
-        /// <param name="thinDams"> The <see cref="ThinDam2D" /> objects that are being validated. </param>
-        /// <param name="gridExtent"> The <see cref="Envelope" /> object that describes the extent of the FM model grid. </param>
+        /// <param name="thinDams"> The <see cref="ThinDam2D"/> objects that are being validated. </param>
+        /// <param name="gridExtent"> The <see cref="Envelope"/> object that describes the extent of the FM model grid. </param>
         /// <returns> A set of validation issues encountered. </returns>
         public static IEnumerable<ValidationIssue> Validate(this IEnumerable<ThinDam2D> thinDams, Envelope gridExtent)
         {

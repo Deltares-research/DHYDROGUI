@@ -4,15 +4,15 @@ using DelftTools.Controls;
 using DelftTools.Hydro;
 using DelftTools.Shell.Gui;
 using DelftTools.Utils.Editing;
+using DeltaShell.Plugins.NetworkEditor.Gui.Properties;
+using GeoAPI.Extensions.Networks;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView.NodePresenters
 {
-    class LateralSourceTreeViewNodePresenter : BranchFeatureTreeViewNodePresenterBase<LateralSource>
+    internal class LateralSourceTreeViewNodePresenter : BranchFeatureTreeViewNodePresenterBase<LateralSource>
     {
         public LateralSourceTreeViewNodePresenter(GuiPlugin guiPlugin)
-            : base(guiPlugin)
-        {
-        }
+            : base(guiPlugin) {}
 
         #region ITreeNodePresenter Members
 
@@ -23,16 +23,16 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView.NodePre
 
         protected override Image GetImage(LateralSource feature)
         {
-            return Properties.Resources.LateralSourceSmall;
+            return Resources.LateralSourceSmall;
         }
 
         protected override bool RemoveNodeData(object parentNodeData, LateralSource source)
         {
-            var network = source.Network;
+            INetwork network = source.Network;
             network.BeginEdit("Remove " + source.Name);
-            
-            var links = source.Links.ToArray();
-            foreach (var link in links)
+
+            HydroLink[] links = source.Links.ToArray();
+            foreach (HydroLink link in links)
             {
                 HydroRegion.RemoveLink(link);
             }

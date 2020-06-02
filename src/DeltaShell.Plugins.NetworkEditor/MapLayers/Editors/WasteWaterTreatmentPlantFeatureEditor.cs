@@ -17,7 +17,7 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors
             DrainageBasin.BeginEdit(new DefaultEditAction("Add new waste water treatment plant"));
             try
             {
-                var feat = base.AddNewFeatureByGeometry(layer, geometry);
+                IFeature feat = base.AddNewFeatureByGeometry(layer, geometry);
 
                 var nameable = feat as INameable;
                 if (nameable != null)
@@ -32,10 +32,10 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors
                 DrainageBasin.EndEdit();
             }
         }
-        
+
         public override IFeatureInteractor CreateInteractor(ILayer layer, IFeature feature)
         {
-            return new WasteWaterTreatmentPlantFeatureInteractor(layer, feature, ((VectorLayer)layer).Style, DrainageBasin);
+            return new WasteWaterTreatmentPlantFeatureInteractor(layer, feature, ((VectorLayer) layer).Style, DrainageBasin);
         }
     }
 }

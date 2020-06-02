@@ -19,46 +19,12 @@ namespace DelftTools.Hydro.CrossSections
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(CrossSectionDefinitionYZ));
 
+        private FastYZDataTable yzDataTable;
+
         public CrossSectionDefinitionYZ()
             : this("") {}
 
         public CrossSectionDefinitionYZ(string name) : base(name) {}
-
-        private void RowChanging(object sender, LightDataRowChangeEventArgs e)
-        {
-            // here to trigger event
-            BeginEdit(new DefaultEditAction("Row changing"));
-            EndEdit();
-
-            if (e.Action == DataRowAction.Add || e.Action == DataRowAction.Change)
-            {
-                ValidateRow(e.Row as CrossSectionDataSet.CrossSectionYZRow);
-            }
-        }
-
-        private void ValidateRow(CrossSectionDataSet.CrossSectionYZRow row)
-        {
-            int rowIndex = yzDataTable.Rows.IndexOf(row);
-            Utils.Tuple<string, bool> validationResult = ValidateCellValue(rowIndex, 0, row.Yq);
-            if (!validationResult.Second)
-            {
-                throw new ArgumentException(validationResult.First);
-            }
-
-            validationResult = ValidateCellValue(rowIndex, 1, row.Z);
-            if (!validationResult.Second)
-            {
-                throw new ArgumentException(validationResult.First);
-            }
-
-            validationResult = ValidateCellValue(rowIndex, 2, row.DeltaZStorage);
-            if (!validationResult.Second)
-            {
-                throw new ArgumentException(validationResult.First);
-            }
-        }
-
-        private FastYZDataTable yzDataTable;
 
         public override bool GeometryBased => false;
 
@@ -80,6 +46,30 @@ namespace DelftTools.Hydro.CrossSections
             }
         }
 
+        public override CrossSectionType CrossSectionType => CrossSectionType.YZ;
+
+        public override LightDataTable RawData => YZDataTable;
+
+        public virtual FastYZDataTable YZDataTable
+        {
+            get
+            {
+                if (yzDataTable == null)
+                {
+                    yzDataTable = new FastYZDataTable();
+                    SubscribeToDataTable();
+                }
+
+                return yzDataTable;
+            }
+            set
+            {
+                UnsubscribeFromDataTable();
+                yzDataTable = value;
+                SubscribeToDataTable();
+            }
+        }
+
         public virtual CrossSectionDataSet.CrossSectionYZRow GetRow(int profileIndex)
         {
             LightBindingList<CrossSectionDataSet.CrossSectionYZRow> unsortedRows = YZDataTable.Rows;
@@ -88,7 +78,13 @@ namespace DelftTools.Hydro.CrossSections
             return YZDataTable.Rows.ElementAt(realIndex);
         }
 
-        public override CrossSectionType CrossSectionType => CrossSectionType.YZ;
+        public static CrossSectionDefinitionYZ CreateDefault(string name = "")
+        {
+            var crossSectionYZ = new CrossSectionDefinitionYZ();
+            crossSectionYZ.SetDefaultYZTableAndUpdateThalWeg();
+            crossSectionYZ.Name = name;
+            return crossSectionYZ;
+        }
 
         public override void ShiftLevel(double delta)
         {
@@ -164,48 +160,6 @@ namespace DelftTools.Hydro.CrossSections
             return profileIndex;
         }
 
-        public virtual FastYZDataTable YZDataTable
-        {
-            get
-            {
-                if (yzDataTable == null)
-                {
-                    yzDataTable = new FastYZDataTable();
-                    SubscribeToDataTable();
-                }
-
-                return yzDataTable;
-            }
-            set
-            {
-                UnsubscribeFromDataTable();
-                yzDataTable = value;
-                SubscribeToDataTable();
-            }
-        }
-
-        private void UnsubscribeFromDataTable()
-        {
-            if (yzDataTable == null)
-            {
-                return;
-            }
-
-            yzDataTable.RowChanging -= RowChanging;
-        }
-
-        private void SubscribeToDataTable()
-        {
-            if (yzDataTable == null)
-            {
-                return;
-            }
-
-            yzDataTable.RowChanging += RowChanging;
-        }
-
-        public override LightDataTable RawData => YZDataTable;
-
         /// <summary>
         /// This method will check if the roughness sections needs shifting and if they do, shift the roughness positions of
         /// the Sections.
@@ -261,6 +215,60 @@ namespace DelftTools.Hydro.CrossSections
             return clone;
         }
 
+        private void RowChanging(object sender, LightDataRowChangeEventArgs e)
+        {
+            // here to trigger event
+            BeginEdit(new DefaultEditAction("Row changing"));
+            EndEdit();
+
+            if (e.Action == DataRowAction.Add || e.Action == DataRowAction.Change)
+            {
+                ValidateRow(e.Row as CrossSectionDataSet.CrossSectionYZRow);
+            }
+        }
+
+        private void ValidateRow(CrossSectionDataSet.CrossSectionYZRow row)
+        {
+            int rowIndex = yzDataTable.Rows.IndexOf(row);
+            Utils.Tuple<string, bool> validationResult = ValidateCellValue(rowIndex, 0, row.Yq);
+            if (!validationResult.Second)
+            {
+                throw new ArgumentException(validationResult.First);
+            }
+
+            validationResult = ValidateCellValue(rowIndex, 1, row.Z);
+            if (!validationResult.Second)
+            {
+                throw new ArgumentException(validationResult.First);
+            }
+
+            validationResult = ValidateCellValue(rowIndex, 2, row.DeltaZStorage);
+            if (!validationResult.Second)
+            {
+                throw new ArgumentException(validationResult.First);
+            }
+        }
+
+        private void UnsubscribeFromDataTable()
+        {
+            if (yzDataTable == null)
+            {
+                return;
+            }
+
+            yzDataTable.RowChanging -= RowChanging;
+        }
+
+        private void SubscribeToDataTable()
+        {
+            if (yzDataTable == null)
+            {
+                return;
+            }
+
+            yzDataTable.RowChanging += RowChanging;
+        }
+
         private bool CompareTotalSectionWidths()
         {
             double deltaWidthRoughnessPositions = Sections.Last().MaxY - Sections.First().MinY;
@@ -304,14 +312,6 @@ namespace DelftTools.Hydro.CrossSections
             {
                 section.MaxY += necessaryShift;
             }
-        }
-
-        public static CrossSectionDefinitionYZ CreateDefault(string name = "")
-        {
-            var crossSectionYZ = new CrossSectionDefinitionYZ();
-            crossSectionYZ.SetDefaultYZTableAndUpdateThalWeg();
-            crossSectionYZ.Name = name;
-            return crossSectionYZ;
         }
     }
 }

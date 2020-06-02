@@ -1,8 +1,10 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
+using SharpMap.Api.Editors;
 using SharpMap.Api.Layers;
 using SharpMap.UI.Tools;
 
@@ -18,7 +20,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
             // Create or add a new FeatureInteractor
             if (SelectedFeatureInteractors.Count > 0)
             {
-                var currentFeatureInteractor = GetActiveFeatureInteractor(nearest);
+                IFeatureInteractor currentFeatureInteractor = GetActiveFeatureInteractor(nearest);
                 if (KeyExtendSelection) // Shift key
                 {
                     if (currentFeatureInteractor == null)
@@ -59,6 +61,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
                     {
                         StartMultiSelect();
                     }
+
                     SetTargetNodeIfBranch(worldPosition, nearest);
                 }
             }
@@ -68,6 +71,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
                 {
                     StartMultiSelect();
                 }
+
                 SetTargetNodeIfBranch(worldPosition, nearest);
             }
         }
@@ -79,9 +83,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
                          selectedBranch.Target.Geometry.Distance(new Point(worldPosition))
                              ? selectedBranch.Source
                              : selectedBranch.Target;
-            var result = selectedBranch.Network.GetShortestPath(sourceNode, targetNode, null);
+            IEnumerable<IBranch> result = selectedBranch.Network.GetShortestPath(sourceNode, targetNode, null);
 
-            foreach (var branch in result)
+            foreach (IBranch branch in result)
             {
                 AddSelection(selectedLayer, branch);
             }
@@ -108,6 +112,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
                 // Not selecting a branch, thus clear 'targetNode'
                 targetNode = null;
             }
-        } 
+        }
     }
 }

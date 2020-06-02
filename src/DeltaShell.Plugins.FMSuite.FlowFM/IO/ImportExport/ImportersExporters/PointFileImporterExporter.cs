@@ -10,6 +10,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.ImportersExporters
 {
     public class PointFileImporterExporter : Feature2DImportExportBase<Feature2DPoint>
     {
+        public override string Category => "Feature geometries";
+
+        public override string Description => string.Empty;
+
+        public override Bitmap Image => Resources.Observation;
+
+        public override string FileFilter => $"2D points file|*{FileConstants.XynFileExtension}";
         protected override string ImporterName => $"Points from {FileConstants.XynFileExtension} file";
 
         protected override string ExporterName => $"Points to {FileConstants.XynFileExtension} file";
@@ -25,13 +32,5 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.ImportersExporters
             var writer = new ObsFile<Feature2DPoint>();
             writer.Write(path, features);
         }
-
-        public override string Category => "Feature geometries";
-
-        public override string Description => string.Empty;
-
-        public override Bitmap Image => Resources.Observation;
-
-        public override string FileFilter => $"2D points file|*{FileConstants.XynFileExtension}";
     }
 }

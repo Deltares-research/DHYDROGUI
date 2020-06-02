@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Linq;
 using DelftTools.Hydro;
+using DeltaShell.Plugins.NetworkEditor.Properties;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
 using SharpMap.Api;
@@ -16,17 +17,17 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.CustomRenderers
     {
         public bool Render(IFeature feature, Graphics g, ILayer layer)
         {
-            var catchment = (Catchment)feature;
+            var catchment = (Catchment) feature;
 
-            var geometry = GetRenderedFeatureGeometry(feature, layer);
+            IGeometry geometry = GetRenderedFeatureGeometry(feature, layer);
 
-            var catchmentType = catchment.CatchmentType;
+            CatchmentType catchmentType = catchment.CatchmentType;
 
-            var symbol = catchmentType == null
-                             ? Properties.Resources.catchment
-                             : catchment.SubCatchments.Count == 0
-                                   ? catchmentType.Icon
-                                   : catchmentType.SoftIcon;
+            Bitmap symbol = catchmentType == null
+                                ? Resources.catchment
+                                : catchment.SubCatchments.Count == 0
+                                    ? catchmentType.Icon
+                                    : catchmentType.SoftIcon;
 
             var vectorStyle = new VectorStyle {Fill = Brushes.DarkCyan};
             if (symbol != null)
@@ -42,13 +43,13 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.CustomRenderers
         public IGeometry GetRenderedFeatureGeometry(IFeature feature, ILayer layer)
         {
             var catchment = (Catchment) feature;
-            var geometry = catchment.Geometry is IPoint
-                                ? catchment.Geometry
-                                : catchment.InteriorPoint;
+            IGeometry geometry = catchment.Geometry is IPoint
+                                     ? catchment.Geometry
+                                     : catchment.InteriorPoint;
 
             return layer.CoordinateTransformation != null
-                        ? GeometryTransform.TransformGeometry(geometry, layer.CoordinateTransformation.MathTransform)
-                        : geometry;
+                       ? GeometryTransform.TransformGeometry(geometry, layer.CoordinateTransformation.MathTransform)
+                       : geometry;
         }
 
         public IEnumerable<IFeature> GetFeatures(IGeometry geometry, ILayer layer)

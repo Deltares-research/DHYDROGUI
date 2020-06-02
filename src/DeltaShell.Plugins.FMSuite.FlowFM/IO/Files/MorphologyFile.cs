@@ -142,43 +142,49 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             WaterFlowFMPropertyDefinition propertyDefinition = property.PropertyDefinition;
 
             return propertyDefinition.FilePropertyName != BcFile
-                && propertyDefinition.FileCategoryName != GuiProperties.GUIonly
-                && (propertyDefinition.FileCategoryName.ToLower().Equals(KnownProperties.morphology)
-                 || propertyDefinition.UnknownPropertySource.Equals(PropertySource.MorphologyFile));
+                   && propertyDefinition.FileCategoryName != GuiProperties.GUIonly
+                   && (propertyDefinition.FileCategoryName.ToLower().Equals(KnownProperties.morphology)
+                       || propertyDefinition.UnknownPropertySource.Equals(PropertySource.MorphologyFile));
         }
 
         #region Read
 
         /// <summary>
         /// Reads the morphology properties from files of which the location is stored in the
-        /// mdu file with file path <param name="mduFilePath"/>. Read data will be stored in
-        /// the <param name="modelDefinition"/> as a <see cref="WaterFlowFMProperty"/>.
+        /// mdu file with file path
+        /// <param name="mduFilePath"/>
+        /// . Read data will be stored in
+        /// the
+        /// <param name="modelDefinition"/>
+        /// as a <see cref="WaterFlowFMProperty"/>.
         /// </summary>
         /// <param name="mduFilePath">The file path to the mdu file.</param>
         /// <param name="modelDefinition">The model definition of the FM model that is being read.</param>
-        /// <exception cref="FormatException">Whenever the Sediment Model Number is equal to 1, 2 or 3. Our GUI
-        /// does not support FM models with these values.</exception>
+        /// <exception cref="FormatException">
+        /// Whenever the Sediment Model Number is equal to 1, 2 or 3. Our GUI
+        /// does not support FM models with these values.
+        /// </exception>
         /// <remarks>The Sediment Model Number currently can have values 0, 1, 2, 3 & 4.</remarks>
         public static void Read(string mduFilePath, WaterFlowFMModelDefinition modelDefinition)
         {
             var logHandler = new LogHandler("reading the morphology file");
 
-            var sedimentModelNumber = (int)modelDefinition.GetModelProperty(KnownProperties.SedimentModelNumber).Value;
+            var sedimentModelNumber = (int) modelDefinition.GetModelProperty(KnownProperties.SedimentModelNumber).Value;
             if (sedimentModelNumber >= 1 && sedimentModelNumber <= 3)
             {
                 throw new FormatException(Resources.MorphologyFile_Read_Sediment_model_numbers_1_2_3_are_not_supported_);
             }
 
-            var morFileName = (string)modelDefinition.GetModelProperty(KnownProperties.MorFile).Value;
+            var morFileName = (string) modelDefinition.GetModelProperty(KnownProperties.MorFile).Value;
             if (sedimentModelNumber == 4 && !string.IsNullOrEmpty(morFileName))
             {
-                ReadMorphologyProperties(mduFilePath, 
-                                         KnownProperties.MorFile, 
-                                         modelDefinition, 
+                ReadMorphologyProperties(mduFilePath,
+                                         KnownProperties.MorFile,
+                                         modelDefinition,
                                          logHandler,
                                          out IList<DelftIniCategory> boundaryCategories);
 
-                string bcmFile = modelDefinition.GetModelProperty(KnownProperties.BcmFile).Value.ToString();
+                var bcmFile = modelDefinition.GetModelProperty(KnownProperties.BcmFile).Value.ToString();
                 if (!string.IsNullOrEmpty(bcmFile)
                     && boundaryCategories.Count > 0)
                 {
@@ -199,7 +205,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             logHandler.LogReport();
         }
 
-        private static void ReadMorphologyBoundaryConditions(string mduFilePath, 
+        private static void ReadMorphologyBoundaryConditions(string mduFilePath,
                                                              string bcmFile,
                                                              IEnumerable<DelftIniCategory> boundaryDelftIniCategories,
                                                              WaterFlowFMModelDefinition modelDefinition)
@@ -233,7 +239,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             }
         }
 
-        private static void ReadMorphologyProperties(string mduFilePath, 
+        private static void ReadMorphologyProperties(string mduFilePath,
                                                      string propertyName,
                                                      WaterFlowFMModelDefinition modelDefinition,
                                                      ILogHandler logHandler,
@@ -287,7 +293,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                     continue;
                 }
 
-                delftIniProperty.Name = 
+                delftIniProperty.Name =
                     backwardsCompatibilityHelper.GetUpdatedPropertyName(delftIniProperty.Name,
                                                                         logHandler) ??
                     delftIniProperty.Name;
@@ -300,8 +306,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                         CreateModelPropertyForUnknownDelftIniProperty(categoryName, delftIniProperty);
                     modelDefinition.AddProperty(property);
 
-                    logHandler?.ReportWarningFormat(Resources.MorphologySediment_ReadCategoryProperties_Unsupported_keyword___0___at_line___1___detected_and_will_be_passed_to_the_computational_core__Note_that_some_data_or_the_connection_to_linked_files_may_be_lost_, 
-                                                    delftIniProperty.Name,  delftIniProperty.LineNumber);
+                    logHandler?.ReportWarningFormat(Resources.MorphologySediment_ReadCategoryProperties_Unsupported_keyword___0___at_line___1___detected_and_will_be_passed_to_the_computational_core__Note_that_some_data_or_the_connection_to_linked_files_may_be_lost_,
+                                                    delftIniProperty.Name, delftIniProperty.LineNumber);
 
                     continue;
                 }
@@ -314,7 +320,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         }
 
         private static WaterFlowFMProperty GetExistingPropertyInCategory(WaterFlowFMModelDefinition modelDefinition,
-                                                                         DelftIniProperty delftIniProperty, 
+                                                                         DelftIniProperty delftIniProperty,
                                                                          string categoryName)
         {
             return modelDefinition.Properties.FirstOrDefault(
@@ -334,9 +340,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
             WaterFlowFMPropertyDefinition propertyDefinition =
                 WaterFlowFMPropertyDefinitionCreator.CreateForCustomProperty(fileCategoryName,
-                                                                              delftIniProperty.Name,
-                                                                              delftIniProperty.Comment,
-                                                                              PropertySource.MorphologyFile);
+                                                                             delftIniProperty.Name,
+                                                                             delftIniProperty.Comment,
+                                                                             PropertySource.MorphologyFile);
             propertyDefinition.Category = categoryName;
 
             var modelProperty = new WaterFlowFMProperty(propertyDefinition, delftIniProperty.Value);
@@ -350,9 +356,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             return modelProperty;
         }
 
-        private static void ReadBoundaryConditionsBlock(DelftIniCategory delftIniCategory, 
+        private static void ReadBoundaryConditionsBlock(DelftIniCategory delftIniCategory,
                                                         Feature2D feature,
-                                                        IEnumerable<BcBlockData> featureBlockData, 
+                                                        IEnumerable<BcBlockData> featureBlockData,
                                                         string mduFilePath,
                                                         WaterFlowFMModelDefinition modelDefinition)
         {
@@ -389,10 +395,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             };
 
             List<BoundaryConditionSet> bcSets = modelDefinition.BoundaryConditionSets
-                                                               .Select(bcs => new BoundaryConditionSet
-                                                               {
-                                                                   Feature = bcs.Feature
-                                                               })
+                                                               .Select(bcs => new BoundaryConditionSet {Feature = bcs.Feature})
                                                                .ToList();
 
             if (featureBlockData != null)

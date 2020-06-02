@@ -22,6 +22,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(TimFileImporter));
 
+        public override IEnumerable<BoundaryConditionDataType> ForcingTypes
+        {
+            get
+            {
+                yield return BoundaryConditionDataType.TimeSeries;
+            }
+        }
+
         public Func<SourceAndSink, WaterFlowFMModel> GetModelForSourceAndSink { private get; set; }
 
         public Func<HeatFluxModel, WaterFlowFMModel> GetModelForHeatFluxModel { private get; set; }
@@ -29,6 +37,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
         public Func<UniformWindField, WaterFlowFMModel> GetModelForWindTimeSeries { private get; set; }
 
         public bool WindFileImporter { get; set; }
+
+        public override void Import(string fileName, FlowBoundaryCondition boundaryCondition)
+        {
+            ImportItem(fileName, boundaryCondition);
+        }
+
+        public override bool CanImportOnBoundaryCondition(FlowBoundaryCondition boundaryCondition)
+        {
+            return ForcingTypes.Contains(boundaryCondition.DataType);
+        }
 
         #region IFileImporter
 
@@ -215,23 +233,5 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
         }
 
         #endregion
-
-        public override IEnumerable<BoundaryConditionDataType> ForcingTypes
-        {
-            get
-            {
-                yield return BoundaryConditionDataType.TimeSeries;
-            }
-        }
-
-        public override void Import(string fileName, FlowBoundaryCondition boundaryCondition)
-        {
-            ImportItem(fileName, boundaryCondition);
-        }
-
-        public override bool CanImportOnBoundaryCondition(FlowBoundaryCondition boundaryCondition)
-        {
-            return ForcingTypes.Contains(boundaryCondition.DataType);
-        }
     }
 }

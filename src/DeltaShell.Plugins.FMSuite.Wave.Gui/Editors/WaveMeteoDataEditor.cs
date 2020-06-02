@@ -11,7 +11,33 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors
 {
     public partial class WaveMeteoDataEditor : UserControl
     {
+        private readonly MeteoFileSelectionControl spiderWebFileControl = new MeteoFileSelectionControl
+        {
+            LabelText = "Spider web:",
+            FileFilter = "spider web (*.spw)|*.spw"
+        };
+
+        private readonly MeteoFileSelectionControl xComponentFileControl = new MeteoFileSelectionControl
+        {
+            LabelText = "X component:",
+            FileFilter = "uniform x series (*.wnd)|*.wnd"
+        };
+
+        private readonly MeteoFileSelectionControl yComponentFileControl = new MeteoFileSelectionControl
+        {
+            LabelText = "Y component:",
+            FileFilter = "uniform y series (*.wnd)|*.wnd"
+        };
+
+        private readonly MeteoFileSelectionControl xyVectorFileControl = new MeteoFileSelectionControl
+        {
+            LabelText = "Wind velocity:",
+            FileFilter = "uniform xy series (*.wnd)|*.wnd"
+        };
+
         private WaveMeteoData meteoData;
+
+        private Func<string, string> importIntoModelDirectory;
 
         public WaveMeteoDataEditor()
         {
@@ -127,32 +153,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors
                 flowLayoutPanel2.Controls.Add(spiderWebFileControl);
             }
         }
-
-        private readonly MeteoFileSelectionControl spiderWebFileControl = new MeteoFileSelectionControl
-        {
-            LabelText = "Spider web:",
-            FileFilter = "spider web (*.spw)|*.spw"
-        };
-
-        private readonly MeteoFileSelectionControl xComponentFileControl = new MeteoFileSelectionControl
-        {
-            LabelText = "X component:",
-            FileFilter = "uniform x series (*.wnd)|*.wnd"
-        };
-
-        private readonly MeteoFileSelectionControl yComponentFileControl = new MeteoFileSelectionControl
-        {
-            LabelText = "Y component:",
-            FileFilter = "uniform y series (*.wnd)|*.wnd"
-        };
-
-        private readonly MeteoFileSelectionControl xyVectorFileControl = new MeteoFileSelectionControl
-        {
-            LabelText = "Wind velocity:",
-            FileFilter = "uniform xy series (*.wnd)|*.wnd"
-        };
-
-        private Func<string, string> importIntoModelDirectory;
 
         private void spwButton_Click(object sender, EventArgs e)
         {

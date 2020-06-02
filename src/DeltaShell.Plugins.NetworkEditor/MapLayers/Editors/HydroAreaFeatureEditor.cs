@@ -9,12 +9,12 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors
 {
     public class HydroAreaFeatureEditor : Feature2DEditor
     {
-        public HydroArea Area { get; private set; }
-
         public HydroAreaFeatureEditor(HydroArea area) : base(area)
         {
             Area = area;
         }
+
+        public HydroArea Area { get; private set; }
 
         public override IFeatureInteractor CreateInteractor(ILayer layer, IFeature feature)
         {

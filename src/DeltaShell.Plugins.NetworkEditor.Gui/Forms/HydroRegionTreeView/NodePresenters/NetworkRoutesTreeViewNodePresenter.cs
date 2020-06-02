@@ -4,18 +4,17 @@ using DelftTools.Controls;
 using DelftTools.Shell.Gui;
 using DelftTools.Shell.Gui.Swf;
 using DelftTools.Utils.Collections.Generic;
+using DeltaShell.Plugins.NetworkEditor.Gui.Properties;
 using NetTopologySuite.Extensions.Coverages;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView.NodePresenters
 {
     public class NetworkRoutesTreeViewNodePresenter : TreeViewNodePresenterBaseForPluginGui<IEventedList<Route>>
     {
-        private static readonly Image RoutesImage = Properties.Resources.routes;
+        private static readonly Image RoutesImage = Resources.routes;
 
         public NetworkRoutesTreeViewNodePresenter(GuiPlugin guiPlugin)
-            : base(guiPlugin)
-        {
-        }
+            : base(guiPlugin) {}
 
         public override void UpdateNode(ITreeNode parentNode, ITreeNode node, IEventedList<Route> nodeData)
         {
@@ -25,7 +24,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView.NodePre
 
         public override IEnumerable GetChildNodeObjects(IEventedList<Route> parentNodeData, ITreeNode node)
         {
-            foreach (var route in parentNodeData)
+            foreach (Route route in parentNodeData)
             {
                 yield return route;
             }
@@ -37,6 +36,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView.NodePre
             {
                 return null;
             }
+
             return GuiPlugin.GetContextMenu(sender, nodeData);
         }
     }

@@ -19,41 +19,18 @@ namespace DelftTools.Hydro
             Links = new EventedList<HydroLink>();
         }
 
-        public static WasteWaterTreatmentPlant CreateDefault()
-        {
-            return new WasteWaterTreatmentPlant {Geometry = new Point(0, 0)};
-        }
-
-        // override: this feature needs to bubble geometry changes
-        public override IGeometry Geometry { get; set; }
-
-        public virtual object Clone()
-        {
-            var wwtp = new WasteWaterTreatmentPlant();
-            wwtp.Geometry = Geometry;
-            wwtp.Description = Description;
-            wwtp.LongName = LongName;
-            wwtp.Name = Name;
-            wwtp.Basin = Basin;
-            wwtp.Attributes = (IFeatureAttributeCollection) Attributes.Clone();
-            wwtp.Links = new EventedList<HydroLink>(Links);
-
-            return wwtp;
-        }
-
-        [DisplayName("Name")]
-        [FeatureAttribute]
-        public virtual string Name { get; set; }
-
-        [DisplayName("LongName")]
-        [FeatureAttribute]
-        public virtual string LongName { get; set; }
-
         [FeatureAttribute]
         public virtual string Description { get; set; }
 
         [Aggregation]
         public virtual DrainageBasin Basin { get; set; }
+
+        // override: this feature needs to bubble geometry changes
+        public override IGeometry Geometry { get; set; }
+
+        [DisplayName("Name")]
+        [FeatureAttribute]
+        public virtual string Name { get; set; }
 
         public virtual IHydroRegion Region => Basin;
 
@@ -64,19 +41,13 @@ namespace DelftTools.Hydro
 
         public virtual bool CanBeLinkTarget => true;
 
-        public virtual HydroLink LinkTo(IHydroObject target)
-        {
-            return Region.AddNewLink(this, target);
-        }
+        [DisplayName("LongName")]
+        [FeatureAttribute]
+        public virtual string LongName { get; set; }
 
-        public virtual void UnlinkFrom(IHydroObject target)
+        public static WasteWaterTreatmentPlant CreateDefault()
         {
-            Region.RemoveLink(this, target);
-        }
-
-        public virtual bool CanLinkTo(IHydroObject target)
-        {
-            return Region.CanLinkTo(this, target);
+            return new WasteWaterTreatmentPlant {Geometry = new Point(0, 0)};
         }
 
         public override string ToString()
@@ -117,6 +88,35 @@ namespace DelftTools.Hydro
             }
 
             throw new InvalidOperationException();
+        }
+
+        public virtual object Clone()
+        {
+            var wwtp = new WasteWaterTreatmentPlant();
+            wwtp.Geometry = Geometry;
+            wwtp.Description = Description;
+            wwtp.LongName = LongName;
+            wwtp.Name = Name;
+            wwtp.Basin = Basin;
+            wwtp.Attributes = (IFeatureAttributeCollection) Attributes.Clone();
+            wwtp.Links = new EventedList<HydroLink>(Links);
+
+            return wwtp;
+        }
+
+        public virtual HydroLink LinkTo(IHydroObject target)
+        {
+            return Region.AddNewLink(this, target);
+        }
+
+        public virtual void UnlinkFrom(IHydroObject target)
+        {
+            Region.RemoveLink(this, target);
+        }
+
+        public virtual bool CanLinkTo(IHydroObject target)
+        {
+            return Region.CanLinkTo(this, target);
         }
     }
 }

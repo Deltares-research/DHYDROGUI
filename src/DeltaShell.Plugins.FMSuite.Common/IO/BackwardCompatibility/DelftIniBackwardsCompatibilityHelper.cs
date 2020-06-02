@@ -56,7 +56,9 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.BackwardCompatibility
         /// ELSE null.
         /// </returns>
         /// <exception cref="ArgumentNullException">
-        /// Thrown when <param name="propertyName"/> is null.
+        /// Thrown when
+        /// <param name="propertyName"/>
+        /// is null.
         /// </exception>
         /// <remarks>
         /// Note that property names are case-insensitive and will be matched as such.
@@ -77,7 +79,9 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.BackwardCompatibility
         /// ELSE null.
         /// </returns>
         /// <exception cref="ArgumentNullException">
-        /// Thrown when <param name="categoryName"/> is null.
+        /// Thrown when
+        /// <param name="categoryName"/>
+        /// is null.
         /// </exception>
         /// <remarks>
         /// Note that categories names are case-insensitive and will be matched as such.
@@ -88,7 +92,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.BackwardCompatibility
             return GetUpdatedName(categoryName, configurationValues.LegacyCategoryMapping, logHandler);
         }
 
-        private static string GetUpdatedName(string propertyName, 
+        private static string GetUpdatedName(string propertyName,
                                              IReadOnlyDictionary<string, string> mapping,
                                              ILogHandler logHandler)
         {

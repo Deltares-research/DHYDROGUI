@@ -16,12 +16,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         /// <returns>All inputs that are indirectly connected to the output.</returns>
         public static IEnumerable<Input> InputItemsForOutput(ControlGroup controlGroup, Output output)
         {
-            HashSet<Input> inputs = new HashSet<Input>();
-            foreach (var ruleBase in controlGroup.Rules)
+            var inputs = new HashSet<Input>();
+            foreach (RuleBase ruleBase in controlGroup.Rules)
             {
                 if (ruleBase.Outputs.Contains(output))
                 {
-                    foreach (var r in InputsForRule(controlGroup, ruleBase))
+                    foreach (Input r in InputsForRule(controlGroup, ruleBase))
                     {
                         inputs.Add(r);
                     }
@@ -32,6 +32,24 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         }
 
         /// <summary>
+        /// RetrieveTriggerObjects returns all main triggers from which the serializers should start.
+        /// </summary>
+        /// <param name="controlGroup"></param>
+        /// <returns>IEnumerable with triggers</returns>
+        public static IEnumerable<RtcBaseObject> RetrieveTriggerObjects(IControlGroup controlGroup)
+        {
+            IEventedList<ConditionBase> conditions = controlGroup.Conditions;
+            List<RtcBaseObject> conditionOutputs = conditions
+                                                   .SelectMany(c => c.TrueOutputs.Concat(c.FalseOutputs))
+                                                   .ToList();
+
+            IEnumerable<RtcBaseObject> triggerCandidates = conditions
+                .Concat<RtcBaseObject>(controlGroup.MathematicalExpressions);
+
+            return triggerCandidates.Except(conditionOutputs);
+        }
+
+        /// <summary>
         /// Returns all input items that are connected via conditions or are Input to the rule.
         /// </summary>
         /// <param name="controlGroup"></param>
@@ -39,7 +57,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         /// <returns></returns>
         private static IEnumerable<Input> InputsForRule(ControlGroup controlGroup, RuleBase ruleBase)
         {
-            foreach (var input in ruleBase.Inputs.OfType<Input>())
+            foreach (Input input in ruleBase.Inputs.OfType<Input>())
             {
                 yield return input;
             }
@@ -52,18 +70,19 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
                 }
             }
 
-            foreach (var conditionBase in controlGroup.Conditions)
+            foreach (ConditionBase conditionBase in controlGroup.Conditions)
             {
                 if (conditionBase.TrueOutputs.Contains(ruleBase))
                 {
-                    foreach (var input in InputsForCondition(controlGroup, conditionBase))
+                    foreach (Input input in InputsForCondition(controlGroup, conditionBase))
                     {
                         yield return input;
                     }
                 }
+
                 if (conditionBase.FalseOutputs.Contains(ruleBase))
                 {
-                    foreach (var input in InputsForCondition(controlGroup, conditionBase))
+                    foreach (Input input in InputsForCondition(controlGroup, conditionBase))
                     {
                         yield return input;
                     }
@@ -116,34 +135,16 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
                 }
             }
 
-            foreach (var rootCondition in controlGroup.Conditions)
+            foreach (ConditionBase rootCondition in controlGroup.Conditions)
             {
                 if (rootCondition.TrueOutputs.Contains(conditionBase) || rootCondition.FalseOutputs.Contains(conditionBase))
                 {
-                    foreach (var inputForCondition in InputsForCondition(controlGroup, rootCondition))
+                    foreach (Input inputForCondition in InputsForCondition(controlGroup, rootCondition))
                     {
                         yield return inputForCondition;
                     }
                 }
             }
-        }
-
-        /// <summary>
-        /// RetrieveTriggerObjects returns all main triggers from which the serializers should start.
-        /// </summary>
-        /// <param name="controlGroup"></param>
-        /// <returns>IEnumerable with triggers</returns>
-        public static IEnumerable<RtcBaseObject> RetrieveTriggerObjects(IControlGroup controlGroup)
-        {
-            IEventedList<ConditionBase> conditions = controlGroup.Conditions;
-            List<RtcBaseObject> conditionOutputs = conditions
-                                                   .SelectMany(c => c.TrueOutputs.Concat(c.FalseOutputs))
-                                                   .ToList();
-
-            IEnumerable<RtcBaseObject> triggerCandidates = conditions
-                .Concat<RtcBaseObject>(controlGroup.MathematicalExpressions);
-
-            return triggerCandidates.Except(conditionOutputs);
         }
     }
 }

@@ -9,7 +9,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
     public interface IBoundaryCondition : IEditableObject, IFeatureData, ICloneable
     {
         /// <summary>
-        /// Physical process, like water flow, sediments transport, ..., see <see cref="FunctionAttributes.StandardProcessNames" />
+        /// Physical process, like water flow, sediments transport, ..., see <see cref="FunctionAttributes.StandardProcessNames"/>
         /// for a list of possible values.
         /// </summary>
         string ProcessName { get; }
@@ -30,7 +30,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
         string VariableDescription { get; }
 
         /// <summary>
-        /// Defines structure of the data in <see cref="PointData" /> functions (e.g. const, time series, harmonic, etc.).
+        /// Defines structure of the data in <see cref="PointData"/> functions (e.g. const, time series, harmonic, etc.).
         /// </summary>
         BoundaryConditionDataType DataType { get; set; }
 
@@ -45,7 +45,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
         IEventedList<int> DataPointIndices { get; }
 
         /// <summary>
-        /// Function that represents a boundary condition data for every point in <see cref="DataPointIndices" />.
+        /// Function that represents a boundary condition data for every point in <see cref="DataPointIndices"/>.
         /// </summary>
         IEventedList<IFunction> PointData { get; }
 
@@ -60,7 +60,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
         bool IsHorizontallyUniform { get; }
 
         /// <summary>
-        /// When true - only <see cref="DepthLayerType.Single" /> can be used to define Z layers.
+        /// When true - only <see cref="DepthLayerType.Single"/> can be used to define Z layers.
         /// </summary>
         bool IsVerticallyUniform { get; }
 
@@ -77,14 +77,14 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
         void RemovePoint(int i);
 
         /// <summary>
-        /// Gets point data for point <paramref name="i" />.
+        /// Gets point data for point <paramref name="i"/>.
         /// </summary>
         /// <param name="i"> </param>
         /// <returns> </returns>
         IFunction GetDataAtPoint(int i);
 
         /// <summary>
-        /// Gets Z layer for point <paramref name="i" />.
+        /// Gets Z layer for point <paramref name="i"/>.
         /// </summary>
         /// <param name="i"> </param>
         /// <returns> </returns>

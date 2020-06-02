@@ -8,33 +8,18 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO.SubFileImporterCom
     public class SubFilePropertyRegexInfo
     {
         /// <summary>
-        /// Gets the name of the property.
-        /// </summary>
-        public string PropertyName { get; }
-
-        /// <summary>
-        /// Gets the name of the capture group.
-        /// </summary>
-        public string CaptureGroupName { get; }
-
-        /// <summary>
-        /// Gets the pattern that is part of the capture group.
-        /// </summary>
-        public string CaptureGroupPattern { get; }
-
-        /// <summary>
-        /// Creates a new instance of <see cref="SubFilePropertyRegexInfo" />.
+        /// Creates a new instance of <see cref="SubFilePropertyRegexInfo"/>.
         /// </summary>
         /// <param name="propertyName"> The name of the property. </param>
         /// <param name="captureGroupName"> The name of the Regex capture group. </param>
         /// <param name="captureGroupPattern"> The legit characters in the capture group. </param>
         /// <exception cref="ArgumentNullException">
-        /// Thrown when <paramref name="captureGroupPattern" />
+        /// Thrown when <paramref name="captureGroupPattern"/>
         /// is <c> null </c>.
         /// </exception>
         /// <exception cref="ArgumentException">
-        /// Thrown when <paramref name="propertyName" /> or
-        /// <paramref name="captureGroupName" /> is <c> null </c>, empty or consists of only whitespace.
+        /// Thrown when <paramref name="propertyName"/> or
+        /// <paramref name="captureGroupName"/> is <c> null </c>, empty or consists of only whitespace.
         /// </exception>
         public SubFilePropertyRegexInfo(string propertyName, string captureGroupName, string captureGroupPattern)
         {
@@ -57,5 +42,20 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO.SubFileImporterCom
             CaptureGroupName = captureGroupName;
             CaptureGroupPattern = captureGroupPattern;
         }
+
+        /// <summary>
+        /// Gets the name of the property.
+        /// </summary>
+        public string PropertyName { get; }
+
+        /// <summary>
+        /// Gets the name of the capture group.
+        /// </summary>
+        public string CaptureGroupName { get; }
+
+        /// <summary>
+        /// Gets the pattern that is part of the capture group.
+        /// </summary>
+        public string CaptureGroupPattern { get; }
     }
 }

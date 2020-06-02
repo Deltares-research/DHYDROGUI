@@ -12,6 +12,22 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Xml
 {
     public class XmlTimeSeries : IXmlTimeSeries
     {
+        private const string StrDatePattern = "yyyy-MM-dd";
+        private const string StrTimePattern = "HH:mm:ss";
+
+        /// <summary>
+        /// InterpolationType = Constant, Linear, None
+        /// piInterpolationOptionEnumStringType = "BLOCK" or "LINEAR"; optional default is None?
+        /// </summary>
+        public InterpolationType InterpolationType { get; set; }
+
+        /// <summary>
+        /// InterpolationType = Constant, Linear, Periodic, None
+        /// piExtrapolationOptionEnumStringType = "BLOCK" or "PERIODIC"; optional default is None?
+        /// </summary>
+        public ExtrapolationTimeSeriesType ExtrapolationType { get; set; }
+
+        public TimeSpan PeriodSpan { get; set; }
         public string Name { get; set; }
         public string LocationId { get; set; }
         public string ParameterId { get; set; }
@@ -20,28 +36,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Xml
         public TimeSpan TimeStep { get; set; }
         public TimeSeries TimeSeries { get; set; }
 
-        private const string StrDatePattern = "yyyy-MM-dd";
-        private const string StrTimePattern = "HH:mm:ss";
-
-        /// <summary>
-        /// InterpolationType = Constant, Linear, None
-        /// piInterpolationOptionEnumStringType = "BLOCK" or "LINEAR"; optional default is None? 
-        /// </summary>
-        public InterpolationType InterpolationType { get; set; }
-
-        /// <summary>
-        /// InterpolationType = Constant, Linear, Periodic, None
-        /// piExtrapolationOptionEnumStringType = "BLOCK" or "PERIODIC"; optional default is None? 
-        /// </summary>
-        public ExtrapolationTimeSeriesType ExtrapolationType { get; set; }
-
-        public TimeSpan PeriodSpan { get; set; }
-
         public XElement GetTimeSeriesXElementForDataConfigFile(XNamespace xNamespace, bool headerOnly)
         {
             var timeSeriesElement = new XElement(xNamespace + "timeSeries", new XAttribute("id", Name));
 
-            if (headerOnly) return timeSeriesElement;
+            if (headerOnly)
+            {
+                return timeSeriesElement;
+            }
 
             timeSeriesElement.Add(GetPiTimeSeriesXElement(xNamespace));
 
@@ -62,24 +64,23 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Xml
         {
             if (TimeSeries.Time.Values.Any())
             {
-                foreach (var dateTime in TimeSeries.Time.GetValues())
+                foreach (DateTime dateTime in TimeSeries.Time.GetValues())
                 {
                     yield return GetEventXElement(xNamespace, dateTime);
                 }
             }
 
             // no times and constant extrapolation is constant time series.
-            else
-                if (ExtrapolationType == ExtrapolationTimeSeriesType.Constant)
-                {
-                    yield return GetEventXElement(xNamespace, StartTime, true);
-                    yield return GetEventXElement(xNamespace, EndTime, true);
-                }
+            else if (ExtrapolationType == ExtrapolationTimeSeriesType.Constant)
+            {
+                yield return GetEventXElement(xNamespace, StartTime, true);
+                yield return GetEventXElement(xNamespace, EndTime, true);
+            }
         }
 
         private XElement GetHeaderXElement(XNamespace xNamespace, TimeSpan timeSpan)
         {
-            var timeStep = DetermineTimeStepAndEndDate(timeSpan, out var endDate);
+            TimeSpan timeStep = DetermineTimeStepAndEndDate(timeSpan, out DateTime endDate);
 
             var headerXElement = new XElement(xNamespace + "header");
 
@@ -98,20 +99,20 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Xml
 
         private TimeSpan DetermineTimeStepAndEndDate(TimeSpan timeStep, out DateTime tableEnd)
         {
-            var xTimeStep = timeStep;
+            TimeSpan xTimeStep = timeStep;
 
             tableEnd = EndTime;
 
-            var times = TimeSeries.Time.GetValues().ToArray();
+            DateTime[] times = TimeSeries.Time.GetValues().ToArray();
 
             if (ExtrapolationType == ExtrapolationTimeSeriesType.Periodic && PeriodSpan.Ticks > 0)
             {
                 // Check Time Steps
-                var minTableStep = PeriodSpan;
+                TimeSpan minTableStep = PeriodSpan;
 
                 for (var i = 0; i < times.Length - 1; i++)
                 {
-                    var tableStep = times[i + 1] - times[i];
+                    TimeSpan tableStep = times[i + 1] - times[i];
                     var bufStep = new TimeSpan();
 
                     if (tableStep.Seconds > 0)
@@ -160,7 +161,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Xml
 
                 if (minTableStep.Days < 3650)
                 {
-                    tableEnd = StartTime + PeriodSpan - minTableStep;
+                    tableEnd = (StartTime + PeriodSpan) - minTableStep;
                     xTimeStep = minTableStep;
                 }
             }
@@ -171,10 +172,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Xml
         private XElement GetPiTimeSeriesXElement(XNamespace xNamespace)
         {
             var piTimeSeriesXElement = new XElement(xNamespace + "PITimeSeries",
-                new XElement(xNamespace + "locationId", LocationId),
-                new XElement(xNamespace + "parameterId", ParameterId),
-                GetInterpolationXElement(xNamespace),
-                GetExtrapolationXElement(xNamespace)
+                                                    new XElement(xNamespace + "locationId", LocationId),
+                                                    new XElement(xNamespace + "parameterId", ParameterId),
+                                                    GetInterpolationXElement(xNamespace),
+                                                    GetExtrapolationXElement(xNamespace)
             );
 
             return piTimeSeriesXElement;
@@ -182,9 +183,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Xml
 
         private XElement GetInterpolationXElement(XNamespace xNamespace)
         {
-            if (InterpolationType == InterpolationType.None) return null;
+            if (InterpolationType == InterpolationType.None)
+            {
+                return null;
+            }
 
-            var interpolationString = InterpolationType == InterpolationType.Constant ? "BLOCK" : "LINEAR";
+            string interpolationString = InterpolationType == InterpolationType.Constant ? "BLOCK" : "LINEAR";
 
             var interpolationXElement = new XElement(xNamespace + "interpolationOption", interpolationString);
 
@@ -194,9 +198,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Xml
         private XElement GetExtrapolationXElement(XNamespace xNamespace)
         {
             if (ExtrapolationType != ExtrapolationTimeSeriesType.Constant &&
-                ExtrapolationType != ExtrapolationTimeSeriesType.Periodic) return null;
+                ExtrapolationType != ExtrapolationTimeSeriesType.Periodic)
+            {
+                return null;
+            }
 
-            var extrapolationString = ExtrapolationType == ExtrapolationTimeSeriesType.Constant ? "BLOCK" : "PERIODIC";
+            string extrapolationString = ExtrapolationType == ExtrapolationTimeSeriesType.Constant ? "BLOCK" : "PERIODIC";
 
             var extrapolationXElement = new XElement(xNamespace + "extrapolationOption", extrapolationString);
 
@@ -205,9 +212,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Xml
 
         private XElement GetEventXElement(XNamespace xNamespace, DateTime dateTime, bool useDefault = false)
         {
-            var valueAttribute = useDefault
-                ? new XAttribute("value", ConvertToDouble(TimeSeries.Components[0].DefaultValue).ToString(CultureInfo.InvariantCulture))
-                : new XAttribute("value", ConvertToDouble(TimeSeries[dateTime]).ToString(CultureInfo.InvariantCulture));
+            XAttribute valueAttribute = useDefault
+                                            ? new XAttribute("value", ConvertToDouble(TimeSeries.Components[0].DefaultValue).ToString(CultureInfo.InvariantCulture))
+                                            : new XAttribute("value", ConvertToDouble(TimeSeries[dateTime]).ToString(CultureInfo.InvariantCulture));
 
             var eventElement = new XElement(xNamespace + "event", GetDateTimeAttributes(dateTime), valueAttribute);
 

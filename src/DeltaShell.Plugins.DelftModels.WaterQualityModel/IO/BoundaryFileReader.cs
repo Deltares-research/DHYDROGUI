@@ -15,19 +15,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
     /// </summary>
     public static class BoundaryFileReader
     {
-        //private int expectedNumberOfBoundaries, readNumberOfBoundaries;
-        //private string currectReadingBoundary;
-
-        #region Regex capture group name constants
-
-        private const string GroupBoundaryNodeId = "boundaryNodeID";
-        private const string GroupX1 = "x1";
-        private const string GroupY1 = "y1";
-        private const string GroupX2 = "x2";
-        private const string GroupY2 = "y2";
-
-        #endregion
-
         /// <summary>
         /// Reads all boundary data.
         /// </summary>
@@ -213,5 +200,17 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         {
             return double.Parse(match.Groups[groupname].Value, CultureInfo.InvariantCulture);
         }
+        //private int expectedNumberOfBoundaries, readNumberOfBoundaries;
+        //private string currectReadingBoundary;
+
+        #region Regex capture group name constants
+
+        private const string GroupBoundaryNodeId = "boundaryNodeID";
+        private const string GroupX1 = "x1";
+        private const string GroupY1 = "y1";
+        private const string GroupX2 = "x2";
+        private const string GroupY2 = "y2";
+
+        #endregion
     }
 }

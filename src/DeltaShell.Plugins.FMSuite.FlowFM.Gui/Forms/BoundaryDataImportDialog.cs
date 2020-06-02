@@ -24,7 +24,5 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
         {
             importer.DataPointIndices = dataImportPointsListBox1.CheckedIndices.Cast<int>().ToList();
         }
-
-
     }
 }

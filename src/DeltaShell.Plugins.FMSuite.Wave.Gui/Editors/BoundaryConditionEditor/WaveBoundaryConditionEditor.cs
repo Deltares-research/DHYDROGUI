@@ -13,14 +13,20 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.BoundaryConditionEditor
     /// </summary>
     public partial class WaveBoundaryConditionEditor : UserControl, ICompositeView, IReusableView
     {
+        private WaveBoundaryCondition waveBoundaryCondition;
+
+        public event EventHandler LockedChanged
+        {
+            add => BoundaryConditionEditor.LockedChanged += value;
+            remove => BoundaryConditionEditor.LockedChanged -= value;
+        }
+
         public WaveBoundaryConditionEditor()
         {
             InitializeComponent();
         }
 
         public Common.Gui.Editors.BoundaryConditionEditor BoundaryConditionEditor { get; private set; }
-
-        private WaveBoundaryCondition waveBoundaryCondition;
 
         public object Data
         {
@@ -49,12 +55,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.BoundaryConditionEditor
             set => BoundaryConditionEditor.Image = value;
         }
 
-        public void EnsureVisible(object item)
-        {
-            BoundaryConditionEditor.EnsureVisible(item);
-        }
-
         public ViewInfo ViewInfo { get; set; }
+
+        public IEventedList<IView> ChildViews => BoundaryConditionEditor.ChildViews;
+
+        public bool HandlesChildViews => true;
 
         public bool Locked
         {
@@ -62,15 +67,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.BoundaryConditionEditor
             set => BoundaryConditionEditor.Locked = value;
         }
 
-        public event EventHandler LockedChanged
+        public void EnsureVisible(object item)
         {
-            add => BoundaryConditionEditor.LockedChanged += value;
-            remove => BoundaryConditionEditor.LockedChanged -= value;
+            BoundaryConditionEditor.EnsureVisible(item);
         }
-
-        public IEventedList<IView> ChildViews => BoundaryConditionEditor.ChildViews;
-
-        public bool HandlesChildViews => true;
 
         public void ActivateChildView(IView childView) {}
     }

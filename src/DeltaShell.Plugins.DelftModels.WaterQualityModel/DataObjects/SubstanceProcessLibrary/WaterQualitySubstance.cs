@@ -14,11 +14,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.Substance
     public class WaterQualitySubstance : Unique<long>, INameable, ICloneable, IComparable
     {
         /// <summary>
-        /// The name of the substance
-        /// </summary>
-        public string Name { get; set; }
-
-        /// <summary>
         /// The description of the substance
         /// </summary>
         public string Description { get; set; }
@@ -42,6 +37,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.Substance
         /// The waste load unit of the substance
         /// </summary>
         public string WasteLoadUnit { get; set; }
+
+        /// <summary>
+        /// The name of the substance
+        /// </summary>
+        public string Name { get; set; }
 
         public override string ToString()
         {

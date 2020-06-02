@@ -40,6 +40,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
         private static readonly Bitmap coordinateBasedBoundaryIcon = Resources.boundary;
         private static readonly Bitmap obstacleDataIcon = Properties.Resources.wall_brick;
 
+        public Func<IEnumerable<WaveModel>> GetWaveModels { get; set; }
+
         public ILayer CreateLayer(object data, object parent)
         {
             var waveModel = data as WaveModel;
@@ -89,10 +91,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
                         Name = discreteGrid.Name,
                         CurviLinearGrid = discreteGrid,
                         OptimizeRendering = discreteGrid.X.Values.Count > 50000,
-                        DataSource = new WaveGridBasedDataSource(discreteGrid)
-                        {
-                            CoordinateSystem = coordinateSystem
-                        },
+                        DataSource = new WaveGridBasedDataSource(discreteGrid) {CoordinateSystem = coordinateSystem},
                         ReadOnly = true // to exclude from spatial editor
                     };
                 }
@@ -103,10 +102,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
                     Coverage = discreteGrid,
                     Visible = false,
                     OptimizeRendering = discreteGrid.X.Values.Count > 30000,
-                    DataSource = new WaveGridBasedDataSource(discreteGrid)
-                    {
-                        CoordinateSystem = coordinateSystem
-                    },
+                    DataSource = new WaveGridBasedDataSource(discreteGrid) {CoordinateSystem = coordinateSystem},
                     ReadOnly = !discreteGrid.IsEditable // Exclude output from spatial editor
                 };
             }
@@ -341,7 +337,5 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
                 }
             }
         }
-
-        public Func<IEnumerable<WaveModel>> GetWaveModels { get; set; }
     }
 }

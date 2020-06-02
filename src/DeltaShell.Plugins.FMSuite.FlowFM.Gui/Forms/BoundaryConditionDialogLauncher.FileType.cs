@@ -4,7 +4,7 @@
     {
         private enum FileType
         {
-            Bc =1,
+            Bc = 1,
             Pli = 2,
             Other = 3
         }

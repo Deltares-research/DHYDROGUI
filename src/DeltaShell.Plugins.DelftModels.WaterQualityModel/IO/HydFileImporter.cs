@@ -9,6 +9,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
 {
     public class HydFileImporter : IFileImporter
     {
+        private readonly Func<string> StoreWorkingDirectoryPathFunc;
+
         /// <summary>
         /// Constructor needed for connecting the Application.WorkingDirectory to the
         /// WaterQualityModelSettings Working Directory when a new Water Quality model
@@ -24,6 +26,12 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         /// Constructor for when the Water Quality model already exists, but empty hyd file.
         /// </summary>
         public HydFileImporter() {}
+
+        public Action<WaterQualityModel> ExpandModelNode { get; set; }
+
+        public bool MarkModelOutputOutOfSync { get; set; }
+
+        public bool SkipImportTimers { get; set; }
 
         public string Name => "Hydrodynamics (*.hyd)";
 
@@ -41,11 +49,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
             }
         }
 
-        public bool CanImportOn(object targetObject)
-        {
-            return true;
-        }
-
         public bool CanImportOnRootLevel => true;
 
         public string FileFilter => "Hydrodynamics File (*.hyd)|*.hyd";
@@ -59,20 +62,17 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
 
         public bool OpenViewAfterImport => true;
 
-        public Action<WaterQualityModel> ExpandModelNode { get; set; }
-
-        public bool MarkModelOutputOutOfSync { get; set; }
-
-        public bool SkipImportTimers { get; set; }
-
-        private readonly Func<string> StoreWorkingDirectoryPathFunc;
+        public bool CanImportOn(object targetObject)
+        {
+            return true;
+        }
 
         /// <summary>
         /// Import data on a water quality model,
         /// or create a new one if the target doesn't exist.
         /// </summary>
         public object ImportItem(string path, object target = null)
-        { 
+        {
             if (!File.Exists(path))
             {
                 throw new FileNotFoundException("Couldn't find file: " + path);
@@ -81,7 +81,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
             SetProgress("Reading hydrodynamics file", 0, 0);
             HydFileData data = HydFileReader.ReadAll(new FileInfo(path));
 
-            WaterQualityModel model = target as WaterQualityModel;
+            var model = target as WaterQualityModel;
 
             if (model == null)
             {

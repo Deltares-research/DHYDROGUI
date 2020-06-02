@@ -3,40 +3,23 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
+using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Properties;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
 {
     public static class BoundaryDataMapSymbols
     {
-        public static Bitmap GetSymbol(FlowBoundaryQuantityType qt, BoundaryConditionDataType conditionData)
-        {
-            var symbol = new Bitmap(28, 16);
-            var forcingSymbol = ForcingSymbolLookup[conditionData];
-            using (var graphics = Graphics.FromImage(symbol))
-            {
-                graphics.DrawImage(forcingSymbol, 12, 0, 16, 16);
-
-                graphics.SmoothingMode = SmoothingMode.AntiAlias;
-                var path = new GraphicsPath();
-                path.AddString(QuantityStringLookup[qt], Font.FontFamily, (int) Font.Style, Font.Size,
-                               new PointF(1f, 2f), null);
-                graphics.DrawPath(OutlinePen, path);
-                graphics.FillPath(Brushes.Black, path);
-            }
-            return symbol;
-        }
-
         private static readonly Dictionary<BoundaryConditionDataType, Bitmap> ForcingSymbolLookup = new Dictionary
             <BoundaryConditionDataType, Bitmap>
             {
-                {BoundaryConditionDataType.Empty, Properties.Resources.BoundaryType_TimeSeries},
-                {BoundaryConditionDataType.TimeSeries, Properties.Resources.BoundaryType_TimeSeries},
-                {BoundaryConditionDataType.AstroComponents, Properties.Resources.BoundaryType_AstroComponent},
-                {BoundaryConditionDataType.AstroCorrection, Properties.Resources.BoundaryType_AstroComponent},
-                {BoundaryConditionDataType.Harmonics, Properties.Resources.BoundaryType_Harmonics},
-                {BoundaryConditionDataType.HarmonicCorrection, Properties.Resources.BoundaryType_Harmonics},
-                {BoundaryConditionDataType.Qh, Properties.Resources.BoundaryType_Qh},
-                {BoundaryConditionDataType.Constant, Properties.Resources.BoundaryType_Undefined}
+                {BoundaryConditionDataType.Empty, Resources.BoundaryType_TimeSeries},
+                {BoundaryConditionDataType.TimeSeries, Resources.BoundaryType_TimeSeries},
+                {BoundaryConditionDataType.AstroComponents, Resources.BoundaryType_AstroComponent},
+                {BoundaryConditionDataType.AstroCorrection, Resources.BoundaryType_AstroComponent},
+                {BoundaryConditionDataType.Harmonics, Resources.BoundaryType_Harmonics},
+                {BoundaryConditionDataType.HarmonicCorrection, Resources.BoundaryType_Harmonics},
+                {BoundaryConditionDataType.Qh, Resources.BoundaryType_Qh},
+                {BoundaryConditionDataType.Constant, Resources.BoundaryType_Undefined}
             };
 
         private static readonly Dictionary<FlowBoundaryQuantityType, string> QuantityStringLookup = new Dictionary
@@ -44,7 +27,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             {
                 {FlowBoundaryQuantityType.WaterLevel, "h"},
                 {FlowBoundaryQuantityType.Discharge, "Q"},
-                {FlowBoundaryQuantityType.Velocity,"v"},
+                {FlowBoundaryQuantityType.Velocity, "v"},
                 {FlowBoundaryQuantityType.Neumann, "N"},
                 {FlowBoundaryQuantityType.Riemann, "R"},
                 {FlowBoundaryQuantityType.RiemannVelocity, "Rv"},
@@ -65,5 +48,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
 
         private static readonly Pen OutlinePen = new Pen(Color.LightCyan, 3f);
         private static readonly Font Font = new Font(FontFamily.GenericSansSerif, 10f, FontStyle.Bold);
+
+        public static Bitmap GetSymbol(FlowBoundaryQuantityType qt, BoundaryConditionDataType conditionData)
+        {
+            var symbol = new Bitmap(28, 16);
+            Bitmap forcingSymbol = ForcingSymbolLookup[conditionData];
+            using (Graphics graphics = Graphics.FromImage(symbol))
+            {
+                graphics.DrawImage(forcingSymbol, 12, 0, 16, 16);
+
+                graphics.SmoothingMode = SmoothingMode.AntiAlias;
+                var path = new GraphicsPath();
+                path.AddString(QuantityStringLookup[qt], Font.FontFamily, (int) Font.Style, Font.Size,
+                               new PointF(1f, 2f), null);
+                graphics.DrawPath(OutlinePen, path);
+                graphics.FillPath(Brushes.Black, path);
+            }
+
+            return symbol;
+        }
     }
 }

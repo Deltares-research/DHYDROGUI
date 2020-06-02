@@ -1,4 +1,6 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Helpers;
@@ -19,71 +21,34 @@ using SharpMap.Styles;
 
 namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors
 {
-    public class StructureInteractor<T> : PointInteractor,IBranchMaintainableInteractor,  INetworkFeatureInteractor where T : class, IStructure1D, new()
+    public class StructureInteractor<T> : PointInteractor, IBranchMaintainableInteractor, INetworkFeatureInteractor where T : class, IStructure1D, new()
     {
         private bool moving;
         private bool addingNew;
-        public INetwork Network { get; set; }
 
         public StructureInteractor(ILayer layer, IFeature feature, VectorStyle vectorStyle, IEditableObject editableObject)
-            : base(layer, feature, vectorStyle, editableObject)
-        {
-        }
+            : base(layer, feature, vectorStyle, editableObject) {}
 
-        protected override void CreateTrackers()
-        {
-            var bitmap = (VectorStyle != null)
-                ? TrackerSymbolHelper.GenerateComposite(new Pen(Color.Blue), new SolidBrush(Color.DarkBlue),
-                    VectorStyle.Symbol.Width, VectorStyle.Symbol.Height, 6,6)
-                : null;
-
-            Trackers.Add(new TrackerFeature(this, GeometryFactory.CreatePoint(CalculateCoordinate(SourceFeature.Geometry)), 0, bitmap));
-            Trackers[0].Selected = true;
-        }
-
-        private Coordinate CalculateCoordinate(IGeometry geometry)
-        {
-            if (Layer == null)
-            {
-                return (Coordinate)geometry.Coordinates[0].Clone();
-            }
-
-            var structure = (T) (moving ? TargetFeature : SourceFeature);
-
-            int index = 0;
-            int structureCount = 1;
-
-            if (structure.ParentStructure != null)
-            {
-                var grouping = structure.ParentStructure.Structures.GroupBy(s => s.GetType()).ToList();
-                index = grouping.Select(g => g.Key).ToList().IndexOf(structure.GetType());
-                structureCount = grouping.Count;
-            }
-            
-            var org = Layer.Map.ImageToWorld(new PointF(0, 0));
-            var range = Layer.Map.ImageToWorld(new PointF(VectorStyle.Symbol.Width, VectorStyle.Symbol.Height));
-            var anchor = geometry.Coordinates[0];
-            
-            var halfWidth = (range.X - org.X) / 2;
-            return new Coordinate(
-                anchor.X - (halfWidth * (structureCount - 1)) + (2 * halfWidth * index),
-                anchor.Y);
-        }
+        public INetwork Network { get; set; }
 
         public override void UpdateTracker(IGeometry geometry)
         {
-            var coordinate = CalculateCoordinate(geometry);
+            Coordinate coordinate = CalculateCoordinate(geometry);
             Trackers[0].Geometry.Coordinates[0].X = coordinate.X;
             Trackers[0].Geometry.Coordinates[0].Y = coordinate.Y;
         }
 
         public override void Start()
         {
-            var structure = (T)SourceFeature;
+            var structure = (T) SourceFeature;
 
-            var geometry = ((IGeometry)structure.Geometry.Clone());
+            var geometry = (IGeometry) structure.Geometry.Clone();
 
-            TargetFeature = new T { Name = structure.Name, Geometry = geometry };
+            TargetFeature = new T
+            {
+                Name = structure.Name,
+                Geometry = geometry
+            };
         }
 
         public override void Add(IFeature feature)
@@ -96,7 +61,7 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors
 
         public override void Delete()
         {
-            T t = (T)SourceFeature;
+            var t = (T) SourceFeature;
             HydroNetworkHelper.RemoveStructure(t);
             Layer.RenderRequired = true;
         }
@@ -108,10 +73,23 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors
 
         public override void Stop(SnapResult snapResult)
         {
-            Stop(snapResult,false);
+            Stop(snapResult, false);
         }
 
-        public void Stop(SnapResult snapResult,bool stayOnSameBranch)
+        public override bool MoveTracker(TrackerFeature trackerFeature, double deltaX, double deltaY, SnapResult snapResult = null)
+        {
+            moving = true;
+            bool moveTracker = base.MoveTracker(trackerFeature, deltaX, deltaY, snapResult);
+            UpdateTracker(TargetFeature.Geometry);
+            return moveTracker;
+        }
+
+        public override bool AllowSingleClickAndMove()
+        {
+            return true;
+        }
+
+        public void Stop(SnapResult snapResult, bool stayOnSameBranch)
         {
             if (!addingNew && snapResult == null) // cancel
             {
@@ -119,22 +97,28 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors
                 moving = false;
                 return;
             }
-            
-            var hydroNetwork = (IHydroNetwork)Network;
+
+            var hydroNetwork = (IHydroNetwork) Network;
 
             if (Layer != null)
             {
-                for (int i = 0; i < Layer.CustomRenderers.Count; i++)
+                for (var i = 0; i < Layer.CustomRenderers.Count; i++)
                 {
                     if (!(Layer.CustomRenderers[i] is StructureRenderer))
+                    {
                         continue;
-                    var structureRenderer = (StructureRenderer)Layer.CustomRenderers[i];
+                    }
+
+                    var structureRenderer = (StructureRenderer) Layer.CustomRenderers[i];
                     structureRenderer.Reset();
                 }
             }
 
             var branchFeature = SourceFeature as IBranchFeature;
-            if (branchFeature == null) return;
+            if (branchFeature == null)
+            {
+                return;
+            }
 
             if (moving)
             {
@@ -143,10 +127,10 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors
 
             if (!stayOnSameBranch)
             {
-                var channel = (IChannel)branchFeature.Branch;
+                var channel = (IChannel) branchFeature.Branch;
                 if (null != channel)
                 {
-                    hydroNetwork = (IHydroNetwork)channel.Network;
+                    hydroNetwork = (IHydroNetwork) channel.Network;
                     channel.BranchFeatures.Remove(branchFeature);
                     branchFeature.Branch = null;
                 }
@@ -154,11 +138,11 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors
 
             base.Stop();
 
-            var tolerance = Layer == null ? Tolerance : MapHelper.ImageToWorld(Layer.Map, 1);
+            double tolerance = Layer == null ? Tolerance : MapHelper.ImageToWorld(Layer.Map, 1);
 
             if (!stayOnSameBranch)
             {
-                var branch = NetworkHelper.AddBranchFeatureToNearestBranch(hydroNetwork.Branches, branchFeature, tolerance);
+                IBranch branch = NetworkHelper.AddBranchFeatureToNearestBranch(hydroNetwork.Branches, branchFeature, tolerance);
                 if (branch == null)
                 {
                     return;
@@ -168,13 +152,13 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors
             NetworkHelper.UpdateBranchFeatureChainageFromGeometry(branchFeature);
 
             var structureToCompositeStructureTopology = new StructureToCompositeStructureTopology<IStructure1D>
-                                                                                                          {
-                                                                                                              Network = hydroNetwork,
-                                                                                                              CompositeStructures = hydroNetwork.CompositeBranchStructures,
-                                                                                                              Layer = Layer,
-                                                                                                              Tolerance = Tolerance
-                                                                                                          };
-            structureToCompositeStructureTopology.OnStructureAdded((IStructure1D)SourceFeature, snapResult);
+            {
+                Network = hydroNetwork,
+                CompositeStructures = hydroNetwork.CompositeBranchStructures,
+                Layer = Layer,
+                Tolerance = Tolerance
+            };
+            structureToCompositeStructureTopology.OnStructureAdded((IStructure1D) SourceFeature, snapResult);
 
             if (moving)
             {
@@ -183,12 +167,15 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors
             }
         }
 
-        public override bool MoveTracker(TrackerFeature trackerFeature, double deltaX, double deltaY, SnapResult snapResult = null)
+        protected override void CreateTrackers()
         {
-            moving = true;
-            var moveTracker = base.MoveTracker(trackerFeature, deltaX, deltaY, snapResult);
-            UpdateTracker(TargetFeature.Geometry);
-            return moveTracker;
+            Bitmap bitmap = VectorStyle != null
+                                ? TrackerSymbolHelper.GenerateComposite(new Pen(Color.Blue), new SolidBrush(Color.DarkBlue),
+                                                                        VectorStyle.Symbol.Width, VectorStyle.Symbol.Height, 6, 6)
+                                : null;
+
+            Trackers.Add(new TrackerFeature(this, GeometryFactory.CreatePoint(CalculateCoordinate(SourceFeature.Geometry)), 0, bitmap));
+            Trackers[0].Selected = true;
         }
 
         protected override bool AllowMoveCore()
@@ -201,9 +188,33 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors
             return true;
         }
 
-        public override bool AllowSingleClickAndMove()
+        private Coordinate CalculateCoordinate(IGeometry geometry)
         {
-            return true;
+            if (Layer == null)
+            {
+                return (Coordinate) geometry.Coordinates[0].Clone();
+            }
+
+            var structure = (T) (moving ? TargetFeature : SourceFeature);
+
+            var index = 0;
+            var structureCount = 1;
+
+            if (structure.ParentStructure != null)
+            {
+                List<IGrouping<Type, IStructure1D>> grouping = structure.ParentStructure.Structures.GroupBy(s => s.GetType()).ToList();
+                index = grouping.Select(g => g.Key).ToList().IndexOf(structure.GetType());
+                structureCount = grouping.Count;
+            }
+
+            Coordinate org = Layer.Map.ImageToWorld(new PointF(0, 0));
+            Coordinate range = Layer.Map.ImageToWorld(new PointF(VectorStyle.Symbol.Width, VectorStyle.Symbol.Height));
+            Coordinate anchor = geometry.Coordinates[0];
+
+            double halfWidth = (range.X - org.X) / 2;
+            return new Coordinate(
+                (anchor.X - (halfWidth * (structureCount - 1))) + (2 * halfWidth * index),
+                anchor.Y);
         }
     }
 }

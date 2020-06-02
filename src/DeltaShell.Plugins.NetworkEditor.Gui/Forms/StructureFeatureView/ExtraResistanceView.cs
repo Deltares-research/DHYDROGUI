@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 using System.Windows.Forms;
 using DelftTools.Controls;
 using DelftTools.Functions;
@@ -18,7 +19,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
 
         public object Data
         {
-            get { return extraResistance; }
+            get
+            {
+                return extraResistance;
+            }
             set
             {
                 extraResistance = (IExtraResistance) value;
@@ -32,12 +36,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
         }
 
         public Image Image { get; set; }
-        public void EnsureVisible(object item) { }
         public ViewInfo ViewInfo { get; set; }
+        public void EnsureVisible(object item) {}
 
-        private void buttonTable_Click(object sender, System.EventArgs e)
+        private void buttonTable_Click(object sender, EventArgs e)
         {
-            var dialogData = (IFunction)extraResistance.FrictionTable.Clone();
+            var dialogData = (IFunction) extraResistance.FrictionTable.Clone();
             var editFunctionDialog = new EditFunctionDialog
             {
                 Text = "Extra resistance table",
@@ -55,6 +59,5 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
                 extraResistance.FrictionTable = dialogData;
             }
         }
-
     }
 }

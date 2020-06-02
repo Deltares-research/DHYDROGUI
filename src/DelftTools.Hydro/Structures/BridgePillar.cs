@@ -3,7 +3,7 @@
     /// <summary>
     /// Class used for creating Bridge pillar objects.
     /// </summary>
-    /// <seealso cref="DelftTools.Hydro.GroupableFeature2D" />
+    /// <seealso cref="DelftTools.Hydro.GroupableFeature2D"/>
     public class BridgePillar : GroupableFeature2D
     {
         /// <summary>

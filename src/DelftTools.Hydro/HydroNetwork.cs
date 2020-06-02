@@ -21,15 +21,33 @@ namespace DelftTools.Hydro
     [Entity]
     public partial class HydroNetwork : Network, IHydroNetwork
     {
-        private static readonly ILog log = LogManager.GetLogger(typeof(HydroNetwork));
-        public static string CrossSectionSectionFormat = "Section{0:D3}";
-
         public const string ImportBranchesActionName = "Import branches";
+        public static string CrossSectionSectionFormat = "Section{0:D3}";
+        private static readonly ILog log = LogManager.GetLogger(typeof(HydroNetwork));
+
+        private IEventedList<Route> routes;
+
+        private IEventedList<ICrossSectionDefinition> sharedCrossSectionDefinitions;
+
+        private IEventedList<CrossSectionSectionType> crossSectionSectionTypes;
+
+        public HydroNetwork()
+        {
+            Name = "network1";
+            CrossSectionSectionTypes = new EventedList<CrossSectionSectionType>();
+            SharedCrossSectionDefinitions = new EventedList<ICrossSectionDefinition>();
+            Routes = new EventedList<Route>();
+
+            var section = new CrossSectionSectionType {Name = "Main"};
+
+            CrossSectionSectionTypes.Add(section);
+
+            Links = new EventedList<HydroLink>();
+            SubRegions = new EventedList<IRegion>();
+        }
 
         [Aggregation]
         public virtual ICrossSectionDefinition DefaultCrossSectionDefinition { get; set; }
-
-        private IEventedList<Route> routes;
 
         public virtual IEventedList<Route> Routes
         {
@@ -50,8 +68,6 @@ namespace DelftTools.Hydro
             }
         }
 
-        private IEventedList<ICrossSectionDefinition> sharedCrossSectionDefinitions;
-
         public virtual IEventedList<ICrossSectionDefinition> SharedCrossSectionDefinitions
         {
             get => sharedCrossSectionDefinitions;
@@ -69,8 +85,6 @@ namespace DelftTools.Hydro
                 }
             }
         }
-
-        private IEventedList<CrossSectionSectionType> crossSectionSectionTypes;
 
         public virtual IEventedList<CrossSectionSectionType> CrossSectionSectionTypes
         {
@@ -90,21 +104,6 @@ namespace DelftTools.Hydro
                     ((INotifyPropertyChanged) crossSectionSectionTypes).PropertyChanged += SectionTypesPropertyChanged;
                 }
             }
-        }
-
-        public HydroNetwork()
-        {
-            Name = "network1";
-            CrossSectionSectionTypes = new EventedList<CrossSectionSectionType>();
-            SharedCrossSectionDefinitions = new EventedList<ICrossSectionDefinition>();
-            Routes = new EventedList<Route>();
-
-            var section = new CrossSectionSectionType {Name = "Main"};
-
-            CrossSectionSectionTypes.Add(section);
-
-            Links = new EventedList<HydroLink>();
-            SubRegions = new EventedList<IRegion>();
         }
 
         public override IEventedList<IBranch> Branches
@@ -168,6 +167,27 @@ namespace DelftTools.Hydro
         public virtual IEnumerable<ILateralSource> LateralSources { get; protected set; }
         public virtual IEnumerable<IRetention> Retentions { get; protected set; }
         public virtual IEnumerable<IObservationPoint> ObservationPoints { get; protected set; }
+
+        public virtual IEventedList<IRegion> SubRegions { get; set; }
+
+        public virtual IEnumerable<IRegion> AllRegions => HydroRegion.GetAllRegions(this);
+
+        [Aggregation]
+        public virtual IRegion Parent { get; set; }
+
+        public virtual IEnumerable<IHydroObject> AllHydroObjects =>
+            Nodes.Cast<IHydroObject>()
+                 .Concat(Branches.Cast<IHydroObject>())
+                 .Concat(BranchFeatures.Cast<IHydroObject>())
+                 .Concat(NodeFeatures.Cast<IHydroObject>());
+
+        public virtual IEventedList<HydroLink> Links { get; set; }
+
+        public new virtual bool EditWasCancelled
+        {
+            get => base.EditWasCancelled;
+            set => base.EditWasCancelled = value;
+        }
 
         public override string ToString()
         {
@@ -259,21 +279,6 @@ namespace DelftTools.Hydro
             return clone;
         }
 
-        public virtual IEventedList<IRegion> SubRegions { get; set; }
-
-        public virtual IEnumerable<IRegion> AllRegions => HydroRegion.GetAllRegions(this);
-
-        [Aggregation]
-        public virtual IRegion Parent { get; set; }
-
-        public virtual IEnumerable<IHydroObject> AllHydroObjects =>
-            Nodes.Cast<IHydroObject>()
-                 .Concat(Branches.Cast<IHydroObject>())
-                 .Concat(BranchFeatures.Cast<IHydroObject>())
-                 .Concat(NodeFeatures.Cast<IHydroObject>());
-
-        public virtual IEventedList<HydroLink> Links { get; set; }
-
         public virtual HydroLink AddNewLink(IHydroObject source, IHydroObject target)
         {
             throw new NotImplementedException();
@@ -299,12 +304,6 @@ namespace DelftTools.Hydro
             return string.IsNullOrEmpty(nodeName)
                        ? null
                        : Nodes.FirstOrDefault(n => n.Name == nodeName);
-        }
-
-        public new virtual bool EditWasCancelled
-        {
-            get => base.EditWasCancelled;
-            set => base.EditWasCancelled = value;
         }
     }
 }

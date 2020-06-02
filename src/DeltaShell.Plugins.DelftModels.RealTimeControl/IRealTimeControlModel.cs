@@ -16,6 +16,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         ICoordinateSystem CoordinateSystem { get; set; }
 
         IEnumerable<IModel> ControlledModels { get; } // TODO: rename to ControlledModels once RTC model will not be ICompositeModel
+
         /// <summary>
         /// Query connectable locations from controlled models.
         /// </summary>

@@ -9,18 +9,32 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors
 {
     public class ShapeHoverTool : ShapeLayerTool
     {
-        private IShapeFeature HoverShape { get; set; }
         private Bitmap backGround;
+
+        public void Clear()
+        {
+            HoverShape = null;
+        }
+
+        public void ClearBuffer()
+        {
+            if (null == backGround)
+            {
+                return;
+            }
+
+            backGround.Dispose();
+            backGround = null;
+        }
 
         public override void MouseEvent(ChartMouseEvent kind, MouseEventArgs e, Cursor c)
         {
-            Point tmP = new Point(e.X, e.Y);
+            var tmP = new Point(e.X, e.Y);
             switch (kind)
             {
                 case ChartMouseEvent.Move:
                     if (e.Button == MouseButtons.None)
                     {
-
                         IShapeFeature hoverShape = ShapeModifyTool.Clicked(tmP.X, tmP.Y);
                         if (HoverShape != hoverShape)
                         {
@@ -28,17 +42,26 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors
                             Draw();
                         }
                     }
+
                     break;
             }
         }
 
+        public override void Paint()
+        {
+            //PaintHovers();
+        }
+
+        private IShapeFeature HoverShape { get; set; }
+
         private void Draw()
         {
-            var c = ShapeModifyTool.Chart.ParentControl;
+            Control c = ShapeModifyTool.Chart.ParentControl;
             if (null == c)
             {
                 return;
             }
+
             if (null == backGround)
             {
                 backGround = ShapeModifyTool.Chart.Bitmap();
@@ -57,26 +80,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors
             graphics.DrawImage(hoverImage, 0, 0);
             hoverImage.Dispose();
             graphics.Dispose();
-        }
-
-        public void Clear()
-        {
-            HoverShape = null;
-        }
-
-        public void ClearBuffer()
-        {
-            if (null == backGround)
-            {
-                return;
-            }
-            backGround.Dispose();
-            backGround = null;
-        }
-
-        public override void Paint()
-        {
-            //PaintHovers();
         }
 
         private void PaintHovers(Graphics graphics)

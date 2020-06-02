@@ -13,6 +13,7 @@ using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Gui;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView.NodePresenters;
+using DeltaShell.Plugins.NetworkEditor.Gui.Properties;
 using DeltaShell.Plugins.SharpMapGis.Gui.Commands;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using GeoAPI.Extensions.Feature;
@@ -51,152 +52,39 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
             gui.SelectionChanged += GuiSelectionChanged;
 
             TreeView = new TreeView
-                           {
-                               AllowDrop = true, 
-                               Dock = DockStyle.Fill,
-                           };
+            {
+                AllowDrop = true,
+                Dock = DockStyle.Fill,
+            };
 
             AddNodePresenters(guiPlugin);
 
             Controls.Add(TreeView);
         }
 
-        public new void Dispose()
-        {
-            gui.SelectionChanged -= GuiSelectionChanged;
-            base.Dispose();
-        }
-
-        private void AddNodePresenters(GuiPlugin guiPlugin)
-        {
-            var treeNodePresenters = new ITreeNodePresenter[]
-                                         {
-                                             new HydroRegionTreeViewNodePresenter(guiPlugin),
-                                             new NetworkTreeViewNodePresenter(guiPlugin),
-                                             new DrainageBasinTreeViewNodePresenter(guiPlugin),
-                                             new HydroAreaTreeViewNodePresenter(guiPlugin), 
-                                             new CatchmentTypesNodePresenter(guiPlugin), 
-                                             new CatchmentTypeNodePresenter(guiPlugin), 
-                                             new ChannelTreeViewNodePresenter(guiPlugin),
-                                             new CrossSectionTreeViewNodePresenter(guiPlugin),
-                                             new LateralSourceTreeViewNodePresenter(guiPlugin),
-                                             new RetentionNodePresenter(guiPlugin),
-                                             new ObservationPointTreeViewNodePresenter(guiPlugin),
-                                             new CrossSectionSectionTypeTreeViewNodePresenter(guiPlugin),
-                                             new CrossSectionSectionTypesTreeViewNodePresenter(guiPlugin),
-                                             new SharedCrossSectionDefinitionTreeViewNodePresenter(guiPlugin),
-                                             new SharedCrossSectionDefinitionsTreeViewNodePresenter(guiPlugin),
-                                             new NetworkRoutesTreeViewNodePresenter(guiPlugin),
-                                             new NetworkRouteTreeViewNodePresenter(guiPlugin),
-                                             new CompositeStructureTreeViewNodePresenter(guiPlugin),
-                                             new PumpTreeViewNodePresenter(guiPlugin),
-                                             new CulvertTreeViewNodePresenter(guiPlugin),
-                                             new WeirTreeViewNodePresenter(guiPlugin),
-                                             new BridgeTreeViewNodePresenter(guiPlugin),
-                                             new ExtraRestanceTreeViewNodePresenter(guiPlugin),
-                                             new CatchmentsTreeViewNodePresenter(guiPlugin),
-                                             new CatchmentTreeViewNodePresenter(guiPlugin),
-                                             new WasteWaterTreatmentPlantsTreeViewNodePresenter(guiPlugin),
-                                             new WasteWaterTreatmentPlantTreeViewNodePresenter(guiPlugin),
-                                             new RunoffBoundariesTreeViewNodePresenter(guiPlugin),
-                                             new RunoffBoundaryTreeViewNodePresenter(guiPlugin)
-                                         };
-
-            foreach (var treeNodePresenter in treeNodePresenters)
-            {
-                TreeView.NodePresenters.Add(treeNodePresenter);
-            }
-        }
-
         public bool SynchronizingGuiSelection { get; private set; }
-
-        private void GuiSelectionChanged(object sender, SelectedItemChangedEventArgs e)
-        {
-            IFeature selectedFeature = null;
-
-            // Try to select the network object in the treeview
-            if (gui.Selection is IFeature)
-            {
-                selectedFeature = (IFeature) gui.Selection;
-            }
-            else if (gui.Selection is IEnumerable<IFeature>)
-            {
-                var features = ((IEnumerable<IFeature>)gui.Selection).ToList();
-                if (features.Count == 0) return;
-
-                selectedFeature = features[0];
-            }
-
-            if (selectedFeature == null) return;
-
-            // Search by comparing the feature to all the node tags
-            var treeNode = TreeView.GetNodeByTag(selectedFeature);
-            if (treeNode == null) return;
-
-            // The node correspoinding to the feature was found: select it
-            SynchronizingGuiSelection = true;
-            TreeView.SelectedNode = treeNode;
-            SynchronizingGuiSelection = false;
-        }
-
-        #region IView Members
-
-        object IView.Data
-        {
-            get { return region; }
-            set { Region = (IHydroNetwork) value; }
-        }
-
-        public IHydroRegion Region
-        {
-            get { return region; }
-            set
-            {
-                if (region == value)
-                {
-                    return;
-                }
-
-                SynchronizingGuiSelection = true;
-                region = value;
-
-                TreeView.Data = Region;
-
-                SynchronizingGuiSelection = false;
-            }
-        }
-        
-        public Image Image
-        {
-            get { return Properties.Resources.network_branches; }
-            set { }
-        }
-
-        public void EnsureVisible(object item) { }
-        public ViewInfo ViewInfo { get; set; }
-
-        public TreeView TreeView { get; }
-
-        #endregion
 
         public IMenuItem GetContextMenu(object node, object tag)
         {
-            ITreeNode treeNode = (ITreeNode)node;
+            var treeNode = (ITreeNode) node;
             SelectedRegion = GetParentRegionFromNode(node);
 
-            var isActiveViewMapView = gui.DocumentViews.ActiveView.GetViewsOfType<MapView>().Any();
+            bool isActiveViewMapView = gui.DocumentViews.ActiveView.GetViewsOfType<MapView>().Any();
             if (tag is IHydroNetwork)
             {
                 return new MenuItemContextMenuStripAdapter(contextMenuNetwork);
             }
+
             if (tag is IEventedList<Route>)
             {
                 return new MenuItemContextMenuStripAdapter(contextMenuRoutes);
             }
+
             if (tag is IEventedList<ICrossSectionDefinition>)
             {
                 return new MenuItemContextMenuStripAdapter(contextMenuSharedCrossSectionDefinitions);
             }
+
             if (tag is ICrossSectionDefinition)
             {
                 var strip = new ContextMenuStrip();
@@ -209,45 +97,151 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
                 buttonDataItemRename.Enabled = true;
                 showUsageToolStripMenuItem.Visible = true;
                 setAsDefaultToolStripMenuItem.Visible = true;
-                setAsDefaultToolStripMenuItem.Enabled = (SelectedNetwork != null && SelectedNetwork.DefaultCrossSectionDefinition != tag);
+                setAsDefaultToolStripMenuItem.Enabled = SelectedNetwork != null && SelectedNetwork.DefaultCrossSectionDefinition != tag;
                 placeOnEmptyBranchesToolStripMenuItem.Visible = CheckIfExistsEmptyBranchesWithinNetwork();
                 return new MenuItemContextMenuStripAdapter(strip);
             }
+
             if (tag is IEventedList<CrossSectionSectionType>)
             {
                 return new MenuItemContextMenuStripAdapter(contextMenuCrossSectionSectionTypes);
             }
+
             if (tag is CrossSectionSectionType)
             {
                 var strip = new ContextMenuStrip();
                 strip.Items.Add(buttonMenuFeatureDelete);
                 ITreeNodePresenter p = treeNode.Presenter;
-                var parentNodeData = TreeView.SelectedNode.Parent.Tag;
+                object parentNodeData = TreeView.SelectedNode.Parent.Tag;
                 buttonMenuFeatureDelete.Enabled = p.CanRemove(parentNodeData, tag);
                 return new MenuItemContextMenuStripAdapter(strip);
             }
+
             if (tag is IChannel)
             {
                 buttonMenuBranchZoomTo.Enabled = isActiveViewMapView;
                 return new MenuItemContextMenuStripAdapter(contextMenuBranch);
             }
+
             if (tag is HydroRegion)
             {
                 return NetworkEditorGuiPlugin.Instance.GetContextMenu(node, tag);
             }
+
             if (tag is IFeature && TreeView.SelectedNode.Parent != null)
             {
                 ITreeNodePresenter p = treeNode.Presenter;
-                
-                var parentNodeData = TreeView.SelectedNode.Parent.Tag;
+
+                object parentNodeData = TreeView.SelectedNode.Parent.Tag;
                 buttonMenuFeatureDelete.Enabled = p.CanRemove(parentNodeData, tag);
                 buttonMenuFeatureCut.Enabled = p.CanRemove(parentNodeData, tag);
                 buttonMenuFeatureZoomTo.Enabled = isActiveViewMapView;
                 var contextMenuAdapter = new MenuItemContextMenuStripAdapter(contextMenuFeature);
-                
+
                 return contextMenuAdapter;
             }
+
             return null;
+        }
+
+        public void WaitUntilAllEventsAreProcessed()
+        {
+            TreeView.WaitUntilAllEventsAreProcessed();
+        }
+
+        public new void Dispose()
+        {
+            gui.SelectionChanged -= GuiSelectionChanged;
+            base.Dispose();
+        }
+
+        private IHydroRegion SelectedRegion { get; set; }
+
+        private IHydroNetwork SelectedNetwork
+        {
+            get
+            {
+                return SelectedRegion as IHydroNetwork;
+            }
+        }
+
+        private void AddNodePresenters(GuiPlugin guiPlugin)
+        {
+            var treeNodePresenters = new ITreeNodePresenter[]
+            {
+                new HydroRegionTreeViewNodePresenter(guiPlugin),
+                new NetworkTreeViewNodePresenter(guiPlugin),
+                new DrainageBasinTreeViewNodePresenter(guiPlugin),
+                new HydroAreaTreeViewNodePresenter(guiPlugin),
+                new CatchmentTypesNodePresenter(guiPlugin),
+                new CatchmentTypeNodePresenter(guiPlugin),
+                new ChannelTreeViewNodePresenter(guiPlugin),
+                new CrossSectionTreeViewNodePresenter(guiPlugin),
+                new LateralSourceTreeViewNodePresenter(guiPlugin),
+                new RetentionNodePresenter(guiPlugin),
+                new ObservationPointTreeViewNodePresenter(guiPlugin),
+                new CrossSectionSectionTypeTreeViewNodePresenter(guiPlugin),
+                new CrossSectionSectionTypesTreeViewNodePresenter(guiPlugin),
+                new SharedCrossSectionDefinitionTreeViewNodePresenter(guiPlugin),
+                new SharedCrossSectionDefinitionsTreeViewNodePresenter(guiPlugin),
+                new NetworkRoutesTreeViewNodePresenter(guiPlugin),
+                new NetworkRouteTreeViewNodePresenter(guiPlugin),
+                new CompositeStructureTreeViewNodePresenter(guiPlugin),
+                new PumpTreeViewNodePresenter(guiPlugin),
+                new CulvertTreeViewNodePresenter(guiPlugin),
+                new WeirTreeViewNodePresenter(guiPlugin),
+                new BridgeTreeViewNodePresenter(guiPlugin),
+                new ExtraRestanceTreeViewNodePresenter(guiPlugin),
+                new CatchmentsTreeViewNodePresenter(guiPlugin),
+                new CatchmentTreeViewNodePresenter(guiPlugin),
+                new WasteWaterTreatmentPlantsTreeViewNodePresenter(guiPlugin),
+                new WasteWaterTreatmentPlantTreeViewNodePresenter(guiPlugin),
+                new RunoffBoundariesTreeViewNodePresenter(guiPlugin),
+                new RunoffBoundaryTreeViewNodePresenter(guiPlugin)
+            };
+
+            foreach (ITreeNodePresenter treeNodePresenter in treeNodePresenters)
+            {
+                TreeView.NodePresenters.Add(treeNodePresenter);
+            }
+        }
+
+        private void GuiSelectionChanged(object sender, SelectedItemChangedEventArgs e)
+        {
+            IFeature selectedFeature = null;
+
+            // Try to select the network object in the treeview
+            if (gui.Selection is IFeature)
+            {
+                selectedFeature = (IFeature) gui.Selection;
+            }
+            else if (gui.Selection is IEnumerable<IFeature>)
+            {
+                List<IFeature> features = ((IEnumerable<IFeature>) gui.Selection).ToList();
+                if (features.Count == 0)
+                {
+                    return;
+                }
+
+                selectedFeature = features[0];
+            }
+
+            if (selectedFeature == null)
+            {
+                return;
+            }
+
+            // Search by comparing the feature to all the node tags
+            ITreeNode treeNode = TreeView.GetNodeByTag(selectedFeature);
+            if (treeNode == null)
+            {
+                return;
+            }
+
+            // The node correspoinding to the feature was found: select it
+            SynchronizingGuiSelection = true;
+            TreeView.SelectedNode = treeNode;
+            SynchronizingGuiSelection = false;
         }
 
         private IHydroRegion GetParentRegionFromNode(object obj)
@@ -259,14 +253,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
                 {
                     return node.Tag as IHydroRegion;
                 }
+
                 node = node.Parent;
             }
+
             return null;
         }
-
-        private IHydroRegion SelectedRegion { get; set; }
-    
-        private IHydroNetwork SelectedNetwork { get { return SelectedRegion as IHydroNetwork; } }
 
         private void handleButtonOpen_Click(object sender, EventArgs e)
         {
@@ -276,7 +268,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
         private void handleButtonAddBranch_Click(object sender, EventArgs e)
         {
             object selectedObject = TreeView.SelectedNode.Tag;
-            var network = (selectedObject as IHydroNetwork);
+            var network = selectedObject as IHydroNetwork;
 
             if (network != null)
             {
@@ -284,7 +276,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
 
                 // HACK: add geometry manually, TODO: probably it should happen automatically in topology rule, and also for nodes
                 channel.Geometry =
-                    new WKTReader().Read(String.Format("LINESTRING({0} 0,{0} 100)", network.Branches.Count*100));
+                    new WKTReader().Read(string.Format("LINESTRING({0} 0,{0} 100)", network.Branches.Count * 100));
 
                 NetworkHelper.AddChannelToHydroNetwork(network, channel);
                 channel.Name = HydroNetworkHelper.GetUniqueFeatureName(network, channel);
@@ -328,7 +320,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
         private void handleButtonAddPump_Click(object sender, EventArgs e)
         {
             var channel = TreeView.SelectedNode.Tag as IChannel;
-            if (channel == null) return;
+            if (channel == null)
+            {
+                return;
+            }
 
             var branchFeature = new Pump(false);
             BranchStructure.AddStructureToNetwork(branchFeature, channel);
@@ -393,10 +388,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
             }
         }
 
-        private void ButtonMenuFeatureCutClick(object sender, EventArgs e)
-        {
-
-        }
+        private void ButtonMenuFeatureCutClick(object sender, EventArgs e) {}
 
         private void HandleButtonAddCrossSectionClick(object sender, EventArgs e)
         {
@@ -405,12 +397,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
             {
                 return;
             }
-            FormPasteBranchFeature formPasteCrossSection = new FormPasteBranchFeature
-                                                               {
-                                                                   Branch = channel,
-                                                                   Title =
-                                                                       "Insert new default cross section into channel.",
-                                                               };          
+
+            var formPasteCrossSection = new FormPasteBranchFeature
+            {
+                Branch = channel,
+                Title =
+                    "Insert new default cross section into channel.",
+            };
             formPasteCrossSection.textBoxShift.Enabled = true;
             formPasteCrossSection.textBoxShift.Visible = true;
             formPasteCrossSection.labelShift.Visible = true;
@@ -419,12 +412,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
             {
                 return;
             }
-            var crossSection = CrossSection.CreateDefault(CrossSectionType.YZ, channel,
-                                                                       formPasteCrossSection.Chainage);
+
+            ICrossSection crossSection = CrossSection.CreateDefault(CrossSectionType.YZ, channel,
+                                                                    formPasteCrossSection.Chainage);
             channel.BranchFeatures.Add(crossSection);
 
             crossSection.Definition.ShiftLevel(formPasteCrossSection.Shift);
-            crossSection.Name =  HydroNetworkHelper.GetUniqueFeatureName(region,crossSection);
+            crossSection.Name = HydroNetworkHelper.GetUniqueFeatureName(region, crossSection);
             gui.Selection = crossSection;
         }
 
@@ -433,16 +427,15 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
             if (SelectedNetwork != null)
             {
                 var sectionType = new CrossSectionSectionType
-                    {
-                        Name = NetworkHelper.GetUniqueName(HydroNetwork.CrossSectionSectionFormat,
-                                                        SelectedNetwork.CrossSectionSectionTypes, "section")
-                    };
+                {
+                    Name = NetworkHelper.GetUniqueName(HydroNetwork.CrossSectionSectionFormat,
+                                                       SelectedNetwork.CrossSectionSectionTypes, "section")
+                };
 
                 SelectedNetwork.CrossSectionSectionTypes.Add(sectionType);
-
             }
         }
-        
+
         private void ZWTabulatedToolStripMenuItemClick(object sender, EventArgs e)
         {
             AddDefinitionToNetwork(CrossSectionDefinitionZW.CreateDefault());
@@ -463,7 +456,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
                 SelectedNetwork.SharedCrossSectionDefinitions.Add(definition);
             }
         }
-        
+
         private void AddRouteToolStripMenuItemClick(object sender, EventArgs e)
         {
             if (SelectedNetwork != null)
@@ -478,14 +471,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
 
             if (definition != null && SelectedNetwork != null)
             {
-                var usages = definition.FindUsage(SelectedNetwork);
+                IList<ICrossSection> usages = definition.FindUsage(SelectedNetwork);
 
                 string message = string.Format("Cross section definition '{0}' ", definition.Name);
 
                 if (usages.Any())
                 {
-                    var usage = string.Join("\n", usages.Select(
-                        x => string.Format(" {0} at {1}, {2:0.###}", x.Name, x.Branch, x.Chainage)).ToArray());
+                    string usage = string.Join("\n", usages.Select(
+                                                   x => string.Format(" {0} at {1}, {2:0.###}", x.Name, x.Branch, x.Chainage)).ToArray());
 
                     message = string.Format("{0} is used in the following cross sections: \n\n{1}",
                                             message, usage);
@@ -495,7 +488,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
                     message = string.Format("{0} is unused", message);
                 }
 
-                var caption = string.Format("Usage of {0}", definition.Name);
+                string caption = string.Format("Usage of {0}", definition.Name);
 
                 MessageBox.Show(message, caption);
             }
@@ -518,7 +511,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
 
             if (definition != null && SelectedNetwork != null)
             {
-                foreach (var channel in SelectedNetwork.Channels.Where(c => !c.CrossSections.Any()))
+                foreach (IChannel channel in SelectedNetwork.Channels.Where(c => !c.CrossSections.Any()))
                 {
                     var crossSection = new CrossSection(new CrossSectionDefinitionProxy(definition));
                     NetworkHelper.AddBranchFeatureToBranch(crossSection, channel, channel.Length / 2.0);
@@ -530,16 +523,63 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
 
         private bool CheckIfExistsEmptyBranchesWithinNetwork()
         {
-            var channelsWithoutCrossSections = SelectedNetwork != null
-                                                   ? SelectedNetwork.Channels.Where(c => !c.CrossSections.Any())
-                                                   : new Channel[0];
-            var count = channelsWithoutCrossSections.Count();
+            IEnumerable<IChannel> channelsWithoutCrossSections = SelectedNetwork != null
+                                                                     ? SelectedNetwork.Channels.Where(c => !c.CrossSections.Any())
+                                                                     : new Channel[0];
+            int count = channelsWithoutCrossSections.Count();
             return count > 0;
         }
 
-        public void WaitUntilAllEventsAreProcessed()
+        #region IView Members
+
+        object IView.Data
         {
-            TreeView.WaitUntilAllEventsAreProcessed();
+            get
+            {
+                return region;
+            }
+            set
+            {
+                Region = (IHydroNetwork) value;
+            }
         }
+
+        public IHydroRegion Region
+        {
+            get
+            {
+                return region;
+            }
+            set
+            {
+                if (region == value)
+                {
+                    return;
+                }
+
+                SynchronizingGuiSelection = true;
+                region = value;
+
+                TreeView.Data = Region;
+
+                SynchronizingGuiSelection = false;
+            }
+        }
+
+        public Image Image
+        {
+            get
+            {
+                return Resources.network_branches;
+            }
+            set {}
+        }
+
+        public void EnsureVisible(object item) {}
+        public ViewInfo ViewInfo { get; set; }
+
+        public TreeView TreeView { get; }
+
+        #endregion
     }
 }

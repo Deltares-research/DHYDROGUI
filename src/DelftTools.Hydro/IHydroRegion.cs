@@ -21,7 +21,7 @@ namespace DelftTools.Hydro
         IEventedList<HydroLink> Links { get; set; }
 
         /// <summary>
-        /// Add a new link between between <paramref name="source" /> and <paramref name="target" />.
+        /// Add a new link between between <paramref name="source"/> and <paramref name="target"/>.
         /// </summary>
         /// <param name="source"> </param>
         /// <param name="target"> </param>
@@ -29,7 +29,7 @@ namespace DelftTools.Hydro
         HydroLink AddNewLink(IHydroObject source, IHydroObject target);
 
         /// <summary>
-        /// Remove link from this hydro region and from the <paramref name="source" /> and <paramref name="target" />
+        /// Remove link from this hydro region and from the <paramref name="source"/> and <paramref name="target"/>
         /// </summary>
         /// <param name="source"> </param>
         /// <param name="target"> </param>

@@ -11,6 +11,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.Properties
     [DisplayName("Mathematical Expression")]
     public class MathematicalExpressionProperties : ObjectProperties<MathematicalExpression>
     {
+        [Browsable(false)]
+        public override object Data
+        {
+            get => data;
+            set => data = (MathematicalExpression) value;
+        }
+
         [ResourcesDisplayName(typeof(Resources), "Common_Name_DisplayName")]
         [ResourcesCategory(typeof(Resources), "Categories_General")]
         [PropertyOrder(1)]
@@ -33,13 +40,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.Properties
         {
             get => data.Expression;
             set => data.Expression = value;
-        }
-
-        [Browsable(false)]
-        public override object Data
-        {
-            get => data;
-            set => data = (MathematicalExpression) value;
         }
 
         private KeyValuePair<string, string>[] GetInputs()

@@ -8,21 +8,21 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO.HydFileElement
     /// <typeparam name="T"> Type of the property value. </typeparam>
     public class KeyValueElement<T> : IHydFileElement
     {
-        public T Value { get; protected set; }
-
         private readonly Action<HydFileData, T> dataSetAction;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="KeyValueElement{T}" /> class.
+        /// Initializes a new instance of the <see cref="KeyValueElement{T}"/> class.
         /// </summary>
         /// <param name="func">
-        /// The function that applies <see cref="Value" /> to an instance
-        /// of <see cref="HydFileData" />. Cannot be null.
+        /// The function that applies <see cref="Value"/> to an instance
+        /// of <see cref="HydFileData"/>. Cannot be null.
         /// </param>
         public KeyValueElement(Action<HydFileData, T> func)
         {
             dataSetAction = func;
         }
+
+        public T Value { get; protected set; }
 
         public void SetDataTo(HydFileData hydFileData)
         {

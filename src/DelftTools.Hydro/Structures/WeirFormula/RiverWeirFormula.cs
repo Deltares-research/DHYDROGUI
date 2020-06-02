@@ -21,26 +21,6 @@ namespace DelftTools.Hydro.Structures.WeirFormula
         }
 
         /// <summary>
-        /// Creates a RiverWeirFormula with default values as found in Sobek.
-        /// </summary>
-        /// <returns> </returns>
-        public static RiverWeirFormula CreateDefault()
-        {
-            var riverWeirFormula = new RiverWeirFormula
-            {
-                CorrectionCoefficientNeg = 1,
-                CorrectionCoefficientPos = 1,
-                SubmergeLimitNeg = 0.82,
-                SubmergeLimitPos = 0.82
-            };
-            riverWeirFormula.SubmergeReductionPos = CrestBroadSubmergeReduction;
-            riverWeirFormula.SubmergeReductionNeg = CrestBroadSubmergeReduction;
-            return riverWeirFormula;
-        }
-
-        public virtual string Name => "Weir with detailed description of crest (River weir)";
-
-        /// <summary>
         /// Correction coefficient flow direction(pos_cwcoef)
         /// </summary>
         public virtual double CorrectionCoefficientPos { get; set; }
@@ -72,11 +52,7 @@ namespace DelftTools.Hydro.Structures.WeirFormula
         /// </summary>
         public virtual double SubmergeLimitNeg { get; set; }
 
-        public virtual bool IsRectangle => true;
-
         public virtual bool IsGated => false;
-
-        public virtual bool HasFlowDirection => false;
 
         public static IFunction CrestBroadSubmergeReduction
         {
@@ -147,6 +123,30 @@ namespace DelftTools.Hydro.Structures.WeirFormula
                 submergeReduction[1.00] = 0.0;
                 return submergeReduction;
             }
+        }
+
+        public virtual string Name => "Weir with detailed description of crest (River weir)";
+
+        public virtual bool IsRectangle => true;
+
+        public virtual bool HasFlowDirection => false;
+
+        /// <summary>
+        /// Creates a RiverWeirFormula with default values as found in Sobek.
+        /// </summary>
+        /// <returns> </returns>
+        public static RiverWeirFormula CreateDefault()
+        {
+            var riverWeirFormula = new RiverWeirFormula
+            {
+                CorrectionCoefficientNeg = 1,
+                CorrectionCoefficientPos = 1,
+                SubmergeLimitNeg = 0.82,
+                SubmergeLimitPos = 0.82
+            };
+            riverWeirFormula.SubmergeReductionPos = CrestBroadSubmergeReduction;
+            riverWeirFormula.SubmergeReductionNeg = CrestBroadSubmergeReduction;
+            return riverWeirFormula;
         }
 
         public virtual object Clone()

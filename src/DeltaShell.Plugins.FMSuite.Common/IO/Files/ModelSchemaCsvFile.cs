@@ -13,10 +13,9 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files
         private const int descriptionIndex = 15;
         private const int unitIndex = 16;
 
-        private string FileGroupName { get; set; }
-
         /// <summary>
-        /// Reads <see cref="ModelPropertyDefinition"/> objects from csv and returns them in <see cref="ModelPropertySchema{TDefinition}"/> object.
+        /// Reads <see cref="ModelPropertyDefinition"/> objects from csv and returns them in
+        /// <see cref="ModelPropertySchema{TDefinition}"/> object.
         /// </summary>
         /// <typeparam name="TDef">The type of <see cref="ModelPropertyDefinition"/>.</typeparam>
         /// <param name="filePath">The absolute path to the file.</param>
@@ -41,6 +40,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files
                 }
             }
         }
+
+        private string FileGroupName { get; set; }
 
         private ModelPropertySchema<TDef> ReadModelPropertySchema<TDef>() where TDef : ModelPropertyDefinition, new()
         {
@@ -74,7 +75,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files
             guiPropertyGroups.ForEach(kvp => { schema.GuiPropertyGroups.Add(kvp); });
 
             IEnumerable<KeyValuePair<string, ModelPropertyGroup>> modelDefinitionCategories = ReadModelDefinitionCategories();
-            modelDefinitionCategories.ForEach(action: kvp => { schema.ModelDefinitionCategory.Add(kvp); });
+            modelDefinitionCategories.ForEach(kvp => { schema.ModelDefinitionCategory.Add(kvp); });
         }
 
         private IEnumerable<KeyValuePair<string, ModelPropertyGroup>> ReadGuiPropertyGroups()

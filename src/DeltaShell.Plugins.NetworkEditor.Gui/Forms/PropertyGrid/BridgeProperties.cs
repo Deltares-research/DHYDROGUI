@@ -19,16 +19,28 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [PropertyOrder(0)]
         public string Name
         {
-            get { return data.Name; }
-            set { data.Name = value ; }
+            get
+            {
+                return data.Name;
+            }
+            set
+            {
+                data.Name = value;
+            }
         }
-        
+
         [Category("General")]
         [PropertyOrder(1)]
         public string LongName
         {
-            get { return data.LongName; }
-            set { data.LongName = value; }
+            get
+            {
+                return data.LongName;
+            }
+            set
+            {
+                data.LongName = value;
+            }
         }
 
         [Description("Cross sectional bridge shape")]
@@ -37,8 +49,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [PropertyOrder(2)]
         public BridgeType BridgeType
         {
-            get { return data.BridgeType; }
-            set { data.BridgeType = value; }
+            get
+            {
+                return data.BridgeType;
+            }
+            set
+            {
+                data.BridgeType = value;
+            }
         }
 
         [Description("Length of the bridge (along the branch).")]
@@ -48,8 +66,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [DynamicReadOnly]
         public double Length
         {
-            get { return data.Length; }
-            set { data.Length= value; }
+            get
+            {
+                return data.Length;
+            }
+            set
+            {
+                data.Length = value;
+            }
         }
 
         [Description("Direction in which flow is allowed.")]
@@ -57,8 +81,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [PropertyOrder(4)]
         public FlowDirection AllowedFlowDirection
         {
-            get { return data.FlowDirection; }
-            set { data.FlowDirection= value; }
+            get
+            {
+                return data.FlowDirection;
+            }
+            set
+            {
+                data.FlowDirection = value;
+            }
         }
 
         [Description("Inlet loss")]
@@ -67,8 +97,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [DynamicReadOnly]
         public double InletLoss
         {
-            get { return data.InletLossCoefficient; }
-            set { data.InletLossCoefficient= value; }
+            get
+            {
+                return data.InletLossCoefficient;
+            }
+            set
+            {
+                data.InletLossCoefficient = value;
+            }
         }
 
         [Description("Outlet loss.")]
@@ -77,8 +113,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [DynamicReadOnly]
         public double OutletLoss
         {
-            get { return data.OutletLossCoefficient; }
-            set { data.OutletLossCoefficient = value; }
+            get
+            {
+                return data.OutletLossCoefficient;
+            }
+            set
+            {
+                data.OutletLossCoefficient = value;
+            }
         }
 
         [DisplayName("Roughness type")]
@@ -88,7 +130,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [DynamicReadOnly]
         public BridgeFrictionType FrictionType
         {
-            get { return data.FrictionType; }
+            get
+            {
+                return data.FrictionType;
+            }
             set
             {
                 if (data.FrictionType != value)
@@ -106,8 +151,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [DynamicReadOnly]
         public double Friction
         {
-            get { return data.Friction; }
-            set { data.Friction = value; }
+            get
+            {
+                return data.Friction;
+            }
+            set
+            {
+                data.Friction = value;
+            }
         }
 
         [DisplayName("Groundlayer enabled")]
@@ -117,8 +168,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [DynamicReadOnly]
         public bool GroundlayerEnabled
         {
-            get { return data.GroundLayerEnabled; }
-            set { data.GroundLayerEnabled = value; }
+            get
+            {
+                return data.GroundLayerEnabled;
+            }
+            set
+            {
+                data.GroundLayerEnabled = value;
+            }
         }
 
         [DisplayName("Groundlayer roughness")]
@@ -128,8 +185,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [DynamicReadOnly]
         public double GroundlayerRoughness
         {
-            get { return data.GroundLayerRoughness; }
-            set { data.GroundLayerRoughness = value; }
+            get
+            {
+                return data.GroundLayerRoughness;
+            }
+            set
+            {
+                data.GroundLayerRoughness = value;
+            }
         }
 
         [DisplayName("Groundlayer thickness")]
@@ -139,8 +202,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [DynamicReadOnly]
         public double GroundlayerThickness
         {
-            get { return data.GroundLayerThickness; }
-            set { data.GroundLayerThickness = value; }
+            get
+            {
+                return data.GroundLayerThickness;
+            }
+            set
+            {
+                data.GroundLayerThickness = value;
+            }
         }
 
         [DisplayName("Bed level")]
@@ -150,8 +219,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [DynamicReadOnly]
         public double BottomLevel
         {
-            get { return data.BottomLevel; }
-            set { data.BottomLevel = value; }
+            get
+            {
+                return data.BottomLevel;
+            }
+            set
+            {
+                data.BottomLevel = value;
+            }
         }
 
         [Description("Width")]
@@ -160,8 +235,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [DynamicReadOnly]
         public double Width
         {
-            get { return data.Width; }
-            set { data.Width = value; }
+            get
+            {
+                return data.Width;
+            }
+            set
+            {
+                data.Width = value;
+            }
         }
 
         [Description("Height")]
@@ -170,8 +251,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [DynamicReadOnly]
         public double Height
         {
-            get { return data.Height; }
-            set { data.Height = value; }
+            get
+            {
+                return data.Height;
+            }
+            set
+            {
+                data.Height = value;
+            }
         }
 
         [Category("General")]
@@ -180,7 +267,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [TypeConverter(typeof(AttributeArrayConverter<object>))]
         public AttributeProperties<object>[] Attributes
         {
-            get { return data.Attributes.Select(x => new AttributeProperties<object>(data.Attributes, x.Key)).ToArray(); }
+            get
+            {
+                return data.Attributes.Select(x => new AttributeProperties<object>(data.Attributes, x.Key)).ToArray();
+            }
         }
 
         [Description("Total width of all pillars")]
@@ -189,8 +279,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [DynamicReadOnly]
         public double PillarWidth
         {
-            get { return data.PillarWidth; }
-            set { data.PillarWidth = value; }
+            get
+            {
+                return data.PillarWidth;
+            }
+            set
+            {
+                data.PillarWidth = value;
+            }
         }
 
         [Description("Shape/Form factor")]
@@ -199,8 +295,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [DynamicReadOnly]
         public double ShapeFactor
         {
-            get { return data.ShapeFactor; }
-            set { data.ShapeFactor = value; }
+            get
+            {
+                return data.ShapeFactor;
+            }
+            set
+            {
+                data.ShapeFactor = value;
+            }
         }
 
         [Description("Channel in which the composite structure is located.")]
@@ -208,7 +310,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [Category("Administration")]
         public string Channel
         {
-            get { return data.Channel.ToString(); }
+            get
+            {
+                return data.Channel.ToString();
+            }
         }
 
         [Description("Composite structure in which the structure is located.")]
@@ -216,7 +321,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [Category("Administration")]
         public string CompositeStructure
         {
-            get { return data.ParentStructure.ToString(); }
+            get
+            {
+                return data.ParentStructure.ToString();
+            }
         }
 
         [Description("Chainage of the bridge in the channel on the map.")]
@@ -225,7 +333,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [DisplayName("Chainage (Map)")]
         public double Chainage
         {
-            get { return NetworkHelper.MapChainage(data.ParentStructure); }
+            get
+            {
+                return NetworkHelper.MapChainage(data.ParentStructure);
+            }
         }
 
         [Description("Chainage of the bridge in the channel as used in the simulation.")]
@@ -234,20 +345,26 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [DisplayName("Chainage")]
         public double CompuChainage
         {
-            get { return data.ParentStructure.Chainage; }
-            set { HydroRegionEditorHelper.MoveBranchFeatureTo(data, value); }
+            get
+            {
+                return data.ParentStructure.Chainage;
+            }
+            set
+            {
+                HydroRegionEditorHelper.MoveBranchFeatureTo(data, value);
+            }
         }
 
         [DynamicReadOnlyValidationMethod]
         public bool DynamicReadOnlyValidationMethod(string propertyName)
         {
-            if (propertyName == "Length" || propertyName == "InletLoss" || propertyName == "OutletLoss" || propertyName == "GroundlayerEnabled" || 
+            if (propertyName == "Length" || propertyName == "InletLoss" || propertyName == "OutletLoss" || propertyName == "GroundlayerEnabled" ||
                 propertyName == "FrictionType" || propertyName == "Friction")
             {
                 return data.IsPillar;
             }
 
-            if(propertyName == "GroundlayerThickness" || propertyName == "GroundlayerRoughness")
+            if (propertyName == "GroundlayerThickness" || propertyName == "GroundlayerRoughness")
             {
                 return data.IsPillar || !data.GroundLayerEnabled;
             }

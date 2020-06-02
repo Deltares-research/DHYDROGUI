@@ -3,17 +3,16 @@ using DelftTools.Controls;
 using DelftTools.Hydro;
 using DelftTools.Shell.Gui;
 using DelftTools.Shell.Gui.Swf;
+using DeltaShell.Plugins.NetworkEditor.Gui.Properties;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView.NodePresenters
 {
     public class RunoffBoundaryTreeViewNodePresenter : TreeViewNodePresenterBaseForPluginGui<RunoffBoundary>
     {
-        private static readonly Image BoundaryImage = Properties.Resources.runoff;
+        private static readonly Image BoundaryImage = Resources.runoff;
 
         public RunoffBoundaryTreeViewNodePresenter(GuiPlugin guiPlugin)
-            : base(guiPlugin)
-        {
-        }
+            : base(guiPlugin) {}
 
         public override void UpdateNode(ITreeNode parentNode, ITreeNode node, RunoffBoundary nodeData)
         {
@@ -21,12 +20,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView.NodePre
             UpdateNodeText(nodeData, node);
         }
 
-        protected override bool CanRemove(RunoffBoundary nodeData)
+        public override bool CanRenameNode(ITreeNode node)
         {
             return true;
         }
 
-        public override bool CanRenameNode(ITreeNode node)
+        protected override bool CanRemove(RunoffBoundary nodeData)
         {
             return true;
         }

@@ -34,8 +34,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
     {
         Color ForeColor { get; set; }
         IShapeFeature ShapeFeature { get; set; }
-        void Render(List<Rectangle> usedSpace, IChart chart, Graphics graphics);
         HoverType HoverType { get; set; }
+        void Render(List<Rectangle> usedSpace, IChart chart, Graphics graphics);
     }
 
     public interface IHoverText : IHoverFeature

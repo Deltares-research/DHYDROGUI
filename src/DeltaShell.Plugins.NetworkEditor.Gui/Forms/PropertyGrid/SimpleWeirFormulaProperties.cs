@@ -6,20 +6,16 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
 {
     internal class SimpleWeirFormulaProperties : WeirFormulaProperties
     {
-        public SimpleWeirFormulaProperties(SimpleWeirFormula simpleWeirFormula, IWeir weir) : base(simpleWeirFormula, weir)
-        {
-        }
-
-        private SimpleWeirFormula SimpleWeirFormula
-        {
-            get { return (SimpleWeirFormula) weirFormula; }
-        }
+        public SimpleWeirFormulaProperties(SimpleWeirFormula simpleWeirFormula, IWeir weir) : base(simpleWeirFormula, weir) {}
 
         [Category("General")]
         [DisplayName("Is Gated")]
         public bool IsGated
         {
-            get { return SimpleWeirFormula.IsGated; }
+            get
+            {
+                return SimpleWeirFormula.IsGated;
+            }
         }
 
         [Category("General")]
@@ -27,8 +23,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [Description("Discharge coefficient Ce")]
         public double DischargeCoefficient
         {
-            get { return SimpleWeirFormula.DischargeCoefficient; }
-            set { SimpleWeirFormula.DischargeCoefficient = value; }
+            get
+            {
+                return SimpleWeirFormula.DischargeCoefficient;
+            }
+            set
+            {
+                SimpleWeirFormula.DischargeCoefficient = value;
+            }
         }
 
         [Category("General")]
@@ -36,8 +38,22 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [Description("Lateral contraction Cw")]
         public double LateralContraction
         {
-            get { return SimpleWeirFormula.LateralContraction; }
-            set { SimpleWeirFormula.LateralContraction = value; }
+            get
+            {
+                return SimpleWeirFormula.LateralContraction;
+            }
+            set
+            {
+                SimpleWeirFormula.LateralContraction = value;
+            }
+        }
+
+        private SimpleWeirFormula SimpleWeirFormula
+        {
+            get
+            {
+                return (SimpleWeirFormula) weirFormula;
+            }
         }
     }
 }

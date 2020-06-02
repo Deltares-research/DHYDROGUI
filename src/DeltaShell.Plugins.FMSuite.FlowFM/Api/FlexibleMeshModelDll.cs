@@ -78,24 +78,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
                                                      [In] string parameterName, [In] [Out] ref IntPtr value);
 
         [DllImport(DFLOWFM_DLL_NAME, EntryPoint = "dfm_init_user_timestep",
-            CallingConvention = CallingConvention.Cdecl)]
+                   CallingConvention = CallingConvention.Cdecl)]
         public static extern int dfm_init_user_timestep([In] [Out] ref double targetTime);
 
         [DllImport(DFLOWFM_DLL_NAME, EntryPoint = "dfm_finalize_user_timestep",
-            CallingConvention = CallingConvention.Cdecl)]
+                   CallingConvention = CallingConvention.Cdecl)]
         public static extern int dfm_finalize_user_timestep();
 
         [DllImport(DFLOWFM_DLL_NAME, EntryPoint = "dfm_init_computational_timestep",
-            CallingConvention = CallingConvention.Cdecl)]
+                   CallingConvention = CallingConvention.Cdecl)]
         public static extern int dfm_init_computational_timestep([In] [Out] ref double targetTime,
                                                                  [In] [Out] ref double timeStep);
 
         [DllImport(DFLOWFM_DLL_NAME, EntryPoint = "dfm_run_computational_timestep",
-            CallingConvention = CallingConvention.Cdecl)]
+                   CallingConvention = CallingConvention.Cdecl)]
         public static extern int dfm_run_computational_timestep([In] [Out] ref double actualTimeStep);
 
         [DllImport(DFLOWFM_DLL_NAME, EntryPoint = "dfm_finalize_computational_timestep",
-            CallingConvention = CallingConvention.Cdecl)]
+                   CallingConvention = CallingConvention.Cdecl)]
         public static extern int dfm_finalize_computational_timestep();
 
         [DllImport(DFLOWFM_DLL_NAME, EntryPoint = "get_snapped_feature", CallingConvention = CallingConvention.Cdecl)]

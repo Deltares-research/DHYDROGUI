@@ -80,27 +80,6 @@ namespace DelftTools.Hydro.Helpers
             return route;
         }
 
-        private static int GetAvailableRouteNumber(IHydroNetwork network)
-        {
-            var lastNr = 0;
-
-            foreach (Route route in network.Routes.Reverse())
-            {
-                try
-                {
-                    lastNr = int.Parse(route.Name.Split('_')[1]);
-                    break;
-                }
-                catch (Exception)
-                {
-                    //don't do anything: exception on split or on parse: non standard name
-                    log.DebugFormat("Non-standard name '{0}' detected. Skipping!", route.Name);
-                }
-            }
-
-            return lastNr + 1;
-        }
-
         /// <summary>
         /// Splits a branch at the given coordinate.
         /// All branch features are updated
@@ -112,17 +91,6 @@ namespace DelftTools.Hydro.Helpers
             var lengthIndexedLine = new LengthIndexedLine(branch.Geometry);
             double offset = lengthIndexedLine.Project(coordinate);
             return SplitChannelAtNode(branch, offset);
-        }
-
-        /// <summary>
-        /// Returns the number of networklocation in a coverage for a branch
-        /// </summary>
-        /// <param name="networkCoverage"> </param>
-        /// <param name="branch"> </param>
-        /// <returns> </returns>
-        private static int BranchLocationCount(INetworkCoverage networkCoverage, IChannel branch)
-        {
-            return networkCoverage.Locations.Values.Where(nl => nl.Branch == branch).Count();
         }
 
         /// <summary>
@@ -247,6 +215,246 @@ namespace DelftTools.Hydro.Helpers
             }
 
             discretization.Locations.SkipUniqueValuesCheck = wasSkipping;
+        }
+
+        /// <summary>
+        /// Switches the direction of the branch
+        /// </summary>
+        /// <param name="branch"> </param>
+        public static void ReverseBranch(IBranch branch) // TODO: move to NetworkHelper ... 
+        {
+            var branchReverseAction = new BranchReverseAction(branch);
+            branch.Network.BeginEdit(branchReverseAction);
+
+            INode fromNode = branch.Source;
+            INode toNode = branch.Target;
+
+            branch.Target = null; // Prevents IsConnectedToMultipleBranches from becoming true when false
+            branch.Source = toNode;
+            branch.Target = fromNode;
+
+            // Reverse the linestring geometry
+            var vertices = new List<Coordinate>();
+            for (int i = branch.Geometry.Coordinates.Length - 1; i >= 0; i--)
+            {
+                vertices.Add(new Coordinate(branch.Geometry.Coordinates[i].X, branch.Geometry.Coordinates[i].Y));
+            }
+
+            branch.Geometry = new LineString(vertices.ToArray()); // endGeometry;
+
+            ReverseBranchBranchFeatures(branch);
+
+            branch.Network.EndEdit();
+        }
+
+        /// <summary>
+        /// Removes structureFeatures without structures. StructureFeatures are helper/container
+        /// object that are created/deleted automatically.
+        /// </summary>
+        public static void RemoveUnusedCompositeStructures(IHydroNetwork network)
+        {
+            foreach (ICompositeBranchStructure structure in network
+                                                            .CompositeBranchStructures
+                                                            .Where(s => s.Structures.Count == 0).ToArray())
+            {
+                structure.Branch.BranchFeatures.Remove(structure);
+            }
+        }
+
+        /// <summary>
+        /// Sets the default name of a specific feature.
+        /// </summary>
+        /// <param name="region"> </param>
+        /// <param name="feature"> </param>
+        public static string GetUniqueFeatureName(IHydroRegion region, IFeature feature,
+                                                  bool checkIfNewNameIsNeeded = false)
+        {
+            string featureName = feature.GetEntityType().Name;
+            IHydroRegion fullRegion = region.Parent as IHydroRegion ?? region;
+            IEnumerable<string> hydroObjectNames = fullRegion
+                                                   .AllHydroObjects.Where(f => f.GetEntityType().Name == featureName)
+                                                   .Select(f => f.Name);
+            IEnumerable<string> allLinkNames =
+                fullRegion.AllRegions.OfType<IHydroRegion>().SelectMany(r => r.Links).Select(l => l.Name);
+            IEnumerable<string> allNames = hydroObjectNames.Concat(allLinkNames);
+            var names = new HashSet<string>(allNames);
+
+            if (checkIfNewNameIsNeeded)
+            {
+                PropertyInfo nameProperty = feature.GetType().GetProperty("Name");
+                if (nameProperty != null)
+                {
+                    object currentName = nameProperty.GetValue(feature, null);
+
+                    if (!string.IsNullOrWhiteSpace(currentName as string) && !names.Contains(currentName.ToString()))
+                    {
+                        return currentName.ToString();
+                    }
+                }
+            }
+
+            var i = 1;
+            string uniqueName = featureName + i;
+            while (names.Contains(uniqueName))
+            {
+                i++;
+                uniqueName = featureName + i;
+            }
+
+            return uniqueName;
+        }
+
+        public static void AddStructureToComposite(ICompositeBranchStructure compositeBranchStructure,
+                                                   IStructure1D structure)
+        {
+            structure.Branch = compositeBranchStructure.Branch;
+            structure.ParentStructure = compositeBranchStructure;
+            structure.Chainage = compositeBranchStructure.Chainage;
+            compositeBranchStructure.Structures.Add(structure);
+
+            if (null != compositeBranchStructure.Geometry)
+            {
+                structure.Geometry = (IGeometry) compositeBranchStructure.Geometry.Clone();
+            }
+
+            structure.Branch.BranchFeatures.Add(structure);
+        }
+
+        public static void AddStructureToExistingCompositeStructureOrToANewOne(IStructure1D structure, IBranch branch)
+        {
+            ICompositeBranchStructure compositeBranchStructure = branch
+                                                                 .BranchFeatures.OfType<ICompositeBranchStructure>()
+                                                                 .FirstOrDefault(
+                                                                     f => Math.Abs(f.Chainage - structure.Chainage) <
+                                                                          0.01);
+
+            if (compositeBranchStructure == null)
+            {
+                compositeBranchStructure = new CompositeBranchStructure
+                {
+                    Branch = branch,
+                    Network = branch.Network,
+                    Chainage = structure.Chainage,
+                    Geometry = (IGeometry) structure.Geometry?.Clone()
+                };
+
+                // make new composite structure names unique
+                compositeBranchStructure.Name =
+                    GetUniqueFeatureName(compositeBranchStructure.Network as HydroNetwork, compositeBranchStructure);
+
+                branch.BranchFeatures.Add(compositeBranchStructure);
+            }
+
+            AddStructureToComposite(compositeBranchStructure, structure);
+        }
+
+        /// <summary>
+        /// Removes a structure from the hydro network
+        /// </summary>
+        /// <param name="structure"> </param>
+        public static void RemoveStructure(IStructure1D structure)
+        {
+            IBranch channel = structure.Branch;
+            if (channel == null)
+            {
+                return; // Do nothing if structure is not on a branch
+            }
+
+            channel.Network.BeginEdit("Delete " + structure.Name);
+
+            channel.BranchFeatures.Remove(structure);
+            RemoveFromChannel(structure, channel);
+
+            channel.Network.EndEdit();
+        }
+
+        public static IHydroNetwork GetSnakeHydroNetwork(params Point[] points)
+        {
+            return GetSnakeHydroNetwork(false, points);
+        }
+
+        public static IHydroNetwork GetSnakeHydroNetwork(bool generateIDs, params Point[] points)
+        {
+            var network = new HydroNetwork();
+            AddSnakeNetwork(generateIDs, points, network);
+            return network;
+        }
+
+        public static IHydroNetwork GetSnakeHydroNetwork(int numberOfBranches)
+        {
+            return GetSnakeHydroNetwork(numberOfBranches, false);
+        }
+
+        /// <summary>
+        /// Creates a random network with numberofBranches branches.
+        /// All branches are 100 long and the network is directed to the right.
+        /// </summary>
+        /// <param name="numberOfBranches"> </param>
+        /// <param name="generateIDs"> </param>
+        /// <returns> </returns>
+        public static IHydroNetwork GetSnakeHydroNetwork(int numberOfBranches, bool generateIDs)
+        {
+            IList<Point> points = new List<Point>();
+            // create a random network by moving constantly right
+            double currentX = 0;
+            double currentY = 0;
+            var random = new Random();
+            int numberOfNodes = numberOfBranches + 1;
+            for (var i = 0; i < numberOfNodes; i++)
+            {
+                // generate a network of branches of length 100 moving right by random angle.
+                points.Add(new Point(currentX, currentY));
+                //angle between -90 and +90
+                double angle = random.Next(180) - 90;
+                // x is cos between 0 < 1
+                // y is sin between 1 and -1
+                currentX += 100 * Math.Cos(DegreeToRadian(angle)); // between 0 and 100
+                currentY += 100 * Math.Sin(DegreeToRadian(angle)); // between -100 and 100
+            }
+
+            return GetSnakeHydroNetwork(generateIDs, points.ToArray());
+        }
+
+        public static ICrossSection AddCrossSectionDefinitionToBranch(IBranch branch,
+                                                                      ICrossSectionDefinition crossSectionDefinition,
+                                                                      double offset)
+        {
+            var branchFeature = new CrossSection(crossSectionDefinition);
+            branchFeature.Name = "cross_section";
+            NetworkHelper.AddBranchFeatureToBranch(branchFeature, branch, offset);
+            return branchFeature;
+        }
+
+        private static int GetAvailableRouteNumber(IHydroNetwork network)
+        {
+            var lastNr = 0;
+
+            foreach (Route route in network.Routes.Reverse())
+            {
+                try
+                {
+                    lastNr = int.Parse(route.Name.Split('_')[1]);
+                    break;
+                }
+                catch (Exception)
+                {
+                    //don't do anything: exception on split or on parse: non standard name
+                    log.DebugFormat("Non-standard name '{0}' detected. Skipping!", route.Name);
+                }
+            }
+
+            return lastNr + 1;
+        }
+
+        /// <summary>
+        /// Returns the number of networklocation in a coverage for a branch
+        /// </summary>
+        /// <param name="networkCoverage"> </param>
+        /// <param name="branch"> </param>
+        /// <returns> </returns>
+        private static int BranchLocationCount(INetworkCoverage networkCoverage, IChannel branch)
+        {
+            return networkCoverage.Locations.Values.Where(nl => nl.Branch == branch).Count();
         }
 
         private static void AddGridChainagesAtFixedIntervals(List<double> chainages, bool gridAtFixedLength,
@@ -414,36 +622,6 @@ namespace DelftTools.Hydro.Helpers
         }
 
         /// <summary>
-        /// Switches the direction of the branch
-        /// </summary>
-        /// <param name="branch"> </param>
-        public static void ReverseBranch(IBranch branch) // TODO: move to NetworkHelper ... 
-        {
-            var branchReverseAction = new BranchReverseAction(branch);
-            branch.Network.BeginEdit(branchReverseAction);
-
-            INode fromNode = branch.Source;
-            INode toNode = branch.Target;
-
-            branch.Target = null; // Prevents IsConnectedToMultipleBranches from becoming true when false
-            branch.Source = toNode;
-            branch.Target = fromNode;
-
-            // Reverse the linestring geometry
-            var vertices = new List<Coordinate>();
-            for (int i = branch.Geometry.Coordinates.Length - 1; i >= 0; i--)
-            {
-                vertices.Add(new Coordinate(branch.Geometry.Coordinates[i].X, branch.Geometry.Coordinates[i].Y));
-            }
-
-            branch.Geometry = new LineString(vertices.ToArray()); // endGeometry;
-
-            ReverseBranchBranchFeatures(branch);
-
-            branch.Network.EndEdit();
-        }
-
-        /// <summary>
         /// Update the offsets of the branchFeatures. The location on the map are not changed merely there offset
         /// relative to the start of the branch.
         /// </summary>
@@ -469,127 +647,6 @@ namespace DelftTools.Hydro.Helpers
             }
         }
 
-        /// <summary>
-        /// Removes structureFeatures without structures. StructureFeatures are helper/container
-        /// object that are created/deleted automatically.
-        /// </summary>
-        public static void RemoveUnusedCompositeStructures(IHydroNetwork network)
-        {
-            foreach (ICompositeBranchStructure structure in network
-                                                            .CompositeBranchStructures
-                                                            .Where(s => s.Structures.Count == 0).ToArray())
-            {
-                structure.Branch.BranchFeatures.Remove(structure);
-            }
-        }
-
-        /// <summary>
-        /// Sets the default name of a specific feature.
-        /// </summary>
-        /// <param name="region"> </param>
-        /// <param name="feature"> </param>
-        public static string GetUniqueFeatureName(IHydroRegion region, IFeature feature,
-                                                  bool checkIfNewNameIsNeeded = false)
-        {
-            string featureName = feature.GetEntityType().Name;
-            IHydroRegion fullRegion = region.Parent as IHydroRegion ?? region;
-            IEnumerable<string> hydroObjectNames = fullRegion
-                                                   .AllHydroObjects.Where(f => f.GetEntityType().Name == featureName)
-                                                   .Select(f => f.Name);
-            IEnumerable<string> allLinkNames =
-                fullRegion.AllRegions.OfType<IHydroRegion>().SelectMany(r => r.Links).Select(l => l.Name);
-            IEnumerable<string> allNames = hydroObjectNames.Concat(allLinkNames);
-            var names = new HashSet<string>(allNames);
-
-            if (checkIfNewNameIsNeeded)
-            {
-                PropertyInfo nameProperty = feature.GetType().GetProperty("Name");
-                if (nameProperty != null)
-                {
-                    object currentName = nameProperty.GetValue(feature, null);
-
-                    if (!string.IsNullOrWhiteSpace(currentName as string) && !names.Contains(currentName.ToString()))
-                    {
-                        return currentName.ToString();
-                    }
-                }
-            }
-
-            var i = 1;
-            string uniqueName = featureName + i;
-            while (names.Contains(uniqueName))
-            {
-                i++;
-                uniqueName = featureName + i;
-            }
-
-            return uniqueName;
-        }
-
-        public static void AddStructureToComposite(ICompositeBranchStructure compositeBranchStructure,
-                                                   IStructure1D structure)
-        {
-            structure.Branch = compositeBranchStructure.Branch;
-            structure.ParentStructure = compositeBranchStructure;
-            structure.Chainage = compositeBranchStructure.Chainage;
-            compositeBranchStructure.Structures.Add(structure);
-
-            if (null != compositeBranchStructure.Geometry)
-            {
-                structure.Geometry = (IGeometry) compositeBranchStructure.Geometry.Clone();
-            }
-
-            structure.Branch.BranchFeatures.Add(structure);
-        }
-
-        public static void AddStructureToExistingCompositeStructureOrToANewOne(IStructure1D structure, IBranch branch)
-        {
-            ICompositeBranchStructure compositeBranchStructure = branch
-                                                                 .BranchFeatures.OfType<ICompositeBranchStructure>()
-                                                                 .FirstOrDefault(
-                                                                     f => Math.Abs(f.Chainage - structure.Chainage) <
-                                                                          0.01);
-
-            if (compositeBranchStructure == null)
-            {
-                compositeBranchStructure = new CompositeBranchStructure
-                {
-                    Branch = branch,
-                    Network = branch.Network,
-                    Chainage = structure.Chainage,
-                    Geometry = (IGeometry) structure.Geometry?.Clone()
-                };
-
-                // make new composite structure names unique
-                compositeBranchStructure.Name =
-                    GetUniqueFeatureName(compositeBranchStructure.Network as HydroNetwork, compositeBranchStructure);
-
-                branch.BranchFeatures.Add(compositeBranchStructure);
-            }
-
-            AddStructureToComposite(compositeBranchStructure, structure);
-        }
-
-        /// <summary>
-        /// Removes a structure from the hydro network
-        /// </summary>
-        /// <param name="structure"> </param>
-        public static void RemoveStructure(IStructure1D structure)
-        {
-            IBranch channel = structure.Branch;
-            if (channel == null)
-            {
-                return; // Do nothing if structure is not on a branch
-            }
-
-            channel.Network.BeginEdit("Delete " + structure.Name);
-
-            channel.BranchFeatures.Remove(structure);
-            RemoveFromChannel(structure, channel);
-
-            channel.Network.EndEdit();
-        }
-
         [EditAction]
         private static void RemoveFromChannel(IStructure1D structure, IBranch channel)
         {
@@ -607,18 +664,6 @@ namespace DelftTools.Hydro.Helpers
 
             channel.BranchFeatures.Remove(structure.ParentStructure);
             structure.ParentStructure.Branch = null;
-        }
-
-        public static IHydroNetwork GetSnakeHydroNetwork(params Point[] points)
-        {
-            return GetSnakeHydroNetwork(false, points);
-        }
-
-        public static IHydroNetwork GetSnakeHydroNetwork(bool generateIDs, params Point[] points)
-        {
-            var network = new HydroNetwork();
-            AddSnakeNetwork(generateIDs, points, network);
-            return network;
         }
 
         private static void AddSnakeNetwork(bool generateIDs, Point[] points, IHydroNetwork network)
@@ -652,54 +697,9 @@ namespace DelftTools.Hydro.Helpers
             }
         }
 
-        public static IHydroNetwork GetSnakeHydroNetwork(int numberOfBranches)
-        {
-            return GetSnakeHydroNetwork(numberOfBranches, false);
-        }
-
-        /// <summary>
-        /// Creates a random network with numberofBranches branches.
-        /// All branches are 100 long and the network is directed to the right.
-        /// </summary>
-        /// <param name="numberOfBranches"> </param>
-        /// <param name="generateIDs"> </param>
-        /// <returns> </returns>
-        public static IHydroNetwork GetSnakeHydroNetwork(int numberOfBranches, bool generateIDs)
-        {
-            IList<Point> points = new List<Point>();
-            // create a random network by moving constantly right
-            double currentX = 0;
-            double currentY = 0;
-            var random = new Random();
-            int numberOfNodes = numberOfBranches + 1;
-            for (var i = 0; i < numberOfNodes; i++)
-            {
-                // generate a network of branches of length 100 moving right by random angle.
-                points.Add(new Point(currentX, currentY));
-                //angle between -90 and +90
-                double angle = random.Next(180) - 90;
-                // x is cos between 0 < 1
-                // y is sin between 1 and -1
-                currentX += 100 * Math.Cos(DegreeToRadian(angle)); // between 0 and 100
-                currentY += 100 * Math.Sin(DegreeToRadian(angle)); // between -100 and 100
-            }
-
-            return GetSnakeHydroNetwork(generateIDs, points.ToArray());
-        }
-
         private static double DegreeToRadian(double angle)
         {
             return (Math.PI * angle) / 180.0;
-        }
-
-        public static ICrossSection AddCrossSectionDefinitionToBranch(IBranch branch,
-                                                                      ICrossSectionDefinition crossSectionDefinition,
-                                                                      double offset)
-        {
-            var branchFeature = new CrossSection(crossSectionDefinition);
-            branchFeature.Name = "cross_section";
-            NetworkHelper.AddBranchFeatureToBranch(branchFeature, branch, offset);
-            return branchFeature;
         }
     }
 }

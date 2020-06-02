@@ -21,32 +21,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.ImportersExporters
     public class PlizFileImporterExporter<TParent, TFeat> : Feature2DImportExportBase<TFeat>
         where TFeat : class, IFeature, INameable, new() where TParent : INameable
     {
-        /// <inheritdoc />
-        protected override string ImporterName => $"Features from {FileConstants.PlizFileExtension} file";
-
-        /// <inheritdoc />
-        protected override string ExporterName => $"Features to {FileConstants.PlizFileExtension} file";
-
-        /// <inheritdoc />
+        /// <inheritdoc/>
         public override string FileFilter => $"Feature polyline-z files (*{FileConstants.PlizFileExtension})|*{FileConstants.PlizFileExtension}";
 
-        /// <inheritdoc />
+        /// <inheritdoc/>
         public override string Category => "Feature geometries";
 
-        /// <inheritdoc />
+        /// <inheritdoc/>
         public override string Description => string.Empty;
 
-        /// <inheritdoc />
+        /// <inheritdoc/>
         public override Bitmap Image => Resources.TextDocument;
 
-        /// <inheritdoc />
-        public override IEnumerable<Type> SourceTypes()
-        {
-            yield return typeof(TParent);
-            yield return typeof(IList<TParent>);
-        }
-
-        /// <inheritdoc />
+        /// <inheritdoc/>
         public override IEnumerable<Type> SupportedItemTypes
         {
             get
@@ -87,99 +74,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.ImportersExporters
         /// </value>
         public Action<IList<TFeat>> AfterImportAction { get; set; }
 
-        /// <inheritdoc />
-        protected override IEnumerable<TFeat> Import(string path)
+        /// <inheritdoc/>
+        public override IEnumerable<Type> SourceTypes()
         {
-            if (Path.GetExtension(path) == FileConstants.PlizFileExtension)
-            {
-                return ReadFeaturesFromFile<PlizFile<TFeat>>(path);
-            }
-
-            return Enumerable.Empty<TFeat>();
+            yield return typeof(TParent);
+            yield return typeof(IList<TParent>);
         }
 
-        protected IEnumerable<TFeat> ReadFeaturesFromFile<TFileType>(string path)
-            where TFileType: PliFile<TFeat>, new()
-        {
-            var reader = new TFileType
-            {
-                CreateDelegate = CreateDelegate,
-            };
-            return reader.Read(path, (s, c, t) => ProgressChanged?.Invoke(s, c, t));
-        }
-
-        /// <summary>
-        /// Called when item is importer
-        /// </summary>
-        /// <param name="path">The file path.</param>
-        /// <param name="target">The target to import on.</param>
-        /// <returns></returns>
-        protected override object OnImportItem(string path, object target = null)
-        {
-            if (typeof(TParent).IsAssignableFrom(typeof(TFeat)))
-            {
-                object importedItem = base.OnImportItem(path, target);
-                AfterImportAction?.Invoke(target as IList<TFeat>);
-                return importedItem;
-            }
-
-            if (target is IList<TParent> list)
-            {
-                var featureList = new List<TFeat>();
-                base.OnImportItem(path, featureList);
-                AddOrReplace(list, featureList.Select(CreateParentFromFeature), EqualityComparer);
-            }
-
-            return target;
-        }
-
-        /// <summary>
-        /// Creates the parent from feature.
-        /// </summary>
-        /// <param name="feature">The feature.</param>
-        /// <returns></returns>
-        /// <exception cref="InvalidCastException">
-        /// Thrown when object of type <see cref="TParent"/> cannot be created from type of <see cref="TFeat"/>
-        /// </exception>
-        private TParent CreateParentFromFeature(TFeat feature)
-        {
-            if (CreateFromFeature != null)
-            {
-                return CreateFromFeature(feature);
-            }
-
-            if (feature is TParent)
-            {
-                //prevent compiler from whining
-                object o = feature;
-                return (TParent)o;
-            }
-
-            throw new InvalidCastException(string.Format("Cannot create object of type {0} from feature of type {1}",
-                                                         typeof(TParent), typeof(TFeat)));
-        }
-
-
-        /// <inheritdoc />
-        protected override void Export(IEnumerable<TFeat> features, string path)
-        {
-            if (Path.GetExtension(path) == FileConstants.PlizFileExtension)
-            {
-                WriteFeaturesToFile<PlizFile<TFeat>>(path, features);
-            }
-        }
-
-        protected void WriteFeaturesToFile<TFileType>(string path, IEnumerable<TFeat> features)
-            where TFileType : PliFile<TFeat>, new()
-        {
-            var writer = new TFileType
-            {
-                CreateDelegate = CreateDelegate,
-            };
-            writer.Write(path, features);
-        }
-
-        /// <inheritdoc />
+        /// <inheritdoc/>
         public override bool Export(object item, string path)
         {
             string file = path;
@@ -231,6 +133,103 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.ImportersExporters
 
             AfterExportActionDelegate?.Invoke(itemsToExport);
             return true;
+        }
+
+        /// <inheritdoc/>
+        protected override string ImporterName => $"Features from {FileConstants.PlizFileExtension} file";
+
+        /// <inheritdoc/>
+        protected override string ExporterName => $"Features to {FileConstants.PlizFileExtension} file";
+
+        /// <inheritdoc/>
+        protected override IEnumerable<TFeat> Import(string path)
+        {
+            if (Path.GetExtension(path) == FileConstants.PlizFileExtension)
+            {
+                return ReadFeaturesFromFile<PlizFile<TFeat>>(path);
+            }
+
+            return Enumerable.Empty<TFeat>();
+        }
+
+        protected IEnumerable<TFeat> ReadFeaturesFromFile<TFileType>(string path)
+            where TFileType : PliFile<TFeat>, new()
+        {
+            var reader = new TFileType
+            {
+                CreateDelegate = CreateDelegate,
+            };
+            return reader.Read(path, (s, c, t) => ProgressChanged?.Invoke(s, c, t));
+        }
+
+        /// <summary>
+        /// Called when item is importer
+        /// </summary>
+        /// <param name="path">The file path.</param>
+        /// <param name="target">The target to import on.</param>
+        /// <returns></returns>
+        protected override object OnImportItem(string path, object target = null)
+        {
+            if (typeof(TParent).IsAssignableFrom(typeof(TFeat)))
+            {
+                object importedItem = base.OnImportItem(path, target);
+                AfterImportAction?.Invoke(target as IList<TFeat>);
+                return importedItem;
+            }
+
+            if (target is IList<TParent> list)
+            {
+                var featureList = new List<TFeat>();
+                base.OnImportItem(path, featureList);
+                AddOrReplace(list, featureList.Select(CreateParentFromFeature), EqualityComparer);
+            }
+
+            return target;
+        }
+
+        /// <inheritdoc/>
+        protected override void Export(IEnumerable<TFeat> features, string path)
+        {
+            if (Path.GetExtension(path) == FileConstants.PlizFileExtension)
+            {
+                WriteFeaturesToFile<PlizFile<TFeat>>(path, features);
+            }
+        }
+
+        protected void WriteFeaturesToFile<TFileType>(string path, IEnumerable<TFeat> features)
+            where TFileType : PliFile<TFeat>, new()
+        {
+            var writer = new TFileType
+            {
+                CreateDelegate = CreateDelegate,
+            };
+            writer.Write(path, features);
+        }
+
+        /// <summary>
+        /// Creates the parent from feature.
+        /// </summary>
+        /// <param name="feature">The feature.</param>
+        /// <returns></returns>
+        /// <exception cref="InvalidCastException">
+        /// Thrown when object of type <see cref="TParent"/> cannot be created from type of <see cref="TFeat"/>
+        /// </exception>
+        private TParent CreateParentFromFeature(TFeat feature)
+        {
+            if (CreateFromFeature != null)
+            {
+                return CreateFromFeature(feature);
+            }
+
+            if (feature is TParent)
+            {
+                //prevent compiler from whining
+                object o = feature;
+                return (TParent) o;
+            }
+
+            throw new InvalidCastException(string.Format("Cannot create object of type {0} from feature of type {1}",
+                                                         typeof(TParent), typeof(TFeat)));
         }
 
         /// <summary>

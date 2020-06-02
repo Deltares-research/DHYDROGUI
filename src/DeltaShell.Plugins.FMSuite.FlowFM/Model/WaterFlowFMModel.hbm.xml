@@ -6,11 +6,11 @@
   <joined-subclass name="DeltaShell.Plugins.FMSuite.FlowFM.Model.WaterFlowFMModel" lazy="false"
                    extends="DelftTools.Shell.Core.Workflow.IModel, DelftTools.Shell.Core" table="fm_model">
     <key column="project_item_id" />
-    
-    <property name="Path"/>
+
+    <property name="Path" />
 
     <!--This is required because otherwise NHibernate will not notice we need to be saved-->
-    <property name="dirtyCounter" access="field"/>
+    <property name="dirtyCounter" access="field" />
 
   </joined-subclass>
 </hibernate-mapping>

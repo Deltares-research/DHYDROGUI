@@ -16,12 +16,12 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Snapping
     {
         public override SnapResult Execute(IFeature sourceFeature, Tuple<IFeature, ILayer>[] candidates, IGeometry sourceGeometry, IList<IFeature> snapTargets, Coordinate worldPos, Envelope envelope, int trackingIndex)
         {
-            var isMoving = sourceFeature != null; //existing node: moving
-             
+            bool isMoving = sourceFeature != null; //existing node: moving
+
             if (isMoving)
             {
                 var point = new Point(worldPos);
-                return new SnapResult(point.Coordinates[0], null, null, point, 0, 0) { Rule = this };
+                return new SnapResult(point.Coordinates[0], null, null, point, 0, 0) {Rule = this};
             }
 
             return base.Execute(sourceFeature, candidates, sourceGeometry, snapTargets, worldPos, envelope, trackingIndex);

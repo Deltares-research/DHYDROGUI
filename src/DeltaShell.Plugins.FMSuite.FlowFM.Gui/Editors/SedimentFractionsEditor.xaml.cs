@@ -11,6 +11,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
     public partial class SedimentFractionsEditor : UserControl
     {
         private readonly SedimentFractionsEditorViewModel viewModel = new SedimentFractionsEditorViewModel();
+
         public SedimentFractionsEditor(IEventedList<ISedimentFraction> sedimentFractions, IEventedList<ISedimentProperty> sedimentOverallProperties)
         {
             InitializeComponent();

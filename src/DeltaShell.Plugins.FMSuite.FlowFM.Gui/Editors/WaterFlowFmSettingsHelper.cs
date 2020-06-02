@@ -23,9 +23,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
         /// <param name="gui"> The GUI.</param>
         /// <returns>
         /// IF model != null THEN
-        ///   An ObservableCollection containing all the relevant WpfGuiCategories
+        /// An ObservableCollection containing all the relevant WpfGuiCategories
         /// ELSE
-        ///   An empty ObservableCollection
+        /// An empty ObservableCollection
         /// </returns>
         public static ObservableCollection<WpfGuiCategory> GetWpfGuiCategories(WaterFlowFMModel model, IGui gui)
         {
@@ -34,7 +34,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
                 return new ObservableCollection<WpfGuiCategory>();
             }
 
-            List<WpfGuiCategory> wpfGuiCategories = 
+            List<WpfGuiCategory> wpfGuiCategories =
                 GetWaterFlowFmSettings(model).FieldDescriptions
                                              .GroupBy(fd => fd.Category)
                                              .Select(gp => new WpfGuiCategory(gp.Key, gp.ToList()))
@@ -52,17 +52,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             //Extract the UiDescription
             var groupsToSkip = new List<string>(0);
             var waterFlowFmGuiPropertyExtractor = new WaterFlowFMGuiPropertyExtractor(model);
-            var uiProperties = waterFlowFmGuiPropertyExtractor.ExtractObjectDescription(groupsToSkip);
+            ObjectUIDescription uiProperties = waterFlowFmGuiPropertyExtractor.ExtractObjectDescription(groupsToSkip);
             return ExtendedUiProperties(model, uiProperties);
         }
 
         private static void SetFlowFmExtraSettings(IModel model, IGui gui, IList<WpfGuiCategory> wpfCategories)
         {
-            if (!(model is WaterFlowFMModel)) return;
+            if (!(model is WaterFlowFMModel))
+            {
+                return;
+            }
 
             var fmModel = model as WaterFlowFMModel;
             //General settings
-            var generalCategory = wpfCategories.FirstOrDefault(c => c.CategoryName.ToLower().Equals("general"));
+            WpfGuiCategory generalCategory = wpfCategories.FirstOrDefault(c => c.CategoryName.ToLower().Equals("general"));
             if (generalCategory != null)
             {
                 var depthlayers = new WpfGuiProperty(new FieldUIDescription(d => fmModel.DepthLayerDefinition?.Description, null, o => true, o => true)
@@ -101,7 +104,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
                 generalCategory.AddWpfGuiProperty(coordSys);
             }
 
-            var icCategory = wpfCategories.FirstOrDefault(c => c.CategoryName.ToLower().Equals("initial conditions"));
+            WpfGuiCategory icCategory = wpfCategories.FirstOrDefault(c => c.CategoryName.ToLower().Equals("initial conditions"));
             if (icCategory != null)
             {
                 var coverageLayers = new WpfGuiProperty(new FieldUIDescription(d => EditCoverageLayersHelper.DepthLayersToString(model), null, o => true, o => true)
@@ -124,7 +127,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             //Add more settings
             //Use the FieldUIDescription to generate the getters and the enable / disable functions.
             Func<object, bool> isEnabledFunc = o => true;
-            Func<object, bool> isVisibleFunc = o => (o is WaterFlowFMModel) && (o as WaterFlowFMModel).UseMorSed;
+            Func<object, bool> isVisibleFunc = o => o is WaterFlowFMModel && (o as WaterFlowFMModel).UseMorSed;
             var fieldUi = new FieldUIDescription(null, null, isEnabledFunc, isVisibleFunc);
             var fieldUiDescriptions = new List<FieldUIDescription>();
             fieldUiDescriptions.Add(fieldUi);
@@ -137,28 +140,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
 
             wpfCategories.Add(sedimentCategory);
 
-            var morphologyCategory = wpfCategories.FirstOrDefault(wCat => wCat.CategoryName.ToLower() == "morphology");
+            WpfGuiCategory morphologyCategory = wpfCategories.FirstOrDefault(wCat => wCat.CategoryName.ToLower() == "morphology");
             if (morphologyCategory != null)
             {
                 morphologyCategory.CategoryVisibility = () => fmModel.UseMorSed;
             }
 
-            var tracersCategory = new WpfGuiSubCategory("Tracers", new List<FieldUIDescription>{ new FieldUIDescription(null,null, o => true, o => true)})
-            {
-                CustomControl = new TracerDefinitionsEditorWpf
-                {
-                    Tracers = fmModel.TracerDefinitions
-                }
-            };
+            var tracersCategory = new WpfGuiSubCategory("Tracers", new List<FieldUIDescription> {new FieldUIDescription(null, null, o => true, o => true)}) {CustomControl = new TracerDefinitionsEditorWpf {Tracers = fmModel.TracerDefinitions}};
 
-            var processesCategory = wpfCategories.FirstOrDefault(c => c.CategoryName.ToLower().Equals("processes"));
+            WpfGuiCategory processesCategory = wpfCategories.FirstOrDefault(c => c.CategoryName.ToLower().Equals("processes"));
             processesCategory?.SubCategories.Add(tracersCategory);
         }
 
         /*Extracted from WaterFlowFMModelView.cs */
         private static ObjectUIDescription ExtendedUiProperties(WaterFlowFMModel data, ObjectUIDescription objectDescription)
         {
-            if (data == null) return objectDescription;
+            if (data == null)
+            {
+                return objectDescription;
+            }
 
             // Cache the fieldDescriptions before returning
             FieldUIDescription[] cachedFieldDescriptions = objectDescription.FieldDescriptions.ToArray();
@@ -178,10 +178,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
                         : "Start time must be smaller than stop time";
 
             objectDescription.FieldDescriptions.First(f => f.Name == "AngLat").VisibilityMethod =
-                o => (data.CoordinateSystem == null || !data.CoordinateSystem.IsGeographic);
+                o => data.CoordinateSystem == null || !data.CoordinateSystem.IsGeographic;
 
             objectDescription.FieldDescriptions.First(f => f.Name == "AngLon").VisibilityMethod =
-                o => (data.CoordinateSystem == null || !data.CoordinateSystem.IsGeographic);
+                o => data.CoordinateSystem == null || !data.CoordinateSystem.IsGeographic;
             return objectDescription;
         }
 
@@ -192,9 +192,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
         /// <param name="setValueAction">The action to set the value to the description</param>
         /// <param name="fieldDescriptions">The collection of <see cref="FieldUIDescription"/>.</param>
         /// <param name="parameterName">The name of the parameter to map.</param>
-        /// <exception cref="ArgumentException">Thrown when <paramref name="fieldDescriptions"/>
-        /// has no or multiple definitions of <paramref name="parameterName"/>.</exception>
-        private static void MapDataOntoProperty(Func<object, object> getValueFunc, 
+        /// <exception cref="ArgumentException">
+        /// Thrown when <paramref name="fieldDescriptions"/>
+        /// has no or multiple definitions of <paramref name="parameterName"/>.
+        /// </exception>
+        private static void MapDataOntoProperty(Func<object, object> getValueFunc,
                                                 Action<object, object> setValueAction,
                                                 FieldUIDescription[] fieldDescriptions,
                                                 string parameterName)
@@ -205,7 +207,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
 
             if (descriptionIndex == -1 || descriptionIndex != secondDescriptionIndex)
             {
-               throw new ArgumentException($"Could not find {parameterName} or multiple definitions found.");
+                throw new ArgumentException($"Could not find {parameterName} or multiple definitions found.");
             }
 
             FieldUIDescription currentFieldDescription = fieldDescriptions[descriptionIndex];

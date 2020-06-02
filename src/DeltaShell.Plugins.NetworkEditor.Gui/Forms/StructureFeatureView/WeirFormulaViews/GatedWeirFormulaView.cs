@@ -15,11 +15,15 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView.WeirFo
         }
 
         /// <summary>
-        /// Gets or sets data shown by this view. Usually it is any object in the system which can be shown by some IView derived class.
+        /// Gets or sets data shown by this view. Usually it is any object in the system which can be shown by some IView derived
+        /// class.
         /// </summary>
         public object Data
         {
-            get { return data; }
+            get
+            {
+                return data;
+            }
             set
             {
                 data = (GatedWeirFormula) value;
@@ -30,13 +34,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView.WeirFo
         /// <summary>
         /// Sets or gets image set on the title of the view.
         /// </summary>
-        public Image Image
-        {
-            get;
-            set;
-        }
+        public Image Image { get; set; }
 
-        public void EnsureVisible(object item) { }
         public ViewInfo ViewInfo { get; set; }
+
+        public void EnsureVisible(object item) {}
     }
 }

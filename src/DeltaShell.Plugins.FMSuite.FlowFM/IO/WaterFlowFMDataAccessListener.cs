@@ -22,10 +22,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(WaterFlowFMDataAccessListener));
 
-        private static readonly IDictionary<string, string> updatedDataItemNames = new Dictionary<string, string>()
-        {
-            {"Bathymetry", WaterFlowFMModelDefinition.BathymetryDataItemName}
-        };
+        private static readonly IDictionary<string, string> updatedDataItemNames = new Dictionary<string, string>() {{"Bathymetry", WaterFlowFMModelDefinition.BathymetryDataItemName}};
 
         public override object Clone()
         {

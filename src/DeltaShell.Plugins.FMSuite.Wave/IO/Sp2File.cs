@@ -67,6 +67,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             return data;
         }
 
+        public void Write(IDictionary<Coordinate, IFunction> data, string sp2FilePath) {}
+
         private IEnumerable<Coordinate> ReadCoordinates(int nrOfCoordinates)
         {
             for (var i = 0; i < nrOfCoordinates; ++i)
@@ -80,7 +82,5 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
                 yield return new Coordinate(x, y);
             }
         }
-
-        public void Write(IDictionary<Coordinate, IFunction> data, string sp2FilePath) {}
     }
 }

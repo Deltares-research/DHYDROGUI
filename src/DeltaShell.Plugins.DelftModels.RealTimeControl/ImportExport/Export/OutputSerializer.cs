@@ -11,7 +11,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export
         private readonly Output output;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="OutputSerializer" /> class.
+        /// Initializes a new instance of the <see cref="OutputSerializer"/> class.
         /// </summary>
         /// <param name="output"> The output to serialize. </param>
         public OutputSerializer(Output output)
@@ -44,7 +44,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export
         /// <param name="differentialName"> The differential name. </param>
         /// <returns> The reference xml element. </returns>
         public XElement ToXmlOutputReference(XNamespace xNamespace, string labelName, string integralName,
-                                     string differentialName)
+                                             string differentialName)
         {
             var result = new XElement(xNamespace + "output");
             result.Add(new XElement(xNamespace + labelName, GetXmlName()));

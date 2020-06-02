@@ -9,10 +9,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
 {
     public class FeatureDataSyncer<TFeat, TData> : IDisposable where TFeat : IFeature
     {
-        private IEventedList<TFeat> Features { get; set; }
-        private IEventedList<TData> ModelData { get; set; }
-        private Func<TFeat, TData> CreateDataForFeature { get; set; }
-
         private bool synchronizing;
 
         public FeatureDataSyncer(IEventedList<TFeat> features, IEventedList<TData> modelData,
@@ -24,6 +20,27 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
             features.CollectionChanged += OnFeaturesCollectionChanged;
             modelData.CollectionChanged += OnDataCollectionChanged;
         }
+
+        public void Dispose()
+        {
+            if (Features != null)
+            {
+                Features.CollectionChanged -= OnFeaturesCollectionChanged;
+            }
+
+            if (ModelData != null)
+            {
+                ModelData.CollectionChanged -= OnDataCollectionChanged;
+            }
+
+            Features = null;
+            ModelData = null;
+            CreateDataForFeature = null;
+        }
+
+        private IEventedList<TFeat> Features { get; set; }
+        private IEventedList<TData> ModelData { get; set; }
+        private Func<TFeat, TData> CreateDataForFeature { get; set; }
 
         private void OnFeaturesCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
@@ -156,23 +173,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-        }
-
-        public void Dispose()
-        {
-            if (Features != null)
-            {
-                Features.CollectionChanged -= OnFeaturesCollectionChanged;
-            }
-
-            if (ModelData != null)
-            {
-                ModelData.CollectionChanged -= OnDataCollectionChanged;
-            }
-
-            Features = null;
-            ModelData = null;
-            CreateDataForFeature = null;
         }
     }
 }

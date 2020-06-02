@@ -14,14 +14,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation.Area
 {
     public static class WeirValidator
     {
-        private static DateTime modelStartTime;
-        private static DateTime modelStopTime;
-
         public const string CrestWidthPropertyName = "Crest Width";
         public const string Upstream1WidthPropertyName = "Upstream 1 Width";
         public const string Upstream2WidthPropertyName = "Upstream 2 Width";
         public const string Downstream1WidthPropertyName = "Downstream 1 Width";
         public const string Downstream2WidthPropertyName = "Downstream 2 Width";
+        private static DateTime modelStartTime;
+        private static DateTime modelStopTime;
 
         /// <summary>
         /// Validate the weirs and return any encountered issues.
@@ -62,7 +61,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation.Area
         }
 
         /// <summary>
-        /// Add an issue to this issues if any is encountered for the specified <paramref name="crestWidthValue" />.
+        /// Add an issue to this issues if any is encountered for the specified <paramref name="crestWidthValue"/>.
         /// </summary>
         /// <param name="subjectWeir"> The weir to which the crest width property belongs. </param>
         /// <param name="crestWidthValue"> The crest width value to be evaluated. </param>

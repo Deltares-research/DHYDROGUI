@@ -17,58 +17,13 @@ namespace DelftTools.Hydro.CrossSections
         public const string Floodplain2SectionTypeName = "FloodPlain2";
         private bool skipValidation;
 
+        private FastZWDataTable zwDataTable;
+
         public CrossSectionDefinitionZW() : this("") {}
 
         public CrossSectionDefinitionZW(string name) : base(name)
         {
             SummerDike = new SummerDike {Active = false};
-        }
-
-        private FastZWDataTable zwDataTable;
-
-        private void RowChanging(object sender, LightDataRowChangeEventArgs e)
-        {
-            // here to trigger event
-            BeginEdit(new DefaultEditAction("Row changing"));
-            EndEdit();
-
-            if (skipValidation)
-            {
-                return;
-            }
-
-            if (e.Action == DataRowAction.Add || e.Action == DataRowAction.Change)
-            {
-                ValidateRow((CrossSectionDataSet.CrossSectionZWRow) e.Row);
-            }
-        }
-
-        private void ValidateRow(CrossSectionDataSet.CrossSectionZWRow row)
-        {
-            int rowIndex = zwDataTable.Rows.IndexOf(row);
-            if (rowIndex == -1 && row.StorageWidth > row.Width
-            ) // Sadly, ValidateCellValue cannot do this check when adding a new row :(
-            {
-                throw new ArgumentException("Storage Width cannot exceed Total Width.");
-            }
-
-            Utils.Tuple<string, bool> validationResult = ValidateCellValue(rowIndex, 0, row.Z);
-            if (!validationResult.Second)
-            {
-                throw new ArgumentException(validationResult.First);
-            }
-
-            validationResult = ValidateCellValue(rowIndex, 1, row.Width);
-            if (!validationResult.Second)
-            {
-                throw new ArgumentException(validationResult.First);
-            }
-
-            validationResult = ValidateCellValue(rowIndex, 2, row.StorageWidth);
-            if (!validationResult.Second)
-            {
-                throw new ArgumentException(validationResult.First);
-            }
         }
 
         public override bool GeometryBased => false;
@@ -77,32 +32,73 @@ namespace DelftTools.Hydro.CrossSections
 
         public override IEnumerable<Coordinate> FlowProfile => GetProfile(ZWDataTable, true);
 
-        private static IEnumerable<Coordinate> GetProfile(CrossSectionDataSet.CrossSectionZWDataTable dataTable,
-                                                          bool forStorage = false)
+        public override CrossSectionType CrossSectionType => CrossSectionType.ZW;
+
+        public override LightDataTable RawData => ZWDataTable;
+
+        public virtual FastZWDataTable ZWDataTable
         {
-            List<CrossSectionDataSet.CrossSectionZWRow> sortedData =
-                dataTable.Rows.OrderByDescending(row => row.Z).ToList();
-
-            var isOdd = false;
-
-            if (sortedData.Count > 0)
+            get
             {
-                isOdd = sortedData[sortedData.Count - 1].Width == 0.0;
+                if (zwDataTable == null)
+                {
+                    zwDataTable = new FastZWDataTable();
+                    SubscribeToDataTable();
+                }
+
+                return zwDataTable;
             }
-
-            IList<Coordinate> profile = sortedData
-                                        .Select(row => new Coordinate(
-                                                    -(row.Width - (forStorage ? row.StorageWidth : 0)) / 2.0, row.Z))
-                                        .ToList();
-
-            IEnumerable<Coordinate> secondHalf = isOdd
-                                                     ? profile.Reverse().Skip(1)
-                                                     : profile.Reverse();
-
-            return profile.Concat(secondHalf.Select(c => new Coordinate(c.X * -1, c.Y)));
+            set
+            {
+                UnsubscribeToDataTable();
+                zwDataTable = value;
+                SubscribeToDataTable();
+            }
         }
 
-        public override CrossSectionType CrossSectionType => CrossSectionType.ZW;
+        /// <summary>
+        /// Indicates whether this cross section should be treated as a close profile. Has impact on calculation.
+        /// </summary>
+        public virtual bool IsClosed { get; set; }
+
+        public virtual bool CanHaveSummerDike => true;
+
+        /// <summary>
+        /// Has summerdike activate the properties SummerdikeCrestLevel, SummerdikeFloodSurface, SummerdikeTotalSurface,
+        /// SummerdikeFloodPlainLevel
+        /// </summary>
+
+        public virtual SummerDike SummerDike { get; set; }
+
+        /// <summary>
+        /// TODO: get this under test. this method is called by HydroNetwork when te names of a CS-type changes.
+        /// For example if main is renamed to mains this should result in removing a section.
+        /// </summary>
+        public virtual void RemoveInvalidSections()
+        {
+            string[] validNames = new[]
+            {
+                MainSectionName,
+                Floodplain1SectionTypeName,
+                Floodplain2SectionTypeName
+            };
+            List<CrossSectionSection> crossSectionSections = Sections.ToList();
+            foreach (CrossSectionSection section in crossSectionSections)
+            {
+                if (!validNames.Contains(section.SectionType.Name))
+                {
+                    Sections.Remove(section);
+                }
+            }
+        }
+
+        public static CrossSectionDefinitionZW CreateDefault(string name = "")
+        {
+            var crossSectionZW = new CrossSectionDefinitionZW();
+            crossSectionZW.SetDefaultZWTable();
+            crossSectionZW.Name = name;
+            return crossSectionZW;
+        }
 
         public override Utils.Tuple<string, bool> ValidateCellValue(int rowIndex, int columnIndex, object cellValue)
         {
@@ -159,8 +155,6 @@ namespace DelftTools.Hydro.CrossSections
             return new Utils.Tuple<string, bool>("", true);
         }
 
-        protected override double SectionsMinY => 0.0;
-
         public override void ShiftLevel(double delta)
         {
             BeginEdit(new DefaultEditAction("Shift level"));
@@ -200,15 +194,6 @@ namespace DelftTools.Hydro.CrossSections
 
             return unMirroredIndex;
         }
-
-        public virtual bool CanHaveSummerDike => true;
-
-        /// <summary>
-        /// Has summerdike activate the properties SummerdikeCrestLevel, SummerdikeFloodSurface, SummerdikeTotalSurface,
-        /// SummerdikeFloodPlainLevel
-        /// </summary>
-
-        public virtual SummerDike SummerDike { get; set; }
 
         public override object Clone()
         {
@@ -253,24 +238,76 @@ namespace DelftTools.Hydro.CrossSections
             EndEdit();
         }
 
-        public virtual FastZWDataTable ZWDataTable
-        {
-            get
-            {
-                if (zwDataTable == null)
-                {
-                    zwDataTable = new FastZWDataTable();
-                    SubscribeToDataTable();
-                }
+        protected override double SectionsMinY => 0.0;
 
-                return zwDataTable;
-            }
-            set
+        private void RowChanging(object sender, LightDataRowChangeEventArgs e)
+        {
+            // here to trigger event
+            BeginEdit(new DefaultEditAction("Row changing"));
+            EndEdit();
+
+            if (skipValidation)
             {
-                UnsubscribeToDataTable();
-                zwDataTable = value;
-                SubscribeToDataTable();
+                return;
             }
+
+            if (e.Action == DataRowAction.Add || e.Action == DataRowAction.Change)
+            {
+                ValidateRow((CrossSectionDataSet.CrossSectionZWRow) e.Row);
+            }
+        }
+
+        private void ValidateRow(CrossSectionDataSet.CrossSectionZWRow row)
+        {
+            int rowIndex = zwDataTable.Rows.IndexOf(row);
+            if (rowIndex == -1 && row.StorageWidth > row.Width
+            ) // Sadly, ValidateCellValue cannot do this check when adding a new row :(
+            {
+                throw new ArgumentException("Storage Width cannot exceed Total Width.");
+            }
+
+            Utils.Tuple<string, bool> validationResult = ValidateCellValue(rowIndex, 0, row.Z);
+            if (!validationResult.Second)
+            {
+                throw new ArgumentException(validationResult.First);
+            }
+
+            validationResult = ValidateCellValue(rowIndex, 1, row.Width);
+            if (!validationResult.Second)
+            {
+                throw new ArgumentException(validationResult.First);
+            }
+
+            validationResult = ValidateCellValue(rowIndex, 2, row.StorageWidth);
+            if (!validationResult.Second)
+            {
+                throw new ArgumentException(validationResult.First);
+            }
+        }
+
+        private static IEnumerable<Coordinate> GetProfile(CrossSectionDataSet.CrossSectionZWDataTable dataTable,
+                                                          bool forStorage = false)
+        {
+            List<CrossSectionDataSet.CrossSectionZWRow> sortedData =
+                dataTable.Rows.OrderByDescending(row => row.Z).ToList();
+
+            var isOdd = false;
+
+            if (sortedData.Count > 0)
+            {
+                isOdd = sortedData[sortedData.Count - 1].Width == 0.0;
+            }
+
+            IList<Coordinate> profile = sortedData
+                                        .Select(row => new Coordinate(
+                                                    -(row.Width - (forStorage ? row.StorageWidth : 0)) / 2.0, row.Z))
+                                        .ToList();
+
+            IEnumerable<Coordinate> secondHalf = isOdd
+                                                     ? profile.Reverse().Skip(1)
+                                                     : profile.Reverse();
+
+            return profile.Concat(secondHalf.Select(c => new Coordinate(c.X * -1, c.Y)));
         }
 
         private void UnsubscribeToDataTable()
@@ -292,43 +329,6 @@ namespace DelftTools.Hydro.CrossSections
 
             //need to subscribe to deleted because changed event does not happen when row is removed..
             zwDataTable.RowChanging += RowChanging;
-        }
-
-        /// <summary>
-        /// TODO: get this under test. this method is called by HydroNetwork when te names of a CS-type changes.
-        /// For example if main is renamed to mains this should result in removing a section.
-        /// </summary>
-        public virtual void RemoveInvalidSections()
-        {
-            string[] validNames = new[]
-            {
-                MainSectionName,
-                Floodplain1SectionTypeName,
-                Floodplain2SectionTypeName
-            };
-            List<CrossSectionSection> crossSectionSections = Sections.ToList();
-            foreach (CrossSectionSection section in crossSectionSections)
-            {
-                if (!validNames.Contains(section.SectionType.Name))
-                {
-                    Sections.Remove(section);
-                }
-            }
-        }
-
-        public override LightDataTable RawData => ZWDataTable;
-
-        /// <summary>
-        /// Indicates whether this cross section should be treated as a close profile. Has impact on calculation.
-        /// </summary>
-        public virtual bool IsClosed { get; set; }
-
-        public static CrossSectionDefinitionZW CreateDefault(string name = "")
-        {
-            var crossSectionZW = new CrossSectionDefinitionZW();
-            crossSectionZW.SetDefaultZWTable();
-            crossSectionZW.Name = name;
-            return crossSectionZW;
         }
     }
 }

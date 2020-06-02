@@ -15,15 +15,17 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors
     {
         private bool wasMoved;
 
+        public CatchmentFeatureInteractor(ILayer layer, IFeature feature, VectorStyle vectorStyle, DrainageBasin basin) : base(layer, feature, vectorStyle, basin)
+        {
+            DrainageBasin = basin;
+        }
+
+        public DrainageBasin DrainageBasin { get; set; }
+
         public override IEnumerable<IFeatureRelationInteractor> GetFeatureRelationInteractors(IFeature feature)
         {
             yield return new HydroObjectToHydroLinkRelationInteractor();
             yield return new SubCatchmentRelationInteractor();
-        }
-
-        public CatchmentFeatureInteractor(ILayer layer, IFeature feature, VectorStyle vectorStyle, DrainageBasin basin) : base(layer, feature, vectorStyle, basin)
-        {
-            DrainageBasin = basin;
         }
 
         public override bool MoveTracker(TrackerFeature trackerFeature, double deltaX, double deltaY,
@@ -36,7 +38,7 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors
                 var targetPoint = TargetFeature.Geometry as IPoint;
 
                 //we're moving a sub-catchment directly: keep it within parent
-                var parentCatchment = GetParentCatchment(catchment); //SLOW!
+                Catchment parentCatchment = GetParentCatchment(catchment); //SLOW!
 
                 if (parentCatchment != null)
                 {
@@ -49,7 +51,7 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors
             }
 
             // do the move
-            var movedTracker = base.MoveTracker(trackerFeature, deltaX, deltaY, snapResult);
+            bool movedTracker = base.MoveTracker(trackerFeature, deltaX, deltaY, snapResult);
 
             if (movedTracker)
             {
@@ -68,16 +70,14 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors
             {
                 wasMoved = false;
                 // set catchment default geometry to false: the user has customized it by moving some trackers
-                var catchment = ((Catchment) SourceFeature);
+                var catchment = (Catchment) SourceFeature;
                 if (catchment.IsGeometryDerivedFromAreaSize)
+                {
                     catchment.IsGeometryDerivedFromAreaSize = false;
+                }
             }
-            base.Stop();
-        }
 
-        private Catchment GetParentCatchment(Catchment catchment)
-        {
-            return DrainageBasin.Catchments.FirstOrDefault(c => c.SubCatchments.Contains(catchment));
+            base.Stop();
         }
 
         public override void Delete()
@@ -92,24 +92,14 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors
             }
             else
             {
-                var parentCatchment = GetParentCatchment(catchment);
+                Catchment parentCatchment = GetParentCatchment(catchment);
                 if (parentCatchment != null)
                 {
                     parentCatchment.SubCatchments.Remove(catchment);
                 }
             }
         }
-        
-        protected override bool AllowDeletionCore()
-        {
-            return true;
-        }
 
-        protected override bool AllowMoveCore()
-        {
-            return true;
-        }
-        
         public override void Add(IFeature feature) // TODO: not used?!?
         {
             base.Add(feature);
@@ -131,13 +121,26 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors
             }
         }
 
+        protected override bool AllowDeletionCore()
+        {
+            return true;
+        }
+
+        protected override bool AllowMoveCore()
+        {
+            return true;
+        }
+
+        private Catchment GetParentCatchment(Catchment catchment)
+        {
+            return DrainageBasin.Catchments.FirstOrDefault(c => c.SubCatchments.Contains(catchment));
+        }
+
         private static Polygon GetBoundingPolygon(IGeometry catchmentGeometry)
         {
             //todo..use concave (!) hull algorithm?
-            var boundaryCoordinates = catchmentGeometry.Coordinates;
+            Coordinate[] boundaryCoordinates = catchmentGeometry.Coordinates;
             return new Polygon(new LinearRing(boundaryCoordinates));
         }
-
-        public DrainageBasin DrainageBasin { get; set; }
     }
 }

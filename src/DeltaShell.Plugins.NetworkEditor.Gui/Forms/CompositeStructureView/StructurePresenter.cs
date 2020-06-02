@@ -6,8 +6,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
 {
     public class StructurePresenter : ICanvasEditor
     {
-        ShapeModifyTool ShapeModifyTool { get; set; }
-
         internal StructurePresenter(ShapeModifyTool shapeModifyTool)
         {
             ShapeModifyTool = shapeModifyTool;
@@ -15,12 +13,18 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
 
         public bool CanSelectItem
         {
-            get { return true; }
+            get
+            {
+                return true;
+            }
         }
 
         public bool IsSelectItemActive
         {
-            get { return ShapeModifyTool.ShapeSelectTool.IsActive; }
+            get
+            {
+                return ShapeModifyTool.ShapeSelectTool.IsActive;
+            }
             set
             {
                 if (value)
@@ -32,12 +36,18 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
 
         public bool CanMoveItem
         {
-            get { return true; }
+            get
+            {
+                return true;
+            }
         }
 
         public bool IsMoveItemActive
         {
-            get { return ShapeModifyTool.ShapeMoveTool.IsActive; }
+            get
+            {
+                return ShapeModifyTool.ShapeMoveTool.IsActive;
+            }
             set
             {
                 if (value)
@@ -49,23 +59,38 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
 
         public bool CanMoveItemLinear
         {
-            get { return false; }
+            get
+            {
+                return false;
+            }
         }
 
         public bool IsMoveItemLinearActive
         {
-            get { return false; }
-            set { throw new NotImplementedException(); }
+            get
+            {
+                return false;
+            }
+            set
+            {
+                throw new NotImplementedException();
+            }
         }
 
         public bool CanDeleteItem
         {
-            get { return true; }
+            get
+            {
+                return true;
+            }
         }
 
         public bool IsDeleteItemActive
         {
-            get { return ShapeModifyTool.ShapeDeletePointTool.IsActive; }
+            get
+            {
+                return ShapeModifyTool.ShapeDeletePointTool.IsActive;
+            }
             set
             {
                 if (value)
@@ -77,12 +102,18 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
 
         public bool CanAddPoint
         {
-            get { return true; }
+            get
+            {
+                return true;
+            }
         }
 
         public bool IsAddPointActive
         {
-            get { return ShapeModifyTool.ShapeInsertPointTool.IsActive; }
+            get
+            {
+                return ShapeModifyTool.ShapeInsertPointTool.IsActive;
+            }
             set
             {
                 if (value)
@@ -93,6 +124,15 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
         }
 
         public bool IsRemovePointActive { get; set; }
-        public bool CanRemovePoint { get { return false; } }
+
+        public bool CanRemovePoint
+        {
+            get
+            {
+                return false;
+            }
+        }
+
+        private ShapeModifyTool ShapeModifyTool { get; set; }
     }
 }

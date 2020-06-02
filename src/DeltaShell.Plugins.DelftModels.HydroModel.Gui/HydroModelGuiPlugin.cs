@@ -37,57 +37,52 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui
             InitializeComponent();
         }
 
-        private void InitializeComponent()
-        {
-            modelMergeMenuItem = new ClonableToolStripMenuItem
-            {
-                Name = "mergeModelToolStripMenuItem",
-                Size = new Size(201, 22),
-                Text = "Merge with:"
-            };
-
-            modelMergeMenu = new ContextMenuStrip
-            {
-                Name = "Merge",
-                Size = new Size(202, 48)
-            };
-
-            modelMergeMenu.Items.AddRange(new ToolStripItem[] { modelMergeMenuItem });
-        }
-
         public override string Name
         {
-            get { return "Hydro Model (UI)"; }
+            get
+            {
+                return "Hydro Model (UI)";
+            }
         }
 
         public override string DisplayName
         {
-            get { return "Hydro Model Plugin (UI)"; }
+            get
+            {
+                return "Hydro Model Plugin (UI)";
+            }
         }
 
         public override string Description
         {
-            get { return DelftModels.HydroModel.Properties.Resources.HydroModelApplicationPlugin_Description; }
+            get
+            {
+                return DelftModels.HydroModel.Properties.Resources.HydroModelApplicationPlugin_Description;
+            }
         }
 
         public override string Version
         {
-            get { return GetType().Assembly.GetName().Version.ToString(); }
+            get
+            {
+                return GetType().Assembly.GetName().Version.ToString();
+            }
         }
 
         public override string FileFormatVersion
         {
-            get { return "1.1.0.0"; }
+            get
+            {
+                return "1.1.0.0";
+            }
         }
 
-        public override IEnumerable<PropertyInfo> GetPropertyInfos()
+        public override IGui Gui
         {
-            return Enumerable.Empty<PropertyInfo>();
-        }
-
-        public override IGui Gui 
-        { 
-            get { return base.Gui; }
+            get
+            {
+                return base.Gui;
+            }
             set
             {
                 if (base.Gui != null)
@@ -106,42 +101,43 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui
             }
         }
 
-        [InvokeRequired]
-        private void ActivityRunnerActivityStatusChanged(object sender, ActivityStatusChangedEventArgs e)
+        public override IMapLayerProvider MapLayerProvider
         {
-            if (!(sender is HydroModel) || e.NewStatus != ActivityStatus.Failed ||
-                e.NewStatus == ActivityStatus.Failed && e.OldStatus == ActivityStatus.Executing) return;
+            get
+            {
+                return hydroModelMapLayerProvider;
+            }
+        }
 
-            Gui.CommandHandler.OpenView(sender, typeof(ValidationView));
+        public override IEnumerable<PropertyInfo> GetPropertyInfos()
+        {
+            return Enumerable.Empty<PropertyInfo>();
         }
 
         public override IEnumerable<ViewInfo> GetViewInfoObjects()
         {
             yield return new ViewInfo<HydroModel, HydroModelSettings>
+            {
+                Description = "Hydro Model Settings",
+                GetViewName = (v, o) => o.Name + " Settings",
+                CompositeViewType = typeof(ProjectItemMapView),
+                GetCompositeViewData = o => o,
+                AfterCreate = (v, o) =>
                 {
-                    Description = "Hydro Model Settings",
-                    GetViewName = (v, o) => o.Name + " Settings",
-                    CompositeViewType = typeof(ProjectItemMapView),
-                    GetCompositeViewData = o => o,
-                    AfterCreate = (v, o) =>
-                        {
-                            v.RunCallback = (m) =>
-                                {
-                                    Gui.Selection = m;
-                                    Gui.CommandHandler.RunSelectedModel();
-                                };
-                            v.WorkflowSelectedCallback = (a) =>
-                                {
-                                    Gui.Selection = a;
-                                };
-                            v.AddNewActivityCallback = (m) =>
-                                {
-                                    Gui.Selection = m;
-                                    return Gui.CommandHandler.AddNewModel();
-                                };
-                            v.RemoveActivityCallback = (a) => Gui.CommandHandler.DeleteProjectItem(a);
-                        }
-                };
+                    v.RunCallback = (m) =>
+                    {
+                        Gui.Selection = m;
+                        Gui.CommandHandler.RunSelectedModel();
+                    };
+                    v.WorkflowSelectedCallback = (a) => { Gui.Selection = a; };
+                    v.AddNewActivityCallback = (m) =>
+                    {
+                        Gui.Selection = m;
+                        return Gui.CommandHandler.AddNewModel();
+                    };
+                    v.RemoveActivityCallback = (a) => Gui.CommandHandler.DeleteProjectItem(a);
+                }
+            };
 
             yield return
                 new ViewInfo<DHydroConfigXmlExporter, DHydroExporterDialog> {AfterCreate = (v, o) => v.Gui = Gui};
@@ -154,12 +150,12 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui
                     v.Gui = Gui;
                     v.OnMergeValidate = (destination, source) =>
                     {
-                        var destinationModel = (destination as IModelMerge);
+                        var destinationModel = destination as IModelMerge;
                         return destinationModel == null ? null : destinationModel.ValidateMerge(source as IModelMerge);
                     };
                     v.OnMerge = (destination, source) =>
                     {
-                        var destinationModel = (destination as IModelMerge);
+                        var destinationModel = destination as IModelMerge;
                         return destinationModel != null && destinationModel.Merge(source as IModelMerge, null);
                     };
                 }
@@ -173,11 +169,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui
                     v.OnValidate = delegate(object d) { return o.Validate(); };
                 }
             };
-        }
-
-        public override IMapLayerProvider MapLayerProvider
-        {
-            get { return hydroModelMapLayerProvider; }
         }
 
         public override IEnumerable<ITreeNodePresenter> GetProjectTreeViewNodePresenters()
@@ -202,12 +193,12 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui
                 if (projectExplorerContextMenu != null)
                 {
                     ContextMenuStrip projectExplorerContextMenuStrip =
-                        ((MenuItemContextMenuStripAdapter)projectExplorerContextMenu).ContextMenuStrip;
+                        ((MenuItemContextMenuStripAdapter) projectExplorerContextMenu).ContextMenuStrip;
 
                     List<ClonableToolStripMenuItem> contextMenuItems =
                         projectExplorerContextMenuStrip.Items.OfType<ClonableToolStripMenuItem>()
-                            .Where(i => i.Text == HydroModelGuiProperties.Resources.HydroModelGuiPlugin_GetContextMenu_Validate___)
-                            .ToList();
+                                                       .Where(i => i.Text == HydroModelGuiProperties.Resources.HydroModelGuiPlugin_GetContextMenu_Validate___)
+                                                       .ToList();
 
                     foreach (ClonableToolStripMenuItem menuItem in contextMenuItems)
                     {
@@ -220,19 +211,16 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui
                 {
                     HydroModel[] allCompositeHydroModels = Gui.Application.GetAllModelsInProject().OfType<HydroModel>().ToArray();
                     bool isChildModel = allCompositeHydroModels.Any(m => m.Activities.Contains(hydroModel));
-                    
+
                     Folder folder = GetFolderContaining(hydroModel);
                     if (folder != null && !isChildModel)
                     {
                         var topItem = new ClonableToolStripMenuItem
                         {
-                            Text = Properties.Resources.HydroModelGuiPlugin_GetContextMenu_Turn_into_or_Move_to_Integrated_Model,
+                            Text = HydroModelGuiProperties.Resources.HydroModelGuiPlugin_GetContextMenu_Turn_into_or_Move_to_Integrated_Model,
                         };
 
-                        var upgradeItem = new ClonableToolStripMenuItem
-                        {
-                            Text = Properties.Resources.HydroModelGuiPlugin_GetContextMenu_Turn_into_Integrated_Model
-                        };
+                        var upgradeItem = new ClonableToolStripMenuItem {Text = HydroModelGuiProperties.Resources.HydroModelGuiPlugin_GetContextMenu_Turn_into_Integrated_Model};
                         upgradeItem.Click += (s, e) => hydroModel.UpgradeModelIntoIntegratedModel(folder);
                         topItem.DropDownItems.Add(upgradeItem);
 
@@ -246,23 +234,25 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui
                             var moveItem = new ClonableToolStripMenuItem
                             {
                                 Text =
-                                    Properties.Resources.HydroModelGuiPlugin_GetContextMenu_Move_into_ +
+                                    HydroModelGuiProperties.Resources.HydroModelGuiPlugin_GetContextMenu_Move_into_ +
                                     compositeHydroModel.Name
                             };
                             moveItem.Click += (s, e) =>
                             {
                                 if (
                                     compositeHydroModel.Activities.Any(a => a.GetType().Implements(hydroModel.GetType())) &&
-                                    MessageBox.Show(Properties.Resources.HydroModelGuiPlugin_GetContextMenu_This_will_overwrite_the_existing_model__Are_you_sure_, 
-                                                    Properties.Resources.HydroModelGuiPlugin_GetContextMenu_Overwrite_existing_model_, 
+                                    MessageBox.Show(HydroModelGuiProperties.Resources.HydroModelGuiPlugin_GetContextMenu_This_will_overwrite_the_existing_model__Are_you_sure_,
+                                                    HydroModelGuiProperties.Resources.HydroModelGuiPlugin_GetContextMenu_Overwrite_existing_model_,
                                                     MessageBoxButtons.YesNo) != DialogResult.Yes)
                                 {
                                     return;
                                 }
+
                                 hydroModel.MoveModelIntoIntegratedModel(folder, compositeHydroModel);
                             };
                             topItem.DropDownItems.Add(moveItem);
                         }
+
                         var strip = new ContextMenuStrip();
                         strip.Items.Add(topItem);
                         var contextMenu = new MenuItemContextMenuStripAdapter(strip);
@@ -281,9 +271,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui
                         {
                             CleanFileExplorerContextMenu(data);
                         }
+
                         return mergeMenu;
                     }
                 }
+
                 CleanFileExplorerContextMenu(data);
                 return null;
             }
@@ -309,110 +301,18 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui
                     else
                     {
                         // Data item is persistent, but the Tag is lost. Resetting validation tag item again.
-                        IEnumerable<ClonableToolStripMenuItem> validateItems = 
+                        IEnumerable<ClonableToolStripMenuItem> validateItems =
                             projectExplorerContextMenu.OfType<ClonableToolStripMenuItem>()
-                                                      .Where(mi => mi.Text == HydroModelGuiProperties.Resources.HydroModelGuiPlugin_GetContextMenu_Validate___ && 
+                                                      .Where(mi => mi.Text == HydroModelGuiProperties.Resources.HydroModelGuiPlugin_GetContextMenu_Validate___ &&
                                                                    mi.Tag != data);
 
                         validateItems.ForEach(menuItem => menuItem.Tag = model);
                     }
                 }
             }
+
             CleanFileExplorerContextMenu(data);
             return mergeMenu;
-        }
-
-        private void OnValidateClicked(object sender, EventArgs e)
-        {
-            var model = (HydroModel)((ToolStripItem)sender).Tag;
-            Gui.DocumentViewsResolver.OpenViewForData(model, typeof(ValidationView));
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="data"></param>
-        private void CleanFileExplorerContextMenu(object data)
-        {
-            var projectExplorerContextMenu = Gui.MainWindow.ProjectExplorer.GetContextMenu(null, data);
-            if (projectExplorerContextMenu == null) return;
-            var projectExplorerContextMenuStrip =
-                ((MenuItemContextMenuStripAdapter) projectExplorerContextMenu).ContextMenuStrip;
-            foreach (var menuItemName in modelMergeMenu.Items.OfType<ClonableToolStripMenuItem>()
-                                                       .Select(item => item.Text)
-                                                       .Where(name => !string.IsNullOrWhiteSpace(name)))
-            {
-                var name = menuItemName;
-                var menuItems = projectExplorerContextMenuStrip.Items.OfType<ClonableToolStripMenuItem>()
-                                                               .Where(i => i.Text == name)
-                                                               .ToList();
-
-                foreach (var menuItem in menuItems)
-                {
-                    menuItem.Click -= ModelMergeMenuItemClick;
-                    projectExplorerContextMenuStrip.Items.Remove(menuItem);
-                }
-            }
-            
-        }
-
-        private IMenuItem SetupMergeMenu(object nodeData)
-        {
-            var destinationModel = nodeData as IModelMerge;
-            if (destinationModel == null) return null;
-            // model merge
-            var mergeModelNamesInProject = Gui.Application.GetAllModelsInProject().OfType<IModelMerge>().Where(m => m != destinationModel && destinationModel.CanMerge(m)).Select(m => m.Name).ToList();
-            modelMergeMenuItem.Available = mergeModelNamesInProject.Count != 0;
-
-            foreach (var dropDownItem in modelMergeMenuItem.DropDownItems)
-            {
-                var mergeModelMenu = dropDownItem as ClonableToolStripMenuItem;
-                if (mergeModelMenu != null) mergeModelMenu.Click -= ModelMergeMenuItemClick;
-            }
-            modelMergeMenuItem.DropDownItems.Clear();
-
-            if (modelMergeMenuItem.Available)
-            {
-                foreach (var sourceModelNames in mergeModelNamesInProject)
-                {
-                    var mergeModelMenuItem = new ClonableToolStripMenuItem
-                    {
-                        Name = "modelMergeToolStripMenuItem_" + sourceModelNames.Replace(" ", "_"),
-                        Size = new Size(201, 22),
-                        Text = sourceModelNames
-                    };
-                    mergeModelMenuItem.Click += ModelMergeMenuItemClick;
-                    modelMergeMenuItem.DropDownItems.Add(mergeModelMenuItem);
-                }
-            }
-            return new MenuItemContextMenuStripAdapter(modelMergeMenu);
-        }
-
-        private void ModelMergeMenuItemClick(object sender, EventArgs e)
-        {
-            var modelToMergeWith = ((ClonableToolStripMenuItem)sender).Text;
-
-            var destinationModel = Gui.Selection as IModelMerge;
-            if (destinationModel == null) return;
-            var sourceModel = (IModelMerge)Gui.Application.GetAllModelsInProject().OfType<IModelMerge>().Cast<IModel>().FirstOrDefault(m => m.Name == modelToMergeWith);
-            Gui.DocumentViewsResolver.OpenViewForData(new ValidateMergeModelObjects { DestinationModel = destinationModel, SourceModel = sourceModel }, typeof(MergeModelValidationView));
-        }
-        private static Folder GetFolderContaining(IProjectItem projectItem)
-        {
-            while (projectItem != null)
-            {
-                var dataItem = projectItem as IDataItem;
-                var parent = dataItem != null && dataItem.Parent != null
-                                 ? dataItem.Parent
-                                 : projectItem.Owner();
-
-                var folder = parent as Folder;
-                if (folder != null)
-                    return folder;
-                
-                projectItem = parent;
-            }
-            return null;
         }
 
         public override bool CanLink(IDataItem item)
@@ -503,13 +403,162 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui
                 return true;
             }
 
-            var model = Gui.Application.ModelService.GetModelByDataItem(Gui.Application.Project, dataItem);
-            if(model is HydroModel && region.Parent != null && dataItem.LinkedBy.Count > 0)
+            IModel model = Gui.Application.ModelService.GetModelByDataItem(Gui.Application.Project, dataItem);
+            if (model is HydroModel && region.Parent != null && dataItem.LinkedBy.Count > 0)
             {
                 return false; // data item is a sub-region and it is being used - delete model first (unlink)
             }
 
             return base.CanDelete(item);
+        }
+
+        private void InitializeComponent()
+        {
+            modelMergeMenuItem = new ClonableToolStripMenuItem
+            {
+                Name = "mergeModelToolStripMenuItem",
+                Size = new Size(201, 22),
+                Text = "Merge with:"
+            };
+
+            modelMergeMenu = new ContextMenuStrip
+            {
+                Name = "Merge",
+                Size = new Size(202, 48)
+            };
+
+            modelMergeMenu.Items.AddRange(new ToolStripItem[]
+            {
+                modelMergeMenuItem
+            });
+        }
+
+        [InvokeRequired]
+        private void ActivityRunnerActivityStatusChanged(object sender, ActivityStatusChangedEventArgs e)
+        {
+            if (!(sender is HydroModel) || e.NewStatus != ActivityStatus.Failed ||
+                e.NewStatus == ActivityStatus.Failed && e.OldStatus == ActivityStatus.Executing)
+            {
+                return;
+            }
+
+            Gui.CommandHandler.OpenView(sender, typeof(ValidationView));
+        }
+
+        private void OnValidateClicked(object sender, EventArgs e)
+        {
+            var model = (HydroModel) ((ToolStripItem) sender).Tag;
+            Gui.DocumentViewsResolver.OpenViewForData(model, typeof(ValidationView));
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="data"></param>
+        private void CleanFileExplorerContextMenu(object data)
+        {
+            IMenuItem projectExplorerContextMenu = Gui.MainWindow.ProjectExplorer.GetContextMenu(null, data);
+            if (projectExplorerContextMenu == null)
+            {
+                return;
+            }
+
+            ContextMenuStrip projectExplorerContextMenuStrip =
+                ((MenuItemContextMenuStripAdapter) projectExplorerContextMenu).ContextMenuStrip;
+            foreach (string menuItemName in modelMergeMenu.Items.OfType<ClonableToolStripMenuItem>()
+                                                          .Select(item => item.Text)
+                                                          .Where(name => !string.IsNullOrWhiteSpace(name)))
+            {
+                string name = menuItemName;
+                List<ClonableToolStripMenuItem> menuItems = projectExplorerContextMenuStrip.Items.OfType<ClonableToolStripMenuItem>()
+                                                                                           .Where(i => i.Text == name)
+                                                                                           .ToList();
+
+                foreach (ClonableToolStripMenuItem menuItem in menuItems)
+                {
+                    menuItem.Click -= ModelMergeMenuItemClick;
+                    projectExplorerContextMenuStrip.Items.Remove(menuItem);
+                }
+            }
+        }
+
+        private IMenuItem SetupMergeMenu(object nodeData)
+        {
+            var destinationModel = nodeData as IModelMerge;
+            if (destinationModel == null)
+            {
+                return null;
+            }
+
+            // model merge
+            List<string> mergeModelNamesInProject = Gui.Application.GetAllModelsInProject().OfType<IModelMerge>().Where(m => m != destinationModel && destinationModel.CanMerge(m)).Select(m => m.Name).ToList();
+            modelMergeMenuItem.Available = mergeModelNamesInProject.Count != 0;
+
+            foreach (object dropDownItem in modelMergeMenuItem.DropDownItems)
+            {
+                var mergeModelMenu = dropDownItem as ClonableToolStripMenuItem;
+                if (mergeModelMenu != null)
+                {
+                    mergeModelMenu.Click -= ModelMergeMenuItemClick;
+                }
+            }
+
+            modelMergeMenuItem.DropDownItems.Clear();
+
+            if (modelMergeMenuItem.Available)
+            {
+                foreach (string sourceModelNames in mergeModelNamesInProject)
+                {
+                    var mergeModelMenuItem = new ClonableToolStripMenuItem
+                    {
+                        Name = "modelMergeToolStripMenuItem_" + sourceModelNames.Replace(" ", "_"),
+                        Size = new Size(201, 22),
+                        Text = sourceModelNames
+                    };
+                    mergeModelMenuItem.Click += ModelMergeMenuItemClick;
+                    modelMergeMenuItem.DropDownItems.Add(mergeModelMenuItem);
+                }
+            }
+
+            return new MenuItemContextMenuStripAdapter(modelMergeMenu);
+        }
+
+        private void ModelMergeMenuItemClick(object sender, EventArgs e)
+        {
+            string modelToMergeWith = ((ClonableToolStripMenuItem) sender).Text;
+
+            var destinationModel = Gui.Selection as IModelMerge;
+            if (destinationModel == null)
+            {
+                return;
+            }
+
+            var sourceModel = (IModelMerge) Gui.Application.GetAllModelsInProject().OfType<IModelMerge>().Cast<IModel>().FirstOrDefault(m => m.Name == modelToMergeWith);
+            Gui.DocumentViewsResolver.OpenViewForData(new ValidateMergeModelObjects
+            {
+                DestinationModel = destinationModel,
+                SourceModel = sourceModel
+            }, typeof(MergeModelValidationView));
+        }
+
+        private static Folder GetFolderContaining(IProjectItem projectItem)
+        {
+            while (projectItem != null)
+            {
+                var dataItem = projectItem as IDataItem;
+                IProjectItem parent = dataItem != null && dataItem.Parent != null
+                                          ? dataItem.Parent
+                                          : projectItem.Owner();
+
+                var folder = parent as Folder;
+                if (folder != null)
+                {
+                    return folder;
+                }
+
+                projectItem = parent;
+            }
+
+            return null;
         }
 
         private void OnGuiAfterRun()

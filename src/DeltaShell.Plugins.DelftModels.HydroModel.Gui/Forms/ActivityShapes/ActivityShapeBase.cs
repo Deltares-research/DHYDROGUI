@@ -13,34 +13,30 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.ActivityShapes
     /// </summary>
     public abstract class ActivityShapeBase : Shape
     {
+        protected const int HorizontalPadding = 5;
+        protected const int VerticalPadding = 5;
         private IActivity activity;
         private Color shapeColor = Color.WhiteSmoke;
         private Brush backgroundBrush = new SolidBrush(Color.WhiteSmoke);
         private PointF lastPoint;
         private Cursor cursor;
-        protected const int HorizontalPadding = 5;
-        protected const int VerticalPadding = 5;
 
         /// <summary>
         /// Default constructor, used for instantiations by <see cref="Netron.GraphLib.UI.GraphControl"/>.
         /// </summary>
-        /// <Deprecated>Please use <see cref="ActivityShapeBase(IGraphSite)"/> or 
-        /// <see cref="ActivityShapeBase(IGraphSite,string)"/> instead.</Deprecated>
+        /// <Deprecated>
+        /// Please use <see cref="ActivityShapeBase(IGraphSite)"/> or
+        /// <see cref="ActivityShapeBase(IGraphSite,string)"/> instead.
+        /// </Deprecated>
         [Obsolete("Used only for Netron.GraphLib.UI.GraphControl")]
-        protected ActivityShapeBase()
-        {
-            
-        }
+        protected ActivityShapeBase() {}
 
         /// <summary>
         /// Creates an activity shape for a given <see cref="Netron.GraphLib.Interfaces.IGraphSite"/>.
         /// </summary>
         /// <param name="graphControl">The control hosting this shape.</param>
         protected ActivityShapeBase(IGraphSite graphControl)
-            : this(graphControl, "[Not set]")
-        {
-            
-        }
+            : this(graphControl, "[Not set]") {}
 
         /// <summary>
         /// Creates an activity with a set text for a given <see cref="Netron.GraphLib.Interfaces.IGraphSite"/>.
@@ -55,25 +51,15 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.ActivityShapes
         }
 
         /// <summary>
-        /// The activity associated with this shape.
-        /// </summary>
-        public virtual IActivity Activity
-        {
-            get { return activity; }
-            set
-            {
-                activity = value;
-                Invalidate();
-            }
-        }
-
-        /// <summary>
         /// Background color of this shape.
         /// </summary>
         // Override to remove dependency on Layers of Netron.
         public override Color ShapeColor
         {
-            get { return shapeColor; }
+            get
+            {
+                return shapeColor;
+            }
             set
             {
                 shapeColor = value;
@@ -83,12 +69,19 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.ActivityShapes
         }
 
         /// <summary>
-        /// Background <see cref="Brush"/> definition, color determined by <see cref="ShapeColor"/>.
+        /// The activity associated with this shape.
         /// </summary>
-        // Override to remove dependency on Layers of Netron.
-        protected override Brush BackgroundBrush
+        public virtual IActivity Activity
         {
-            get { return backgroundBrush; }
+            get
+            {
+                return activity;
+            }
+            set
+            {
+                activity = value;
+                Invalidate();
+            }
         }
 
         /// <summary>
@@ -97,38 +90,63 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.ActivityShapes
         public void Inflate()
         {
             // Measure Text:
-            var requiredSize = GetRequiredSize(Site.Graphics);
+            SizeF requiredSize = GetRequiredSize(Site.Graphics);
 
             // Apply new requested size:
             Rectangle = new RectangleF(Rectangle.X, Rectangle.Y, requiredSize.Width, requiredSize.Height);
         }
-       public override void Paint(Graphics g)
+
+        public override void Paint(Graphics g)
         {
             // Update sizing:
             Inflate();
-            
+
             DrawShape(g, Rectangle);
+        }
+
+        public override Cursor GetCursor(PointF p)
+        {
+            if (lastPoint == p)
+            {
+                return cursor;
+            }
+
+            lastPoint = p;
+            cursor = base.GetCursor(p);
+            return cursor;
+        }
+
+        /// <summary>
+        /// Background <see cref="Brush"/> definition, color determined by <see cref="ShapeColor"/>.
+        /// </summary>
+        // Override to remove dependency on Layers of Netron.
+        protected override Brush BackgroundBrush
+        {
+            get
+            {
+                return backgroundBrush;
+            }
         }
 
         protected void DrawShape(Graphics g, RectangleF rectangle)
         {
-            var rec = System.Drawing.Rectangle.Round(rectangle);
-            
+            Rectangle rec = System.Drawing.Rectangle.Round(rectangle);
+
             var linePen = new Pen(Color.Black, 1);
             linePen.EndCap = linePen.StartCap = LineCap.Round;
 
-            int cornerRadius = 20;
+            var cornerRadius = 20;
             var gfxPath = new GraphicsPath();
             gfxPath.AddArc(rec.X, rec.Y, cornerRadius, cornerRadius, 180, 90);
-            gfxPath.AddArc(rec.X + rec.Width - cornerRadius, rec.Y, cornerRadius, cornerRadius, 270, 90);
-            gfxPath.AddArc(rec.X + rec.Width - cornerRadius, rec.Y + rec.Height - cornerRadius, cornerRadius, cornerRadius, 0, 90);
-            gfxPath.AddArc(rec.X, rec.Y + rec.Height - cornerRadius, cornerRadius, cornerRadius, 90, 90);
+            gfxPath.AddArc((rec.X + rec.Width) - cornerRadius, rec.Y, cornerRadius, cornerRadius, 270, 90);
+            gfxPath.AddArc((rec.X + rec.Width) - cornerRadius, (rec.Y + rec.Height) - cornerRadius, cornerRadius, cornerRadius, 0, 90);
+            gfxPath.AddArc(rec.X, (rec.Y + rec.Height) - cornerRadius, cornerRadius, cornerRadius, 90, 90);
             gfxPath.CloseAllFigures();
 
             var linearGradientBrush = new LinearGradientBrush(rec, ShapeColor, ControlPaint.LightLight(shapeColor), 90F);
 
-            var smoothingMode = g.SmoothingMode;
-            
+            SmoothingMode smoothingMode = g.SmoothingMode;
+
             g.SmoothingMode = SmoothingMode.AntiAlias;
             g.FillPath(linearGradientBrush, gfxPath);
             g.DrawPath(linePen, gfxPath);
@@ -136,7 +154,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.ActivityShapes
             g.DrawString(Text, Font, TextBrush, Rectangle.X + HorizontalPadding, Rectangle.Y + VerticalPadding);
 
             g.SmoothingMode = smoothingMode;
-            
+
             linePen.Dispose();
         }
 
@@ -147,19 +165,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.ActivityShapes
         /// <returns>Minimum required size.</returns>
         internal virtual SizeF GetRequiredSize(Graphics g)
         {
-            var requiredSize = g.MeasureString(Text, Font);
+            SizeF requiredSize = g.MeasureString(Text, Font);
             requiredSize.Height += 2 * VerticalPadding;
             requiredSize.Width += 2 * HorizontalPadding;
             return requiredSize;
-        }
-
-        public override Cursor GetCursor(PointF p)
-        {
-            if (lastPoint == p) return cursor;
-
-            lastPoint = p;
-            cursor = base.GetCursor(p);
-            return cursor;
         }
     }
 }

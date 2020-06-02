@@ -8,27 +8,17 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.BoundaryConditionEditor
 {
     public partial class WaveSpectrumFileSelection : UserControl
     {
+        private WaveBoundaryCondition data;
+
+        private int selectedPointIndex;
+
         public WaveSpectrumFileSelection()
         {
             InitializeComponent();
             selectFileBtn.Click += SelectFileBtnOnClick;
         }
 
-        private void SelectFileBtnOnClick(object sender, EventArgs eventArgs)
-        {
-            openFileDialog1.Filter = "Spectrum Files (*.sp1,*.sp2)|*.sp1;*.sp2";
-            openFileDialog1.Title = "Select spectrum file ...";
-            if (openFileDialog1.ShowDialog() == DialogResult.OK)
-            {
-                string filePath = openFileDialog1.FileName;
-                data.SpectrumFiles[selectedPointIndex] = ImportIntoDirectory(filePath);
-                UpdatePanel();
-            }
-        }
-
         public Func<string, string> ImportIntoDirectory { private get; set; }
-
-        private WaveBoundaryCondition data;
 
         public WaveBoundaryCondition Data
         {
@@ -52,6 +42,28 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.BoundaryConditionEditor
 
         public string MdwFilePath { get; set; }
 
+        public int SelectedPointIndex
+        {
+            get => selectedPointIndex;
+            set
+            {
+                selectedPointIndex = value;
+                UpdatePanel();
+            }
+        }
+
+        private void SelectFileBtnOnClick(object sender, EventArgs eventArgs)
+        {
+            openFileDialog1.Filter = "Spectrum Files (*.sp1,*.sp2)|*.sp1;*.sp2";
+            openFileDialog1.Title = "Select spectrum file ...";
+            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                string filePath = openFileDialog1.FileName;
+                data.SpectrumFiles[selectedPointIndex] = ImportIntoDirectory(filePath);
+                UpdatePanel();
+            }
+        }
+
         private void OnBoundaryConditionPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             var bc = sender as WaveBoundaryCondition;
@@ -66,18 +78,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.BoundaryConditionEditor
             }
 
             UpdatePanel();
-        }
-
-        private int selectedPointIndex;
-
-        public int SelectedPointIndex
-        {
-            get => selectedPointIndex;
-            set
-            {
-                selectedPointIndex = value;
-                UpdatePanel();
-            }
         }
 
         private void UpdatePanel()

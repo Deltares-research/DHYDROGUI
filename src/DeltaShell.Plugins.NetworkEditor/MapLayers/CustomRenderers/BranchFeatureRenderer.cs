@@ -10,7 +10,7 @@ using SharpMap.Layers;
 
 namespace DeltaShell.Plugins.NetworkEditor.MapLayers.CustomRenderers
 {
-    public abstract class BranchFeatureRenderer: IFeatureRenderer, ICloneable
+    public abstract class BranchFeatureRenderer : IFeatureRenderer, ICloneable
     {
         protected readonly Dictionary<IFeature, ILineString> updatedBranchFeatures;
         protected Envelope lastEnvelope;
@@ -22,7 +22,13 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.CustomRenderers
         }
 
         /// <summary>
-        /// Called for each feature that needs to be rendered. CrossSectionRenderer assumes it is always 
+        /// Clones the custom renderer. This allows the Network Editor to use custom renderers for
+        /// </summary>
+        /// <returns></returns>
+        public abstract object Clone();
+
+        /// <summary>
+        /// Called for each feature that needs to be rendered. CrossSectionRenderer assumes it is always
         /// added to a vectorlayer.
         /// </summary>
         /// <param name="feature"></param>
@@ -34,8 +40,8 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.CustomRenderers
         public IGeometry GetRenderedFeatureGeometry(IFeature feature, ILayer layer)
         {
             return layer.CoordinateTransformation != null
-                ? GeometryTransform.TransformGeometry(feature.Geometry, layer.CoordinateTransformation.MathTransform)
-                : feature.Geometry;
+                       ? GeometryTransform.TransformGeometry(feature.Geometry, layer.CoordinateTransformation.MathTransform)
+                       : feature.Geometry;
         }
 
         public IEnumerable<IFeature> GetFeatures(IGeometry geometry, ILayer layer)
@@ -48,24 +54,15 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.CustomRenderers
             return layer.GetFeatures(box);
         }
 
-
-        /// <summary>
-        /// Clones the custom renderer. This allows the Network Editor to use custom renderers for
-        /// </summary>
-        /// <returns></returns>
-        public abstract object Clone();
-
         protected void InitLastEnvelope(ILayer layer)
         {
-            if ((null == lastEnvelope)
-                || (lastEnvelope.Width != layer.Map.Envelope.Width)
-                || (lastEnvelope.Height != layer.Map.Envelope.Height))
+            if (null == lastEnvelope
+                || lastEnvelope.Width != layer.Map.Envelope.Width
+                || lastEnvelope.Height != layer.Map.Envelope.Height)
             {
                 lastEnvelope = layer.Map.Envelope.Clone();
                 updatedBranchFeatures.Clear();
             }
         }
-
-
     }
 }

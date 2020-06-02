@@ -16,24 +16,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.ModelDefinition
     public class WaveModelDefinition
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(WaveModelDefinition));
-        public IEventedList<WaveModelProperty> Properties { get; set; }
-        public ModelPropertySchema<WaveModelPropertyDefinition> ModelSchema { get; private set; }
-
-        public bool BoundaryIsDefinedBySpecFile { get; set; }
-        public string OverallSpecFile { get; set; }
-
-        public IWaveDomainData OuterDomain { get; set; }
-        public IEventedList<WaveBoundaryCondition> BoundaryConditions { get; set; }
-        public IEventedList<WaveObstacle> Obstacles { get; set; }
-        public IEventedList<Feature2DPoint> ObservationPoints { get; set; }
-        public IEventedList<Feature2D> ObservationCrossSections { get; set; }
-
-        public string ObstaclePolylineFile { get; set; }
-
-        // only for import, will be converted
-        public IList<WaveBoundaryCondition> OrientedBoundaryConditions { get; set; }
-
-        public WaveInputFieldData TimePointData { get; set; }
 
         // 
 
@@ -90,6 +72,25 @@ namespace DeltaShell.Plugins.FMSuite.Wave.ModelDefinition
 
             BoundaryIsDefinedBySpecFile = false;
         }
+
+        public IEventedList<WaveModelProperty> Properties { get; set; }
+        public ModelPropertySchema<WaveModelPropertyDefinition> ModelSchema { get; private set; }
+
+        public bool BoundaryIsDefinedBySpecFile { get; set; }
+        public string OverallSpecFile { get; set; }
+
+        public IWaveDomainData OuterDomain { get; set; }
+        public IEventedList<WaveBoundaryCondition> BoundaryConditions { get; set; }
+        public IEventedList<WaveObstacle> Obstacles { get; set; }
+        public IEventedList<Feature2DPoint> ObservationPoints { get; set; }
+        public IEventedList<Feature2D> ObservationCrossSections { get; set; }
+
+        public string ObstaclePolylineFile { get; set; }
+
+        // only for import, will be converted
+        public IList<WaveBoundaryCondition> OrientedBoundaryConditions { get; set; }
+
+        public WaveInputFieldData TimePointData { get; set; }
 
         public void SetModelProperty(string fileCategoryName, string filePropertyName, WaveModelProperty property)
         {

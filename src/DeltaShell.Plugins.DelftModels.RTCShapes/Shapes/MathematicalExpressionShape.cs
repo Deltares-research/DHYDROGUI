@@ -13,25 +13,28 @@ namespace DeltaShell.Plugins.DelftModels.RTCShapes.Shapes
         "Mathematical expression")]
     public class MathematicalExpressionShape : ShapeBase
     {
-        protected override void Initialize()
-        {
-            Rectangle = new RectangleF(0, 0, 25, 50);
-
-            LeftNode = CreateConnector("Left", false, true);
-            TopNode = CreateConnector("Top", false, true);
-            BottomNode = CreateConnector("Bottom", true, false);
-
-            Connectors.Add(LeftNode);
-            Connectors.Add(TopNode);
-            Connectors.Add(BottomNode);
-        }
-
         public override PointF ConnectionPoint(Connector c)
         {
-            if (c == TopNode) return new PointF(Rectangle.Right, Rectangle.Top);
-            if (c == BottomNode) return new PointF(Rectangle.Right, Rectangle.Bottom);
-            if (c == LeftNode) return new PointF(Rectangle.Left, Rectangle.Top + (Rectangle.Height / 2));
-            if (c == RightNode) return new PointF(Rectangle.Right, Rectangle.Top + (Rectangle.Height / 2));
+            if (c == TopNode)
+            {
+                return new PointF(Rectangle.Right, Rectangle.Top);
+            }
+
+            if (c == BottomNode)
+            {
+                return new PointF(Rectangle.Right, Rectangle.Bottom);
+            }
+
+            if (c == LeftNode)
+            {
+                return new PointF(Rectangle.Left, Rectangle.Top + (Rectangle.Height / 2));
+            }
+
+            if (c == RightNode)
+            {
+                return new PointF(Rectangle.Right, Rectangle.Top + (Rectangle.Height / 2));
+            }
+
             return new PointF(0, 0);
         }
 
@@ -64,6 +67,19 @@ namespace DeltaShell.Plugins.DelftModels.RTCShapes.Shapes
 
             PreRender(g);
             base.Paint(g);
+        }
+
+        protected override void Initialize()
+        {
+            Rectangle = new RectangleF(0, 0, 25, 50);
+
+            LeftNode = CreateConnector("Left", false, true);
+            TopNode = CreateConnector("Top", false, true);
+            BottomNode = CreateConnector("Bottom", true, false);
+
+            Connectors.Add(LeftNode);
+            Connectors.Add(TopNode);
+            Connectors.Add(BottomNode);
         }
 
         private Connector CreateConnector(string name, bool allowFrom, bool allowTo)

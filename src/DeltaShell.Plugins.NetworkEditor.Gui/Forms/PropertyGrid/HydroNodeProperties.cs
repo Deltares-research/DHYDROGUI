@@ -15,35 +15,56 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [Category("General")]
         public string Name
         {
-            get { return data.Name; }
-            set { data.Name = value; }
+            get
+            {
+                return data.Name;
+            }
+            set
+            {
+                data.Name = value;
+            }
         }
 
         [Category("General")]
         public string LongName
         {
-            get { return data.LongName; }
-            set { data.LongName = value; }
+            get
+            {
+                return data.LongName;
+            }
+            set
+            {
+                data.LongName = value;
+            }
         }
 
         [Category("Relations")]
         [Description("Number of branches that end in this node.")]
         public int IncomingBranches
         {
-            get { return data.IncomingBranches.Count; }
+            get
+            {
+                return data.IncomingBranches.Count;
+            }
         }
 
         [Category("Relations")]
         [Description("Number of branches that start in this node.")]
         public int OutgoingBranches
         {
-            get { return data.OutgoingBranches.Count; }
+            get
+            {
+                return data.OutgoingBranches.Count;
+            }
         }
 
         [Category("General")]
         public double X
         {
-            get { return data.Geometry.Centroid.X; }
+            get
+            {
+                return data.Geometry.Centroid.X;
+            }
             set
             {
                 //unwanted relation..also causes a crash when setting with no mapcontrol open.
@@ -54,8 +75,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [Category("General")]
         public double Y
         {
-            get { return data.Geometry.Centroid.Y; }
-            set { HydroRegionEditorHelper.MoveNodeTo(data, X, value); }
+            get
+            {
+                return data.Geometry.Centroid.Y;
+            }
+            set
+            {
+                HydroRegionEditorHelper.MoveNodeTo(data, X, value);
+            }
         }
 
         [Category("General")]
@@ -63,7 +90,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [TypeConverter(typeof(AttributeArrayConverter<object>))]
         public AttributeProperties<object>[] Attributes
         {
-            get { return data.Attributes.Select(x => new AttributeProperties<object>(data.Attributes, x.Key)).ToArray(); }
+            get
+            {
+                return data.Attributes.Select(x => new AttributeProperties<object>(data.Attributes, x.Key)).ToArray();
+            }
         }
     }
 }

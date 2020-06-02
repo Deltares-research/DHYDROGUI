@@ -12,13 +12,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export
     /// <summary>
     /// Serializer for a <see cref="PidRule"/>.
     /// </summary>
-    /// <seealso cref="RuleSerializerBase" />
+    /// <seealso cref="RuleSerializerBase"/>
     public class PidRuleSerializer : RuleSerializerBase
     {
-        private PIDRule PidRule { get; }
-
         /// <summary>
-        /// Initializes a new instance of the <see cref="PidRuleSerializer" /> class.
+        /// Initializes a new instance of the <see cref="PidRuleSerializer"/> class.
         /// </summary>
         /// <param name="pidRule"> The pid rule to serialize. </param>
         public PidRuleSerializer(PIDRule pidRule) : base(pidRule)
@@ -26,10 +24,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export
             PidRule = pidRule;
         }
 
-        protected override string XmlTag { get; } = RtcXmlTag.PIDRule;
-
         /// <summary>
-        /// Converts the pid rule to a collection of <see cref="XElement" />
+        /// Converts the pid rule to a collection of <see cref="XElement"/>
         /// to be written to the import series in the data config xml file
         /// and the time series import xml file.
         /// </summary>
@@ -37,7 +33,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export
         /// <param name="start"> The start time of the model. </param>
         /// <param name="stop"> The stop time of the model. </param>
         /// <param name="step"> The time step of the model. </param>
-        /// <returns> The collection of <see cref="XElement" />. </returns>
+        /// <returns> The collection of <see cref="XElement"/>. </returns>
         public override IEnumerable<IXmlTimeSeries> XmlImportTimeSeries(string prefix, DateTime start, DateTime stop,
                                                                         TimeSpan step)
         {
@@ -48,25 +44,15 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export
         }
 
         /// <summary>
-        /// Converts the pid rule to a collection of <see cref="IXmlTimeSeries" />
+        /// Converts the pid rule to a collection of <see cref="IXmlTimeSeries"/>
         /// to be written to the export time series in the data config xml file.
         /// </summary>
         /// <param name="prefix"> The prefix. </param>
-        /// <returns> The collection of <see cref="XElement" />. </returns>
+        /// <returns> The collection of <see cref="XElement"/>. </returns>
         public override IEnumerable<IXmlTimeSeries> XmlExportTimeSeries(string prefix)
         {
             yield return GetExportTimeSeries(GetIntegralPartId(prefix));
             yield return GetExportTimeSeries(GetDifferentialPartId(prefix));
-        }
-
-        private string GetIntegralPartId(string prefix)
-        {
-            return RtcXmlTag.IP + GetXmlNameWithoutTag(prefix);
-        }
-
-        private string GetDifferentialPartId(string prefix)
-        {
-            return RtcXmlTag.DP + GetXmlNameWithoutTag(prefix);
         }
 
         // Example of ToXmlInputReference:
@@ -90,12 +76,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export
         //  </pid>
 
         /// <summary>
-        /// Converts the pid rule to a collection of <see cref="XElement" />
+        /// Converts the pid rule to a collection of <see cref="XElement"/>
         /// to be written to the tools config xml file.
         /// </summary>
         /// <param name="xNamespace"> The xml namespace. </param>
         /// <param name="prefix"> The prefix. </param>
-        /// <returns> The collection of <see cref="XElement" />. </returns>
+        /// <returns> The collection of <see cref="XElement"/>. </returns>
         public override IEnumerable<XElement> ToXml(XNamespace xNamespace, string prefix)
         {
             XElement result = base.ToXml(xNamespace, prefix).First();
@@ -124,12 +110,36 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export
                                                        : serializer.ToXmlInputReference(xNamespace, "x", "setpointSeries");
                                         }),
                                     PidRule.Outputs.Select(
-                                                output =>
-                                                {
-                                                    var serializer = new OutputSerializer(output);
-                                                    return serializer.ToXmlOutputReference(xNamespace, "y", "integralPart", "differentialPart");
-                                                })));
+                                        output =>
+                                        {
+                                            var serializer = new OutputSerializer(output);
+                                            return serializer.ToXmlOutputReference(xNamespace, "y", "integralPart", "differentialPart");
+                                        })));
             yield return result;
+        }
+
+        /// <summary>
+        /// The PID rule requires the input as parameter to calculate the output value. The
+        /// output should be set as input exchange item
+        /// </summary>
+        /// <param name="xNamespace"> </param>
+        /// <returns> The collection of <see cref="XElement"/>. </returns>
+        public override IEnumerable<XElement> OutputAsInputToDataConfigXml(XNamespace xNamespace)
+        {
+            yield break;
+        }
+
+        protected override string XmlTag { get; } = RtcXmlTag.PIDRule;
+        private PIDRule PidRule { get; }
+
+        private string GetIntegralPartId(string prefix)
+        {
+            return RtcXmlTag.IP + GetXmlNameWithoutTag(prefix);
+        }
+
+        private string GetDifferentialPartId(string prefix)
+        {
+            return RtcXmlTag.DP + GetXmlNameWithoutTag(prefix);
         }
 
         private XElement GenerateConstantValueSetPointXml(XNamespace xNamespace, string name)
@@ -138,17 +148,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export
             result.Add(new XElement(xNamespace + "x", name));
             result.Add(new XElement(xNamespace + "setpointValue", PidRule.ConstantValue));
             return result;
-        }
-
-        /// <summary>
-        /// The PID rule requires the input as parameter to calculate the output value. The
-        /// output should be set as input exchange item
-        /// </summary>
-        /// <param name="xNamespace"> </param>
-        /// <returns> The collection of <see cref="XElement" />. </returns>
-        public override IEnumerable<XElement> OutputAsInputToDataConfigXml(XNamespace xNamespace)
-        {
-            yield break;
         }
 
         private IXmlTimeSeries GetImportTimeSeries(string prefix, DateTime start, DateTime stop, TimeSpan step)

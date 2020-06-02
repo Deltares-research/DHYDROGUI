@@ -14,11 +14,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
 {
     public class ControlGroupFeatureCollection : FeatureCollection
     {
-        private IEditableObject editableObjectRefresh;
-
         private readonly IEventedList<ControlGroup> controlGroups;
+        private IEditableObject editableObjectRefresh;
         private IEventedList<Connection> connectionList;
-        private IEventedList<ConnectionPoint> connectionPointList; 
+        private IEventedList<ConnectionPoint> connectionPointList;
         private bool useConnections;
 
         public ControlGroupFeatureCollection(IEventedList<ControlGroup> controlGroups)
@@ -32,20 +31,63 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
             UseConnections = false;
         }
 
-        private void ControlGroupsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        public override IList Features
         {
-            // Immediate action needed: Attribute table needs to be updated. 
-            RefreshEventedList();
+            get
+            {
+                return useConnections ? (IList) connectionList : (IList) connectionPointList;
+            }
+            set {}
         }
 
         public bool UseConnections
         {
-            get { return useConnections; }
+            get
+            {
+                return useConnections;
+            }
             set
             {
                 useConnections = value;
                 FeatureType = useConnections ? typeof(Connection) : typeof(ConnectionPoint);
             }
+        }
+
+        public IEditableObject EditableObjectRefresh
+        {
+            get
+            {
+                return editableObjectRefresh;
+            }
+            set
+            {
+                if (editableObjectRefresh is INotifyPropertyChanged)
+                {
+                    ((INotifyPropertyChanged) editableObjectRefresh).PropertyChanged -= EditableObjectPropertyChanged;
+                }
+
+                editableObjectRefresh = value;
+                RefreshEventedList();
+                RefreshCoordinateSystem();
+                if (editableObjectRefresh is INotifyPropertyChanged)
+                {
+                    ((INotifyPropertyChanged) editableObjectRefresh).PropertyChanged += EditableObjectPropertyChanged;
+                }
+            }
+        }
+
+        public override void Dispose()
+        {
+            EditableObjectRefresh = null;
+
+            controlGroups.CollectionChanged -= ControlGroupsCollectionChanged;
+            base.Dispose();
+        }
+
+        private void ControlGroupsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            // Immediate action needed: Attribute table needs to be updated. 
+            RefreshEventedList();
         }
 
         private void RefreshEventedList()
@@ -64,37 +106,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
 
         private IEnumerable<Connection> GetConnections(ControlGroup cg)
         {
-            foreach (var output in cg.Outputs.Where(output => output.IsConnected))
+            foreach (Output output in cg.Outputs.Where(output => output.IsConnected))
             {
-                foreach (var input in ControlGroupHelper.InputItemsForOutput(cg, output).Where(c => c.IsConnected))
+                foreach (Input input in ControlGroupHelper.InputItemsForOutput(cg, output).Where(c => c.IsConnected))
                 {
                     yield return new Connection(input, output);
-                }
-            }
-        }
-
-        public override IList Features
-        {
-            get { return useConnections ? (IList) connectionList : (IList) connectionPointList; }
-            set { }
-        }
-
-        public IEditableObject EditableObjectRefresh
-        {
-            get { return editableObjectRefresh; }
-            set 
-            { 
-                if (editableObjectRefresh is INotifyPropertyChanged)
-                {
-                    ((INotifyPropertyChanged)editableObjectRefresh).PropertyChanged -= EditableObjectPropertyChanged;
-                }
-
-                editableObjectRefresh = value;
-                RefreshEventedList();
-                RefreshCoordinateSystem();
-                if (editableObjectRefresh is INotifyPropertyChanged)
-                {
-                    ((INotifyPropertyChanged)editableObjectRefresh).PropertyChanged += EditableObjectPropertyChanged;
                 }
             }
         }
@@ -102,31 +118,28 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
         private void RefreshCoordinateSystem()
         {
             var realTimeControlModel = editableObjectRefresh as IRealTimeControlModel;
-            if (realTimeControlModel == null) return;
-            if(!CoordinateSystem.EqualsTo(realTimeControlModel.CoordinateSystem))
-            CoordinateSystem = realTimeControlModel.CoordinateSystem;
+            if (realTimeControlModel == null)
+            {
+                return;
+            }
+
+            if (!CoordinateSystem.EqualsTo(realTimeControlModel.CoordinateSystem))
+            {
+                CoordinateSystem = realTimeControlModel.CoordinateSystem;
+            }
         }
 
-        void EditableObjectPropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void EditableObjectPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName != "IsEditing" || editableObjectRefresh.IsEditing)
             {
                 RefreshEventedList();
             }
+
             if (e.PropertyName == "CoordinateSystem")
             {
                 RefreshCoordinateSystem();
             }
-
-            
-        }
-
-        public override void Dispose()
-        {
-            EditableObjectRefresh = null;
-
-            controlGroups.CollectionChanged -= ControlGroupsCollectionChanged;
-            base.Dispose();
         }
     }
 }

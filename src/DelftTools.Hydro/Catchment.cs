@@ -30,10 +30,6 @@ namespace DelftTools.Hydro
 
         public virtual IEventedList<Catchment> SubCatchments { get; set; }
 
-        [DisplayName("Name")]
-        [FeatureAttribute(Order = 1)]
-        public virtual string Name { get; set; }
-
         [DisplayName("Long name")]
         [FeatureAttribute(Order = 3)]
         public virtual string LongName
@@ -57,6 +53,17 @@ namespace DelftTools.Hydro
 
         public virtual bool IsGeometryDerivedFromAreaSize { get; set; }
 
+        public virtual IPoint InteriorPoint => interiorPointCache ?? (interiorPointCache = CalculateInteriorPoint());
+
+        public virtual double AreaSize => Geometry != null ? Geometry.Area : 0.0;
+
+        [Aggregation]
+        public virtual IDrainageBasin Basin { get; set; }
+
+        [DisplayName("Name")]
+        [FeatureAttribute(Order = 1)]
+        public virtual string Name { get; set; }
+
         public override IGeometry Geometry
         {
             get => base.Geometry;
@@ -75,7 +82,15 @@ namespace DelftTools.Hydro
             }
         }
 
-        public virtual IPoint InteriorPoint => interiorPointCache ?? (interiorPointCache = CalculateInteriorPoint());
+        [Aggregation]
+        public virtual IHydroRegion Region => Basin;
+
+        [Aggregation]
+        public virtual IEventedList<HydroLink> Links { get; set; }
+
+        public virtual bool CanBeLinkSource => !CatchmentType.SubCatchmentTypes.Any();
+
+        public virtual bool CanBeLinkTarget => false;
 
         public virtual void SetAreaSize(double area)
         {
@@ -89,7 +104,109 @@ namespace DelftTools.Hydro
             }
         }
 
-        public virtual double AreaSize => Geometry != null ? Geometry.Area : 0.0;
+        public static Catchment CreateDefault()
+        {
+            var catchment = new Catchment();
+
+            var factory = new GeometricShapeFactory
+            {
+                Centre = new Coordinate(20, 20),
+                Size = 30
+            };
+            catchment.Geometry = factory.CreateCircle();
+            catchment.IsGeometryDerivedFromAreaSize = true;
+
+            return catchment;
+        }
+
+        public virtual Catchment AddSubCatchment(CatchmentType catchmentType)
+        {
+            if (!CatchmentType.SubCatchmentTypes.Contains(catchmentType))
+            {
+                throw new InvalidOperationException("This catchment cannot have sub catchments of given type");
+            }
+
+            var delta = new Coordinate(0, 0);
+            var offset = 100;
+            switch (catchmentType.Name)
+            {
+                case CatchmentType.PavedTypeName:
+                    delta = new Coordinate(-offset, 0);
+                    break;
+                case CatchmentType.UnpavedTypeName:
+                    delta = new Coordinate(0, offset);
+                    break;
+                case CatchmentType.GreenhouseTypeName:
+                    delta = new Coordinate(offset, 0);
+                    break;
+                case CatchmentType.OpenwaterTypeName:
+                    delta = new Coordinate(0, -offset);
+                    break;
+                default:
+                    throw new NotSupportedException("Unknown type to render as part of polder concept");
+            }
+
+            var geometry = new Point(InteriorPoint.X + delta.X, InteriorPoint.Y + delta.Y);
+
+            var subCatchment = new Catchment
+            {
+                Name = Name + "_" + catchmentType,
+                LongName = LongName + "_" + catchmentType,
+                CatchmentType = catchmentType,
+                Geometry = geometry,
+                Basin = Basin
+            };
+            SubCatchments.Add(subCatchment);
+            return subCatchment;
+        }
+
+        public override string ToString()
+        {
+            return Name;
+        }
+
+        public virtual int CompareTo(object other)
+        {
+            if (other is Catchment)
+            {
+                if (Equals(this, other))
+                {
+                    return 0;
+                }
+
+                foreach (Catchment c in Basin.AllCatchments)
+                {
+                    if (Equals(c, this))
+                    {
+                        return -1;
+                    }
+
+                    if (Equals(c, other))
+                    {
+                        return 1;
+                    }
+                }
+            }
+            else if (other is WasteWaterTreatmentPlant)
+            {
+                return -1;
+            }
+
+            throw new InvalidOperationException();
+        }
+
+        public virtual void CopyFrom(object source)
+        {
+            var copyFrom = (Catchment) source;
+
+            // Geometry = Geometry != null ? (IGeometry) Geometry.Clone() : null;
+            copyFrom.IsGeometryDerivedFromAreaSize = IsGeometryDerivedFromAreaSize;
+            // copyFrom.Name = Name;
+            copyFrom.Attributes = (IFeatureAttributeCollection) Attributes.Clone();
+            copyFrom.Basin = Basin;
+            copyFrom.Description = Description;
+            copyFrom.Links = new EventedList<HydroLink>(Links);
+        }
 
         public override object Clone()
         {
@@ -110,32 +227,6 @@ namespace DelftTools.Hydro
             return clone;
         }
 
-        public virtual void CopyFrom(object source)
-        {
-            var copyFrom = (Catchment) source;
-
-            // Geometry = Geometry != null ? (IGeometry) Geometry.Clone() : null;
-            copyFrom.IsGeometryDerivedFromAreaSize = IsGeometryDerivedFromAreaSize;
-            // copyFrom.Name = Name;
-            copyFrom.Attributes = (IFeatureAttributeCollection) Attributes.Clone();
-            copyFrom.Basin = Basin;
-            copyFrom.Description = Description;
-            copyFrom.Links = new EventedList<HydroLink>(Links);
-        }
-
-        [Aggregation]
-        public virtual IDrainageBasin Basin { get; set; }
-
-        [Aggregation]
-        public virtual IHydroRegion Region => Basin;
-
-        [Aggregation]
-        public virtual IEventedList<HydroLink> Links { get; set; }
-
-        public virtual bool CanBeLinkSource => !CatchmentType.SubCatchmentTypes.Any();
-
-        public virtual bool CanBeLinkTarget => false;
-
         public virtual HydroLink LinkTo(IHydroObject target)
         {
             return Region.AddNewLink(this, target);
@@ -151,19 +242,12 @@ namespace DelftTools.Hydro
             return Region.CanLinkTo(this, target);
         }
 
-        public static Catchment CreateDefault()
+        //nhib ;-) \-)
+        [NoNotifyPropertyChange]
+        protected virtual string CatchmentTypeString
         {
-            var catchment = new Catchment();
-
-            var factory = new GeometricShapeFactory
-            {
-                Centre = new Coordinate(20, 20),
-                Size = 30
-            };
-            catchment.Geometry = factory.CreateCircle();
-            catchment.IsGeometryDerivedFromAreaSize = true;
-
-            return catchment;
+            get => CatchmentType != null ? CatchmentType.Name : CatchmentType.PavedTypeName;
+            set => CatchmentType = CatchmentType.LoadFromString(value);
         }
 
         private IPoint CalculateInteriorPoint()
@@ -209,90 +293,6 @@ namespace DelftTools.Hydro
                              ? Geometry.Envelope.Centroid
                              : new Point(Geometry.Coordinate)
                        : new Point(0, 0);
-        }
-
-        public override string ToString()
-        {
-            return Name;
-        }
-
-        public virtual int CompareTo(object other)
-        {
-            if (other is Catchment)
-            {
-                if (Equals(this, other))
-                {
-                    return 0;
-                }
-
-                foreach (Catchment c in Basin.AllCatchments)
-                {
-                    if (Equals(c, this))
-                    {
-                        return -1;
-                    }
-
-                    if (Equals(c, other))
-                    {
-                        return 1;
-                    }
-                }
-            }
-            else if (other is WasteWaterTreatmentPlant)
-            {
-                return -1;
-            }
-
-            throw new InvalidOperationException();
-        }
-
-        //nhib ;-) \-)
-        [NoNotifyPropertyChange]
-        protected virtual string CatchmentTypeString
-        {
-            get => CatchmentType != null ? CatchmentType.Name : CatchmentType.PavedTypeName;
-            set => CatchmentType = CatchmentType.LoadFromString(value);
-        }
-
-        public virtual Catchment AddSubCatchment(CatchmentType catchmentType)
-        {
-            if (!CatchmentType.SubCatchmentTypes.Contains(catchmentType))
-            {
-                throw new InvalidOperationException("This catchment cannot have sub catchments of given type");
-            }
-
-            var delta = new Coordinate(0, 0);
-            var offset = 100;
-            switch (catchmentType.Name)
-            {
-                case CatchmentType.PavedTypeName:
-                    delta = new Coordinate(-offset, 0);
-                    break;
-                case CatchmentType.UnpavedTypeName:
-                    delta = new Coordinate(0, offset);
-                    break;
-                case CatchmentType.GreenhouseTypeName:
-                    delta = new Coordinate(offset, 0);
-                    break;
-                case CatchmentType.OpenwaterTypeName:
-                    delta = new Coordinate(0, -offset);
-                    break;
-                default:
-                    throw new NotSupportedException("Unknown type to render as part of polder concept");
-            }
-
-            var geometry = new Point(InteriorPoint.X + delta.X, InteriorPoint.Y + delta.Y);
-
-            var subCatchment = new Catchment
-            {
-                Name = Name + "_" + catchmentType,
-                LongName = LongName + "_" + catchmentType,
-                CatchmentType = catchmentType,
-                Geometry = geometry,
-                Basin = Basin
-            };
-            SubCatchments.Add(subCatchment);
-            return subCatchment;
         }
     }
 }

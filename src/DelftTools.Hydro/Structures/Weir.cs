@@ -38,6 +38,11 @@ namespace DelftTools.Hydro.Structures
             CanBeTimedependent = allowTimeVaryingData;
         }
 
+        [ReadOnly(true)]
+        [DisplayName("Formula")]
+        [FeatureAttribute(Order = 5)]
+        public virtual string FormulaName => weirFormula.Name;
+
         public virtual bool CanBeTimedependent
         {
             get => canBeTimedependent;
@@ -45,27 +50,6 @@ namespace DelftTools.Hydro.Structures
             {
                 canBeTimedependent = value;
                 OnCanBeTimeDependentSet();
-            }
-        }
-
-        [EditAction]
-        private void OnCanBeTimeDependentSet()
-        {
-            if (canBeTimedependent)
-            {
-                // For performance: initialize lazy
-                if (CrestLevelTimeSeries == null)
-                {
-                    CrestLevelTimeSeries =
-                        HydroTimeSeriesFactory.CreateTimeSeries(GuiParameterNames.CrestLevel,
-                                                                GuiParameterNames.CrestLevel, "m AD");
-                }
-            }
-            else
-            {
-                UseCrestLevelTimeSeries = false;
-
-                CrestLevelTimeSeries = null;
             }
         }
 
@@ -134,34 +118,11 @@ namespace DelftTools.Hydro.Structures
 
         public virtual TimeSeries CrestLevelTimeSeries { get; protected set; }
 
-        [EditAction]
-        private void OnCrestLevelChanged()
-        {
-            if (weirFormula is GeneralStructureWeirFormula)
-            {
-                (weirFormula as GeneralStructureWeirFormula).BedLevelStructureCentre = crestLevel;
-            }
-        }
-
-        [EditAction]
-        private void OnCrestWidthChanged()
-        {
-            if (weirFormula is GeneralStructureWeirFormula)
-            {
-                (weirFormula as GeneralStructureWeirFormula).WidthStructureCentre = crestWidth;
-            }
-        }
-
         public virtual IWeirFormula WeirFormula
         {
             get => weirFormula;
             set => weirFormula = value;
         }
-
-        [ReadOnly(true)]
-        [DisplayName("Formula")]
-        [FeatureAttribute(Order = 5)]
-        public virtual string FormulaName => weirFormula.Name;
 
         /// <summary>
         /// Secondary property : Gated or Not
@@ -215,15 +176,6 @@ namespace DelftTools.Hydro.Structures
             }
         }
 
-        [EditAction]
-        private void UpdateFlowDirection(bool allowPositiveFlow, bool allowNegativeFlow)
-        {
-            if (WeirFormula.HasFlowDirection)
-            {
-                FlowDirection = GetPossibleFlowDirection(allowPositiveFlow, allowNegativeFlow);
-            }
-        }
-
         /// <summary>
         /// Shape along the branch
         /// </summary>
@@ -232,6 +184,9 @@ namespace DelftTools.Hydro.Structures
         [DisplayName("Flow direction")]
         [FeatureAttribute(Order = 8, ExportName = "FlowDir")]
         public virtual FlowDirection FlowDirection { get; set; }
+
+        public virtual bool SpecifyCrestLevelAndWidthOnWeir =>
+            !(weirFormula is GeneralStructureWeirFormula || weirFormula is FreeFormWeirFormula);
 
         public override void CopyFrom(object source)
         {
@@ -254,18 +209,6 @@ namespace DelftTools.Hydro.Structures
             UseCrestLevelTimeSeries = copyFrom.UseCrestLevelTimeSeries;
             CrestLevelTimeSeries = (TimeSeries) copyFrom.CrestLevelTimeSeries.Clone(true);
         }
-
-        private static FlowDirection GetPossibleFlowDirection(bool allowPositiveFlow, bool allowNegativeFlow)
-        {
-            return allowPositiveFlow
-                       ? allowNegativeFlow ? FlowDirection.Both : FlowDirection.Positive
-                       : allowNegativeFlow
-                           ? FlowDirection.Negative
-                           : FlowDirection.None;
-        }
-
-        public virtual bool SpecifyCrestLevelAndWidthOnWeir =>
-            !(weirFormula is GeneralStructureWeirFormula || weirFormula is FreeFormWeirFormula);
 
         public override StructureType GetStructureType()
         {
@@ -300,6 +243,63 @@ namespace DelftTools.Hydro.Structures
             }
 
             return StructureType.Unknown;
+        }
+
+        [EditAction]
+        private void OnCanBeTimeDependentSet()
+        {
+            if (canBeTimedependent)
+            {
+                // For performance: initialize lazy
+                if (CrestLevelTimeSeries == null)
+                {
+                    CrestLevelTimeSeries =
+                        HydroTimeSeriesFactory.CreateTimeSeries(GuiParameterNames.CrestLevel,
+                                                                GuiParameterNames.CrestLevel, "m AD");
+                }
+            }
+            else
+            {
+                UseCrestLevelTimeSeries = false;
+
+                CrestLevelTimeSeries = null;
+            }
+        }
+
+        [EditAction]
+        private void OnCrestLevelChanged()
+        {
+            if (weirFormula is GeneralStructureWeirFormula)
+            {
+                (weirFormula as GeneralStructureWeirFormula).BedLevelStructureCentre = crestLevel;
+            }
+        }
+
+        [EditAction]
+        private void OnCrestWidthChanged()
+        {
+            if (weirFormula is GeneralStructureWeirFormula)
+            {
+                (weirFormula as GeneralStructureWeirFormula).WidthStructureCentre = crestWidth;
+            }
+        }
+
+        [EditAction]
+        private void UpdateFlowDirection(bool allowPositiveFlow, bool allowNegativeFlow)
+        {
+            if (WeirFormula.HasFlowDirection)
+            {
+                FlowDirection = GetPossibleFlowDirection(allowPositiveFlow, allowNegativeFlow);
+            }
+        }
+
+        private static FlowDirection GetPossibleFlowDirection(bool allowPositiveFlow, bool allowNegativeFlow)
+        {
+            return allowPositiveFlow
+                       ? allowNegativeFlow ? FlowDirection.Both : FlowDirection.Positive
+                       : allowNegativeFlow
+                           ? FlowDirection.Negative
+                           : FlowDirection.None;
         }
     }
 }

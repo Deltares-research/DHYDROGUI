@@ -24,7 +24,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         private const string RecordsInTableKey = "records-in-table";
         private const string UnitKey = "unit";
         private const string TimeUnit = "minutes";
-        private int blocknr = 0;
 
         private readonly List<FlowBoundaryQuantityType> supportedProcesses = new List<FlowBoundaryQuantityType>()
         {
@@ -36,20 +35,50 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         };
 
         private readonly int columnWidth = RecordsInTableKey.Length + 1; /* Largest string length */
+        private int blocknr = 0;
 
-        private static string[] SplitString(string str)
+        public override void Write(
+            IEnumerable<KeyValuePair<IBoundaryCondition, BoundaryConditionSet>> boundaryConditions,
+            string filePath, BcFileFlowBoundaryDataBuilder boundaryDataBuilder, DateTime? refDate = null)
         {
-            return str.Split('\'')
-                      .Select((element, index) => index % 2 == 0 // If even index
-                                                      ? element.Split(new[]
-                                                      {
-                                                          ' '
-                                                      }, StringSplitOptions.RemoveEmptyEntries) // Split the item
-                                                      : new string[]
-                                                      {
-                                                          element
-                                                      }) // Keep the entire item
-                      .SelectMany(element => element).ToArray();
+            blocknr = 0;
+            base.Write(boundaryConditions, filePath, boundaryDataBuilder, refDate);
+        }
+
+        public override IEnumerable<BcBlockData> Read(string inputFile)
+        {
+            OpenInputFile(inputFile);
+            try
+            {
+                string line = GetNextLine();
+                while (line != null)
+                {
+                    if (line.StartsWith(BlockKey))
+                    {
+                        line = GetNextLine();
+                    }
+
+                    if (line.StartsWith(LocationKey))
+                    {
+                        string[] splitHeader = SplitString(line);
+                        string boundaryName = splitHeader.Length == 2 ? splitHeader[1] : "BoundaryName";
+                        BcmBlockData block = ReadDataBlock(out line, boundaryName);
+                        if (block != null)
+                        {
+                            yield return block;
+                        }
+                    }
+                    else
+                    {
+                        log.WarnFormat("Omitting line {0} not strarting with {1}", LineNumber, BlockKey);
+                        line = GetNextLine();
+                    }
+                }
+            }
+            finally
+            {
+                CloseInputFile();
+            }
         }
 
         protected override List<string> SupportedProcesses
@@ -59,35 +88,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                 return supportedProcesses.Select(sp => FlowBoundaryCondition.GetProcessNameForQuantity(sp)).Distinct()
                                          .ToList();
             }
-        }
-
-        private void WriteKyeValuePairParameterLine(string parameter, string unit)
-        {
-            string valueString = WriteBetweenCommas(parameter);
-            if (unit != null)
-            {
-                valueString = valueString + " " + UnitKey + " " + WriteBetweenCommas(unit);
-            }
-
-            WriteKeyValuePairLine(ParameterKey, valueString);
-        }
-
-        private string WriteBetweenCommas(string value)
-        {
-            return "\'" + value + "\'";
-        }
-
-        private void WriteKeyValuePairLine(string keyString, string valueString)
-        {
-            WriteLine(keyString.PadRight(columnWidth) + valueString);
-        }
-
-        public override void Write(
-            IEnumerable<KeyValuePair<IBoundaryCondition, BoundaryConditionSet>> boundaryConditions,
-            string filePath, BcFileFlowBoundaryDataBuilder boundaryDataBuilder, DateTime? refDate = null)
-        {
-            blocknr = 0;
-            base.Write(boundaryConditions, filePath, boundaryDataBuilder, refDate);
         }
 
         protected override void WriteBlock(BcBlockData block)
@@ -171,6 +171,42 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             }
         }
 
+        private static string[] SplitString(string str)
+        {
+            return str.Split('\'')
+                      .Select((element, index) => index % 2 == 0 // If even index
+                                                      ? element.Split(new[]
+                                                      {
+                                                          ' '
+                                                      }, StringSplitOptions.RemoveEmptyEntries) // Split the item
+                                                      : new string[]
+                                                      {
+                                                          element
+                                                      }) // Keep the entire item
+                      .SelectMany(element => element).ToArray();
+        }
+
+        private void WriteKyeValuePairParameterLine(string parameter, string unit)
+        {
+            string valueString = WriteBetweenCommas(parameter);
+            if (unit != null)
+            {
+                valueString = valueString + " " + UnitKey + " " + WriteBetweenCommas(unit);
+            }
+
+            WriteKeyValuePairLine(ParameterKey, valueString);
+        }
+
+        private string WriteBetweenCommas(string value)
+        {
+            return "\'" + value + "\'";
+        }
+
+        private void WriteKeyValuePairLine(string keyString, string valueString)
+        {
+            WriteLine(keyString.PadRight(columnWidth) + valueString);
+        }
+
         private string GetTimeStep(string value, int i, DateTime startTime, string timeUnit)
         {
             if (i == 0)
@@ -208,42 +244,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             }
 
             return date;
-        }
-
-        public override IEnumerable<BcBlockData> Read(string inputFile)
-        {
-            OpenInputFile(inputFile);
-            try
-            {
-                string line = GetNextLine();
-                while (line != null)
-                {
-                    if (line.StartsWith(BlockKey))
-                    {
-                        line = GetNextLine();
-                    }
-
-                    if (line.StartsWith(LocationKey))
-                    {
-                        string[] splitHeader = SplitString(line);
-                        string boundaryName = splitHeader.Length == 2 ? splitHeader[1] : "BoundaryName";
-                        BcmBlockData block = ReadDataBlock(out line, boundaryName);
-                        if (block != null)
-                        {
-                            yield return block;
-                        }
-                    }
-                    else
-                    {
-                        log.WarnFormat("Omitting line {0} not strarting with {1}", LineNumber, BlockKey);
-                        line = GetNextLine();
-                    }
-                }
-            }
-            finally
-            {
-                CloseInputFile();
-            }
         }
 
         private BcmBlockData ReadDataBlock(out string line, string blockName)

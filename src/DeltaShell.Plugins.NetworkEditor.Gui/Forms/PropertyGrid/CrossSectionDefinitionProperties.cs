@@ -16,8 +16,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [DisplayName("Name")]
         public string Name
         {
-            get { return data.Name; }
-            set { data.Name = value; }
+            get
+            {
+                return data.Name;
+            }
+            set
+            {
+                data.Name = value;
+            }
         }
 
         [Description("Type of the cross section definition.")]
@@ -25,15 +31,24 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [DisplayName("Definition Type")]
         public CrossSectionType Type
         {
-            get { return data.CrossSectionType; }
+            get
+            {
+                return data.CrossSectionType;
+            }
         }
-        
+
         [Description("Thalweg; offset in cross section where thalweg intersects channel.")]
         [Category("General")]
         public double Thalweg
         {
-            get { return Math.Round(data.Thalweg, 2); }
-            set { data.Thalweg = CrossSectionHelper.ValidateThalWay(data, value); }
+            get
+            {
+                return Math.Round(data.Thalweg, 2);
+            }
+            set
+            {
+                data.Thalweg = CrossSectionHelper.ValidateThalWay(data, value);
+            }
         }
 
         [Description("Does this (ZW) definition have a summer dike")]
@@ -60,21 +75,30 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [Category("Metrics")]
         public double LowestPoint
         {
-            get { return data.LowestPoint; }
+            get
+            {
+                return data.LowestPoint;
+            }
         }
 
         [Description("Highest level of the cross section (m)")]
         [Category("Metrics")]
         public double HighestPoint
         {
-            get { return data.HighestPoint; }
+            get
+            {
+                return data.HighestPoint;
+            }
         }
 
         [Description("Width of the cross section (m)")]
         [Category("Metrics")]
         public double Width
         {
-            get { return data.Width; }
+            get
+            {
+                return data.Width;
+            }
         }
     }
 }

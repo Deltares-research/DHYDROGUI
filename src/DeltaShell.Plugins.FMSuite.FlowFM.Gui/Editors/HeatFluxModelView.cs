@@ -16,16 +16,42 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
         {
             InitializeComponent();
             radiationCheckBox.CheckedChanged += RadiationCheckBoxOnCheckedChanged;
-            ChildViews = new EventedList<IView>(new[] {tabbedMultipleFunctionView});
+            ChildViews = new EventedList<IView>(new[]
+            {
+                tabbedMultipleFunctionView
+            });
+        }
+
+        public TabbedMultipleFunctionView FunctionView
+        {
+            get
+            {
+                return tabbedMultipleFunctionView;
+            }
         }
 
         public override string Text
         {
-            get { return "Heat flux model data"; }
+            get
+            {
+                return "Heat flux model data";
+            }
         }
 
         public Image Image { get; set; }
-        public void EnsureVisible(object item){}
+
+        public IEventedList<IView> ChildViews { get; private set; }
+
+        public bool HandlesChildViews
+        {
+            get
+            {
+                return true;
+            }
+        }
+
+        public void EnsureVisible(object item) {}
+        public void ActivateChildView(IView childView) {}
 
         private HeatFluxModel HeatFluxModel
         {
@@ -42,9 +68,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
                     radiationCheckBox.Enabled = heatFluxModel.CanHaveSolarRadiation;
                     radiationCheckBox.Checked = heatFluxModel.ContainsSolarRadiation;
 
-                    if(heatFluxModel.MeteoData != null)
+                    if (heatFluxModel.MeteoData != null)
                     {
-                        tabbedMultipleFunctionView.Data = new[] {heatFluxModel.MeteoData};
+                        tabbedMultipleFunctionView.Data = new[]
+                        {
+                            heatFluxModel.MeteoData
+                        };
                     }
                     else
                     {
@@ -57,14 +86,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
                     radiationCheckBox.Enabled = false;
                     tabbedMultipleFunctionView.Data = null;
                 }
+
                 radiationCheckBox.CheckedChanged += RadiationCheckBoxOnCheckedChanged;
-                
             }
         }
 
         private void RadiationCheckBoxOnCheckedChanged(object sender, EventArgs eventArgs)
         {
-            bool proceed = true;
+            var proceed = true;
 
             if (heatFluxModel != null)
             {
@@ -73,10 +102,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
                     if (heatFluxModel.MeteoData != null &&
                         heatFluxModel.MeteoData.Arguments[0].Values.Count > 0)
                     {
-                        var dialogResult = MessageBox.Show("Are you sure you want to erase solar radiation data?",
-                                                           "Dismiss solar radiation",
-                                                           MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
-                        
+                        DialogResult dialogResult = MessageBox.Show("Are you sure you want to erase solar radiation data?",
+                                                                    "Dismiss solar radiation",
+                                                                    MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
+
                         if (dialogResult == DialogResult.Cancel)
                         {
                             proceed = false;
@@ -93,28 +122,28 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
                 {
                     radiationCheckBox.CheckedChanged -= RadiationCheckBoxOnCheckedChanged;
                     // reset value back to what it was
-                    radiationCheckBox.Checked = heatFluxModel.ContainsSolarRadiation;    
+                    radiationCheckBox.Checked = heatFluxModel.ContainsSolarRadiation;
                     radiationCheckBox.CheckedChanged += RadiationCheckBoxOnCheckedChanged;
                 }
             }
         }
 
-        public TabbedMultipleFunctionView FunctionView{get { return tabbedMultipleFunctionView; }}
-
         #region IView
 
         public object Data
         {
-            get { return HeatFluxModel; }
-            set { HeatFluxModel = value as HeatFluxModel; }
+            get
+            {
+                return HeatFluxModel;
+            }
+            set
+            {
+                HeatFluxModel = value as HeatFluxModel;
+            }
         }
 
         public ViewInfo ViewInfo { get; set; }
 
         #endregion
-
-        public IEventedList<IView> ChildViews { get; private set; }
-        public bool HandlesChildViews { get { return true; } }
-        public void ActivateChildView(IView childView) {}
     }
 }

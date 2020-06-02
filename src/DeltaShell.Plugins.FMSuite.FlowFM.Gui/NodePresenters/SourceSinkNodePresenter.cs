@@ -1,14 +1,26 @@
 ﻿using System.Collections.Generic;
 using System.Drawing;
+using DelftTools.Controls;
 using DeltaShell.Plugins.FMSuite.Common.Gui.NodePresenters;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
+using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Properties;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
 {
-    class SourceSinkNodePresenter : FMSuiteNodePresenterBase<SourceAndSink>
+    internal class SourceSinkNodePresenter : FMSuiteNodePresenterBase<SourceAndSink>
     {
-        private static readonly Bitmap SourceSinkIcon = Properties.Resources.SourceSink;
-        private static readonly Bitmap SourceIcon = Properties.Resources.LateralSourceMap;
+        private static readonly Bitmap SourceSinkIcon = Resources.SourceSink;
+        private static readonly Bitmap SourceIcon = Resources.LateralSourceMap;
+
+        public override bool CanRenameNode(ITreeNode node)
+        {
+            return true;
+        }
+
+        public override void OnNodeRenamed(SourceAndSink data, string newName)
+        {
+            data.Feature.Name = newName;
+        }
 
         protected override string GetNodeText(SourceAndSink data)
         {
@@ -32,6 +44,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
             {
                 return sourceAndSinks.Remove(nodeData);
             }
+
             var treeShortCut = parentNodeData as FmModelTreeShortcut;
             if (treeShortCut != null)
             {
@@ -41,17 +54,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
                     return sourceAndSinks.Remove(nodeData);
                 }
             }
+
             return false;
-        }
-
-        public override bool CanRenameNode(DelftTools.Controls.ITreeNode node)
-        {
-            return true;
-        }
-
-        public override void OnNodeRenamed(SourceAndSink data, string newName)
-        {
-            data.Feature.Name = newName;
         }
     }
 }

@@ -21,7 +21,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Buttons
         /// <remarks>
         /// The selected file location value will be put on the COMFile-property with
         /// forward slashes as file separators.
-        /// 
         /// We will not cover the code in this class with tests, as we cannot
         /// automate the behavior in this method, due to the OpenFileDialog.
         /// </remarks>
@@ -33,10 +32,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Buttons
                 return;
             }
 
-            using (var fileDialog = new OpenFileDialog
-            {
-                Filter = string.Format(Resources.SelectComFileButton_ButtonAction_Communication_files___0_, FileConstants.ComFileExtension)
-            })
+            using (var fileDialog = new OpenFileDialog {Filter = string.Format(Resources.SelectComFileButton_ButtonAction_Communication_files___0_, FileConstants.ComFileExtension)})
             {
                 if (fileDialog.ShowDialog() != DialogResult.OK)
                 {

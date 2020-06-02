@@ -7,7 +7,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Helpers
     /// <see cref="MdwFileBackwardsCompatibilityConfigurationValues"/> defines the obsolete and legacy categories
     /// and properties for the <see cref="MdwFile"/>
     /// </summary>
-    /// <seealso cref="IDelftIniBackwardsCompatibilityConfigurationValues" />
+    /// <seealso cref="IDelftIniBackwardsCompatibilityConfigurationValues"/>
     public sealed class MdwFileBackwardsCompatibilityConfigurationValues : IDelftIniBackwardsCompatibilityConfigurationValues
     {
         public ISet<string> ObsoleteProperties { get; } = new HashSet<string>();

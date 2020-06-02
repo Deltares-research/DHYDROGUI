@@ -12,7 +12,7 @@ using DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd;
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.DataAccess
 {
     /// <summary>
-    /// Creates a <see cref="ConditionDataAccessObject" /> based of a <see cref="StandardTriggerXML" />.
+    /// Creates a <see cref="ConditionDataAccessObject"/> based of a <see cref="StandardTriggerXML"/>.
     /// </summary>
     public static class ConditionDataAccessObjectCreator
     {
@@ -24,12 +24,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.DataAccess
         };
 
         /// <summary>
-        /// Creates a <see cref="ConditionDataAccessObject" /> from the specified <paramref name="standardTriggerXml" />.
+        /// Creates a <see cref="ConditionDataAccessObject"/> from the specified <paramref name="standardTriggerXml"/>.
         /// </summary>
         /// <param name="standardTriggerXml"> The standard trigger XML. </param>
         /// <param name="logHandler"> The log handler. </param>
         /// <returns>
-        /// A <see cref="ConditionDataAccessObject" /> created from the specified <paramref name="standardTriggerXml" />.
+        /// A <see cref="ConditionDataAccessObject"/> created from the specified <paramref name="standardTriggerXml"/>.
         /// </returns>
         /// <exception cref="ArgumentNullException">
         /// Thrown when <paramref name="standardTriggerXml"/> is <c>null</c>.

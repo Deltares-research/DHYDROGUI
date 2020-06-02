@@ -12,19 +12,9 @@ using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Properties;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
 {
-    class WindItemListNodePresenter : FMSuiteNodePresenterBase<IEventedList<IWindField>>
+    internal class WindItemListNodePresenter : FMSuiteNodePresenterBase<IEventedList<IWindField>>
     {
         private static readonly Bitmap WindIcon = Resources.Wind1;
-
-        protected override string GetNodeText(IEventedList<IWindField> data)
-        {
-            return "Wind";
-        }
-
-        protected override Image GetNodeImage(IEventedList<IWindField> data)
-        {
-            return WindIcon;
-        }
 
         public override IEnumerable GetChildNodeObjects(IEventedList<IWindField> parentNodeData, ITreeNode node)
         {
@@ -33,7 +23,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
 
         public override IMenuItem GetContextMenu(ITreeNode sender, object nodeData)
         {
-            var menu = base.GetContextMenu(sender, nodeData);
+            IMenuItem menu = base.GetContextMenu(sender, nodeData);
             var menuStrip = new ContextMenuStrip();
             var addItem = new ClonableToolStripMenuItem
             {
@@ -47,14 +37,28 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
             return menu;
         }
 
+        protected override string GetNodeText(IEventedList<IWindField> data)
+        {
+            return "Wind";
+        }
+
+        protected override Image GetNodeImage(IEventedList<IWindField> data)
+        {
+            return WindIcon;
+        }
+
         private void AddItemOnClick(object sender, EventArgs eventArgs)
         {
-            var windItems = ((ToolStripMenuItem)sender).Tag as IEventedList<IWindField>;
-            if (windItems == null) return;
+            var windItems = ((ToolStripMenuItem) sender).Tag as IEventedList<IWindField>;
+            if (windItems == null)
+            {
+                return;
+            }
+
             var dialog = new WindSelectionDialog();
             if (dialog.ShowDialog() == DialogResult.OK)
             {
-                var windItem = dialog.WindField;
+                IWindField windItem = dialog.WindField;
                 if (windItem != null)
                 {
                     windItems.Add(windItem);

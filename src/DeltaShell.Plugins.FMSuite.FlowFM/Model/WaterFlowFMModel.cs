@@ -46,8 +46,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                                             IHasCoordinateSystem, IGridOperationApi, IDisposable, IHydroModel,
                                             IHydFileModel, IDimrModel, IWaterFlowFMModel, ISedimentModelData
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(WaterFlowFMModel));
         private const string HydroAreaTag = "hydro_area_tag";
+        private static readonly ILog Log = LogManager.GetLogger(typeof(WaterFlowFMModel));
         private readonly IList<IDisposable> syncers = new List<IDisposable>();
         private readonly DimrRunner runner;
         private WaterFlowFMModelDefinition modelDefinition;
@@ -113,6 +113,261 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             FireImportProgressChanged(this, "Reading spatial operations", 9, TotalImportSteps);
             AddSpatialDataItems();
             ImportSpatialOperationsAfterCreating();
+        }
+
+        public Type SupportedRegionType => typeof(HydroArea);
+
+        /// <summary>
+        /// Make a copy of the file if it is located in the DeltaShell working directory
+        /// </summary>
+        public bool CopyFromWorkingDirectory { get; }
+
+        public WaterFlowFMModelDefinition ModelDefinition
+        {
+            get => modelDefinition;
+            private set
+            {
+                if (modelDefinition != null)
+                {
+                    ((INotifyPropertyChange) modelDefinition.Properties).PropertyChanged -=
+                        OnModelDefinitionPropertyChanged;
+                }
+
+                modelDefinition = value;
+
+                OnModelDefinitionChanged();
+
+                if (modelDefinition != null)
+                {
+                    ((INotifyPropertyChange) modelDefinition.Properties).PropertyChanged +=
+                        OnModelDefinitionPropertyChanged;
+                }
+            }
+        }
+
+        #region Implementation of IWaterFlowFMModel
+
+        public bool DisableFlowNodeRenumbering { get; set; }
+
+        #endregion
+
+        // Do not remove...used in HydroModelBuilder.py
+        public void SetWaveForcing()
+        {
+            ModelDefinition.GetModelProperty(KnownProperties.WaveModelNr).SetValueAsString("3");
+        }
+
+        public virtual string GetFeatureCategory(IFeature feature)
+        {
+            if (feature is IPump)
+            {
+                return KnownFeatureCategories.Pumps;
+            }
+
+            if (feature is IWeir weir)
+            {
+                IWeirFormula weirFormula = weir.WeirFormula;
+                if (weirFormula is GeneralStructureWeirFormula)
+                {
+                    return KnownFeatureCategories.GeneralStructures;
+                }
+
+                if (weirFormula is GatedWeirFormula)
+                {
+                    return KnownFeatureCategories.Gates;
+                }
+
+                return KnownFeatureCategories.Weirs;
+            }
+
+            if (Area.ObservationPoints.Contains(feature))
+            {
+                return KnownFeatureCategories.ObservationPoints;
+            }
+
+            if (Area.ObservationCrossSections.Contains(feature))
+            {
+                return KnownFeatureCategories.ObservationCrossSections;
+            }
+
+            return null;
+        }
+
+        private void SynchronizeModelDefinitions()
+        {
+            HeatFluxModelType = ModelDefinition.HeatFluxModel.Type; // sync the heat flux model
+            Boundaries = ModelDefinition.Boundaries;
+            BoundaryConditionSets = ModelDefinition.BoundaryConditionSets;
+            WindFields = ModelDefinition.WindFields;
+            UnsupportedFileBasedExtForceFileItems = ModelDefinition.UnsupportedFileBasedExtForceFileItems;
+            Pipes = ModelDefinition.Pipes;
+            SourcesAndSinks = ModelDefinition.SourcesAndSinks;
+
+            // read depth layer definition
+            DepthLayerDefinition = ModelDefinition.Kmx == 0
+                                       ? new DepthLayerDefinition(DepthLayerType.Single)
+                                       : new DepthLayerDefinition(ModelDefinition.Kmx);
+
+            syncers.Add(
+                new FeatureDataSyncer<Feature2D, BoundaryConditionSet>(Boundaries, BoundaryConditionSets,
+                                                                       CreateBoundaryCondition));
+            syncers.Add(new FeatureDataSyncer<Feature2D, SourceAndSink>(Pipes, SourcesAndSinks, CreateSourceAndSink));
+        }
+
+        private void AddTracerToSourcesAndSink(string name)
+        {
+            SourcesAndSinks.ForEach(ss =>
+            {
+                if (!ss.TracerNames.Contains(name))
+                {
+                    ss.TracerNames.Add(name);
+                }
+            });
+        }
+
+        private void AddToInitialCoverages(IList<UnstructuredGridCellCoverage> initialCoverages, string spatiallyVaryingName)
+        {
+            if (initialCoverages == null)
+            {
+                return;
+            }
+
+            IDataItem t = DataItems.FirstOrDefault(di => di.Name == spatiallyVaryingName);
+            if (t == null)
+            {
+                UnstructuredGridCellCoverage unstructuredGridCellCoverage =
+                    CreateUnstructuredGridCellCoverage(spatiallyVaryingName, Grid);
+                initialCoverages.Add(unstructuredGridCellCoverage);
+            }
+            else
+            {
+                var unstrGridCellCoverage = t.Value as UnstructuredGridCellCoverage;
+                if (unstrGridCellCoverage == null)
+                {
+                    t.Value = CreateUnstructuredGridCellCoverage(spatiallyVaryingName, Grid);
+                    initialCoverages.Add((UnstructuredGridCellCoverage) t.Value);
+                    /* DELFT3DFM-1077 
+                     * Apparently the spatial operation is not being executed after being added (which should be)
+                     * We can force it here.
+                     */
+                    var spOperationSet = t.ValueConverter as SpatialOperationSetValueConverter;
+                    if (spOperationSet != null)
+                    {
+                        spOperationSet.SpatialOperationSet.Execute();
+                    }
+                }
+                else
+                {
+                    if (!initialCoverages.Contains(unstrGridCellCoverage))
+                    {
+                        initialCoverages.Add(unstrGridCellCoverage);
+                    }
+                }
+            }
+        }
+
+        private void AddToInitialFractions(string spatiallyVaryingName)
+        {
+            AddToInitialCoverages(InitialFractions, spatiallyVaryingName);
+        }
+
+        private void AddToInitialTracers(string spatiallyVaryingName)
+        {
+            AddToInitialCoverages(InitialTracers, spatiallyVaryingName);
+        }
+
+        private void AddSpatialDataItems()
+        {
+            AddOrRenameDataItem(Bathymetry, WaterFlowFMModelDefinition.BathymetryDataItemName);
+
+            // Backwards compatibility
+            // BedLevel dataitem value used to be exclusively UnstructuredGridVertexCoverages, now it needs to be more generic
+            IDataItem bedLevelDataItem =
+                DataItems.FirstOrDefault(di => di.Name == WaterFlowFMModelDefinition.BathymetryDataItemName);
+            if (bedLevelDataItem != null)
+            {
+                bedLevelDataItem.ValueType = typeof(UnstructuredGridCoverage);
+            }
+
+            AddOrRenameDataItem(InitialWaterLevel, WaterFlowFMModelDefinition.InitialWaterLevelDataItemName);
+            AddOrRenameDataItem(Roughness, WaterFlowFMModelDefinition.RoughnessDataItemName);
+            AddOrRenameDataItem(Viscosity, WaterFlowFMModelDefinition.ViscosityDataItemName);
+            AddOrRenameDataItem(Diffusivity, WaterFlowFMModelDefinition.DiffusivityDataItemName);
+            AddOrRenameDataItem(InitialTemperature, WaterFlowFMModelDefinition.InitialTemperatureDataItemName);
+            AddOrRenameDataItems(InitialSalinity, WaterFlowFMModelDefinition.InitialSalinityDataItemName);
+            AddOrRenameTracerDataItems();
+            AddOrRenameFractionDataItems();
+        }
+
+        private void AddOrRenameTracerDataItems()
+        {
+            foreach (UnstructuredGridCellCoverage initialTracer in InitialTracers)
+            {
+                AddOrRenameDataItem(initialTracer, initialTracer.Name);
+            }
+        }
+
+        private void AddOrRenameFractionDataItems()
+        {
+            foreach (UnstructuredGridCellCoverage initialFraction in InitialFractions)
+            {
+                AddOrRenameDataItem(initialFraction, initialFraction.Name);
+            }
+        }
+
+        private void AddOrRenameDataItem(ICoverage coverage, string name)
+        {
+            IDataItem existingDataItem = GetDataItemByValue(coverage);
+            if (existingDataItem == null)
+            {
+                DataItems.Add(new DataItem(coverage, name) {Role = DataItemRole.Input});
+            }
+            else
+            {
+                if (existingDataItem.Name != name)
+                {
+                    existingDataItem.Name = name;
+                }
+            }
+        }
+
+        private void AddOrRenameDataItems(CoverageDepthLayersList coverageDepthLayersList, string name)
+        {
+            var i = 1;
+            bool uniform = coverageDepthLayersList.VerticalProfile.Type == VerticalProfileType.Uniform;
+
+            foreach (ICoverage coverage in coverageDepthLayersList.Coverages)
+            {
+                string numberedName = uniform ? name : name + "_" + i++;
+                AddOrRenameDataItem(coverage, numberedName);
+            }
+        }
+
+        private static BoundaryConditionSet CreateBoundaryCondition(Feature2D feature)
+        {
+            return new BoundaryConditionSet {Feature = feature};
+        }
+
+        private static SourceAndSink CreateSourceAndSink(Feature2D feature)
+        {
+            return new SourceAndSink {Feature = feature};
+        }
+
+        private ModelFeatureCoordinateData<FixedWeir> CreateModelFeatureCoordinateDataFor(FixedWeir fixedWeir)
+        {
+            var modelFeatureCoordinateData = new ModelFeatureCoordinateData<FixedWeir> {Feature = fixedWeir};
+            string scheme = ModelDefinition.GetModelProperty(KnownProperties.FixedWeirScheme).GetValueAsString();
+
+            modelFeatureCoordinateData.UpdateDataColumns(scheme);
+            return modelFeatureCoordinateData;
+        }
+
+        private ModelFeatureCoordinateData<BridgePillar> CreateModelFeatureCoordinateDataFor(BridgePillar bridgePillar)
+        {
+            var modelFeatureCoordinateData = new ModelFeatureCoordinateData<BridgePillar> {Feature = bridgePillar};
+            modelFeatureCoordinateData.UpdateDataColumns();
+
+            return modelFeatureCoordinateData;
         }
 
         #region Model Data
@@ -377,7 +632,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             set {}
         }
 
-        #region  IHasCoordinateSystem        
+        #region IHasCoordinateSystem
 
         public ICoordinateSystem CoordinateSystem
         {
@@ -519,206 +774,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
         #endregion Model Data
 
-        public WaterFlowFMModelDefinition ModelDefinition
-        {
-            get => modelDefinition;
-            private set
-            {
-                if (modelDefinition != null)
-                {
-                    ((INotifyPropertyChange) modelDefinition.Properties).PropertyChanged -=
-                        OnModelDefinitionPropertyChanged;
-                }
-
-                modelDefinition = value;
-
-                OnModelDefinitionChanged();
-
-                if (modelDefinition != null)
-                {
-                    ((INotifyPropertyChange) modelDefinition.Properties).PropertyChanged +=
-                        OnModelDefinitionPropertyChanged;
-                }
-            }
-        }
-
-        private void SynchronizeModelDefinitions()
-        {
-            HeatFluxModelType = ModelDefinition.HeatFluxModel.Type; // sync the heat flux model
-            Boundaries = ModelDefinition.Boundaries;
-            BoundaryConditionSets = ModelDefinition.BoundaryConditionSets;
-            WindFields = ModelDefinition.WindFields;
-            UnsupportedFileBasedExtForceFileItems = ModelDefinition.UnsupportedFileBasedExtForceFileItems;
-            Pipes = ModelDefinition.Pipes;
-            SourcesAndSinks = ModelDefinition.SourcesAndSinks;
-
-            // read depth layer definition
-            DepthLayerDefinition = ModelDefinition.Kmx == 0
-                                       ? new DepthLayerDefinition(DepthLayerType.Single)
-                                       : new DepthLayerDefinition(ModelDefinition.Kmx);
-
-            syncers.Add(
-                new FeatureDataSyncer<Feature2D, BoundaryConditionSet>(Boundaries, BoundaryConditionSets,
-                                                                       CreateBoundaryCondition));
-            syncers.Add(new FeatureDataSyncer<Feature2D, SourceAndSink>(Pipes, SourcesAndSinks, CreateSourceAndSink));
-        }
-
-        private void AddTracerToSourcesAndSink(string name)
-        {
-            SourcesAndSinks.ForEach(ss =>
-            {
-                if (!ss.TracerNames.Contains(name))
-                {
-                    ss.TracerNames.Add(name);
-                }
-            });
-        }
-
-        private void AddToInitialCoverages(IList<UnstructuredGridCellCoverage> initialCoverages, string spatiallyVaryingName)
-        {
-            if (initialCoverages == null)
-            {
-                return;
-            }
-
-            IDataItem t = DataItems.FirstOrDefault(di => di.Name == spatiallyVaryingName);
-            if (t == null)
-            {
-                UnstructuredGridCellCoverage unstructuredGridCellCoverage =
-                    CreateUnstructuredGridCellCoverage(spatiallyVaryingName, Grid);
-                initialCoverages.Add(unstructuredGridCellCoverage);
-            }
-            else
-            {
-                var unstrGridCellCoverage = t.Value as UnstructuredGridCellCoverage;
-                if (unstrGridCellCoverage == null)
-                {
-                    t.Value = CreateUnstructuredGridCellCoverage(spatiallyVaryingName, Grid);
-                    initialCoverages.Add((UnstructuredGridCellCoverage)t.Value);
-                    /* DELFT3DFM-1077 
-                     * Apparently the spatial operation is not being executed after being added (which should be)
-                     * We can force it here.
-                     */
-                    var spOperationSet = t.ValueConverter as SpatialOperationSetValueConverter;
-                    if (spOperationSet != null)
-                    {
-                        spOperationSet.SpatialOperationSet.Execute();
-                    }
-                }
-                else
-                {
-                    if (!initialCoverages.Contains(unstrGridCellCoverage))
-                    {
-                        initialCoverages.Add(unstrGridCellCoverage);
-                    }
-                }
-            }
-        }
-
-        private void AddToInitialFractions(string spatiallyVaryingName)
-        {
-            AddToInitialCoverages(InitialFractions, spatiallyVaryingName);
-        }
-
-        private void AddToInitialTracers(string spatiallyVaryingName)
-        {
-            AddToInitialCoverages(InitialTracers, spatiallyVaryingName);
-        }
-
-        private void AddSpatialDataItems()
-        {
-            AddOrRenameDataItem(Bathymetry, WaterFlowFMModelDefinition.BathymetryDataItemName);
-
-            // Backwards compatibility
-            // BedLevel dataitem value used to be exclusively UnstructuredGridVertexCoverages, now it needs to be more generic
-            IDataItem bedLevelDataItem =
-                DataItems.FirstOrDefault(di => di.Name == WaterFlowFMModelDefinition.BathymetryDataItemName);
-            if (bedLevelDataItem != null)
-            {
-                bedLevelDataItem.ValueType = typeof(UnstructuredGridCoverage);
-            }
-
-            AddOrRenameDataItem(InitialWaterLevel, WaterFlowFMModelDefinition.InitialWaterLevelDataItemName);
-            AddOrRenameDataItem(Roughness, WaterFlowFMModelDefinition.RoughnessDataItemName);
-            AddOrRenameDataItem(Viscosity, WaterFlowFMModelDefinition.ViscosityDataItemName);
-            AddOrRenameDataItem(Diffusivity, WaterFlowFMModelDefinition.DiffusivityDataItemName);
-            AddOrRenameDataItem(InitialTemperature, WaterFlowFMModelDefinition.InitialTemperatureDataItemName);
-            AddOrRenameDataItems(InitialSalinity, WaterFlowFMModelDefinition.InitialSalinityDataItemName);
-            AddOrRenameTracerDataItems();
-            AddOrRenameFractionDataItems();
-        }
-
-        private void AddOrRenameTracerDataItems()
-        {
-            foreach (UnstructuredGridCellCoverage initialTracer in InitialTracers)
-            {
-                AddOrRenameDataItem(initialTracer, initialTracer.Name);
-            }
-        }
-
-        private void AddOrRenameFractionDataItems()
-        {
-            foreach (UnstructuredGridCellCoverage initialFraction in InitialFractions)
-            {
-                AddOrRenameDataItem(initialFraction, initialFraction.Name);
-            }
-        }
-
-        private void AddOrRenameDataItem(ICoverage coverage, string name)
-        {
-            IDataItem existingDataItem = GetDataItemByValue(coverage);
-            if (existingDataItem == null)
-            {
-                DataItems.Add(new DataItem(coverage, name) {Role = DataItemRole.Input});
-            }
-            else
-            {
-                if (existingDataItem.Name != name)
-                {
-                    existingDataItem.Name = name;
-                }
-            }
-        }
-
-        private void AddOrRenameDataItems(CoverageDepthLayersList coverageDepthLayersList, string name)
-        {
-            var i = 1;
-            bool uniform = coverageDepthLayersList.VerticalProfile.Type == VerticalProfileType.Uniform;
-
-            foreach (ICoverage coverage in coverageDepthLayersList.Coverages)
-            {
-                string numberedName = uniform ? name : name + "_" + i++;
-                AddOrRenameDataItem(coverage, numberedName);
-            }
-        }
-
-        private static BoundaryConditionSet CreateBoundaryCondition(Feature2D feature)
-        {
-            return new BoundaryConditionSet {Feature = feature};
-        }
-
-        private static SourceAndSink CreateSourceAndSink(Feature2D feature)
-        {
-            return new SourceAndSink {Feature = feature};
-        }
-
-        private ModelFeatureCoordinateData<FixedWeir> CreateModelFeatureCoordinateDataFor(FixedWeir fixedWeir)
-        {
-            var modelFeatureCoordinateData = new ModelFeatureCoordinateData<FixedWeir> {Feature = fixedWeir};
-            string scheme = ModelDefinition.GetModelProperty(KnownProperties.FixedWeirScheme).GetValueAsString();
-
-            modelFeatureCoordinateData.UpdateDataColumns(scheme);
-            return modelFeatureCoordinateData;
-        }
-
-        private ModelFeatureCoordinateData<BridgePillar> CreateModelFeatureCoordinateDataFor(BridgePillar bridgePillar)
-        {
-            var modelFeatureCoordinateData = new ModelFeatureCoordinateData<BridgePillar> {Feature = bridgePillar};
-            modelFeatureCoordinateData.UpdateDataColumns();
-
-            return modelFeatureCoordinateData;
-        }
-
         #region IHasCoordinateSystem
 
         public bool CanSetCoordinateSystem(ICoordinateSystem potentialCoordinateSystem)
@@ -813,10 +868,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                         continue;
                     }
 
-                    var newOperation = new AddSamplesOperation(false)
-                    {
-                        Name = spatialOperationValueConverter.SpatialOperationSet.Name
-                    };
+                    var newOperation = new AddSamplesOperation(false) {Name = spatialOperationValueConverter.SpatialOperationSet.Name};
                     newOperation.SetInputData(AddSamplesOperation.SamplesInputName,
                                               new PointCloudFeatureProvider
                                               {
@@ -870,14 +922,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         }
 
         #endregion
-
-        public Type SupportedRegionType => typeof(HydroArea);
-
-        // Do not remove...used in HydroModelBuilder.py
-        public void SetWaveForcing()
-        {
-            ModelDefinition.GetModelProperty(KnownProperties.WaveModelNr).SetValueAsString("3");
-        }
 
         #region WaterFlowFMFeatureValueConverter
 
@@ -939,52 +983,5 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         }
 
         #endregion
-
-        public virtual string GetFeatureCategory(IFeature feature)
-        {
-            if (feature is IPump)
-            {
-                return KnownFeatureCategories.Pumps;
-            }
-
-            if (feature is IWeir weir)
-            {
-                IWeirFormula weirFormula = weir.WeirFormula;
-                if (weirFormula is GeneralStructureWeirFormula)
-                {
-                    return KnownFeatureCategories.GeneralStructures;
-                }
-
-                if (weirFormula is GatedWeirFormula)
-                {
-                    return KnownFeatureCategories.Gates;
-                }
-
-                return KnownFeatureCategories.Weirs;
-            }
-
-            if (Area.ObservationPoints.Contains(feature))
-            {
-                return KnownFeatureCategories.ObservationPoints;
-            }
-
-            if (Area.ObservationCrossSections.Contains(feature))
-            {
-                return KnownFeatureCategories.ObservationCrossSections;
-            }
-
-            return null;
-        }
-
-        #region Implementation of IWaterFlowFMModel
-
-        public bool DisableFlowNodeRenumbering { get; set; }
-
-        #endregion
-
-        /// <summary>
-        /// Make a copy of the file if it is located in the DeltaShell working directory
-        /// </summary>
-        public bool CopyFromWorkingDirectory { get; }
     }
 }

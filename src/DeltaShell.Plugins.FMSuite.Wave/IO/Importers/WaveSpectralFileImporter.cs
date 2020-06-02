@@ -17,6 +17,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Importers
             getModels = getModelsFunc;
         }
 
+        public string SelectedFilePath { get; set; }
+
         public string Name => "Swan Spectral File (*.sp2)";
 
         public string Category { get; private set; }
@@ -32,14 +34,18 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Importers
             }
         }
 
+        public bool CanImportOnRootLevel => false;
+
+        public Bitmap Image { get; private set; }
+        public string TargetDataDirectory { get; set; }
+        public bool ShouldCancel { get; set; }
+        public ImportProgressChangedDelegate ProgressChanged { get; set; }
+        public bool OpenViewAfterImport { get; private set; }
+
         public bool CanImportOn(object targetObject)
         {
             return true;
         }
-
-        public bool CanImportOnRootLevel => false;
-
-        public string SelectedFilePath { get; set; }
 
         public object ImportItem(string path, object target)
         {
@@ -61,11 +67,5 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Importers
 
             return target;
         }
-
-        public Bitmap Image { get; private set; }
-        public string TargetDataDirectory { get; set; }
-        public bool ShouldCancel { get; set; }
-        public ImportProgressChangedDelegate ProgressChanged { get; set; }
-        public bool OpenViewAfterImport { get; private set; }
     }
 }

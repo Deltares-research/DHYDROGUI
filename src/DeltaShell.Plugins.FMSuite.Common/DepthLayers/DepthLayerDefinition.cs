@@ -44,7 +44,10 @@ namespace DeltaShell.Plugins.FMSuite.Common.DepthLayers
                     break;
                 case DepthLayerType.Z:
                     layerDepths = !values.Any()
-                                      ? (IList<double>) new double[] {1}
+                                      ? (IList<double>) new double[]
+                                      {
+                                          1
+                                      }
                                       : values.ToList();
                     break;
                 default:

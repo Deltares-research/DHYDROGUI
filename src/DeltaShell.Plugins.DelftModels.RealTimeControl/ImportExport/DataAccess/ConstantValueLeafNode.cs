@@ -19,14 +19,14 @@
         /// </summary>
         public string Value { get; set; }
 
-        public string GetExpression()
-        {
-            return Value;
-        }
-
         public override string ToString()
         {
             return GetExpression();
+        }
+
+        public string GetExpression()
+        {
+            return Value;
         }
     }
 }

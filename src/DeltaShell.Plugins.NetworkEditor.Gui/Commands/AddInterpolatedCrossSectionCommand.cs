@@ -8,6 +8,35 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Commands
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(AddInterpolatedCrossSectionCommand));
 
+        public override bool Checked
+        {
+            get
+            {
+                if (null != MapView && null != CurrentTool && Enabled)
+                {
+                    return CurrentTool.IsActive;
+                }
+
+                return false;
+            }
+        }
+
+        public override bool Enabled
+        {
+            get
+            {
+                if (base.Enabled && CurrentTool is NewPointFeatureTool)
+                {
+                    if (((NewPointFeatureTool) CurrentTool).GetFeaturePerProvider != null)
+                    {
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+        }
+
         protected IMapTool CurrentTool
         {
             get
@@ -19,31 +48,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Commands
         protected override void OnExecute(params object[] arguments)
         {
             MapView.MapControl.ActivateTool(CurrentTool);
-        }
-
-        public override bool Checked
-        {
-            get
-            {
-                if ((null != MapView) && (null != CurrentTool) && Enabled)
-                    return CurrentTool.IsActive;
-                return false;
-            }
-        }
-
-        public override bool Enabled
-        {
-            get
-            {
-                if (base.Enabled && CurrentTool is NewPointFeatureTool)
-                {
-                    if (((NewPointFeatureTool)CurrentTool).GetFeaturePerProvider != null)
-                    {
-                        return true;
-                    }
-                }
-                return false;
-            }
         }
     }
 }

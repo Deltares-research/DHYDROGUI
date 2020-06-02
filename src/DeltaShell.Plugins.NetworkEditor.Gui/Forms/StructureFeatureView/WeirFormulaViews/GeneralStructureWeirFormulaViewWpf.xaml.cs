@@ -10,6 +10,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView.WeirFo
     /// </summary>
     public partial class GeneralStructureWeirFormulaViewWpf : UserControl
     {
+        public static readonly DependencyProperty WeirFormulaProperty =
+            DependencyProperty.Register(
+                "WeirFormula",
+                typeof(GeneralStructureWeirFormula),
+                typeof(GeneralStructureWeirFormulaViewWpf),
+                new FrameworkPropertyMetadata(new GeneralStructureWeirFormula(), OnWeirFormulaChangedCallback));
+
         public GeneralStructureWeirFormulaViewWpf()
         {
             InitializeComponent();
@@ -17,20 +24,19 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView.WeirFo
 
         public GeneralStructureWeirFormula WeirFormula
         {
-            get { return (GeneralStructureWeirFormula) GetValue(WeirFormulaProperty); }
-            set { SetValue(WeirFormulaProperty, value);}
+            get
+            {
+                return (GeneralStructureWeirFormula) GetValue(WeirFormulaProperty);
+            }
+            set
+            {
+                SetValue(WeirFormulaProperty, value);
+            }
         }
-
-        public static readonly DependencyProperty WeirFormulaProperty = 
-            DependencyProperty.Register(
-            "WeirFormula", 
-            typeof(GeneralStructureWeirFormula), 
-            typeof(GeneralStructureWeirFormulaViewWpf),
-            new FrameworkPropertyMetadata(new GeneralStructureWeirFormula(), OnWeirFormulaChangedCallback));
 
         private static void OnWeirFormulaChangedCallback(DependencyObject sender, DependencyPropertyChangedEventArgs e)
         {
-            GeneralStructureWeirFormulaViewWpf f = sender as GeneralStructureWeirFormulaViewWpf;
+            var f = sender as GeneralStructureWeirFormulaViewWpf;
             if (f != null)
             {
                 f.DataContext = e.NewValue as IWeirFormula;

@@ -13,23 +13,22 @@ using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.FMSuite.Common.DepthLayers;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using GeoAPI.Extensions.Feature;
+using GeoAPI.Geometries;
 using log4net;
 
 namespace DeltaShell.Plugins.FMSuite.Common.Gui.Editors
 {
     public partial class BoundaryConditionEditor : UserControl, ICompositeView, IReusableView, ISuspendibleView
     {
-        public event EventHandler<EventArgs<int>> SelectedSupportPointChanged;
-
         private static readonly ILog Log = LogManager.GetLogger(typeof(BoundaryConditionEditor));
+        private readonly IEventedList<IView> childViews;
 
-        private BoundaryConditionFactory boundaryConditionFactory;        
+        private BoundaryConditionFactory boundaryConditionFactory;
         private BoundaryConditionSet boundaryConditionSet;
         private IBoundaryCondition selectedBoundaryCondition;
         private string selectedCategory;
         private int selectedSupportPointIndex;
-        private bool guiHandling;       
-        private readonly IEventedList<IView> childViews;
+        private bool guiHandling;
         private BoundaryConditionEditorController controller;
         private BoundaryConditionPropertiesControl boundaryConditionPropertiesControl;
         private bool supportPointsListBoxUpdating;
@@ -38,20 +37,23 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Editors
         private int cachedSelectedSupportPoint;
         private Control boundaryConditionDataView;
 
+        private bool updatingVerticalProfile;
+        public event EventHandler<EventArgs<int>> SelectedSupportPointChanged;
+
         public BoundaryConditionEditor()
         {
             InitializeComponent();
             childViews = new EventedList<IView>();
 
             categoryComboBox.SelectedValueChanged += SelectedCategoryChanged;
-                        
+
             conditionsListBox.SelectedIndexChanged += SelectedBoundaryConditionChanged;
             conditionsListBox.Format += ConditionsListBoxFormat;
             conditionsListBox.OnItemRemoved += SelectedBoundaryConditionRemoved;
-            
+
             supportPointListBox.SelectedIndexChanged += OnSelectedSupportPointChanged;
             supportPointListBox.ItemCheck += SupportPointListBoxItemCheck;
-            
+
             supportPointListBox.CheckOnClick = false;
 
             verticalProfileControl.AfterProfileDefinitionCreated = ExtractDepthLayerControlData;
@@ -63,7 +65,10 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Editors
 
         public bool ShowSupportPointChainages
         {
-            private get { return showSupportPointChainages; }
+            private get
+            {
+                return showSupportPointChainages;
+            }
             set
             {
                 showSupportPointChainages = value;
@@ -73,7 +78,10 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Editors
 
         public bool ShowSupportPointNames
         {
-            private get { return showSupportPointNames; }
+            private get
+            {
+                return showSupportPointNames;
+            }
             set
             {
                 showSupportPointNames = value;
@@ -93,10 +101,12 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Editors
                 {
                     categoryComboBox.SelectedItem = value;
                 }
+
                 if (selectedCategory == value)
                 {
                     return;
                 }
+
                 selectedCategory = value;
                 RefreshQuantitiesComboBox();
                 RefreshBoundaryConditionsListBox();
@@ -106,13 +116,17 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Editors
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public int SelectedSupportPointIndex
         {
-            get { return selectedSupportPointIndex; }
+            get
+            {
+                return selectedSupportPointIndex;
+            }
             private set
             {
                 if (!guiHandling)
                 {
                     supportPointListBox.SelectedIndex = value;
                 }
+
                 selectedSupportPointIndex = value;
                 FireSelectedSupportPointChanged();
             }
@@ -120,7 +134,10 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Editors
 
         public BoundaryConditionEditorController Controller
         {
-            get { return controller; }
+            get
+            {
+                return controller;
+            }
             set
             {
                 controller = value;
@@ -140,7 +157,10 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Editors
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public BoundaryConditionPropertiesControl BoundaryConditionPropertiesControl
         {
-            private get { return boundaryConditionPropertiesControl; }
+            private get
+            {
+                return boundaryConditionPropertiesControl;
+            }
             set
             {
                 boundaryConditionPropertiesControl = value;
@@ -151,7 +171,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Editors
 
                     boundaryConditionPropertiesControl.BoundaryCondition = SelectedBoundaryCondition;
                     boundaryConditionPropertiesControl.Visible = SelectedBoundaryCondition != null;
-                    
+
                     boundaryConditionPropertiesPanel.Controls.Clear();
                     boundaryConditionPropertiesControl.Dock = DockStyle.Fill;
                     boundaryConditionPropertiesPanel.Controls.Add(boundaryConditionPropertiesControl);
@@ -163,35 +183,38 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Editors
 
         public IBoundaryCondition SelectedBoundaryCondition
         {
-            private get { return selectedBoundaryCondition; }
+            private get
+            {
+                return selectedBoundaryCondition;
+            }
             set
             {
                 if (!guiHandling)
                 {
                     conditionsListBox.SelectedItem = value;
                 }
-                
+
                 if (ReferenceEquals(selectedBoundaryCondition, value))
                 {
                     return;
                 }
-                
+
                 if (selectedBoundaryCondition != null)
                 {
-                    ((INotifyPropertyChange)selectedBoundaryCondition).PropertyChanged -= OnBoundaryConditionPropertyChanged;
+                    ((INotifyPropertyChange) selectedBoundaryCondition).PropertyChanged -= OnBoundaryConditionPropertyChanged;
                     selectedBoundaryCondition.DataPointIndices.CollectionChanged -= OnDataPointsChanged;
                 }
-                
+
                 selectedBoundaryCondition = value;
-                
+
                 if (selectedBoundaryCondition != null)
                 {
-                    ((INotifyPropertyChange)selectedBoundaryCondition).PropertyChanged += OnBoundaryConditionPropertyChanged;
+                    ((INotifyPropertyChange) selectedBoundaryCondition).PropertyChanged += OnBoundaryConditionPropertyChanged;
                     selectedBoundaryCondition.DataPointIndices.CollectionChanged += OnDataPointsChanged;
                 }
-                
+
                 RefreshGeometryPanel();
-                                
+
                 if (BoundaryConditionPropertiesControl != null)
                 {
                     BoundaryConditionPropertiesControl.BoundaryCondition = selectedBoundaryCondition;
@@ -214,13 +237,16 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Editors
 
         public BoundaryConditionFactory BoundaryConditionFactory
         {
-            private get { return boundaryConditionFactory; }
+            private get
+            {
+                return boundaryConditionFactory;
+            }
             set
-            {               
+            {
                 boundaryConditionFactory = value;
 
-                var supportsMultiple = boundaryConditionFactory != null &&
-                                       boundaryConditionFactory.SupportsMultipleConditionsPerSet;
+                bool supportsMultiple = boundaryConditionFactory != null &&
+                                        boundaryConditionFactory.SupportsMultipleConditionsPerSet;
                 addDefinitionButton.Enabled = supportsMultiple;
                 conditionsListBox.AllowItemDelete = supportsMultiple;
             }
@@ -229,7 +255,10 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Editors
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public Control BoundaryConditionDataView
         {
-            get { return boundaryConditionDataView; }
+            get
+            {
+                return boundaryConditionDataView;
+            }
             set
             {
                 childViews.Clear();
@@ -249,66 +278,30 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Editors
 
         public DepthLayerDefinition ModelDepthLayerDefinition
         {
-            set { verticalProfileControl.ModelDepthLayerDefinition = value; }
+            set
+            {
+                verticalProfileControl.ModelDepthLayerDefinition = value;
+            }
         }
 
         public ToolStripItem[] SupportPointListBoxContextMenuItems
         {
-            get { return supportPointListBox.ContextMenuItems; }
-            set { supportPointListBox.ContextMenuItems = value; }
-        }
-
-        public void SuspendUpdates()
-        {
-            cachedBoundaryConditionSet = boundaryConditionSet;
-            cachedBoundaryCondition = SelectedBoundaryCondition;
-            cachedSelectedSupportPoint = SelectedSupportPointIndex;
-            Data = null;
-        }
-
-        public void ResumeUpdates()
-        {
-            Data = cachedBoundaryConditionSet;
-
-            var boundaryCondition =
-                boundaryConditionSet.BoundaryConditions.Contains(cachedBoundaryCondition)
-                    ? cachedBoundaryCondition
-                    : boundaryConditionSet.BoundaryConditions.FirstOrDefault();
-
-            if (boundaryCondition != null)
+            get
             {
-                SelectedCategory = boundaryCondition.ProcessName;
-                SelectedBoundaryCondition = boundaryCondition;
+                return supportPointListBox.ContextMenuItems;
             }
-
-            SelectedSupportPointIndex = cachedSelectedSupportPoint <
-                                        boundaryConditionSet.Feature.Geometry.Coordinates.Count()
-                                            ? cachedSelectedSupportPoint
-                                            : 0;
-        }
-
-        [InvokeRequired]
-        public void UpdateGeometryPanel()
-        {
-            var horizontallyUniform = SelectedBoundaryCondition == null || SelectedBoundaryCondition.IsHorizontallyUniform;
-            var verticallyUniform = SelectedBoundaryCondition == null || SelectedBoundaryCondition.IsVerticallyUniform ||
-                                    !DepthLayerControlVisible;
-
-            tableLayoutPanel1.ColumnStyles[0] = new ColumnStyle(SizeType.Percent, horizontallyUniform ? 0.0f : 33.33f);
-            tableLayoutPanel1.ColumnStyles[2] = new ColumnStyle(SizeType.Percent, verticallyUniform ? 0.0f : 33.33f); 
-            UpdateSupportPointsListBox();
-            UpdateGeometryPreview();
-        }
-
-        public void RefreshAvailableCategories()
-        {
-            RefreshCategoryComboBox();
-            RefreshQuantitiesComboBox();
+            set
+            {
+                supportPointListBox.ContextMenuItems = value;
+            }
         }
 
         public BoundaryConditionSet BoundaryConditionSet
         {
-            get { return boundaryConditionSet; }
+            get
+            {
+                return boundaryConditionSet;
+            }
             set
             {
                 UnSubscribeListBoxes();
@@ -325,25 +318,121 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Editors
                 }
 
                 boundaryGeometryPreview.Feature = boundaryConditionSet == null
-                    ? null
-                    : boundaryConditionSet.Feature;
+                                                      ? null
+                                                      : boundaryConditionSet.Feature;
                 boundaryGeometryPreview.FeatureGeometry = boundaryConditionSet == null
                                                               ? null
                                                               : boundaryConditionSet.Feature.Geometry;
-               
+
                 RefreshSupportPointsListBox();
                 RefreshBoundaryConditionsListBox();
-                
+
                 SelectedBoundaryCondition = boundaryConditionSet == null
                                                 ? null
                                                 : boundaryConditionSet.BoundaryConditions.FirstOrDefault();
-              
+
                 UpdateGeometryPanel();
 
                 RefreshQuantitiesComboBox();
 
                 SelectedSupportPointIndex = selectedSupportPointIndex;
             }
+        }
+
+        public IEnumerable<VerticalProfileType> SupportedVerticalProfileTypes
+        {
+            set
+            {
+                verticalProfileControl.SetSupportedProfileTypes(value);
+            }
+        }
+
+        [InvokeRequired]
+        public void UpdateGeometryPanel()
+        {
+            bool horizontallyUniform = SelectedBoundaryCondition == null || SelectedBoundaryCondition.IsHorizontallyUniform;
+            bool verticallyUniform = SelectedBoundaryCondition == null || SelectedBoundaryCondition.IsVerticallyUniform ||
+                                     !DepthLayerControlVisible;
+
+            tableLayoutPanel1.ColumnStyles[0] = new ColumnStyle(SizeType.Percent, horizontallyUniform ? 0.0f : 33.33f);
+            tableLayoutPanel1.ColumnStyles[2] = new ColumnStyle(SizeType.Percent, verticallyUniform ? 0.0f : 33.33f);
+            UpdateSupportPointsListBox();
+            UpdateGeometryPreview();
+        }
+
+        public void RefreshAvailableCategories()
+        {
+            RefreshCategoryComboBox();
+            RefreshQuantitiesComboBox();
+        }
+
+        public void RefreshQuantitiesComboBox()
+        {
+            quantitiesComboBox.Items.Clear();
+
+            if (BoundaryConditionFactory == null)
+            {
+                return;
+            }
+
+            quantitiesComboBox.Items.AddRange(
+                controller.GetAllowedVariablesFor(SelectedCategory, BoundaryConditionSet)
+                          .Select(v => controller.GetVariableDescription(v, SelectedCategory))
+                          .Cast<object>()
+                          .ToArray());
+
+            quantitiesComboBox.SelectedIndex = quantitiesComboBox.Items.Count != 0 ? 0 : -1;
+            quantitiesComboBox.Enabled = quantitiesComboBox.Items.Count != 0;
+        }
+
+        public void UpdateSupportPointLabel(int j)
+        {
+            if (BoundaryConditionSet == null)
+            {
+                return;
+            }
+
+            var chainage = 0.0;
+            if (ShowSupportPointChainages)
+            {
+                Coordinate[] coordinates = BoundaryConditionSet.Feature.Geometry.Coordinates;
+                for (var i = 1; i < j; ++i)
+                {
+                    chainage += coordinates[i].Distance(coordinates[i - 1]);
+                }
+            }
+
+            string format = ShowSupportPointChainages ? "{0}: {1,10}" : "{0}";
+            supportPointListBox.Items[j] = string.Format(format, SupportPointLabel(j), chainage.ToString("F2"));
+        }
+
+        public void SuspendUpdates()
+        {
+            cachedBoundaryConditionSet = boundaryConditionSet;
+            cachedBoundaryCondition = SelectedBoundaryCondition;
+            cachedSelectedSupportPoint = SelectedSupportPointIndex;
+            Data = null;
+        }
+
+        public void ResumeUpdates()
+        {
+            Data = cachedBoundaryConditionSet;
+
+            IBoundaryCondition boundaryCondition =
+                boundaryConditionSet.BoundaryConditions.Contains(cachedBoundaryCondition)
+                    ? cachedBoundaryCondition
+                    : boundaryConditionSet.BoundaryConditions.FirstOrDefault();
+
+            if (boundaryCondition != null)
+            {
+                SelectedCategory = boundaryCondition.ProcessName;
+                SelectedBoundaryCondition = boundaryCondition;
+            }
+
+            SelectedSupportPointIndex = cachedSelectedSupportPoint <
+                                        boundaryConditionSet.Feature.Geometry.Coordinates.Count()
+                                            ? cachedSelectedSupportPoint
+                                            : 0;
         }
 
         private IEnumerable<string> Categories
@@ -356,11 +445,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Editors
             }
         }
 
-        public IEnumerable<VerticalProfileType> SupportedVerticalProfileTypes
-        {
-            set { verticalProfileControl.SetSupportedProfileTypes(value); }
-        }
-
         private void RefreshSupportPointsListBox()
         {
             supportPointListBox.Items.Clear();
@@ -368,17 +452,20 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Editors
             {
                 return;
             }
-            
-            var coordinates = ((IFeature)boundaryConditionSet.Feature).Geometry.Coordinates.ToList();
-            if (coordinates.Count == 0) return;
 
-            int i = 0;
-            double chainage = 0.0;
-            var format = ShowSupportPointChainages ? "{0}: {1,10}" : "{0}";
+            List<Coordinate> coordinates = ((IFeature) boundaryConditionSet.Feature).Geometry.Coordinates.ToList();
+            if (coordinates.Count == 0)
+            {
+                return;
+            }
+
+            var i = 0;
+            var chainage = 0.0;
+            string format = ShowSupportPointChainages ? "{0}: {1,10}" : "{0}";
             supportPointListBox.Items.Add(string.Format(format, SupportPointLabel(i), chainage.ToString("F2")));
             for (i = 1; i < coordinates.Count; ++i)
             {
-                chainage += coordinates[i].Distance(coordinates[i-1]);
+                chainage += coordinates[i].Distance(coordinates[i - 1]);
                 supportPointListBox.Items.Add(string.Format(format, SupportPointLabel(i), chainage.ToString("F2")));
             }
         }
@@ -386,22 +473,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Editors
         private string SupportPointLabel(int i)
         {
             return ShowSupportPointNames ? BoundaryConditionSet.SupportPointNames[i] : (i + 1).ToString();
-        }
-
-        public void RefreshQuantitiesComboBox()
-        {
-            quantitiesComboBox.Items.Clear();
-            
-            if (BoundaryConditionFactory == null) return;
-
-            quantitiesComboBox.Items.AddRange(
-                controller.GetAllowedVariablesFor(SelectedCategory, BoundaryConditionSet)
-                          .Select(v => controller.GetVariableDescription(v, SelectedCategory))
-                          .Cast<object>()
-                          .ToArray());
-
-            quantitiesComboBox.SelectedIndex = quantitiesComboBox.Items.Count != 0 ? 0 : -1;
-            quantitiesComboBox.Enabled = quantitiesComboBox.Items.Count != 0;
         }
 
         private void RefreshCategoryComboBox()
@@ -419,7 +490,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Editors
             {
                 definitions =
                     boundaryConditionSet.BoundaryConditions.Where(
-                        bc => bc.ProcessName == (string)categoryComboBox.SelectedItem).OfType<object>().ToList();
+                        bc => bc.ProcessName == (string) categoryComboBox.SelectedItem).OfType<object>().ToList();
             }
 
             conditionsListBox.Items.Clear();
@@ -437,8 +508,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Editors
         private void RefreshGeometryPanel()
         {
             boundaryGeometryPreview.Feature = boundaryConditionSet == null
-                    ? null
-                    : boundaryConditionSet.Feature;
+                                                  ? null
+                                                  : boundaryConditionSet.Feature;
             boundaryGeometryPreview.FeatureGeometry = BoundaryConditionSet == null
                                                           ? null
                                                           : BoundaryConditionSet.Feature.Geometry;
@@ -465,11 +536,17 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Editors
 
             else if (SelectedBoundaryCondition.IsHorizontallyUniform)
             {
-                boundaryGeometryPreview.SelectedPoints = new[] {0};
+                boundaryGeometryPreview.SelectedPoints = new[]
+                {
+                    0
+                };
             }
             else
             {
-                boundaryGeometryPreview.SelectedPoints = new[] {SelectedSupportPointIndex};
+                boundaryGeometryPreview.SelectedPoints = new[]
+                {
+                    SelectedSupportPointIndex
+                };
             }
         }
 
@@ -497,32 +574,41 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Editors
 
             supportPointListBox.Enabled = true;
 
-            foreach (var i in SelectedBoundaryCondition.DataPointIndices)
+            foreach (int i in SelectedBoundaryCondition.DataPointIndices)
             {
                 supportPointListBox.SetItemChecked(i, true);
             }
+
             supportPointsListBoxUpdating = false;
         }
 
-        private bool updatingVerticalProfile;
-
         private void FillDepthLayerControl()
         {
-            if (updatingVerticalProfile) return;
+            if (updatingVerticalProfile)
+            {
+                return;
+            }
+
             verticalProfileControl.VerticalProfileDefinition = SelectedBoundaryCondition == null
                                                                    ? null
                                                                    : SelectedBoundaryCondition
-                                                                         .GetDepthLayerDefinitionAtPoint(
-                                                                             SelectedSupportPointIndex);
+                                                                       .GetDepthLayerDefinitionAtPoint(
+                                                                           SelectedSupportPointIndex);
         }
 
         private void ExtractDepthLayerControlData(VerticalProfileDefinition depthLayerDefinition)
         {
-            if (SelectedBoundaryCondition == null) return;
+            if (SelectedBoundaryCondition == null)
+            {
+                return;
+            }
 
-            var index = SelectedBoundaryCondition.DataPointIndices.IndexOf(SelectedSupportPointIndex);
+            int index = SelectedBoundaryCondition.DataPointIndices.IndexOf(SelectedSupportPointIndex);
 
-            if (index == -1) return;
+            if (index == -1)
+            {
+                return;
+            }
 
             updatingVerticalProfile = true;
 
@@ -536,7 +622,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Editors
             if (boundaryConditionSet != null)
             {
                 boundaryConditionSet.BoundaryConditions.CollectionChanged -= BoundaryConditionsCollectionChanged;
-                ((INotifyPropertyChanged)boundaryConditionSet.Feature).PropertyChanged -= BoundaryPropertyChanged;
+                ((INotifyPropertyChanged) boundaryConditionSet.Feature).PropertyChanged -= BoundaryPropertyChanged;
             }
         }
 
@@ -551,35 +637,37 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Editors
 
         private string GenerateUniqueName(IBoundaryCondition newCondition)
         {
-            var names = boundaryConditionSet.BoundaryConditions.Select(bc => bc.Name).ToList();
-            var newName = newCondition.Name;
+            List<string> names = boundaryConditionSet.BoundaryConditions.Select(bc => bc.Name).ToList();
+            string newName = newCondition.Name;
             var i = 2;
             while (names.Contains(newName))
             {
                 newName = newCondition.Name + "(" + i + ")";
                 i++;
             }
+
             return newName;
         }
 
         private void AddBoundaryConditionButtonClick(object sender, EventArgs e)
         {
-            var index = quantitiesComboBox.SelectedIndex;
-            var quantities = controller.GetAllowedVariablesFor(SelectedCategory,BoundaryConditionSet).ToList();
+            int index = quantitiesComboBox.SelectedIndex;
+            List<string> quantities = controller.GetAllowedVariablesFor(SelectedCategory, BoundaryConditionSet).ToList();
             if (index < 0 || index >= quantities.Count)
             {
                 return;
             }
-            var quantity = quantities.ElementAt(index);
+
+            string quantity = quantities.ElementAt(index);
             if (BoundaryConditionFactory != null)
             {
-                var dataTypes = controller.GetSupportedDataTypesForVariable(quantity).ToList();
+                List<BoundaryConditionDataType> dataTypes = controller.GetSupportedDataTypesForVariable(quantity).ToList();
                 if (dataTypes.Any())
                 {
-                    var newCondition = BoundaryConditionFactory.CreateBoundaryCondition(boundaryConditionSet.Feature,
-                                                                                        quantity,
-                                                                                        dataTypes.First(),
-                                                                                        SelectedCategory);
+                    IBoundaryCondition newCondition = BoundaryConditionFactory.CreateBoundaryCondition(boundaryConditionSet.Feature,
+                                                                                                       quantity,
+                                                                                                       dataTypes.First(),
+                                                                                                       SelectedCategory);
                     if (newCondition == null)
                     {
                         Log.ErrorFormat("Could not create boundary condition of quantity type {0}", quantity);
@@ -593,21 +681,53 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Editors
             }
         }
 
+        private void UpdateSupportPointLabels()
+        {
+            if (BoundaryConditionSet == null)
+            {
+                return;
+            }
+
+            if (ShowSupportPointChainages)
+            {
+                int i;
+                var chainage = 0.0;
+                string format = ShowSupportPointChainages ? "{0}: {1,10}" : "{0}";
+                Coordinate[] coordinates = BoundaryConditionSet.Feature.Geometry.Coordinates;
+                supportPointListBox.Items[0] = string.Format(format, SupportPointLabel(0), chainage.ToString("F2"));
+                for (i = 1; i < coordinates.Length; ++i)
+                {
+                    chainage += coordinates[i].Distance(coordinates[i - 1]);
+                    supportPointListBox.Items[i] = string.Format(format, SupportPointLabel(i), chainage.ToString("F2"));
+                }
+            }
+            else
+            {
+                for (var i = 0; i < BoundaryConditionSet.Feature.Geometry.Coordinates.Length; ++i)
+                {
+                    supportPointListBox.Items[i] = SupportPointLabel(i);
+                }
+            }
+        }
+
         #region IView implementation
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public object Data
         {
-            get { return BoundaryConditionSet; }
+            get
+            {
+                return BoundaryConditionSet;
+            }
             set
             {
                 BoundaryConditionSet = (BoundaryConditionSet) value;
             }
         }
-        
+
         public Image Image { get; set; }
 
-        public void EnsureVisible(object item){}
+        public void EnsureVisible(object item) {}
 
         public ViewInfo ViewInfo { get; set; }
 
@@ -639,10 +759,21 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Editors
         private void OnBoundaryConditionPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             var bc = sender as BoundaryCondition;
-            if (bc == null) return;
-            if (bc.IsEditing) return;
-            if (!geometryPanelRefreshRequired && e.PropertyName.Equals(nameof(bc.IsEditing)))
+            if (bc == null)
+            {
                 return;
+            }
+
+            if (bc.IsEditing)
+            {
+                return;
+            }
+
+            if (!geometryPanelRefreshRequired && e.PropertyName.Equals(nameof(bc.IsEditing)))
+            {
+                return;
+            }
+
             RefreshSupportPointsListBox();
             if (selectedSupportPointIndex < BoundaryConditionSet.Feature.Geometry.Coordinates.Count())
             {
@@ -652,6 +783,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Editors
             {
                 SelectedSupportPointIndex = -1;
             }
+
             RefreshGeometryPanel();
             geometryPanelRefreshRequired = false;
         }
@@ -665,6 +797,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Editors
                 UpdateSupportPointsListBox();
                 return;
             }
+
             if (e.PropertyName == nameof(BoundaryConditionSet.Feature.Geometry))
             {
                 var pointCountChanged = false;
@@ -673,6 +806,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Editors
                     pointCountChanged = true;
                     RefreshSupportPointsListBox();
                 }
+
                 if (pointCountChanged)
                 {
                     if (selectedSupportPointIndex < supportPointListBox.Items.Count)
@@ -687,7 +821,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Editors
 
                 // only call RefreshGeometryPanel when there is no data on the boundary
                 // because this will be called via OnBoundaryConditionPropertyChanged
-                if(SelectedBoundaryCondition == null)
+                if (SelectedBoundaryCondition == null)
                 {
                     RefreshGeometryPanel();
                 }
@@ -695,25 +829,28 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Editors
         }
 
         private bool geometryPanelRefreshRequired;
+
         private void OnDataPointsChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             if (SelectedBoundaryCondition == null)
             {
                 return;
             }
+
             if (SelectedBoundaryCondition.IsEditing)
             {
                 geometryPanelRefreshRequired = true;
                 return;
             }
+
             UpdateSupportPointsListBox();
         }
 
         private void BoundaryConditionsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            var removedOrAddedItem = e.GetRemovedOrAddedItem();
+            object removedOrAddedItem = e.GetRemovedOrAddedItem();
             var boundaryConditionData = removedOrAddedItem as IBoundaryCondition;
-            
+
             if (boundaryConditionData == null ||
                 boundaryConditionData.ProcessName != (string) categoryComboBox.SelectedItem)
             {
@@ -724,6 +861,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Editors
             {
                 conditionsListBox.Items.Add(removedOrAddedItem);
             }
+
             if (e.Action == NotifyCollectionChangedAction.Remove)
             {
                 conditionsListBox.Items.Remove(removedOrAddedItem);
@@ -732,17 +870,18 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Editors
             RefreshQuantitiesComboBox();
         }
 
-        void ConditionsListBoxFormat(object sender, ListControlConvertEventArgs e)
+        private void ConditionsListBoxFormat(object sender, ListControlConvertEventArgs e)
         {
             var item = e.ListItem as IBoundaryCondition;
             if (item == null)
             {
                 return;
             }
+
             e.Value = item.Name;
         }
-        
-        void SupportPointListBoxItemCheck(object sender, ItemCheckEventArgs e)
+
+        private void SupportPointListBoxItemCheck(object sender, ItemCheckEventArgs e)
         {
             if (supportPointsListBoxUpdating || e.CurrentValue == e.NewValue) // double-click to fire event
             {
@@ -775,15 +914,16 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Editors
             {
                 SelectedSupportPointChanged(SelectedBoundaryCondition, new EventArgs<int>(SelectedSupportPointIndex));
             }
+
             FillDepthLayerControl();
             UpdateGeometryPreview();
         }
 
-        void SelectedBoundaryConditionRemoved(object sender, ListBoxItemRemovedEventArgs e)
+        private void SelectedBoundaryConditionRemoved(object sender, ListBoxItemRemovedEventArgs e)
         {
             var boundaryCondition = e.Value as IBoundaryCondition;
-            var removedIndex = e.Index;
-            if (boundaryCondition!=null)
+            int removedIndex = e.Index;
+            if (boundaryCondition != null)
             {
                 var condition = boundaryCondition as BoundaryCondition;
                 if (condition != null)
@@ -793,6 +933,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Editors
 
                 boundaryConditionSet.BoundaryConditions.Remove(boundaryCondition);
             }
+
             if (removedIndex < conditionsListBox.Items.Count)
             {
                 conditionsListBox.SelectedIndex = removedIndex;
@@ -809,12 +950,21 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Editors
 
         public IEventedList<IView> ChildViews
         {
-            get { return childViews; }
+            get
+            {
+                return childViews;
+            }
         }
 
-        public bool HandlesChildViews { get { return true; } }
-        
-        public void ActivateChildView(IView childView){}
+        public bool HandlesChildViews
+        {
+            get
+            {
+                return true;
+            }
+        }
+
+        public void ActivateChildView(IView childView) {}
 
         #endregion
 
@@ -826,7 +976,10 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Editors
 
         public bool Locked
         {
-            get { return locked; }
+            get
+            {
+                return locked;
+            }
             set
             {
                 locked = value;
@@ -840,46 +993,5 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Editors
         public event EventHandler LockedChanged;
 
         #endregion
-
-        public void UpdateSupportPointLabel(int j)
-        {
-            if (BoundaryConditionSet == null) return;
-            var chainage = 0.0;
-            if (ShowSupportPointChainages)
-            {
-                var coordinates = BoundaryConditionSet.Feature.Geometry.Coordinates;
-                for (var i = 1; i < j; ++i)
-                {
-                    chainage += coordinates[i].Distance(coordinates[i - 1]);
-                }
-            }
-            var format = ShowSupportPointChainages ? "{0}: {1,10}" : "{0}";
-            supportPointListBox.Items[j] = string.Format(format, SupportPointLabel(j), chainage.ToString("F2"));
-        }
-
-        private void UpdateSupportPointLabels()
-        {
-            if (BoundaryConditionSet == null) return;
-            if (ShowSupportPointChainages)
-            {
-                int i;
-                var chainage = 0.0;
-                var format = ShowSupportPointChainages ? "{0}: {1,10}" : "{0}";
-                var coordinates = BoundaryConditionSet.Feature.Geometry.Coordinates;
-                supportPointListBox.Items[0] = string.Format(format, SupportPointLabel(0), chainage.ToString("F2"));
-                for (i = 1; i < coordinates.Length; ++i)
-                {
-                    chainage += coordinates[i].Distance(coordinates[i - 1]);
-                    supportPointListBox.Items[i] = string.Format(format, SupportPointLabel(i), chainage.ToString("F2"));
-                }
-            }
-            else
-            {
-                for (var i = 0; i < BoundaryConditionSet.Feature.Geometry.Coordinates.Length; ++i)
-                {
-                    supportPointListBox.Items[i] = SupportPointLabel(i);
-                }
-            }
-        }
     }
 }

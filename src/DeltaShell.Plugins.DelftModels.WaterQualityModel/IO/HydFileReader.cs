@@ -92,118 +92,47 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
                 {"geometry", new SchematizationElement()},
                 {"z-layers-ztop", new KeyValueElement<double>((hydFileData, value) => hydFileData.ZTop = value)},
                 {"z-layers-zbot", new KeyValueElement<double>((hydFileData, value) => hydFileData.ZBot = value)},
+                {"conversion-ref-time", new KeyValueElement<DateTime>((hydFileData, value) => hydFileData.ConversionReferenceTime = value)},
+                {"conversion-start-time", new KeyValueElement<DateTime>((hydFileData, value) => hydFileData.ConversionStartTime = value)},
+                {"conversion-stop-time", new KeyValueElement<DateTime>((hydFileData, value) => hydFileData.ConversionStopTime = value)},
+                {"conversion-timestep", new KeyValueElement<TimeSpan>((hydFileData, value) => hydFileData.ConversionTimeStep = value)},
                 {
-                    "conversion-ref-time",
-                    new KeyValueElement<DateTime>((hydFileData, value) => hydFileData.ConversionReferenceTime = value)
+                    "number-water-quality-segments-per-layer", new KeyValueElement<int>((hydFileData, value) =>
+                                                                                            hydFileData.NumberOfDelwaqSegmentsPerHydrodynamicLayer = value)
                 },
+                {"number-horizontal-exchanges", new KeyValueElement<int>((hydFileData, value) => hydFileData.NumberOfHorizontalExchanges = value)},
+                {"number-vertical-exchanges", new KeyValueElement<int>((hydFileData, value) => hydFileData.NumberOfVerticalExchanges = value)},
+                {"number-hydrodynamic-layers", new KeyValueElement<int>((hydFileData, value) => hydFileData.NumberOfHydrodynamicLayers = value)},
                 {
-                    "conversion-start-time",
-                    new KeyValueElement<DateTime>((hydFileData, value) => hydFileData.ConversionStartTime = value)
+                    "hydrodynamic-layers", new KeyValueElement<double[]>((hydFileData, value) =>
+                                                                             hydFileData.HydrodynamicLayerThicknesses = value)
                 },
+                {"number-water-quality-layers", new KeyValueElement<int>((hydFileData, value) => hydFileData.NumberOfWaqSegmentLayers = value)},
                 {
-                    "conversion-stop-time",
-                    new KeyValueElement<DateTime>((hydFileData, value) => hydFileData.ConversionStopTime = value)
+                    "water-quality-layers", new KeyValueElement<int[]>((hydFileData, value) =>
+                                                                           hydFileData.NumberOfHydrodynamicLayersPerWaqSegmentLayer = value)
                 },
+                {"boundaries-file", new KeyValueElement<string>((hydFileData, value) => hydFileData.BoundariesRelativePath = value)},
+                {"waqgeom-file", new KeyValueElement<string>((hydFileData, value) => hydFileData.GridRelativePath = value)},
+                {"volumes-file", new KeyValueElement<string>((hydFileData, value) => hydFileData.VolumesRelativePath = value)},
+                {"areas-file", new KeyValueElement<string>((hydFileData, value) => hydFileData.AreasRelativePath = value)},
+                {"flows-file", new KeyValueElement<string>((hydFileData, value) => hydFileData.FlowsRelativePath = value)},
+                {"pointers-file", new KeyValueElement<string>((hydFileData, value) => hydFileData.PointersRelativePath = value)},
+                {"lengths-file", new KeyValueElement<string>((hydFileData, value) => hydFileData.LengthsRelativePath = value)},
+                {"salinity-file", new KeyValueElement<string>((hydFileData, value) => hydFileData.SalinityRelativePath = value)},
+                {"temperature-file", new KeyValueElement<string>((hydFileData, value) => hydFileData.TemperatureRelativePath = value)},
                 {
-                    "conversion-timestep",
-                    new KeyValueElement<TimeSpan>((hydFileData, value) => hydFileData.ConversionTimeStep = value)
+                    "vert-diffusion-file", new KeyValueElement<string>((hydFileData, value) =>
+                                                                           hydFileData.VerticalDiffusionRelativePath = value)
                 },
+                {"horizontal-surfaces-file", new KeyValueElement<string>((hydFileData, value) => hydFileData.SurfacesRelativePath = value)},
+                {"shear-stresses-file", new KeyValueElement<string>((hydFileData, value) => hydFileData.ShearStressesRelativePath = value)},
+                {"attributes-file", new KeyValueElement<string>((hydFileData, value) => hydFileData.AttributesRelativePath = value)},
+                {"velocities-file", new KeyValueElement<string>((hydFileData, value) => hydFileData.VelocitiesRelativePath = value)},
+                {"widths-file", new KeyValueElement<string>((hydFileData, value) => hydFileData.WidthsRelativePath = value)},
                 {
-                    "number-water-quality-segments-per-layer",
-                    new KeyValueElement<int>((hydFileData, value) =>
-                                                 hydFileData.NumberOfDelwaqSegmentsPerHydrodynamicLayer = value)
-                },
-                {
-                    "number-horizontal-exchanges",
-                    new KeyValueElement<int>((hydFileData, value) => hydFileData.NumberOfHorizontalExchanges = value)
-                },
-                {
-                    "number-vertical-exchanges",
-                    new KeyValueElement<int>((hydFileData, value) => hydFileData.NumberOfVerticalExchanges = value)
-                },
-                {
-                    "number-hydrodynamic-layers",
-                    new KeyValueElement<int>((hydFileData, value) => hydFileData.NumberOfHydrodynamicLayers = value)
-                },
-                {
-                    "hydrodynamic-layers",
-                    new KeyValueElement<double[]>((hydFileData, value) =>
-                                                      hydFileData.HydrodynamicLayerThicknesses = value)
-                },
-                {
-                    "number-water-quality-layers",
-                    new KeyValueElement<int>((hydFileData, value) => hydFileData.NumberOfWaqSegmentLayers = value)
-                },
-                {
-                    "water-quality-layers",
-                    new KeyValueElement<int[]>((hydFileData, value) =>
-                                                   hydFileData.NumberOfHydrodynamicLayersPerWaqSegmentLayer = value)
-                },
-                {
-                    "boundaries-file",
-                    new KeyValueElement<string>((hydFileData, value) => hydFileData.BoundariesRelativePath = value)
-                },
-                {
-                    "waqgeom-file",
-                    new KeyValueElement<string>((hydFileData, value) => hydFileData.GridRelativePath = value)
-                },
-                {
-                    "volumes-file",
-                    new KeyValueElement<string>((hydFileData, value) => hydFileData.VolumesRelativePath = value)
-                },
-                {
-                    "areas-file",
-                    new KeyValueElement<string>((hydFileData, value) => hydFileData.AreasRelativePath = value)
-                },
-                {
-                    "flows-file",
-                    new KeyValueElement<string>((hydFileData, value) => hydFileData.FlowsRelativePath = value)
-                },
-                {
-                    "pointers-file",
-                    new KeyValueElement<string>((hydFileData, value) => hydFileData.PointersRelativePath = value)
-                },
-                {
-                    "lengths-file",
-                    new KeyValueElement<string>((hydFileData, value) => hydFileData.LengthsRelativePath = value)
-                },
-                {
-                    "salinity-file",
-                    new KeyValueElement<string>((hydFileData, value) => hydFileData.SalinityRelativePath = value)
-                },
-                {
-                    "temperature-file",
-                    new KeyValueElement<string>((hydFileData, value) => hydFileData.TemperatureRelativePath = value)
-                },
-                {
-                    "vert-diffusion-file",
-                    new KeyValueElement<string>((hydFileData, value) =>
-                                                    hydFileData.VerticalDiffusionRelativePath = value)
-                },
-                {
-                    "horizontal-surfaces-file",
-                    new KeyValueElement<string>((hydFileData, value) => hydFileData.SurfacesRelativePath = value)
-                },
-                {
-                    "shear-stresses-file",
-                    new KeyValueElement<string>((hydFileData, value) => hydFileData.ShearStressesRelativePath = value)
-                },
-                {
-                    "attributes-file",
-                    new KeyValueElement<string>((hydFileData, value) => hydFileData.AttributesRelativePath = value)
-                },
-                {
-                    "velocities-file",
-                    new KeyValueElement<string>((hydFileData, value) => hydFileData.VelocitiesRelativePath = value)
-                },
-                {
-                    "widths-file",
-                    new KeyValueElement<string>((hydFileData, value) => hydFileData.WidthsRelativePath = value)
-                },
-                {
-                    "chezy-coefficients-file",
-                    new KeyValueElement<string>((hydFileData, value) =>
-                                                    hydFileData.ChezyCoefficientsRelativePath = value)
+                    "chezy-coefficients-file", new KeyValueElement<string>((hydFileData, value) =>
+                                                                               hydFileData.ChezyCoefficientsRelativePath = value)
                 },
             };
         }

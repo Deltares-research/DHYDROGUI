@@ -10,18 +10,18 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
     [Entity]
     public abstract class RuleBase : RtcBaseObject, IItemContainer
     {
-        [Aggregation]
-        public IEventedList<IInput> Inputs { get; set; }
-
-        [Aggregation]
-        public IEventedList<Output> Outputs { get; set; }
-
         protected RuleBase()
         {
             Name = RuleProvider.GetTitle(GetType());
             Inputs = new EventedList<IInput>();
             Outputs = new EventedList<Output>();
         }
+
+        [Aggregation]
+        public IEventedList<IInput> Inputs { get; set; }
+
+        [Aggregation]
+        public IEventedList<Output> Outputs { get; set; }
 
         public virtual bool CanBeLinkedFromSignal()
         {
@@ -42,13 +42,15 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
             {
                 exceptions.Add(new ValidationException(string.Format("rule '{0}' has no output.", ruleBase.Name)));
             }
-            foreach (var output in ruleBase.Outputs)
+
+            foreach (Output output in ruleBase.Outputs)
             {
                 if (string.IsNullOrEmpty(output.ParameterName))
                 {
                     exceptions.Add(new ValidationException(string.Format("rule '{0}' has unlinked output.", ruleBase.Name)));
                 }
             }
+
             if (exceptions.Count > 0)
             {
                 throw new ValidationContextException(exceptions);

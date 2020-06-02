@@ -41,8 +41,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             FileUtils.DeleteIfExists(previousExplicitWorkingDirectory);
         }
 
-        public virtual bool ExportTo(string mduPath, 
-                                     bool switchTo = true, 
+        public virtual bool ExportTo(string mduPath,
+                                     bool switchTo = true,
                                      bool writeExtForcings = true,
                                      bool writeFeatures = true)
         {

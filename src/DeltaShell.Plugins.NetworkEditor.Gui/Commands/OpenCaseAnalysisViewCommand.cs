@@ -10,24 +10,29 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Commands
     /// </summary>
     public class OpenCaseAnalysisViewCommand : Command, IGuiCommand
     {
+        public override bool Enabled
+        {
+            get
+            {
+                return GetProject(Gui) != null;
+            }
+        }
+
+        public IGui Gui { get; set; }
+
         protected override void OnExecute(params object[] arguments)
         {
-            var project = GetProject(Gui);
+            Project project = GetProject(Gui);
 
             if (project != null)
             {
-                Gui.DocumentViews.Add(new CoverageAnalysisView{ Data = project});
+                Gui.DocumentViews.Add(new CoverageAnalysisView {Data = project});
             }
-        }
-        
-        public override bool Enabled
-        {
-            get { return GetProject(Gui) != null; }
         }
 
         private static Project GetProject(IGui gui)
         {
-            var app = gui.Application;
+            IApplication app = gui.Application;
 
             if (app == null)
             {
@@ -36,7 +41,5 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Commands
 
             return app.Project;
         }
-
-        public IGui Gui { get; set; }
     }
 }

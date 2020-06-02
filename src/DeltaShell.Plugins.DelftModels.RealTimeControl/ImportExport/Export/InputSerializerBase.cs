@@ -11,10 +11,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export
         private readonly IInput input;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="InputSerializerBase" /> class.
+        /// Initializes a new instance of the <see cref="InputSerializerBase"/> class.
         /// </summary>
         /// <param name="input"> The input to serialize. </param>
-        protected InputSerializerBase(IInput input) : base((RtcBaseObject)input)
+        protected InputSerializerBase(IInput input) : base((RtcBaseObject) input)
         {
             this.input = input;
         }

@@ -21,7 +21,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
 
         public ControlGroupEditor ControlGroupEditor
         {
-            get { return controlGroupEditor; }
+            get
+            {
+                return controlGroupEditor;
+            }
         }
 
         public IGui Gui
@@ -37,9 +40,25 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
             }
         } // selection and opening views
 
+        public IRealTimeControlModel Model
+        {
+            get
+            {
+                return model;
+            }
+            set
+            {
+                model = value;
+                controlGroupEditor.Model = Model;
+            }
+        }
+
         public object Data
         {
-            get { return controlGroup; }
+            get
+            {
+                return controlGroup;
+            }
             set
             {
                 UnsubscribeEventListeners();
@@ -48,46 +67,45 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
                 controlGroup = value as ControlGroup;
 
                 if (controlGroup == null)
+                {
                     return;
+                }
 
                 BindViews();
                 SubscribeEventListeners();
             }
         }
 
-        public IRealTimeControlModel Model
-        {
-            get { return model; }
-            set
-            {
-                model = value;
-                controlGroupEditor.Model = Model;
-            }
-        }
-
         public Image Image
         {
-            get { return null; }
-            set { }
+            get
+            {
+                return null;
+            }
+            set {}
         }
 
         public IViewContext ViewContext
         {
-            get { return controlGroupEditor.ViewContext; }
-            set { controlGroupEditor.ViewContext = value; }
-        }
-
-        public void EnsureVisible(object item)
-        {
+            get
+            {
+                return controlGroupEditor.ViewContext;
+            }
+            set
+            {
+                controlGroupEditor.ViewContext = value;
+            }
         }
 
         public ViewInfo ViewInfo { get; set; }
+
+        public void EnsureVisible(object item) {}
 
         private void SubscribeEventListeners()
         {
             if (null != controlGroup)
             {
-                ((INotifyPropertyChanged)controlGroup).PropertyChanged += ControlGroupPropertyChanged;
+                ((INotifyPropertyChanged) controlGroup).PropertyChanged += ControlGroupPropertyChanged;
             }
         }
 
@@ -95,11 +113,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
         {
             if (null != controlGroup)
             {
-                ((INotifyPropertyChanged)controlGroup).PropertyChanged -= ControlGroupPropertyChanged;
+                ((INotifyPropertyChanged) controlGroup).PropertyChanged -= ControlGroupPropertyChanged;
             }
         }
 
-        void ControlGroupPropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void ControlGroupPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == "Name" && sender is ControlGroup)
             {

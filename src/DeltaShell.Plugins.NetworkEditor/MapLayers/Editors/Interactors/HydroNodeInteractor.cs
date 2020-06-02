@@ -12,9 +12,7 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors
 {
     public class HydroNodeInteractor : NodeInteractor
     {
-        public HydroNodeInteractor(ILayer layer, IFeature feature, VectorStyle vectorStyle, IEditableObject editableObject) : base(layer, feature, vectorStyle, editableObject)
-        {
-        }
+        public HydroNodeInteractor(ILayer layer, IFeature feature, VectorStyle vectorStyle, IEditableObject editableObject) : base(layer, feature, vectorStyle, editableObject) {}
 
         public override IEnumerable<IFeatureRelationInteractor> GetFeatureRelationInteractors(IFeature feature)
         {
@@ -24,10 +22,10 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors
 
         public override void Delete()
         {
-            var node = (HydroNode)SourceFeature;
+            var node = (HydroNode) SourceFeature;
 
-            var links = node.Links.ToArray();
-            foreach (var link in links)
+            HydroLink[] links = node.Links.ToArray();
+            foreach (HydroLink link in links)
             {
                 HydroRegion.RemoveLink(link);
             }

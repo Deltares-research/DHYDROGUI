@@ -4,13 +4,20 @@ using SharpMap.Styles;
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChartShapes
 {
     //Classes containing color information for structures. Merge with StructureShapeStyle provider
-    
-    
+
     /// <summary>
     /// Colors used in culvertView and SideView,StructureView shapes
     /// </summary>
     public static class CulvertStyling
     {
+        public static Color SiphonOffLevelColor = Color.Red;
+        public static Color SiphonOnLevelColor = Color.Black;
+
+        public static Color OutletColor = Color.CornflowerBlue;
+        public static Color InletColor = Color.MidnightBlue;
+
+        private const int alpha = 40;
+
         static CulvertStyling()
         {
             NormalSiphonOffLevelStyle = new VectorStyle
@@ -24,7 +31,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
                 Fill = new SolidBrush(SiphonOffLevelColor),
                 Line = new Pen(SiphonOffLevelColor)
             };
-
 
             NormalSiphonOnLevelStyle = new VectorStyle
             {
@@ -50,10 +56,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
             };
 
             NormalInletStyle = new VectorStyle
-                                   {
-                                       Fill = new SolidBrush(Color.FromArgb(alpha, InletColor)),
-                                       Line = new Pen(Color.FromArgb(alpha, InletColor))
-                                   };
+            {
+                Fill = new SolidBrush(Color.FromArgb(alpha, InletColor)),
+                Line = new Pen(Color.FromArgb(alpha, InletColor))
+            };
             SelectedInletStyle = new VectorStyle
             {
                 Fill = new SolidBrush(InletColor),
@@ -72,19 +78,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
             };
         }
 
-        private const int alpha = 40;
-
-        public static Color SiphonOffLevelColor = Color.Red;
-        public static Color SiphonOnLevelColor = Color.Black;
-
-        public static Color OutletColor = Color.CornflowerBlue;
-        public static Color InletColor = Color.MidnightBlue;
-
         //styles are shared between shapes in structureview and sideview..
         public static VectorStyle SelectedStyle { get; private set; }
         public static VectorStyle NormalStyle { get; private set; }
 
-        public static VectorStyle NormalSiphonOffLevelStyle{ get;private set;}
+        public static VectorStyle NormalSiphonOffLevelStyle { get; private set; }
         public static VectorStyle NormalSiphonOnLevelStyle { get; private set; }
         public static VectorStyle SelectedSiphonOffLevelStyle { get; private set; }
         public static VectorStyle SelectedSiphonOnLevelStyle { get; private set; }

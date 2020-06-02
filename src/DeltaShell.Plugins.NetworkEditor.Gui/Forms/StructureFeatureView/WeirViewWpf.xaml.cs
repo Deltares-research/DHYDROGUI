@@ -19,9 +19,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
             InitializeComponent();
         }
 
+        public bool Visible { get; private set; }
+
         public object Data
         {
-            get { return WeirViewModel.Weir; }
+            get
+            {
+                return WeirViewModel.Weir;
+            }
             set
             {
                 WeirViewModel.Weir = (IWeir) value;
@@ -35,14 +40,16 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
 
         public Image Image { get; set; }
 
-        public bool Visible { get; private set; }
-
         public ViewInfo ViewInfo { get; set; }
+
+        public void EnsureVisible(object item) {}
+
+        public void Dispose() {}
 
         private TimeSeries CrestLevelTimeSeriesEditor(IWeir weirData)
         {
             string weirName = weirData.Name;
-            var dialogData = (TimeSeries)weirData.CrestLevelTimeSeries.Clone(true);
+            var dialogData = (TimeSeries) weirData.CrestLevelTimeSeries.Clone(true);
 
             var editFunctionDialog = new EditFunctionDialog
             {
@@ -61,13 +68,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
             {
                 return dialogData;
             }
+
             return null;
         }
 
         private TimeSeries LowerEdgeLevelTimeSeriesEditor(IGatedWeirFormula gatedWeirData)
         {
             string weirName = gatedWeirData.Name;
-            var dialogData = (TimeSeries)gatedWeirData.LowerEdgeLevelTimeSeries.Clone(true);
+            var dialogData = (TimeSeries) gatedWeirData.LowerEdgeLevelTimeSeries.Clone(true);
 
             var editFunctionDialog = new EditFunctionDialog
             {
@@ -86,13 +94,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
             {
                 return dialogData;
             }
+
             return null;
         }
 
         private TimeSeries HorizontalDoorOpeningWidthTimeSeriesEditor(IGatedWeirFormula gatedWeirData)
         {
             string weirName = gatedWeirData.Name;
-            var dialogData = (TimeSeries)gatedWeirData.HorizontalDoorOpeningWidthTimeSeries.Clone(true);
+            var dialogData = (TimeSeries) gatedWeirData.HorizontalDoorOpeningWidthTimeSeries.Clone(true);
 
             var editFunctionDialog = new EditFunctionDialog
             {
@@ -111,16 +120,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
             {
                 return dialogData;
             }
+
             return null;
-        }
-
-        public void EnsureVisible(object item)
-        {
-
-        }
-
-        public void Dispose()
-        {
         }
     }
 }

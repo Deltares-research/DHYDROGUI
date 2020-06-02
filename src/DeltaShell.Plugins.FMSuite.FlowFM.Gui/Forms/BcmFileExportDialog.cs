@@ -10,14 +10,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
 {
     public class BcmFileExportDialog : BcFileExportDialog
     {
-        private void ExportModeComboBoxFormat(object sender, ListControlConvertEventArgs e)
-        {
-            if (e.ListItem is BcFile.WriteMode)
-            {
-                e.Value = ((BcFile.WriteMode)e.ListItem).GetDescription();
-            }
-        }
-
         public override DelftDialogResult ShowModal()
         {
             saveFileDialog.DefaultExt = BcmFile.Extension;
@@ -30,6 +22,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
             {
                 return DelftDialogResult.Cancel;
             }
+
             FilePath = saveFileDialog.FileName;
             return ShowDialog() == DialogResult.OK ? DelftDialogResult.OK : DelftDialogResult.Cancel;
         }
@@ -41,17 +34,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
             {
                 bcmFileExporter.ExcludedQuantities =
                     quantities.Keys.Except(quantitiesListBox.CheckedItems.Cast<string>())
-                        .Select(k => quantities[k])
-                        .ToList();
+                              .Select(k => quantities[k])
+                              .ToList();
 
                 bcmFileExporter.ExcludedDataTypes =
                     dataTypes.Keys.Except(dataTypesListBox.CheckedItems.Cast<string>())
-                        .Select(k => dataTypes[k])
-                        .ToList();
+                             .Select(k => dataTypes[k])
+                             .ToList();
 
-                bcmFileExporter.WriteMode = (BcFile.WriteMode)exportModeComboBox.SelectedItem;
+                bcmFileExporter.WriteMode = (BcFile.WriteMode) exportModeComboBox.SelectedItem;
 
                 bcmFileExporter.FilePath = FilePath;
+            }
+        }
+
+        private void ExportModeComboBoxFormat(object sender, ListControlConvertEventArgs e)
+        {
+            if (e.ListItem is BcFile.WriteMode)
+            {
+                e.Value = ((BcFile.WriteMode) e.ListItem).GetDescription();
             }
         }
     }

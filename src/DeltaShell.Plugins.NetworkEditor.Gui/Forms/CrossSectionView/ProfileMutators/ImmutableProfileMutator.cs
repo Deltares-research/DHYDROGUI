@@ -7,6 +7,62 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView.ProfileMut
     /// </summary>
     public class ImmutableProfileMutator : ICrossSectionProfileMutator
     {
+        public bool CanDelete
+        {
+            get
+            {
+                return false;
+            }
+        }
+
+        public bool CanAdd
+        {
+            get
+            {
+                return false;
+            }
+        }
+
+        public bool CanMove
+        {
+            get
+            {
+                return false;
+            }
+        }
+
+        public bool ClipHorizontal
+        {
+            get
+            {
+                return false;
+            }
+        }
+
+        public bool ClipVertical
+        {
+            get
+            {
+                return false;
+            }
+        }
+
+        public bool FixHorizontal
+        {
+            get
+            {
+                return false;
+            }
+        }
+
+        public bool FixVertical
+        {
+            get
+            {
+                return false;
+            }
+        }
+
         public void MovePoint(int index, double y, double z)
         {
             throw new NotImplementedException();
@@ -20,41 +76,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView.ProfileMut
         public void DeletePoint(int index)
         {
             throw new NotImplementedException();
-        }
-
-        public bool CanDelete
-        {
-            get { return false; }
-        }
-
-        public bool CanAdd
-        {
-            get { return false; }
-        }
-
-        public bool CanMove
-        {
-            get { return false; }
-        }
-
-        public bool ClipHorizontal
-        {
-            get { return false; }
-        }
-
-        public bool ClipVertical
-        {
-            get { return false; }
-        }
-
-        public bool FixHorizontal
-        {
-            get { return false; }
-        }
-
-        public bool FixVertical
-        {
-            get { return false; }
         }
     }
 }

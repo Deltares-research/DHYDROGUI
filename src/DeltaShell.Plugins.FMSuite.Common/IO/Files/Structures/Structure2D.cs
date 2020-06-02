@@ -32,21 +32,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
             Properties = new List<ModelProperty>();
         }
 
-        private void SetStructureType(string type)
-        {
-            try
-            {
-                StructureType =
-                    (StructureType) Enum.Parse(typeof(StructureType), type,
-                                               true); // TODO: This is also a ModelProperty! Should this refer to the ModelProperty of should we remove that one from Properties?
-            }
-            catch (ArgumentException)
-            {
-                StructureType = StructureType.InvalidType;
-                InvalidStructureType = type;
-            }
-        }
-
         // Might be risky: assumes that KnownStructureProperties.Name is always available.
         public string Name => GetProperty(KnownStructureProperties.Name).GetValueAsString();
 
@@ -63,6 +48,21 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
         public ModelProperty GetProperty(KnownGeneralStructureProperties property)
         {
             return GetProperty(property.GetDescription());
+        }
+
+        private void SetStructureType(string type)
+        {
+            try
+            {
+                StructureType =
+                    (StructureType) Enum.Parse(typeof(StructureType), type,
+                                               true); // TODO: This is also a ModelProperty! Should this refer to the ModelProperty of should we remove that one from Properties?
+            }
+            catch (ArgumentException)
+            {
+                StructureType = StructureType.InvalidType;
+                InvalidStructureType = type;
+            }
         }
     }
 }

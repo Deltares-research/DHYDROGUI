@@ -32,36 +32,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             return CoordinateSystemValidator.CanAssignCoordinateSystem(modelCoordinates, coordinateSystem);
         }
 
-        private static bool CanConvertModel(WaterFlowFMModel model, ICoordinateTransformation transformation)
-        {
-            Envelope gridEnvelope = model.GridExtent;
-            if (!CoordinateSystemValidator.CanConvertByTransformation(gridEnvelope, transformation))
-            {
-                return false;
-            }
-
-            if (SpatialOperationPointClouds(model)
-                .Any(
-                    pointCloud =>
-                        !CoordinateSystemValidator.CanConvertByTransformation(pointCloud.GetExtents(),
-                                                                              transformation)))
-            {
-                return false;
-            }
-
-            return CoordinateSystemValidator.CanConvertByTransformation(
-                GetAllModelFeatures(model).Select(f => f.Geometry), transformation);
-        }
-
-        private static IEnumerable<IFeatureProvider> SpatialOperationPointClouds(IModel model)
-        {
-            return model.DataItems.Select(di => di.ValueConverter)
-                        .OfType<SpatialOperationSetValueConverter>()
-                        .Select(vc => vc.SpatialOperationSet)
-                        .SelectMany(sos => sos.GetAllFeatureProviders().OfType<PointCloudFeatureProvider>())
-                        .ToList();
-        }
-
         public static void ConvertModel(WaterFlowFMModel model, ICoordinateTransformation transformation)
         {
             if (!CanConvertModel(model, transformation))
@@ -120,6 +90,36 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 cell.CenterX = (float) newCellCenter[0];
                 cell.CenterY = (float) newCellCenter[1];
             }
+        }
+
+        private static bool CanConvertModel(WaterFlowFMModel model, ICoordinateTransformation transformation)
+        {
+            Envelope gridEnvelope = model.GridExtent;
+            if (!CoordinateSystemValidator.CanConvertByTransformation(gridEnvelope, transformation))
+            {
+                return false;
+            }
+
+            if (SpatialOperationPointClouds(model)
+                .Any(
+                    pointCloud =>
+                        !CoordinateSystemValidator.CanConvertByTransformation(pointCloud.GetExtents(),
+                                                                              transformation)))
+            {
+                return false;
+            }
+
+            return CoordinateSystemValidator.CanConvertByTransformation(
+                GetAllModelFeatures(model).Select(f => f.Geometry), transformation);
+        }
+
+        private static IEnumerable<IFeatureProvider> SpatialOperationPointClouds(IModel model)
+        {
+            return model.DataItems.Select(di => di.ValueConverter)
+                        .OfType<SpatialOperationSetValueConverter>()
+                        .Select(vc => vc.SpatialOperationSet)
+                        .SelectMany(sos => sos.GetAllFeatureProviders().OfType<PointCloudFeatureProvider>())
+                        .ToList();
         }
 
         private static IEnumerable<IFeature> GetAllModelFeatures(WaterFlowFMModel model)

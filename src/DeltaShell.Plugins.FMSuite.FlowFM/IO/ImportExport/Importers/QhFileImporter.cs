@@ -17,6 +17,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(QhFileImporter));
 
+        public override IEnumerable<BoundaryConditionDataType> ForcingTypes
+        {
+            get
+            {
+                yield return BoundaryConditionDataType.Qh;
+            }
+        }
+
+        public override void Import(string fileName, FlowBoundaryCondition boundaryCondition)
+        {
+            ImportItem(fileName, boundaryCondition);
+        }
+
+        public override bool CanImportOnBoundaryCondition(FlowBoundaryCondition boundaryCondition)
+        {
+            return ForcingTypes.Contains(boundaryCondition.DataType);
+        }
+
         #region IFileImporter
 
         public string Name => "Boundary data from .qh file";
@@ -88,23 +106,5 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
         }
 
         #endregion
-
-        public override IEnumerable<BoundaryConditionDataType> ForcingTypes
-        {
-            get
-            {
-                yield return BoundaryConditionDataType.Qh;
-            }
-        }
-
-        public override void Import(string fileName, FlowBoundaryCondition boundaryCondition)
-        {
-            ImportItem(fileName, boundaryCondition);
-        }
-
-        public override bool CanImportOnBoundaryCondition(FlowBoundaryCondition boundaryCondition)
-        {
-            return ForcingTypes.Contains(boundaryCondition.DataType);
-        }
     }
 }

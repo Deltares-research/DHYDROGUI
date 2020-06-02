@@ -5,7 +5,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.DataAccess
     /// <summary>
     /// Represents a binary expression tree starting at a root node.
     /// </summary>
-    /// <seealso cref="IRtcDataAccessObject{MathematicalExpression}" />
+    /// <seealso cref="IRtcDataAccessObject{MathematicalExpression}"/>
     public class ExpressionTree : IRtcDataAccessObject<MathematicalExpression>
     {
         /// <summary>

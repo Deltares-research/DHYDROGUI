@@ -13,9 +13,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms
 {
     public partial class SubstanceProcessLibraryView : UserControl, IView, INameable
     {
+        private readonly DelayedEventHandler<NotifyCollectionChangedEventArgs> dataCollectionChangedDelayedEventHandler;
         private SubstanceProcessLibrary library;
         private bool showNameAndDescriptionColumnsOnly;
-        private readonly DelayedEventHandler<NotifyCollectionChangedEventArgs> dataCollectionChangedDelayedEventHandler;
 
         public SubstanceProcessLibraryView()
         {
@@ -23,21 +23,30 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms
             Image = new Bitmap(5, 5);
 
             dataCollectionChangedDelayedEventHandler =
-                new DelayedEventHandler<NotifyCollectionChangedEventArgs>(delegate { UpdateDataGridViews(); })
-                {
-                    SynchronizingObject = this
-                };
+                new DelayedEventHandler<NotifyCollectionChangedEventArgs>(delegate { UpdateDataGridViews(); }) {SynchronizingObject = this};
 
             InitializeTableViews();
         }
 
-        public Image Image { get; set; }
+        /// <summary>
+        /// Whether columns other than "Name" and "Description" should be hidden or not
+        /// </summary>
+        public bool ShowNameAndDescriptionColumnsOnly
+        {
+            get => showNameAndDescriptionColumnsOnly;
+            set
+            {
+                showNameAndDescriptionColumnsOnly = value;
 
-        public void EnsureVisible(object item) {}
+                InitializeTableViews();
+            }
+        }
+
+        public Image Image { get; set; }
         public ViewInfo ViewInfo { get; set; }
 
         /// <summary>
-        /// The <see cref="SubstanceProcessLibrary" /> associated with this view.
+        /// The <see cref="SubstanceProcessLibrary"/> associated with this view.
         /// </summary>
         public object Data
         {
@@ -60,18 +69,19 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms
             }
         }
 
-        /// <summary>
-        /// Whether columns other than "Name" and "Description" should be hidden or not
-        /// </summary>
-        public bool ShowNameAndDescriptionColumnsOnly
-        {
-            get => showNameAndDescriptionColumnsOnly;
-            set
-            {
-                showNameAndDescriptionColumnsOnly = value;
+        public void EnsureVisible(object item) {}
 
-                InitializeTableViews();
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && components != null)
+            {
+                dataCollectionChangedDelayedEventHandler.Enabled = false;
+                dataCollectionChangedDelayedEventHandler.Dispose();
+
+                components.Dispose();
             }
+
+            base.Dispose(disposing);
         }
 
         private void UpdateDataGridViews()
@@ -224,19 +234,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms
             }
 
             tableViewOutputParameters.BestFitColumns();
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing && components != null)
-            {
-                dataCollectionChangedDelayedEventHandler.Enabled = false;
-                dataCollectionChangedDelayedEventHandler.Dispose();
-
-                components.Dispose();
-            }
-
-            base.Dispose(disposing);
         }
     }
 }

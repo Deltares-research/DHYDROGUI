@@ -88,59 +88,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files
             function.EndEdit();
         }
 
-        private void Read(string timFilePath, IList<double> minutes, IList<List<double>> values)
-        {
-            OpenInputFile(timFilePath);
-            using (CultureUtils.SwitchToInvariantCulture())
-            {
-                try
-                {
-                    string line = GetNextLine();
-                    var additionalValuesDetected = false;
-
-                    while (line != null)
-                    {
-                        var lineFields = (IList<string>) SplitLine(line).ToList();
-                        minutes.Add(GetDouble(lineFields[0], "time"));
-
-                        int actualNumberOfValueColumns = lineFields.Count - 1;
-                        int expectedNumberOfValueColumns = values.Count;
-
-                        if (expectedNumberOfValueColumns < actualNumberOfValueColumns)
-                        {
-                            additionalValuesDetected = true;
-                        }
-
-                        int numberOfValuesRead = Math.Min(actualNumberOfValueColumns, expectedNumberOfValueColumns);
-
-                        for (var i = 0; i < numberOfValuesRead; i++)
-                        {
-                            values[i].Add(GetDouble(lineFields[i + 1], "value"));
-                        }
-
-                        int missingValueColumns = expectedNumberOfValueColumns - actualNumberOfValueColumns;
-                        for (var i = 0; i < missingValueColumns; i++)
-                        {
-                            values[actualNumberOfValueColumns + i].Add(0.0);
-                        }
-
-                        line = GetNextLine();
-                    }
-
-                    if (additionalValuesDetected)
-                    {
-                        Log.WarnFormat("Additional values detected when reading file: {0}." +
-                                       "{1}Expected number of value columns is {2}, all additional values have been ignored.",
-                                       timFilePath, Environment.NewLine, values.Count);
-                    }
-                }
-                finally
-                {
-                    CloseInputFile();
-                }
-            }
-        }
-
         public TimeSeries Read(string timFilePath, DateTime modelReferenceDate)
         {
             OpenInputFile(timFilePath);
@@ -207,6 +154,59 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files
         {
             double value = GetDouble(lineField, errorMessageKey);
             return GetDateTime(value, reference);
+        }
+
+        private void Read(string timFilePath, IList<double> minutes, IList<List<double>> values)
+        {
+            OpenInputFile(timFilePath);
+            using (CultureUtils.SwitchToInvariantCulture())
+            {
+                try
+                {
+                    string line = GetNextLine();
+                    var additionalValuesDetected = false;
+
+                    while (line != null)
+                    {
+                        var lineFields = (IList<string>) SplitLine(line).ToList();
+                        minutes.Add(GetDouble(lineFields[0], "time"));
+
+                        int actualNumberOfValueColumns = lineFields.Count - 1;
+                        int expectedNumberOfValueColumns = values.Count;
+
+                        if (expectedNumberOfValueColumns < actualNumberOfValueColumns)
+                        {
+                            additionalValuesDetected = true;
+                        }
+
+                        int numberOfValuesRead = Math.Min(actualNumberOfValueColumns, expectedNumberOfValueColumns);
+
+                        for (var i = 0; i < numberOfValuesRead; i++)
+                        {
+                            values[i].Add(GetDouble(lineFields[i + 1], "value"));
+                        }
+
+                        int missingValueColumns = expectedNumberOfValueColumns - actualNumberOfValueColumns;
+                        for (var i = 0; i < missingValueColumns; i++)
+                        {
+                            values[actualNumberOfValueColumns + i].Add(0.0);
+                        }
+
+                        line = GetNextLine();
+                    }
+
+                    if (additionalValuesDetected)
+                    {
+                        Log.WarnFormat("Additional values detected when reading file: {0}." +
+                                       "{1}Expected number of value columns is {2}, all additional values have been ignored.",
+                                       timFilePath, Environment.NewLine, values.Count);
+                    }
+                }
+                finally
+                {
+                    CloseInputFile();
+                }
+            }
         }
 
         private static DateTime? GetDateTime(double value, DateTime? reference)

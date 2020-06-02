@@ -26,7 +26,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.ProjectExpl
     {
         /// <summary>
         /// Creates a water quality model node presenter with
-        /// <param name="guiPlugin" />
+        /// <param name="guiPlugin"/>
         /// </summary>
         public WaterQualityModelNodePresenter(GuiPlugin guiPlugin) : base(guiPlugin) {}
 
@@ -46,24 +46,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.ProjectExpl
                                                          GuiPlugin);
             yield return new TreeFolder(waterQualityModel, GetOutputItems(waterQualityModel), "Output",
                                         FolderImageType.Output);
-        }
-
-        private static IEnumerable GetOutputItems(WaterQualityModel data)
-        {
-            yield return new TreeFolder(data, data.DataItems.Where(IsOutputRestartFile), "States",
-                                        FolderImageType.None);
-
-            foreach (IDataItem outputDataItem in data.DataItems.Where(
-                di => di.Role.HasFlag(DataItemRole.Output) &&
-                      !IsOutputRestartFile(di)))
-            {
-                yield return data.GetDataItemByValue(outputDataItem.Value);
-            }
-        }
-
-        private static bool IsOutputRestartFile(IDataItem dataItem)
-        {
-            return dataItem.Value is FileBasedRestartState && dataItem.Role == DataItemRole.Output;
         }
 
         public override bool CanRenameNode(ITreeNode node)
@@ -98,6 +80,24 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.ProjectExpl
             {
                 ((TreeNode) node).RefreshChildNodes();
             }
+        }
+
+        private static IEnumerable GetOutputItems(WaterQualityModel data)
+        {
+            yield return new TreeFolder(data, data.DataItems.Where(IsOutputRestartFile), "States",
+                                        FolderImageType.None);
+
+            foreach (IDataItem outputDataItem in data.DataItems.Where(
+                di => di.Role.HasFlag(DataItemRole.Output) &&
+                      !IsOutputRestartFile(di)))
+            {
+                yield return data.GetDataItemByValue(outputDataItem.Value);
+            }
+        }
+
+        private static bool IsOutputRestartFile(IDataItem dataItem)
+        {
+            return dataItem.Value is FileBasedRestartState && dataItem.Role == DataItemRole.Output;
         }
 
         private static IMenuItem GetContextMenu(WaterQualityModel model, IGui gui)
@@ -154,19 +154,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.ProjectExpl
                 inputItems.Add(new DataItem(new WaterQualityFunctionDataWrapper(waterQualityModel.InitialConditions),
                                             WaterQualityModel.InitialConditionsDataItemMetaData.Name,
                                             typeof(WaterQualityFunctionDataWrapper), DataItemRole.Input,
-                                            WaterQualityModel.InitialConditionsDataItemMetaData.Tag)
-                {
-                    Owner = waterQualityModel
-                });
+                                            WaterQualityModel.InitialConditionsDataItemMetaData.Tag) {Owner = waterQualityModel});
 
                 // Add a function data wrapper data item for the process coefficients
                 inputItems.Add(new DataItem(new WaterQualityFunctionDataWrapper(waterQualityModel.ProcessCoefficients),
                                             WaterQualityModel.ProcessCoefficientsDataItemMetaData.Name,
                                             typeof(WaterQualityFunctionDataWrapper), DataItemRole.Input,
-                                            WaterQualityModel.ProcessCoefficientsDataItemMetaData.Tag)
-                {
-                    Owner = waterQualityModel
-                });
+                                            WaterQualityModel.ProcessCoefficientsDataItemMetaData.Tag) {Owner = waterQualityModel});
 
                 var waqGuiPlugin = guiPlugin as WaterQualityModelGuiPlugin;
 
@@ -188,23 +182,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.ProjectExpl
                 inputItems.Add(new DataItem(new WaterQualityFunctionDataWrapper(waterQualityModel.Dispersion),
                                             WaterQualityModel.DispersionDataItemMetaData.Name,
                                             typeof(WaterQualityFunctionDataWrapper), DataItemRole.Input,
-                                            WaterQualityModel.DispersionDataItemMetaData.Tag)
-                {
-                    Owner = waterQualityModel
-                });
+                                            WaterQualityModel.DispersionDataItemMetaData.Tag) {Owner = waterQualityModel});
 
                 inputItems.Add(new DataItem(waterQualityModel.Boundaries, DataItemRole.Input,
-                                            WaterQualityModel.BoundariesDataItemMetaData.Tag)
-                {
-                    Owner = waterQualityModel
-                });
+                                            WaterQualityModel.BoundariesDataItemMetaData.Tag) {Owner = waterQualityModel});
                 inputItems.Add(new DataItem(waterQualityModel.Loads, DataItemRole.Input,
                                             WaterQualityModel.LoadsDataItemMetaData.Tag) {Owner = waterQualityModel});
                 inputItems.Add(new DataItem(waterQualityModel.ObservationPoints, DataItemRole.Input,
-                                            WaterQualityModel.ObservationPointsDataItemMetaData.Tag)
-                {
-                    Owner = waterQualityModel
-                });
+                                            WaterQualityModel.ObservationPointsDataItemMetaData.Tag) {Owner = waterQualityModel});
                 inputItems.Add(
                     waterQualityModel.GetDataItemByTag(WaterQualityModel.ObservationAreasDataItemMetaData.Tag));
                 inputItems.Add(waterQualityModel.GetDataItemByTag(WaterQualityModel.BoundaryDataDataItemMetaData.Tag));

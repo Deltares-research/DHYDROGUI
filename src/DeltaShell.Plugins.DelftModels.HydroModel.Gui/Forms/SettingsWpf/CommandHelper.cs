@@ -15,10 +15,19 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
 
         public ICommand CustomCommand
         {
-            get { return new RelayCommand(ExecuteAction); }
+            get
+            {
+                return new RelayCommand(ExecuteAction);
+            }
         }
 
-        public bool ButtonIsVisible { get { return ButtonFunction != null; } }
+        public bool ButtonIsVisible
+        {
+            get
+            {
+                return ButtonFunction != null;
+            }
+        }
 
         /// <summary>
         /// Determines whether the user may also enter a value in
@@ -33,17 +42,17 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
 
         public Bitmap ButtonImage { get; set; }
 
-        private void ExecuteAction(object dummyObject)
-        {
-            var model = GetModel?.Invoke();
-            ButtonFunction?.Invoke(model);
-            UpdateAction?.Invoke();
-        }
-
         public Func<object> GetModel { get; set; }
 
         public Action UpdateAction { get; set; }
 
         public Action<object> ButtonFunction { get; set; }
+
+        private void ExecuteAction(object dummyObject)
+        {
+            object model = GetModel?.Invoke();
+            ButtonFunction?.Invoke(model);
+            UpdateAction?.Invoke();
+        }
     }
 }

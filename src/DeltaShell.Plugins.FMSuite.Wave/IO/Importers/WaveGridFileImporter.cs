@@ -42,14 +42,19 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Importers
             }
         }
 
+        public bool CanImportOnRootLevel => false;
+
+        public string FileFilter => "Delft3D Grid (*.grd)|*.grd|All Files (*.*)|*.*";
+
+        public string TargetDataDirectory { get; set; }
+        public bool ShouldCancel { get; set; }
+        public ImportProgressChangedDelegate ProgressChanged { get; set; }
+        public bool OpenViewAfterImport { get; private set; }
+
         public bool CanImportOn(object targetObject)
         {
             return true;
         }
-
-        public bool CanImportOnRootLevel => false;
-
-        public string FileFilter => "Delft3D Grid (*.grd)|*.grd|All Files (*.*)|*.*";
 
         public object ImportItem(string path, object target = null)
         {
@@ -99,10 +104,5 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Importers
 
             return target;
         }
-
-        public string TargetDataDirectory { get; set; }
-        public bool ShouldCancel { get; set; }
-        public ImportProgressChangedDelegate ProgressChanged { get; set; }
-        public bool OpenViewAfterImport { get; private set; }
     }
 }

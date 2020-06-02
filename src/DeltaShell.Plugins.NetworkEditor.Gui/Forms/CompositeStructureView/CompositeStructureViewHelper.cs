@@ -15,46 +15,60 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
         {
             double min, max;
             var localMinMaxValues = new List<double>();
-            foreach (var branchFeature in BranchFeatures)
+            foreach (IBranchFeature branchFeature in BranchFeatures)
             {
                 if (branchFeature is ICompositeBranchStructure)
                 {
-                    var compositeBranchStructure = (ICompositeBranchStructure)branchFeature;
-                    foreach (var structure in compositeBranchStructure.Structures)
+                    var compositeBranchStructure = (ICompositeBranchStructure) branchFeature;
+                    foreach (IStructure1D structure in compositeBranchStructure.Structures)
                     {
                         min = max = double.NaN;
                         if (structure is IWeir)
                         {
-                            UpdateMinMaxForWeir((IWeir)structure, ref min, ref max);
+                            UpdateMinMaxForWeir((IWeir) structure, ref min, ref max);
                         }
+
                         if (structure is IPump)
                         {
                             UpdateMinMaxForPump((IPump) structure, ref min, ref max);
                         }
+
                         if (structure is IBridge)
                         {
-                            UpdateMinMaxForBridge((IBridge)structure, ref min, ref max);
+                            UpdateMinMaxForBridge((IBridge) structure, ref min, ref max);
                         }
+
                         if (structure is ICulvert)
                         {
-                            UpdateMinMaxForCulvert((ICulvert)structure, ref min, ref max);
+                            UpdateMinMaxForCulvert((ICulvert) structure, ref min, ref max);
                         }
-                        localMinMaxValues.AddRange(new[] {min, max});
+
+                        localMinMaxValues.AddRange(new[]
+                        {
+                            min,
+                            max
+                        });
                     }
                 }
+
                 if (branchFeature is ICrossSection)
                 {
-                    var crossSectionDefinition = ((ICrossSection)branchFeature).Definition;
+                    ICrossSectionDefinition crossSectionDefinition = ((ICrossSection) branchFeature).Definition;
                     // this is a hack; a cross sections highest or lowest point may not be valid when newly added;
                     // todo fix in networkeditor
                     double low = crossSectionDefinition.LowestPoint;
                     double high = crossSectionDefinition.HighestPoint;
-                    localMinMaxValues.AddRange(new[] {low, high});
+                    localMinMaxValues.AddRange(new[]
+                    {
+                        low,
+                        high
+                    });
                 }
             }
+
             if (localMinMaxValues.Any())
             {
-                var localMinMaxValuesNoNaN = localMinMaxValues.Where(v => !double.IsNaN(v)).ToList();
+                List<double> localMinMaxValuesNoNaN = localMinMaxValues.Where(v => !double.IsNaN(v)).ToList();
                 if (localMinMaxValuesNoNaN.Any())
                 {
                     minValue = double.IsNaN(minValue) ? localMinMaxValuesNoNaN.Min() : Math.Min(localMinMaxValuesNoNaN.Min(), minValue);
@@ -66,9 +80,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
         private static void UpdateMinMaxForCulvert(ICulvert culvert, ref double min, ref double max)
         {
             //all z values from inlet and outlet crossection
-            var zValues = culvert.CrossSectionDefinitionAtInletAbsolute.ZWDataTable.
-                Concat(culvert.CrossSectionDefinitionAtOutletAbsolute.ZWDataTable).
-                Select(hfsw => hfsw.Z).Where(v => !double.IsNaN(v)).ToList();
+            List<double> zValues = culvert.CrossSectionDefinitionAtInletAbsolute.ZWDataTable.Concat(culvert.CrossSectionDefinitionAtOutletAbsolute.ZWDataTable).Select(hfsw => hfsw.Z).Where(v => !double.IsNaN(v)).ToList();
 
             //siphon levels
             if (culvert.CulvertType.Equals(CulvertType.Siphon))
@@ -76,7 +88,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
                 zValues.Add(culvert.SiphonOnLevel);
                 zValues.Add(culvert.SiphonOffLevel);
             }
-            
+
             if (zValues.Any())
             {
                 min = double.IsNaN(min) ? zValues.Min() : Math.Min(min, zValues.Min());
@@ -86,7 +98,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
 
         private static void UpdateMinMaxForBridge(IBridge bridge, ref double min, ref double max)
         {
-            var zValues = bridge.EffectiveCrossSectionDefinition.ZWDataTable.Select(h => h.Z).Where(v => !double.IsNaN(v)).ToList();
+            List<double> zValues = bridge.EffectiveCrossSectionDefinition.ZWDataTable.Select(h => h.Z).Where(v => !double.IsNaN(v)).ToList();
             if (zValues.Any())
             {
                 min = double.IsNaN(min) ? zValues.Min() : Math.Min(min, zValues.Min());
@@ -97,7 +109,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
         private static void UpdateMinMaxForPump(IPump pump, ref double min, ref double max)
         {
             //all z related values of pump (levels and pump OffsetZ)
-            var zValues = new[]
+            List<double> zValues = new[]
             {
                 pump.OffsetZ,
                 pump.StartDelivery,
@@ -118,10 +130,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
             //add 10 for weir
             if (weir.WeirFormula is IGatedWeirFormula)
             {
-                var formula = (IGatedWeirFormula)weir.WeirFormula;
-                var newVal = weir.CrestLevel + formula.GateOpening;
-                if (!double.IsNaN(newVal)) max = Math.Max(max, newVal);    
+                var formula = (IGatedWeirFormula) weir.WeirFormula;
+                double newVal = weir.CrestLevel + formula.GateOpening;
+                if (!double.IsNaN(newVal))
+                {
+                    max = Math.Max(max, newVal);
+                }
             }
+
             //we want to see a weir when it is below the bottom
             min = double.IsNaN(min) ? weir.CrestLevel : Math.Min(min, weir.CrestLevel);
         }

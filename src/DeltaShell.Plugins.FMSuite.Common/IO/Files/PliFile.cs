@@ -16,9 +16,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files
 {
     public class PliFile<T> : FMSuiteFileBase, IFeature2DFileBase<T> where T : IFeature, INameable, new()
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(PliFile<T>));
-        private const int MaximumAmountOfNumericValuesInPliFile = 9;
-        private const int AmountOfDimensionalValuesInPliFile = 2;
+        public const string Extension = "pli";
 
         public static readonly string[] NumericColumnAttributesKeys =
         {
@@ -31,18 +29,22 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files
             "Column9"
         };
 
+        private const int MaximumAmountOfNumericValuesInPliFile = 9;
+        private const int AmountOfDimensionalValuesInPliFile = 2;
+        private static readonly ILog Log = LogManager.GetLogger(typeof(PliFile<T>));
+
         protected readonly string[] StringColumnAttributesKeys =
         {
             "WeirType"
         };
 
-        public const string Extension = "pli";
+        public Func<List<Coordinate>, string, T> CreateDelegate { private get; set; }
 
         /// <summary>
-        /// Creates and returns a <see cref="LineString" /> object with the provided coordinates.
+        /// Creates and returns a <see cref="LineString"/> object with the provided coordinates.
         /// </summary>
-        /// <param name="coordinates"> The collection of coordinates to put into the <see cref="LineString" /> object. </param>
-        /// <returns> An <see cref="IGeometry" /> object with the provided collection of coordinates. </returns>
+        /// <param name="coordinates"> The collection of coordinates to put into the <see cref="LineString"/> object. </param>
+        /// <returns> An <see cref="IGeometry"/> object with the provided collection of coordinates. </returns>
         /// <exception cref="ArgumentException"> Thrown when the amount of coordinates is smaller than 2. </exception>
         public static IGeometry CreatePolyLineGeometry(IList<Coordinate> coordinates)
         {
@@ -54,85 +56,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files
             return new LineString(coordinates.ToArray());
         }
 
-        public Func<List<Coordinate>, string, T> CreateDelegate { private get; set; }
-
         /// <summary>
-        /// Writes a polyline file for the collection of features <see cref="features" />
-        /// </summary>
-        /// <param name="filePath"> The target file path to write the .pli file to. </param>
-        /// <param name="features">
-        /// The features of type <typeparamref name="T" /> that are used to write data to file
-        /// at path <paramref name="filePath" />
-        /// </param>
-        public virtual void Write(string filePath, IEnumerable<T> features)
-        {
-            using (CultureUtils.SwitchToInvariantCulture())
-            {
-                OpenOutputFile(filePath);
-                try
-                {
-                    foreach (T feature2D in features)
-                    {
-                        var numericColumnValues = new List<IList<double>>();
-                        var stringColumnValues = new List<IList<string>>();
-                        IList<string> locationNames = null;
-
-                        var numColumns = 2; // X, Y
-                        if (feature2D.Attributes != null)
-                        {
-                            BuildColumnValuesFromFeature(feature2D, numericColumnValues, NumericColumnAttributesKeys,
-                                                         ref numColumns);
-                            BuildColumnValuesFromFeature(feature2D, stringColumnValues, StringColumnAttributesKeys,
-                                                         ref numColumns);
-                            if (feature2D.Attributes.ContainsKey(Feature2D.LocationKey))
-                            {
-                                // location names, does not count as a data column
-                                locationNames = (IList<string>) feature2D.Attributes[Feature2D.LocationKey];
-                            }
-                        }
-
-                        WriteLine(feature2D.Name);
-                        WriteLine($"    {feature2D.Geometry.NumPoints}    {numColumns}");
-                        for (var i = 0; i < feature2D.Geometry.Coordinates.Length; i++)
-                        {
-                            Coordinate coordinate = feature2D.Geometry.Coordinates[i];
-                            string line = $"{coordinate.X:E15}  {coordinate.Y:E15}";
-                            ConstructLineContent(i, numericColumnValues, 0.0, NumericColumnAttributesKeys, ref line,
-                                                 feature2D.Name);
-                            ConstructLineContent(i, stringColumnValues, "T", StringColumnAttributesKeys, ref line,
-                                                 feature2D.Name);
-
-                            if (locationNames != null)
-                            {
-                                if (i < locationNames.Count)
-                                {
-                                    line += $" {locationNames[i]}";
-                                }
-                            }
-
-                            WriteLine(line);
-                        }
-                    }
-                }
-                finally
-                {
-                    CloseOutputFile();
-                }
-            }
-        }
-
-        /// <summary>
-        /// Reads a polyline file and creates a collection of features of type <typeparamref name="T" />.
-        /// </summary>
-        /// <param name="filePath"> File path to the .pli file that is being read. </param>
-        /// <returns> A collection of features of type <typeparamref name="T" />. </returns>
-        public virtual IList<T> Read(string filePath)
-        {
-            return Read(filePath, null);
-        }
-
-        /// <summary>
-        /// Reads a polyline file and creates a collection of features of type <typeparamref name="T" /> and optionally
+        /// Reads a polyline file and creates a collection of features of type <typeparamref name="T"/> and optionally
         /// reports reading progress information to the user.
         /// </summary>
         /// <param name="filePath"> File path to the .pli file that is being read. </param>
@@ -140,7 +65,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files
         /// Action that is invoked when reading a line in the .pli file.
         /// This informs the user about the reading progress.
         /// </param>
-        /// <returns> A collection of features of type <typeparamref name="T" />. </returns>
+        /// <returns> A collection of features of type <typeparamref name="T"/>. </returns>
         public virtual IList<T> Read(string filePath, Action<string, int, int> progress)
         {
             var features = new EventedList<T>();
@@ -318,6 +243,119 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files
             return features;
         }
 
+        /// <summary>
+        /// Writes a polyline file for the collection of features <see cref="features"/>
+        /// </summary>
+        /// <param name="filePath"> The target file path to write the .pli file to. </param>
+        /// <param name="features">
+        /// The features of type <typeparamref name="T"/> that are used to write data to file
+        /// at path <paramref name="filePath"/>
+        /// </param>
+        public virtual void Write(string filePath, IEnumerable<T> features)
+        {
+            using (CultureUtils.SwitchToInvariantCulture())
+            {
+                OpenOutputFile(filePath);
+                try
+                {
+                    foreach (T feature2D in features)
+                    {
+                        var numericColumnValues = new List<IList<double>>();
+                        var stringColumnValues = new List<IList<string>>();
+                        IList<string> locationNames = null;
+
+                        var numColumns = 2; // X, Y
+                        if (feature2D.Attributes != null)
+                        {
+                            BuildColumnValuesFromFeature(feature2D, numericColumnValues, NumericColumnAttributesKeys,
+                                                         ref numColumns);
+                            BuildColumnValuesFromFeature(feature2D, stringColumnValues, StringColumnAttributesKeys,
+                                                         ref numColumns);
+                            if (feature2D.Attributes.ContainsKey(Feature2D.LocationKey))
+                            {
+                                // location names, does not count as a data column
+                                locationNames = (IList<string>) feature2D.Attributes[Feature2D.LocationKey];
+                            }
+                        }
+
+                        WriteLine(feature2D.Name);
+                        WriteLine($"    {feature2D.Geometry.NumPoints}    {numColumns}");
+                        for (var i = 0; i < feature2D.Geometry.Coordinates.Length; i++)
+                        {
+                            Coordinate coordinate = feature2D.Geometry.Coordinates[i];
+                            string line = $"{coordinate.X:E15}  {coordinate.Y:E15}";
+                            ConstructLineContent(i, numericColumnValues, 0.0, NumericColumnAttributesKeys, ref line,
+                                                 feature2D.Name);
+                            ConstructLineContent(i, stringColumnValues, "T", StringColumnAttributesKeys, ref line,
+                                                 feature2D.Name);
+
+                            if (locationNames != null)
+                            {
+                                if (i < locationNames.Count)
+                                {
+                                    line += $" {locationNames[i]}";
+                                }
+                            }
+
+                            WriteLine(line);
+                        }
+                    }
+                }
+                finally
+                {
+                    CloseOutputFile();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Reads a polyline file and creates a collection of features of type <typeparamref name="T"/>.
+        /// </summary>
+        /// <param name="filePath"> File path to the .pli file that is being read. </param>
+        /// <returns> A collection of features of type <typeparamref name="T"/>. </returns>
+        public virtual IList<T> Read(string filePath)
+        {
+            return Read(filePath, null);
+        }
+
+        protected static void AssignDoubleValuesToAttribute(IList<double> columnValues, IFeature feature, string key)
+        {
+            GeometryPointsSyncedList<double> syncedList;
+            if (feature.Attributes.ContainsKey(key) && feature.Attributes[key] is GeometryPointsSyncedList<double>)
+            {
+                syncedList = (GeometryPointsSyncedList<double>) feature.Attributes[key];
+            }
+            else
+            {
+                syncedList = new GeometryPointsSyncedList<double>
+                {
+                    CreationMethod = (f, i) => 0.0,
+                    Feature = feature
+                };
+                feature.Attributes[key] = syncedList;
+            }
+
+            for (var i = 0; i < columnValues.Count; ++i)
+            {
+                syncedList[i] = columnValues[i];
+            }
+        }
+
+        protected static void AssignStringValuesToAttribute(IList<string> columnValues, IFeature feature, string key)
+        {
+            var syncedList = new GeometryPointsSyncedList<string>
+            {
+                CreationMethod = (f, i) => string.Empty,
+                Feature = feature
+            };
+            feature.Attributes[key] = syncedList;
+
+            for (var i = 0; i < columnValues.Count; ++i)
+            {
+                syncedList[i] = columnValues[i];
+            }
+        }
+
         private T CreateFeature2D(string name, List<Coordinate> points, int numColumns,
                                   IList<IList<double>> columnNumericalValueLists,
                                   IList<IList<string>> columnStringValueLists,
@@ -421,44 +459,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files
 
                     lineContent += $"  {defaultValue:E15}";
                 }
-            }
-        }
-
-        protected static void AssignDoubleValuesToAttribute(IList<double> columnValues, IFeature feature, string key)
-        {
-            GeometryPointsSyncedList<double> syncedList;
-            if (feature.Attributes.ContainsKey(key) && feature.Attributes[key] is GeometryPointsSyncedList<double>)
-            {
-                syncedList = (GeometryPointsSyncedList<double>) feature.Attributes[key];
-            }
-            else
-            {
-                syncedList = new GeometryPointsSyncedList<double>
-                {
-                    CreationMethod = (f, i) => 0.0,
-                    Feature = feature
-                };
-                feature.Attributes[key] = syncedList;
-            }
-
-            for (var i = 0; i < columnValues.Count; ++i)
-            {
-                syncedList[i] = columnValues[i];
-            }
-        }
-
-        protected static void AssignStringValuesToAttribute(IList<string> columnValues, IFeature feature, string key)
-        {
-            var syncedList = new GeometryPointsSyncedList<string>
-            {
-                CreationMethod = (f, i) => string.Empty,
-                Feature = feature
-            };
-            feature.Attributes[key] = syncedList;
-
-            for (var i = 0; i < columnValues.Count; ++i)
-            {
-                syncedList[i] = columnValues[i];
             }
         }
     }

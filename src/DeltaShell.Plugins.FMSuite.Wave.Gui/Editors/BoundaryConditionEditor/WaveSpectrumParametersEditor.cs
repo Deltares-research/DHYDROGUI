@@ -6,6 +6,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.BoundaryConditionEditor
 {
     public partial class WaveSpectralParametersEditor : UserControl
     {
+        private WaveBoundaryCondition data;
+
         public WaveSpectralParametersEditor()
         {
             InitializeComponent();
@@ -24,21 +26,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.BoundaryConditionEditor
             UpdateInputFields();
         }
 
-        private void ShapeTypeBoxOnSelectedValueChanged(object sender, EventArgs eventArgs)
-        {
-            UpdateInputFields();
-        }
-
-        private void UpdateInputFields()
-        {
-            peakEnhBox.Enabled = (WaveSpectrumShapeType) shapeTypeBox.SelectedValue == WaveSpectrumShapeType.Jonswap;
-            peakEnhLabel.Enabled = peakEnhBox.Enabled;
-            gaussSpreadBox.Enabled = (WaveSpectrumShapeType) shapeTypeBox.SelectedValue == WaveSpectrumShapeType.Gauss;
-            gaussSpreadLabel.Enabled = gaussSpreadBox.Enabled;
-        }
-
-        private WaveBoundaryCondition data;
-
         public WaveBoundaryCondition Data
         {
             get => data;
@@ -52,6 +39,19 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.BoundaryConditionEditor
                     BindControls();
                 }
             }
+        }
+
+        private void ShapeTypeBoxOnSelectedValueChanged(object sender, EventArgs eventArgs)
+        {
+            UpdateInputFields();
+        }
+
+        private void UpdateInputFields()
+        {
+            peakEnhBox.Enabled = (WaveSpectrumShapeType) shapeTypeBox.SelectedValue == WaveSpectrumShapeType.Jonswap;
+            peakEnhLabel.Enabled = peakEnhBox.Enabled;
+            gaussSpreadBox.Enabled = (WaveSpectrumShapeType) shapeTypeBox.SelectedValue == WaveSpectrumShapeType.Gauss;
+            gaussSpreadLabel.Enabled = gaussSpreadBox.Enabled;
         }
 
         private void BindControls()

@@ -17,8 +17,19 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
     [Entity]
     public sealed class WpfSettingsViewModel : IDisposable
     {
-        private bool disposed;
         private readonly ObservableCollection<WpfGuiCategory> settingsCategories;
+        private bool disposed;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="WpfSettingsViewModel"/> class.
+        /// </summary>
+        public WpfSettingsViewModel()
+        {
+            settingsCategories = new ObservableCollection<WpfGuiCategory>();
+            settingsCategories.CollectionChanged += SettingsCategoriesOnCollectionChanged;
+
+            RemovedCategories = new List<WpfGuiCategory>();
+        }
 
         /// <summary>
         /// Gets or sets the data model.
@@ -69,16 +80,15 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
             }
         }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="WpfSettingsViewModel" /> class.
-        /// </summary>
-        public WpfSettingsViewModel()
+        public void Dispose()
         {
-            settingsCategories = new ObservableCollection<WpfGuiCategory>();
-            settingsCategories.CollectionChanged += SettingsCategoriesOnCollectionChanged;
-
-            RemovedCategories = new List<WpfGuiCategory>();
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
+
+        private IList<WpfGuiCategory> RemovedCategories { get; set; }
+
+        private bool UpdatingProperties { get; set; }
 
         private void SettingsCategoriesOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs notifyCollectionChangedEventArgs)
         {
@@ -90,10 +100,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
                 UpdatingProperties = false;
             }
         }
-
-        private IList<WpfGuiCategory> RemovedCategories { get; set; }
-
-        private bool UpdatingProperties { get; set; }
 
         private void OnPropertyChanged(object sender, PropertyChangedEventArgs propertyChangedEventArgs)
         {
@@ -128,12 +134,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
                 settingsCategories.AddRange(guiCategories);
                 RemovedCategories.RemoveAllWhere(rc => rc.IsVisible);
             }
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
         }
 
         private void Dispose(bool disposing)

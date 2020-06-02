@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using DelftTools.Controls.Swf.Charting;
@@ -27,26 +28,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
         private CrossSectionDefinitionViewHistoryController historyController;
         private ToolTip toolTip;
 
-        #region Tools
-
-        private IAddPointTool addPointTool;
-        private IEditPointTool editFlowProfileTool;
-        private IEditPointTool editProfileTool;
-        private ShapeModifyTool sectionRectanglesTool;
-        private ISelectPointTool selectPointTool;
-        private ISeriesBandTool storageAreaTool;
-        private ICursorLineTool thalWegMarker;
-        private IHistoryTool historyTool;
-
-        #endregion
-
         private Cursor cursor;
         private CrossSectionDefinitionViewModel viewModel;
 
-        private Cursor GetAddPointCursor()
-        {
-            return cursor ?? (cursor = new Cursor(new System.IO.MemoryStream(Resources.AddPointCursor)));
-        }
+        public event EventHandler SectionSelectionChanged;
+
+        public event EventHandler StatusMessage;
 
         public ProfileChartView()
         {
@@ -56,12 +43,18 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
 
         public ChartView ChartView
         {
-            get { return chartView; }
+            get
+            {
+                return chartView;
+            }
         }
 
         public bool HistoryToolEnabled
         {
-            get { return historyTool.Active; }
+            get
+            {
+                return historyTool.Active;
+            }
             set
             {
                 historyTool.Active = value;
@@ -74,7 +67,20 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
             }
         }
 
-        public event EventHandler SectionSelectionChanged;
+        protected override void OnResize(EventArgs e)
+        {
+            base.OnResize(e);
+
+            if (viewModel != null && viewModel.FixOnScreenRatio)
+            {
+                UpdateChartAxis();
+            }
+        }
+
+        private Cursor GetAddPointCursor()
+        {
+            return cursor ?? (cursor = new Cursor(new MemoryStream(Resources.AddPointCursor)));
+        }
 
         private void Initialize()
         {
@@ -82,11 +88,114 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
             ChartView.Chart.Legend.Alignment = LegendAlignment.Bottom;
             ChartView.Chart.Legend.Visible = true;
             ChartView.MouseUp += (s, e) => ReActivateTools();
-            
+
             historyTool = ChartView.NewHistoryTool();
             historyTool.Active = false;
             historyController = new CrossSectionDefinitionViewHistoryController(historyTool);
         }
+
+        private void ReActivateTools()
+        {
+            foreach (IChartViewTool tool in mutualExclusiveTools)
+            {
+                tool.Active = true;
+            }
+        }
+
+        private void DeActivateOtherTools(IChartViewTool sender)
+        {
+            foreach (IChartViewTool tool in mutualExclusiveTools)
+            {
+                if (tool != sender)
+                {
+                    tool.Active = false;
+                }
+            }
+        }
+
+        private ChartRectangle GetChartExtends()
+        {
+            var minX = double.MaxValue;
+            var maxX = double.MinValue;
+            var minY = double.MaxValue;
+            var maxY = double.MinValue;
+
+            var defined = false;
+
+            //yz-values, storage and historyTool series
+            foreach (IChartSeries series in ChartView.Chart.Series)
+            {
+                var lst = series.DataSource as IEnumerable<ICoordinate>; /* TODO: ICoordinate should be replaced for Coordinate, check issue SOBEK3-666 */
+                if (lst != null && lst.Any())
+                {
+                    minX = Math.Min(lst.Select(c => c.X).Min(), minX);
+                    maxX = Math.Max(lst.Select(c => c.X).Max(), maxX);
+                    minY = Math.Min(lst.Select(c => c.Y).Min(), minY);
+                    maxY = Math.Max(lst.Select(c => c.Y).Max(), maxY);
+                    defined = true;
+                }
+            }
+
+            if (defined)
+            {
+                if (viewModel.FixOnScreenRatio)
+                {
+                    FixOnScreenRatio(ref minX, ref maxX, ref minY, ref maxY);
+                }
+
+                return new ChartRectangle
+                {
+                    Left = minX,
+                    Right = maxX,
+                    Bottom = minY,
+                    Top = maxY
+                };
+            }
+
+            return new ChartRectangle(0, 0, 0, 0);
+        }
+
+        private void FixOnScreenRatio(ref double minX, ref double maxX, ref double minY, ref double maxY)
+        {
+            double width = maxX - minX;
+            double height = maxY - minY;
+            double radiusX = width / 2.0;
+            double radiusY = height / 2.0;
+            double centerX = minX + radiusX;
+            double centerY = minY + radiusY;
+
+            double dataRatio = width / height;
+            int chartHeight = ChartView.Height - 40; //magic number: about the amount of pixels required to draw the legend
+            double chartRatio = (double) ChartView.Width / chartHeight;
+            double combinedRatio = chartRatio / dataRatio;
+
+            if (dataRatio > chartRatio)
+            {
+                radiusY /= combinedRatio;
+            }
+            else
+            {
+                radiusX *= combinedRatio;
+            }
+
+            minX = centerX - radiusX;
+            maxX = centerX + radiusX;
+            minY = centerY - radiusY;
+            maxY = centerY + radiusY;
+        }
+
+        #region Tools
+
+        private IAddPointTool addPointTool;
+        private IEditPointTool editFlowProfileTool;
+        private IEditPointTool editProfileTool;
+        private ShapeModifyTool sectionRectanglesTool;
+        private ISelectPointTool selectPointTool;
+        private ISeriesBandTool storageAreaTool;
+        private ICursorLineTool thalWegMarker;
+        private IHistoryTool historyTool;
+
+        #endregion
 
         #region Initialize on Data
 
@@ -111,24 +220,30 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
         /// </summary>
         public void RefreshChartTitle()
         {
-            var name = crossSectionDefinition == null ? "" : crossSectionDefinition.Name;
-            chartView.Title = String.Format("Profile {0}",
+            string name = crossSectionDefinition == null ? "" : crossSectionDefinition.Name;
+            chartView.Title = string.Format("Profile {0}",
                                             string.IsNullOrEmpty(name)
                                                 ? ""
-                                                : String.Format("'{0}'", name));
+                                                : string.Format("'{0}'", name));
         }
 
         private void Cleanup()
         {
             ChartView.Chart.Series.Clear();
 
-            var toolsToRemove = mutualExclusiveTools.Concat(new[] {sectionRectanglesTool}).ToList();
-            
-            foreach (var tool in toolsToRemove)
+            List<IChartViewTool> toolsToRemove = mutualExclusiveTools.Concat(new[]
+            {
+                sectionRectanglesTool
+            }).ToList();
+
+            foreach (IChartViewTool tool in toolsToRemove)
             {
                 var disposableTool = tool as IDisposable;
-                if (disposableTool != null) 
+                if (disposableTool != null)
+                {
                     disposableTool.Dispose();
+                }
+
                 ChartView.Tools.Remove(tool);
             }
 
@@ -160,15 +275,22 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
 
             toolTip = new ToolTip();
 
-            mutualExclusiveTools.AddRange(new IChartViewTool[] {addPointTool, selectPointTool, editProfileTool, editFlowProfileTool, thalWegMarker});
-            
+            mutualExclusiveTools.AddRange(new IChartViewTool[]
+            {
+                addPointTool,
+                selectPointTool,
+                editProfileTool,
+                editFlowProfileTool,
+                thalWegMarker
+            });
+
             RefreshChart();
         }
 
         private void CreateSectionRenderer()
         {
             sectionRenderer = new CrossSectionDefinitionViewSectionRenderer(ChartView.Chart, sectionRectanglesTool,
-                                                                  crossSectionSections, viewModel.IsSymmetrical);
+                                                                            crossSectionSections, viewModel.IsSymmetrical);
         }
 
         private void CreateSelectPointTool()
@@ -183,9 +305,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
         {
             sectionRectanglesTool = new ShapeModifyTool(ChartView.Chart)
             {
-                ShapeEditMode = (ShapeEditMode.ShapeSelect |
-                                 ShapeEditMode.ShapeMove |
-                                 ShapeEditMode.ShapeResize)
+                ShapeEditMode = ShapeEditMode.ShapeSelect |
+                                ShapeEditMode.ShapeMove |
+                                ShapeEditMode.ShapeResize
             };
             sectionRectanglesTool.ShapeEditMode = ShapeEditMode.ShapeSelect;
             sectionRectanglesTool.SelectionChanged += (s, e) =>
@@ -203,9 +325,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
 
         private void CreateThalWegMarker()
         {
-            var enabled = !crossSectionDefinition.GeometryBased;
+            bool enabled = !crossSectionDefinition.GeometryBased;
 
-            var color = enabled ? Color.DarkMagenta : Color.DarkGray;
+            Color color = enabled ? Color.DarkMagenta : Color.DarkGray;
 
             thalWegMarker = ChartView.NewCursorLineTool(CursorLineToolStyles.Vertical, color, 3, DashStyle.Dot);
             thalWegMarker.Enabled = enabled;
@@ -213,15 +335,15 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
             thalWegMarker.MouseDown += (s, e) => DeActivateOtherTools(thalWegMarker);
             thalWegMarker.MouseUp += (s, e) => ReActivateTools();
         }
-        
+
         private void CreateAddPointTool(ICrossSectionProfileMutator crossSectionProfileMutator)
         {
             addPointTool = ChartView.NewAddPointTool();
             addPointTool.PointAdded += (s, e) =>
-                                           {
-                                               crossSectionProfileMutator.AddPoint(e.X, e.Y);
-                                               RefreshChart();
-                                           };
+            {
+                crossSectionProfileMutator.AddPoint(e.X, e.Y);
+                RefreshChart();
+            };
             addPointTool.Button = MouseButtons.Left;
             addPointTool.Cursor = GetAddPointCursor();
             addPointTool.Enabled = crossSectionProfileMutator.CanAdd;
@@ -231,7 +353,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
 
         private IEditPointTool AddProfileTools(ICrossSectionProfileMutator profileMutator)
         {
-            var editTool = ChartView.NewEditPointTool();
+            IEditPointTool editTool = ChartView.NewEditPointTool();
             editTool.IsPolygon = false;
             editTool.Enabled = profileMutator.CanMove;
             editTool.MouseHoverPoint += (s, e) => ShowALTMessageIfProfilesOverlap(e.Index);
@@ -239,7 +361,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
             editTool.AfterPointEdit += (s, e) => profileMutator.MovePoint(e.Index, e.X, e.Y);
             editTool.ClipXValues = profileMutator.ClipHorizontal;
             editTool.ClipYValues = profileMutator.ClipVertical;
-            
+
             if (profileMutator.FixHorizontal)
             {
                 editTool.DragStyles = DragStyle.Y;
@@ -252,7 +374,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
             return editTool;
         }
 
-        void EditToolBeforeDrag(object sender, PointEventArgs e)
+        private void EditToolBeforeDrag(object sender, PointEventArgs e)
         {
             if (ModifierKeys == Keys.Alt && sender == editFlowProfileTool)
             {
@@ -295,16 +417,19 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
 
         private bool DoSeriesOverlap(int seriesIndex)
         {
-            if (seriesIndex == -1) return false;
+            if (seriesIndex == -1)
+            {
+                return false;
+            }
 
-            var profileSeries = editProfileTool.Series;
-            var flowProfileSeries = editFlowProfileTool.Series;
+            ILineChartSeries profileSeries = editProfileTool.Series;
+            ILineChartSeries flowProfileSeries = editFlowProfileTool.Series;
 
-            var x1 = profileSeries.CalcXPos(seriesIndex);
-            var x2 = flowProfileSeries.CalcXPos(seriesIndex);
-            
-            var y1 = profileSeries.CalcYPos(seriesIndex);
-            var y2 = flowProfileSeries.CalcYPos(seriesIndex);
+            double x1 = profileSeries.CalcXPos(seriesIndex);
+            double x2 = flowProfileSeries.CalcXPos(seriesIndex);
+
+            double y1 = profileSeries.CalcYPos(seriesIndex);
+            double y2 = flowProfileSeries.CalcYPos(seriesIndex);
 
             return Math.Abs(x1 - x2) < double.Epsilon && Math.Abs(y1 - y2) < double.Epsilon;
         }
@@ -324,12 +449,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
         {
             ChartRectangle chartRectangle = GetChartExtends();
 
-            double horizontalMargin = 0.02*(chartRectangle.Right - chartRectangle.Left);
-            double verticalMargin = 0.04*(chartRectangle.Top - chartRectangle.Bottom);
+            double horizontalMargin = 0.02 * (chartRectangle.Right - chartRectangle.Left);
+            double verticalMargin = 0.04 * (chartRectangle.Top - chartRectangle.Bottom);
 
             ChartView.Chart.LeftAxis.Automatic = false;
             ChartView.Chart.LeftAxis.Maximum = chartRectangle.Top + verticalMargin;
-            ChartView.Chart.LeftAxis.Minimum = chartRectangle.Bottom - 3.0*verticalMargin;
+            ChartView.Chart.LeftAxis.Minimum = chartRectangle.Bottom - (3.0 * verticalMargin);
 
             ChartView.Chart.BottomAxis.Automatic = false;
             ChartView.Chart.BottomAxis.Maximum = chartRectangle.Right + horizontalMargin;
@@ -346,11 +471,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
             selectPointTool.ClearSelection(); //clear selection, selected points belong to old series anyway
             ChartView.Chart.Series.Clear();
 
-            var profile = crossSectionDefinition.Profile.ToList();
-            var flowProfile = crossSectionDefinition.FlowProfile.ToList();
-            
-            var profileSeries = CreateLineSeries("Total profile", profile, Color.DarkBlue, DashStyle.Solid);
-            var flowProfileSeries = CreateLineSeries("Flow profile", flowProfile, Color.SteelBlue, DashStyle.Dash);
+            List<Coordinate> profile = crossSectionDefinition.Profile.ToList();
+            List<Coordinate> flowProfile = crossSectionDefinition.FlowProfile.ToList();
+
+            ILineChartSeries profileSeries = CreateLineSeries("Total profile", profile, Color.DarkBlue, DashStyle.Solid);
+            ILineChartSeries flowProfileSeries = CreateLineSeries("Flow profile", flowProfile, Color.SteelBlue, DashStyle.Dash);
 
             editProfileTool.Series = profileSeries;
             editFlowProfileTool.Series = flowProfileSeries;
@@ -365,6 +490,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
             {
                 ChartView.Tools.Remove(storageAreaTool);
             }
+
             storageAreaTool = ChartView.NewSeriesBandTool(profileSeries, flowProfileSeries, Color.LightBlue,
                                                           HatchStyle.BackwardDiagonal, Color.WhiteSmoke);
             ChartView.Tools.Add(storageAreaTool);
@@ -383,7 +509,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
             double area = CrossSectionHelper.CalculateStorageArea(profile, flowProfile);
 
             IAreaChartSeries legendPlaceholderStorageSeries = ChartSeriesFactory.CreateAreaSeries();
-            legendPlaceholderStorageSeries.Title = String.Format("Storage Area ({0:0.##} m²) ", area);
+            legendPlaceholderStorageSeries.Title = string.Format("Storage Area ({0:0.##} m²) ", area);
             legendPlaceholderStorageSeries.UseHatch = true;
             legendPlaceholderStorageSeries.Color = Color.LightBlue;
             legendPlaceholderStorageSeries.HatchStyle = HatchStyle.BackwardDiagonal;
@@ -407,6 +533,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
             profileSeries.Width = 2;
             return profileSeries;
         }
+
         #endregion
 
         #region Selection
@@ -426,105 +553,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
 
         public void SelectSection(CrossSectionSection section)
         {
-            if (section == null || sectionRenderer == null) 
+            if (section == null || sectionRenderer == null)
+            {
                 return;
-            
+            }
+
             sectionRenderer.SelectSection(section);
         }
 
         #endregion
-        
-        private void ReActivateTools()
-        {
-            foreach (IChartViewTool tool in mutualExclusiveTools)
-            {
-                tool.Active = true;
-            }
-        }
-
-        private void DeActivateOtherTools(IChartViewTool sender)
-        {
-            foreach (IChartViewTool tool in mutualExclusiveTools)
-            {
-                if (tool != sender)
-                {
-                    tool.Active = false;
-                }
-            }
-        }
-
-        private ChartRectangle GetChartExtends()
-        {
-            var minX = double.MaxValue;
-            var maxX = double.MinValue;
-            var minY = double.MaxValue;
-            var maxY = double.MinValue;
-
-            bool defined = false;
-
-            //yz-values, storage and historyTool series
-            foreach (var series in ChartView.Chart.Series)
-            {
-                var lst = series.DataSource as IEnumerable<ICoordinate>; /* TODO: ICoordinate should be replaced for Coordinate, check issue SOBEK3-666 */
-                if (lst != null && lst.Any())
-                {
-                    minX = Math.Min(lst.Select(c => c.X).Min(), minX);
-                    maxX = Math.Max(lst.Select(c => c.X).Max(), maxX);
-                    minY = Math.Min(lst.Select(c => c.Y).Min(), minY);
-                    maxY = Math.Max(lst.Select(c => c.Y).Max(), maxY);
-                    defined = true;
-                }
-            }
-            if (defined)
-            {
-                if (viewModel.FixOnScreenRatio)
-                {
-                    FixOnScreenRatio(ref minX, ref maxX, ref minY, ref maxY);
-                }
-                return new ChartRectangle {Left = minX, Right = maxX, Bottom = minY, Top = maxY};
-            }
-            return new ChartRectangle(0, 0, 0, 0);
-        }
-
-        private void FixOnScreenRatio(ref double minX, ref double maxX, ref double minY, ref double maxY)
-        {            
-            var width = maxX - minX;
-            var height = maxY - minY;
-            var radiusX = width/2.0;
-            var radiusY = height/2.0;
-            var centerX = minX + radiusX;
-            var centerY = minY + radiusY;
-            
-            var dataRatio = width/height;
-            var chartHeight = ChartView.Height - 40; //magic number: about the amount of pixels required to draw the legend
-            var chartRatio = ((double)ChartView.Width) / chartHeight;
-            var combinedRatio = chartRatio/dataRatio;
-            
-            if (dataRatio > chartRatio)
-            {
-                radiusY /= combinedRatio;
-            }
-            else
-            {
-                radiusX *= combinedRatio;
-            }
-
-            minX = centerX - radiusX;
-            maxX = centerX + radiusX;
-            minY = centerY - radiusY;
-            maxY = centerY + radiusY;
-        }
-
-        protected override void OnResize(EventArgs e)
-        {
-            base.OnResize(e);
-
-            if (viewModel != null && viewModel.FixOnScreenRatio)
-            {
-                UpdateChartAxis();
-            }
-        }
-
-        public event EventHandler StatusMessage;
     }
 }

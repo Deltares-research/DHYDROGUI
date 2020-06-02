@@ -13,49 +13,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         private object maxValue;
         private object minValue;
 
+        public event EventHandler<MultiDimensionalArrayChangingEventArgs> CollectionChanging;
+
+        public event EventHandler<MultiDimensionalArrayChangingEventArgs> CollectionChanged;
+
         public MultiDimentionalArrayAdapter(IList<T> values)
         {
             this.values = values;
-        }
-
-        T IMultiDimensionalArray<T>.this[params int[] indexes]
-        {
-            get
-            {
-                if (indexes.Length == 1)
-                {
-                    return values[indexes[0]];
-                }
-
-                throw new NotImplementedException();
-            }
-            set => throw new NotImplementedException();
-        }
-
-        object IMultiDimensionalArray.this[params int[] index]
-        {
-            get
-            {
-                if (index.Length == 1)
-                {
-                    return values[index[0]];
-                }
-
-                throw new NotImplementedException();
-            }
-            set => throw new NotImplementedException();
-        }
-
-        T IList<T>.this[int index]
-        {
-            get => values[index];
-            set => throw new NotImplementedException();
-        }
-
-        object IList.this[int index]
-        {
-            get => values[index];
-            set => throw new NotImplementedException();
         }
 
         public long Id { get; set; }
@@ -81,28 +45,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         bool ICollection<T>.IsReadOnly => true;
 
         bool IList.IsReadOnly => true;
-
-        #region Unused properties
-
-        public object SyncRoot { get; private set; }
-
-        public bool IsSynchronized { get; private set; }
-
-        public object DefaultValue { get; set; }
-
-        public int[] Shape { get; private set; }
-
-        public int[] Stride { get; private set; }
-
-        public int Rank { get; private set; }
-
-        public bool FireEvents { get; set; }
-
-        public bool IsAutoSorted { get; set; }
-
-        public bool IsFixedSize => true;
-
-        #endregion
 
         IEnumerator IEnumerable.GetEnumerator()
         {
@@ -153,6 +95,68 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         {
             return GetType();
         }
+
+        T IMultiDimensionalArray<T>.this[params int[] indexes]
+        {
+            get
+            {
+                if (indexes.Length == 1)
+                {
+                    return values[indexes[0]];
+                }
+
+                throw new NotImplementedException();
+            }
+            set => throw new NotImplementedException();
+        }
+
+        object IMultiDimensionalArray.this[params int[] index]
+        {
+            get
+            {
+                if (index.Length == 1)
+                {
+                    return values[index[0]];
+                }
+
+                throw new NotImplementedException();
+            }
+            set => throw new NotImplementedException();
+        }
+
+        T IList<T>.this[int index]
+        {
+            get => values[index];
+            set => throw new NotImplementedException();
+        }
+
+        object IList.this[int index]
+        {
+            get => values[index];
+            set => throw new NotImplementedException();
+        }
+
+        #region Unused properties
+
+        public object SyncRoot { get; private set; }
+
+        public bool IsSynchronized { get; private set; }
+
+        public object DefaultValue { get; set; }
+
+        public int[] Shape { get; private set; }
+
+        public int[] Stride { get; private set; }
+
+        public int Rank { get; private set; }
+
+        public bool FireEvents { get; set; }
+
+        public bool IsAutoSorted { get; set; }
+
+        public bool IsFixedSize => true;
+
+        #endregion
 
         #region Unsupported functions
 
@@ -297,9 +301,5 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         }
 
         #endregion
-
-        public event EventHandler<MultiDimensionalArrayChangingEventArgs> CollectionChanging;
-
-        public event EventHandler<MultiDimensionalArrayChangingEventArgs> CollectionChanged;
     }
 }

@@ -19,12 +19,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.ProjectExplorer
 
         public override DragOperations CanDrag(DrainageBasin nodeData)
         {
-            if(nodeData.Parent != null)
+            if (nodeData.Parent != null)
             {
                 return DragOperations.Link;
             }
 
-            return (DragOperations.Link | DragOperations.Move);
+            return DragOperations.Link | DragOperations.Move;
         }
     }
 }

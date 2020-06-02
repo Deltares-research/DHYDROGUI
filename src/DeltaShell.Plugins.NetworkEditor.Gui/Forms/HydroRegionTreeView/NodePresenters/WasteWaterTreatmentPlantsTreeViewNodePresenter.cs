@@ -6,17 +6,16 @@ using DelftTools.Hydro;
 using DelftTools.Shell.Gui;
 using DelftTools.Shell.Gui.Swf;
 using DelftTools.Utils.Collections.Generic;
+using DeltaShell.Plugins.NetworkEditor.Gui.Properties;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView.NodePresenters
 {
     public class WasteWaterTreatmentPlantsTreeViewNodePresenter : TreeViewNodePresenterBaseForPluginGui<IEventedList<WasteWaterTreatmentPlant>>
     {
-        public WasteWaterTreatmentPlantsTreeViewNodePresenter(GuiPlugin guiPlugin)
-            : base(guiPlugin)
-        {
-        }
+        private static readonly Image WWTPImage = Resources.wwtp;
 
-        private static readonly Image WWTPImage = Properties.Resources.wwtp;
+        public WasteWaterTreatmentPlantsTreeViewNodePresenter(GuiPlugin guiPlugin)
+            : base(guiPlugin) {}
 
         public override void UpdateNode(ITreeNode parentNode, ITreeNode node, IEventedList<WasteWaterTreatmentPlant> nodeData)
         {

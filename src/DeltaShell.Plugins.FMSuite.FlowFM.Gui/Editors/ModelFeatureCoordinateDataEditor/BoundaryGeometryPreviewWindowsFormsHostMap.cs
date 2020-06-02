@@ -9,9 +9,8 @@ using NetTopologySuite.Geometries;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors.ModelFeatureCoordinateDataEditor
 {
-
     /// <summary>
-    /// Attached properties for WindowsFormsHost with a BoundaryGeometryPreview child item. 
+    /// Attached properties for WindowsFormsHost with a BoundaryGeometryPreview child item.
     /// Allows for one way binding of properties in WPF controls
     /// </summary>
     public static class BoundaryGeometryPreviewWindowsFormsHostMap
@@ -27,7 +26,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors.ModelFeatureCoordinateDa
 
         public static Geometry GetFeatureGeometry(DependencyObject element)
         {
-            return (Geometry)element.GetValue(FeatureGeometryProperty);
+            return (Geometry) element.GetValue(FeatureGeometryProperty);
         }
 
         public static void SetSelectedIndex(DependencyObject element, int value)
@@ -53,7 +52,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors.ModelFeatureCoordinateDa
         private static void PropertyChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             var boundaryGeometryPreview = (sender as WindowsFormsHost).Child as BoundaryGeometryPreview;
-            if (boundaryGeometryPreview == null) return;
+            if (boundaryGeometryPreview == null)
+            {
+                return;
+            }
 
             if (e.Property == FeatureProperty)
             {
@@ -62,23 +64,31 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors.ModelFeatureCoordinateDa
 
             if (e.Property == FeatureGeometryProperty)
             {
-                var featureGeometry = (Geometry)e.NewValue;
+                var featureGeometry = (Geometry) e.NewValue;
 
                 boundaryGeometryPreview.FeatureGeometry = featureGeometry;
 
-                if (featureGeometry == null) return;
+                if (featureGeometry == null)
+                {
+                    return;
+                }
+
                 boundaryGeometryPreview.DataPoints = new EventedList<int>(Enumerable.Range(0, featureGeometry.Coordinates.Length));
 
                 if (featureGeometry.Coordinates.Length > 0)
                 {
-                    boundaryGeometryPreview.SelectedPoints = new List<int> { 0 };
+                    boundaryGeometryPreview.SelectedPoints = new List<int> {0};
                 }
             }
 
             if (e.Property == SelectedIndexProperty && e.NewValue is int)
             {
                 var index = (int) e.NewValue;
-                if (index == -1) return;
+                if (index == -1)
+                {
+                    return;
+                }
+
                 boundaryGeometryPreview.SelectedPoints = new List<int> {index};
             }
         }

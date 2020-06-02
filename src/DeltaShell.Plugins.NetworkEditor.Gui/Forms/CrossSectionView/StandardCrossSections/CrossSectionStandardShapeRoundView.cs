@@ -5,7 +5,7 @@ using DelftTools.Hydro.CrossSections.StandardShapes;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView.StandardCrossSections
 {
-    public partial class CrossSectionStandardShapeRoundView : UserControl,IView
+    public partial class CrossSectionStandardShapeRoundView : UserControl, IView
     {
         public CrossSectionStandardShapeRoundView()
         {
@@ -24,16 +24,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView.StandardCr
             }
         }
 
-        public Image Image
-        {
-            get; set;
-        }
-
-        public void EnsureVisible(object item)
-        {
-            
-        }
+        public Image Image { get; set; }
 
         public ViewInfo ViewInfo { get; set; }
+
+        public void EnsureVisible(object item) {}
     }
 }

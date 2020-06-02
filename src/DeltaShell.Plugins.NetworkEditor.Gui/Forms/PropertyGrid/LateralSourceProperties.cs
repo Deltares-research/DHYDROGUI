@@ -17,16 +17,28 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [PropertyOrder(1)]
         public string LongName
         {
-            get { return data.LongName; }
-            set { data.LongName = value; }
+            get
+            {
+                return data.LongName;
+            }
+            set
+            {
+                data.LongName = value;
+            }
         }
 
         [Category("General")]
         [PropertyOrder(2)]
         public string Name
         {
-            get { return data.Name; }
-            set { data.Name = value; }
+            get
+            {
+                return data.Name;
+            }
+            set
+            {
+                data.Name = value;
+            }
         }
 
         [Category("General")]
@@ -34,7 +46,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [TypeConverter(typeof(AttributeArrayConverter<object>))]
         public AttributeProperties<object>[] Attributes
         {
-            get { return data.Attributes.Select(x => new AttributeProperties<object>(data.Attributes, x.Key)).ToArray(); }
+            get
+            {
+                return data.Attributes.Select(x => new AttributeProperties<object>(data.Attributes, x.Key)).ToArray();
+            }
         }
 
         [Category("Administration")]
@@ -42,7 +57,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [PropertyOrder(3)]
         public string Channel
         {
-            get { return data.Branch.ToString(); }
+            get
+            {
+                return data.Branch.ToString();
+            }
         }
 
         [Category("Administration")]
@@ -51,7 +69,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [PropertyOrder(3)]
         public double Chainage
         {
-            get { return NetworkHelper.MapChainage(data); }
+            get
+            {
+                return NetworkHelper.MapChainage(data);
+            }
         }
 
         [Category("Administration")]
@@ -60,8 +81,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [DisplayName("Chainage")]
         public double CompuChainage
         {
-            get { return data.Chainage; }
-            set { HydroRegionEditorHelper.MoveBranchFeatureTo(data, value); }
+            get
+            {
+                return data.Chainage;
+            }
+            set
+            {
+                HydroRegionEditorHelper.MoveBranchFeatureTo(data, value);
+            }
         }
 
         [Description("Length of the reach segment of diffuse lateral into with it is discharging")]
@@ -70,8 +97,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [PropertyOrder(7)]
         public double LengthLateralSource
         {
-            get { return data.Length; }
-            set { HydroRegionEditorHelper.UpdateBranchFeatureGeometry(data, value); }
+            get
+            {
+                return data.Length;
+            }
+            set
+            {
+                HydroRegionEditorHelper.UpdateBranchFeatureGeometry(data, value);
+            }
         }
     }
 }

@@ -5,33 +5,19 @@ using DelftTools.Shell.Gui;
 using DelftTools.Shell.Gui.Swf;
 using DelftTools.Utils.Editing;
 using DeltaShell.Plugins.NetworkEditor.Gui.Properties;
+using GeoAPI.Extensions.Networks;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView.NodePresenters
 {
     public class RetentionNodePresenter : TreeViewNodePresenterBaseForPluginGui<IRetention>
     {
-        public RetentionNodePresenter(GuiPlugin guiPlugin)
-            : base(guiPlugin)
-        {
-        }
         private static Image nodeImage;
 
-        private static Image NodeImage
-        {
-            get
-            {
-                if (nodeImage == null)
-                {
-                    nodeImage = Resources.Retention;
-                }
-                return nodeImage;
-            }
-        }
-
-
+        public RetentionNodePresenter(GuiPlugin guiPlugin)
+            : base(guiPlugin) {}
 
         public override bool CanRenameNode(ITreeNode node)
-        {           
+        {
             return true;
         }
 
@@ -54,11 +40,24 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView.NodePre
 
         protected override bool RemoveNodeData(object parentNodeData, IRetention nodeData)
         {
-            var network = nodeData.Network;
+            INetwork network = nodeData.Network;
             network.BeginEdit(new DefaultEditAction("Delete feature " + nodeData.Name));
             nodeData.Branch.BranchFeatures.Remove(nodeData);
             network.EndEdit();
             return true;
+        }
+
+        private static Image NodeImage
+        {
+            get
+            {
+                if (nodeImage == null)
+                {
+                    nodeImage = Resources.Retention;
+                }
+
+                return nodeImage;
+            }
         }
     }
 }

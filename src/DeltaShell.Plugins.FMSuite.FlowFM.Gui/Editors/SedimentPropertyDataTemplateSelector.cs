@@ -8,11 +8,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
     {
         public override DataTemplate SelectTemplate(object item, DependencyObject container)
         {
-            FrameworkElement element = container as FrameworkElement;
-            if (element == null || item == null) return null;
+            var element = container as FrameworkElement;
+            if (element == null || item == null)
+            {
+                return null;
+            }
+
             var sedimentProperty = item as ISedimentProperty;
-            if(sedimentProperty == null) return null;
-            return element.FindResource(sedimentProperty.DataTemplateName) as DataTemplate; 
+            if (sedimentProperty == null)
+            {
+                return null;
+            }
+
+            return element.FindResource(sedimentProperty.DataTemplateName) as DataTemplate;
         }
     }
 }

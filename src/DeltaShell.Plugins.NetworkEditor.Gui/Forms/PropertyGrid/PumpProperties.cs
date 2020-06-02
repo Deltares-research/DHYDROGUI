@@ -20,8 +20,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [PropertyOrder(1)]
         public string Name
         {
-            get { return data.Name; }
-            set { data.Name = value; }
+            get
+            {
+                return data.Name;
+            }
+            set
+            {
+                data.Name = value;
+            }
         }
 
         [DynamicVisible]
@@ -29,8 +35,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [PropertyOrder(2)]
         public string LongName
         {
-            get { return data.LongName; }
-            set { data.LongName= value; }
+            get
+            {
+                return data.LongName;
+            }
+            set
+            {
+                data.LongName = value;
+            }
         }
 
         [DynamicVisible]
@@ -40,8 +52,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [DisplayName("Capacity input")]
         public TimeDependency UseCapacityTimeSeries
         {
-            get { return data.UseCapacityTimeSeries ? TimeDependency.TimeDependent : TimeDependency.Constant; }
-            set { data.UseCapacityTimeSeries = value == TimeDependency.TimeDependent; }
+            get
+            {
+                return data.UseCapacityTimeSeries ? TimeDependency.TimeDependent : TimeDependency.Constant;
+            }
+            set
+            {
+                data.UseCapacityTimeSeries = value == TimeDependency.TimeDependent;
+            }
         }
 
         [DynamicReadOnly]
@@ -57,6 +75,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
                 {
                     return "Time series";
                 }
+
                 return data.Capacity.ToString(CultureInfo.CurrentCulture);
             }
             set
@@ -65,6 +84,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
                 {
                     throw new InvalidOperationException("Cannot set value using time dependent pump capacity.");
                 }
+
                 data.Capacity = double.Parse(value, CultureInfo.CurrentCulture);
             }
         }
@@ -76,8 +96,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [PropertyOrder(5)]
         public double StartDelivery
         {
-            get { return data.StartDelivery; }
-            set { data.StartDelivery = value; }
+            get
+            {
+                return data.StartDelivery;
+            }
+            set
+            {
+                data.StartDelivery = value;
+            }
         }
 
         [DynamicVisible]
@@ -87,8 +113,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [PropertyOrder(6)]
         public double StopDelivery
         {
-            get { return data.StopDelivery; }
-            set { data.StopDelivery = value; }
+            get
+            {
+                return data.StopDelivery;
+            }
+            set
+            {
+                data.StopDelivery = value;
+            }
         }
 
         [DynamicVisible]
@@ -98,8 +130,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [PropertyOrder(7)]
         public double StartSuction
         {
-            get { return data.StartSuction; }
-            set { data.StartSuction = value; }
+            get
+            {
+                return data.StartSuction;
+            }
+            set
+            {
+                data.StartSuction = value;
+            }
         }
 
         [DynamicVisible]
@@ -109,8 +147,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [PropertyOrder(8)]
         public double StopSuction
         {
-            get { return data.StopSuction; }
-            set { data.StopSuction = value; }
+            get
+            {
+                return data.StopSuction;
+            }
+            set
+            {
+                data.StopSuction = value;
+            }
         }
 
         [DynamicVisible]
@@ -120,7 +164,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [TypeConverter(typeof(AttributeArrayConverter<object>))]
         public AttributeProperties<object>[] Attributes
         {
-            get { return data.Attributes.Select(x => new AttributeProperties<object>(data.Attributes, x.Key)).ToArray(); }
+            get
+            {
+                return data.Attributes.Select(x => new AttributeProperties<object>(data.Attributes, x.Key)).ToArray();
+            }
         }
 
         [DynamicVisible]
@@ -129,7 +176,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [Category("Administration")]
         public string Channel
         {
-            get { return data.Channel != null ? data.Channel.ToString() : ""; }
+            get
+            {
+                return data.Channel != null ? data.Channel.ToString() : "";
+            }
         }
 
         [DynamicVisible]
@@ -138,7 +188,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [Category("Administration")]
         public string CompositeStructure
         {
-            get { return data.ParentStructure != null ? data.ParentStructure.ToString() : ""; }
+            get
+            {
+                return data.ParentStructure != null ? data.ParentStructure.ToString() : "";
+            }
         }
 
         [DynamicVisible]
@@ -148,7 +201,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [DisplayName("Chainage (Map)")]
         public double Chainage
         {
-            get { return data.ParentStructure != null ? NetworkHelper.MapChainage(data.ParentStructure) : double.NaN; }
+            get
+            {
+                return data.ParentStructure != null ? NetworkHelper.MapChainage(data.ParentStructure) : double.NaN;
+            }
         }
 
         [DynamicVisible]
@@ -158,8 +214,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [DisplayName("Chainage")]
         public double CompuChainage
         {
-            get { return data.ParentStructure != null ? data.ParentStructure.Chainage : double.NaN; }
-            set { HydroRegionEditorHelper.MoveBranchFeatureTo(data, value); }
+            get
+            {
+                return data.ParentStructure != null ? data.ParentStructure.Chainage : double.NaN;
+            }
+            set
+            {
+                HydroRegionEditorHelper.MoveBranchFeatureTo(data, value);
+            }
         }
 
         [DynamicVisible]
@@ -168,8 +230,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [PropertyOrder(14)]
         public string YOffSet
         {
-            get { return string.Format("{0:0.##}", data.OffsetY); }
-            set { data.OffsetY = double.Parse(value); }
+            get
+            {
+                return string.Format("{0:0.##}", data.OffsetY);
+            }
+            set
+            {
+                data.OffsetY = double.Parse(value);
+            }
         }
 
         [DynamicVisible]
@@ -178,7 +246,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [PropertyOrder(15)]
         public string ZOffSet
         {
-            get { return string.Format("{0:0.##}", data.OffsetZ); }
+            get
+            {
+                return string.Format("{0:0.##}", data.OffsetZ);
+            }
         }
 
         [DynamicVisible]
@@ -187,8 +258,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [PropertyOrder(16)]
         public PumpDirection PumpDirection
         {
-            get { return data.DirectionIsPositive ? PumpDirection.Positive : PumpDirection.Negative; }
-            set { data.DirectionIsPositive = value == PumpDirection.Positive; }
+            get
+            {
+                return data.DirectionIsPositive ? PumpDirection.Positive : PumpDirection.Negative;
+            }
+            set
+            {
+                data.DirectionIsPositive = value == PumpDirection.Positive;
+            }
         }
 
         [DynamicVisible]
@@ -197,8 +274,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [PropertyOrder(17)]
         public PumpControlDirection ControlDirection
         {
-            get { return data.ControlDirection; }
-            set { data.ControlDirection = value; }
+            get
+            {
+                return data.ControlDirection;
+            }
+            set
+            {
+                data.ControlDirection = value;
+            }
         }
 
         [DynamicVisibleValidationMethod]
@@ -211,15 +294,18 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
             {
                 return data.Branch != null; //exclude FM pumps
             }
+
             if (propertyName == "StartDelivery" || propertyName == "StopDelivery" ||
                 propertyName == "StartSuction" || propertyName == "StopSuction" || propertyName == "ControlDirection")
             {
                 return data.Branch != null; //exclude FM pumps until we support it...
             }
+
             if (propertyName == "UseCapacityTimeSeries")
             {
                 return data.CanBeTimedependent;
             }
+
             return true;
         }
 
@@ -230,6 +316,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
             {
                 return data.CanBeTimedependent && data.UseCapacityTimeSeries;
             }
+
             return false;
         }
     }

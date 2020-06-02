@@ -1,36 +1,45 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using DelftTools.Utils.Aop;
 using BasicModelInterface;
+using DelftTools.Utils.Aop;
 
 namespace DeltaShell.Dimr.Gui.ViewModels
 {
     [Entity]
     public class DIMRConfigRibbonViewModel
     {
-        public DIMRConfigRibbonViewModel()
-        {
-            
-        }
+        public DIMRConfigRibbonViewModel() {}
 
         public Level CurrentLogfileLevel
         {
-            get { return DimrApiDataSet.LogFileLevel; }
-            set { DimrApiDataSet.LogFileLevel = value; }
+            get
+            {
+                return DimrApiDataSet.LogFileLevel;
+            }
+            set
+            {
+                DimrApiDataSet.LogFileLevel = value;
+            }
         }
 
         public Level CurrentFeedbackLevel
         {
-            get { return DimrApiDataSet.FeedbackLevel; }
-            set { DimrApiDataSet.FeedbackLevel = value; }
+            get
+            {
+                return DimrApiDataSet.FeedbackLevel;
+            }
+            set
+            {
+                DimrApiDataSet.FeedbackLevel = value;
+            }
         }
 
         public IEnumerable<Level> Levels
         {
             get
             {
-                return Enum.GetValues(typeof(Level)).Cast<Level>(); 
+                return Enum.GetValues(typeof(Level)).Cast<Level>();
             }
         }
     }

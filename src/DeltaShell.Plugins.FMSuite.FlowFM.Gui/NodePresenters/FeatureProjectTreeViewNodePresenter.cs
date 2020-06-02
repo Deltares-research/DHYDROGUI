@@ -32,7 +32,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
             IMenuItem menuBase = base.GetContextMenu(sender, nodeData);
             IMenuItem menu = NodePresenterHelper.GetContextMenuFromPluginGuis(Gui, sender, nodeData);
             if (menuBase != null)
+            {
                 menu.Add(menuBase);
+            }
 
             ContextMenuStrip contextMenuStrip = ContextMenuFactory.CreateMenuFor(nodeData, Gui, this, sender);
             menu.Add(new MenuItemContextMenuStripAdapter(contextMenuStrip));

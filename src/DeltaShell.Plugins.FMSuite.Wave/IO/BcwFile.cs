@@ -16,7 +16,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
 {
     public class BcwFile : FMSuiteFileBase
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(BcwFile));
+        public const string TimeFunctionAttributeName = "time_function";
+        public const string RefDateAttributeName = "reference_date";
+        public const string TimeUnitAttributeName = "time_unit";
+
+        public const string DateFormatString = "yyyyMMdd";
 
         private const string BoundaryNamePattern = @"(location\s+\'(?'value'.+)\')";
         private const string TimeFunctionPattern = @"(time-function\s+\'(?'value'.+)\')";
@@ -25,12 +29,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
         private const string InterpolPattern = @"(interpolation\s+\'(?'value'.+)\')";
 
         private const string ParameterPattern = @"(parameter\s+\'(?'parname'.+)\'\s+unit\s+\'(?'unit'.+)\')";
-
-        public const string TimeFunctionAttributeName = "time_function";
-        public const string RefDateAttributeName = "reference_date";
-        public const string TimeUnitAttributeName = "time_unit";
-
-        public const string DateFormatString = "yyyyMMdd";
+        private static readonly ILog Log = LogManager.GetLogger(typeof(BcwFile));
 
         /// <summary>
         /// Reads the .bcw file.
@@ -70,6 +69,49 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             }
 
             return bcwData;
+        }
+
+        /// <summary>
+        /// Writes the specified boundary condition data.
+        /// </summary>
+        /// <param name="boundaryConditionToFunctionsMappings">
+        /// A dictionary with the boundary condition names with their
+        /// functions.
+        /// </param>
+        /// <param name="filePath"> The file path. </param>
+        /// <remarks>
+        /// If wave boundary condition does not have any functions, only the boundary condition name is written to the
+        /// file.
+        /// </remarks>
+        public void Write(IDictionary<string, List<IFunction>> boundaryConditionToFunctionsMappings, string filePath)
+        {
+            OpenOutputFile(filePath);
+            try
+            {
+                foreach (KeyValuePair<string, List<IFunction>> boundaryConditionToFunctionsMapping in
+                    boundaryConditionToFunctionsMappings)
+                {
+                    string boundaryName = boundaryConditionToFunctionsMapping.Key;
+                    List<IFunction> functions = boundaryConditionToFunctionsMapping.Value;
+
+                    if (functions.Any())
+                    {
+                        BcwHeaderData header = CreateHeaderFromFunction(functions.First());
+                        IList<BcwParameter> parameters = CreateParametersFromFunctions(functions);
+
+                        WriteBoundaryData(boundaryName, header, parameters);
+                    }
+
+                    else
+                    {
+                        WriteBoundaryName(boundaryName);
+                    }
+                }
+            }
+            finally
+            {
+                CloseOutputFile();
+            }
         }
 
         private void ReadBlock(IDictionary<string, List<IFunction>> bcwData)
@@ -250,49 +292,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             return line.StartsWith("location");
         }
 
-        /// <summary>
-        /// Writes the specified boundary condition data.
-        /// </summary>
-        /// <param name="boundaryConditionToFunctionsMappings">
-        /// A dictionary with the boundary condition names with their
-        /// functions.
-        /// </param>
-        /// <param name="filePath"> The file path. </param>
-        /// <remarks>
-        /// If wave boundary condition does not have any functions, only the boundary condition name is written to the
-        /// file.
-        /// </remarks>
-        public void Write(IDictionary<string, List<IFunction>> boundaryConditionToFunctionsMappings, string filePath)
-        {
-            OpenOutputFile(filePath);
-            try
-            {
-                foreach (KeyValuePair<string, List<IFunction>> boundaryConditionToFunctionsMapping in
-                    boundaryConditionToFunctionsMappings)
-                {
-                    string boundaryName = boundaryConditionToFunctionsMapping.Key;
-                    List<IFunction> functions = boundaryConditionToFunctionsMapping.Value;
-
-                    if (functions.Any())
-                    {
-                        BcwHeaderData header = CreateHeaderFromFunction(functions.First());
-                        IList<BcwParameter> parameters = CreateParametersFromFunctions(functions);
-
-                        WriteBoundaryData(boundaryName, header, parameters);
-                    }
-
-                    else
-                    {
-                        WriteBoundaryName(boundaryName);
-                    }
-                }
-            }
-            finally
-            {
-                CloseOutputFile();
-            }
-        }
-
         private void WriteBoundaryName(string boundaryName)
         {
             WriteLine(string.Format("{0,-21}{1,-21}", "location", "\'" + boundaryName + "\'").TrimEnd());
@@ -319,7 +318,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             BcwParameter timeParameter = sortedParameters.First(p => p.Name == "time");
             for (var i = 0; i < timeParameter.Values.Count; ++i)
             {
-                string time = timeParameter.Values[i].ToString("F2", CultureInfo.InvariantCulture);
+                var time = timeParameter.Values[i].ToString("F2", CultureInfo.InvariantCulture);
                 string line = string.Format("{0,8}", time);
                 for (var j = 1; j < sortedParameters.Count; ++j)
                 {

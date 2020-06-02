@@ -14,6 +14,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Exporters
 {
     internal class WindItemExporter : IFileExporter
     {
+        private static readonly ILog Log = LogManager.GetLogger(typeof(WindItemExporter));
+
+        public Func<IWindField, DateTime> ReferenceDateGetter { private get; set; }
+
+        public string Name => "wind data exporter";
+
+        public string Category { get; private set; }
+        public string Description => string.Empty;
+
+        public string FileFilter { get; private set; }
+
+        [ExcludeFromCodeCoverage]
+        public Bitmap Icon { get; private set; }
+
         public static IEnumerable<WindItemExporter> CreateExporters()
         {
             yield return
@@ -118,16 +132,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Exporters
                 };
         }
 
-        private static readonly ILog Log = LogManager.GetLogger(typeof(WindItemExporter));
-
-        public string Name => "wind data exporter";
-
-        private IList<Type> SupportedTypes { get; set; }
-
-        private IList<WindQuantity> SupportedQuantities { get; set; }
-
-        public Func<IWindField, DateTime> ReferenceDateGetter { private get; set; }
-
         public bool Export(object item, string path)
         {
             var uniformWindField = item as UniformWindField;
@@ -198,23 +202,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Exporters
             return true;
         }
 
-        public string Category { get; private set; }
-        public string Description => string.Empty;
-
         public IEnumerable<Type> SourceTypes()
         {
             return SupportedTypes;
         }
-
-        public string FileFilter { get; private set; }
-
-        [ExcludeFromCodeCoverage]
-        public Bitmap Icon { get; private set; }
 
         public bool CanExportFor(object item)
         {
             return SupportedTypes.Contains(item.GetType()) &&
                    SupportedQuantities.Contains(((IWindField) item).Quantity);
         }
+
+        private IList<Type> SupportedTypes { get; set; }
+
+        private IList<WindQuantity> SupportedQuantities { get; set; }
     }
 }

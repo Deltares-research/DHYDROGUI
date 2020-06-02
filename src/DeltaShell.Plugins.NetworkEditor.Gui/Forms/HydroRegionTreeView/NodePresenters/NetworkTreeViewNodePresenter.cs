@@ -5,17 +5,16 @@ using DelftTools.Controls;
 using DelftTools.Hydro;
 using DelftTools.Shell.Gui;
 using DelftTools.Shell.Gui.Swf;
+using DeltaShell.Plugins.NetworkEditor.Gui.Properties;
 using GeoAPI.Extensions.Networks;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView.NodePresenters
 {
     public class NetworkTreeViewNodePresenter : TreeViewNodePresenterBaseForPluginGui<INetwork>
     {
-        private static readonly Image NetworkImage = Properties.Resources.Network;
+        private static readonly Image NetworkImage = Resources.Network;
 
-        public NetworkTreeViewNodePresenter(GuiPlugin guiPlugin): base(guiPlugin)
-        {
-        }
+        public NetworkTreeViewNodePresenter(GuiPlugin guiPlugin) : base(guiPlugin) {}
 
         public override bool CanRenameNode(ITreeNode node)
         {
@@ -38,14 +37,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView.NodePre
 
         public override IEnumerable GetChildNodeObjects(INetwork network, ITreeNode node)
         {
-            yield return ((IHydroNetwork)network).Routes;
-            yield return ((IHydroNetwork)network).SharedCrossSectionDefinitions;
+            yield return ((IHydroNetwork) network).Routes;
+            yield return ((IHydroNetwork) network).SharedCrossSectionDefinitions;
             yield return ((IHydroNetwork) network).CrossSectionSectionTypes;
-            
-            foreach (var branch in network.Branches)
+
+            foreach (IBranch branch in network.Branches)
             {
                 yield return branch;
-            } 
+            }
         }
 
         public override DragOperations CanDrag(INetwork nodeData)
@@ -55,7 +54,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView.NodePre
 
         protected override void OnPropertyChanged(INetwork netWork, ITreeNode node, PropertyChangedEventArgs e)
         {
-            if (!e.PropertyName.Equals("Name")) return;
+            if (!e.PropertyName.Equals("Name"))
+            {
+                return;
+            }
 
             UpdateNode(null, TreeView.GetNodeByTag(netWork), netWork);
         }

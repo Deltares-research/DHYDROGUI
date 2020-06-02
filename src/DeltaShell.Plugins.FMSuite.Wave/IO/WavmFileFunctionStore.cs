@@ -16,15 +16,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
         private const string XCoordinateVariableName = "x";
         private const string YCoordinateVariableName = "y";
 
-        public CurvilinearGrid Grid { get; private set; }
-
-        //nhib
-        protected WavmFileFunctionStore() : base() {}
-
         public WavmFileFunctionStore(string ncPath) : base(ncPath)
         {
             DisableCaching = true;
         }
+
+        //nhib
+        protected WavmFileFunctionStore() : base() {}
+
+        public CurvilinearGrid Grid { get; private set; }
 
         protected override IEnumerable<IFunction> ConstructFunctions(IEnumerable<NetCdfVariableInfo> dataVariables)
         {
@@ -83,7 +83,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
 
         private CurvilinearGrid ReadGridFromFile()
         {
-            CurvilinearGrid grid = CurvilinearGrid.CreateDefault();
+            var grid = CurvilinearGrid.CreateDefault();
 
             int sizeN = netCdfFile.GetDimensionLength(NSizeDimensionName);
             int sizeM = netCdfFile.GetDimensionLength(MSizeDimensionName);

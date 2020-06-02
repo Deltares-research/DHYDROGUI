@@ -14,6 +14,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
         public IList<int> DataPointIndices { get; set; }
 
         public DateTime? ModelReferenceDate { get; set; }
+        public abstract string FileFilter { get; }
+
+        public abstract void Import(string fileName, FlowBoundaryCondition boundaryCondition);
+        public abstract bool CanImportOnBoundaryCondition(FlowBoundaryCondition boundaryCondition);
 
         protected IEnumerable<IFunction> SeriesToFill(IBoundaryCondition boundaryCondition)
         {
@@ -29,9 +33,5 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
                 yield return boundaryCondition.GetDataAtPoint(dataPointIndex);
             }
         }
-
-        public abstract void Import(string fileName, FlowBoundaryCondition boundaryCondition);
-        public abstract bool CanImportOnBoundaryCondition(FlowBoundaryCondition boundaryCondition);
-        public abstract string FileFilter { get; }
     }
 }

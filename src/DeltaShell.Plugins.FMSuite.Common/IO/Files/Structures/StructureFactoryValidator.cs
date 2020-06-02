@@ -9,6 +9,14 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
 {
     public static class StructureFactoryValidator
     {
+        public static readonly StructureType[] SupportedTypes = new[]
+        {
+            StructureType.Pump,
+            StructureType.Weir,
+            StructureType.Gate,
+            StructureType.GeneralStructure
+        };
+
         /// <summary>
         /// Checks if the given structure is valid or not.
         /// </summary>
@@ -33,6 +41,24 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
             }
 
             return "";
+        }
+
+        /// <summary>
+        /// Throws <see cref="FormatException"/> is case structure does not match expected type.
+        /// </summary>
+        /// <exception cref="FormatException"> </exception>
+        public static void ThrowIfInvalidType(Structure2D structure, IEnumerable<StructureType> expectedTypes)
+        {
+            StructureType[] enumerable = expectedTypes as StructureType[] ?? expectedTypes.ToArray();
+            StructureType structureType = structure.StructureType;
+            if (enumerable.All(type => type != structureType))
+            {
+                bool isSingularItem = enumerable.Length > 1;
+                throw new FormatException(string.Format("Structure specification for {0}, but should {1}: {2}",
+                                                        structureType,
+                                                        isSingularItem ? "be type" : "be any of the following",
+                                                        string.Join(", ", enumerable)));
+            }
         }
 
         private static bool ValidateSpecificStructureProperties(Structure2D structure, string name,
@@ -99,7 +125,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
         /// <param name="structure"> Structure to be validated. </param>
         /// <param name="name"> Name of the structure </param>
         /// <param name="errorMessage"> Error message output. </param>
-        /// <returns> True if <paramref name="errorMessage" /> is set; False otherwise. </returns>
+        /// <returns> True if <paramref name="errorMessage"/> is set; False otherwise. </returns>
         private static bool ValidateGeneralStructureProperties(Structure2D structure,
                                                                out string name,
                                                                out string errorMessage)
@@ -198,32 +224,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
 
             errorMessage = "";
             return false;
-        }
-
-        public static readonly StructureType[] SupportedTypes = new[]
-        {
-            StructureType.Pump,
-            StructureType.Weir,
-            StructureType.Gate,
-            StructureType.GeneralStructure
-        };
-
-        /// <summary>
-        /// Throws <see cref="FormatException" /> is case structure does not match expected type.
-        /// </summary>
-        /// <exception cref="FormatException"> </exception>
-        public static void ThrowIfInvalidType(Structure2D structure, IEnumerable<StructureType> expectedTypes)
-        {
-            StructureType[] enumerable = expectedTypes as StructureType[] ?? expectedTypes.ToArray();
-            StructureType structureType = structure.StructureType;
-            if (enumerable.All(type => type != structureType))
-            {
-                bool isSingularItem = enumerable.Length > 1;
-                throw new FormatException(string.Format("Structure specification for {0}, but should {1}: {2}",
-                                                        structureType,
-                                                        isSingularItem ? "be type" : "be any of the following",
-                                                        string.Join(", ", enumerable)));
-            }
         }
     }
 }

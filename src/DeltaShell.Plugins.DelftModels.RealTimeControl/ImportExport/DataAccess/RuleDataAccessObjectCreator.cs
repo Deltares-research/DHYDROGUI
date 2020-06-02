@@ -10,19 +10,19 @@ using DeltaShell.Plugins.DelftModels.RealTimeControl.Xsd;
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.DataAccess
 {
     /// <summary>
-    /// Creates a <see cref="RuleDataAccessObject" /> based of a <see cref="RuleXML" />.
+    /// Creates a <see cref="RuleDataAccessObject"/> based of a <see cref="RuleXML"/>.
     /// </summary>
     public static class RuleDataAccessObjectCreator
     {
         /// <summary>
-        /// Creates a <see cref="RuleDataAccessObject" /> from the specified <paramref name="ruleElement" />.
+        /// Creates a <see cref="RuleDataAccessObject"/> from the specified <paramref name="ruleElement"/>.
         /// </summary>
         /// <param name="ruleElement"> The rule XML. </param>
         /// <param name="logHandler"> The log handler. </param>
         /// <returns>
-        /// A <see cref="RuleDataAccessObject" /> created from the specified <paramref name="ruleElement" />.
+        /// A <see cref="RuleDataAccessObject"/> created from the specified <paramref name="ruleElement"/>.
         /// </returns>
-        ///<exception cref="System.ArgumentNullException">
+        /// <exception cref="System.ArgumentNullException">
         /// Thrown when <paramref name="ruleElement"/> is <c>null</c>.
         /// </exception>
         public static RuleDataAccessObject Create(RuleXML ruleElement, ILogHandler logHandler = null)

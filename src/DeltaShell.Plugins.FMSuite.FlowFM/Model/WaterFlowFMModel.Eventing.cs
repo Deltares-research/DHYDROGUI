@@ -27,6 +27,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
     {
         private bool updatingGroupName;
 
+        #region Spatial data
+
+        public bool InitialCoverageSetChanged { get; set; }
+
+        #endregion
+
+        public object WaveModel
+        {
+            // cannot actually return anything, because it's a dynamic enum
+            get => null;
+            private set
+            {
+                // empty, but just used for event bubbling
+            }
+        }
+
         private void SourcesAndSinksCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             var sourceAndSink = e.GetRemovedOrAddedItem() as SourceAndSink;
@@ -841,22 +857,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
         #endregion
 
-        #region Spatial data
-
-        public bool InitialCoverageSetChanged { get; set; }
-
-        #endregion
-
-        public object WaveModel
-        {
-            // cannot actually return anything, because it's a dynamic enum
-            get => null;
-            private set
-            {
-                // empty, but just used for event bubbling
-            }
-        }
-
         #region Overrides of TimeDependentModelBase
 
         protected override void OnAfterDataItemsSet()
@@ -940,7 +940,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
         private void RemoveOutputTextDocumentDataItem()
         {
-            IList<IDataItem> textDocumentDataItems = dataItems.Where(di => di.Role.HasFlag(DataItemRole.Output) 
+            IList<IDataItem> textDocumentDataItems = dataItems.Where(di => di.Role.HasFlag(DataItemRole.Output)
                                                                            && di.ValueType == typeof(TextDocument))
                                                               .ToList();
 

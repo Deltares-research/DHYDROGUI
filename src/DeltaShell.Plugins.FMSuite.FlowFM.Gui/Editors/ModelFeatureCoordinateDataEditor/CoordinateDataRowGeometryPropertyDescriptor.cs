@@ -4,30 +4,38 @@ using System.ComponentModel;
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors.ModelFeatureCoordinateDataEditor
 {
     /// <summary>
-    /// <see cref="PropertyDescriptor"/> for <see cref="CoordinateDataRow"/> that represents a coordinate value (<see cref="GeometryPropertyDescriptorType"/>)
+    /// <see cref="PropertyDescriptor"/> for <see cref="CoordinateDataRow"/> that represents a coordinate value (
+    /// <see cref="GeometryPropertyDescriptorType"/>)
     /// </summary>
     public class CoordinateDataRowGeometryPropertyDescriptor : PropertyDescriptor
     {
-        public CoordinateDataRowGeometryPropertyDescriptor(string name) : base(name, null)
-        {
-        }
-
-        public GeometryPropertyDescriptorType Type { get; set; }
+        public CoordinateDataRowGeometryPropertyDescriptor(string name) : base(name, null) {}
 
         public override Type ComponentType
         {
-            get { return typeof(CoordinateDataRow); }
+            get
+            {
+                return typeof(CoordinateDataRow);
+            }
         }
 
         public override bool IsReadOnly
         {
-            get { return true; }
+            get
+            {
+                return true;
+            }
         }
 
         public override Type PropertyType
         {
-            get { return typeof(double); }
+            get
+            {
+                return typeof(double);
+            }
         }
+
+        public GeometryPropertyDescriptorType Type { get; set; }
 
         public override bool CanResetValue(object component)
         {

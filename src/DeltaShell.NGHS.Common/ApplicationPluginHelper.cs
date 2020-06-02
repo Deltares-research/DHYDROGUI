@@ -30,8 +30,8 @@ namespace DeltaShell.NGHS.Common
             }
 
             List<ICompositeActivity> compositeActivities = rootFolder.GetAllModelsRecursive().OfType<ICompositeActivity>().ToList();
-            var treeFolderParentActivity = owner.GetType().GetProperty("Parent")?.GetMethod.
-                                                  Invoke(owner, new object[] {}) as ICompositeActivity;
+            var treeFolderParentActivity = owner.GetType().GetProperty("Parent")?.GetMethod.Invoke(owner, new object[]
+                                                                                                       {}) as ICompositeActivity;
 
             return compositeActivities.FirstOrDefault(a =>
             {

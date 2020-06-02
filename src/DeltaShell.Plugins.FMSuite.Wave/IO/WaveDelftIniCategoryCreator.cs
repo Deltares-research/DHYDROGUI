@@ -14,12 +14,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
     public static class WaveDelftIniCategoryCreator
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(WaveDelftIniCategoryCreator));
-        
+
         /// <summary>
         /// Creates and returns a <see cref="DelftIniCategory"/> from the data of a wave boundary condition.
         /// </summary>
-        /// <param name="boundaryCondition">The <see cref="WaveBoundaryCondition"/> that provides the information for the
-        /// <see cref="DelftIniCategory"/> to be created.</param>
+        /// <param name="boundaryCondition">
+        /// The <see cref="WaveBoundaryCondition"/> that provides the information for the
+        /// <see cref="DelftIniCategory"/> to be created.
+        /// </param>
         /// <returns>The requested <see cref="DelftIniCategory"/>.</returns>
         public static DelftIniCategory CreateBoundaryConditionCategory(WaveBoundaryCondition boundaryCondition)
         {
@@ -71,7 +73,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO
             else if (boundaryCondition.DataPointIndices.Count == 0) // spatially varying, no data points
             {
                 log.WarnFormat(Resources.WaveDelftIniCategoryConverter_CreateBoundaryConditionCategory_No_data_points_found_for_boundary___0____,
-                    boundaryCondition.FeatureName);
+                               boundaryCondition.FeatureName);
                 const double defaultValue = 0.0;
                 boundaryCategory.AddProperty(KnownWaveProperties.WaveHeight, defaultValue);
                 boundaryCategory.AddProperty(KnownWaveProperties.Period, defaultValue);

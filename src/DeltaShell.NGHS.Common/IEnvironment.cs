@@ -23,10 +23,10 @@ namespace DeltaShell.NGHS.Common
         /// or an error occurred during the execution of this operation.
         /// </exception>
         /// <exception cref="System.Security.SecurityException">
-        /// Thrown when the caller does not have the required permission to perform this operation. 
+        /// Thrown when the caller does not have the required permission to perform this operation.
         /// </exception>
-        void SetVariable(string key, 
-                         string value, 
+        void SetVariable(string key,
+                         string value,
                          EnvironmentVariableTarget target = EnvironmentVariableTarget.Process);
 
         /// <summary>
@@ -44,9 +44,9 @@ namespace DeltaShell.NGHS.Common
         /// or an error occurred during the execution of this operation.
         /// </exception>
         /// <exception cref="System.Security.SecurityException">
-        /// Thrown when the caller does not have the required permission to perform this operation. 
+        /// Thrown when the caller does not have the required permission to perform this operation.
         /// </exception>
-        string GetVariable(string key, 
+        string GetVariable(string key,
                            EnvironmentVariableTarget target = EnvironmentVariableTarget.Process);
     }
 }

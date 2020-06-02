@@ -24,6 +24,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.BoundaryConditionEditor
 
         private readonly WaveConstantParametersEditor constantParametersEditor = new WaveConstantParametersEditor();
 
+        private WaveBoundaryCondition boundaryCondition;
+
+        private Func<string, string> importIntoModelDirectory;
+
         public WaveBoundaryConditionDataView()
         {
             InitializeComponent();
@@ -33,7 +37,22 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.BoundaryConditionEditor
             functionView.TableView.BestFitColumns(false);
         }
 
-        private WaveBoundaryCondition boundaryCondition;
+        public int SelectedPointIndex { get; set; }
+
+        public WaveModel Model { get; set; }
+
+        public Func<string, string> ImportIntoModelDirectory
+        {
+            private get
+            {
+                return importIntoModelDirectory;
+            }
+            set
+            {
+                importIntoModelDirectory = value;
+                spectralFileSelection.ImportIntoDirectory = importIntoModelDirectory;
+            }
+        }
 
         public object Data
         {
@@ -55,30 +74,28 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.BoundaryConditionEditor
             }
         }
 
+        public Image Image { get; set; }
+        public ViewInfo ViewInfo { get; set; }
+
+        public IEventedList<IView> ChildViews => functionView.ChildViews;
+
+        public bool HandlesChildViews => true;
+
+        public void OnSelectedPointChanged(object sender, EventArgs<int> e)
+        {
+            SelectedPointIndex = e.Value;
+            UpdateDataView();
+        }
+
+        public void EnsureVisible(object item) {}
+
+        public void ActivateChildView(IView childView) {}
+
         private DateTime StartTime => Model != null ? Model.ModelDefinition.ModelReferenceDateTime : DateTime.Today;
 
         private DateTime StopTime => StartTime.AddDays(1);
 
         private TimeSpan Timestep => new TimeSpan(1, 0, 0, 0);
-
-        public int SelectedPointIndex { get; set; }
-
-        public WaveModel Model { get; set; }
-
-        private Func<string, string> importIntoModelDirectory;
-
-        public Func<string, string> ImportIntoModelDirectory
-        {
-            private get
-            {
-                return importIntoModelDirectory;
-            }
-            set
-            {
-                importIntoModelDirectory = value;
-                spectralFileSelection.ImportIntoDirectory = importIntoModelDirectory;
-            }
-        }
 
         private void FullRefresh()
         {
@@ -143,12 +160,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.BoundaryConditionEditor
             }
         }
 
-        public void OnSelectedPointChanged(object sender, EventArgs<int> e)
-        {
-            SelectedPointIndex = e.Value;
-            UpdateDataView();
-        }
-
         private void UpdateDataView()
         {
             if (boundaryCondition == null)
@@ -181,16 +192,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.BoundaryConditionEditor
                 functionView.TableView.BestFitColumns(false);
             }
         }
-
-        public Image Image { get; set; }
-        public void EnsureVisible(object item) {}
-        public ViewInfo ViewInfo { get; set; }
-
-        public IEventedList<IView> ChildViews => functionView.ChildViews;
-
-        public bool HandlesChildViews => true;
-
-        public void ActivateChildView(IView childView) {}
 
         private void genDataButton_Click(object sender, EventArgs e)
         {

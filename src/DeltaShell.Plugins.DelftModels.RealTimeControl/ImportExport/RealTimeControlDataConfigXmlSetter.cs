@@ -29,18 +29,27 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
         /// <remarks>If parameter elements or controlGroups is NULL, methods returns.</remarks>
         public void SetInterpolationAndExtrapolationRtcComponents(IList<PITimeSeriesXML> elements, IList<IControlGroup> controlGroups)
         {
-            if (elements == null || controlGroups == null) return;
-
-            foreach (var element in elements)
+            if (elements == null || controlGroups == null)
             {
-                var id = element.locationId;
-                var tag = RealTimeControlXmlReaderHelper.GetTagFromElementId(id);
+                return;
+            }
 
-                if (!RtcXmlTag.ComponentTags.Contains(tag)) continue;
+            foreach (PITimeSeriesXML element in elements)
+            {
+                string id = element.locationId;
+                string tag = RealTimeControlXmlReaderHelper.GetTagFromElementId(id);
 
-                var controlGroup = controlGroups.GetControlGroupByElementId(id, logHandler);
+                if (!RtcXmlTag.ComponentTags.Contains(tag))
+                {
+                    continue;
+                }
 
-                if (controlGroup == null) continue;
+                IControlGroup controlGroup = controlGroups.GetControlGroupByElementId(id, logHandler);
+
+                if (controlGroup == null)
+                {
+                    continue;
+                }
 
                 switch (tag)
                 {
@@ -72,11 +81,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
         /// <remarks>If parameter elements or hydraulicRules is NULL, methods returns.</remarks>
         public void SetTimeLagOnHydraulicRules(IList<RTCTimeSeriesXML> elements, IList<HydraulicRule> hydraulicRules, TimeSpan modelTimeStep)
         {
-            if (elements == null || hydraulicRules == null) return;
-
-            foreach (var hydraulicRule in hydraulicRules)
+            if (elements == null || hydraulicRules == null)
             {
-                var input = hydraulicRule.Inputs.FirstOrDefault();
+                return;
+            }
+
+            foreach (HydraulicRule hydraulicRule in hydraulicRules)
+            {
+                IInput input = hydraulicRule.Inputs.FirstOrDefault();
 
                 if (input == null)
                 {
@@ -86,19 +98,22 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
                     continue;
                 }
 
-                var correspondingElementName = RtcXmlTag.Delayed + input.Name;
-                var correspondingInputElement = elements.FirstOrDefault(e => e.id == correspondingElementName);
+                string correspondingElementName = RtcXmlTag.Delayed + input.Name;
+                RTCTimeSeriesXML correspondingInputElement = elements.FirstOrDefault(e => e.id == correspondingElementName);
 
-                if (correspondingInputElement == null) continue;
+                if (correspondingInputElement == null)
+                {
+                    continue;
+                }
 
-                var timeLagFactor = correspondingInputElement.vectorLength;
+                int timeLagFactor = correspondingInputElement.vectorLength;
                 var timeLagInSeconds = (int) Math.Round((timeLagFactor + 1) * modelTimeStep.TotalSeconds);
                 hydraulicRule.TimeLag = timeLagInSeconds;
             }
         }
 
         private void SetInterpolationAndExtrapolationOnTimeCondition(IControlGroup controlGroup,
-            PITimeSeriesXML conditionItem)
+                                                                     PITimeSeriesXML conditionItem)
         {
             var condition = controlGroup.GetConditionByElementId<TimeCondition>(conditionItem.locationId, logHandler);
             condition.InterpolationOptionsTime = GetInterpolationType(conditionItem.interpolationOption);
@@ -106,7 +121,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
         }
 
         private void SetInterpolationAndExtrapolationOnTimeRule(IControlGroup controlGroup,
-            PITimeSeriesXML ruleItem)
+                                                                PITimeSeriesXML ruleItem)
         {
             var rule = (TimeRule) controlGroup.GetRuleByElementId<TimeRule>(ruleItem.locationId, logHandler);
             rule.InterpolationOptionsTime = GetInterpolationType(ruleItem.interpolationOption);
@@ -114,14 +129,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
         }
 
         private void SetInterpolationAndExtrapolationOnRelativeTimeRule(IControlGroup controlGroup,
-            PITimeSeriesXML ruleItem)
+                                                                        PITimeSeriesXML ruleItem)
         {
             var rule = (RelativeTimeRule) controlGroup.GetRuleByElementId<RelativeTimeRule>(ruleItem.locationId, logHandler);
             rule.Interpolation = GetInterpolationType(ruleItem.interpolationOption);
         }
 
         private void SetInterpolationAndExtrapolationOnPidRule(IControlGroup controlGroup,
-            PITimeSeriesXML ruleItem)
+                                                               PITimeSeriesXML ruleItem)
         {
             var rule = (PIDRule) controlGroup.GetRuleByElementId<PIDRule>(ruleItem.locationId, logHandler);
             rule.InterpolationOptionsTime = GetInterpolationType(ruleItem.interpolationOption);
@@ -129,7 +144,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
         }
 
         private void SetInterpolationAndExtrapolationOnIntervalRule(IControlGroup controlGroup,
-            PITimeSeriesXML ruleItem)
+                                                                    PITimeSeriesXML ruleItem)
         {
             var rule = (IntervalRule) controlGroup.GetRuleByElementId<IntervalRule>(ruleItem.locationId, logHandler);
             rule.InterpolationOptionsTime = GetInterpolationType(ruleItem.interpolationOption);
@@ -139,15 +154,15 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
         private static InterpolationType GetInterpolationType(PIInterpolationOptionEnumStringType conditionItemExtrapolationOption)
         {
             return conditionItemExtrapolationOption == PIInterpolationOptionEnumStringType.BLOCK
-                ? InterpolationType.Constant
-                : InterpolationType.Linear;
+                       ? InterpolationType.Constant
+                       : InterpolationType.Linear;
         }
 
         private static ExtrapolationType GetExtrapolationType(PIExtrapolationOptionEnumStringType conditionItemExtrapolationOption)
         {
             return conditionItemExtrapolationOption == PIExtrapolationOptionEnumStringType.PERIODIC
-                ? ExtrapolationType.Periodic
-                : ExtrapolationType.Constant;
+                       ? ExtrapolationType.Periodic
+                       : ExtrapolationType.Constant;
         }
     }
 }

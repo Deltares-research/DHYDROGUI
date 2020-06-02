@@ -1,4 +1,5 @@
 ﻿using DelftTools.Utils.Aop;
+
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
 {
     [Entity]
@@ -14,8 +15,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
 
         public double AmplitudeCorrection
         {
-            get { return amplitudeCorrection; }
-            set { amplitudeCorrection = value; }
+            get
+            {
+                return amplitudeCorrection;
+            }
+            set
+            {
+                amplitudeCorrection = value;
+            }
         }
 
         public double PhaseCorrection { get; set; }

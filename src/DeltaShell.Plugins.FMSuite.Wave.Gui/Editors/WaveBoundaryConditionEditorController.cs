@@ -11,6 +11,18 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors
     {
         public const string WaveQuantityName = "wave energy density";
 
+        public override IEnumerable<string> SupportedProcessNames
+        {
+            get
+            {
+                yield return WaveBoundaryCondition.WaveProcessName;
+            }
+        }
+
+        public Func<string, string> ImportIntoModelDirectory { private get; set; }
+
+        public WaveModel Model { get; set; }
+
         public override void OnBoundaryConditionSelectionChanged(IBoundaryCondition boundaryCondition)
         {
             int selectedPointIndex = Editor.SelectedSupportPointIndex;
@@ -33,18 +45,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors
             Editor.BoundaryConditionDataView = view;
             Editor.ChildViews.Add(view);
         }
-
-        public Func<string, string> ImportIntoModelDirectory { private get; set; }
-
-        public override IEnumerable<string> SupportedProcessNames
-        {
-            get
-            {
-                yield return WaveBoundaryCondition.WaveProcessName;
-            }
-        }
-
-        public WaveModel Model { get; set; }
 
         public override IEnumerable<string> GetVariablesForProcess(string category)
         {

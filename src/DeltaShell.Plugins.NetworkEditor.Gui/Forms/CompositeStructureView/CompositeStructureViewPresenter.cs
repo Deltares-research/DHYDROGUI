@@ -21,29 +21,158 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
         private ISelectionContainer selectionContainer;
         private bool disposed;
 
-        protected void OnSelectionChanged(object sender, SelectedItemChangedEventArgs args)
-        {
-            if (args.Item is ICompositeBranchStructure) return;
-
-            SelectObjectInViews(args.Item as IStructure1D);
-        }
-
         public ICompositeStructureView View
         {
-            get { return view; }
+            get
+            {
+                return view;
+            }
             set
             {
                 view = value;
             }
         }
 
-        public Func<object,IView> CreateView { get; set; } 
+        public Func<object, IView> CreateView { get; set; }
+
+        public ISelectionContainer SelectionContainer
+        {
+            get
+            {
+                return selectionContainer;
+            }
+            set
+            {
+                selectionContainer = value;
+                if (selectionContainer == null)
+                {
+                    return;
+                }
+
+                selectionContainer.SelectionChanged += OnSelectionChanged;
+            }
+        }
+
+        public bool CanSelectItem
+        {
+            get
+            {
+                return ((StructurePresenter) View.CrossSectionStructureView.CommandReceiver).CanSelectItem;
+            }
+        }
+
+        public bool IsSelectItemActive
+        {
+            get
+            {
+                return ((StructurePresenter) View.CrossSectionStructureView.CommandReceiver).IsSelectItemActive;
+            }
+            set
+            {
+                ((StructurePresenter) View.CrossSectionStructureView.CommandReceiver).IsSelectItemActive = value;
+                ((StructurePresenter) View.SideView.CommandReceiver).IsSelectItemActive = value;
+            }
+        }
+
+        public bool CanMoveItem
+        {
+            get
+            {
+                return ((StructurePresenter) View.CrossSectionStructureView.CommandReceiver).CanMoveItem;
+            }
+        }
+
+        public bool IsMoveItemActive
+        {
+            get
+            {
+                return ((StructurePresenter) View.CrossSectionStructureView.CommandReceiver).IsMoveItemActive;
+            }
+            set
+            {
+                ((StructurePresenter) View.CrossSectionStructureView.CommandReceiver).IsMoveItemActive = value;
+                ((StructurePresenter) View.SideView.CommandReceiver).IsMoveItemActive = value;
+            }
+        }
+
+        public bool CanMoveItemLinear
+        {
+            get
+            {
+                return ((StructurePresenter) View.CrossSectionStructureView.CommandReceiver).CanMoveItemLinear;
+            }
+        }
+
+        public bool IsMoveItemLinearActive
+        {
+            get
+            {
+                return ((StructurePresenter) View.CrossSectionStructureView.CommandReceiver).IsMoveItemLinearActive;
+            }
+            set
+            {
+                ((StructurePresenter) View.CrossSectionStructureView.CommandReceiver).IsMoveItemLinearActive = value;
+                ((StructurePresenter) View.SideView.CommandReceiver).IsMoveItemLinearActive = value;
+            }
+        }
+
+        public bool CanDeleteItem
+        {
+            get
+            {
+                return ((StructurePresenter) View.CrossSectionStructureView.CommandReceiver).CanDeleteItem;
+            }
+        }
+
+        public bool IsDeleteItemActive
+        {
+            get
+            {
+                return ((StructurePresenter) View.CrossSectionStructureView.CommandReceiver).IsDeleteItemActive;
+            }
+            set
+            {
+                ((StructurePresenter) View.CrossSectionStructureView.CommandReceiver).IsDeleteItemActive = value;
+                ((StructurePresenter) View.SideView.CommandReceiver).IsDeleteItemActive = value;
+            }
+        }
+
+        public bool CanAddPoint
+        {
+            get
+            {
+                return ((StructurePresenter) View.CrossSectionStructureView.CommandReceiver).CanAddPoint;
+            }
+        }
+
+        public bool IsAddPointActive
+        {
+            get
+            {
+                return ((StructurePresenter) View.CrossSectionStructureView.CommandReceiver).IsAddPointActive;
+            }
+            set
+            {
+                ((StructurePresenter) View.CrossSectionStructureView.CommandReceiver).IsAddPointActive = value;
+                ((StructurePresenter) View.SideView.CommandReceiver).IsAddPointActive = value;
+            }
+        }
+
+        public bool IsRemovePointActive { get; set; }
+
+        public bool CanRemovePoint
+        {
+            get
+            {
+                return false;
+            }
+        }
 
         public void SetModelIntoView()
         {
             if (View != null)
             {
-                var compositeBranchStructure = View.Data;
+                object compositeBranchStructure = View.Data;
 
                 GenerateViewTitle();
 
@@ -90,10 +219,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
             }
             else
             {
-                var count = data.Structures.Count;
-                var firstStructure = data.Structures.First();
-                var name = firstStructure.Name;
-                if (!String.IsNullOrEmpty(firstStructure.LongName))
+                int count = data.Structures.Count;
+                IStructure1D firstStructure = data.Structures.First();
+                string name = firstStructure.Name;
+                if (!string.IsNullOrEmpty(firstStructure.LongName))
                 {
                     name += ", " + firstStructure.LongName;
                 }
@@ -104,42 +233,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
                 }
                 else
                 {
-                    View.Text = name + String.Format(" (+{0} more)", count - 1);
+                    View.Text = name + string.Format(" (+{0} more)", count - 1);
                 }
-            }
-        }
-
-        private void SideViewUpdateCrossSectionStyles()
-        {
-            if (null != _sideViewDataController.CrossSectionBefore)
-            {
-                View.SideView.UpdateStyles(_sideViewDataController.CrossSectionBefore,
-                                           new VectorStyle
-                                           {
-                                               Fill = new SolidBrush(Color.FromArgb(100, Color.LightPink)),
-                                               Line = new Pen(Color.Black)
-                                           },
-                                           new VectorStyle
-                                           {
-                                               Fill = new SolidBrush(Color.LightPink),
-                                               Line = new Pen(Color.Black)
-                                           }
-                    );
-            }
-            if (null != _sideViewDataController.CrossSectionAfter)
-            {
-                View.SideView.UpdateStyles(_sideViewDataController.CrossSectionAfter,
-                                           new VectorStyle
-                                               {
-                                                   Fill = new SolidBrush(Color.FromArgb(100, Color.LightGreen)),
-                                                   Line = new Pen(Color.Black)
-                                               },
-                                           new VectorStyle
-                                               {
-                                                   Fill = new SolidBrush(Color.LightGreen),
-                                                   Line = new Pen(Color.Black)
-                                               }
-                    );
             }
         }
 
@@ -159,116 +254,26 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
                 {
                     return;
                 }
+
                 IStructure1D visibleSelection = structure;
-                if (!((ICompositeBranchStructure)View.Data).Structures.Contains(structure))
+                if (!((ICompositeBranchStructure) View.Data).Structures.Contains(structure))
                 {
                     visibleSelection = null;
                 }
 
                 if (visibleSelection != null)
                 {
-                    View.ActivateFormView(visibleSelection);                    
+                    View.ActivateFormView(visibleSelection);
                 }
-
-
 
                 if (visibleSelection is ICompositeBranchStructure)
                 {
                     visibleSelection = ((ICompositeBranchStructure) visibleSelection).Structures[0];
                 }
+
                 View.CrossSectionStructureView.SelectedStructure = visibleSelection;
                 //this.View.SideView.SelectedStructure = structure;
                 View.SideView.SelectedFeature = visibleSelection;
-            }
-        }
-
-        public bool CanSelectItem
-        {
-            get { return ((StructurePresenter) View.CrossSectionStructureView.CommandReceiver).CanSelectItem; }
-        }
-
-        public bool IsSelectItemActive
-        {
-            get { return ((StructurePresenter) View.CrossSectionStructureView.CommandReceiver).IsSelectItemActive; }
-            set
-            {
-                ((StructurePresenter) View.CrossSectionStructureView.CommandReceiver).IsSelectItemActive = value;
-                ((StructurePresenter) View.SideView.CommandReceiver).IsSelectItemActive = value;
-            }
-        }
-
-        public bool CanMoveItem
-        {
-            get { return ((StructurePresenter) View.CrossSectionStructureView.CommandReceiver).CanMoveItem; }
-        }
-
-        public bool IsMoveItemActive
-        {
-            get { return ((StructurePresenter) View.CrossSectionStructureView.CommandReceiver).IsMoveItemActive; }
-            set
-            {
-                ((StructurePresenter) View.CrossSectionStructureView.CommandReceiver).IsMoveItemActive = value;
-                ((StructurePresenter) View.SideView.CommandReceiver).IsMoveItemActive = value;
-            }
-        }
-
-        public bool CanMoveItemLinear
-        {
-            get { return ((StructurePresenter) View.CrossSectionStructureView.CommandReceiver).CanMoveItemLinear; }
-        }
-
-        public bool IsMoveItemLinearActive
-        {
-            get { return ((StructurePresenter) View.CrossSectionStructureView.CommandReceiver).IsMoveItemLinearActive; }
-            set
-            {
-                ((StructurePresenter) View.CrossSectionStructureView.CommandReceiver).IsMoveItemLinearActive = value;
-                ((StructurePresenter) View.SideView.CommandReceiver).IsMoveItemLinearActive = value;
-            }
-        }
-
-        public bool CanDeleteItem
-        {
-            get { return ((StructurePresenter) View.CrossSectionStructureView.CommandReceiver).CanDeleteItem; }
-        }
-
-        public bool IsDeleteItemActive
-        {
-            get { return ((StructurePresenter) View.CrossSectionStructureView.CommandReceiver).IsDeleteItemActive; }
-            set
-            {
-                ((StructurePresenter) View.CrossSectionStructureView.CommandReceiver).IsDeleteItemActive = value;
-                ((StructurePresenter) View.SideView.CommandReceiver).IsDeleteItemActive = value;
-            }
-        }
-
-        public bool CanAddPoint
-        {
-            get { return ((StructurePresenter) View.CrossSectionStructureView.CommandReceiver).CanAddPoint; }
-        }
-
-        public bool IsAddPointActive
-        {
-            get { return ((StructurePresenter) View.CrossSectionStructureView.CommandReceiver).IsAddPointActive; }
-            set
-            {
-                ((StructurePresenter) View.CrossSectionStructureView.CommandReceiver).IsAddPointActive = value;
-                ((StructurePresenter) View.SideView.CommandReceiver).IsAddPointActive = value;
-            }
-        }
-
-        public bool IsRemovePointActive { get; set; }
-        public bool CanRemovePoint { get { return false; } }
-
-        public ISelectionContainer SelectionContainer
-        {
-            get { return selectionContainer; }
-            set
-            {
-                selectionContainer = value;
-                if (selectionContainer == null) return;
-
-                selectionContainer.SelectionChanged += OnSelectionChanged;
             }
         }
 
@@ -280,5 +285,49 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
             }
         }
 
+        protected void OnSelectionChanged(object sender, SelectedItemChangedEventArgs args)
+        {
+            if (args.Item is ICompositeBranchStructure)
+            {
+                return;
+            }
+
+            SelectObjectInViews(args.Item as IStructure1D);
+        }
+
+        private void SideViewUpdateCrossSectionStyles()
+        {
+            if (null != _sideViewDataController.CrossSectionBefore)
+            {
+                View.SideView.UpdateStyles(_sideViewDataController.CrossSectionBefore,
+                                           new VectorStyle
+                                           {
+                                               Fill = new SolidBrush(Color.FromArgb(100, Color.LightPink)),
+                                               Line = new Pen(Color.Black)
+                                           },
+                                           new VectorStyle
+                                           {
+                                               Fill = new SolidBrush(Color.LightPink),
+                                               Line = new Pen(Color.Black)
+                                           }
+                );
+            }
+
+            if (null != _sideViewDataController.CrossSectionAfter)
+            {
+                View.SideView.UpdateStyles(_sideViewDataController.CrossSectionAfter,
+                                           new VectorStyle
+                                           {
+                                               Fill = new SolidBrush(Color.FromArgb(100, Color.LightGreen)),
+                                               Line = new Pen(Color.Black)
+                                           },
+                                           new VectorStyle
+                                           {
+                                               Fill = new SolidBrush(Color.LightGreen),
+                                               Line = new Pen(Color.Black)
+                                           }
+                );
+            }
+        }
     }
 }

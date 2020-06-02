@@ -17,7 +17,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Model
     public static class WaterQualityOutputDisconnector
     {
         /// <summary>
-        /// Disconnects the specified <paramref name="model" /> from the output.
+        /// Disconnects the specified <paramref name="model"/> from the output.
         /// </summary>
         /// <param name="model"> The model. </param>
         public static void Disconnect(WaterQualityModel model)

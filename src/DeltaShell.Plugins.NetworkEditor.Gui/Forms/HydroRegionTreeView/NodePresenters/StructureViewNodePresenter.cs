@@ -13,14 +13,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView.NodePre
     internal class StructureViewNodePresenter<T> : TreeViewNodePresenterBaseForPluginGui<T> where T : IStructure1D
     {
         public StructureViewNodePresenter(GuiPlugin guiPlugin)
-            : base(guiPlugin)
-        {
-        }
-
-        protected override bool CanRemove(T nodeData)
-        {
-            return true;
-        }
+            : base(guiPlugin) {}
 
         public override DragOperations CanDrag(T nodeData)
         {
@@ -30,12 +23,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView.NodePre
         public override void UpdateNode(ITreeNode parentNode, ITreeNode node, T data)
         {
             node.Text = data.Name;
-        }
-
-        protected override bool RemoveNodeData(object parentNodeData, T nodeData)
-        {
-            HydroNetworkHelper.RemoveStructure(nodeData);
-            return true;
         }
 
         public override bool CanRenameNode(ITreeNode node)
@@ -51,9 +38,23 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView.NodePre
             }
         }
 
+        protected override bool CanRemove(T nodeData)
+        {
+            return true;
+        }
+
+        protected override bool RemoveNodeData(object parentNodeData, T nodeData)
+        {
+            HydroNetworkHelper.RemoveStructure(nodeData);
+            return true;
+        }
+
         protected override void OnPropertyChanged(T item, ITreeNode node, PropertyChangedEventArgs e)
         {
-            if (node == null) return;
+            if (node == null)
+            {
+                return;
+            }
 
             if (e.PropertyName.Equals("Name"))
             {
@@ -70,15 +71,18 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView.NodePre
             {
                 if (parentNode.Nodes.Count > 1)
                 {
-                    var node = parentNode.GetNodeByTag(e.GetRemovedOrAddedItem());
-                    if (node == null) return;
+                    ITreeNode node = parentNode.GetNodeByTag(e.GetRemovedOrAddedItem());
+                    if (node == null)
+                    {
+                        return;
+                    }
 
-                    var index = parentNode.Nodes.IndexOf(node);
+                    int index = parentNode.Nodes.IndexOf(node);
 
                     //index of node in sorted list
                     var nodes = new List<ITreeNode>(parentNode.Nodes);
                     nodes.Sort(new BranchFeatureComparer());
-                    var sortedIndex = nodes.IndexOf(node);
+                    int sortedIndex = nodes.IndexOf(node);
 
                     if (sortedIndex != index)
                     {

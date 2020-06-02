@@ -4,7 +4,7 @@ using SharpMap.UI.Tools;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Commands
 {
-    class ImportBranchesCommand : NetworkEditorCommand
+    internal class ImportBranchesCommand : NetworkEditorCommand
     {
         protected IMapTool CurrentTool
         {
@@ -13,10 +13,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Commands
                 return MapView.MapControl.GetToolByType<ImportBranchesFromSelectionMapTool>();
             }
         }
+
         protected override void OnExecute(params object[] arguments)
         {
-            var exportMapTool = MapView.MapControl.Tools.First(tool => tool is ImportBranchesFromSelectionMapTool);
+            IMapTool exportMapTool = MapView.MapControl.Tools.First(tool => tool is ImportBranchesFromSelectionMapTool);
             exportMapTool.Execute();
         }
-        }
     }
+}

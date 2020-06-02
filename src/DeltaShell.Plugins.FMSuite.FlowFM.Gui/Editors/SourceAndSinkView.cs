@@ -5,6 +5,8 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using DelftTools.Controls;
+using DelftTools.Controls.Swf.Charting;
+using DelftTools.Functions;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.CommonTools.Gui.Forms.Functions;
@@ -19,18 +21,129 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
         private bool locked;
         private WaterFlowFMModel model;
 
+        public event EventHandler LockedChanged;
+
         public SourceAndSinkView()
         {
             InitializeComponent();
             areaTextBox.Validating += AreaTextBoxOnValidating;
             areaTextBox.CausesValidation = true;
             functionView.CausesValidation = true;
-            ChildViews = new EventedList<IView>(new[] {functionView});
+            ChildViews = new EventedList<IView>(new[]
+            {
+                functionView
+            });
+        }
+
+        public FunctionView FunctionView
+        {
+            get
+            {
+                return functionView;
+            }
+        }
+
+        public WaterFlowFMModel Model
+        {
+            get
+            {
+                return model;
+            }
+            set
+            {
+                if (model != null)
+                {
+                    ((INotifyPropertyChange) model).PropertyChanged -= ModelPropertyChanged;
+                }
+
+                model = value;
+                if (model != null)
+                {
+                    IList<bool> visibilitySettings = CalculateComponentVisibilitySettings();
+                    SetVisibility(visibilitySettings);
+                    ((INotifyPropertyChange) model).PropertyChanged += ModelPropertyChanged;
+                }
+            }
+        }
+
+        public IEventedList<IView> ChildViews { get; private set; }
+
+        public bool HandlesChildViews
+        {
+            get
+            {
+                return true;
+            }
+        }
+
+        public object Data
+        {
+            get
+            {
+                return SourceAndSink;
+            }
+            set
+            {
+                SourceAndSink = value as SourceAndSink;
+                if (SourceAndSink == null)
+                {
+                    Model = null;
+                }
+            }
+        }
+
+        public Image Image { get; set; }
+
+        public ViewInfo ViewInfo { get; set; }
+
+        public bool Locked
+        {
+            get
+            {
+                return locked;
+            }
+            set
+            {
+                locked = value;
+                if (LockedChanged != null)
+                {
+                    LockedChanged(this, new EventArgs());
+                }
+            }
+        }
+
+        public void ActivateChildView(IView childView) {}
+
+        public void EnsureVisible(object item) {}
+
+        private SourceAndSink SourceAndSink
+        {
+            get
+            {
+                return sourceAndSink;
+            }
+            set
+            {
+                FunctionView.Data = null;
+                if (sourceAndSink != null)
+                {
+                    ((INotifyPropertyChange) sourceAndSink).PropertyChanged -= OnPropertyChanged;
+                }
+
+                sourceAndSink = value;
+                if (sourceAndSink != null)
+                {
+                    ((INotifyPropertyChange) sourceAndSink).PropertyChanged += OnPropertyChanged;
+                    FunctionView.Data = sourceAndSink.Function;
+                }
+
+                FillAreaPanel();
+            }
         }
 
         private void AreaTextBoxOnValidating(object sender, CancelEventArgs e)
         {
-            var text = ((TextBox) sender).Text;
+            string text = ((TextBox) sender).Text;
             double value;
             if (double.TryParse(text, out value))
             {
@@ -43,67 +156,28 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
                     return;
                 }
             }
+
             errorProvider1.Clear();
             errorProvider1.SetError(areaTextBox, "Choose an area between zero and 1e+6");
             e.Cancel = true;
         }
 
-        public FunctionView FunctionView
-        {
-            get { return functionView; }
-        }
-
         private void FillAreaPanel()
         {
-            if (sourceAndSink == null) return;
+            if (sourceAndSink == null)
+            {
+                return;
+            }
+
             areaTextBox.Text = sourceAndSink.Area.ToString();
             areaTextBox.Enabled = sourceAndSink.CanIncludeMomentum && sourceAndSink.MomentumSource;
             includeMomentumCheckBox.Enabled = sourceAndSink.CanIncludeMomentum;
             includeMomentumCheckBox.Checked = sourceAndSink.MomentumSource;
         }
 
-        private SourceAndSink SourceAndSink
-        {
-            get { return sourceAndSink; }
-            set
-            {
-                FunctionView.Data = null;
-                if (sourceAndSink != null)
-                {
-                    ((INotifyPropertyChange)sourceAndSink).PropertyChanged -= OnPropertyChanged;
-                }
-                sourceAndSink = value;
-                if (sourceAndSink != null)
-                {
-                    ((INotifyPropertyChange)sourceAndSink).PropertyChanged += OnPropertyChanged;
-                    FunctionView.Data = sourceAndSink.Function;
-                }
-                FillAreaPanel();
-            }
-        }
-
         private void OnPropertyChanged(object sender, PropertyChangedEventArgs propertyChangedEventArgs)
         {
             FillAreaPanel();
-        }
-
-        public WaterFlowFMModel Model
-        {
-            get { return model; }
-            set
-            {
-                if (model != null)
-                {
-                    ((INotifyPropertyChange)model).PropertyChanged -= ModelPropertyChanged;
-                }
-                model = value;
-                if (model != null)
-                {
-                    var visibilitySettings = CalculateComponentVisibilitySettings();
-                    SetVisibility(visibilitySettings);
-                    ((INotifyPropertyChange) model).PropertyChanged += ModelPropertyChanged;
-                }
-            }
         }
 
         private void ModelPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -114,7 +188,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
                 e.PropertyName == nameof(Model.UseSecondaryFlow)
             )
             {
-                var visibilitySettings = CalculateComponentVisibilitySettings();
+                IList<bool> visibilitySettings = CalculateComponentVisibilitySettings();
                 SetVisibility(visibilitySettings);
             }
         }
@@ -124,7 +198,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             var componentIsForTracer = false;
             var visibilitySettings = new List<bool>();
 
-            foreach (var componentName in SourceAndSink.Function.Components.Select(c => c.Name))
+            foreach (string componentName in SourceAndSink.Function.Components.Select(c => c.Name))
             {
                 switch (componentName)
                 {
@@ -146,86 +220,47 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
                         {
                             visibilitySettings.Add(Model.UseMorSed);
                         }
-                        else                             
+                        else
                         {
                             visibilitySettings.Add(true);
                         }
+
                         break;
                 }
             }
+
             return visibilitySettings;
         }
 
         private void SetVisibility(IList<bool> visibilitySettings)
         {
             FunctionView.TableView.GetColumnByName(SourceAndSink.Function.Arguments[0].Name).Visible = true;
-            int k = 1;
-            for (int i = 0; i < SourceAndSink.Function.Components.Count; i++)
+            var k = 1;
+            for (var i = 0; i < SourceAndSink.Function.Components.Count; i++)
             {
-                var component = SourceAndSink.Function.Components[i];
-                var visibility = i >= visibilitySettings.Count || visibilitySettings[i];
+                IVariable component = SourceAndSink.Function.Components[i];
+                bool visibility = i >= visibilitySettings.Count || visibilitySettings[i];
 
-                var columnIndex = i + 1;
+                int columnIndex = i + 1;
                 if (columnIndex < FunctionView.TableView.Columns.Count)
                 {
-                    var tableViewColumn = FunctionView.TableView.Columns[columnIndex];
+                    ITableViewColumn tableViewColumn = FunctionView.TableView.Columns[columnIndex];
                     tableViewColumn.Visible = visibility;
-                    var chartSeries = FunctionView.ChartSeries.FirstOrDefault(s => s.YValuesDataMember == component.DisplayName);
-                    if(chartSeries != null) chartSeries.Visible = visibility;
+                    IChartSeries chartSeries = FunctionView.ChartSeries.FirstOrDefault(s => s.YValuesDataMember == component.DisplayName);
+                    if (chartSeries != null)
+                    {
+                        chartSeries.Visible = visibility;
+                    }
 
                     if (tableViewColumn.Visible)
+                    {
                         tableViewColumn.DisplayIndex = k++;
+                    }
                 }
             }
+
             FunctionView.TableView.GetColumnByName(SourceAndSink.Function.Arguments[0].Name).DisplayIndex = 0;
             FunctionView.TableView.BestFitColumns(false);
-        }
-
-        public object Data
-        {
-            get { return SourceAndSink; }
-            set
-            {
-                SourceAndSink = value as SourceAndSink;
-                if (SourceAndSink == null)
-                {
-                    Model = null;
-                }
-            }
-        }
-
-        public Image Image { get; set; }
-
-        public void EnsureVisible(object item)
-        {
-        }
-
-        public ViewInfo ViewInfo { get; set; }
-
-        public bool Locked
-        {
-            get { return locked; }
-            set
-            {
-                locked = value;
-                if (LockedChanged != null)
-                {
-                    LockedChanged(this, new EventArgs());
-                }
-            }
-        }
-
-        public event EventHandler LockedChanged;
-
-        public IEventedList<IView> ChildViews { get; private set; }
-
-        public bool HandlesChildViews
-        {
-            get { return true; }
-        }
-
-        public void ActivateChildView(IView childView)
-        {
         }
 
         private void includeMomentumCheckBox_CheckedChanged(object sender, EventArgs e)

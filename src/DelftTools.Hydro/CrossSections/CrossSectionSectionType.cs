@@ -10,14 +10,14 @@ namespace DelftTools.Hydro.CrossSections
     {
         public virtual string Name { get; set; }
 
-        public virtual object Clone()
-        {
-            return new CrossSectionSectionType {Name = Name};
-        }
-
         public override string ToString()
         {
             return Name ?? "<CSST>";
+        }
+
+        public virtual object Clone()
+        {
+            return new CrossSectionSectionType {Name = Name};
         }
     }
 }

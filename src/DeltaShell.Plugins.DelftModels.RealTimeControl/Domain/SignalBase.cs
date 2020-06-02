@@ -11,6 +11,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
     {
         private const string defaultSignalName = "Lookup Table";
 
+        protected SignalBase()
+        {
+            Name = defaultSignalName;
+            Inputs = new EventedList<Input>();
+            RuleBases = new EventedList<RuleBase>();
+        }
+
         [Aggregation]
         public IEventedList<Input> Inputs { get; set; }
 
@@ -18,13 +25,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
         public IEventedList<RuleBase> RuleBases { get; set; }
 
         public bool StoreAsRule { get; set; }
-
-        protected SignalBase()
-        {
-            Name = defaultSignalName;
-            Inputs = new EventedList<Input>();
-            RuleBases = new EventedList<RuleBase>();
-        }
 
         [ValidationMethod]
         public static void Validate(SignalBase signalBase)
@@ -35,13 +35,15 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
             {
                 exceptions.Add(new ValidationException(string.Format("signal '{0}' has no rule.", signalBase.Name)));
             }
-            foreach (var rulebase in signalBase.RuleBases)
+
+            foreach (RuleBase rulebase in signalBase.RuleBases)
             {
                 if (string.IsNullOrEmpty(rulebase.Name))
                 {
                     exceptions.Add(new ValidationException(string.Format("signal '{0}' has unlinked rule.", signalBase.Name)));
                 }
             }
+
             if (exceptions.Count > 0)
             {
                 throw new ValidationContextException(exceptions);

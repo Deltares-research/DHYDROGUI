@@ -5,15 +5,15 @@ using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export
 {
     /// <summary>
-    /// Serializer for a <see cref="ConditionBase" />.
+    /// Serializer for a <see cref="ConditionBase"/>.
     /// </summary>
-    /// <seealso cref="RtcSerializerBase" />
+    /// <seealso cref="RtcSerializerBase"/>
     public abstract class ConditionSerializerBase : RtcSerializerBase
     {
         private readonly ConditionBase conditionBase;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ConditionSerializerBase" /> class.
+        /// Initializes a new instance of the <see cref="ConditionSerializerBase"/> class.
         /// </summary>
         /// <param name="conditionBase"> The condition to serialize. </param>
         protected ConditionSerializerBase(ConditionBase conditionBase) : base(conditionBase)
@@ -22,39 +22,39 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export
         }
 
         /// <summary>
-        /// Converts the condition to a collection of <see cref="XElement" />
-        /// to be written to the tools config xml file.
-        /// </summary>
-        /// <param name="xNamespace"> The xml namespace. </param>
-        /// <returns> The collection of <see cref="XElement" />. </returns>
-        public override IEnumerable<XElement> ToXml(XNamespace xNamespace, string prefix)
-        {
-            yield return new XElement(xNamespace + "trigger");
-        }
-
-        /// <summary>
-        /// Converts the condition to a collection of <see cref="XElement" />
+        /// Converts the condition to a collection of <see cref="XElement"/>
         /// to be written to the import series in the data config xml file.
         /// </summary>
         /// <param name="prefix"> The prefix. </param>
         /// <param name="xNamespace"> The xml namespace. </param>
-        /// <returns> The collection of <see cref="XElement" />. </returns>
+        /// <returns> The collection of <see cref="XElement"/>. </returns>
         public virtual IEnumerable<XElement> ToDataConfigImportSeries(string prefix, XNamespace xNamespace)
         {
             yield break;
         }
 
         /// <summary>
-        /// Converts the condition to a collection of <see cref="XElement" />
+        /// Converts the condition to a collection of <see cref="XElement"/>
         /// to be written to export series in the data config xml file.
         /// </summary>
         /// <param name="prefix"> The prefix. </param>
         /// <param name="xNamespace"> The xml namespace. </param>
-        /// <returns> The collection of <see cref="XElement" />. </returns>
+        /// <returns> The collection of <see cref="XElement"/>. </returns>
         public virtual IEnumerable<XElement> ToDataConfigExportSeries(XNamespace xNamespace, string prefix)
         {
             yield return new XElement(xNamespace + "timeSeries",
                                       new XAttribute("id", RtcXmlTag.Status + GetXmlNameWithoutTag(prefix)));
+        }
+
+        /// <summary>
+        /// Converts the condition to a collection of <see cref="XElement"/>
+        /// to be written to the tools config xml file.
+        /// </summary>
+        /// <param name="xNamespace"> The xml namespace. </param>
+        /// <returns> The collection of <see cref="XElement"/>. </returns>
+        public override IEnumerable<XElement> ToXml(XNamespace xNamespace, string prefix)
+        {
+            yield return new XElement(xNamespace + "trigger");
         }
 
         /// <summary>
@@ -66,7 +66,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export
             IInput conditionInput = conditionBase.Input;
 
             var serializer =
-                SerializerCreator.CreateSerializerType<InputSerializerBase>((RtcBaseObject)conditionInput);
+                SerializerCreator.CreateSerializerType<InputSerializerBase>((RtcBaseObject) conditionInput);
 
             return serializer == null ? "|no input|" : serializer.GetXmlName();
         }

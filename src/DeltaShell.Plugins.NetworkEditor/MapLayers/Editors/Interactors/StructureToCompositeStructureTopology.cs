@@ -12,7 +12,7 @@ using SharpMap.Rendering;
 
 namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors
 {
-    class StructureToCompositeStructureTopology<T> where T : IStructure1D
+    internal class StructureToCompositeStructureTopology<T> where T : IStructure1D
     {
         public IHydroNetwork Network { set; get; }
         public IEnumerable<ICompositeBranchStructure> CompositeStructures { get; set; }
@@ -20,7 +20,7 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors
         public double Tolerance { get; set; }
 
         /// <summary>
-        /// Called when a structure geometry is created in the editor. The structure will be 
+        /// Called when a structure geometry is created in the editor. The structure will be
         /// connected to the StructureFeature.
         /// </summary>
         /// <param name="t">The newly created structure</param>
@@ -32,8 +32,8 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors
         }
 
         /// <summary>
-        /// connects branchFeature to the first branch is in range. This is not correct it should 
-        /// take the nearest or only use a very small tolerance. Updating coordinates is primarily 
+        /// connects branchFeature to the first branch is in range. This is not correct it should
+        /// take the nearest or only use a very small tolerance. Updating coordinates is primarily
         /// the responsibility of the snapping layer.
         /// </summary>
         /// <param name="t">Assumed its <see cref="IFeature.Geometry"/> is not null.</param>
@@ -56,11 +56,11 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors
             // if snap tool failed we will effectively add the structure to the end of the list.
             if (newParentCompositeStructure == null)
             {
-                var limit = Layer == null ? Tolerance : MapHelper.ImageToWorld(Layer.Map, 1);
+                double limit = Layer == null ? Tolerance : MapHelper.ImageToWorld(Layer.Map, 1);
                 newParentCompositeStructure = CompositeStructures.FirstOrDefault(cs => cs.Geometry.Distance(t.Geometry) < limit);
             }
 
-            var oldParentCompositeStructure = CompositeStructures.FirstOrDefault(s => s.Structures.Contains(t));
+            ICompositeBranchStructure oldParentCompositeStructure = CompositeStructures.FirstOrDefault(s => s.Structures.Contains(t));
             if (null != newParentCompositeStructure)
             {
                 // existing or new structure is snapped to a composite structure
@@ -74,20 +74,22 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors
 
         private void AddStructureToExistingCompositeStructure(ICompositeBranchStructure newParentCompositeBranchStructure, T t, ICompositeBranchStructure oldParentCompositeStructure, int newIndex)
         {
-            var oldIndex = -1;
+            int oldIndex = -1;
             if (oldParentCompositeStructure != null)
             {
                 oldIndex = oldParentCompositeStructure.Structures.IndexOf(t);
-                if ((oldIndex == newIndex) && (oldParentCompositeStructure == newParentCompositeBranchStructure))
+                if (oldIndex == newIndex && oldParentCompositeStructure == newParentCompositeBranchStructure)
                 {
                     // structure is dropped at the location it already is in; do nothing.
                     return;
                 }
             }
+
             if (oldParentCompositeStructure != null)
             {
                 oldParentCompositeStructure.Structures.Remove(t);
             }
+
             // attach structure if it is moved to another structureFeature
             ICompositeBranchStructure parentStructure = null;
             if (oldParentCompositeStructure != newParentCompositeBranchStructure)
@@ -99,6 +101,7 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors
             {
                 parentStructure = oldParentCompositeStructure;
             }
+
             t.ParentStructure = parentStructure;
 
             if (parentStructure == null)
@@ -107,16 +110,20 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors
             }
 
             if (newIndex == -1)
+            {
                 parentStructure.Structures.Add(t);
+            }
             else
+            {
                 parentStructure.Structures.Insert(newIndex, t);
+            }
         }
 
         private void AddStructureToNewCompositeStructure(IStructure1D structure)
         {
             IBranch branch = structure.Branch;
 
-            var oldParentCompositeStructure = CompositeStructures.FirstOrDefault(s => s.Structures.Contains(structure));
+            ICompositeBranchStructure oldParentCompositeStructure = CompositeStructures.FirstOrDefault(s => s.Structures.Contains(structure));
             if (oldParentCompositeStructure != null)
             {
                 oldParentCompositeStructure.Structures.Remove(structure);
@@ -128,14 +135,14 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors
                 Branch = branch,
                 Network = branch.Network,
                 Chainage = structure.Chainage,
-                Geometry = (IGeometry)structure.Geometry?.Clone()
+                Geometry = (IGeometry) structure.Geometry?.Clone()
             };
 
             // make new composite structure names unique
             newCompositeStructure.Name = HydroNetworkHelper.GetUniqueFeatureName(newCompositeStructure.Network as HydroNetwork, newCompositeStructure);
-            
+
             // always connect structure to branch because of property changed events
-            structure.Branch =  branch; 
+            structure.Branch = branch;
             branch.BranchFeatures.Add(newCompositeStructure);
             newCompositeStructure.Chainage = structure.Chainage;
             structure.ParentStructure = newCompositeStructure;

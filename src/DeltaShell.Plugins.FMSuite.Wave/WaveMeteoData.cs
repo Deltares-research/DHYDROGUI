@@ -1,6 +1,6 @@
-﻿using DelftTools.Utils.Aop;
+﻿using System.IO;
+using DelftTools.Utils.Aop;
 using DeltaShell.Plugins.FMSuite.Common.Wind;
-using System.IO;
 
 namespace DeltaShell.Plugins.FMSuite.Wave
 {
@@ -75,7 +75,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         /// Gets or sets a value indicating whether a spider web is used.
         /// </summary>
         /// <value>
-        ///   <c>true</c> if this instance uses a spider web; otherwise, <c>false</c>.
+        /// <c>true</c> if this instance uses a spider web; otherwise, <c>false</c>.
         /// </value>
         public bool HasSpiderWeb { get; set; }
 

@@ -19,8 +19,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
         /// <param name="structureType"> The type-specifier of structure. </param>
         /// <param name="name"> Name of the property found as key in a structure file. </param>
         /// <returns>
-        /// The property definition corresponding to <paramref name="name" />;
-        /// Null if <paramref name="structureType" /> is unkown or <paramref name="name" />
+        /// The property definition corresponding to <paramref name="name"/>;
+        /// Null if <paramref name="structureType"/> is unkown or <paramref name="name"/>
         /// is not among the schema properties.
         /// </returns>
         public ModelPropertyDefinition GetDefinition(string structureType, string name)

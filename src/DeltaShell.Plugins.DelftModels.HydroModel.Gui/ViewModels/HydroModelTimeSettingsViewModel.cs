@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
@@ -17,6 +18,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.ViewModels
     [Entity]
     public class HydroModelTimeSettingsViewModel
     {
+        private readonly string parameterValueName = nameof(Parameter.Value);
         private DateTime startTime;
         private DateTime stopTime;
         private TimeSpan timeStep;
@@ -28,14 +30,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.ViewModels
         private HydroModel hydroModel;
         private bool isUpdatingModel;
 
-        private readonly string parameterValueName = nameof(Parameter.Value);
-
         #region Properties
 
-        public HydroModelTimeSettingsViewModel()
-        {
-            
-        }
+        public HydroModelTimeSettingsViewModel() {}
 
         public HydroModelTimeSettingsViewModel(HydroModel hydroModel)
         {
@@ -44,29 +41,35 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.ViewModels
 
         public HydroModel HydroModel
         {
-            get { return hydroModel; }
+            get
+            {
+                return hydroModel;
+            }
             set
             {
                 if (hydroModel != null)
                 {
-                    ((INotifyPropertyChanged)hydroModel).PropertyChanged -= OnModelPropertyChanged;
+                    ((INotifyPropertyChanged) hydroModel).PropertyChanged -= OnModelPropertyChanged;
                     hydroModel.CollectionChanged -= OnModelCollectionChanged;
-                    var models = Models.ToList();
+                    List<TimeDependentModelBaseViewModel> models = Models.ToList();
                     Models.Clear();
                     models.ForEach(m => m.Dispose());
                 }
 
                 hydroModel = value;
 
-                if (hydroModel == null) return;
+                if (hydroModel == null)
+                {
+                    return;
+                }
 
                 SyncTimesAfterAction();
 
                 Models = new ObservableCollection<TimeDependentModelBaseViewModel>(hydroModel.Activities
-                    .OfType<ITimeDependentModel>()
-                    .Select(m => new TimeDependentModelBaseViewModel(m)));
+                                                                                             .OfType<ITimeDependentModel>()
+                                                                                             .Select(m => new TimeDependentModelBaseViewModel(m)));
 
-                ((INotifyPropertyChanged)hydroModel).PropertyChanged += OnModelPropertyChanged;
+                ((INotifyPropertyChanged) hydroModel).PropertyChanged += OnModelPropertyChanged;
                 hydroModel.CollectionChanged += OnModelCollectionChanged;
             }
         }
@@ -75,12 +78,18 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.ViewModels
 
         public ICommand RemoveSubmodel
         {
-            get { return deleteModelCommand ?? (deleteModelCommand = new RelayCommand(RemoveModelFromHydroModel, CanRemoveModel)); }
+            get
+            {
+                return deleteModelCommand ?? (deleteModelCommand = new RelayCommand(RemoveModelFromHydroModel, CanRemoveModel));
+            }
         }
 
         public ICommand AddSubmodel
         {
-            get { return addModelCommand ?? (addModelCommand = new RelayCommand(m => AddModelToHydroModel(), m => CanAddSubmodel())); }
+            get
+            {
+                return addModelCommand ?? (addModelCommand = new RelayCommand(m => AddModelToHydroModel(), m => CanAddSubmodel()));
+            }
         }
 
         public string DurationText { get; set; }
@@ -91,7 +100,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.ViewModels
 
         public DateTime StartTime
         {
-            get { return startTime; }
+            get
+            {
+                return startTime;
+            }
             set
             {
                 startTime = value;
@@ -101,7 +113,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.ViewModels
 
         public DateTime StopTime
         {
-            get { return stopTime; }
+            get
+            {
+                return stopTime;
+            }
             set
             {
                 stopTime = value;
@@ -112,7 +127,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.ViewModels
 
         public TimeSpan TimeStep
         {
-            get { return timeStep; }
+            get
+            {
+                return timeStep;
+            }
             set
             {
                 timeStep = value;
@@ -122,7 +140,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.ViewModels
 
         public bool StartTimeSynchronisationEnabled
         {
-            get { return startTimeSynchronisationEnabled; }
+            get
+            {
+                return startTimeSynchronisationEnabled;
+            }
             set
             {
                 startTimeSynchronisationEnabled = value;
@@ -132,7 +153,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.ViewModels
 
         public bool StopTimeSynchronisationEnabled
         {
-            get { return stopTimeSynchronisationEnabled; }
+            get
+            {
+                return stopTimeSynchronisationEnabled;
+            }
             set
             {
                 stopTimeSynchronisationEnabled = value;
@@ -142,7 +166,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.ViewModels
 
         public bool TimeStepSynchronisationEnabled
         {
-            get { return timeStepSynchronisationEnabled; }
+            get
+            {
+                return timeStepSynchronisationEnabled;
+            }
             set
             {
                 timeStepSynchronisationEnabled = value;
@@ -158,19 +185,28 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.ViewModels
 
         private void DetermineErrorTexts()
         {
-            if(ErrorTexts == null) ErrorTexts = new ObservableCollection<string>();
+            if (ErrorTexts == null)
+            {
+                ErrorTexts = new ObservableCollection<string>();
+            }
+
             ErrorTexts.Clear();
 
             if (!DurationIsValid)
+            {
                 ErrorTexts.Add(Resources.HydroModelTimeSettingsViewModel_DetermineErrorText_Start_time_must_be_earlier_than_stop_time);
+            }
+
             if (TimeStep <= TimeSpan.Zero)
+            {
                 ErrorTexts.Add(Resources.HydroModelTimeSettingsViewModel_DetermineErrorText_Time_step_must_be_positive);
+            }
         }
 
         public void UpdateDurationText()
         {
-            var intervalLength = StopTime - StartTime;
-            DurationText = string.Format(Resources.HydroModelTimeSettingsViewModel_UpdateDurationLabel__0__days__1__hours__2__minutes__3__seconds, intervalLength.Days, intervalLength.Hours , intervalLength.Minutes, intervalLength.Seconds );
+            TimeSpan intervalLength = StopTime - StartTime;
+            DurationText = string.Format(Resources.HydroModelTimeSettingsViewModel_UpdateDurationLabel__0__days__1__hours__2__minutes__3__seconds, intervalLength.Days, intervalLength.Hours, intervalLength.Minutes, intervalLength.Seconds);
 
             DurationIsValid = intervalLength > TimeSpan.Zero && !string.IsNullOrEmpty(DurationText);
             DetermineErrorTexts();
@@ -178,7 +214,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.ViewModels
 
         private void RemoveModelFromHydroModel(object model)
         {
-            if (!CanRemoveModel(model)) return;
+            if (!CanRemoveModel(model))
+            {
+                return;
+            }
 
             var modelToRemove = model as TimeDependentModelBaseViewModel;
             HydroModel.Activities.RemoveAllWhere(m => { return modelToRemove != null && m.Name == modelToRemove.Name; });
@@ -193,12 +232,15 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.ViewModels
 
         private void AddModelToHydroModel()
         {
-            if (AddNewActivityCallback == null || !CanAddSubmodel()) return;
-            
+            if (AddNewActivityCallback == null || !CanAddSubmodel())
+            {
+                return;
+            }
+
             var editAction = new DefaultEditAction("Add activity: <unknown>");
             HydroModel.BeginEdit(editAction);
 
-            var activity = AddNewActivityCallback(HydroModel);
+            IActivity activity = AddNewActivityCallback(HydroModel);
 
             if (activity != null)
             {
@@ -216,17 +258,28 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.ViewModels
         private void OnModelCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             var timeDependentModel = e.GetRemovedOrAddedItem() as ITimeDependentModel;
-            if (sender != HydroModel.Activities || timeDependentModel == null) return;
+            if (sender != HydroModel.Activities || timeDependentModel == null)
+            {
+                return;
+            }
 
             switch (e.Action)
             {
                 case NotifyCollectionChangedAction.Add:
-                    if (Models.Any(m => m.Model == timeDependentModel)) return;
+                    if (Models.Any(m => m.Model == timeDependentModel))
+                    {
+                        return;
+                    }
+
                     Models.Add(new TimeDependentModelBaseViewModel(timeDependentModel));
                     break;
                 case NotifyCollectionChangedAction.Remove:
-                    var tdViewModel = Models.FirstOrDefault(m => m.Model == timeDependentModel);
-                    if (tdViewModel == null) return;
+                    TimeDependentModelBaseViewModel tdViewModel = Models.FirstOrDefault(m => m.Model == timeDependentModel);
+                    if (tdViewModel == null)
+                    {
+                        return;
+                    }
+
                     Models.Remove(tdViewModel);
                     tdViewModel.Dispose();
                     break;
@@ -237,7 +290,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.ViewModels
         private void OnModelPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if ((!(sender is Parameter) || e.PropertyName != parameterValueName) &&
-                e.PropertyName != "OverrideStartTime" && 
+                e.PropertyName != "OverrideStartTime" &&
                 e.PropertyName != "OverrideStopTime" &&
                 e.PropertyName != "OverrideTimeStep")
             {
@@ -249,7 +302,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.ViewModels
 
         private void SyncTimesAfterAction(Action action = null)
         {
-            if (isUpdatingModel) return;
+            if (isUpdatingModel)
+            {
+                return;
+            }
+
             isUpdatingModel = true;
 
             action?.Invoke();
@@ -258,9 +315,20 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.ViewModels
             StopTime = HydroModel.StopTime;
             TimeStep = HydroModel.TimeStep;
 
-            if (StartTimeSynchronisationEnabled) Models?.Where(vm => vm.StartTime != StartTime).ForEach(vm => vm.StartTime = StartTime);
-            if (StopTimeSynchronisationEnabled) Models?.Where(vm => vm.StopTime != StopTime).ForEach(vm => vm.StopTime = StopTime);
-            if (TimeStepSynchronisationEnabled) Models?.Where(vm => vm.TimeStep != TimeStep).ForEach(vm => vm.TimeStep = TimeStep);
+            if (StartTimeSynchronisationEnabled)
+            {
+                Models?.Where(vm => vm.StartTime != StartTime).ForEach(vm => vm.StartTime = StartTime);
+            }
+
+            if (StopTimeSynchronisationEnabled)
+            {
+                Models?.Where(vm => vm.StopTime != StopTime).ForEach(vm => vm.StopTime = StopTime);
+            }
+
+            if (TimeStepSynchronisationEnabled)
+            {
+                Models?.Where(vm => vm.TimeStep != TimeStep).ForEach(vm => vm.TimeStep = TimeStep);
+            }
 
             StartTimeSynchronisationEnabled = HydroModel.OverrideStartTime;
             StopTimeSynchronisationEnabled = HydroModel.OverrideStopTime;

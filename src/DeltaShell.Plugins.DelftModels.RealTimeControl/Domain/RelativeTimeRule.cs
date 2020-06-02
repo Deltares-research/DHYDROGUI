@@ -1,9 +1,9 @@
-﻿using DelftTools.Functions;
+﻿using System.Collections.Generic;
+using System.Linq;
+using DelftTools.Functions;
 using DelftTools.Functions.Generic;
 using DelftTools.Utils.Aop;
 using log4net;
-using System.Collections.Generic;
-using System.Linq;
 using ValidationAspects;
 using ValidationAspects.Exceptions;
 
@@ -12,6 +12,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
     [Entity]
     public class RelativeTimeRule : RuleBase
     {
+        private const string LookupTable = "lookupTable";
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(RelativeTimeRule));
         private int minimumPeriod = 0;
@@ -20,22 +21,39 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
         /// Function that holds the relative time series
         /// </summary>
         private Function function;
+
+        public RelativeTimeRule()
+            : this(null, false) {}
+
+        public RelativeTimeRule(string name, bool fromValue)
+        {
+            if (name != null)
+            {
+                Name = name;
+            }
+
+            FromValue = fromValue;
+        }
+
         public Function Function
         {
             get
             {
-                if(function == null)
+                if (function == null)
                 {
                     function = DefineFunction();
                 }
 
                 return function;
-            } 
-            set { function = value; }
+            }
+            set
+            {
+                function = value;
+            }
         }
 
         /// <summary>
-        /// If true the rule uses the controlled parameter to determine the start position in the 
+        /// If true the rule uses the controlled parameter to determine the start position in the
         /// function
         /// </summary>
         public bool FromValue { get; set; }
@@ -45,7 +63,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
         /// </summary>
         public int MinimumPeriod
         {
-            get { return minimumPeriod; }
+            get
+            {
+                return minimumPeriod;
+            }
             set
             {
                 if (value >= 0)
@@ -55,21 +76,21 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
                 else
                 {
                     Log.Error("Minimum Period must be 0 or greater.");
-                } 
+                }
             }
         }
 
-        private const string LookupTable = "lookupTable";
-
-        public RelativeTimeRule()
-            : this(null, false)
+        [NoNotifyPropertyChange]
+        public InterpolationType Interpolation
         {
-        }
-
-        public RelativeTimeRule(string name, bool fromValue)
-        {
-            if (name != null) Name = name;
-            FromValue = fromValue;
+            get
+            {
+                return Function.Arguments.First().InterpolationType;
+            }
+            set
+            {
+                Function.Arguments.First().InterpolationType = value;
+            }
         }
 
         public static Function DefineFunction()
@@ -79,18 +100,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
                 new Variable<double>("seconds")
                 {
                     InterpolationType = InterpolationType.Constant,
-                    ExtrapolationType = ExtrapolationType.None}
-                );
+                    ExtrapolationType = ExtrapolationType.None
+                }
+            );
             function.Components.Add(new Variable<double>("value"));
             function.Name = LookupTable;
             return function;
-        }
-
-        [NoNotifyPropertyChange]
-        public InterpolationType Interpolation
-        {
-            get { return Function.Arguments.First().InterpolationType; }
-            set { Function.Arguments.First().InterpolationType = value; }
         }
 
         [ValidationMethod]
@@ -140,7 +155,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
         public override IEnumerable<object> GetDirectChildren()
         {
             if (function != null)
+            {
                 yield return function;
+            }
         }
     }
 }

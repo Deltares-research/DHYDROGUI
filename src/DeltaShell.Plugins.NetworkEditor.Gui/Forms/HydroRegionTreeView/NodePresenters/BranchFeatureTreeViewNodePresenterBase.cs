@@ -10,11 +10,9 @@ using GeoAPI.Extensions.Networks;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView.NodePresenters
 {
-    public abstract class BranchFeatureTreeViewNodePresenterBase<T> : TreeViewNodePresenterBaseForPluginGui<T> where T : class ,IBranchFeature
+    public abstract class BranchFeatureTreeViewNodePresenterBase<T> : TreeViewNodePresenterBaseForPluginGui<T> where T : class, IBranchFeature
     {
-        protected BranchFeatureTreeViewNodePresenterBase(GuiPlugin guiPlugin) : base(guiPlugin)
-        {
-        }
+        protected BranchFeatureTreeViewNodePresenterBase(GuiPlugin guiPlugin) : base(guiPlugin) {}
 
         public override void UpdateNode(ITreeNode parentNode, ITreeNode node, T data)
         {
@@ -24,26 +22,36 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView.NodePre
 
         protected override void OnPropertyChanged(T feature, ITreeNode node, PropertyChangedEventArgs e)
         {
-            if (node == null) return;
+            if (node == null)
+            {
+                return;
+            }
 
             if (!e.PropertyName.Equals("Chainage", StringComparison.Ordinal) &&
-                !e.PropertyName.Equals("Name", StringComparison.Ordinal)) return;
-            
+                !e.PropertyName.Equals("Name", StringComparison.Ordinal))
+            {
+                return;
+            }
+
             UpdateNodeText(feature, node);
 
-            var parentNode = node.Parent;
-            if (parentNode.Nodes.Count == 1) return;
+            ITreeNode parentNode = node.Parent;
+            if (parentNode.Nodes.Count == 1)
+            {
+                return;
+            }
 
-            var index = parentNode.Nodes.IndexOf(node);
+            int index = parentNode.Nodes.IndexOf(node);
             var nodes = new List<ITreeNode>(parentNode.Nodes);
 
             nodes.Sort(new BranchFeatureComparer());
 
-            var newIndex = nodes.IndexOf(node);
+            int newIndex = nodes.IndexOf(node);
             if (newIndex == index)
             {
                 return;
             }
+
             parentNode.Nodes.Remove(node);
             parentNode.Nodes.Insert(newIndex, node);
         }
@@ -54,13 +62,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView.NodePre
         {
             var offsetString = feature.Chainage.ToString("F", CultureInfo.InvariantCulture);
             return string.Format("{0}: {1}",
-                                     string.IsNullOrEmpty(feature.Name) ? "<no name>" : feature.Name.Clone(),
-                                     offsetString);
+                                 string.IsNullOrEmpty(feature.Name) ? "<no name>" : feature.Name.Clone(),
+                                 offsetString);
         }
 
         private void UpdateImage(T feature, ITreeNode node)
         {
-            var image = GetImage(feature);
+            Image image = GetImage(feature);
 
             if (node.Image != image)
             {
@@ -70,9 +78,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView.NodePre
 
         private void UpdateNodeText(T feature, ITreeNode node)
         {
-            if (feature == null) return;
+            if (feature == null)
+            {
+                return;
+            }
 
-            var text = GetText(feature);
+            string text = GetText(feature);
 
             if (node.Text != text)
             {

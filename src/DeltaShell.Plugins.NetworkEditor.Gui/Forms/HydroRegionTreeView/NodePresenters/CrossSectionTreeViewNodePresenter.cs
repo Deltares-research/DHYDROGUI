@@ -5,15 +5,14 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Shell.Gui;
 using DelftTools.Utils.Editing;
+using GeoAPI.Extensions.Networks;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView.NodePresenters
 {
     public class CrossSectionTreeViewNodePresenter : BranchFeatureTreeViewNodePresenterBase<ICrossSection>
     {
         public CrossSectionTreeViewNodePresenter(GuiPlugin guiPlugin)
-            : base(guiPlugin)
-        {
-        }
+            : base(guiPlugin) {}
 
         #region ITreeNodePresenter Members
 
@@ -32,18 +31,18 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView.NodePre
             var chainageString = crossSection.Chainage.ToString("F", CultureInfo.InvariantCulture);
 
             return string.IsNullOrEmpty(crossSection.Name)
-               ? string.Format("<no name>: {0}", chainageString)
-               : (crossSection.Definition.IsProxy)
-                     ? string.Format("{0}({1}): {2}", crossSection.Name,
-                                     ((CrossSectionDefinitionProxy)crossSection.Definition).InnerDefinition
-                                         .Name, chainageString)
-                     : string.Format("{0}: {1}", crossSection.Name, chainageString);
+                       ? string.Format("<no name>: {0}", chainageString)
+                       : crossSection.Definition.IsProxy
+                           ? string.Format("{0}({1}): {2}", crossSection.Name,
+                                           ((CrossSectionDefinitionProxy) crossSection.Definition).InnerDefinition
+                                                                                                  .Name, chainageString)
+                           : string.Format("{0}: {1}", crossSection.Name, chainageString);
         }
 
         protected override bool RemoveNodeData(object parentNodeData, ICrossSection crossSection)
         {
             //remove the cross section from both branch and networkschematization.
-            var network = crossSection.Network;
+            INetwork network = crossSection.Network;
 
             network.BeginEdit(new DefaultEditAction("Delete feature " + crossSection.Name));
             var channel = (IChannel) crossSection.Branch;
@@ -62,7 +61,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView.NodePre
         {
             return true;
         }
-
 
         #endregion
     }

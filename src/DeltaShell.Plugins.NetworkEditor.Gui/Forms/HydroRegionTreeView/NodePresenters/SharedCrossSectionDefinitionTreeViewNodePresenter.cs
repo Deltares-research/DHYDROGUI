@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
@@ -7,35 +8,28 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Shell.Gui;
 using DelftTools.Shell.Gui.Swf;
+using DelftTools.Utils.Collections.Generic;
+using DeltaShell.Plugins.NetworkEditor.Gui.Properties;
 using MessageBox = DelftTools.Controls.Swf.MessageBox;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView.NodePresenters
 {
     public class SharedCrossSectionDefinitionTreeViewNodePresenter : TreeViewNodePresenterBaseForPluginGui<ICrossSectionDefinition>
     {
-        private static Image defaultImage = Properties.Resources.favorite;
+        private static Image defaultImage = Resources.favorite;
 
         public SharedCrossSectionDefinitionTreeViewNodePresenter(GuiPlugin guiPlugin)
-            : base(guiPlugin)
-        {
-            
-        }
-        
-        private bool IsDefaultDefinition(ITreeNode parentNode, ICrossSectionDefinition nodeData)
-        {
-            var hydroNetwork = GetHydroNetwork(parentNode);
-            return (hydroNetwork != null && hydroNetwork.DefaultCrossSectionDefinition == nodeData);
-        }
+            : base(guiPlugin) {}
 
         public override void UpdateNode(ITreeNode parentNode, ITreeNode node, ICrossSectionDefinition nodeData)
         {
             node.Text = nodeData.Name;
-            var image = CrossSectionNodePresenterIconHelper.GetIcon(nodeData.CrossSectionType);
+            Image image = CrossSectionNodePresenterIconHelper.GetIcon(nodeData.CrossSectionType);
 
             if (IsDefaultDefinition(parentNode, nodeData))
             {
                 image = (Image) image.Clone();
-                var graphics = Graphics.FromImage(image);
+                Graphics graphics = Graphics.FromImage(image);
                 graphics.DrawImage(defaultImage, 0, 6, 10, 10);
                 graphics.Dispose();
             }
@@ -62,6 +56,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView.NodePre
             {
                 return null;
             }
+
             return GuiPlugin.GetContextMenu(sender, nodeData);
         }
 
@@ -72,17 +67,17 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView.NodePre
 
         protected override bool RemoveNodeData(object parentNodeData, ICrossSectionDefinition definition)
         {
-            var network = GetHydroNetwork(TreeView.SelectedNode.Parent);
+            IHydroNetwork network = GetHydroNetwork(TreeView.SelectedNode.Parent);
             if (network != null)
             {
-                var crossSectionsUsingDefinitionBeingRemoved = definition.FindUsage(network);
-                
+                IList<ICrossSection> crossSectionsUsingDefinitionBeingRemoved = definition.FindUsage(network);
+
                 if (crossSectionsUsingDefinitionBeingRemoved.Count > 0)
                 {
-                    var crossSectionsList = string.Join("\n", crossSectionsUsingDefinitionBeingRemoved.Select(x => x.Name).ToArray());
+                    string crossSectionsList = string.Join("\n", crossSectionsUsingDefinitionBeingRemoved.Select(x => x.Name).ToArray());
 
-                    var message =
-                        String.Format(
+                    string message =
+                        string.Format(
                             "The cross section definition you are trying to delete is being used. " +
                             "If you continue, the definition will be replaced by local copies in each cross section. " +
                             "Are you sure you want to continue?\n\nThe following cross sections use this definition:\n{0}",
@@ -92,15 +87,16 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView.NodePre
                     {
                         return false;
                     }
+
                     //fix the cross sections
-                    foreach (var cs in crossSectionsUsingDefinitionBeingRemoved)
+                    foreach (ICrossSection cs in crossSectionsUsingDefinitionBeingRemoved)
                     {
                         cs.MakeDefinitionLocal();
                     }
                 }
 
                 //actual delete
-                var sharedDefinitions = network.SharedCrossSectionDefinitions;
+                IEventedList<ICrossSectionDefinition> sharedDefinitions = network.SharedCrossSectionDefinitions;
                 if (sharedDefinitions != null)
                 {
                     sharedDefinitions.Remove(definition);
@@ -112,6 +108,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView.NodePre
             }
 
             return true;
+        }
+
+        private bool IsDefaultDefinition(ITreeNode parentNode, ICrossSectionDefinition nodeData)
+        {
+            IHydroNetwork hydroNetwork = GetHydroNetwork(parentNode);
+            return hydroNetwork != null && hydroNetwork.DefaultCrossSectionDefinition == nodeData;
         }
 
         private IHydroNetwork GetHydroNetwork(ITreeNode sharedDefinitionsNode)

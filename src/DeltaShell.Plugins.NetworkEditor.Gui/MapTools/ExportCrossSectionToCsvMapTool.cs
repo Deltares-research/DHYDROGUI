@@ -21,42 +21,58 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
             LayerFilter = layerFilter;
         }
 
-        HydroRegionMapLayer HydroNetworkMapLayer
-        {
-            get { return (HydroRegionMapLayer)Layers.FirstOrDefault(); }
-        }
-        
         public override bool Enabled
         {
             get
             {
-                return (HydroNetworkMapLayer != null && MapControl.SelectedFeatures.OfType<ICrossSection>().Any());
+                return HydroNetworkMapLayer != null && MapControl.SelectedFeatures.OfType<ICrossSection>().Any();
             }
         }
-        
+
         public override bool AlwaysActive
         {
-            get { return Enabled; }
+            get
+            {
+                return Enabled;
+            }
         }
 
         public override IEnumerable<MapToolContextMenuItem> GetContextMenuItems(Coordinate worldPosition)
         {
-            if (!Enabled) yield break;
+            if (!Enabled)
+            {
+                yield break;
+            }
 
             yield return new MapToolContextMenuItem
-                        {
-                            Priority = 4,
-                            MenuItem = new ToolStripMenuItem("Export all cross section(s) ...", null, ExportAllCrossSectionEventHandler)
-                        };
-            
+            {
+                Priority = 4,
+                MenuItem = new ToolStripMenuItem("Export all cross section(s) ...", null, ExportAllCrossSectionEventHandler)
+            };
+
             if (MapControl.SelectedFeatures.Any())
             {
                 yield return new MapToolContextMenuItem
-                        {
-                            Priority = 3,
-                            MenuItem = new ToolStripMenuItem("Export selected cross section(s) ...", null, ExportSelectedCrossSectionEventHandler)
-                        };
-            };
+                {
+                    Priority = 3,
+                    MenuItem = new ToolStripMenuItem("Export selected cross section(s) ...", null, ExportSelectedCrossSectionEventHandler)
+                };
+            }
+
+            ;
+        }
+
+        public override void Execute()
+        {
+            Burp(MapControl.SelectedFeatures.OfType<ICrossSection>().Any());
+        }
+
+        private HydroRegionMapLayer HydroNetworkMapLayer
+        {
+            get
+            {
+                return (HydroRegionMapLayer) Layers.FirstOrDefault();
+            }
         }
 
         private void ExportAllCrossSectionEventHandler(object sender, EventArgs e)
@@ -69,16 +85,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
             Burp(true);
         }
 
-        public override void Execute()
-        {
-            Burp(MapControl.SelectedFeatures.OfType<ICrossSection>().Any());
-        }
-
         private void Burp(bool selection)
         {
-            var cursor = MapControl.Cursor;
+            Cursor cursor = MapControl.Cursor;
             MapControl.Cursor = Cursors.WaitCursor;
-            var oldSelectioon = NetworkEditorGuiPlugin.Instance.Gui.Selection;
+            object oldSelectioon = NetworkEditorGuiPlugin.Instance.Gui.Selection;
             try
             {
                 IList<ICrossSection> list;
@@ -88,9 +99,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
                 }
                 else
                 {
-                    var network = (IHydroNetwork)HydroNetworkMapLayer.Region;
+                    var network = (IHydroNetwork) HydroNetworkMapLayer.Region;
                     list = network.CrossSections.ToList();
                 }
+
                 NetworkEditorGuiPlugin.Instance.Gui.Selection = list;
                 NetworkEditorGuiPlugin.Instance.Gui.CommandHandler.ExportSelectedItem();
             }
@@ -103,7 +115,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
                 MapControl.Cursor = cursor;
                 NetworkEditorGuiPlugin.Instance.Gui.Selection = oldSelectioon;
             }
+
             MapControl.Refresh();
-        }  
+        }
     }
 }

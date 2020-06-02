@@ -26,6 +26,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors
         private readonly ITableViewColumn spectralDefColumn;
         private readonly ITableViewColumn spectrumShapeColumn;
 
+        private WaveModel model;
+
+        public event EventHandler SelectedFeaturesChanged;
+
         public WaveBoundaryConditionListView()
         {
             InitializeComponent();
@@ -58,6 +62,89 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors
 
             boundariesPanel.Controls.Add(tableView);
         }
+
+        public Action<WaveBoundaryCondition, Type> OpenEditorView { private get; set; }
+
+        public object Data
+        {
+            get => model;
+            set
+            {
+                if (model != null)
+                {
+                    ((INotifyPropertyChange) model).PropertyChanged -= OnModelPropertyChanged;
+                }
+
+                model = value as WaveModel;
+
+                if (model != null)
+                {
+                    ((INotifyPropertyChange) model).PropertyChanged += OnModelPropertyChanged;
+                }
+
+                tableView.Data = model != null
+                                     ? model.BoundaryConditions
+                                     : null;
+                specFileSelectionControl.Data = model;
+
+                if (model != null)
+                {
+                    UpdateView();
+                }
+            }
+        }
+
+        public Image Image { get; set; }
+
+        public ViewInfo ViewInfo { get; set; }
+
+        public IEnumerable<IFeature> SelectedFeatures
+        {
+            get
+            {
+                if (tableView.Data != null)
+                {
+                    var conditions = tableView.Data as IEventedList<WaveBoundaryCondition>;
+                    if (conditions != null)
+                    {
+                        return
+                            tableView.SelectedRowsIndices.Select(
+                                         i => conditions[tableView.GetDataSourceIndexByRowIndex(i)].Feature)
+                                     .Distinct();
+                    }
+                }
+
+                return Enumerable.Empty<IFeature>();
+            }
+            set
+            {
+                if (value == null)
+                {
+                    return;
+                }
+
+                List<WaveBoundaryCondition> selectedInMap = value.OfType<WaveBoundaryCondition>().ToList();
+                var allConditions = tableView.Data as IEventedList<WaveBoundaryCondition>;
+                if (allConditions == null)
+                {
+                    return;
+                }
+
+                IEnumerable<WaveBoundaryCondition> selectedBoundaries = allConditions.Intersect(selectedInMap);
+                int[] selectedIndices = selectedBoundaries.Select(allConditions.IndexOf).ToArray();
+
+                tableView.ClearSelection();
+                tableView.SelectRows(selectedIndices);
+                tableView.FocusedRowIndex = tableView.SelectedRowsIndices.FirstOrDefault();
+            }
+        }
+
+        public ILayer Layer { get; set; }
+        public void EnsureVisible(object item) {}
+
+        public void OnActivated() {}
+
+        public void OnDeactivated() {}
 
         private void TableViewOnSelectionChanged(object sender, TableSelectionChangedEventArgs e)
         {
@@ -209,37 +296,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors
             return new DelftTools.Utils.Tuple<string, bool>("", true);
         }
 
-        private WaveModel model;
-
-        public object Data
-        {
-            get => model;
-            set
-            {
-                if (model != null)
-                {
-                    ((INotifyPropertyChange) model).PropertyChanged -= OnModelPropertyChanged;
-                }
-
-                model = value as WaveModel;
-
-                if (model != null)
-                {
-                    ((INotifyPropertyChange) model).PropertyChanged += OnModelPropertyChanged;
-                }
-
-                tableView.Data = model != null
-                                     ? model.BoundaryConditions
-                                     : null;
-                specFileSelectionControl.Data = model;
-
-                if (model != null)
-                {
-                    UpdateView();
-                }
-            }
-        }
-
         private void UpdateView()
         {
             tableView.BestFitColumns();
@@ -287,60 +343,5 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors
             specFileSelectionControl.Data = model;
             UpdateView();
         }
-
-        public Image Image { get; set; }
-        public void EnsureVisible(object item) {}
-
-        public ViewInfo ViewInfo { get; set; }
-
-        public IEnumerable<IFeature> SelectedFeatures
-        {
-            get
-            {
-                if (tableView.Data != null)
-                {
-                    var conditions = tableView.Data as IEventedList<WaveBoundaryCondition>;
-                    if (conditions != null)
-                    {
-                        return
-                            tableView.SelectedRowsIndices.Select(
-                                         i => conditions[tableView.GetDataSourceIndexByRowIndex(i)].Feature)
-                                     .Distinct();
-                    }
-                }
-
-                return Enumerable.Empty<IFeature>();
-            }
-            set
-            {
-                if (value == null)
-                {
-                    return;
-                }
-
-                List<WaveBoundaryCondition> selectedInMap = value.OfType<WaveBoundaryCondition>().ToList();
-                var allConditions = tableView.Data as IEventedList<WaveBoundaryCondition>;
-                if (allConditions == null)
-                {
-                    return;
-                }
-
-                IEnumerable<WaveBoundaryCondition> selectedBoundaries = allConditions.Intersect(selectedInMap);
-                int[] selectedIndices = selectedBoundaries.Select(allConditions.IndexOf).ToArray();
-
-                tableView.ClearSelection();
-                tableView.SelectRows(selectedIndices);
-                tableView.FocusedRowIndex = tableView.SelectedRowsIndices.FirstOrDefault();
-            }
-        }
-
-        public Action<WaveBoundaryCondition, Type> OpenEditorView { private get; set; }
-
-        public event EventHandler SelectedFeaturesChanged;
-        public ILayer Layer { get; set; }
-
-        public void OnActivated() {}
-
-        public void OnDeactivated() {}
     }
 }

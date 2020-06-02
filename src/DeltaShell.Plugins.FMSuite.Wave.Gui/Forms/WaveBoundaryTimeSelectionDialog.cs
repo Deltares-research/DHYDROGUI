@@ -13,6 +13,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Forms
 {
     public partial class WaveBoundaryTimeSelectionDialog : Form, IDialog, IView
     {
+        private IList<WaveBoundaryCondition> boundaryConditions;
+
         public WaveBoundaryTimeSelectionDialog()
         {
             InitializeComponent();
@@ -22,6 +24,40 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Forms
             boundaryListBox.SelectedIndexChanged += BoundaryListBoxOnSelectedIndexChanged;
             supportPointListbox.SelectedIndexChanged += SupportPointListboxOnSelectedIndexChanged;
         }
+
+        public IList<DateTime> SelectedDateTimes { get; private set; }
+
+        public string Title { get; set; }
+
+        public object Data
+        {
+            get => boundaryConditions;
+            set
+            {
+                boundaryConditions =
+                    ((IList<WaveBoundaryCondition>) value).Where(
+                        bc => bc.DataType == BoundaryConditionDataType
+                                  .ParameterizedSpectrumTimeseries).ToList();
+
+                boundaryListBox.DataSource = new BindingList<WaveBoundaryCondition>(boundaryConditions);
+            }
+        }
+
+        public Image Image { get; set; }
+
+        public ViewInfo ViewInfo { get; set; }
+
+        public DelftDialogResult ShowModal()
+        {
+            return ShowDialog() == DialogResult.OK ? DelftDialogResult.OK : DelftDialogResult.Cancel;
+        }
+
+        public DelftDialogResult ShowModal(object owner)
+        {
+            return ShowModal();
+        }
+
+        public void EnsureVisible(object item) {}
 
         private void SupportPointListboxOnSelectedIndexChanged(object sender, EventArgs eventArgs)
         {
@@ -62,27 +98,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Forms
             timesListBox.DataSource = new BindingList<string>(timeStrings);
         }
 
-        private IList<WaveBoundaryCondition> boundaryConditions;
-
-        public object Data
-        {
-            get => boundaryConditions;
-            set
-            {
-                boundaryConditions =
-                    ((IList<WaveBoundaryCondition>) value).Where(
-                        bc => bc.DataType == BoundaryConditionDataType
-                                  .ParameterizedSpectrumTimeseries).ToList();
-
-                boundaryListBox.DataSource = new BindingList<WaveBoundaryCondition>(boundaryConditions);
-            }
-        }
-
-        public Image Image { get; set; }
-        public void EnsureVisible(object item) {}
-
-        public ViewInfo ViewInfo { get; set; }
-
         private void okButton_Click(object sender, EventArgs e)
         {
             DialogResult = DialogResult.OK;
@@ -90,25 +105,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Forms
             Close();
         }
 
-        public IList<DateTime> SelectedDateTimes { get; private set; }
-
         private void cancelButton_Click(object sender, EventArgs e)
         {
             DialogResult = DialogResult.Cancel;
             SelectedDateTimes = null;
             Close();
-        }
-
-        public string Title { get; set; }
-
-        public DelftDialogResult ShowModal()
-        {
-            return ShowDialog() == DialogResult.OK ? DelftDialogResult.OK : DelftDialogResult.Cancel;
-        }
-
-        public DelftDialogResult ShowModal(object owner)
-        {
-            return ShowModal();
         }
     }
 }

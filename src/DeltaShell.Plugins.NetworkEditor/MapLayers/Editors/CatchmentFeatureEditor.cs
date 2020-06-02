@@ -15,6 +15,8 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors
 {
     public class CatchmentFeatureEditor : DrainageBasinFeatureEditor
     {
+        public CatchmentType NewCatchmentType { get; set; }
+
         public override IFeature AddNewFeatureByGeometry(ILayer layer, IGeometry geometry)
         {
             if (geometry.Envelope is IPoint) //single click
@@ -43,15 +45,20 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors
             }
         }
 
+        public override IFeatureInteractor CreateInteractor(ILayer layer, IFeature feature)
+        {
+            return new CatchmentFeatureInteractor(layer, feature, ((VectorLayer) layer).Style, DrainageBasin);
+        }
+
         protected override void AddFeatureToDataSource(ILayer layer, IFeature feature)
         {
             var catchment = (Catchment) feature;
             if (feature.Geometry.Envelope is IPoint) //single click
             {
                 //find catchments under click
-                var potentialParent = layer.DataSource.Features.OfType<Catchment>()
-                                           .FirstOrDefault(c => c.CatchmentType.SubCatchmentTypes.Contains(NewCatchmentType) &&
-                                                                c.Geometry.Contains(feature.Geometry));
+                Catchment potentialParent = layer.DataSource.Features.OfType<Catchment>()
+                                                 .FirstOrDefault(c => c.CatchmentType.SubCatchmentTypes.Contains(NewCatchmentType) &&
+                                                                      c.Geometry.Contains(feature.Geometry));
                 if (potentialParent != null)
                 {
                     if (potentialParent.SubCatchments.Any(c => c.CatchmentType.Equals(NewCatchmentType)))
@@ -62,18 +69,12 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors
                     potentialParent.SubCatchments.Add(catchment);
                     return;
                 }
+
                 throw new InvalidOperationException(
                     "Catchment directly on basin must be defined by at least three vertices"); //aborts the add
             }
 
             base.AddFeatureToDataSource(layer, feature);
         }
-
-        public override IFeatureInteractor CreateInteractor(ILayer layer, IFeature feature)
-        {
-            return new CatchmentFeatureInteractor(layer, feature, ((VectorLayer)layer).Style, DrainageBasin);
-        }
-        
-        public CatchmentType NewCatchmentType { get; set; }
     }
 }

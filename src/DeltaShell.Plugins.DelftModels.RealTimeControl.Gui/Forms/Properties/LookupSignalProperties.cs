@@ -17,8 +17,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.Properties
         [ResourcesDescription(typeof(Resources), "Rule_Name_Description")]
         public string Name
         {
-            get { return data.Name; }
-            set { data.Name = value; }
+            get
+            {
+                return data.Name;
+            }
+            set
+            {
+                data.Name = value;
+            }
         }
 
         [ResourcesCategory(typeof(Resources), "Categories_General")]
@@ -26,8 +32,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.Properties
         [ResourcesDescription(typeof(Resources), "Rule_LongName_Description")]
         public string LongName
         {
-            get { return data.LongName; }
-            set { data.LongName = value; }
+            get
+            {
+                return data.LongName;
+            }
+            set
+            {
+                data.LongName = value;
+            }
         }
 
         [ResourcesCategory(typeof(Resources), "Category_Table")]
@@ -35,8 +47,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.Properties
         [ResourcesDescription(typeof(Resources), "RTC_Interpolation_Description")]
         public InterpolationHydraulicType Interpolation
         {
-            get { return (InterpolationHydraulicType) data.Interpolation; }
-            set { data.Interpolation = (InterpolationType) value; }
+            get
+            {
+                return (InterpolationHydraulicType) data.Interpolation;
+            }
+            set
+            {
+                data.Interpolation = (InterpolationType) value;
+            }
         }
 
         [ResourcesCategory(typeof(Resources), "Category_Table")]
@@ -44,36 +62,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.Properties
         [ResourcesDescription(typeof(Resources), "RTC_Extrapolation_Description")]
         public ExtrapolationHydraulicType Extrapolation
         {
-            get { return (ExtrapolationHydraulicType) data.Extrapolation; }
-        }
-        
-        /// <summary>
-        /// Update the column name for better user readability
-        /// add an extra [i] to avoid dupliclate names: crestlevel may set crestlevel
-        /// todo refactor UpdateFunctionArgumentName and UpdateFunctionComponentName
-        /// </summary>
-        private void UpdateFunctionArgumentName()
-        {
-            if (data.Inputs.Count == 1)
+            get
             {
-                var input = data.Inputs[0];
-
-                if (input.IsConnected)
-                {
-                    SetVariableName(data.Function.Arguments[0], input.ParameterName + " [i]");
-                }
-
-                return;
-            }
-
-            SetVariableName(data.Function.Arguments[0], "<input undefined>");
-        }
-
-        private static void SetVariableName(IVariable target, string value)
-        {
-            if (target.Name != value)
-            {
-                target.Name = value;
+                return (ExtrapolationHydraulicType) data.Extrapolation;
             }
         }
 
@@ -98,7 +89,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.Properties
         //    SetVariableName(data.Function.Components[0], "<output undefined>");
         //}
 
-
         [Editor(typeof(ViewPropertyEditor), typeof(UITypeEditor))]
         [ResourcesCategory(typeof(Resources), "Category_Table")]
         [ResourcesDisplayName(typeof(Resources), "Table_DisplayName")]
@@ -112,7 +102,40 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.Properties
 
                 return data.Function;
             }
-            set { data.Function = value; }
+            set
+            {
+                data.Function = value;
+            }
+        }
+
+        /// <summary>
+        /// Update the column name for better user readability
+        /// add an extra [i] to avoid dupliclate names: crestlevel may set crestlevel
+        /// todo refactor UpdateFunctionArgumentName and UpdateFunctionComponentName
+        /// </summary>
+        private void UpdateFunctionArgumentName()
+        {
+            if (data.Inputs.Count == 1)
+            {
+                Input input = data.Inputs[0];
+
+                if (input.IsConnected)
+                {
+                    SetVariableName(data.Function.Arguments[0], input.ParameterName + " [i]");
+                }
+
+                return;
+            }
+
+            SetVariableName(data.Function.Arguments[0], "<input undefined>");
+        }
+
+        private static void SetVariableName(IVariable target, string value)
+        {
+            if (target.Name != value)
+            {
+                target.Name = value;
+            }
         }
     }
 }

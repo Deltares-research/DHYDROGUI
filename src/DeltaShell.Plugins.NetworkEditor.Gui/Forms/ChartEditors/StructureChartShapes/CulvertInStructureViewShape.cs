@@ -19,7 +19,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
         private VectorStyle normalGateStyle;
         private VectorStyle selectedGateStyle;
 
-
         public CulvertInStructureViewShape(IChart chart, ICulvert culvert)
             : base(chart)
         {
@@ -27,27 +26,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
 
             CreateStyles();
 
-
             CalculateShapeFeatures();
         }
-
-        private void CreateStyles()
-        {
-            var alpha = 40;
-
-            normalGateStyle = new VectorStyle
-                               {
-                                   Fill = new SolidBrush(Color.FromArgb(alpha, Color.Black)),
-                                   Line = new Pen(Color.FromArgb(alpha, Color.Black))
-                               };
-
-            selectedGateStyle = new VectorStyle
-            {
-                Fill = new SolidBrush(Color.Black),
-                Line = new Pen(Color.Black)
-            };
-        }
-
 
         /// <summary>
         /// Custom paint method since x of level lines is dependent of zoom-level
@@ -59,6 +39,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
             {
                 return;
             }
+
             CalculateShapeFeatures();
             base.Paint(vectorStyle);
         }
@@ -68,6 +49,23 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
             CalculateShapeFeatures();
             return base.Contains(x, y);
             //get current shapes
+        }
+
+        private void CreateStyles()
+        {
+            var alpha = 40;
+
+            normalGateStyle = new VectorStyle
+            {
+                Fill = new SolidBrush(Color.FromArgb(alpha, Color.Black)),
+                Line = new Pen(Color.FromArgb(alpha, Color.Black))
+            };
+
+            selectedGateStyle = new VectorStyle
+            {
+                Fill = new SolidBrush(Color.Black),
+                Line = new Pen(Color.Black)
+            };
         }
 
         private double GetWorldWidth(int deviceWidth)
@@ -84,19 +82,18 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
         /// delivery is left if we culvert along the branch and the axis is reversed
         /// or we culvert against the branch and the axis was not reversed
         /// </summary>
-
         private void CalculateShapeFeatures()
         {
             //keep selection
-            var oldStatus = Selected;
+            bool oldStatus = Selected;
             ShapeFeatures.Clear();
-            
-            var crossSectionFeature = GetCrossSectionFeature();
+
+            PolygonShapeFeature crossSectionFeature = GetCrossSectionFeature();
             if (crossSectionFeature != null)
             {
                 ShapeFeatures.Add(crossSectionFeature);
             }
-            
+
             if (culvert.GroundLayerEnabled)
             {
                 ShapeFeatures.Add(GetGroundLayerLine());
@@ -104,12 +101,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
 
             if (culvert.IsGated)
             {
-                var gate = GetGateFeature();
+                IShapeFeature gate = GetGateFeature();
                 if (gate != null)
                 {
                     ShapeFeatures.Add(gate);
                 }
             }
+
             if (culvert.CulvertType.Equals(CulvertType.Siphon))
             {
                 ShapeFeatures.Add(GetSiphonOffLevelFeature());
@@ -124,17 +122,17 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
             VectorStyle normalStyle = CulvertStyling.NormalInletStyle;
             VectorStyle selectedStyle = CulvertStyling.SelectedInletStyle;
 
-            var level = culvert.GroundLayerThickness + culvert.BottomLevel;
+            double level = culvert.GroundLayerThickness + culvert.BottomLevel;
 
-            var worldWidth = culvert.CrossSectionDefinitionForCalculation.Width;
-            var x = culvert.OffsetY;
-            
+            double worldWidth = culvert.CrossSectionDefinitionForCalculation.Width;
+            double x = culvert.OffsetY;
+
             var feature = new FixedRectangleShapeFeature(Chart, x, level, worldWidth, 3, true, false)
             {
                 NormalStyle = normalStyle,
                 SelectedStyle = selectedStyle
             };
-            
+
             return feature;
         }
 
@@ -142,6 +140,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
         {
             return GetCenteredHorizontalLine(culvert.SiphonOnLevel, CulvertStyling.NormalSiphonOnLevelStyle, CulvertStyling.SelectedSiphonOnLevelStyle);
         }
+
         private IShapeFeature GetSiphonOffLevelFeature()
         {
             return GetCenteredHorizontalLine(culvert.SiphonOffLevel, CulvertStyling.NormalSiphonOffLevelStyle, CulvertStyling.SelectedSiphonOffLevelStyle);
@@ -150,21 +149,22 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
         private IShapeFeature GetCenteredHorizontalLine(double level, VectorStyle normalStyle, VectorStyle selectedStyle)
         {
             if (!culvert.CulvertType.Equals(CulvertType.Siphon))
+            {
                 throw new ArgumentException("No siphon defined.");
+            }
+
             //pixel width and height
             const int height = 3;
             const int width = 10;
 
             //lower level line at YOffset of 6 pixels wide
-            var x = culvert.OffsetY - (GetWorldWidth(width)/2);
-            
-            
+            double x = culvert.OffsetY - (GetWorldWidth(width) / 2);
 
-            var feature = new FixedRectangleShapeFeature(Chart,x,level,width,height,false, false)
-                              {
-                                  NormalStyle = normalStyle,
-                                  SelectedStyle = selectedStyle
-                              };
+            var feature = new FixedRectangleShapeFeature(Chart, x, level, width, height, false, false)
+            {
+                NormalStyle = normalStyle,
+                SelectedStyle = selectedStyle
+            };
 
             return feature;
         }
@@ -172,21 +172,28 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
         /// <summary>
         /// Defines a horizontal line representing the gate level.
         /// </summary>
-        /// <returns>a shape representing the gate level, may return null if there are no coordinates on which to base the shape of the gate level on</returns>
+        /// <returns>
+        /// a shape representing the gate level, may return null if there are no coordinates on which to base the shape of
+        /// the gate level on
+        /// </returns>
         private IShapeFeature GetGateFeature()
         {
             if (!culvert.IsGated)
+            {
                 throw new ArgumentException("No gate defined.");
+            }
 
             IList<Coordinate> coordinates = culvert.CrossSectionDefinitionAtInletAbsolute.Profile.ToList();
             if (!coordinates.Any())
+            {
                 return null;
+            }
 
             //take the leftmost and rightmost coordinate..add a little margin and draw a big line a the lower edge level
-            var left = coordinates.Min(c => c.X + culvert.OffsetY) - GetWorldWidth(3);
-            var right = coordinates.Max(c => c.X + culvert.OffsetY) + GetWorldWidth(3);
-            var bottom = culvert.GateLowerEdgeLevel;
-            var top = culvert.GateLowerEdgeLevel + GetWorldHeigth(3);
+            double left = coordinates.Min(c => c.X + culvert.OffsetY) - GetWorldWidth(3);
+            double right = coordinates.Max(c => c.X + culvert.OffsetY) + GetWorldWidth(3);
+            double bottom = culvert.GateLowerEdgeLevel;
+            double top = culvert.GateLowerEdgeLevel + GetWorldHeigth(3);
 
             var feature = new RectangleShapeFeature(Chart, left, top, right, bottom);
             feature.NormalStyle = normalGateStyle;
@@ -194,17 +201,18 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
             return feature;
         }
 
-
         private PolygonShapeFeature GetCrossSectionFeature()
         {
             IList<Coordinate> coordinates = culvert.CrossSectionDefinitionAtInletAbsolute.Profile.ToList();
 
             if (coordinates.Count <= 2)
+            {
                 return null;
+            }
 
             double offsetLeftIsZero = culvert.CrossSectionDefinitionAtInletAbsolute.Left;
-            var drawCoordinates =
-                coordinates.Select(c => new Coordinate(c.X + culvert.OffsetY - offsetLeftIsZero, c.Y)).ToList();
+            List<Coordinate> drawCoordinates =
+                coordinates.Select(c => new Coordinate((c.X + culvert.OffsetY) - offsetLeftIsZero, c.Y)).ToList();
             //add the first as the last so we get a closed ring
             drawCoordinates.Add(drawCoordinates.First());
 

@@ -3,8 +3,23 @@ using SharpMap.UI.Tools;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Commands
 {
-    class AddNewRetentionCommand : NetworkEditorCommand
+    internal class AddNewRetentionCommand : NetworkEditorCommand
     {
+        public override bool Checked
+        {
+            get
+            {
+                if (null != MapView && null != CurrentTool)
+                {
+                    return CurrentTool.IsActive;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+        }
+
         protected IMapTool CurrentTool
         {
             get
@@ -12,21 +27,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Commands
                 return MapView.MapControl.GetToolByName(HydroRegionEditorMapTool.AddRetentionToolName);
             }
         }
+
         protected override void OnExecute(params object[] arguments)
         {
             MapView.MapControl.ActivateTool(CurrentTool);
         }
-        public override bool Checked
-        {
-            get
-            {
-                if ((null != MapView) && (null != CurrentTool))
-                    return CurrentTool.IsActive;
-                else
-                    return false;
-            }
-        }
-
-        
     }
 }

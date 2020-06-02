@@ -8,6 +8,13 @@ namespace DeltaShell.Plugins.FMSuite.Common.FunctionStores
     {
         private const string TimeDimensionName = "time";
 
+        //nhib
+        protected FMNetCdfFileFunctionStore() {}
+
+        protected FMNetCdfFileFunctionStore(string ncPath) : base(ncPath) {}
+
+        public string Name { get; set; }
+
         protected override IList<string> TimeDimensionNames => new[]
         {
             TimeDimensionName
@@ -17,13 +24,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.FunctionStores
         {
             GetTimeVariableName(TimeDimensionName)
         };
-
-        public string Name { get; set; }
-
-        //nhib
-        protected FMNetCdfFileFunctionStore() {}
-
-        protected FMNetCdfFileFunctionStore(string ncPath) : base(ncPath) {}
 
         protected override string GetTimeVariableName(string dimName)
         {

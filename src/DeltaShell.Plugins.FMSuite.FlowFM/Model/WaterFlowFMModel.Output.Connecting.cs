@@ -15,6 +15,42 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 {
     public partial class WaterFlowFMModel
     {
+        private void ReadDiaFile(string outputDirectory)
+        {
+            ReportProgressText("Reading dia file");
+            string diaFileName = string.Format("{0}.dia", Name);
+
+            string diaFilePath = Path.Combine(outputDirectory, diaFileName);
+            if (File.Exists(diaFilePath))
+            {
+                try
+                {
+                    IDataItem logDataItem = DataItems.FirstOrDefault(di => di.Tag == DiaFileDataItemTag);
+                    if (logDataItem == null)
+                    {
+                        // add logfile dataitem if not exists
+                        var textDocument = new TextDocument(true) {Name = diaFileName};
+                        logDataItem = new DataItem(textDocument, DataItemRole.Output, DiaFileDataItemTag);
+                        DataItems.Add(logDataItem);
+                    }
+
+                    string log = File.ReadAllText(diaFilePath);
+                    ((TextDocument) logDataItem.Value).Content = log;
+                }
+                catch (Exception ex)
+                {
+                    Log.ErrorFormat(Resources.WaterFlowFMModel_ReadDiaFile_Error_reading_log_file___0____1_,
+                                    diaFileName, ex.Message);
+                }
+            }
+            else
+            {
+                Log.WarnFormat(
+                    Resources.WaterFlowFMModel_ReadDiaFile_Could_not_find_log_file___0__at_expected_path___1_,
+                    diaFileName, diaFilePath);
+            }
+        }
+
         #region Implementation of IDimrModel
 
         /// <summary>
@@ -22,7 +58,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         /// </summary>
         /// <param name="sourceDirectory"> The source directory. </param>
         /// <param name="targetDirectoryPath"> The target directory path. </param>
-        /// <remarks> <paramref name="sourceDirectory" /> should exist. </remarks>
+        /// <remarks> <paramref name="sourceDirectory"/> should exist. </remarks>
         public virtual void ConnectOutput(string outputPath)
         {
             currentOutputDirectoryPath = outputPath;
@@ -252,41 +288,5 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         }
 
         #endregion
-
-        private void ReadDiaFile(string outputDirectory)
-        {
-            ReportProgressText("Reading dia file");
-            string diaFileName = string.Format("{0}.dia", Name);
-
-            string diaFilePath = Path.Combine(outputDirectory, diaFileName);
-            if (File.Exists(diaFilePath))
-            {
-                try
-                {
-                    IDataItem logDataItem = DataItems.FirstOrDefault(di => di.Tag == DiaFileDataItemTag);
-                    if (logDataItem == null)
-                    {
-                        // add logfile dataitem if not exists
-                        var textDocument = new TextDocument(true) {Name = diaFileName};
-                        logDataItem = new DataItem(textDocument, DataItemRole.Output, DiaFileDataItemTag);
-                        DataItems.Add(logDataItem);
-                    }
-
-                    string log = File.ReadAllText(diaFilePath);
-                    ((TextDocument) logDataItem.Value).Content = log;
-                }
-                catch (Exception ex)
-                {
-                    Log.ErrorFormat(Resources.WaterFlowFMModel_ReadDiaFile_Error_reading_log_file___0____1_,
-                                    diaFileName, ex.Message);
-                }
-            }
-            else
-            {
-                Log.WarnFormat(
-                    Resources.WaterFlowFMModel_ReadDiaFile_Could_not_find_log_file___0__at_expected_path___1_,
-                    diaFileName, diaFilePath);
-            }
-        }
     }
 }

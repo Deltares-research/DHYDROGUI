@@ -29,14 +29,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
             Type = type;
         }
 
+        public override bool OpenViewAfterImport => false;
+
         /// <summary>
         /// Type of structures in the collection
         /// </summary>
         public StructuresListType Type { get; set; }
 
         public Func<IEnumerable, WaterFlowFMModel> GetModelForList { get; set; }
-
-        public override bool OpenViewAfterImport => false;
 
         private string GetStructuresName()
         {

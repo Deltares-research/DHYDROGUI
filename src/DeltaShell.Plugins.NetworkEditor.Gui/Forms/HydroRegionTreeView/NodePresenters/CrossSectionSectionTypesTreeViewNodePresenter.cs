@@ -5,19 +5,18 @@ using DelftTools.Hydro.CrossSections;
 using DelftTools.Shell.Gui;
 using DelftTools.Shell.Gui.Swf;
 using DelftTools.Utils.Collections.Generic;
+using DeltaShell.Plugins.NetworkEditor.Gui.Properties;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView.NodePresenters
 {
-    internal class  CrossSectionSectionTypesTreeViewNodePresenter :
+    internal class CrossSectionSectionTypesTreeViewNodePresenter :
         TreeViewNodePresenterBaseForPluginGui<IEventedList<CrossSectionSectionType>>
     {
-        private static readonly Image CrossSectionSectionTypesImage = Properties.Resources.CrossSectionSectionTypes;
+        private static readonly Image CrossSectionSectionTypesImage = Resources.CrossSectionSectionTypes;
 
         public CrossSectionSectionTypesTreeViewNodePresenter(GuiPlugin guiPlugin)
-            : base(guiPlugin)
-        {
-        }
-       
+            : base(guiPlugin) {}
+
         public override void UpdateNode(ITreeNode parentNode, ITreeNode node, IEventedList<CrossSectionSectionType> nodeData)
         {
             node.Text = "Sections (roughness)";
@@ -26,7 +25,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView.NodePre
 
         public override IEnumerable GetChildNodeObjects(IEventedList<CrossSectionSectionType> parentNodeData, ITreeNode node)
         {
-            foreach (var crossSectionSectionType in parentNodeData)
+            foreach (CrossSectionSectionType crossSectionSectionType in parentNodeData)
             {
                 yield return crossSectionSectionType;
             }

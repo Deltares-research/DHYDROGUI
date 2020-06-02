@@ -4,6 +4,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessObjects
 {
     public class ExtForceFileItem
     {
+        public ExtForceFileItem(string quantity)
+        {
+            ModelData = new Dictionary<string, object>();
+
+            Quantity = quantity;
+            Enabled = true;
+            FileType = int.MinValue;
+            Method = int.MinValue;
+
+            // optional additional data
+            Value = double.NaN;
+            Factor = double.NaN;
+            Offset = double.NaN;
+        }
+
         // general data
         public string Quantity { get; set; }
         public string FileName { get; set; }
@@ -20,20 +35,5 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessObjects
 
         // optional additional data, e.g. for friction type
         public Dictionary<string, object> ModelData { get; set; }
-
-        public ExtForceFileItem(string quantity)
-        {
-            ModelData = new Dictionary<string, object>();
-
-            Quantity = quantity;
-            Enabled = true;
-            FileType = int.MinValue;
-            Method = int.MinValue;
-
-            // optional additional data
-            Value = double.NaN;
-            Factor = double.NaN;
-            Offset = double.NaN;
-        }
     }
 }

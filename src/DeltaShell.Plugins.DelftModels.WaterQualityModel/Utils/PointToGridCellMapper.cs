@@ -8,7 +8,7 @@ using NetTopologySuite.Extensions.Grids;
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Utils
 {
     /// <summary>
-    /// Class able to map a 3D location to a <see cref="UnstructuredGrid" /> cell index,
+    /// Class able to map a 3D location to a <see cref="UnstructuredGrid"/> cell index,
     /// taking into account sigma or Z-layer discretization.
     /// </summary>
     public class PointToGridCellMapper
@@ -32,7 +32,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Utils
         /// </remarks>
         /// <exception cref="ArgumentException">
         /// When the sum of all thicknesses in
-        /// <paramref name="relativeThicknesses" /> to not add up to ~1.0.
+        /// <paramref name="relativeThicknesses"/> to not add up to ~1.0.
         /// </exception>
         public void SetSigmaLayers(double[] relativeThicknesses)
         {
@@ -47,7 +47,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Utils
         /// <param name="bottom"> The bottom level (bottom). </param>
         /// <exception cref="ArgumentException">
         /// When the sum of all thicknesses in
-        /// <paramref name="relativeThicknesses" /> to not add up to ~1.0.
+        /// <paramref name="relativeThicknesses"/> to not add up to ~1.0.
         /// </exception>
         public void SetZLayers(double[] relativeThicknesses, double top, double bottom)
         {
@@ -55,7 +55,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Utils
         }
 
         /// <summary>
-        /// Gets the cell index for <see cref="Grid" /> and the initialized layers, for a
+        /// Gets the cell index for <see cref="Grid"/> and the initialized layers, for a
         /// 3D location.
         /// </summary>
         /// <param name="x"> The x coordinate. </param>
@@ -63,13 +63,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Utils
         /// <param name="z"> The z coordinate. </param>
         /// <returns> </returns>
         /// <exception cref="System.InvalidOperationException">
-        /// When <see cref="Grid" /> is null or when either <see cref="SetSigmaLayers" /> or
-        /// <see cref="SetZLayers" /> hasn't been called before to initialize the model layers.
+        /// When <see cref="Grid"/> is null or when either <see cref="SetSigmaLayers"/> or
+        /// <see cref="SetZLayers"/> hasn't been called before to initialize the model layers.
         /// </exception>
         /// <exception cref="System.ArgumentOutOfRangeException">
-        /// When <paramref name="z" />
-        /// falls outside the valid range as defined when calling either <see cref="SetSigmaLayers" />
-        /// or <see cref="SetZLayers" />.
+        /// When <paramref name="z"/>
+        /// falls outside the valid range as defined when calling either <see cref="SetSigmaLayers"/>
+        /// or <see cref="SetZLayers"/>.
         /// </exception>
         /// <exception cref="System.ArgumentException">
         /// When evaluating at a location outside
@@ -116,6 +116,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Utils
             }
 
             return Grid.GetCellIndexForCoordinate(new Coordinate(x, y)) + 1 ?? 0; // + 1, waq is one based.
+        }
+
+        public Cell GetCellFromWaqSegmentId(int segmentIndex)
+        {
+            return Grid.Cells[segmentIndex];
         }
 
         private string GetModelType()
@@ -169,11 +174,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Utils
         private double MapToRelativeValue(double z)
         {
             return (z - topLevel) / (bottomLevel - topLevel);
-        }
-
-        public Cell GetCellFromWaqSegmentId(int segmentIndex)
-        {
-            return Grid.Cells[segmentIndex];
         }
     }
 }

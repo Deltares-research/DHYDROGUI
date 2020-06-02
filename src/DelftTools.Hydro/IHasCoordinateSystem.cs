@@ -15,8 +15,8 @@ namespace DelftTools.Hydro
         /// The 'not likely' is very vague, so the basic premises is that the visualization shouldn't crash on this new
         /// combination being transformed to, arbitrarily, wgs84.
         /// </summary>
-        /// <param name="potentialCoordinateSystem" />
-        /// <returns />
+        /// <param name="potentialCoordinateSystem"/>
+        /// <returns/>
         bool CanSetCoordinateSystem(ICoordinateSystem potentialCoordinateSystem);
     }
 }

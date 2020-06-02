@@ -17,7 +17,7 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors
             DrainageBasin.BeginEdit(new DefaultEditAction("Add new runoff boundary"));
             try
             {
-                var feat = base.AddNewFeatureByGeometry(layer, geometry);
+                IFeature feat = base.AddNewFeatureByGeometry(layer, geometry);
 
                 var nameable = feat as INameable;
                 if (nameable != null)
@@ -35,7 +35,7 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors
 
         public override IFeatureInteractor CreateInteractor(ILayer layer, IFeature feature)
         {
-            return new RunoffBoundaryFeatureInteractor(layer, feature, ((VectorLayer)layer).Style, DrainageBasin);
+            return new RunoffBoundaryFeatureInteractor(layer, feature, ((VectorLayer) layer).Style, DrainageBasin);
         }
     }
 }

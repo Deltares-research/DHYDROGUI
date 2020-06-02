@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Collections;
+using System.IO;
 using DelftTools.Controls;
 using DelftTools.Controls.Swf.TreeViewControls;
 using DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores;
@@ -12,7 +13,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
             node.Text = Path.GetFileName(nodeData.Path);
         }
 
-        public override System.Collections.IEnumerable GetChildNodeObjects(FMHisFileFunctionStore parentNodeData, ITreeNode node)
+        public override IEnumerable GetChildNodeObjects(FMHisFileFunctionStore parentNodeData, ITreeNode node)
         {
             return parentNodeData.Functions;
         }

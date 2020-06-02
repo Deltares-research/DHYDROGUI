@@ -6,7 +6,7 @@
     public class ParameterLeafNode : ILeafNode
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="ParameterLeafNode" /> class.
+        /// Initializes a new instance of the <see cref="ParameterLeafNode"/> class.
         /// </summary>
         /// <param name="value"> The parameter name. </param>
         public ParameterLeafNode(string value)
@@ -19,14 +19,14 @@
         /// </summary>
         public string Value { get; set; }
 
-        public string GetExpression()
-        {
-            return Value;
-        }
-
         public override string ToString()
         {
             return GetExpression();
+        }
+
+        public string GetExpression()
+        {
+            return Value;
         }
     }
 }

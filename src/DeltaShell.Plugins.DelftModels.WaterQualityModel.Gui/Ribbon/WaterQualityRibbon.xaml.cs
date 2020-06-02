@@ -55,6 +55,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Ribbon
 
         public IEnumerable<ICommand> Commands => buttonCommands.Values;
 
+        public bool RibbonContainsSpatialOperationCommand(SpatialOperationCommandBase operationCommand)
+        {
+            return !spatialOperationCommands.Contains(operationCommand);
+        }
+
         public object GetRibbonControl()
         {
             return RibbonControl;
@@ -98,11 +103,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Ribbon
         {
             setLabelCommand.Execute();
             ValidateItems();
-        }
-
-        public bool RibbonContainsSpatialOperationCommand(SpatialOperationCommandBase operationCommand)
-        {
-            return !spatialOperationCommands.Contains(operationCommand);
         }
 
         private void ButtonOverwriteLabel_Click(object sender, RoutedEventArgs e)

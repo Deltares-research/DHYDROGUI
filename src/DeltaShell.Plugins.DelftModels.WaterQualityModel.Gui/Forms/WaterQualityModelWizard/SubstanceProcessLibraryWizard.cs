@@ -7,8 +7,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.WaterQualit
 {
     public class SubstanceProcessLibraryWizard : WizardDialog, IConfigureDialog
     {
-        private SubFileImporter subFileItemFileImporter;
         private readonly SubstanceProcessLibraryWizardPage substanceProcessLibraryWizardPage;
+        private SubFileImporter subFileItemFileImporter;
 
         public SubstanceProcessLibraryWizard()
         {

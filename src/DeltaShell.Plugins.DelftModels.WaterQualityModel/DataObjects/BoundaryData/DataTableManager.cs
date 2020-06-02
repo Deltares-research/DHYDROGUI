@@ -25,7 +25,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.BoundaryD
         private IEventedList<DataTable> dataTables;
 
         /// <summary>
-        /// Flag to keep track if executing <see cref="MoveDataTable" /> or not.
+        /// Flag to keep track if executing <see cref="MoveDataTable"/> or not.
         /// </summary>
         private bool movingDataTables;
 
@@ -34,8 +34,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.BoundaryD
             DataTables = new EventedList<DataTable>();
             Name = "Data Table Manager";
         }
-
-        public virtual string Name { get; set; }
 
         /// <summary>
         /// The data-tables managed by this manager.
@@ -64,8 +62,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.BoundaryD
         /// </summary>
         public virtual string FolderPath { get; set; }
 
+        public virtual string Name { get; set; }
+
         /// <summary>
-        /// Moves the datatable up or down in the <see cref="DataTables" /> order
+        /// Moves the datatable up or down in the <see cref="DataTables"/> order
         /// </summary>
         /// <param name="dataTable"> DataTable to move </param>
         /// <param name="up"> Move table up (true) or down (false) </param>
@@ -87,22 +87,22 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.BoundaryD
         }
 
         /// <summary>
-        /// Creates the new <see cref="DataTable" /> and appends it to <see cref="DataTables" />
+        /// Creates the new <see cref="DataTable"/> and appends it to <see cref="DataTables"/>
         /// while creating the required files on disk.
         /// </summary>
         /// <param name="name">
         /// The name of the datatable and used to define the file name for file with contents
-        /// specified for <paramref name="tableContents" />.
+        /// specified for <paramref name="tableContents"/>.
         /// </param>
         /// <param name="tableContents"> The data table contents. </param>
         /// <param name="useforFullFilename">
         /// The usefor filename with extension, as referred
-        /// to in <paramref name="tableContents" />.
+        /// to in <paramref name="tableContents"/>.
         /// </param>
         /// <param name="useforContents"> The usefor file contents. </param>
         /// <param name="createNewFileNamesIfExists"> A new file name will be created if the original already exists </param>
         /// <exception cref="System.InvalidOperationException">
-        /// <see cref="FolderPath" /> not set to a valid folder-path.
+        /// <see cref="FolderPath"/> not set to a valid folder-path.
         /// </exception>
         /// <exception cref="System.ArgumentException">
         /// When a file already exists with the given filename.
@@ -132,7 +132,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.BoundaryD
         }
 
         /// <summary>
-        /// Migrates this data table manager from <see cref="FolderPath" /> to a new target
+        /// Migrates this data table manager from <see cref="FolderPath"/> to a new target
         /// directory, moving all it's associated files.
         /// </summary>
         /// <param name="path"> The new path. </param>
@@ -175,7 +175,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.BoundaryD
         /// Clears the data related to the data table when a data table is removed.
         /// </summary>
         /// <param name="sender"> The sender. </param>
-        /// <param name="e"> The <see cref="NotifyCollectionChangedEventArgs" /> instance containing the event data. </param>
+        /// <param name="e"> The <see cref="NotifyCollectionChangedEventArgs"/> instance containing the event data. </param>
         private void DataTablesOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             if (movingDataTables || !Equals(sender, dataTables))

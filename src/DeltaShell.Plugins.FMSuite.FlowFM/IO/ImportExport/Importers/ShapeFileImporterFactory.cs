@@ -13,7 +13,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
     /// <summary>
     /// The <see cref="ShapeFileImporterFactory"/> provides the construction
     /// method to create new <see cref="ShapeFileImporter{TGeometry,TFeature2D}"/>.
-    ///
     /// Furthermore, it provides a set of AfterCreateActions within the static
     /// nested class AfterFeatureCreateActions.
     /// </summary>
@@ -33,7 +32,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
         /// during the <see cref="ShapeFileImporter{TGeometry,TFeature2D}.OnImportItem"/>.
         /// It can be used to add additional data, or make modifications to the
         /// constructed feature.
-        /// 
         /// <see cref="AfterFeatureCreateActions"/>
         /// describes a set of predefined AfterFeatureCreateActions
         /// </param>
@@ -49,7 +47,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
             return new ShapeFileImporter<TGeometry, TFeature2D>(ShapeFileImporterHelper.Read<TGeometry>,
                                                                 afterFeatureCreateAction);
         }
-
 
         /// <summary>
         /// A collection of AfterFeatureCreateActions used to compose ShapeFileImporters.
@@ -71,8 +68,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
                 params Action<IFeature, TFeature2D, IEnumerable<TFeature2D>>[] actions)
             {
                 return (srcFeature, targetFeature, targets) => actions.ForEach(a => a?.Invoke(srcFeature,
-                                                                                                    targetFeature, 
-                                                                                                    targets));
+                                                                                              targetFeature,
+                                                                                              targets));
             }
 
             /// <summary>
@@ -86,20 +83,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
             /// <param name="targetFeature">
             /// The feature constructed from <see cref="srcFeature"/>.
             /// </param>
-            /// <param name="targets"> 
+            /// <param name="targets">
             /// The set of targets to which <paramref name="targetFeature"/> will be added.
             /// </param>
             /// <post-condition>
             /// IF "Name" IN srcFeature.Attributes THEN
-            ///   (new) targetFeature.Name == srcFeature.Attributes["Name"]
+            /// (new) targetFeature.Name == srcFeature.Attributes["Name"]
             /// ELSE
-            ///   (new) targetFeature.Name == "imported_feature"
+            /// (new) targetFeature.Name == "imported_feature"
             /// </post-condition>
             /// <remarks>
             /// If a feature already exists in targets with the same proposed name, it will
             /// be made unique by appending _{index}.
             /// </remarks>
-            public static void TryAddName<TFeature2D>(IFeature srcFeature, 
+            public static void TryAddName<TFeature2D>(IFeature srcFeature,
                                                       TFeature2D targetFeature,
                                                       IEnumerable<TFeature2D> targets)
                 where TFeature2D : IFeature, INameable
@@ -124,14 +121,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
             /// <param name="targetFeature">
             /// The feature constructed from <see cref="srcFeature"/>.
             /// </param>
-            /// <param name="_"> 
+            /// <param name="_">
             /// The set of targets to which <paramref name="targetFeature"/> will be added.
             /// </param>
             /// <post-condition>
             /// IF "CrestWidth" IN srcFeature.Attributes THEN
-            ///   (new) targetFeature.CrestWidth == srcFeature.Attributes["CrestWidth"]
+            /// (new) targetFeature.CrestWidth == srcFeature.Attributes["CrestWidth"]
             /// </post-condition>
-            public static void TryAddCrestWidth<TFeature2D>(IFeature srcFeature, 
+            public static void TryAddCrestWidth<TFeature2D>(IFeature srcFeature,
                                                             TFeature2D targetFeature,
                                                             IEnumerable<TFeature2D> _)
                 where TFeature2D : Weir2D
@@ -153,14 +150,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
             /// <param name="targetFeature">
             /// The feature constructed from <see cref="srcFeature"/>.
             /// </param>
-            /// <param name="_"> 
+            /// <param name="_">
             /// The set of targets to which <paramref name="targetFeature"/> will be added.
             /// </param>
             /// <post-condition>
             /// IF "CrestLevel" IN srcFeature.Attributes THEN
-            ///   (new) targetFeature.CrestLevel == srcFeature.Attributes["CrestLevel"]
+            /// (new) targetFeature.CrestLevel == srcFeature.Attributes["CrestLevel"]
             /// </post-condition>
-            public static void TryAddCrestLevel<TFeature2D>(IFeature srcFeature, 
+            public static void TryAddCrestLevel<TFeature2D>(IFeature srcFeature,
                                                             TFeature2D targetFeature,
                                                             IEnumerable<TFeature2D> _)
                 where TFeature2D : Weir2D
@@ -183,14 +180,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
             /// <param name="targetFeature">
             /// The feature constructed from <see cref="srcFeature"/>.
             /// </param>
-            /// <param name="_"> 
+            /// <param name="_">
             /// The set of targets to which <paramref name="targetFeature"/> will be added.
             /// </param>
             /// <post-condition>
             /// IF "FormulaName" IN srcFeature.Attributes THEN
-            ///   (new) targetFeature.WeirFormula.Name == srcFeature.Attributes["FormulaName"]
+            /// (new) targetFeature.WeirFormula.Name == srcFeature.Attributes["FormulaName"]
             /// </post-condition>
-            public static void TryAddWeirFormula<TFeature2D>(IFeature srcFeature, 
+            public static void TryAddWeirFormula<TFeature2D>(IFeature srcFeature,
                                                              TFeature2D targetFeature,
                                                              IEnumerable<TFeature2D> _)
                 where TFeature2D : Weir2D
@@ -225,14 +222,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
             /// <param name="targetFeature">
             /// The feature constructed from <see cref="srcFeature"/>.
             /// </param>
-            /// <param name="_"> 
+            /// <param name="_">
             /// The set of targets to which <paramref name="targetFeature"/> will be added.
             /// </param>
             /// <post-condition>
             /// IF "Capacity" IN srcFeature.Attributes THEN
-            ///   (new) targetFeature.Capacity == srcFeature.Attributes["Capacity"]
+            /// (new) targetFeature.Capacity == srcFeature.Attributes["Capacity"]
             /// </post-condition>
-            public static void TryAddCapacity<TFeature2D>(IFeature srcFeature, 
+            public static void TryAddCapacity<TFeature2D>(IFeature srcFeature,
                                                           TFeature2D targetFeature,
                                                           IEnumerable<TFeature2D> _)
                 where TFeature2D : Pump2D
@@ -253,9 +250,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
             /// <param name="returnValue"> The return value. </param>
             /// <returns>
             /// IF key IN feature AND feature[key] is of type T THEN
-            ///   <c>true</c>
+            /// <c>true</c>
             /// ELSE
-            ///   <c> false </c>
+            /// <c> false </c>
             /// </returns>
             private static bool TryGetValue<T>(IFeature feature, string key, out T returnValue)
             {

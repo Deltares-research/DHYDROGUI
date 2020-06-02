@@ -17,16 +17,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
             {
                 return DelftDialogResult.Cancel;
             }
+
             FilePaths = openFileDialog.FileNames;
-            var result = ShowDialog() == DialogResult.OK ? DelftDialogResult.OK : DelftDialogResult.Cancel;
+            DelftDialogResult result = ShowDialog() == DialogResult.OK ? DelftDialogResult.OK : DelftDialogResult.Cancel;
             if (result == DelftDialogResult.OK && deleteDataCheckBox.Checked &&
                 quantitiesListBox.CheckedItems.Count * dataTypesListBox.CheckedItems.Count == 0)
             {
-                var extraResult = MessageBox.Show(
+                DialogResult extraResult = MessageBox.Show(
                     "You are deleting data without importing any boundary condition data. Do you wish to continue?",
                     "Deleting data", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1);
                 return extraResult == DialogResult.Yes ? DelftDialogResult.OK : DelftDialogResult.Cancel;
             }
+
             return result;
         }
 
@@ -39,13 +41,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
 
                 bcmFileImporter.ExcludedQuantities =
                     quantities.Keys.Except(quantitiesListBox.CheckedItems.Cast<string>())
-                        .Select(k => quantities[k])
-                        .ToList();
+                              .Select(k => quantities[k])
+                              .ToList();
 
                 bcmFileImporter.ExcludedDataTypes =
                     dataTypes.Keys.Except(dataTypesListBox.CheckedItems.Cast<string>())
-                        .Select(k => dataTypes[k])
-                        .ToList();
+                             .Select(k => dataTypes[k])
+                             .ToList();
 
                 bcmFileImporter.OverwriteExistingData = overwriteCheckBox.Checked;
                 bcmFileImporter.DeleteDataBeforeImport = deleteDataCheckBox.Checked;

@@ -19,12 +19,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapeEdit
 
         public bool MoveTracker(IPoint trackerFeature, Coordinate worldPosition, double deltaX, double deltaY)
         {
-            SymbolShapeFeature symbolShapeFeature = (SymbolShapeFeature)ShapeFeature;
+            var symbolShapeFeature = (SymbolShapeFeature) ShapeFeature;
             if (CanMove)
             {
                 symbolShapeFeature.X += deltaX;
                 symbolShapeFeature.Y += deltaY;
             }
+
             return true;
         }
 

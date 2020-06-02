@@ -19,22 +19,32 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
         private IWeir data;
         private bool handlingPropertyChanged;
 
+        public FMWeirView()
+        {
+            InitializeComponent();
+            crestLevelButton = CreateTimeseriesButton(CrestLevelButton_Click);
+        }
+
         public object Data
         {
-            get { return data; }
+            get
+            {
+                return data;
+            }
             set
             {
                 if (data != null)
                 {
-                    ((INotifyPropertyChanged)data).PropertyChanged -= WeirPropertyChanged;
+                    ((INotifyPropertyChanged) data).PropertyChanged -= WeirPropertyChanged;
                 }
-                data = (IWeir)value;
+
+                data = (IWeir) value;
 
                 //set formula etc in data class
                 bindingSourceWeir.DataSource = Data ?? typeof(Weir);
-                bindingSourceFormula.DataSource = (data != null && data.WeirFormula != null)
-                    ? (object) data.WeirFormula
-                    : typeof (SimpleWeirFormula);
+                bindingSourceFormula.DataSource = data != null && data.WeirFormula != null
+                                                      ? (object) data.WeirFormula
+                                                      : typeof(SimpleWeirFormula);
 
                 if (value == null)
                 {
@@ -45,25 +55,29 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
 
                 if (data != null)
                 {
-                    ((INotifyPropertyChanged)data).PropertyChanged += WeirPropertyChanged;
+                    ((INotifyPropertyChanged) data).PropertyChanged += WeirPropertyChanged;
                 }
+
                 ConfigureTimeDependentControls();
                 UpdateUseCrestLevel();
             }
         }
 
+        public Image Image { get; set; }
+
+        public ViewInfo ViewInfo { get; set; }
+        public void EnsureVisible(object item) {}
+
         private void UpdateUseCrestLevel()
         {
-            if (data == null) return;
-            var useCrestLevel = data.CrestWidth > 0.0;
+            if (data == null)
+            {
+                return;
+            }
+
+            bool useCrestLevel = data.CrestWidth > 0.0;
             checkBoxUseCrestWidth.Checked = useCrestLevel;
             textBoxCrestWidth.Enabled = useCrestLevel;
-        }
-
-        public FMWeirView()
-        {
-            InitializeComponent();
-            crestLevelButton = CreateTimeseriesButton(CrestLevelButton_Click);
         }
 
         private void ConfigureTimeDependentControls()
@@ -107,14 +121,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
             }
         }
 
-        public Image Image { get; set; }
-        public void EnsureVisible(object item) { }
-
-        public ViewInfo ViewInfo { get; set; }
-
         private static Button CreateTimeseriesButton(EventHandler handler)
         {
-            var result = new Button {Dock = DockStyle.Fill, Text = "Time series..."};
+            var result = new Button
+            {
+                Dock = DockStyle.Fill,
+                Text = "Time series..."
+            };
             result.Click += handler;
 
             return result;
@@ -133,11 +146,56 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
             return false;
         }
 
+        private void LateralCoefficientTextBoxValidated(object sender, EventArgs e)
+        {
+            double coeff;
+            if (ParseDouble(lateralCoefficientTextBox.Text, out coeff))
+            {
+                ((SimpleWeirFormula) data.WeirFormula).LateralContraction = coeff;
+            }
+        }
+
+        private void CrestLevelTextBoxValidated(object sender, EventArgs e)
+        {
+            double crestLevel;
+            if (ParseDouble(crestLevelTextBox.Text, out crestLevel))
+            {
+                data.CrestLevel = crestLevel;
+            }
+        }
+
+        private void CrestWidthTextBoxValidated(object sender, EventArgs e)
+        {
+            double crestWidth;
+            if (ParseDouble(textBoxCrestWidth.Text, out crestWidth))
+            {
+                data.CrestWidth = crestWidth;
+            }
+        }
+
+        private void CheckBoxUseCrestWidthCheckedChanged(object sender, EventArgs e)
+        {
+            if (handlingPropertyChanged || Data == null)
+            {
+                return;
+            }
+
+            if (checkBoxUseCrestWidth.Checked && data.CrestWidth <= 0.0)
+            {
+                data.CrestWidth = data.Geometry.Length;
+            }
+
+            if (!checkBoxUseCrestWidth.Checked && data.CrestWidth > 0.0)
+            {
+                data.CrestWidth = 0.0;
+            }
+        }
+
         #region Eventing
 
         private void CrestLevelButton_Click(object sender, EventArgs e)
         {
-            var dialogData = (TimeSeries)data.CrestLevelTimeSeries.Clone(true);
+            var dialogData = (TimeSeries) data.CrestLevelTimeSeries.Clone(true);
 
             var editFunctionDialog = new EditFunctionDialog
             {
@@ -163,7 +221,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
 
         private void WeirPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (handlingPropertyChanged) return;
+            if (handlingPropertyChanged)
+            {
+                return;
+            }
 
             handlingPropertyChanged = true;
 
@@ -196,6 +257,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
         }
 
         #endregion Eventing
+
         #region Reusable
 
         private bool locked;
@@ -203,7 +265,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
 
         public bool Locked
         {
-            get { return locked; }
+            get
+            {
+                return locked;
+            }
             set
             {
                 locked = value;
@@ -215,47 +280,5 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
         }
 
         #endregion Reusable
-
-        private void LateralCoefficientTextBoxValidated(object sender, EventArgs e)
-        {
-            double coeff;
-            if (ParseDouble(lateralCoefficientTextBox.Text, out coeff))
-            {
-                ((SimpleWeirFormula) data.WeirFormula).LateralContraction = coeff;
-            }
-        }
-
-        private void CrestLevelTextBoxValidated(object sender, EventArgs e)
-        {
-            double crestLevel;
-            if (ParseDouble(crestLevelTextBox.Text, out crestLevel))
-            {
-                data.CrestLevel = crestLevel;
-            }
-        }
-
-        private void CrestWidthTextBoxValidated(object sender, EventArgs e)
-        {
-            double crestWidth;
-            if (ParseDouble(textBoxCrestWidth.Text, out crestWidth))
-            {
-                data.CrestWidth = crestWidth;
-            }
-        }
-
-        private void CheckBoxUseCrestWidthCheckedChanged(object sender, EventArgs e)
-        {
-            if (handlingPropertyChanged || Data == null) return;
-
-            if (checkBoxUseCrestWidth.Checked && data.CrestWidth <= 0.0)
-            {
-                data.CrestWidth = data.Geometry.Length;
-            }
-
-            if (!checkBoxUseCrestWidth.Checked && data.CrestWidth > 0.0)
-            {
-                data.CrestWidth = 0.0;
-            }
-        }
     }
 }

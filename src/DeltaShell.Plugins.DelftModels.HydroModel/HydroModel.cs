@@ -37,10 +37,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
     [Entity(FireOnCollectionChange = false)]
     public partial class HydroModel : TimeDependentModelBase, IHydroModel, ICompositeActivity, IFileBased, IModelMerge, IDisposable
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(HydroModel));
-        
         private const string HydroRegionTag = "RootHydroRegion";
-        
+        private static readonly ILog Log = LogManager.GetLogger(typeof(HydroModel));
+
         #region Fields and properties
 
         private IEventedList<IActivity> activities;
@@ -62,6 +61,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
         /// Make a copy of the file if it is located in the DeltaShell working directory
         /// </summary>
         public virtual bool CopyFromWorkingDirectory { get; }
+
         #endregion
 
         #region Constructor and dispose
@@ -79,8 +79,14 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
             // add hydro region
             var hydroRegion = new HydroRegion();
-            ((INotifyCollectionChange)hydroRegion).CollectionChanged += OnHydroRegionCollectionChanged;
-            DataItems.Add(new DataItem { ValueType = typeof(HydroRegion), Value = hydroRegion, Name = "Region", Tag = HydroRegionTag });
+            ((INotifyCollectionChange) hydroRegion).CollectionChanged += OnHydroRegionCollectionChanged;
+            DataItems.Add(new DataItem
+            {
+                ValueType = typeof(HydroRegion),
+                Value = hydroRegion,
+                Name = "Region",
+                Tag = HydroRegionTag
+            });
 
             creating = false;
 
@@ -91,13 +97,13 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             OverrideTimeStep = true;
 
             // for triggering nhibernate storage of unmapped part:
-            ((INotifyPropertyChanged)this).PropertyChanged += (s, e) => MarkDirty();
-            ((INotifyCollectionChanged)this).CollectionChanged += (s, e) => MarkDirty();
+            ((INotifyPropertyChanged) this).PropertyChanged += (s, e) => MarkDirty();
+            ((INotifyCollectionChanged) this).CollectionChanged += (s, e) => MarkDirty();
         }
 
         public void Dispose()
         {
-            foreach (var activity in Activities.GetActivitiesOfType<IDisposable>())
+            foreach (IDisposable activity in Activities.GetActivitiesOfType<IDisposable>())
             {
                 activity.Dispose();
             }
@@ -109,7 +115,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
         public virtual bool OverrideStartTime
         {
-            get { return overrideStartTime; }
+            get
+            {
+                return overrideStartTime;
+            }
             set
             {
                 overrideStartTime = value;
@@ -119,7 +128,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
         public virtual bool OverrideStopTime
         {
-            get { return overrideStopTime; }
+            get
+            {
+                return overrideStopTime;
+            }
             set
             {
                 overrideStopTime = value;
@@ -129,7 +141,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
         public virtual bool OverrideTimeStep
         {
-            get { return overrideTimeStep; }
+            get
+            {
+                return overrideTimeStep;
+            }
             set
             {
                 overrideTimeStep = value;
@@ -140,7 +155,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
         [NoNotifyPropertyChange]
         public override DateTime StartTime
         {
-            get { return base.StartTime; }
+            get
+            {
+                return base.StartTime;
+            }
             set
             {
                 this.BeginEdit("Change start time to: " + value);
@@ -153,7 +171,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
         [NoNotifyPropertyChange]
         public override DateTime StopTime
         {
-            get { return base.StopTime; }
+            get
+            {
+                return base.StopTime;
+            }
             set
             {
                 this.BeginEdit("Change stop time to: " + value);
@@ -166,7 +187,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
         [NoNotifyPropertyChange]
         public override TimeSpan TimeStep
         {
-            get { return base.TimeStep; }
+            get
+            {
+                return base.TimeStep;
+            }
             set
             {
                 this.BeginEdit("Change time step to: " + value);
@@ -194,10 +218,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             }
 
             updating = true;
-            foreach (var subModel in Activities.GetActivitiesOfType<ITimeDependentModel>().Where(a => a.StartTime != StartTime))
+            foreach (ITimeDependentModel subModel in Activities.GetActivitiesOfType<ITimeDependentModel>().Where(a => a.StartTime != StartTime))
             {
                 subModel.StartTime = StartTime;
             }
+
             updating = false;
         }
 
@@ -210,10 +235,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             }
 
             updating = true;
-            foreach (var subModel in Activities.GetActivitiesOfType<ITimeDependentModel>().Where(a => a.StopTime != StopTime))
+            foreach (ITimeDependentModel subModel in Activities.GetActivitiesOfType<ITimeDependentModel>().Where(a => a.StopTime != StopTime))
             {
                 subModel.StopTime = StopTime;
             }
+
             updating = false;
         }
 
@@ -226,10 +252,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             }
 
             updating = true;
-            foreach (var subModel in Activities.GetActivitiesOfType<ITimeDependentModel>().Where(a => a.TimeStep != TimeStep))
+            foreach (ITimeDependentModel subModel in Activities.GetActivitiesOfType<ITimeDependentModel>().Where(a => a.TimeStep != TimeStep))
             {
                 subModel.TimeStep = TimeStep;
             }
+
             updating = false;
         }
 
@@ -239,28 +266,31 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
         public virtual IEventedList<IActivity> Activities
         {
-            get { return activities; }
+            get
+            {
+                return activities;
+            }
             protected set
             {
                 if (activities != null)
                 {
                     activities.CollectionChanging -= ActivitiesCollectionChanging;
                     activities.CollectionChanged -= ActivitiesCollectionChanged;
-                    ((INotifyPropertyChanged)activities).PropertyChanged -= OnActivitiesPropertyChanged;
+                    ((INotifyPropertyChanged) activities).PropertyChanged -= OnActivitiesPropertyChanged;
                 }
 
                 activities = value;
 
                 if (activities != null)
                 {
-                    foreach (var model in activities.OfType<IModel>())
+                    foreach (IModel model in activities.OfType<IModel>())
                     {
                         model.Owner = this;
                     }
 
                     activities.CollectionChanging += ActivitiesCollectionChanging;
                     activities.CollectionChanged += ActivitiesCollectionChanged;
-                    ((INotifyPropertyChanged)activities).PropertyChanged += OnActivitiesPropertyChanged;
+                    ((INotifyPropertyChanged) activities).PropertyChanged += OnActivitiesPropertyChanged;
                 }
             }
         }
@@ -269,7 +299,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
         {
             get
             {
-                if (activities == null) return true; // Can be set null
+                if (activities == null)
+                {
+                    return true; // Can be set null
+                }
 
                 // Only ModelBase has syncing logic about output:
                 return activities.OfType<ModelBase>().All(m => m.OutputIsEmpty);
@@ -302,7 +335,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
             // underlying model parameter has been changed - reset override flag
 
-            var timeDependentModels = Activities.OfType<ITimeDependentModel>();
+            IEnumerable<ITimeDependentModel> timeDependentModels = Activities.OfType<ITimeDependentModel>();
             switch (parameter.Name)
             {
                 case StartTimeName:
@@ -310,6 +343,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                     {
                         OverrideStartTime = false;
                     }
+
                     StartTime = timeDependentModels.Select(m => m.StartTime).Min();
                     break;
                 case StopTimeName:
@@ -317,6 +351,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                     {
                         OverrideStopTime = false;
                     }
+
                     StopTime = timeDependentModels.Select(m => m.StopTime).Max();
                     break;
                 case TimeStepName:
@@ -324,6 +359,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                     {
                         OverrideTimeStep = false;
                     }
+
                     TimeStep = timeDependentModels.Select(m => m.TimeStep).Min();
                     break;
             }
@@ -351,7 +387,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             // activity was removed / added
             if (Equals(sender, activities))
             {
-                var removedOrAddedItem = e.GetRemovedOrAddedItem();
+                object removedOrAddedItem = e.GetRemovedOrAddedItem();
                 var model = removedOrAddedItem as IModel;
                 var timeDependentModel = removedOrAddedItem as ITimeDependentModel;
                 switch (e.Action)
@@ -417,7 +453,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
         public virtual IEnumerable<IModel> Models
         {
-            get { return Activities.OfType<IModel>(); }
+            get
+            {
+                return Activities.OfType<IModel>();
+            }
         }
 
         #endregion
@@ -426,7 +465,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
         public virtual IEventedList<ICompositeActivity> Workflows
         {
-            get { return workflows; }
+            get
+            {
+                return workflows;
+            }
             set
             {
                 if (workflows != null)
@@ -452,7 +494,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
         private void WorkflowsOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            var removedOrAddedItem = e.GetRemovedOrAddedItem();
+            object removedOrAddedItem = e.GetRemovedOrAddedItem();
             var activity = removedOrAddedItem as ICompositeActivity;
             if (activity != null)
             {
@@ -484,11 +526,16 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
         [Aggregation]
         public virtual ICompositeActivity CurrentWorkflow
         {
-            get { return currentWorkflow; }
+            get
+            {
+                return currentWorkflow;
+            }
             set
             {
                 if (currentWorkflow == value)
+                {
                     return;
+                }
 
                 if (currentWorkflow != null)
                 {
@@ -505,7 +552,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                 currentWorkFlowData = null;
 
                 if (!creating)
+                {
                     RebuildModelLinks();
+                }
             }
         }
 
@@ -520,10 +569,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
         {
             Log.ErrorFormat(Resources.HydroModel_LogInvalidActivities_The_integrated_model___0___could_not_initialize__Please_check_the_validation_report_, Name);
         }
-        
+
         [EditAction]
         private void CurrentWorkflowOnStatusChanged(object sender,
-            ActivityStatusChangedEventArgs activityStatusChangedEventArgs)
+                                                    ActivityStatusChangedEventArgs activityStatusChangedEventArgs)
         {
             Status = currentWorkflow.Status;
         }
@@ -538,18 +587,24 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
         [NoNotifyPropertyChange]
         protected virtual int CurrentWorkflowIndex
         {
-            get { return Workflows.IndexOf(CurrentWorkflow); }
+            get
+            {
+                return Workflows.IndexOf(CurrentWorkflow);
+            }
             [EditAction]
             set
             {
                 if (Workflows.Count <= 1) //only default workflow: can happen on load
+                {
                     RefreshDefaultModelWorkflows();
+                }
+
                 if (value > -1 && value < Workflows.Count)
+                {
                     CurrentWorkflow = Workflows[value];
+                }
             }
         }
-
-
 
         /// <summary>
         /// Data of the <see cref="CurrentWorkflow"/>
@@ -562,18 +617,24 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                 {
                     currentWorkFlowData = new CompositeHydroModelWorkFlowData
                     {
-                        HydroModelWorkFlowDataLookUp = GetActivitiesLevelIndices(CurrentWorkflow, new int[] { })
-                            .Where(t => t.Item1 != null)
-                            .ToDictionary(t => t.Item1, t => t.Item2)
+                        HydroModelWorkFlowDataLookUp = GetActivitiesLevelIndices(CurrentWorkflow, new int[]
+                                                                                     {})
+                                                       .Where(t => t.Item1 != null)
+                                                       .ToDictionary(t => t.Item1, t => t.Item2)
                     };
                 }
+
                 return currentWorkFlowData;
             }
             set
             {
                 currentWorkFlowData = value;
 
-                if (currentWorkFlowData == null) return;
+                if (currentWorkFlowData == null)
+                {
+                    return;
+                }
+
                 currentWorkFlowData.TryRestoreData(CurrentWorkflow);
             }
         }
@@ -587,13 +648,19 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             }
 
             var compositeActivity = activity as ICompositeActivity;
-            if (compositeActivity == null) yield break;
-
-            for (int i = 0; i < compositeActivity.Activities.Count; i++)
+            if (compositeActivity == null)
             {
-                var newLevelIndices = new List<int>(indicesList.Concat(new[] { i })).ToArray();
+                yield break;
+            }
 
-                foreach (var tuple in GetActivitiesLevelIndices(compositeActivity.Activities[i], newLevelIndices))
+            for (var i = 0; i < compositeActivity.Activities.Count; i++)
+            {
+                int[] newLevelIndices = new List<int>(indicesList.Concat(new[]
+                {
+                    i
+                })).ToArray();
+
+                foreach (System.Tuple<IHydroModelWorkFlowData, IList<int>> tuple in GetActivitiesLevelIndices(compositeActivity.Activities[i], newLevelIndices))
                 {
                     yield return tuple;
                 }
@@ -606,14 +673,22 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
         private bool DoDimrRun()
         {
-            if (currentWorkflow == null) return false;
+            if (currentWorkflow == null)
+            {
+                return false;
+            }
+
             return currentWorkflow.Activities.GetActivitiesOfType<IModel>().Count() ==
                    currentWorkflow.Activities.GetActivitiesOfType<IDimrModel>().Count();
         }
 
         protected override void OnExecute()
         {
-            if (CurrentWorkflow == null) return;
+            if (CurrentWorkflow == null)
+            {
+                return;
+            }
+
             if (DoDimrRun())
             {
                 try
@@ -650,23 +725,33 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             {
                 CurrentWorkflow.Execute();
             }
-            
         }
 
         public override ActivityStatus Status
         {
-            get { return base.Status; }
+            get
+            {
+                return base.Status;
+            }
             protected set
             {
                 base.Status = value;
-                if (!DoDimrRun()) return;
+                if (!DoDimrRun())
+                {
+                    return;
+                }
+
                 Activities.GetActivitiesOfType<IDimrModel>().ForEach(dimrModel => dimrModel.Status = Status);
             }
         }
-        
+
         protected override void OnInitialize()
         {
-            if (CurrentWorkflow == null) return;
+            if (CurrentWorkflow == null)
+            {
+                return;
+            }
+
             if (!WorkFlowTypeValidatorFactory.GetWorkFlowTypeValidator(CurrentWorkflow).Valid())
             {
                 LogInvalidWorkflow();
@@ -674,7 +759,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                 return;
             }
 
-            var validationReport = new HydroModelValidator().Validate(this);
+            ValidationReport validationReport = new HydroModelValidator().Validate(this);
             if (validationReport.ErrorCount > 0)
             {
                 LogInvalidActivities();
@@ -688,9 +773,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                 {
                     PrepareWorkDirectory();
 
-                    var dimrModels = CurrentWorkflow.Activities.GetActivitiesOfType<IDimrModel>()
-                                                    .Plus(CurrentWorkflow as IDimrModel).Where(dm => dm != null)
-                                                    .ToList();
+                    List<IDimrModel> dimrModels = CurrentWorkflow.Activities.GetActivitiesOfType<IDimrModel>()
+                                                                 .Plus(CurrentWorkflow as IDimrModel).Where(dm => dm != null)
+                                                                 .ToList();
 
                     dimrModels.ForEach(m =>
                     {
@@ -701,8 +786,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                         m.PrepareForIntegratedModelRun();
                     });
 
-                    var kernelDirectories = GetKernelDirectories(dimrModels);
-                    if (kernelDirectories == null) return;
+                    string kernelDirectories = GetKernelDirectories(dimrModels);
+                    if (kernelDirectories == null)
+                    {
+                        return;
+                    }
 
                     var dHydroConfigXmlExporter = new DHydroConfigXmlExporter();
                     if (!dHydroConfigXmlExporter.Export(this, Path.Combine(ExplicitWorkingDirectory, "dimr.xml")))
@@ -714,8 +802,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                     // use message buffering when running in Main thread 
                     // dimrExe (using process.WaitForExit) blocks main thread, so messages (that are marshaled to MainThread) that 
                     // are send from async output handlers will cause deadlock
-                    var runningInMainThread = Thread.CurrentThread.ManagedThreadId ==
-                                              HydroModelApplicationPlugin.MainThreadId;
+                    bool runningInMainThread = Thread.CurrentThread.ManagedThreadId ==
+                                               HydroModelApplicationPlugin.MainThreadId;
                     dimrApi = DimrApiFactory.CreateNew( /*runningInMainThread*/ /*runRemote:false*/);
 
                     if (dimrApi == null)
@@ -770,10 +858,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
         private void PrepareWorkDirectory()
         {
-            var workDirectory = ExplicitWorkingDirectory;
+            string workDirectory = ExplicitWorkingDirectory;
             if (ExplicitWorkingDirectory == null)
             {
-                var dirPath = Path.GetDirectoryName(path) ?? Environment.CurrentDirectory;
+                string dirPath = Path.GetDirectoryName(path) ?? Environment.CurrentDirectory;
                 workDirectory = Path.Combine(dirPath, Name.Replace(' ', '_') + "_output");
                 ExplicitWorkingDirectory = workDirectory;
             }
@@ -788,12 +876,21 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
         protected override void OnProgressChanged()
         {
-            if (dimrApi != null) dimrApi.ProcessMessages();
+            if (dimrApi != null)
+            {
+                dimrApi.ProcessMessages();
+            }
+
             base.OnProgressChanged();
         }
+
         protected override void OnCancel()
         {
-            if (CurrentWorkflow == null) return;
+            if (CurrentWorkflow == null)
+            {
+                return;
+            }
+
             if (!DoDimrRun())
             {
                 CurrentWorkflow.Cancel();
@@ -818,28 +915,36 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
             if (DoDimrRun())
             {
-                var validPath = ExplicitWorkingDirectory;
-                if (!Directory.Exists(validPath)) return;
-                
-                var dimrModels = currentWorkflow.GetActivitiesOfType<IDimrModel>().ToList();
+                string validPath = ExplicitWorkingDirectory;
+                if (!Directory.Exists(validPath))
+                {
+                    return;
+                }
+
+                List<IDimrModel> dimrModels = currentWorkflow.GetActivitiesOfType<IDimrModel>().ToList();
                 dimrModels.ForEach(m => m.RunsInIntegratedModel = false);
 
-                foreach (var dimrModel in dimrModels)
+                foreach (IDimrModel dimrModel in dimrModels)
                 {
-                    var outputDirectory = Path.Combine(validPath, dimrModel.DimrModelRelativeOutputDirectory);
+                    string outputDirectory = Path.Combine(validPath, dimrModel.DimrModelRelativeOutputDirectory);
                     dimrModel.ConnectOutput(outputDirectory);
                 }
+
                 var CurrentWorkflowIsDimr = CurrentWorkflow as IDimrModel;
                 if (CurrentWorkflowIsDimr != null)
                 {
                     CurrentWorkflowIsDimr.ConnectOutput(validPath);
                     CurrentWorkflowIsDimr.RunsInIntegratedModel = false;
                 }
+
                 DimrRunner.ConnectDimrRunLogFile(this);
             }
             else
             {
-                if (CurrentWorkflow != null) CurrentWorkflow.Cleanup();
+                if (CurrentWorkflow != null)
+                {
+                    CurrentWorkflow.Cleanup();
+                }
             }
         }
 
@@ -852,7 +957,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             }
             else
             {
-                if (CurrentWorkflow != null) CurrentWorkflow.Finish();
+                if (CurrentWorkflow != null)
+                {
+                    CurrentWorkflow.Finish();
+                }
             }
         }
 
@@ -862,28 +970,37 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
         public virtual IHydroRegion Region
         {
-            get { return (IHydroRegion)GetDataItemByTag(HydroRegionTag).Value; }
+            get
+            {
+                return (IHydroRegion) GetDataItemByTag(HydroRegionTag).Value;
+            }
             set
             {
-                var hydroRegion = Region;
+                IHydroRegion hydroRegion = Region;
                 if (hydroRegion != null)
                 {
-                    ((INotifyCollectionChange)hydroRegion).CollectionChanged -= OnHydroRegionCollectionChanged;
+                    ((INotifyCollectionChange) hydroRegion).CollectionChanged -= OnHydroRegionCollectionChanged;
                 }
 
-                var regionDataItem = GetDataItemByTag(HydroRegionTag);
+                IDataItem regionDataItem = GetDataItemByTag(HydroRegionTag);
                 regionDataItem.Value = value;
 
                 if (value != null)
                 {
-                    ((INotifyCollectionChange)value).CollectionChanged += OnHydroRegionCollectionChanged;
+                    ((INotifyCollectionChange) value).CollectionChanged += OnHydroRegionCollectionChanged;
                 }
 
                 AddChildRegionDataItems(regionDataItem);
             }
         }
 
-        public virtual Type SupportedRegionType { get { return typeof(HydroRegion); } }
+        public virtual Type SupportedRegionType
+        {
+            get
+            {
+                return typeof(HydroRegion);
+            }
+        }
 
         [EditAction]
         private void OnHydroRegionCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -898,19 +1015,20 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
             if (e.Action == NotifyCollectionChangedAction.Add)
             {
-                var parentRegionDataItem = GetDataItemByValue(subRegion.Parent);
+                IDataItem parentRegionDataItem = GetDataItemByValue(subRegion.Parent);
                 AddChildRegionDataItems(parentRegionDataItem);
                 return;
             }
 
             if (e.Action == NotifyCollectionChangedAction.Remove)
             {
-                var parentRegionDataItem = GetDataItemByValue(subRegion.Parent);
-                var regionDataItem = parentRegionDataItem.Children.FirstOrDefault(di => Equals(di.Value, subRegion));
+                IDataItem parentRegionDataItem = GetDataItemByValue(subRegion.Parent);
+                IDataItem regionDataItem = parentRegionDataItem.Children.FirstOrDefault(di => Equals(di.Value, subRegion));
                 if (regionDataItem != null)
                 {
                     parentRegionDataItem.Children.Remove(regionDataItem);
                 }
+
                 return;
             }
 
@@ -919,16 +1037,17 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
         private static void AddChildRegionDataItems(IDataItem regionDataItem)
         {
-            var region = (IHydroRegion)regionDataItem.Value;
-            foreach (var subRegion in region.SubRegions.OfType<IHydroRegion>())
+            var region = (IHydroRegion) regionDataItem.Value;
+            foreach (IHydroRegion subRegion in region.SubRegions.OfType<IHydroRegion>())
             {
-                var existingDataItem =
+                IDataItem existingDataItem =
                     regionDataItem.Children.FirstOrDefault(childDataItem => childDataItem.Value == subRegion);
                 if (existingDataItem == null)
                 {
                     existingDataItem = CreateDataItemForSubRegion(subRegion, regionDataItem);
                     regionDataItem.Children.Add(existingDataItem);
                 }
+
                 AddChildRegionDataItems(existingDataItem);
             }
         }
@@ -949,9 +1068,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
         #region HydroModelBuilder
 
-        static HydroModelBuilder builder = new HydroModelBuilder();
+        private static HydroModelBuilder builder = new HydroModelBuilder();
         private IDimrApi dimrApi;
-        
+
         [EditAction]
         public virtual void RefreshDefaultModelWorkflows()
         {
@@ -981,49 +1100,61 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
         #endregion
 
         #region IModelMerge
+
         public virtual ValidationReport ValidateMerge(IModelMerge sourceModel)
         {
             var validationReports = new List<ValidationReport>();
             var validationReport = new ValidationReport("HydroModel Merge", validationReports);
-            if (!CanMerge(sourceModel)) return validationReport;
-            var sourceHydroModel = sourceModel as HydroModel;
-            if (sourceHydroModel == null) return validationReport;
-            foreach (var destinationChildModel in Activities.OfType<IModelMerge>())
+            if (!CanMerge(sourceModel))
             {
-                foreach (var sourceChildModel in sourceHydroModel.Activities.OfType<IModelMerge>())
+                return validationReport;
+            }
+
+            var sourceHydroModel = sourceModel as HydroModel;
+            if (sourceHydroModel == null)
+            {
+                return validationReport;
+            }
+
+            foreach (IModelMerge destinationChildModel in Activities.OfType<IModelMerge>())
+            {
+                foreach (IModelMerge sourceChildModel in sourceHydroModel.Activities.OfType<IModelMerge>())
                 {
                     if (destinationChildModel.CanMerge(sourceChildModel))
                     {
-                        var childModelValReport = destinationChildModel.ValidateMerge(sourceChildModel);
+                        ValidationReport childModelValReport = destinationChildModel.ValidateMerge(sourceChildModel);
                         if (childModelValReport != null)
                         {
                             validationReports.Add(childModelValReport);
                         }
                     }
                 }
-
             }
+
             return new ValidationReport("HydroModel Merge", validationReports);
         }
 
         private void ProcessModelMergeWithDependencies(HydroModel sourceHydroModel, Action<IModelMerge, IModelMerge, Dictionary<IModelMerge, IModelMerge>> mergeAction = null)
         {
-            mergeAction = mergeAction ?? ((d, s, lu) => { });
+            mergeAction = mergeAction ?? ((d, s, lu) => {});
 
-            var modelsToMerge = sourceHydroModel.Activities.OfType<IModelMerge>().ToList();
-            var modelToMergeLookup = modelsToMerge.ToDictionary(m => m, m => Activities.OfType<IModelMerge>().First(a => a.CanMerge(m)));
+            List<IModelMerge> modelsToMerge = sourceHydroModel.Activities.OfType<IModelMerge>().ToList();
+            Dictionary<IModelMerge, IModelMerge> modelToMergeLookup = modelsToMerge.ToDictionary(m => m, m => Activities.OfType<IModelMerge>().First(a => a.CanMerge(m)));
 
             var mergedModels = new List<IModelMerge>();
             var mergeDictionary = new Dictionary<IModelMerge, IModelMerge>();
             while (modelsToMerge.Count != 0)
             {
-                var previousmergedModelsCount = mergedModels.Count;
+                int previousmergedModelsCount = mergedModels.Count;
                 var copyModelsToMerge = new List<IModelMerge>(modelsToMerge);
-                foreach (var modelToMerge in copyModelsToMerge)
+                foreach (IModelMerge modelToMerge in copyModelsToMerge)
                 {
-                    if (modelToMerge.DependendModels.Except(mergedModels).Any()) continue;
+                    if (modelToMerge.DependendModels.Except(mergedModels).Any())
+                    {
+                        continue;
+                    }
 
-                    var desModel = modelToMergeLookup[modelToMerge];
+                    IModelMerge desModel = modelToMergeLookup[modelToMerge];
 
                     mergeAction(desModel, modelToMerge, mergeDictionary);
 
@@ -1034,9 +1165,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
                 if (mergedModels.Count == previousmergedModelsCount)
                 {
-                    var message =
+                    string message =
                         string.Format("While merging or checking dependent submodels of model {0} something went wrong. It appears a dependent subModel couldn't be merged.",
-                        sourceHydroModel.Name);
+                                      sourceHydroModel.Name);
                     throw new Exception(message);
                 }
             }
@@ -1044,13 +1175,22 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
         public virtual bool Merge(IModelMerge sourceModel, IDictionary<IModelMerge, IModelMerge> mergedDependendModelsLookup)
         {
-            if (!CanMerge(sourceModel)) return false;
+            if (!CanMerge(sourceModel))
+            {
+                return false;
+            }
 
             var sourceHydroModel = sourceModel as HydroModel;
-            if (sourceHydroModel == null) return false;
+            if (sourceHydroModel == null)
+            {
+                return false;
+            }
 
             var clone_sourceHydroModel = sourceHydroModel.DeepClone() as HydroModel;
-            if (clone_sourceHydroModel == null) return false;
+            if (clone_sourceHydroModel == null)
+            {
+                return false;
+            }
 
             using (clone_sourceHydroModel)
             {
@@ -1063,13 +1203,16 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
         public virtual bool CanMerge(object sourceModel)
         {
             var sourceHydroModel = sourceModel as HydroModel;
-            if (sourceHydroModel == null) return false;
+            if (sourceHydroModel == null)
+            {
+                return false;
+            }
 
             // Of all source model check if they can be merged with at least 1 model of the destination child models
-            var sourceChildModels = sourceHydroModel.Activities.OfType<IModelMerge>();
+            IEnumerable<IModelMerge> sourceChildModels = sourceHydroModel.Activities.OfType<IModelMerge>();
             if (!sourceChildModels
-                .All(sourceChildModel => Activities.OfType<IModelMerge>() // destinationChildModels
-                    .Any(destinationModel => destinationModel.CanMerge(sourceChildModel))))
+                    .All(sourceChildModel => Activities.OfType<IModelMerge>() // destinationChildModels
+                                                       .Any(destinationModel => destinationModel.CanMerge(sourceChildModel))))
             {
                 return false;
             }
@@ -1085,7 +1228,13 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             }
         }
 
-        public virtual IEnumerable<IModelMerge> DependendModels { get { yield break; } }
+        public virtual IEnumerable<IModelMerge> DependendModels
+        {
+            get
+            {
+                yield break;
+            }
+        }
 
         #endregion
 
@@ -1114,16 +1263,19 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
         public override IEnumerable<object> GetDirectChildren()
         {
-            var objects = base.GetDirectChildren().Concat(Activities);
-            foreach (var o in objects)
+            IEnumerable<object> objects = base.GetDirectChildren().Concat(Activities);
+            foreach (object o in objects)
             {
                 yield return o;
             }
 
             var hydroModelWorkFlow = CurrentWorkflow as IHydroModelWorkFlow;
-            if (hydroModelWorkFlow == null || hydroModelWorkFlow.Data == null) yield break;
+            if (hydroModelWorkFlow == null || hydroModelWorkFlow.Data == null)
+            {
+                yield break;
+            }
 
-            foreach (var dataItem in hydroModelWorkFlow.Data.OutputDataItems)
+            foreach (IDataItem dataItem in hydroModelWorkFlow.Data.OutputDataItems)
             {
                 yield return dataItem;
             }
@@ -1131,9 +1283,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
         public override IProjectItem DeepClone()
         {
-            var clonedHydroModel = (HydroModel)base.DeepClone();
+            var clonedHydroModel = (HydroModel) base.DeepClone();
 
-            clonedHydroModel.Activities = new EventedList<IActivity>(Activities.Select(a => (IActivity)a.DeepClone()));
+            clonedHydroModel.Activities = new EventedList<IActivity>(Activities.Select(a => (IActivity) a.DeepClone()));
 
             clonedHydroModel.RelinkInternalDataItemLinks(this);
             clonedHydroModel.RelinkExternalDataItemLinks(this);
@@ -1146,6 +1298,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             {
                 clonedHydroModel.CurrentWorkflow = clonedHydroModel.Workflows[Workflows.IndexOf(CurrentWorkflow)];
             }
+
             clonedHydroModel.creating = false;
 
             return clonedHydroModel;
@@ -1153,34 +1306,34 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
         private void RewireHydroRegionValueConverters(HydroModel hydroModel, HydroModel clonedHydroModel)
         {
-            var sourceItems = hydroModel.GetAllItemsRecursive().ToList();
-            var clonedItems = clonedHydroModel.GetAllItemsRecursive().ToList();
+            List<object> sourceItems = hydroModel.GetAllItemsRecursive().ToList();
+            List<object> clonedItems = clonedHydroModel.GetAllItemsRecursive().ToList();
 
-            var sourceDataItems = sourceItems.OfType<IDataItem>().Where(di => di.ValueConverter is IHydroRegionValueConverter).ToList();
-            var clonedDataItems = clonedItems.OfType<IDataItem>().Where(di => di.ValueConverter is IHydroRegionValueConverter).ToList();
+            List<IDataItem> sourceDataItems = sourceItems.OfType<IDataItem>().Where(di => di.ValueConverter is IHydroRegionValueConverter).ToList();
+            List<IDataItem> clonedDataItems = clonedItems.OfType<IDataItem>().Where(di => di.ValueConverter is IHydroRegionValueConverter).ToList();
 
             if (sourceDataItems.Count != clonedDataItems.Count)
             {
                 throw new InvalidOperationException("DataItems with HydroRegion value converters count does not match after clone");
             }
 
-            var sourceRegions = sourceItems.OfType<IHydroRegion>().ToList();
-            var clonedRegions = clonedItems.OfType<IHydroRegion>().ToList();
+            List<IHydroRegion> sourceRegions = sourceItems.OfType<IHydroRegion>().ToList();
+            List<IHydroRegion> clonedRegions = clonedItems.OfType<IHydroRegion>().ToList();
 
             if (sourceRegions.Count != clonedRegions.Count)
             {
                 throw new InvalidOperationException("Number of regions does not match after clone");
             }
 
-            for (int i = 0; i < sourceDataItems.Count; i++)
+            for (var i = 0; i < sourceDataItems.Count; i++)
             {
-                var source = sourceDataItems[i];
-                var clone = clonedDataItems[i];
+                IDataItem source = sourceDataItems[i];
+                IDataItem clone = clonedDataItems[i];
 
-                var sourceRegion = ((IHydroRegionValueConverter)source.ValueConverter).HydroRegion;
-                var indexInSource = sourceRegions.IndexOf(sourceRegion);
+                IHydroRegion sourceRegion = ((IHydroRegionValueConverter) source.ValueConverter).HydroRegion;
+                int indexInSource = sourceRegions.IndexOf(sourceRegion);
 
-                var clonedConverter = ((IHydroRegionValueConverter)clone.ValueConverter);
+                var clonedConverter = (IHydroRegionValueConverter) clone.ValueConverter;
                 clonedConverter.HydroRegion = clonedRegions[indexInSource];
             }
         }
@@ -1189,14 +1342,13 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
         {
             // allow linking of region to any of the sub-models
             var sourceRegion = source.Value as IHydroRegion;
-            if (sourceRegion != null && Region.AllRegions.Contains(sourceRegion) && target.Owner is IActivity && Activities.Contains((IActivity)target.Owner))
+            if (sourceRegion != null && Region.AllRegions.Contains(sourceRegion) && target.Owner is IActivity && Activities.Contains((IActivity) target.Owner))
             {
                 return true;
             }
 
             return base.IsLinkAllowed(source, target);
         }
-
 
         #endregion
     }

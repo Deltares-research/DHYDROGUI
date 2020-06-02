@@ -33,11 +33,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Importers
 
         public bool OpenViewAfterImport => true;
 
-        public bool CanImportOn(object targetObject)
-        {
-            return targetObject is ICompositeActivity || targetObject is WaveModel;
-        }
-
         public bool CanImportOnRootLevel => true;
 
         public string FileFilter => "Master Definition WAVE File|*.mdw";
@@ -47,6 +42,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Importers
         public bool ShouldCancel { get; set; }
 
         public ImportProgressChangedDelegate ProgressChanged { get; set; }
+
+        public bool CanImportOn(object targetObject)
+        {
+            return targetObject is ICompositeActivity || targetObject is WaveModel;
+        }
 
         public object ImportItem(string path, object target = null)
         {
@@ -75,6 +75,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Importers
                         importedWaveModel.MoveModelIntoIntegratedModel(null, compositeActivity);
                         return compositeActivity;
                     }
+
                     return ShouldCancel ? null : importedWaveModel;
                 }
 
@@ -85,6 +86,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.IO.Importers
                     importedWaveModel.MoveModelIntoIntegratedModel(null, hydroModel);
                     return hydroModel;
                 }
+
                 return ShouldCancel ? null : importedWaveModel;
             }
             catch (Exception e)

@@ -8,24 +8,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Commands
     /// </summary>
     public class ShowCrossSectionHistoryCommand : Command
     {
-        protected override void OnExecute(params object[] arguments)
-        {
-            var activeStatusTool = CrossSectionHistoryCapableView.HistoryToolEnabled;
-            CrossSectionHistoryCapableView.HistoryToolEnabled = !activeStatusTool;
-        }
-
         public override bool Enabled
-        {
-            get { return CrossSectionHistoryCapableView != null; }
-        }
-
-        private static ICrossSectionHistoryCapableView CrossSectionHistoryCapableView
         {
             get
             {
-                return NetworkEditorGuiPlugin.Instance.Gui != null
-                    ? NetworkEditorGuiPlugin.Instance.Gui.DocumentViews.ActiveView as ICrossSectionHistoryCapableView 
-                    : null;
+                return CrossSectionHistoryCapableView != null;
             }
         }
 
@@ -34,6 +21,22 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Commands
             get
             {
                 return Enabled && CrossSectionHistoryCapableView.HistoryToolEnabled;
+            }
+        }
+
+        protected override void OnExecute(params object[] arguments)
+        {
+            bool activeStatusTool = CrossSectionHistoryCapableView.HistoryToolEnabled;
+            CrossSectionHistoryCapableView.HistoryToolEnabled = !activeStatusTool;
+        }
+
+        private static ICrossSectionHistoryCapableView CrossSectionHistoryCapableView
+        {
+            get
+            {
+                return NetworkEditorGuiPlugin.Instance.Gui != null
+                           ? NetworkEditorGuiPlugin.Instance.Gui.DocumentViews.ActiveView as ICrossSectionHistoryCapableView
+                           : null;
             }
         }
     }

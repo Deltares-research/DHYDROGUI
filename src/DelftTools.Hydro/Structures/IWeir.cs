@@ -47,9 +47,9 @@ namespace DelftTools.Hydro.Structures
         double CrestWidth { get; set; }
 
         /// <summary>
-        /// When true, use <see cref="CrestLevelTimeSeries" /> otherwise use <see cref="CrestLevel" />.
+        /// When true, use <see cref="CrestLevelTimeSeries"/> otherwise use <see cref="CrestLevel"/>.
         /// </summary>
-        /// <exception cref="InvalidOperationException"> When setting to true while <see cref="CanBeTimedependent" /> is false. </exception>
+        /// <exception cref="InvalidOperationException"> When setting to true while <see cref="CanBeTimedependent"/> is false. </exception>
         bool UseCrestLevelTimeSeries { get; set; }
 
         /// <summary>
@@ -58,7 +58,7 @@ namespace DelftTools.Hydro.Structures
         double CrestLevel { get; set; }
 
         /// <summary>
-        /// Time varying crest level. Will be null when <see cref="CanBeTimedependent" /> is false.
+        /// Time varying crest level. Will be null when <see cref="CanBeTimedependent"/> is false.
         /// </summary>
         TimeSeries CrestLevelTimeSeries { get; }
 

@@ -6,15 +6,15 @@ using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export
 {
     /// <summary>
-    /// Serializer for an <see cref="Input" />.
+    /// Serializer for an <see cref="Input"/>.
     /// </summary>
-    /// <seealso cref="InputSerializerBase" />
-    public class InputSerializer : InputSerializerBase 
+    /// <seealso cref="InputSerializerBase"/>
+    public class InputSerializer : InputSerializerBase
     {
         private readonly Input input;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="InputSerializer" /> class.
+        /// Initializes a new instance of the <see cref="InputSerializer"/> class.
         /// </summary>
         /// <param name="input"> The input to serialize. </param>
         public InputSerializer(Input input) : base(input)
@@ -32,10 +32,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export
             return XmlTag + input.LocationName.Replace("##", "~~") + "/" + input.ParameterName;
         }
 
-        protected override string XmlTag { get; }
-
         /// <summary>
-        /// Throws a <exception cref="NotSupportedException" /> when called.
+        /// Throws a <exception cref="NotSupportedException"/> when called.
         /// </summary>
         /// <param name="xNamespace"> This parameter is not used. </param>
         /// <param name="prefix"> This parameter is not used. </param>
@@ -46,5 +44,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export
         {
             throw new NotSupportedException();
         }
+
+        protected override string XmlTag { get; }
     }
 }

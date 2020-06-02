@@ -3,13 +3,13 @@
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export
 {
     /// <summary>
-    /// Serializer for a <see cref="FactorRule" />.
+    /// Serializer for a <see cref="FactorRule"/>.
     /// </summary>
-    /// <seealso cref="HydraulicRuleSerializer" />
+    /// <seealso cref="HydraulicRuleSerializer"/>
     public class FactorRuleSerializer : HydraulicRuleSerializer
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="FactorRuleSerializer" /> class.
+        /// Initializes a new instance of the <see cref="FactorRuleSerializer"/> class.
         /// </summary>
         /// <param name="factorRule"> The factor rule to serialize. </param>
         public FactorRuleSerializer(FactorRule factorRule) : base(factorRule) {}

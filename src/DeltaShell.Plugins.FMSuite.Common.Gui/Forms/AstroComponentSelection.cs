@@ -11,37 +11,12 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Forms
         private IDictionary<string, double> astroComponents;
         private bool periodRepresentation;
 
-        // Astronomical tidal modes, name mapped to frequency (in deg/h)
-        public IDictionary<string, double> AstroComponents
-        {
-            get { return astroComponents; }
-            set
-            {
-                ClearListView();
-                astroComponents = value;
-                FillListView();
-            }
-        }
-
-        private bool PeriodRepresentation
-        {
-            get { return periodRepresentation; }
-            set
-            {
-                if (value != periodRepresentation)
-                {
-                    periodRepresentation = value;
-                    SwitchToPeriodRepresentation();
-                }
-            }
-        }
-
         public AstroComponentSelection()
         {
             InitializeComponent();
-            const double factor = 360/(2*Math.PI);
+            const double factor = 360 / (2 * Math.PI);
             AstroComponents = HarmonicComponent.DefaultAstroComponentsRadPerHour.ToDictionary(kvp => kvp.Key,
-                                                                                              kvp => factor*kvp.Value);
+                                                                                              kvp => factor * kvp.Value);
             dataGridView1.KeyDown += dataGridView1_KeyDown;
             dataGridView1.CellMouseClick += dataGridView1_CellMouseClick;
         }
@@ -54,11 +29,26 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Forms
             dataGridView1.CellMouseClick += dataGridView1_CellMouseClick;
         }
 
-        public IEnumerable<KeyValuePair<string,double>> SelectedComponents
+        // Astronomical tidal modes, name mapped to frequency (in deg/h)
+        public IDictionary<string, double> AstroComponents
         {
             get
             {
-                foreach (var row in dataGridView1.Rows.OfType<DataGridViewRow>())
+                return astroComponents;
+            }
+            set
+            {
+                ClearListView();
+                astroComponents = value;
+                FillListView();
+            }
+        }
+
+        public IEnumerable<KeyValuePair<string, double>> SelectedComponents
+        {
+            get
+            {
+                foreach (DataGridViewRow row in dataGridView1.Rows.OfType<DataGridViewRow>())
                 {
                     if ((bool) row.Cells[0].Value)
                     {
@@ -72,9 +62,9 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Forms
         public void SelectComponents(IEnumerable<string> selection)
         {
             dataGridView1.ClearSelection();
-            foreach (var component in selection)
+            foreach (string component in selection)
             {
-                var row = dataGridView1.Rows.OfType<DataGridViewRow>().FirstOrDefault(r => Equals(r.Cells[1].Value, component));
+                DataGridViewRow row = dataGridView1.Rows.OfType<DataGridViewRow>().FirstOrDefault(r => Equals(r.Cells[1].Value, component));
                 if (row != null)
                 {
                     row.Cells[0].Value = true;
@@ -83,21 +73,37 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Forms
             }
         }
 
-        void dataGridView1_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+        private bool PeriodRepresentation
         {
-            if (dataGridView1.CurrentCell.ColumnIndex == 0)
+            get
             {
-                dataGridView1.CurrentCell.Value = !(bool)dataGridView1.CurrentCell.Value;
+                return periodRepresentation;
+            }
+            set
+            {
+                if (value != periodRepresentation)
+                {
+                    periodRepresentation = value;
+                    SwitchToPeriodRepresentation();
+                }
             }
         }
 
-        void dataGridView1_KeyDown(object sender, KeyEventArgs e)
+        private void dataGridView1_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            if (dataGridView1.CurrentCell.ColumnIndex == 0)
+            {
+                dataGridView1.CurrentCell.Value = !(bool) dataGridView1.CurrentCell.Value;
+            }
+        }
+
+        private void dataGridView1_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Space)
             {
-                foreach (var selectedRow in dataGridView1.SelectedRows.OfType<DataGridViewRow>())
+                foreach (DataGridViewRow selectedRow in dataGridView1.SelectedRows.OfType<DataGridViewRow>())
                 {
-                    selectedRow.Cells[0].Value = !(bool)selectedRow.Cells[0].Value;
+                    selectedRow.Cells[0].Value = !(bool) selectedRow.Cells[0].Value;
                 }
             }
             else if (e.KeyCode == Keys.Escape)
@@ -108,12 +114,13 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Forms
             {
                 buttonOk.PerformClick();
             }
-            else if(e.KeyCode == Keys.Tab)
+            else if (e.KeyCode == Keys.Tab)
             {
                 if (dataGridView1.EditingControl != null)
                 {
                     dataGridView1.CurrentCell.DetachEditingControl();
                 }
+
                 SelectNextControl(dataGridView1, true, true, true, true);
             }
         }
@@ -130,13 +137,14 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Forms
             dataGridView1.SuspendLayout();
             Column3.HeaderText = PeriodRepresentation ? "Period [h]" : "Frequency [deg/h]";
 
-            foreach (var astroComponent in AstroComponents)
+            foreach (KeyValuePair<string, double> astroComponent in AstroComponents)
             {
                 dataGridView1.Rows.Add(new object[]
-                    {
-                        false, astroComponent.Key,
-                        FrequencyToString(astroComponent.Value)
-                    });
+                {
+                    false,
+                    astroComponent.Key,
+                    FrequencyToString(astroComponent.Value)
+                });
             }
 
             dataGridView1.ResumeLayout();
@@ -145,17 +153,17 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Forms
         private void SwitchToPeriodRepresentation()
         {
             Column3.HeaderText = PeriodRepresentation ? "Period [h]" : "Frequency [deg/h]";
-            foreach (var row in dataGridView1.Rows)
+            foreach (object row in dataGridView1.Rows)
             {
                 var astroComponent = ((DataGridViewRow) row).Cells[1].Value as string;
-                ((DataGridViewRow)row).Cells[2].Value = FrequencyToString(AstroComponents[astroComponent]);
+                ((DataGridViewRow) row).Cells[2].Value = FrequencyToString(AstroComponents[astroComponent]);
             }
         }
 
         private string FrequencyToString(double frequency)
         {
             return PeriodRepresentation
-                       ? (360/frequency).ToString("0.00")
+                       ? (360 / frequency).ToString("0.00")
                        : frequency.ToString("0.00");
         }
 

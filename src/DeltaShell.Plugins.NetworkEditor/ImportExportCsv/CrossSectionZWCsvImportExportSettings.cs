@@ -35,94 +35,40 @@ namespace DeltaShell.Plugins.NetworkEditor.ImportExportCsv
 
         public static readonly IDictionary<CsvRequiredField, CsvColumnInfo> ColumnsMapping =
             new Dictionary<CsvRequiredField, CsvColumnInfo>
+            {
+                {new CsvRequiredField(IdHeader, typeof(string)), new CsvColumnInfo(0, null)},
+                {new CsvRequiredField(NameHeader, typeof(string)), new CsvColumnInfo(1, null)},
+                {new CsvRequiredField(RecordTypeHeader, typeof(string)), new CsvColumnInfo(2, null)},
+                {new CsvRequiredField(LevelHeader, typeof(double)), new CsvColumnInfo(3, new NumberFormatInfo())},
+                {new CsvRequiredField(TotalWidthHeader, typeof(double)), new CsvColumnInfo(4, new NumberFormatInfo())},
+                {new CsvRequiredField(FlowWidthHeader, typeof(double)), new CsvColumnInfo(5, new NumberFormatInfo())},
+                {new CsvRequiredField(ProfileTypeHeader, typeof(string)), new CsvColumnInfo(6, null)},
+                {new CsvRequiredField(BranchHeader, typeof(string)), new CsvColumnInfo(7, null)},
+                {new CsvRequiredField(ChainageHeader, typeof(double)), new CsvColumnInfo(8, new NumberFormatInfo())},
+                {new CsvRequiredField(MainWidthHeader, typeof(double)), new CsvColumnInfo(9, new NumberFormatInfo())},
+                {new CsvRequiredField(FloodPlain1Header, typeof(double)), new CsvColumnInfo(10, new NumberFormatInfo())},
+                {new CsvRequiredField(FloodPlain2Header, typeof(double)), new CsvColumnInfo(11, new NumberFormatInfo())},
+                {new CsvRequiredField(SedimentWidthHeader, typeof(double)), new CsvColumnInfo(12, new NumberFormatInfo())},
                 {
-                    {
-                        new CsvRequiredField(IdHeader, typeof (string)), 
-                        new CsvColumnInfo(0, null)
-                    },
-                    {
-                        new CsvRequiredField(NameHeader, typeof (string)), 
-                        new CsvColumnInfo(1, null)
-                    },
-                    {
-                        new CsvRequiredField(RecordTypeHeader, typeof (string)), 
-                        new CsvColumnInfo(2, null)
-                    },
-                    {
-                        new CsvRequiredField(LevelHeader, typeof (double)), 
-                        new CsvColumnInfo(3, new NumberFormatInfo())
-                    },
-                    {
-                        new CsvRequiredField(TotalWidthHeader, typeof (double)), 
-                        new CsvColumnInfo(4, new NumberFormatInfo())
-                    },
-                    {
-                        new CsvRequiredField(FlowWidthHeader, typeof (double)), 
-                        new CsvColumnInfo(5, new NumberFormatInfo())
-                    },
-                    {
-                        new CsvRequiredField(ProfileTypeHeader, typeof (string)), 
-                        new CsvColumnInfo(6, null)
-                    },
-                    {
-                        new CsvRequiredField(BranchHeader, typeof (string)), 
-                        new CsvColumnInfo(7, null)
-                    },
-                    {
-                        new CsvRequiredField(ChainageHeader, typeof (double)), 
-                        new CsvColumnInfo(8, new NumberFormatInfo())
-                    },
-                    {
-                        new CsvRequiredField(MainWidthHeader, typeof (double)),
-                        new CsvColumnInfo(9, new NumberFormatInfo())
-                    },
-                    {
-                        new CsvRequiredField(FloodPlain1Header, typeof (double)),
-                        new CsvColumnInfo(10, new NumberFormatInfo())
-                    },
-                    {
-                        new CsvRequiredField(FloodPlain2Header, typeof (double)),
-                        new CsvColumnInfo(11, new NumberFormatInfo())
-                    },
-                    {
-                        new CsvRequiredField(SedimentWidthHeader, typeof (double)),
-                        new CsvColumnInfo(12, new NumberFormatInfo())
-                    },
-                    {
-                        new CsvRequiredField(UseSummerdikeHeader, typeof (int)), //parses to bool
-                        new CsvColumnInfo(13, new NumberFormatInfo())
-                    },
-                    {
-                        new CsvRequiredField(CrestLevelSummerdikeHeader, typeof (double)),
-                        new CsvColumnInfo(14, new NumberFormatInfo())
-                    },
-                    {
-                        new CsvRequiredField(FloodPlainLevelSummerdikeHeader, typeof (double)),
-                        new CsvColumnInfo(15, new NumberFormatInfo())
-                    },
-                    {
-                        new CsvRequiredField(FlowAreaSummerdikeHeader, typeof (double)),
-                        new CsvColumnInfo(16, new NumberFormatInfo())
-                    },
-                    {
-                        new CsvRequiredField(TotalAreaSummerdikeHeader, typeof (double)),
-                        new CsvColumnInfo(17, new NumberFormatInfo())
-                    },
-                    {
-                        new CsvRequiredField(UseGroundlayerHeader, typeof (int)), //parses to bool
-                        new CsvColumnInfo(18, new NumberFormatInfo())
-                    },
-                    {
-                        new CsvRequiredField(GroundLayerDepthHeader, typeof (double)),
-                        new CsvColumnInfo(19, new NumberFormatInfo())
-                    }
-                };
+                    new CsvRequiredField(UseSummerdikeHeader, typeof(int)), //parses to bool
+                    new CsvColumnInfo(13, new NumberFormatInfo())
+                },
+                {new CsvRequiredField(CrestLevelSummerdikeHeader, typeof(double)), new CsvColumnInfo(14, new NumberFormatInfo())},
+                {new CsvRequiredField(FloodPlainLevelSummerdikeHeader, typeof(double)), new CsvColumnInfo(15, new NumberFormatInfo())},
+                {new CsvRequiredField(FlowAreaSummerdikeHeader, typeof(double)), new CsvColumnInfo(16, new NumberFormatInfo())},
+                {new CsvRequiredField(TotalAreaSummerdikeHeader, typeof(double)), new CsvColumnInfo(17, new NumberFormatInfo())},
+                {
+                    new CsvRequiredField(UseGroundlayerHeader, typeof(int)), //parses to bool
+                    new CsvColumnInfo(18, new NumberFormatInfo())
+                },
+                {new CsvRequiredField(GroundLayerDepthHeader, typeof(double)), new CsvColumnInfo(19, new NumberFormatInfo())}
+            };
 
         public static readonly Dictionary<bool, string> GeoMetaMapping = new Dictionary<bool, string>
-            {
-                {true, "meta"},
-                {false, "geom"}
-            }; 
+        {
+            {true, "meta"},
+            {false, "geom"}
+        };
 
         public static bool IsMeta(DataRow row)
         {
@@ -147,6 +93,7 @@ namespace DeltaShell.Plugins.NetworkEditor.ImportExportCsv
             {
                 return (int) o != 0;
             }
+
             return false;
         }
     }

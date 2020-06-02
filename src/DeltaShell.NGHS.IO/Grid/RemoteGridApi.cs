@@ -7,12 +7,26 @@ namespace DeltaShell.NGHS.IO.Grid
 {
     public abstract class RemoteGridApi : IGridApi
     {
-        protected bool disposed;
-        protected IGridApi api;
-
         static RemoteGridApi()
         {
             RemotingTypeConverters.RegisterTypeConverter(new UgridGlobalMetaDataToProtoConverter());
+        }
+
+        protected bool disposed;
+        protected IGridApi api;
+
+        public bool Initialized
+        {
+            get
+            {
+                return api != null && api.Initialized;
+            }
+        }
+
+        public virtual void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
 
         public int GetConvention(string file, out GridApiDataSet.DataSetConventions convention)
@@ -29,18 +43,13 @@ namespace DeltaShell.NGHS.IO.Grid
         public int CreateFile(string filePath, UGridGlobalMetaData uGridGlobalMetaData, GridApiDataSet.NetcdfOpenMode mode = GridApiDataSet.NetcdfOpenMode.nf90_write)
         {
             return api != null
-                ? api.CreateFile(filePath, uGridGlobalMetaData, mode)
-                : GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
+                       ? api.CreateFile(filePath, uGridGlobalMetaData, mode)
+                       : GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
         }
 
         public int Open(string filePath, GridApiDataSet.NetcdfOpenMode mode)
         {
             return api != null ? api.Open(filePath, mode) : GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
-        }
-
-        public bool Initialized
-        {
-            get{ return api != null && api.Initialized;}
         }
 
         public int Close()
@@ -69,7 +78,6 @@ namespace DeltaShell.NGHS.IO.Grid
         {
             return api != null ? api.GetVersion() : double.NaN;
         }
-        
 
         public int Initialize()
         {
@@ -92,29 +100,16 @@ namespace DeltaShell.NGHS.IO.Grid
         {
             numberOfMesh = 0;
             return api != null
-                ? api.GetNumberOfMeshByType(meshType, out numberOfMesh)
-                : GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
+                       ? api.GetNumberOfMeshByType(meshType, out numberOfMesh)
+                       : GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
         }
 
         public int GetMeshIdsByMeshType(UGridMeshType meshType, int numberOfMeshes, out int[] meshIds)
         {
             meshIds = new int[0];
             return api != null
-                ? api.GetMeshIdsByMeshType(meshType, numberOfMeshes, out meshIds)
-                : GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
-        }
-
-
-        ~RemoteGridApi()
-        {
-            // in case someone forgets to dispose..
-            Dispose(false);
-        }
-
-        public virtual void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
+                       ? api.GetMeshIdsByMeshType(meshType, numberOfMeshes, out meshIds)
+                       : GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
         }
 
         protected virtual void Dispose(bool disposing)
@@ -129,11 +124,18 @@ namespace DeltaShell.NGHS.IO.Grid
                         RemoteInstanceContainer.RemoveInstance(api);
                         Thread.Sleep(100); // wait for process to truly exit
                     }
+
                     api = null;
                 }
+
                 disposed = true;
             }
         }
-       
+
+        ~RemoteGridApi()
+        {
+            // in case someone forgets to dispose..
+            Dispose(false);
+        }
     }
 }

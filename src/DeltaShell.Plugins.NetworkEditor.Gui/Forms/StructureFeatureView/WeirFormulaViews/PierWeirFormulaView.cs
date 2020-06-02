@@ -17,12 +17,36 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView.WeirFo
         }
 
         /// <summary>
-        /// Gets or sets data shown by this view. Usually it is any object in the system which can be shown by some IView derived class.
+        /// Gets or sets data shown by this view. Usually it is any object in the system which can be shown by some IView derived
+        /// class.
+        /// </summary>
+        public PierWeirFormula Data
+        {
+            get
+            {
+                return data;
+            }
+            set
+            {
+                data = value;
+                bindingSourcePierWeirFormula.DataSource = data;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets data shown by this view. Usually it is any object in the system which can be shown by some IView derived
+        /// class.
         /// </summary>
         object IView.Data
         {
-            get { return Data; }
-            set { Data = (PierWeirFormula) value; }
+            get
+            {
+                return Data;
+            }
+            set
+            {
+                Data = (PierWeirFormula) value;
+            }
         }
 
         /// <summary>
@@ -30,24 +54,18 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView.WeirFo
         /// </summary>
         public Image Image
         {
-            get { return image; }
-            set { image = value; }
-        }
-
-        public void EnsureVisible(object item) { }
-        public ViewInfo ViewInfo { get; set; }
-
-        /// <summary>
-        /// Gets or sets data shown by this view. Usually it is any object in the system which can be shown by some IView derived class.
-        /// </summary>
-        public PierWeirFormula Data
-        {
-            get { return data; }
+            get
+            {
+                return image;
+            }
             set
             {
-                data = value;
-                bindingSourcePierWeirFormula.DataSource = data;
+                image = value;
             }
         }
+
+        public ViewInfo ViewInfo { get; set; }
+
+        public void EnsureVisible(object item) {}
     }
 }

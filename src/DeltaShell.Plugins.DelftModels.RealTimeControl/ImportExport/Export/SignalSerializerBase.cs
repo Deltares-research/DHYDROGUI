@@ -7,7 +7,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export
     /// <summary>
     /// Serializer for a <see cref="SignalBase"/>.
     /// </summary>
-    /// <seealso cref="RtcSerializerBase" />
+    /// <seealso cref="RtcSerializerBase"/>
     public abstract class SignalSerializerBase : RtcSerializerBase
     {
         private readonly SignalBase signalBase;
@@ -22,12 +22,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export
         }
 
         /// <summary>
-        /// Converts the signal to a collection of <see cref="XElement" />
+        /// Converts the signal to a collection of <see cref="XElement"/>
         /// to be written to the tools config xml file.
         /// </summary>
         /// <param name="xNamespace"> The xml namespace. </param>
         /// <param name="prefix"> The prefix. </param>
-        /// <returns> The collection of <see cref="XElement" />. </returns>
+        /// <returns> The collection of <see cref="XElement"/>. </returns>
         public override IEnumerable<XElement> ToXml(XNamespace xNamespace, string prefix)
         {
             yield return signalBase.StoreAsRule

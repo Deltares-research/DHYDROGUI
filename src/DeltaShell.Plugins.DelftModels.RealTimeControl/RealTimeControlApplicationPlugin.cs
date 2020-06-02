@@ -23,17 +23,26 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
         public override string Name
         {
-            get { return "Real-Time Control"; }
+            get
+            {
+                return "Real-Time Control";
+            }
         }
 
         public override string DisplayName
         {
-            get { return "D-Real Time Control Plugin"; }
+            get
+            {
+                return "D-Real Time Control Plugin";
+            }
         }
 
         public override string Description
         {
-            get { return Properties.Resources.RealTimeControlApplicationPlugin_Description; }
+            get
+            {
+                return Properties.Resources.RealTimeControlApplicationPlugin_Description;
+            }
         }
 
         public override string Version
@@ -46,7 +55,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
         public override string FileFormatVersion
         {
-            get { return "3.6.0.0"; }
+            get
+            {
+                return "3.6.0.0";
+            }
         }
 
         public override IApplication Application
@@ -71,6 +83,46 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
                     Application.HybridProjectRepository.ProjectOpening += HybridProjectRepositoryOnProjectOpening;
                 }
             }
+        }
+
+        public override IEnumerable<ModelInfo> GetModelInfos()
+        {
+            yield return new ModelInfo
+            {
+                Name = "Real-Time Control Model",
+                Category = "1D / 2D / 3D Standalone Models",
+                GetParentProjectItem = owner =>
+                {
+                    Folder rootFolder = Application?.Project?.RootFolder;
+                    return ApplicationPluginHelper.FindParentProjectItemInsideProject(rootFolder, owner) ?? rootFolder;
+                },
+                AdditionalOwnerCheck = owner =>
+                    owner is ICompositeActivity // Only allow composite activities as target
+                    && !(owner is ParallelActivity)
+                    && !(owner is SequentialActivity)
+                    && !((ICompositeActivity) owner).Activities.OfType<RealTimeControlModel>().Any(), // Don't allow multiple realtime control models in one composite activity
+                CreateModel = owner => new RealTimeControlModel("Real-Time Control")
+            };
+        }
+
+        public override IEnumerable<Assembly> GetPersistentAssemblies()
+        {
+            yield return GetType().Assembly;
+        }
+
+        public override IEnumerable<IFileExporter> GetFileExporters()
+        {
+            yield return new RealTimeControlModelExporter();
+        }
+
+        public override IEnumerable<IFileImporter> GetFileImporters()
+        {
+            yield return new RealTimeControlModelImporter();
+        }
+
+        public IEnumerable<IDataAccessListener> CreateDataAccessListeners()
+        {
+            yield return new RtcDataAccessListener();
         }
 
         private void HybridProjectRepositoryOnProjectOpening(object sender, CancelEventArgs e)
@@ -102,8 +154,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
             if (pluginVersions.TryGetValue(Name, out Version currentVersion))
             {
-                var needsUpgradingVersion = new Version(3,5,0,0);
-                var maximumVersionThatNeedsUpgrading = new Version(3,6,0,0);
+                var needsUpgradingVersion = new Version(3, 5, 0, 0);
+                var maximumVersionThatNeedsUpgrading = new Version(3, 6, 0, 0);
 
                 if (currentVersion <= needsUpgradingVersion && currentVersion < maximumVersionThatNeedsUpgrading)
                 {
@@ -115,10 +167,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         }
 
         /// <summary>
-        /// Because of the current database table structure of RTC it is not possible to use the NHibernate LegacyLoader or DataAccessListener to update
+        /// Because of the current database table structure of RTC it is not possible to use the NHibernate LegacyLoader or
+        /// DataAccessListener to update
         /// the objects / table to the new format.
-        /// Only solution is to use SQL statements to create tables, moves objects from one table to the other. Because the objects have Foreign Keys
-        /// we need use pragma statements to stop the database from trying to keep the database consistent by monitoring these FK relations.
+        /// Only solution is to use SQL statements to create tables, moves objects from one table to the other. Because the objects
+        /// have Foreign Keys
+        /// we need use pragma statements to stop the database from trying to keep the database consistent by monitoring these FK
+        /// relations.
         /// </summary>
         /// <param name="path">Rooted path to the dsproj file.</param>
         private static void UpdateDataBase(string path)
@@ -129,7 +184,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
                 try
                 {
-                    using (var sqlCommand = dbConnection.CreateCommand())
+                    using (SQLiteCommand sqlCommand = dbConnection.CreateCommand())
                     {
                         /*
                          * Disable enforcing correct foreign key relations
@@ -154,48 +209,8 @@ PRAGMA foreign_keys = on;
                     throw new SQLiteException("Loaded a project that has been migrated, but not saved. RTC database schema is in corrupted state.", exception);
                 }
             }
-            
+
             log.Info("RTC database schema updated to support mathematical expressions.");
-        }
-
-        public override IEnumerable<ModelInfo> GetModelInfos()
-        {
-            yield return new ModelInfo
-                {
-                    Name = "Real-Time Control Model",
-                    Category = "1D / 2D / 3D Standalone Models",
-                    GetParentProjectItem = owner =>
-                    {
-                        Folder rootFolder = Application?.Project?.RootFolder;
-                        return ApplicationPluginHelper.FindParentProjectItemInsideProject(rootFolder, owner) ?? rootFolder;
-                    },
-                    AdditionalOwnerCheck = owner =>
-                        (owner is ICompositeActivity) // Only allow composite activities as target
-                        && (!(owner is ParallelActivity))
-                        && (!(owner is SequentialActivity))
-                        && (!((ICompositeActivity)owner).Activities.OfType<RealTimeControlModel>().Any()), // Don't allow multiple realtime control models in one composite activity
-                    CreateModel = owner => new RealTimeControlModel("Real-Time Control")
-                };
-        }
-
-        public override IEnumerable<Assembly> GetPersistentAssemblies()
-        {
-            yield return GetType().Assembly;
-        }
-
-        public IEnumerable<IDataAccessListener> CreateDataAccessListeners()
-        {
-            yield return new RtcDataAccessListener();
-        }
-
-        public override IEnumerable<IFileExporter> GetFileExporters()
-        {
-            yield return new RealTimeControlModelExporter();
-        }
-
-        public override IEnumerable<IFileImporter> GetFileImporters()
-        {
-            yield return new RealTimeControlModelImporter();
         }
 
         private void ApplicationProjectOpened(Project project)
@@ -204,11 +219,14 @@ PRAGMA foreign_keys = on;
                 Note: it was not possible to do this in RtcDataAccessListener.OnPostLoad() 
                 DataItems for Inputs and Outputs are not re-linked until the whole HydroModel has been imported
              */
-             
-            var rtcModelsWithControlGroups = Application.GetAllModelsInProject()
-                .OfType<RealTimeControlModel>().Where(m => m.ControlGroups.Any()).ToList();
 
-            if (!rtcModelsWithControlGroups.Any()) return;
+            List<RealTimeControlModel> rtcModelsWithControlGroups = Application.GetAllModelsInProject()
+                                                                               .OfType<RealTimeControlModel>().Where(m => m.ControlGroups.Any()).ToList();
+
+            if (!rtcModelsWithControlGroups.Any())
+            {
+                return;
+            }
 
             // DELFT3DFM-1441: Existing projects can have ControlGroups with the same names
             rtcModelsWithControlGroups.ForEach(m => m.MakeControlGroupNamesUnique());

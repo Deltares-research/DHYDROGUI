@@ -21,6 +21,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Exporters
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(TimFileExporter));
 
+        public override IEnumerable<BoundaryConditionDataType> ForcingTypes
+        {
+            get
+            {
+                yield return BoundaryConditionDataType.TimeSeries;
+            }
+        }
+
         public Func<SourceAndSink, WaterFlowFMModel> GetModelForSourceAndSink { private get; set; }
 
         public Func<HeatFluxModel, WaterFlowFMModel> GetModelForHeatFluxModel { private get; set; }
@@ -130,13 +138,5 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Exporters
         }
 
         #endregion
-
-        public override IEnumerable<BoundaryConditionDataType> ForcingTypes
-        {
-            get
-            {
-                yield return BoundaryConditionDataType.TimeSeries;
-            }
-        }
     }
 }

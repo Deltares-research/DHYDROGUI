@@ -17,29 +17,30 @@ using Point = NetTopologySuite.Geometries.Point;
 namespace DeltaShell.Plugins.NetworkEditor.MapLayers.CustomRenderers
 {
     /// <summary>
-    /// Custom renderer to draw not geometry based cross sections. These cross sections are 
+    /// Custom renderer to draw not geometry based cross sections. These cross sections are
     /// drawn as a perpendicular line to the branch
     /// CrossSectionRenderer assumes it is always added to a vectorlayer. The vectorlayer renderer only calls
     /// a custom renderer if a theme is added to the layer:
-    ///   networkLayer.CrossSectionLayer.CustomRenderers.Add(new CrossSectionRenderer());
-    ///   networkLayer.CrossSectionLayer.Theme = new SharpMap.Rendering.Thematics.CustomTheme(null);
+    /// networkLayer.CrossSectionLayer.CustomRenderers.Add(new CrossSectionRenderer());
+    /// networkLayer.CrossSectionLayer.Theme = new SharpMap.Rendering.Thematics.CustomTheme(null);
     /// Since the actual cross section geometries are stored in the cross section feature there is a problem
     /// when more views of the same network are opened.
     /// Support for ICloneable added to draw the custom features during drag operations
     /// note: custom rendering in progress:
-    ///  - color for cross section types hard codes; should be based on style -> map legend?
-    ///  - todo is implement option to draw fixed symbol or minimum length for certain zoom levels.
+    /// - color for cross section types hard codes; should be based on style -> map legend?
+    /// - todo is implement option to draw fixed symbol or minimum length for certain zoom levels.
     /// </summary>
     public class CrossSectionRenderer : BranchFeatureRenderer
     {
         private const double minimumPixelLength = 16.0;
+
         // Store all geometries for which we have updated the default geometry
         // todo replace by HashSet<IFeature>
         // The envelope that is used to calculate the default geometry
-        double defaultLength = 10;
+        private double defaultLength = 10;
 
         /// <summary>
-        /// Called for each feature that needs to be rendered. CrossSectionRenderer assumes it is always 
+        /// Called for each feature that needs to be rendered. CrossSectionRenderer assumes it is always
         /// added to a vectorlayer.
         /// </summary>
         /// <param name="feature"></param>
@@ -51,8 +52,9 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.CustomRenderers
             // TODO can be MoveToolFeature; should be removed.
             if (!(feature is ICrossSection))
             {
-                return false; 
+                return false;
             }
+
             //var crossSection = (ICrossSection)feature;
             //Linestring outlines is drawn by drawing the layer once with a thicker line
             //before drawing the "inline" on top.
@@ -61,44 +63,46 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.CustomRenderers
             {
                 return false;
             }
+
             var crossSection = (ICrossSection) feature;
             bool themeOn = vectorLayer.Theme != null;
 
-            var currentGeometry = GetRenderedFeatureGeometry(crossSection, vectorLayer);
-            
+            IGeometry currentGeometry = GetRenderedFeatureGeometry(crossSection, vectorLayer);
+
             if (currentGeometry is IPoint)
             {
-                VectorRenderingHelper.DrawPoint(g, (IPoint)currentGeometry, Resources.CrossSectionSmallWithExclamation, 1, new PointF(0, 0), 0, layer.Map);
+                VectorRenderingHelper.DrawPoint(g, (IPoint) currentGeometry, Resources.CrossSectionSmallWithExclamation, 1, new PointF(0, 0), 0, layer.Map);
                 return true;
             }
 
-            var pixelLength = GetPixelLength(currentGeometry);
-            
+            double pixelLength = GetPixelLength(currentGeometry);
+
             if (pixelLength < minimumPixelLength)
             {
-                currentGeometry = GeometryTransform.Scale(currentGeometry, minimumPixelLength/pixelLength);
+                currentGeometry = GeometryTransform.Scale(currentGeometry, minimumPixelLength / pixelLength);
             }
-            else if (pixelLength > 3*minimumPixelLength)
+            else if (pixelLength > 3 * minimumPixelLength)
             {
                 if (crossSection.Branch != null)
                 {
-                    var branchGeometry = crossSection.Branch.Geometry;
+                    IGeometry branchGeometry = crossSection.Branch.Geometry;
                     var indexLine = new LengthIndexedLine(branchGeometry);
-                    var mapOffset = NetworkHelper.MapChainage(crossSection.Branch, crossSection.Chainage);
-                    var intersection = indexLine.ExtractPoint(mapOffset);
-                    
+                    double mapOffset = NetworkHelper.MapChainage(crossSection.Branch, crossSection.Chainage);
+                    Coordinate intersection = indexLine.ExtractPoint(mapOffset);
+
                     VectorRenderingHelper.DrawCircle(g, new Point(intersection), 5, Brushes.DarkSlateGray, layer.Map);
                 }
             }
-            
-            var currentVectorStyle = themeOn
-                                ? vectorLayer.Theme.GetStyle(crossSection) as VectorStyle
-                                : vectorLayer.Style;
+
+            VectorStyle currentVectorStyle = themeOn
+                                                 ? vectorLayer.Theme.GetStyle(crossSection) as VectorStyle
+                                                 : vectorLayer.Style;
 
             if (null == currentVectorStyle)
             {
                 return false;
             }
+
             switch (crossSection.CrossSectionType)
             {
                 case CrossSectionType.YZ:
@@ -117,12 +121,13 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.CustomRenderers
                     currentVectorStyle.Line.Color = Color.OrangeRed;
                     break;
             }
+
             if (vectorLayer.Style.EnableOutline)
             {
                 //Draw background of all line-outlines first
                 if (!themeOn ||
-                    (currentVectorStyle != null && currentVectorStyle.Enabled &&
-                     currentVectorStyle.EnableOutline))
+                    currentVectorStyle != null && currentVectorStyle.Enabled &&
+                    currentVectorStyle.EnableOutline)
                 {
                     switch (currentGeometry.GeometryType)
                     {
@@ -140,25 +145,12 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.CustomRenderers
                 }
             }
 
-            VectorRenderingHelper.RenderGeometry(g, layer.Map , currentGeometry, currentVectorStyle, 
-                null/*DefaultPointSymbol*/, vectorLayer.ClippingEnabled);
+            VectorRenderingHelper.RenderGeometry(g, layer.Map, currentGeometry, currentVectorStyle,
+                                                 null /*DefaultPointSymbol*/, vectorLayer.ClippingEnabled);
             //lastRenderedCoordinatesCount += currentGeometry.Coordinates.Length;
             return true;
         }
 
-        private double GetPixelLength(IGeometry currentGeometry)
-        {
-            if (currentGeometry.Coordinates.Length > 1)
-            {
-                var pixelStart = vectorLayer.Map.WorldToImage(currentGeometry.Coordinates.First());
-                var pixelEnd = vectorLayer.Map.WorldToImage(currentGeometry.Coordinates.Last());
-                var dX = pixelStart.X - pixelEnd.X;
-                var dY = pixelStart.Y - pixelEnd.Y;
-                return Math.Sqrt(dX*dX + dY*dY);
-            }
-            return 0.0;
-        }
-        
         /// <summary>
         /// Clones the custom renderer. This allows the Network Editor to use custom renderers for
         /// </summary>
@@ -168,5 +160,18 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.CustomRenderers
             return new CrossSectionRenderer();
         }
 
+        private double GetPixelLength(IGeometry currentGeometry)
+        {
+            if (currentGeometry.Coordinates.Length > 1)
+            {
+                PointF pixelStart = vectorLayer.Map.WorldToImage(currentGeometry.Coordinates.First());
+                PointF pixelEnd = vectorLayer.Map.WorldToImage(currentGeometry.Coordinates.Last());
+                float dX = pixelStart.X - pixelEnd.X;
+                float dY = pixelStart.Y - pixelEnd.Y;
+                return Math.Sqrt((dX * dX) + (dY * dY));
+            }
+
+            return 0.0;
+        }
     }
 }

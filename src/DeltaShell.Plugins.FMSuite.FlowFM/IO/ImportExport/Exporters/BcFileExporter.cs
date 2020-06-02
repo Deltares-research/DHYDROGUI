@@ -16,6 +16,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Exporters
 {
     public class BcFileExporter : BoundaryDataExporterBase, IFileExporter
     {
+        public override IEnumerable<BoundaryConditionDataType> ForcingTypes { get; }
+
+        public Func<IBoundaryCondition, DateTime?> GetRefDateForBoundaryCondition { private get; set; }
+
+        public BcFile.WriteMode WriteMode { private get; set; }
+
+        public IList<BoundaryConditionDataType> ExcludedDataTypes { private get; set; }
+
+        public IList<FlowBoundaryQuantityType> ExcludedQuantities { private get; set; }
+
+        public string FilePath { private get; set; }
+
         [ExcludeFromCodeCoverage]
         public string Name => "Boundary data to .bc file";
 
@@ -24,7 +36,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Exporters
 
         public string Description => string.Empty;
 
-        public Func<IBoundaryCondition, DateTime?> GetRefDateForBoundaryCondition { private get; set; }
+        [ExcludeFromCodeCoverage]
+        public string FileFilter => "Boundary conditions file|*.bc";
+
+        [ExcludeFromCodeCoverage]
+        public Bitmap Icon => Resources.TextDocument;
 
         public bool Export(object item, string path)
         {
@@ -134,18 +150,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Exporters
         }
 
         [ExcludeFromCodeCoverage]
-        public string FileFilter => "Boundary conditions file|*.bc";
-
-        [ExcludeFromCodeCoverage]
-        public Bitmap Icon => Resources.TextDocument;
-
-        [ExcludeFromCodeCoverage]
         public bool CanExportFor(object item)
         {
             return true;
         }
-
-        public BcFile.WriteMode WriteMode { private get; set; }
 
         private BoundaryConditionSet FilterBoundaryConditionSet(BoundaryConditionSet inputSet)
         {
@@ -172,12 +180,5 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Exporters
 
             return true;
         }
-
-        public IList<BoundaryConditionDataType> ExcludedDataTypes { private get; set; }
-
-        public IList<FlowBoundaryQuantityType> ExcludedQuantities { private get; set; }
-
-        public string FilePath { private get; set; }
-        public override IEnumerable<BoundaryConditionDataType> ForcingTypes { get; }
     }
 }

@@ -7,15 +7,8 @@ namespace DelftTools.Hydro.CrossSections.StandardShapes
     [Entity(FireOnCollectionChange = false)]
     public class CrossSectionStandardShapeTrapezium : CrossSectionStandardShapeBase
     {
-        public override CrossSectionStandardShapeType Type => CrossSectionStandardShapeType.Trapezium;
-
-        public override CrossSectionDefinitionZW GetTabulatedDefinition()
-        {
-            return StandardCrossSectionsFactory.GetTabulatedCrossSectionFromTrapezium(
-                Slope, BottomWidthB, MaximumFlowWidth);
-        }
-
         private double slope;
+        public override CrossSectionStandardShapeType Type => CrossSectionStandardShapeType.Trapezium;
 
         public virtual double Slope
         {
@@ -42,6 +35,12 @@ namespace DelftTools.Hydro.CrossSections.StandardShapes
                 BottomWidthB = 10,
                 MaximumFlowWidth = 20
             };
+        }
+
+        public override CrossSectionDefinitionZW GetTabulatedDefinition()
+        {
+            return StandardCrossSectionsFactory.GetTabulatedCrossSectionFromTrapezium(
+                Slope, BottomWidthB, MaximumFlowWidth);
         }
     }
 }

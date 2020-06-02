@@ -9,12 +9,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.DomainSpecificDataEditor.C
     /// <summary>
     /// Converter for converting a file path to its file name
     /// </summary>
-    /// <seealso cref="System.Windows.Data.IValueConverter" />
+    /// <seealso cref="System.Windows.Data.IValueConverter"/>
     [ValueConversion(typeof(string), typeof(string))]
     public class FilePathToFileNameConverter : IValueConverter
     {
         /// <summary>
-        /// Converts the specified <paramref name="value" /> as a file path to the file name.
+        /// Converts the specified <paramref name="value"/> as a file path to the file name.
         /// </summary>
         /// <param name="value">The file path</param>
         /// <param name="targetType">Type of the target, which should be <see cref="string"/>.</param>
@@ -22,10 +22,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.DomainSpecificDataEditor.C
         /// <param name="culture">The parameter is not used.</param>
         /// <returns> The file name. </returns>
         /// <remarks>
-        /// <see cref="DependencyProperty.UnsetValue" /> is returned if
-        /// the <paramref name="value" /> is not a <see cref="string" /> or
-        /// the <paramref name="targetType" /> is not a <see cref="string" />.
-        /// the <paramref name="value" /> is returned if the specified <paramref name="value" /> is not recognized as a valid path, .
+        /// <see cref="DependencyProperty.UnsetValue"/> is returned if
+        /// the <paramref name="value"/> is not a <see cref="string"/> or
+        /// the <paramref name="targetType"/> is not a <see cref="string"/>.
+        /// the <paramref name="value"/> is returned if the specified <paramref name="value"/> is not recognized as a valid path, .
         /// </remarks>
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
@@ -44,7 +44,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.DomainSpecificDataEditor.C
             return DependencyProperty.UnsetValue;
         }
 
-        ///<summary>Method is not implemented.</summary>
+        /// <summary>Method is not implemented.</summary>
         /// <exception cref="NotSupportedException">Thrown when this method is called.</exception>
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {

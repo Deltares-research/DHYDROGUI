@@ -18,6 +18,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
 {
     public abstract class NameablePointFeatureImporter<T> : IFileImporter where T : NameablePointFeature
     {
+        public Func<double> GetDefaultZValue { get; set; }
+
+        public ICoordinateSystem ModelCoordinateSystem { get; set; }
         public abstract string Name { get; }
         public string Category => "Hydro";
 
@@ -32,11 +35,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
             }
         }
 
-        public bool CanImportOn(object targetObject)
-        {
-            return true;
-        }
-
         public bool CanImportOnRootLevel => false;
         public string FileFilter => "Shape file (*.shp)|*.shp";
         public string TargetDataDirectory { get; set; }
@@ -44,9 +42,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         public ImportProgressChangedDelegate ProgressChanged { get; set; }
         public bool OpenViewAfterImport => true;
 
-        public Func<double> GetDefaultZValue { get; set; }
-
-        public ICoordinateSystem ModelCoordinateSystem { get; set; }
+        public bool CanImportOn(object targetObject)
+        {
+            return true;
+        }
 
         public object ImportItem(string path, object target = null)
         {
@@ -94,6 +93,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
             return target;
         }
 
+        protected abstract string NewNameFormatString { get; }
+
         protected virtual void ReadAttributes(T newFeature, IFeature feature, IEnumerable<T> list)
         {
             const string nameAttributeName = "Name";
@@ -125,8 +126,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
                 newFeature.Z = TryGetDefaultZValue();
             }
         }
-
-        protected abstract string NewNameFormatString { get; }
 
         protected abstract T CreateFeature();
 

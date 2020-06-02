@@ -25,15 +25,18 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                 return hydroModelWorkFlowDataLookUp.ToDictionary(
                     kvp => kvp.Key,
                     kvp => (IList<int>)
-                            kvp.Value.Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries)
-                                .Select(s => Convert.ToInt32(s))
-                                .ToList());
+                        kvp.Value.Split(new[]
+                           {
+                               ','
+                           }, StringSplitOptions.RemoveEmptyEntries)
+                           .Select(s => Convert.ToInt32(s))
+                           .ToList());
             }
             set
             {
                 hydroModelWorkFlowDataLookUp = value != null
-                    ? value.ToDictionary(kvp => kvp.Key, kvp => string.Join(",", kvp.Value) )
-                    : null;
+                                                   ? value.ToDictionary(kvp => kvp.Key, kvp => string.Join(",", kvp.Value))
+                                                   : null;
 
                 workFlowDatas = value == null ? null : value.Keys.ToList();
             }
@@ -41,21 +44,30 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
         public IEnumerable<IHydroModelWorkFlowData> WorkFlowDatas
         {
-            get { return workFlowDatas; }
+            get
+            {
+                return workFlowDatas;
+            }
         }
 
         public IEnumerable<IDataItem> OutputDataItems
         {
-            get { return WorkFlowDatas.SelectMany(d => d.OutputDataItems); }
+            get
+            {
+                return WorkFlowDatas.SelectMany(d => d.OutputDataItems);
+            }
         }
 
         public void TryRestoreData(ICompositeActivity currentWorkflow)
         {
-            if (HydroModelWorkFlowDataLookUp == null) return;
-
-            foreach (var workFlowDataKvp in HydroModelWorkFlowDataLookUp)
+            if (HydroModelWorkFlowDataLookUp == null)
             {
-                var activity = GetActivityForIndices(currentWorkflow, workFlowDataKvp.Value);
+                return;
+            }
+
+            foreach (KeyValuePair<IHydroModelWorkFlowData, IList<int>> workFlowDataKvp in HydroModelWorkFlowDataLookUp)
+            {
+                IHydroModelWorkFlow activity = GetActivityForIndices(currentWorkflow, workFlowDataKvp.Value);
                 if (activity != null)
                 {
                     activity.Data = workFlowDataKvp.Key;
@@ -65,9 +77,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
         private IHydroModelWorkFlow GetActivityForIndices(IActivity currentWorkflow, IList<int> indices)
         {
-            var currentActivity = currentWorkflow;
+            IActivity currentActivity = currentWorkflow;
 
-            foreach (var index in indices)
+            foreach (int index in indices)
             {
                 var compositeActivity = currentActivity as ICompositeActivity;
                 if (compositeActivity == null)

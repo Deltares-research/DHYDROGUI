@@ -17,6 +17,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Exporters
 
         public string Description => string.Empty;
 
+        [ExcludeFromCodeCoverage]
+        public Bitmap Icon { get; private set; }
+
+        public string FileFilter => $"Flexible Mesh Model Definition|*{FileConstants.MduFileExtension}";
+
         public bool Export(object item, string path)
         {
             // Check if the item is set
@@ -46,14 +51,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Exporters
             yield return typeof(WaterFlowFMModel);
         }
 
-        [ExcludeFromCodeCoverage]
-        public Bitmap Icon { get; private set; }
-
         public bool CanExportFor(object item)
         {
             return true;
         }
-
-        public string FileFilter => $"Flexible Mesh Model Definition|*{FileConstants.MduFileExtension}";
     }
 }

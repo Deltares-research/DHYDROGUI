@@ -15,11 +15,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.Dependency
     /// </summary>
     public class BooleanIsTrueDependencyExpression : DependencyExpressionBase
     {
-        /// <summary>
-        /// Matches the pattern: start with model property key, end.
-        /// </summary>
-        protected override string Regex => @"^\w+$";
-
         protected internal override string OnValidate(ModelProperty evaluatedProperty,
                                                       IEnumerable<ModelProperty> allProperties,
                                                       string dependencyExpression)
@@ -62,5 +57,10 @@ namespace DeltaShell.Plugins.FMSuite.Common.Dependency
                 return false;
             };
         }
+
+        /// <summary>
+        /// Matches the pattern: start with model property key, end.
+        /// </summary>
+        protected override string Regex => @"^\w+$";
     }
 }

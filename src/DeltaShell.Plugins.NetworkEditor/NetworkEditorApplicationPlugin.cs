@@ -22,32 +22,47 @@ namespace DeltaShell.Plugins.NetworkEditor
     {
         public override string Name
         {
-            get { return "Network"; }
+            get
+            {
+                return "Network";
+            }
         }
 
         public override string DisplayName
         {
-            get { return Properties.Resources.NetworkEditorApplicationPlugin_DisplayName_Hydro_Region_Plugin; }
+            get
+            {
+                return Properties.Resources.NetworkEditorApplicationPlugin_DisplayName_Hydro_Region_Plugin;
+            }
         }
 
         public override string Description
         {
-            get { return Properties.Resources.NetworkEditorApplicationPlugin_Description; }
+            get
+            {
+                return Properties.Resources.NetworkEditorApplicationPlugin_Description;
+            }
         }
 
         public override string Version
         {
-            get { return GetType().Assembly.GetName().Version.ToString(); }
+            get
+            {
+                return GetType().Assembly.GetName().Version.ToString();
+            }
         }
 
         public override string FileFormatVersion
         {
-            get { return "3.5.2.0"; }
+            get
+            {
+                return "3.5.2.0";
+            }
         }
 
         public override IEnumerable<Assembly> GetPersistentAssemblies()
         {
-            yield return typeof (HydroRegion).Assembly;
+            yield return typeof(HydroRegion).Assembly;
             yield return typeof(ReadOnlyMapHisFileFunctionStore).Assembly;
             yield return GetType().Assembly;
         }
@@ -79,23 +94,29 @@ namespace DeltaShell.Plugins.NetworkEditor
 
         private void FixOwnersOnChildDataItems(Folder folder)
         {
-            foreach (var item in folder.Items)
+            foreach (IProjectItem item in folder.Items)
             {
                 var subfolder = item as Folder;
                 if (subfolder != null)
+                {
                     FixOwnersOnChildDataItems(subfolder);
+                }
 
                 var dataItem = item as IDataItem;
                 if (dataItem != null)
+                {
                     SetOwnerForDataItem(dataItem, folder);
+                }
             }
         }
 
         private void SetOwnerForDataItem(IDataItem dataItem, IDataItemOwner dataItemOwner)
         {
             dataItem.Owner = dataItemOwner;
-            foreach(var child in dataItem.Children)
+            foreach (IDataItem child in dataItem.Children)
+            {
                 SetOwnerForDataItem(child, dataItemOwner);
+            }
         }
 
         private void OnProjectCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -122,7 +143,7 @@ namespace DeltaShell.Plugins.NetworkEditor
 
             if (e.Action == NotifyCollectionChangedAction.Add)
             {
-                if(!(sender is IEventedList<IProjectItem>))
+                if (!(sender is IEventedList<IProjectItem>))
                 {
                     return;
                 }
@@ -134,7 +155,7 @@ namespace DeltaShell.Plugins.NetworkEditor
             if (e.Action == NotifyCollectionChangedAction.Remove)
             {
                 // handle child data item removed
-                var region = (IHydroRegion)regionDataItem.Value;
+                var region = (IHydroRegion) regionDataItem.Value;
                 if (region.Parent != null && regionDataItem.Parent != null && Equals(regionDataItem.Parent.Children, sender))
                 {
                     region.Parent.SubRegions.Remove(region);
@@ -145,7 +166,7 @@ namespace DeltaShell.Plugins.NetworkEditor
 
             throw new NotSupportedException(string.Format(Properties.Resources.NetworkEditorApplicationPlugin_HandleRegionDataItemCollectionChanged__0__is_not_supported_for_hydro_regions_in_the_project, e.Action));
         }
-        
+
         /// <summary>
         /// Add / remove child data item.
         /// </summary>
@@ -164,19 +185,20 @@ namespace DeltaShell.Plugins.NetworkEditor
 
             if (e.Action == NotifyCollectionChangedAction.Add)
             {
-                var parentRegionDataItem = Application.DataItemService.GetDataItemByValue(Application.Project, subRegion.Parent);
+                IDataItem parentRegionDataItem = Application.DataItemService.GetDataItemByValue(Application.Project, subRegion.Parent);
                 AddChildRegionDataItems(parentRegionDataItem);
                 return;
             }
 
             if (e.Action == NotifyCollectionChangedAction.Remove)
             {
-                var parentRegionDataItem = Application.DataItemService.GetDataItemByValue(Application.Project, subRegion.Parent);
-                var regionDataItem = parentRegionDataItem.Children.FirstOrDefault(di => Equals(di.Value, subRegion));
+                IDataItem parentRegionDataItem = Application.DataItemService.GetDataItemByValue(Application.Project, subRegion.Parent);
+                IDataItem regionDataItem = parentRegionDataItem.Children.FirstOrDefault(di => Equals(di.Value, subRegion));
                 if (regionDataItem != null)
                 {
                     parentRegionDataItem.Children.Remove(regionDataItem);
                 }
+
                 return;
             }
 
@@ -187,19 +209,20 @@ namespace DeltaShell.Plugins.NetworkEditor
         {
             var region = regionDataItem.Value as IRegion;
 
-            if(region == null)
+            if (region == null)
             {
                 return;
             }
 
-            foreach (var subRegion in region.SubRegions)
+            foreach (IRegion subRegion in region.SubRegions)
             {
-                var existingDataItem = regionDataItem.Children.FirstOrDefault(childDataItem => childDataItem.Value == subRegion);
+                IDataItem existingDataItem = regionDataItem.Children.FirstOrDefault(childDataItem => childDataItem.Value == subRegion);
                 if (existingDataItem == null)
                 {
                     existingDataItem = CreateDataItemForSubRegion(subRegion, regionDataItem);
                     regionDataItem.Children.Add(existingDataItem);
                 }
+
                 AddChildRegionDataItems(existingDataItem);
             }
         }

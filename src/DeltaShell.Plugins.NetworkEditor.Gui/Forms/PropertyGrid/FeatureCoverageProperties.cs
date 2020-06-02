@@ -18,8 +18,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [DynamicReadOnly]
         public string Name
         {
-            get { return data.Name; }
-            set { data.Name = value; }
+            get
+            {
+                return data.Name;
+            }
+            set
+            {
+                data.Name = value;
+            }
         }
 
         [Category("General")]
@@ -27,16 +33,24 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [DisplayName("Time Dependent")]
         public bool TimeDepedent
         {
-            get { return data.IsTimeDependent; }
+            get
+            {
+                return data.IsTimeDependent;
+            }
         }
-
 
         [Category("General")]
         [Description("Default value when no data is available")]
         public double DefaultValue
         {
-            get { return (double)data.Components[0].DefaultValue; }
-            set { data.Components[0].DefaultValue = value; }
+            get
+            {
+                return (double) data.Components[0].DefaultValue;
+            }
+            set
+            {
+                data.Components[0].DefaultValue = value;
+            }
         }
 
         [Category("General")]
@@ -53,13 +67,19 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [DisplayName("Number of features")]
         public int FeatureCount
         {
-            get { return data.FeatureVariable != null ? data.FeatureVariable.Values.Count : 0; }
+            get
+            {
+                return data.FeatureVariable != null ? data.FeatureVariable.Values.Count : 0;
+            }
         }
 
         [TypeConverter(typeof(CoordinateSystemStringTypeConverter))]
         public ICoordinateSystem CoordinateSystem
         {
-            get { return data.CoordinateSystem; }
+            get
+            {
+                return data.CoordinateSystem;
+            }
         }
 
         [DynamicReadOnlyValidationMethod]

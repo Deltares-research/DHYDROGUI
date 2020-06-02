@@ -3,6 +3,7 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.Helpers;
 using DeltaShell.Plugins.NetworkEditor.Gui.MapTools;
 using SharpMap.Layers;
+using SharpMap.UI.Forms;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Commands
 {
@@ -10,7 +11,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Commands
     {
         protected override void OnExecute(params object[] arguments)
         {
-            var hydroNetwork = HydroRegionEditorMapTool.HydroRegions.OfType<IHydroNetwork>().FirstOrDefault();
+            IHydroNetwork hydroNetwork = HydroRegionEditorMapTool.HydroRegions.OfType<IHydroNetwork>().FirstOrDefault();
 
             if (hydroNetwork == null || !hydroNetwork.Branches.Any())
             {
@@ -19,29 +20,29 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Commands
 
             HydroNetworkHelper.AddNewRouteToNetwork(hydroNetwork);
 
-            var activeNetworkCoverageGroupLayer = ((GroupLayer) MapView.GetLayerForData(hydroNetwork.Routes)).Layers.OfType<INetworkCoverageGroupLayer>().LastOrDefault();
+            INetworkCoverageGroupLayer activeNetworkCoverageGroupLayer = ((GroupLayer) MapView.GetLayerForData(hydroNetwork.Routes)).Layers.OfType<INetworkCoverageGroupLayer>().LastOrDefault();
             if (activeNetworkCoverageGroupLayer != null)
             {
                 activeNetworkCoverageGroupLayer.Visible = true;
             }
-            
+
             HydroRegionEditorMapTool.ActiveNetworkCoverageGroupLayer = activeNetworkCoverageGroupLayer;
 
             MapView.MapControl.ActivateTool(MapView.MapControl.GetToolByName(HydroRegionEditorMapTool.AddNetworkLocationToolName));
         }
-        
+
         private static HydroRegionEditorMapTool HydroRegionEditorMapTool
         {
             get
             {
                 if (null != MapView)
                 {
-                    var mapControl = MapView.MapControl;
+                    MapControl mapControl = MapView.MapControl;
                     return mapControl.GetToolByType<HydroRegionEditorMapTool>();
                 }
+
                 return null;
             }
         }
-        
     }
 }

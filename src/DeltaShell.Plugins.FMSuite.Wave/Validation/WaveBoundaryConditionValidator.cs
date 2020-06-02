@@ -17,7 +17,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
         /// </summary>
         /// <param name="waveBoundaryConditions"> The wave boundary conditions to validate. </param>
         /// <returns> A validation report about the wave boundary conditions. </returns>
-        /// <remarks> <paramref name="waveBoundaryConditions" /> should not be null. </remarks>
+        /// <remarks> <paramref name="waveBoundaryConditions"/> should not be null. </remarks>
         public static ValidationReport Validate(IEnumerable<WaveBoundaryCondition> waveBoundaryConditions)
         {
             IEnumerable<ValidationReport> subReports =
@@ -94,7 +94,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
             {
                 WaveBoundaryParameters spectrumValues = spectrumParameters.Value;
 
-                string precedingText = string.Empty;
+                var precedingText = string.Empty;
                 if (boundaryCondition.SpatialDefinitionType ==
                     WaveBoundaryConditionSpatialDefinitionType.SpatiallyVarying)
                 {
@@ -291,16 +291,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
         private class PointDataFunctionMapping
         {
             /// <summary>
-            /// Gets the index of the point data.
-            /// </summary>
-            public int PointDataIndex { get; }
-
-            /// <summary>
-            /// Gets the point data function.
-            /// </summary>
-            public IFunction PointDataFunction { get; }
-
-            /// <summary>
             /// Creates a new instance of <see cref="PointDataFunctionMapping"/>.
             /// </summary>
             /// <param name="pointDataIndex">The index of the <paramref name="pointDataFunction"/>.</param>
@@ -310,6 +300,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
                 PointDataIndex = pointDataIndex;
                 PointDataFunction = pointDataFunction;
             }
+
+            /// <summary>
+            /// Gets the index of the point data.
+            /// </summary>
+            public int PointDataIndex { get; }
+
+            /// <summary>
+            /// Gets the point data function.
+            /// </summary>
+            public IFunction PointDataFunction { get; }
         }
     }
 }

@@ -22,13 +22,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Helpers
                 GetViewName = (v, o) => o.Name,
                 AdditionalDataCheck = o =>
                 {
-                    var lst = getGui().Application.Project.RootFolder.GetAllItemsRecursive().OfType<HydroArea>().
-                        FirstOrDefault(hr => ReferenceEquals(getCollection(hr), o));
+                    HydroArea lst = getGui().Application.Project.RootFolder.GetAllItemsRecursive().OfType<HydroArea>().FirstOrDefault(hr => ReferenceEquals(getCollection(hr), o));
                     return lst != null;
                 },
                 GetViewData = o =>
                 {
-                    var centralMap =
+                    ProjectItemMapView centralMap =
                         getGui()
                             .DocumentViews.OfType<ProjectItemMapView>()
                             .FirstOrDefault(v => v.MapView.GetLayerForData(o) != null);
@@ -36,24 +35,25 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Helpers
                 },
                 CompositeViewType = typeof(ProjectItemMapView),
                 GetCompositeViewData =
-                    o => getGui().Application.Project.RootFolder.GetAllItemsRecursive().OfType<DataItem>().
-                        FirstOrDefault(di => di.ValueType == typeof(HydroArea) && ReferenceEquals(getCollection((HydroArea) di.Value), o)),
+                    o => getGui().Application.Project.RootFolder.GetAllItemsRecursive().OfType<DataItem>().FirstOrDefault(di => di.ValueType == typeof(HydroArea) && ReferenceEquals(getCollection((HydroArea) di.Value), o)),
                 AfterCreate = (v, o) =>
                 {
-                    var centralMap =
+                    ProjectItemMapView centralMap =
                         getGui()
                             .DocumentViews.OfType<ProjectItemMapView>()
                             .FirstOrDefault(vi => vi.MapView.GetLayerForData(o) != null);
-                    if (centralMap == null) return;
+                    if (centralMap == null)
+                    {
+                        return;
+                    }
 
                     v.DeleteSelectedFeatures = () => centralMap.MapView.MapControl.DeleteTool.DeleteSelection();
                     v.ZoomToFeature = feature => centralMap.MapView.EnsureVisible(feature);
-                    v.OpenViewMethod = f => getGui().CommandHandler.OpenView(f); 
+                    v.OpenViewMethod = f => getGui().CommandHandler.OpenView(f);
                     v.DynamicAttributeVisible = s => s == Feature2D.LocationKey;
                     v.CanAddDeleteAttributes = false;
                 }
             };
         }
-
     }
 }

@@ -22,10 +22,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.DomainSpecificDataEditor.C
         /// otherwise, false;
         /// </returns>
         /// <remarks>
-        /// Returns <see cref="DependencyProperty.UnsetValue" /> if
-        /// the <paramref name="value" /> is not a <see cref="WindInputType" /> or
-        /// the <paramref name="targetType" /> is not a <see cref="Visibility" /> or
-        /// the <paramref name="parameter" /> is not a <see cref="WindInputType" />.
+        /// Returns <see cref="DependencyProperty.UnsetValue"/> if
+        /// the <paramref name="value"/> is not a <see cref="WindInputType"/> or
+        /// the <paramref name="targetType"/> is not a <see cref="Visibility"/> or
+        /// the <paramref name="parameter"/> is not a <see cref="WindInputType"/>.
         /// </remarks>
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
@@ -37,7 +37,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.DomainSpecificDataEditor.C
             return DependencyProperty.UnsetValue;
         }
 
-        ///<summary>Method is not implemented.</summary>
+        /// <summary>Method is not implemented.</summary>
         /// <exception cref="NotSupportedException">Thrown when this method is called.</exception>
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {

@@ -12,9 +12,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files
 {
     public class PolFile<T> : FMSuiteFileBase, IFeature2DFileBase<T> where T : Feature2DPolygon, new()
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(T));
-
         public const string Extension = "pol";
+        private static readonly ILog Log = LogManager.GetLogger(typeof(T));
 
         public PolFile()
         {

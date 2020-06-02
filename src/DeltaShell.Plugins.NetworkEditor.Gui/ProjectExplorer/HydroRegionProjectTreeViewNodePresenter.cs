@@ -25,7 +25,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.ProjectExplorer
 
         public override DragOperations CanDrag(HydroRegion nodeData)
         {
-            return (DragOperations.Link | DragOperations.Copy);
+            return DragOperations.Link | DragOperations.Copy;
         }
     }
 }

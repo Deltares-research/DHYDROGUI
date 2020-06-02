@@ -6,7 +6,6 @@ using System.Security;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
-using DeltaShell.NGHS.IO.Handlers;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.Common.IO.Files;
@@ -359,7 +358,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             var extForceFileItems = new List<ExtForceFileItem>();
             try
             {
-                int temperatureProcessNumber = (int) modelDefinition.HeatFluxModel.Type;
+                var temperatureProcessNumber = (int) modelDefinition.HeatFluxModel.Type;
 
                 // Process Temperature is Uniform Composite Model (Temperature 5 in MDU, but *.tim file)
                 if (temperatureProcessNumber == 5 && modelDefinition.HeatFluxModel.GriddedHeatFluxFilePath == null)

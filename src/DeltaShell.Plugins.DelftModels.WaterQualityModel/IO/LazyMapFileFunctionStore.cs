@@ -18,22 +18,20 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
     /// </summary>
     public class LazyMapFileFunctionStore : IFunctionStore
     {
+        private readonly IDictionary<string, double> minValues = new Dictionary<string, double>();
+        private readonly IDictionary<string, double> maxValues = new Dictionary<string, double>();
         private IEventedList<IFunction> functions = new EventedList<IFunction>();
         private bool isNetCdfFile;
         private MapFileMetaData metaData;
-        private readonly IDictionary<string, double> minValues = new Dictionary<string, double>();
-        private readonly IDictionary<string, double> maxValues = new Dictionary<string, double>();
         private string path;
 
-        public long Id { get; set; }
+        public event EventHandler<FunctionValuesChangingEventArgs> FunctionValuesChanged;
 
-        public IEventedList<IFunction> Functions
-        {
-            get => functions;
-            set => functions = value;
-        }
+        public event EventHandler<FunctionValuesChangingEventArgs> FunctionValuesChanging;
 
-        public bool FireEvents { get; set; }
+        public event NotifyCollectionChangingEventHandler CollectionChanging;
+
+        public event NotifyCollectionChangedEventHandler CollectionChanged;
 
         public string Path
         {
@@ -57,48 +55,49 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
 
         public bool IsOpen => false;
 
-        #region Unsupported properties
+        public long Id { get; set; }
 
-        public bool SkipChildItemEventBubbling { get; set; }
-
-        public bool SupportsPartialRemove => false;
-
-        public IList<ITypeConverter> TypeConverters => null;
-
-        public bool DisableCaching { get; set; }
-
-        public bool IsMultiValueFilteringSupported => true;
-
-        #endregion
-
-        #region Unsupported functions
-
-        public void SetVariableValues<T>(IVariable function, IEnumerable<T> values, params IVariableFilter[] filters)
+        public IEventedList<IFunction> Functions
         {
-            throw new NotSupportedException("Function store is readonly");
+            get => functions;
+            set => functions = value;
         }
 
-        public void RemoveFunctionValues(IFunction function, params IVariableValueFilter[] filters)
+        public bool FireEvents { get; set; }
+
+        public void CreateNew(string path)
         {
-            throw new NotSupportedException("Function store is readonly");
+            FileUtils.DeleteIfExists(path);
+            Path = path;
         }
 
-        public void AddIndependentVariableValues<T>(IVariable variable, IEnumerable<T> values)
+        public void Close() {}
+
+        public void Open(string path) {}
+
+        public void CopyTo(string destinationPath)
         {
-            throw new NotSupportedException("Function store is readonly");
+            if (!File.Exists(path) || Equals(Path, destinationPath))
+            {
+                return;
+            }
+
+            // create directory if not exists
+            var destinationFileInfo = new FileInfo(destinationPath);
+            FileUtils.CreateDirectoryIfNotExists(destinationFileInfo.DirectoryName);
+
+            FileUtils.CopyFile(path, destinationPath);
         }
 
-        public void UpdateVariableSize(IVariable variable)
+        public void SwitchTo(string newPath)
         {
-            throw new NotSupportedException("Function store is readonly");
+            path = newPath;
         }
 
-        public void CacheVariable(IVariable variable)
+        public void Delete()
         {
-            throw new NotSupportedException("Function store has no caching");
+            FileUtils.DeleteIfExists(path);
         }
-
-        #endregion
 
         public Type GetEntityType()
         {
@@ -178,6 +177,45 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
             return (IMultiDimensionalArray<T>) GetVariableValues(function, filters);
         }
 
+        public T GetMaxValue<T>(IVariable variable)
+        {
+            if (typeof(T) == typeof(double))
+            {
+                double maxValue = maxValues.ContainsKey(variable.Name) ? maxValues[variable.Name] : double.MaxValue;
+                return (T) Convert.ChangeType(maxValue, typeof(T));
+            }
+
+            if (typeof(T) == typeof(DateTime))
+            {
+                DateTime maxDateTime = MetaData.Times.Count == 0 ? MetaData.Times[0] : MetaData.Times.Last();
+                return (T) Convert.ChangeType(maxDateTime, typeof(T));
+            }
+
+            throw new NotSupportedException("Map file only contains doubles or datetime values");
+        }
+
+        public T GetMinValue<T>(IVariable variable)
+        {
+            if (typeof(T) == typeof(double))
+            {
+                double minValue = minValues.ContainsKey(variable.Name) ? minValues[variable.Name] : double.MinValue;
+                return (T) Convert.ChangeType(minValue, typeof(T));
+            }
+
+            if (typeof(T) == typeof(DateTime))
+            {
+                return (T) Convert.ChangeType(MetaData.Times[0], typeof(T));
+            }
+
+            throw new NotSupportedException("Map file only contains doubles or datetime values");
+        }
+
+        private bool HasValidMapFile => !string.IsNullOrEmpty(path) && MetaData != null;
+
+        private MapFileMetaData MetaData => metaData ?? (metaData = isNetCdfFile
+                                                                        ? DelwaqNetCdfMapFileReader.ReadMetaData(path)
+                                                                        : DelwaqMapFileReader.ReadMetaData(path));
+
         private MultiDimentionalArrayAdapter<DateTime> GetArgumentValues(IVariable function, IVariableFilter[] filters)
         {
             VariableValueFilter<DateTime> argumentTimeFilter =
@@ -227,87 +265,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
                        ? DelwaqNetCdfMapFileReader.GetTimeStepData(path, MetaData, timeIndex, function.Name, locationIndex)
                        : DelwaqMapFileReader.GetTimeStepData(path, MetaData, timeIndex, function.Name, locationIndex);
         }
-
-        public T GetMaxValue<T>(IVariable variable)
-        {
-            if (typeof(T) == typeof(double))
-            {
-                double maxValue = maxValues.ContainsKey(variable.Name) ? maxValues[variable.Name] : double.MaxValue;
-                return (T) Convert.ChangeType(maxValue, typeof(T));
-            }
-
-            if (typeof(T) == typeof(DateTime))
-            {
-                DateTime maxDateTime = MetaData.Times.Count == 0 ? MetaData.Times[0] : MetaData.Times.Last();
-                return (T) Convert.ChangeType(maxDateTime, typeof(T));
-            }
-
-            throw new NotSupportedException("Map file only contains doubles or datetime values");
-        }
-
-        public T GetMinValue<T>(IVariable variable)
-        {
-            if (typeof(T) == typeof(double))
-            {
-                double minValue = minValues.ContainsKey(variable.Name) ? minValues[variable.Name] : double.MinValue;
-                return (T) Convert.ChangeType(minValue, typeof(T));
-            }
-
-            if (typeof(T) == typeof(DateTime))
-            {
-                return (T) Convert.ChangeType(MetaData.Times[0], typeof(T));
-            }
-
-            throw new NotSupportedException("Map file only contains doubles or datetime values");
-        }
-
-        public void CreateNew(string path)
-        {
-            FileUtils.DeleteIfExists(path);
-            Path = path;
-        }
-
-        public void Close() {}
-
-        public void Open(string path) {}
-
-        public void CopyTo(string destinationPath)
-        {
-            if (!File.Exists(path) || Equals(Path, destinationPath))
-            {
-                return;
-            }
-
-            // create directory if not exists
-            var destinationFileInfo = new FileInfo(destinationPath);
-            FileUtils.CreateDirectoryIfNotExists(destinationFileInfo.DirectoryName);
-
-            FileUtils.CopyFile(path, destinationPath);
-        }
-
-        public void SwitchTo(string newPath)
-        {
-            path = newPath;
-        }
-
-        public void Delete()
-        {
-            FileUtils.DeleteIfExists(path);
-        }
-
-        public event EventHandler<FunctionValuesChangingEventArgs> FunctionValuesChanged;
-
-        public event EventHandler<FunctionValuesChangingEventArgs> FunctionValuesChanging;
-
-        public event NotifyCollectionChangingEventHandler CollectionChanging;
-
-        public event NotifyCollectionChangedEventHandler CollectionChanged;
-
-        private bool HasValidMapFile => !string.IsNullOrEmpty(path) && MetaData != null;
-
-        private MapFileMetaData MetaData => metaData ?? (metaData = isNetCdfFile
-                                                                        ? DelwaqNetCdfMapFileReader.ReadMetaData(path)
-                                                                        : DelwaqMapFileReader.ReadMetaData(path));
 
         private static IMultiDimensionalArray CreateEmptyArrayForType(Type type)
         {
@@ -391,5 +348,48 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
 
             FunctionValuesChanging(sender, e);
         }
+
+        #region Unsupported properties
+
+        public bool SkipChildItemEventBubbling { get; set; }
+
+        public bool SupportsPartialRemove => false;
+
+        public IList<ITypeConverter> TypeConverters => null;
+
+        public bool DisableCaching { get; set; }
+
+        public bool IsMultiValueFilteringSupported => true;
+
+        #endregion
+
+        #region Unsupported functions
+
+        public void SetVariableValues<T>(IVariable function, IEnumerable<T> values, params IVariableFilter[] filters)
+        {
+            throw new NotSupportedException("Function store is readonly");
+        }
+
+        public void RemoveFunctionValues(IFunction function, params IVariableValueFilter[] filters)
+        {
+            throw new NotSupportedException("Function store is readonly");
+        }
+
+        public void AddIndependentVariableValues<T>(IVariable variable, IEnumerable<T> values)
+        {
+            throw new NotSupportedException("Function store is readonly");
+        }
+
+        public void UpdateVariableSize(IVariable variable)
+        {
+            throw new NotSupportedException("Function store is readonly");
+        }
+
+        public void CacheVariable(IVariable variable)
+        {
+            throw new NotSupportedException("Function store has no caching");
+        }
+
+        #endregion
     }
 }

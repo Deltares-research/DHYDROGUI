@@ -9,8 +9,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Sediment
     [Entity]
     public class SedimentFraction : ISedimentFraction
     {
-        private ISedimentFormulaType currentFormulaType;
         private readonly List<ISedimentFormulaType> AvailableFormulaTypes;
+        private ISedimentFormulaType currentFormulaType;
 
         public SedimentFraction()
         {

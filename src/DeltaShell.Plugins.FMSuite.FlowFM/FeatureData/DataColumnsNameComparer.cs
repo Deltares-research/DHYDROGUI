@@ -3,7 +3,7 @@ using System.Collections.Generic;
 namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
 {
     /// <summary>
-    /// Compares <see cref="IDataColumn" /> by name
+    /// Compares <see cref="IDataColumn"/> by name
     /// </summary>
     public class DataColumnsNameComparer : IEqualityComparer<IDataColumn>
     {

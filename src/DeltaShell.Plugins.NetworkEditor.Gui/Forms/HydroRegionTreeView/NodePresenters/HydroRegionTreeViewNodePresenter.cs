@@ -5,14 +5,15 @@ using DelftTools.Controls;
 using DelftTools.Hydro;
 using DelftTools.Shell.Gui;
 using DelftTools.Shell.Gui.Swf;
+using DeltaShell.Plugins.NetworkEditor.Gui.Properties;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView.NodePresenters
 {
     public class HydroRegionTreeViewNodePresenter : TreeViewNodePresenterBaseForPluginGui<HydroRegion>
     {
-        private static readonly Image RegionImage = Properties.Resources.HydroRegion;
+        private static readonly Image RegionImage = Resources.HydroRegion;
 
-        public HydroRegionTreeViewNodePresenter(GuiPlugin guiPlugin) : base(guiPlugin){ }
+        public HydroRegionTreeViewNodePresenter(GuiPlugin guiPlugin) : base(guiPlugin) {}
 
         public override void UpdateNode(ITreeNode parentNode, ITreeNode node, HydroRegion region)
         {
@@ -24,7 +25,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView.NodePre
             {
                 node.Expand(); // region
 
-                foreach (var treeNode in node.Nodes)
+                foreach (ITreeNode treeNode in node.Nodes)
                 {
                     treeNode.Expand(); // sub-region
                 }

@@ -6,6 +6,8 @@ namespace DelftTools.Hydro.CrossSections.StandardShapes
     [Entity(FireOnCollectionChange = false)]
     public class CrossSectionStandardShapeElliptical : CrossSectionStandardShapeWidthHeightBase
     {
+        public override CrossSectionStandardShapeType Type => CrossSectionStandardShapeType.Elliptical;
+
         public static CrossSectionStandardShapeElliptical CreateDefault()
         {
             return new CrossSectionStandardShapeElliptical
@@ -14,8 +16,6 @@ namespace DelftTools.Hydro.CrossSections.StandardShapes
                 Width = 1
             };
         }
-
-        public override CrossSectionStandardShapeType Type => CrossSectionStandardShapeType.Elliptical;
 
         public override CrossSectionDefinitionZW GetTabulatedDefinition()
         {

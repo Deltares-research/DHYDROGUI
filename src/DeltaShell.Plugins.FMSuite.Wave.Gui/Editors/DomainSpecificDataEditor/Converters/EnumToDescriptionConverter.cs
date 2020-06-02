@@ -13,7 +13,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.DomainSpecificDataEditor.C
     public class EnumToDescriptionConverter : IValueConverter
     {
         /// <summary>
-        /// Converts the specified <paramref name="value" /> as an <see cref="Enum"/> to its description.
+        /// Converts the specified <paramref name="value"/> as an <see cref="Enum"/> to its description.
         /// </summary>
         /// <param name="value">The enum value.</param>
         /// <param name="targetType">Type of the target, which should be <see cref="string"/>.</param>
@@ -21,9 +21,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.DomainSpecificDataEditor.C
         /// <param name="culture">This parameter is not used.</param>
         /// <returns> The enum description. </returns>
         /// <remarks>
-        /// <see cref="DependencyProperty.UnsetValue" /> is returned if
-        /// the <paramref name="value" /> is not an <see cref="Enum" /> or
-        /// the <paramref name="targetType" /> is not a <see cref="string" />.
+        /// <see cref="DependencyProperty.UnsetValue"/> is returned if
+        /// the <paramref name="value"/> is not an <see cref="Enum"/> or
+        /// the <paramref name="targetType"/> is not a <see cref="string"/>.
         /// </remarks>
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
@@ -35,7 +35,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.DomainSpecificDataEditor.C
             return DependencyProperty.UnsetValue;
         }
 
-        ///<summary>Method is not implemented.</summary>
+        /// <summary>Method is not implemented.</summary>
         /// <exception cref="NotSupportedException">Thrown when this method is called.</exception>
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {

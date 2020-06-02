@@ -13,11 +13,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.Substance
     public class WaterQualityOutputParameter : Unique<long>, INameable, ICloneable
     {
         /// <summary>
-        /// THe name of the output parameter
-        /// </summary>
-        public string Name { get; set; }
-
-        /// <summary>
         /// The description of the output parameter
         /// </summary>
         public string Description { get; set; }
@@ -31,6 +26,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.Substance
         /// Whether or not the output parameter should be shown in the MAP output
         /// </summary>
         public bool ShowInMap { get; set; }
+
+        /// <summary>
+        /// THe name of the output parameter
+        /// </summary>
+        public string Name { get; set; }
 
         public object Clone()
         {

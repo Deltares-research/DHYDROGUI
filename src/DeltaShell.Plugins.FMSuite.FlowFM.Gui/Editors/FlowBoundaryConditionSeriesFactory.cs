@@ -21,22 +21,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
     public class FlowBoundaryConditionSeriesFactory
     {
         private static readonly Color[] signalColors = new[]
-            {
-                Color.Red, Color.LimeGreen, Color.Blue, Color.Violet, Color.Orange, Color.BlueViolet, Color.Aqua,
-                Color.Gold, Color.DarkGreen, Color.Tomato
-            };
-
-        private static readonly Color[] backGroundColors = new[] { Color.Gray, Color.Black, Color.LightGray };
-
-        private static Color GetSignalColor(int i)
         {
-            return signalColors[i % signalColors.Length];
-        }
+            Color.Red,
+            Color.LimeGreen,
+            Color.Blue,
+            Color.Violet,
+            Color.Orange,
+            Color.BlueViolet,
+            Color.Aqua,
+            Color.Gold,
+            Color.DarkGreen,
+            Color.Tomato
+        };
 
-        private static Color GetBackgroundColor(int i)
+        private static readonly Color[] backGroundColors = new[]
         {
-            return backGroundColors[i % backGroundColors.Length];
-        }
+            Color.Gray,
+            Color.Black,
+            Color.LightGray
+        };
 
         private readonly List<IFunction> backgroundTimeSeries;
         private IFunction signalTimeSeries;
@@ -53,30 +56,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             signalTimeSeries = null;
         }
 
-        public IEnumerable<IChartSeries> CreateSeries()
-        {
-            var i = 0;
-            if (signalTimeSeries != null)
-            {
-                foreach (var component in signalTimeSeries.Components)
-                {
-                    yield return
-                        MakeSeries(signalTimeSeries, component.DisplayName, DashStyle.Solid,
-                                   GetSignalColor(i++));
-                }
-            }
-            foreach (var backgroundfunction in backgroundTimeSeries)
-            {
-                if (backgroundfunction == null) continue;
-                foreach (var component in backgroundfunction.Components)
-                {
-                    yield return
-                        MakeSeries(backgroundfunction, component.DisplayName, DashStyle.Solid,
-                                   GetSignalColor(i++));
-                }
-            }
-        }
-        
         public DateTime ModelStartTime { private get; set; }
 
         public DateTime ModelStopTime { private get; set; }
@@ -87,13 +66,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
 
         public EventedList<FlowBoundaryConditionPointData> BackgroundFunctions
         {
-            get { return backgroundFunctions; }
+            get
+            {
+                return backgroundFunctions;
+            }
             set
             {
                 if (backgroundFunctions != null)
                 {
-                    backgroundFunctions.CollectionChanged -= BackgroundFunctionsCollectionChanged;   
+                    backgroundFunctions.CollectionChanged -= BackgroundFunctionsCollectionChanged;
                 }
+
                 backgroundFunctions = value;
                 EvaluateBackgrounds();
                 if (backgroundFunctions != null)
@@ -105,7 +88,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
 
         public FlowBoundaryConditionPointData SignalFunction
         {
-            get { return signalFunction; }
+            get
+            {
+                return signalFunction;
+            }
             set
             {
                 signalFunction = value;
@@ -113,59 +99,32 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             }
         }
 
-        private LineChartSeries MakeSeries(IFunction function, string componentName, DashStyle style, Color color)
+        public IEnumerable<IChartSeries> CreateSeries()
         {
-            return new LineChartSeries
-                {
-                    ChartSeriesInterpolationType = ChartSeriesInterpolationType.Linear,
-                    XValuesDataMember = function.Arguments[0].DisplayName,
-                    YValuesDataMember = componentName,
-                    Title = componentName,
-                    DefaultNullValue = (double) function.Components[0].DefaultValue,
-                    PointerSize = 3,
-                    PointerVisible = false,
-                    DataSource = new FunctionBindingList(function),
-                    UpdateASynchronously = true,
-                    XAxisIsDateTime = function.Arguments[0].ValueType == typeof (DateTime),
-                    DashStyle = style,
-                    Color = color,
-                    PointerColor = color
-                };
-        }
-
-        private DateTime StartTime
-        {
-            get
+            var i = 0;
+            if (signalTimeSeries != null)
             {
-                if (SignalFunction != null && SignalFunction.ForcingType == BoundaryConditionDataType.TimeSeries)
+                foreach (IVariable component in signalTimeSeries.Components)
                 {
-                    var timeValues = SignalFunction.Function.Arguments[0].Values;
-                    return timeValues.Count == 0 ? ModelStartTime : (DateTime) timeValues[0];
+                    yield return
+                        MakeSeries(signalTimeSeries, component.DisplayName, DashStyle.Solid,
+                                   GetSignalColor(i++));
                 }
-                return ModelStartTime;
             }
-        }
 
-        private DateTime StopTime
-        {
-            get
+            foreach (IFunction backgroundfunction in backgroundTimeSeries)
             {
-                if (SignalFunction != null && SignalFunction.ForcingType == BoundaryConditionDataType.TimeSeries)
+                if (backgroundfunction == null)
                 {
-                    var timeValues = SignalFunction.Function.Arguments[0].Values;
-                    return timeValues.Count == 0 ? ModelStartTime : (DateTime) timeValues[timeValues.Count - 1];
+                    continue;
                 }
-                return ModelStopTime;
-            }
-        }
 
-        private void EvaluateBackgrounds()
-        {
-            backgroundTimeSeries.Clear();
-            if (BackgroundFunctions == null) return;
-            foreach (var flowFunctionWrapper in BackgroundFunctions)
-            {
-                backgroundTimeSeries.Add(CreateTimeSeries(new[] {flowFunctionWrapper}));
+                foreach (IVariable component in backgroundfunction.Components)
+                {
+                    yield return
+                        MakeSeries(backgroundfunction, component.DisplayName, DashStyle.Solid,
+                                   GetSignalColor(i++));
+                }
             }
         }
 
@@ -176,26 +135,111 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
                 signalTimeSeries = null;
                 return;
             }
+
             signalTimeSeries = SignalFunction.ForcingType == BoundaryConditionDataType.Qh
-                ? SignalFunction.Function
-                : CreateTimeSeries(new[] {SignalFunction});
+                                   ? SignalFunction.Function
+                                   : CreateTimeSeries(new[]
+                                   {
+                                       SignalFunction
+                                   });
+        }
+
+        private DateTime StartTime
+        {
+            get
+            {
+                if (SignalFunction != null && SignalFunction.ForcingType == BoundaryConditionDataType.TimeSeries)
+                {
+                    IMultiDimensionalArray timeValues = SignalFunction.Function.Arguments[0].Values;
+                    return timeValues.Count == 0 ? ModelStartTime : (DateTime) timeValues[0];
+                }
+
+                return ModelStartTime;
+            }
+        }
+
+        private DateTime StopTime
+        {
+            get
+            {
+                if (SignalFunction != null && SignalFunction.ForcingType == BoundaryConditionDataType.TimeSeries)
+                {
+                    IMultiDimensionalArray timeValues = SignalFunction.Function.Arguments[0].Values;
+                    return timeValues.Count == 0 ? ModelStartTime : (DateTime) timeValues[timeValues.Count - 1];
+                }
+
+                return ModelStopTime;
+            }
+        }
+
+        private static Color GetSignalColor(int i)
+        {
+            return signalColors[i % signalColors.Length];
+        }
+
+        private static Color GetBackgroundColor(int i)
+        {
+            return backGroundColors[i % backGroundColors.Length];
+        }
+
+        private LineChartSeries MakeSeries(IFunction function, string componentName, DashStyle style, Color color)
+        {
+            return new LineChartSeries
+            {
+                ChartSeriesInterpolationType = ChartSeriesInterpolationType.Linear,
+                XValuesDataMember = function.Arguments[0].DisplayName,
+                YValuesDataMember = componentName,
+                Title = componentName,
+                DefaultNullValue = (double) function.Components[0].DefaultValue,
+                PointerSize = 3,
+                PointerVisible = false,
+                DataSource = new FunctionBindingList(function),
+                UpdateASynchronously = true,
+                XAxisIsDateTime = function.Arguments[0].ValueType == typeof(DateTime),
+                DashStyle = style,
+                Color = color,
+                PointerColor = color
+            };
+        }
+
+        private void EvaluateBackgrounds()
+        {
+            backgroundTimeSeries.Clear();
+            if (BackgroundFunctions == null)
+            {
+                return;
+            }
+
+            foreach (FlowBoundaryConditionPointData flowFunctionWrapper in BackgroundFunctions)
+            {
+                backgroundTimeSeries.Add(CreateTimeSeries(new[]
+                {
+                    flowFunctionWrapper
+                }));
+            }
         }
 
         private void BackgroundFunctionsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            var removedOrAddedIndex = e.GetRemovedOrAddedIndex();
-            var removedOrAddedItem = e.GetRemovedOrAddedItem();
+            int removedOrAddedIndex = e.GetRemovedOrAddedIndex();
+            object removedOrAddedItem = e.GetRemovedOrAddedItem();
             switch (e.Action)
             {
                 case NotifyCollectionChangedAction.Add:
                     backgroundTimeSeries.Insert(removedOrAddedIndex,
-                                                CreateTimeSeries(new[] { (FlowBoundaryConditionPointData)removedOrAddedItem }));
+                                                CreateTimeSeries(new[]
+                                                {
+                                                    (FlowBoundaryConditionPointData) removedOrAddedItem
+                                                }));
                     break;
                 case NotifyCollectionChangedAction.Remove:
                     backgroundTimeSeries.RemoveAt(removedOrAddedIndex);
                     break;
                 case NotifyCollectionChangedAction.Replace:
-                    backgroundTimeSeries[removedOrAddedIndex] = CreateTimeSeries(new[] { (FlowBoundaryConditionPointData)removedOrAddedItem });
+                    backgroundTimeSeries[removedOrAddedIndex] = CreateTimeSeries(new[]
+                    {
+                        (FlowBoundaryConditionPointData) removedOrAddedItem
+                    });
                     break;
                 case NotifyCollectionChangedAction.Reset:
                     backgroundTimeSeries.Clear();
@@ -226,7 +270,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
                 ComputeSampleTimeStamps(pointData.Select(f => f.Function.Arguments.FirstOrDefault()), StartTime,
                                         StopTime);
 
-            var function = new Function {Name = pointData.Count == 1 ? name : ("Total " + name)};
+            var function = new Function {Name = pointData.Count == 1 ? name : "Total " + name};
             function.Arguments.Add(new Variable<DateTime>("Time", new Unit("hours", "h")));
             function.Arguments[0].SetValues(times);
 
@@ -234,28 +278,33 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             {
                 for (var variableDimension = 0; variableDimension < firstWrapper.VariableDimension; ++variableDimension)
                 {
-                    for(var functionComponents = 0; functionComponents  < firstWrapper.Function.Components.Count; ++functionComponents )
+                    for (var functionComponents = 0; functionComponents < firstWrapper.Function.Components.Count; ++functionComponents)
                     {
-                        List<double> values = Enumerable.Repeat((double)0, times.Count).ToList();
+                        List<double> values = Enumerable.Repeat((double) 0, times.Count).ToList();
                         foreach (FlowBoundaryConditionPointData condition in pointData)
                         {
-                            if (!CanCreateTimeSeries(condition)) continue;
+                            if (!CanCreateTimeSeries(condition))
+                            {
+                                continue;
+                            }
 
                             List<IVariable> summedComponents = condition.FilterLayersAndComponents(0, variableDimension).ToList();
                             int totalSummedComponents = summedComponents.Count;
-                            if (functionComponents  < totalSummedComponents)
+                            if (functionComponents < totalSummedComponents)
                             {
-                                summedComponents = new List<IVariable>() { summedComponents[functionComponents ] };
+                                summedComponents = new List<IVariable>() {summedComponents[functionComponents]};
                                 // only use zeroth layer for sum.
                                 FillValues(condition.ForcingType, condition.Function.Arguments[0], summedComponents, times,
                                            values, condition.BoundaryCondition.Factor, condition.BoundaryCondition.Offset);
                             }
                         }
-                        function.Components.Add(new Variable<double>(firstWrapper.Function.Components[functionComponents ].Name, unit));
+
+                        function.Components.Add(new Variable<double>(firstWrapper.Function.Components[functionComponents].Name, unit));
                         function.Components.Last().SetValues(values);
                         function.Components.Last().NoDataValue = double.NaN;
                     }
                 }
+
                 return function;
             }
 
@@ -263,12 +312,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             {
                 for (var i = 0; i < firstWrapper.VariableDimension; ++i)
                 {
-                    var values = Enumerable.Repeat((double) 0, times.Count).ToList();
-                    foreach (var condition in pointData)
+                    List<double> values = Enumerable.Repeat((double) 0, times.Count).ToList();
+                    foreach (FlowBoundaryConditionPointData condition in pointData)
                     {
-                        if (!CanCreateTimeSeries(condition)) continue;
+                        if (!CanCreateTimeSeries(condition))
+                        {
+                            continue;
+                        }
 
-                        var summedComponents = condition.FilterLayersAndComponents(0, i).ToList();
+                        List<IVariable> summedComponents = condition.FilterLayersAndComponents(0, i).ToList();
                         // only use zeroth layer for sum.
 
                         FillValues(condition.ForcingType, condition.Function.Arguments[0], summedComponents, times,
@@ -277,23 +329,23 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
 
                     function.Components.Add(new Variable<double>(name, unit));
                     function.Components.Last().SetValues(values);
-                    function.Components.Last().NoDataValue = Double.NaN;
+                    function.Components.Last().NoDataValue = double.NaN;
                 }
             }
             else
             {
-                var numLayers = firstWrapper.UseLayers
-                    ? firstWrapper.Function.Components.Count/
-                      (firstWrapper.VariableDimension*firstWrapper.ForcingTypeDimension)
-                    : 1;
+                int numLayers = firstWrapper.UseLayers
+                                    ? firstWrapper.Function.Components.Count /
+                                      (firstWrapper.VariableDimension * firstWrapper.ForcingTypeDimension)
+                                    : 1;
 
                 for (var i = 0; i < firstWrapper.VariableDimension; ++i)
                 {
                     for (var j = 0; j < numLayers; ++j)
                     {
-                        var values = Enumerable.Repeat((double) 0, times.Count).ToList();
+                        List<double> values = Enumerable.Repeat((double) 0, times.Count).ToList();
 
-                        var summedComponents = firstWrapper.FilterLayersAndComponents(j, i).ToList();
+                        List<IVariable> summedComponents = firstWrapper.FilterLayersAndComponents(j, i).ToList();
 
                         FillValues(firstWrapper.ForcingType, firstWrapper.Function.Arguments[0], summedComponents, times,
                                    values, firstWrapper.BoundaryCondition.Factor, firstWrapper.BoundaryCondition.Offset);
@@ -302,7 +354,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
                                                     numLayers == 1 ? name : name + "(" + (j + 1) + ")", unit));
 
                         function.Components.Last().SetValues(values);
-                        function.Components.Last().NoDataValue = Double.NaN;
+                        function.Components.Last().NoDataValue = double.NaN;
                     }
                 }
             }
@@ -313,7 +365,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
         private void FillValues(BoundaryConditionDataType forcingType, IVariable argument, IList<IVariable> components,
                                 IList<DateTime> times, IList<double> values, double factor, double offset)
         {
-            const double prefactor = Math.PI/180;
+            const double prefactor = Math.PI / 180;
 
             switch (forcingType)
             {
@@ -321,15 +373,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
 
                     for (var i = 0; i < times.Count; i++)
                     {
-                        var time = times[i];
+                        DateTime time = times[i];
                         // no extrapolation: outside range time series are set to zero.
-                        if (argument.ValueType == typeof (DateTime) && time >= (DateTime) argument.MinValue &&
+                        if (argument.ValueType == typeof(DateTime) && time >= (DateTime) argument.MinValue &&
                             time <= (DateTime) argument.MaxValue)
                         {
                             values[i] +=
-                                (factor*
-                                 components[0].Evaluate<double>(new VariableValueFilter<DateTime>(argument, time)) +
-                                 offset);
+                                (factor *
+                                 components[0].Evaluate<double>(new VariableValueFilter<DateTime>(argument, time))) +
+                                offset;
                         }
                     }
 
@@ -339,20 +391,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
 
                     for (var i = 0; i < times.Count; i++)
                     {
-                        var time = times[i];
+                        DateTime time = times[i];
                         double value = offset;
-                        var timeOffset = time - ModelReferenceTime;
+                        TimeSpan timeOffset = time - ModelReferenceTime;
                         for (var j = 0; j < argument.Values.Count; j++)
                         {
                             double frequency;
                             if (AstroComponents.TryGetValue((string) argument.Values[j], out frequency))
                             {
-                                var amplitude = (double) components[0].Values[j]*factor;
-                                var phase = ((double) components[1].Values[j] % 360.0);
+                                double amplitude = (double) components[0].Values[j] * factor;
+                                double phase = (double) components[1].Values[j] % 360.0;
 
                                 if (frequency != 0)
                                 {
-                                    value += amplitude*Math.Cos(prefactor*(frequency*timeOffset.TotalHours - phase));
+                                    value += amplitude * Math.Cos(prefactor * ((frequency * timeOffset.TotalHours) - phase));
                                 }
                                 else
                                 {
@@ -360,6 +412,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
                                 }
                             }
                         }
+
                         values[i] += value;
                     }
 
@@ -369,20 +422,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
 
                     for (var i = 0; i < times.Count; i++)
                     {
-                        var time = times[i];
+                        DateTime time = times[i];
                         double value = offset;
-                        var timeOffset = time - ModelReferenceTime;
+                        TimeSpan timeOffset = time - ModelReferenceTime;
                         for (var j = 0; j < argument.Values.Count; j++)
                         {
                             double frequency;
                             if (AstroComponents.TryGetValue((string) argument.Values[j], out frequency))
                             {
-                                var amplitude = (double) components[0].Values[j]*(double) components[2].Values[j]*factor;
-                                var phase = ((double) components[1].Values[j] + (double) components[3].Values[j]) % 360.0;
+                                double amplitude = (double) components[0].Values[j] * (double) components[2].Values[j] * factor;
+                                double phase = ((double) components[1].Values[j] + (double) components[3].Values[j]) % 360.0;
 
                                 if (frequency != 0)
                                 {
-                                    value += amplitude*Math.Cos(prefactor*(frequency*timeOffset.TotalHours - phase));
+                                    value += amplitude * Math.Cos(prefactor * ((frequency * timeOffset.TotalHours) - phase));
                                 }
                                 else
                                 {
@@ -390,6 +443,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
                                 }
                             }
                         }
+
                         values[i] += value;
                     }
 
@@ -399,24 +453,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
 
                     for (var i = 0; i < times.Count; i++)
                     {
-                        var time = times[i];
+                        DateTime time = times[i];
                         double value = offset;
 
-                        var timeOffset = time - ModelReferenceTime;
+                        TimeSpan timeOffset = time - ModelReferenceTime;
                         for (var j = 0; j < argument.Values.Count; j++)
                         {
                             var frequency = (double) argument.Values[j];
-                            var amplitude = (double) components[0].Values[j]*factor;
-                            var phase = (double) components[1].Values[j] % 360.0;
+                            double amplitude = (double) components[0].Values[j] * factor;
+                            double phase = (double) components[1].Values[j] % 360.0;
                             if (frequency != 0)
                             {
-                                value += amplitude*Math.Cos(prefactor*(frequency*timeOffset.TotalHours - phase));
+                                value += amplitude * Math.Cos(prefactor * ((frequency * timeOffset.TotalHours) - phase));
                             }
                             else
                             {
                                 value += amplitude;
                             }
                         }
+
                         values[i] += value;
                     }
 
@@ -426,24 +481,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
 
                     for (var i = 0; i < times.Count; i++)
                     {
-                        var time = times[i];
+                        DateTime time = times[i];
                         double value = offset;
 
-                        var timeOffset = time - ModelReferenceTime;
+                        TimeSpan timeOffset = time - ModelReferenceTime;
                         for (var j = 0; j < argument.Values.Count; j++)
                         {
                             var frequency = (double) argument.Values[j];
-                            var amplitude = (double) components[0].Values[j]*(double) components[2].Values[j]*factor;
-                            var phase = ((double) components[1].Values[j] + (double) components[3].Values[j]) % 360.0;
+                            double amplitude = (double) components[0].Values[j] * (double) components[2].Values[j] * factor;
+                            double phase = ((double) components[1].Values[j] + (double) components[3].Values[j]) % 360.0;
                             if (frequency != 0)
                             {
-                                value += amplitude*Math.Cos(prefactor*(frequency*timeOffset.TotalHours - phase));
+                                value += amplitude * Math.Cos(prefactor * ((frequency * timeOffset.TotalHours) - phase));
                             }
                             else
                             {
                                 value += amplitude;
                             }
                         }
+
                         values[i] += value;
                     }
 
@@ -460,11 +516,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             var result = new SortedSet<DateTime>();
             double sampleFrequency = 0;
 
-            foreach (var backgroundVariable in backgroundVariables)
+            foreach (IVariable backgroundVariable in backgroundVariables)
             {
                 if (backgroundVariable.ValueType == typeof(DateTime))
                 {
-                    var dateTimes = backgroundVariable.Values.Cast<DateTime>().ToList();
+                    List<DateTime> dateTimes = backgroundVariable.Values.Cast<DateTime>().ToList();
 
                     dateTimes.SkipWhile(d => d < startTime)
                              .TakeWhile(d => d <= stopTime)
@@ -476,6 +532,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
                         {
                             result.Add(dateTimes.Last(d => d < startTime));
                         }
+
                         if (dateTimes.Any(d => d > stopTime))
                         {
                             result.Add(dateTimes.FirstOrDefault(d => d > stopTime));
@@ -490,11 +547,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
 
             if (sampleFrequency > 0)
             {
-                var timeSpan = stopTime - startTime;
-                var samples = Math.Min(Math.Max((int)(4 * sampleFrequency * timeSpan.TotalHours), 500), 10000);
-                var timeTicks = samples == 0 ? 0 : timeSpan.Ticks / samples;
-                var dateTimes = Enumerable.Range(0, samples).Select(i => startTime + new TimeSpan(i * timeTicks));
-                foreach (var dateTime in dateTimes)
+                TimeSpan timeSpan = stopTime - startTime;
+                int samples = Math.Min(Math.Max((int) (4 * sampleFrequency * timeSpan.TotalHours), 500), 10000);
+                long timeTicks = samples == 0 ? 0 : timeSpan.Ticks / samples;
+                IEnumerable<DateTime> dateTimes = Enumerable.Range(0, samples).Select(i => startTime + new TimeSpan(i * timeTicks));
+                foreach (DateTime dateTime in dateTimes)
                 {
                     result.Add(dateTime);
                 }
@@ -514,17 +571,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             {
                 return 0;
             }
+
             if (variable.ValueType == typeof(string))
             {
-                return 2 * Math.PI *
-                       variable.Values.Cast<string>()
-                               .Select(s => AstroComponents.ContainsKey(s) ? AstroComponents[s] : 0)
-                               .Max() / 360;
+                return (2 * Math.PI *
+                        variable.Values.Cast<string>()
+                                .Select(s => AstroComponents.ContainsKey(s) ? AstroComponents[s] : 0)
+                                .Max()) / 360;
             }
+
             if (variable.ValueType == typeof(double))
             {
-                return 2 * Math.PI * variable.Values.Cast<double>().Max() / 360;
+                return (2 * Math.PI * variable.Values.Cast<double>().Max()) / 360;
             }
+
             return 0;
         }
     }

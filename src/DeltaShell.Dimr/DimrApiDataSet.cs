@@ -20,6 +20,21 @@ namespace DeltaShell.Dimr
         [Obsolete("No longer used, use the Dll instead.")]
         public const string DimrExeName = "dimr.exe";
 
+        /// <summary>
+        /// The feedback level key
+        /// </summary>
+        public const string FeedbackLevelKey = "feedbackLevel";
+
+        /// <summary>
+        /// The logfile level key
+        /// </summary>
+        public const string LogFileLevelKey = "debugLevel";
+
+        /// <summary>
+        /// The DIMR fill value
+        /// </summary>
+        public const double DimrFillValue = -999000.0d;
+
         private const string standardBinFolderName = "bin";
         private const string standardScriptFolderName = "scripts";
         private const string shareFolderName = "share";
@@ -94,42 +109,6 @@ namespace DeltaShell.Dimr
         public static string RtcToolsDllPath => Path.Combine(KernelsDirectory, ARCH, rtcToolsFolderName, standardBinFolderName);
 
         /// <summary>
-        /// Add the DIMR shared dll path to the end of the PATH variable, if it has not been added yet.
-        /// </summary>
-        public static void SetSharedPath()
-        {
-            SetSharedPath(new SystemEnvironment());
-        }
-        
-        /// <summary>
-        /// Add the DIMR shared dll path to the end of the PATH variable, if it has not been added yet
-        /// using the specified environment.
-        /// </summary>
-        /// <param name="environment">The environment to interact with.</param>
-        internal static void SetSharedPath(IEnvironment environment)
-        {
-            string path = environment.GetVariable(EnvironmentConstants.PathKey) ?? "";
-
-            if (path.Contains(SharedDllPath)) 
-                return;
-
-            path = path.Any() ? string.Join(";", SharedDllPath, path) 
-                              : SharedDllPath;
-
-            environment.SetVariable(EnvironmentConstants.PathKey, path);
-        }
-
-        /// <summary>
-        /// The feedback level key
-        /// </summary>
-        public const string FeedbackLevelKey = "feedbackLevel";
-
-        /// <summary>
-        /// The logfile level key
-        /// </summary>
-        public const string LogFileLevelKey = "debugLevel";
-
-        /// <summary>
         /// The log file level
         /// </summary>
         public static Level LogFileLevel { get; set; } = Level.None;
@@ -140,8 +119,32 @@ namespace DeltaShell.Dimr
         public static Level FeedbackLevel { get; set; } = Level.None;
 
         /// <summary>
-        /// The DIMR fill value
+        /// Add the DIMR shared dll path to the end of the PATH variable, if it has not been added yet.
         /// </summary>
-        public const double DimrFillValue = -999000.0d;
+        public static void SetSharedPath()
+        {
+            SetSharedPath(new SystemEnvironment());
+        }
+
+        /// <summary>
+        /// Add the DIMR shared dll path to the end of the PATH variable, if it has not been added yet
+        /// using the specified environment.
+        /// </summary>
+        /// <param name="environment">The environment to interact with.</param>
+        internal static void SetSharedPath(IEnvironment environment)
+        {
+            string path = environment.GetVariable(EnvironmentConstants.PathKey) ?? "";
+
+            if (path.Contains(SharedDllPath))
+            {
+                return;
+            }
+
+            path = path.Any()
+                       ? string.Join(";", SharedDllPath, path)
+                       : SharedDllPath;
+
+            environment.SetVariable(EnvironmentConstants.PathKey, path);
+        }
     }
 }

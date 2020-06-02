@@ -49,18 +49,6 @@ namespace DelftTools.Hydro
         [FeatureAttribute(ExportName = "StreetLvl")]
         public virtual double StreetLevel { get; set; }
 
-        public override void CopyFrom(object source)
-        {
-            base.CopyFrom(source);
-            Type = ((Retention) source).Type;
-            StorageArea = ((Retention) source).StorageArea;
-            StreetStorageArea = ((Retention) source).StreetStorageArea;
-            BedLevel = ((Retention) source).BedLevel;
-            LevelBL = ((Retention) source).LevelBL;
-            StreetLevel = ((Retention) source).StreetLevel;
-            Data = (IFunction) ((Retention) source).Data.Clone(true);
-        }
-
         public virtual IFunction Data { get; set; }
 
         public virtual IHydroNetwork HydroNetwork => Network as IHydroNetwork;
@@ -77,6 +65,18 @@ namespace DelftTools.Hydro
             {
                 yield return Data;
             }
+        }
+
+        public override void CopyFrom(object source)
+        {
+            base.CopyFrom(source);
+            Type = ((Retention) source).Type;
+            StorageArea = ((Retention) source).StorageArea;
+            StreetStorageArea = ((Retention) source).StreetStorageArea;
+            BedLevel = ((Retention) source).BedLevel;
+            LevelBL = ((Retention) source).LevelBL;
+            StreetLevel = ((Retention) source).StreetLevel;
+            Data = (IFunction) ((Retention) source).Data.Clone(true);
         }
     }
 }

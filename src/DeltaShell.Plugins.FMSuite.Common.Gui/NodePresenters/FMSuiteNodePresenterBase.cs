@@ -8,45 +8,56 @@ using DelftTools.Utils;
 
 namespace DeltaShell.Plugins.FMSuite.Common.Gui.NodePresenters
 {
-    public abstract class FMSuiteNodePresenterBase<T> : TreeViewNodePresenterBaseForPluginGui<T> where T : class 
+    public abstract class FMSuiteNodePresenterBase<T> : TreeViewNodePresenterBaseForPluginGui<T> where T : class
     {
         private Image lastImageForEmptyData;
         private Image emptyDataImage;
+
+        private bool firstUpdate = true;
 
         public override void UpdateNode(ITreeNode parentNode, ITreeNode node, T nodeData)
         {
             CheckNodeImageResourceLeak(nodeData);
 
             node.Text = GetNodeText(nodeData);
-            var image = GetNodeImage(nodeData);
+            Image image = GetNodeImage(nodeData);
             if (IsDataEmpty())
             {
                 if (!ReferenceEquals(image, lastImageForEmptyData)) // create new empty image
                 {
                     lastImageForEmptyData = image;
                     if (emptyDataImage != null)
+                    {
                         emptyDataImage.Dispose();
+                    }
+
                     emptyDataImage = CreateEmptyDataImage(image);
                 }
+
                 image = emptyDataImage;
             }
+
             node.Image = image;
         }
 
-        private static Image CreateEmptyDataImage(Image image)
+        public override IMenuItem GetContextMenu(ITreeNode sender, object nodeData)
         {
-            var semiTransparentyImage = new Bitmap(image);
-            using (var graphics = Graphics.FromImage(semiTransparentyImage))
+            IMenuItem menuBase = base.GetContextMenu(sender, nodeData);
+            IMenuItem menu = NodePresenterHelper.GetContextMenuFromPluginGuis(Gui, sender, nodeData);
+            if (menuBase != null)
             {
-                graphics.Clear(Color.Transparent);
-                GraphicsUtils.DrawImageTransparent(graphics, image, 0.5f);
+                menu.Add(menuBase);
             }
-            return semiTransparentyImage;
+
+            object data = GetContextMenuData((T) nodeData);
+            menu.Add(new MenuItemContextMenuStripAdapter(ContextMenuFactory.CreateMenuFor(data, Gui, this, sender)));
+
+            return menu;
         }
 
         protected abstract string GetNodeText(T data);
         protected abstract Image GetNodeImage(T data);
-        
+
         protected virtual bool IsDataEmpty()
         {
             return false;
@@ -57,34 +68,35 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.NodePresenters
             return data;
         }
 
-        public override IMenuItem GetContextMenu(ITreeNode sender, object nodeData)
+        private static Image CreateEmptyDataImage(Image image)
         {
-            var menuBase = base.GetContextMenu(sender, nodeData);
-            var menu = NodePresenterHelper.GetContextMenuFromPluginGuis(Gui, sender, nodeData);
-            if (menuBase != null)
-                menu.Add(menuBase);
+            var semiTransparentyImage = new Bitmap(image);
+            using (Graphics graphics = Graphics.FromImage(semiTransparentyImage))
+            {
+                graphics.Clear(Color.Transparent);
+                GraphicsUtils.DrawImageTransparent(graphics, image, 0.5f);
+            }
 
-            var data = GetContextMenuData((T)nodeData);
-            menu.Add(new MenuItemContextMenuStripAdapter(ContextMenuFactory.CreateMenuFor(data, Gui, this, sender)));
-
-            return menu;
+            return semiTransparentyImage;
         }
-
-        private bool firstUpdate = true;
 
         [Conditional("DEBUG")]
         private void CheckNodeImageResourceLeak(T data)
         {
             if (!firstUpdate)
+            {
                 return;
+            }
 
             firstUpdate = false;
-            var image1 = GetNodeImage(data);
-            var image2 = GetNodeImage(data);
+            Image image1 = GetNodeImage(data);
+            Image image2 = GetNodeImage(data);
             if (!ReferenceEquals(image1, image2))
+            {
                 throw new InvalidOperationException(
                     string.Format("Apparent resource leak in {0}.GetNodeImage(): a new bitmap is returned each time, please reuse the bitmap",
-                        GetType().Name));
+                                  GetType().Name));
+            }
         }
     }
 }

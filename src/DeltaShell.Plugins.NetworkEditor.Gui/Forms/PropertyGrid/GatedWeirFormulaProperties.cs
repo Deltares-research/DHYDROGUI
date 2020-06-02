@@ -9,29 +9,34 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
 {
     internal class GatedWeirFormulaProperties : WeirFormulaProperties
     {
-        public GatedWeirFormulaProperties(GatedWeirFormula gatedWeirFormula, IWeir weir) : base(gatedWeirFormula, weir)
-        {
-        }
-
-        private GatedWeirFormula GatedWeirFormula
-        {
-            get { return (GatedWeirFormula)weirFormula; }
-        }
+        public GatedWeirFormulaProperties(GatedWeirFormula gatedWeirFormula, IWeir weir) : base(gatedWeirFormula, weir) {}
 
         [DisplayName("Contraction Coefficient")]
         [Description("Contraction coefficient")]
         public double ContractionCoefficient
         {
-            get { return GatedWeirFormula.ContractionCoefficient; }
-            set { GatedWeirFormula.ContractionCoefficient = value; }
+            get
+            {
+                return GatedWeirFormula.ContractionCoefficient;
+            }
+            set
+            {
+                GatedWeirFormula.ContractionCoefficient = value;
+            }
         }
 
         [DisplayName("Lateral Contraction")]
         [Description("Lateral contraction Cw")]
         public double LateralContraction
         {
-            get { return GatedWeirFormula.LateralContraction; }
-            set { GatedWeirFormula.LateralContraction = value; }
+            get
+            {
+                return GatedWeirFormula.LateralContraction;
+            }
+            set
+            {
+                GatedWeirFormula.LateralContraction = value;
+            }
         }
 
         [DynamicVisible]
@@ -40,8 +45,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [DisplayName("Gate opening type")]
         public TimeDependency UseCapacityTimeSeries
         {
-            get { return GatedWeirFormula.UseLowerEdgeLevelTimeSeries ? TimeDependency.TimeDependent : TimeDependency.Constant; }
-            set { GatedWeirFormula.UseLowerEdgeLevelTimeSeries = value == TimeDependency.TimeDependent; }
+            get
+            {
+                return GatedWeirFormula.UseLowerEdgeLevelTimeSeries ? TimeDependency.TimeDependent : TimeDependency.Constant;
+            }
+            set
+            {
+                GatedWeirFormula.UseLowerEdgeLevelTimeSeries = value == TimeDependency.TimeDependent;
+            }
         }
 
         [DynamicReadOnly]
@@ -55,6 +66,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
                 {
                     return "Time series";
                 }
+
                 return GatedWeirFormula.GateOpening.ToString(CultureInfo.CurrentCulture);
             }
             set
@@ -63,6 +75,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
                 {
                     throw new InvalidOperationException("Cannot set value using time dependent gate opening.");
                 }
+
                 GatedWeirFormula.GateOpening = double.Parse(value, CultureInfo.CurrentCulture);
             }
         }
@@ -72,8 +85,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [DynamicReadOnly]
         public double MaxFlowPos
         {
-            get { return GatedWeirFormula.MaxFlowPos; }
-            set { GatedWeirFormula.MaxFlowPos = value; }
+            get
+            {
+                return GatedWeirFormula.MaxFlowPos;
+            }
+            set
+            {
+                GatedWeirFormula.MaxFlowPos = value;
+            }
         }
 
         [DisplayName("Max Flow Neg")]
@@ -81,8 +100,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [DynamicReadOnly]
         public double MaxFlowNeg
         {
-            get { return GatedWeirFormula.MaxFlowNeg; }
-            set { GatedWeirFormula.MaxFlowNeg = value; }
+            get
+            {
+                return GatedWeirFormula.MaxFlowNeg;
+            }
+            set
+            {
+                GatedWeirFormula.MaxFlowNeg = value;
+            }
         }
 
         [DisplayName("Use Max Flow Pos")]
@@ -90,8 +115,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [DynamicReadOnly]
         public bool UseMaxFlowPos
         {
-            get { return GatedWeirFormula.UseMaxFlowPos; }
-            set { GatedWeirFormula.UseMaxFlowPos = value; }
+            get
+            {
+                return GatedWeirFormula.UseMaxFlowPos;
+            }
+            set
+            {
+                GatedWeirFormula.UseMaxFlowPos = value;
+            }
         }
 
         [DisplayName("Use Max Flow Neg")]
@@ -99,8 +130,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [DynamicReadOnly]
         public bool UseMaxFlowNeg
         {
-            get { return GatedWeirFormula.UseMaxFlowNeg; }
-            set { GatedWeirFormula.UseMaxFlowNeg = value; }
+            get
+            {
+                return GatedWeirFormula.UseMaxFlowNeg;
+            }
+            set
+            {
+                GatedWeirFormula.UseMaxFlowNeg = value;
+            }
         }
 
         [DynamicReadOnlyValidationMethod]
@@ -110,14 +147,17 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
             {
                 return GatedWeirFormula.CanBeTimedependent && GatedWeirFormula.UseLowerEdgeLevelTimeSeries;
             }
-            if(propertyName == nameof(MaxFlowNeg) || propertyName == nameof(UseMaxFlowNeg))
+
+            if (propertyName == nameof(MaxFlowNeg) || propertyName == nameof(UseMaxFlowNeg))
             {
                 return !weir.AllowNegativeFlow;
             }
+
             if (propertyName == nameof(MaxFlowPos) || propertyName == nameof(UseMaxFlowPos))
             {
                 return !weir.AllowPositiveFlow;
             }
+
             return false;
         }
 
@@ -128,7 +168,16 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
             {
                 return GatedWeirFormula.CanBeTimedependent;
             }
+
             return true;
+        }
+
+        private GatedWeirFormula GatedWeirFormula
+        {
+            get
+            {
+                return (GatedWeirFormula) weirFormula;
+            }
         }
     }
 }

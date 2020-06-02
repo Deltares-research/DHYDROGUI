@@ -20,6 +20,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
             flexibleMeshBasicModelInterface = new FlexibleMeshBasicModelInterface();
         }
 
+        public DateTime StartTime => flexibleMeshBasicModelInterface.StartTime;
+
+        public DateTime StopTime => flexibleMeshBasicModelInterface.StopTime;
+
+        public DateTime CurrentTime => flexibleMeshBasicModelInterface.CurrentTime;
+
+        public TimeSpan TimeStep => flexibleMeshBasicModelInterface.TimeStep;
+
+        public string[] VariableNames => flexibleMeshBasicModelInterface.VariableNames;
+
+        public Logger Logger { get; set; }
+
         public string GetVersionString()
         {
             var versionAsStringBuilder = new StringBuilder("tst".PadRight(FlexibleMeshModelDll.MAXSTRLEN));
@@ -158,18 +170,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
         {
             return flexibleMeshBasicModelInterface.GetVariableLocation(variable);
         }
-
-        public DateTime StartTime => flexibleMeshBasicModelInterface.StartTime;
-
-        public DateTime StopTime => flexibleMeshBasicModelInterface.StopTime;
-
-        public DateTime CurrentTime => flexibleMeshBasicModelInterface.CurrentTime;
-
-        public TimeSpan TimeStep => flexibleMeshBasicModelInterface.TimeStep;
-
-        public string[] VariableNames => flexibleMeshBasicModelInterface.VariableNames;
-
-        public Logger Logger { get; set; }
 
         public void Dispose()
         {

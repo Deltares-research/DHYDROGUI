@@ -14,7 +14,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
         /// <summary>
         /// Gets or sets the network route data
         /// </summary>
-        INetworkCoverage NetworkRoute { get;  }
+        INetworkCoverage NetworkRoute { get; }
 
         /// <summary>
         /// Gets the maximum Y value for a route (can be a structure OffsetZ or coverage value)
@@ -35,13 +35,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
         /// Gets the bed level network coverage
         /// </summary>
         /// <remarks>
-        /// The bed level network coverage will only be set (for caching purpose) 
+        /// The bed level network coverage will only be set (for caching purpose)
         /// when the NetworkRoute (NetworkCoverage) is set.
-        /// To get a new rebuilded BedLevelNetworkCovarage object use the 
+        /// To get a new rebuilded BedLevelNetworkCovarage object use the
         /// function BuildBottomLevelNetworkCoverage()
         /// </remarks>
         INetworkCoverage BedLevelNetworkCoverage { get; } // { return BedLevelNetworkCoverageBuilder.BuildCoverage(route); }
-        
+
         // todo refactor this interface?
         IList<INetworkCoverage> AllNetworkCoverages { get; }
         IList<IFeatureCoverage> AllFeatureCoverages { get; }

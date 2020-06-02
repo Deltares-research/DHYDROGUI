@@ -7,7 +7,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Sediment
     {
         IEventedList<ISedimentProperty> SedimentOverallProperties { get; }
         IEventedList<ISedimentFraction> SedimentFractions { get; }
-        SedimentModelDataItem GetSedimentDataItem();
         string MduFilePath { get; }
+        SedimentModelDataItem GetSedimentDataItem();
     }
 }

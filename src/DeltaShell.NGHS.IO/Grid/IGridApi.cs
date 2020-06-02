@@ -3,6 +3,12 @@ namespace DeltaShell.NGHS.IO.Grid
     public interface IGridApi
     {
         /// <summary>
+        /// Checks if the gridapi is initialized with a nc file
+        /// </summary>
+        /// <returns>Initialization status</returns>
+        bool Initialized { get; }
+
+        /// <summary>
         /// Read the convention from the grid nc file via the io_netcdf.dll
         /// </summary>
         /// <param name="file">The grid nc file</param>
@@ -20,7 +26,7 @@ namespace DeltaShell.NGHS.IO.Grid
         bool adherestoConventions(GridApiDataSet.DataSetConventions convtype);
 
         /// <summary>
-        /// Read the convention from the initialized grid nc file 
+        /// Read the convention from the initialized grid nc file
         /// </summary>
         /// <returns>The convention in the initialized grid nc file (or other)</returns>
         GridApiDataSet.DataSetConventions GetConvention();
@@ -41,12 +47,6 @@ namespace DeltaShell.NGHS.IO.Grid
         int Open(string filePath, GridApiDataSet.NetcdfOpenMode mode);
 
         /// <summary>
-        /// Checks if the gridapi is initialized with a nc file
-        /// </summary>
-        /// <returns>Initialization status</returns>
-        bool Initialized { get; }
-
-        /// <summary>
         /// Tries to close an open io_netcdf data set.
         /// </summary>
         int Close();
@@ -60,11 +60,11 @@ namespace DeltaShell.NGHS.IO.Grid
         int GetCoordinateSystemCode(out int coordinateSystemCode);
 
         /// <summary>
-        /// Read the version from the initialized grid nc file 
+        /// Read the version from the initialized grid nc file
         /// </summary>
         /// <returns>The version in the initialized grid nc file (or NaN)</returns>
         double GetVersion();
-        
+
         int Initialize();
 
         int GetNumberOfNetworks(out int numberOfNetworks);

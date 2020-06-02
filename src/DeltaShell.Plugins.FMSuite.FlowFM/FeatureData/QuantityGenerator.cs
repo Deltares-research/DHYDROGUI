@@ -9,8 +9,8 @@ using GeoAPI.Extensions.Feature;
 namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
 {
     /// <summary>
-    /// This class generates the possible quantities for every <see cref="IFeature" /> object, depending on
-    /// the concrete type of <see cref="IFeature" />.
+    /// This class generates the possible quantities for every <see cref="IFeature"/> object, depending on
+    /// the concrete type of <see cref="IFeature"/>.
     /// </summary>
     public static class QuantityGenerator
     {
@@ -22,7 +22,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
         /// When the requesting model uses salinity, this argument is true. This affects the quantities
         /// that are generated.
         /// </param>
-        /// <returns> A collection of strings that describe every possible quantity for <paramref name="feature" /> </returns>
+        /// <returns> A collection of strings that describe every possible quantity for <paramref name="feature"/> </returns>
         public static IEnumerable<string> GetQuantitiesForFeature(IFeature feature, bool useSalinity)
         {
             if (feature is IPump)

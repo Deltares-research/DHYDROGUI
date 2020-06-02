@@ -19,6 +19,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
         private SectionsBindingList sections;
         private IEventedList<CrossSectionSectionType> sectionTypeList = new EventedList<CrossSectionSectionType>();
 
+        public event EventHandler SelectionChanged;
 
         public SectionsTableView()
         {
@@ -30,7 +31,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public IEventedList<CrossSectionSectionType> SectionTypeList
         {
-            get { return sectionTypeList; }
+            get
+            {
+                return sectionTypeList;
+            }
             set
             {
                 UnSubscribeSectionTypeListChange();
@@ -39,10 +43,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
                 ResetSelectionTypeEditor();
             }
         }
-        
+
         public bool Enabled
         {
-            get { return tableViewSections.Enabled; }
+            get
+            {
+                return tableViewSections.Enabled;
+            }
             set
             {
                 tableViewSections.Enabled = value;
@@ -51,39 +58,28 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
                 {
                     column.ReadOnly = !tableViewSections.Enabled;
                 }
+
                 SetTableMutability();
             }
         }
 
-        #region IView<IBindingList> Members
+        public double MaxY { get; set; }
+        public double MinY { get; set; }
 
-        public object Data
+        public void Select(CrossSectionSection section)
         {
-            get { return sections; }
-            set
+            tableViewSections.ClearSelection();
+
+            if (section == null)
             {
-                UnSubscribeFromData();
-                sections = (SectionsBindingList) value;
-                SubscribeToData();
-
-                tableViewSections.Data = sections;
-                SetTableMutability();
-
+                return;
             }
+
+            int displayRowIndex = tableViewSections.GetRowIndexByDataSourceIndex(sections.IndexOf(section));
+            tableViewSections.SelectRow(displayRowIndex);
+            tableViewSections.FocusedRowIndex = displayRowIndex;
+            tableViewSections.Invalidate();
         }
-        
-        public Image Image { get; set; }
-
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public int MaximumNumberOfRoughnessSections { get; set; }
-
-        public void EnsureVisible(object item)
-        {
-        }
-
-        public ViewInfo ViewInfo { get; set; }
-
-        #endregion
 
         private void SubscribeSectionTypeListChange()
         {
@@ -99,12 +95,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
         private void ResetSelectionTypeEditor()
         {
             var typeEditor = new ComboBoxTypeEditor
-                {
-                    CustomFormatter = new CrossSectionSectionTypeFormatter(),
-                    Items = SectionTypeList
-                };
+            {
+                CustomFormatter = new CrossSectionSectionTypeFormatter(),
+                Items = SectionTypeList
+            };
 
-            var selectionTypeColumn = tableViewSections.Columns[SectionTypeColumn];
+            ITableViewColumn selectionTypeColumn = tableViewSections.Columns[SectionTypeColumn];
 
             selectionTypeColumn.Editor = typeEditor;
             selectionTypeColumn.CustomFormatter = new CrossSectionSectionTypeFormatter();
@@ -129,18 +125,18 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
             tableViewSections.AllowColumnSorting = false;
             tableViewSections.ShowRowNumbers = true;
             tableViewSections.ReadOnlyCellFilter = cell =>
-                                                       {
-                                                           //lefttop-most and rightbottom-most can't be edited
-                                                           return cell.Column.AbsoluteIndex == 0 && cell.RowIndex == 0 ||
-                                                                  cell.Column.AbsoluteIndex == 1 &&
-                                                                  cell.RowIndex == tableViewSections.RowCount - 1;
-                                                       };
+            {
+                //lefttop-most and rightbottom-most can't be edited
+                return cell.Column.AbsoluteIndex == 0 && cell.RowIndex == 0 ||
+                       cell.Column.AbsoluteIndex == 1 &&
+                       cell.RowIndex == tableViewSections.RowCount - 1;
+            };
 
             tableViewSections.RowSelect = true;
             tableViewSections.FocusedRowChanged += TableViewSectionsFocusedRowChanged; //todo: use selectedrowchanged (not fired correctly now)
         }
 
-        void TableViewSectionsFocusedRowChanged(object sender, EventArgs e)
+        private void TableViewSectionsFocusedRowChanged(object sender, EventArgs e)
         {
             if (SelectionChanged != null)
             {
@@ -155,17 +151,25 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
             if (arg1.RowIndex < 0)
             {
                 // we are apparanetly editing a newly added line; The recoprd has been added to the Data collection 
-                if ((arg1.Column.AbsoluteIndex == MinYColumn) && (sections.Count == 1))
+                if (arg1.Column.AbsoluteIndex == MinYColumn && sections.Count == 1)
+                {
                     return new DelftTools.Utils.Tuple<string, bool>("The first from value can not be edited.", false);
+                }
+
                 if (arg1.Column.AbsoluteIndex == MaxYColumn)
+                {
                     return new DelftTools.Utils.Tuple<string, bool>("The last to value can not be edited.", false);
+                }
+
                 return new DelftTools.Utils.Tuple<string, bool>("", true);
             }
-            if (!((arg1.Column.AbsoluteIndex == MinYColumn) || (arg1.Column.AbsoluteIndex == MaxYColumn)))
+
+            if (!(arg1.Column.AbsoluteIndex == MinYColumn || arg1.Column.AbsoluteIndex == MaxYColumn))
             {
                 return new DelftTools.Utils.Tuple<string, bool>("", true);
             }
-            double newValue = Convert.ToDouble(arg2);
+
+            var newValue = Convert.ToDouble(arg2);
             if (arg1.Column.AbsoluteIndex == MinYColumn)
             {
                 if (newValue > GetRoughnessSection(arg1.RowIndex).MaxY)
@@ -174,8 +178,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
                         string.Format("Min value {0} must be less than max value {1}", newValue,
                                       GetRoughnessSection(arg1.RowIndex).MaxY), false);
                 }
+
                 // the first real value that is actually smaller
-                var prevSection = sections.FirstOrDefault(csr => csr.MinY <= newValue);
+                CrossSectionSection prevSection = sections.FirstOrDefault(csr => csr.MinY <= newValue);
 
                 var previous = double.MinValue;
                 if (prevSection != null)
@@ -189,8 +194,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
                         string.Format("Roughness segments can not overlap {0} < {1}", newValue,
                                       GetRoughnessSection(arg1.RowIndex - 1).MinY), false);
                 }
+
                 return new DelftTools.Utils.Tuple<string, bool>("", true);
             }
+
             if (newValue < GetRoughnessSection(arg1.RowIndex).MinY)
             {
                 return new DelftTools.Utils.Tuple<string, bool>(
@@ -198,7 +205,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
                                   GetRoughnessSection(arg1.RowIndex).MinY), false);
             }
 
-            var nextSection = sections.FirstOrDefault(csr => csr.MaxY > newValue);
+            CrossSectionSection nextSection = sections.FirstOrDefault(csr => csr.MaxY > newValue);
             var next = double.MaxValue;
             if (nextSection != null)
             {
@@ -211,6 +218,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
                     string.Format("Roughness segments can not overlap ({0} > {1})", newValue,
                                   GetRoughnessSection(arg1.RowIndex + 1).MaxY), false);
             }
+
             return new DelftTools.Utils.Tuple<string, bool>("", true);
         }
 
@@ -260,34 +268,44 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
             SubscribeToData();
         }
 
-        public double MaxY { get; set; }
-        public double MinY { get; set; }
-
-        public void Select(CrossSectionSection section)
-        {
-            tableViewSections.ClearSelection();
-
-            if (section == null)
-            {
-                return;
-            }
-
-            var displayRowIndex = tableViewSections.GetRowIndexByDataSourceIndex(sections.IndexOf(section));
-            tableViewSections.SelectRow(displayRowIndex);
-            tableViewSections.FocusedRowIndex = displayRowIndex;
-            tableViewSections.Invalidate();
-        }
-
         private class CrossSectionSectionTypeFormatter : ICustomFormatter
         {
             public string Format(string format, object arg, IFormatProvider formatProvider)
             {
-                return (arg is CrossSectionSectionType)
-                           ? ((CrossSectionSectionType)arg).Name
+                return arg is CrossSectionSectionType
+                           ? ((CrossSectionSectionType) arg).Name
                            : arg.ToString();
             }
         }
 
-        public event EventHandler SelectionChanged;
+        #region IView<IBindingList> Members
+
+        public object Data
+        {
+            get
+            {
+                return sections;
+            }
+            set
+            {
+                UnSubscribeFromData();
+                sections = (SectionsBindingList) value;
+                SubscribeToData();
+
+                tableViewSections.Data = sections;
+                SetTableMutability();
+            }
+        }
+
+        public Image Image { get; set; }
+
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public int MaximumNumberOfRoughnessSections { get; set; }
+
+        public void EnsureVisible(object item) {}
+
+        public ViewInfo ViewInfo { get; set; }
+
+        #endregion
     }
 }

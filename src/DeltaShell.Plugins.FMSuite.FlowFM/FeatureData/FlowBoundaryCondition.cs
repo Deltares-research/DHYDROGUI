@@ -564,51 +564,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
                 .Except(ValidBoundaryConditionCombinations.SelectMany(l => l).Distinct())
                 .ToList();
 
-        public static string GetVariableNameForQuantity(FlowBoundaryQuantityType flowQuantity)
-        {
-            return flowQuantity.ToString();
-        }
-
-        public static string GetDescription(FlowBoundaryQuantityType flowQuantity)
-        {
-            return flowQuantity.GetDescription();
-        }
-
-        public static string GetDescription(BoundaryConditionDataType boundaryConditionDataType)
-        {
-            return boundaryConditionDataType.GetDescription();
-        }
-
-        public static string GetDescription(FlowBoundaryQuantityType flowBoundaryQuantityType,
-                                            BoundaryConditionDataType boundaryConditionDataType)
-        {
-            return GetDescription(flowBoundaryQuantityType) + " (" +
-                   GetDescription(boundaryConditionDataType) + ")";
-        }
-
-        public static string GetProcessNameForQuantity(FlowBoundaryQuantityType flowQuantity)
-        {
-            List<CategoryAttribute> attributes =
-                typeof(FlowBoundaryQuantityType).GetField(flowQuantity.ToString())
-                                                .GetCustomAttributes(typeof(CategoryAttribute), false)
-                                                .OfType<CategoryAttribute>()
-                                                .ToList();
-
-            return attributes.Any() ? attributes.First().Category : "<none>";
-        }
-
-        public static double GetPeriodInMinutes(double frequencyInDegPerHour)
-        {
-            return frequencyInDegPerHour == 0 ? 0 : (60 * 360) / frequencyInDegPerHour;
-        }
-
-        public static double GetFrequencyInDegPerHour(double periodInMinutes)
-        {
-            return periodInMinutes == 0 ? 0 : (60 * 360) / periodInMinutes;
-        }
-
         private VerticalInterpolationType verticalInterpolationType;
         private string tracerName;
+
+        private string sedimentFractionName;
 
         public FlowBoundaryCondition(FlowBoundaryQuantityType flowQuantity, BoundaryConditionDataType dataType) :
             base(dataType)
@@ -619,150 +578,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
             ThatcherHarlemanTimeLag = TimeSpan.Zero;
             verticalInterpolationType = SupportedVerticalInterpolationTypes.First();
         }
-
-        public FlowBoundaryQuantityType FlowQuantity { get; private set; }
-
-        public double Offset { get; set; }
-
-        public double Factor { get; set; }
-
-        public TimeSpan ThatcherHarlemanTimeLag { get; set; }
-
-        public bool SupportsReflection => false;
-
-        public IEnumerable<VerticalInterpolationType> SupportedVerticalInterpolationTypes
-        {
-            get
-            {
-                if (IsVerticallyUniform)
-                {
-                    yield return VerticalInterpolationType.Uniform;
-                }
-                else
-                {
-                    yield return VerticalInterpolationType.Linear;
-                    yield return VerticalInterpolationType.Step;
-                    yield return VerticalInterpolationType.Logarithmic;
-                }
-            }
-        }
-
-        [DisplayName("Reflection parameter")]
-        public double ReflectionAlpha { get; set; }
-
-        public IUnit ReflectionUnit
-        {
-            get
-            {
-                switch (FlowQuantity)
-                {
-                    case FlowBoundaryQuantityType.WaterLevel:
-                        return new Unit("", "s²");
-                    case FlowBoundaryQuantityType.Velocity:
-                    case FlowBoundaryQuantityType.NormalVelocity:
-                    case FlowBoundaryQuantityType.TangentVelocity:
-                    case FlowBoundaryQuantityType.VelocityVector:
-                    case FlowBoundaryQuantityType.Discharge:
-                        return new Unit("time", "s");
-                    default:
-                        throw new ArgumentOutOfRangeException(string.Format("VariableName type {0} not supported",
-                                                                            FlowQuantity));
-                }
-            }
-        }
-
-        //TODO: move the vertical profile, depends upon support point.
-        public VerticalInterpolationType VerticalInterpolationType
-        {
-            get => verticalInterpolationType;
-            set
-            {
-                if (SupportedVerticalInterpolationTypes.Contains(value))
-                {
-                    verticalInterpolationType = value;
-                }
-            }
-        }
-
-        public void KeepBottomLayer()
-        {
-            for (var i = 0; i < PointDepthLayerDefinitions.Count; ++i)
-            {
-                int numLayers = PointDepthLayerDefinitions[i].ProfilePoints;
-                IFunction data = PointData[i];
-                int componentsToRemove = (numLayers - 1) * (data.Components.Count / numLayers);
-                for (var j = 0; j < componentsToRemove; ++j)
-                {
-                    data.Components.RemoveAt(j);
-                }
-
-                PointDepthLayerDefinitions[i] = new VerticalProfileDefinition();
-            }
-        }
-
-        public void KeepTopLayer()
-        {
-            for (var i = 0; i < PointDepthLayerDefinitions.Count; ++i)
-            {
-                PointDepthLayerDefinitions[i] = new VerticalProfileDefinition();
-            }
-        }
-
-        /// <summary>
-        /// The tracer name is only set when the <see cref="FlowQuantity" /> is set to
-        /// <see cref="FlowBoundaryQuantityType.Tracer" />.
-        /// It is the postfix of tracer_{TracerName}.
-        /// </summary>
-        public string TracerName
-        {
-            get => tracerName;
-            set
-            {
-                tracerName = value;
-
-                if (FlowQuantity == FlowBoundaryQuantityType.Tracer)
-                {
-                    foreach (IFunction function in PointData)
-                    {
-                        function.BeginEdit(new DefaultEditAction("Tracer name"));
-
-                        function.Components[0].Name = VariableName;
-                        function.Name = VariableName;
-
-                        function.EndEdit();
-                    }
-                }
-
-                UpdateName();
-            }
-        }
-
-        public string SedimentFractionName
-        {
-            get => sedimentFractionName;
-            set
-            {
-                sedimentFractionName = value;
-                if (FlowQuantity == FlowBoundaryQuantityType.SedimentConcentration)
-                {
-                    foreach (IFunction function in PointData)
-                    {
-                        function.BeginEdit(new DefaultEditAction("Sediment concentration name"));
-
-                        function.Components[0].Name = VariableName;
-                        function.Name = VariableName;
-
-                        function.EndEdit();
-                    }
-                }
-
-                UpdateName();
-            }
-        }
-
-        private string sedimentFractionName;
-
-        public List<string> SedimentFractionNames { get; set; } /* Sediment fraction names are unique */
 
         /// <summary>
         /// Gets the name of the flow boundary quantity type.
@@ -864,6 +679,203 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
             }
         }
 
+        public FlowBoundaryQuantityType FlowQuantity { get; private set; }
+
+        public double Offset { get; set; }
+
+        public double Factor { get; set; }
+
+        public TimeSpan ThatcherHarlemanTimeLag { get; set; }
+
+        public bool SupportsReflection => false;
+
+        public IEnumerable<VerticalInterpolationType> SupportedVerticalInterpolationTypes
+        {
+            get
+            {
+                if (IsVerticallyUniform)
+                {
+                    yield return VerticalInterpolationType.Uniform;
+                }
+                else
+                {
+                    yield return VerticalInterpolationType.Linear;
+                    yield return VerticalInterpolationType.Step;
+                    yield return VerticalInterpolationType.Logarithmic;
+                }
+            }
+        }
+
+        [DisplayName("Reflection parameter")]
+        public double ReflectionAlpha { get; set; }
+
+        public IUnit ReflectionUnit
+        {
+            get
+            {
+                switch (FlowQuantity)
+                {
+                    case FlowBoundaryQuantityType.WaterLevel:
+                        return new Unit("", "s²");
+                    case FlowBoundaryQuantityType.Velocity:
+                    case FlowBoundaryQuantityType.NormalVelocity:
+                    case FlowBoundaryQuantityType.TangentVelocity:
+                    case FlowBoundaryQuantityType.VelocityVector:
+                    case FlowBoundaryQuantityType.Discharge:
+                        return new Unit("time", "s");
+                    default:
+                        throw new ArgumentOutOfRangeException(string.Format("VariableName type {0} not supported",
+                                                                            FlowQuantity));
+                }
+            }
+        }
+
+        //TODO: move the vertical profile, depends upon support point.
+        public VerticalInterpolationType VerticalInterpolationType
+        {
+            get => verticalInterpolationType;
+            set
+            {
+                if (SupportedVerticalInterpolationTypes.Contains(value))
+                {
+                    verticalInterpolationType = value;
+                }
+            }
+        }
+
+        /// <summary>
+        /// The tracer name is only set when the <see cref="FlowQuantity"/> is set to
+        /// <see cref="FlowBoundaryQuantityType.Tracer"/>.
+        /// It is the postfix of tracer_{TracerName}.
+        /// </summary>
+        public string TracerName
+        {
+            get => tracerName;
+            set
+            {
+                tracerName = value;
+
+                if (FlowQuantity == FlowBoundaryQuantityType.Tracer)
+                {
+                    foreach (IFunction function in PointData)
+                    {
+                        function.BeginEdit(new DefaultEditAction("Tracer name"));
+
+                        function.Components[0].Name = VariableName;
+                        function.Name = VariableName;
+
+                        function.EndEdit();
+                    }
+                }
+
+                UpdateName();
+            }
+        }
+
+        public string SedimentFractionName
+        {
+            get => sedimentFractionName;
+            set
+            {
+                sedimentFractionName = value;
+                if (FlowQuantity == FlowBoundaryQuantityType.SedimentConcentration)
+                {
+                    foreach (IFunction function in PointData)
+                    {
+                        function.BeginEdit(new DefaultEditAction("Sediment concentration name"));
+
+                        function.Components[0].Name = VariableName;
+                        function.Name = VariableName;
+
+                        function.EndEdit();
+                    }
+                }
+
+                UpdateName();
+            }
+        }
+
+        public List<string> SedimentFractionNames { get; set; } /* Sediment fraction names are unique */
+
+        public bool StrictlyPositive =>
+            FlowQuantity == FlowBoundaryQuantityType.Salinity ||
+            FlowQuantity == FlowBoundaryQuantityType.Temperature ||
+            FlowQuantity == FlowBoundaryQuantityType.SedimentConcentration ||
+            FlowQuantity == FlowBoundaryQuantityType.Tracer;
+
+        public bool SupportsThatcherHarleman =>
+            FlowQuantity == FlowBoundaryQuantityType.Salinity ||
+            FlowQuantity == FlowBoundaryQuantityType.Temperature ||
+            FlowQuantity == FlowBoundaryQuantityType.SedimentConcentration ||
+            FlowQuantity == FlowBoundaryQuantityType.Tracer;
+
+        public static string GetVariableNameForQuantity(FlowBoundaryQuantityType flowQuantity)
+        {
+            return flowQuantity.ToString();
+        }
+
+        public static string GetDescription(FlowBoundaryQuantityType flowQuantity)
+        {
+            return flowQuantity.GetDescription();
+        }
+
+        public static string GetDescription(BoundaryConditionDataType boundaryConditionDataType)
+        {
+            return boundaryConditionDataType.GetDescription();
+        }
+
+        public static string GetDescription(FlowBoundaryQuantityType flowBoundaryQuantityType,
+                                            BoundaryConditionDataType boundaryConditionDataType)
+        {
+            return GetDescription(flowBoundaryQuantityType) + " (" +
+                   GetDescription(boundaryConditionDataType) + ")";
+        }
+
+        public static string GetProcessNameForQuantity(FlowBoundaryQuantityType flowQuantity)
+        {
+            List<CategoryAttribute> attributes =
+                typeof(FlowBoundaryQuantityType).GetField(flowQuantity.ToString())
+                                                .GetCustomAttributes(typeof(CategoryAttribute), false)
+                                                .OfType<CategoryAttribute>()
+                                                .ToList();
+
+            return attributes.Any() ? attributes.First().Category : "<none>";
+        }
+
+        public static double GetPeriodInMinutes(double frequencyInDegPerHour)
+        {
+            return frequencyInDegPerHour == 0 ? 0 : (60 * 360) / frequencyInDegPerHour;
+        }
+
+        public static double GetFrequencyInDegPerHour(double periodInMinutes)
+        {
+            return periodInMinutes == 0 ? 0 : (60 * 360) / periodInMinutes;
+        }
+
+        public void KeepBottomLayer()
+        {
+            for (var i = 0; i < PointDepthLayerDefinitions.Count; ++i)
+            {
+                int numLayers = PointDepthLayerDefinitions[i].ProfilePoints;
+                IFunction data = PointData[i];
+                int componentsToRemove = (numLayers - 1) * (data.Components.Count / numLayers);
+                for (var j = 0; j < componentsToRemove; ++j)
+                {
+                    data.Components.RemoveAt(j);
+                }
+
+                PointDepthLayerDefinitions[i] = new VerticalProfileDefinition();
+            }
+        }
+
+        public void KeepTopLayer()
+        {
+            for (var i = 0; i < PointDepthLayerDefinitions.Count; ++i)
+            {
+                PointDepthLayerDefinitions[i] = new VerticalProfileDefinition();
+            }
+        }
+
         public static bool MorphologyBoundaryConditionHasGeneratedData(IBoundaryCondition boundaryCondition)
         {
             bool generatedData = boundaryCondition.DataType != BoundaryConditionDataType.Empty &&
@@ -891,39 +903,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
                    flowQuantity == FlowBoundaryQuantityType.MorphologyBedLevelFixed;
         }
 
-        protected override IFunction CreateFunction()
-        {
-            if (DataType == BoundaryConditionDataType.Qh)
-            {
-                var function = new Function(VariableName);
-                function.Arguments.Add(new Variable<double>("Q", new Unit("cubic meters", "m3/s")));
-                function.Components.Add(new Variable<double>("h", new Unit("meters", "m")) {NoDataValue = double.NaN});
-
-                return function;
-            }
-
-            if (FlowQuantity == FlowBoundaryQuantityType.MorphologyBedLoadTransport &&
-                DataType == BoundaryConditionDataType.TimeSeries)
-            {
-                if (SedimentFractionNames == null || SedimentFractionNames.Count == 0)
-                {
-                    return null;
-                }
-
-                IFunction loadTransport = new Function(VariableName);
-
-                loadTransport.Arguments.Add(new Variable<DateTime>("Time"));
-                foreach (string fraction in SedimentFractionNames)
-                {
-                    AddSedimentFractionToFunction(loadTransport, fraction);
-                }
-
-                return loadTransport;
-            }
-
-            return base.CreateFunction();
-        }
-
         public void AddSedimentFractionToFunction(IFunction loadTransport, string fraction)
         {
             if (!SedimentFractionNames.Contains(fraction))
@@ -945,23 +924,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
             {
                 loadTransport.Components.RemoveAllWhere(fc => fc.Name.Equals(fraction));
             }
-        }
-
-        protected override void FeaturePropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName.Equals(nameof(Feature2D.Name)))
-            {
-                UpdateName();
-            }
-            else
-            {
-                base.FeaturePropertyChanged(sender, e);
-            }
-        }
-
-        protected override void UpdateName()
-        {
-            Name = Feature == null ? VariableDescription : Feature.Name + "-" + VariableDescription;
         }
 
         public static IEnumerable<BoundaryConditionDataType> GetSupportedDataTypesForQuantity(
@@ -1004,16 +966,54 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
             }
         }
 
-        public bool StrictlyPositive =>
-            FlowQuantity == FlowBoundaryQuantityType.Salinity ||
-            FlowQuantity == FlowBoundaryQuantityType.Temperature ||
-            FlowQuantity == FlowBoundaryQuantityType.SedimentConcentration ||
-            FlowQuantity == FlowBoundaryQuantityType.Tracer;
+        protected override IFunction CreateFunction()
+        {
+            if (DataType == BoundaryConditionDataType.Qh)
+            {
+                var function = new Function(VariableName);
+                function.Arguments.Add(new Variable<double>("Q", new Unit("cubic meters", "m3/s")));
+                function.Components.Add(new Variable<double>("h", new Unit("meters", "m")) {NoDataValue = double.NaN});
 
-        public bool SupportsThatcherHarleman =>
-            FlowQuantity == FlowBoundaryQuantityType.Salinity ||
-            FlowQuantity == FlowBoundaryQuantityType.Temperature ||
-            FlowQuantity == FlowBoundaryQuantityType.SedimentConcentration ||
-            FlowQuantity == FlowBoundaryQuantityType.Tracer;
+                return function;
+            }
+
+            if (FlowQuantity == FlowBoundaryQuantityType.MorphologyBedLoadTransport &&
+                DataType == BoundaryConditionDataType.TimeSeries)
+            {
+                if (SedimentFractionNames == null || SedimentFractionNames.Count == 0)
+                {
+                    return null;
+                }
+
+                IFunction loadTransport = new Function(VariableName);
+
+                loadTransport.Arguments.Add(new Variable<DateTime>("Time"));
+                foreach (string fraction in SedimentFractionNames)
+                {
+                    AddSedimentFractionToFunction(loadTransport, fraction);
+                }
+
+                return loadTransport;
+            }
+
+            return base.CreateFunction();
+        }
+
+        protected override void FeaturePropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName.Equals(nameof(Feature2D.Name)))
+            {
+                UpdateName();
+            }
+            else
+            {
+                base.FeaturePropertyChanged(sender, e);
+            }
+        }
+
+        protected override void UpdateName()
+        {
+            Name = Feature == null ? VariableDescription : Feature.Name + "-" + VariableDescription;
+        }
     }
 }

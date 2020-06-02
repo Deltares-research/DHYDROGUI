@@ -5,6 +5,11 @@ namespace DeltaShell.NGHS.IO.Grid
     public interface IUGridApi : IGridApi, IDisposable
     {
         /// <summary>
+        /// contains the fill value for z-Coordinates
+        /// </summary>
+        double zCoordinateFillValue { get; set; }
+
+        /// <summary>
         /// Gets the number of nodes in a single mesh from a data set.
         /// </summary>
         /// <param name="meshId">The mesh id of the specified data set.</param>
@@ -61,11 +66,6 @@ namespace DeltaShell.NGHS.IO.Grid
         int GetNodeZCoordinates(int meshId, out double[] zCoordinates);
 
         /// <summary>
-        /// contains the fill value for z-Coordinates
-        /// </summary>
-        double zCoordinateFillValue { get; set; }
-
-        /// <summary>
         /// Gets the edge-node connectivity table for all edges in the specified mesh.
         /// </summary>
         /// <param name="meshId">The mesh id in the specified data set.</param>
@@ -82,7 +82,7 @@ namespace DeltaShell.NGHS.IO.Grid
         int GetFaceNodesForMesh(int meshId, out int[,] faceNodes);
 
         int GetVarCount(int meshId, GridApiDataSet.LocationType locationType, out int nCount);
-        int GetVarNames(int meshId, GridApiDataSet.LocationType locationType , out int[] varIds);
+        int GetVarNames(int meshId, GridApiDataSet.LocationType locationType, out int[] varIds);
         int WriteXYCoordinateValues(int meshId, double[] xValues, double[] yValues);
         int WriteZCoordinateValues(int meshId, GridApiDataSet.LocationType locationType, string varName, string longName, double[] zValues);
         int ReadZCoordinateValues(int meshId, GridApiDataSet.LocationType locationType, string varName, out double[] zValues);

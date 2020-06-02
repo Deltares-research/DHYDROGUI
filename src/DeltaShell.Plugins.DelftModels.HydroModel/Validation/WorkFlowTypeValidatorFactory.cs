@@ -10,7 +10,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Validation
 
         public static IWorkFlowTypeValidator GetWorkFlowTypeValidator(IActivity activity)
         {
-            var workFlowTypeValidator = WorkFlowTypeValidators.Select(p => p.CreateWorkFlowTypeValidator(activity)).FirstOrDefault(c => c != null);
+            IWorkFlowTypeValidator workFlowTypeValidator = WorkFlowTypeValidators.Select(p => p.CreateWorkFlowTypeValidator(activity)).FirstOrDefault(c => c != null);
             return workFlowTypeValidator ?? new WorkFlowTypeValidator(activity);
         }
     }

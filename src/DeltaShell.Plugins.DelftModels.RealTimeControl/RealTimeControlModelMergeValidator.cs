@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
+using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Validation;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 {
@@ -10,18 +12,18 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         {
             return new ValidationReport(destinationModel.Name + " (Real Time Control)", new[]
             {
-                ValidateControlGroups(destinationModel,sourceModel),
+                ValidateControlGroups(destinationModel, sourceModel),
             });
         }
 
         public static ValidationReport ValidateControlGroups(RealTimeControlModel destinationModel, RealTimeControlModel sourceModel)
         {
-            var destControlGroups = destinationModel.ControlGroups;
-            var srcControlGroups = sourceModel.ControlGroups;
+            IEventedList<ControlGroup> destControlGroups = destinationModel.ControlGroups;
+            IEventedList<ControlGroup> srcControlGroups = sourceModel.ControlGroups;
             var issues = new List<ValidationIssue>();
-            foreach (var srcControlGroup in srcControlGroups)
+            foreach (ControlGroup srcControlGroup in srcControlGroups)
             {
-                foreach (var destControlGroup in destControlGroups)
+                foreach (ControlGroup destControlGroup in destControlGroups)
                 {
                     if (srcControlGroup.Name == destControlGroup.Name)
                     {
@@ -29,6 +31,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
                     }
                 }
             }
+
             return issues.Count == 0 ? new ValidationReport("Control group names", Enumerable.Empty<ValidationIssue>()) : new ValidationReport("Control group names", issues);
         }
     }

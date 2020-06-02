@@ -28,6 +28,10 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
         private IEventedList<int> dataPointIndices;
         private IEventedList<VerticalProfileDefinition> pointDepthLayerDefinitions;
 
+        private bool syncing;
+
+        private IGeometry previousGeometry;
+
         protected BoundaryCondition(BoundaryConditionDataType type)
         {
             dataType = type;
@@ -41,32 +45,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
             pointDepthLayerDefinitions = new EventedList<VerticalProfileDefinition>();
             pointDepthLayerDefinitions.CollectionChanged += PointDepthLayerDefinitionsCollectionChanged;
         }
-
-        protected override void UpdateName()
-        {
-            Name = Feature == null ? "" : FeatureName + " (" + VariableName + ")";
-        }
-
-        [FeatureAttribute(Order = 1)]
-        [ReadOnly(true)]
-        [DisplayName("Boundary")]
-        public string FeatureName => Feature.Name;
-
-        public abstract string ProcessName { get; }
-
-        public virtual string Description => VariableDescription;
-
-        public abstract string VariableName { get; }
-
-        public abstract string VariableDescription { get; }
-
-        public abstract bool IsHorizontallyUniform { get; }
-
-        public abstract bool IsVerticallyUniform { get; }
-
-        public abstract IUnit VariableUnit { get; }
-
-        public abstract int VariableDimension { get; }
 
         [Aggregation]
         public override Feature2D Feature
@@ -87,6 +65,27 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
                 }
             }
         }
+
+        [FeatureAttribute(Order = 1)]
+        [ReadOnly(true)]
+        [DisplayName("Boundary")]
+        public string FeatureName => Feature.Name;
+
+        public abstract IUnit VariableUnit { get; }
+
+        public abstract int VariableDimension { get; }
+
+        public abstract string ProcessName { get; }
+
+        public virtual string Description => VariableDescription;
+
+        public abstract string VariableName { get; }
+
+        public abstract string VariableDescription { get; }
+
+        public abstract bool IsHorizontallyUniform { get; }
+
+        public abstract bool IsVerticallyUniform { get; }
 
         [FeatureAttribute(Order = 4)]
         [ReadOnly(true)]
@@ -143,6 +142,23 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
                     }
                 }
             }
+        }
+
+        public bool IsEditing { get; private set; }
+
+        public bool EditWasCancelled { get; private set; }
+
+        public IEditAction CurrentEditAction { get; private set; }
+
+        IFeature IBoundaryCondition.Feature => base.Feature;
+
+        public void ClearData()
+        {
+            syncing = true;
+            DataPointIndices.Clear();
+            PointData.Clear();
+            PointDepthLayerDefinitions.Clear();
+            syncing = false;
         }
 
         public virtual void AddPoint(int i)
@@ -202,12 +218,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
             return pointIndex < PointDepthLayerDefinitions.Count ? PointDepthLayerDefinitions[pointIndex] : null;
         }
 
-        public bool IsEditing { get; private set; }
-
-        public bool EditWasCancelled { get; private set; }
-
-        public IEditAction CurrentEditAction { get; private set; }
-
         public void BeginEdit(IEditAction action)
         {
             IsEditing = true;
@@ -223,32 +233,14 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
             IsEditing = false;
         }
 
-        private IFunction CreateMultiLayerFunction(int supportPoint)
+        public object Clone()
         {
-            IFunction function = CreateFunction();
+            throw new NotImplementedException("Cloning boundary conditions is not implemented yet");
+        }
 
-            VerticalProfileDefinition verticalProfileDefinition = GetDepthLayerDefinitionAtPoint(supportPoint);
-
-            if (verticalProfileDefinition != null && verticalProfileDefinition.ProfilePoints > 1)
-            {
-                int componentCount = function.Components.Count;
-                for (var i = 1; i < verticalProfileDefinition.ProfilePoints; ++i)
-                {
-                    for (var j = 0; j < componentCount; ++j)
-                    {
-                        var component = (IVariable) function.Components[j].Clone(false);
-                        component.Name += "(" + (i + 1) + ")";
-                        function.Components.Add(component);
-                    }
-                }
-
-                for (var j = 0; j < componentCount; ++j)
-                {
-                    function.Components[j].Name += "(1)";
-                }
-            }
-
-            return function;
+        protected override void UpdateName()
+        {
+            Name = Feature == null ? "" : FeatureName + " (" + VariableName + ")";
         }
 
         protected virtual IFunction ConvertMultiLayerFunction(int supportPoint,
@@ -308,10 +300,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
                     function.Arguments.Add(new Variable<DateTime>("Time"));
                     foreach (string componentSuffix in componentSuffixes)
                     {
-                        function.Components.Add(new Variable<double>(VariableName + componentSuffix, VariableUnit)
-                        {
-                            NoDataValue = double.NaN
-                        });
+                        function.Components.Add(new Variable<double>(VariableName + componentSuffix, VariableUnit) {NoDataValue = double.NaN});
                     }
 
                     break;
@@ -320,15 +309,9 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
                     function.Arguments.Add(new Variable<string>("Component", new Unit("", "-")) {IsAutoSorted = false});
                     foreach (string componentSuffix in componentSuffixes)
                     {
-                        function.Components.Add(new Variable<double>("Amplitude" + componentSuffix, VariableUnit)
-                        {
-                            NoDataValue = double.NaN
-                        });
+                        function.Components.Add(new Variable<double>("Amplitude" + componentSuffix, VariableUnit) {NoDataValue = double.NaN});
                         function.Components.Add(new Variable<double>("Phase" + componentSuffix,
-                                                                     new Unit("degree", "deg"))
-                        {
-                            NoDataValue = double.NaN
-                        });
+                                                                     new Unit("degree", "deg")) {NoDataValue = double.NaN});
                     }
 
                     break;
@@ -337,15 +320,9 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
                     function.Arguments.Add(new Variable<string>("Component", new Unit("", "-")) {IsAutoSorted = false});
                     foreach (string componentSuffix in componentSuffixes)
                     {
-                        function.Components.Add(new Variable<double>("Amplitude" + componentSuffix, VariableUnit)
-                        {
-                            NoDataValue = double.NaN
-                        });
+                        function.Components.Add(new Variable<double>("Amplitude" + componentSuffix, VariableUnit) {NoDataValue = double.NaN});
                         function.Components.Add(new Variable<double>("Phase" + componentSuffix,
-                                                                     new Unit("degree", "deg"))
-                        {
-                            NoDataValue = double.NaN
-                        });
+                                                                     new Unit("degree", "deg")) {NoDataValue = double.NaN});
                         function.Components.Add(new Variable<double>("Amplitude corr." + componentSuffix, new Unit("-"))
                         {
                             NoDataValue = double.NaN,
@@ -365,15 +342,9 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
                     function.Arguments.Add(new Variable<double>("Frequency", new Unit("degree per hour", "deg/h")));
                     foreach (string componentSuffix in componentSuffixes)
                     {
-                        function.Components.Add(new Variable<double>("Amplitude" + componentSuffix, VariableUnit)
-                        {
-                            NoDataValue = double.NaN
-                        });
+                        function.Components.Add(new Variable<double>("Amplitude" + componentSuffix, VariableUnit) {NoDataValue = double.NaN});
                         function.Components.Add(new Variable<double>("Phase" + componentSuffix,
-                                                                     new Unit("degree", "deg"))
-                        {
-                            NoDataValue = double.NaN
-                        });
+                                                                     new Unit("degree", "deg")) {NoDataValue = double.NaN});
                     }
 
                     break;
@@ -382,15 +353,9 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
                     function.Arguments.Add(new Variable<double>("Frequency", new Unit("degree per hour", "deg/h")));
                     foreach (string componentSuffix in componentSuffixes)
                     {
-                        function.Components.Add(new Variable<double>("Amplitude" + componentSuffix, VariableUnit)
-                        {
-                            NoDataValue = double.NaN
-                        });
+                        function.Components.Add(new Variable<double>("Amplitude" + componentSuffix, VariableUnit) {NoDataValue = double.NaN});
                         function.Components.Add(new Variable<double>("Phase" + componentSuffix,
-                                                                     new Unit("degree", "deg"))
-                        {
-                            NoDataValue = double.NaN
-                        });
+                                                                     new Unit("degree", "deg")) {NoDataValue = double.NaN});
                         function.Components.Add(new Variable<double>("Amplitude corr." + componentSuffix, new Unit("-"))
                         {
                             NoDataValue = double.NaN,
@@ -424,14 +389,102 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
             return function;
         }
 
-        IFeature IBoundaryCondition.Feature => base.Feature;
+        protected virtual void FeaturePropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(Feature2D.Geometry))
+            {
+                BeginEdit(new DefaultEditAction("Syncing data with geometry points"));
+
+                List<int> newIndices =
+                    DataPointIndices.Select(
+                        i => LookupIndexForCoordinate(previousGeometry.Coordinates[i],
+                                                      Feature.Geometry)).ToList();
+
+                if (Feature.Geometry.Coordinates.Count() != previousGeometry.Coordinates.Count())
+                {
+                    for (int i = DataPointIndices.Count - 1; i > -1; i--)
+                    {
+                        if (newIndices[i] == -1)
+                        {
+                            DataPointIndices.RemoveAt(i);
+                            newIndices.RemoveAt(i);
+                        }
+                        else
+                        {
+                            syncing = true;
+                            DataPointIndices[i] = newIndices[i];
+                            syncing = false;
+                        }
+                    }
+                }
+
+                EndEdit();
+            }
+
+            previousGeometry = Feature.Geometry;
+        }
+
+        [EditAction]
+        protected virtual void AfterDataTypeChanged(BoundaryConditionDataType previousDataType)
+        {
+            BeginEdit(new DefaultEditAction("Syncing data with data type"));
+
+            if (IsHorizontallyUniform && !DataPointIndices.Any())
+            {
+                AddPoint(0);
+            }
+            else
+            {
+                for (var i = 0; i < DataPointIndices.Count; ++i)
+                {
+                    if (IsVerticallyUniform)
+                    {
+                        syncing = true;
+                        PointDepthLayerDefinitions[i] = new VerticalProfileDefinition();
+                        syncing = false;
+                    }
+
+                    syncing = true;
+                    PointData[i] = ConvertMultiLayerFunction(DataPointIndices[i], previousDataType);
+                    syncing = false;
+                }
+            }
+
+            EndEdit();
+        }
+
+        private IFunction CreateMultiLayerFunction(int supportPoint)
+        {
+            IFunction function = CreateFunction();
+
+            VerticalProfileDefinition verticalProfileDefinition = GetDepthLayerDefinitionAtPoint(supportPoint);
+
+            if (verticalProfileDefinition != null && verticalProfileDefinition.ProfilePoints > 1)
+            {
+                int componentCount = function.Components.Count;
+                for (var i = 1; i < verticalProfileDefinition.ProfilePoints; ++i)
+                {
+                    for (var j = 0; j < componentCount; ++j)
+                    {
+                        var component = (IVariable) function.Components[j].Clone(false);
+                        component.Name += "(" + (i + 1) + ")";
+                        function.Components.Add(component);
+                    }
+                }
+
+                for (var j = 0; j < componentCount; ++j)
+                {
+                    function.Components[j].Name += "(1)";
+                }
+            }
+
+            return function;
+        }
 
         private bool ValidIndex(int i)
         {
             return i >= 0 && i < Feature.Geometry.Coordinates.Count();
         }
-
-        private bool syncing;
 
         [EditAction]
         private void DataPointIndicesCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -641,72 +694,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
             return -1;
         }
 
-        private IGeometry previousGeometry;
-
-        protected virtual void FeaturePropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName == nameof(Feature2D.Geometry))
-            {
-                BeginEdit(new DefaultEditAction("Syncing data with geometry points"));
-
-                List<int> newIndices =
-                    DataPointIndices.Select(
-                        i => LookupIndexForCoordinate(previousGeometry.Coordinates[i],
-                                                      Feature.Geometry)).ToList();
-
-                if (Feature.Geometry.Coordinates.Count() != previousGeometry.Coordinates.Count())
-                {
-                    for (int i = DataPointIndices.Count - 1; i > -1; i--)
-                    {
-                        if (newIndices[i] == -1)
-                        {
-                            DataPointIndices.RemoveAt(i);
-                            newIndices.RemoveAt(i);
-                        }
-                        else
-                        {
-                            syncing = true;
-                            DataPointIndices[i] = newIndices[i];
-                            syncing = false;
-                        }
-                    }
-                }
-
-                EndEdit();
-            }
-
-            previousGeometry = Feature.Geometry;
-        }
-
-        [EditAction]
-        protected virtual void AfterDataTypeChanged(BoundaryConditionDataType previousDataType)
-        {
-            BeginEdit(new DefaultEditAction("Syncing data with data type"));
-
-            if (IsHorizontallyUniform && !DataPointIndices.Any())
-            {
-                AddPoint(0);
-            }
-            else
-            {
-                for (var i = 0; i < DataPointIndices.Count; ++i)
-                {
-                    if (IsVerticallyUniform)
-                    {
-                        syncing = true;
-                        PointDepthLayerDefinitions[i] = new VerticalProfileDefinition();
-                        syncing = false;
-                    }
-
-                    syncing = true;
-                    PointData[i] = ConvertMultiLayerFunction(DataPointIndices[i], previousDataType);
-                    syncing = false;
-                }
-            }
-
-            EndEdit();
-        }
-
         private static string BaseName(string name)
         {
             return name.EndsWith("(1)") ? name.Substring(0, name.Length - 3) : name;
@@ -795,20 +782,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
             }
 
             data.EndEdit();
-        }
-
-        public void ClearData()
-        {
-            syncing = true;
-            DataPointIndices.Clear();
-            PointData.Clear();
-            PointDepthLayerDefinitions.Clear();
-            syncing = false;
-        }
-
-        public object Clone()
-        {
-            throw new NotImplementedException("Cloning boundary conditions is not implemented yet");
         }
     }
 }

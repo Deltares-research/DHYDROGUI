@@ -5,8 +5,8 @@ using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Extensions;
+using DeltaShell.Plugins.FMSuite.Common.Gui.Properties;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools;
-using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Properties;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using SharpMap.Api.Layers;
@@ -17,10 +17,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
 {
     public class FlowFMMapViewDecorator
     {
-        private static readonly Bitmap BoundaryIcon = Common.Gui.Properties.Resources.boundary;
-        private static readonly Bitmap SourceSinkIcon = Resources.SourceSink;
-        private static readonly Bitmap SourceIcon = Resources.LateralSourceMap;
-
         internal const string BoundaryToolName = "Boundary tool (2D)";
         internal const string SourceToolName = "Source tool (2D)";
         internal const string SourceAndSinkToolName = "Source & sink tool";
@@ -28,25 +24,30 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
         internal const string GenerateEmbankmentsToolName = "Generate embankments (2D)";
         internal const string MergeEmbankmentsToolName = "Merge embankments";
         internal const string GridWizardToolName = "Grid wizard";
+        private static readonly Bitmap BoundaryIcon = Resources.boundary;
+        private static readonly Bitmap SourceSinkIcon = Properties.Resources.SourceSink;
+        private static readonly Bitmap SourceIcon = Properties.Resources.LateralSourceMap;
 
-        private static readonly string ModelName = typeof (WaterFlowFMModel).Name;
+        private static readonly string ModelName = typeof(WaterFlowFMModel).Name;
 
         public static void AddMapToolsIfMissing(MapView mapView)
         {
             if (mapView.MapControl.Tools.OfType<Feature2DLineTool>().Any(t => t.Name == BoundaryToolName))
+            {
                 return; // already has them
+            }
 
             var tools = new List<MapTool>();
-            
+
             tools.Add(new Reverse2DLineTool
-                {
-                    Name = Reverse2DLineToolName,
-                    LayerFilter = layer => (layer.Name == HydroArea.ObservationCrossSectionsPluralName ||
-                                            layer.Name == HydroArea.PumpsPluralName ||
-                                            layer.Name == HydroArea.WeirsPluralName ||
-                                            layer.Name == FlowFMMapLayerProvider.SourcesAndSinksLayerName) &&
-                                           layer.DataSource is Feature2DCollection
-                });
+            {
+                Name = Reverse2DLineToolName,
+                LayerFilter = layer => (layer.Name == HydroArea.ObservationCrossSectionsPluralName ||
+                                        layer.Name == HydroArea.PumpsPluralName ||
+                                        layer.Name == HydroArea.WeirsPluralName ||
+                                        layer.Name == FlowFMMapLayerProvider.SourcesAndSinksLayerName) &&
+                                       layer.DataSource is Feature2DCollection
+            });
 
             // model
             tools.Add(new Feature2DLineTool(FlowFMMapLayerProvider.BoundariesLayerName, BoundaryToolName, BoundaryIcon));
@@ -62,7 +63,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
 
         private static Func<ILayer, bool> GetLayerFilter(ITargetLayerTool tool)
         {
-            return l => l.Name == tool.LayerName && //expected layer name must match
+            return l => l.Name == tool.LayerName &&            //expected layer name must match
                         l.DataSource is Feature2DCollection && //and layer must be a 2D layer
                         ((Feature2DCollection) l.DataSource).ModelName == ModelName;
         }

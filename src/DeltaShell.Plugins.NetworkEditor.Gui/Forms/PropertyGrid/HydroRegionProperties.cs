@@ -18,8 +18,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [PropertyOrder(1)]
         public string Name
         {
-            get { return data.Name; }
-            set { data.Name = value; }
+            get
+            {
+                return data.Name;
+            }
+            set
+            {
+                data.Name = value;
+            }
         }
 
         [DisplayName("Total hydro objects")]
@@ -27,7 +33,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [PropertyOrder(1)]
         public int TotalHydroObjects
         {
-            get { return data.AllHydroObjects.Count(); }
+            get
+            {
+                return data.AllHydroObjects.Count();
+            }
         }
 
         [DisplayName("Links")]
@@ -35,7 +44,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [PropertyOrder(1)]
         public int Links
         {
-            get { return data.Links.Count(); }
+            get
+            {
+                return data.Links.Count();
+            }
         }
 
         [DisplayName("Total regions")]
@@ -43,15 +55,24 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [PropertyOrder(1)]
         public int TotalRegions
         {
-            get { return data.AllRegions.Count(); }
+            get
+            {
+                return data.AllRegions.Count();
+            }
         }
 
         [TypeConverter(typeof(CoordinateSystemStringTypeConverter))]
         [Editor(typeof(CoordinateSystemTypeEditor), typeof(UITypeEditor))]
         public ICoordinateSystem CoordinateSystem
         {
-            get { return data.CoordinateSystem; }
-            set { data.CoordinateSystem = value; }
+            get
+            {
+                return data.CoordinateSystem;
+            }
+            set
+            {
+                data.CoordinateSystem = value;
+            }
         }
     }
 }

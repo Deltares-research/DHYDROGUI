@@ -24,13 +24,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
         /// <summary>
         /// Allow adding of new coordinates
         /// GeometryBased
-        ///   Do not allow adding or removing in the table
-        ///   Only allow change of the Z column
+        /// Do not allow adding or removing in the table
+        /// Only allow change of the Z column
         /// YZ
-        ///   Allow adding / removing
-        ///   Allow change of Y and Z
+        /// Allow adding / removing
+        /// Allow change of Y and Z
         /// ZW
-        ///   Table is readonly
+        /// Table is readonly
         /// </summary>
         private bool allowAddRemove;
 
@@ -45,9 +45,25 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
 
         private bool readOnlyYColumn;
 
+        public event PropertyChangingEventHandler PropertyChanging;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public event NotifyCollectionChangedEventHandler CollectionChanged;
+
+        public event NotifyCollectionChangingEventHandler CollectionChanging;
+
+        public YZTableView()
+        {
+            InitializeComponent();
+        }
+
         public bool AllowAddRemove
         {
-            get { return allowAddRemove; } 
+            get
+            {
+                return allowAddRemove;
+            }
             set
             {
                 allowAddRemove = value;
@@ -56,29 +72,37 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
             }
         }
 
-        public bool ReadOnly 
-        { 
-            get { return readOnly; } 
+        public bool ReadOnly
+        {
+            get
+            {
+                return readOnly;
+            }
             set
             {
                 if (value == readOnly)
                 {
                     return;
                 }
+
                 readOnly = value;
                 tableViewYZ.Enabled = !readOnly;
-            } 
+            }
         }
 
         public bool ReadOnlyYColumn
         {
-            get { return readOnlyYColumn; }
+            get
+            {
+                return readOnlyYColumn;
+            }
             set
             {
                 if (value == readOnlyYColumn)
                 {
                     return;
                 }
+
                 readOnlyYColumn = value;
                 if (tableViewYZ != null && tableViewYZ.Columns.Count > 1)
                 {
@@ -87,12 +111,59 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
             }
         }
 
-        public YZTableView()
+        public IEditableObject EditableObject
         {
-            InitializeComponent();
+            get
+            {
+                return tableViewYZ.EditableObject;
+            }
+            set
+            {
+                tableViewYZ.EditableObject = value;
+            }
         }
 
-        
+        public bool SkipChildItemEventBubbling { get; set; }
+
+        bool INotifyPropertyChange.HasParent { get; set; }
+
+        public object Data
+        {
+            get
+            {
+                return data;
+            }
+            set
+            {
+                UnSubscribeToData();
+                var coordata = (IEventedList<Coordinate>) value;
+                if (coordata == null)
+                {
+                    return;
+                }
+
+                data = new EventedList<SimplifiedCoordinate>();
+                foreach (Coordinate coordinate in coordata)
+                {
+                    data.Add(new SimplifiedCoordinate()
+                    {
+                        X = coordinate.X,
+                        Y = coordinate.Y
+                    });
+                }
+
+                tableViewYZ.Data = null;
+                SetupTableView();
+                SubscribeToData();
+            }
+        }
+
+        public Image Image { get; set; }
+
+        public ViewInfo ViewInfo { get; set; }
+
+        public void EnsureVisible(object item) {}
+
         private void SetupTableView()
         {
             bindingList = new ThreadsafeBindingList<SimplifiedCoordinate>(SynchronizationContext.Current, data)
@@ -100,8 +171,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
                 AllowNew = AllowAddRemove,
                 AllowRemove = AllowAddRemove,
             };
-            
-            
+
             tableViewYZ.AutoGenerateColumns = false;
             tableViewYZ.AddColumn("X", "Y'");
             tableViewYZ.AddColumn("Y", "Z");
@@ -111,37 +181,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
             tableViewYZ.Columns[YZTableZColumnIndex].DisplayFormat = "0.00";
             tableViewYZ.Columns[YZTableYColumnIndex].ReadOnly = readOnlyYColumn;
 
-            tableViewYZ.PasteController = new TableViewArgumentBasedPasteController(tableViewYZ, new List<int> { 0 }){DataIsSorted = false};
+            tableViewYZ.PasteController = new TableViewArgumentBasedPasteController(tableViewYZ, new List<int> {0}) {DataIsSorted = false};
             tableViewYZ.Data = bindingList;
-
-        }
-
-        public object Data
-        {
-            get { return data; }
-            set
-            {
-                UnSubscribeToData();
-                var coordata = (IEventedList<Coordinate>) value;
-                if (coordata == null)
-                    return;
-
-                data = new EventedList<SimplifiedCoordinate>();
-                foreach (var coordinate in coordata)
-                {
-                    data.Add(new SimplifiedCoordinate() {X=coordinate.X,Y=coordinate.Y});
-                }
-                tableViewYZ.Data = null;
-                SetupTableView();
-                SubscribeToData();
-                
-            }
-        }
-
-        public IEditableObject EditableObject
-        {
-            get { return tableViewYZ.EditableObject; }
-            set { tableViewYZ.EditableObject = value; }
         }
 
         private void UnSubscribeToData()
@@ -160,15 +201,18 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
             }
         }
 
-        void DataCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private void DataCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            if (!Equals(sender, data)) return;
+            if (!Equals(sender, data))
+            {
+                return;
+            }
 
             if (e.Action == NotifyCollectionChangedAction.Add)
             {
                 if (data.Count > 1)
                 {
-                    Coordinate coordinate = (Coordinate)e.GetRemovedOrAddedItem();
+                    var coordinate = (Coordinate) e.GetRemovedOrAddedItem();
                     UnSubscribeToData();
                     // item is already added to internal list
                     coordinate.X = data[data.Count - 2].X;
@@ -176,15 +220,17 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
                     SubscribeToData();
                 }
             }
+
             CollectionChanged?.Invoke(sender, e);
         }
 
-        void TableViewYZSelectionChanged(object sender, TableSelectionChangedEventArgs e)
+        private void TableViewYZSelectionChanged(object sender, TableSelectionChangedEventArgs e)
         {
             if (!AllowAddRemove)
             {
                 return;
             }
+
             if (e.Cells.Count > 0)
             {
                 int lastRow = tableViewYZ.RowCount - 1;
@@ -202,8 +248,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
             {
                 if (tableViewYZ.CurrentFocusedRowObject != null)
                 {
-                    int index = data.IndexOf((SimplifiedCoordinate)tableViewYZ.CurrentFocusedRowObject);
-                    if ((index == 0) || (index == data.Count - 1))
+                    int index = data.IndexOf((SimplifiedCoordinate) tableViewYZ.CurrentFocusedRowObject);
+                    if (index == 0 || index == data.Count - 1)
                     {
                         // do not allow removal of the first or last row
                         tableViewYZ.AllowDeleteRow = false;
@@ -228,9 +274,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
                 case YZTableZColumnIndex:
                     if (null != PropertyChanged)
                     {
-                        int rowIndex = e.Value.RowIndex < 0 ? data.Count - 1: e.Value.RowIndex;
+                        int rowIndex = e.Value.RowIndex < 0 ? data.Count - 1 : e.Value.RowIndex;
                         PropertyChanged(data[rowIndex], new PropertyChangedEventArgs("Y"));
                     }
+
                     break;
                 case YZTableYColumnIndex:
                     // e.Value.RowIndex < 0 when editing a newly added row
@@ -244,31 +291,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
                         int rowIndex = e.Value.RowIndex < 0 ? data.Count - 1 : e.Value.RowIndex;
                         PropertyChanged(data[rowIndex], new PropertyChangedEventArgs("X"));
                     }
+
                     break;
             }
         }
-
-        public Image Image
-        {
-            get; set;
-        }
-
-        public void EnsureVisible(object item)
-        {
-        }
-
-        public ViewInfo ViewInfo { get; set; }
-
-        public event PropertyChangingEventHandler PropertyChanging;
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        bool INotifyPropertyChange.HasParent { get; set; }
-
-        public event NotifyCollectionChangedEventHandler CollectionChanged;
-
-        public event NotifyCollectionChangingEventHandler CollectionChanging;
-
-        public bool SkipChildItemEventBubbling { get; set; }
     }
 }

@@ -9,9 +9,9 @@ using DelftTools.Utils.Collections;
 using DelftTools.Utils.Guards;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf;
 using DeltaShell.Plugins.FMSuite.Common.Gui.Editors.Buttons;
-using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.DomainSpecificDataEditor.Views;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Buttons;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.DomainSpecificDataEditor.ViewModels;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.DomainSpecificDataEditor.Views;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Properties;
 using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
 
@@ -72,10 +72,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
         private static WpfGuiCategory GetDomainSpecificSettingsCategory(WaveModel model)
         {
             return new WpfGuiCategory(Resources.WaveSettingsHelper_GetWaveSettings_Domain_specific_settings,
-                                      Enumerable.Empty<FieldUIDescription>().ToList())
-            {
-                CustomControl = new MainDomainSpecificDataView(new MainDomainSpecificDataViewModel(model.OuterDomain))
-            };
+                                      Enumerable.Empty<FieldUIDescription>().ToList()) {CustomControl = new MainDomainSpecificDataView(new MainDomainSpecificDataViewModel(model.OuterDomain))};
         }
 
         private static ObjectUIDescription GetWaveSettings(WaveModel data)
@@ -83,7 +80,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
             ObjectUIDescription objectDescription = WaveModelUIDescription.Extract(data);
 
             var flowCouplingCheckBox = new FieldUIDescription(o => data.IsCoupledToFlow,
-                                                              (d, v) => data.IsCoupledToFlow = (bool)v)
+                                                              (d, v) => data.IsCoupledToFlow = (bool) v)
             {
                 Category = KnownWaveCategories.GeneralCategory,
                 SubCategory = Resources.WaveSettingsHelper_GetWaveSettings_Online_Coupling_Time_Frame,

@@ -6,10 +6,10 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Readers
 {
     public class ApwxwyFileReader : NGHSFileBase
     {
+        private const string GridFileIdentifier = "grid_file";
         private static readonly ILog Log = LogManager.GetLogger(typeof(ApwxwyFileReader));
         private readonly string filePath;
-        private const string GridFileIdentifier = "grid_file";
-        
+
         public ApwxwyFileReader(string filePath)
         {
             this.filePath = filePath;

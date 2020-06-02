@@ -5,18 +5,18 @@ using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.DataAccess
 {
     /// <summary>
-    /// Data access object for importing a <see cref="RuleBase" /> from the tools config xml file.
+    /// Data access object for importing a <see cref="RuleBase"/> from the tools config xml file.
     /// </summary>
-    /// <seealso cref="IRtcDataAccessObject{RuleBase}" />
+    /// <seealso cref="IRtcDataAccessObject{RuleBase}"/>
     public class RuleDataAccessObject : IRtcDataAccessObject<RuleBase>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="RuleDataAccessObject" /> class.
+        /// Initializes a new instance of the <see cref="RuleDataAccessObject"/> class.
         /// </summary>
         /// <param name="id"> The identifier that was read from the file. </param>
         /// <param name="rule"> The created rule. </param>
         /// <exception cref="System.ArgumentNullException">
-        /// Thrown when <paramref name="id" /> or <paramref name="rule" /> is <c> null </c>.
+        /// Thrown when <paramref name="id"/> or <paramref name="rule"/> is <c> null </c>.
         /// </exception>
         public RuleDataAccessObject(string id, RuleBase rule)
         {
@@ -27,10 +27,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.DataAccess
             ControlGroupName = RealTimeControlXmlReaderHelper.GetControlGroupNameFromElementId(Id);
             Object = rule;
         }
-
-        public string Id { get; }
-
-        public string ControlGroupName { get; }
 
         /// <summary>
         /// Gets the references to the rule inputs.
@@ -56,8 +52,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.DataAccess
         /// </value>
         public IList<string> SignalReferences { get; } = new List<string>();
 
+        public string Id { get; }
+
+        public string ControlGroupName { get; }
+
         /// <summary>
-        /// Gets the <see cref="RuleBase" /> that was created from the tools config file.
+        /// Gets the <see cref="RuleBase"/> that was created from the tools config file.
         /// </summary>
         /// <value>
         /// The created rule.

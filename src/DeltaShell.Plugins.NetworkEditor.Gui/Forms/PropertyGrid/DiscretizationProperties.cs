@@ -16,15 +16,24 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [DynamicReadOnly]
         public string Name
         {
-            get { return data.Name; }
-            set { data.Name = value; }
+            get
+            {
+                return data.Name;
+            }
+            set
+            {
+                data.Name = value;
+            }
         }
 
         [Category("General")]
         [Description("Method used to generate segments from location")]
         public SegmentGenerationMethod SegmentMethod
         {
-            get { return data.SegmentGenerationMethod; }
+            get
+            {
+                return data.SegmentGenerationMethod;
+            }
         }
 
         [DynamicReadOnlyValidationMethod]

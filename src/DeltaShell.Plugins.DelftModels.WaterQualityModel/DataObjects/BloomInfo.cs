@@ -38,11 +38,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects
 
         public IEnumerable<string> Descriptions => descriptions.Values;
 
-        private List<string> ExpandParameterNames()
-        {
-            return algHeaders.SelectMany(alga => korts, MakeParameter).ToList();
-        }
-
         public string MakeParameter(string header, string kort)
         {
             string subString = header.Substring(0, header.Length - 3);
@@ -71,6 +66,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects
                     yield return header;
                 }
             }
+        }
+
+        private List<string> ExpandParameterNames()
+        {
+            return algHeaders.SelectMany(alga => korts, MakeParameter).ToList();
         }
     }
 }

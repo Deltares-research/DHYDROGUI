@@ -35,7 +35,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
     internal class CoordinateDistanceComparer : IComparer<FlavouredCoordinate>
     {
         private readonly Coordinate startCoordinate;
-        
+
         public CoordinateDistanceComparer(Coordinate startCoordinate)
         {
             this.startCoordinate = startCoordinate;
@@ -43,16 +43,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
 
         public int Compare(FlavouredCoordinate x, FlavouredCoordinate y)
         {
-            return startCoordinate.Distance(x.Coordinate) < startCoordinate.Distance(y.Coordinate) ? -1 : 1; 
+            return startCoordinate.Distance(x.Coordinate) < startCoordinate.Distance(y.Coordinate) ? -1 : 1;
         }
     }
 
     public class GridWizardMapToolHelper
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof (GridWizardMapToolHelper));
+        private static readonly ILog Log = LogManager.GetLogger(typeof(GridWizardMapToolHelper));
 
         public static IList<IPolygon> ComputePolygons(IDiscretization discretization, IList<Feature2D> embankments,
-            IPolygon userPolygon, double supportPointDistance, double minimumSupportPointDistance)
+                                                      IPolygon userPolygon, double supportPointDistance, double minimumSupportPointDistance)
         {
             // Protect against a folded userPolygon.
             if (!userPolygon.IsValid)
@@ -71,6 +71,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
             {
                 return null;
             }
+
             if (!embankmentLineStrings.Any())
             {
                 Log.Error("No embankments cross the user polygon.");
@@ -78,8 +79,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
             }
 
             // Demand that each embankment intersects the userPolygon an even number of times.
-            var userLineString = userPolygon.ExteriorRing;
-            var oddEmbankments = embankments.Where(e => e.Geometry.Intersection(userLineString).NumPoints % 2 != 0).ToList();
+            ILineString userLineString = userPolygon.ExteriorRing;
+            List<Feature2D> oddEmbankments = embankments.Where(e => e.Geometry.Intersection(userLineString).NumPoints % 2 != 0).ToList();
             if (oddEmbankments.Any())
             {
                 // Show the names of 5 problematic embankments. 
@@ -88,9 +89,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
             }
 
             // Identify the branches intersecting the userPolygon.
-            var branches = discretization.Network.Branches
-                .Where(branch => branch.Geometry.Intersects(userPolygon))
-                .ToList();
+            List<IBranch> branches = discretization.Network.Branches
+                                                   .Where(branch => branch.Geometry.Intersects(userPolygon))
+                                                   .ToList();
 
             if (!branches.Any())
             {
@@ -99,7 +100,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
             }
 
             // Construct velocity LineStrings by cutting the branches with the userPolygon.
-            var velocityLineStrings = GetVelocityLineStrings(discretization, branches, userPolygon);
+            List<ILineString> velocityLineStrings = GetVelocityLineStrings(discretization, branches, userPolygon);
             if (!velocityLineStrings.Any())
             {
                 Log.Error("No branch velocity points inside the user polygon.");
@@ -107,74 +108,88 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
             }
 
             // Construct embankment LineStrings by cutting the embankments with the userPolygon.
-            var cutEmbankmentLineStrings = GetEmbankmentLineStrings(embankmentLineStrings, userPolygon).ToList();
-            
+            List<ILineString> cutEmbankmentLineStrings = GetEmbankmentLineStrings(embankmentLineStrings, userPolygon).ToList();
+
             // Construct LineStrings from velocityLineStrings projected on embankmentLineStrings.
             //    Identify the embankmentLineString - velocityLineStrings associations (1->N).
-            var associations = GetAssociations(cutEmbankmentLineStrings, velocityLineStrings);
-            var projectedLineStrings = ProjectLineStrings(associations, minimumSupportPointDistance, supportPointDistance).ToList();
-            if (!(projectedLineStrings.Any()))
+            Dictionary<ILineString, IList<ILineString>> associations = GetAssociations(cutEmbankmentLineStrings, velocityLineStrings);
+            List<ILineString> projectedLineStrings = ProjectLineStrings(associations, minimumSupportPointDistance, supportPointDistance).ToList();
+            if (!projectedLineStrings.Any())
             {
                 Log.Error("Less than two Locations in the Spatial data of a Branch are inside the user polygon.");
                 return null;
             }
-            
+
             // Densify unassociated embankmentLineStrings.
-            var densifiedEmbankmentLineStrings = DensifiedEmbankmentLineStrings(supportPointDistance, minimumSupportPointDistance, cutEmbankmentLineStrings, associations);
+            IEnumerable<LineString> densifiedEmbankmentLineStrings = DensifiedEmbankmentLineStrings(supportPointDistance, minimumSupportPointDistance, cutEmbankmentLineStrings, associations);
 
             // Construct boundary LineStrings structured as: Embankment intersection, userPolygon Coordinates, Embankment intersection.
-            var branchGeometries = branches.Select(branch => branch.Geometry).ToList();
-            var boundaryLineStrings = MakeBoundaryLineStrings(embankmentLineStrings, userPolygon, branchGeometries);
-            if (boundaryLineStrings == null) return null;
-            var denseBoundaryLineStrings = boundaryLineStrings.Select(c => Densify(c, supportPointDistance)).ToList();
+            List<IGeometry> branchGeometries = branches.Select(branch => branch.Geometry).ToList();
+            IEnumerable<LineString> boundaryLineStrings = MakeBoundaryLineStrings(embankmentLineStrings, userPolygon, branchGeometries);
+            if (boundaryLineStrings == null)
+            {
+                return null;
+            }
+
+            List<LineString> denseBoundaryLineStrings = boundaryLineStrings.Select(c => Densify(c, supportPointDistance)).ToList();
 
             // Cluster all LineStrings.
-            var toMergeLists = ClusterLineStrings(projectedLineStrings, densifiedEmbankmentLineStrings, denseBoundaryLineStrings);
-            if (toMergeLists == null) return null;
+            IEnumerable<List<ILineString>> toMergeLists = ClusterLineStrings(projectedLineStrings, densifiedEmbankmentLineStrings, denseBoundaryLineStrings);
+            if (toMergeLists == null)
+            {
+                return null;
+            }
 
             // Merge the clustered LineStrings.
-            var mergedLineStrings = MergeLineStrings(toMergeLists);
+            IEnumerable<ILineString> mergedLineStrings = MergeLineStrings(toMergeLists);
 
             // Construct polygons from merged LineStrings.
-            var polygons = MakePolygons(mergedLineStrings);
+            IList<IPolygon> polygons = MakePolygons(mergedLineStrings);
 
             return polygons;
         }
 
         private static IEnumerable<LineString> DensifiedEmbankmentLineStrings(double supportPointDistance, double minimumSupportPointDistance,
-            IEnumerable<ILineString> embankmentLineStrings, IDictionary<ILineString, IList<ILineString>> associations)
+                                                                              IEnumerable<ILineString> embankmentLineStrings, IDictionary<ILineString, IList<ILineString>> associations)
         {
-            var unassociatedEmbankmentLineStrings = embankmentLineStrings.Where(embankment => !associations.ContainsKey(embankment)).ToArray();
+            ILineString[] unassociatedEmbankmentLineStrings = embankmentLineStrings.Where(embankment => !associations.ContainsKey(embankment)).ToArray();
             var filteredUnassociated = new List<ILineString>();
-            foreach (var unassociatedEmbankmentLineString in unassociatedEmbankmentLineStrings)
+            foreach (ILineString unassociatedEmbankmentLineString in unassociatedEmbankmentLineStrings)
             {
-                var coordinates = unassociatedEmbankmentLineString.Coordinates;
+                Coordinate[] coordinates = unassociatedEmbankmentLineString.Coordinates;
                 var newCoordinates = new List<Coordinate> {coordinates[0]};
-                var previous = newCoordinates[0];
+                Coordinate previous = newCoordinates[0];
                 for (var i = 1; i < coordinates.Length - 1; i++)
                 {
-                    var current = coordinates[i];
-                    if (!(previous.Distance(current) >= minimumSupportPointDistance)) continue;
+                    Coordinate current = coordinates[i];
+                    if (!(previous.Distance(current) >= minimumSupportPointDistance))
+                    {
+                        continue;
+                    }
+
                     newCoordinates.Add(current);
                     previous = current;
                 }
+
                 newCoordinates.Add(coordinates[coordinates.Length - 1]);
                 filteredUnassociated.Add(new LineString(newCoordinates.ToArray()));
             }
-            var densifiedLineStrings = filteredUnassociated.Select(uaEmbankment => Densify(uaEmbankment, supportPointDistance)).ToList();
-            var numberOfUnassociatedEmbankmentLineStrings = densifiedLineStrings.Count;
+
+            List<LineString> densifiedLineStrings = filteredUnassociated.Select(uaEmbankment => Densify(uaEmbankment, supportPointDistance)).ToList();
+            int numberOfUnassociatedEmbankmentLineStrings = densifiedLineStrings.Count;
             if (numberOfUnassociatedEmbankmentLineStrings > 0)
             {
                 Log.Warn("Found " + numberOfUnassociatedEmbankmentLineStrings + " embankment(s) not belonging to any branch.");
             }
+
             return densifiedLineStrings;
         }
 
         private static IEnumerable<List<ILineString>> ClusterLineStrings(IList<ILineString> projectedLineStrings, IEnumerable<ILineString> densifiedLineStrings,
-            IEnumerable<ILineString> denseBoundaryLineStrings)
+                                                                         IEnumerable<ILineString> denseBoundaryLineStrings)
         {
             // Self-intersecting LineStrings lead to folded polygons.
-            if (projectedLineStrings.Any(l => !(l.IsSimple)))
+            if (projectedLineStrings.Any(l => !l.IsSimple))
             {
                 Log.Warn("Found a self-intersecting embankment.");
                 return null;
@@ -184,18 +199,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
             allLineStrings.AddRange(projectedLineStrings);
             allLineStrings.AddRange(densifiedLineStrings);
             allLineStrings.AddRange(denseBoundaryLineStrings);
-            foreach (var aLineString in allLineStrings)
+            foreach (ILineString aLineString in allLineStrings)
             {
-                foreach (var aCoordinate in aLineString.Coordinates)
+                foreach (Coordinate aCoordinate in aLineString.Coordinates)
                 {
                     aCoordinate.Z = 0.0;
                 }
             }
+
             var toMergeLists = new List<List<ILineString>>();
             while (allLineStrings.Count > 1)
             {
                 var newList = new List<ILineString>();
-                var seed = allLineStrings[0];
+                ILineString seed = allLineStrings[0];
                 allLineStrings.RemoveAt(0);
                 newList.Add(seed);
                 var busy = true;
@@ -205,6 +221,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
                     {
                         break;
                     }
+
                     busy = false;
                     for (var i = 0; i < allLineStrings.Count; i++)
                     {
@@ -218,13 +235,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
                         }
                     }
                 }
+
                 toMergeLists.Add(newList);
             }
+
             // check remainder
             if (allLineStrings.Any())
             {
                 toMergeLists.Add(allLineStrings);
             }
+
             return toMergeLists;
         }
 
@@ -232,26 +252,27 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
         {
             const double distanceEpsilon = 1.0;
             var mergedLineStrings = new List<ILineString>();
-            
-            foreach (var mergeList in toMergeLists)
+
+            foreach (List<ILineString> mergeList in toMergeLists)
             {
                 while (mergeList.Count > 1)
                 {
-                    var seed = mergeList[0];
+                    ILineString seed = mergeList[0];
                     mergeList.RemoveAt(0);
                     for (var i = 0; i < mergeList.Count; i++)
                     {
-                        var firstCoordinateMergeLine = mergeList[i].Coordinates[0];
-                        var lastCoordinateMergeLine = mergeList[i].Coordinates[mergeList[i].Coordinates.Length - 1];
+                        Coordinate firstCoordinateMergeLine = mergeList[i].Coordinates[0];
+                        Coordinate lastCoordinateMergeLine = mergeList[i].Coordinates[mergeList[i].Coordinates.Length - 1];
 
                         // Try growing from the end of the seed.
-                        var lastSeedCoordinate = seed.Coordinates[seed.Coordinates.Length - 1];
+                        Coordinate lastSeedCoordinate = seed.Coordinates[seed.Coordinates.Length - 1];
                         if (lastSeedCoordinate.Distance(firstCoordinateMergeLine) <= distanceEpsilon)
                         {
                             mergeList.Add(new LineString(seed.Coordinates.Concat(mergeList[i].Coordinates.Skip(1)).ToArray()));
                             mergeList.RemoveAt(i);
                             break;
                         }
+
                         if (lastSeedCoordinate.Distance(lastCoordinateMergeLine) <= distanceEpsilon)
                         {
                             mergeList.Add(new LineString(seed.Coordinates.Concat(mergeList[i].Coordinates.Reverse().Skip(1)).ToArray()));
@@ -269,6 +290,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
                             mergeList.RemoveAt(i);
                             break;
                         }
+
                         if (lastSeedCoordinate.Distance(lastCoordinateMergeLine) <= distanceEpsilon)
                         {
                             mergeList.Add(new LineString(seed.Coordinates.Concat(mergeList[i].Coordinates.Reverse().Skip(1)).ToArray()));
@@ -277,30 +299,37 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
                         }
                     }
                 }
+
                 mergedLineStrings.Add(mergeList[0]);
             }
+
             return mergedLineStrings;
         }
 
         private static IList<IPolygon> MakePolygons(IEnumerable<ILineString> mergedLineStrings)
         {
-            var coordinateLists = mergedLineStrings.Select(lineString => new CoordinateList(lineString.Coordinates.ToArray())).ToArray();
+            CoordinateList[] coordinateLists = mergedLineStrings.Select(lineString => new CoordinateList(lineString.Coordinates.ToArray())).ToArray();
             IList<IPolygon> polygons = new List<IPolygon>();
 
-            foreach (var coordinateList in coordinateLists)
+            foreach (CoordinateList coordinateList in coordinateLists)
             {
                 // Determine closedness in 2D, not 3D.
                 if (coordinateList[0].Distance(coordinateList[coordinateList.Count - 1]) <= 10.0)
                 {
                     coordinateList.RemoveAt(0);
                 }
+
                 coordinateList.CloseRing();
-                if (coordinateList.Count < 4) continue;
+                if (coordinateList.Count < 4)
+                {
+                    continue;
+                }
+
                 polygons.Add(new Polygon(new LinearRing(coordinateList.ToCoordinateArray())));
             }
 
             // Protect against a folded polygons.
-            if (polygons.Any(polygon => !(polygon.IsValid)))
+            if (polygons.Any(polygon => !polygon.IsValid))
             {
                 Log.Warn("Generated invalid or folded polygon, aborting.");
                 return null;
@@ -310,7 +339,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
             if (polygons.Count > 1 && polygons.Any(p => polygons.Any(p2 => p != p2 && p.Intersects(p2))))
             {
                 Log.Warn("Constructed overlapping polygons, aborting.");
-                return null;                
+                return null;
             }
 
             return polygons;
@@ -318,34 +347,47 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
 
         private static IEnumerable<ILineString> ProjectLineStrings(Dictionary<ILineString, IList<ILineString>> associations, double minimumDistance, double optimalDistance)
         {
-            foreach (var kvp in associations)
+            foreach (KeyValuePair<ILineString, IList<ILineString>> kvp in associations)
             {
                 var lengthIndexedLine = new LengthIndexedLine(kvp.Key);
 
                 // Keep the start and end chainages, so that either the projectedLineString's endpoints lie on the userPolygon.
-                var chainages = new List<double> { lengthIndexedLine.StartIndex, lengthIndexedLine.EndIndex };
+                var chainages = new List<double>
+                {
+                    lengthIndexedLine.StartIndex,
+                    lengthIndexedLine.EndIndex
+                };
 
                 // Project the velocity points of each velocityLineString onto the embankmentLineString and determine the maximumProjectedLength for use in densification.
-                var maximumProjectedLength = Double.NegativeInfinity;
-                foreach (var vl in kvp.Value)
+                double maximumProjectedLength = double.NegativeInfinity;
+                foreach (ILineString vl in kvp.Value)
                 {
-                    var chainagesSection = vl.Coordinates.Select(lengthIndexedLine.Project).OrderBy(item => item);
+                    IOrderedEnumerable<double> chainagesSection = vl.Coordinates.Select(lengthIndexedLine.Project).OrderBy(item => item);
                     chainages.AddRange(chainagesSection);
-                    var localMaximum = chainagesSection.Skip(1).Zip(chainagesSection, (second, first) => Math.Abs(second - first)).Max();
+                    double localMaximum = chainagesSection.Skip(1).Zip(chainagesSection, (second, first) => Math.Abs(second - first)).Max();
                     maximumProjectedLength = Math.Max(maximumProjectedLength, localMaximum);
                 }
 
                 // Remove chainages when too close together, preserving start and end chainages.
-                var orderedChainages = chainages.OrderBy(chainage => chainage).ToArray();
-                var newChainages = new List<double> { orderedChainages[0], orderedChainages[1] };
-                var previous = newChainages[0];
+                double[] orderedChainages = chainages.OrderBy(chainage => chainage).ToArray();
+                var newChainages = new List<double>
+                {
+                    orderedChainages[0],
+                    orderedChainages[1]
+                };
+                double previous = newChainages[0];
                 for (var i = 2; i < orderedChainages.Count() - 2; i++)
                 {
-                    var current = orderedChainages[i];
-                    if (!(Math.Abs(previous - current) >= minimumDistance)) continue;
+                    double current = orderedChainages[i];
+                    if (!(Math.Abs(previous - current) >= minimumDistance))
+                    {
+                        continue;
+                    }
+
                     newChainages.Add(current);
                     previous = current;
                 }
+
                 newChainages.Add(orderedChainages[orderedChainages.Length - 2]);
                 newChainages.Add(orderedChainages[orderedChainages.Length - 1]);
 
@@ -353,7 +395,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
                 var sparseLineString = new LineString(newChainages.Distinct().Select(c => lengthIndexedLine.ExtractPoint(c)).ToArray());
 
                 // Densify chainages where a part of the embankments is not associated with a branch.
-                var denseLineString = Densify(sparseLineString, optimalDistance, maximumProjectedLength);
+                LineString denseLineString = Densify(sparseLineString, optimalDistance, maximumProjectedLength);
 
                 // Construct the projectedLineString.
                 yield return denseLineString;
@@ -363,53 +405,60 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
         private static Dictionary<ILineString, IList<ILineString>> GetAssociations(IEnumerable<ILineString> embankmentLineStrings, IList<ILineString> velocityLineStrings)
         {
             var associations = new Dictionary<ILineString, IList<ILineString>>();
-            foreach (var embankmentLineString in embankmentLineStrings)
+            foreach (ILineString embankmentLineString in embankmentLineStrings)
             {
                 // Store the velocityLineStrings indices closest to each embankmentLineString segment.
                 var segmentAssociations = new List<int>();
 
                 // Determine the velocityLineStrings indices.
                 var locationIndexedLine = new LocationIndexedLine(embankmentLineString);
-                for (var index = locationIndexedLine.StartIndex.SegmentIndex;
-                    index <= locationIndexedLine.EndIndex.SegmentIndex; index++)
+                for (int index = locationIndexedLine.StartIndex.SegmentIndex;
+                     index <= locationIndexedLine.EndIndex.SegmentIndex;
+                     index++)
                 {
                     var midPoint = new Point(locationIndexedLine.ExtractPoint(new LinearLocation(index, 0.5)));
-                    var closest = Double.PositiveInfinity;
-                    var velocityIndex = -1;
+                    double closest = double.PositiveInfinity;
+                    int velocityIndex = -1;
                     for (var j = 0; j < velocityLineStrings.Count; j++)
                     {
-                        var distance = velocityLineStrings[j].Distance(midPoint);
+                        double distance = velocityLineStrings[j].Distance(midPoint);
                         // Corner case: A Embankment whose Branch(es) lie outside the userPolygon will be associated to the nearest Branch inside the userPolygon.
                         // Approximate solution: demand distance < 500 m;
-                        if (!(distance < closest)) continue; 
-                        
+                        if (!(distance < closest))
+                        {
+                            continue;
+                        }
+
                         velocityIndex = j;
                         closest = distance;
                     }
 
                     if (velocityIndex > -1)
                     {
-                        segmentAssociations.Add(velocityIndex);                        
+                        segmentAssociations.Add(velocityIndex);
                     }
                 }
 
                 // Associate a velocityLineString to a embankmentLineString if it is associated to three or more segments.
                 //Using 2 in stead of: Math.Min(velocityLineStrings.Count, locationIndexedLine.EndIndex.SegmentIndex - locationIndexedLine.StartIndex.SegmentIndex + 1);
-                var associatedEmbankments = Enumerable.Range(0, velocityLineStrings.Count).Where(index => segmentAssociations.Count(sa => sa == index) >= 2).Select(i => velocityLineStrings[i]).ToList();
+                List<ILineString> associatedEmbankments = Enumerable.Range(0, velocityLineStrings.Count).Where(index => segmentAssociations.Count(sa => sa == index) >= 2).Select(i => velocityLineStrings[i]).ToList();
                 if (associatedEmbankments.Any())
                 {
                     associations.Add(embankmentLineString, associatedEmbankments);
                 }
             }
+
             return associations;
         }
 
-        private static IEnumerable<ILineString> GetEmbankmentLineStrings(IEnumerable<LineString> embankments, IPolygon userPolygon)        {
-            var userLineString = userPolygon.ExteriorRing;
-            foreach (var embankment in embankments)            {
+        private static IEnumerable<ILineString> GetEmbankmentLineStrings(IEnumerable<LineString> embankments, IPolygon userPolygon)
+        {
+            ILineString userLineString = userPolygon.ExteriorRing;
+            foreach (LineString embankment in embankments)
+            {
                 // Find all intersection coordinates.
                 var lineString = new LineString(embankment.Coordinates);
-                var intersectionCoordinates = lineString.Intersection(userLineString).Coordinates.ToList();
+                List<Coordinate> intersectionCoordinates = lineString.Intersection(userLineString).Coordinates.ToList();
 
                 // Handle embankments which lie inside the userPolygon.
                 if (intersectionCoordinates.Count == 0)
@@ -422,6 +471,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
                 {
                     intersectionCoordinates.Add(lineString.Coordinates.First());
                 }
+
                 if (new Point(lineString.Coordinates.Last()).Within(userPolygon))
                 {
                     intersectionCoordinates.Add(lineString.Coordinates.Last());
@@ -429,12 +479,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
 
                 // Find the sorted intersection chainages.
                 var lengthIndexedLine = new LengthIndexedLine(lineString);
-                var intersectionChainages = intersectionCoordinates.Select(lengthIndexedLine.IndexOf).OrderBy(c => c).ToArray();
+                double[] intersectionChainages = intersectionCoordinates.Select(lengthIndexedLine.IndexOf).OrderBy(c => c).ToArray();
 
                 // Construct the embankment LineStrings.
                 for (var i = 0; i < intersectionChainages.Length; i += 2)
                 {
-                    var newLine = (LineString)lengthIndexedLine.ExtractLine(intersectionChainages[i], intersectionChainages[i+1]);
+                    var newLine = (LineString) lengthIndexedLine.ExtractLine(intersectionChainages[i], intersectionChainages[i + 1]);
                     yield return newLine;
                 }
             }
@@ -442,25 +492,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
 
         private static List<ILineString> GetVelocityLineStrings(INetworkCoverage discretization, IEnumerable<IBranch> branches, IPolygon userPolygon)
         {
-            var userLineString = userPolygon.ExteriorRing;
+            ILineString userLineString = userPolygon.ExteriorRing;
             var velocityLineStrings = new List<ILineString>();
 
-            foreach (var branch in branches)
+            foreach (IBranch branch in branches)
             {
                 // Find all intersection coordinates.
                 var lineString = new LineString(branch.Geometry.Coordinates);
-                var intersectionCoordinates = lineString.Intersection(userLineString).Coordinates.ToList();
+                List<Coordinate> intersectionCoordinates = lineString.Intersection(userLineString).Coordinates.ToList();
 
-                var firstCoordinate = lineString.Coordinates.First();
-                var lastCoordinate = lineString.Coordinates.Last();
+                Coordinate firstCoordinate = lineString.Coordinates.First();
+                Coordinate lastCoordinate = lineString.Coordinates.Last();
 
                 // Supplement intersections when a branch ends inside the userPolygon.
-                if (intersectionCoordinates.Count%2 == 1)
+                if (intersectionCoordinates.Count % 2 == 1)
                 {
                     intersectionCoordinates.Add(new Coordinate(
-                        new Point(firstCoordinate).Within(userPolygon)
-                            ? firstCoordinate
-                            : lastCoordinate));
+                                                    new Point(firstCoordinate).Within(userPolygon)
+                                                        ? firstCoordinate
+                                                        : lastCoordinate));
                 }
 
                 // Handle branches fully inside the userPolygon.
@@ -472,24 +522,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
 
                 // Find the sorted branch chainages, corresponding to the intersection coordinates.
                 var lengthIndexedLine = new LengthIndexedLine(lineString);
-                var intersectionChainages = intersectionCoordinates.Select(lengthIndexedLine.IndexOf).OrderBy(c => c) .ToArray();
+                double[] intersectionChainages = intersectionCoordinates.Select(lengthIndexedLine.IndexOf).OrderBy(c => c).ToArray();
 
                 // Find the sorted chainages of the velocity points.
-                var locations = discretization.GetLocationsForBranch(branch);
-                var velocityChainages = locations.Skip(1).Zip(locations, (second, first) => 0.5*(first.Chainage + second.Chainage)).OrderBy(c => c).ToArray();
+                IList<INetworkLocation> locations = discretization.GetLocationsForBranch(branch);
+                double[] velocityChainages = locations.Skip(1).Zip(locations, (second, first) => 0.5 * (first.Chainage + second.Chainage)).OrderBy(c => c).ToArray();
 
                 // Group the velocity chainages by the intersection coordinates.
-                var chainageGroups = intersectionChainages.Skip(1)
-                        .Zip(intersectionChainages, (second, first) =>
-                                velocityChainages.Where(chainage => first <= chainage && chainage <= second).ToArray())
-                        .Where(cg => cg.Count() > 1).ToArray();
+                double[][] chainageGroups = intersectionChainages.Skip(1)
+                                                                 .Zip(intersectionChainages, (second, first) =>
+                                                                          velocityChainages.Where(chainage => first <= chainage && chainage <= second).ToArray())
+                                                                 .Where(cg => cg.Count() > 1).ToArray();
 
                 // Translate velocity chainages into coordinates.
-                var coordinateGroups = chainageGroups.Select(group => @group.Select(g => lengthIndexedLine.ExtractPoint(g)).ToArray());
+                IEnumerable<Coordinate[]> coordinateGroups = chainageGroups.Select(group => @group.Select(g => lengthIndexedLine.ExtractPoint(g)).ToArray());
 
                 // Construct the velocity LineStrings.
                 velocityLineStrings.AddRange(coordinateGroups.Select(group => new LineString(@group)));
             }
+
             return velocityLineStrings;
         }
 
@@ -497,15 +548,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
         {
             // Construct typed Coordinates using userPolygon Coordinates and the Embankment and Branch intersections.
             var typedCoordinates = new List<FlavouredCoordinate>();
-            var userCoordinates = userPolygon.Coordinates;
+            Coordinate[] userCoordinates = userPolygon.Coordinates;
 
             for (var i = 0; i <= userCoordinates.Length - 2; i++)
             {
-                var segment = new LineString(new[] {userCoordinates[i], userCoordinates[i + 1]});
+                var segment = new LineString(new[]
+                {
+                    userCoordinates[i],
+                    userCoordinates[i + 1]
+                });
 
-                var embankmentIntersections = embankments.SelectMany(b => b.Intersection(segment).Coordinates.Select(c => new FlavouredCoordinate(c, Flavour.Embankment)));
-                var branchIntersections = branchGeometries.SelectMany(bg => bg.Intersection(segment).Coordinates.Select(c => new FlavouredCoordinate(c, Flavour.Branch)));
-                var intersections = embankmentIntersections.Concat(branchIntersections).ToList();
+                IEnumerable<FlavouredCoordinate> embankmentIntersections = embankments.SelectMany(b => b.Intersection(segment).Coordinates.Select(c => new FlavouredCoordinate(c, Flavour.Embankment)));
+                IEnumerable<FlavouredCoordinate> branchIntersections = branchGeometries.SelectMany(bg => bg.Intersection(segment).Coordinates.Select(c => new FlavouredCoordinate(c, Flavour.Branch)));
+                List<FlavouredCoordinate> intersections = embankmentIntersections.Concat(branchIntersections).ToList();
 
                 // Sort the intersections based on the distance from userCoordinates[i].
                 var comparer = new CoordinateDistanceComparer(userCoordinates[i]);
@@ -521,11 +576,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
             if (typedCoordinates.Count(c => c.Flavour == Flavour.Branch) < 2)
             {
                 Log.Warn("Fewer than two crossings between branches and the user polygon found.");
-                return null; 
+                return null;
             }
 
             // Shift the typedCoordinates until they start with a Branch.
-            var lastIndex = typedCoordinates.Count - 1;
+            int lastIndex = typedCoordinates.Count - 1;
             while (typedCoordinates[0].Flavour != Flavour.Branch)
             {
                 typedCoordinates.Move(0, lastIndex);
@@ -536,7 +591,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
 
             // Identify Embankment * Embankment sections not containing Branch. (* ==  wildcard)
             var typedCoordinateSections = new List<List<int>>();
-            var startIndex = -1;
+            int startIndex = -1;
             var sectionsAfterBranch = 0;
             for (var i = 0; i < typedCoordinates.Count; i++)
             {
@@ -546,29 +601,35 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
                     startIndex = -1;
                     sectionsAfterBranch = 0;
                 }
+
                 // Start or finish segment upon encountering a Embankment.
-                if (typedCoordinates[i].Flavour != Flavour.Embankment) continue;
+                if (typedCoordinates[i].Flavour != Flavour.Embankment)
+                {
+                    continue;
+                }
+
                 if (startIndex > -1)
                 {
                     sectionsAfterBranch += 1;
                     // Even number of sections after a Branch are superseded by the densified unassociated embankmentLineStrings.
                     if (sectionsAfterBranch % 2 == 1)
                     {
-                        typedCoordinateSections.Add(Enumerable.Range(startIndex, i - startIndex + 1).ToList());
+                        typedCoordinateSections.Add(Enumerable.Range(startIndex, (i - startIndex) + 1).ToList());
                     }
                 }
+
                 startIndex = i;
             }
-            
+
             // Construct the resulting LineStrings.
-            var coordinateSections = typedCoordinateSections.Select(section => section.Select(c => typedCoordinates[c].Coordinate).ToArray());
+            IEnumerable<Coordinate[]> coordinateSections = typedCoordinateSections.Select(section => section.Select(c => typedCoordinates[c].Coordinate).ToArray());
             return coordinateSections.Select(section => new LineString(section)).ToList();
         }
 
         private static LineString Densify(IGeometry lineString, double optimum, double minimumLength = double.NegativeInfinity)
         {
-            var precisionModel = lineString.PrecisionModel;
-            var coordinates = lineString.Coordinates.ToArray();
+            IPrecisionModel precisionModel = lineString.PrecisionModel;
+            Coordinate[] coordinates = lineString.Coordinates.ToArray();
 
             var denseCoordinates = new List<Coordinate>();
 
@@ -576,17 +637,27 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
             {
                 denseCoordinates.Add(coordinates[i]);
                 var segment = new LineSegment(coordinates[i], coordinates[i + 1]);
-                
-                var distance = segment.Length;
-                if (distance < 2 * optimum) continue;
-                if (distance < minimumLength) continue;
 
-                var numberOfParts = Math.Floor(distance/optimum);
-                if (!(numberOfParts > 1)) continue;
-                
+                double distance = segment.Length;
+                if (distance < 2 * optimum)
+                {
+                    continue;
+                }
+
+                if (distance < minimumLength)
+                {
+                    continue;
+                }
+
+                double numberOfParts = Math.Floor(distance / optimum);
+                if (!(numberOfParts > 1))
+                {
+                    continue;
+                }
+
                 for (var j = 1; j < numberOfParts; j++)
                 {
-                    var coordinate = segment.PointAlong(j/numberOfParts);
+                    Coordinate coordinate = segment.PointAlong(j / numberOfParts);
                     precisionModel.MakePrecise(coordinate);
                     denseCoordinates.Add(coordinate);
                 }

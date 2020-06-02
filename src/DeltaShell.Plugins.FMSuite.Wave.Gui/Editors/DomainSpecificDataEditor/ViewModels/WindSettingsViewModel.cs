@@ -16,6 +16,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.DomainSpecificDataEditor.V
         private readonly WaveMeteoData meteoData;
 
         /// <summary>
+        /// Occurs when [property changed].
+        /// </summary>
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="WindSettingsViewModel"/> class.
         /// </summary>
         /// <param name="meteoData">The meteo data.</param>
@@ -129,7 +134,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.DomainSpecificDataEditor.V
         /// Gets or sets a value indicating whether to use the spider web grid.
         /// </summary>
         /// <value>
-        ///   <c>true</c> if the spider web grid should be used; otherwise, <c>false</c>.
+        /// <c>true</c> if the spider web grid should be used; otherwise, <c>false</c>.
         /// </value>
         public bool UseSpiderWebGrid
         {
@@ -143,11 +148,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.DomainSpecificDataEditor.V
                 }
             }
         }
-
-        /// <summary>
-        /// Occurs when [property changed].
-        /// </summary>
-        public event PropertyChangedEventHandler PropertyChanged;
 
         /// <summary>
         /// Called when [property changed].

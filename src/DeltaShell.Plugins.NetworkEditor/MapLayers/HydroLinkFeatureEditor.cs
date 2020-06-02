@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Helpers;
@@ -22,22 +23,22 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers
 
         public override IFeatureInteractor CreateInteractor(ILayer layer, IFeature feature)
         {
-            return new HydroLinkInteractor(layer, feature, ((VectorLayer)layer).Style, Region);
+            return new HydroLinkInteractor(layer, feature, ((VectorLayer) layer).Style, Region);
         }
 
         public override IFeature AddNewFeatureByGeometry(ILayer layer, IGeometry geometry)
         {
-            var linkMapGeometry = layer.CoordinateTransformation != null
-                                        ? GeometryTransform.TransformGeometry(geometry, layer.CoordinateTransformation.MathTransform)
-                                        : geometry;
+            IGeometry linkMapGeometry = layer.CoordinateTransformation != null
+                                            ? GeometryTransform.TransformGeometry(geometry, layer.CoordinateTransformation.MathTransform)
+                                            : geometry;
 
             // snape to source / target features
-            var source = GetHydroFeature(linkMapGeometry.Coordinates[0], layer);
-            var target = GetHydroFeature(linkMapGeometry.Coordinates.Last(), layer);
+            Tuple<IHydroObject, ILayer> source = GetHydroFeature(linkMapGeometry.Coordinates[0], layer);
+            Tuple<IHydroObject, ILayer> target = GetHydroFeature(linkMapGeometry.Coordinates.Last(), layer);
 
             Region.BeginEdit(new DefaultEditAction(string.Format("Adding link from {0} to {1}", source.Item1.Name, target.Item1.Name)));
 
-            var link = source.Item1.LinkTo(target.Item1);
+            HydroLink link = source.Item1.LinkTo(target.Item1);
 
             link.Name = HydroNetworkHelper.GetUniqueFeatureName(Region, link);
             link.Geometry = geometry;
@@ -49,18 +50,21 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers
 
         private static Tuple<IHydroObject, ILayer> GetHydroFeature(Coordinate coordinate, ILayer layer)
         {
-            var envelope = MapHelper.GetEnvelope(coordinate, (float)MapHelper.ImageToWorld(layer.Map, 1));
+            Envelope envelope = MapHelper.GetEnvelope(coordinate, (float) MapHelper.ImageToWorld(layer.Map, 1));
 
-            var compatibleLayers = layer.Map.GetAllVisibleLayers(false)
-                .Where(l => l.DataSource != null &&
-                            l.DataSource.FeatureType != null &&
-                            l.DataSource.FeatureType.Implements(typeof (IHydroObject)))
-                .ToList();
+            List<ILayer> compatibleLayers = layer.Map.GetAllVisibleLayers(false)
+                                                 .Where(l => l.DataSource != null &&
+                                                             l.DataSource.FeatureType != null &&
+                                                             l.DataSource.FeatureType.Implements(typeof(IHydroObject)))
+                                                 .ToList();
 
-            foreach (var compatibleLayer in compatibleLayers)
+            foreach (ILayer compatibleLayer in compatibleLayers)
             {
-                var feature = compatibleLayer.GetFeatures(envelope).OfType<IHydroObject>().FirstOrDefault();
-                if(feature == null) continue;
+                IHydroObject feature = compatibleLayer.GetFeatures(envelope).OfType<IHydroObject>().FirstOrDefault();
+                if (feature == null)
+                {
+                    continue;
+                }
 
                 return new Tuple<IHydroObject, ILayer>(feature, layer);
             }

@@ -17,16 +17,28 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [PropertyOrder(1)]
         public string Name
         {
-            get { return data.Name; }
-            set { data.Name = value; }
+            get
+            {
+                return data.Name;
+            }
+            set
+            {
+                data.Name = value;
+            }
         }
 
         [Category("General")]
         [PropertyOrder(2)]
         public string LongName
         {
-            get { return data.LongName; }
-            set { data.LongName = value; }
+            get
+            {
+                return data.LongName;
+            }
+            set
+            {
+                data.LongName = value;
+            }
         }
 
         [Category("General")]
@@ -35,7 +47,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [TypeConverter(typeof(AttributeArrayConverter<object>))]
         public AttributeProperties<object>[] Attributes
         {
-            get { return data.Attributes.Select(x => new AttributeProperties<object>(data.Attributes, x.Key)).ToArray(); }
+            get
+            {
+                return data.Attributes.Select(x => new AttributeProperties<object>(data.Attributes, x.Key)).ToArray();
+            }
         }
 
         [Description("Channel in which the Extra Resistance is located.")]
@@ -43,7 +58,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [Category("Administration")]
         public string Channel
         {
-            get { return data.Channel.ToString(); }
+            get
+            {
+                return data.Channel.ToString();
+            }
         }
 
         [Description("Composite structure in which the Extra Resistance is located.")]
@@ -51,7 +69,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [Category("Administration")]
         public string CompositeStructure
         {
-            get { return data.ParentStructure.ToString(); }
+            get
+            {
+                return data.ParentStructure.ToString();
+            }
         }
 
         [Description("Chainage of the extra resistance in the channel on the map.")]
@@ -60,7 +81,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [DisplayName("Chainage (Map)")]
         public double Chainage
         {
-            get { return NetworkHelper.MapChainage(data.ParentStructure); }
+            get
+            {
+                return NetworkHelper.MapChainage(data.ParentStructure);
+            }
         }
 
         [Description("Chainage of the extra resistance in the channel as used in the simulation.")]
@@ -69,8 +93,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [DisplayName("Chainage")]
         public double CompuChainage
         {
-            get { return data.ParentStructure.Chainage; }
-            set { HydroRegionEditorHelper.MoveBranchFeatureTo(data, value); }
+            get
+            {
+                return data.ParentStructure.Chainage;
+            }
+            set
+            {
+                HydroRegionEditorHelper.MoveBranchFeatureTo(data, value);
+            }
         }
     }
 }

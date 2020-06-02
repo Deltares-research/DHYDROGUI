@@ -7,11 +7,11 @@ using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Gui;
 using DelftTools.Shell.Gui.Forms;
+using DelftTools.Utils.Collections.Generic;
 using Mono.Addins;
 
 namespace DeltaShell.Dimr.Gui
 {
-
     [Extension(typeof(IPlugin))]
     public class DimrGuiPlugin : GuiPlugin
     {
@@ -20,55 +20,75 @@ namespace DeltaShell.Dimr.Gui
             Instance = this;
         }
 
-        public static DimrGuiPlugin Instance { get; private set; }
-
         public override string Name
-        {
-            get { return "Dimr (UI)"; }
-        }
-
-        public virtual bool IsOnlyDimrModelSelected
         {
             get
             {
-                if(Gui?.SelectedModel is IDimrModel)
-                    return true;
-
-                var activities = (Gui?.SelectedModel as ICompositeActivity)?.CurrentWorkflow?.Activities;
-
-                return activities != null &&
-                        activities.GetActivitiesOfType<IModel>().Count() ==
-                        activities.GetActivitiesOfType<IDimrModel>().Count();
+                return "Dimr (UI)";
             }
         }
 
         public override string DisplayName
         {
-            get { return "Dimr configuration Plugin (UI)"; }
+            get
+            {
+                return "Dimr configuration Plugin (UI)";
+            }
         }
 
         public override string Description
         {
-            get { return Properties.Resources.DimrGuiPlugin_Description_Provides_possibilities_to_configure_DIMR_settings; }
+            get
+            {
+                return Properties.Resources.DimrGuiPlugin_Description_Provides_possibilities_to_configure_DIMR_settings;
+            }
         }
 
         [ExcludeFromCodeCoverage]
         public override string Version
         {
-            get { return GetType().Assembly.GetName().Version.ToString(); }
+            get
+            {
+                return GetType().Assembly.GetName().Version.ToString();
+            }
         }
 
         [ExcludeFromCodeCoverage]
         public override string FileFormatVersion
         {
-            get { return "1.0.0.0"; }
+            get
+            {
+                return "1.0.0.0";
+            }
         }
 
         public override IRibbonCommandHandler RibbonCommandHandler
         {
-            get { return new Ribbon(); }
+            get
+            {
+                return new Ribbon();
+            }
         }
-        
+
+        public static DimrGuiPlugin Instance { get; private set; }
+
+        public virtual bool IsOnlyDimrModelSelected
+        {
+            get
+            {
+                if (Gui?.SelectedModel is IDimrModel)
+                {
+                    return true;
+                }
+
+                IEventedList<IActivity> activities = (Gui?.SelectedModel as ICompositeActivity)?.CurrentWorkflow?.Activities;
+
+                return activities != null &&
+                       activities.GetActivitiesOfType<IModel>().Count() ==
+                       activities.GetActivitiesOfType<IDimrModel>().Count();
+            }
+        }
+
         public override void Dispose()
         {
             base.Dispose();

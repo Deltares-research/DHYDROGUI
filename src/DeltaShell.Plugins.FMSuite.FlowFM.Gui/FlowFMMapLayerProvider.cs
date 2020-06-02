@@ -45,6 +45,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
 {
     public class FlowFMMapLayerProvider : IMapLayerProvider
     {
+        public const string BoundariesLayerName = "Boundaries";
+        public const string BoundaryConditionsLayerName = "Boundary Conditions";
+        public const string SourcesAndSinksLayerName = "Sources and Sinks";
+        public const string OutputSnappedFeaturesLayerName = "Output Snapped features";
+        public const string GridSnappedFeaturesLayerName = "Estimated Grid-snapped features";
+
         private static readonly ConditionalWeakTable<WaterFlowFMModel, FMSnappedFeaturesGroupLayerData>
             snappedGroupLayerDataMapping =
                 new ConditionalWeakTable<WaterFlowFMModel, FMSnappedFeaturesGroupLayerData>();
@@ -56,12 +62,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
         private static readonly ILog log = LogManager.GetLogger(typeof(FlowFMMapLayerProvider));
 
         private static readonly string modelName = typeof(WaterFlowFMModel).Name;
-
-        public const string BoundariesLayerName = "Boundaries";
-        public const string BoundaryConditionsLayerName = "Boundary Conditions";
-        public const string SourcesAndSinksLayerName = "Sources and Sinks";
-        public const string OutputSnappedFeaturesLayerName = "Output Snapped features";
-        public const string GridSnappedFeaturesLayerName = "Estimated Grid-snapped features";
 
         /// <summary>
         /// Creates a maplayer.
@@ -104,10 +104,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                         DataSource =
                             new Feature2DCollection().Init(feature2Ds, "Boundary", modelName, fmModel.CoordinateSystem),
                         FeatureEditor =
-                            new Boundary2DEditor(fmModel)
-                            {
-                                AllowRemovePoint = new RemoveBoundaryPointDialog(fmModel).ShowDialogForFeature
-                            },
+                            new Boundary2DEditor(fmModel) {AllowRemovePoint = new RemoveBoundaryPointDialog(fmModel).ShowDialogForFeature},
                         Style = AreaLayerStyles.BoundariesStyle,
                         NameIsReadOnly = true,
                         ShowInLegend = false
@@ -241,44 +238,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             return null;
         }
 
-        private static string GetCommonFunctionName(IList<IFunction> functions)
-        {
-            if (!functions.Any())
-            {
-                return string.Empty;
-            }
-
-            char[] commonFunctionName = functions[0].Name.ToCharArray();
-
-            for (var i = 1; i < functions.Count; i++)
-            {
-                char[] functionName = functions[i].Name.ToCharArray();
-                var commonCharacters = new List<char>();
-                for (var j = 0; j < Math.Min(commonFunctionName.Length, functionName.Length); j++)
-                {
-                    if (commonFunctionName[j] == functionName[j])
-                    {
-                        commonCharacters.Add(commonFunctionName[j]);
-                    }
-                }
-
-                commonFunctionName = new string(commonCharacters.ToArray()).Replace("()", string.Empty).ToCharArray();
-            }
-
-            return new string(commonFunctionName).Trim();
-        }
-
-        private void MapGroupLayerLayersCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            var layer = e.GetRemovedOrAddedItem() as UnstructuredGridLayer;
-            if (layer == null || e.Action != NotifyCollectionChangedAction.Add)
-            {
-                return;
-            }
-
-            layer.GridColor = Color.Gray;
-        }
-
         /// <summary>
         /// Determines whether this instance can create a layer for the specified data object.
         /// </summary>
@@ -303,12 +262,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
         }
 
         /// <summary>
-        /// Child objects for <paramref name="data" />. Objects will be used to create child layers
-        /// for the group layer (<paramref name="data" />)
+        /// Child objects for <paramref name="data"/>. Objects will be used to create child layers
+        /// for the group layer (<paramref name="data"/>)
         /// </summary>
         /// <param name="data"> Group layer data </param>
         /// <returns>
-        /// Child objects for <paramref name="data" />
+        /// Child objects for <paramref name="data"/>
         /// </returns>
         public IEnumerable<object> ChildLayerObjects(object data)
         {
@@ -463,6 +422,44 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                     yield return function;
                 }
             }
+        }
+
+        private static string GetCommonFunctionName(IList<IFunction> functions)
+        {
+            if (!functions.Any())
+            {
+                return string.Empty;
+            }
+
+            char[] commonFunctionName = functions[0].Name.ToCharArray();
+
+            for (var i = 1; i < functions.Count; i++)
+            {
+                char[] functionName = functions[i].Name.ToCharArray();
+                var commonCharacters = new List<char>();
+                for (var j = 0; j < Math.Min(commonFunctionName.Length, functionName.Length); j++)
+                {
+                    if (commonFunctionName[j] == functionName[j])
+                    {
+                        commonCharacters.Add(commonFunctionName[j]);
+                    }
+                }
+
+                commonFunctionName = new string(commonCharacters.ToArray()).Replace("()", string.Empty).ToCharArray();
+            }
+
+            return new string(commonFunctionName).Trim();
+        }
+
+        private void MapGroupLayerLayersCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            var layer = e.GetRemovedOrAddedItem() as UnstructuredGridLayer;
+            if (layer == null || e.Action != NotifyCollectionChangedAction.Add)
+            {
+                return;
+            }
+
+            layer.GridColor = Color.Gray;
         }
 
         private static IEnumerable<object> GetMapOutputFunctions(FMMapFileFunctionStore mapStore)

@@ -25,6 +25,16 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
 {
     public class WaterQualityObservationAreaImporter : IFileImporter
     {
+        /// <summary>
+        /// Coordinate system of the model of the import target.
+        /// </summary>
+        public ICoordinateSystem ModelCoordinateSystem { get; set; }
+
+        /// <summary>
+        /// Method to retrieve the <see cref="IDataItem"/> storing the import target.
+        /// </summary>
+        public Func<WaterQualityObservationAreaCoverage, IDataItem> GetDataItemForTarget { get; set; }
+
         public string Name => "Observation area from GIS importer";
 
         public string Category => "Hydro";
@@ -38,11 +48,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
             typeof(WaterQualityObservationAreaCoverage)
         };
 
-        public bool CanImportOn(object targetObject)
-        {
-            return true;
-        }
-
         public bool CanImportOnRootLevel => false;
 
         public string FileFilter => "Shape file (*.shp)|*.shp";
@@ -55,15 +60,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
 
         public bool OpenViewAfterImport => true;
 
-        /// <summary>
-        /// Coordinate system of the model of the import target.
-        /// </summary>
-        public ICoordinateSystem ModelCoordinateSystem { get; set; }
-
-        /// <summary>
-        /// Method to retrieve the <see cref="IDataItem" /> storing the import target.
-        /// </summary>
-        public Func<WaterQualityObservationAreaCoverage, IDataItem> GetDataItemForTarget { get; set; }
+        public bool CanImportOn(object targetObject)
+        {
+            return true;
+        }
 
         public object ImportItem(string path, object target = null)
         {

@@ -200,14 +200,6 @@ namespace DelftTools.Hydro.CrossSections
             return definition is CrossSectionDefinitionZW ? 2.0 : 1.0;
         }
 
-        private static ICrossSectionDefinition GetInnerOrCurrentCrossSectionDefinition(
-            ICrossSectionDefinition crossSectionDefinition)
-        {
-            var proxyDefinition = crossSectionDefinition as CrossSectionDefinitionProxy;
-
-            return proxyDefinition != null ? proxyDefinition.InnerDefinition : crossSectionDefinition;
-        }
-
         public static void GetCrossSectionDefinitionSectionBounds(this CrossSectionDefinition definition,
                                                                   out double minY, out double maxY)
         {
@@ -235,6 +227,14 @@ namespace DelftTools.Hydro.CrossSections
             // default (YZ & XYZ)
             minY = 0.0;
             maxY = definition.FlowWidth();
+        }
+
+        private static ICrossSectionDefinition GetInnerOrCurrentCrossSectionDefinition(
+            ICrossSectionDefinition crossSectionDefinition)
+        {
+            var proxyDefinition = crossSectionDefinition as CrossSectionDefinitionProxy;
+
+            return proxyDefinition != null ? proxyDefinition.InnerDefinition : crossSectionDefinition;
         }
     }
 }

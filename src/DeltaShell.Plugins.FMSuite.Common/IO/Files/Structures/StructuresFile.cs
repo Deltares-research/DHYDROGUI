@@ -28,11 +28,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
         private const string StructureCategoryName = "structure";
         private static readonly ILog Log = LogManager.GetLogger(typeof(StructuresFile));
 
-        public StructuresFile()
-        {
-            PropertyTypesFromIni = new List<string>();
-        }
-
         private readonly Dictionary<string, string> backwardsCompatibilityMapping = new Dictionary<string, string>
         {
             {"levelcenter", KnownStructureProperties.CrestLevel},
@@ -58,6 +53,11 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
             {"crest_width", KnownStructureProperties.CrestWidth}
         };
 
+        public StructuresFile()
+        {
+            PropertyTypesFromIni = new List<string>();
+        }
+
         public StructureSchema<ModelPropertyDefinition> StructureSchema { private get; set; }
 
         public DateTime ReferenceDate { private get; set; }
@@ -69,8 +69,10 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
         /// finally from these "structures" weirs with different weirformulas and pumps will be created (ConvertStructure step)
         /// </summary>
         /// <param name="structuresFilePath"> File path of the structures file</param>
-        /// <param name="structuresSubFilesReferenceFilePath"> Filepath of the reference file. This is structures file or Mdu
-        /// dependent on the PathsRelativeToParent option in the Mdu. </param>
+        /// <param name="structuresSubFilesReferenceFilePath">
+        /// Filepath of the reference file. This is structures file or Mdu
+        /// dependent on the PathsRelativeToParent option in the Mdu.
+        /// </param>
         /// <returns>List with weirs with different weirformulas and pumps</returns>
         public IList<IStructure> ReadStructuresFileRelativeToReferenceFile(
             string structuresFilePath, string structuresSubFilesReferenceFilePath)
@@ -88,10 +90,13 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
         }
 
         /// <summary>
-        ///  Method reads ini file and creates temporary data access objects ("structures") 
+        /// Method reads ini file and creates temporary data access objects ("structures")
         /// </summary>
         /// <param name="filePath">File path of the structures file</param>
-        /// <param name="logHandler"> Log messages collector and reporter. Not required if you are not interested in the log messages.</param>
+        /// <param name="logHandler">
+        /// Log messages collector and reporter. Not required if you are not interested in the log
+        /// messages.
+        /// </param>
         /// <returns>List with structures</returns>
         public IEnumerable<Structure2D> ReadStructures2D(string filePath, ILogHandler logHandler = null)
         {
@@ -107,20 +112,20 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
                 // Filter out unexpected .ini categories:
                 if (category.Name != StructureCategoryName)
                 {
-                    logHandler?.ReportWarningFormat(Resources.StructureFile_Category__0__not_supported_for_structures_and_is_skipped_Line__1__, 
-                                                    category.Name, 
+                    logHandler?.ReportWarningFormat(Resources.StructureFile_Category__0__not_supported_for_structures_and_is_skipped_Line__1__,
+                                                    category.Name,
                                                     category.LineNumber);
                     continue;
                 }
 
                 // TODO: Check for potentially other required properties:
                 // Read required 'type' property:
-                DelftIniProperty structureTypeProperty = 
+                DelftIniProperty structureTypeProperty =
                     category.Properties.FirstOrDefault(p => p.Name == KnownStructureProperties.Type);
                 if (structureTypeProperty == null)
                 {
                     logHandler?.ReportWarningFormat(Resources.StructureFile_Obligated_property__0__expected_but_is_missing_Structure_is_skipped_Line__1__,
-                                                    KnownStructureProperties.Type, 
+                                                    KnownStructureProperties.Type,
                                                     category.LineNumber);
                     continue;
                 }
@@ -131,7 +136,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
                 if (!string.IsNullOrEmpty(errorMessage))
                 {
                     logHandler?.ReportErrorFormat(Resources.StructureFile_Failed_to_convert_ini_structure_definition_to_actual_structure_Line__0____1__,
-                                                  category.LineNumber, 
+                                                  category.LineNumber,
                                                   errorMessage);
                     continue;
                 }
@@ -152,9 +157,9 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
             var logHandler = new LogHandler($"reading the structures file ({filePath}),", Log);
 
             List<IStructure> structures = ReadStructures2D(filePath, logHandler)
-                             .Select(s => ConvertStructure(s, filePath))
-                             .Where(s => s != null)
-                             .ToList();
+                                          .Select(s => ConvertStructure(s, filePath))
+                                          .Where(s => s != null)
+                                          .ToList();
 
             logHandler.LogReport();
 
@@ -202,7 +207,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
                 throw;
             }
         }
-        
+
         private static IEnumerable<IStructure> GetSupportedStructures(IEnumerable<IStructure> structures)
         {
             var list = new List<IStructure>();
@@ -240,8 +245,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
                 }
 
                 var delftIniProperty = new DelftIniProperty(
-                    property.PropertyDefinition.FilePropertyName, 
-                    property.GetValueAsString(), 
+                    property.PropertyDefinition.FilePropertyName,
+                    property.GetValueAsString(),
                     property.PropertyDefinition.Description);
 
                 delftIniCategory.AddProperty(delftIniProperty);
@@ -263,10 +268,10 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
             return delftIniCategory;
         }
 
-        private Structure2D CreateStructure2D(StructureSchema<ModelPropertyDefinition> schema, 
+        private Structure2D CreateStructure2D(StructureSchema<ModelPropertyDefinition> schema,
                                               string structureType,
-                                              DelftIniCategory category, 
-                                              string filePath, 
+                                              DelftIniCategory category,
+                                              string filePath,
                                               ILogHandler logHandler)
         {
             var newStructure = new Structure2D(structureType);
@@ -285,7 +290,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
                 try
                 {
                     var structureProperty = new StructureProperty(modelPropertyDefinition, property.Value);
-                    Steerable propertyValue = structureProperty.Value as Steerable;
+                    var propertyValue = structureProperty.Value as Steerable;
                     if (propertyValue != null && propertyValue.Mode == SteerableMode.TimeSeries)
                     {
                         SetOrUpdateTimFolder(propertyValue.TimeSeriesFilename, property.LineNumber, logHandler);
@@ -686,16 +691,16 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
         }
 
         /// <summary>
-        /// Add the specified <paramref name="value" /> property with name
-        /// <paramref name="propertyName" /> to <paramref name="properties" /> if
-        /// <paramref name="value" /> is NaN or greater than zero.
+        /// Add the specified <paramref name="value"/> property with name
+        /// <paramref name="propertyName"/> to <paramref name="properties"/> if
+        /// <paramref name="value"/> is NaN or greater than zero.
         /// </summary>
         /// <param name="properties"> The properties. </param>
         /// <param name="propertyName"> The name of the new property. </param>
         /// <param name="value"> The value to be added as property. </param>
         /// <param name="structureType"> Type of the structure. </param>
         /// <remarks>
-        /// If <paramref name="value" /> is NaN then an empty value field will be written.
+        /// If <paramref name="value"/> is NaN then an empty value field will be written.
         /// Properties is not null
         /// </remarks>
         private void AddDoubleOrEmptyPropertyConditionally(ICollection<DelftIniProperty> properties,
@@ -964,11 +969,11 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
         private DelftIniProperty ConstructProperty(string propertyName, object value, string structureType)
         {
             ModelPropertyDefinition definition = StructureSchema.GetDefinition(structureType, propertyName);
-            string propertyValue = FMParser.ToString(value, value is ICollection ? typeof(IList<double>) : value.GetType());
+            var propertyValue = FMParser.ToString(value, value is ICollection ? typeof(IList<double>) : value.GetType());
 
             var delftIniProperty = new DelftIniProperty(
-                definition.FilePropertyName, 
-                propertyValue, 
+                definition.FilePropertyName,
+                propertyValue,
                 definition.Description
             );
             return delftIniProperty;

@@ -19,19 +19,19 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             Exchanges = new List<ModelExchange>();
         }
 
-        public static string GetModelIdentifier(IModel model)
-        {
-            return model.Name;
-        }
-
         [DataMember]
         public string SourceModelName { get; set; }
 
         [DataMember]
         public string TargetModelName { get; set; }
-        
+
         [DataMember]
         public IList<ModelExchange> Exchanges { get; set; }
+
+        public static string GetModelIdentifier(IModel model)
+        {
+            return model.Name;
+        }
     }
 
     [DataContract]
@@ -43,6 +43,12 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             TargetName = GetExchangeIdentifier(target);
         }
 
+        [DataMember]
+        public string SourceName { get; set; }
+
+        [DataMember]
+        public string TargetName { get; set; }
+
         /// <summary>
         /// Create an exchange identifier consisting of the name of the dataItem
         /// and the parameter name if it has a <see cref="ParameterValueConverter"/>.
@@ -51,10 +57,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
         /// <returns>The identifier that represents the data item and its parameter name.</returns>
         public static string GetExchangeIdentifier(IDataItem dataItem)
         {
-            var result = dataItem.Name;
+            string result = dataItem.Name;
 
-            var parameterName = dataItem.GetParameterName();
-            
+            string parameterName = dataItem.GetParameterName();
+
             if (!string.IsNullOrEmpty(parameterName))
             {
                 result += "." + parameterName;
@@ -62,42 +68,41 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
             if (string.IsNullOrEmpty(result) || result == "0") //sobek legacy?
             {
-                var parent = dataItem.Parent;
-                var role = dataItem.Role;
+                IDataItem parent = dataItem.Parent;
+                DataItemRole role = dataItem.Role;
 
-                if (parent == null) return result;
-                
+                if (parent == null)
+                {
+                    return result;
+                }
+
                 string id = null;
                 if ((role & DataItemRole.Input) == DataItemRole.Input)
                 {
-                    var index =
+                    int index =
                         parent.Children.Where(c => (c.Role & DataItemRole.Input) == DataItemRole.Input)
-                            .ToList()
-                            .IndexOf(dataItem);
+                              .ToList()
+                              .IndexOf(dataItem);
                     id = "input" + index;
                 }
+
                 if ((role & DataItemRole.Output) == DataItemRole.Output)
                 {
-                    var index =
+                    int index =
                         parent.Children.Where(c => (c.Role & DataItemRole.Output) == DataItemRole.Output)
-                            .ToList()
-                            .IndexOf(dataItem);
+                              .ToList()
+                              .IndexOf(dataItem);
                     id = "output" + index;
                 }
+
                 if (id != null)
                 {
-                    var parentName = parent.Name;
+                    string parentName = parent.Name;
                     result = string.IsNullOrEmpty(parentName) ? id : string.Join(".", parentName, id);
                 }
             }
 
             return result;
         }
-
-        [DataMember]
-        public string SourceName { get; set; }
-
-        [DataMember]
-        public string TargetName { get; set; }
     }
 }

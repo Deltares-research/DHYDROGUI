@@ -18,31 +18,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
 {
     public class FMMapFileFunctionStore : FMNetCdfFileFunctionStore
     {
-        #region Map file constants
-
-        private const string NSedSusName = "nSedSus";
-        private const string NSedTotName = "nSedTot";
-        private const string VelocityCoverageName = "velocity (ucx + ucy)";
-        private const string NFlowElemName = "nFlowElem";
-        private const string NFlowLinkName = "nFlowLink";
-        private const string NNetLinkName = "nNetLink";
-        private const string NFlowElemBndName = "nFlowElemBnd";
-
-        private const string StandardNameAttribute = "standard_name";
-        private const string LongNameAttribute = "long_name";
-        private const string UnitAttribute = "units";
-
-        private const string EastwardSeaWaterVelocityStandardName = "eastward_sea_water_velocity";
-        private const string NorthwardSeaWaterVelocityStandardName = "northward_sea_water_velocity";
-
-        // For Backwards compatibility: since the fm kernel keeps changing between the two
-        private const string SeaWaterXVelocityStandardName = "sea_water_x_velocity";
-        private const string SeaWaterYVelocityStandardName = "sea_water_y_velocity";
-
-        private const string SedIndexAttributeName = "SedIndex";
-
-        #endregion
-
         private static readonly ILog log = LogManager.GetLogger(typeof(FMMapFileFunctionStore));
 
         private static readonly IList<string> DeprecatedVariables = new[]
@@ -67,6 +42,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
 
         public UnstructuredGrid Grid { get; private set; }
 
+        public IList<ITimeSeries> BoundaryCellValues => boundaryCellValues;
+
+        public IFunction CustomVelocityCoverage
+        {
+            get
+            {
+                return Functions.FirstOrDefault(f => f.Name == VelocityCoverageName);
+            }
+        }
+
         public void SetCoordinateSystem(ICoordinateSystem coordinateSystem)
         {
             if (Grid != null)
@@ -77,16 +62,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
             {
                 log.Warn(Resources
                              .FMMapFileFunctionStore_CoordinateSystem_Could_not_set_coordinate_system_in_output_map_because_grid_is_not_set);
-            }
-        }
-
-        public IList<ITimeSeries> BoundaryCellValues => boundaryCellValues;
-
-        public IFunction CustomVelocityCoverage
-        {
-            get
-            {
-                return Functions.FirstOrDefault(f => f.Name == VelocityCoverageName);
             }
         }
 
@@ -110,56 +85,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
             }
 
             return functions;
-        }
-
-        private List<UnstructuredGridCoverage> GetFunctions(IEnumerable<NetCdfVariableInfo> dataVariables,
-                                                            bool isUgridConvention)
-        {
-            // Construct UnstructuredGridCoverages from file
-            Func<NetCdfVariableInfo, bool> timeDepVarSelectionCriteria = isUgridConvention
-                                                                             ? (Func<NetCdfVariableInfo, bool>)
-                                                                             (v => v.IsTimeDependent &&
-                                                                                   v.NumDimensions > 1)
-                                                                             : v => v.IsTimeDependent &&
-                                                                                    v.NumDimensions > 1 &&
-                                                                                    v.NumDimensions <= 2;
-            List<NetCdfVariableInfo> timeDepVariables = dataVariables.Where(timeDepVarSelectionCriteria).ToList();
-            List<UnstructuredGridCoverage> functions =
-                timeDepVariables.SelectMany(ProcessTimeDependentVariable).Where(c => c != null).ToList();
-
-            // Construct custom Velocity Coverage
-            if (velocityCoverages.ContainsKey(EastwardSeaWaterVelocityStandardName) &&
-                velocityCoverages.ContainsKey(NorthwardSeaWaterVelocityStandardName))
-            {
-                functions.Add(AddCustomVelocityCoverage(velocityCoverages[EastwardSeaWaterVelocityStandardName],
-                                                        velocityCoverages[NorthwardSeaWaterVelocityStandardName]));
-            }
-
-            // Backwards compatibility...
-            if (velocityCoverages.ContainsKey(SeaWaterXVelocityStandardName) &&
-                velocityCoverages.ContainsKey(SeaWaterYVelocityStandardName))
-            {
-                functions.Add(AddCustomVelocityCoverage(velocityCoverages[SeaWaterXVelocityStandardName],
-                                                        velocityCoverages[SeaWaterYVelocityStandardName]));
-            }
-
-            return functions;
-        }
-
-        private void LogWarningsForExcludedTimeDependentVariables(IEnumerable<NetCdfVariableInfo> dataVariables)
-        {
-            // When the NetCDF file is not UGRID1+, log a warning for the time dependent variables that have been filtered out
-            List<NetCdfVariableInfo> filteredTimeDepVariables =
-                dataVariables.Where(v => v.IsTimeDependent && v.NumDimensions > 2).ToList();
-            IEnumerable<string> timeDepVariablesNames =
-                filteredTimeDepVariables.Select(v => netCdfFile.GetVariableName(v.NetCdfDataVariable));
-            foreach (string timeDepVarName in timeDepVariablesNames)
-            {
-                log.WarnFormat(
-                    Resources
-                        .FMMapFileFunctionStore_ConstructFunctions_Time_dependent_variable___0___has_been_filtered_out,
-                    timeDepVarName);
-            }
         }
 
         protected override int GetVariableValuesCount(IVariable function, IVariableFilter[] filters)
@@ -316,7 +241,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
                     {
                         // is coverage
                         //check if there are multidimensional sedimentnames
-                        string indexOfSedimentToRender = string.Empty;
+                        var indexOfSedimentToRender = string.Empty;
                         if (coverage.Attributes.TryGetValue(SedIndexAttributeName, out indexOfSedimentToRender))
                         {
                             int nIndex = -1;
@@ -333,7 +258,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
                 {
                     // is component
                     //check if there are multidimensional sedimentnames
-                    string indexOfSedimentToRender = string.Empty;
+                    var indexOfSedimentToRender = string.Empty;
                     if (coverage.Attributes.TryGetValue(SedIndexAttributeName, out indexOfSedimentToRender))
                     {
                         int nIndex = -1;
@@ -356,6 +281,56 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
                 log.Error(string.Format(Resources.FMMapFileFunctionStore_GetVariableValuesCore_While_reading_variable__0__from_the_file__1__an_error_was_encountered___2_, function.Name, System.IO.Path.GetFileName(Path), e.Message));
                 int functionSize = GetSize(function);
                 return new MultiDimensionalArray<T>(new List<T>(new T[functionSize]), functionSize);
+            }
+        }
+
+        private List<UnstructuredGridCoverage> GetFunctions(IEnumerable<NetCdfVariableInfo> dataVariables,
+                                                            bool isUgridConvention)
+        {
+            // Construct UnstructuredGridCoverages from file
+            Func<NetCdfVariableInfo, bool> timeDepVarSelectionCriteria = isUgridConvention
+                                                                             ? (Func<NetCdfVariableInfo, bool>)
+                                                                             (v => v.IsTimeDependent &&
+                                                                                   v.NumDimensions > 1)
+                                                                             : v => v.IsTimeDependent &&
+                                                                                    v.NumDimensions > 1 &&
+                                                                                    v.NumDimensions <= 2;
+            List<NetCdfVariableInfo> timeDepVariables = dataVariables.Where(timeDepVarSelectionCriteria).ToList();
+            List<UnstructuredGridCoverage> functions =
+                timeDepVariables.SelectMany(ProcessTimeDependentVariable).Where(c => c != null).ToList();
+
+            // Construct custom Velocity Coverage
+            if (velocityCoverages.ContainsKey(EastwardSeaWaterVelocityStandardName) &&
+                velocityCoverages.ContainsKey(NorthwardSeaWaterVelocityStandardName))
+            {
+                functions.Add(AddCustomVelocityCoverage(velocityCoverages[EastwardSeaWaterVelocityStandardName],
+                                                        velocityCoverages[NorthwardSeaWaterVelocityStandardName]));
+            }
+
+            // Backwards compatibility...
+            if (velocityCoverages.ContainsKey(SeaWaterXVelocityStandardName) &&
+                velocityCoverages.ContainsKey(SeaWaterYVelocityStandardName))
+            {
+                functions.Add(AddCustomVelocityCoverage(velocityCoverages[SeaWaterXVelocityStandardName],
+                                                        velocityCoverages[SeaWaterYVelocityStandardName]));
+            }
+
+            return functions;
+        }
+
+        private void LogWarningsForExcludedTimeDependentVariables(IEnumerable<NetCdfVariableInfo> dataVariables)
+        {
+            // When the NetCDF file is not UGRID1+, log a warning for the time dependent variables that have been filtered out
+            List<NetCdfVariableInfo> filteredTimeDepVariables =
+                dataVariables.Where(v => v.IsTimeDependent && v.NumDimensions > 2).ToList();
+            IEnumerable<string> timeDepVariablesNames =
+                filteredTimeDepVariables.Select(v => netCdfFile.GetVariableName(v.NetCdfDataVariable));
+            foreach (string timeDepVarName in timeDepVariablesNames)
+            {
+                log.WarnFormat(
+                    Resources
+                        .FMMapFileFunctionStore_ConstructFunctions_Time_dependent_variable___0___has_been_filtered_out,
+                    timeDepVarName);
             }
         }
 
@@ -619,5 +594,30 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
             // import the grid from the map file if there is no model grid available
             Grid = UnstructuredGridFileHelper.LoadFromFile(netCdfFile.Path, true);
         }
+
+        #region Map file constants
+
+        private const string NSedSusName = "nSedSus";
+        private const string NSedTotName = "nSedTot";
+        private const string VelocityCoverageName = "velocity (ucx + ucy)";
+        private const string NFlowElemName = "nFlowElem";
+        private const string NFlowLinkName = "nFlowLink";
+        private const string NNetLinkName = "nNetLink";
+        private const string NFlowElemBndName = "nFlowElemBnd";
+
+        private const string StandardNameAttribute = "standard_name";
+        private const string LongNameAttribute = "long_name";
+        private const string UnitAttribute = "units";
+
+        private const string EastwardSeaWaterVelocityStandardName = "eastward_sea_water_velocity";
+        private const string NorthwardSeaWaterVelocityStandardName = "northward_sea_water_velocity";
+
+        // For Backwards compatibility: since the fm kernel keeps changing between the two
+        private const string SeaWaterXVelocityStandardName = "sea_water_x_velocity";
+        private const string SeaWaterYVelocityStandardName = "sea_water_y_velocity";
+
+        private const string SedIndexAttributeName = "SedIndex";
+
+        #endregion
     }
 }

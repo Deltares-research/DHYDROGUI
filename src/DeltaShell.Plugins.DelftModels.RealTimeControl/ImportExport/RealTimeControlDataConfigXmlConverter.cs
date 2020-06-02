@@ -25,20 +25,26 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
         /// <remarks>If parameter elements is NULL, methods returns.</remarks>
         public IEnumerable<ConnectionPoint> CreateConnectionPointsFromXmlElements(IEnumerable<RTCTimeSeriesXML> elements)
         {
-            if (elements == null) yield break;
-
-            foreach (var element in elements)
+            if (elements == null)
             {
-                var id = element.id;
+                yield break;
+            }
 
-                var tag = RealTimeControlXmlReaderHelper.GetTagFromElementId(id);
+            foreach (RTCTimeSeriesXML element in elements)
+            {
+                string id = element.id;
 
-                var ignoreElement = !RtcXmlTag.ConnectionPointTags.Contains(tag) ||
-                                    id.Contains(RtcXmlTag.OutputAsInput) ||
-                                    id.Contains(RtcXmlTag.Delayed) ||
-                                    element.OpenMIExchangeItem.elementId == null;
+                string tag = RealTimeControlXmlReaderHelper.GetTagFromElementId(id);
 
-                if (ignoreElement) continue;
+                bool ignoreElement = !RtcXmlTag.ConnectionPointTags.Contains(tag) ||
+                                     id.Contains(RtcXmlTag.OutputAsInput) ||
+                                     id.Contains(RtcXmlTag.Delayed) ||
+                                     element.OpenMIExchangeItem.elementId == null;
+
+                if (ignoreElement)
+                {
+                    continue;
+                }
 
                 ConnectionPoint connectionPoint;
 
@@ -62,4 +68,3 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
         }
     }
 }
-

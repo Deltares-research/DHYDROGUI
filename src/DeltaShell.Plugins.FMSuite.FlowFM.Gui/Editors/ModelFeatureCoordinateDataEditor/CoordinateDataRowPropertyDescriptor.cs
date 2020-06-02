@@ -22,22 +22,34 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors.ModelFeatureCoordinateDa
 
         public override string DisplayName
         {
-            get { return displayName; }
+            get
+            {
+                return displayName;
+            }
         }
 
         public override Type ComponentType
         {
-            get { return typeof(CoordinateDataRow); }
+            get
+            {
+                return typeof(CoordinateDataRow);
+            }
         }
 
         public override bool IsReadOnly
         {
-            get { return false; }
+            get
+            {
+                return false;
+            }
         }
 
         public override Type PropertyType
         {
-            get { return type; }
+            get
+            {
+                return type;
+            }
         }
 
         public override bool CanResetValue(object component)
@@ -49,15 +61,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors.ModelFeatureCoordinateDa
         {
             return (component as CoordinateDataRow)?.GetDataValue(columnIndex);
         }
+
         public override void SetValue(object component, object value)
         {
             (component as CoordinateDataRow)?.SetDataValue(columnIndex, value);
         }
 
-        public override void ResetValue(object component)
-        {
-
-        }
+        public override void ResetValue(object component) {}
 
         public override bool ShouldSerializeValue(object component)
         {

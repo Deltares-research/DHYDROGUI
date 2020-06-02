@@ -9,10 +9,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
 {
     public interface INetworkSideView : IView
     {
+        event EventHandler<SelectedItemChangedEventArgs> SelectionChanged;
         NetworkSideViewDataController DataController { get; set; }
         IFeature SelectedFeature { get; set; }
-        void UpdateStyles(IBranchFeature branchFeature, VectorStyle normalStyle, VectorStyle selectedStyle);
-        event EventHandler<SelectedItemChangedEventArgs> SelectionChanged;
         object CommandReceiver { get; }
+        void UpdateStyles(IBranchFeature branchFeature, VectorStyle normalStyle, VectorStyle selectedStyle);
     }
 }

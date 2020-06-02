@@ -26,8 +26,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.Dependency
         /// </summary>
         private const string ValueArrayPart = @"\s*-?\d+(\|-?\d+)*$";
 
-        protected override string Regex => KeywordPart + "=" + ValueArrayPart;
-
         protected internal override string OnValidate(ModelProperty evaluatedProperty,
                                                       IEnumerable<ModelProperty> allProperties,
                                                       string dependencyExpression)
@@ -75,6 +73,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.Dependency
                 return false;
             };
         }
+
+        protected override string Regex => KeywordPart + "=" + ValueArrayPart;
 
         private static IEnumerable<int> GetComparisonValues(string dependencyExpression)
         {

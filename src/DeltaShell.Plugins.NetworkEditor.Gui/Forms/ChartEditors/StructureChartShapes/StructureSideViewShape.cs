@@ -6,58 +6,19 @@ using SharpMap.Styles;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChartShapes
 {
-
     /// <summary>
     /// Class updates shape features just before paint and contains. Descended classes need to have a CalculatedShapeFeatures
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public abstract class StructureSideViewShape<T>: CompositeShapeFeature where  T :IStructure1D
+    public abstract class StructureSideViewShape<T> : CompositeShapeFeature where T : IStructure1D
     {
-        protected StructureSideViewShape(IChart chart, double offsetInSideView, T structure):base(chart)
+        protected StructureSideViewShape(IChart chart, double offsetInSideView, T structure) : base(chart)
         {
             Structure = structure;
             OffsetInSideView = offsetInSideView;
 
             CreateStyles();
         }
-
-        protected T Structure
-        {
-            get; private set;
-        }
-
-        protected double OffsetInSideView
-        {
-            get;
-            private set;
-        }
-
-
-
-        /// <summary>
-        /// Style initialization. Called at constructor. 
-        /// TODO: Make it virtual??
-        /// </summary>
-        protected abstract void CreateStyles();
-
-        /// <summary>
-        /// Update shape features before paint and contains.
-        /// </summary>
-        private void CalculateShapeFeatures()
-        {
-            var wasSelected = Selected;
-            var wasActive = Active;
-            ShapeFeatures.Clear();
-            foreach (IShapeFeature feature in GetShapeFeatures())
-            {
-                ShapeFeatures.Add(feature);    
-            }
-            //set it again to update the child shapes.
-            Selected = wasSelected;
-            Active = wasActive;
-        }
-
-        protected abstract IEnumerable<IShapeFeature> GetShapeFeatures();
 
         /// <summary>
         /// Custom paint method since x of level lines is dependend of zoom-level
@@ -78,6 +39,18 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
             //get current shapes
         }
 
+        protected T Structure { get; private set; }
+
+        protected double OffsetInSideView { get; private set; }
+
+        /// <summary>
+        /// Style initialization. Called at constructor.
+        /// TODO: Make it virtual??
+        /// </summary>
+        protected abstract void CreateStyles();
+
+        protected abstract IEnumerable<IShapeFeature> GetShapeFeatures();
+
         protected double GetWorldWidth(int deviceWidth)
         {
             return ChartCoordinateService.ToWorldWidth(Chart, deviceWidth);
@@ -86,6 +59,24 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
         protected double GetWorldHeigth(int deviceHeight)
         {
             return ChartCoordinateService.ToWorldHeight(Chart, deviceHeight);
+        }
+
+        /// <summary>
+        /// Update shape features before paint and contains.
+        /// </summary>
+        private void CalculateShapeFeatures()
+        {
+            bool wasSelected = Selected;
+            bool wasActive = Active;
+            ShapeFeatures.Clear();
+            foreach (IShapeFeature feature in GetShapeFeatures())
+            {
+                ShapeFeatures.Add(feature);
+            }
+
+            //set it again to update the child shapes.
+            Selected = wasSelected;
+            Active = wasActive;
         }
     }
 }

@@ -6,19 +6,11 @@ namespace DelftTools.Hydro.CrossSections.StandardShapes
     [Entity(FireOnCollectionChange = false)]
     public class CrossSectionStandardShapeCunette : CrossSectionStandardShapeWidthHeightBase
     {
-        public static CrossSectionStandardShapeCunette CreateDefault()
-        {
-            return new CrossSectionStandardShapeCunette {Width = 1};
-        }
+        private double height;
+
+        private double width;
 
         public override CrossSectionStandardShapeType Type => CrossSectionStandardShapeType.Cunette;
-
-        public override CrossSectionDefinitionZW GetTabulatedDefinition()
-        {
-            return StandardCrossSectionsFactory.GetTabulatedCrossSectionFromCunette(Width, Height);
-        }
-
-        private double height;
 
         /// <summary>
         /// Sets the height and auto-scales the width so width/height ratio remains 1/1.577
@@ -33,8 +25,6 @@ namespace DelftTools.Hydro.CrossSections.StandardShapes
             }
         }
 
-        private double width;
-
         /// <summary>
         /// Sets the width and auto-scales the height so width/height ratio remains 1/1.577
         /// </summary>
@@ -46,6 +36,16 @@ namespace DelftTools.Hydro.CrossSections.StandardShapes
                 width = value;
                 height = 0.634 * width;
             }
+        }
+
+        public static CrossSectionStandardShapeCunette CreateDefault()
+        {
+            return new CrossSectionStandardShapeCunette {Width = 1};
+        }
+
+        public override CrossSectionDefinitionZW GetTabulatedDefinition()
+        {
+            return StandardCrossSectionsFactory.GetTabulatedCrossSectionFromCunette(Width, Height);
         }
     }
 }

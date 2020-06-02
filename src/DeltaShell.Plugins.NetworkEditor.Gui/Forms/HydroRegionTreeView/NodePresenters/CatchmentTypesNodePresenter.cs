@@ -11,9 +11,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView.NodePre
 {
     public class CatchmentTypesNodePresenter : TreeViewNodePresenterBaseForPluginGui<IEventedList<CatchmentType>>
     {
-        public CatchmentTypesNodePresenter(GuiPlugin guiPlugin) : base(guiPlugin) { }
-
         private static Image catchmentTypeImage = null;
+        public CatchmentTypesNodePresenter(GuiPlugin guiPlugin) : base(guiPlugin) {}
 
         public override void UpdateNode(ITreeNode parentNode, ITreeNode node, IEventedList<CatchmentType> nodeData)
         {

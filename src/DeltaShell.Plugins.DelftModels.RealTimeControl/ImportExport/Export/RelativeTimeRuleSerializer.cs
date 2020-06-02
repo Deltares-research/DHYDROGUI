@@ -10,11 +10,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export
     /// <summary>
     /// Serializer for a <see cref="RelativeTimeRule"/>.
     /// </summary>
-    /// <seealso cref="RuleSerializerBase" />
+    /// <seealso cref="RuleSerializerBase"/>
     public class RelativeTimeRuleSerializer : RuleSerializerBase
     {
-        private RelativeTimeRule RelativeTimeRule { get; }
-
         /// <summary>
         /// Initializes a new instance of the <see cref="RelativeTimeRuleSerializer"/> class.
         /// </summary>
@@ -23,10 +21,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export
         {
             RelativeTimeRule = relativeTimeRule;
         }
-
-        protected override string XmlTag { get; } = RtcXmlTag.RelativeTimeRule;
-
-        private string TimeValueOption => RelativeTimeRule.FromValue ? "RELATIVE" : "ABSOLUTE";
 
         // Example of ToXmlInputReference:
         //  <timeRelative id = "[RelativeTimeRule]control_group_1/relative_time_rule">
@@ -45,12 +39,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export
         //  </timeRelative>
 
         /// <summary>
-        /// Converts the relative time rule to a collection of <see cref="XElement" />
+        /// Converts the relative time rule to a collection of <see cref="XElement"/>
         /// to be written to the tools config xml file.
         /// </summary>
         /// <param name="xNamespace"> The xml namespace. </param>
         /// <param name="prefix"> The prefix. </param>
-        /// <returns> The collection of <see cref="XElement" />. </returns>
+        /// <returns> The collection of <see cref="XElement"/>. </returns>
         public override IEnumerable<XElement> ToXml(XNamespace xNamespace, string prefix)
         {
             XElement result = base.ToXml(xNamespace, prefix).First();
@@ -92,11 +86,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export
         }
 
         /// <summary>
-        /// Converts the relative time rule to a collection of <see cref="XElement" />
+        /// Converts the relative time rule to a collection of <see cref="XElement"/>
         /// to be written to the import series in the data config xml file.
         /// </summary>
         /// <param name="xNamespace"> The xml namespace. </param>
-        /// <returns> The collection of <see cref="XElement" />. </returns>
+        /// <returns> The collection of <see cref="XElement"/>. </returns>
         public override IEnumerable<XElement> OutputAsInputToDataConfigXml(XNamespace xNamespace)
         {
             if (RelativeTimeRule.FromValue)
@@ -123,15 +117,20 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export
         }
 
         /// <summary>
-        /// Converts the relative time rule to a collection of <see cref="XElement" />
+        /// Converts the relative time rule to a collection of <see cref="XElement"/>
         /// to be written to the export series in the data config xml file.
         /// </summary>
         /// <param name="prefix"> The prefix. </param>
-        /// <returns> The collection of <see cref="XElement" />. </returns>
+        /// <returns> The collection of <see cref="XElement"/>. </returns>
         public override IEnumerable<IXmlTimeSeries> XmlExportTimeSeries(string prefix)
         {
             yield return GetExportTimeSeries(prefix);
         }
+
+        protected override string XmlTag { get; } = RtcXmlTag.RelativeTimeRule;
+        private RelativeTimeRule RelativeTimeRule { get; }
+
+        private string TimeValueOption => RelativeTimeRule.FromValue ? "RELATIVE" : "ABSOLUTE";
 
         private string OutputAsInput(Output outputAsInput)
         {
@@ -190,7 +189,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export
         }
 
         /// <summary>
-        /// Determines whether <paramref name="table" /> already contains a fix for the extrapolation
+        /// Determines whether <paramref name="table"/> already contains a fix for the extrapolation
         /// behaviour of RTCTools.
         /// </summary>
         /// <param name="table"> The table. </param>

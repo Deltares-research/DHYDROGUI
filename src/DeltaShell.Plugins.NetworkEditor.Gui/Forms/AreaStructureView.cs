@@ -23,7 +23,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
 
         public IStructure1D Data
         {
-            get { return structure; }
+            get
+            {
+                return structure;
+            }
             set
             {
                 if (structure != null)
@@ -51,6 +54,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
             }
         }
 
+        public Control StructureControl { get; private set; }
+
         private void SetStructureName()
         {
             label2.Text = structure == null ? "No structure data set..." : structure.Name;
@@ -58,13 +63,17 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
 
         private void SetStructureTypeView()
         {
-            foreach (var control in structureViewPanel.Controls.OfType<IDisposable>())
+            foreach (IDisposable control in structureViewPanel.Controls.OfType<IDisposable>())
             {
                 control.Dispose();
             }
+
             structureViewPanel.Controls.Clear();
 
-            if (structure == null) return;
+            if (structure == null)
+            {
+                return;
+            }
 
             if (structure is IPump)
             {
@@ -83,7 +92,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
                 var controlHost = new ElementHost
                 {
                     Dock = DockStyle.Fill,
-                    Child = new WeirViewWpf { Data = structure },
+                    Child = new WeirViewWpf {Data = structure},
                 };
                 StructureControl = controlHost;
                 structureViewPanel.AutoScrollMinSize = new Size(StructureControl.Width, StructureControl.Height);
@@ -102,10 +111,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
                 structureViewPanel.Controls.Add(StructureControl);
                 return;
             }
+
             throw new NotImplementedException();
         }
-
-        public Control StructureControl { get; private set; }
 
         private void PropertyChangedHandler(object sender, PropertyChangedEventArgs e)
         {
@@ -119,10 +127,18 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
 
         object IView.Data
         {
-            get { return Data; }
-            set { Data = (IStructure1D) value; }
+            get
+            {
+                return Data;
+            }
+            set
+            {
+                Data = (IStructure1D) value;
+            }
         }
+
         public Image Image { get; set; }
+
         public void EnsureVisible(object item)
         {
             // Do nothing
@@ -136,10 +152,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
 
         public bool Locked
         {
-            get { return locked; }
+            get
+            {
+                return locked;
+            }
             set
             {
-
                 locked = value;
                 if (LockedChanged != null)
                 {

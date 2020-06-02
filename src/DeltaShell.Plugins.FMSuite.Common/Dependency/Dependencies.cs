@@ -7,7 +7,7 @@ using log4net;
 namespace DeltaShell.Plugins.FMSuite.Common.Dependency
 {
     /// <summary>
-    /// This class compiles <see cref="ModelPropertyDefinition.EnabledDependencies" /> and is
+    /// This class compiles <see cref="ModelPropertyDefinition.EnabledDependencies"/> and is
     /// responsible for updating all dependency related methods.
     /// </summary>
     public static class Dependencies

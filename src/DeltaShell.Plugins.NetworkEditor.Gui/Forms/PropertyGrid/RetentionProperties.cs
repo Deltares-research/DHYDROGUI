@@ -21,16 +21,28 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [PropertyOrder(1)]
         public string LongName
         {
-            get { return data.LongName; }
-            set { data.LongName = value; }
+            get
+            {
+                return data.LongName;
+            }
+            set
+            {
+                data.LongName = value;
+            }
         }
 
         [Category("General")]
         [PropertyOrder(2)]
         public string Name
         {
-            get { return data.Name; }
-            set { data.Name = value; }
+            get
+            {
+                return data.Name;
+            }
+            set
+            {
+                data.Name = value;
+            }
         }
 
         [Category("General")]
@@ -39,7 +51,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [TypeConverter(typeof(AttributeArrayConverter<object>))]
         public AttributeProperties<object>[] Attributes
         {
-            get { return data.Attributes.Select(x => new AttributeProperties<object>(data.Attributes, x.Key)).ToArray(); }
+            get
+            {
+                return data.Attributes.Select(x => new AttributeProperties<object>(data.Attributes, x.Key)).ToArray();
+            }
         }
 
         [Category("Administration")]
@@ -47,7 +62,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [PropertyOrder(3)]
         public string Channel
         {
-            get { return data.Branch.ToString(); }
+            get
+            {
+                return data.Branch.ToString();
+            }
         }
 
         [Description("Chainage of the retention in the channel on the map.")]
@@ -56,7 +74,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [DisplayName("Chainage (Map)")]
         public double Chainage
         {
-            get { return NetworkHelper.MapChainage(data); }
+            get
+            {
+                return NetworkHelper.MapChainage(data);
+            }
         }
 
         [Description("Chainage of the retention in the channel as used in the simulation.")]
@@ -65,18 +86,29 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [DisplayName("Chainage")]
         public double CompuChainage
         {
-            get { return data.Chainage; }
-            set { HydroRegionEditorHelper.MoveBranchFeatureTo(data, value); }
+            get
+            {
+                return data.Chainage;
+            }
+            set
+            {
+                HydroRegionEditorHelper.MoveBranchFeatureTo(data, value);
+            }
         }
-
 
         [Category("Retention")]
         [Description("Type")]
         [PropertyOrder(6)]
         public RetentionType Type
         {
-            get { return data.Type; }
-            set { data.Type = value; }
+            get
+            {
+                return data.Type;
+            }
+            set
+            {
+                data.Type = value;
+            }
         }
 
         [Category("Retention")]
@@ -85,8 +117,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [DynamicReadOnly]
         public double Area
         {
-            get { return data.StorageArea; }
-            set{data.StorageArea = value;}
+            get
+            {
+                return data.StorageArea;
+            }
+            set
+            {
+                data.StorageArea = value;
+            }
         }
 
         [Category("Retention")]
@@ -95,8 +133,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [DynamicReadOnly]
         public double StreetStorageArea
         {
-            get { return data.StreetStorageArea; }
-            set{data.StreetStorageArea = value;}
+            get
+            {
+                return data.StreetStorageArea;
+            }
+            set
+            {
+                data.StreetStorageArea = value;
+            }
         }
 
         [Category("Retention")]
@@ -105,8 +149,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [DynamicReadOnly]
         public double BedLevel
         {
-            get { return data.BedLevel; }
-            set { data.BedLevel = value; }
+            get
+            {
+                return data.BedLevel;
+            }
+            set
+            {
+                data.BedLevel = value;
+            }
         }
 
         [Category("Retention")]
@@ -115,10 +165,16 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [DynamicReadOnly]
         public double StreetLevel
         {
-            get { return data.StreetLevel; }
-            set { data.StreetLevel = value; }
+            get
+            {
+                return data.StreetLevel;
+            }
+            set
+            {
+                data.StreetLevel = value;
+            }
         }
-        
+
         [Category("Table")]
         [Description("Storage bed definition")]
         [PropertyOrder(11)]
@@ -126,8 +182,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [DynamicReadOnly]
         public Function Storage
         {
-            get { return (Function)data.Data; }
-            set { data.Data = value; }
+            get
+            {
+                return (Function) data.Data;
+            }
+            set
+            {
+                data.Data = value;
+            }
         }
 
         [Category("Table")]
@@ -136,8 +198,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [DynamicReadOnly]
         public InterpolationType InterpolationType
         {
-            get { return data.Data.Arguments[0].InterpolationType; }
-            set { data.Data.Arguments[0].InterpolationType = value; }
+            get
+            {
+                return data.Data.Arguments[0].InterpolationType;
+            }
+            set
+            {
+                data.Data.Arguments[0].InterpolationType = value;
+            }
         }
 
         [Category("Table")]
@@ -145,8 +213,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [PropertyOrder(13)]
         public bool UseTable
         {
-            get { return data.UseTable; }
-            set { data.UseTable = value; }
+            get
+            {
+                return data.UseTable;
+            }
+            set
+            {
+                data.UseTable = value;
+            }
         }
 
         [DynamicReadOnlyValidationMethod]

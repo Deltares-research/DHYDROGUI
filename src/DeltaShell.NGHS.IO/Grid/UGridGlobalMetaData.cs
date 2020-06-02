@@ -11,12 +11,14 @@ namespace DeltaShell.NGHS.IO.Grid
             Source = "Unknown Source";
             Version = "-";
         }
+
         public UGridGlobalMetaData(string modelName, string source, string version)
         {
             Modelname = modelName;
             Source = source;
             Version = version;
         }
+
         public string Modelname { get; private set; }
 
         public string Source { get; private set; }
@@ -25,7 +27,11 @@ namespace DeltaShell.NGHS.IO.Grid
 
         public override bool Equals(object obj)
         {
-            if (obj == null || GetType() != obj.GetType()) return false;
+            if (obj == null || GetType() != obj.GetType())
+            {
+                return false;
+            }
+
             var gmd = (UGridGlobalMetaData) obj;
             return Modelname == gmd.Modelname && Source == gmd.Source && Version == gmd.Version;
         }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro;
+using GeoAPI.CoordinateSystems.Transformations;
 using GeoAPI.Extensions.CoordinateSystems;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
@@ -17,7 +18,6 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors
 {
     /// <summary>
     /// Used to edit links connected to the hydro objects which are being moved.
-    /// 
     /// Starts interacton on Activitate() then maintains a copy of all links connected to the hydro object using
     /// UpdateRelatedFeatures() and then updates original feature geometries on StoreRelatedFeatures().
     /// </summary>
@@ -25,7 +25,7 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors
     {
         private IFeature lastFeature;
         private Coordinate lastCoordinate;
-        
+
         private IList<HydroLink> links;
         private IList<HydroLink> linksCloned;
         private IList<IGeometry> linkGeometriesCloned;
@@ -33,21 +33,19 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors
         private List<IHydroRegion> linkRegions;
         private OgrCoordinateSystemFactory coordinateSystemFactory;
 
-        private IFallOffPolicy FallOffPolicy { get; set; }
-
         public override IFeatureRelationInteractor Activate(IFeature feature, IFeature cloneFeature, AddRelatedFeature addRelatedFeature, int level, IFallOffPolicy fallOffPolicy)
         {
             FallOffPolicy = new LinearFallOffPolicy(); //fallOffPolicy ?? new NoFallOffPolicy();
-            
+
             var hydroObject = feature as IHydroObject;
             if (hydroObject == null)
             {
                 return null;
             }
 
-            var cloneRule = (HydroObjectToHydroLinkRelationInteractor)CloneRule();
+            var cloneRule = (HydroObjectToHydroLinkRelationInteractor) CloneRule();
             cloneRule.Start(hydroObject, addRelatedFeature, level);
-            
+
             return cloneRule;
         }
 
@@ -61,6 +59,8 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors
             UpdateOrStoreRelatedFeatures(true, links, feature, newGeometry);
         }
 
+        private IFallOffPolicy FallOffPolicy { get; set; }
+
         private void Start(IHydroObject hydroObject, AddRelatedFeature addRelatedFeature, int level)
         {
             coordinateSystemFactory = new OgrCoordinateSystemFactory();
@@ -73,28 +73,28 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors
             linkRegions = links.Select(GetLinkRegion).ToList();
 
             linkRules = addRelatedFeature != null
-                ? links.Select((l, i) => GetInteractors(l, i, addRelatedFeature, level)).ToList()
-                : null;
+                            ? links.Select((l, i) => GetInteractors(l, i, addRelatedFeature, level)).ToList()
+                            : null;
         }
 
         private void UpdateOrStoreRelatedFeatures(bool final, IList<HydroLink> features, IFeature feature, IGeometry newGeometry)
         {
             var hydroObject = feature as IHydroObject;
 
-            if(hydroObject == null || hydroObject.Links == null || !Equals(feature, lastFeature))
+            if (hydroObject == null || hydroObject.Links == null || !Equals(feature, lastFeature))
             {
                 return;
             }
 
             for (var index = 0; index < links.Count; index++)
             {
-                var link = links[index];
-                var geometry = linkGeometriesCloned[index];
-                var region = linkRegions[index];
+                HydroLink link = links[index];
+                IGeometry geometry = linkGeometriesCloned[index];
+                IHydroRegion region = linkRegions[index];
 
-                var localStartCoordinate = GetLocalCoordinate(lastCoordinate, hydroObject.Region.CoordinateSystem, region.CoordinateSystem);
+                Coordinate localStartCoordinate = GetLocalCoordinate(lastCoordinate, hydroObject.Region.CoordinateSystem, region.CoordinateSystem);
                 Coordinate localEndCoordinate;
-                
+
                 try
                 {
                     // interior point of newGeometry can become invalid, so use try catch
@@ -105,36 +105,50 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors
                     localEndCoordinate = (Coordinate) localStartCoordinate.Clone();
                 }
 
-                var deltaX = localEndCoordinate.X - localStartCoordinate.X;
-                var deltaY = localEndCoordinate.Y - localStartCoordinate.Y;
-                
+                double deltaX = localEndCoordinate.X - localStartCoordinate.X;
+                double deltaY = localEndCoordinate.Y - localStartCoordinate.Y;
+
                 FallOffPolicy.Reset();
 
-                var coordinateToMove = Equals(link.Target, feature) ? geometry.Coordinates.Length - 1 : 0;
-                
+                int coordinateToMove = Equals(link.Target, feature) ? geometry.Coordinates.Length - 1 : 0;
+
                 // use the move method of FallOfPolicy that uses a source and target geometry
-                var targetFeature = features[index];
+                HydroLink targetFeature = features[index];
 
                 if (final)
+                {
                     FallOffPolicy.Move(targetFeature, geometry, coordinateToMove, deltaX, deltaY);
+                }
                 else
+                {
                     FallOffPolicy.Move(targetFeature.Geometry, geometry, coordinateToMove, deltaX, deltaY);
-                
-                if (linkRules == null) continue;
+                }
 
-                var linkTrackerIndices = new List<int> { coordinateToMove };
-                var linkFeatureRelationInteractors = linkRules[index];
+                if (linkRules == null)
+                {
+                    continue;
+                }
 
-                foreach (var interactor in linkFeatureRelationInteractors)
+                var linkTrackerIndices = new List<int> {coordinateToMove};
+                List<IFeatureRelationInteractor> linkFeatureRelationInteractors = linkRules[index];
+
+                foreach (IFeatureRelationInteractor interactor in linkFeatureRelationInteractors)
                 {
                     if (final)
+                    {
                         interactor.StoreRelatedFeatures(link, targetFeature.Geometry, linkTrackerIndices);
+                    }
                     else
+                    {
                         interactor.UpdateRelatedFeatures(link, targetFeature.Geometry, linkTrackerIndices);
+                    }
                 }
             }
 
-            if (!final) return;
+            if (!final)
+            {
+                return;
+            }
 
             coordinateSystemFactory = null;
             linkRegions = null;
@@ -147,12 +161,12 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors
 
         private IFeatureRelationInteractor CloneRule()
         {
-            return new HydroObjectToHydroLinkRelationInteractor { FallOffPolicy = FallOffPolicy };
+            return new HydroObjectToHydroLinkRelationInteractor {FallOffPolicy = FallOffPolicy};
         }
 
         private static IHydroRegion GetLinkRegion(HydroLink link)
         {
-            var region = link.Source.Region;
+            IHydroRegion region = link.Source.Region;
 
             while (true)
             {
@@ -162,8 +176,11 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors
                 }
 
                 var parentHydroRegion = region.Parent as IHydroRegion;
-                if (parentHydroRegion == null) return null;
-                
+                if (parentHydroRegion == null)
+                {
+                    return null;
+                }
+
                 region = parentHydroRegion;
             }
         }
@@ -182,7 +199,7 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors
                 return coordinate;
             }
 
-            var transformation = coordinateSystemFactory.CreateTransformation(sourceCoordinateSystem, targetCoordinateSystem);
+            ICoordinateTransformation transformation = coordinateSystemFactory.CreateTransformation(sourceCoordinateSystem, targetCoordinateSystem);
 
             return GeometryTransform.TransformGeometry(new Point(coordinate), transformation.MathTransform).Coordinate;
         }

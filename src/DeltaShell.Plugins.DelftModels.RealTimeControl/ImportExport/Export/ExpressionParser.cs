@@ -12,7 +12,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport.Export
     public static class ExpressionParser
     {
         /// <summary>
-        /// Parses the <param name="expressionStr"/> into a binary expression tree.
+        /// Parses the
+        /// <param name="expressionStr"/>
+        /// into a binary expression tree.
         /// </summary>
         /// <param name="expressionStr">The expression string.</param>
         /// <param name="rootNode">

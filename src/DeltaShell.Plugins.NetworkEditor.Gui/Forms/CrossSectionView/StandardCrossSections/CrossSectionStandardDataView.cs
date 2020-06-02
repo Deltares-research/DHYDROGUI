@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using DelftTools.Controls;
@@ -11,7 +12,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView.StandardCr
     /// <summary>
     /// Draws the data of the standard cross-section. Does not auto-update. Call refresh
     /// </summary>
-    public partial class CrossSectionStandardDataView : UserControl,IView
+    public partial class CrossSectionStandardDataView : UserControl, IView
     {
         private CrossSectionDefinitionStandard data;
 
@@ -19,8 +20,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView.StandardCr
         {
             InitializeComponent();
 
-            var dataSource = EnumBindingHelper.ToList<CrossSectionStandardShapeType>();
-            
+            IList<KeyValuePair<CrossSectionStandardShapeType, string>> dataSource = EnumBindingHelper.ToList<CrossSectionStandardShapeType>();
+
             //Not implemented yet. Wait for closed cross-sections
             dataSource.RemoveAllWhere(ds => ds.Key == CrossSectionStandardShapeType.Egg);
             dataSource.RemoveAllWhere(ds => ds.Key == CrossSectionStandardShapeType.Round);
@@ -28,9 +29,46 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView.StandardCr
             comboBoxShapeType.DataSource = dataSource;
             comboBoxShapeType.DisplayMember = "Value";
             comboBoxShapeType.ValueMember = "Key";
-            
         }
-        
+
+        public object Data
+        {
+            get
+            {
+                return data;
+            }
+            set
+            {
+                data = (CrossSectionDefinitionStandard) value;
+
+                RefreshView();
+            }
+        }
+
+        public Image Image { get; set; }
+
+        public ViewInfo ViewInfo { get; set; }
+
+        /// <summary>
+        /// Redraws the view based on current data. Needed because this view does not subscribe to data. Parent view is responsible
+        /// for notification.
+        /// </summary>
+        public void RefreshView()
+        {
+            if (data != null)
+            {
+                bindingSourceStandardDefinition.DataSource = data;
+            }
+
+            SetComboBoxType();
+            SetStandardCrossSectionDataView();
+        }
+
+        public void EnsureVisible(object item)
+        {
+            throw new NotImplementedException();
+        }
+
         private void SetStandardCrossSectionDataView()
         {
             panelDataView.Controls.Clear();
@@ -48,29 +86,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView.StandardCr
             }
         }
 
-        public object Data
-        {
-            get { return data; }
-            set
-            {
-                data = (CrossSectionDefinitionStandard) value;
-                
-                RefreshView();
-            }
-        }
-
-        public Image Image
-        {
-            get; set;
-        }
-
-        public void EnsureVisible(object item)
-        {
-            throw new NotImplementedException();
-        }
-
-        public ViewInfo ViewInfo { get; set; }
-
         private void ComboBoxShapeTypeSelectedIndexChanged(object sender, EventArgs e)
         {
             if (Data != null)
@@ -82,20 +97,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView.StandardCr
                     data.ShapeType = newShape;
                 }
             }
-        }
-
-        /// <summary>
-        /// Redraws the view based on current data. Needed because this view does not subscribe to data. Parent view is responsible for notification.
-        /// </summary>
-        public void RefreshView()
-        {
-            if (data != null)
-            {
-                bindingSourceStandardDefinition.DataSource = data;
-            }
-
-            SetComboBoxType();
-            SetStandardCrossSectionDataView();
         }
     }
 }

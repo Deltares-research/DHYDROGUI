@@ -27,6 +27,18 @@ namespace DelftTools.Hydro
     [DisplayName("Drainage Basin")]
     public class DrainageBasin : RegionBase, IDrainageBasin
     {
+        private IEventedList<Catchment> catchments;
+
+        private IEventedList<WasteWaterTreatmentPlant> wasteWaterTreatmentPlants;
+
+        private IEventedList<HydroLink> links;
+
+        private bool allCatchmentsDirty = true;
+        private IList<Catchment> cachedAllCatchments = new List<Catchment>();
+        private IEventedList<RunoffBoundary> boundaries;
+
+        private bool isCloning;
+
         public DrainageBasin()
         {
             Name = "drainage basin";
@@ -49,11 +61,23 @@ namespace DelftTools.Hydro
 
         public virtual IEventedList<CatchmentType> CatchmentTypes { get; set; }
 
-        private IEventedList<Catchment> catchments;
+        public virtual IEventedList<RunoffBoundary> Boundaries
+        {
+            get => boundaries;
+            set
+            {
+                if (boundaries != null)
+                {
+                    boundaries.CollectionChanged -= OnBoundariesCollectionChanged;
+                }
 
-        private IEventedList<WasteWaterTreatmentPlant> wasteWaterTreatmentPlants;
-
-        private IEventedList<HydroLink> links;
+                boundaries = value;
+                if (boundaries != null)
+                {
+                    boundaries.CollectionChanged += OnBoundariesCollectionChanged;
+                }
+            }
+        }
 
         public virtual IEventedList<Catchment> Catchments
         {
@@ -91,30 +115,8 @@ namespace DelftTools.Hydro
             }
         }
 
-        public virtual IEventedList<RunoffBoundary> Boundaries
-        {
-            get => boundaries;
-            set
-            {
-                if (boundaries != null)
-                {
-                    boundaries.CollectionChanged -= OnBoundariesCollectionChanged;
-                }
-
-                boundaries = value;
-                if (boundaries != null)
-                {
-                    boundaries.CollectionChanged += OnBoundariesCollectionChanged;
-                }
-            }
-        }
-
         public virtual IEnumerable<IHydroObject> AllHydroObjects =>
             AllCatchments.Cast<IHydroObject>().Concat(WasteWaterTreatmentPlants).Concat(Boundaries);
-
-        private bool allCatchmentsDirty = true;
-        private IList<Catchment> cachedAllCatchments = new List<Catchment>();
-        private IEventedList<RunoffBoundary> boundaries;
 
         public virtual IEnumerable<Catchment> AllCatchments
         {
@@ -128,19 +130,6 @@ namespace DelftTools.Hydro
                 }
 
                 return cachedAllCatchments;
-            }
-        }
-
-        private IEnumerable<Catchment> GetAllCatchments(IEnumerable<Catchment> catchments)
-        {
-            foreach (Catchment catchment in catchments)
-            {
-                yield return catchment;
-
-                foreach (Catchment subCatchment in GetAllCatchments(catchment.SubCatchments))
-                {
-                    yield return subCatchment;
-                }
             }
         }
 
@@ -160,34 +149,6 @@ namespace DelftTools.Hydro
                 {
                     links.CollectionChanged += OnLinksCollectionChanged;
                 }
-            }
-        }
-
-        private bool isCloning;
-
-        [EditAction]
-        private void OnLinksCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            if (isCloning)
-            {
-                return;
-            }
-
-            var link = e.GetRemovedOrAddedItem() as HydroLink;
-
-            if (e.Action == NotifyCollectionChangedAction.Remove)
-            {
-                link.Source.Links.Remove(link);
-                link.Target.Links.Remove(link);
-            }
-            else if (e.Action == NotifyCollectionChangedAction.Add)
-            {
-                link.Source.Links.Add(link);
-                link.Target.Links.Add(link);
-            }
-            else
-            {
-                throw new NotSupportedException();
             }
         }
 
@@ -239,6 +200,53 @@ namespace DelftTools.Hydro
             HydroRegion.CloneAndAddLinks(this, clone);
             clone.isCloning = false;
             return clone;
+        }
+
+        public override IEnumerable<object> GetDirectChildren()
+        {
+            return Catchments.Cast<object>()
+                             .Union(WasteWaterTreatmentPlants.Cast<object>())
+                             .Union(Boundaries.Cast<object>())
+                             .Union(Links.Cast<object>());
+        }
+
+        private IEnumerable<Catchment> GetAllCatchments(IEnumerable<Catchment> catchments)
+        {
+            foreach (Catchment catchment in catchments)
+            {
+                yield return catchment;
+
+                foreach (Catchment subCatchment in GetAllCatchments(catchment.SubCatchments))
+                {
+                    yield return subCatchment;
+                }
+            }
+        }
+
+        [EditAction]
+        private void OnLinksCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (isCloning)
+            {
+                return;
+            }
+
+            var link = e.GetRemovedOrAddedItem() as HydroLink;
+
+            if (e.Action == NotifyCollectionChangedAction.Remove)
+            {
+                link.Source.Links.Remove(link);
+                link.Target.Links.Remove(link);
+            }
+            else if (e.Action == NotifyCollectionChangedAction.Add)
+            {
+                link.Source.Links.Add(link);
+                link.Target.Links.Add(link);
+            }
+            else
+            {
+                throw new NotSupportedException();
+            }
         }
 
         private void OnCatchmentsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -326,14 +334,6 @@ namespace DelftTools.Hydro
                     wasteWaterTreatmentPlant.Basin = null;
                     break;
             }
-        }
-
-        public override IEnumerable<object> GetDirectChildren()
-        {
-            return Catchments.Cast<object>()
-                             .Union(WasteWaterTreatmentPlants.Cast<object>())
-                             .Union(Boundaries.Cast<object>())
-                             .Union(Links.Cast<object>());
         }
     }
 }

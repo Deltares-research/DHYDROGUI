@@ -19,8 +19,10 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Snapping
             {
                 // If branch exist only allow snapping to node if the first or last coordinate is
                 // moved. Thus prevent snapping of other points of the linestring.
-                if ((trackingIndex == 0) || (trackingIndex == (sourceGeometry.Coordinates.Length - 1)))
+                if (trackingIndex == 0 || trackingIndex == sourceGeometry.Coordinates.Length - 1)
+                {
                     return base.Execute(sourceFeature, candidates, sourceGeometry, snapTargets, worldPos, envelope, trackingIndex);
+                }
             }
             else
             {
@@ -28,6 +30,7 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Snapping
                 // snap the first coordinate of a lineString to snap before the linestring is created.
                 return base.Execute(null, candidates, null, snapTargets, worldPos, envelope, -1);
             }
+
             return null;
         }
     }

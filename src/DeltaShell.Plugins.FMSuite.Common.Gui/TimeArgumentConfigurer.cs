@@ -6,7 +6,7 @@ using DelftTools.Shell.Core.Workflow;
 
 namespace DeltaShell.Plugins.FMSuite.Common.Gui
 {
-    public class DateTimeGenerator: NextValueGenerator<DateTime>
+    public class DateTimeGenerator : NextValueGenerator<DateTime>
     {
         private readonly IVariable<DateTime> variable;
 
@@ -28,7 +28,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui
     {
         public static void Configure(IFunction function, ITimeDependentModel model)
         {
-            foreach (var timeArgument in function.Arguments.OfType<IVariable<DateTime>>())
+            foreach (IVariable<DateTime> timeArgument in function.Arguments.OfType<IVariable<DateTime>>())
             {
                 timeArgument.DefaultValue = model.StartTime;
                 timeArgument.NextValueGenerator = new DateTimeGenerator(timeArgument, model.TimeStep);
